@@ -191,6 +191,7 @@ namespace Ombi.Core.Engine
                 };
             }
             request.Approved = true;
+            request.Denied = false;
             await MovieRepository.Update(request);
 
             NotificationHelper.Notify(request, NotificationType.RequestApproved);

@@ -178,9 +178,20 @@ namespace Ombi.Core.Engine
             return results;
         }
 
-        public async Task<RequestEngineResult> ApproveChildRequest(ChildRequests request)
+        public async Task<RequestEngineResult> ApproveChildRequest(int id)
         {
+            var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == id);
+            if (request == null)
+            {
+                return new RequestEngineResult
+                {
+                    ErrorMessage = "Child Request does not exist"
+                };
+            }
+            request.Approved = true;
+            request.Denied = false;
             await TvRepository.UpdateChild(request);
+
             if (request.Approved)
             {
                 NotificationHelper.Notify(request, NotificationType.RequestApproved);
@@ -194,10 +205,23 @@ namespace Ombi.Core.Engine
             };
         }
 
-        public async Task<ChildRequests> DenyChildRequest(ChildRequests request)
+        public async Task<RequestEngineResult> DenyChildRequest(int requestId)
         {
+            var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId);
+            if (request == null)
+            {
+                return new RequestEngineResult
+                {
+                    ErrorMessage = "Child Request does not exist"
+                };
+            }
+            request.Denied = true;
+            await TvRepository.UpdateChild(request);
             NotificationHelper.Notify(request, NotificationType.RequestDeclined);
-            return await UpdateChildRequest(request);
+            return new RequestEngineResult
+            {
+                RequestAdded = true
+            };
         }
 
         public async Task<ChildRequests> ChangeAvailability(ChildRequests request)

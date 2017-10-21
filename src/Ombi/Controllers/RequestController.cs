@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ombi.Store.Entities.Requests;
 using System.Diagnostics;
+using Ombi.Models;
 
 namespace Ombi.Controllers
 {
@@ -81,7 +82,7 @@ namespace Ombi.Controllers
         /// <summary>
         /// Updates the specified movie request.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="model">The Movie's ID</param>
         /// <returns></returns>
         [HttpPut("movie")]
         public async Task<MovieRequests> UpdateRequest([FromBody] MovieRequests model)
@@ -92,7 +93,7 @@ namespace Ombi.Controllers
         /// <summary>
         /// Approves the specified movie request.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="model">The Movie's ID</param>
         /// <returns></returns>
         [HttpPost("movie/approve")]
         public async Task<RequestEngineResult> ApproveMovie([FromBody] MovieUpdateModel model)
@@ -103,9 +104,9 @@ namespace Ombi.Controllers
         /// <summary>
         /// Denies the specified movie request.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="model">The Movie's ID</param>
         /// <returns></returns>
-        [HttpPost("movie/deny")]
+        [HttpPut("movie/deny")]
         public async Task<RequestEngineResult> DenyMovie([FromBody] MovieUpdateModel model)
         {
             return await MovieRequestEngine.DenyMovieById(model.Id);
@@ -214,12 +215,12 @@ namespace Ombi.Controllers
         /// <summary>
         /// Denies the a specific child request
         /// </summary>
-        /// <param name="child">The model.</param>
+        /// <param name="model">This is the child request's ID</param>
         /// <returns></returns>
         [HttpPut("tv/deny")]
-        public async Task<ChildRequests> DenyChild([FromBody] ChildRequests child)
+        public async Task<RequestEngineResult> DenyChild([FromBody] TvUpdateModel model)
         {
-            return await TvRequestEngine.DenyChildRequest(child);
+            return await TvRequestEngine.DenyChildRequest(model.Id);
         }
 
         /// <summary>
@@ -236,12 +237,12 @@ namespace Ombi.Controllers
         /// <summary>
         /// Updates the a specific child request
         /// </summary>
-        /// <param name="child">The model.</param>
+        /// <param name="model">This is the child request's ID</param>
         /// <returns></returns>
-        [HttpPost("tv/child/approve")]
-        public async Task<RequestEngineResult> ApproveChild([FromBody] ChildRequests child)
+        [HttpPost("tv/approve")]
+        public async Task<RequestEngineResult> ApproveChild([FromBody] TvUpdateModel model)
         {
-            return await TvRequestEngine.ApproveChildRequest(child);
+            return await TvRequestEngine.ApproveChildRequest(model.Id);
         }
 
         /// <summary>

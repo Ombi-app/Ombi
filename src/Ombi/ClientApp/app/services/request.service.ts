@@ -6,7 +6,7 @@ import { Observable } from "rxjs/Rx";
 
 import { TreeNode } from "primeng/primeng";
 import { IRequestEngineResult } from "../interfaces";
-import { IChildRequests, IMovieRequests, IMovieUpdateModel, IRequestCountModel, IRequestGrid, ITvRequests } from "../interfaces";
+import { IChildRequests, IMovieRequests, IMovieUpdateModel, IRequestCountModel, IRequestGrid, ITvRequests, ITvUpdateModel } from "../interfaces";
 import { ISearchMovieResult } from "../interfaces";
 import { ISearchTvResult } from "../interfaces";
 import { ServiceAuthHelpers } from "./service.helpers";
@@ -27,6 +27,10 @@ export class RequestService extends ServiceAuthHelpers {
 
     public approveMovie(movie: IMovieUpdateModel): Observable<IRequestEngineResult> {
         return this.http.post(`${this.url}Movie/Approve`, JSON.stringify(movie), { headers: this.headers }).map(this.extractData);
+    }
+
+    public denyMovie(movie: IMovieUpdateModel): Observable<IRequestEngineResult> {
+        return this.http.put(`${this.url}Movie/Deny`, JSON.stringify(movie), { headers: this.headers }).map(this.extractData);
     }
 
     public getMovieRequests(count: number, position: number): Observable<IMovieRequests[]> {
@@ -78,14 +82,14 @@ export class RequestService extends ServiceAuthHelpers {
     public updateChild(child: IChildRequests): Observable<IChildRequests> {
         return this.http.put(`${this.url}tv/child`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
     }   
-    public denyChild(child: IChildRequests): Observable<IChildRequests> {
+    public denyChild(child: ITvUpdateModel): Observable<IRequestEngineResult> {
         return this.http.put(`${this.url}tv/deny`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
     } 
     public changeAvailabilityChild(child: IChildRequests): Observable<IChildRequests> {
         return this.http.put(`${this.url}tv/changeavailability`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
     }   
-    public approveChild(child: IChildRequests): Observable<IRequestEngineResult> {
-        return this.http.post(`${this.url}tv/child/approve`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
+    public approveChild(child: ITvUpdateModel): Observable<IRequestEngineResult> {
+        return this.http.post(`${this.url}tv/approve`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
     }
     public deleteChild(child: IChildRequests): Observable<IChildRequests> {
         return this.http.delete(`${this.url}tv/child/${child.id}`, { headers: this.headers }).map(this.extractData);

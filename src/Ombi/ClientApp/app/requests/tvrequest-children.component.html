@@ -12,7 +12,7 @@
                 <form>
                     <button style="text-align: right" *ngIf="child.canApprove && !child.approved" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve</button>
                 </form>
-                <form>
+                <form *ngIf="!child.denied"> 
                     <button type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</button>
                 </form>
                 <form>
@@ -65,11 +65,13 @@
                                             {{ep.airDate | date: 'dd/MM/yyyy' }}
                                         </td>
                                         <td>
-                                            <span *ngIf="ep.available" class="label label-success">Available</span>
-                                            <span *ngIf="ep.approved && !ep.available" class="label label-info">Processing Request</span>
-                                            <div *ngIf="!ep.approved">
+                                            <span *ngIf="child.denied" class="label label-danger">Denied</span>
+                                            <span *ngIf="!child.denied && ep.available" class="label label-success">Available</span>
+                                            <span *ngIf="!child.denied &&ep.approved && !ep.available" class="label label-info">Processing Request</span>
+                                            <div *ngIf="!child.denied && !ep.approved">
                                                 <div *ngIf="!ep.available"><span class="label label-warning">Pending Approval</span></div>
                                             </div>
+                                            
                                         </td>
                                     </tr>
                                 </tbody>

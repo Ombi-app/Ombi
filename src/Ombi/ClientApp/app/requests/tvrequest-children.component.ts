@@ -23,7 +23,6 @@ export class TvRequestChildrenComponent {
     }
 
     public deny(request: IChildRequests) {
-        request.approved = false;
         request.denied = true;
 
         request.seasonRequests.forEach((season) => {
@@ -31,8 +30,16 @@ export class TvRequestChildrenComponent {
                 ep.approved = false;
             });
         });
-        this.requestService.deleteChild(request)
-            .subscribe();
+        this.requestService.denyChild({ id: request.id })
+            .subscribe(x => {
+                if (x.requestAdded) {
+                    this.notificationService.success("Request Denied",
+                        `Request has been denied successfully`);
+                } else {
+                    this.notificationService.warning("Request Denied", x.message ? x.message : x.errorMessage);
+                    request.approved = false;
+                }
+            });
     }
 
     public approve(request: IChildRequests) {
@@ -43,7 +50,7 @@ export class TvRequestChildrenComponent {
                 ep.approved = true;
             });
         });
-        this.requestService.approveChild(request)
+        this.requestService.approveChild({ id: request.id })
             .subscribe(x => {
                 if (x.requestAdded) {
                     this.notificationService.success("Request Approved",

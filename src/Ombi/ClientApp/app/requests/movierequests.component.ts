@@ -80,7 +80,6 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     public deny(request: IMovieRequests) {
-        request.approved = false;
         request.denied = true;
         this.updateRequest(request);
     }

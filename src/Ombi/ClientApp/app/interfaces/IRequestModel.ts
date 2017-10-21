@@ -130,6 +130,10 @@ export interface IChildRequests extends IBaseRequest {
   seasonRequests: INewSeasonRequests[];
 }
 
+export interface ITvUpdateModel {
+  id: number;
+}
+
 export interface INewSeasonRequests {
   id: number;
   seasonNumber: number;
