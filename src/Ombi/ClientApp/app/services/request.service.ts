@@ -91,7 +91,7 @@ export class RequestService extends ServiceAuthHelpers {
     public approveChild(child: ITvUpdateModel): Observable<IRequestEngineResult> {
         return this.http.post(`${this.url}tv/approve`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
     }
-    public deleteChild(child: IChildRequests): Observable<IChildRequests> {
+    public deleteChild(child: IChildRequests): Observable<any> {
         return this.http.delete(`${this.url}tv/child/${child.id}`, { headers: this.headers }).map(this.extractData);
     }
 

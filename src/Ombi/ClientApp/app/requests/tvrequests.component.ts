@@ -101,6 +101,11 @@ export class TvRequestsComponent implements OnInit {
         this.showChildDialogue = true;
     }
 
+    public childRequestDeleted(childId: number): void {
+        // Refresh the UI, hackly way around reloading the data
+        this.ngOnInit();
+    }
+
     private loadInit() {
         this.requestService.getTvRequestsTree(this.amountToLoad, 0)
             .subscribe(x => {

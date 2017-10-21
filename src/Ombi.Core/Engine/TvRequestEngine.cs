@@ -244,6 +244,8 @@ namespace Ombi.Core.Engine
         public async Task RemoveTvChild(int requestId)
         {
             var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId);
+
+            TvRepository.Db.ChildRequests.Remove(request);
             var all = TvRepository.Db.TvRequests.Include(x => x.ChildRequests);
             var parent = all.FirstOrDefault(x => x.Id == request.ParentRequestId);
 
@@ -255,7 +257,6 @@ namespace Ombi.Core.Engine
             }
             await Audit.Record(AuditType.Deleted, AuditArea.TvRequest, $"Deleting Request {request.Title}", Username);
 
-            TvRepository.Db.ChildRequests.Remove(request);
             await TvRepository.Db.SaveChangesAsync();
         }
 

@@ -47,9 +47,12 @@ export class ServiceAuthHelpers {
     }
 
     protected extractData(res: Response) {
-        const body = res.json();
-        //console.log('extractData', body || {});
-        return body;
+        if(res.text()) {
+            const body = res.json();
+            return body;
+        } else {
+            return "";
+        }
     }
 
     protected handleError(error: any) {

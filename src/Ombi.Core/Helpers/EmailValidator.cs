@@ -12,7 +12,7 @@ namespace Ombi.Core.Helpers
         {
             _invalid = false;
             if (string.IsNullOrEmpty(strIn))
-                return false;
+                return true;
 
             // Use IdnMapping class to convert Unicode domain names.
             try

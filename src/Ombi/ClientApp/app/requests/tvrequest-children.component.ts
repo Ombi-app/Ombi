@@ -1,4 +1,4 @@
-﻿import { Component, Input } from "@angular/core";
+﻿import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { IChildRequests } from "../interfaces";
 import { NotificationService, RequestService } from "../services";
 
@@ -9,13 +9,18 @@ import { NotificationService, RequestService } from "../services";
 export class TvRequestChildrenComponent {
     @Input() public childRequests: IChildRequests[];
     @Input() public isAdmin: boolean;
+
+    @Output() public requestDeleted = new EventEmitter<number>();
+
     constructor(private requestService: RequestService,
                 private notificationService: NotificationService) { }
 
     public removeRequest(request: IChildRequests) {
         this.requestService.deleteChild(request)
-            .subscribe();
-        this.removeRequestFromUi(request);
+            .subscribe(x => {
+                this.removeRequestFromUi(request);
+                this.requestDeleted.emit(request.id);
+            });       
     }
 
     public changeAvailability(request: IChildRequests, available: boolean) {
