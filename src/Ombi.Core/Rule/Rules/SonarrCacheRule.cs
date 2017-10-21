@@ -2,13 +2,13 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Models.Search;
-using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
+using Ombi.Store.Entities.Requests;
 
-namespace Ombi.Core.Rule.Rules.Search
+namespace Ombi.Core.Rule.Rules
 {
-    public class SonarrCacheRule : BaseSearchRule, IRules<SearchViewModel>
+    public class SonarrCacheRule
     {
         public SonarrCacheRule(IOmbiContext ctx)
         {
@@ -16,6 +16,37 @@ namespace Ombi.Core.Rule.Rules.Search
         }
 
         private readonly IOmbiContext _ctx;
+
+        public async Task<RuleResult> Execute(BaseRequest obj)
+        {
+            if (obj.RequestType == RequestType.TvShow)
+            {
+                var vm = (ChildRequests) obj;
+                var result = await _ctx.SonarrCache.FirstOrDefaultAsync(x => x.TvDbId == vm.Id);
+                if (result != null)
+                {
+                    if (vm.SeasonRequests.Any())
+                    {
+                        var sonarrEpisodes = _ctx.SonarrEpisodeCache;
+                        foreach (var season in vm.SeasonRequests)
+                        {
+                            foreach (var ep in season.Episodes)
+                            {
+                                // Check if we have it
+                                var monitoredInSonarr = sonarrEpisodes.Any(x =>
+                                    x.EpisodeNumber == ep.EpisodeNumber && x.SeasonNumber == season.SeasonNumber
+                                    && x.TvDbId == vm.Id);
+                                if (monitoredInSonarr)
+                                {
+                                    return new RuleResult{Message = "We already have this request, please choose the \"Select...\" option to refine your request"};
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return new RuleResult { Success = true };
+        }
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {
@@ -48,7 +79,7 @@ namespace Ombi.Core.Rule.Rules.Search
                     }
                 }
             }
-            return Success();
+            return new RuleResult { Success = true };
         }
     }
 }
