@@ -76,7 +76,7 @@ export class TvRequestsComponent implements OnInit {
         this.currentlyLoaded = 5;
         this.tvRequests = [];
         this.loadInit();
-        this.isAdmin = this.auth.hasRole("admin");
+        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
     }
 
     public loadMore() {
