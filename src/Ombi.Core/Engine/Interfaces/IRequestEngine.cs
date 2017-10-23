@@ -14,5 +14,8 @@ namespace Ombi.Core.Engine.Interfaces
         Task<IEnumerable<T>> GetRequests(int count, int position);
         Task<IEnumerable<T>> GetRequests();
         Task<bool> UserHasRequest(string userId);
+
+        Task<RequestEngineResult> MarkUnavailable(int modelId);
+        Task<RequestEngineResult> MarkAvailable(int modelId);
     }
 }

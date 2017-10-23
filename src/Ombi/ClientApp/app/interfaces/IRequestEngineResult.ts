@@ -1,5 +1,5 @@
 ﻿export interface IRequestEngineResult {
-    requestAdded: boolean;
+    result: boolean;
     message: string;
     errorMessage: string;
 }

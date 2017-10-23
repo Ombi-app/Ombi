@@ -25,6 +25,27 @@ export class TvRequestChildrenComponent {
 
     public changeAvailability(request: IChildRequests, available: boolean) {
         request.available = available;
+        if(available) {
+            this.requestService.markTvAvailable({ id: request.id }).subscribe(x => {
+                if (x.result) {
+                    this.notificationService.success("Request Available",
+                        `This request is now available`);
+                } else {
+                    this.notificationService.warning("Request Available", x.message ? x.message : x.errorMessage);
+                    request.approved = false;
+                }
+            });
+        } else {
+            this.requestService.markTvUnavailable({ id: request.id }).subscribe(x => {
+                if (x.result) {
+                    this.notificationService.success("Request Available",
+                    `This request is now unavailable`);
+                } else {
+                    this.notificationService.warning("Request Available", x.message ? x.message : x.errorMessage);
+                    request.approved = false;
+                }
+            });
+        }
     }
 
     public deny(request: IChildRequests) {
@@ -37,7 +58,7 @@ export class TvRequestChildrenComponent {
         });
         this.requestService.denyChild({ id: request.id })
             .subscribe(x => {
-                if (x.requestAdded) {
+                if (x.result) {
                     this.notificationService.success("Request Denied",
                         `Request has been denied successfully`);
                 } else {
@@ -57,7 +78,7 @@ export class TvRequestChildrenComponent {
         });
         this.requestService.approveChild({ id: request.id })
             .subscribe(x => {
-                if (x.requestAdded) {
+                if (x.result) {
                     this.notificationService.success("Request Approved",
                         `Request has been approved successfully`);
                 } else {

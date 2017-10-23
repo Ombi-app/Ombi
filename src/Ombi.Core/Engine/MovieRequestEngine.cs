@@ -9,7 +9,6 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Authentication;
@@ -48,7 +47,7 @@ namespace Ombi.Core.Engine
             {
                 return new RequestEngineResult
                 {
-                    RequestAdded = false,
+                    Result = false,
                     Message = "There was an issue adding this movie!",
                     ErrorMessage = $"TheMovieDb didn't have any information for ID {model.Id}"
                 };
@@ -87,7 +86,7 @@ namespace Ombi.Core.Engine
             if (requestModel.Approved) // The rules have auto approved this
             {
                 var requestEngineResult = await AddMovieRequest(requestModel, fullMovieName);
-                if (requestEngineResult.RequestAdded)
+                if (requestEngineResult.Result)
                 {
                     var result = await ApproveMovie(requestModel);
                     if (result.IsError)
@@ -97,7 +96,7 @@ namespace Ombi.Core.Engine
                         {
                             Message = result.Message,
                             ErrorMessage = result.Message,
-                            RequestAdded = false
+                            Result = false
                         };
                     }
 
@@ -203,7 +202,7 @@ namespace Ombi.Core.Engine
                 {
                     return new RequestEngineResult
                     {
-                        RequestAdded = true
+                        Result = true
                     };
                 }
                 if (!result.Success)
@@ -213,7 +212,7 @@ namespace Ombi.Core.Engine
                     {
                         Message = result.Message,
                         ErrorMessage = result.Message,
-                        RequestAdded = false
+                        Result = false
                     };
                 }
                 // If there are no providers then it's successful but movie has not been sent
@@ -221,7 +220,7 @@ namespace Ombi.Core.Engine
 
             return new RequestEngineResult
             {
-                RequestAdded = true
+                Result = true
             };
         }
 
@@ -267,6 +266,47 @@ namespace Ombi.Core.Engine
             return await MovieRepository.GetAll().AnyAsync(x => x.RequestedUserId == userId);
         }
 
+        public async Task<RequestEngineResult> MarkUnavailable(int modelId)
+        {
+            var request = await MovieRepository.Find(modelId);
+            if (request == null)
+            {
+                return new RequestEngineResult
+                {
+                    ErrorMessage = "Request does not exist"
+                };
+            }
+            request.Available = false;
+            await MovieRepository.Update(request);
+
+            return new RequestEngineResult
+            {
+                Message = "Request is now unavailable",
+                Result = true
+            };
+        }
+
+        public async Task<RequestEngineResult> MarkAvailable(int modelId)
+        {
+            var request = await MovieRepository.Find(modelId);
+            if (request == null)
+            {
+                return new RequestEngineResult
+                {
+                    ErrorMessage = "Request does not exist"
+                };
+            }
+            request.Available = true;
+            NotificationHelper.Notify(request, NotificationType.RequestAvailable);
+            await MovieRepository.Update(request);
+
+            return new RequestEngineResult
+            {
+                Message = "Request is now available",
+                Result = true
+            };
+        }
+
         private async Task<RequestEngineResult> AddMovieRequest(MovieRequests model, string movieName)
         {
             await MovieRepository.Add(model);
@@ -277,7 +317,7 @@ namespace Ombi.Core.Engine
                 NotificationHelper.NewRequest(model);
             }
 
-            return new RequestEngineResult { RequestAdded = true, Message = $"{movieName} has been successfully added!" };
+            return new RequestEngineResult { Result = true, Message = $"{movieName} has been successfully added!" };
         }
 
         public async Task<IEnumerable<MovieRequests>> GetApprovedRequests()

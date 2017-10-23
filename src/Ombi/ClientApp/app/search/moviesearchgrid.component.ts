@@ -50,7 +50,7 @@ export class MovieSearchGridComponent implements OnInit {
         this.movieResults = [];
         this.result = {
             message: "",
-            requestAdded: false,
+            result: false,
             errorMessage: "",
         };
     }
@@ -71,7 +71,7 @@ export class MovieSearchGridComponent implements OnInit {
                 .subscribe(x => {
                     this.result = x;
 
-                    if (this.result.requestAdded) {
+                    if (this.result.result) {
                         this.notificationService.success("Request Added",
                             `Request for ${searchResult.title} has been added successfully`);
                         searchResult.processed = true;

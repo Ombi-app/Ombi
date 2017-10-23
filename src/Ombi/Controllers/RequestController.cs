@@ -102,6 +102,28 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Set's the specified Movie as available 
+        /// </summary>
+        /// <param name="model">The Movie's ID</param>
+        /// <returns></returns>
+        [HttpPost("movie/available")]
+        public async Task<RequestEngineResult> MarkMovieAvailable([FromBody] MovieUpdateModel model)
+        {
+            return await MovieRequestEngine.MarkAvailable(model.Id);
+        }
+
+        /// <summary>
+        /// Set's the specified Movie as unavailable 
+        /// </summary>
+        /// <param name="model">The Movie's ID</param>
+        /// <returns></returns>
+        [HttpPost("movie/unavailable")]
+        public async Task<RequestEngineResult> MarkMovieUnAvailable([FromBody] MovieUpdateModel model)
+        {
+            return await MovieRequestEngine.MarkUnavailable(model.Id);
+        }
+
+        /// <summary>
         /// Denies the specified movie request.
         /// </summary>
         /// <param name="model">The Movie's ID</param>
@@ -224,14 +246,25 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
-        /// Changes the availability of the a specific child request
+        /// Set's the specified tv child as available 
         /// </summary>
-        /// <param name="child">The model.</param>
+        /// <param name="model">The Movie's ID</param>
         /// <returns></returns>
-        [HttpPut("tv/changeavailability")]
-        public async Task<ChildRequests> ChangeAvailability([FromBody] ChildRequests child)
+        [HttpPost("tv/available")]
+        public async Task<RequestEngineResult> MarkTvAvailable([FromBody] TvUpdateModel model)
         {
-            return await TvRequestEngine.ChangeAvailability(child);
+            return await TvRequestEngine.MarkAvailable(model.Id);
+        }
+
+        /// <summary>
+        /// Set's the specified tv child as unavailable 
+        /// </summary>
+        /// <param name="model">The Movie's ID</param>
+        /// <returns></returns>
+        [HttpPost("tv/unavailable")]
+        public async Task<RequestEngineResult> MarkTvUnAvailable([FromBody] TvUpdateModel model)
+        {
+            return await TvRequestEngine.MarkUnavailable(model.Id);
         }
 
         /// <summary>

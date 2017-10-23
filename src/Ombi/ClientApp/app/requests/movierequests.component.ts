@@ -71,7 +71,27 @@ export class MovieRequestsComponent implements OnInit {
     public changeAvailability(request: IMovieRequests, available: boolean) {
         request.available = available;
 
-        this.updateRequest(request);
+        if(available) {
+            this.requestService.markMovieAvailable({ id: request.id }).subscribe(x => {
+                if (x.result) {
+                    this.notificationService.success("Request Available",
+                        `${request.title} Is now available`);
+                } else {
+                    this.notificationService.warning("Request Available", x.message ? x.message : x.errorMessage);
+                    request.approved = false;
+                }
+            });
+        } else {
+            this.requestService.markMovieUnavailable({ id: request.id }).subscribe(x => {
+                if (x.result) {
+                    this.notificationService.success("Request Available",
+                        `${request.title} Is now unavailable`);
+                } else {
+                    this.notificationService.warning("Request Available", x.message ? x.message : x.errorMessage);
+                    request.approved = false;
+                }
+            });
+        }
     }
 
     public approve(request: IMovieRequests) {
@@ -119,7 +139,7 @@ export class MovieRequestsComponent implements OnInit {
         this.requestService.approveMovie({ id: request.id })
             .subscribe(x => {
 
-                if (x.requestAdded) {
+                if (x.result) {
                     this.notificationService.success("Request Approved",
                         `Request for ${request.title} has been approved successfully`);
                 } else {

@@ -33,6 +33,14 @@ export class RequestService extends ServiceAuthHelpers {
         return this.http.put(`${this.url}Movie/Deny`, JSON.stringify(movie), { headers: this.headers }).map(this.extractData);
     }
 
+    public markMovieAvailable(movie: IMovieUpdateModel): Observable<IRequestEngineResult> {
+        return this.http.post(`${this.url}Movie/available`, JSON.stringify(movie), { headers: this.headers }).map(this.extractData);
+    }
+
+    public markMovieUnavailable(movie: IMovieUpdateModel): Observable<IRequestEngineResult> {
+        return this.http.post(`${this.url}Movie/unavailable`, JSON.stringify(movie), { headers: this.headers }).map(this.extractData);
+    }
+
     public getMovieRequests(count: number, position: number): Observable<IMovieRequests[]> {
         return this.http.get(`${this.url}movie/${count}/${position}`).map(this.extractData);
     }
@@ -75,19 +83,27 @@ export class RequestService extends ServiceAuthHelpers {
     public removeTvRequest(request: ITvRequests) {
         this.http.delete(`${this.url}tv/${request.id}`).map(this.extractData).subscribe();
     }
+    
+    public markTvAvailable(movie: ITvUpdateModel): Observable<IRequestEngineResult> {
+        return this.http.post(`${this.url}tv/available`, JSON.stringify(movie), { headers: this.headers }).map(this.extractData);
+    }
+
+    public markTvUnavailable(movie: ITvUpdateModel): Observable<IRequestEngineResult> {
+        return this.http.post(`${this.url}tv/unavailable`, JSON.stringify(movie), { headers: this.headers }).map(this.extractData);
+    }
 
     public updateTvRequest(request: ITvRequests): Observable<ITvRequests> {
         return this.http.put(`${this.url}tv/`, JSON.stringify(request), { headers: this.headers }).map(this.extractData);
     }
+
     public updateChild(child: IChildRequests): Observable<IChildRequests> {
         return this.http.put(`${this.url}tv/child`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
     }   
+
     public denyChild(child: ITvUpdateModel): Observable<IRequestEngineResult> {
         return this.http.put(`${this.url}tv/deny`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
     } 
-    public changeAvailabilityChild(child: IChildRequests): Observable<IChildRequests> {
-        return this.http.put(`${this.url}tv/changeavailability`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
-    }   
+
     public approveChild(child: ITvUpdateModel): Observable<IRequestEngineResult> {
         return this.http.post(`${this.url}tv/approve`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
     }

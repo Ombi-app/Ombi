@@ -111,7 +111,7 @@ namespace Ombi.Core.Engine
                     // Looks like we have removed them all! They were all duplicates...
                     return new RequestEngineResult
                     {
-                        RequestAdded = false,
+                        Result = false,
                         ErrorMessage = "This has already been requested"
                     };
                 }
@@ -201,7 +201,7 @@ namespace Ombi.Core.Engine
             }
             return new RequestEngineResult
             {
-                RequestAdded = true
+                Result = true
             };
         }
 
@@ -220,17 +220,8 @@ namespace Ombi.Core.Engine
             NotificationHelper.Notify(request, NotificationType.RequestDeclined);
             return new RequestEngineResult
             {
-                RequestAdded = true
+                Result = true
             };
-        }
-
-        public async Task<ChildRequests> ChangeAvailability(ChildRequests request)
-        {
-            if (request.Available)
-            {
-                NotificationHelper.Notify(request, NotificationType.RequestAvailable);
-            }
-            return await UpdateChildRequest(request);
         }
 
         public async Task<ChildRequests> UpdateChildRequest(ChildRequests request)
@@ -270,6 +261,46 @@ namespace Ombi.Core.Engine
         public async Task<bool> UserHasRequest(string userId)
         {
             return await TvRepository.GetChild().AnyAsync(x => x.RequestedUserId == userId);
+        }
+
+        public async Task<RequestEngineResult> MarkUnavailable(int modelId)
+        {
+            var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == modelId);
+            if (request == null)
+            {
+                return new RequestEngineResult
+                {
+                    ErrorMessage = "Child Request does not exist"
+                };
+            }
+            request.Available = false;
+            await TvRepository.UpdateChild(request);
+            NotificationHelper.Notify(request, NotificationType.RequestAvailable);
+            return new RequestEngineResult
+            {
+                Result = true,
+                Message = "Request is now unavailable",
+            };
+        }
+
+        public async Task<RequestEngineResult> MarkAvailable(int modelId)
+        {
+            var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == modelId);
+            if (request == null)
+            {
+                return new RequestEngineResult
+                {
+                    ErrorMessage = "Child Request does not exist"
+                };
+            }
+            request.Available = true;
+            await TvRepository.UpdateChild(request);
+            NotificationHelper.Notify(request, NotificationType.RequestAvailable);
+            return new RequestEngineResult
+            {
+                Result = true,
+                Message = "Request is now available",
+            };
         }
 
         private async Task<RequestEngineResult> AddExistingRequest(ChildRequests newRequest, TvRequests existingRequest)
@@ -339,7 +370,7 @@ namespace Ombi.Core.Engine
                 var result = await TvSender.Send(model);
                 if (result.Success)
                 {
-                    return new RequestEngineResult {RequestAdded = true};
+                    return new RequestEngineResult {Result = true};
                 }
                 return new RequestEngineResult
                 {
@@ -347,7 +378,7 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            return new RequestEngineResult {RequestAdded = true};
+            return new RequestEngineResult {Result = true};
         }
     }
 }
