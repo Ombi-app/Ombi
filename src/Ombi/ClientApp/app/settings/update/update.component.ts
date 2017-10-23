@@ -11,6 +11,12 @@ export class UpdateComponent implements OnInit {
 
     public form: FormGroup;
     public updateAvailable = false;
+    public enableUpdateButton = false;
+    public get useScript() {
+        const control = this.form.get("useScript");
+        console.log(control);
+        return control!.value!;
+    }
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
@@ -25,7 +31,10 @@ export class UpdateComponent implements OnInit {
                     username: [x.username],
                     password: [x.password],
                     processName: [x.processName],
+                    useScript: [x.useScript],
+                    scriptLocation: [x.scriptLocation],
                 });
+                this.enableUpdateButton = x.autoUpdateEnabled;
             });
     }
 
@@ -50,6 +59,7 @@ export class UpdateComponent implements OnInit {
             this.notificationService.error("Validation", "Please check your entered values");
             return;
         }
+        this.enableUpdateButton = form.value.autoUpdateEnabled;
         this.settingsService.saveUpdateSettings(form.value)
             .subscribe(x => {
                 if (x) {

@@ -6,5 +6,8 @@
         public string Username { get; set; }
         public string Password { get; set; }
         public string ProcessName { get; set; }
+
+        public bool UseScript { get; set; }
+        public string ScriptLocation { get; set; }
     }
 }

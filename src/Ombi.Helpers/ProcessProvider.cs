@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.Extensions.Logging;
+using Ombi.Updater;
 
-namespace Ombi.Updater
+namespace Ombi.Helpers
 {
     public class ProcessProvider : IProcessProvider
     {
-        public ProcessProvider()
+        public ProcessProvider(ILogger<ProcessProvider> log)
         {
-            
+            _log = log;
         }
+
+        private readonly ILogger<ProcessProvider> _log;
 
         public int GetCurrentProcessId()
         {
@@ -32,17 +36,17 @@ namespace Ombi.Updater
         }
         public ProcessInfo GetProcessById(int id)
         {
-            Console.WriteLine("Finding process with Id:{0}", id);
+            _log.LogInformation("Finding process with Id:{0}", id);
 
             var processInfo = ConvertToProcessInfo(Process.GetProcesses().FirstOrDefault(p => p.Id == id));
 
             if (processInfo == null)
             {
-                Console.WriteLine("Unable to find process with ID {0}", id);
+                _log.LogInformation("Unable to find process with ID {0}", id);
             }
             else
             {
-                Console.WriteLine("Found process {0}", processInfo.ToString());
+                _log.LogInformation("Found process {0}", processInfo.ToString());
             }
 
             return processInfo;
@@ -56,7 +60,7 @@ namespace Ombi.Updater
 
         public void WaitForExit(Process process)
         {
-            Console.WriteLine("Waiting for process {0} to exit.", process.ProcessName);
+            _log.LogInformation("Waiting for process {0} to exit.", process.ProcessName);
 
             process.WaitForExit();
         }
@@ -65,7 +69,7 @@ namespace Ombi.Updater
         {
             var process = Process.GetProcessById(processId);
 
-            Console.WriteLine("Updating [{0}] process priority from {1} to {2}",
+            _log.LogInformation("Updating [{0}] process priority from {1} to {2}",
                         process.ProcessName,
                         process.PriorityClass,
                         priority);
@@ -79,7 +83,7 @@ namespace Ombi.Updater
 
             if (process == null)
             {
-                Console.WriteLine("Cannot find process with id: {0}", processId);
+                _log.LogInformation("Cannot find process with id: {0}", processId);
                 return;
             }
 
@@ -87,32 +91,32 @@ namespace Ombi.Updater
 
             if (process.Id != Process.GetCurrentProcess().Id && process.HasExited)
             {
-                Console.WriteLine("Process has already exited");
+                _log.LogInformation("Process has already exited");
                 return;
             }
 
-            Console.WriteLine("[{0}]: Killing process", process.Id);
+            _log.LogInformation("[{0}]: Killing process", process.Id);
             process.Kill();
-            Console.WriteLine("[{0}]: Waiting for exit", process.Id);
+            _log.LogInformation("[{0}]: Waiting for exit", process.Id);
             process.WaitForExit();
-            Console.WriteLine("[{0}]: Process terminated successfully", process.Id);
+            _log.LogInformation("[{0}]: Process terminated successfully", process.Id);
         }
 
         public void KillAll(string processName)
         {
             var processes = GetProcessesByName(processName);
 
-            Console.WriteLine("Found {0} processes to kill", processes.Count);
+            _log.LogInformation("Found {0} processes to kill", processes.Count);
 
             foreach (var processInfo in processes)
             {
                 if (processInfo.Id == Process.GetCurrentProcess().Id)
                 {
-                    Console.WriteLine("Tried killing own process, skipping: {0} [{1}]", processInfo.Id, processInfo.ProcessName);
+                    _log.LogInformation("Tried killing own process, skipping: {0} [{1}]", processInfo.Id, processInfo.ProcessName);
                     continue;
                 }
 
-                Console.WriteLine("Killing process: {0} [{1}]", processInfo.Id, processInfo.ProcessName);
+                _log.LogInformation("Killing process: {0} [{1}]", processInfo.Id, processInfo.ProcessName);
                 Kill(processInfo.Id);
             }
         }
@@ -144,11 +148,51 @@ namespace Ombi.Updater
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                _log.LogInformation(e.Message);
             }
 
             return processInfo;
 
+        }
+
+        public Process Start(string path, string args = null)
+        {
+            var startInfo = new ProcessStartInfo(path, args)
+            {
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
+                RedirectStandardInput = true
+            };
+            
+            _log.LogDebug("Starting {0} {1}", path, args);
+
+            var process = new Process
+            {
+                StartInfo = startInfo
+            };
+
+            process.OutputDataReceived += (sender, eventArgs) =>
+            {
+                if (string.IsNullOrWhiteSpace(eventArgs.Data)) return;
+
+                _log.LogDebug(eventArgs.Data);
+            };
+
+            process.ErrorDataReceived += (sender, eventArgs) =>
+            {
+                if (string.IsNullOrWhiteSpace(eventArgs.Data)) return;
+
+                _log.LogDebug(eventArgs.Data);
+            };
+
+            process.Start();
+
+            process.BeginErrorReadLine();
+            process.BeginOutputReadLine();
+
+            return process;
         }
 
         private static string GetExeFileName(Process process)
@@ -160,13 +204,13 @@ namespace Ombi.Updater
         {
             var processes = Process.GetProcessesByName(name).ToList();
 
-            Console.WriteLine("Found {0} processes with the name: {1}", processes.Count, name);
+            _log.LogInformation("Found {0} processes with the name: {1}", processes.Count, name);
 
             try
             {
                 foreach (var process in processes)
                 {
-                    Console.WriteLine(" - [{0}] {1}", process.Id, process.ProcessName);
+                    _log.LogInformation(" - [{0}] {1}", process.Id, process.ProcessName);
                 }
             }
             catch

@@ -19,6 +19,7 @@ using Ombi.Api.Service.Models;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
+using Ombi.Updater;
 using SharpCompress.Readers;
 using SharpCompress.Readers.Tar;
 
@@ -27,16 +28,18 @@ namespace Ombi.Schedule.Jobs.Ombi
     public class OmbiAutomaticUpdater : IOmbiAutomaticUpdater
     {
         public OmbiAutomaticUpdater(ILogger<OmbiAutomaticUpdater> log, IOmbiService service,
-            ISettingsService<UpdateSettings> s)
+            ISettingsService<UpdateSettings> s, IProcessProvider proc)
         {
             Logger = log;
             OmbiService = service;
             Settings = s;
+            _processProvider = proc;
         }
 
         private ILogger<OmbiAutomaticUpdater> Logger { get; }
         private IOmbiService OmbiService { get; }
         private ISettingsService<UpdateSettings> Settings { get; }
+        private readonly IProcessProvider _processProvider;
         private static PerformContext Ctx { get; set; }
 
         public string[] GetVersion()
@@ -126,6 +129,22 @@ namespace Ombi.Schedule.Jobs.Ombi
                     Ctx.WriteLine("Found the download! {0}", download.Name);
                     Ctx.WriteLine("URL {0}", download.Url);
 
+                    Ctx.WriteLine("Clearing out Temp Path");
+                    var tempPath = Path.Combine(currentLocation, "TempUpdate");
+                    if (Directory.Exists(tempPath))
+                    {
+                        Directory.Delete(tempPath, true);
+                    }
+
+                    // Temp Path
+                    Directory.CreateDirectory(tempPath);
+
+                    if (settings.UseScript)
+                    {
+                        RunScript(settings, download.Url);
+                        return;
+                    }
+
                     // Download it
                     Logger.LogInformation(LoggingEvents.Updater, "Downloading the file {0} from {1}", download.Name, download.Url);
                     var extension = download.Name.Split('.').Last();
@@ -149,12 +168,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         Logger.LogError(LoggingEvents.Updater, e, "Error when downloading the zip");
                         throw;
                     }
-                    Ctx.WriteLine("Clearing out Temp Path");
-                    var tempPath = Path.Combine(currentLocation, "TempUpdate");
-                    if (Directory.Exists(tempPath))
-                    {
-                        Directory.Delete(tempPath, true);
-                    }
+
                     // Extract it
                     Ctx.WriteLine("Extracting ZIP");
                     Extract(zipDir, tempPath);
@@ -199,14 +213,34 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
+        private void RunScript(UpdateSettings settings, string downloadUrl)
+        {
+            var scriptToRun = settings.ScriptLocation;
+            if (scriptToRun.IsNullOrEmpty())
+            {
+                Logger.LogError("Use Script is enabled but there is no script to run");
+                return;
+            }
+
+            if (!File.Exists(scriptToRun))
+            {
+                Logger.LogError("Cannot find the file {0}", scriptToRun);
+                return;
+            }
+
+            var ombiProcess = _processProvider.FindProcessByName(settings.ProcessName).FirstOrDefault();
+            var currentInstallLocation = Assembly.GetEntryAssembly().Location;
+            _processProvider.Start(scriptToRun, string.Join(" ", downloadUrl, ombiProcess.Id, currentInstallLocation));
+
+            Logger.LogInformation("Script started");
+        }
+
         private void Extract(string zipDir, string tempPath)
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 using (var files = ZipFile.OpenRead(zipDir))
                 {
-                    // Temp Path
-                    Directory.CreateDirectory(tempPath);
                     foreach (var entry in files.Entries)
                     {
                         if (entry.FullName.Contains("/"))

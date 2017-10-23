@@ -57,7 +57,8 @@ namespace Ombi.Updater
 
             //// Add services
             serviceCollection.AddTransient<IInstaller, Installer>();
-    }
+            serviceCollection.AddTransient<IProcessProvider, ProcessProvider>();
+        }
 
         private static StartupOptions CheckArgs(string[] args)
         {

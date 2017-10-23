@@ -20,6 +20,8 @@ export interface IUpdateSettings extends ISettings {
     username: string;
     password: string;
     processName: string;
+    useScript: boolean;
+    scriptLocation: string;
 }
 
 export interface IEmbySettings extends ISettings {
