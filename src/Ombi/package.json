@@ -5,10 +5,11 @@
   "scripts": {
     "vendor": "gulp vendor",
     "publish": "gulp publish",
-    "lint": "tslint ClientApp/**/*.ts"
+    "lint": "tslint ClientApp/**/*.ts",
+    "restore": "dotnet restore && npm install"
   },
   "dependencies": {
-    "@angular/animations": "4.4.1",
+    "@angular/animations": "^4.4.6",
     "@angular/cdk": "^2.0.0-beta.12",
     "@angular/common": "^4.4.6",
     "@angular/compiler": "^4.4.6",
@@ -22,8 +23,10 @@
     "@angular/router": "^4.4.6",
     "@ng-bootstrap/ng-bootstrap": "^1.0.0-beta.5",
     "@types/core-js": "^0.9.43",
+    "@types/extract-text-webpack-plugin": "^3.0.0",
     "@types/intro.js": "^2.4.3",
     "@types/node": "^8.0.46",
+    "@types/webpack": "^3.0.13",
     "angular2-jwt": "^0.2.3",
     "angular2-moment": "^1.7.0",
     "angular2-template-loader": "^0.6.2",
@@ -35,10 +38,10 @@
     "css": "^2.2.1",
     "css-loader": "^0.28.7",
     "del": "^3.0.0",
-    "event-source-polyfill": "^0.0.9",
+    "event-source-polyfill": "^0.0.11",
     "expose-loader": "^0.7.3",
     "extract-text-webpack-plugin": "^3.0.1",
-    "file-loader": "^0.11.2",
+    "file-loader": "^1.1.5",
     "font-awesome": "^4.7.0",
     "gulp": "^3.9.1",
     "gulp-run": "^1.7.1",
@@ -49,7 +52,7 @@
     "ng2-cookies": "^1.0.12",
     "ng2-dragula": "1.5.0",
     "ngx-clipboard": "^8.1.1",
-    "ngx-infinite-scroll": "^0.5.2",
+    "ngx-infinite-scroll": "^0.6.1",
     "node-sass": "^4.5.3",
     "npm": "^5.5.1",
     "pace-progress": "^1.0.2",
@@ -58,14 +61,15 @@
     "run-sequence": "^2.2.0",
     "rxjs": "^5.5.0",
     "sass-loader": "^6.0.6",
-    "style-loader": "^0.18.2",
+    "style-loader": "^0.19.0",
     "to-string-loader": "^1.1.5",
+    "ts-node": "^3.3.0",
     "tslint": "^5.8.0",
     "tslint-language-service": "^0.9.6",
     "typescript": "^2.5.3",
     "uglify-es": "^3.1.5",
     "uglifyjs-webpack-plugin": "^1.0.1",
-    "url-loader": "^0.5.9",
+    "url-loader": "^0.6.2",
     "webpack": "^3.8.1",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-hot-middleware": "^2.20.0",
@@ -81,6 +85,6 @@
     "karma-chrome-launcher": "2.2.0",
     "karma-cli": "1.0.1",
     "karma-jasmine": "1.1.0",
-    "karma-webpack": "2.0.4"
+    "karma-webpack": "2.0.5"
   }
 }
