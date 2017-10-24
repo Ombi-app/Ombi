@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
-import { MdButtonModule, MdCardModule, MdInputModule, MdTabsModule } from "@angular/material";
+import { MatButtonModule, MatCardModule, MatInputModule, MatTabsModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule, Routes } from "@angular/router";
@@ -69,12 +69,12 @@ const routes: Routes = [
         WizardModule,
         SearchModule,
         DialogModule,
-        MdButtonModule,
+        MatButtonModule,
         NgbModule.forRoot(),
         //DragulaModule,
-        MdCardModule,
-        MdInputModule,
-        MdTabsModule,
+        MatCardModule,
+        MatInputModule,
+        MatTabsModule,
         ReactiveFormsModule,
         UserManagementModule,
         RequestsModule,
