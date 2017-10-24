@@ -348,7 +348,7 @@ namespace Ombi.Core.Engine
             {
                 foreach (var requests in value.SeasonRequests)
                 {
-                    requests.Episodes.OrderBy(x => x.EpisodeNumber);
+                    requests.Episodes = requests.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
                 }
             }
             return items;
