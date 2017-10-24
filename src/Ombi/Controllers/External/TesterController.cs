@@ -45,7 +45,8 @@ namespace Ombi.Controllers.External
         /// <param name="po">The pushover.</param>
         /// <param name="mm">The mattermost.</param>
         /// <param name="log">The logger.</param>
-        /// <param name="provider"></param>
+        /// <param name="provider">The email provider</param>
+        /// <param name="cpApi">The couch potato API</param>
         public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN,
             IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
             IPlexApi plex, IEmbyApi emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider,

@@ -21,6 +21,10 @@
     <NoWarn>1701;1702;1705;1591;</NoWarn>
     <DefineConstants>TRACE;RELEASE;NETCOREAPP2_0</DefineConstants>
   </PropertyGroup>
+
+  <Target Name="NpmCommandsDebug" Condition="'$(Configuration)'=='Debug'" AfterTargets="Build">
+    <Exec Command="npm run-script vendor" />
+  </Target>
   
   <ItemGroup>
     <!-- Files not to show in IDE -->
