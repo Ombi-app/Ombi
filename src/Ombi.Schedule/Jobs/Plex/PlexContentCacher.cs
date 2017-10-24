@@ -94,6 +94,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
                 Logger.LogInformation("Getting all content from server {0}", servers.Name);
                 var allContent = GetAllContent(servers);
+                Logger.LogInformation("We found {0} items", allContent.Count);
 
                 // Let's now process this.
                 var contentToAdd = new List<PlexContent>();
@@ -103,7 +104,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     {
                         // Process Shows
                         Logger.LogInformation("Processing TV Shows");
-                        foreach (var show in content.Metadata)
+                        foreach (var show in content.Metadata ?? new Metadata[]{})
                         {
                             var seasonList = await PlexApi.GetSeasons(servers.PlexAuthToken, servers.FullUri,
                                 show.ratingKey);
