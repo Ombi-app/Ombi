@@ -1,8 +1,10 @@
 ﻿@using Ombi.Core.Settings
 @using Ombi.Settings.Settings.Models
 @inject ISettingsService<OmbiSettings> Settings
+@inject ISettingsService<CustomizationSettings> CustomizationSettings
 @{
     var s = await Settings.GetSettingsAsync();
+    var customization = await CustomizationSettings.GetSettingsAsync();
     var baseUrl = s?.BaseUrl ?? string.Empty;
 
     if (!baseUrl.EndsWith("/"))
@@ -13,13 +15,19 @@
     {
         baseUrl = baseUrl.TrimStart('/');
     }
+
+    var appName = customization.ApplicationName;
+    if(string.IsNullOrEmpty(appName))
+    {
+        appName = "Ombi";
+    }
 }
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ombi</title>
+    <title>@appName</title>
     <base href="/@baseUrl"/>
     <link rel="SHORTCUT ICON" href="~/images/favicon/favicon.ico" />
     <link rel="icon" href="~/images/favicon/favicon.ico" type="image/ico" />
