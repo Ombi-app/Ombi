@@ -1,9 +1,17 @@
+import * as Pace from "pace-progress";
+
+Pace.start();
+
 import "bootstrap/dist/js/bootstrap";
-import "pace-progress";
-import "./imports";
-import "./polyfills";
+
 import "./styles/base.scss";
 import "./styles/Themes/plex.scss";
+
+import "./polyfills";
+
+import "hammerjs";
+
+import "./imports";
 
 import { enableProdMode } from "@angular/core";
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";

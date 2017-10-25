@@ -32,7 +32,6 @@ module.exports = (env: any) => {
                 "primeng/resources/primeng.min.css",
                 "@angular/material/prebuilt-themes/deeppurple-amber.css",
                 "font-awesome/scss/font-awesome.scss",
-                "intro.js-mit/introjs.css",
                 "bootswatch/superhero/bootstrap.min.css",
 
                 "@angular/animations",
@@ -62,7 +61,6 @@ module.exports = (env: any) => {
                 "hammerjs",
                 "event-source-polyfill",
                 "bootstrap/dist/js/bootstrap",
-                "intro.js-mit/intro.js",
                 "ngx-clipboard",
                 "angular2-jwt",
                 "ng2-cookies",
