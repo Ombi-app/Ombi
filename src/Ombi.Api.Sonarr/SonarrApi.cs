@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -198,6 +199,28 @@ namespace Ombi.Api.Sonarr
             request.AddHeader("X-Api-Key", apiKey);
 
             return await Api.Request<SystemStatus>(request);
+        }
+
+        public async Task<bool> SeasonPass(string apiKey, string baseUrl, SonarrSeries series)
+        {
+            var seasonPass = new SeasonPass
+            {
+                series = new []
+                {
+                    series
+                },
+                monitoringOptions = new Monitoringoptions
+                {
+                    ignoreEpisodesWithFiles = false,
+                    ignoreEpisodesWithoutFiles = false,
+                }
+            };
+            var request = new Request("/api/seasonpass", baseUrl, HttpMethod.Post);
+            request.AddHeader("X-Api-Key", apiKey);
+            request.AddJsonBody(seasonPass);
+
+            var content = await Api.RequestContent(request);
+            return content.Equals("ok", StringComparison.CurrentCultureIgnoreCase);
         }
     }
 }

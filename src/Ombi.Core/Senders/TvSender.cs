@@ -230,7 +230,7 @@ namespace Ombi.Core.Senders
             }
             if (seriesChanges)
             {
-                await SonarrApi.UpdateSeries(result, s.ApiKey, s.FullUri);
+                await SonarrApi.SeasonPass(s.ApiKey, s.FullUri, result);
             }
 
 
