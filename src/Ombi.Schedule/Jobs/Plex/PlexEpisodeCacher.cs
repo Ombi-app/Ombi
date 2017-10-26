@@ -120,6 +120,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private async Task ProcessEpsiodes(PlexContainer episodes, IQueryable<PlexEpisode> currentEpisodes)
         {
             var ep = new HashSet<PlexEpisode>();
+
             foreach (var episode in episodes?.MediaContainer?.Metadata ?? new Metadata[]{})
             {
                 // I don't think we need to get the metadata, we only need to get the metadata if we need the provider id (TheTvDbid). Why do we need it for episodes?
