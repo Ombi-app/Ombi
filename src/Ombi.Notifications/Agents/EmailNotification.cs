@@ -95,7 +95,7 @@ namespace Ombi.Notifications.Agents
             {
                 user = MovieRequest.RequestedUser.UserAlias;
                 title = MovieRequest.Title;
-                img = MovieRequest.PosterPath;
+                img = $"https://image.tmdb.org/t/p/w300/{MovieRequest.PosterPath}";
             }
             else
             {

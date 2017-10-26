@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using EnsureThat;
 using MailKit.Net.Smtp;
+using Microsoft.Extensions.Logging;
 using MimeKit;
 using Ombi.Core.Settings;
 using Ombi.Notifications.Models;
@@ -12,11 +14,13 @@ namespace Ombi.Notifications
 {
     public class GenericEmailProvider : IEmailProvider
     {
-        public GenericEmailProvider(ISettingsService<CustomizationSettings> s)
+        public GenericEmailProvider(ISettingsService<CustomizationSettings> s, ILogger<GenericEmailProvider> log)
         {
             CustomizationSettings = s;
+            _log = log;
         }
         private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
+        private readonly ILogger<GenericEmailProvider> _log;
 
         /// <summary>
         /// This will load up the Email template and generate the HTML
@@ -95,6 +99,11 @@ namespace Ombi.Notifications
         {
             try
             {
+                EnsureArg.IsNotNullOrEmpty(settings.SenderAddress);
+                EnsureArg.IsNotNullOrEmpty(model.To);
+                EnsureArg.IsNotNullOrEmpty(model.Message);
+                EnsureArg.IsNotNullOrEmpty(settings.Host);
+
                 var body = new BodyBuilder
                 {
                     HtmlBody = model.Message,
@@ -141,8 +150,8 @@ namespace Ombi.Notifications
             }
             catch (Exception e)
             {
-                //Log.Error(e);
-                throw new InvalidOperationException(e.Message);
+                _log.LogError(e, "Exception when attempting to send email");
+                throw;
             }
         }
     }

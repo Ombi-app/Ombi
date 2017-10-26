@@ -144,7 +144,11 @@ namespace Ombi.Core.Engine
         public async Task<IEnumerable<MovieRequests>> SearchMovieRequest(string search)
         {
             var allRequests = await MovieRepository.GetWithUser().ToListAsync();
-            var results = allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase));
+            var results = allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToList();
+            results.ForEach(x =>
+            {
+                x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
+            });
             return results;
         }
         
@@ -175,11 +179,6 @@ namespace Ombi.Core.Engine
             };
         }
 
-        /// <summary>
-        /// This is the method that is triggered by pressing Approve on the requests page
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
         public async Task<RequestEngineResult> ApproveMovie(MovieRequests request)
         {
             if (request == null)
@@ -242,7 +241,7 @@ namespace Ombi.Core.Engine
             results.IssueId = request.IssueId;
             results.Issues = request.Issues;
             results.Overview = request.Overview;
-            results.PosterPath = request.PosterPath;
+            results.PosterPath = PosterPathHelper.FixPosterPath(request.PosterPath);
             results.QualityOverride = request.QualityOverride;
             results.RootPathOverride = request.RootPathOverride;
 

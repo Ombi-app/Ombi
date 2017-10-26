@@ -21,7 +21,8 @@ namespace Ombi.Notifications
             Type = req.RequestType.ToString();
             Overview = req.Overview;
             Year = req.ReleaseDate.Year.ToString();
-            PosterImage = req.PosterPath;
+            PosterImage = req.RequestType == RequestType.Movie ?
+                $"https://image.tmdb.org/t/p/w300/{req.PosterPath}" : req.PosterPath;
         }
 
         public void Setup(ChildRequests req, CustomizationSettings s)
@@ -36,7 +37,8 @@ namespace Ombi.Notifications
             Type = req.RequestType.ToString();
             Overview = req.ParentRequest.Overview;
             Year = req.ParentRequest.ReleaseDate.Year.ToString();
-            PosterImage = req.ParentRequest.PosterPath;
+            PosterImage = req.RequestType == RequestType.Movie ?
+                $"https://image.tmdb.org/t/p/w300/{req.ParentRequest.PosterPath}" : req.ParentRequest.PosterPath;
             // DO Episode and Season Lists
         }
 
