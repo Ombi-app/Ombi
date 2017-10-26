@@ -22,7 +22,7 @@ namespace Ombi.Notifications
             Overview = req.Overview;
             Year = req.ReleaseDate.Year.ToString();
             PosterImage = req.RequestType == RequestType.Movie ?
-                $"https://image.tmdb.org/t/p/w300/{req.PosterPath}" : req.PosterPath;
+                $"https://image.tmdb.org/t/p/w300{req.PosterPath}" : req.PosterPath;
         }
 
         public void Setup(ChildRequests req, CustomizationSettings s)
