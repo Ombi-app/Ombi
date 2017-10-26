@@ -197,11 +197,12 @@ export class TvSearchComponent implements OnInit, OnDestroy {
     private updateItem(key: TreeNode, updated: TreeNode) {
         const index = this.tvResults.indexOf(key, 0);
         if (index > -1) {
-            // Update certian properties, otherwise we will loose some data
+            // Update certain properties, otherwise we will loose some data
             this.tvResults[index].data.banner = updated.data.banner;
             this.tvResults[index].data.imdbId = updated.data.imdbId;
             this.tvResults[index].data.seasonRequests = updated.data.seasonRequests;
             this.tvResults[index].data.seriesId = updated.data.seriesId;
+            this.tvResults[index].data.fullyAvailable = updated.data.fullyAvailable;
         }
     }
 

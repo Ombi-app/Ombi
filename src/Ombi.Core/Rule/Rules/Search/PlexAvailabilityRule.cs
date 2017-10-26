@@ -46,6 +46,11 @@ namespace Ombi.Core.Rule.Rules.Search
                                 }
                             }
                         }
+
+                        if (search.SeasonRequests.All(x => x.Episodes.All(e => e.Available)))
+                        {
+                            search.FullyAvailable = true;
+                        }
                     }
                 }
             }
