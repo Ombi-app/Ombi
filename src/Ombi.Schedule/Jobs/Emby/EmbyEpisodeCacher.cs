@@ -89,6 +89,15 @@ namespace Ombi.Schedule.Jobs.Emby
                     continue;
                 }
 
+                // Let's make sure we have the parent request, stop those pesky forign key errors,
+                // Damn me having data integrity
+                var parent = await _repo.GetByEmbyId(epInfo.SeriesId);
+                if (parent == null)
+                {
+                    _logger.LogInformation("The episode {0} does not relate to a series, so we cannot save this", ep.Name);
+                    continue;
+                }
+
                 var existingEpisode = await _repo.GetByEmbyId(ep.Id);
                 if (existingEpisode == null)
                 {
