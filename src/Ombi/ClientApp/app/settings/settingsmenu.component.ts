@@ -3,4 +3,8 @@
     selector: "settings-menu",
     templateUrl: "./settingsmenu.component.html",
 })
-export class SettingsMenuComponent { }
+export class SettingsMenuComponent {
+    public ignore(event: any): void {
+        event.preventDefault();
+    }
+ }
