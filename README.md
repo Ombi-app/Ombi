@@ -122,3 +122,4 @@ If you feel like donating you can donate with the below buttons!
 ### Sponsors ###
 - [JetBrains](http://www.jetbrains.com/) for providing us with free licenses to their great tools
     - [ReSharper](http://www.jetbrains.com/resharper/)
+- [BrowserStack](https://www.browserstack.com) for allowing us to use their platform for testing
