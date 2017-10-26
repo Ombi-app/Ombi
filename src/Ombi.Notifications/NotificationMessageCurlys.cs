@@ -38,7 +38,7 @@ namespace Ombi.Notifications
             Overview = req.ParentRequest.Overview;
             Year = req.ParentRequest.ReleaseDate.Year.ToString();
             PosterImage = req.RequestType == RequestType.Movie ?
-                $"https://image.tmdb.org/t/p/w300/{req.ParentRequest.PosterPath}" : req.ParentRequest.PosterPath;
+                $"https://image.tmdb.org/t/p/w300{req.ParentRequest.PosterPath}" : req.ParentRequest.PosterPath;
             // DO Episode and Season Lists
         }
 
