@@ -26,29 +26,29 @@
     "PartiallyOnlineParagraph": "Medieserveren er delvist online.",
     "MultipleServersUnavailable": "Der er {{serversUnavailable}} servere offline ud af {{totalServers}}.",
     "SingleServerUnavailable": "Der er {{serversUnavailable}} server offline ud af {{totalServers}}.",
-    "OfflineHeading": "I øjeblikket Offline",
-    "OfflineParagraph": "Media server er i øjeblikket offline.",
+    "OfflineHeading": "Offline nu",
+    "OfflineParagraph": "Medieserveren er offline.",
     "CheckPageForUpdates": "Tjek denne side for løbende opdateringer."
   },
   "NavigationBar": {
     "Search": "Søg",
     "Requests": "Anmodninger",
     "UserManagement": "Brugeradministration",
-    "Donate": "Donere!",
-    "DonateTooltip": "Dette er hvordan jeg overbevise min kone til at lade mig bruge min ekstra tid på at udvikle Ombi ;)",
-    "UpdateAvailableTooltip": "Opdatering tilgængelig!",
+    "Donate": "Donér!",
+    "DonateTooltip": "Sådan overbeviser jeg min kone om, at jeg skal bruge min fritid på at udvikle Ombi :)",
+    "UpdateAvailableTooltip": "Ny opdatering venter!",
     "Settings": "Indstillinger",
     "Welcome": "Velkommen til {{username}}",
-    "UpdateDetails": "Opdatere oplysninger",
-    "Logout": "Logout",
+    "UpdateDetails": "Opdater loginoplysninger",
+    "Logout": "Log af",
     "Language": {
-      "English": "engelsk",
-      "French": "fransk",
-      "Spanish": "spansk",
-      "German": "tysk",
-      "Italian": "italiensk",
-      "Danish": "dansk",
-      "Dutch": "nederlandsk"
+      "English": "Engelsk",
+      "French": "Fransk",
+      "Spanish": "Spansk",
+      "German": "Tysk",
+      "Italian": "Italiensk",
+      "Danish": "Dansk",
+      "Dutch": "Hollandsk"
     }
   }
 }
