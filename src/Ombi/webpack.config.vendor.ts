@@ -64,6 +64,8 @@ module.exports = (env: any) => {
                 "ngx-clipboard",
                 "angular2-jwt",
                 "ng2-cookies",
+                "@ngx-translate/core",
+                "@ngx-translate/http-loader",
             ],
         },
         output: {

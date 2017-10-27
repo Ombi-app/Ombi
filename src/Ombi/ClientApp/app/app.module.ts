@@ -1,3 +1,4 @@
+import { HttpClient, HttpClientModule} from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
@@ -9,6 +10,8 @@ import { RouterModule, Routes } from "@angular/router";
 // Third Party
 //import { DragulaModule, DragulaService } from 'ng2-dragula/ng2-dragula';
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { GrowlModule } from "primeng/components/growl/growl";
 import { ButtonModule, CaptchaModule,ConfirmationService, ConfirmDialogModule, DataTableModule,DialogModule, SharedModule, TooltipModule } from "primeng/primeng";
 
@@ -39,7 +42,6 @@ import { SearchModule } from "./search/search.module";
 import { SettingsModule } from "./settings/settings.module";
 import { UserManagementModule } from "./usermanagement/usermanagement.module";
 import { WizardModule } from "./wizard/wizard.module";
-//import { PipeModule } from './pipes/pipe.module';
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
@@ -53,10 +55,16 @@ const routes: Routes = [
     { path: "landingpage", component: LandingPageComponent },
 ];
 
+// AoT requires an exported function for factories
+export function HttpLoaderFactory(http: HttpClient) {
+    return new TranslateHttpLoader(http, "/translations/", ".json");
+}
+
 @NgModule({
     imports: [
         RouterModule.forRoot(routes),
         BrowserModule,
+        HttpClientModule,
         BrowserAnimationsModule,
         HttpModule,
         GrowlModule,
@@ -71,7 +79,6 @@ const routes: Routes = [
         DialogModule,
         MatButtonModule,
         NgbModule.forRoot(),
-        //DragulaModule,
         MatCardModule,
         MatInputModule,
         MatTabsModule,
@@ -80,7 +87,14 @@ const routes: Routes = [
         RequestsModule,
         CaptchaModule,
         TooltipModule,
-        ConfirmDialogModule,
+        ConfirmDialogModule,        
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient],
+            },
+        }),
     ],
     declarations: [
         AppComponent,
@@ -100,8 +114,7 @@ const routes: Routes = [
         StatusService,
         LandingPageService,
         ConfirmationService,
-ImageService,
-    //DragulaService
+        ImageService,
     ],
     bootstrap: [AppComponent],
 })

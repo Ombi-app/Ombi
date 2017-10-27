@@ -15,20 +15,20 @@ include the remember me checkbox
             <form class="form-signin" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
                 
                
-                <input type="email" id="inputEmail" class="form-control" formControlName="username" placeholder="Username" autofocus>
-                <input type="password" id="inputPassword" class="form-control" formControlName="password" placeholder="Password">
+                <input type="email" id="inputEmail" class="form-control" formControlName="username" [attr.placeholder]="'Login.UsernamePlaceholder' | translate" autofocus>
+                <input type="password" id="inputPassword" class="form-control" formControlName="password" [attr.placeholder]="'Login.PasswordPlaceholder' | translate">
                 <div class="form-group">
                     <div class="checkbox">
                         <input type="checkbox" id="RememberMe" formControlName="rememberMe" >
                         
-                        <label for="RememberMe"> Remember Me</label>
+                        <label for="RememberMe" [translate]="'Login.RememberMe'"></label>
                     
                     </div>
                 </div>
-                <button class="btn btn-success" type="submit">Sign in</button>
+                <button class="btn btn-success" type="submit" [translate]="'Login.SignInButton'"></button>
             </form><!-- /form -->
             <a [routerLink]="['/reset']" class="forgot-password col-md-12">
-                <b>Forgot your password?</b>
+                <b [translate]="'Login.ForgottenPassword'"></b>
             </a>
         </div><!-- /card-container -->
     </div><!-- /container -->

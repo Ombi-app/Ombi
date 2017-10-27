@@ -1,0 +1,9 @@
+{
+    "Login": {
+        "SignInButton": "Sign in",
+        "UsernamePlaceholder":"Username",
+        "PasswordPlaceholder":"Password",
+        "RememberMe":"Remember Me",
+        "ForgottenPassword":"Forgot your password?"
+    }
+}

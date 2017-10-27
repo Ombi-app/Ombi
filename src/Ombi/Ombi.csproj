@@ -88,6 +88,7 @@
 
   <ItemGroup>
     <None Include="wwwroot\loading.css" />
+    <None Include="wwwroot\translations\*.json" />
   </ItemGroup>
  
 </Project>
