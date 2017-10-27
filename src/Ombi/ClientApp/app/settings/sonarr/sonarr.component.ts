@@ -87,7 +87,7 @@ export class SonarrComponent implements OnInit, OnDestroy {
 
     public test(form: FormGroup) {
         if (form.invalid) {
-            this.notificationService.error("Validation", "Please check your entered values");
+            this.notificationService.error("Please check your entered values");
             return;
         }
         const settings = <ISonarrSettings>form.value;
@@ -95,14 +95,14 @@ export class SonarrComponent implements OnInit, OnDestroy {
             if (x) {
                 this.notificationService.success("Connected", "Successfully connected to Sonarr!");
             } else {
-                this.notificationService.error("Connected", "We could not connect to Sonarr!");
+                this.notificationService.error("We could not connect to Sonarr!");
             }
         });
     }
 
     public onSubmit(form: FormGroup) {
         if (form.invalid) {
-            this.notificationService.error("Validation", "Please check your entered values");
+            this.notificationService.error("Please check your entered values");
             return;
         }
         this.settingsService.saveSonarr(form.value)
@@ -111,7 +111,7 @@ export class SonarrComponent implements OnInit, OnDestroy {
                 if (x) {
                     this.notificationService.success("Settings Saved", "Successfully saved Sonarr settings");
                 } else {
-                    this.notificationService.error("Settings Saved", "There was an error when saving the Sonarr settings");
+                    this.notificationService.error("There was an error when saving the Sonarr settings");
                 }
             });
     }

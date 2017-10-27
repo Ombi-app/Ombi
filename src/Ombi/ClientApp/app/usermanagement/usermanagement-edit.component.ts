@@ -42,7 +42,7 @@ export class UserManagementEditComponent {
                         this.router.navigate(["usermanagement"]);
                     } else {
                         x.errors.forEach((val) => {
-                            this.notificationService.error("Error", val);
+                            this.notificationService.error(val);
                         });
                     }
         
@@ -61,7 +61,7 @@ export class UserManagementEditComponent {
                 this.router.navigate(["usermanagement"]);
             } else {
                 x.errors.forEach((val) => {
-                    this.notificationService.error("Error", val);
+                    this.notificationService.error(val);
                 });
             }
 
@@ -76,7 +76,7 @@ export class UserManagementEditComponent {
         });
 
         if (!hasClaims) {
-            this.notificationService.error("Error", "Please assign a role");
+            this.notificationService.error("Please assign a role");
             return;
         }
 
@@ -86,7 +86,7 @@ export class UserManagementEditComponent {
                 this.router.navigate(["usermanagement"]);
             } else {
                 x.errors.forEach((val) => {
-                    this.notificationService.error("Error", val);
+                    this.notificationService.error(val);
                 });
             }
         });

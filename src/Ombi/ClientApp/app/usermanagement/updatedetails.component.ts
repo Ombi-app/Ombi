@@ -33,13 +33,13 @@ export class UpdateDetailsComponent implements OnInit {
 
     public onSubmit(form: FormGroup) {
     if (form.invalid) {
-            this.notificationService.error("Validation", "Please check your entered values");
+            this.notificationService.error("Please check your entered values");
             return;
         }
 
     if (form.controls.password.dirty) {
             if (form.value.password !== form.value.confirmNewPassword) {
-                this.notificationService.error("Error", "Passwords do not match");
+                this.notificationService.error("Passwords do not match");
                 return;
             }
         }
@@ -49,7 +49,7 @@ export class UpdateDetailsComponent implements OnInit {
                 this.notificationService.success("Updated", `All of your details have now been updated`);
             } else {
                 x.errors.forEach((val) => {
-                    this.notificationService.error("Error", val);
+                    this.notificationService.error(val);
                 });
             }
         });

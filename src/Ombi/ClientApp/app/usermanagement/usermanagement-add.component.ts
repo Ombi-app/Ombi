@@ -37,7 +37,7 @@ export class UserManagementAddComponent implements OnInit {
 
         if (this.user.password) {
             if (this.user.password !== this.confirmPass) {
-                this.notificationSerivce.error("Error", "Passwords do not match");
+                this.notificationSerivce.error("Passwords do not match");
                 return;
             }
         }
@@ -48,7 +48,7 @@ export class UserManagementAddComponent implements OnInit {
         });
 
         if (!hasClaims) {
-            this.notificationSerivce.error("Error", "Please assign a role");
+            this.notificationSerivce.error("Please assign a role");
             return;
         }
 
@@ -58,7 +58,7 @@ export class UserManagementAddComponent implements OnInit {
                 this.router.navigate(["usermanagement"]);
             } else {
                 x.errors.forEach((val) => {
-                    this.notificationSerivce.error("Error", val);
+                    this.notificationSerivce.error(val);
                 });
             }
         });

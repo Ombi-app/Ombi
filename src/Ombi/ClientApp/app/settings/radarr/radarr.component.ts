@@ -88,7 +88,7 @@ export class RadarrComponent implements OnInit {
 
     public test(form: FormGroup) {
         if (form.invalid) {
-            this.notificationService.error("Validation", "Please check your entered values");
+            this.notificationService.error("Please check your entered values");
             return;
         }
         const settings = <IRadarrSettings>form.value;
@@ -96,14 +96,14 @@ export class RadarrComponent implements OnInit {
             if (x === true) {
                 this.notificationService.success("Connected", "Successfully connected to Radarr!");
             } else {
-                this.notificationService.error("Connected", "We could not connect to Radarr!");
+                this.notificationService.error("We could not connect to Radarr!");
             }
         });
     }
 
 public onSubmit(form: FormGroup) {
         if (form.invalid) {
-            this.notificationService.error("Validation", "Please check your entered values");
+            this.notificationService.error("Please check your entered values");
             return;
         }
 

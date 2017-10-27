@@ -51,7 +51,7 @@ export class CouchPotatoComponent implements OnInit {
 
     public onSubmit(form: FormGroup) {
         if (form.invalid) {
-            this.notificationService.error("Validation", "Please check your entered values");
+            this.notificationService.error("Please check your entered values");
             return;
         }
 
@@ -68,7 +68,7 @@ export class CouchPotatoComponent implements OnInit {
 
     public test(form: FormGroup) {
         if (form.invalid) {
-            this.notificationService.error("Validation", "Please check your entered values");
+            this.notificationService.error("Please check your entered values");
             return;
         }
         const settings = form.value;
@@ -76,7 +76,7 @@ export class CouchPotatoComponent implements OnInit {
             if (x === true) {
                 this.notificationService.success("Connected", "Successfully connected to CouchPotato!");
             } else {
-                this.notificationService.error("Connected", "We could not connect to CouchPotato!");
+                this.notificationService.error("We could not connect to CouchPotato!");
             }
         });
     }
@@ -87,7 +87,7 @@ export class CouchPotatoComponent implements OnInit {
                 (<FormControl>this.form.controls.apiKey).setValue(x.api_key);
                 this.notificationService.success("Api Key", "Successfully got the Api Key");
             } else {
-                this.notificationService.error("Api Key", "Could not get the Api Key");
+                this.notificationService.error("Could not get the Api Key");
             }
         });
     }

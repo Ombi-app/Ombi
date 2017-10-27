@@ -90,7 +90,7 @@ export class MovieSearchComponent implements OnInit {
 
             searchResult.processed = false;
             searchResult.requestProcessing = false;
-            this.notificationService.error("Something went wrong", e);
+            this.notificationService.error(e);
         }
     }
 

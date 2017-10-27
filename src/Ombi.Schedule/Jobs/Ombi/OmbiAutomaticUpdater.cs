@@ -19,6 +19,8 @@ using Ombi.Api.Service.Models;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
+using Ombi.Store.Entities;
+using Ombi.Store.Repository;
 using Ombi.Updater;
 using SharpCompress.Readers;
 using SharpCompress.Readers.Tar;
@@ -28,12 +30,13 @@ namespace Ombi.Schedule.Jobs.Ombi
     public class OmbiAutomaticUpdater : IOmbiAutomaticUpdater
     {
         public OmbiAutomaticUpdater(ILogger<OmbiAutomaticUpdater> log, IOmbiService service,
-            ISettingsService<UpdateSettings> s, IProcessProvider proc)
+            ISettingsService<UpdateSettings> s, IProcessProvider proc, IRepository<ApplicationConfiguration> appConfig)
         {
             Logger = log;
             OmbiService = service;
             Settings = s;
             _processProvider = proc;
+            _appConfig = appConfig;
         }
 
         private ILogger<OmbiAutomaticUpdater> Logger { get; }
@@ -41,6 +44,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private ISettingsService<UpdateSettings> Settings { get; }
         private readonly IProcessProvider _processProvider;
         private static PerformContext Ctx { get; set; }
+        private readonly IRepository<ApplicationConfiguration> _appConfig;
 
         public string[] GetVersion()
         {
@@ -182,13 +186,15 @@ namespace Ombi.Schedule.Jobs.Ombi
                     }
                     var updaterFile = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
                         "TempUpdate", $"Ombi.Updater{updaterExtension}");
+
+
                     // There must be an update
                     var start = new ProcessStartInfo
                     {
                         UseShellExecute = false,
                         CreateNoWindow = true,
                         FileName = updaterFile,
-                        Arguments = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + " " + (settings.ProcessName.HasValue() ? settings.ProcessName : "Ombi"),
+                        Arguments = GetArgs(settings),
                         WorkingDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "TempUpdate"),
                     };
                     if (settings.Username.HasValue())
@@ -213,6 +219,18 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
+        private string GetArgs(UpdateSettings settings)
+        {
+            var config = _appConfig.GetAll();
+            var url = config.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
+            var storage = config.FirstOrDefault(x => x.Type == ConfigurationTypes.StoragePath);
+
+            var currentLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            var processName = (settings.ProcessName.HasValue() ? settings.ProcessName : "Ombi");
+
+            return string.Join(" ", currentLocation, processName, url, storage);
+        }
+
         private void RunScript(UpdateSettings settings, string downloadUrl)
         {
             var scriptToRun = settings.ScriptLocation;
@@ -230,7 +248,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             var ombiProcess = _processProvider.FindProcessByName(settings.ProcessName).FirstOrDefault();
             var currentInstallLocation = Assembly.GetEntryAssembly().Location;
-            _processProvider.Start(scriptToRun, string.Join(" ", downloadUrl, ombiProcess.Id, currentInstallLocation));
+            _processProvider.Start(scriptToRun, downloadUrl + " " + ombiProcess.Id + " " + GetArgs(settings));
 
             Logger.LogInformation("Script started");
         }

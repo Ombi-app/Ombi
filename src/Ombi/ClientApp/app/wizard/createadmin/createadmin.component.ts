@@ -38,8 +38,7 @@ export class CreateAdminComponent {
 
                 });
             } else {
-                this.notificationService.error("Error in creating user",
-                    "There was an error... You might want to put this on Github...");
+                this.notificationService.error("There was an error... You might want to put this on Github...");
             }
         });
     }

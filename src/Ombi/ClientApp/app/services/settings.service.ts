@@ -124,6 +124,9 @@ export class SettingsService extends ServiceAuthHelpers {
     public getEmailNotificationSettings(): Observable<IEmailNotificationSettings> {
         return this.httpAuth.get(`${this.url}/notifications/email`).map(this.extractData).catch(this.handleError);
     }
+    public getEmailSettingsEnabled(): Observable<boolean> {
+        return this.nonAuthHttp.get(`${this.url}/notifications/email/enabled`).map(this.extractData).catch(this.handleError);
+    }
 
     public saveEmailNotificationSettings(settings: IEmailNotificationSettings): Observable<boolean> {
         return this.httpAuth

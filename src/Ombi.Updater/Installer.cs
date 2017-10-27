@@ -56,7 +56,8 @@ namespace Ombi.Updater
             {
                 UseShellExecute = false,
                 FileName = Path.Combine(options.ApplicationPath,fileName),
-                WorkingDirectory = options.ApplicationPath
+                WorkingDirectory = options.ApplicationPath,
+                Arguments = options.StartupArgs
             };
             using (var proc = new Process { StartInfo = start })
             {

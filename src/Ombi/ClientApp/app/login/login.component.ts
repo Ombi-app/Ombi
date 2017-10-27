@@ -1,6 +1,7 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
+import { TranslateService } from "@ngx-translate/core";
 
 import { PlatformLocation } from "@angular/common";
 import { AuthService } from "../auth/auth.service";
@@ -23,10 +24,13 @@ export class LoginComponent implements OnInit {
     public background: any;
     public landingFlag: boolean;
     public baseUrl: string;
+    
+    private errorBody: string;
+    private errorValidation: string;
 
     constructor(private authService: AuthService, private router: Router, private notify: NotificationService, private status: StatusService,
                 private fb: FormBuilder, private settingsService: SettingsService, private images: ImageService, private sanitizer: DomSanitizer,
-                private route: ActivatedRoute, private location: PlatformLocation) {
+                private route: ActivatedRoute, private location: PlatformLocation, private readonly translate: TranslateService) {
         this.route.params
             .subscribe((params: any) => {
                 this.landingFlag = params.landing;
@@ -61,11 +65,14 @@ export class LoginComponent implements OnInit {
         if (base.length > 1) {
             this.baseUrl = base;
         }
+
+        this.translate.get("Login.Errors.IncorrectCredentials").subscribe(x => this.errorBody = x);
+        this.translate.get("Common.Errors.Validation").subscribe(x => this.errorValidation = x);
     }
 
     public onSubmit(form: FormGroup) {
         if (form.invalid) {
-            this.notify.error("Validation", "Please check your entered values");
+            this.notify.error(this.errorValidation);
             return;
         }
         const value = form.value;
@@ -76,9 +83,9 @@ export class LoginComponent implements OnInit {
                 if (this.authService.loggedIn()) {
                     this.router.navigate(["search"]);
                 } else {
-                    this.notify.error("Could not log in", "Incorrect username or password");
+                    this.notify.error(this.errorBody);
                 }
 
-            }, err => this.notify.error("Could not log in", "Incorrect username or password"));
+            }, err => this.notify.error(this.errorBody));
     }
 }

@@ -4,10 +4,16 @@
     "UsernamePlaceholder": "Username",
     "PasswordPlaceholder": "Password",
     "RememberMe": "Remember Me",
-    "ForgottenPassword": "Forgot your password?"
+    "ForgottenPassword": "Forgot your password?",
+    "Errors":{
+        "IncorrectCredentials":"Incorrect username or password"
+    }
   },
   "Common":{
-      "ContinueButton":"Continue"
+      "ContinueButton":"Continue",
+      "Errors":{
+          "Validation":"Please check your entered values"
+      }
   },
   "PasswordReset": {
     "EmailAddressPlaceholder": "Email Address",
@@ -25,7 +31,7 @@
       "OfflineHeading":"Currently Offline",
       "OfflineParagraph":"The media server is currently offline.",
 
-      "CheckPageForUpdates":"Check this page for continous site updates."
+      "CheckPageForUpdates":"Check this page for continuous site updates."
   },
   "NavigationBar":{
       "Search":"Search",
