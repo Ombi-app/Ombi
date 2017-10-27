@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
                     
                     // See if we can match the supported langs with the current browser lang
                     const browserLang: string = translate.getBrowserLang();
-                    this.translate.use(browserLang.match(/en|fr/) ? browserLang : "en");
+                    this.translate.use(browserLang.match(/en|fr|da|de|es|it|nl/) ? browserLang : "en");
                 }
 
     public ngOnInit() {
