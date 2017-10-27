@@ -1,48 +1,48 @@
 {
   "Login": {
-    "SignInButton": "Sign in",
-    "UsernamePlaceholder": "Username",
-    "PasswordPlaceholder": "Password",
-    "RememberMe": "Remember Me",
-    "ForgottenPassword": "Forgot your password?"
+    "SignInButton": "Inicia sesión",
+    "UsernamePlaceholder": "Nombre de usuario",
+    "PasswordPlaceholder": "Contraseña",
+    "RememberMe": "Acuérdate de mí",
+    "ForgottenPassword": "¿Olvidó su contraseña?"
   },
   "Common": {
-    "ContinueButton": "Continue"
+    "ContinueButton": "Continuar"
   },
   "PasswordReset": {
-    "EmailAddressPlaceholder": "Email Address",
-    "ResetPasswordButton": "Reset Password"
+    "EmailAddressPlaceholder": "Dirección de correo electrónico",
+    "ResetPasswordButton": "Restablecer contraseña"
   },
   "LandingPage": {
-    "OnlineHeading": "Currently Online",
-    "OnlineParagraph": "The media server is currently online",
-    "PartiallyOnlineHeading": "Partially Online",
-    "PartiallyOnlineParagraph": "The media server is partially online.",
-    "MultipleServersUnavailable": "There are {{serversUnavailable}} servers offline out of {{totalServers}}.",
-    "SingleServerUnavailable": "There is {{serversUnavailable}} server offline out of {{totalServers}}.",
-    "OfflineHeading": "Currently Offline",
-    "OfflineParagraph": "The media server is currently offline.",
-    "CheckPageForUpdates": "Check this page for continous site updates."
+    "OnlineHeading": "Actualmente en línea",
+    "OnlineParagraph": "El servidor de medios es actualmente en línea",
+    "PartiallyOnlineHeading": "Parcialmente en línea",
+    "PartiallyOnlineParagraph": "El servidor de medios es parcialmente en línea.",
+    "MultipleServersUnavailable": "Hay servidores de {{serversUnavailable}} línea de {{totalServers}}.",
+    "SingleServerUnavailable": "Hay {{serversUnavailable}} servidor offline fuera de {{totalServers}}.",
+    "OfflineHeading": "Actualmente fuera de línea",
+    "OfflineParagraph": "El servidor de medios está actualmente fuera de línea.",
+    "CheckPageForUpdates": "Consulte esta página para actualizaciones del sitio continuo."
   },
   "NavigationBar": {
-    "Search": "Search",
-    "Requests": "Requests",
-    "UserManagement": "User Management",
-    "Donate": "Donate!",
-    "DonateTooltip": "This is how I convince my wife to let me spend my spare time developing Ombi ;)",
-    "UpdateAvailableTooltip": "Update Available!",
-    "Settings": "Settings",
-    "Welcome": "Welcome {{username}}",
-    "UpdateDetails": "Update Details",
-    "Logout": "Logout",
+    "Search": "Búsqueda de",
+    "Requests": "Solicitudes de",
+    "UserManagement": "Gestión de usuarios",
+    "Donate": "¡Dona!",
+    "DonateTooltip": "Esto es cómo convencer a mi esposa que me dejara pasar mi tiempo libre desarrollando Ombi ;)",
+    "UpdateAvailableTooltip": "¡Actualización disponible!",
+    "Settings": "Configuración",
+    "Welcome": "Bienvenido {{username}}",
+    "UpdateDetails": "Actualizar datos",
+    "Logout": "Cierre de sesión",
     "Language": {
-      "English": "English",
-      "French": "French",
-      "Spanish": "Spanish",
-      "German": "German",
-      "Italian": "Italian",
-      "Danish": "Danish",
-      "Dutch": "Dutch"
+      "English": "Inglés",
+      "French": "Francés",
+      "Spanish": "Español",
+      "German": "Alemán",
+      "Italian": "Italiano",
+      "Danish": "Danés",
+      "Dutch": "Holandés"
     }
   }
 }
