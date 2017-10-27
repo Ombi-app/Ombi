@@ -1,9 +1,48 @@
 {
-    "Login": {
-        "SignInButton": "Log ind",
-        "UsernamePlaceholder":"Brugernavn",
-        "PasswordPlaceholder":"Adgangskode",
-        "RememberMe":"Husk mig",
-        "ForgottenPassword":"Glemt adgangskode?"
+  "Login": {
+    "SignInButton": "Log ind",
+    "UsernamePlaceholder": "Brugernavn",
+    "PasswordPlaceholder": "Adgangskode",
+    "RememberMe": "Husk mig",
+    "ForgottenPassword": "Glemt adgangskode?"
+  },
+  "Common": {
+    "ContinueButton": "Continue"
+  },
+  "PasswordReset": {
+    "EmailAddressPlaceholder": "Email Address",
+    "ResetPasswordButton": "Reset Password"
+  },
+  "LandingPage": {
+    "OnlineHeading": "Currently Online",
+    "OnlineParagraph": "The media server is currently online",
+    "PartiallyOnlineHeading": "Partially Online",
+    "PartiallyOnlineParagraph": "The media server is partially online.",
+    "MultipleServersUnavailable": "There are {{serversUnavailable}} servers offline out of {{totalServers}}.",
+    "SingleServerUnavailable": "There is {{serversUnavailable}} server offline out of {{totalServers}}.",
+    "OfflineHeading": "Currently Offline",
+    "OfflineParagraph": "The media server is currently offline.",
+    "CheckPageForUpdates": "Check this page for continous site updates."
+  },
+  "NavigationBar": {
+    "Search": "Search",
+    "Requests": "Requests",
+    "UserManagement": "User Management",
+    "Donate": "Donate!",
+    "DonateTooltip": "This is how I convince my wife to let me spend my spare time developing Ombi ;)",
+    "UpdateAvailableTooltip": "Update Available!",
+    "Settings": "Settings",
+    "Welcome": "Welcome {{username}}",
+    "UpdateDetails": "Update Details",
+    "Logout": "Logout",
+    "Language": {
+      "English": "English",
+      "French": "French",
+      "Spanish": "Spanish",
+      "German": "German",
+      "Italian": "Italian",
+      "Danish": "Danish",
+      "Dutch": "Dutch"
     }
+  }
 }
