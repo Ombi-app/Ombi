@@ -1,4 +1,54 @@
 {
-    "Login": {
+  "Login": {
+    "SignInButton": "Aanmelden",
+    "UsernamePlaceholder": "Gebruikersnaam",
+    "PasswordPlaceholder": "Wachtwoord",
+    "RememberMe": "Onthoud mijn gegevens",
+    "ForgottenPassword": "Wachtwoord vergeten?",
+    "Errors": {
+      "IncorrectCredentials": "Incorrect username or password"
     }
+  },
+  "Common": {
+    "ContinueButton": "Blijven",
+    "Errors": {
+      "Validation": "Please check your entered values"
+    }
+  },
+  "PasswordReset": {
+    "EmailAddressPlaceholder": "E-mailadres",
+    "ResetPasswordButton": "Reset wachtwoord"
+  },
+  "LandingPage": {
+    "OnlineHeading": "Momenteel Online",
+    "OnlineParagraph": "De mediaserver is momenteel online",
+    "PartiallyOnlineHeading": "Gedeeltelijk Online",
+    "PartiallyOnlineParagraph": "De mediaserver is gedeeltelijk online.",
+    "MultipleServersUnavailable": "Er zijn {{serversUnavailable}} servers offline uit {{totalServers}}.",
+    "SingleServerUnavailable": "Er is {{serversUnavailable}} server off line uit {{totalServers}}.",
+    "OfflineHeading": "Op dit moment Offline",
+    "OfflineParagraph": "De mediaserver is momenteel offline.",
+    "CheckPageForUpdates": "Check this page for continuous site updates."
+  },
+  "NavigationBar": {
+    "Search": "Zoek",
+    "Requests": "Aanvragen",
+    "UserManagement": "Gebruikersbeheer",
+    "Donate": "Doneer!",
+    "DonateTooltip": "Dit is hoe ik mijn vrouw om me mijn vrije tijd ontwikkelen Ombi ;) te laten overtuigen",
+    "UpdateAvailableTooltip": "Update beschikbaar!",
+    "Settings": "Instellingen",
+    "Welcome": "Welkom {{username}}",
+    "UpdateDetails": "Update Details",
+    "Logout": "Logout",
+    "Language": {
+      "English": "Engels",
+      "French": "Frans",
+      "Spanish": "Spaans",
+      "German": "Duits",
+      "Italian": "Italiaans",
+      "Danish": "Deens",
+      "Dutch": "Nederlands"
+    }
+  }
 }

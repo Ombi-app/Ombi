@@ -1,4 +1,54 @@
 {
-    "Login": {
+  "Login": {
+    "SignInButton": "Inicia sesión",
+    "UsernamePlaceholder": "Nombre de usuario",
+    "PasswordPlaceholder": "Contraseña",
+    "RememberMe": "Acuérdate de mí",
+    "ForgottenPassword": "¿Olvidó su contraseña?",
+    "Errors": {
+      "IncorrectCredentials": "Incorrect username or password"
     }
+  },
+  "Common": {
+    "ContinueButton": "Continuar",
+    "Errors": {
+      "Validation": "Please check your entered values"
+    }
+  },
+  "PasswordReset": {
+    "EmailAddressPlaceholder": "Dirección de correo electrónico",
+    "ResetPasswordButton": "Restablecer contraseña"
+  },
+  "LandingPage": {
+    "OnlineHeading": "Actualmente en línea",
+    "OnlineParagraph": "El servidor de medios es actualmente en línea",
+    "PartiallyOnlineHeading": "Parcialmente en línea",
+    "PartiallyOnlineParagraph": "El servidor de medios es parcialmente en línea.",
+    "MultipleServersUnavailable": "Hay servidores de {{serversUnavailable}} línea de {{totalServers}}.",
+    "SingleServerUnavailable": "Hay {{serversUnavailable}} servidor offline fuera de {{totalServers}}.",
+    "OfflineHeading": "Actualmente fuera de línea",
+    "OfflineParagraph": "El servidor de medios está actualmente fuera de línea.",
+    "CheckPageForUpdates": "Check this page for continuous site updates."
+  },
+  "NavigationBar": {
+    "Search": "Búsqueda de",
+    "Requests": "Solicitudes de",
+    "UserManagement": "Gestión de usuarios",
+    "Donate": "¡Dona!",
+    "DonateTooltip": "Esto es cómo convencer a mi esposa que me dejara pasar mi tiempo libre desarrollando Ombi ;)",
+    "UpdateAvailableTooltip": "¡Actualización disponible!",
+    "Settings": "Configuración",
+    "Welcome": "Bienvenido {{username}}",
+    "UpdateDetails": "Actualizar datos",
+    "Logout": "Cierre de sesión",
+    "Language": {
+      "English": "Inglés",
+      "French": "Francés",
+      "Spanish": "Español",
+      "German": "Alemán",
+      "Italian": "Italiano",
+      "Danish": "Danés",
+      "Dutch": "Holandés"
+    }
+  }
 }

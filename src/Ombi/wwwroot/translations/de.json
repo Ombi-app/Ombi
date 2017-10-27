@@ -1,7 +1,54 @@
 {
-    "Login": {
-        "SignInButton": "Eintragen",
-        "UsernamePlaceholder":"Useraname",
-        "PasswordPlaceholder":"Password"
+  "Login": {
+    "SignInButton": "Eintragen",
+    "UsernamePlaceholder": "Useraname",
+    "PasswordPlaceholder": "Passwort",
+    "RememberMe": "Erinnere dich an mich",
+    "ForgottenPassword": "Passwort vergessen?",
+    "Errors": {
+      "IncorrectCredentials": "Incorrect username or password"
     }
+  },
+  "Common": {
+    "ContinueButton": "Weiter",
+    "Errors": {
+      "Validation": "Please check your entered values"
+    }
+  },
+  "PasswordReset": {
+    "EmailAddressPlaceholder": "E-Mail-Adresse",
+    "ResetPasswordButton": "Passwort zurücksetzen"
+  },
+  "LandingPage": {
+    "OnlineHeading": "Gerade Online",
+    "OnlineParagraph": "Der Mediaserver ist gerade online",
+    "PartiallyOnlineHeading": "Teilweise Online",
+    "PartiallyOnlineParagraph": "Der Mediaserver ist teilweise online.",
+    "MultipleServersUnavailable": "Es gibt {{serversUnavailable}} Server offline aus {{totalServers}}.",
+    "SingleServerUnavailable": "Es gibt {{serversUnavailable}}-Server offline aus {{totalServers}}.",
+    "OfflineHeading": "Derzeit Offline",
+    "OfflineParagraph": "Der Mediaserver ist derzeit offline.",
+    "CheckPageForUpdates": "Check this page for continuous site updates."
+  },
+  "NavigationBar": {
+    "Search": "Suche",
+    "Requests": "Anfragen",
+    "UserManagement": "Benutzerverwaltung",
+    "Donate": "Spenden Sie!",
+    "DonateTooltip": "Dies ist, wie ich meine Frau, lassen mich meine Freizeit entwickeln Ombi ;) überzeugen",
+    "UpdateAvailableTooltip": "Update verfügbar!",
+    "Settings": "Einstellungen",
+    "Welcome": "Willkommen {{username}}",
+    "UpdateDetails": "Update-Details",
+    "Logout": "Logout",
+    "Language": {
+      "English": "Englisch",
+      "French": "Französisch",
+      "Spanish": "Spanisch",
+      "German": "Deutsch",
+      "Italian": "Italienisch",
+      "Danish": "Dänisch",
+      "Dutch": "Holländisch"
+    }
+  }
 }

@@ -1,4 +1,54 @@
 {
-    "Login": {
+  "Login": {
+    "SignInButton": "Accedi",
+    "UsernamePlaceholder": "Nome utente",
+    "PasswordPlaceholder": "Password",
+    "RememberMe": "Ricordati di Me",
+    "ForgottenPassword": "Hai dimenticato la password?",
+    "Errors": {
+      "IncorrectCredentials": "Incorrect username or password"
     }
+  },
+  "Common": {
+    "ContinueButton": "Continuare",
+    "Errors": {
+      "Validation": "Please check your entered values"
+    }
+  },
+  "PasswordReset": {
+    "EmailAddressPlaceholder": "Indirizzo di posta elettronica",
+    "ResetPasswordButton": "Reimpostare la Password"
+  },
+  "LandingPage": {
+    "OnlineHeading": "Attualmente Online",
+    "OnlineParagraph": "Il media server è attualmente online",
+    "PartiallyOnlineHeading": "Parzialmente in linea",
+    "PartiallyOnlineParagraph": "Il media server è parzialmente in linea.",
+    "MultipleServersUnavailable": "Ci sono {{serversUnavailable}} server offline fuori {{totalServers}}.",
+    "SingleServerUnavailable": "C'è {{serversUnavailable}} il server offline fuori {{totalServers}}.",
+    "OfflineHeading": "Attualmente Offline",
+    "OfflineParagraph": "Il media server è attualmente offline.",
+    "CheckPageForUpdates": "Check this page for continuous site updates."
+  },
+  "NavigationBar": {
+    "Search": "Ricerca",
+    "Requests": "Richieste",
+    "UserManagement": "Gestione degli utenti",
+    "Donate": "Fai una donazione!",
+    "DonateTooltip": "Questo è come convincere mia moglie a farmi spendere il mio tempo libero lo sviluppo di Ombi ;)",
+    "UpdateAvailableTooltip": "Aggiornamento disponibile!",
+    "Settings": "Impostazioni",
+    "Welcome": "Benvenuto {{username}}",
+    "UpdateDetails": "Aggiornare i dettagli",
+    "Logout": "Logout",
+    "Language": {
+      "English": "Inglese",
+      "French": "Francese",
+      "Spanish": "Spagnolo",
+      "German": "Tedesco",
+      "Italian": "Italiano",
+      "Danish": "Danese",
+      "Dutch": "Olandese"
+    }
+  }
 }

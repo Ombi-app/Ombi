@@ -1,9 +1,54 @@
 {
-    "Login": {
-        "SignInButton": "Log ind",
-        "UsernamePlaceholder":"Brugernavn",
-        "PasswordPlaceholder":"Adgangskode",
-        "RememberMe":"Husk mig",
-        "ForgottenPassword":"Glemt adgangskode?"
+  "Login": {
+    "SignInButton": "Log ind",
+    "UsernamePlaceholder": "Brugernavn",
+    "PasswordPlaceholder": "Adgangskode",
+    "RememberMe": "Husk mig",
+    "ForgottenPassword": "Glemt adgangskode?",
+    "Errors": {
+      "IncorrectCredentials": "Forkert brugernavn eller adgangskode"
     }
+  },
+  "Common": {
+    "ContinueButton": "Fortsæt",
+    "Errors": {
+      "Validation": "Tjek venligst dine indtastede værdier"
+    }
+  },
+  "PasswordReset": {
+    "EmailAddressPlaceholder": "E-mail-adresse",
+    "ResetPasswordButton": "Nulstil adgangskode"
+  },
+  "LandingPage": {
+    "OnlineHeading": "Online nu",
+    "OnlineParagraph": "Medieserveren er online",
+    "PartiallyOnlineHeading": "Delvist online",
+    "PartiallyOnlineParagraph": "Medieserveren er delvist online.",
+    "MultipleServersUnavailable": "Der er {{serversUnavailable}} servere offline ud af {{totalServers}}.",
+    "SingleServerUnavailable": "Der er {{serversUnavailable}} server offline ud af {{totalServers}}.",
+    "OfflineHeading": "Offline nu",
+    "OfflineParagraph": "Medieserveren er offline.",
+    "CheckPageForUpdates": "Tjek denne side for løbende opdateringer."
+  },
+  "NavigationBar": {
+    "Search": "Søg",
+    "Requests": "Anmodninger",
+    "UserManagement": "Brugeradministration",
+    "Donate": "Donér!",
+    "DonateTooltip": "Sådan overbeviser jeg min kone om, at jeg skal bruge min fritid på at udvikle Ombi :)",
+    "UpdateAvailableTooltip": "Ny opdatering venter!",
+    "Settings": "Indstillinger",
+    "Welcome": "Velkommen til {{username}}",
+    "UpdateDetails": "Opdater loginoplysninger",
+    "Logout": "Log af",
+    "Language": {
+      "English": "Engelsk",
+      "French": "Fransk",
+      "Spanish": "Spansk",
+      "German": "Tysk",
+      "Italian": "Italiensk",
+      "Danish": "Dansk",
+      "Dutch": "Hollandsk"
+    }
+  }
 }
