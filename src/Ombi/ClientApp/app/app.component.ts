@@ -25,8 +25,8 @@ export class AppComponent implements OnInit {
                 private readonly router: Router,
                 private readonly settingsService: SettingsService,
                 private readonly jobService: JobService,
-                private readonly translate: TranslateService) { 
-                    this.translate.addLangs(["en", "de"]);
+                public readonly translate: TranslateService) { 
+                    this.translate.addLangs(["en", "de", "fr","da","es","it","nl"]);
                     // this language will be used as a fallback when a translation isn't found in the current language
                     this.translate.setDefaultLang("en");
                     
