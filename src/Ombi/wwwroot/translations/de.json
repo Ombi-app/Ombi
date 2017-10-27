@@ -2,6 +2,6 @@
     "Login": {
         "SignInButton": "Eintragen",
         "UsernamePlaceholder":"Useraname",
-        "PasswordPlaceholder":"Password",
+        "PasswordPlaceholder":"Password"
     }
 }
