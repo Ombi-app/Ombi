@@ -7,42 +7,42 @@
     "ForgottenPassword": "Glemt adgangskode?"
   },
   "Common": {
-    "ContinueButton": "Continue"
+    "ContinueButton": "Fortsat"
   },
   "PasswordReset": {
-    "EmailAddressPlaceholder": "Email Address",
-    "ResetPasswordButton": "Reset Password"
+    "EmailAddressPlaceholder": "E-mail-adresse",
+    "ResetPasswordButton": "Nulstil adgangskode"
   },
   "LandingPage": {
-    "OnlineHeading": "Currently Online",
-    "OnlineParagraph": "The media server is currently online",
-    "PartiallyOnlineHeading": "Partially Online",
-    "PartiallyOnlineParagraph": "The media server is partially online.",
-    "MultipleServersUnavailable": "There are {{serversUnavailable}} servers offline out of {{totalServers}}.",
-    "SingleServerUnavailable": "There is {{serversUnavailable}} server offline out of {{totalServers}}.",
-    "OfflineHeading": "Currently Offline",
-    "OfflineParagraph": "The media server is currently offline.",
-    "CheckPageForUpdates": "Check this page for continous site updates."
+    "OnlineHeading": "I øjeblikket Online",
+    "OnlineParagraph": "Media server er i øjeblikket online",
+    "PartiallyOnlineHeading": "Delvist Online",
+    "PartiallyOnlineParagraph": "Media server er delvist online.",
+    "MultipleServersUnavailable": "Der er {{serversUnavailable}} servere offline ud af {{totalServers}}.",
+    "SingleServerUnavailable": "Der er {{serversUnavailable}} server offline ud af {{totalServers}}.",
+    "OfflineHeading": "I øjeblikket Offline",
+    "OfflineParagraph": "Media server er i øjeblikket offline.",
+    "CheckPageForUpdates": "Check denne side for kontinuerlig site opdateringer."
   },
   "NavigationBar": {
-    "Search": "Search",
-    "Requests": "Requests",
-    "UserManagement": "User Management",
-    "Donate": "Donate!",
-    "DonateTooltip": "This is how I convince my wife to let me spend my spare time developing Ombi ;)",
-    "UpdateAvailableTooltip": "Update Available!",
-    "Settings": "Settings",
-    "Welcome": "Welcome {{username}}",
-    "UpdateDetails": "Update Details",
+    "Search": "Søg",
+    "Requests": "Anmodninger",
+    "UserManagement": "Brugeradministration",
+    "Donate": "Donere!",
+    "DonateTooltip": "Dette er hvordan jeg overbevise min kone til at lade mig bruge min ekstra tid på at udvikle Ombi ;)",
+    "UpdateAvailableTooltip": "Opdatering tilgængelig!",
+    "Settings": "Indstillinger",
+    "Welcome": "Velkommen til {{username}}",
+    "UpdateDetails": "Opdatere oplysninger",
     "Logout": "Logout",
     "Language": {
-      "English": "English",
-      "French": "French",
-      "Spanish": "Spanish",
-      "German": "German",
-      "Italian": "Italian",
-      "Danish": "Danish",
-      "Dutch": "Dutch"
+      "English": "engelsk",
+      "French": "fransk",
+      "Spanish": "spansk",
+      "German": "tysk",
+      "Italian": "italiensk",
+      "Danish": "dansk",
+      "Dutch": "nederlandsk"
     }
   }
 }
