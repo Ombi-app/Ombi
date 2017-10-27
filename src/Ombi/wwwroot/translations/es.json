@@ -4,10 +4,16 @@
     "UsernamePlaceholder": "Nombre de usuario",
     "PasswordPlaceholder": "Contraseña",
     "RememberMe": "Acuérdate de mí",
-    "ForgottenPassword": "¿Olvidó su contraseña?"
+    "ForgottenPassword": "¿Olvidó su contraseña?",
+    "Errors": {
+      "IncorrectCredentials": "Incorrect username or password"
+    }
   },
   "Common": {
-    "ContinueButton": "Continuar"
+    "ContinueButton": "Continuar",
+    "Errors": {
+      "Validation": "Please check your entered values"
+    }
   },
   "PasswordReset": {
     "EmailAddressPlaceholder": "Dirección de correo electrónico",
@@ -22,7 +28,7 @@
     "SingleServerUnavailable": "Hay {{serversUnavailable}} servidor offline fuera de {{totalServers}}.",
     "OfflineHeading": "Actualmente fuera de línea",
     "OfflineParagraph": "El servidor de medios está actualmente fuera de línea.",
-    "CheckPageForUpdates": "Consulte esta página para actualizaciones del sitio continuo."
+    "CheckPageForUpdates": "Check this page for continuous site updates."
   },
   "NavigationBar": {
     "Search": "Búsqueda de",
