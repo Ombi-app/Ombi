@@ -1,0 +1,3 @@
+files:
+  - source: /src/Ombi/wwwroot/translations/en.json
+    translation: /src/Ombi/wwwroot/translations/%two_letters_code%.json
