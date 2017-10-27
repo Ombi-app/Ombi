@@ -4,10 +4,16 @@
     "UsernamePlaceholder": "Nom d’utilisateur",
     "PasswordPlaceholder": "Mot de passe",
     "RememberMe": "Se souvenir de moi",
-    "ForgottenPassword": "Vous avez oublié votre mot de passe ?"
+    "ForgottenPassword": "Vous avez oublié votre mot de passe ?",
+    "Errors": {
+      "IncorrectCredentials": "Incorrect username or password"
+    }
   },
   "Common": {
-    "ContinueButton": "Continuer"
+    "ContinueButton": "Continuer",
+    "Errors": {
+      "Validation": "Please check your entered values"
+    }
   },
   "PasswordReset": {
     "EmailAddressPlaceholder": "Adresse de courriel",
@@ -22,7 +28,7 @@
     "SingleServerUnavailable": "Il n’y a {{serversUnavailable}} serveur en mode hors connexion sur {{totalServers}}.",
     "OfflineHeading": "Actuellement hors ligne",
     "OfflineParagraph": "Le serveur média est actuellement hors ligne.",
-    "CheckPageForUpdates": "Consultez cette page pour les mises à jour du site continue."
+    "CheckPageForUpdates": "Check this page for continuous site updates."
   },
   "NavigationBar": {
     "Search": "Recherche",
