@@ -4,10 +4,16 @@
     "UsernamePlaceholder": "Brugernavn",
     "PasswordPlaceholder": "Adgangskode",
     "RememberMe": "Husk mig",
-    "ForgottenPassword": "Glemt adgangskode?"
+    "ForgottenPassword": "Glemt adgangskode?",
+    "Errors": {
+      "IncorrectCredentials": "Incorrect username or password"
+    }
   },
   "Common": {
-    "ContinueButton": "Fortsat"
+    "ContinueButton": "Fortsat",
+    "Errors": {
+      "Validation": "Please check your entered values"
+    }
   },
   "PasswordReset": {
     "EmailAddressPlaceholder": "E-mail-adresse",
@@ -22,7 +28,7 @@
     "SingleServerUnavailable": "Der er {{serversUnavailable}} server offline ud af {{totalServers}}.",
     "OfflineHeading": "I øjeblikket Offline",
     "OfflineParagraph": "Media server er i øjeblikket offline.",
-    "CheckPageForUpdates": "Check denne side for kontinuerlig site opdateringer."
+    "CheckPageForUpdates": "Check this page for continuous site updates."
   },
   "NavigationBar": {
     "Search": "Søg",
