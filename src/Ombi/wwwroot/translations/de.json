@@ -4,10 +4,16 @@
     "UsernamePlaceholder": "Useraname",
     "PasswordPlaceholder": "Passwort",
     "RememberMe": "Erinnere dich an mich",
-    "ForgottenPassword": "Passwort vergessen?"
+    "ForgottenPassword": "Passwort vergessen?",
+    "Errors": {
+      "IncorrectCredentials": "Incorrect username or password"
+    }
   },
   "Common": {
-    "ContinueButton": "Weiter"
+    "ContinueButton": "Weiter",
+    "Errors": {
+      "Validation": "Please check your entered values"
+    }
   },
   "PasswordReset": {
     "EmailAddressPlaceholder": "E-Mail-Adresse",
@@ -22,7 +28,7 @@
     "SingleServerUnavailable": "Es gibt {{serversUnavailable}}-Server offline aus {{totalServers}}.",
     "OfflineHeading": "Derzeit Offline",
     "OfflineParagraph": "Der Mediaserver ist derzeit offline.",
-    "CheckPageForUpdates": "Überprüfen Sie diese Seite für kontinuierliche Updates Website."
+    "CheckPageForUpdates": "Check this page for continuous site updates."
   },
   "NavigationBar": {
     "Search": "Suche",
