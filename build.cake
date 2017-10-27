@@ -157,7 +157,6 @@ Task("Publish")
     .IsDependentOn("Run-Unit-Tests")
     .IsDependentOn("PrePublish")
     .IsDependentOn("Publish-Windows")
-    .IsDependentOn("Publish-Windows-32bit")
     .IsDependentOn("Publish-OSX").IsDependentOn("Publish-Linux")
     .IsDependentOn("Package");
 
