@@ -6,13 +6,13 @@
     "RememberMe": "Husk mig",
     "ForgottenPassword": "Glemt adgangskode?",
     "Errors": {
-      "IncorrectCredentials": "Incorrect username or password"
+      "IncorrectCredentials": "Forkert brugernavn eller adgangskode"
     }
   },
   "Common": {
-    "ContinueButton": "Fortsat",
+    "ContinueButton": "Fortsæt",
     "Errors": {
-      "Validation": "Please check your entered values"
+      "Validation": "Tjek venligst dine indtastede værdier"
     }
   },
   "PasswordReset": {
@@ -20,15 +20,15 @@
     "ResetPasswordButton": "Nulstil adgangskode"
   },
   "LandingPage": {
-    "OnlineHeading": "I øjeblikket Online",
-    "OnlineParagraph": "Media server er i øjeblikket online",
-    "PartiallyOnlineHeading": "Delvist Online",
-    "PartiallyOnlineParagraph": "Media server er delvist online.",
+    "OnlineHeading": "Online nu",
+    "OnlineParagraph": "Medieserveren er online",
+    "PartiallyOnlineHeading": "Delvist online",
+    "PartiallyOnlineParagraph": "Medieserveren er delvist online.",
     "MultipleServersUnavailable": "Der er {{serversUnavailable}} servere offline ud af {{totalServers}}.",
     "SingleServerUnavailable": "Der er {{serversUnavailable}} server offline ud af {{totalServers}}.",
     "OfflineHeading": "I øjeblikket Offline",
     "OfflineParagraph": "Media server er i øjeblikket offline.",
-    "CheckPageForUpdates": "Check this page for continuous site updates."
+    "CheckPageForUpdates": "Tjek denne side for løbende opdateringer."
   },
   "NavigationBar": {
     "Search": "Søg",
