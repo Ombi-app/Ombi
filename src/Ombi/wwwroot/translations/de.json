@@ -2,47 +2,47 @@
   "Login": {
     "SignInButton": "Eintragen",
     "UsernamePlaceholder": "Useraname",
-    "PasswordPlaceholder": "Password",
-    "RememberMe": "Remember Me",
-    "ForgottenPassword": "Forgot your password?"
+    "PasswordPlaceholder": "Passwort",
+    "RememberMe": "Erinnere dich an mich",
+    "ForgottenPassword": "Passwort vergessen?"
   },
   "Common": {
-    "ContinueButton": "Continue"
+    "ContinueButton": "Weiter"
   },
   "PasswordReset": {
-    "EmailAddressPlaceholder": "Email Address",
-    "ResetPasswordButton": "Reset Password"
+    "EmailAddressPlaceholder": "E-Mail-Adresse",
+    "ResetPasswordButton": "Passwort zurücksetzen"
   },
   "LandingPage": {
-    "OnlineHeading": "Currently Online",
-    "OnlineParagraph": "The media server is currently online",
-    "PartiallyOnlineHeading": "Partially Online",
-    "PartiallyOnlineParagraph": "The media server is partially online.",
-    "MultipleServersUnavailable": "There are {{serversUnavailable}} servers offline out of {{totalServers}}.",
-    "SingleServerUnavailable": "There is {{serversUnavailable}} server offline out of {{totalServers}}.",
-    "OfflineHeading": "Currently Offline",
-    "OfflineParagraph": "The media server is currently offline.",
-    "CheckPageForUpdates": "Check this page for continous site updates."
+    "OnlineHeading": "Gerade Online",
+    "OnlineParagraph": "Der Mediaserver ist gerade online",
+    "PartiallyOnlineHeading": "Teilweise Online",
+    "PartiallyOnlineParagraph": "Der Mediaserver ist teilweise online.",
+    "MultipleServersUnavailable": "Es gibt {{serversUnavailable}} Server offline aus {{totalServers}}.",
+    "SingleServerUnavailable": "Es gibt {{serversUnavailable}}-Server offline aus {{totalServers}}.",
+    "OfflineHeading": "Derzeit Offline",
+    "OfflineParagraph": "Der Mediaserver ist derzeit offline.",
+    "CheckPageForUpdates": "Überprüfen Sie diese Seite für kontinuierliche Updates Website."
   },
   "NavigationBar": {
-    "Search": "Search",
-    "Requests": "Requests",
-    "UserManagement": "User Management",
-    "Donate": "Donate!",
-    "DonateTooltip": "This is how I convince my wife to let me spend my spare time developing Ombi ;)",
-    "UpdateAvailableTooltip": "Update Available!",
-    "Settings": "Settings",
-    "Welcome": "Welcome {{username}}",
-    "UpdateDetails": "Update Details",
+    "Search": "Suche",
+    "Requests": "Anfragen",
+    "UserManagement": "Benutzerverwaltung",
+    "Donate": "Spenden Sie!",
+    "DonateTooltip": "Dies ist, wie ich meine Frau, lassen mich meine Freizeit entwickeln Ombi ;) überzeugen",
+    "UpdateAvailableTooltip": "Update verfügbar!",
+    "Settings": "Einstellungen",
+    "Welcome": "Willkommen {{username}}",
+    "UpdateDetails": "Update-Details",
     "Logout": "Logout",
     "Language": {
-      "English": "English",
-      "French": "French",
-      "Spanish": "Spanish",
-      "German": "German",
-      "Italian": "Italian",
-      "Danish": "Danish",
-      "Dutch": "Dutch"
+      "English": "Englisch",
+      "French": "Französisch",
+      "Spanish": "Spanisch",
+      "German": "Deutsch",
+      "Italian": "Italienisch",
+      "Danish": "Dänisch",
+      "Dutch": "Holländisch"
     }
   }
 }
