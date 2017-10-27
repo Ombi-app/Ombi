@@ -1,0 +1,54 @@
+{
+  "Login": {
+    "SignInButton": "crwdns37:0crwdne37:0",
+    "UsernamePlaceholder": "crwdns38:0crwdne38:0",
+    "PasswordPlaceholder": "crwdns39:0crwdne39:0",
+    "RememberMe": "crwdns40:0crwdne40:0",
+    "ForgottenPassword": "crwdns41:0crwdne41:0",
+    "Errors": {
+      "IncorrectCredentials": "crwdns71:0crwdne71:0"
+    }
+  },
+  "Common": {
+    "ContinueButton": "crwdns42:0crwdne42:0",
+    "Errors": {
+      "Validation": "crwdns72:0crwdne72:0"
+    }
+  },
+  "PasswordReset": {
+    "EmailAddressPlaceholder": "crwdns43:0crwdne43:0",
+    "ResetPasswordButton": "crwdns44:0crwdne44:0"
+  },
+  "LandingPage": {
+    "OnlineHeading": "crwdns45:0crwdne45:0",
+    "OnlineParagraph": "crwdns46:0crwdne46:0",
+    "PartiallyOnlineHeading": "crwdns47:0crwdne47:0",
+    "PartiallyOnlineParagraph": "crwdns48:0crwdne48:0",
+    "MultipleServersUnavailable": "crwdns49:0{{serversUnavailable}}crwdnd49:0{{totalServers}}crwdne49:0",
+    "SingleServerUnavailable": "crwdns50:0{{serversUnavailable}}crwdnd50:0{{totalServers}}crwdne50:0",
+    "OfflineHeading": "crwdns51:0crwdne51:0",
+    "OfflineParagraph": "crwdns52:0crwdne52:0",
+    "CheckPageForUpdates": "crwdns73:0crwdne73:0"
+  },
+  "NavigationBar": {
+    "Search": "crwdns54:0crwdne54:0",
+    "Requests": "crwdns55:0crwdne55:0",
+    "UserManagement": "crwdns56:0crwdne56:0",
+    "Donate": "crwdns57:0crwdne57:0",
+    "DonateTooltip": "crwdns58:0crwdne58:0",
+    "UpdateAvailableTooltip": "crwdns59:0crwdne59:0",
+    "Settings": "crwdns60:0crwdne60:0",
+    "Welcome": "crwdns61:0{{username}}crwdne61:0",
+    "UpdateDetails": "crwdns62:0crwdne62:0",
+    "Logout": "crwdns63:0crwdne63:0",
+    "Language": {
+      "English": "crwdns64:0crwdne64:0",
+      "French": "crwdns65:0crwdne65:0",
+      "Spanish": "crwdns66:0crwdne66:0",
+      "German": "crwdns67:0crwdne67:0",
+      "Italian": "crwdns68:0crwdne68:0",
+      "Danish": "crwdns69:0crwdne69:0",
+      "Dutch": "crwdns70:0crwdne70:0"
+    }
+  }
+}
