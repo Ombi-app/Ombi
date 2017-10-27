@@ -108,7 +108,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
                         Logger.LogInformation(LoggingEvents.Updater, "We are Windows");
-                        download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("windows", CompareOptions.IgnoreCase));
+                        download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("windows.zip", CompareOptions.IgnoreCase));
                     }
                     else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                     {
