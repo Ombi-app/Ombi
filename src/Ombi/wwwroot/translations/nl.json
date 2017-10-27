@@ -4,10 +4,16 @@
     "UsernamePlaceholder": "Gebruikersnaam",
     "PasswordPlaceholder": "Wachtwoord",
     "RememberMe": "Onthoud mijn gegevens",
-    "ForgottenPassword": "Wachtwoord vergeten?"
+    "ForgottenPassword": "Wachtwoord vergeten?",
+    "Errors": {
+      "IncorrectCredentials": "Incorrect username or password"
+    }
   },
   "Common": {
-    "ContinueButton": "Blijven"
+    "ContinueButton": "Blijven",
+    "Errors": {
+      "Validation": "Please check your entered values"
+    }
   },
   "PasswordReset": {
     "EmailAddressPlaceholder": "E-mailadres",
@@ -22,7 +28,7 @@
     "SingleServerUnavailable": "Er is {{serversUnavailable}} server off line uit {{totalServers}}.",
     "OfflineHeading": "Op dit moment Offline",
     "OfflineParagraph": "De mediaserver is momenteel offline.",
-    "CheckPageForUpdates": "Bekijk deze pagina voor ononderbroken updates site."
+    "CheckPageForUpdates": "Check this page for continuous site updates."
   },
   "NavigationBar": {
     "Search": "Zoek",
