@@ -1,4 +1,9 @@
 {
     "Login": {
+        "SignInButton": "Log ind",
+        "UsernamePlaceholder":"Brugernavn",
+        "PasswordPlaceholder":"Adgangskode",
+        "RememberMe":"Husk mig",
+        "ForgottenPassword":"Glemt adgangskode?"
     }
 }
