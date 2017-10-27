@@ -1,48 +1,48 @@
 {
   "Login": {
-    "SignInButton": "Sign in",
-    "UsernamePlaceholder": "Username",
-    "PasswordPlaceholder": "Password",
-    "RememberMe": "Remember Me",
-    "ForgottenPassword": "Forgot your password?"
+    "SignInButton": "Aanmelden",
+    "UsernamePlaceholder": "Gebruikersnaam",
+    "PasswordPlaceholder": "Wachtwoord",
+    "RememberMe": "Onthoud mijn gegevens",
+    "ForgottenPassword": "Wachtwoord vergeten?"
   },
   "Common": {
-    "ContinueButton": "Continue"
+    "ContinueButton": "Blijven"
   },
   "PasswordReset": {
-    "EmailAddressPlaceholder": "Email Address",
-    "ResetPasswordButton": "Reset Password"
+    "EmailAddressPlaceholder": "E-mailadres",
+    "ResetPasswordButton": "Reset wachtwoord"
   },
   "LandingPage": {
-    "OnlineHeading": "Currently Online",
-    "OnlineParagraph": "The media server is currently online",
-    "PartiallyOnlineHeading": "Partially Online",
-    "PartiallyOnlineParagraph": "The media server is partially online.",
-    "MultipleServersUnavailable": "There are {{serversUnavailable}} servers offline out of {{totalServers}}.",
-    "SingleServerUnavailable": "There is {{serversUnavailable}} server offline out of {{totalServers}}.",
-    "OfflineHeading": "Currently Offline",
-    "OfflineParagraph": "The media server is currently offline.",
-    "CheckPageForUpdates": "Check this page for continous site updates."
+    "OnlineHeading": "Momenteel Online",
+    "OnlineParagraph": "De mediaserver is momenteel online",
+    "PartiallyOnlineHeading": "Gedeeltelijk Online",
+    "PartiallyOnlineParagraph": "De mediaserver is gedeeltelijk online.",
+    "MultipleServersUnavailable": "Er zijn {{serversUnavailable}} servers offline uit {{totalServers}}.",
+    "SingleServerUnavailable": "Er is {{serversUnavailable}} server off line uit {{totalServers}}.",
+    "OfflineHeading": "Op dit moment Offline",
+    "OfflineParagraph": "De mediaserver is momenteel offline.",
+    "CheckPageForUpdates": "Bekijk deze pagina voor ononderbroken updates site."
   },
   "NavigationBar": {
-    "Search": "Search",
-    "Requests": "Requests",
-    "UserManagement": "User Management",
-    "Donate": "Donate!",
-    "DonateTooltip": "This is how I convince my wife to let me spend my spare time developing Ombi ;)",
-    "UpdateAvailableTooltip": "Update Available!",
-    "Settings": "Settings",
-    "Welcome": "Welcome {{username}}",
+    "Search": "Zoek",
+    "Requests": "Aanvragen",
+    "UserManagement": "Gebruikersbeheer",
+    "Donate": "Doneer!",
+    "DonateTooltip": "Dit is hoe ik mijn vrouw om me mijn vrije tijd ontwikkelen Ombi ;) te laten overtuigen",
+    "UpdateAvailableTooltip": "Update beschikbaar!",
+    "Settings": "Instellingen",
+    "Welcome": "Welkom {{username}}",
     "UpdateDetails": "Update Details",
     "Logout": "Logout",
     "Language": {
-      "English": "English",
-      "French": "French",
-      "Spanish": "Spanish",
-      "German": "German",
-      "Italian": "Italian",
-      "Danish": "Danish",
-      "Dutch": "Dutch"
+      "English": "Engels",
+      "French": "Frans",
+      "Spanish": "Spaans",
+      "German": "Duits",
+      "Italian": "Italiaans",
+      "Danish": "Deens",
+      "Dutch": "Nederlands"
     }
   }
 }
