@@ -1,48 +1,48 @@
 {
   "Login": {
-    "SignInButton": "Sign in",
-    "UsernamePlaceholder": "Username",
-    "PasswordPlaceholder": "Password",
-    "RememberMe": "Remember Me",
-    "ForgottenPassword": "Forgot your password?"
+    "SignInButton": "Connexion",
+    "UsernamePlaceholder": "Nom d’utilisateur",
+    "PasswordPlaceholder": "Mot de passe",
+    "RememberMe": "Se souvenir de moi",
+    "ForgottenPassword": "Vous avez oublié votre mot de passe ?"
   },
   "Common": {
-    "ContinueButton": "Continue"
+    "ContinueButton": "Continuer"
   },
   "PasswordReset": {
-    "EmailAddressPlaceholder": "Email Address",
-    "ResetPasswordButton": "Reset Password"
+    "EmailAddressPlaceholder": "Adresse de courriel",
+    "ResetPasswordButton": "Réinitialiser mot de passe"
   },
   "LandingPage": {
-    "OnlineHeading": "Currently Online",
-    "OnlineParagraph": "The media server is currently online",
-    "PartiallyOnlineHeading": "Partially Online",
-    "PartiallyOnlineParagraph": "The media server is partially online.",
-    "MultipleServersUnavailable": "There are {{serversUnavailable}} servers offline out of {{totalServers}}.",
-    "SingleServerUnavailable": "There is {{serversUnavailable}} server offline out of {{totalServers}}.",
-    "OfflineHeading": "Currently Offline",
-    "OfflineParagraph": "The media server is currently offline.",
-    "CheckPageForUpdates": "Check this page for continous site updates."
+    "OnlineHeading": "Actuellement en ligne",
+    "OnlineParagraph": "Le serveur média est actuellement en ligne",
+    "PartiallyOnlineHeading": "Partiellement en ligne",
+    "PartiallyOnlineParagraph": "Le serveur média est partiellement en ligne.",
+    "MultipleServersUnavailable": "Il y a {{serversUnavailable}} serveur hors ligne hors {{totalServers}}.",
+    "SingleServerUnavailable": "Il n’y a {{serversUnavailable}} serveur en mode hors connexion sur {{totalServers}}.",
+    "OfflineHeading": "Actuellement hors ligne",
+    "OfflineParagraph": "Le serveur média est actuellement hors ligne.",
+    "CheckPageForUpdates": "Consultez cette page pour les mises à jour du site continue."
   },
   "NavigationBar": {
-    "Search": "Search",
-    "Requests": "Requests",
-    "UserManagement": "User Management",
-    "Donate": "Donate!",
-    "DonateTooltip": "This is how I convince my wife to let me spend my spare time developing Ombi ;)",
-    "UpdateAvailableTooltip": "Update Available!",
-    "Settings": "Settings",
-    "Welcome": "Welcome {{username}}",
-    "UpdateDetails": "Update Details",
+    "Search": "Recherche",
+    "Requests": "Demandes",
+    "UserManagement": "Gestion des utilisateurs",
+    "Donate": "Faites un don !",
+    "DonateTooltip": "C’est comment convaincre ma femme de me laisser passer mon temps libre développement IACSM  ;)",
+    "UpdateAvailableTooltip": "Mise à jour disponible !",
+    "Settings": "Paramètres",
+    "Welcome": "Bienvenue {{username}}",
+    "UpdateDetails": "Détails de la mise à jour",
     "Logout": "Logout",
     "Language": {
-      "English": "English",
-      "French": "French",
-      "Spanish": "Spanish",
-      "German": "German",
-      "Italian": "Italian",
-      "Danish": "Danish",
-      "Dutch": "Dutch"
+      "English": "Anglais",
+      "French": "Français",
+      "Spanish": "Espagnol",
+      "German": "Allemand",
+      "Italian": "Italien",
+      "Danish": "Danois",
+      "Dutch": "Néerlandais"
     }
   }
 }
