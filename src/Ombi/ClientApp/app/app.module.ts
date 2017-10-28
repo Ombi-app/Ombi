@@ -1,11 +1,12 @@
-import { HttpClient, HttpClientModule} from "@angular/common/http";
-import { NgModule } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { HttpModule } from "@angular/http";
-import { MatButtonModule, MatCardModule, MatInputModule, MatTabsModule } from "@angular/material";
-import { BrowserModule } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { RouterModule, Routes } from "@angular/router";
+import {PlatformLocation} from "@angular/common";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {NgModule} from "@angular/core";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {HttpModule} from "@angular/http";
+import {MatButtonModule, MatCardModule, MatInputModule, MatTabsModule} from "@angular/material";
+import {BrowserModule} from "@angular/platform-browser";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {RouterModule, Routes} from "@angular/router";
 
 // Third Party
 //import { DragulaModule, DragulaService } from 'ng2-dragula/ng2-dragula';
@@ -56,7 +57,11 @@ const routes: Routes = [
 ];
 
 // AoT requires an exported function for factories
-export function HttpLoaderFactory(http: HttpClient) {
+export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLocation) {
+    const base = platformLocation.getBaseHrefFromDOM();
+    if (base.length > 1) {
+        return new TranslateHttpLoader(http, `${base}/translations/`, ".json");
+    }
     return new TranslateHttpLoader(http, "/translations/", ".json");
 }
 
