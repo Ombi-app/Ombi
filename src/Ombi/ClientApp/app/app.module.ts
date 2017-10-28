@@ -1,4 +1,4 @@
-import {PlatformLocation} from "@angular/common";
+import {CommonModule, PlatformLocation} from "@angular/common";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {NgModule} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -92,12 +92,13 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
         RequestsModule,
         CaptchaModule,
         TooltipModule,
-        ConfirmDialogModule,        
+        ConfirmDialogModule,
+        CommonModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
                 useFactory: HttpLoaderFactory,
-                deps: [HttpClient],
+                deps: [HttpClient, PlatformLocation],
             },
         }),
     ],
