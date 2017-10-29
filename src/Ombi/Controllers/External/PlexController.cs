@@ -41,6 +41,10 @@ namespace Ombi.Controllers.External
         [AllowAnonymous]
         public async Task<PlexAuthentication> SignIn([FromBody] UserRequest request)
         {
+            try
+            {
+
+ 
             // Do we already have settings?
             _log.LogDebug("OK, signing into Plex");
             var settings = await PlexSettings.GetSettingsAsync();
@@ -82,6 +86,12 @@ namespace Ombi.Controllers.External
 
             _log.LogDebug("Finished");
             return result;
+            }
+            catch (Exception e)
+            {
+                _log.LogCritical(e, "Error when trying to sign into Plex.tv");
+                throw;
+            }
         }
 
         /// <summary>
