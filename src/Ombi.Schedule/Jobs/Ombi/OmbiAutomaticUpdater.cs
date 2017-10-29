@@ -233,7 +233,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         private void RunScript(UpdateSettings settings, string downloadUrl)
         {
-            var scriptToRun = settings.ScriptLocation;
+            var scriptToRun = settings?.ScriptLocation ?? string.Empty;
             if (scriptToRun.IsNullOrEmpty())
             {
                 Logger.LogError("Use Script is enabled but there is no script to run");
@@ -245,10 +245,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                 Logger.LogError("Cannot find the file {0}", scriptToRun);
                 return;
             }
-
-            var ombiProcess = _processProvider.FindProcessByName(settings.ProcessName).FirstOrDefault();
-            var currentInstallLocation = Assembly.GetEntryAssembly().Location;
-            _processProvider.Start(scriptToRun, downloadUrl + " " + ombiProcess.Id + " " + GetArgs(settings));
+            
+            _processProvider.Start(scriptToRun, downloadUrl + " " + GetArgs(settings));
 
             Logger.LogInformation("Script started");
         }
