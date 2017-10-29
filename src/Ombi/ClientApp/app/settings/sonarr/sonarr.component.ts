@@ -1,7 +1,5 @@
-﻿import { Component, OnDestroy, OnInit } from "@angular/core";
+﻿import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import "rxjs/add/operator/takeUntil";
-import { Subject } from "rxjs/Subject";
 
 import { ISonarrProfile, ISonarrRootFolder } from "../../interfaces";
 
@@ -14,7 +12,7 @@ import { SettingsService } from "../../services";
 @Component({
     templateUrl: "./sonarr.component.html",
 })
-export class SonarrComponent implements OnInit, OnDestroy {
+export class SonarrComponent implements OnInit {
 
     public qualities: ISonarrProfile[];
     public rootFolders: ISonarrRootFolder[];
@@ -25,8 +23,6 @@ export class SonarrComponent implements OnInit, OnDestroy {
     public form: FormGroup;
     public advanced = false;
 
-    private subscriptions = new Subject<void>();
-
     constructor(private settingsService: SettingsService,
                 private sonarrService: SonarrService,
                 private notificationService: NotificationService,
@@ -36,9 +32,7 @@ export class SonarrComponent implements OnInit, OnDestroy {
     public ngOnInit() {
 
         this.settingsService.getSonarr()
-            .takeUntil(this.subscriptions)
             .subscribe(x => {
-
                 this.form = this.fb.group({
                     enabled: [x.enabled],
                     apiKey: [x.apiKey, [Validators.required]],
@@ -59,29 +53,33 @@ export class SonarrComponent implements OnInit, OnDestroy {
                     this.getRootFolders(this.form);
                 }
             });
+        this.rootFolders = [];
+        this.qualities = [];
+        this.rootFolders.push({ path: "Please Select", id: -1 });
+        this.qualities.push({ name: "Please Select", id: -1 });
     }
 
     public getProfiles(form: FormGroup) {
         this.profilesRunning = true;
         this.sonarrService.getQualityProfiles(form.value)
-            .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.qualities = x;
+                this.qualities.unshift({ name: "Please Select", id: -1 });
 
                 this.profilesRunning = false;
-                this.notificationService.success("Quality Profiles", "Successfully retrevied the Quality Profiles");
+                this.notificationService.success("Quality Profiles", "Successfully retrieved the Quality Profiles");
             });
     }
 
     public getRootFolders(form: FormGroup) {
         this.rootFoldersRunning = true;
         this.sonarrService.getRootFolders(form.value)
-            .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.rootFolders = x;
+                this.rootFolders.unshift({ path: "Please Select", id: -1 });
 
                 this.rootFoldersRunning = false;
-                this.notificationService.success("Settings Saved", "Successfully retrevied the Root Folders");
+                this.notificationService.success("Settings Saved", "Successfully retrieved the Root Folders");
             });
     }
 
@@ -105,8 +103,11 @@ export class SonarrComponent implements OnInit, OnDestroy {
             this.notificationService.error("Please check your entered values");
             return;
         }
+        if(form.controls.defaultQualityProfile.value === "-1" || form.controls.defaultRootPath.value === "Please Select") {
+            this.notificationService.error("Please check your entered values");
+            return;
+        }
         this.settingsService.saveSonarr(form.value)
-            .takeUntil(this.subscriptions)
             .subscribe(x => {
                 if (x) {
                     this.notificationService.success("Settings Saved", "Successfully saved Sonarr settings");
@@ -114,10 +115,5 @@ export class SonarrComponent implements OnInit, OnDestroy {
                     this.notificationService.error("There was an error when saving the Sonarr settings");
                 }
             });
-    }
-
-    public ngOnDestroy() {
-        this.subscriptions.next();
-        this.subscriptions.complete();
     }
 }
