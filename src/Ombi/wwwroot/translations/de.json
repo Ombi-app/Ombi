@@ -35,12 +35,12 @@
     "Requests": "Anfragen",
     "UserManagement": "Benutzerverwaltung",
     "Donate": "Spenden!",
-    "DonateTooltip": "Dies ist, wie ich meine Frau, lassen mich meine Freizeit entwickeln Ombi ;) überzeugen",
+    "DonateTooltip": "So überzeuge ich meine Frau, meine Freizeit mit der Entwicklung von Ombi zu verbringen ;)",
     "UpdateAvailableTooltip": "Update verfügbar!",
     "Settings": "Einstellungen",
     "Welcome": "Willkommen {{username}}",
     "UpdateDetails": "Update-Details",
-    "Logout": "Logout",
+    "Logout": "Ausloggen",
     "Language": {
       "English": "Englisch",
       "French": "Französisch",
@@ -48,7 +48,7 @@
       "German": "Deutsch",
       "Italian": "Italienisch",
       "Danish": "Dänisch",
-      "Dutch": "Holländisch"
+      "Dutch": "Niederländisch"
     }
   }
 }
