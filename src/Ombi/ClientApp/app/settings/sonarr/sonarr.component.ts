@@ -30,7 +30,6 @@ export class SonarrComponent implements OnInit {
                 private fb: FormBuilder) { }
 
     public ngOnInit() {
-
         this.settingsService.getSonarr()
             .subscribe(x => {
                 this.form = this.fb.group({
@@ -103,10 +102,17 @@ export class SonarrComponent implements OnInit {
             this.notificationService.error("Please check your entered values");
             return;
         }
-        if(form.controls.defaultQualityProfile.value === "-1" || form.controls.defaultRootPath.value === "Please Select") {
-            this.notificationService.error("Please check your entered values");
-            return;
+        if(form.controls.defaultQualityProfile) {
+            if(form.controls.defaultQualityProfile.value === "-1") {
+                this.notificationService.error("Please check your entered values");
+            }
         }
+        if(form.controls.defaultRootPath) {
+            if(form.controls.defaultRootPath.value === "Please Select") {
+                this.notificationService.error("Please check your entered values");
+            }
+        }
+
         this.settingsService.saveSonarr(form.value)
             .subscribe(x => {
                 if (x) {
