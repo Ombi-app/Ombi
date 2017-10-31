@@ -66,7 +66,7 @@
     "NoResults": "Sorry, we didn't find any results!",
     "ReleaseDate": "Release Date",
     "ViewOnPlex": "View On Plex",
-    "RequestAdded": "Request for {{title}} has been added successfully",
+    "RequestAdded": "Anfrage für {{title}} wurde erfolgreich hinzugefügt",
     "Movies": {
       "PopularMovies": "Popular Movies",
       "UpcomingMovies": "Upcoming Movies",
