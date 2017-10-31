@@ -6,40 +6,40 @@
     "RememberMe": "Onthoud mijn gegevens",
     "ForgottenPassword": "Wachtwoord vergeten?",
     "Errors": {
-      "IncorrectCredentials": "Incorrect username or password"
+      "IncorrectCredentials": "Onjuiste gebruikersnaam of wachtwoord"
     }
   },
   "Common": {
-    "ContinueButton": "Blijven",
+    "ContinueButton": "Doorgaan",
     "Errors": {
-      "Validation": "Please check your entered values"
+      "Validation": "Fout: Controleer de ingevulde waardes"
     }
   },
   "PasswordReset": {
-    "EmailAddressPlaceholder": "E-mailadres",
-    "ResetPasswordButton": "Reset wachtwoord"
+    "EmailAddressPlaceholder": "E-mail adres",
+    "ResetPasswordButton": "Herstel wachtwoord"
   },
   "LandingPage": {
-    "OnlineHeading": "Momenteel Online",
+    "OnlineHeading": "Online",
     "OnlineParagraph": "De mediaserver is momenteel online",
     "PartiallyOnlineHeading": "Gedeeltelijk Online",
     "PartiallyOnlineParagraph": "De mediaserver is gedeeltelijk online.",
-    "MultipleServersUnavailable": "Er zijn {{serversUnavailable}} servers offline uit {{totalServers}}.",
-    "SingleServerUnavailable": "Er is {{serversUnavailable}} server off line uit {{totalServers}}.",
+    "MultipleServersUnavailable": "Er zijn {{serversUnavailable}} servers offline van de in totaal {{totalServers}}.",
+    "SingleServerUnavailable": "Er is {{serversUnavailable}} server offline uit {{totalServers}}.",
     "OfflineHeading": "Op dit moment Offline",
     "OfflineParagraph": "De mediaserver is momenteel offline.",
-    "CheckPageForUpdates": "Check this page for continuous site updates."
+    "CheckPageForUpdates": "Controleer deze pagina voor updates."
   },
   "NavigationBar": {
-    "Search": "Zoek",
+    "Search": "Zoeken",
     "Requests": "Aanvragen",
     "UserManagement": "Gebruikersbeheer",
     "Donate": "Doneer!",
-    "DonateTooltip": "Dit is hoe ik mijn vrouw om me mijn vrije tijd ontwikkelen Ombi ;) te laten overtuigen",
+    "DonateTooltip": "Dit is hoe ik mijn vrouw heb laten overtuigen dat ik Ombi mag ontwikkelen ;-)",
     "UpdateAvailableTooltip": "Update beschikbaar!",
     "Settings": "Instellingen",
     "Welcome": "Welkom {{username}}",
-    "UpdateDetails": "Update Details",
+    "UpdateDetails": "Update gegevens",
     "Logout": "Logout",
     "Language": {
       "English": "Engels",

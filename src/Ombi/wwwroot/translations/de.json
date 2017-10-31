@@ -1,18 +1,18 @@
 {
   "Login": {
-    "SignInButton": "Eintragen",
-    "UsernamePlaceholder": "Useraname",
+    "SignInButton": "Einloggen",
+    "UsernamePlaceholder": "Benutzername",
     "PasswordPlaceholder": "Passwort",
     "RememberMe": "Erinnere dich an mich",
     "ForgottenPassword": "Passwort vergessen?",
     "Errors": {
-      "IncorrectCredentials": "Incorrect username or password"
+      "IncorrectCredentials": "Falscher Benutzername oder falsches Passwort"
     }
   },
   "Common": {
     "ContinueButton": "Weiter",
     "Errors": {
-      "Validation": "Please check your entered values"
+      "Validation": "Bitte überprüfen Sie die eingegebenen Werte"
     }
   },
   "PasswordReset": {
@@ -24,7 +24,7 @@
     "OnlineParagraph": "Der Mediaserver ist gerade online",
     "PartiallyOnlineHeading": "Teilweise Online",
     "PartiallyOnlineParagraph": "Der Mediaserver ist teilweise online.",
-    "MultipleServersUnavailable": "Es gibt {{serversUnavailable}} Server offline aus {{totalServers}}.",
+    "MultipleServersUnavailable": "Es sind {{serversUnavailable}} von {{totalServers}} Servern offline.",
     "SingleServerUnavailable": "Es gibt {{serversUnavailable}}-Server offline aus {{totalServers}}.",
     "OfflineHeading": "Derzeit Offline",
     "OfflineParagraph": "Der Mediaserver ist derzeit offline.",
@@ -34,13 +34,13 @@
     "Search": "Suche",
     "Requests": "Anfragen",
     "UserManagement": "Benutzerverwaltung",
-    "Donate": "Spenden Sie!",
-    "DonateTooltip": "Dies ist, wie ich meine Frau, lassen mich meine Freizeit entwickeln Ombi ;) überzeugen",
+    "Donate": "Spenden!",
+    "DonateTooltip": "So überzeuge ich meine Frau, meine Freizeit mit der Entwicklung von Ombi zu verbringen ;)",
     "UpdateAvailableTooltip": "Update verfügbar!",
     "Settings": "Einstellungen",
     "Welcome": "Willkommen {{username}}",
     "UpdateDetails": "Update-Details",
-    "Logout": "Logout",
+    "Logout": "Ausloggen",
     "Language": {
       "English": "Englisch",
       "French": "Französisch",
@@ -48,7 +48,7 @@
       "German": "Deutsch",
       "Italian": "Italienisch",
       "Danish": "Dänisch",
-      "Dutch": "Holländisch"
+      "Dutch": "Niederländisch"
     }
   }
 }
