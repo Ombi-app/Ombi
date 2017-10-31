@@ -37,14 +37,14 @@ export class SlackComponent implements OnInit {
 
     public onSubmit(form: FormGroup) {
         if (form.invalid) {
-            this.notificationService.error("Validation", "Please check your entered values");
+            this.notificationService.error("Please check your entered values");
             return;
         }
 
         const settings = <ISlackNotificationSettings>form.value;
         if (settings.iconEmoji && settings.iconUrl) {
 
-            this.notificationService.error("Validation", "You cannot have a Emoji icon and a URL icon");
+            this.notificationService.error("You cannot have a Emoji icon and a URL icon");
             return;
         }
         settings.notificationTemplates = this.templates;
@@ -61,14 +61,14 @@ export class SlackComponent implements OnInit {
 
     public test(form: FormGroup) {
         if (form.invalid) {
-            this.notificationService.error("Validation", "Please check your entered values");
+            this.notificationService.error("Please check your entered values");
             return;
         }
 
         const settings = <ISlackNotificationSettings>form.value;
         if (settings.iconEmoji && settings.iconUrl) {
 
-            this.notificationService.error("Validation", "You cannot have a Emoji icon and a URL icon");
+            this.notificationService.error("You cannot have a Emoji icon and a URL icon");
             return;
         }
         this.testerService.slackTest(settings).subscribe(x => {

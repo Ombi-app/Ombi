@@ -25,6 +25,11 @@ export class TvRequestChildrenComponent {
 
     public changeAvailability(request: IChildRequests, available: boolean) {
         request.available = available;
+        request.seasonRequests.forEach((season)=> {
+            season.episodes.forEach((ep)=> {
+                ep.available = available;
+            });
+        });
         if(available) {
             this.requestService.markTvAvailable({ id: request.id }).subscribe(x => {
                 if (x.result) {

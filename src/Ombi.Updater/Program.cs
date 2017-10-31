@@ -72,6 +72,14 @@ namespace Ombi.Updater
                 ApplicationPath = args[0],
                 ProcessName = args[1],
             };
+            if (args.Length == 4)
+            {
+                startup.StartupArgs = args[2] + " " + args[3];
+            }
+            else if (args.Length == 3)
+            {
+                startup.StartupArgs = args[2];
+            }
 
             var p = new ProcessProvider();
             var ombiProc = p.FindProcessByName(startup.ProcessName).FirstOrDefault();
@@ -87,5 +95,6 @@ namespace Ombi.Updater
         public string ProcessName { get; set; }
         public string ApplicationPath { get; set; }
         public int OmbiProcessId { get; set; }
+        public string StartupArgs { get; set; }
     }
 }

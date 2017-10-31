@@ -63,7 +63,7 @@ export class PlexComponent implements OnInit, OnDestroy {
             if (x === true) {
                 this.notificationService.success("Connected", `Successfully connected to the Plex server ${server.name}!`);
             } else {
-                this.notificationService.error("Connected", `We could not connect to the Plex server  ${server.name}!`);
+                this.notificationService.error(`We could not connect to the Plex server  ${server.name}!`);
             }
         });
     }
@@ -85,7 +85,7 @@ export class PlexComponent implements OnInit, OnDestroy {
 
     public loadLibraries(server: IPlexServer) {
         if (server.ip == null) {
-            this.notificationService.error("Not Configured", "Plex is not yet configured correctly");
+            this.notificationService.error("Plex is not yet configured correctly");
             return;
         }
         this.plexService.getLibraries(server).subscribe(x => {
@@ -100,10 +100,10 @@ export class PlexComponent implements OnInit, OnDestroy {
                         server.plexSelectedLibraries.push(lib);
                     });
                 } else {
-                    this.notificationService.error("Error", x.message);
+                    this.notificationService.error(x.message);
                 }
             },
-        err => { this.notificationService.error("Error", err); });
+        err => { this.notificationService.error(err); });
     }
 
     public save() {

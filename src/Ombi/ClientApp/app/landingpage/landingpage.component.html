@@ -22,7 +22,7 @@
                     <div *ngIf="mediaServerStatus.fullyAvailable">
                         <h3 class="online"><i class="fa fa-check-circle "></i> {{ 'LandingPage.OnlineHeading' | translate }}</h3>
                         <span [translate]="'LandingPage.OnlineParagraph'"></span>
-                        <p [translate]="'CheckPageForUpdates'"></p>
+                        <p [translate]="'LandingPage.CheckPageForUpdates'"></p>
                     </div>
                     
                     <div *ngIf="mediaServerStatus.partiallyDown">
@@ -30,13 +30,13 @@
                         <span [translate]="'LandingPage.PartiallyOnlineParagraph'"></span>
                         <p *ngIf="mediaServerStatus.serversUnavailable > 1" [translate]="'LandingPage.MultipleServersUnavailable'" [translateParams]="{serversUnavailable: mediaServerStatus.serversUnavailable, totalServers: mediaServerStatus.totalServers}"></p>
                         <p *ngIf="mediaServerStatus.serversUnavailable == 1" [translate]="'LandingPage.SingleServerUnavailable'" [translateParams]="{serversUnavailable: mediaServerStatus.serversUnavailable, totalServers: mediaServerStatus.totalServers}">There is {{mediaServerStatus.serversUnavailable}} server offline out of {{mediaServerStatus.totalServers}}.</p>
-                        <p [translate]="'CheckPageForUpdates'"></p>
+                        <p [translate]="'LandingPage.CheckPageForUpdates'"></p>
                     </div>
 
                     <div *ngIf="mediaServerStatus.completelyDown">
                         <h3 class="offline"><i class="fa fa-times "></i> {{ 'LandingPage.OfflineHeading' | translate }}</h3>
                         <span [translate]="'LandingPage.OfflineParagraph'"></span>
-                        <p [translate]="'CheckPageForUpdates'"></p>
+                        <p [translate]="'LandingPage.CheckPageForUpdates'"></p>
                     </div>
                 </div>
             </div>

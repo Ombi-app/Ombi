@@ -407,6 +407,19 @@ namespace Ombi.Controllers
             return model;
         }
 
+
+        /// <summary>
+        /// Gets the Email Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/email/enabled")]
+        [AllowAnonymous]
+        public async Task<bool> EmailNotificationSettingsEnabled()
+        {
+            var emailSettings = await Get<EmailNotificationSettings>();
+            return emailSettings.Enabled;
+        }
+
         /// <summary>
         /// Saves the discord notification settings.
         /// </summary>

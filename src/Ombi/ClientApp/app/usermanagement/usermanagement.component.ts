@@ -29,11 +29,11 @@ export class UserManagementComponent implements OnInit {
 
     public welcomeEmail(user: IUser) {
         if(!user.emailAddress) {
-            this.notificationService.error("Email", "The user needs an email address.");
+            this.notificationService.error("The user needs an email address.");
             return;
         }
         if (!this.emailSettings.enabled) {
-            this.notificationService.error("Email", "Email Notifications are not setup, cannot send welcome email");
+            this.notificationService.error("Email Notifications are not setup, cannot send welcome email");
             return;
         }
         this.identityService.sendWelcomeEmail(user).subscribe();        

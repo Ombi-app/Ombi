@@ -1,7 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import "rxjs/add/operator/takeUntil";
-import { Subject } from "rxjs/Subject";
 
 import { IMinimumAvailability, IRadarrProfile, IRadarrRootFolder } from "../../interfaces";
 import { IRadarrSettings } from "../../interfaces";
@@ -23,8 +21,6 @@ export class RadarrComponent implements OnInit {
     public advanced = false;
     public form: FormGroup;
 
-    private subscriptions = new Subject<void>();
-
     constructor(private settingsService: SettingsService,
                 private radarrService: RadarrService,
                 private notificationService: NotificationService,
@@ -33,7 +29,6 @@ export class RadarrComponent implements OnInit {
 
     public ngOnInit() {
         this.settingsService.getRadarr()
-            .takeUntil(this.subscriptions)
             .subscribe(x => {
 
                 this.form = this.fb.group({
@@ -57,6 +52,11 @@ export class RadarrComponent implements OnInit {
                 }
             });
 
+        this.qualities = [];
+        this.qualities.push({ name: "Please Select", id: -1 });
+        
+        this.rootFolders = [];
+        this.rootFolders.push({ path: "Please Select", id: -1 });
         this.minimumAvailabilityOptions = [
             { name: "Announced", value: "Announced" },
             { name: "In Cinemas", value: "InCinemas" },
@@ -70,9 +70,10 @@ export class RadarrComponent implements OnInit {
          this.profilesRunning = true;
          this.radarrService.getQualityProfiles(form.value).subscribe(x => {
              this.qualities = x;
+             this.qualities.unshift({ name: "Please Select", id: -1 });
 
              this.profilesRunning = false;
-             this.notificationService.success("Quality Profiles", "Successfully retrevied the Quality Profiles");
+             this.notificationService.success("Quality Profiles", "Successfully retrieved the Quality Profiles");
          });
     }
 
@@ -80,15 +81,16 @@ export class RadarrComponent implements OnInit {
          this.rootFoldersRunning = true;
          this.radarrService.getRootFolders(form.value).subscribe(x => {
              this.rootFolders = x;
+             this.rootFolders.unshift({ path: "Please Select", id: -1 });
 
              this.rootFoldersRunning = false;
-             this.notificationService.success("Settings Saved", "Successfully retrevied the Root Folders");
+             this.notificationService.success("Settings Saved", "Successfully retrieved the Root Folders");
          });
     }
 
     public test(form: FormGroup) {
         if (form.invalid) {
-            this.notificationService.error("Validation", "Please check your entered values");
+            this.notificationService.error("Please check your entered values");
             return;
         }
         const settings = <IRadarrSettings>form.value;
@@ -96,14 +98,18 @@ export class RadarrComponent implements OnInit {
             if (x === true) {
                 this.notificationService.success("Connected", "Successfully connected to Radarr!");
             } else {
-                this.notificationService.error("Connected", "We could not connect to Radarr!");
+                this.notificationService.error("We could not connect to Radarr!");
             }
         });
     }
 
 public onSubmit(form: FormGroup) {
         if (form.invalid) {
-            this.notificationService.error("Validation", "Please check your entered values");
+            this.notificationService.error("Please check your entered values");
+            return;
+        }
+        if(form.controls.defaultQualityProfile.value === "-1" || form.controls.defaultRootPath.value === "Please Select") {
+            this.notificationService.error("Please check your entered values");
             return;
         }
 
@@ -116,10 +122,5 @@ public onSubmit(form: FormGroup) {
             }
         });
 
-    }
-
-    public ngOnDestroy() {
-        this.subscriptions.next();
-        this.subscriptions.complete();
     }
 }

@@ -41,7 +41,7 @@ export class EmbyComponent implements OnInit {
     public save() {
         this.embyService.logIn(this.embySettings).subscribe(x => {
             if (x == null || !x.servers[0].apiKey) {
-                this.notificationService.error("Could Not Authenticate", "Username or password was incorrect. Could not authenticate with Emby.");
+                this.notificationService.error("Username or password was incorrect. Could not authenticate with Emby.");
                 return;
             }
             this.router.navigate(["Wizard/CreateAdmin"]);

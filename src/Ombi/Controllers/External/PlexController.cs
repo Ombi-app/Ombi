@@ -41,19 +41,31 @@ namespace Ombi.Controllers.External
         [AllowAnonymous]
         public async Task<PlexAuthentication> SignIn([FromBody] UserRequest request)
         {
+            try
+            {
+
+ 
             // Do we already have settings?
+            _log.LogDebug("OK, signing into Plex");
             var settings = await PlexSettings.GetSettingsAsync();
             if (!settings.Servers?.Any() ?? false) return null;
 
+            _log.LogDebug("This is our first time, good to go!");
+
             var result = await PlexApi.SignIn(request);
+
+            _log.LogDebug("Attempting to sign in to Plex.Tv");
             if (!string.IsNullOrEmpty(result.user?.authentication_token))
             {
+                _log.LogDebug("Sign in successful");
+                _log.LogDebug("Getting servers");
                 var server = await PlexApi.GetServer(result.user.authentication_token);
                 var servers = server.Server.FirstOrDefault();
                 if (servers == null)
                 {
                     _log.LogWarning("Looks like we can't find any Plex Servers");
                 }
+                _log.LogDebug("Adding first server");
 
                 settings.Enable = true;
                 settings.Servers = new List<PlexServers> {
@@ -72,7 +84,14 @@ namespace Ombi.Controllers.External
                 await PlexSettings.SaveSettingsAsync(settings);
             }
 
+            _log.LogDebug("Finished");
             return result;
+            }
+            catch (Exception e)
+            {
+                _log.LogCritical(e, "Error when trying to sign into Plex.tv");
+                throw;
+            }
         }
 
         /// <summary>

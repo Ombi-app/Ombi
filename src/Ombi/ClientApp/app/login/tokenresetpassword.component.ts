@@ -38,7 +38,7 @@ export class TokenResetPasswordComponent implements OnInit {
 
     public onSubmit(form: FormGroup) {
         if (form.invalid) {
-            this.notify.error("Validation", "Email address is required");
+            this.notify.error("Email address is required");
             return;
         }
         const token = form.value as IResetPasswordToken;
@@ -48,7 +48,7 @@ export class TokenResetPasswordComponent implements OnInit {
                 this.router.navigate(["login"]);
             } else {
                 x.errors.forEach((val) => {
-                    this.notify.error("Error", val);
+                    this.notify.error(val);
                 });
             }
         });

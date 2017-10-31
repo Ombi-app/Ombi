@@ -55,8 +55,7 @@ namespace Ombi
             if (string.IsNullOrEmpty(StoragePath.StoragePath))
             {
                 config = new LoggerConfiguration()
-                    .MinimumLevel.Information()
-
+                    .MinimumLevel.Debug()
                     .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "Logs", "log-{Date}.txt"))
                     .WriteTo.SQLite("Ombi.db", "Logs", LogEventLevel.Debug)
                     .CreateLogger();
@@ -64,8 +63,7 @@ namespace Ombi
             else
             {
                 config = new LoggerConfiguration()
-                    .MinimumLevel.Information()
-
+                    .MinimumLevel.Debug()
                     .WriteTo.RollingFile(Path.Combine(StoragePath.StoragePath, "Logs", "log-{Date}.txt"))
                     .WriteTo.SQLite(Path.Combine(StoragePath.StoragePath, "Ombi.db"), "Logs", LogEventLevel.Debug)
                     .CreateLogger();

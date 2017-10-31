@@ -21,7 +21,7 @@ export class PlexComponent {
     public requestAuthToken() {
         this.plexService.logIn(this.login, this.password).subscribe(x => {
             if (x.user == null) {
-                this.notificationService.error("Could Not Authenticate", "Username or password was incorrect. Could not authenticate with Plex.");
+                this.notificationService.error("Username or password was incorrect. Could not authenticate with Plex.");
                 return;
             }
             this.authenticationResult = x;

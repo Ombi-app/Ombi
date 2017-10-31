@@ -34,7 +34,7 @@ export class OmbiComponent implements OnInit {
 
     public onSubmit(form: FormGroup) {
         if (form.invalid) {
-            this.notificationService.error("Validation", "Please check your entered values");
+            this.notificationService.error("Please check your entered values");
             return;
         }
 

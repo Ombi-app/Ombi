@@ -274,6 +274,13 @@ namespace Ombi.Core.Engine
                 };
             }
             request.Available = false;
+            foreach (var season in request.SeasonRequests)
+            {
+                foreach (var e in season.Episodes)
+                {
+                    e.Available = false;
+                }
+            }
             await TvRepository.UpdateChild(request);
             NotificationHelper.Notify(request, NotificationType.RequestAvailable);
             return new RequestEngineResult
@@ -285,7 +292,7 @@ namespace Ombi.Core.Engine
 
         public async Task<RequestEngineResult> MarkAvailable(int modelId)
         {
-            var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == modelId);
+            ChildRequests request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == modelId);
             if (request == null)
             {
                 return new RequestEngineResult
@@ -294,6 +301,13 @@ namespace Ombi.Core.Engine
                 };
             }
             request.Available = true;
+            foreach (var season in request.SeasonRequests)
+            {
+                foreach (var e in season.Episodes)
+                {
+                    e.Available = true;
+                }
+            }
             await TvRepository.UpdateChild(request);
             NotificationHelper.Notify(request, NotificationType.RequestAvailable);
             return new RequestEngineResult

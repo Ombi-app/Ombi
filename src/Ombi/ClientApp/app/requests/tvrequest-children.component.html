@@ -9,15 +9,15 @@
 
 
             <div class="col-md-1 col-md-push-9" *ngIf="isAdmin">
-                <form>
-                    <button style="text-align: right" *ngIf="child.canApprove && !child.approved" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve</button>
-                </form>
-                <form *ngIf="!child.denied"> 
-                    <button type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</button>
-                </form>
-                <form>
+               
+                    <button *ngIf="child.canApprove && !child.approved" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve</button>
+                    <button *ngIf="child.available" (click)="changeAvailability(child, false)" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change"><i class="fa fa-minus"></i> Mark Unavailable</button>
+                    <button *ngIf="!child.available" (click)="changeAvailability(child, true)" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change"><i class="fa fa-plus"></i> Mark Available</button>
+
+                    <button *ngIf="!child.denied" type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</button>
+           
                     <button type="button" (click)="removeRequest(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Remove</button>
-                </form>
+                
             </div>
         </div>
         <div class="col-md-12">

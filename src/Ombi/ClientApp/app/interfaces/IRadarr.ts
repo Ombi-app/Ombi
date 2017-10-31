@@ -1,16 +1,11 @@
-﻿import { ICutoff, IItem } from "./ICommon";
-
-export interface IRadarrRootFolder {
+﻿export interface IRadarrRootFolder {
     id: number;
     path: string;
-    freespace: number;
 }
 
 export interface IRadarrProfile {
     name: string;
     id: number;
-    cutoff: ICutoff;
-    items: IItem[];
 }
 
 export interface IMinimumAvailability {
