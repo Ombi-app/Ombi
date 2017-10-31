@@ -11,12 +11,12 @@
   },
   "Common": {
     "ContinueButton": "Fortsæt",
-    "Available": "Available",
-    "ProcessingRequest": "Processing Request",
-    "PendingApproval": "Pending Approval",
-    "NotRequested": "Not Requested",
-    "Requested": "Requested",
-    "Request": "Request",
+    "Available": "Tilgængelig",
+    "ProcessingRequest": "Bearbejder forespørgsel",
+    "PendingApproval": "Afventer godkendelse",
+    "NotRequested": "Ikke forespurgt",
+    "Requested": "Forespurgt",
+    "Request": "Forespørg",
     "Errors": {
       "Validation": "Tjek venligst dine indtastede værdier"
     }
@@ -58,14 +58,14 @@
     }
   },
   "Search": {
-    "Title": "Search",
-    "Paragraph": "Want to watch something that is not currently available? No problem, just search for it below and request it!",
-    "MoviesTab": "Movies",
-    "TvTab": "TV Shows",
-    "Suggestions": "Suggestions",
-    "NoResults": "Sorry, we didn't find any results!",
-    "ReleaseDate": "Release Date",
-    "ViewOnPlex": "View On Plex",
+    "Title": "Søg",
+    "Paragraph": "Ønsker du at se noget, som ikke er der? Intet problem, bare søg efter det nedenfor og forespørg det!",
+    "MoviesTab": "Film",
+    "TvTab": "TV serier",
+    "Suggestions": "Forslag",
+    "NoResults": "Beklager, vi kunne ikke finde nogle match!",
+    "ReleaseDate": "Udgivelsesdato",
+    "ViewOnPlex": "Se på Plex",
     "RequestAdded": "Request for {{title}} has been added successfully",
     "Movies": {
       "PopularMovies": "Popular Movies",
