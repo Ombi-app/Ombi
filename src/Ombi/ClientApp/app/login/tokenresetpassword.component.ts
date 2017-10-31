@@ -44,7 +44,7 @@ export class TokenResetPasswordComponent implements OnInit {
         const token = form.value as IResetPasswordToken;
         this.identityService.resetPassword(token).subscribe(x => {
             if (x.successful) {
-                this.notify.success("Success", `Your Password has been reset`);
+                this.notify.success(`Your Password has been reset`);
                 this.router.navigate(["login"]);
             } else {
                 x.errors.forEach((val) => {

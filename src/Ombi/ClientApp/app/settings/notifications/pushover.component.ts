@@ -42,9 +42,9 @@ export class PushoverComponent implements OnInit {
 
         this.settingsService.savePushoverNotificationSettings(settings).subscribe(x => {
             if (x) {
-                this.notificationService.success("Settings Saved", "Successfully saved the Pushover settings");
+                this.notificationService.success( "Successfully saved the Pushover settings");
             } else {
-                this.notificationService.success("Settings Saved", "There was an error when saving the Pushover settings");
+                this.notificationService.success("There was an error when saving the Pushover settings");
             }
         });
 
@@ -58,9 +58,9 @@ export class PushoverComponent implements OnInit {
 
         this.testerService.pushoverTest(form.value).subscribe(x => {
             if (x) {
-                this.notificationService.success("Successful", "Successfully sent a Pushover message");
+                this.notificationService.success( "Successfully sent a Pushover message");
             } else {
-                this.notificationService.success("Error", "There was an error when sending the Pushover message. Please check your settings");
+                this.notificationService.error("There was an error when sending the Pushover message. Please check your settings");
             }
         });
     }

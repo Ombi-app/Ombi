@@ -22,9 +22,9 @@ export class LandingPageComponent implements OnInit {
     public save() {
         this.settingsService.saveLandingPage(this.settings).subscribe(x => {
             if (x) {
-                this.notificationService.success("Settings Saved", "Successfully saved the Landing Page settings");
+                this.notificationService.success("Successfully saved the Landing Page settings");
             } else {
-                this.notificationService.success("Settings Saved", "There was an error when saving the Landing Page settings");
+                this.notificationService.success("There was an error when saving the Landing Page settings");
             }
         });
     }

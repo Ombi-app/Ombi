@@ -1,4 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
 import "rxjs/add/operator/map";
@@ -20,9 +21,12 @@ export class MovieSearchComponent implements OnInit {
     public movieResults: ISearchMovieResult[];
     public result: IRequestEngineResult;
     public searchApplied = false;
+    
+    private requestAddedText: string;
         
     constructor(private searchService: SearchService, private requestService: RequestService,
-                private notificationService: NotificationService, private authService: AuthService) {
+                private notificationService: NotificationService, private authService: AuthService,
+                private readonly translate: TranslateService) {
 
         this.searchChanged
             .debounceTime(600) // Wait Xms afterthe last event before emitting last event
@@ -52,6 +56,7 @@ export class MovieSearchComponent implements OnInit {
             result: false,
             errorMessage: "",
         };
+        
     }
 
     public search(text: any) {
@@ -71,9 +76,11 @@ export class MovieSearchComponent implements OnInit {
                     this.result = x;
 
                     if (this.result.result) {
-                        this.notificationService.success("Request Added",
-                            `Request for ${searchResult.title} has been added successfully`);
-                        searchResult.processed = true;
+                        
+                        this.translate.get("Search.RequestAdded", searchResult.title).subscribe(x => {
+                            this.notificationService.success(x);
+                            searchResult.processed = true;
+                        });
                     } else {
                         if (this.result.errorMessage && this.result.message) {
                             this.notificationService.warning("Request Added", `${this.result.message} - ${this.result.errorMessage}`);

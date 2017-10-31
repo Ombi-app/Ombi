@@ -46,7 +46,7 @@ export class UpdateDetailsComponent implements OnInit {
 
     this.identityService.updateLocalUser(this.form.value).subscribe(x => {
             if (x.successful) {
-                this.notificationService.success("Updated", `All of your details have now been updated`);
+                this.notificationService.success(`All of your details have now been updated`);
             } else {
                 x.errors.forEach((val) => {
                     this.notificationService.error(val);

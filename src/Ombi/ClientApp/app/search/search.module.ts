@@ -18,6 +18,8 @@ import { SearchService } from "../services";
 
 import { AuthGuard } from "../auth/auth.guard";
 
+import { SharedModule } from "../shared/shared.module";
+
 const routes: Routes = [
     { path: "search", component: SearchComponent, canActivate: [AuthGuard] },
     { path: "search/show/:id", component: SeriesInformationComponent, canActivate: [AuthGuard] },
@@ -30,6 +32,7 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         NgbModule.forRoot(),
         TreeTableModule,
+        SharedModule,
     ],
     declarations: [
         SearchComponent,

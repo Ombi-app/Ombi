@@ -66,7 +66,7 @@ export class SonarrComponent implements OnInit {
                 this.qualities.unshift({ name: "Please Select", id: -1 });
 
                 this.profilesRunning = false;
-                this.notificationService.success("Quality Profiles", "Successfully retrieved the Quality Profiles");
+                this.notificationService.success("Successfully retrieved the Quality Profiles");
             });
     }
 
@@ -78,7 +78,7 @@ export class SonarrComponent implements OnInit {
                 this.rootFolders.unshift({ path: "Please Select", id: -1 });
 
                 this.rootFoldersRunning = false;
-                this.notificationService.success("Settings Saved", "Successfully retrieved the Root Folders");
+                this.notificationService.success("Successfully retrieved the Root Folders");
             });
     }
 
@@ -90,7 +90,7 @@ export class SonarrComponent implements OnInit {
         const settings = <ISonarrSettings>form.value;
         this.testerService.sonarrTest(settings).subscribe(x => {
             if (x) {
-                this.notificationService.success("Connected", "Successfully connected to Sonarr!");
+                this.notificationService.success("Successfully connected to Sonarr!");
             } else {
                 this.notificationService.error("We could not connect to Sonarr!");
             }
@@ -116,7 +116,7 @@ export class SonarrComponent implements OnInit {
         this.settingsService.saveSonarr(form.value)
             .subscribe(x => {
                 if (x) {
-                    this.notificationService.success("Settings Saved", "Successfully saved Sonarr settings");
+                    this.notificationService.success("Successfully saved Sonarr settings");
                 } else {
                     this.notificationService.error("There was an error when saving the Sonarr settings");
                 }

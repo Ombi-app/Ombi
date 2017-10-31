@@ -74,7 +74,7 @@ export class MovieRequestsComponent implements OnInit {
         if(available) {
             this.requestService.markMovieAvailable({ id: request.id }).subscribe(x => {
                 if (x.result) {
-                    this.notificationService.success("Request Available",
+                    this.notificationService.success(
                         `${request.title} Is now available`);
                 } else {
                     this.notificationService.warning("Request Available", x.message ? x.message : x.errorMessage);
@@ -84,7 +84,7 @@ export class MovieRequestsComponent implements OnInit {
         } else {
             this.requestService.markMovieUnavailable({ id: request.id }).subscribe(x => {
                 if (x.result) {
-                    this.notificationService.success("Request Available",
+                    this.notificationService.success(
                         `${request.title} Is now unavailable`);
                 } else {
                     this.notificationService.warning("Request Available", x.message ? x.message : x.errorMessage);
@@ -140,7 +140,7 @@ export class MovieRequestsComponent implements OnInit {
             .subscribe(x => {
 
                 if (x.result) {
-                    this.notificationService.success("Request Approved",
+                    this.notificationService.success(
                         `Request for ${request.title} has been approved successfully`);
                 } else {
                     this.notificationService.warning("Request Approved", x.message ? x.message : x.errorMessage);

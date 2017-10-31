@@ -47,7 +47,7 @@ export class ResetPasswordComponent implements OnInit {
             }
             this.identityService.submitResetPassword(form.value.email).subscribe(x => {
                 x.errors.forEach((val) => {
-                    this.notify.success("Password Reset", val);
+                    this.notify.success(val);
                 });
             });
         } else {

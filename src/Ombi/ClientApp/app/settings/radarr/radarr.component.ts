@@ -73,7 +73,7 @@ export class RadarrComponent implements OnInit {
              this.qualities.unshift({ name: "Please Select", id: -1 });
 
              this.profilesRunning = false;
-             this.notificationService.success("Quality Profiles", "Successfully retrieved the Quality Profiles");
+             this.notificationService.success("Successfully retrieved the Quality Profiles");
          });
     }
 
@@ -84,7 +84,7 @@ export class RadarrComponent implements OnInit {
              this.rootFolders.unshift({ path: "Please Select", id: -1 });
 
              this.rootFoldersRunning = false;
-             this.notificationService.success("Settings Saved", "Successfully retrieved the Root Folders");
+             this.notificationService.success("Successfully retrieved the Root Folders");
          });
     }
 
@@ -96,7 +96,7 @@ export class RadarrComponent implements OnInit {
         const settings = <IRadarrSettings>form.value;
         this.testerService.radarrTest(settings).subscribe(x => {
             if (x === true) {
-                this.notificationService.success("Connected", "Successfully connected to Radarr!");
+                this.notificationService.success("Successfully connected to Radarr!");
             } else {
                 this.notificationService.error("We could not connect to Radarr!");
             }
@@ -116,9 +116,9 @@ public onSubmit(form: FormGroup) {
         const settings = <IRadarrSettings>form.value;
         this.settingsService.saveRadarr(settings).subscribe(x => {
             if (x) {
-                this.notificationService.success("Settings Saved", "Successfully saved Radarr settings");
+                this.notificationService.success("Successfully saved Radarr settings");
             } else {
-                this.notificationService.success("Settings Saved", "There was an error when saving the Radarr settings");
+                this.notificationService.success("There was an error when saving the Radarr settings");
             }
         });
 

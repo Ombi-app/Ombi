@@ -33,7 +33,7 @@ export class TvRequestChildrenComponent {
         if(available) {
             this.requestService.markTvAvailable({ id: request.id }).subscribe(x => {
                 if (x.result) {
-                    this.notificationService.success("Request Available",
+                    this.notificationService.success(
                         `This request is now available`);
                 } else {
                     this.notificationService.warning("Request Available", x.message ? x.message : x.errorMessage);
@@ -43,7 +43,7 @@ export class TvRequestChildrenComponent {
         } else {
             this.requestService.markTvUnavailable({ id: request.id }).subscribe(x => {
                 if (x.result) {
-                    this.notificationService.success("Request Available",
+                    this.notificationService.success(
                     `This request is now unavailable`);
                 } else {
                     this.notificationService.warning("Request Available", x.message ? x.message : x.errorMessage);
@@ -64,7 +64,7 @@ export class TvRequestChildrenComponent {
         this.requestService.denyChild({ id: request.id })
             .subscribe(x => {
                 if (x.result) {
-                    this.notificationService.success("Request Denied",
+                    this.notificationService.success(
                         `Request has been denied successfully`);
                 } else {
                     this.notificationService.warning("Request Denied", x.message ? x.message : x.errorMessage);
@@ -84,7 +84,7 @@ export class TvRequestChildrenComponent {
         this.requestService.approveChild({ id: request.id })
             .subscribe(x => {
                 if (x.result) {
-                    this.notificationService.success("Request Approved",
+                    this.notificationService.success(
                         `Request has been approved successfully`);
                 } else {
                     this.notificationService.warning("Request Approved", x.message ? x.message : x.errorMessage);

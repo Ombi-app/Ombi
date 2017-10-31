@@ -44,9 +44,9 @@ export class DiscordComponent implements OnInit {
 
         this.settingsService.saveDiscordNotificationSettings(settings).subscribe(x => {
             if (x) {
-                this.notificationService.success("Settings Saved", "Successfully saved the Discord settings");
+                this.notificationService.success("Successfully saved the Discord settings");
             } else {
-                this.notificationService.success("Settings Saved", "There was an error when saving the Discord settings");
+                this.notificationService.success("There was an error when saving the Discord settings");
             }
         });
 
@@ -60,9 +60,9 @@ export class DiscordComponent implements OnInit {
 
         this.testerService.discordTest(form.value).subscribe(x => {
             if (x) {
-                this.notificationService.success("Successful", "Successfully sent a Discord message, please check the discord channel");
+                this.notificationService.success("Successfully sent a Discord message, please check the discord channel");
             } else {
-                this.notificationService.success("Error", "There was an error when sending the Discord message. Please check your settings");
+                this.notificationService.error("There was an error when sending the Discord message. Please check your settings");
             }
         });
 

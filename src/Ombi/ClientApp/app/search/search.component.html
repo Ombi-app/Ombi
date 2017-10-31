@@ -1,5 +1,5 @@
-﻿<h1 id="searchTitle">Search</h1>
-<h4>Want to watch something that is not currently available? No problem, just search for it below and request it!</h4>
+﻿<h1 [translate]="'Search.Title'"></h1>
+<h4 [translate]="'Search.Paragraph'"></h4>
 <br />
 <!-- Nav tabs -->
 
@@ -7,11 +7,11 @@
 <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
 
     <li role="presentation" class="active">
-        <a id="movieTabButton" href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab" (click)="selectMovieTab()"><i class="fa fa-film"></i> Movies</a>
+        <a id="movieTabButton" href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab" (click)="selectMovieTab()"><i class="fa fa-film"></i>  {{ 'Search.MoviesTab' | translate }}</a>
     </li>
     
     <li role="presentation">
-        <a id="tvTabButton" href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectTvTab()"><i class="fa fa-television"></i> TV Shows</a>
+        <a id="tvTabButton" href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectTvTab()"><i class="fa fa-television"></i> {{ 'Search.TvTab' | translate }}</a>
     </li>
 </ul>
 
