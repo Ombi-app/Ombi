@@ -59,14 +59,14 @@
   },
   "Search": {
     "Title": "Søg",
-    "Paragraph": "Ønsker du at se noget, som ikke er der? Intet problem, bare søg efter det nedenfor og forespørg det!",
+    "Paragraph": "Ønsker du at se noget, som er utilgængeligt? intet problem, bare søg efter det nedenfor og anmod om det!",
     "MoviesTab": "Film",
     "TvTab": "Tv-serier",
     "Suggestions": "Forslag",
-    "NoResults": "Beklager, vi kunne ikke finde nogle match!",
+    "NoResults": "Beklager, vi fandt ingen resultater!",
     "ReleaseDate": "Udgivelsesdato",
     "ViewOnPlex": "Se på Plex",
-    "RequestAdded": "Forespørgsel om {{title}} er blevet tilføjet",
+    "RequestAdded": "{{title}} er anmodet med succes",
     "Movies": {
       "PopularMovies": "Populære film",
       "UpcomingMovies": "Kommende film",
