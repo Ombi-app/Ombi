@@ -95,9 +95,9 @@ export class UserManagementComponent implements OnInit {
 
         this.settingsService.saveUserManagementSettings(this.settings).subscribe(x => {
             if (x === true) {
-                this.notificationService.success("Saved", "Successfully saved the User Management Settings");
+                this.notificationService.success("Successfully saved the User Management Settings");
             } else {
-                this.notificationService.success("Settings Saved", "There was an error when saving the Ombi settings");
+                this.notificationService.success( "There was an error when saving the Ombi settings");
             }
         });
     }

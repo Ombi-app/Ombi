@@ -155,7 +155,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
             .subscribe(x => {
                 this.result = x;
                 if (this.result.result) {
-                    this.notificationService.success("Request Added",
+                    this.notificationService.success(
                         `Request for ${searchResult.title} has been added successfully`);
                 } else {
                     if (this.result.errorMessage && this.result.message) {

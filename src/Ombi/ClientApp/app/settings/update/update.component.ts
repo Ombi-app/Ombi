@@ -42,16 +42,16 @@ export class UpdateComponent implements OnInit {
         this.updateService.checkForNewUpdate().subscribe(x => {
             if (x === true) {
                 this.updateAvailable = true;
-                this.notificationService.success("Update", "There is a new update available");
+                this.notificationService.success("There is a new update available");
             } else {
-                this.notificationService.success("Update", "You are on the latest version!");
+                this.notificationService.success("You are on the latest version!");
             }
         });
     }
 
     public update() {
         this.updateService.forceUpdate().subscribe();
-        this.notificationService.success("Update", "We triggered the update job");
+        this.notificationService.success("We triggered the update job");
     }
 
     public onSubmit(form: FormGroup) {
@@ -63,7 +63,7 @@ export class UpdateComponent implements OnInit {
         this.settingsService.saveUpdateSettings(form.value)
             .subscribe(x => {
                 if (x) {
-                    this.notificationService.success("Settings Saved", "Successfully saved Update settings");
+                    this.notificationService.success("Successfully saved Update settings");
                 } else {
                     this.notificationService.error("There was an error when saving the Update settings");
                 }

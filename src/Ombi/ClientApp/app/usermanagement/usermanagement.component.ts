@@ -37,7 +37,7 @@ export class UserManagementComponent implements OnInit {
             return;
         }
         this.identityService.sendWelcomeEmail(user).subscribe();        
-        this.notificationService.success("Email", `Sent a welcome email to ${user.emailAddress}`);
+        this.notificationService.success(`Sent a welcome email to ${user.emailAddress}`);
     }
 
     public checkAllBoxes() {

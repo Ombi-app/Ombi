@@ -72,7 +72,7 @@ export class MovieSearchGridComponent implements OnInit {
                     this.result = x;
 
                     if (this.result.result) {
-                        this.notificationService.success("Request Added",
+                        this.notificationService.success(
                             `Request for ${searchResult.title} has been added successfully`);
                         searchResult.processed = true;
                     } else {

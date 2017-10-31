@@ -38,7 +38,7 @@ export class UserManagementEditComponent {
             accept: () => {
                 this.identityService.deleteUser(this.user).subscribe(x => {
                     if (x.successful) {
-                        this.notificationService.success("Deleted", `The user ${this.user.userName} was deleted`);
+                        this.notificationService.success(`The user ${this.user.userName} was deleted`);
                         this.router.navigate(["usermanagement"]);
                     } else {
                         x.errors.forEach((val) => {
@@ -57,7 +57,7 @@ export class UserManagementEditComponent {
     public resetPassword() {
         this.identityService.submitResetPassword(this.user.emailAddress).subscribe(x => {
             if (x.successful) {
-                this.notificationService.success("Reset", `Sent reset password email to ${this.user.emailAddress}`);
+                this.notificationService.success(`Sent reset password email to ${this.user.emailAddress}`);
                 this.router.navigate(["usermanagement"]);
             } else {
                 x.errors.forEach((val) => {
@@ -82,7 +82,7 @@ export class UserManagementEditComponent {
 
         this.identityService.updateUser(this.user).subscribe(x => {
             if (x.successful) {
-                this.notificationService.success("Updated", `The user ${this.user.userName} has been updated successfully`);
+                this.notificationService.success(`The user ${this.user.userName} has been updated successfully`);
                 this.router.navigate(["usermanagement"]);
             } else {
                 x.errors.forEach((val) => {

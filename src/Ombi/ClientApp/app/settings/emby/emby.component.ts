@@ -39,7 +39,7 @@ export class EmbyComponent implements OnInit {
     public test(server: IEmbyServer) {
         this.testerService.embyTest(server).subscribe(x => {
             if (x === true) {
-                this.notificationService.success("Connected", `Successfully connected to the Emby server ${server.name}!`);
+                this.notificationService.success(`Successfully connected to the Emby server ${server.name}!`);
             } else {
                 this.notificationService.error(`We could not connect to the Emby server  ${server.name}!`);
             }
@@ -56,9 +56,9 @@ export class EmbyComponent implements OnInit {
     public save() {
         this.settingsService.saveEmby(this.settings).subscribe(x => {
             if (x) {
-                this.notificationService.success("Settings Saved", "Successfully saved Emby settings");
+                this.notificationService.success("Successfully saved Emby settings");
             } else {
-                this.notificationService.success("Settings Saved", "There was an error when saving the Emby settings");
+                this.notificationService.success("There was an error when saving the Emby settings");
             }
         });
     }
@@ -66,7 +66,7 @@ export class EmbyComponent implements OnInit {
     public runCacher(): void {
         this.jobService.runEmbyCacher().subscribe(x => {
             if(x) {
-                this.notificationService.success("Running","Triggered the Emby Content Cacher");
+                this.notificationService.success("Triggered the Emby Content Cacher");
             }
         });
     }

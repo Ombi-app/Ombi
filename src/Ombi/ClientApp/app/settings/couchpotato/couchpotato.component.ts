@@ -59,9 +59,9 @@ export class CouchPotatoComponent implements OnInit {
 
         this.settingsService.saveCouchPotatoSettings(settings).subscribe(x => {
             if (x) {
-                this.notificationService.success("Settings Saved", "Successfully saved the CouchPotato settings");
+                this.notificationService.success("Successfully saved the CouchPotato settings");
             } else {
-                this.notificationService.success("Settings Saved", "There was an error when saving the CouchPotato settings");
+                this.notificationService.success("There was an error when saving the CouchPotato settings");
             }
         });
     }
@@ -74,7 +74,7 @@ export class CouchPotatoComponent implements OnInit {
         const settings = form.value;
         this.testerService.couchPotatoTest(settings).subscribe(x => {
             if (x === true) {
-                this.notificationService.success("Connected", "Successfully connected to CouchPotato!");
+                this.notificationService.success("Successfully connected to CouchPotato!");
             } else {
                 this.notificationService.error("We could not connect to CouchPotato!");
             }
@@ -85,7 +85,7 @@ export class CouchPotatoComponent implements OnInit {
         this.couchPotatoService.getApiKey(form.value).subscribe(x => {
             if (x.success === true) {
                 (<FormControl>this.form.controls.apiKey).setValue(x.api_key);
-                this.notificationService.success("Api Key", "Successfully got the Api Key");
+                this.notificationService.success("Successfully grabbed the Api Key");
             } else {
                 this.notificationService.error("Could not get the Api Key");
             }

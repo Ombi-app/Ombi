@@ -5,17 +5,17 @@
         <div class="input-group-addon right-radius">
             <div class="btn-group">
                 <a href="#" class="btn btn-sm btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    Suggestions
+                    {{ 'Search.Suggestions' | translate }}
                     <i class="fa fa-chevron-down"></i>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a (click)="popularMovies()">Popular Movies</a></li>
-                    <li><a (click)="upcomingMovies()">Upcoming Movies</a></li>
-                    <li><a (click)="topRatedMovies()">Top Rated Movies</a></li>
-                    <li><a (click)="nowPlayingMovies()">Now Playing Movies</a></li>
+                    <li><a (click)="popularMovies()" [translate]="'Search.Movies.PopularMovies'"></a></li>
+                    <li><a (click)="upcomingMovies()" [translate]="'Search.Movies.UpcomingMovies'"></a></li>
+                    <li><a (click)="topRatedMovies()" [translate]="'Search.Movies.TopRatedMovies'"></a></li>
+                    <li><a (click)="nowPlayingMovies()" [translate]="'Search.Movies.NowPlayingMovies'"></a></li>
                 </ul>
             </div>
-            <i id="movieSearchButton" class="fa fa-search"></i>
+            <i class="fa fa-search"></i>
         </div>
     </div>
     <br />
@@ -23,14 +23,12 @@
     <!-- Movie content -->
     <div id="movieList">
         <div *ngIf="searchApplied && movieResults?.length <= 0" class='no-search-results'>
-            <i class='fa fa-film no-search-results-icon'></i><div class='no-search-results-text'>Sorry, we didn't find any results!</div>
+            <i class='fa fa-film no-search-results-icon'></i><div class='no-search-results-text' [translate]="'Search.NoResults'"></div>
         </div>
 
         <div *ngFor="let result of movieResults">
             <div class="row">
-                <div id="{{id}}imgDiv" class="col-sm-2">
-
-
+                <div class="col-sm-2">
                     <img *ngIf="result.posterPath"  class="img-responsive poster" src="https://image.tmdb.org/t/p/w150/{{result.posterPath}}" alt="poster">
 
                 </div>
@@ -40,21 +38,17 @@
                             <h4>{{result.title}} ({{result.releaseDate | date: 'yyyy'}})</h4>
                         </a>
 
+                        <span *ngIf="result.releaseDate" class="label label-info" target="_blank">{{ 'Search.ReleaseDate' | translate }} {{result.releaseDate | date: 'dd/MM/yyyy'}}</span>
 
-                        <span *ngIf="result.firstAired" class="label label-info" target="_blank">Air Date: {{result.firstAired | date: 'dd/MM/yyyy'}}</span>
+                        <a *ngIf="result.homepage" href="{{result.homepage}}" target="_blank"><span class="label label-info" [translate]="'Search.Movies.HomePage'"></span></a>
 
-
-                        <span *ngIf="result.releaseDate" class="label label-info" target="_blank">Release Date: {{result.releaseDate | date: 'dd/MM/yyyy'}}</span>
-
-                        <a *ngIf="result.homepage" href="{{result.homepage}}" target="_blank"><span class="label label-info">HomePage</span></a>
-
-                        <a *ngIf="result.trailer" href="{{result.trailer}}" target="_blank"><span class="label label-info">Trailer</span></a>
+                        <a *ngIf="result.trailer" href="{{result.trailer}}" target="_blank"><span class="label label-info" [translate]="'Search.Movies.Trailer'"></span></a>
                         <span *ngIf="result.quality" class="label label-success">{{result.quality}}p</span>
                         
-                        <ng-template [ngIf]="result.available"><span class="label label-success">Available</span></ng-template>
-                        <ng-template [ngIf]="result.approved && !result.available"><span class="label label-info">Processing Request</span></ng-template>
-                        <ng-template [ngIf]="result.requested && !result.approved && !result.available"><span class="label label-warning">Pending Approval</span></ng-template>
-                        <ng-template [ngIf]="!result.requested && !result.available && !result.approved"><span class="label label-danger">Not Requested</span></ng-template>
+                        <ng-template [ngIf]="result.available"><span class="label label-success" [translate]="'Common.Available'"></span></ng-template>
+                        <ng-template [ngIf]="result.approved && !result.available"><span class="label label-info" [translate]="'Common.ProcessingRequest'"></span></ng-template>
+                        <ng-template [ngIf]="result.requested && !result.approved && !result.available"><span class="label label-warning" [translate]="'Common.PendingApproval'"></span></ng-template>
+                        <ng-template [ngIf]="!result.requested && !result.available && !result.approved"><span class="label label-danger" [translate]="'Common.NotRequested'"></span></ng-template>
 
 
 
@@ -67,34 +61,25 @@
 
 
                 <div class="col-sm-2">
-                    <input name="{{type}}Id" type="text" value="{{result.id}}" hidden="hidden"/>
 
                     <div *ngIf="result.available">
-                        <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> Available</button>
-
-                        <div *ngIf="result.url">
-                            <br/>
-                            <br/>
-                            <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{result.url}}" target="_blank"><i class="fa fa-eye"></i> View In Plex</a>
-
-                        </div>
+                        <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> {{ 'Common.Available' | translate }}</button>
                     </div>
                     <div *ngIf="!result.available">
                     <div *ngIf="result.requested || result.approved; then requestedBtn else notRequestedBtn"></div>
                     <ng-template #requestedBtn>
-                        <button style="text-align: right" class="btn btn-primary-outline disabled" [disabled]><i class="fa fa-check"></i> Requested</button>
+                        <button style="text-align: right" class="btn btn-primary-outline disabled" [disabled]><i class="fa fa-check"></i> {{ 'Common.Requested' | translate }}</button>
                     </ng-template>
                     <ng-template #notRequestedBtn>
                         <button id="{{result.id}}" style="text-align: right" class="btn btn-primary-outline" (click)="request(result)">
                             <i *ngIf="result.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> <i *ngIf="!result.requestProcessing && !result.processed" class="fa fa-plus"></i>
-                            <i *ngIf="result.processed && !result.requestProcessing" class="fa fa-check"></i>Request</button>
+                            <i *ngIf="result.processed && !result.requestProcessing" class="fa fa-check"></i>{{ 'Common.Request' | translate }}</button>
                     </ng-template>
                         </div>
 
                     <br/>
                     <div *ngIf="result.available">
                         <a *ngIf="result.plexUrl" style="text-align: right" class="btn btn-sm btn-success-outline" href="{{result.plexUrl}}" target="_blank"><i class="fa fa-eye"></i> View On Plex</a>
-
                     </div>
 
                 </div>

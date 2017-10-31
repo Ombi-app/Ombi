@@ -37,9 +37,9 @@ export class DogNzbComponent implements OnInit {
 
         this.settingsService.saveDogNzbSettings(settings).subscribe(x => {
             if (x) {
-                this.notificationService.success("Settings Saved", "Successfully saved the DogNzb settings");
+                this.notificationService.success("Successfully saved the DogNzb settings");
             } else {
-                this.notificationService.success("Settings Saved", "There was an error when saving the DogNzb settings");
+                this.notificationService.success("There was an error when saving the DogNzb settings");
             }
         });
     }

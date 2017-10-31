@@ -59,9 +59,9 @@ export class EmailNotificationComponent implements OnInit {
 
         this.settingsService.saveEmailNotificationSettings(settings).subscribe(x => {
             if (x) {
-                this.notificationService.success("Settings Saved", "Successfully saved Email settings");
+                this.notificationService.success("Successfully saved Email settings");
             } else {
-                this.notificationService.success("Settings Saved", "There was an error when saving the Email settings");
+                this.notificationService.success("There was an error when saving the Email settings");
             }
         });
 
@@ -75,9 +75,9 @@ export class EmailNotificationComponent implements OnInit {
 
         this.testerService.emailTest(form.value).subscribe(x => {
               if (x === true) {
-                this.notificationService.success("Sent", "Successfully sent an email message, please check your inbox");
+                this.notificationService.success("Successfully sent an email message, please check your inbox");
             } else {
-                this.notificationService.success("Error", "There was an error when sending the Email message, please check your settings.");
+                this.notificationService.error("There was an error when sending the Email message, please check your settings.");
             }
         });
     }

@@ -40,7 +40,7 @@ export class PlexComponent implements OnInit, OnDestroy {
                 if (x.success) {
                     this.loadedServers = x;
                     this.serversButton = true;
-                    this.notificationService.success("Loaded", "Found the servers! Please select one!");
+                    this.notificationService.success("Found the servers! Please select one!");
                 } else {
                     this.notificationService.warning("Error When Requesting Plex Servers", "Please make sure your username and password are correct");
                 }
@@ -55,13 +55,13 @@ export class PlexComponent implements OnInit, OnDestroy {
         server.port = parseInt(selectedServer.port);
         server.ssl = selectedServer.scheme === "http" ? false : true;
 
-        this.notificationService.success("Success", `Selected ${server.name}!`);
+        this.notificationService.success(`Selected ${server.name}!`);
     }
 
     public testPlex(server: IPlexServer) {
         this.testerService.plexTest(server).subscribe(x => {
             if (x === true) {
-                this.notificationService.success("Connected", `Successfully connected to the Plex server ${server.name}!`);
+                this.notificationService.success(`Successfully connected to the Plex server ${server.name}!`);
             } else {
                 this.notificationService.error(`We could not connect to the Plex server  ${server.name}!`);
             }
@@ -111,9 +111,9 @@ export class PlexComponent implements OnInit, OnDestroy {
         this.settings.servers = filtered;
         this.settingsService.savePlex(this.settings).subscribe(x => {
             if (x) {
-                this.notificationService.success("Settings Saved", "Successfully saved Plex settings");
+                this.notificationService.success("Successfully saved Plex settings");
             } else {
-                this.notificationService.success("Settings Saved", "There was an error when saving the Plex settings");
+                this.notificationService.success("There was an error when saving the Plex settings");
             }
         });
     }
@@ -121,7 +121,7 @@ export class PlexComponent implements OnInit, OnDestroy {
     public runCacher(): void {
         this.jobService.runPlexCacher().subscribe(x => {
             if(x) {
-                this.notificationService.success("Running","Triggered the Plex Content Cacher");
+                this.notificationService.success("Triggered the Plex Content Cacher");
             }
         });
     }

@@ -42,9 +42,9 @@ export class PushbulletComponent implements OnInit {
 
         this.settingsService.savePushbulletNotificationSettings(settings).subscribe(x => {
             if (x) {
-                this.notificationService.success("Settings Saved", "Successfully saved the Pushbullet settings");
+                this.notificationService.success("Successfully saved the Pushbullet settings");
             } else {
-                this.notificationService.success("Settings Saved", "There was an error when saving the Pushbullet settings");
+                this.notificationService.success("There was an error when saving the Pushbullet settings");
             }
         });
 
@@ -58,9 +58,9 @@ export class PushbulletComponent implements OnInit {
 
         this.testerService.pushbulletTest(form.value).subscribe(x => {
             if (x) {
-                this.notificationService.success("Successful", "Successfully sent a Pushbullet message");
+                this.notificationService.success("Successfully sent a Pushbullet message");
             } else {
-                this.notificationService.success("Error", "There was an error when sending the Pushbullet message. Please check your settings");
+                this.notificationService.error("There was an error when sending the Pushbullet message. Please check your settings");
             }
         });
 

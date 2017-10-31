@@ -46,9 +46,9 @@ export class MattermostComponent implements OnInit {
 
         this.settingsService.saveMattermostNotificationSettings(settings).subscribe(x => {
             if (x) {
-                this.notificationService.success("Settings Saved", "Successfully saved the Mattermost settings");
+                this.notificationService.success("Successfully saved the Mattermost settings");
             } else {
-                this.notificationService.success("Settings Saved", "There was an error when saving the Mattermost settings");
+                this.notificationService.success("There was an error when saving the Mattermost settings");
             }
         });
 
@@ -62,9 +62,9 @@ export class MattermostComponent implements OnInit {
 
         this.testerService.mattermostTest(form.value).subscribe(x => {
             if (x) {
-                this.notificationService.success("Successful", "Successfully sent a Mattermost message, please check the discord channel");
+                this.notificationService.success( "Successfully sent a Mattermost message, please check the discord channel");
             } else {
-                this.notificationService.success("Error", "There was an error when sending the Mattermost message. Please check your settings");
+                this.notificationService.error("There was an error when sending the Mattermost message. Please check your settings");
             }
         });
 

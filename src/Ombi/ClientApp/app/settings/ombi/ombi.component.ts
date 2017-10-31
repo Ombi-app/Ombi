@@ -40,14 +40,14 @@ export class OmbiComponent implements OnInit {
 
         this.settingsService.saveOmbi(form.value).subscribe(x => {
             if (x) {
-                this.notificationService.success("Settings Saved", "Successfully saved Ombi settings");
+                this.notificationService.success("Successfully saved Ombi settings");
             } else {
-                this.notificationService.success("Settings Saved", "There was an error when saving the Ombi settings");
+                this.notificationService.success("There was an error when saving the Ombi settings");
             }
         });
     }
 
     public successfullyCopied() {
-        this.notificationService.success("Copied", "Copied the Api Key to the clipboard!");
+        this.notificationService.success("Copied the Api Key to the clipboard!");
     }
 }
