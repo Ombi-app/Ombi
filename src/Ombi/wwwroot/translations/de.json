@@ -11,12 +11,12 @@
   },
   "Common": {
     "ContinueButton": "Weiter",
-    "Available": "Available",
-    "ProcessingRequest": "Processing Request",
-    "PendingApproval": "Pending Approval",
-    "NotRequested": "Not Requested",
-    "Requested": "Requested",
-    "Request": "Request",
+    "Available": "Verfügbar",
+    "ProcessingRequest": "Anfrage wird bearbeitet",
+    "PendingApproval": "Genehmigung ausstehend",
+    "NotRequested": "Nicht angefragt",
+    "Requested": "Angefragt",
+    "Request": "Anfrage",
     "Errors": {
       "Validation": "Bitte überprüfen Sie die eingegebenen Werte"
     }
@@ -58,7 +58,7 @@
     }
   },
   "Search": {
-    "Title": "Search",
+    "Title": "Suche",
     "Paragraph": "Want to watch something that is not currently available? No problem, just search for it below and request it!",
     "MoviesTab": "Movies",
     "TvTab": "TV Shows",
