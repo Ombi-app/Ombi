@@ -12,11 +12,11 @@
   "Common": {
     "ContinueButton": "Fortsæt",
     "Available": "Tilgængelig",
-    "ProcessingRequest": "Bearbejder forespørgsel",
+    "ProcessingRequest": "Behandler anmodning",
     "PendingApproval": "Afventer godkendelse",
-    "NotRequested": "Ikke forespurgt",
-    "Requested": "Forespurgt",
-    "Request": "Forespørg",
+    "NotRequested": "Ikke anmodet",
+    "Requested": "Anmodet",
+    "Request": "Anmod",
     "Errors": {
       "Validation": "Tjek venligst dine indtastede værdier"
     }
@@ -61,7 +61,7 @@
     "Title": "Søg",
     "Paragraph": "Ønsker du at se noget, som ikke er der? Intet problem, bare søg efter det nedenfor og forespørg det!",
     "MoviesTab": "Film",
-    "TvTab": "TV serier",
+    "TvTab": "Tv-serier",
     "Suggestions": "Forslag",
     "NoResults": "Beklager, vi kunne ikke finde nogle match!",
     "ReleaseDate": "Udgivelsesdato",
@@ -70,8 +70,8 @@
     "Movies": {
       "PopularMovies": "Populære film",
       "UpcomingMovies": "Kommende film",
-      "TopRatedMovies": "Højest rangerede film",
-      "NowPlayingMovies": "Now Playing Movies",
+      "TopRatedMovies": "Bedst bedømte film",
+      "NowPlayingMovies": "Aktuelle film",
       "HomePage": "Startside",
       "Trailer": "Trailer"
     }
