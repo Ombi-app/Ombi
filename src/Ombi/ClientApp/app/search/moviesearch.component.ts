@@ -21,8 +21,6 @@ export class MovieSearchComponent implements OnInit {
     public movieResults: ISearchMovieResult[];
     public result: IRequestEngineResult;
     public searchApplied = false;
-    
-    private requestAddedText: string;
         
     constructor(private searchService: SearchService, private requestService: RequestService,
                 private notificationService: NotificationService, private authService: AuthService,
