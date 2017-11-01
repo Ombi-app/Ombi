@@ -74,8 +74,7 @@ export class MovieSearchComponent implements OnInit {
                     this.result = x;
 
                     if (this.result.result) {
-                        
-                        this.translate.get("Search.RequestAdded", searchResult.title).subscribe(x => {
+                        this.translate.get("Search.RequestAdded", { title: searchResult.title }).subscribe(x => {
                             this.notificationService.success(x);
                             searchResult.processed = true;
                         });
