@@ -27,12 +27,13 @@
         </div>
 
         <div *ngFor="let result of movieResults">
-            <div class="row">
-                <div class="col-sm-2">
+        
+            <div class="row backdrop" [style.background-image]="result.background">
+                <div class="col-sm-2 small-padding">
                     <img *ngIf="result.posterPath"  class="img-responsive poster" src="https://image.tmdb.org/t/p/w150/{{result.posterPath}}" alt="poster">
 
                 </div>
-                <div class="col-sm-8">
+                <div class="col-sm-8 small-padding">
                     <div>
                         <a href="https://www.themoviedb.org/movie/{{result.id}}/" target="_blank">
                             <h4>{{result.title}} ({{result.releaseDate | date: 'yyyy'}})</h4>
@@ -54,13 +55,12 @@
 
 
                         <br/>
-                        <br/>
                     </div>
                     <p style="font-size: 0.9rem !important">{{result.overview}}</p>
                 </div>
 
 
-                <div class="col-sm-2">
+                <div class="col-sm-2 small-padding">
 
                     <div *ngIf="result.available">
                         <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> {{ 'Common.Available' | translate }}</button>
@@ -85,7 +85,8 @@
                 </div>
 
             </div>
-            <hr/>
+            <br/>
+            <br/>
         </div>
 
     </div>

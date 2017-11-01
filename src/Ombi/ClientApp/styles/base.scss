@@ -760,8 +760,8 @@ textarea {
 }
 
 .poster {
-    box-shadow: 5px 5px 30px #000000;
-    border-radius: 30px;
+    // box-shadow: 3px 3px 15px #000000;
+    border-radius: 5px;
 }
 
 
@@ -832,4 +832,14 @@ a > h4:hover {
 
 .ui-treetable tbody td {
     padding: 0.25em 3.5em;
+}
+
+.small-padding {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.backdrop{
+     box-shadow: 3px 3px 10px #000000;
+     background-position: center;
 }

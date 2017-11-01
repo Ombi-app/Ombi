@@ -42,6 +42,7 @@ export class MovieRequestsComponent implements OnInit {
                 }
                 this.requestService.searchMovieRequests(this.searchText)
                     .subscribe(m => {
+                        this.setOverrides(m);
                         this.movieRequests = m;
                     });
             });
