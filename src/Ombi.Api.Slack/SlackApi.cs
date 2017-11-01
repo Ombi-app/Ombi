@@ -36,7 +36,7 @@ namespace Ombi.Api.Slack
             request.AddJsonBody(body);
             request.ApplicationJsonContentType();
 
-            return await Api.Request<string>(request);
+            return await Api.RequestContent(request);
         }
     }
 }
