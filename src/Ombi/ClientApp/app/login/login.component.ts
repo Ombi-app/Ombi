@@ -54,6 +54,10 @@ export class LoginComponent implements OnInit {
                 this.router.navigate(["Wizard"]);
             }
         });
+
+        if(authService.loggedIn()) {
+            this.router.navigate(["search"]);
+        }
     }
 
     public ngOnInit() {
