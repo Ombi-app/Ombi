@@ -93,7 +93,7 @@ namespace Ombi.Schedule.Jobs.Plex
             {
 
                 Logger.LogInformation("Getting all content from server {0}", servers.Name);
-                var allContent = GetAllContent(servers);
+                var allContent = await GetAllContent(servers);
                 Logger.LogInformation("We found {0} items", allContent.Count);
 
                 // Let's now process this.
@@ -222,9 +222,9 @@ namespace Ombi.Schedule.Jobs.Plex
         /// </summary>
         /// <param name="plexSettings">The plex settings.</param>
         /// <returns></returns>
-        private List<Mediacontainer> GetAllContent(PlexServers plexSettings)
+        private async Task<List<Mediacontainer>> GetAllContent(PlexServers plexSettings)
         {
-            var sections = PlexApi.GetLibrarySections(plexSettings.PlexAuthToken, plexSettings.FullUri).Result;
+            var sections = await PlexApi.GetLibrarySections(plexSettings.PlexAuthToken, plexSettings.FullUri);
 
             var libs = new List<Mediacontainer>();
             if (sections != null)
@@ -246,7 +246,7 @@ namespace Ombi.Schedule.Jobs.Plex
                             }
                         }
                     }
-                    var lib = PlexApi.GetLibrary(plexSettings.PlexAuthToken, plexSettings.FullUri, dir.key).Result;
+                    var lib = await PlexApi.GetLibrary(plexSettings.PlexAuthToken, plexSettings.FullUri, dir.key);
                     if (lib != null)
                     {
                         libs.Add(lib.MediaContainer);

@@ -842,4 +842,12 @@ a > h4:hover {
 .backdrop{
      box-shadow: 3px 3px 10px #000000;
      background-position: center;
+     background-size: cover;
+}
+
+.tv-overview{
+    -webkit-text-fill-color: white;
+    -webkit-text-stroke-width: 0.3px;
+    -webkit-text-stroke-color: black;
+    font-size: 0.9rem !important
 }
