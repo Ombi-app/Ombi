@@ -66,7 +66,7 @@
     "NoResults": "Beklager, vi fandt ingen resultater!",
     "ReleaseDate": "Udgivelsesdato",
     "ViewOnPlex": "Se på Plex",
-    "RequestAdded": "Forespørgsel om {{title}} er blevet tilføjet",
+    "RequestAdded": "{{title}} er anmodet med succes",
     "Movies": {
       "PopularMovies": "Populære film",
       "UpcomingMovies": "Kommende film",
