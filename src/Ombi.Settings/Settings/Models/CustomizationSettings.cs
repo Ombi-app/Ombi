@@ -6,6 +6,7 @@ namespace Ombi.Settings.Settings.Models
     {
         public string ApplicationName { get; set; }
         public string ApplicationUrl { get; set; }
+        public string CustomCssLink { get; set; }
 
         public void AddToUrl(string part)
         {

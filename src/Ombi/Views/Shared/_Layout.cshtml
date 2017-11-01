@@ -21,6 +21,8 @@
     {
         appName = "Ombi";
     }
+
+    
 }
 <!DOCTYPE html>
 <html>
@@ -51,6 +53,12 @@
     <meta name="theme-color" content="#ffffff" />
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    @{
+        if (!string.IsNullOrEmpty(customization.CustomCssLink))
+        {
+            <link rel="stylesheet" href="@customization.CustomCssLink" />
+        }
+    }
     <link rel="stylesheet" href="~/loading.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/dist/vendor.css" asp-append-version="true" />
     <script src="~/dist/vendor.js" asp-append-version="true" defer></script>

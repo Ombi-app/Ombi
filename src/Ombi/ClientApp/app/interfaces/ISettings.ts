@@ -93,6 +93,7 @@ export interface ICustomizationSettings extends ISettings {
     applicationName: string;
     applicationUrl: string;
     logo: string;
+    customCssLink: string;
 }
 
 export interface IAuthenticationSettings extends ISettings {
