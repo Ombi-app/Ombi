@@ -37,6 +37,19 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
     }
 
     public submitRequests() {
+
+        // Make sure something has been selected
+        const selected = this.series.seasonRequests.some((season) => {
+            return  season.episodes.some((ep) => {
+                return ep.selected;
+            });
+        });
+
+        if(!selected) {
+            this.notificationService.error("You need to select some episodes!");
+            return;
+        }
+
         this.series.requested = true;
 
         this.requestService.requestTv(this.series)
