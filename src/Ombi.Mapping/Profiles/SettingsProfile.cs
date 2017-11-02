@@ -14,6 +14,7 @@ namespace Ombi.Mapping.Profiles
             CreateMap<SlackNotificationsViewModel, SlackNotificationSettings>().ReverseMap();
             CreateMap<PushoverNotificationViewModel, PushoverSettings>().ReverseMap();
             CreateMap<MattermostNotificationsViewModel, MattermostNotificationSettings>().ReverseMap();
+            CreateMap<TelegramNotificationsViewModel, TelegramSettings>().ReverseMap();
         }
     }
 }

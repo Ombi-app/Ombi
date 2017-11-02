@@ -122,6 +122,9 @@ export class MovieRequestsComponent implements OnInit {
     private loadRequests(amountToLoad: number, currentlyLoaded: number) {
         this.requestService.getMovieRequests(amountToLoad, currentlyLoaded + 1)
             .subscribe(x => {
+                // x.background = this.sanitizer.
+                // bypassSecurityTrustStyle
+                // ("linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%),url(" + "https://image.tmdb.org/t/p/w1280" + x.backdropPath + ")");
                 this.setOverrides(x);
                 this.movieRequests.push.apply(this.movieRequests, x);
                 this.currentlyLoaded = currentlyLoaded + amountToLoad;

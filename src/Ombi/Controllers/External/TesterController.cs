@@ -9,6 +9,7 @@ using Ombi.Api.Emby;
 using Ombi.Api.Plex;
 using Ombi.Api.Radarr;
 using Ombi.Api.Sonarr;
+using Ombi.Api.Telegram;
 using Ombi.Attributes;
 using Ombi.Core.Notifications;
 using Ombi.Core.Settings.Models.External;
@@ -292,5 +293,20 @@ namespace Ombi.Controllers.External
                 return false;
             }
         }
+
+        /// <summary>
+        /// Sends a test message to Slack using the provided settings
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        //[HttpPost("telegram")]
+        //public async Task<bool> Telegram([FromBody] TelegramSettings settings)
+        //{
+        //    settings.Enabled = true;
+        //    await TelegramApi.Send("This is a test ")
+
+        //    return true;
+        //}
+
     }
 }

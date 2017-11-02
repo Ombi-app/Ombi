@@ -22,6 +22,7 @@ import {
     IRadarrSettings,
     ISlackNotificationSettings,
     ISonarrSettings,
+    ITelegramNotifcationSettings,
     IUpdateSettings,
     IUserManagementSettings,
 } from "../interfaces";
@@ -218,6 +219,16 @@ export class SettingsService extends ServiceAuthHelpers {
     public saveDogNzbSettings(settings: IDogNzbSettings): Observable<boolean> {
         return this.httpAuth
             .post(`${this.url}/DogNzb`, JSON.stringify(settings), { headers: this.headers })
+            .map(this.extractData).catch(this.handleError);
+    }
+
+    public getTelegramNotificationSettings(): Observable<ITelegramNotifcationSettings> {
+        return this.httpAuth.get(`${this.url}/notifications/telegram`).map(this.extractData).catch(this.handleError);
+    }
+
+    public saveTelegramNotificationSettings(settings: ITelegramNotifcationSettings): Observable<boolean> {
+        return this.httpAuth
+            .post(`${this.url}/notifications/telegram`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
 }

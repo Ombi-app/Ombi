@@ -311,3 +311,18 @@ button.list-group-item:focus {
     background:$bg-colour-disabled;
     color:white;
 }
+
+.ui-state-active{
+    color:$primary-colour $i;
+}
+
+.ui-state-default {
+    border-width: 2px;
+    border-style: solid;
+    border-color: $primary-colour-outline;
+    border-image: initial;
+}
+
+.ui-radiobutton, .ui-radiobutton-label{
+    vertical-align: baseline;
+}

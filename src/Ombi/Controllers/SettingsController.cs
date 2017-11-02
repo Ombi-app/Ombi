@@ -454,6 +454,41 @@ namespace Ombi.Controllers
             return model;
         }
 
+
+        /// <summary>
+        /// Saves the telegram notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/telegram")]
+        public async Task<bool> TelegramNotificationSettings([FromBody] TelegramNotificationsViewModel model)
+        {
+            // Save the email settings
+            var settings = Mapper.Map<TelegramSettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.UpdateRange(model.NotificationTemplates);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the telegram Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/telegram")]
+        public async Task<TelegramNotificationsViewModel> TelegramNotificationSettings()
+        {
+            var emailSettings = await Get<TelegramSettings>();
+            var model = Mapper.Map<TelegramNotificationsViewModel>(emailSettings);
+
+            // Lookup to see if we have any templates saved
+            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Telegram);
+
+            return model;
+        }
+
         /// <summary>
         /// Saves the pushbullet notification settings.
         /// </summary>

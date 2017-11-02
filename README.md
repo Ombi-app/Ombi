@@ -12,7 +12,7 @@ ____
 [![Report a bug](http://i.imgur.com/xSpw482.png)](https://github.com/tidusjar/Ombi/issues/new) [![Feature request](http://i.imgur.com/mFO0OuX.png)](http://feathub.com/tidusjar/Ombi)
 
 
-| Service  | Master (Version 2.0 - Recommended)                | Open Beta     (Version 3.0)          |
+| Service  | Master (V2)                | Open Beta     (V3 - Recommended)          |
 |----------|:---------------------------:|:----------------------------:|
 | AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/master?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/DotNetCore?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/DotNetCore) | 
 | Download |[![Download](http://i.imgur.com/odToka3.png)](https://github.com/tidusjar/Ombi/releases)            |      [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/DotNetCore/artifacts)       | 
@@ -24,19 +24,19 @@ Here are some of the features Ombi V3 has:
 * User management system (supports plex.tv, Emby and local accounts)
 * A landing page that will give you the availability of your Plex/Emby server and also add custom notification text to inform your users of downtime.
 * Allows your users to get custom notifications!
-* Secure authentication so you don't have to worry about those script kiddies
+* Secure authentication using best practises
 * Will show if the request is already on plex or even if it's already monitored.
 * Automatically updates the status of requests when they are available on Plex/Emby
 * Slick, responsive and mobile friendly UI
 * Ombi will automatically update itself :)
-* Very fast system.
+* Very fast!
 
 ### Integration 
 We integrate with the following applications:
 * Plex Media Server
 * Emby
 * Sonarr
-* Radarr (beta)
+* Radarr
 * DogNzb
 * Couch Potato
 
@@ -49,30 +49,31 @@ Supported notifications:
 * Pushbullet
 * Pushover
 * Mattermost
+* Telegram
 
 ### The difference between Version 3 and 2
 
-Over the last 7 months, we focused on the main functions on Ombi, a complete rewrite while making it better, faster and more stable.
+Over the last 8 months, we focused on the main functions on Ombi, a complete rewrite while making it better, faster and more stable.
 We have already done most of the work, but some features are still be missing in this first version.
-We are planning to bring back these features in Version 3 but for now you can find a list below with a comparison of features between v2 and v3.
+We are planning to bring back these features in V3 but for now you can find a list below with a quick comparison of features between v2 and v3.
 
 
 | Service  | Version 3 | Version 2 |
 |----------|:----------:|:----------:|
-| Supported online | Yes | No |
-|Multiple Plex/Emby Servers| Yes | No |
+| Multiple Plex/Emby Servers| Yes | No |
 | Emby & Plex support | Yes | Yes |
 | Mono dependency | No | Yes |
 | Notifications support | Yes| Yes |
 | Landing page | Yes (brand new) | Yes |
 | Login page | Yes (brand new) | Yes |
-| Custom Logo in Ombi and notifications | Yes | No |
+| Custom Notification Messages | Yes | No |
 | Sending newsletters | Planned | Yes |
 | Send a Mass Email | Planned | Yes |
-| SickRage | Planned (not supported yet)| Yes |
+| SickRage | Planned | Yes |
 | CouchPotato | Yes | Yes |
 | Watcher | Planned | Yes |
 | DogNzb | Yes | No |
+| Issues | Planned | Yes |
 | Headphones | No (support dropped) | Yes |
 
 # Feature Requests
@@ -89,17 +90,7 @@ Search the existing requests to see if your suggestion has already been submitte
 
 # Installation
 
-Windows: Download the windows zip file above and run ombi.exe
-
-Linux: Download the linux zip file, run chmod +x Ombi to make the Ombi file an executable.
-
-Get the following error? 
-libunwind.so.8: cannot open shared object file
-You may need to install libwind8.
-```apt-get install libunwind8```
-
-# FAQ
-Do you have an issue or a question? if so check out our [FAQ](https://github.com/tidusjar/Ombi/wiki/FAQ)!
+[Click Here](https://github.com/tidusjar/Ombi/wiki/Installation)
 
 # Contributors
 
@@ -113,7 +104,7 @@ If you feel like donating you can donate with the below buttons!
 [![Patreon](https://www.ombi.io/img/patreondonate.svg)](https://patreon.com/tidusjar/Ombi) 
 [![Paypal](https://www.ombi.io/img/paypaldonate.svg)](https://paypal.me/PlexRequestsNet)
 
-### A massive thanks to everyone for all their helps!
+### A massive thanks to everyone for all their help!
 
 ## Stats
 [![Throughput Graph](https://graphs.waffle.io/tidusjar/PlexRequests.Net/throughput.svg)](https://waffle.io/tidusjar/PlexRequests.Net/metrics/throughput)

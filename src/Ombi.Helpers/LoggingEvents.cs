@@ -27,6 +27,7 @@ namespace Ombi.Helpers
         public static EventId SlackNotification => new EventId(4003);
         public static EventId MattermostNotification => new EventId(4004);
         public static EventId PushoverNotification => new EventId(4005);
+        public static EventId TelegramNotifcation => new EventId(4006);
 
         public static EventId TvSender => new EventId(5000);
         public static EventId SonarrSender => new EventId(5001);

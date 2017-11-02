@@ -44,10 +44,10 @@ using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Jobs.Sonarr;
-using Ombi.Store.Entities;
 using Ombi.Store.Repository.Requests;
 using Ombi.Updater;
 using PlexContentCacher = Ombi.Schedule.Jobs.Plex.PlexContentCacher;
+using Ombi.Api.Telegram;
 
 namespace Ombi.DependencyInjection
 {
@@ -99,6 +99,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMattermostApi, MattermostApi>();
             services.AddTransient<ICouchPotatoApi, CouchPotatoApi>();
             services.AddTransient<IDogNzbApi, DogNzbApi>();
+            services.AddTransient<ITelegramApi, TelegramApi>();
         }
 
         public static void RegisterStore(this IServiceCollection services) { 

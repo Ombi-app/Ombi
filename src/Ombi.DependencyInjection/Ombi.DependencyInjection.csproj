@@ -28,6 +28,7 @@
     <ProjectReference Include="..\Ombi.Api.Service\Ombi.Api.Service.csproj" />
     <ProjectReference Include="..\Ombi.Api.Slack\Ombi.Api.Slack.csproj" />
     <ProjectReference Include="..\Ombi.Api.Sonarr\Ombi.Api.Sonarr.csproj" />
+    <ProjectReference Include="..\Ombi.Api.Telegram\Ombi.Api.Telegram.csproj" />
     <ProjectReference Include="..\Ombi.Api.Trakt\Ombi.Api.Trakt.csproj" />
     <ProjectReference Include="..\Ombi.Api.TvMaze\Ombi.Api.TvMaze.csproj" />
     <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
