@@ -15,7 +15,7 @@
     "ProcessingRequest": "Anfrage wird bearbeitet",
     "PendingApproval": "Genehmigung ausstehend",
     "NotRequested": "Nicht angefragt",
-    "Requested": "Angefragt",
+    "Requested": "Angefordert",
     "Request": "Anfrage",
     "Errors": {
       "Validation": "Bitte überprüfen Sie die eingegebenen Werte"
