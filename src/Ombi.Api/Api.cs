@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Microsoft.Extensions.Caching.Memory;
@@ -36,7 +37,7 @@ namespace Ombi.Api
             {
                 return new HttpClientHandler
                 {
-                    ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true
+                    ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true,
                 };
             }
             return new HttpClientHandler();
@@ -49,9 +50,9 @@ namespace Ombi.Api
 
         public async Task<T> Request<T>(Request request)
         {
-            using (var httpClient = new HttpClient(await GetHandler()))
+            using(var handler = await GetHandler())
+            using (var httpClient = new HttpClient(handler))
             {
-
                 using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, request.FullUri))
                 {
                     // Add the Json Body

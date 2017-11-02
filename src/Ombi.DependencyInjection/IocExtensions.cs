@@ -134,6 +134,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ISlackNotification, SlackNotification>();
             services.AddTransient<IMattermostNotification, MattermostNotification>();
             services.AddTransient<IPushoverNotification, PushoverNotification>();
+            services.AddTransient<ITelegramNotification, TelegramNotification>();
 
         }
 

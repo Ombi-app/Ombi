@@ -43,14 +43,12 @@ namespace Ombi.Controllers
         /// <param name="mapper">The mapper.</param>
         /// <param name="templateRepo">The templateRepo.</param>
         /// <param name="embyApi">The embyApi.</param>
-        /// <param name="embyCacher">The embyCacher.</param>
         /// <param name="radarrCacher">The radarrCacher.</param>
         /// <param name="memCache">The memory cache.</param>
         public SettingsController(ISettingsResolver resolver,
             IMapper mapper,
             INotificationTemplatesRepository templateRepo,
             IEmbyApi embyApi,
-            IEmbyContentCacher embyCacher,
             IRadarrCacher radarrCacher,
             IMemoryCache memCache)
         {
@@ -58,7 +56,6 @@ namespace Ombi.Controllers
             Mapper = mapper;
             TemplateRepository = templateRepo;
             _embyApi = embyApi;
-            _embyContentCacher = embyCacher;
             _radarrCacher = radarrCacher;
             _cache = memCache;
         }
@@ -67,7 +64,6 @@ namespace Ombi.Controllers
         private IMapper Mapper { get; }
         private INotificationTemplatesRepository TemplateRepository { get; }
         private readonly IEmbyApi _embyApi;
-        private readonly IEmbyContentCacher _embyContentCacher;
         private readonly IRadarrCacher _radarrCacher;
         private readonly IMemoryCache _cache;
 
@@ -90,6 +86,7 @@ namespace Ombi.Controllers
         public async Task<bool> OmbiSettings([FromBody]OmbiSettings ombi)
         {
             ombi.Wizard = true;
+            _cache.Remove(CacheKeys.OmbiSettings);
             return await Save(ombi);
         }
 
