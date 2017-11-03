@@ -27,14 +27,14 @@
             <ng-template let-col let-node="rowData" pTemplate="body">
                 <!--This is the section that holds the parent level results set-->
                 <div *ngIf="!node.leaf">
-                    <div class="row">
-                        <div class="col-sm-2">
+                    <div class="row backdrop" [style.background-image]="node?.data?.background">
+                        <div class="col-sm-2  small-padding" >
 
                             <img class="img-responsive poster" src="{{node.data.posterPath || null}}" alt="poster">
 
                         </div>
 
-                        <div class="col-sm-5 ">
+                        <div class="col-sm-5  small-padding">
                             <div>
                                 <a href="http://www.imdb.com/title/{{node.data.imdbId}}/" target="_blank">
                                     <h4 class="request-title">{{node.data.title}} ({{node.data.releaseDate | date: 'yyyy'}})</h4>
@@ -50,7 +50,7 @@
                             <div>Release Date: {{node.data.releaseDate | date}}</div>
                             <br />
                         </div>
-                        <div class="col-sm-3 col-sm-push-3">
+                        <div class="col-sm-3 col-sm-push-3  small-padding">
 
                             <button  style="text-align: right" class="btn btn-sm btn-success-outline" (click)="openClosestTab($event)"><i class="fa fa-plus"></i> View</button>
                         </div>

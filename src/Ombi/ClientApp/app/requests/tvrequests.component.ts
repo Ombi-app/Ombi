@@ -1,8 +1,10 @@
 ﻿import { Component, OnInit } from "@angular/core";
+import { DomSanitizer } from '@angular/platform-browser';
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
 import "rxjs/add/operator/map";
 import { Subject } from "rxjs/Subject";
+import { ImageService } from './../services/image.service';
 
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
@@ -32,9 +34,11 @@ export class TvRequestsComponent implements OnInit {
     private amountToLoad: number;
 
     constructor(private requestService: RequestService,
-                private auth: AuthService) {
+                private auth: AuthService,
+                private sanitizer: DomSanitizer,
+                private imageService: ImageService) {
         this.searchChanged
-            .debounceTime(600) // Wait Xms afterthe last event before emitting last event
+            .debounceTime(600) // Wait Xms after the last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
             .subscribe(x => {
                 this.searchText = x as string;
@@ -43,7 +47,10 @@ export class TvRequestsComponent implements OnInit {
                     return;
                 }
                 this.requestService.searchTvRequestsTree(this.searchText)
-                    .subscribe(m => this.tvRequests = m);
+                    .subscribe(m => {
+                        this.tvRequests = m;
+                        this.tvRequests.forEach((val) => this.loadBackdrop(val));
+                    });
             });
     }
     public openClosestTab(el: any) {
@@ -110,11 +117,20 @@ export class TvRequestsComponent implements OnInit {
         this.requestService.getTvRequestsTree(this.amountToLoad, 0)
             .subscribe(x => {
                 this.tvRequests = x;
-            });
+                this.tvRequests.forEach((val, index) => {
+                    this.loadBackdrop(val);
+            });     
+        });
     }
 
     private resetSearch() {
         this.currentlyLoaded = 5;
         this.loadInit();
+    }
+    private loadBackdrop(val: TreeNode): void {
+        this.imageService.getTvBanner(val.data.id).subscribe(x => {
+            val.data.background = this.sanitizer.bypassSecurityTrustStyle
+                ("linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%),url(" + x + ")");
+            });
     }
 }

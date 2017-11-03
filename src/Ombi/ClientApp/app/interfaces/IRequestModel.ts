@@ -99,9 +99,10 @@ export interface IFullBaseRequest extends IBaseRequest {
   releaseDate: Date;
   status: string;
   released: boolean;
+  background: string;
 
   // Used in the UI
-  background: any;
+  backgroundPath: any;
 }
 
 export interface IBaseRequest {

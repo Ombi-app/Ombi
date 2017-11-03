@@ -1,4 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
 import "rxjs/add/operator/map";
@@ -30,7 +31,8 @@ export class MovieRequestsComponent implements OnInit {
     constructor(private requestService: RequestService,
                 private auth: AuthService,
                 private notificationService: NotificationService,
-                private radarrService: RadarrService) {
+                private radarrService: RadarrService,
+                private sanitizer: DomSanitizer) {
         this.searchChanged
             .debounceTime(600) // Wait Xms after the last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -157,6 +159,10 @@ export class MovieRequestsComponent implements OnInit {
         this.requestService.getMovieRequests(this.amountToLoad, 0)
             .subscribe(x => {
                 this.movieRequests = x;
+
+                this.movieRequests.forEach((req) => {
+                    this.movieRequests.forEach((req) => this.setBackground(req));
+                });
                 this.radarrService.getQualityProfilesFromSettings().subscribe(c => {
                     this.radarrProfiles = c;
                     this.movieRequests.forEach((req) => this.setQualityOverrides(req));
@@ -208,7 +214,13 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     private setOverride(req: IMovieRequests): void {
-       this.setQualityOverrides(req);
-       this.setRootFolderOverrides(req);
+        this.setBackground(req);
+        this.setQualityOverrides(req);
+        this.setRootFolderOverrides(req);
+    }
+
+    private setBackground(req: IMovieRequests): void {
+        req.backgroundPath = this.sanitizer.bypassSecurityTrustStyle
+        ("linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%),url(" + "https://image.tmdb.org/t/p/w1280" + req.background + ")");
     }
 }

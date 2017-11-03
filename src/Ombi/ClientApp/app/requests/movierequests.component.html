@@ -14,14 +14,14 @@
     <div *ngFor="let request of movieRequests">
 
 
-        <div class="row" >
-            <div class="col-sm-2">
+        <div class="row backdrop" [style.background-image]="request.backgroundPath">
+            <div class="col-sm-2  small-padding">
 
                 <img class="img-responsive poster" src="https://image.tmdb.org/t/p/w150/{{request.posterPath}}" alt="poster">
 
             </div>
 
-            <div class="col-sm-5 ">
+            <div class="col-sm-5  small-padding">
                 <div>
                     <a href="http://www.imdb.com/title/{{request.imdbId}}/" target="_blank">
                         <h4 class="request-title">{{request.title}} ({{request.releaseDate | date: 'yyyy'}})</h4>
@@ -63,7 +63,7 @@
                 </div>
 
             </div>
-            <div class="col-sm-3 col-sm-push-3">
+            <div class="col-sm-3 col-sm-push-3  small-padding">
                 <div *ngIf="isAdmin">
                     <div *ngIf="!request.approved">
                         <form>
@@ -130,7 +130,8 @@
 
             </div>
         </div>
-        <hr />
+        <br/>
+        <br/>
 
 
 
