@@ -41,7 +41,15 @@ namespace Ombi.Controllers
             });
 
             var images = await Api.GetTvImages(tvdbid, key.Value);
-            return images.tvbanner.FirstOrDefault()?.url ?? string.Empty;
+            if (images.tvbanner != null)
+            {
+                return images.tvbanner.FirstOrDefault()?.url ?? string.Empty;
+            }
+            if (images.showbackground != null)
+            {
+                return images.showbackground.FirstOrDefault()?.url ?? string.Empty;
+            }
+            return string.Empty;
         }
 
         [HttpGet("background")]

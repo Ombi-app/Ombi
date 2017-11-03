@@ -159,15 +159,10 @@ namespace Ombi.Core.Engine
                 viewMovie.ImdbId = showInfo.ImdbId;
             }
 
-            // So when we run the rule to check if it's available in Plex we need the ImdbId
-            // But we only pass down the SearchViewModel that doesn't contain this
-            // So set the ImdbId to viewMovie.Id and then set it back afterwards
-            var oldId = viewMovie.Id;
-            viewMovie.TheMovieDbId = viewMovie.TheMovieDbId;
+            viewMovie.TheMovieDbId = viewMovie.Id.ToString();
 
             await RunSearchRules(viewMovie);
-
-            viewMovie.Id = oldId;
+            
             return viewMovie;
         }
 
