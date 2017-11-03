@@ -104,7 +104,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     {
                         // Process Shows
                         Logger.LogInformation("Processing TV Shows");
-                        foreach (var show in content.Metadata ?? new Metadata[]{})
+                        foreach (var show in content.Metadata ?? new Metadata[] { })
                         {
                             var seasonList = await PlexApi.GetSeasons(servers.PlexAuthToken, servers.FullUri,
                                 show.ratingKey);
@@ -124,24 +124,31 @@ namespace Ombi.Schedule.Jobs.Plex
                             var existingContent = await Repo.GetByKey(show.ratingKey);
                             if (existingContent != null)
                             {
-                                Logger.LogInformation("We already have show {0} checking for new seasons", existingContent.Title);
-                                // Ok so we have it, let's check if there are any new seasons
-                                var itemAdded = false;
-                                foreach (var season in seasonsContent)
+                                try
                                 {
-                                    var seasonExists = existingContent.Seasons.FirstOrDefault(x => x.SeasonKey == season.SeasonKey);
-
-                                    if (seasonExists != null)
+                                    Logger.LogInformation("We already have show {0} checking for new seasons", existingContent.Title);
+                                    // Ok so we have it, let's check if there are any new seasons
+                                    var itemAdded = false;
+                                    foreach (var season in seasonsContent)
                                     {
-                                        // We already have this season
-                                        continue;
-                                    }
-                                    
-                                    existingContent.Seasons.Add(season);
-                                    itemAdded = true;
-                                }
+                                        var seasonExists = existingContent.Seasons.FirstOrDefault(x => x.SeasonKey == season.SeasonKey);
 
-                                if (itemAdded) await Repo.Update(existingContent);
+                                        if (seasonExists != null)
+                                        {
+                                            // We already have this season
+                                            continue;
+                                        }
+
+                                        existingContent.Seasons.Add(season);
+                                        itemAdded = true;
+                                    }
+
+                                    if (itemAdded) await Repo.Update(existingContent);
+                                }
+                                catch (Exception e)
+                                {
+                                   Logger.LogError(LoggingEvents.PlexContentCacher, e, "Exception when adding new seasons to title {0}", existingContent.Title);
+                                }
                             }
                             else
                             {
@@ -153,7 +160,7 @@ namespace Ombi.Schedule.Jobs.Plex
                                 var showMetadata = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
                                     show.ratingKey);
                                 var providerIds = PlexHelper.GetProviderIdFromPlexGuid(showMetadata.MediaContainer.Metadata.FirstOrDefault().guid);
-                                
+
                                 var item = new PlexServerContent
                                 {
                                     AddedAt = DateTime.Now,
@@ -186,11 +193,11 @@ namespace Ombi.Schedule.Jobs.Plex
                     if (content.viewGroup.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase))
                     {
                         Logger.LogInformation("Processing Movies");
-                        foreach (var movie in content?.Metadata ?? new Metadata[]{})
+                        foreach (var movie in content?.Metadata ?? new Metadata[] { })
                         {
                             // Let's check if we have this movie
                             var existing = await Repo.GetByKey(movie.ratingKey);
-                            if(existing != null)
+                            if (existing != null)
                             {
                                 continue;
                             }

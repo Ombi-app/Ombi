@@ -114,6 +114,7 @@ namespace Ombi.Schedule.Jobs.Plex
             }
 
             // we have now finished.
+            _log.LogInformation(LoggingEvents.PlexEpisodeCacher, "We have finished caching the episodes.");
             await _repo.SaveChangesAsync();
         }
 

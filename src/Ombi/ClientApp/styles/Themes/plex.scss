@@ -316,7 +316,7 @@ button.list-group-item:focus {
     color:$primary-colour $i;
 }
 
-.ui-state-default {
+.ui-radiobutton-box .ui-widget .ui-state-default {
     border-width: 2px;
     border-style: solid;
     border-color: $primary-colour-outline;
