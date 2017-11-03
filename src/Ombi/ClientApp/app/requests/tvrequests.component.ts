@@ -1,10 +1,10 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer } from "@angular/platform-browser";
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
 import "rxjs/add/operator/map";
 import { Subject } from "rxjs/Subject";
-import { ImageService } from './../services/image.service';
+import { ImageService } from "./../services/image.service";
 
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
