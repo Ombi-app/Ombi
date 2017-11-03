@@ -26,28 +26,57 @@
 #endregion
 
 using System;
+using System.Globalization;
 
 namespace Ombi.Helpers
 {
     public class PlexHelper
     {
-        public static string GetProviderIdFromPlexGuid(string guid)
+       
+        public static ProviderId GetProviderIdFromPlexGuid(string guid)
         {
+            //com.plexapp.agents.thetvdb://269586/2/8?lang=en
+            //com.plexapp.agents.themoviedb://390043?lang=en
+            //com.plexapp.agents.imdb://tt2543164?lang=en
             if (string.IsNullOrEmpty(guid))
-                return guid;
+            {
+                return new ProviderId();
+            }
 
             var guidSplit = guid.Split(new[] { '/', '?' }, StringSplitOptions.RemoveEmptyEntries);
             if (guidSplit.Length > 1)
             {
-                return guidSplit[1];
+                if (guid.Contains("thetvdb", CompareOptions.IgnoreCase))
+                {
+                    return new ProviderId
+                    {
+                        TheTvDb = guidSplit[1]
+                    };
+                }
+                if (guid.Contains("themoviedb", CompareOptions.IgnoreCase))
+                {
+                    return new ProviderId
+                    {
+                        TheMovieDb = guidSplit[1]
+                    };
+                }
+                if (guid.Contains("imdb", CompareOptions.IgnoreCase))
+                {
+                    return new ProviderId
+                    {
+                        ImdbId = guidSplit[1]
+                    };
+                }
             }
-            return string.Empty;
+            return new ProviderId();
         }
 
         public static EpisodeModelHelper GetSeasonsAndEpisodesFromPlexGuid(string guid)
         {
             var ep = new EpisodeModelHelper();
-            //guid="com.plexapp.agents.thetvdb://269586/2/8?lang=en"
+            //com.plexapp.agents.thetvdb://269586/2/8?lang=en
+            //com.plexapp.agents.themoviedb://390043?lang=en
+            //com.plexapp.agents.imdb://tt2543164?lang=en
             if (string.IsNullOrEmpty(guid))
                 return null;
             try
@@ -55,7 +84,20 @@ namespace Ombi.Helpers
                 var guidSplit = guid.Split(new[] { '/', '?' }, StringSplitOptions.RemoveEmptyEntries);
                 if (guidSplit.Length > 2)
                 {
-                    ep.ProviderId = guidSplit[1];
+                    if (guid.Contains("thetvdb", CompareOptions.IgnoreCase))
+                    {
+                        ep.ProviderId = new ProviderId {TheTvDb = guidSplit[1]};
+                    }
+                    if (guid.Contains("themoviedb", CompareOptions.IgnoreCase))
+                    {
+                        ep.ProviderId = new ProviderId { TheMovieDb = guidSplit[1] };
+
+                    }
+                    if (guid.Contains("imdb", CompareOptions.IgnoreCase))
+                    {
+                        ep.ProviderId = new ProviderId { ImdbId = guidSplit[1] };
+
+                    }
                     ep.SeasonNumber = int.Parse(guidSplit[2]);
                     ep.EpisodeNumber = int.Parse(guidSplit[3]);
                 }
@@ -68,47 +110,52 @@ namespace Ombi.Helpers
             }
         }
 
-        public static int GetSeasonNumberFromTitle(string title)
-        {
-            if (string.IsNullOrEmpty(title))
-            {
-                return 0;
-            }
-
-            var split = title.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            if (split.Length < 2)
-            {
-                // Cannot get the season number, it's not in the usual format
-                return 0;
-            }
-
-            int season;
-            if (int.TryParse(split[1], out season))
-            {
-                return season;
-            }
-
-            return 0;
-        }
-
         public static string GetPlexMediaUrl(string machineId, int mediaId)
         {
             var url =
                 $"https://app.plex.tv/web/app#!/server/{machineId}/details?key=library%2Fmetadata%2F{mediaId}";
             return url;
         }
-
-        public static string FormatGenres(string tags)
-        {
-            var split = tags.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-            return string.Join(", ", split);
-        }
     }
 
     public class EpisodeModelHelper
     {
-        public string ProviderId { get; set; }
+        public ProviderId ProviderId { get; set; }
         public int SeasonNumber { get; set; }
         public int EpisodeNumber { get; set; }
+    }
+
+    public class ProviderId
+    {
+        public string TheTvDb { get; set; }
+        public string TheMovieDb { get; set; }
+        public string ImdbId { get; set; }
+
+        public ProviderType Type
+        {
+            get
+            {
+                if (ImdbId.HasValue())
+                {
+                    return ProviderType.ImdbId;
+                }
+                if (TheMovieDb.HasValue())
+                {
+                    return ProviderType.TheMovieDbId;
+                }
+                if (TheTvDb.HasValue())
+                {
+                    return ProviderType.TvDbId;
+                }
+                return ProviderType.ImdbId;
+            }
+        }
+    }
+
+    public enum ProviderType
+    {
+        ImdbId,
+        TheMovieDbId,
+        TvDbId
     }
 }

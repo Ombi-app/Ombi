@@ -23,7 +23,7 @@ namespace Ombi.Core.Tests.Rule.Search
         [Test]
         public async Task ShouldBe_Available_WhenFoundInPlex()
         {
-            ContextMock.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(new PlexContent
+            ContextMock.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(new PlexServerContent
             {
                 Url = "TestUrl"
             });
@@ -38,7 +38,7 @@ namespace Ombi.Core.Tests.Rule.Search
         [Test]
         public async Task ShouldBe_NotAvailable_WhenNotFoundInPlex()
         {
-            ContextMock.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(default(PlexContent)));
+            ContextMock.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(default(PlexServerContent)));
             var search = new SearchMovieViewModel();
             var result = await Rule.Execute(search);
 

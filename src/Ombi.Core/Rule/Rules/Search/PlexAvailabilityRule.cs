@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 
@@ -19,7 +20,42 @@ namespace Ombi.Core.Rule.Rules.Search
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {
-            var item = await PlexContentRepository.Get(obj.CustomId);
+            PlexServerContent item = null;
+            var useImdb = false;
+            var useTheMovieDb = false;
+            var useTvDb = false;
+            if (obj.ImdbId.HasValue())
+            {
+                item = await PlexContentRepository.Get(obj.ImdbId);
+                if (item != null)
+                {
+                    useImdb = true;
+                }
+            }
+            if (item == null)
+            {
+                if (obj.TheMovieDbId.HasValue())
+                {
+                    item = await PlexContentRepository.Get(obj.TheMovieDbId);
+                    if (item != null)
+                    {
+                        useTheMovieDb = true;
+                    }
+                }
+
+                if (item == null)
+                {
+                    if (obj.TheTvDbId.HasValue())
+                    {
+                        item = await PlexContentRepository.Get(obj.TheTvDbId);
+                        if (item != null)
+                        {
+                            useTvDb = true;
+                        }
+                    }
+                }
+            }
+
             if (item != null)
             {
                 obj.Available = true;
@@ -37,9 +73,26 @@ namespace Ombi.Core.Rule.Rules.Search
                         {
                             foreach (var episode in season.Episodes)
                             {
-                                var epExists = await allEpisodes.FirstOrDefaultAsync(x =>
-                                    x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                                    x.Series.ProviderId == item.ProviderId.ToString());
+                                PlexEpisode epExists = null;
+                                if (useImdb)
+                                {
+                                    epExists = await allEpisodes.FirstOrDefaultAsync(x =>
+                                        x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
+                                        x.Series.ImdbId == item.ImdbId.ToString());
+                                }
+                                if (useTheMovieDb)
+                                {
+                                    epExists = await allEpisodes.FirstOrDefaultAsync(x =>
+                                        x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
+                                        x.Series.TheMovieDbId == item.TheMovieDbId.ToString());
+                                }
+                                if (useTvDb)
+                                {
+                                    epExists = await allEpisodes.FirstOrDefaultAsync(x =>
+                                        x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
+                                        x.Series.TvDbId == item.TvDbId.ToString());
+                                }
+                                
                                 if (epExists != null)
                                 {
                                     episode.Available = true;

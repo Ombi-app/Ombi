@@ -46,6 +46,7 @@ namespace Ombi.Store.Migrations
                     ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    LastLoggedIn = table.Column<DateTime>(type: "TEXT", nullable: true),
                     LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
                     NormalizedEmail = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -79,6 +80,19 @@ namespace Ombi.Store.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Audit", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CouchPotatoCache",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    TheMovieDbId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CouchPotatoCache", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -131,24 +145,26 @@ namespace Ombi.Store.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PlexContent",
+                name: "PlexServerContent",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     AddedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ImdbId = table.Column<string>(type: "TEXT", nullable: true),
                     Key = table.Column<int>(type: "INTEGER", nullable: false),
-                    ProviderId = table.Column<string>(type: "TEXT", nullable: true),
                     Quality = table.Column<string>(type: "TEXT", nullable: true),
                     ReleaseYear = table.Column<string>(type: "TEXT", nullable: true),
+                    TheMovieDbId = table.Column<string>(type: "TEXT", nullable: true),
                     Title = table.Column<string>(type: "TEXT", nullable: true),
+                    TvDbId = table.Column<string>(type: "TEXT", nullable: true),
                     Type = table.Column<int>(type: "INTEGER", nullable: false),
                     Url = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PlexContent", x => x.Id);
-                    table.UniqueConstraint("AK_PlexContent_Key", x => x.Key);
+                    table.PrimaryKey("PK_PlexServerContent", x => x.Id);
+                    table.UniqueConstraint("AK_PlexServerContent_Key", x => x.Key);
                 });
 
             migrationBuilder.CreateTable(
@@ -162,6 +178,34 @@ namespace Ombi.Store.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RadarrCache", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SonarrCache",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    TvDbId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SonarrCache", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SonarrEpisodeCache",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    EpisodeNumber = table.Column<int>(type: "INTEGER", nullable: false),
+                    SeasonNumber = table.Column<int>(type: "INTEGER", nullable: false),
+                    TvDbId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SonarrEpisodeCache", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -304,10 +348,12 @@ namespace Ombi.Store.Migrations
                     IssueId = table.Column<int>(type: "INTEGER", nullable: true),
                     Overview = table.Column<string>(type: "TEXT", nullable: true),
                     PosterPath = table.Column<string>(type: "TEXT", nullable: true),
+                    QualityOverride = table.Column<int>(type: "INTEGER", nullable: false),
                     ReleaseDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     RequestType = table.Column<int>(type: "INTEGER", nullable: false),
                     RequestedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     RequestedUserId = table.Column<string>(type: "TEXT", nullable: true),
+                    RootPathOverride = table.Column<int>(type: "INTEGER", nullable: false),
                     Status = table.Column<string>(type: "TEXT", nullable: true),
                     TheMovieDbId = table.Column<int>(type: "INTEGER", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: true)
@@ -385,9 +431,9 @@ namespace Ombi.Store.Migrations
                 {
                     table.PrimaryKey("PK_PlexEpisode", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PlexEpisode_PlexContent_GrandparentKey",
+                        name: "FK_PlexEpisode_PlexServerContent_GrandparentKey",
                         column: x => x.GrandparentKey,
-                        principalTable: "PlexContent",
+                        principalTable: "PlexServerContent",
                         principalColumn: "Key",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -400,6 +446,7 @@ namespace Ombi.Store.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     ParentKey = table.Column<int>(type: "INTEGER", nullable: false),
                     PlexContentId = table.Column<int>(type: "INTEGER", nullable: false),
+                    PlexServerContentId = table.Column<int>(type: "INTEGER", nullable: true),
                     SeasonKey = table.Column<int>(type: "INTEGER", nullable: false),
                     SeasonNumber = table.Column<int>(type: "INTEGER", nullable: false)
                 },
@@ -407,11 +454,11 @@ namespace Ombi.Store.Migrations
                 {
                     table.PrimaryKey("PK_PlexSeasonsContent", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PlexSeasonsContent_PlexContent_PlexContentId",
-                        column: x => x.PlexContentId,
-                        principalTable: "PlexContent",
+                        name: "FK_PlexSeasonsContent_PlexServerContent_PlexServerContentId",
+                        column: x => x.PlexServerContentId,
+                        principalTable: "PlexServerContent",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -628,9 +675,9 @@ namespace Ombi.Store.Migrations
                 column: "GrandparentKey");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PlexSeasonsContent_PlexContentId",
+                name: "IX_PlexSeasonsContent_PlexServerContentId",
                 table: "PlexSeasonsContent",
-                column: "PlexContentId");
+                column: "PlexServerContentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SeasonRequests_ChildRequestId",
@@ -677,6 +724,9 @@ namespace Ombi.Store.Migrations
                 name: "Audit");
 
             migrationBuilder.DropTable(
+                name: "CouchPotatoCache");
+
+            migrationBuilder.DropTable(
                 name: "EmbyEpisode");
 
             migrationBuilder.DropTable(
@@ -701,6 +751,12 @@ namespace Ombi.Store.Migrations
                 name: "RadarrCache");
 
             migrationBuilder.DropTable(
+                name: "SonarrCache");
+
+            migrationBuilder.DropTable(
+                name: "SonarrEpisodeCache");
+
+            migrationBuilder.DropTable(
                 name: "Tokens");
 
             migrationBuilder.DropTable(
@@ -719,7 +775,7 @@ namespace Ombi.Store.Migrations
                 name: "MovieRequests");
 
             migrationBuilder.DropTable(
-                name: "PlexContent");
+                name: "PlexServerContent");
 
             migrationBuilder.DropTable(
                 name: "ChildRequests");

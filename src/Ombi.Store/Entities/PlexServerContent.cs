@@ -31,12 +31,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ombi.Store.Entities
 {
-    [Table("PlexContent")]
-    public class PlexContent : Entity
+    [Table("PlexServerContent")]
+    public class PlexServerContent : Entity
     {
         public string Title { get; set; }
         public string ReleaseYear { get; set; }
-        public string ProviderId { get; set; }
+        public string ImdbId { get; set; }
+        public string TvDbId { get; set; }
+        public string TheMovieDbId { get; set; }
         public PlexMediaTypeEntity Type { get; set; }
 
         public string Url { get; set; }

@@ -44,7 +44,7 @@ namespace Ombi.Schedule.Jobs.Plex
             foreach (var child in tv)
             {
                 var tvDbId = child.ParentRequest.TvDbId;
-                var seriesEpisodes = plexEpisodes.Where(x => x.Series.ProviderId == tvDbId.ToString());
+                var seriesEpisodes = plexEpisodes.Where(x => x.Series.TvDbId == tvDbId.ToString());
                 foreach (var season in child.SeasonRequests)
                 {
                     foreach (var episode in season.Episodes)

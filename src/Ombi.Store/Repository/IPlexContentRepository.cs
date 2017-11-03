@@ -5,13 +5,13 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public interface IPlexContentRepository : IRepository<PlexContent>
+    public interface IPlexContentRepository : IRepository<PlexServerContent>
     {
-        Task<PlexContent> Add(PlexContent content);
+        Task<PlexServerContent> Add(PlexServerContent content);
         Task<bool> ContentExists(string providerId);
-        Task<PlexContent> Get(string providerId);
-        Task<PlexContent> GetByKey(int key);
-        Task Update(PlexContent existingContent);
+        Task<PlexServerContent> Get(string providerId);
+        Task<PlexServerContent> GetByKey(int key);
+        Task Update(PlexServerContent existingContent);
         IQueryable<PlexEpisode> GetAllEpisodes();
         Task<PlexEpisode> Add(PlexEpisode content);
         Task<PlexEpisode> GetEpisodeByKey(int key);

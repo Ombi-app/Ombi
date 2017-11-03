@@ -14,7 +14,7 @@ namespace Ombi.Store.Context
         int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
         DbSet<GlobalSettings> Settings { get; set; }
-        DbSet<PlexContent> PlexContent { get; set; }
+        DbSet<PlexServerContent> PlexServerContent { get; set; }
         DbSet<PlexEpisode> PlexEpisode { get; set; }
         DbSet<RadarrCache> RadarrCache { get; set; }
         DbSet<EmbyContent> EmbyContent { get; set; }

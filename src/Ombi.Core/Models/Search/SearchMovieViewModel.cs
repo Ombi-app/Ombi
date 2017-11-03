@@ -22,7 +22,6 @@ namespace Ombi.Core.Models.Search
         public bool AlreadyInCp { get; set; }
         public string Trailer { get; set; }
         public string Homepage { get; set; }
-        public string ImdbId { get; set; }
         public int RootPathOverride { get; set; }
         public int QualityOverride { get; set; }
         public override RequestType Type => RequestType.Movie;

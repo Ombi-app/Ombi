@@ -22,7 +22,6 @@ namespace Ombi.Core.Models.Search
         public string AirsDayOfWeek { get; set; }
         public string AirsTime { get; set; }
         public string Rating { get; set; }
-        public string ImdbId { get; set; }
         public int SiteRating { get; set; }
 
         /// <summary>

@@ -19,7 +19,7 @@ namespace Ombi.Core.Rule.Rules.Search
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {
-            var item = await EmbyContentRepository.Get(obj.CustomId);
+            var item = await EmbyContentRepository.Get(obj.ImdbId);
             if (item != null)
             {
                 obj.Available = true;

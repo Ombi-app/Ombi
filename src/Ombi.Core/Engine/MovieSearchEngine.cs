@@ -163,7 +163,7 @@ namespace Ombi.Core.Engine
             // But we only pass down the SearchViewModel that doesn't contain this
             // So set the ImdbId to viewMovie.Id and then set it back afterwards
             var oldId = viewMovie.Id;
-            viewMovie.CustomId = viewMovie.ImdbId ?? string.Empty;
+            viewMovie.TheMovieDbId = viewMovie.TheMovieDbId;
 
             await RunSearchRules(viewMovie);
 

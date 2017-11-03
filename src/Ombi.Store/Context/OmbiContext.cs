@@ -23,7 +23,7 @@ namespace Ombi.Store.Context
 
         public DbSet<NotificationTemplates> NotificationTemplates { get; set; }
         public DbSet<GlobalSettings> Settings { get; set; }
-        public DbSet<PlexContent> PlexContent { get; set; }
+        public DbSet<PlexServerContent> PlexServerContent { get; set; }
         public DbSet<PlexEpisode> PlexEpisode { get; set; }
         public DbSet<RadarrCache> RadarrCache { get; set; }
         public DbSet<CouchPotatoCache> CouchPotatoCache { get; set; }
@@ -55,11 +55,10 @@ namespace Ombi.Store.Context
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<PlexEpisode>()
-                .HasOne(p => p.Series)
-                .WithMany(b => b.Episodes)
+            builder.Entity<PlexServerContent>().HasMany(x => x.Episodes)
+                .WithOne(x => x.Series)
                 .HasPrincipalKey(x => x.Key)
-                .HasForeignKey(p => p.GrandparentKey);
+                .HasForeignKey(x => x.GrandparentKey);
 
             builder.Entity<EmbyEpisode>()
                 .HasOne(p => p.Series)
