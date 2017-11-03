@@ -22,7 +22,7 @@ namespace Ombi.Store.Repository
 
         public GlobalSettings Insert(GlobalSettings entity)
         {
-            _cache.Remove(entity.SettingsName);
+            _cache.Remove(GetName(entity.SettingsName));
             var settings = Db.Settings.Add(entity);
             Db.SaveChanges();
             return settings.Entity;
@@ -30,7 +30,7 @@ namespace Ombi.Store.Repository
 
         public async Task<GlobalSettings> InsertAsync(GlobalSettings entity)
         {
-            _cache.Remove(entity.SettingsName);
+            _cache.Remove(GetName(entity.SettingsName));
             var settings = await Db.Settings.AddAsync(entity).ConfigureAwait(false);
             await Db.SaveChangesAsync().ConfigureAwait(false);
             return settings.Entity;
@@ -39,7 +39,7 @@ namespace Ombi.Store.Repository
 
         public GlobalSettings Get(string pageName)
         {
-            return _cache.GetOrCreate(pageName, entry =>
+            return _cache.GetOrCreate(GetName(pageName), entry =>
             {
                 entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(1);
                 var entity = Db.Settings.AsNoTracking().FirstOrDefault(x => x.SettingsName == pageName);
@@ -49,7 +49,7 @@ namespace Ombi.Store.Repository
 
         public async Task<GlobalSettings> GetAsync(string settingsName)
         {
-            return await _cache.GetOrCreateAsync(settingsName, async entry =>
+            return await _cache.GetOrCreateAsync(GetName(settingsName), async entry =>
             {
                 entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(1);
                 var obj = await Db.Settings.AsNoTracking().FirstOrDefaultAsync(x => x.SettingsName == settingsName);
@@ -59,29 +59,34 @@ namespace Ombi.Store.Repository
 
         public async Task DeleteAsync(GlobalSettings entity)
         {
-            _cache.Remove(entity.SettingsName);
+            _cache.Remove(GetName(entity.SettingsName));
             Db.Settings.Remove(entity);
             await Db.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(GlobalSettings entity)
         {
-            _cache.Remove(entity.SettingsName);
+            _cache.Remove(GetName(entity.SettingsName));
             Db.Update(entity);
             await Db.SaveChangesAsync();
         }
 
         public void Delete(GlobalSettings entity)
         {
-            _cache.Remove(entity.SettingsName);
+            _cache.Remove(GetName(entity.SettingsName));
             Db.Settings.Remove(entity);
             Db.SaveChanges();
         }
 
         public void Update(GlobalSettings entity)
         {
-            _cache.Remove(entity.SettingsName);
+            _cache.Remove(GetName(entity.SettingsName));
             Db.SaveChanges();
+        }
+
+        private string GetName(string entity)
+        {
+            return $"{entity}Json";
         }
     }
 }

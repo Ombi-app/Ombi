@@ -72,6 +72,7 @@ namespace Ombi.Core.Engine
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
                 RequestedUserId = userDetails.Id,
+                Background = movieInfo.BackdropPath
             };
 
             var ruleResults = (await RunRequestRules(requestModel)).ToList();

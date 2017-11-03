@@ -11,6 +11,7 @@ namespace Ombi.Store.Entities.Requests
         public string PosterPath { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string Status { get; set; }
+        public string Background { get; set; }
 
 
         [NotMapped]
