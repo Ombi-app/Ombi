@@ -14,13 +14,6 @@ namespace Ombi.Store.Repository
         Task<GlobalSettings> InsertAsync(GlobalSettings entity);
 
         /// <summary>
-        /// Gets all.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<GlobalSettings> GetAll();
-        Task<IEnumerable<GlobalSettings>> GetAllAsync();
-
-        /// <summary>
         /// Gets the specified identifier.
         /// </summary>
         /// <param name="settingsName">Name of the settings.</param>
