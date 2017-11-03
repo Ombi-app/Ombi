@@ -148,7 +148,6 @@ export class MovieSearchComponent implements OnInit {
     private updateItem(key: ISearchMovieResult, updated: ISearchMovieResult) {
         const index = this.movieResults.indexOf(key, 0);
         if (index > -1) {
-            debugger;
             const copy = { ...this.movieResults[index] };
             this.movieResults[index] = updated;  
             this.movieResults[index].background = copy.background;     
