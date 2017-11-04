@@ -43,8 +43,31 @@ namespace Ombi.Schedule.Jobs.Plex
 
             foreach (var child in tv)
             {
+
+                PlexServerContent item = null;
+                var useImdb = false;
+                var useTvDb = false;
+                if (child.ParentRequest.ImdbId.HasValue())
+                {
+                    useImdb = true;
+                }
+
+                if (child.ParentRequest.TvDbId.ToString().HasValue())
+                {
+                    useTvDb = true;
+                }
+                
                 var tvDbId = child.ParentRequest.TvDbId;
-                var seriesEpisodes = plexEpisodes.Where(x => x.Series.TvDbId == tvDbId.ToString());
+                var imdbId = child.ParentRequest.ImdbId;
+                IQueryable<PlexEpisode> seriesEpisodes = null;
+                if (useImdb)
+                {
+                    seriesEpisodes = plexEpisodes.Where(x => x.Series.ImdbId == imdbId.ToString());
+                }
+                if (useTvDb)
+                {
+                    seriesEpisodes = plexEpisodes.Where(x => x.Series.TvDbId == tvDbId.ToString());
+                }
                 foreach (var season in child.SeasonRequests)
                 {
                     foreach (var episode in season.Episodes)
@@ -87,8 +110,19 @@ namespace Ombi.Schedule.Jobs.Plex
 
             foreach (var movie in movies)
             {
-                var plexContent = await _repo.Get(movie.ImdbId);
-                if (plexContent == null)
+                PlexServerContent item = null;
+                if (movie.ImdbId.HasValue())
+                {
+                    item = await _repo.Get(movie.ImdbId);
+                }
+                if (item == null)
+                {
+                    if (movie.TheMovieDbId.ToString().HasValue())
+                    {
+                        item = await _repo.Get(movie.TheMovieDbId.ToString());
+                    }
+                }
+                if (item == null)
                 {
                     // We don't yet have this
                     continue;
