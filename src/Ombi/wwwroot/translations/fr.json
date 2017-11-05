@@ -16,7 +16,7 @@
     "PendingApproval": "En attente de validation",
     "NotRequested": "Non demandé",
     "Requested": "Demandé",
-    "Request": "Demande",
+    "Request": "Demander",
     "Errors": {
       "Validation": "Veuillez vérifier les valeurs entrées"
     }
@@ -37,16 +37,16 @@
     "CheckPageForUpdates": "Consultez cette page pour voir les mises à jour du site."
   },
   "NavigationBar": {
-    "Search": "Recherche",
+    "Search": "Rechercher",
     "Requests": "Demandes",
     "UserManagement": "Gestion des utilisateurs",
-    "Donate": "Faites un don !",
-    "DonateTooltip": "C’est comment convaincre ma femme de me laisser passer mon temps libre développement IACSM  ;)",
+    "Donate": "Faire un don !",
+    "DonateTooltip": "C’est pour convaincre ma femme de me laisser passer mon temps libre à développer Ombi ;)",
     "UpdateAvailableTooltip": "Mise à jour disponible !",
     "Settings": "Paramètres",
     "Welcome": "Bienvenue {{username}}",
     "UpdateDetails": "Détails de la mise à jour",
-    "Logout": "Logout",
+    "Logout": "Déconnexion",
     "Language": {
       "English": "Anglais",
       "French": "Français",
