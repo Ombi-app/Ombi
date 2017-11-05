@@ -6,7 +6,7 @@
     "RememberMe": "Se souvenir de moi",
     "ForgottenPassword": "Mot de passe oublié ?",
     "Errors": {
-      "IncorrectCredentials": "Nom utilisateur ou mot de passe incorrect"
+      "IncorrectCredentials": "Nom d'utilisateur ou mot de passe incorrect"
     }
   },
   "Common": {
@@ -30,7 +30,7 @@
     "OnlineParagraph": "Le serveur média est actuellement en ligne",
     "PartiallyOnlineHeading": "Partiellement en ligne",
     "PartiallyOnlineParagraph": "Le serveur média est partiellement en ligne.",
-    "MultipleServersUnavailable": "Il y a {{serversUnavailable}} serveurs hors lignes sur {{totalServers}}.",
+    "MultipleServersUnavailable": "Il y a {{serversUnavailable}} serveurs hors ligne sur {{totalServers}}.",
     "SingleServerUnavailable": "Il y a {{serversUnavailable}} serveur hors ligne sur {{totalServers}}.",
     "OfflineHeading": "Actuellement hors ligne",
     "OfflineParagraph": "Le serveur média est actuellement hors ligne.",
