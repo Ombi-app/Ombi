@@ -6,16 +6,16 @@
     "RememberMe": "Se souvenir de moi",
     "ForgottenPassword": "Vous avez oublié votre mot de passe ?",
     "Errors": {
-      "IncorrectCredentials": "Incorrect username or password"
+      "IncorrectCredentials": "Nom utilisateur ou mot de passe incorrect"
     }
   },
   "Common": {
     "ContinueButton": "Continuer",
-    "Available": "Available",
-    "ProcessingRequest": "Processing Request",
-    "PendingApproval": "Pending Approval",
-    "NotRequested": "Not Requested",
-    "Requested": "Requested",
+    "Available": "Disponible",
+    "ProcessingRequest": "En cours de traitement",
+    "PendingApproval": "En attente de validation",
+    "NotRequested": "Non demandé",
+    "Requested": "Demandé",
     "Request": "Request",
     "Errors": {
       "Validation": "Please check your entered values"
