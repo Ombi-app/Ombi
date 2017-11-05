@@ -31,7 +31,7 @@
     "PartiallyOnlineHeading": "Teilweise Online",
     "PartiallyOnlineParagraph": "Der Mediaserver ist teilweise online.",
     "MultipleServersUnavailable": "Es sind {{serversUnavailable}} von {{totalServers}} Servern offline.",
-    "SingleServerUnavailable": "Es gibt {{serversUnavailable}}-Server offline aus {{totalServers}}.",
+    "SingleServerUnavailable": "Es sind {{serversUnavailable}} von {{totalServers}} Servern offline.",
     "OfflineHeading": "Derzeit Offline",
     "OfflineParagraph": "Der Mediaserver ist derzeit offline.",
     "CheckPageForUpdates": "Überprüfe diese Seite für kontinuierliche Website-Updates."
