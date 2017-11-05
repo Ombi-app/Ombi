@@ -3,7 +3,7 @@
     "SignInButton": "Einloggen",
     "UsernamePlaceholder": "Benutzername",
     "PasswordPlaceholder": "Passwort",
-    "RememberMe": "Erinnere dich an mich",
+    "RememberMe": "Eingeloggt bleiben",
     "ForgottenPassword": "Passwort vergessen?",
     "Errors": {
       "IncorrectCredentials": "Falscher Benutzername oder falsches Passwort"
@@ -34,7 +34,7 @@
     "SingleServerUnavailable": "Es gibt {{serversUnavailable}}-Server offline aus {{totalServers}}.",
     "OfflineHeading": "Derzeit Offline",
     "OfflineParagraph": "Der Mediaserver ist derzeit offline.",
-    "CheckPageForUpdates": "Check this page for continuous site updates."
+    "CheckPageForUpdates": "Überprüfe diese Seite für kontinuierliche Website-Updates."
   },
   "NavigationBar": {
     "Search": "Suche",
@@ -59,20 +59,20 @@
   },
   "Search": {
     "Title": "Suche",
-    "Paragraph": "Want to watch something that is not currently available? No problem, just search for it below and request it!",
+    "Paragraph": "Möchtest du etwas sehen, das nicht verfügbar ist? Kein Problem, benutze einfach die Suchbox und fordere es an!",
     "MoviesTab": "Filme",
     "TvTab": "Serien",
     "Suggestions": "Vorschläge",
-    "NoResults": "Sorry, we didn't find any results!",
+    "NoResults": "Es tut uns leid, wir haben keine Ergebnisse gefunden!",
     "ReleaseDate": "Veröffentlichungsdatum",
     "ViewOnPlex": "In Plex anschauen",
     "RequestAdded": "Anfrage für {{title}} wurde erfolgreich hinzugefügt",
     "Movies": {
       "PopularMovies": "Beliebte Filme",
-      "UpcomingMovies": "Upcoming Movies",
-      "TopRatedMovies": "Top Rated Movies",
-      "NowPlayingMovies": "Now Playing Movies",
-      "HomePage": "Home Page",
+      "UpcomingMovies": "Kommende Filme",
+      "TopRatedMovies": "Am besten bewertete Filme",
+      "NowPlayingMovies": "Im Kino",
+      "HomePage": "Startseite",
       "Trailer": "Trailer"
     }
   }
