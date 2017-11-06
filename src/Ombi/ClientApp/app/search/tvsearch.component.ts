@@ -51,7 +51,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
     public openClosestTab(el: any) {
         el.preventDefault();
         const rowclass = "undefined";
-        el = el.toElement;
+        el = el.toElement || el.relatedTarget || el.target;
         while (el.className !== rowclass) {
             // Increment the loop to the parent node until we find the row we need
             el = el.parentNode;
