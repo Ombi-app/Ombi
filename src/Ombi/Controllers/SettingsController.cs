@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -17,13 +18,13 @@ using Ombi.Core.Settings.Models;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Models;
-using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Radarr;
 using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Ombi.Api.Github;
 
 namespace Ombi.Controllers
 {
@@ -45,12 +46,14 @@ namespace Ombi.Controllers
         /// <param name="embyApi">The embyApi.</param>
         /// <param name="radarrCacher">The radarrCacher.</param>
         /// <param name="memCache">The memory cache.</param>
+        /// <param name="githubApi">The memory cache.</param>
         public SettingsController(ISettingsResolver resolver,
             IMapper mapper,
             INotificationTemplatesRepository templateRepo,
             IEmbyApi embyApi,
             IRadarrCacher radarrCacher,
-            IMemoryCache memCache)
+            IMemoryCache memCache,
+            IGithubApi githubApi)
         {
             SettingsResolver = resolver;
             Mapper = mapper;
@@ -58,6 +61,7 @@ namespace Ombi.Controllers
             _embyApi = embyApi;
             _radarrCacher = radarrCacher;
             _cache = memCache;
+            _githubApi = githubApi;
         }
 
         private ISettingsResolver SettingsResolver { get; }
@@ -66,6 +70,7 @@ namespace Ombi.Controllers
         private readonly IEmbyApi _embyApi;
         private readonly IRadarrCacher _radarrCacher;
         private readonly IMemoryCache _cache;
+        private readonly IGithubApi _githubApi;
 
         /// <summary>
         /// Gets the Ombi settings.
@@ -214,6 +219,33 @@ namespace Ombi.Controllers
         public async Task<bool> CustomizationSettings([FromBody]CustomizationSettings settings)
         {
             return await Save(settings);
+        }
+
+        [HttpGet("themes")]
+        public async Task<IEnumerable<PresetThemeViewModel>> GetThemes()
+        {
+            var themes = await _githubApi.GetCakeThemes();
+            var cssThemes = themes.Themes.Where(x => x.name.Contains(".css", CompareOptions.IgnoreCase) 
+                            && x.type.Equals("file", StringComparison.CurrentCultureIgnoreCase));
+
+            // 001-theBlur-leram84-1.0.css
+            // Number-Name-Author-Version.css
+            var model = new List<PresetThemeViewModel>();
+            foreach (var theme in cssThemes)
+            {
+                var parts = theme.name.Split("-");
+                model.Add(new PresetThemeViewModel
+                {
+                    DisplayName = parts[1],
+                    FullName = theme.name,
+                    Version = parts[3].Replace(".css",string.Empty, StringComparison.CurrentCultureIgnoreCase)
+                });
+            }
+
+            // Display on UI - Current Theme = theBlur 1.0
+            // In dropdown display as "theBlur 1.1"
+
+            return model;
         }
 
         /// <summary>

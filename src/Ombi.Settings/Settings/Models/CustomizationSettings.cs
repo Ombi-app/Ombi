@@ -8,6 +8,8 @@ namespace Ombi.Settings.Settings.Models
         public string ApplicationUrl { get; set; }
         public string CustomCssLink { get; set; }
 
+        //public string PresetTheme { get; set; }
+        
         public void AddToUrl(string part)
         {
             if (string.IsNullOrEmpty(ApplicationUrl))

@@ -31,6 +31,7 @@ using Ombi.Api;
 using Ombi.Api.CouchPotato;
 using Ombi.Api.DogNzb;
 using Ombi.Api.FanartTv;
+using Ombi.Api.Github;
 using Ombi.Api.Mattermost;
 using Ombi.Api.Pushbullet;
 using Ombi.Api.Pushover;
@@ -100,6 +101,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ICouchPotatoApi, CouchPotatoApi>();
             services.AddTransient<IDogNzbApi, DogNzbApi>();
             services.AddTransient<ITelegramApi, TelegramApi>();
+            services.AddTransient<IGithubApi, GithubApi>();
         }
 
         public static void RegisterStore(this IServiceCollection services) { 
