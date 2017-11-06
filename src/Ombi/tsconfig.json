@@ -30,5 +30,8 @@
   "exclude": [
     "bin",
     "node_modules"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "preserveWhitespaces": false
+  }
 }
