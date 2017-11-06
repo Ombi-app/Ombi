@@ -96,6 +96,13 @@ export interface ICustomizationSettings extends ISettings {
     customCssLink: string;
 }
 
+export interface IThemes {
+    fullName: string;
+    displayName: string;
+    version: string;
+    url: string;
+}
+
 export interface IAuthenticationSettings extends ISettings {
 
     allowExternalUsersToAuthenticate: boolean;

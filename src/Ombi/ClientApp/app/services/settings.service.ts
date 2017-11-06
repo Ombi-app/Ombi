@@ -23,6 +23,7 @@ import {
     ISlackNotificationSettings,
     ISonarrSettings,
     ITelegramNotifcationSettings,
+    IThemes,
     IUpdateSettings,
     IUserManagementSettings,
 } from "../interfaces";
@@ -120,6 +121,10 @@ export class SettingsService extends ServiceAuthHelpers {
     public saveCustomization(settings: ICustomizationSettings): Observable<boolean> {
         return this.httpAuth.post(`${this.url}/customization`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
+    }
+
+    public getThemes(): Observable<IThemes[]> {
+        return this.httpAuth.get(`${this.url}/themes`).map(this.extractData).catch(this.handleError);
     }
 
     public getEmailNotificationSettings(): Observable<IEmailNotificationSettings> {

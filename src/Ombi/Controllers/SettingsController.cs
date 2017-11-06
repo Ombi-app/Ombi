@@ -225,7 +225,7 @@ namespace Ombi.Controllers
         public async Task<IEnumerable<PresetThemeViewModel>> GetThemes()
         {
             var themes = await _githubApi.GetCakeThemes();
-            var cssThemes = themes.Themes.Where(x => x.name.Contains(".css", CompareOptions.IgnoreCase) 
+            var cssThemes = themes.Where(x => x.name.Contains(".css", CompareOptions.IgnoreCase) 
                             && x.type.Equals("file", StringComparison.CurrentCultureIgnoreCase));
 
             // 001-theBlur-leram84-1.0.css
@@ -238,7 +238,8 @@ namespace Ombi.Controllers
                 {
                     DisplayName = parts[1],
                     FullName = theme.name,
-                    Version = parts[3].Replace(".css",string.Empty, StringComparison.CurrentCultureIgnoreCase)
+                    Version = parts[3].Replace(".css",string.Empty, StringComparison.CurrentCultureIgnoreCase),
+                    Url = theme.download_url
                 });
             }
 

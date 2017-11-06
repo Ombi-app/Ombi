@@ -1,10 +1,5 @@
 ﻿namespace Ombi.Api.Github.Models
 {
-    public class CakeThemesContainer
-    {
-        public CakeThemes[] Themes { get; set; }
-    }
-
     public class CakeThemes
     {
         public string name { get; set; }

@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit } from "@angular/core";
 
-import { ICustomizationSettings } from "../../interfaces";
+import { ICustomizationSettings, IThemes } from "../../interfaces";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
 
@@ -10,12 +10,13 @@ import { SettingsService } from "../../services";
 export class CustomizationComponent implements OnInit {
 
     public settings: ICustomizationSettings;
+    public themes: IThemes[];
 
     constructor(private settingsService: SettingsService, private notificationService: NotificationService) {  }
 
     public ngOnInit() {
-
         this.settingsService.getCustomization().subscribe(x => this.settings = x);
+        this.settingsService.getThemes().subscribe(x => this.themes = x);
     }
 
     public save() {
