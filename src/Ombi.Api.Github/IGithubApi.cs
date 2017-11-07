@@ -7,5 +7,6 @@ namespace Ombi.Api.Github
     public interface IGithubApi
     {
         Task<List<CakeThemes>> GetCakeThemes();
+        Task<string> GetThemesRawContent(string url);
     }
 }

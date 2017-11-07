@@ -221,12 +221,16 @@ namespace Ombi.Controllers
             return await Save(settings);
         }
 
+        /// <summary>
+        /// Get's the preset themes available
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("themes")]
         public async Task<IEnumerable<PresetThemeViewModel>> GetThemes()
         {
             var themes = await _githubApi.GetCakeThemes();
-            var cssThemes = themes.Where(x => x.name.Contains(".css", CompareOptions.IgnoreCase) 
-                            && x.type.Equals("file", StringComparison.CurrentCultureIgnoreCase));
+            var cssThemes = themes.Where(x => x.name.Contains(".css", CompareOptions.IgnoreCase)
+                                              && x.type.Equals("file", StringComparison.CurrentCultureIgnoreCase));
 
             // 001-theBlur-leram84-1.0.css
             // Number-Name-Author-Version.css
@@ -238,7 +242,7 @@ namespace Ombi.Controllers
                 {
                     DisplayName = parts[1],
                     FullName = theme.name,
-                    Version = parts[3].Replace(".css",string.Empty, StringComparison.CurrentCultureIgnoreCase),
+                    Version = parts[3].Replace(".css", string.Empty, StringComparison.CurrentCultureIgnoreCase),
                     Url = theme.download_url
                 });
             }
@@ -247,6 +251,19 @@ namespace Ombi.Controllers
             // In dropdown display as "theBlur 1.1"
 
             return model;
+        }
+
+        /// <summary>
+        /// Gets the content of the theme available
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        [HttpGet("themecontent")]
+        public async Task<string> GetThemeContent([FromQuery]string url)
+        {
+            var content = await _githubApi.GetThemesRawContent(url);
+            
+            return content;
         }
 
         /// <summary>

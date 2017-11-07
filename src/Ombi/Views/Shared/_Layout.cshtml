@@ -28,6 +28,8 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="Ombi, media request tool">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@appName</title>
     <base href="/@baseUrl"/>
@@ -56,7 +58,7 @@
     @{
         if (!string.IsNullOrEmpty(customization.CustomCssLink))
         {
-            <link rel="stylesheet" href="@customization.CustomCssLink" />
+            <link rel="stylesheet" href="@customization.CustomCssLink" asp-append-version="true"/>
         }
     }
     <link rel="stylesheet" href="~/loading.css" asp-append-version="true" />
