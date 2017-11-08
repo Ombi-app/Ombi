@@ -19,6 +19,18 @@ export class CustomizationComponent implements OnInit {
             this.settings = x;
             this.settingsService.getThemes().subscribe(t => {
                 this.themes = t;
+
+                const existingTheme = this.themes.filter((item) => {
+                    return item.fullName === this.settings.presetThemeName;
+                })[0];
+
+                if(existingTheme) {
+                    const index = this.themes.indexOf(existingTheme, 0);
+                    if (index > -1) {
+                        this.themes.splice(index, 1);
+                    }
+                }
+
                 if(x.hasPresetTheme) {
                     this.themes.unshift({displayName: x.presetThemeDisplayName, fullName: x.presetThemeName, url: "", version: x.presetThemeVersion});
                 } else {
@@ -45,9 +57,9 @@ export class CustomizationComponent implements OnInit {
             return val.fullName === selectedThemeFullName;
         });
 
-        // if(selectedTheme[0].fullName === this.settings.presetThemeName) {
-        //     return;
-        // }
+        if(selectedTheme[0].fullName === this.settings.presetThemeName) {
+            return;
+        }
         
         this.settings.presetThemeName = selectedThemeFullName;
         this.settingsService.getThemeContent(selectedTheme[0].url).subscribe(x => {

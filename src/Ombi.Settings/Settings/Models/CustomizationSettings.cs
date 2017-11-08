@@ -16,7 +16,7 @@ namespace Ombi.Settings.Settings.Models
         public string PresetThemeContent { get; set; }
 
         [NotMapped]
-        public string PresetThemeVersionVersion
+        public string PresetThemeVersion
         {
             get
             {

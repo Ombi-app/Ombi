@@ -56,6 +56,13 @@
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     @{
+        if (customization.HasPresetTheme)
+        {
+            <style>
+                @Html.Raw(customization.PresetThemeContent)
+            </style>
+        }
+
         if (!string.IsNullOrEmpty(customization.CustomCssLink))
         {
             <link rel="stylesheet" href="@customization.CustomCssLink" asp-append-version="true"/>

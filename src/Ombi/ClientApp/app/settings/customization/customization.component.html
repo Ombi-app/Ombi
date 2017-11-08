@@ -3,7 +3,7 @@
 
 <fieldset *ngIf="settings">
     <legend>Customization</legend>
-    <div class="col-md-6">
+    <div class="col-md-5">
         <div class="form-group">
             <label for="applicationName" class="control-label">Application Name</label>
             <div>
@@ -27,6 +27,12 @@
                     tooltipPosition="top" pTooltip="Use a URL e.g. www.google.com/logo.png">
             </div>
         </div>
+        <div *ngIf="settings.logo" class="form-group">
+            <label for="logo" class="control-label">Logo Preview:</label>
+            <div>
+                <img [src]="settings.logo" style="width: 300px" />
+            </div>
+        </div>
 
 
         <div class="form-group">
@@ -46,7 +52,7 @@
         </div>
 
     </div>
-    <!-- <div class="col-md-6">
+    <div class="col-md-7">
         <div *ngIf="themes">
             <div class="form-group">
                 <label for="presetTheme" class="control-label">Preset Themes</label>
@@ -56,19 +62,14 @@
                     </select>
                 </div>
             </div>
-            <div class="form-group">
-                <textarea rows="4" type="text" class="form-control-custom form-control " id="themeContent" name="themeContent" [(ngModel)]="settings.presetThemeContent"> {{settings.presetThemeContent}} </textarea>
+            <div class="form-group" *ngIf="settings.presetThemeContent">
+                <textarea rows="25" type="text" class="form-control-custom form-control " id="themeContent" name="themeContent" [(ngModel)]="settings.presetThemeContent"> {{settings.presetThemeContent}} </textarea>
             </div>
 
         </div>
-    </div> -->
-
-
-    <div *ngIf="settings.logo" class="form-group">
-        <label for="logo" class="control-label">Logo Preview:</label>
-        <div>
-            <img [src]="settings.logo" style="width: 300px" />
-        </div>
     </div>
+
+
+
 
 </fieldset>

@@ -259,6 +259,7 @@ namespace Ombi.Controllers
         /// <param name="url"></param>
         /// <returns></returns>
         [HttpGet("themecontent")]
+        [AllowAnonymous]
         public async Task<string> GetThemeContent([FromQuery]string url)
         {
             var content = await _githubApi.GetThemesRawContent(url);

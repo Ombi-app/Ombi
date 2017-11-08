@@ -194,7 +194,7 @@ namespace Ombi
 
             app.UseAuthentication();
 
-            ApiKeyMiddlewear(app, serviceProvider);
+            app.ApiKeyMiddlewear(serviceProvider);
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -211,46 +211,6 @@ namespace Ombi
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
-            });
-        }
-
-        private static void ApiKeyMiddlewear(IApplicationBuilder app, IServiceProvider serviceProvider)
-        {
-            app.Use(async (context, next) =>
-            {
-                if (context.Request.Path.StartsWithSegments(new PathString("/api")))
-                {
-                    // Let's check if this is an API Call
-                    if (context.Request.Headers["ApiKey"].Any())
-                    {
-                        // validate the supplied API key
-                        // Validate it
-                        var headerKey = context.Request.Headers["ApiKey"].FirstOrDefault();
-                        var settingsProvider = serviceProvider.GetService<ISettingsService<OmbiSettings>>();
-                        var ombiSettings = settingsProvider.GetSettings();
-                        var valid = ombiSettings.ApiKey.Equals(headerKey, StringComparison.CurrentCultureIgnoreCase);
-                        if (!valid)
-                        {
-                            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                            await context.Response.WriteAsync("Invalid API Key");
-                        }
-                        else
-                        {
-                            var identity = new GenericIdentity("API");
-                            var principal = new GenericPrincipal(identity, new[] { "Admin", "ApiUser" });
-                            context.User = principal;
-                            await next();
-                        }
-                    }
-                    else
-                    {
-                        await next();
-                    }
-                }
-                else
-                {
-                    await next();
-                }
             });
         }
     }

@@ -19,7 +19,7 @@ namespace Ombi.Api.Github
 
         public async Task<List<CakeThemes>> GetCakeThemes()
         {
-            var request = new Request("repos/leram84/layer.Cake/contents/ombi/themes", BaseUrl, HttpMethod.Get);
+            var request = new Request("repos/tidusjar/layer.Cake/contents/ombi/themes", BaseUrl, HttpMethod.Get);
             request.AddHeader("Accept", "application/vnd.github.v3+json");
             request.AddHeader("User-Agent", "Ombi");
             return await _api.Request<List<CakeThemes>>(request);
