@@ -53,20 +53,22 @@
 
     </div>
     <div class="col-md-7">
-        <!-- <div *ngIf="themes">
+        <div *ngIf="themes">
             <div class="form-group">
                 <label for="presetTheme" class="control-label">Preset Themes</label>
                 <div id="presetTheme">
                     <select class="form-control form-control-custom" (change)="dropDownChange($event)">
-                        <option *ngFor="let theme of themes" value="{{theme.fullName}}">{{theme.displayName}} {{theme.version}}</option>
+                        <option *ngFor="let theme of themes" value="{{theme.fullName}}" [selected]="settings.presetThemeName === theme.fullName">{{theme.displayName}} {{theme.version}}</option>
                     </select>
                 </div>
             </div>
             <div class="form-group" *ngIf="settings.presetThemeContent">
                 <textarea rows="25" type="text" class="form-control-custom form-control " id="themeContent" name="themeContent" [(ngModel)]="settings.presetThemeContent"> {{settings.presetThemeContent}} </textarea>
             </div>
-
-        </div> -->
+            <small>Preset themes are powered by
+                <a href="https://github.com/leram84/layer.Cake" target="_blank">layer#Cake</a>.
+            </small>
+        </div>
     </div>
 
 
