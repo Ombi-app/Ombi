@@ -30,7 +30,7 @@
     "OnlineParagraph": "Medieservern är online för tillfället",
     "PartiallyOnlineHeading": "Delvis online",
     "PartiallyOnlineParagraph": "Medieservern är delvis online.",
-    "MultipleServersUnavailable": "Det finns {{serversUnavailable}} servrar offline för ur {{totalServers}}.",
+    "MultipleServersUnavailable": "Det finns {{serversUnavailable}} servrar offline utav {{totalServers}}.",
     "SingleServerUnavailable": "Det finns {{serversUnavailable}} servrar offline utav {{totalServers}}.",
     "OfflineHeading": "För närvarande Offline",
     "OfflineParagraph": "Medieservern är för närvarande offline.",
