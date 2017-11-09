@@ -1,10 +1,10 @@
 {
   "Login": {
-    "SignInButton": "Sign in",
-    "UsernamePlaceholder": "Username",
-    "PasswordPlaceholder": "Password",
-    "RememberMe": "Remember Me",
-    "ForgottenPassword": "Forgot your password?",
+    "SignInButton": "Logga in",
+    "UsernamePlaceholder": "Användarnamn",
+    "PasswordPlaceholder": "Lösenord",
+    "RememberMe": "Kom ihåg mig",
+    "ForgottenPassword": "Glömt ditt lösenord?",
     "Errors": {
       "IncorrectCredentials": "Incorrect username or password"
     }
