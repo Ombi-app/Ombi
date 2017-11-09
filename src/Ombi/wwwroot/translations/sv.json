@@ -6,55 +6,55 @@
     "RememberMe": "Kom ihåg mig",
     "ForgottenPassword": "Glömt ditt lösenord?",
     "Errors": {
-      "IncorrectCredentials": "Incorrect username or password"
+      "IncorrectCredentials": "Felaktigt användarnamn eller lösenord"
     }
   },
   "Common": {
-    "ContinueButton": "Continue",
-    "Available": "Available",
-    "ProcessingRequest": "Processing Request",
-    "PendingApproval": "Pending Approval",
-    "NotRequested": "Not Requested",
-    "Requested": "Requested",
-    "Request": "Request",
+    "ContinueButton": "Fortsätt",
+    "Available": "Tillgänglig",
+    "ProcessingRequest": "Bearbetar förfrågan",
+    "PendingApproval": "I väntan på godkännande",
+    "NotRequested": "Inte önskad",
+    "Requested": "Begärd önskan",
+    "Request": "Begär",
     "Errors": {
       "Validation": "Please check your entered values"
     }
   },
   "PasswordReset": {
-    "EmailAddressPlaceholder": "Email Address",
-    "ResetPasswordButton": "Reset Password"
+    "EmailAddressPlaceholder": "E-postadress",
+    "ResetPasswordButton": "Återställ lösenord"
   },
   "LandingPage": {
-    "OnlineHeading": "Currently Online",
-    "OnlineParagraph": "The media server is currently online",
-    "PartiallyOnlineHeading": "Partially Online",
-    "PartiallyOnlineParagraph": "The media server is partially online.",
-    "MultipleServersUnavailable": "There are {{serversUnavailable}} servers offline out of {{totalServers}}.",
-    "SingleServerUnavailable": "There is {{serversUnavailable}} server offline out of {{totalServers}}.",
-    "OfflineHeading": "Currently Offline",
-    "OfflineParagraph": "The media server is currently offline.",
-    "CheckPageForUpdates": "Check this page for continuous site updates."
+    "OnlineHeading": "Online just nu",
+    "OnlineParagraph": "Medieservern är online för tillfället",
+    "PartiallyOnlineHeading": "Delvis online",
+    "PartiallyOnlineParagraph": "Medieservern är delvis online.",
+    "MultipleServersUnavailable": "Det finns {{serversUnavailable}} servrar offline för ur {{totalServers}}.",
+    "SingleServerUnavailable": "Det finns {{serversUnavailable}} servrar offline utav {{totalServers}}.",
+    "OfflineHeading": "För närvarande Offline",
+    "OfflineParagraph": "Medieservern är för närvarande offline.",
+    "CheckPageForUpdates": "Kontrollera sidan för kontinuerlig platsuppdateringar."
   },
   "NavigationBar": {
-    "Search": "Search",
-    "Requests": "Requests",
-    "UserManagement": "User Management",
-    "Donate": "Donate!",
-    "DonateTooltip": "This is how I convince my wife to let me spend my spare time developing Ombi ;)",
-    "UpdateAvailableTooltip": "Update Available!",
-    "Settings": "Settings",
-    "Welcome": "Welcome {{username}}",
-    "UpdateDetails": "Update Details",
-    "Logout": "Logout",
+    "Search": "Sök",
+    "Requests": "Förfrågningar",
+    "UserManagement": "Användarhantering",
+    "Donate": "Donera!",
+    "DonateTooltip": "Det är så här jag övertygar min fru att jag vill spendera min fritid utveckla Ombi ;)",
+    "UpdateAvailableTooltip": "Uppdatering tillgänglig!",
+    "Settings": "Inställningar",
+    "Welcome": "Välkommen {{username}}",
+    "UpdateDetails": "Uppdatera information",
+    "Logout": "Logga ut",
     "Language": {
-      "English": "English",
-      "French": "French",
-      "Spanish": "Spanish",
-      "German": "German",
-      "Italian": "Italian",
-      "Danish": "Danish",
-      "Dutch": "Dutch"
+      "English": "Engelska",
+      "French": "Franska",
+      "Spanish": "Spanska",
+      "German": "Tyska",
+      "Italian": "Italienska",
+      "Danish": "Danska",
+      "Dutch": "Holländska"
     }
   },
   "Search": {
