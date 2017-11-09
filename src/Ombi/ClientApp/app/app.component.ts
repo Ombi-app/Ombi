@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
     public user: ILocalUser;
     public showNav: boolean;
     public updateAvailable: boolean;
+    public currentUrl: string;
 
     constructor(public notificationService: NotificationService,
                 public authService: AuthService,
@@ -41,6 +42,7 @@ export class AppComponent implements OnInit {
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
 
         this.router.events.subscribe((event: NavigationStart) => {
+            this.currentUrl = event.url;
             if (event instanceof NavigationStart) {
                 this.user = this.authService.claims();
                 this.showNav = this.authService.loggedIn();
