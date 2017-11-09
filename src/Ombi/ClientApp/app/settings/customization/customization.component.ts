@@ -33,6 +33,7 @@ export class CustomizationComponent implements OnInit {
 
                 if(x.hasPresetTheme) {
                     this.themes.unshift({displayName: x.presetThemeDisplayName, fullName: x.presetThemeName, url: "", version: x.presetThemeVersion});
+                    this.themes.unshift({displayName: "None", fullName: "None", url: "", version: ""});
                 } else {
                     this.themes.unshift({displayName: "Please Select", fullName: "-1", url: "-1", version: ""});
                 }
@@ -55,12 +56,18 @@ export class CustomizationComponent implements OnInit {
         const selectedThemeFullName = <string>event.target.value;
         const selectedTheme = this.themes.filter((val) => {
             return val.fullName === selectedThemeFullName;
-        });
+        })[0];
 
-        if(selectedTheme[0].fullName === this.settings.presetThemeName) {
+        if(selectedTheme.fullName === this.settings.presetThemeName) {
             return;
         }
         
+        if(selectedTheme.fullName === "None" || selectedTheme.fullName === "-1") {
+            this.settings.presetThemeName = "";
+            this.settings.presetThemeContent = "";
+            return;
+        }
+
         this.settings.presetThemeName = selectedThemeFullName;
         this.settingsService.getThemeContent(selectedTheme[0].url).subscribe(x => {
             this.settings.presetThemeContent = x;
