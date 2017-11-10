@@ -26,6 +26,7 @@
     // for the UI
     requestProcessing: boolean;
     processed: boolean;
+    background: any;
 }
 
 export interface ISearchMovieResultContainer {

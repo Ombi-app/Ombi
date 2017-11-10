@@ -21,6 +21,10 @@ namespace Ombi.Core.Models.Search
         /// The custom identifier.
         /// </value>
         [NotMapped]
-        public string CustomId { get; set; }
+        public string ImdbId { get; set; }
+        [NotMapped]
+        public string TheTvDbId { get; set; }
+        [NotMapped]
+        public string TheMovieDbId { get; set; }
     }
 }

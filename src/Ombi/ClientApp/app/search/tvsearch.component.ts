@@ -1,11 +1,10 @@
 ﻿import { Component, OnDestroy, OnInit } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
 import { Router } from "@angular/router";
 import { Subject } from "rxjs/Subject";
 
 import { AuthService } from "../auth/auth.service";
-import { NotificationService } from "../services";
-import { RequestService } from "../services";
-import { SearchService } from "../services";
+import { ImageService, NotificationService, RequestService, SearchService} from "../services";
 
 import { TreeNode } from "primeng/primeng";
 import { IRequestEngineResult } from "../interfaces";
@@ -27,10 +26,11 @@ export class TvSearchComponent implements OnInit, OnDestroy {
     private subscriptions = new Subject<void>();
 
     constructor(private searchService: SearchService, private requestService: RequestService,
-                private notificationService: NotificationService, private route: Router, private authService: AuthService) {
+                private notificationService: NotificationService, private route: Router, private authService: AuthService,
+                private imageService: ImageService, private sanitizer: DomSanitizer) {
 
         this.searchChanged
-            .debounceTime(600) // Wait Xms afterthe last event before emitting last event
+            .debounceTime(600) // Wait Xms after the last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
             .takeUntil(this.subscriptions)
             .subscribe(x => {
@@ -51,7 +51,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
     public openClosestTab(el: any) {
         el.preventDefault();
         const rowclass = "undefined";
-        el = el.toElement;
+        el = el.toElement || el.relatedTarget || el.target;
         while (el.className !== rowclass) {
             // Increment the loop to the parent node until we find the row we need
             el = el.parentNode;
@@ -130,6 +130,13 @@ export class TvSearchComponent implements OnInit, OnDestroy {
 
     public getExtraInfo() {
         this.tvResults.forEach((val, index) => {
+
+            this.imageService.getTvBanner(val.data.id).subscribe(x => {
+                
+                val.data.background = this.sanitizer.
+                bypassSecurityTrustStyle
+                ("linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%),url(" + x + ")");
+            });
             this.searchService.getShowInformationTreeNode(val.data.id)
                 .takeUntil(this.subscriptions)
                 .subscribe(x => {
@@ -203,6 +210,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
             this.tvResults[index].data.seasonRequests = updated.data.seasonRequests;
             this.tvResults[index].data.seriesId = updated.data.seriesId;
             this.tvResults[index].data.fullyAvailable = updated.data.fullyAvailable;
+            this.tvResults[index].data.backdrop = updated.data.backdrop;
         }
     }
 

@@ -44,7 +44,7 @@ namespace Ombi.Schedule.Tests
                 ImdbId = "test"
             };
             _movie.Setup(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
-            _repo.Setup(x => x.Get("test")).ReturnsAsync(new PlexContent());
+            _repo.Setup(x => x.Get("test")).ReturnsAsync(new PlexServerContent());
 
             await Checker.Start();
 
@@ -97,15 +97,15 @@ namespace Ombi.Schedule.Tests
             {
                 new PlexEpisode
                 {
-                    Series = new  PlexContent
+                    Series = new  PlexServerContent
                     {
-                        ProviderId = 1.ToString(),
+                        ImdbId = 1.ToString(),
                     },
                     EpisodeNumber = 1,
                     SeasonNumber = 2
                 }
             }.AsQueryable);
-            _repo.Setup(x => x.Include(It.IsAny<IQueryable<PlexEpisode>>(),It.IsAny<Expression<Func<PlexEpisode, PlexContent>>>()));
+            _repo.Setup(x => x.Include(It.IsAny<IQueryable<PlexEpisode>>(),It.IsAny<Expression<Func<PlexEpisode, PlexServerContent>>>()));
 
             await Checker.Start();
 

@@ -31,6 +31,7 @@ using Ombi.Api;
 using Ombi.Api.CouchPotato;
 using Ombi.Api.DogNzb;
 using Ombi.Api.FanartTv;
+using Ombi.Api.Github;
 using Ombi.Api.Mattermost;
 using Ombi.Api.Pushbullet;
 using Ombi.Api.Pushover;
@@ -44,10 +45,10 @@ using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Jobs.Sonarr;
-using Ombi.Store.Entities;
 using Ombi.Store.Repository.Requests;
 using Ombi.Updater;
-using PlexContentCacher = Ombi.Schedule.Jobs.Plex.PlexContentCacher;
+using PlexContentCacher = Ombi.Schedule.Jobs.Plex;
+using Ombi.Api.Telegram;
 
 namespace Ombi.DependencyInjection
 {
@@ -99,6 +100,8 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMattermostApi, MattermostApi>();
             services.AddTransient<ICouchPotatoApi, CouchPotatoApi>();
             services.AddTransient<IDogNzbApi, DogNzbApi>();
+            services.AddTransient<ITelegramApi, TelegramApi>();
+            services.AddTransient<IGithubApi, GithubApi>();
         }
 
         public static void RegisterStore(this IServiceCollection services) { 
@@ -107,7 +110,7 @@ namespace Ombi.DependencyInjection
             services.AddScoped<IOmbiContext, OmbiContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
             services.AddTransient<ISettingsRepository, SettingsJsonRepository>();
             services.AddTransient<ISettingsResolver, SettingsResolver>();
-            services.AddTransient<IPlexContentRepository, PlexContentRepository>();
+            services.AddTransient<IPlexContentRepository, PlexServerContentRepository>();
             services.AddTransient<IEmbyContentRepository, EmbyContentRepository>();
             services.AddTransient<INotificationTemplatesRepository, NotificationTemplatesRepository>();
             
@@ -133,6 +136,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ISlackNotification, SlackNotification>();
             services.AddTransient<IMattermostNotification, MattermostNotification>();
             services.AddTransient<IPushoverNotification, PushoverNotification>();
+            services.AddTransient<ITelegramNotification, TelegramNotification>();
 
         }
 
@@ -140,7 +144,7 @@ namespace Ombi.DependencyInjection
         {
             services.AddTransient<IBackgroundJobClient, BackgroundJobClient>();
 
-            services.AddTransient<IPlexContentCacher, PlexContentCacher>();
+            services.AddTransient<IPlexContentCacher, PlexServerContentCacher>();
             services.AddTransient<IEmbyContentCacher, EmbyContentCacher>();
             services.AddTransient<IEmbyEpisodeCacher, EmbyEpisodeCacher>();
             services.AddTransient<IEmbyAvaliabilityChecker, EmbyAvaliabilityChecker>();

@@ -3,25 +3,43 @@
 
 <fieldset *ngIf="settings">
     <legend>Customization</legend>
-    <div class="col-md-6">
+    <div class="col-md-5">
         <div class="form-group">
             <label for="applicationName" class="control-label">Application Name</label>
             <div>
-                <input type="text" [(ngModel)]="settings.applicationName" class="form-control form-control-custom " id="applicationName" name="applicationName" placeholder="Ombi" value="{{settings.applicationName}}">
+                <input type="text" [(ngModel)]="settings.applicationName" class="form-control form-control-custom " id="applicationName"
+                    name="applicationName" placeholder="Ombi" value="{{settings.applicationName}}">
             </div>
         </div>
 
         <div class="form-group">
             <label for="applicationurl" class="control-label">Application URL</label>
             <div>
-                <input type="text" [(ngModel)]="settings.applicationUrl" class="form-control form-control-custom " id="applicationurl" name="applicationurl" placeholder="http://ombi.io/" value="{{settings.applicationUrl}}">
+                <input type="text" [(ngModel)]="settings.applicationUrl" class="form-control form-control-custom " id="applicationurl" name="applicationurl"
+                    placeholder="http://ombi.io/" value="{{settings.applicationUrl}}">
             </div>
         </div>
 
         <div class="form-group">
             <label for="logo" class="control-label">Custom Logo</label>
             <div>
-                <input type="text" [(ngModel)]="settings.logo" class="form-control form-control-custom " id="logo" name="logo" value="{{settings.logo}}" tooltipPosition="top" pTooltip="Use a URL e.g. www.google.com/logo.png">
+                <input type="text" [(ngModel)]="settings.logo" class="form-control form-control-custom " id="logo" name="logo" value="{{settings.logo}}"
+                    tooltipPosition="top" pTooltip="Use a URL e.g. www.google.com/logo.png">
+            </div>
+        </div>
+        <div *ngIf="settings.logo" class="form-group">
+            <label for="logo" class="control-label">Logo Preview:</label>
+            <div>
+                <img [src]="settings.logo" style="width: 300px" />
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="customLink" class="control-label">Custom CSS Link</label>
+            <div>
+                <input type="text" [(ngModel)]="settings.customCssLink" class="form-control form-control-custom " name="customLink" value="{{settings.customCssLink}}"
+                    tooltipPosition="top" pTooltip="A link to a CSS file, you can use this to use your own styles for Ombi">
             </div>
         </div>
 
@@ -34,14 +52,26 @@
         </div>
 
     </div>
-    <div class="col-md-6">
-
-        <div *ngIf="settings.logo"  class="form-group">
-            <label for="logo" class="control-label">Logo Preview:</label>
-            <div>
-                <img [src]="settings.logo" style="width: 300px" />
+    <div class="col-md-7">
+        <div *ngIf="themes">
+            <div class="form-group">
+                <label for="presetTheme" class="control-label">Preset Themes</label>
+                <div id="presetTheme">
+                    <select class="form-control form-control-custom" (change)="dropDownChange($event)">
+                        <option *ngFor="let theme of themes" value="{{theme.fullName}}" [selected]="settings.presetThemeName === theme.fullName">{{theme.displayName}} {{theme.version}}</option>
+                    </select>
+                </div>
             </div>
+            <div class="form-group" *ngIf="settings.presetThemeContent">
+                <textarea rows="25" type="text" class="form-control-custom form-control " id="themeContent" name="themeContent" [(ngModel)]="settings.presetThemeContent"> {{settings.presetThemeContent}} </textarea>
+            </div>
+            <small>Preset themes are powered by
+                <a href="https://github.com/leram84/layer.Cake" target="_blank">layer#Cake</a>.
+            </small>
         </div>
-
     </div>
+
+
+
+
 </fieldset>

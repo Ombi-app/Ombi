@@ -1,4 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateService } from "@ngx-translate/core";
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
@@ -24,7 +25,7 @@ export class MovieSearchComponent implements OnInit {
         
     constructor(private searchService: SearchService, private requestService: RequestService,
                 private notificationService: NotificationService, private authService: AuthService,
-                private readonly translate: TranslateService) {
+                private readonly translate: TranslateService, private sanitizer: DomSanitizer) {
 
         this.searchChanged
             .debounceTime(600) // Wait Xms afterthe last event before emitting last event
@@ -53,8 +54,7 @@ export class MovieSearchComponent implements OnInit {
             message: "",
             result: false,
             errorMessage: "",
-        };
-        
+        };      
     }
 
     public search(text: any) {
@@ -74,8 +74,7 @@ export class MovieSearchComponent implements OnInit {
                     this.result = x;
 
                     if (this.result.result) {
-                        
-                        this.translate.get("Search.RequestAdded", searchResult.title).subscribe(x => {
+                        this.translate.get("Search.RequestAdded", { title: searchResult.title }).subscribe(x => {
                             this.notificationService.success(x);
                             searchResult.processed = true;
                         });
@@ -135,15 +134,23 @@ export class MovieSearchComponent implements OnInit {
    private getExtaInfo() {
 
         this.movieResults.forEach((val, index) => {
+           
+            val.background = this.sanitizer.
+            bypassSecurityTrustStyle
+            ("linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%),url(" + "https://image.tmdb.org/t/p/w1280" + val.backdropPath + ")");
             this.searchService.getMovieInformation(val.id)
-                .subscribe(m => this.updateItem(val, m));
+                .subscribe(m => {
+                    this.updateItem(val, m);
+                });
         });
     }
 
     private updateItem(key: ISearchMovieResult, updated: ISearchMovieResult) {
         const index = this.movieResults.indexOf(key, 0);
         if (index > -1) {
-            this.movieResults[index] = updated;
+            const copy = { ...this.movieResults[index] };
+            this.movieResults[index] = updated;  
+            this.movieResults[index].background = copy.background;     
         }
     }
     private clearResults() {

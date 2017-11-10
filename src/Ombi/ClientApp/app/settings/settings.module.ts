@@ -24,6 +24,7 @@ import { NotificationTemplate } from "./notifications/notificationtemplate.compo
 import { PushbulletComponent } from "./notifications/pushbullet.component";
 import { PushoverComponent } from "./notifications/pushover.component";
 import { SlackComponent } from "./notifications/slack.component";
+import { TelegramComponent } from "./notifications/telegram.component";
 import { OmbiComponent } from "./ombi/ombi.component";
 import { PlexComponent } from "./plex/plex.component";
 import { RadarrComponent } from "./radarr/radarr.component";
@@ -34,7 +35,7 @@ import { WikiComponent } from "./wiki.component";
 
 import { SettingsMenuComponent } from "./settingsmenu.component";
 
-import { AutoCompleteModule, CalendarModule, InputSwitchModule, InputTextModule, MenuModule, TooltipModule } from "primeng/primeng";
+import { AutoCompleteModule, CalendarModule, InputSwitchModule, InputTextModule, MenuModule, RadioButtonModule, TooltipModule } from "primeng/primeng";
 
 const routes: Routes = [
     { path: "Settings/Ombi", component: OmbiComponent, canActivate: [AuthGuard] },
@@ -55,6 +56,7 @@ const routes: Routes = [
     { path: "Settings/Update", component: UpdateComponent, canActivate: [AuthGuard] },
     { path: "Settings/CouchPotato", component: CouchPotatoComponent, canActivate: [AuthGuard] },
     { path: "Settings/DogNzb", component: DogNzbComponent, canActivate: [AuthGuard] },
+    { path: "Settings/Telegram", component: TelegramComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -74,6 +76,7 @@ const routes: Routes = [
         CalendarModule,
         ClipboardModule,
         PipeModule,
+        RadioButtonModule,
     ],
     declarations: [
         SettingsMenuComponent,
@@ -97,6 +100,7 @@ const routes: Routes = [
         WikiComponent,
         CouchPotatoComponent,
         DogNzbComponent,
+        TelegramComponent,
     ],
     exports: [
         RouterModule,

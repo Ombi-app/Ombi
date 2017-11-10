@@ -13,8 +13,8 @@ using System;
 namespace Ombi.Store.Migrations
 {
     [DbContext(typeof(OmbiContext))]
-    [Migration("20170914122422_Inital")]
-    partial class Inital
+    [Migration("20171103224757_MovieBackground")]
+    partial class MovieBackground
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -163,6 +163,18 @@ namespace Ombi.Store.Migrations
                     b.ToTable("Audit");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.CouchPotatoCache", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("TheMovieDbId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CouchPotatoCache");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.EmbyContent", b =>
                 {
                     b.Property<int>("Id")
@@ -261,6 +273,8 @@ namespace Ombi.Store.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
+                    b.Property<DateTime?>("LastLoggedIn");
+
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
@@ -300,32 +314,6 @@ namespace Ombi.Store.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.PlexContent", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("AddedAt");
-
-                    b.Property<int>("Key");
-
-                    b.Property<string>("ProviderId");
-
-                    b.Property<string>("Quality");
-
-                    b.Property<string>("ReleaseYear");
-
-                    b.Property<string>("Title");
-
-                    b.Property<int>("Type");
-
-                    b.Property<string>("Url");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PlexContent");
-                });
-
             modelBuilder.Entity("Ombi.Store.Entities.PlexEpisode", b =>
                 {
                     b.Property<int>("Id")
@@ -359,15 +347,47 @@ namespace Ombi.Store.Migrations
 
                     b.Property<int>("PlexContentId");
 
+                    b.Property<int?>("PlexServerContentId");
+
                     b.Property<int>("SeasonKey");
 
                     b.Property<int>("SeasonNumber");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlexContentId");
+                    b.HasIndex("PlexServerContentId");
 
                     b.ToTable("PlexSeasonsContent");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.PlexServerContent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("AddedAt");
+
+                    b.Property<string>("ImdbId");
+
+                    b.Property<int>("Key");
+
+                    b.Property<string>("Quality");
+
+                    b.Property<string>("ReleaseYear");
+
+                    b.Property<string>("TheMovieDbId");
+
+                    b.Property<string>("Title");
+
+                    b.Property<string>("TvDbId");
+
+                    b.Property<int>("Type");
+
+                    b.Property<string>("Url");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PlexServerContent");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.RadarrCache", b =>
@@ -447,6 +467,8 @@ namespace Ombi.Store.Migrations
 
                     b.Property<bool>("Available");
 
+                    b.Property<string>("Background");
+
                     b.Property<bool?>("Denied");
 
                     b.Property<string>("DeniedReason");
@@ -459,6 +481,8 @@ namespace Ombi.Store.Migrations
 
                     b.Property<string>("PosterPath");
 
+                    b.Property<int>("QualityOverride");
+
                     b.Property<DateTime>("ReleaseDate");
 
                     b.Property<int>("RequestType");
@@ -466,6 +490,8 @@ namespace Ombi.Store.Migrations
                     b.Property<DateTime>("RequestedDate");
 
                     b.Property<string>("RequestedUserId");
+
+                    b.Property<int>("RootPathOverride");
 
                     b.Property<string>("Status");
 
@@ -526,6 +552,34 @@ namespace Ombi.Store.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TvRequests");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.SonarrCache", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("TvDbId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SonarrCache");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.SonarrEpisodeCache", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("EpisodeNumber");
+
+                    b.Property<int>("SeasonNumber");
+
+                    b.Property<int>("TvDbId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SonarrEpisodeCache");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Tokens", b =>
@@ -643,7 +697,7 @@ namespace Ombi.Store.Migrations
 
             modelBuilder.Entity("Ombi.Store.Entities.PlexEpisode", b =>
                 {
-                    b.HasOne("Ombi.Store.Entities.PlexContent", "Series")
+                    b.HasOne("Ombi.Store.Entities.PlexServerContent", "Series")
                         .WithMany("Episodes")
                         .HasForeignKey("GrandparentKey")
                         .HasPrincipalKey("Key")
@@ -652,10 +706,9 @@ namespace Ombi.Store.Migrations
 
             modelBuilder.Entity("Ombi.Store.Entities.PlexSeasonsContent", b =>
                 {
-                    b.HasOne("Ombi.Store.Entities.PlexContent")
+                    b.HasOne("Ombi.Store.Entities.PlexServerContent")
                         .WithMany("Seasons")
-                        .HasForeignKey("PlexContentId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PlexServerContentId");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.ChildRequests", b =>

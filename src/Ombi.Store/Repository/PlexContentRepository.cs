@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2017 Jamie Rees
-//    File: PlexContentRepository.cs
+//    File: PlexServerContentRepository.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -34,10 +34,10 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public class PlexContentRepository : Repository<PlexContent>, IPlexContentRepository
+    public class PlexServerContentRepository : Repository<PlexServerContent>, IPlexContentRepository
     {
 
-        public PlexContentRepository(IOmbiContext db) : base(db)
+        public PlexServerContentRepository(IOmbiContext db) : base(db)
         {
             Db = db;
         }
@@ -47,22 +47,36 @@ namespace Ombi.Store.Repository
 
         public async Task<bool> ContentExists(string providerId)
         {
-            return await Db.PlexContent.AnyAsync(x => x.ProviderId == providerId);
+            var any = await Db.PlexServerContent.AnyAsync(x => x.ImdbId == providerId);
+            if (!any)
+            {
+                any = await Db.PlexServerContent.AnyAsync(x => x.TheMovieDbId == providerId);
+                if (!any)
+                {
+                    any = await Db.PlexServerContent.AnyAsync(x => x.TvDbId == providerId);
+                }
+            }
+            return any;
         }
 
-        public async Task<PlexContent> Get(string providerId)
+        public async Task<PlexServerContent> Get(string providerId)
         {
-            return await Db.PlexContent.FirstOrDefaultAsync(x => x.ProviderId == providerId);
+            var item = await Db.PlexServerContent.FirstOrDefaultAsync(x => x.ImdbId == providerId);
+            if (item == null)
+            {
+                item = await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TheMovieDbId == providerId) ?? await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TvDbId == providerId);
+            }
+            return item;
         }
 
-        public async Task<PlexContent> GetByKey(int key)
+        public async Task<PlexServerContent> GetByKey(int key)
         {
-            return await Db.PlexContent.Include(x => x.Seasons).FirstOrDefaultAsync(x => x.Key == key);
+            return await Db.PlexServerContent.Include(x => x.Seasons).FirstOrDefaultAsync(x => x.Key == key);
         }
 
-        public async Task Update(PlexContent existingContent)
+        public async Task Update(PlexServerContent existingContent)
         {
-            Db.PlexContent.Update(existingContent);
+            Db.PlexServerContent.Update(existingContent);
             await Db.SaveChangesAsync();
         }
 

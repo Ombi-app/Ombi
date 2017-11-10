@@ -15,4 +15,8 @@ export class ImageService extends ServiceHelpers {
     public getRandomBackground(): Observable<IImages> {
         return this.http.get(`${this.url}background/`, { headers: this.headers }).map(this.extractData);
     }
+
+    public getTvBanner(tvdbid: number): Observable<string> {
+        return this.http.get(`${this.url}tv/${tvdbid}`, { headers: this.headers }).map(this.extractData);
+    }
 }

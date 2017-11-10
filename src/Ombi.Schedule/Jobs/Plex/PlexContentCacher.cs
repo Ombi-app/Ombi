@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2017 Jamie Rees
-//    File: PlexContentCacher.cs
+//    File: PlexServerContentCacher.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -41,9 +41,9 @@ using Ombi.Store.Repository;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
-    public class PlexContentCacher : IPlexContentCacher
+    public class PlexServerContentCacher : IPlexContentCacher
     {
-        public PlexContentCacher(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentCacher> logger, IPlexContentRepository repo,
+        public PlexServerContentCacher(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexServerContentCacher> logger, IPlexContentRepository repo,
             IPlexEpisodeCacher epsiodeCacher)
         {
             Plex = plex;
@@ -55,7 +55,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
         private ISettingsService<PlexSettings> Plex { get; }
         private IPlexApi PlexApi { get; }
-        private ILogger<PlexContentCacher> Logger { get; }
+        private ILogger<PlexServerContentCacher> Logger { get; }
         private IPlexContentRepository Repo { get; }
         private IPlexEpisodeCacher EpisodeCacher { get; }
 
@@ -93,18 +93,18 @@ namespace Ombi.Schedule.Jobs.Plex
             {
 
                 Logger.LogInformation("Getting all content from server {0}", servers.Name);
-                var allContent = GetAllContent(servers);
+                var allContent = await GetAllContent(servers);
                 Logger.LogInformation("We found {0} items", allContent.Count);
 
                 // Let's now process this.
-                var contentToAdd = new List<PlexContent>();
+                var contentToAdd = new List<PlexServerContent>();
                 foreach (var content in allContent)
                 {
-                    if (content.viewGroup.Equals(Jobs.PlexContentCacher.PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                    if (content.viewGroup.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
                     {
                         // Process Shows
                         Logger.LogInformation("Processing TV Shows");
-                        foreach (var show in content.Metadata ?? new Metadata[]{})
+                        foreach (var show in content.Metadata ?? new Metadata[] { })
                         {
                             var seasonList = await PlexApi.GetSeasons(servers.PlexAuthToken, servers.FullUri,
                                 show.ratingKey);
@@ -124,24 +124,31 @@ namespace Ombi.Schedule.Jobs.Plex
                             var existingContent = await Repo.GetByKey(show.ratingKey);
                             if (existingContent != null)
                             {
-                                Logger.LogInformation("We already have show {0} checking for new seasons", existingContent.Title);
-                                // Ok so we have it, let's check if there are any new seasons
-                                var itemAdded = false;
-                                foreach (var season in seasonsContent)
+                                try
                                 {
-                                    var seasonExists = existingContent.Seasons.FirstOrDefault(x => x.SeasonKey == season.SeasonKey);
-
-                                    if (seasonExists != null)
+                                    Logger.LogInformation("We already have show {0} checking for new seasons", existingContent.Title);
+                                    // Ok so we have it, let's check if there are any new seasons
+                                    var itemAdded = false;
+                                    foreach (var season in seasonsContent)
                                     {
-                                        // We already have this season
-                                        continue;
-                                    }
-                                    
-                                    existingContent.Seasons.Add(season);
-                                    itemAdded = true;
-                                }
+                                        var seasonExists = existingContent.Seasons.FirstOrDefault(x => x.SeasonKey == season.SeasonKey);
 
-                                if (itemAdded) await Repo.Update(existingContent);
+                                        if (seasonExists != null)
+                                        {
+                                            // We already have this season
+                                            continue;
+                                        }
+
+                                        existingContent.Seasons.Add(season);
+                                        itemAdded = true;
+                                    }
+
+                                    if (itemAdded) await Repo.Update(existingContent);
+                                }
+                                catch (Exception e)
+                                {
+                                   Logger.LogError(LoggingEvents.PlexContentCacher, e, "Exception when adding new seasons to title {0}", existingContent.Title);
+                                }
                             }
                             else
                             {
@@ -152,19 +159,30 @@ namespace Ombi.Schedule.Jobs.Plex
                                 // But it does not contain the `guid` property that we need to pull out thetvdb id...
                                 var showMetadata = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
                                     show.ratingKey);
-                                var item = new PlexContent
+                                var providerIds = PlexHelper.GetProviderIdFromPlexGuid(showMetadata.MediaContainer.Metadata.FirstOrDefault().guid);
+
+                                var item = new PlexServerContent
                                 {
                                     AddedAt = DateTime.Now,
                                     Key = show.ratingKey,
-                                    ProviderId = PlexHelper.GetProviderIdFromPlexGuid(showMetadata.MediaContainer.Metadata
-                                        .FirstOrDefault()
-                                        .guid),
                                     ReleaseYear = show.year.ToString(),
                                     Type = PlexMediaTypeEntity.Show,
                                     Title = show.title,
                                     Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, show.ratingKey),
                                     Seasons = new List<PlexSeasonsContent>()
                                 };
+                                if (providerIds.Type == ProviderType.ImdbId)
+                                {
+                                    item.ImdbId = providerIds.ImdbId;
+                                }
+                                if (providerIds.Type == ProviderType.TheMovieDbId)
+                                {
+                                    item.TheMovieDbId = providerIds.TheMovieDb;
+                                }
+                                if (providerIds.Type == ProviderType.TvDbId)
+                                {
+                                    item.TvDbId = providerIds.TheTvDb;
+                                }
 
                                 item.Seasons.ToList().AddRange(seasonsContent);
 
@@ -172,14 +190,14 @@ namespace Ombi.Schedule.Jobs.Plex
                             }
                         }
                     }
-                    if (content.viewGroup.Equals(Jobs.PlexContentCacher.PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                    if (content.viewGroup.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase))
                     {
                         Logger.LogInformation("Processing Movies");
-                        foreach (var movie in content?.Metadata ?? new Metadata[]{})
+                        foreach (var movie in content?.Metadata ?? new Metadata[] { })
                         {
                             // Let's check if we have this movie
                             var existing = await Repo.GetByKey(movie.ratingKey);
-                            if(existing != null)
+                            if (existing != null)
                             {
                                 continue;
                             }
@@ -187,13 +205,14 @@ namespace Ombi.Schedule.Jobs.Plex
                             Logger.LogInformation("Adding movie {0}", movie.title);
                             var metaData = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
                                 movie.ratingKey);
-                            var item = new PlexContent
+                            var providerIds = PlexHelper.GetProviderIdFromPlexGuid(metaData.MediaContainer.Metadata
+                                .FirstOrDefault()
+                                .guid);
+
+                            var item = new PlexServerContent
                             {
                                 AddedAt = DateTime.Now,
                                 Key = movie.ratingKey,
-                                ProviderId = PlexHelper.GetProviderIdFromPlexGuid(metaData.MediaContainer.Metadata
-                                .FirstOrDefault()
-                                .guid),
                                 ReleaseYear = movie.year.ToString(),
                                 Type = PlexMediaTypeEntity.Movie,
                                 Title = movie.title,
@@ -201,7 +220,18 @@ namespace Ombi.Schedule.Jobs.Plex
                                 Seasons = new List<PlexSeasonsContent>(),
                                 Quality = movie.Media?.FirstOrDefault()?.videoResolution ?? string.Empty
                             };
-
+                            if (providerIds.Type == ProviderType.ImdbId)
+                            {
+                                item.ImdbId = providerIds.ImdbId;
+                            }
+                            if (providerIds.Type == ProviderType.TheMovieDbId)
+                            {
+                                item.TheMovieDbId = providerIds.TheMovieDb;
+                            }
+                            if (providerIds.Type == ProviderType.TvDbId)
+                            {
+                                item.TvDbId = providerIds.TheTvDb;
+                            }
                             contentToAdd.Add(item);
                         }
                     }
@@ -222,9 +252,9 @@ namespace Ombi.Schedule.Jobs.Plex
         /// </summary>
         /// <param name="plexSettings">The plex settings.</param>
         /// <returns></returns>
-        private List<Mediacontainer> GetAllContent(PlexServers plexSettings)
+        private async Task<List<Mediacontainer>> GetAllContent(PlexServers plexSettings)
         {
-            var sections = PlexApi.GetLibrarySections(plexSettings.PlexAuthToken, plexSettings.FullUri).Result;
+            var sections = await PlexApi.GetLibrarySections(plexSettings.PlexAuthToken, plexSettings.FullUri);
 
             var libs = new List<Mediacontainer>();
             if (sections != null)
@@ -246,7 +276,7 @@ namespace Ombi.Schedule.Jobs.Plex
                             }
                         }
                     }
-                    var lib = PlexApi.GetLibrary(plexSettings.PlexAuthToken, plexSettings.FullUri, dir.key).Result;
+                    var lib = await PlexApi.GetLibrary(plexSettings.PlexAuthToken, plexSettings.FullUri, dir.key);
                     if (lib != null)
                     {
                         libs.Add(lib.MediaContainer);

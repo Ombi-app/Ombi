@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
 
@@ -10,78 +11,82 @@ namespace Ombi.Store.Repository
 {
     public class SettingsJsonRepository : ISettingsRepository
     {
-        public SettingsJsonRepository(IOmbiContext ctx)
+        public SettingsJsonRepository(IOmbiContext ctx, IMemoryCache mem)
         {
             Db = ctx;
+            _cache = mem;
         }
 
         private IOmbiContext Db { get; }
+        private readonly IMemoryCache _cache;
 
         public GlobalSettings Insert(GlobalSettings entity)
         {
-
+            _cache.Remove(GetName(entity.SettingsName));
             var settings = Db.Settings.Add(entity);
             Db.SaveChanges();
             return settings.Entity;
-
         }
 
         public async Task<GlobalSettings> InsertAsync(GlobalSettings entity)
         {
-
+            _cache.Remove(GetName(entity.SettingsName));
             var settings = await Db.Settings.AddAsync(entity).ConfigureAwait(false);
             await Db.SaveChangesAsync().ConfigureAwait(false);
             return settings.Entity;
         }
 
-        public IEnumerable<GlobalSettings> GetAll()
-        {
-
-            var page = Db.Settings.AsNoTracking().ToList();
-            return page;
-
-        }
-
-        public async Task<IEnumerable<GlobalSettings>> GetAllAsync()
-        {
-            var page = await Db.Settings.AsNoTracking().ToListAsync();
-            return page;
-        }
 
         public GlobalSettings Get(string pageName)
         {
-            var entity = Db.Settings.AsNoTracking().FirstOrDefault(x => x.SettingsName == pageName);
-            return entity;
+            return _cache.GetOrCreate(GetName(pageName), entry =>
+            {
+                entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(1);
+                var entity = Db.Settings.AsNoTracking().FirstOrDefault(x => x.SettingsName == pageName);
+                return entity;
+            });
         }
 
         public async Task<GlobalSettings> GetAsync(string settingsName)
         {
-           
-            var obj =  await Db.Settings.AsNoTracking().FirstOrDefaultAsync(x => x.SettingsName == settingsName);
-            return obj;
+            return await _cache.GetOrCreateAsync(GetName(settingsName), async entry =>
+            {
+                entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(1);
+                var obj = await Db.Settings.AsNoTracking().FirstOrDefaultAsync(x => x.SettingsName == settingsName);
+                return obj;
+            });
         }
 
         public async Task DeleteAsync(GlobalSettings entity)
         {
+            _cache.Remove(GetName(entity.SettingsName));
             Db.Settings.Remove(entity);
             await Db.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(GlobalSettings entity)
         {
+            _cache.Remove(GetName(entity.SettingsName));
             Db.Update(entity);
             await Db.SaveChangesAsync();
         }
 
         public void Delete(GlobalSettings entity)
         {
+            _cache.Remove(GetName(entity.SettingsName));
             Db.Settings.Remove(entity);
             Db.SaveChanges();
         }
 
         public void Update(GlobalSettings entity)
         {
+            _cache.Remove(GetName(entity.SettingsName));
             Db.SaveChanges();
+        }
+
+        private string GetName(string entity)
+        {
+            return $"{entity}Json";
         }
     }
 }

@@ -17,6 +17,7 @@ import {
     IRadarrSettings,
     ISlackNotificationSettings,
     ISonarrSettings,
+    ITelegramNotifcationSettings,
 } from "../../interfaces";
 
 @Injectable()
@@ -61,5 +62,8 @@ export class TesterService extends ServiceAuthHelpers {
     }    
     public couchPotatoTest(settings: ICouchPotatoSettings): Observable<boolean> {
         return this.http.post(`${this.url}couchpotato`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
+    }    
+    public telegramTest(settings: ITelegramNotifcationSettings): Observable<boolean> {
+        return this.http.post(`${this.url}telegram`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
     }
 }

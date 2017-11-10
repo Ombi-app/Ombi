@@ -67,7 +67,7 @@ namespace Ombi.Schedule.Jobs.Plex
             var sections = await _api.GetLibrarySections(settings.PlexAuthToken, settings.FullUri);
 
             // Filter the libSections
-            var tvSections = sections.MediaContainer.Directory.Where(x => x.type.Equals(Jobs.PlexContentCacher.PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase));
+            var tvSections = sections.MediaContainer.Directory.Where(x => x.type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase));
 
             foreach (var section in tvSections)
             {
@@ -114,6 +114,7 @@ namespace Ombi.Schedule.Jobs.Plex
             }
 
             // we have now finished.
+            _log.LogInformation(LoggingEvents.PlexEpisodeCacher, "We have finished caching the episodes.");
             await _repo.SaveChangesAsync();
         }
 

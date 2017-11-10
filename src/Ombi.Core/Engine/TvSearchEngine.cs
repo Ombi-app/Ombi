@@ -194,7 +194,8 @@ namespace Ombi.Core.Engine
 
         private async Task<SearchTvShowViewModel> ProcessResult(SearchTvShowViewModel item)
         {
-            item.CustomId = item.Id.ToString();
+            item.TheTvDbId = item.Id.ToString();
+            
             await RunSearchRules(item);
 
             return item;

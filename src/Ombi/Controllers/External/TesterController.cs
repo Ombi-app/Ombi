@@ -9,6 +9,7 @@ using Ombi.Api.Emby;
 using Ombi.Api.Plex;
 using Ombi.Api.Radarr;
 using Ombi.Api.Sonarr;
+using Ombi.Api.Telegram;
 using Ombi.Attributes;
 using Ombi.Core.Notifications;
 using Ombi.Core.Settings.Models.External;
@@ -50,7 +51,7 @@ namespace Ombi.Controllers.External
         public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN,
             IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
             IPlexApi plex, IEmbyApi emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider,
-            ICouchPotatoApi cpApi)
+            ICouchPotatoApi cpApi, ITelegramNotification telegram)
         {
             Service = service;
             DiscordNotification = notification;
@@ -66,6 +67,7 @@ namespace Ombi.Controllers.External
             Log = log;
             EmailProvider = provider;
             CouchPotatoApi = cpApi;
+            TelegramNotification = telegram;
         }
 
         private INotificationService Service { get; }
@@ -82,6 +84,7 @@ namespace Ombi.Controllers.External
         private ICouchPotatoApi CouchPotatoApi { get; }
         private ILogger<TesterController> Log { get; }
         private IEmailProvider EmailProvider { get; }
+        private ITelegramNotification TelegramNotification { get; }
 
 
         /// <summary>
@@ -292,5 +295,20 @@ namespace Ombi.Controllers.External
                 return false;
             }
         }
+
+        /// <summary>
+        /// Sends a test message to Slack using the provided settings
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("telegram")]
+        public async Task<bool> Telegram([FromBody] TelegramSettings settings)
+        {
+            settings.Enabled = true;
+            await TelegramNotification.NotifyAsync(new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
+
+            return true;
+        }
+
     }
 }

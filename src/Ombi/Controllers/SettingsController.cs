@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -17,13 +18,13 @@ using Ombi.Core.Settings.Models;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Models;
-using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Radarr;
 using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Ombi.Api.Github;
 
 namespace Ombi.Controllers
 {
@@ -43,33 +44,33 @@ namespace Ombi.Controllers
         /// <param name="mapper">The mapper.</param>
         /// <param name="templateRepo">The templateRepo.</param>
         /// <param name="embyApi">The embyApi.</param>
-        /// <param name="embyCacher">The embyCacher.</param>
         /// <param name="radarrCacher">The radarrCacher.</param>
         /// <param name="memCache">The memory cache.</param>
+        /// <param name="githubApi">The memory cache.</param>
         public SettingsController(ISettingsResolver resolver,
             IMapper mapper,
             INotificationTemplatesRepository templateRepo,
             IEmbyApi embyApi,
-            IEmbyContentCacher embyCacher,
             IRadarrCacher radarrCacher,
-            IMemoryCache memCache)
+            IMemoryCache memCache,
+            IGithubApi githubApi)
         {
             SettingsResolver = resolver;
             Mapper = mapper;
             TemplateRepository = templateRepo;
             _embyApi = embyApi;
-            _embyContentCacher = embyCacher;
             _radarrCacher = radarrCacher;
             _cache = memCache;
+            _githubApi = githubApi;
         }
 
         private ISettingsResolver SettingsResolver { get; }
         private IMapper Mapper { get; }
         private INotificationTemplatesRepository TemplateRepository { get; }
         private readonly IEmbyApi _embyApi;
-        private readonly IEmbyContentCacher _embyContentCacher;
         private readonly IRadarrCacher _radarrCacher;
         private readonly IMemoryCache _cache;
+        private readonly IGithubApi _githubApi;
 
         /// <summary>
         /// Gets the Ombi settings.
@@ -90,6 +91,7 @@ namespace Ombi.Controllers
         public async Task<bool> OmbiSettings([FromBody]OmbiSettings ombi)
         {
             ombi.Wizard = true;
+            _cache.Remove(CacheKeys.OmbiSettings);
             return await Save(ombi);
         }
 
@@ -217,6 +219,52 @@ namespace Ombi.Controllers
         public async Task<bool> CustomizationSettings([FromBody]CustomizationSettings settings)
         {
             return await Save(settings);
+        }
+
+        /// <summary>
+        /// Get's the preset themes available
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("themes")]
+        public async Task<IEnumerable<PresetThemeViewModel>> GetThemes()
+        {
+            var themes = await _githubApi.GetCakeThemes();
+            var cssThemes = themes.Where(x => x.name.Contains(".css", CompareOptions.IgnoreCase)
+                                              && x.type.Equals("file", StringComparison.CurrentCultureIgnoreCase));
+
+            // 001-theBlur-leram84-1.0.css
+            // Number-Name-Author-Version.css
+            var model = new List<PresetThemeViewModel>();
+            foreach (var theme in cssThemes)
+            {
+                var parts = theme.name.Split("-");
+                model.Add(new PresetThemeViewModel
+                {
+                    DisplayName = parts[1],
+                    FullName = theme.name,
+                    Version = parts[3].Replace(".css", string.Empty, StringComparison.CurrentCultureIgnoreCase),
+                    Url = theme.download_url
+                });
+            }
+
+            // Display on UI - Current Theme = theBlur 1.0
+            // In dropdown display as "theBlur 1.1"
+
+            return model;
+        }
+
+        /// <summary>
+        /// Gets the content of the theme available
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        [HttpGet("themecontent")]
+        [AllowAnonymous]
+        public async Task<string> GetThemeContent([FromQuery]string url)
+        {
+            var content = await _githubApi.GetThemesRawContent(url);
+            
+            return content;
         }
 
         /// <summary>
@@ -450,6 +498,41 @@ namespace Ombi.Controllers
 
             // Lookup to see if we have any templates saved
             model.NotificationTemplates = await BuildTemplates(NotificationAgent.Discord);
+
+            return model;
+        }
+
+
+        /// <summary>
+        /// Saves the telegram notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/telegram")]
+        public async Task<bool> TelegramNotificationSettings([FromBody] TelegramNotificationsViewModel model)
+        {
+            // Save the email settings
+            var settings = Mapper.Map<TelegramSettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.UpdateRange(model.NotificationTemplates);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the telegram Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/telegram")]
+        public async Task<TelegramNotificationsViewModel> TelegramNotificationSettings()
+        {
+            var emailSettings = await Get<TelegramSettings>();
+            var model = Mapper.Map<TelegramNotificationsViewModel>(emailSettings);
+
+            // Lookup to see if we have any templates saved
+            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Telegram);
 
             return model;
         }

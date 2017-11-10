@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
+using Ombi.Helpers;
 
 namespace Ombi.Settings.Settings.Models
 {
@@ -6,6 +9,42 @@ namespace Ombi.Settings.Settings.Models
     {
         public string ApplicationName { get; set; }
         public string ApplicationUrl { get; set; }
+        public string CustomCssLink { get; set; }
+        public string Logo { get; set; }
+
+        public string PresetThemeName { get; set; }
+        public string PresetThemeContent { get; set; }
+
+        [NotMapped]
+        public string PresetThemeVersion
+        {
+            get
+            {
+                if (HasPresetTheme)
+                {
+                    var parts = PresetThemeName.Split('-');
+                    return parts[3].Replace(".css", string.Empty);
+                }
+                return string.Empty;
+            }
+        }
+
+        [NotMapped]
+        public string PresetThemeDisplayName
+        {
+            get
+            {
+                if (HasPresetTheme)
+                {
+                    var parts = PresetThemeName.Split('-');
+                    return parts[1];
+                }
+                return string.Empty;
+            }
+        }
+
+        [NotMapped]
+        public bool HasPresetTheme => PresetThemeName.HasValue() || PresetThemeContent.HasValue();
 
         public void AddToUrl(string part)
         {
@@ -24,6 +63,5 @@ namespace Ombi.Settings.Settings.Models
             }
             ApplicationUrl = ApplicationUrl + part;
         }
-        public string Logo { get; set; }
     }
 }

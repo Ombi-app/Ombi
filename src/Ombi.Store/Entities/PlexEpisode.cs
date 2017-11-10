@@ -25,6 +25,6 @@ namespace Ombi.Store.Entities
         public int GrandparentKey { get; set; }
 
 
-        public PlexContent Series { get; set; }
+        public PlexServerContent Series { get; set; }
     }
 }

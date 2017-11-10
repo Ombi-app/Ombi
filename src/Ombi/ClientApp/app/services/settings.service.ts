@@ -22,6 +22,8 @@ import {
     IRadarrSettings,
     ISlackNotificationSettings,
     ISonarrSettings,
+    ITelegramNotifcationSettings,
+    IThemes,
     IUpdateSettings,
     IUserManagementSettings,
 } from "../interfaces";
@@ -121,6 +123,14 @@ export class SettingsService extends ServiceAuthHelpers {
             .map(this.extractData).catch(this.handleError);
     }
 
+    public getThemes(): Observable<IThemes[]> {
+        return this.httpAuth.get(`${this.url}/themes`).map(this.extractData).catch(this.handleError);
+    }
+
+    public getThemeContent(themeUrl: string): Observable<string> {
+        return this.httpAuth.get(`${this.url}/themecontent?url=${themeUrl}`).map(this.extractData).catch(this.handleError);
+    }
+
     public getEmailNotificationSettings(): Observable<IEmailNotificationSettings> {
         return this.httpAuth.get(`${this.url}/notifications/email`).map(this.extractData).catch(this.handleError);
     }
@@ -218,6 +228,16 @@ export class SettingsService extends ServiceAuthHelpers {
     public saveDogNzbSettings(settings: IDogNzbSettings): Observable<boolean> {
         return this.httpAuth
             .post(`${this.url}/DogNzb`, JSON.stringify(settings), { headers: this.headers })
+            .map(this.extractData).catch(this.handleError);
+    }
+
+    public getTelegramNotificationSettings(): Observable<ITelegramNotifcationSettings> {
+        return this.httpAuth.get(`${this.url}/notifications/telegram`).map(this.extractData).catch(this.handleError);
+    }
+
+    public saveTelegramNotificationSettings(settings: ITelegramNotifcationSettings): Observable<boolean> {
+        return this.httpAuth
+            .post(`${this.url}/notifications/telegram`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
 }

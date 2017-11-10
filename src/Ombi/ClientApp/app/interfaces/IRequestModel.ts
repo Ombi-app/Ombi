@@ -95,9 +95,14 @@ export interface IFullBaseRequest extends IBaseRequest {
   overview: string;
   title: string;
   posterPath: string;
+  backdropPath: string;
   releaseDate: Date;
   status: string;
   released: boolean;
+  background: string;
+
+  // Used in the UI
+  backgroundPath: any;
 }
 
 export interface IBaseRequest {
@@ -121,6 +126,7 @@ export interface ITvRequests {
   overview: string;
   title: string;
   posterPath: string;
+  backdropPath: string;
   releaseDate: Date;
   status: string;
   childRequests: IChildRequests[];

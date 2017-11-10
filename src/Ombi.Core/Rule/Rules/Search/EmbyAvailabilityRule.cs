@@ -19,7 +19,19 @@ namespace Ombi.Core.Rule.Rules.Search
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {
-            var item = await EmbyContentRepository.Get(obj.CustomId);
+            EmbyContent item = null;
+            if (obj.Type == RequestType.Movie)
+            {
+                item = await EmbyContentRepository.Get(obj.ImdbId);
+                if (item == null)
+                {
+                    item = await EmbyContentRepository.Get(obj.TheMovieDbId);
+                }
+            }
+            else
+            {
+                item = await EmbyContentRepository.Get(obj.TheTvDbId);
+            }
             if (item != null)
             {
                 obj.Available = true;

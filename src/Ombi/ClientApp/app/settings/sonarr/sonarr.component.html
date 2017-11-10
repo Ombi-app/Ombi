@@ -62,7 +62,7 @@
                     <label for="select" class="control-label">Quality Profiles</label>
                     <div id="profiles">
                         <select class="form-control form-control-custom"  [ngClass]="{'form-error': form.get('qualityProfile').hasError('required')}" id="select" formControlName="qualityProfile">
-                            <option *ngFor="let quality of qualities" value="{{quality.id}}" [selected]="quality.id == -1">{{quality.name}}</option>
+                            <option *ngFor="let quality of qualities" value="{{quality.id}}" >{{quality.name}}</option>
                         </select>
                     </div>
                     <small *ngIf="form.get('qualityProfile').hasError('required')" class="error-text">A Default Quality Profile is required</small>
@@ -79,7 +79,7 @@
                     <label for="rootFolders" class="control-label">Default Root Folders</label>
                     <div id="rootFolders">
                         <select class="form-control form-control-custom" formControlName="rootPath" [ngClass]="{'form-error': form.get('rootPath').hasError('required')}">
-                            <option *ngFor="let folder of rootFolders" value="{{folder.id}}" [selected]="folder.id == -1">{{folder.path}}</option>
+                            <option *ngFor="let folder of rootFolders" value="{{folder.id}}">{{folder.path}}</option>
                         </select>
                     </div>
                     <small *ngIf="form.get('rootPath').hasError('required')" class="error-text">A Default Root Path is required</small>

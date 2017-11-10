@@ -52,6 +52,13 @@ export interface IDiscordNotifcationSettings extends INotificationSettings {
     notificationTemplates: INotificationTemplates[];
 }
 
+export interface ITelegramNotifcationSettings extends INotificationSettings {
+    botApi: string;
+    chatId: string;
+    parseMode: string;
+    notificationTemplates: INotificationTemplates[];
+}
+
 export interface ISlackNotificationSettings extends INotificationSettings {
     webhookUrl: string;
     username: string;

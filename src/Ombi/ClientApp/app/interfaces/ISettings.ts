@@ -93,6 +93,19 @@ export interface ICustomizationSettings extends ISettings {
     applicationName: string;
     applicationUrl: string;
     logo: string;
+    customCssLink: string;
+    hasPresetTheme: boolean;
+    presetThemeName: string;
+    presetThemeContent: string;
+    presetThemeDisplayName: string;
+    presetThemeVersion: string;
+}
+
+export interface IThemes {
+    fullName: string;
+    displayName: string;
+    version: string;
+    url: string;
 }
 
 export interface IAuthenticationSettings extends ISettings {

@@ -5,8 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Ombi.Config;
+using Ombi.Helpers;
 
 namespace Ombi.Controllers
 {
@@ -14,16 +17,40 @@ namespace Ombi.Controllers
     [Produces("application/json")]
     public class ImagesController : Controller
     {
-        public ImagesController(IFanartTvApi api, IApplicationConfigRepository config, IOptions<LandingPageBackground> options)
+        public ImagesController(IFanartTvApi api, IApplicationConfigRepository config,
+            IOptions<LandingPageBackground> options, IMemoryCache c)
         {
             Api = api;
             Config = config;
             Options = options.Value;
+            _cache = c;
         }
 
         private IFanartTvApi Api { get; }
         private IApplicationConfigRepository Config { get; }
         private LandingPageBackground Options { get; }
+        private readonly IMemoryCache _cache;
+        
+        [HttpGet("tv/{tvdbid}")]
+        public async Task<string> GetTvBanner(int tvdbid)
+        {
+            var key = await _cache.GetOrCreateAsync(CacheKeys.FanartTv, async entry =>
+            {
+                entry.SlidingExpiration = TimeSpan.FromDays(1);
+                return await Config.Get(Store.Entities.ConfigurationTypes.FanartTv);
+            });
+
+            var images = await Api.GetTvImages(tvdbid, key.Value);
+            if (images.tvbanner != null)
+            {
+                return images.tvbanner.FirstOrDefault()?.url ?? string.Empty;
+            }
+            if (images.showbackground != null)
+            {
+                return images.showbackground.FirstOrDefault()?.url ?? string.Empty;
+            }
+            return string.Empty;
+        }
 
         [HttpGet("background")]
         public async Task<object> GetBackgroundImage()
@@ -35,10 +62,15 @@ namespace Ombi.Controllers
             var movieUrl = string.Empty;
             var tvUrl = string.Empty;
 
+            var key = await _cache.GetOrCreateAsync(CacheKeys.FanartTv, async entry =>
+            {
+                entry.SlidingExpiration = TimeSpan.FromDays(1);
+                return await Config.Get(Store.Entities.ConfigurationTypes.FanartTv);
+            });
+
             if (moviesArray.Any())
             {
                 var item = rand.Next(moviesArray.Length);
-                var key = await Config.Get(Store.Entities.ConfigurationTypes.FanartTv);
                 var result = await Api.GetMovieImages(moviesArray[item], key.Value);
 
                 while (!result.moviebackground.Any())
@@ -51,7 +83,6 @@ namespace Ombi.Controllers
             if(tvArray.Any())
             {
                 var item = rand.Next(tvArray.Length);
-                var key = await Config.Get(Store.Entities.ConfigurationTypes.FanartTv);
                 var result = await Api.GetTvImages(tvArray[item], key.Value);
 
                 while (!result.showbackground.Any())

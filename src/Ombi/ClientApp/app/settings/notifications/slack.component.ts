@@ -73,7 +73,7 @@ export class SlackComponent implements OnInit {
         }
         this.testerService.slackTest(settings).subscribe(x => {
             if (x) {
-                this.notificationService.success( "Successfully sent a Slack message, please check the discord channel");
+                this.notificationService.success( "Successfully sent a Slack message, please check the slack channel");
             } else {
                 this.notificationService.error("There was an error when sending the Slack message. Please check your settings");
             }

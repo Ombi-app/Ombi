@@ -4,8 +4,6 @@ import { Router } from "@angular/router";
 import { PlexService } from "../../services";
 import { NotificationService } from "../../services";
 
-import { IPlexAuthentication } from "../../interfaces";
-
 @Component({
     templateUrl: "./plex.component.html",
 })
@@ -13,8 +11,6 @@ export class PlexComponent {
 
     public login: string;
     public password: string;
-
-    private authenticationResult: IPlexAuthentication;
 
     constructor(private plexService: PlexService, private router: Router, private notificationService: NotificationService) { }
 
@@ -24,8 +20,6 @@ export class PlexComponent {
                 this.notificationService.error("Username or password was incorrect. Could not authenticate with Plex.");
                 return;
             }
-            this.authenticationResult = x;
-
             this.router.navigate(["Wizard/CreateAdmin"]);
         });
     }

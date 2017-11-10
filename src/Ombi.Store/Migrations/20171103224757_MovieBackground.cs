@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace Ombi.Store.Migrations
 {
-    public partial class LastLoggedIn : Migration
+    public partial class MovieBackground : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<DateTime>(
-                name: "LastLoggedIn",
-                table: "AspNetUsers",
+            migrationBuilder.AddColumn<string>(
+                name: "Background",
+                table: "MovieRequests",
                 type: "TEXT",
                 nullable: true);
         }
@@ -18,8 +18,8 @@ namespace Ombi.Store.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "LastLoggedIn",
-                table: "AspNetUsers");
+                name: "Background",
+                table: "MovieRequests");
         }
     }
 }

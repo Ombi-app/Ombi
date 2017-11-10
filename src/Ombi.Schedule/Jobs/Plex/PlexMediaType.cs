@@ -28,12 +28,9 @@
 
 namespace Ombi.Schedule.Jobs
 {
-    public partial class PlexContentCacher
+    public enum PlexMediaType
     {
-        public enum PlexMediaType
-        {
-            Movie = 0,
-            Show = 1
-        }
+        Movie = 0,
+        Show = 1
     }
 }

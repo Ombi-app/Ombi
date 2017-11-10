@@ -35,6 +35,7 @@ namespace Ombi.Store.Entities
     public class EmbyContent : Entity
     {
         public string Title { get; set; }
+
         public string ProviderId { get; set; }
         public string EmbyId { get; set; }
         public EmbyMediaType Type { get; set; }

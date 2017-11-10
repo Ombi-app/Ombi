@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
     public user: ILocalUser;
     public showNav: boolean;
     public updateAvailable: boolean;
+    public currentUrl: string;
 
     constructor(public notificationService: NotificationService,
                 public authService: AuthService,
@@ -26,13 +27,13 @@ export class AppComponent implements OnInit {
                 private readonly settingsService: SettingsService,
                 private readonly jobService: JobService,
                 public readonly translate: TranslateService) { 
-                    this.translate.addLangs(["en", "de", "fr","da","es","it","nl"]);
+                    this.translate.addLangs(["en", "de", "fr","da","es","it","nl","sv"]);
                     // this language will be used as a fallback when a translation isn't found in the current language
                     this.translate.setDefaultLang("en");
                     
                     // See if we can match the supported langs with the current browser lang
                     const browserLang: string = translate.getBrowserLang();
-                    this.translate.use(browserLang.match(/en|fr|da|de|es|it|nl/) ? browserLang : "en");
+                    this.translate.use(browserLang.match(/en|fr|da|de|es|it|nl|sv/) ? browserLang : "en");
                 }
 
     public ngOnInit() {
@@ -41,6 +42,7 @@ export class AppComponent implements OnInit {
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
 
         this.router.events.subscribe((event: NavigationStart) => {
+            this.currentUrl = event.url;
             if (event instanceof NavigationStart) {
                 this.user = this.authService.claims();
                 this.showNav = this.authService.loggedIn();
