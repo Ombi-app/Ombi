@@ -13,6 +13,13 @@
                     <label for="importPlex">Import Plex Users</label>
                 </div>
             </div>
+            
+            <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" id="importAdmin" [(ngModel)]="settings.importPlexAdmin">
+                    <label for="importAdmin">Import Plex Admin</label>
+                </div>
+            </div>
             <div *ngIf="plexUsers">
                 <p>Plex Users exclude from Import</p>
                 

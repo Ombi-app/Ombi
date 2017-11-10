@@ -122,7 +122,7 @@ export class MovieSearchGridComponent implements OnInit {
     }
     public upcomingMovies() {
         this.clearResults();
-        this.searchService.upcomignMovies()
+        this.searchService.upcomingMovies()
             .subscribe(x => {
                 this.movieResults = x;
                 this.getExtaInfo();
@@ -130,7 +130,7 @@ export class MovieSearchGridComponent implements OnInit {
     }
 
    private getExtaInfo() {
-        this.movieResults.forEach((val, index) => {
+        this.movieResults.forEach((val) => {
             this.searchService.getMovieInformation(val.id)
                 .subscribe(m => this.updateItem(val, m));
         });

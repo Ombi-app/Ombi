@@ -121,7 +121,8 @@ export interface IAuthenticationSettings extends ISettings {
 }
 
 export interface IUserManagementSettings extends ISettings {
-    importPlexUsers: boolean;
+    importPlexUsers: boolean; 
+    importPlexAdmin: boolean;
     importEmbyUsers: boolean;
     defaultRoles: string[];
     bannedPlexUserIds: string[];

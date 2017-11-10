@@ -39,7 +39,7 @@ namespace Ombi.Notifications.Interfaces
 
         public async Task NotifyAsync(NotificationOptions model)
         {
-            var configuration = GetConfiguration();
+            var configuration = await GetConfiguration();
             await NotifyAsync(model, configuration);
         }
 
@@ -100,6 +100,12 @@ namespace Ombi.Notifications.Interfaces
             }
         }
 
+        /// <summary>
+        /// Loads the TV or Movie Request
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         protected virtual async Task LoadRequest(int requestId, RequestType type)
         {
             if (type == RequestType.Movie)
@@ -112,12 +118,19 @@ namespace Ombi.Notifications.Interfaces
             }
         }
 
-        private T GetConfiguration()
+        private async Task<T> GetConfiguration()
         {
-            var settings = Settings.GetSettings();
+            var settings = await Settings.GetSettingsAsync();
             return settings;
         }
 
+        /// <summary>
+        /// Loads the correct template from the DB
+        /// </summary>
+        /// <param name="agent"></param>
+        /// <param name="type"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         protected virtual async Task<NotificationMessageContent> LoadTemplate(NotificationAgent agent, NotificationType type, NotificationOptions model)
         {
             var template = await TemplateRepository.GetTemplate(agent, type);

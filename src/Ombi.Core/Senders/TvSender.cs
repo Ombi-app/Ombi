@@ -108,7 +108,7 @@ namespace Ombi.Core.Senders
             // Get the root path from the rootfolder selected.
             // For some reason, if we haven't got one use the first root folder in Sonarr
             // TODO make this overrideable via the UI
-            var rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder ?? 0, s);
+            var rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder ?? int.Parse(s.RootPath), s);
             try
             {
                 // Does the series actually exist?

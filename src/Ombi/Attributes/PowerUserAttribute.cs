@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Ombi.Core.Claims;
+using Ombi.Helpers;
 
 namespace Ombi.Attributes
 {

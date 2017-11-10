@@ -1,10 +1,10 @@
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Moq;
-using Ombi.Core.Claims;
 using Ombi.Core.Rule.Rules.Request;
 using Ombi.Store.Entities.Requests;
 using NUnit.Framework;
+using Ombi.Helpers;
 
 namespace Ombi.Core.Tests.Rule.Request
 {

@@ -1,4 +1,4 @@
-﻿namespace Ombi.Core.Claims
+﻿namespace Ombi.Helpers
 {
     public static class OmbiRoles
     {

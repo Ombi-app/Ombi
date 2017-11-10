@@ -18,7 +18,7 @@ export class CreateAdminComponent {
                 private router: Router, private auth: AuthService, private settings: SettingsService) { }
 
     public createUser() {
-        this.identityService.createWizardUser(this.username, this.password).subscribe(x => {
+        this.identityService.createWizardUser({username: this.username, password: this.password, usePlexAdminAccount: false}).subscribe(x => {
             if (x) {
                 // Log me in.
                 this.auth.login({ username: this.username, password: this.password, rememberMe:false }).subscribe(c => {

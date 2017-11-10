@@ -22,7 +22,7 @@ export class SearchService extends ServiceAuthHelpers {
     public popularMovies(): Observable<ISearchMovieResult[]> {
         return this.http.get(`${this.url}/Movie/Popular`).map(this.extractData);
     }
-    public upcomignMovies(): Observable<ISearchMovieResult[]> {
+    public upcomingMovies(): Observable<ISearchMovieResult[]> {
         return this.http.get(`${this.url}/Movie/upcoming`).map(this.extractData);
     }
     public nowPlayingMovies(): Observable<ISearchMovieResult[]> {

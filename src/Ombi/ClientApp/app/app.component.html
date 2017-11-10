@@ -1,5 +1,7 @@
 ﻿<p-growl [value]="notificationService.messages" [life]="3000"></p-growl>
-
+<div *ngIf="user.name">
+<div *ngIf="hasRole('Admin') || hasRole('PowerUser')" class="adminUser"></div>
+</div>
 <nav *ngIf="showNav" class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">

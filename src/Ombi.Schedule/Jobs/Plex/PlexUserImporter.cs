@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -44,6 +45,8 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 return;
             }
+
+
             var allUsers = await _userManager.Users.Where(x => x.UserType == UserType.PlexUser).ToListAsync();
             foreach (var server in settings.Servers)
             {
@@ -51,6 +54,8 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     continue;
                 }
+
+                await ImportAdmin(userManagementSettings, server, allUsers);
 
                 var users = await _api.GetUsers(server.PlexAuthToken);
 
@@ -80,12 +85,8 @@ namespace Ombi.Schedule.Jobs.Plex
                         };
                         _log.LogInformation("Creating Plex user {0}", newUser.UserName);
                         var result = await _userManager.CreateAsync(newUser);
-                        if (!result.Succeeded)
+                        if (!LogResult(result))
                         {
-                            foreach (var identityError in result.Errors)
-                            {
-                                _log.LogError(LoggingEvents.PlexUserImporter, identityError.Description);
-                            }
                             continue;
                         }
                         if (userManagementSettings.DefaultRoles.Any())
@@ -106,6 +107,60 @@ namespace Ombi.Schedule.Jobs.Plex
                     }
                 }
             }
+        }
+
+        private async Task ImportAdmin(UserManagementSettings settings, PlexServers server, List<OmbiUser> allUsers)
+        {
+            if (!settings.ImportPlexAdmin)
+            {
+                return;
+            }
+
+            var plexAdmin = (await _api.GetAccount(server.PlexAuthToken)).user;
+
+            // Check if the admin is already in the DB
+            var adminUserFromDb = allUsers.FirstOrDefault(x =>
+                x.ProviderUserId.Equals(plexAdmin.id, StringComparison.CurrentCultureIgnoreCase));
+
+            if (adminUserFromDb != null)
+            {
+                // Let's update the user
+                adminUserFromDb.Email = plexAdmin.email;
+                adminUserFromDb.UserName = plexAdmin.username;
+                adminUserFromDb.ProviderUserId = plexAdmin.id;
+                await _userManager.UpdateAsync(adminUserFromDb);
+                return;
+            }
+
+            var newUser = new OmbiUser
+            {
+                UserType = UserType.PlexUser,
+                UserName = plexAdmin.username ?? plexAdmin.id,
+                ProviderUserId = plexAdmin.id,
+                Email = plexAdmin.email ?? string.Empty,
+                Alias = string.Empty
+            };
+
+            var result = await _userManager.CreateAsync(newUser);
+            if (!LogResult(result))
+            {
+                return;
+            }
+
+            var roleResult = await _userManager.AddToRoleAsync(newUser, OmbiRoles.Admin);
+            LogResult(roleResult);
+        }
+
+        private bool LogResult(IdentityResult result)
+        {
+            if (!result.Succeeded)
+            {
+                foreach (var identityError in result.Errors)
+                {
+                    _log.LogError(LoggingEvents.PlexUserImporter, identityError.Description);
+                }
+            }
+            return result.Succeeded;
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Ombi.Api.Plex
 
         private const string SignInUri = "https://plex.tv/users/sign_in.json";
         private const string FriendsUri = "https://plex.tv/pms/friends/all";
-        private const string GetAccountUri = "https://plex.tv/users/account";
+        private const string GetAccountUri = "https://plex.tv/users/account.json";
         private const string ServerUri = "https://plex.tv/pms/servers.xml";
 
         /// <summary>
@@ -50,6 +50,13 @@ namespace Ombi.Api.Plex
             var request = new Request(uri, string.Empty, HttpMethod.Get);
             AddHeaders(request, authToken);
             return await Api.Request<PlexStatus>(request);
+        }
+
+        public async Task<PlexAccount> GetAccount(string authToken)
+        {
+            var request = new Request(GetAccountUri, string.Empty, HttpMethod.Get);
+            AddHeaders(request, authToken);
+            return await Api.Request<PlexAccount>(request);
         }
 
         public async Task<PlexServer> GetServer(string authToken)

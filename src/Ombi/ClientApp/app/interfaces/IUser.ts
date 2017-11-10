@@ -14,6 +14,12 @@ export interface IUser {
     checked: boolean;
 }
 
+export interface ICreateWizardUser {
+    username: string;
+    password: string;
+    usePlexAdminAccount: boolean;
+}
+
 export enum UserType {
     LocalUser = 1,
     PlexUser = 2,

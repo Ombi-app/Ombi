@@ -13,8 +13,6 @@ namespace Ombi.Core.Settings.Models.External
     public class PlexServers : ExternalSettings
     {
         public string Name { get; set; }
-        public bool EnableEpisodeSearching { get; set; }
-
         public string PlexAuthToken { get; set; }
         public string MachineIdentifier { get; set; }
 

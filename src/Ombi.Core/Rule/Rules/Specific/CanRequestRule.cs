@@ -1,7 +1,7 @@
 ﻿using System.Security.Principal;
 using System.Threading.Tasks;
-using Ombi.Core.Claims;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Helpers;
 using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core.Rule.Rules.Specific

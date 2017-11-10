@@ -28,7 +28,7 @@ export class MovieSearchComponent implements OnInit {
                 private readonly translate: TranslateService, private sanitizer: DomSanitizer) {
 
         this.searchChanged
-            .debounceTime(600) // Wait Xms afterthe last event before emitting last event
+            .debounceTime(600) // Wait Xms after the last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
             .subscribe(x => {
                 this.searchText = x as string;
@@ -40,9 +40,9 @@ export class MovieSearchComponent implements OnInit {
                     .subscribe(x => {
                         this.movieResults = x;
                         this.searchApplied = true;
-                        // Now let's load some exta info including IMDBId
+                        // Now let's load some extra info including IMDB Id
                         // This way the search is fast at displaying results.
-                        this.getExtaInfo();
+                        this.getExtraInfo();
                     });
             });
     }
@@ -103,7 +103,7 @@ export class MovieSearchComponent implements OnInit {
         this.searchService.popularMovies()
             .subscribe(x => {
                 this.movieResults = x;
-                this.getExtaInfo();
+                this.getExtraInfo();
             });
     }
     public nowPlayingMovies() {
@@ -111,7 +111,7 @@ export class MovieSearchComponent implements OnInit {
         this.searchService.nowPlayingMovies()
             .subscribe(x => {
                 this.movieResults = x;
-                this.getExtaInfo();
+                this.getExtraInfo();
             });
     }
     public topRatedMovies() {
@@ -119,19 +119,19 @@ export class MovieSearchComponent implements OnInit {
         this.searchService.topRatedMovies()
             .subscribe(x => {
                 this.movieResults = x;
-                this.getExtaInfo();
+                this.getExtraInfo();
             });
     }
     public upcomingMovies() {
         this.clearResults();
-        this.searchService.upcomignMovies()
+        this.searchService.upcomingMovies()
             .subscribe(x => {
                 this.movieResults = x;
-                this.getExtaInfo();
+                this.getExtraInfo();
             });
     }
 
-   private getExtaInfo() {
+   private getExtraInfo() {
 
         this.movieResults.forEach((val, index) => {
            

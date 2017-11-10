@@ -3,6 +3,8 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
 
+import {ConfirmationService, ConfirmDialogModule } from "primeng/primeng";
+
 import { CreateAdminComponent } from "./createadmin/createadmin.component";
 import { EmbyComponent } from "./emby/emby.component";
 import { MediaServerComponent } from "./mediaserver/mediaserver.component";
@@ -25,6 +27,7 @@ const routes: Routes = [
     imports: [
         CommonModule,
         FormsModule,
+        ConfirmDialogModule,
         RouterModule.forChild(routes),
     ],
     declarations: [
@@ -41,6 +44,7 @@ const routes: Routes = [
         PlexService,
         IdentityService,
         EmbyService,
+        ConfirmationService,
     ],
 
 })

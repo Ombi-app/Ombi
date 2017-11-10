@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Ombi.Core.Authentication;
-using Ombi.Core.Claims;
+using Ombi.Helpers;
 using Ombi.Models;
 using Ombi.Models.Identity;
 using Ombi.Store.Entities;

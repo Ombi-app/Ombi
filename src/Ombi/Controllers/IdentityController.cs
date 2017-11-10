@@ -12,14 +12,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-
+using Ombi.Api.Plex;
 using Ombi.Attributes;
 using Ombi.Config;
 using Ombi.Core.Authentication;
-using Ombi.Core.Claims;
 using Ombi.Core.Helpers;
 using Ombi.Core.Models.UI;
 using Ombi.Core.Settings;
+using Ombi.Core.Settings.Models.External;
+using Ombi.Helpers;
 using Ombi.Models;
 using Ombi.Models.Identity;
 using Ombi.Notifications;
@@ -35,6 +36,7 @@ using OmbiIdentityResult = Ombi.Models.Identity.IdentityResult;
 
 namespace Ombi.Controllers
 {
+    /// <inheritdoc />
     /// <summary>
     /// The Identity Controller, the API for everything Identity/User related
     /// </summary>
@@ -48,7 +50,9 @@ namespace Ombi.Controllers
             IWelcomeEmail welcome,
             IMovieRequestRepository m,
             ITvRequestRepository t,
-            ILogger<IdentityController> l)
+            ILogger<IdentityController> l,
+            IPlexApi plexApi,
+            ISettingsService<PlexSettings> settings)
         {
             UserManager = user;
             Mapper = mapper;
@@ -60,6 +64,8 @@ namespace Ombi.Controllers
             MovieRepo = m;
             TvRepo = t;
             _log = l;
+            _plexApi = plexApi;
+            _plexSettings = settings;
         }
 
         private OmbiUserManager UserManager { get; }
@@ -71,7 +77,9 @@ namespace Ombi.Controllers
         private IWelcomeEmail WelcomeEmail { get; }
         private IMovieRequestRepository MovieRepo { get; }
         private ITvRequestRepository TvRepo { get; }
-        private ILogger<IdentityController> _log;
+        private readonly ILogger<IdentityController> _log;
+        private readonly IPlexApi _plexApi;
+        private readonly ISettingsService<PlexSettings> _plexSettings;
 
         /// <summary>
         /// This is what the Wizard will call when creating the user for the very first time.
@@ -85,7 +93,7 @@ namespace Ombi.Controllers
         [HttpPost("Wizard")]
         [ApiExplorerSettings(IgnoreApi = true)]
         [AllowAnonymous]
-        public async Task<bool> CreateWizardUser([FromBody] UserAuthModel user)
+        public async Task<bool> CreateWizardUser([FromBody] CreateUserWizardModel user)
         {
             var users = UserManager.Users;
             if (users.Any())
@@ -94,13 +102,48 @@ namespace Ombi.Controllers
                 return false;
             }
 
+            if (user.UsePlexAdminAccount)
+            {
+                var settings = await _plexSettings.GetSettingsAsync();
+                var authToken = settings.Servers.FirstOrDefault()?.PlexAuthToken ?? string.Empty;
+                if (authToken.IsNullOrEmpty())
+                {
+                    _log.LogWarning("Could not find an auth token to create the plex user with");
+                    return false;
+                }
+                var plexUser = await _plexApi.GetAccount(authToken);
+                var adminUser = new OmbiUser
+                {
+                    UserName = plexUser.user.username,
+                    UserType = UserType.PlexUser,
+                    Email = plexUser.user.email,
+                    ProviderUserId = plexUser.user.id
+                };
+
+                return await SaveWizardUser(user, adminUser);
+            }
+
             var userToCreate = new OmbiUser
             {
                 UserName = user.Username,
                 UserType = UserType.LocalUser
             };
 
-            var result = await UserManager.CreateAsync(userToCreate, user.Password);
+            return await SaveWizardUser(user, userToCreate);
+        }
+
+        private async Task<bool> SaveWizardUser(CreateUserWizardModel user, OmbiUser userToCreate)
+        {
+            IdentityResult result;
+            // When creating the admin as the plex user, we do not pass in the password.
+            if (user.Password.HasValue())
+            {
+                result = await UserManager.CreateAsync(userToCreate, user.Password);
+            }
+            else
+            {
+                result = await UserManager.CreateAsync(userToCreate);
+            }
             if (result.Succeeded)
             {
                 _log.LogInformation("Created User {0}", userToCreate.UserName);
@@ -319,7 +362,7 @@ namespace Ombi.Controllers
             {
                 return Error("You need to provide your current password to make any changes");
             }
- 
+
             var changingPass = !string.IsNullOrEmpty(ui.Password) || !string.IsNullOrEmpty(ui.ConfirmNewPassword);
 
             if (changingPass)
@@ -457,7 +500,7 @@ namespace Ombi.Controllers
                 {
                     return Error("You do not have the correct permissions to delete this user");
                 }
-                
+
                 // We need to delete all the requests first
                 var moviesUserRequested = MovieRepo.GetAll().Where(x => x.RequestedUserId == userId);
                 var tvUserRequested = TvRepo.GetChild().Where(x => x.RequestedUserId == userId);
