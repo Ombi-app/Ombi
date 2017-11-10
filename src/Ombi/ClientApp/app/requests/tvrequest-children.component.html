@@ -4,7 +4,11 @@
         <div class="col-md-12">
 
             <div class="col-md-2">
-                <span>Requested By: {{child.requestedUser.userName}}</span>
+                <span>Requested By:</span>
+                
+                <span *ngIf="!isAdmin">{{child.requestedUser.userName}}</span>
+                <span *ngIf="isAdmin && child.requestedUser.alias">{{child.requestedUser.alias}}</span>
+                <span *ngIf="isAdmin && !child.requestedUser.alias">{{child.requestedUser.userName}}</span>
             </div>
 
 
