@@ -30,7 +30,7 @@
     "OnlineParagraph": "Medieservern är online för tillfället",
     "PartiallyOnlineHeading": "Delvis online",
     "PartiallyOnlineParagraph": "Medieservern är delvis online.",
-    "MultipleServersUnavailable": "Det finns {{serversUnavailable}} servrar offline utav {{totalServers}}.",
+    "MultipleServersUnavailable": "Det är {{serversUnavailable}} servrar offline just nu utav {{totalServers}} servrar totalt.",
     "SingleServerUnavailable": "Det finns {{serversUnavailable}} servrar offline utav {{totalServers}}.",
     "OfflineHeading": "För närvarande Offline",
     "OfflineParagraph": "Medieservern är för närvarande offline.",
@@ -41,7 +41,7 @@
     "Requests": "Förfrågningar",
     "UserManagement": "Användarhantering",
     "Donate": "Donera!",
-    "DonateTooltip": "Hur man övertygar min fru att jag spenderar min fritid och utvecklar Ombi :)",
+    "DonateTooltip": "Det är så här jag övertygar min fru att jag vill spendera min fritid att utveckla Ombi ;)",
     "UpdateAvailableTooltip": "Uppdatering tillgänglig!",
     "Settings": "Inställningar",
     "Welcome": "Välkommen {{username}}",
@@ -66,13 +66,13 @@
     "NoResults": "Tyvärr, hittade vi inte några resultat!",
     "ReleaseDate": "Publiceringsdatum",
     "ViewOnPlex": "Visa på Plex",
-    "RequestAdded": "{{title}} har begärts framgångsrikt",
+    "RequestAdded": "Begäran om {{title}} har lagts till",
     "Movies": {
       "PopularMovies": "Populära filmer",
       "UpcomingMovies": "Kommande filmer",
       "TopRatedMovies": "Topprankade filmer",
-      "NowPlayingMovies": "Aktuella filmer",
-      "HomePage": "Startsida",
+      "NowPlayingMovies": "Aktuella Filmer",
+      "HomePage": "Hemsida",
       "Trailer": "Trailer"
     }
   }
