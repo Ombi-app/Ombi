@@ -1,5 +1,15 @@
 ﻿<div class="col-md-12">
-    <div class="col-md-1 col-md-push-11">
-        <a href="{{url}}" target="_blank" class="btn btn-sm btn-info-outline">Wiki</a>
+
+    <div *ngIf="!text" class="col-md-1 col-md-push-11">
+        <a href="{{url}}" target="_blank" class="btn btn-sm btn-info-outline">
+            <span >Wiki</span>
+        </a>
     </div>
+
+    <div  *ngIf="text" class="col-md-1 col-md-push-9">
+            <a href="{{url}}" target="_blank" class="btn btn-sm btn-info-outline">
+                <span>{{text}}</span>
+            </a>
+        </div>
+
 </div>

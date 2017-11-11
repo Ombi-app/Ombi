@@ -6,4 +6,5 @@
 })
 export class WikiComponent {
     @Input() public url: string;
+    @Input() public text: string;
 }
