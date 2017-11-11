@@ -66,7 +66,7 @@
     "NoResults": "Tyvärr, hittade vi inte några resultat!",
     "ReleaseDate": "Publiceringsdatum",
     "ViewOnPlex": "Visa på Plex",
-    "RequestAdded": "Begäran om {{title}} har lagts till",
+    "RequestAdded": "Begäran om {{title}} har lagts till framgångsrikt",
     "Movies": {
       "PopularMovies": "Populära filmer",
       "UpcomingMovies": "Kommande filmer",
