@@ -193,7 +193,11 @@ namespace Ombi.Core.Engine
             request.Denied = false;
             await MovieRepository.Update(request);
 
-            NotificationHelper.Notify(request, NotificationType.RequestApproved);
+            var canNotify = await RunSpecificRule(request, SpecificRules.CanSendNotification);
+            if (canNotify.Success)
+            {
+                NotificationHelper.Notify(request, NotificationType.RequestApproved);
+            }
 
             if (request.Approved)
             {
