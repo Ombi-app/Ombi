@@ -101,7 +101,7 @@ namespace Ombi.Notifications.Agents
 
             var notification = new NotificationMessage
             {
-                Message = parsed.Message,
+                Message = parsed.Message ?? string.Empty,
             };
             
             await Send(notification, settings);

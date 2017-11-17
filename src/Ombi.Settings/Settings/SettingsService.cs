@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
-using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Ombi.Settings.Settings
 {
@@ -12,49 +13,63 @@ namespace Ombi.Settings.Settings
         where T : Models.Settings, new()
     {
 
-        public SettingsService(ISettingsRepository repo, IDataProtectionProvider provider)
+        public SettingsService(ISettingsRepository repo, IMemoryCache cache)
         {
             Repo = repo;
             EntityName = typeof(T).Name;
-            _protector = provider.CreateProtector(GetType().FullName);
+            _cache = cache;
         }
 
         private ISettingsRepository Repo { get; }
         private string EntityName { get; }
-        private readonly IDataProtector _protector;
+        private string CacheName => $"Settings{EntityName}";
+        private readonly IMemoryCache _cache;
 
         public T GetSettings()
         {
-            var result = Repo.Get(EntityName);
-            if (result == null)
+            return _cache.GetOrCreate(CacheName, entry =>
             {
-                return new T();
-            }
-            result.Content = DecryptSettings(result);
-            var obj = string.IsNullOrEmpty(result.Content) ? null : JsonConvert.DeserializeObject<T>(result.Content, SerializerSettings.Settings);
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(2);
+                var result = Repo.Get(EntityName);
+                if (result == null)
+                {
+                    return new T();
+                }
+                result.Content = DecryptSettings(result);
+                var obj = string.IsNullOrEmpty(result.Content)
+                    ? null
+                    : JsonConvert.DeserializeObject<T>(result.Content, SerializerSettings.Settings);
 
-            var model = obj;
+                var model = obj;
 
-            return model;
+                return model;
+            });
         }
 
         public async Task<T> GetSettingsAsync()
         {
-            var result = await Repo.GetAsync(EntityName);
-            if (result == null)
+            return await _cache.GetOrCreateAsync(CacheName, async entry =>
             {
-                return new T();
-            }
-            result.Content = DecryptSettings(result);
-            var obj = string.IsNullOrEmpty(result.Content) ? null : JsonConvert.DeserializeObject<T>(result.Content, SerializerSettings.Settings);
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(2);
+                var result = await Repo.GetAsync(EntityName);
+                if (result == null)
+                {
+                    return new T();
+                }
+                result.Content = DecryptSettings(result);
+                var obj = string.IsNullOrEmpty(result.Content)
+                    ? null
+                    : JsonConvert.DeserializeObject<T>(result.Content, SerializerSettings.Settings);
 
-            var model = obj;
+                var model = obj;
 
-            return model;
+                return model;
+            });
         }
 
         public bool SaveSettings(T model)
         {
+            _cache.Remove(CacheName);
             var entity = Repo.Get(EntityName);
 
             if (entity == null)
@@ -81,6 +96,7 @@ namespace Ombi.Settings.Settings
 
         public async Task<bool> SaveSettingsAsync(T model)
         {
+            _cache.Remove(CacheName);
             var entity = await Repo.GetAsync(EntityName);
 
             if (entity == null)
@@ -107,16 +123,17 @@ namespace Ombi.Settings.Settings
 
         public void Delete(T model)
         {
+            _cache.Remove(CacheName);
             var entity = Repo.Get(EntityName);
             if (entity != null)
             {
                 Repo.Delete(entity);
             }
-
         }
 
         public async Task DeleteAsync(T model)
         {
+            _cache.Remove(CacheName);
             var entity = Repo.Get(EntityName);
             if (entity != null)
             {
