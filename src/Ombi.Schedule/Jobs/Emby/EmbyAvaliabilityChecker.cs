@@ -63,7 +63,7 @@ namespace Ombi.Schedule.Jobs.Emby
 
         private async Task ProcessMovies()
         {
-            var movies = _movieRepo.GetAll().Where(x => !x.Available);
+            var movies = await _movieRepo.GetAll().Where(x => !x.Available).ToListAsync();
 
             foreach (var movie in movies)
             {
@@ -98,18 +98,18 @@ namespace Ombi.Schedule.Jobs.Emby
         /// <returns></returns>
         private async Task ProcessTv()
         {
-            var tv = _tvRepo.GetChild().Where(x => !x.Available);
-            var embyEpisodes = _repo.GetAllEpisodes().Include(x => x.Series);
+            var tv = await _tvRepo.GetChild().Where(x => !x.Available).ToListAsync();
+            var embyEpisodes = await _repo.GetAllEpisodes().Include(x => x.Series).ToListAsync();
 
             foreach (var child in tv)
             {
                 var tvDbId = child.ParentRequest.TvDbId;
-                var seriesEpisodes = embyEpisodes.Where(x => x.Series.ProviderId == tvDbId.ToString());
+                var seriesEpisodes = embyEpisodes.Where(x => x.Series.ProviderId == tvDbId.ToString()).ToList();
                 foreach (var season in child.SeasonRequests)
                 {
                     foreach (var episode in season.Episodes)
                     {
-                        var foundEp = await seriesEpisodes.FirstOrDefaultAsync(
+                        var foundEp = seriesEpisodes.FirstOrDefault(
                             x => x.EpisodeNumber == episode.EpisodeNumber &&
                                  x.SeasonNumber == episode.Season.SeasonNumber);
 
