@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
@@ -59,20 +60,20 @@ namespace Ombi.Schedule.Jobs.Plex
                 
                 var tvDbId = child.ParentRequest.TvDbId;
                 var imdbId = child.ParentRequest.ImdbId;
-                IQueryable<PlexEpisode> seriesEpisodes = null;
+                List<PlexEpisode> seriesEpisodes = null;
                 if (useImdb)
                 {
-                    seriesEpisodes = plexEpisodes.Where(x => x.Series.ImdbId == imdbId.ToString());
+                    seriesEpisodes = plexEpisodes.Where(x => x.Series.ImdbId == imdbId.ToString()).ToList();
                 }
                 if (useTvDb)
                 {
-                    seriesEpisodes = plexEpisodes.Where(x => x.Series.TvDbId == tvDbId.ToString());
+                    seriesEpisodes = plexEpisodes.Where(x => x.Series.TvDbId == tvDbId.ToString()).ToList();
                 }
                 foreach (var season in child.SeasonRequests)
                 {
                     foreach (var episode in season.Episodes)
                     {
-                        var foundEp = await seriesEpisodes.FirstOrDefaultAsync(
+                        var foundEp = seriesEpisodes.FirstOrDefault(
                             x => x.EpisodeNumber == episode.EpisodeNumber &&
                                  x.SeasonNumber == episode.Season.SeasonNumber);
 

@@ -83,7 +83,7 @@ namespace Ombi.Schedule.Jobs.Emby
                         NotificationType = NotificationType.RequestAvailable,
                         RequestId = movie.Id,
                         RequestType = RequestType.Movie,
-                        Recipient = movie.RequestedUser.Email,
+                        Recipient = movie.RequestedUser.Email.HasValue() ? movie.RequestedUser.Email : string.Empty,
                     }));
                 }
             }
