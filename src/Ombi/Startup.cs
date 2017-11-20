@@ -128,7 +128,7 @@ namespace Ombi
             {
                 i.StoragePath = string.Empty;
             }
-            var sqliteStorage = $"Data Source={Path.Combine(i.StoragePath, "Ombi.db")};";
+            var sqliteStorage = $"Data Source={Path.Combine(i.StoragePath, "Schedules.db")};";
 
             services.AddHangfire(x =>
             {
