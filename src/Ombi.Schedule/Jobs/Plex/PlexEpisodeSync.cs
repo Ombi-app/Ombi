@@ -14,9 +14,9 @@ using Ombi.Store.Repository;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
-    public class PlexEpisodeCacher : IPlexEpisodeCacher
+    public class PlexEpisodeSync : IPlexEpisodeSync
     {
-        public PlexEpisodeCacher(ISettingsService<PlexSettings> s, ILogger<PlexEpisodeCacher> log, IPlexApi plexApi,
+        public PlexEpisodeSync(ISettingsService<PlexSettings> s, ILogger<PlexEpisodeSync> log, IPlexApi plexApi,
             IPlexContentRepository repo, IPlexAvailabilityChecker a)
         {
             _settings = s;
@@ -27,7 +27,7 @@ namespace Ombi.Schedule.Jobs.Plex
         }
 
         private readonly ISettingsService<PlexSettings> _settings;
-        private readonly ILogger<PlexEpisodeCacher> _log;
+        private readonly ILogger<PlexEpisodeSync> _log;
         private readonly IPlexApi _api;
         private readonly IPlexContentRepository _repo;
         private readonly IPlexAvailabilityChecker _availabilityChecker;

@@ -144,11 +144,11 @@ namespace Ombi.DependencyInjection
         {
             services.AddTransient<IBackgroundJobClient, BackgroundJobClient>();
 
-            services.AddTransient<IPlexContentCacher, PlexServerContentCacher>();
-            services.AddTransient<IEmbyContentCacher, EmbyContentCacher>();
-            services.AddTransient<IEmbyEpisodeCacher, EmbyEpisodeCacher>();
+            services.AddTransient<IPlexContentSync, PlexContentSync>();
+            services.AddTransient<IEmbyContentSync, EmbyContentSync>();
+            services.AddTransient<IEmbyEpisodeSync, EmbyEpisodeSync>();
             services.AddTransient<IEmbyAvaliabilityChecker, EmbyAvaliabilityChecker>();
-            services.AddTransient<IPlexEpisodeCacher, PlexEpisodeCacher>();
+            services.AddTransient<IPlexEpisodeSync, PlexEpisodeSync>();
             services.AddTransient<IPlexAvailabilityChecker, PlexAvailabilityChecker>();
             services.AddTransient<IJobSetup, JobSetup>();
             services.AddTransient<IRadarrCacher, RadarrCacher>();

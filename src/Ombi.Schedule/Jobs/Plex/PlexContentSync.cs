@@ -41,23 +41,23 @@ using Ombi.Store.Repository;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
-    public class PlexServerContentCacher : IPlexContentCacher
+    public class PlexContentSync : IPlexContentSync
     {
-        public PlexServerContentCacher(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexServerContentCacher> logger, IPlexContentRepository repo,
-            IPlexEpisodeCacher epsiodeCacher)
+        public PlexContentSync(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentSync> logger, IPlexContentRepository repo,
+            IPlexEpisodeSync epsiodeSync)
         {
             Plex = plex;
             PlexApi = plexApi;
             Logger = logger;
             Repo = repo;
-            EpisodeCacher = epsiodeCacher;
+            EpisodeSync = epsiodeSync;
         }
 
         private ISettingsService<PlexSettings> Plex { get; }
         private IPlexApi PlexApi { get; }
-        private ILogger<PlexServerContentCacher> Logger { get; }
+        private ILogger<PlexContentSync> Logger { get; }
         private IPlexContentRepository Repo { get; }
-        private IPlexEpisodeCacher EpisodeCacher { get; }
+        private IPlexEpisodeSync EpisodeSync { get; }
 
         public async Task CacheContent()
         {
@@ -79,7 +79,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
 
                 Logger.LogInformation("Starting EP Cacher");
-                BackgroundJob.Enqueue(() => EpisodeCacher.Start());
+                BackgroundJob.Enqueue(() => EpisodeSync.Start());
             }
             catch (Exception e)
             {

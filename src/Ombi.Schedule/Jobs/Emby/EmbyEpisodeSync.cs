@@ -39,9 +39,9 @@ using Ombi.Store.Repository;
 
 namespace Ombi.Schedule.Jobs.Emby
 {
-    public class EmbyEpisodeCacher : IEmbyEpisodeCacher
+    public class EmbyEpisodeSync : IEmbyEpisodeSync
     {
-        public EmbyEpisodeCacher(ISettingsService<EmbySettings> s, IEmbyApi api, ILogger<EmbyEpisodeCacher> l, IEmbyContentRepository repo,
+        public EmbyEpisodeSync(ISettingsService<EmbySettings> s, IEmbyApi api, ILogger<EmbyEpisodeSync> l, IEmbyContentRepository repo,
             IEmbyAvaliabilityChecker checker)
         {
             _api = api;
@@ -53,7 +53,7 @@ namespace Ombi.Schedule.Jobs.Emby
 
         private readonly ISettingsService<EmbySettings> _settings;
         private readonly IEmbyApi _api;
-        private readonly ILogger<EmbyEpisodeCacher> _logger;
+        private readonly ILogger<EmbyEpisodeSync> _logger;
         private readonly IEmbyContentRepository _repo;
         private readonly IEmbyAvaliabilityChecker _avaliabilityChecker;
 

@@ -2,7 +2,7 @@
 
 namespace Ombi.Schedule.Jobs.Plex
 {
-    public interface IPlexEpisodeCacher
+    public interface IPlexEpisodeSync
     {
         Task Start();
     }

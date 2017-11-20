@@ -19,23 +19,23 @@ namespace Ombi.Controllers
     public class JobController : Controller
     {
         public JobController(IOmbiAutomaticUpdater updater, IPlexUserImporter userImporter,
-            IMemoryCache mem, IEmbyUserImporter embyImporter, IPlexContentCacher plexContentCacher,
-            IEmbyContentCacher embyContentCacher)
+            IMemoryCache mem, IEmbyUserImporter embyImporter, IPlexContentSync plexContentSync,
+            IEmbyContentSync embyContentSync)
         {
             _updater = updater;
             _plexUserImporter = userImporter;
             _embyUserImporter = embyImporter;
             _memCache = mem;
-            _plexContentCacher = plexContentCacher;
-            _embyContentCacher = embyContentCacher;
+            _plexContentSync = plexContentSync;
+            _embyContentSync = embyContentSync;
         }
 
         private readonly IOmbiAutomaticUpdater _updater;
         private readonly IPlexUserImporter _plexUserImporter;
         private readonly IEmbyUserImporter _embyUserImporter;
         private readonly IMemoryCache _memCache;
-        private readonly IPlexContentCacher _plexContentCacher;
-        private readonly IEmbyContentCacher _embyContentCacher;
+        private readonly IPlexContentSync _plexContentSync;
+        private readonly IEmbyContentSync _embyContentSync;
 
         /// <summary>
         /// Runs the update job
@@ -116,7 +116,7 @@ namespace Ombi.Controllers
         [HttpPost("plexcontentcacher")]
         public bool StartPlexContentCacher()
         {
-            BackgroundJob.Enqueue(() => _plexContentCacher.CacheContent());
+            BackgroundJob.Enqueue(() => _plexContentSync.CacheContent());
             return true;
         }
 
@@ -127,7 +127,7 @@ namespace Ombi.Controllers
         [HttpPost("embycontentcacher")]
         public bool StartEmbyContentCacher()
         {
-            BackgroundJob.Enqueue(() => _embyContentCacher.Start());
+            BackgroundJob.Enqueue(() => _embyContentSync.Start());
             return true;
         }
     }

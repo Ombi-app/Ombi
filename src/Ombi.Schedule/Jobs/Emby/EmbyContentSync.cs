@@ -16,23 +16,23 @@ using EmbyMediaType = Ombi.Store.Entities.EmbyMediaType;
 
 namespace Ombi.Schedule.Jobs.Emby
 {
-    public class EmbyContentCacher : IEmbyContentCacher
+    public class EmbyContentSync : IEmbyContentSync
     {
-        public EmbyContentCacher(ISettingsService<EmbySettings> settings, IEmbyApi api, ILogger<EmbyContentCacher> logger,
-            IEmbyContentRepository repo, IEmbyEpisodeCacher epCacher)
+        public EmbyContentSync(ISettingsService<EmbySettings> settings, IEmbyApi api, ILogger<EmbyContentSync> logger,
+            IEmbyContentRepository repo, IEmbyEpisodeSync epSync)
         {
             _logger = logger;
             _settings = settings;
             _api = api;
             _repo = repo;
-            _episodeCacher = epCacher;
+            _episodeSync = epSync;
         }
 
-        private readonly ILogger<EmbyContentCacher> _logger;
+        private readonly ILogger<EmbyContentSync> _logger;
         private readonly ISettingsService<EmbySettings> _settings;
         private readonly IEmbyApi _api;
         private readonly IEmbyContentRepository _repo;
-        private readonly IEmbyEpisodeCacher _episodeCacher;
+        private readonly IEmbyEpisodeSync _episodeSync;
 
 
         public async Task Start()
@@ -45,7 +45,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 await StartServerCache(server);
 
             // Episodes
-            BackgroundJob.Enqueue(() => _episodeCacher.Start());
+            BackgroundJob.Enqueue(() => _episodeSync.Start());
         }
 
 
