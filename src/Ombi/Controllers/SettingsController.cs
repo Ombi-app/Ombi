@@ -44,14 +44,14 @@ namespace Ombi.Controllers
         /// <param name="mapper">The mapper.</param>
         /// <param name="templateRepo">The templateRepo.</param>
         /// <param name="embyApi">The embyApi.</param>
-        /// <param name="radarrCacher">The radarrCacher.</param>
+        /// <param name="radarrSync">The radarrCacher.</param>
         /// <param name="memCache">The memory cache.</param>
         /// <param name="githubApi">The memory cache.</param>
         public SettingsController(ISettingsResolver resolver,
             IMapper mapper,
             INotificationTemplatesRepository templateRepo,
             IEmbyApi embyApi,
-            IRadarrCacher radarrCacher,
+            IRadarrSync radarrSync,
             IMemoryCache memCache,
             IGithubApi githubApi)
         {
@@ -59,7 +59,7 @@ namespace Ombi.Controllers
             Mapper = mapper;
             TemplateRepository = templateRepo;
             _embyApi = embyApi;
-            _radarrCacher = radarrCacher;
+            _radarrSync = radarrSync;
             _cache = memCache;
             _githubApi = githubApi;
         }
@@ -68,7 +68,7 @@ namespace Ombi.Controllers
         private IMapper Mapper { get; }
         private INotificationTemplatesRepository TemplateRepository { get; }
         private readonly IEmbyApi _embyApi;
-        private readonly IRadarrCacher _radarrCacher;
+        private readonly IRadarrSync _radarrSync;
         private readonly IMemoryCache _cache;
         private readonly IGithubApi _githubApi;
 
@@ -332,7 +332,7 @@ namespace Ombi.Controllers
             {
                 _cache.Remove(CacheKeys.RadarrRootProfiles);
                 _cache.Remove(CacheKeys.RadarrQualityProfiles);
-                BackgroundJob.Enqueue(() => _radarrCacher.CacheContent());
+                BackgroundJob.Enqueue(() => _radarrSync.CacheContent());
             }
             return result;
         }

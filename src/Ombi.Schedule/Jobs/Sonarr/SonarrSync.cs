@@ -16,9 +16,9 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Schedule.Jobs.Sonarr
 {
-    public class SonarrCacher : ISonarrCacher
+    public class SonarrSync : ISonarrSync
     {
-        public SonarrCacher(ISettingsService<SonarrSettings> s, ISonarrApi api, ILogger<SonarrCacher> l, IOmbiContext ctx)
+        public SonarrSync(ISettingsService<SonarrSettings> s, ISonarrApi api, ILogger<SonarrSync> l, IOmbiContext ctx)
         {
             _settings = s;
             _api = api;
@@ -28,7 +28,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
 
         private readonly ISettingsService<SonarrSettings> _settings;
         private readonly ISonarrApi _api;
-        private readonly ILogger<SonarrCacher> _log;
+        private readonly ILogger<SonarrSync> _log;
         private readonly IOmbiContext _ctx;
 
         private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);

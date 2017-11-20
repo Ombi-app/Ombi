@@ -4,7 +4,7 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Schedule.Jobs.Radarr
 {
-    public interface IRadarrCacher
+    public interface IRadarrSync
     {
         Task CacheContent();
         Task<IEnumerable<RadarrCache>> GetCachedContent();

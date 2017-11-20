@@ -14,9 +14,9 @@ using Serilog;
 
 namespace Ombi.Schedule.Jobs.Radarr
 {
-    public class RadarrCacher : IRadarrCacher
+    public class RadarrSync : IRadarrSync
     {
-        public RadarrCacher(ISettingsService<RadarrSettings> radarr, IRadarrApi radarrApi, ILogger<RadarrCacher> log, IOmbiContext ctx)
+        public RadarrSync(ISettingsService<RadarrSettings> radarr, IRadarrApi radarrApi, ILogger<RadarrSync> log, IOmbiContext ctx)
         {
             RadarrSettings = radarr;
             RadarrApi = radarrApi;
@@ -26,7 +26,7 @@ namespace Ombi.Schedule.Jobs.Radarr
 
         private ISettingsService<RadarrSettings> RadarrSettings { get; }
         private IRadarrApi RadarrApi { get; }
-        private ILogger<RadarrCacher> Logger { get; }
+        private ILogger<RadarrSync> Logger { get; }
         private readonly IOmbiContext _ctx;
 
         private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);

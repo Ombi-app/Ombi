@@ -2,7 +2,7 @@
 
 namespace Ombi.Schedule.Jobs.Sonarr
 {
-    public interface ISonarrCacher
+    public interface ISonarrSync
     {
         Task Start();
     }

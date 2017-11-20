@@ -151,13 +151,13 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IPlexEpisodeSync, PlexEpisodeSync>();
             services.AddTransient<IPlexAvailabilityChecker, PlexAvailabilityChecker>();
             services.AddTransient<IJobSetup, JobSetup>();
-            services.AddTransient<IRadarrCacher, RadarrCacher>();
-            services.AddTransient<ISonarrCacher, SonarrCacher>();
+            services.AddTransient<IRadarrSync, RadarrSync>();
+            services.AddTransient<ISonarrSync, SonarrSync>();
             services.AddTransient<IOmbiAutomaticUpdater, OmbiAutomaticUpdater>();
             services.AddTransient<IPlexUserImporter, PlexUserImporter>();
             services.AddTransient<IEmbyUserImporter, EmbyUserImporter>();
             services.AddTransient<IWelcomeEmail, WelcomeEmail>();
-            services.AddTransient<ICouchPotatoCacher, CouchPotatoCacher>();
+            services.AddTransient<ICouchPotatoSync, CouchPotatoSync>();
             services.AddTransient<IProcessProvider, ProcessProvider>();
         }
     }

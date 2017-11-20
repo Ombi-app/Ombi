@@ -11,34 +11,34 @@ namespace Ombi.Schedule
 {
     public class JobSetup : IJobSetup
     {
-        public JobSetup(IPlexContentSync plexContentSync, IRadarrCacher radarrCacher,
+        public JobSetup(IPlexContentSync plexContentSync, IRadarrSync radarrSync,
             IOmbiAutomaticUpdater updater, IEmbyContentSync embySync, IPlexUserImporter userImporter,
-            IEmbyUserImporter embyUserImporter, ISonarrCacher cache, ICouchPotatoCacher cpCache)
+            IEmbyUserImporter embyUserImporter, ISonarrSync cache, ICouchPotatoSync cpCache)
         {
             PlexContentSync = plexContentSync;
-            RadarrCacher = radarrCacher;
+            RadarrSync = radarrSync;
             Updater = updater;
             EmbyContentSync = embySync;
             PlexUserImporter = userImporter;
             EmbyUserImporter = embyUserImporter;
-            SonarrCacher = cache;
+            SonarrSync = cache;
             CpCache = cpCache;
         }
 
         private IPlexContentSync PlexContentSync { get; }
-        private IRadarrCacher RadarrCacher { get; }
+        private IRadarrSync RadarrSync { get; }
         private IOmbiAutomaticUpdater Updater { get; }
         private IPlexUserImporter PlexUserImporter { get; }
         private IEmbyContentSync EmbyContentSync { get; }
         private IEmbyUserImporter EmbyUserImporter { get; }
-        private ISonarrCacher SonarrCacher { get; }
-        private ICouchPotatoCacher CpCache { get; }
+        private ISonarrSync SonarrSync { get; }
+        private ICouchPotatoSync CpCache { get; }
 
         public void Setup()
         {
             RecurringJob.AddOrUpdate(() => EmbyContentSync.Start(), Cron.Hourly(5));
-            RecurringJob.AddOrUpdate(() => SonarrCacher.Start(), Cron.Hourly(10));
-            RecurringJob.AddOrUpdate(() => RadarrCacher.CacheContent(), Cron.Hourly(15));
+            RecurringJob.AddOrUpdate(() => SonarrSync.Start(), Cron.Hourly(10));
+            RecurringJob.AddOrUpdate(() => RadarrSync.CacheContent(), Cron.Hourly(15));
             RecurringJob.AddOrUpdate(() => PlexContentSync.CacheContent(), Cron.Hourly(20));
             RecurringJob.AddOrUpdate(() => CpCache.Start(), Cron.Hourly(30));
 

@@ -39,10 +39,10 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Schedule.Jobs.Couchpotato
 {
-    public class CouchPotatoCacher : ICouchPotatoCacher
+    public class CouchPotatoSync : ICouchPotatoSync
     {
-        public CouchPotatoCacher(ISettingsService<CouchPotatoSettings> cpSettings,
-            ICouchPotatoApi api, ILogger<CouchPotatoCacher> log, IOmbiContext ctx)
+        public CouchPotatoSync(ISettingsService<CouchPotatoSettings> cpSettings,
+            ICouchPotatoApi api, ILogger<CouchPotatoSync> log, IOmbiContext ctx)
         {
             _settings = cpSettings;
             _api = api;
@@ -52,7 +52,7 @@ namespace Ombi.Schedule.Jobs.Couchpotato
 
         private readonly ISettingsService<CouchPotatoSettings> _settings;
         private readonly ICouchPotatoApi _api;
-        private readonly ILogger<CouchPotatoCacher> _log;
+        private readonly ILogger<CouchPotatoSync> _log;
         private readonly IOmbiContext _ctx;
 
         public async Task Start()
