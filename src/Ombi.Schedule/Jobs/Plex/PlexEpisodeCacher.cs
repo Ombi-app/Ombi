@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
@@ -99,7 +98,7 @@ namespace Ombi.Schedule.Jobs.Plex
             var currentPosition = 0;
             var resultCount = settings.EpisodeBatchSize == 0 ? 50 : settings.EpisodeBatchSize;
             var episodes = await _api.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, section.key, currentPosition, resultCount);
-            var currentData = await _repo.GetAllEpisodes().ToListAsync();
+            var currentData = _repo.GetAllEpisodes();
             _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Total Epsiodes found for {episodes.MediaContainer.librarySectionTitle} = {episodes.MediaContainer.totalSize}");
 
             await ProcessEpsiodes(episodes, currentData);
@@ -119,7 +118,7 @@ namespace Ombi.Schedule.Jobs.Plex
             await _repo.SaveChangesAsync();
         }
 
-        private async Task ProcessEpsiodes(PlexContainer episodes, IEnumerable<PlexEpisode> currentEpisodes)
+        private async Task ProcessEpsiodes(PlexContainer episodes, IQueryable<PlexEpisode> currentEpisodes)
         {
             var ep = new HashSet<PlexEpisode>();
 

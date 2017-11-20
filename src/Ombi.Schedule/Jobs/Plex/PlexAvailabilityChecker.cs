@@ -39,8 +39,8 @@ namespace Ombi.Schedule.Jobs.Plex
 
         private async Task ProcessTv()
         {
-            var tv = await _tvRepo.GetChild().Where(x => !x.Available).ToListAsync();
-            var plexEpisodes = await _repo.GetAllEpisodes().Include(x => x.Series).ToListAsync();
+            var tv = _tvRepo.GetChild().Where(x => !x.Available);
+            var plexEpisodes = _repo.GetAllEpisodes().Include(x => x.Series);
 
             foreach (var child in tv)
             {
@@ -60,20 +60,20 @@ namespace Ombi.Schedule.Jobs.Plex
                 
                 var tvDbId = child.ParentRequest.TvDbId;
                 var imdbId = child.ParentRequest.ImdbId;
-                List<PlexEpisode> seriesEpisodes = null;
+                IQueryable<PlexEpisode> seriesEpisodes = null;
                 if (useImdb)
                 {
-                    seriesEpisodes = plexEpisodes.Where(x => x.Series.ImdbId == imdbId.ToString()).ToList();
+                    seriesEpisodes = plexEpisodes.Where(x => x.Series.ImdbId == imdbId.ToString());
                 }
                 if (useTvDb)
                 {
-                    seriesEpisodes = plexEpisodes.Where(x => x.Series.TvDbId == tvDbId.ToString()).ToList();
+                    seriesEpisodes = plexEpisodes.Where(x => x.Series.TvDbId == tvDbId.ToString());
                 }
                 foreach (var season in child.SeasonRequests)
                 {
                     foreach (var episode in season.Episodes)
                     {
-                        var foundEp = seriesEpisodes.FirstOrDefault(
+                        var foundEp = await seriesEpisodes.FirstOrDefaultAsync(
                             x => x.EpisodeNumber == episode.EpisodeNumber &&
                                  x.SeasonNumber == episode.Season.SeasonNumber);
 
@@ -107,7 +107,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private async Task ProcessMovies()
         {
             // Get all non available
-            var movies = await _movieRepo.GetAll().Where(x => !x.Available).ToListAsync();
+            var movies = _movieRepo.GetAll().Where(x => !x.Available);
 
             foreach (var movie in movies)
             {
