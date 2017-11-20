@@ -80,7 +80,7 @@ export class TvRequestsComponent implements OnInit {
 
     public ngOnInit() {
         this.amountToLoad = 1000;
-        this.currentlyLoaded = 5;
+        this.currentlyLoaded = 1000;
         this.tvRequests = [];
         this.loadInit();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");

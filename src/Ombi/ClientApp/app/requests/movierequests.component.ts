@@ -51,8 +51,8 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     public ngOnInit() {
-        this.amountToLoad = 5;
-        this.currentlyLoaded = 5;
+        this.amountToLoad = 100;
+        this.currentlyLoaded = 100;
         this.loadInit();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
     }
