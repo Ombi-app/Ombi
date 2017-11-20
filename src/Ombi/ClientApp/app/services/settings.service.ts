@@ -1,4 +1,5 @@
-﻿import { PlatformLocation } from "@angular/common";
+﻿import { IJobSettings } from './../interfaces/ISettings';
+import { PlatformLocation } from "@angular/common";
 import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
 import { AuthHttp } from "angular2-jwt";
@@ -13,6 +14,7 @@ import {
     IDogNzbSettings,
     IEmailNotificationSettings,
     IEmbySettings,
+    IJobSettings,
     ILandingPageSettings,
     IMattermostNotifcationSettings,
     IOmbiSettings,
@@ -238,6 +240,16 @@ export class SettingsService extends ServiceAuthHelpers {
     public saveTelegramNotificationSettings(settings: ITelegramNotifcationSettings): Observable<boolean> {
         return this.httpAuth
             .post(`${this.url}/notifications/telegram`, JSON.stringify(settings), { headers: this.headers })
+            .map(this.extractData).catch(this.handleError);
+    }
+
+    public getJobSettings(): Observable<IJobSettings> {
+        return this.httpAuth.get(`${this.url}/jobs`).map(this.extractData).catch(this.handleError);
+    }
+
+    public saveJobSettings(settings: IJobSettings): Observable<boolean> {
+        return this.httpAuth
+            .post(`${this.url}/jobs`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
 }

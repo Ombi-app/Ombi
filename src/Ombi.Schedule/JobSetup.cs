@@ -1,4 +1,5 @@
 ﻿using Hangfire;
+using Ombi.Core.Settings;
 using Ombi.Schedule.Jobs;
 using Ombi.Schedule.Jobs.Couchpotato;
 using Ombi.Schedule.Jobs.Emby;
@@ -6,6 +7,7 @@ using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Jobs.Radarr;
 using Ombi.Schedule.Jobs.Sonarr;
+using Ombi.Settings.Settings.Models;
 
 namespace Ombi.Schedule
 {
@@ -13,7 +15,8 @@ namespace Ombi.Schedule
     {
         public JobSetup(IPlexContentSync plexContentSync, IRadarrSync radarrSync,
             IOmbiAutomaticUpdater updater, IEmbyContentSync embySync, IPlexUserImporter userImporter,
-            IEmbyUserImporter embyUserImporter, ISonarrSync cache, ICouchPotatoSync cpCache)
+            IEmbyUserImporter embyUserImporter, ISonarrSync cache, ICouchPotatoSync cpCache,
+            ISettingsService<JobSettings> jobsettings)
         {
             PlexContentSync = plexContentSync;
             RadarrSync = radarrSync;
@@ -23,6 +26,7 @@ namespace Ombi.Schedule
             EmbyUserImporter = embyUserImporter;
             SonarrSync = cache;
             CpCache = cpCache;
+            JobSettings = jobsettings;
         }
 
         private IPlexContentSync PlexContentSync { get; }
@@ -33,19 +37,22 @@ namespace Ombi.Schedule
         private IEmbyUserImporter EmbyUserImporter { get; }
         private ISonarrSync SonarrSync { get; }
         private ICouchPotatoSync CpCache { get; }
+        private ISettingsService<JobSettings> JobSettings { get; set; }
 
         public void Setup()
         {
-            RecurringJob.AddOrUpdate(() => EmbyContentSync.Start(), Cron.Hourly(5));
-            RecurringJob.AddOrUpdate(() => SonarrSync.Start(), Cron.Hourly(10));
-            RecurringJob.AddOrUpdate(() => RadarrSync.CacheContent(), Cron.Hourly(15));
-            RecurringJob.AddOrUpdate(() => PlexContentSync.CacheContent(), Cron.Hourly(20));
-            RecurringJob.AddOrUpdate(() => CpCache.Start(), Cron.Hourly(30));
+            var s = JobSettings.GetSettings();
 
-            RecurringJob.AddOrUpdate(() => Updater.Update(null), Cron.HourInterval(6));
+            RecurringJob.AddOrUpdate(() => EmbyContentSync.Start(), JobSettingsHelper.EmbyContent(s));
+            RecurringJob.AddOrUpdate(() => SonarrSync.Start(), JobSettingsHelper.Sonarr(s));
+            RecurringJob.AddOrUpdate(() => RadarrSync.CacheContent(), JobSettingsHelper.Radarr(s));
+            RecurringJob.AddOrUpdate(() => PlexContentSync.CacheContent(), JobSettingsHelper.PlexContent(s));
+            RecurringJob.AddOrUpdate(() => CpCache.Start(), JobSettingsHelper.CouchPotato(s));
 
-            RecurringJob.AddOrUpdate(() => EmbyUserImporter.Start(), Cron.Daily);
-            RecurringJob.AddOrUpdate(() => PlexUserImporter.Start(), Cron.Daily(5));
+            RecurringJob.AddOrUpdate(() => Updater.Update(null), JobSettingsHelper.Updater(s));
+
+            RecurringJob.AddOrUpdate(() => EmbyUserImporter.Start(), JobSettingsHelper.UserImporter(s));
+            RecurringJob.AddOrUpdate(() => PlexUserImporter.Start(), JobSettingsHelper.UserImporter(s));
         }
     }
 }

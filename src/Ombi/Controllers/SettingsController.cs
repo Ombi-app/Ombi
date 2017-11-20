@@ -422,6 +422,37 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Gets the JobSettings Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("jobs")]
+        public async Task<JobSettings> JobSettings()
+        {
+            var j = await Get<JobSettings>();
+            // Get the defaults if the jobs are not set
+            j.RadarrSync = j.RadarrSync.HasValue() ? j.RadarrSync : JobSettingsHelper.Radarr(j);
+            j.SonarrSync = j.SonarrSync.HasValue() ? j.SonarrSync : JobSettingsHelper.Sonarr(j);
+            j.AutomaticUpdater = j.AutomaticUpdater.HasValue() ? j.AutomaticUpdater : JobSettingsHelper.Updater(j);
+            j.CouchPotatoSync = j.CouchPotatoSync.HasValue() ? j.CouchPotatoSync : JobSettingsHelper.CouchPotato(j);
+            j.EmbyContentSync = j.EmbyContentSync.HasValue() ? j.EmbyContentSync : JobSettingsHelper.EmbyContent(j);
+            j.PlexContentSync = j.PlexContentSync.HasValue() ? j.PlexContentSync : JobSettingsHelper.PlexContent(j);
+            j.UserImporter = j.UserImporter.HasValue() ? j.UserImporter : JobSettingsHelper.UserImporter(j);
+
+            return j;
+        }
+
+        /// <summary>
+        /// Save the JobSettings settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("jobs")]
+        public async Task<bool> JobSettings([FromBody]JobSettings settings)
+        {
+            return await Save(settings);
+        }
+
+        /// <summary>
         /// Saves the email notification settings.
         /// </summary>
         /// <param name="model">The model.</param>

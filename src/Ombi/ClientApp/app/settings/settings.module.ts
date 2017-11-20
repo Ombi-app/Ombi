@@ -16,6 +16,7 @@ import { CouchPotatoComponent } from "./couchpotato/couchpotato.component";
 import { CustomizationComponent } from "./customization/customization.component";
 import { DogNzbComponent } from "./dognzb/dognzb.component";
 import { EmbyComponent } from "./emby/emby.component";
+import { JobsComponent } from "./jobs/jobs.component";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
 import { DiscordComponent } from "./notifications/discord.component";
 import { EmailNotificationComponent } from "./notifications/emailnotification.component";
@@ -57,6 +58,7 @@ const routes: Routes = [
     { path: "Settings/CouchPotato", component: CouchPotatoComponent, canActivate: [AuthGuard] },
     { path: "Settings/DogNzb", component: DogNzbComponent, canActivate: [AuthGuard] },
     { path: "Settings/Telegram", component: TelegramComponent, canActivate: [AuthGuard] },
+    { path: "Settings/Jobs", component: JobsComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -83,6 +85,7 @@ const routes: Routes = [
         OmbiComponent,
         PlexComponent,
         EmbyComponent,
+        JobsComponent,
         LandingPageComponent,
         CustomizationComponent,
         DiscordComponent,
