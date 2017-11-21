@@ -1,6 +1,6 @@
 ﻿namespace Ombi.Settings.Settings.Models
 {
-    public class JobSettings
+    public class JobSettings : Settings
     {
         public string EmbyContentSync { get; set; }
         public string SonarrSync { get; set; }
