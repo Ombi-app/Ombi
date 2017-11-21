@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -263,13 +264,10 @@ namespace Ombi.Controllers
         /// <returns></returns>
         [HttpGet("themecontent")]
         [AllowAnonymous]
-        public async Task<HttpResponseMessage> GetThemeContent([FromQuery]string url)
+        public async Task<IActionResult> GetThemeContent([FromQuery]string url)
         {
-            var content = await _githubApi.GetThemesRawContent(url);
-            return new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(content, Encoding.UTF8, "text/css")
-            };
+            var css = await _githubApi.GetThemesRawContent(url);
+            return Content(css, "text/css");
         }
 
         /// <summary>
