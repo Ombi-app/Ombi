@@ -1,5 +1,4 @@
-﻿using Hangfire;
-using Ombi.Helpers;
+﻿using Ombi.Helpers;
 
 namespace Ombi.Settings.Settings.Models
 {
