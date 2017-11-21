@@ -228,7 +228,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             var currentLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             var processName = (settings.ProcessName.HasValue() ? settings.ProcessName : "Ombi");
 
-            return string.Join(" ", currentLocation, processName, url.Value, storage.Value);
+            return string.Join(" ", currentLocation, processName, url?.Value ?? string.Empty, storage?.Value ?? String.Empty);
         }
 
         private void RunScript(UpdateSettings settings, string downloadUrl)
