@@ -82,7 +82,7 @@ namespace Ombi.Tests
             _userManager = _serviceProvider.GetRequiredService<OmbiUserManager>();
             
             Controller = new IdentityController(_userManager, _mapper.Object, _serviceProvider.GetService<RoleManager<IdentityRole>>(), _emailProvider.Object,
-                _emailSettings.Object, _customizationSettings.Object,_welcomeEmail.Object, null, null, null);
+                _emailSettings.Object, _customizationSettings.Object,_welcomeEmail.Object, null, null, null, null, null);
         }
 
         private OmbiUserManager _userManager;
@@ -102,7 +102,7 @@ namespace Ombi.Tests
         [Test]
         public async Task CreateWizardUser_Should_CreateUser_WhenThereAreNoOtherUsers()
         {
-            var model = new UserAuthModel
+            var model = new CreateUserWizardModel()
             {
                 Password = "a",
                 Username = "b"
@@ -118,7 +118,7 @@ namespace Ombi.Tests
         {
             var um = _serviceProvider.GetService<OmbiUserManager>();
             var r  = await um.CreateAsync(new OmbiUser { UserName = "aaaa",UserType = UserType.LocalUser}, "bbb");
-            var model = new UserAuthModel
+            var model = new CreateUserWizardModel
             {
                 Password = "a",
                 Username = "b"
