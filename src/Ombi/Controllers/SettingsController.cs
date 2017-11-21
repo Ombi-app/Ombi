@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Hangfire;
@@ -260,11 +263,13 @@ namespace Ombi.Controllers
         /// <returns></returns>
         [HttpGet("themecontent")]
         [AllowAnonymous]
-        public async Task<string> GetThemeContent([FromQuery]string url)
+        public async Task<HttpResponseMessage> GetThemeContent([FromQuery]string url)
         {
             var content = await _githubApi.GetThemesRawContent(url);
-            
-            return content;
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(content, Encoding.UTF8, "text/css")
+            };
         }
 
         /// <summary>
