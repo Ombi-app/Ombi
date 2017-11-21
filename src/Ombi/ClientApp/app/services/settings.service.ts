@@ -129,7 +129,7 @@ export class SettingsService extends ServiceAuthHelpers {
     }
 
     public getThemeContent(themeUrl: string): Observable<string> {
-        return this.httpAuth.get(`${this.url}/themecontent?url=${themeUrl}`).map(this.extractData).catch(this.handleError);
+        return this.httpAuth.get(`${this.url}/themecontent?url=${themeUrl}`).map(this.extractContentData).catch(this.handleError);
     }
 
     public getEmailNotificationSettings(): Observable<IEmailNotificationSettings> {

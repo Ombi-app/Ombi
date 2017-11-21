@@ -55,6 +55,14 @@ export class ServiceAuthHelpers {
         }
     }
 
+    protected extractContentData(res: Response) {
+        if(res.text()) {
+            return res.text();
+        } else {
+            return "";
+        }
+    }
+
     protected handleError(error: any) {
         // In a real world app, we might use a remote logging infrastructure
         // We'd also dig deeper into the error to get a better message
