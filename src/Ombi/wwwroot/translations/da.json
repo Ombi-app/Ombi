@@ -11,12 +11,12 @@
   },
   "Common": {
     "ContinueButton": "Fortsæt",
-    "Available": "Available",
-    "ProcessingRequest": "Processing Request",
-    "PendingApproval": "Pending Approval",
-    "NotRequested": "Not Requested",
-    "Requested": "Requested",
-    "Request": "Request",
+    "Available": "Tilgængelig",
+    "ProcessingRequest": "Behandler anmodning",
+    "PendingApproval": "Afventer godkendelse",
+    "NotRequested": "Ikke anmodet",
+    "Requested": "Anmodet",
+    "Request": "Anmod",
     "Errors": {
       "Validation": "Tjek venligst dine indtastede værdier"
     }
@@ -58,21 +58,21 @@
     }
   },
   "Search": {
-    "Title": "Search",
-    "Paragraph": "Want to watch something that is not currently available? No problem, just search for it below and request it!",
-    "MoviesTab": "Movies",
-    "TvTab": "TV Shows",
-    "Suggestions": "Suggestions",
-    "NoResults": "Sorry, we didn't find any results!",
-    "ReleaseDate": "Release Date",
-    "ViewOnPlex": "View On Plex",
-    "RequestAdded": "Request for {{title}} has been added successfully",
+    "Title": "Søg",
+    "Paragraph": "Ønsker du at se noget, som er utilgængeligt? intet problem, bare søg efter det nedenfor og anmod om det!",
+    "MoviesTab": "Film",
+    "TvTab": "Tv-serier",
+    "Suggestions": "Forslag",
+    "NoResults": "Beklager, vi fandt ingen resultater!",
+    "ReleaseDate": "Udgivelsesdato",
+    "ViewOnPlex": "Se på Plex",
+    "RequestAdded": "{{title}} er anmodet med succes",
     "Movies": {
-      "PopularMovies": "Popular Movies",
-      "UpcomingMovies": "Upcoming Movies",
-      "TopRatedMovies": "Top Rated Movies",
-      "NowPlayingMovies": "Now Playing Movies",
-      "HomePage": "Home Page",
+      "PopularMovies": "Populære film",
+      "UpcomingMovies": "Kommende film",
+      "TopRatedMovies": "Bedst bedømte film",
+      "NowPlayingMovies": "Aktuelle film",
+      "HomePage": "Startside",
       "Trailer": "Trailer"
     }
   }

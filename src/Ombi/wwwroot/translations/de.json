@@ -3,7 +3,7 @@
     "SignInButton": "Einloggen",
     "UsernamePlaceholder": "Benutzername",
     "PasswordPlaceholder": "Passwort",
-    "RememberMe": "Erinnere dich an mich",
+    "RememberMe": "Eingeloggt bleiben",
     "ForgottenPassword": "Passwort vergessen?",
     "Errors": {
       "IncorrectCredentials": "Falscher Benutzername oder falsches Passwort"
@@ -11,12 +11,12 @@
   },
   "Common": {
     "ContinueButton": "Weiter",
-    "Available": "Available",
-    "ProcessingRequest": "Processing Request",
-    "PendingApproval": "Pending Approval",
-    "NotRequested": "Not Requested",
-    "Requested": "Requested",
-    "Request": "Request",
+    "Available": "Verfügbar",
+    "ProcessingRequest": "Anfrage wird bearbeitet",
+    "PendingApproval": "Genehmigung ausstehend",
+    "NotRequested": "Nicht angefragt",
+    "Requested": "Angefordert",
+    "Request": "Anfrage",
     "Errors": {
       "Validation": "Bitte überprüfen Sie die eingegebenen Werte"
     }
@@ -31,10 +31,10 @@
     "PartiallyOnlineHeading": "Teilweise Online",
     "PartiallyOnlineParagraph": "Der Mediaserver ist teilweise online.",
     "MultipleServersUnavailable": "Es sind {{serversUnavailable}} von {{totalServers}} Servern offline.",
-    "SingleServerUnavailable": "Es gibt {{serversUnavailable}}-Server offline aus {{totalServers}}.",
+    "SingleServerUnavailable": "Es sind {{serversUnavailable}} von {{totalServers}} Servern offline.",
     "OfflineHeading": "Derzeit Offline",
     "OfflineParagraph": "Der Mediaserver ist derzeit offline.",
-    "CheckPageForUpdates": "Check this page for continuous site updates."
+    "CheckPageForUpdates": "Überprüfe diese Seite für kontinuierliche Website-Updates."
   },
   "NavigationBar": {
     "Search": "Suche",
@@ -58,21 +58,21 @@
     }
   },
   "Search": {
-    "Title": "Search",
-    "Paragraph": "Want to watch something that is not currently available? No problem, just search for it below and request it!",
-    "MoviesTab": "Movies",
-    "TvTab": "TV Shows",
-    "Suggestions": "Suggestions",
-    "NoResults": "Sorry, we didn't find any results!",
-    "ReleaseDate": "Release Date",
-    "ViewOnPlex": "View On Plex",
-    "RequestAdded": "Request for {{title}} has been added successfully",
+    "Title": "Suche",
+    "Paragraph": "Möchtest du etwas sehen, das nicht verfügbar ist? Kein Problem, benutze einfach die Suchbox und fordere es an!",
+    "MoviesTab": "Filme",
+    "TvTab": "Serien",
+    "Suggestions": "Vorschläge",
+    "NoResults": "Es tut uns leid, wir haben keine Ergebnisse gefunden!",
+    "ReleaseDate": "Veröffentlichungsdatum",
+    "ViewOnPlex": "In Plex anschauen",
+    "RequestAdded": "Anfrage für {{title}} wurde erfolgreich hinzugefügt",
     "Movies": {
-      "PopularMovies": "Popular Movies",
-      "UpcomingMovies": "Upcoming Movies",
-      "TopRatedMovies": "Top Rated Movies",
-      "NowPlayingMovies": "Now Playing Movies",
-      "HomePage": "Home Page",
+      "PopularMovies": "Beliebte Filme",
+      "UpcomingMovies": "Kommende Filme",
+      "TopRatedMovies": "Am besten bewertete Filme",
+      "NowPlayingMovies": "Im Kino",
+      "HomePage": "Startseite",
       "Trailer": "Trailer"
     }
   }

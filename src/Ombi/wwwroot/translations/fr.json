@@ -4,49 +4,49 @@
     "UsernamePlaceholder": "Nom d’utilisateur",
     "PasswordPlaceholder": "Mot de passe",
     "RememberMe": "Se souvenir de moi",
-    "ForgottenPassword": "Vous avez oublié votre mot de passe ?",
+    "ForgottenPassword": "Mot de passe oublié ?",
     "Errors": {
-      "IncorrectCredentials": "Incorrect username or password"
+      "IncorrectCredentials": "Nom d'utilisateur ou mot de passe incorrect"
     }
   },
   "Common": {
     "ContinueButton": "Continuer",
-    "Available": "Available",
-    "ProcessingRequest": "Processing Request",
-    "PendingApproval": "Pending Approval",
-    "NotRequested": "Not Requested",
-    "Requested": "Requested",
-    "Request": "Request",
+    "Available": "Disponible",
+    "ProcessingRequest": "En cours de traitement",
+    "PendingApproval": "En attente de validation",
+    "NotRequested": "Non demandé",
+    "Requested": "Demandé",
+    "Request": "Demander",
     "Errors": {
-      "Validation": "Please check your entered values"
+      "Validation": "Veuillez vérifier les valeurs entrées"
     }
   },
   "PasswordReset": {
-    "EmailAddressPlaceholder": "Adresse de courriel",
-    "ResetPasswordButton": "Réinitialiser mot de passe"
+    "EmailAddressPlaceholder": "Adresse e-mail",
+    "ResetPasswordButton": "Réinitialiser le mot de passe"
   },
   "LandingPage": {
     "OnlineHeading": "Actuellement en ligne",
     "OnlineParagraph": "Le serveur média est actuellement en ligne",
     "PartiallyOnlineHeading": "Partiellement en ligne",
     "PartiallyOnlineParagraph": "Le serveur média est partiellement en ligne.",
-    "MultipleServersUnavailable": "Il y a {{serversUnavailable}} serveur hors ligne hors {{totalServers}}.",
-    "SingleServerUnavailable": "Il n’y a {{serversUnavailable}} serveur en mode hors connexion sur {{totalServers}}.",
+    "MultipleServersUnavailable": "Il y a {{serversUnavailable}} serveurs hors ligne sur {{totalServers}}.",
+    "SingleServerUnavailable": "Il y a {{serversUnavailable}} serveur hors ligne sur {{totalServers}}.",
     "OfflineHeading": "Actuellement hors ligne",
     "OfflineParagraph": "Le serveur média est actuellement hors ligne.",
-    "CheckPageForUpdates": "Check this page for continuous site updates."
+    "CheckPageForUpdates": "Consultez cette page pour voir les mises à jour du site."
   },
   "NavigationBar": {
-    "Search": "Recherche",
+    "Search": "Rechercher",
     "Requests": "Demandes",
     "UserManagement": "Gestion des utilisateurs",
-    "Donate": "Faites un don !",
-    "DonateTooltip": "C’est comment convaincre ma femme de me laisser passer mon temps libre développement IACSM  ;)",
+    "Donate": "Faire un don !",
+    "DonateTooltip": "C’est pour convaincre ma femme de me laisser passer mon temps libre à développer Ombi ;)",
     "UpdateAvailableTooltip": "Mise à jour disponible !",
     "Settings": "Paramètres",
     "Welcome": "Bienvenue {{username}}",
     "UpdateDetails": "Détails de la mise à jour",
-    "Logout": "Logout",
+    "Logout": "Déconnexion",
     "Language": {
       "English": "Anglais",
       "French": "Français",
@@ -58,22 +58,22 @@
     }
   },
   "Search": {
-    "Title": "Search",
-    "Paragraph": "Want to watch something that is not currently available? No problem, just search for it below and request it!",
-    "MoviesTab": "Movies",
-    "TvTab": "TV Shows",
+    "Title": "Rechercher",
+    "Paragraph": "Vous voulez regarder quelque chose qui n'est pas disponible actuellement ? Pas de problème, recherchez-le ci-dessous et demandez-le !",
+    "MoviesTab": "Films",
+    "TvTab": "Séries",
     "Suggestions": "Suggestions",
-    "NoResults": "Sorry, we didn't find any results!",
-    "ReleaseDate": "Release Date",
-    "ViewOnPlex": "View On Plex",
-    "RequestAdded": "Request for {{title}} has been added successfully",
+    "NoResults": "Désolé, nous n'avons trouvé aucun résultat !",
+    "ReleaseDate": "Date de sortie",
+    "ViewOnPlex": "Regarder sur Plex",
+    "RequestAdded": "La demande pour {{title}} a été ajouté avec succès",
     "Movies": {
-      "PopularMovies": "Popular Movies",
-      "UpcomingMovies": "Upcoming Movies",
-      "TopRatedMovies": "Top Rated Movies",
-      "NowPlayingMovies": "Now Playing Movies",
-      "HomePage": "Home Page",
-      "Trailer": "Trailer"
+      "PopularMovies": "Films populaires",
+      "UpcomingMovies": "Films à venir",
+      "TopRatedMovies": "Films les mieux notés",
+      "NowPlayingMovies": "Films à l'affiche",
+      "HomePage": "Site du film",
+      "Trailer": "Bande-annonce"
     }
   }
 }

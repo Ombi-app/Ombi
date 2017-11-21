@@ -1,3 +1,79 @@
 {
-
+  "Login": {
+    "SignInButton": "Logga in",
+    "UsernamePlaceholder": "Användarnamn",
+    "PasswordPlaceholder": "Lösenord",
+    "RememberMe": "Kom ihåg mig",
+    "ForgottenPassword": "Glömt ditt lösenord?",
+    "Errors": {
+      "IncorrectCredentials": "Felaktigt användarnamn eller lösenord"
+    }
+  },
+  "Common": {
+    "ContinueButton": "Fortsätt",
+    "Available": "Tillgänglig",
+    "ProcessingRequest": "Bearbetar förfrågan",
+    "PendingApproval": "I väntan på godkännande",
+    "NotRequested": "Inte önskad",
+    "Requested": "Begärd önskan",
+    "Request": "Begär",
+    "Errors": {
+      "Validation": "Vänligen kontrollera din angivna värden"
+    }
+  },
+  "PasswordReset": {
+    "EmailAddressPlaceholder": "E-postadress",
+    "ResetPasswordButton": "Återställ lösenord"
+  },
+  "LandingPage": {
+    "OnlineHeading": "Online just nu",
+    "OnlineParagraph": "Medieservern är online för tillfället",
+    "PartiallyOnlineHeading": "Delvis online",
+    "PartiallyOnlineParagraph": "Medieservern är delvis online.",
+    "MultipleServersUnavailable": "Det är {{serversUnavailable}} servrar offline just nu utav {{totalServers}} servrar totalt.",
+    "SingleServerUnavailable": "Det finns {{serversUnavailable}} servrar offline utav {{totalServers}}.",
+    "OfflineHeading": "För närvarande Offline",
+    "OfflineParagraph": "Medieservern är för närvarande offline.",
+    "CheckPageForUpdates": "Kontrollera sidan för kontinuerlig platsuppdateringar."
+  },
+  "NavigationBar": {
+    "Search": "Sök",
+    "Requests": "Förfrågningar",
+    "UserManagement": "Användarhantering",
+    "Donate": "Donera!",
+    "DonateTooltip": "Det är så här jag övertygar min fru att jag vill spendera min fritid att utveckla Ombi ;)",
+    "UpdateAvailableTooltip": "Uppdatering tillgänglig!",
+    "Settings": "Inställningar",
+    "Welcome": "Välkommen {{username}}",
+    "UpdateDetails": "Uppdatera information",
+    "Logout": "Logga ut",
+    "Language": {
+      "English": "Engelska",
+      "French": "Franska",
+      "Spanish": "Spanska",
+      "German": "Tyska",
+      "Italian": "Italienska",
+      "Danish": "Danska",
+      "Dutch": "Holländska"
+    }
+  },
+  "Search": {
+    "Title": "Sök",
+    "Paragraph": "Vill du titta på något som inte är tillgängligt? Inga problem, Sök efter det nedan och önska det!",
+    "MoviesTab": "Filmer",
+    "TvTab": "TV-serier",
+    "Suggestions": "Förslag",
+    "NoResults": "Tyvärr, hittade vi inte några resultat!",
+    "ReleaseDate": "Publiceringsdatum",
+    "ViewOnPlex": "Visa på Plex",
+    "RequestAdded": "Begäran om {{title}} har lagts till framgångsrikt",
+    "Movies": {
+      "PopularMovies": "Populära filmer",
+      "UpcomingMovies": "Kommande filmer",
+      "TopRatedMovies": "Topprankade filmer",
+      "NowPlayingMovies": "Aktuella Filmer",
+      "HomePage": "Hemsida",
+      "Trailer": "Trailer"
+    }
+  }
 }
