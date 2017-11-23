@@ -51,6 +51,7 @@ namespace Ombi.Schedule.Jobs.Plex
             Logger = logger;
             Repo = repo;
             EpisodeSync = epsiodeSync;
+            plex.ClearCache();
         }
 
         private ISettingsService<PlexSettings> Plex { get; }

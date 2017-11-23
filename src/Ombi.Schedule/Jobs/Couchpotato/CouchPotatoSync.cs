@@ -48,6 +48,7 @@ namespace Ombi.Schedule.Jobs.Couchpotato
             _api = api;
             _log = log;
             _ctx = ctx;
+            _settings.ClearCache();
         }
 
         private readonly ISettingsService<CouchPotatoSettings> _settings;

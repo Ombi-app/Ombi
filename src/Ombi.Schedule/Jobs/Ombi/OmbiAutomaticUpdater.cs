@@ -37,6 +37,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             Settings = s;
             _processProvider = proc;
             _appConfig = appConfig;
+            Settings.ClearCache();
         }
 
         private ILogger<OmbiAutomaticUpdater> Logger { get; }

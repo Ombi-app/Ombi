@@ -49,6 +49,7 @@ namespace Ombi.Schedule.Jobs.Emby
             _settings = s;
             _repo = repo;
             _avaliabilityChecker = checker;
+            _settings.ClearCache();
         }
 
         private readonly ISettingsService<EmbySettings> _settings;

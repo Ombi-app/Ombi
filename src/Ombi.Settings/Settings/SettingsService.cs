@@ -142,6 +142,11 @@ namespace Ombi.Settings.Settings
 
         }
 
+        public void ClearCache()
+        {
+            _cache.Remove(CacheName);
+        }
+
         private string EncryptSettings(GlobalSettings settings)
         {
             return settings.Content;

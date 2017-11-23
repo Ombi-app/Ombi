@@ -10,5 +10,6 @@ namespace Ombi.Core.Settings
         Task<bool> SaveSettingsAsync(T model);
         void Delete(T model);
         Task DeleteAsync(T model);
+        void ClearCache();
     }
 }

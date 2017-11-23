@@ -19,6 +19,8 @@ namespace Ombi.Schedule.Jobs.Ombi
             _email = provider;
             _templates = template;
             _customizationSettings = c;
+            email.ClearCache();
+            _customizationSettings.ClearCache();
         }
 
         private readonly ISettingsService<EmailNotificationSettings> _emailSettings;

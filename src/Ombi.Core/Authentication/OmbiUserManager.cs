@@ -36,6 +36,7 @@ using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
+using Ombi.Helpers;
 using Ombi.Store.Entities;
 
 namespace Ombi.Core.Authentication
@@ -102,6 +103,15 @@ namespace Ombi.Core.Authentication
         /// <returns></returns>
         private async Task<bool> CheckEmbyPasswordAsync(OmbiUser user, string password)
         {
+            if (user.IsEmbyConnect)
+            {
+                var result = await _embyApi.LoginConnectUser(user.UserName, password);
+                if (result.AccessToken.HasValue())
+                {
+                    return true;
+                }
+            }
+
             var embySettings = await _embySettings.GetSettingsAsync();
             foreach (var server in embySettings.Servers)
             {

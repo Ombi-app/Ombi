@@ -49,6 +49,7 @@ namespace Ombi.Schedule.Jobs.Emby
             _log = log;
             _embySettings = embySettings;
             _userManagementSettings = ums;
+            _userManagementSettings.ClearCache();
         }
 
         private readonly IEmbyApi _api;
@@ -98,7 +99,8 @@ namespace Ombi.Schedule.Jobs.Emby
                             UserType = UserType.EmbyUser,
                             UserName = embyUser.Name,
                             ProviderUserId = embyUser.Id,
-                            Alias = string.Empty
+                            Alias = string.Empty,
+                            EmbyConnectUserId = embyUser.ConnectUserId.HasValue() ? embyUser.ConnectUserId : string.Empty
                         };
                         var result = await _userManager.CreateAsync(newUser);
                         if (!result.Succeeded)

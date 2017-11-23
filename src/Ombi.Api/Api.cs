@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Authentication;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -59,6 +60,7 @@ namespace Ombi.Api
                     if (request.JsonBody != null)
                     {
                         httpRequestMessage.Content = new JsonContent(request.JsonBody);
+                        httpRequestMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json"); // Emby connect fails if we have the charset in the header
                     }
 
                     // Add headers

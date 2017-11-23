@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2017 Jamie Rees
-//    File: Users.cs
+//    File: EmbyConnectUser.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,13 +24,24 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-namespace Ombi.Store.Entities
+namespace Ombi.Api.Emby.Models
 {
-    public enum UserType
+    public class EmbyConnectUser
     {
-        LocalUser = 1,
-        PlexUser = 2,
-        EmbyUser = 3,
+        public string AccessToken { get; set; }
+        public User User { get; set; }
     }
+
+    public class User
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string DisplayName { get; set; }
+        public string Email { get; set; }
+        public string IsActive { get; set; }
+        public string ImageUrl { get; set; }
+        public object IsSupporter { get; set; }
+        public object ExpDate { get; set; }
+    }
+
 }

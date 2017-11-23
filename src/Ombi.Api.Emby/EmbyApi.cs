@@ -17,6 +17,7 @@ namespace Ombi.Api.Emby
         }
 
         private IApi Api { get; }
+        private const string EmbyConnectService = "https://connect.emby.media/service/";
 
         /// <summary>
         /// Returns all users from the Emby Instance
@@ -47,8 +48,6 @@ namespace Ombi.Api.Emby
         public async Task<EmbyUser> LogIn(string username, string password, string apiKey, string baseUri)
         {
             var request = new Request("emby/users/authenticatebyname", baseUri, HttpMethod.Post);
-
-
             var body = new
             {
                 username,
@@ -63,6 +62,24 @@ namespace Ombi.Api.Emby
             AddHeaders(request, apiKey);
 
             var obj = await Api.Request<EmbyUser>(request);
+            return obj;
+        }
+
+        public async Task<EmbyConnectUser> LoginConnectUser(string username, string password)
+        {
+            var request = new Request("user/authenticate", EmbyConnectService, HttpMethod.Post);
+            var body = new
+            {
+                nameOrEmail = username,
+                rawpw = password,
+            };
+
+            request.AddJsonBody(body);
+
+            request.AddHeader("Accept", "application/json");
+            request.AddContentHeader("Content-Type", "application/json");
+
+            var obj = await Api.Request<EmbyConnectUser>(request);
             return obj;
         }
 

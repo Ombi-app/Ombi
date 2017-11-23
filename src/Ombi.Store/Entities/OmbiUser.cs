@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
+using Ombi.Helpers;
 
 namespace Ombi.Store.Entities
 {
@@ -15,6 +16,11 @@ namespace Ombi.Store.Entities
         public string ProviderUserId { get; set; } 
 
         public DateTime? LastLoggedIn { get; set; }
+
+        public string EmbyConnectUserId { get; set; }
+
+        [NotMapped]
+        public bool IsEmbyConnect => UserType == UserType.EmbyUser && EmbyConnectUserId.HasValue();
 
         [NotMapped]
         public string UserAlias => string.IsNullOrEmpty(Alias) ? UserName : Alias;
