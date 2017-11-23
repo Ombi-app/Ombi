@@ -123,6 +123,8 @@ namespace Ombi.Schedule.Jobs.Emby
                     {
                         // Do we need to update this user?
                         existingEmbyUser.UserName = embyUser.Name;
+                        existingEmbyUser.EmbyConnectUserId =
+                            embyUser.ConnectUserId.HasValue() ? embyUser.ConnectUserId : string.Empty;
 
                         await _userManager.UpdateAsync(existingEmbyUser);
                     }
