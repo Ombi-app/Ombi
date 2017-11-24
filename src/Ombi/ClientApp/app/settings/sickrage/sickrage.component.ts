@@ -3,9 +3,8 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 import { ISonarrProfile, ISonarrRootFolder } from "../../interfaces";
 
-// import { ISickRageSettings } from "../../interfaces";
-// import { SonarrService } from "../../services";
-// import { TesterService } from "../../services";
+import { ISickRageSettings } from "../../interfaces";
+import { TesterService } from "../../services";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
 
@@ -25,6 +24,7 @@ export class SickRageComponent implements OnInit {
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
+                private testerService: TesterService,
                 private fb: FormBuilder) { }
 
     public ngOnInit() {
@@ -49,14 +49,14 @@ export class SickRageComponent implements OnInit {
             this.notificationService.error("Please check your entered values");
             return;
         }
-        // const settings = <ISickRageSettings>form.value;
-        // this.testerService.sonarrTest(settings).subscribe(x => {
-        //     if (x) {
-        //         this.notificationService.success("Successfully connected to SickRage!");
-        //     } else {
-        //         this.notificationService.error("We could not connect to SickRage!");
-        //     }
-        // });
+        const settings = <ISickRageSettings>form.value;
+        this.testerService.sickrageTest(settings).subscribe(x => {
+            if (x) {
+                this.notificationService.success("Successfully connected to SickRage!");
+            } else {
+                this.notificationService.error("We could not connect to SickRage!");
+            }
+        });
     }
 
     public onSubmit(form: FormGroup) {

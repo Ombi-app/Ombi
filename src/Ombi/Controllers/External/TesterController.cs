@@ -8,6 +8,7 @@ using Ombi.Api.CouchPotato;
 using Ombi.Api.Emby;
 using Ombi.Api.Plex;
 using Ombi.Api.Radarr;
+using Ombi.Api.SickRage;
 using Ombi.Api.Sonarr;
 using Ombi.Api.Telegram;
 using Ombi.Attributes;
@@ -34,24 +35,10 @@ namespace Ombi.Controllers.External
         /// <summary>
         /// Initializes a new instance of the <see cref="TesterController" /> class.
         /// </summary>
-        /// <param name="service">The service.</param>
-        /// <param name="notification">The notification.</param>
-        /// <param name="emailN">The notification.</param>
-        /// <param name="pushbullet">The pushbullet.</param>
-        /// <param name="slack">The slack.</param>
-        /// <param name="plex">The plex.</param>
-        /// <param name="emby">The emby.</param>
-        /// <param name="radarr">The radarr.</param>
-        /// <param name="sonarr">The sonarr.</param>
-        /// <param name="po">The pushover.</param>
-        /// <param name="mm">The mattermost.</param>
-        /// <param name="log">The logger.</param>
-        /// <param name="provider">The email provider</param>
-        /// <param name="cpApi">The couch potato API</param>
         public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN,
             IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
             IPlexApi plex, IEmbyApi emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider,
-            ICouchPotatoApi cpApi, ITelegramNotification telegram)
+            ICouchPotatoApi cpApi, ITelegramNotification telegram, ISickRageApi srApi)
         {
             Service = service;
             DiscordNotification = notification;
@@ -68,6 +55,7 @@ namespace Ombi.Controllers.External
             EmailProvider = provider;
             CouchPotatoApi = cpApi;
             TelegramNotification = telegram;
+            SickRageApi = srApi;
         }
 
         private INotificationService Service { get; }
@@ -85,6 +73,7 @@ namespace Ombi.Controllers.External
         private ILogger<TesterController> Log { get; }
         private IEmailProvider EmailProvider { get; }
         private ITelegramNotification TelegramNotification { get; }
+        private ISickRageApi SickRageApi { get; }
 
 
         /// <summary>
@@ -297,7 +286,7 @@ namespace Ombi.Controllers.External
         }
 
         /// <summary>
-        /// Sends a test message to Slack using the provided settings
+        /// Sends a test message to Telegram using the provided settings
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
@@ -310,5 +299,17 @@ namespace Ombi.Controllers.External
             return true;
         }
 
+        /// <summary>
+        /// Sends a test message to Slack using the provided settings
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("sickrage")]
+        public async Task<bool> SickRage([FromBody] SickRageSettings settings)
+        {
+            settings.Enabled = true;
+            var result = await SickRageApi.Ping(settings.ApiKey, settings.FullUri);
+            return result?.data?.pid != null;
+        }
     }
 }

@@ -15,6 +15,7 @@ import {
     IPushbulletNotificationSettings,
     IPushoverNotificationSettings,
     IRadarrSettings,
+    ISickRageSettings,
     ISlackNotificationSettings,
     ISonarrSettings,
     ITelegramNotifcationSettings,
@@ -48,22 +49,32 @@ export class TesterService extends ServiceAuthHelpers {
     public emailTest(settings: IEmailNotificationSettings): Observable<boolean> {
         return this.http.post(`${this.url}email`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
     }
+    
     public plexTest(settings: IPlexServer): Observable<boolean> {
         return this.http.post(`${this.url}plex`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
     }
+
     public embyTest(settings: IEmbyServer): Observable<boolean> {
         return this.http.post(`${this.url}emby`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
     }
+
     public radarrTest(settings: IRadarrSettings): Observable<boolean> {
         return this.http.post(`${this.url}radarr`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
     }
+
     public sonarrTest(settings: ISonarrSettings): Observable<boolean> {
         return this.http.post(`${this.url}sonarr`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
-    }    
+    }   
+
     public couchPotatoTest(settings: ICouchPotatoSettings): Observable<boolean> {
         return this.http.post(`${this.url}couchpotato`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
-    }    
+    } 
+
     public telegramTest(settings: ITelegramNotifcationSettings): Observable<boolean> {
         return this.http.post(`${this.url}telegram`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
+    }
+
+    public sickrageTest(settings: ISickRageSettings): Observable<boolean> {
+        return this.http.post(`${this.url}sickrage`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
     }
 }
