@@ -7,4 +7,3 @@
         public string result { get; set; }
     }
 }
-}

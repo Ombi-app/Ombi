@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.DogNzb;
 using Ombi.Api.DogNzb.Models;
+using Ombi.Api.SickRage;
 using Ombi.Api.Sonarr;
 using Ombi.Api.Sonarr.Models;
 using Ombi.Core.Settings;
@@ -17,20 +18,25 @@ namespace Ombi.Core.Senders
     public class TvSender : ITvSender
     {
         public TvSender(ISonarrApi sonarrApi, ILogger<TvSender> log, ISettingsService<SonarrSettings> sonarrSettings,
-            ISettingsService<DogNzbSettings> dog, IDogNzbApi dogApi)
+            ISettingsService<DogNzbSettings> dog, IDogNzbApi dogApi, ISettingsService<SickRageSettings> srSettings, 
+            ISickRageApi srApi)
         {
             SonarrApi = sonarrApi;
             Logger = log;
             SonarrSettings = sonarrSettings;
             DogNzbSettings = dog;
             DogNzbApi = dogApi;
+            SickRageSettings = srSettings;
+            SickRageApi = srApi;
         }
 
         private ISonarrApi SonarrApi { get; }
         private IDogNzbApi DogNzbApi { get; }
+        private ISickRageApi SickRageApi { get; }
         private ILogger<TvSender> Logger { get; }
         private ISettingsService<SonarrSettings> SonarrSettings { get; }
         private ISettingsService<DogNzbSettings> DogNzbSettings { get; }
+        private ISettingsService<SickRageSettings> SickRageSettings { get; }
 
         public async Task<SenderResult> Send(ChildRequests model)
         {
@@ -238,6 +244,26 @@ namespace Ombi.Core.Senders
             {
                 await SearchForRequest(model, sonarrEpList, result, s, episodesToUpdate);
             }
+        }
+
+        public async Task SendToSickRage(ChildRequests model, string qualityId = null)
+        {
+            var settings = await SickRageSettings.GetSettingsAsync();
+            if (qualityId.HasValue())
+            {
+                if (settings.Qualities.All(x => x.Key != qualityId))
+                {
+                    qualityId = settings.QualityProfile;
+                }
+            }
+
+            //var apiResult = SickRageApi.AddSeries(model.ParentRequest.TvDbId, model.SeasonCount, model.SeasonList, qualityId,
+            //    sickRageSettings.ApiKey, sickRageSettings.FullUri);
+
+            //var result = apiResult.Result;
+
+
+            //return result;
         }
 
         private async Task SearchForRequest(ChildRequests model, IEnumerable<Episode> sonarrEpList, SonarrSeries existingSeries, SonarrSettings s,
