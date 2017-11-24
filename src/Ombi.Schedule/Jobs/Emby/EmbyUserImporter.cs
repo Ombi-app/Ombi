@@ -126,6 +126,14 @@ namespace Ombi.Schedule.Jobs.Emby
                         existingEmbyUser.EmbyConnectUserId =
                             embyUser.ConnectUserId.HasValue() ? embyUser.ConnectUserId : string.Empty;
 
+                        if (existingEmbyUser.IsEmbyConnect)
+                        {
+                            // Note: We do not have access to any of the emby connect details e.g. email
+                            // Since we need the username and password to connect to emby connect, 
+                            // We update the email address in the OmbiUserManager when the emby connect user logs in
+                            existingEmbyUser.UserName = embyUser.ConnectUserName;
+                        }
+
                         await _userManager.UpdateAsync(existingEmbyUser);
                     }
                 }
