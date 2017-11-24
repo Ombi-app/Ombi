@@ -1,4 +1,4 @@
-﻿import { ISettings } from "./ICommon";
+﻿import { IDictionary, ISettings } from "./ICommon";
 
 export interface IExternalSettings extends ISettings {
   ssl: boolean;
@@ -152,6 +152,13 @@ export interface ICouchPotatoSettings extends IExternalSettings {
   defaultProfileId: string;
   username: string;
   password: string;
+}
+
+export interface ISickRageSettings extends IExternalSettings {
+  enabled: boolean;
+  apiKey: string;
+  qualityProfile: string;
+  qualities: IDictionary<string>;
 }
 
 export interface IDogNzbSettings extends ISettings {

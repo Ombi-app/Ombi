@@ -29,6 +29,7 @@ import { TelegramComponent } from "./notifications/telegram.component";
 import { OmbiComponent } from "./ombi/ombi.component";
 import { PlexComponent } from "./plex/plex.component";
 import { RadarrComponent } from "./radarr/radarr.component";
+import { SickRageComponent } from "./sickrage/sickrage.component";
 import { SonarrComponent } from "./sonarr/sonarr.component";
 import { UpdateComponent } from "./update/update.component";
 import { UserManagementComponent } from "./usermanagement/usermanagement.component";
@@ -59,6 +60,7 @@ const routes: Routes = [
     { path: "Settings/DogNzb", component: DogNzbComponent, canActivate: [AuthGuard] },
     { path: "Settings/Telegram", component: TelegramComponent, canActivate: [AuthGuard] },
     { path: "Settings/Jobs", component: JobsComponent, canActivate: [AuthGuard] },
+    { path: "Settings/SickRage", component: SickRageComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -103,6 +105,7 @@ const routes: Routes = [
         WikiComponent,
         CouchPotatoComponent,
         DogNzbComponent,
+        SickRageComponent,
         TelegramComponent,
     ],
     exports: [

@@ -1,4 +1,5 @@
-﻿import { PlatformLocation } from "@angular/common";
+﻿import { ISickRageSettings } from './../interfaces/ISettings';
+import { PlatformLocation } from "@angular/common";
 import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
 import { AuthHttp } from "angular2-jwt";
@@ -21,6 +22,7 @@ import {
     IPushbulletNotificationSettings,
     IPushoverNotificationSettings,
     IRadarrSettings,
+    ISickRageSettings,
     ISlackNotificationSettings,
     ISonarrSettings,
     ITelegramNotifcationSettings,
@@ -234,7 +236,7 @@ export class SettingsService extends ServiceAuthHelpers {
 
     public getTelegramNotificationSettings(): Observable<ITelegramNotifcationSettings> {
         return this.httpAuth.get(`${this.url}/notifications/telegram`).map(this.extractData).catch(this.handleError);
-    }
+    }    
 
     public saveTelegramNotificationSettings(settings: ITelegramNotifcationSettings): Observable<boolean> {
         return this.httpAuth
@@ -249,6 +251,16 @@ export class SettingsService extends ServiceAuthHelpers {
     public saveJobSettings(settings: IJobSettings): Observable<boolean> {
         return this.httpAuth
             .post(`${this.url}/jobs`, JSON.stringify(settings), { headers: this.headers })
+            .map(this.extractData).catch(this.handleError);
+    }   
+    
+    public getSickRageSettings(): Observable<ISickRageSettings> {
+        return this.httpAuth.get(`${this.url}/sickrage`).map(this.extractData).catch(this.handleError);
+    }
+
+    public saveSickRageSettings(settings: ISickRageSettings): Observable<boolean> {
+        return this.httpAuth
+            .post(`${this.url}/sickrage`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
 }

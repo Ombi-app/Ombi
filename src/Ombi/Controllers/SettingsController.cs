@@ -425,6 +425,27 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Save the SickRage settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("SickRage")]
+        public async Task<bool> SickRageSettings([FromBody]SickRageSettings settings)
+        {
+            return await Save(settings);
+        }
+
+        /// <summary>
+        /// Gets the SickRage Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("SickRage")]
+        public async Task<SickRageSettings> SickRageSettings()
+        {
+            return await Get<SickRageSettings>();
+        }
+
+        /// <summary>
         /// Gets the JobSettings Settings.
         /// </summary>
         /// <returns></returns>
