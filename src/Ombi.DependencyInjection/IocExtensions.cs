@@ -36,6 +36,7 @@ using Ombi.Api.Mattermost;
 using Ombi.Api.Pushbullet;
 using Ombi.Api.Pushover;
 using Ombi.Api.Service;
+using Ombi.Api.SickRage;
 using Ombi.Api.Slack;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Senders;
@@ -102,6 +103,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IDogNzbApi, DogNzbApi>();
             services.AddTransient<ITelegramApi, TelegramApi>();
             services.AddTransient<IGithubApi, GithubApi>();
+            services.AddTransient<ISickRageApi, SickRageApi>();
         }
 
         public static void RegisterStore(this IServiceCollection services) { 

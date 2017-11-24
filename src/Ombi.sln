@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.15
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi", "Ombi\Ombi.csproj", "{C987AA67-AFE1-468F-ACD3-EAD5A48E1F6A}"
 EndProject
@@ -86,9 +86,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.DogNzb", "Ombi.Api
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Tests", "Ombi.Tests\Ombi.Tests.csproj", "{C12F5276-352A-43CF-8E33-400E768E9757}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Telegram", "Ombi.Api.Telegram\Ombi.Api.Telegram.csproj", "{CB9DD209-8E09-4E01-983E-C77C89592D36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Telegram", "Ombi.Api.Telegram\Ombi.Api.Telegram.csproj", "{CB9DD209-8E09-4E01-983E-C77C89592D36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Github", "Ombi.Api.Github\Ombi.Api.Github.csproj", "{55866DEE-46D1-4AF7-B1A2-62F6190C8EC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Github", "Ombi.Api.Github\Ombi.Api.Github.csproj", "{55866DEE-46D1-4AF7-B1A2-62F6190C8EC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.SickRage", "Ombi.Api.SickRage\Ombi.Api.SickRage.csproj", "{94C9A366-2595-45EA-AABB-8E4A2E90EC5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -232,6 +234,10 @@ Global
 		{55866DEE-46D1-4AF7-B1A2-62F6190C8EC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55866DEE-46D1-4AF7-B1A2-62F6190C8EC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55866DEE-46D1-4AF7-B1A2-62F6190C8EC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94C9A366-2595-45EA-AABB-8E4A2E90EC5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94C9A366-2595-45EA-AABB-8E4A2E90EC5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94C9A366-2595-45EA-AABB-8E4A2E90EC5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94C9A366-2595-45EA-AABB-8E4A2E90EC5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -265,6 +271,7 @@ Global
 		{C12F5276-352A-43CF-8E33-400E768E9757} = {6F42AB98-9196-44C4-B888-D5E409F415A1}
 		{CB9DD209-8E09-4E01-983E-C77C89592D36} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 		{55866DEE-46D1-4AF7-B1A2-62F6190C8EC7} = {9293CA11-360A-4C20-A674-B9E794431BF5}
+		{94C9A366-2595-45EA-AABB-8E4A2E90EC5B} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {192E9BF8-00B4-45E4-BCCC-4C215725C869}
