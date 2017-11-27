@@ -50,6 +50,7 @@ using Ombi.Store.Repository.Requests;
 using Ombi.Updater;
 using PlexContentCacher = Ombi.Schedule.Jobs.Plex;
 using Ombi.Api.Telegram;
+using Ombi.Schedule.Jobs.SickRage;
 
 namespace Ombi.DependencyInjection
 {
@@ -161,6 +162,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IWelcomeEmail, WelcomeEmail>();
             services.AddTransient<ICouchPotatoSync, CouchPotatoSync>();
             services.AddTransient<IProcessProvider, ProcessProvider>();
+            services.AddTransient<ISickRageSync, SickRageSync>();
         }
     }
 }
