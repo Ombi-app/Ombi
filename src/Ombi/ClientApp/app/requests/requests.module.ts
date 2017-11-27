@@ -1,6 +1,4 @@
-﻿import { CommonModule } from "@angular/common";
-import { NgModule } from "@angular/core";
-import { FormsModule } from "@angular/forms";
+﻿import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
@@ -21,6 +19,8 @@ import { RequestService } from "../services";
 
 import { AuthGuard } from "../auth/auth.guard";
 
+import { SharedModule } from "../shared/shared.module";
+
 const routes: Routes = [
     { path: "requests", component: RequestComponent, canActivate: [AuthGuard] },
     { path: "requests/:id", component: TvRequestChildrenComponent, canActivate: [AuthGuard] },
@@ -28,14 +28,13 @@ const routes: Routes = [
 
 @NgModule({
     imports: [
-        CommonModule,
-        FormsModule,
         RouterModule.forChild(routes),
         NgbModule.forRoot(),
         InfiniteScrollModule,
         ButtonModule,
         DialogModule,
         TreeTableModule,
+        SharedModule,
     ],
     declarations: [
         RequestComponent,
