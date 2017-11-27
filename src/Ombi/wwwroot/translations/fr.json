@@ -71,7 +71,7 @@
     "RequestAdded": "La demande pour {{title}} a été ajouté avec succès",
     "Movies": {
       "PopularMovies": "Films populaires",
-      "UpcomingMovies": "Films à venir",
+      "UpcomingMovies": "Films populaires",
       "TopRatedMovies": "Films les mieux notés",
       "NowPlayingMovies": "Films à l'affiche",
       "HomePage": "Site du film",
