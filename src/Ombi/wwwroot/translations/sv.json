@@ -14,9 +14,11 @@
     "Available": "Tillgänglig",
     "ProcessingRequest": "Bearbetar förfrågan",
     "PendingApproval": "I väntan på godkännande",
+    "RequestDenied": "Request Denied",
     "NotRequested": "Inte önskad",
     "Requested": "Begärd önskan",
     "Request": "Begär",
+    "Denied": "Denied",
     "Errors": {
       "Validation": "Vänligen kontrollera din angivna värden"
     }
@@ -75,5 +77,29 @@
       "HomePage": "Hemsida",
       "Trailer": "Trailer"
     }
+  },
+  "Requests": {
+    "Title": "Requests",
+    "Paragraph": "Below you can see yours and all other requests, as well as their download and approval status.",
+    "MoviesTab": "Movies",
+    "TvTab": "TV Shows",
+    "RequestedBy": "Requested By:",
+    "Status": "Status:",
+    "RequestStatus:": "Request status:",
+    "Denied": " Denied:",
+    "ReleaseDate": "Release Date:",
+    "RequestDate": "Request Date:",
+    "QualityOverride": "Quality Override:",
+    "RootFolderOverride": "Root Folder Override:",
+    "ChangeRootFolder": "Change Root Folder",
+    "ChangeQualityProfile": "Change Quality Profile",
+    "MarkUnavailable": "Mark Unavailable",
+    "MarkAvailable": "Mark Available",
+    "Remove": "Remove",
+    "Deny": "Deny",
+    "Season": "Season:",
+    "GridTitle": "Title",
+    "AirDate": "AirDate",
+    "GridStatus": "Status"
   }
 }
