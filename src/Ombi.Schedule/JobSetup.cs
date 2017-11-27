@@ -28,6 +28,7 @@ namespace Ombi.Schedule
             SonarrSync = cache;
             CpCache = cpCache;
             JobSettings = jobsettings;
+            SrSync = srSync;
         }
 
         private IPlexContentSync PlexContentSync { get; }

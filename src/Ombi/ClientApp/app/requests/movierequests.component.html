@@ -29,37 +29,37 @@
                 </div>
                 <br />
                 <div>
-                    <span>Requested By: </span>
+                    <span>{{ 'Requests.RequestedBy' | translate }} </span>
                     <span *ngIf="!isAdmin">{{request.requestedUser.userName}}</span>
                     <span *ngIf="isAdmin && request.requestedUser.alias">{{request.requestedUser.alias}}</span>
                     <span *ngIf="isAdmin && !request.requestedUser.alias">{{request.requestedUser.userName}}</span>
                 </div>
                 <div>
-                    <span>Status: </span>
+                    <span>{{ 'Requests.Status' | translate }} </span>
                     <span class="label label-success">{{request.status}}</span>
                 </div>
 
                 <div>
-                    <span>Request status: </span>
-                    <span *ngIf="request.available" class="label label-success">Available</span>
-                    <span *ngIf="request.approved && !request.available" class="label label-info">Processing Request</span>
-                    <span *ngIf="request.denied" class="label label-danger">Request Denied</span>
+                    <span>{{ 'Requests.RequestStatus' | translate }} </span>
+                    <span *ngIf="request.available" class="label label-success"  [translate]="'Common.Available'"></span>
+                    <span *ngIf="request.approved && !request.available" class="label label-info" [translate]="'Common.ProcessingRequest'"></span>
+                    <span *ngIf="request.denied" class="label label-danger" [translate]="'Common.RequestDenied'"></span>
                     <span *ngIf="request.deniedReason" title="{{request.deniedReason}}"><i class="fa fa-info-circle"></i></span>
-                    <span *ngIf="!request.approved && !request.availble && !request.denied" class="label label-warning">Pending Approval</span>
+                    <span *ngIf="!request.approved && !request.availble && !request.denied" class="label label-warning" [translate]="'Common.PendingApproval'"></span>
 
                 </div>
                 <div *ngIf="request.denied">
-                    Denied: <i style="color:red;" class="fa fa-check"></i>
+                    {{ 'Requests.Denied' | translate }} <i style="color:red;" class="fa fa-check"></i>
 
                 </div>
 
 
-                <div>Release Date: {{request.releaseDate | date}}</div>
-                <div>Requested Date: {{request.requestedDate | date}}</div>
+                <div>{{ 'Requests.ReleaseDate' | translate }} {{request.releaseDate | date}}</div>
+                <div>{{ 'Requests.RequestedDate' | translate }} {{request.requestedDate | date}}</div>
                 <br />
                 <div *ngIf="isAdmin">
-                    <div *ngIf="request.qualityOverrideTitle">Quality Override: <span>{{request.qualityOverrideTitle}} </span></div>
-                    <div *ngIf="request.rootPathOverrideTitle">Root Folder Override: <span>{{request.rootPathOverrideTitle}} </span></div>
+                    <div *ngIf="request.qualityOverrideTitle">{{ 'Requests.QualityOverride' | translate }} <span>{{request.qualityOverrideTitle}} </span></div>
+                    <div *ngIf="request.rootPathOverrideTitle">{{ 'Requests.RootFolderOverride' | translate }} <span>{{request.rootPathOverrideTitle}} </span></div>
                 </div>
 
             </div>
@@ -67,12 +67,12 @@
                 <div *ngIf="isAdmin">
                     <div *ngIf="!request.approved">
                         <form>
-                            <button (click)="approve(request)" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit"><i class="fa fa-plus"></i> Approve</button>
+                            <button (click)="approve(request)" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit"><i class="fa fa-plus"></i> {{ 'Common.Approve' | translate }}</button>
                         </form>
 
                         <!--Radarr Root Folder-->
                         <div *ngIf="radarrRootFolders" class="btn-group btn-split">
-                            <button type="button" class="btn btn-sm btn-warning-outline"><i class="fa fa-plus"></i> Change Root Folder</button>
+                            <button type="button" class="btn btn-sm btn-warning-outline"><i class="fa fa-plus"></i> {{ 'Requests.ChangeRootFolder' | translate }}</button>
                             <button type="button" class="btn btn-warning-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
@@ -84,7 +84,7 @@
 
                         <!--Radarr Quality Profiles -->
                         <div *ngIf="radarrProfiles" class="btn-group btn-split">
-                            <button type="button" class="btn btn-sm btn-warning-outline"><i class="fa fa-plus"></i> Change Quality Profile</button>
+                            <button type="button" class="btn btn-sm btn-warning-outline"><i class="fa fa-plus"></i> {{ 'Requests.ChangeQualityProfile' | translate }}</button>
                             <button type="button" class="btn btn-warning-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
@@ -95,16 +95,16 @@
                         </div>
 
                         <div *ngIf="!request.denied">
-                            <button type="button" (click)="deny(request)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</button>
+                            <button type="button" (click)="deny(request)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> {{ 'Requests.Deny' | translate }}</button>
                         </div>
                     </div>
                     <form>
-                        <button (click)="removeRequest(request)" style="text-align: right" class="btn btn-sm btn-danger-outline delete"><i class="fa fa-minus"></i> Remove</button>
+                        <button (click)="removeRequest(request)" style="text-align: right" class="btn btn-sm btn-danger-outline delete"><i class="fa fa-minus"></i> {{ 'Requests.Remove' | translate }}</button>
                     </form>
 
                     <form>
-                        <button *ngIf="request.available" (click)="changeAvailability(request, false)" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change"><i class="fa fa-minus"></i> Mark Unavailable</button>
-                        <button *ngIf="!request.available" (click)="changeAvailability(request, true)" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change"><i class="fa fa-plus"></i> Mark Available</button>
+                        <button *ngIf="request.available" (click)="changeAvailability(request, false)" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change"><i class="fa fa-minus"></i> {{ 'Requests.MarkUnavailable' | translate }}</button>
+                        <button *ngIf="!request.available" (click)="changeAvailability(request, true)" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change"><i class="fa fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}</button>
                     </form>
 
 

@@ -4,7 +4,7 @@
         <div class="col-md-12">
 
             <div class="col-md-2">
-                <span>Requested By:</span>
+                <span [translate]="'Requests.RequestedBy'"></span>
                 
                 <span *ngIf="!isAdmin">{{child.requestedUser.userName}}</span>
                 <span *ngIf="isAdmin && child.requestedUser.alias">{{child.requestedUser.alias}}</span>
@@ -14,13 +14,13 @@
 
             <div class="col-md-1 col-md-push-9" *ngIf="isAdmin">
                
-                    <button *ngIf="child.canApprove && !child.approved" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve</button>
-                    <button *ngIf="child.available" (click)="changeAvailability(child, false)" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change"><i class="fa fa-minus"></i> Mark Unavailable</button>
-                    <button *ngIf="!child.available" (click)="changeAvailability(child, true)" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change"><i class="fa fa-plus"></i> Mark Available</button>
+                    <button *ngIf="child.canApprove && !child.approved" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> {{ 'Common.Approve' | translate }}</button>
+                    <button *ngIf="child.available" (click)="changeAvailability(child, false)" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change"><i class="fa fa-minus"></i> {{ 'Requests.MarkUnavailable' | translate }}</button>
+                    <button *ngIf="!child.available" (click)="changeAvailability(child, true)" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change"><i class="fa fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}</button>
 
-                    <button *ngIf="!child.denied" type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</button>
+                    <button *ngIf="!child.denied" type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> {{ 'Requests.Deny' | translate }}</button>
            
-                    <button type="button" (click)="removeRequest(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Remove</button>
+                    <button type="button" (click)="removeRequest(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> {{ 'Requests.Remove' | translate }}</button>
                 
             </div>
         </div>
@@ -30,7 +30,7 @@
                 <div *ngFor="let season of child.seasonRequests">
                     <ngb-tab [id]="season.seasonNumber" [title]="season.seasonNumber">
                         <ng-template ngbTabContent>
-                            <h2>Season: {{season.seasonNumber}}</h2>
+                            <h2>{{ 'Requests.Season' | translate }} {{season.seasonNumber}}</h2>
 
                             <table class="table table-striped table-hover table-responsive table-condensed">
                                 <thead>
@@ -42,17 +42,17 @@
                                         </th>
                                         <th>
                                             <a>
-                                                Title
+                                                {{ 'Requests.GridTitle' | translate }}
                                             </a>
                                         </th>
                                         <th>
                                             <a>
-                                                Air Date
+                                                {{ 'Requests.AirDate' | translate }}
                                             </a>
                                         </th>
                                         <th>
                                             <a>
-                                                Status
+                                                {{ 'Requests.GridStatus' | translate }}
                                             </a>
                                         </th>
                                     </tr>
@@ -69,11 +69,11 @@
                                             {{ep.airDate | date: 'dd/MM/yyyy' }}
                                         </td>
                                         <td>
-                                            <span *ngIf="child.denied" class="label label-danger">Denied</span>
-                                            <span *ngIf="!child.denied && ep.available" class="label label-success">Available</span>
-                                            <span *ngIf="!child.denied &&ep.approved && !ep.available" class="label label-info">Processing Request</span>
+                                            <span *ngIf="child.denied" class="label label-danger" [translate]="'Common.Denied'"></span>
+                                            <span *ngIf="!child.denied && ep.available" class="label label-success" [translate]="'Common.Available'"></span>
+                                            <span *ngIf="!child.denied &&ep.approved && !ep.available" class="label label-info" [translate]="'Common.ProcessingRequest'"></span>
                                             <div *ngIf="!child.denied && !ep.approved">
-                                                <div *ngIf="!ep.available"><span class="label label-warning">Pending Approval</span></div>
+                                                <div *ngIf="!ep.available"><span class="label label-warning" [translate]="'Common.PendingApproval'"></span></div>
                                             </div>
                                             
                                         </td>

@@ -1,14 +1,14 @@
-﻿<h1 id="searchTitle">Requests</h1>
-<h4>Below you can see yours and all other requests, as well as their download and approval status.</h4>
+﻿<h1 id="searchTitle"  [translate]="'Requests.Title'"></h1>
+<h4  [translate]="'Requests.Paragraph'"></h4>
 
 
 
 <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active">
-        <a id="movieTabButton" aria-controls="home" role="tab" data-toggle="tab" (click)="selectMovieTab()"><i class="fa fa-film"></i> Movies</a>
+        <a id="movieTabButton" aria-controls="home" role="tab" data-toggle="tab" (click)="selectMovieTab()"><i class="fa fa-film"></i> {{ 'Requests.MoviesTab' | translate }}</a>
     </li>
     <li role="presentation">
-        <a id="tvTabButton" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectTvTab()"><i class="fa fa-television"></i> TV Shows</a>
+        <a id="tvTabButton" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectTvTab()"><i class="fa fa-television"></i> {{ 'Requests.TvTab' | translate }}</a>
 
     </li>
 </ul>
