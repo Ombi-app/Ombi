@@ -23,8 +23,9 @@ export class JobsComponent implements OnInit {
                 embyContentSync:          [x.embyContentSync, Validators.required],
                 plexContentSync:          [x.plexContentSync, Validators.required],
                 userImporter:             [x.userImporter, Validators.required],
-                sonarrSync:                   [x.radarrSync, Validators.required],
+                sonarrSync:               [x.radarrSync, Validators.required],
                 radarrSync:               [x.sonarrSync, Validators.required],
+                sickRageSync:             [x.sickRageSync, Validators.required],  
             });
         });
     }

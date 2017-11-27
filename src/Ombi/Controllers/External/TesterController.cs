@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.CouchPotato;
@@ -10,7 +9,6 @@ using Ombi.Api.Plex;
 using Ombi.Api.Radarr;
 using Ombi.Api.SickRage;
 using Ombi.Api.Sonarr;
-using Ombi.Api.Telegram;
 using Ombi.Attributes;
 using Ombi.Core.Notifications;
 using Ombi.Core.Settings.Models.External;
@@ -18,7 +16,6 @@ using Ombi.Helpers;
 using Ombi.Notifications;
 using Ombi.Notifications.Agents;
 using Ombi.Notifications.Models;
-using Ombi.Notifications.Templates;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Settings.Settings.Models.Notifications;
 
@@ -84,11 +81,19 @@ namespace Ombi.Controllers.External
         [HttpPost("discord")]
         public bool Discord([FromBody] DiscordNotificationSettings settings)
         {
-            settings.Enabled = true;
-            DiscordNotification.NotifyAsync(
-                new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
+            try
+            {
+                settings.Enabled = true;
+                DiscordNotification.NotifyAsync(
+                    new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
 
-            return true;
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test Discord");
+                return false;
+            }
         }
 
         /// <summary>
@@ -99,11 +104,20 @@ namespace Ombi.Controllers.External
         [HttpPost("pushbullet")]
         public bool Pushbullet([FromBody] PushbulletSettings settings)
         {
-            settings.Enabled = true;
-            PushbulletNotification.NotifyAsync(
-                new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
+            try
+            {
 
-            return true;
+                settings.Enabled = true;
+                PushbulletNotification.NotifyAsync(
+                    new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test Pushbullet");
+                return false;
+            }
         }
 
         /// <summary>
@@ -114,11 +128,20 @@ namespace Ombi.Controllers.External
         [HttpPost("pushover")]
         public bool Pushover([FromBody] PushoverSettings settings)
         {
-            settings.Enabled = true;
-            PushoverNotification.NotifyAsync(
-                new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
+            try
+            {
+                settings.Enabled = true;
+                PushoverNotification.NotifyAsync(
+                    new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
 
-            return true;
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test Pushover");
+                return false;
+            }
+
         }
 
         /// <summary>
@@ -129,11 +152,21 @@ namespace Ombi.Controllers.External
         [HttpPost("mattermost")]
         public bool Mattermost([FromBody] MattermostNotificationSettings settings)
         {
-            settings.Enabled = true;
-            MattermostNotification.NotifyAsync(
-                new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
+            try
+            {
+                settings.Enabled = true;
+                MattermostNotification.NotifyAsync(
+                    new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
 
-            return true;
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test Mattermost");
+                return false;
+            }
+
         }
 
 
@@ -145,11 +178,19 @@ namespace Ombi.Controllers.External
         [HttpPost("slack")]
         public bool Slack([FromBody] SlackNotificationSettings settings)
         {
-            settings.Enabled = true;
-            SlackNotification.NotifyAsync(
-                new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
+            try
+            {
+                settings.Enabled = true;
+                SlackNotification.NotifyAsync(
+                    new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
 
-            return true;
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test Slack");
+                return false;
+            }
         }
 
         /// <summary>
@@ -293,10 +334,18 @@ namespace Ombi.Controllers.External
         [HttpPost("telegram")]
         public async Task<bool> Telegram([FromBody] TelegramSettings settings)
         {
-            settings.Enabled = true;
-            await TelegramNotification.NotifyAsync(new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
+            try
+            {
+                settings.Enabled = true;
+                await TelegramNotification.NotifyAsync(new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
 
-            return true;
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test Telegram");
+                return false;
+            }
         }
 
         /// <summary>
@@ -307,9 +356,17 @@ namespace Ombi.Controllers.External
         [HttpPost("sickrage")]
         public async Task<bool> SickRage([FromBody] SickRageSettings settings)
         {
-            settings.Enabled = true;
-            var result = await SickRageApi.Ping(settings.ApiKey, settings.FullUri);
-            return result?.data?.pid != null;
+            try
+            {
+                settings.Enabled = true;
+                var result = await SickRageApi.Ping(settings.ApiKey, settings.FullUri);
+                return result?.data?.pid != null;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test SickRage");
+                return false;
+            }
         }
     }
 }

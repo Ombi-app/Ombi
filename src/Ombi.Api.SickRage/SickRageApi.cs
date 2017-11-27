@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -27,15 +25,12 @@ namespace Ombi.Api.SickRage
             return await _api.Request<SickRageSeasonList>(request);
         }
 
-        public async Task<SickRageTvAdd> AddSeries(int tvdbId, int seasonCount, int[] seasons, string quality, string apiKey, string baseUrl)
+        public async Task<SickRageTvAdd> AddSeries(int tvdbId, string quality, string status, string apiKey, string baseUrl)
         {
-            var futureStatus = seasons.Length > 0 && seasons.All(x => x != seasonCount) ? SickRageStatus.Skipped : SickRageStatus.Wanted;
-            var status = seasons.Length > 0 ? SickRageStatus.Skipped : SickRageStatus.Wanted;
             var request = new Request($"/api/{apiKey}/?cmd=show.addnew", baseUrl, HttpMethod.Get);
 
             request.AddQueryString("tvdbid", tvdbId.ToString());
             request.AddQueryString("status", status);
-            request.AddQueryString("future_status", futureStatus);
 
             if (!quality.Equals("default", StringComparison.CurrentCultureIgnoreCase))
             {
@@ -43,55 +38,6 @@ namespace Ombi.Api.SickRage
             }
 
             var obj = await _api.Request<SickRageTvAdd>(request);
-
-            if (obj.result != "failure")
-            {
-                var sw = new Stopwatch();
-                sw.Start();
-
-                var seasonIncrement = 0;
-                try
-                {
-                    while (seasonIncrement < seasonCount)
-                    {
-                        var seasonList = await VerifyShowHasLoaded(tvdbId, apiKey, baseUrl);
-                        if (seasonList.result.Equals("failure"))
-                        {
-                            await Task.Delay(3000);
-                            continue;
-                        }
-                        seasonIncrement = seasonList.Data?.Length ?? 0;
-
-                        if (sw.ElapsedMilliseconds > 30000) // Break out after 30 seconds, it's not going to get added
-                        {
-                            _log.LogWarning("Couldn't find out if the show had been added after 10 seconds. I doubt we can change the status to wanted.");
-                            break;
-                        }
-                    }
-                    sw.Stop();
-                }
-                catch (Exception e)
-                {
-                    _log.LogCritical(e, "Exception thrown when getting the seasonList");
-                }
-            }
-
-            try
-            {
-                if (seasons.Length > 0)
-                {
-                    //handle the seasons requested
-                    foreach (var s in seasons)
-                    {
-                        var result = await AddSeason(tvdbId, s, apiKey, baseUrl);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                _log.LogCritical(e, "Exception when adding seasons:");
-                throw;
-            }
 
             return obj;
         }
@@ -111,6 +57,23 @@ namespace Ombi.Api.SickRage
             var request = new Request($"/api/{apiKey}/?cmd=shows", baseUrl, HttpMethod.Get);
 
             return await _api.Request<SickRageShows>(request);
+        }
+
+        public async Task<SickRageShowInformation> GetShow(int tvdbid, string apikey, string baseUrl)
+        {
+            var request = new Request($"/api/{apikey}/?cmd=show", baseUrl, HttpMethod.Get);
+            request.AddQueryString("tvdbid", tvdbid.ToString());
+
+            return await _api.Request<SickRageShowInformation>(request);
+        }
+
+        public async Task<SickRageEpisodes> GetEpisodesForSeason(int tvdbid, int season, string apikey, string baseUrl)
+        {
+            var request = new Request($"/api/{apikey}/?cmd=show.seasons", baseUrl, HttpMethod.Get);
+            request.AddQueryString("tvdbid", tvdbid.ToString());
+            request.AddQueryString("season", season.ToString());
+
+            return await _api.Request<SickRageEpisodes>(request);
         }
 
         public async Task<SickRagePing> Ping(string apiKey, string baseUrl)
@@ -138,6 +101,14 @@ namespace Ombi.Api.SickRage
             }
 
             return await _api.Request<SickRageEpisodeStatus>(request);
+        }
+
+        public async Task<SeasonList> GetSeasonList(int tvdbId, string apikey, string baseurl)
+        {
+            var request = new Request($"/api/{apikey}/?cmd=show.seasonlist", baseurl, HttpMethod.Get);
+            request.AddQueryString("tvdbid", tvdbId.ToString());
+
+            return await _api.Request<SeasonList>(request);
         }
     }
 }

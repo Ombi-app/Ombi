@@ -27,6 +27,7 @@
     <ProjectReference Include="..\Ombi.Api.Plex\Ombi.Api.Plex.csproj" />
     <ProjectReference Include="..\Ombi.Api.Radarr\Ombi.Api.Radarr.csproj" />
     <ProjectReference Include="..\Ombi.Api.Service\Ombi.Api.Service.csproj" />
+    <ProjectReference Include="..\Ombi.Api.SickRage\Ombi.Api.SickRage.csproj" />
     <ProjectReference Include="..\Ombi.Api.Sonarr\Ombi.Api.Sonarr.csproj" />
     <ProjectReference Include="..\Ombi.Notifications\Ombi.Notifications.csproj" />
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />

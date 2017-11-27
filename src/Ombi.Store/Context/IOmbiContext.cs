@@ -38,5 +38,7 @@ namespace Ombi.Store.Context
         EntityEntry Update(object entity);
         EntityEntry<TEntity> Update<TEntity>(TEntity entity) where TEntity : class;
         DbSet<CouchPotatoCache> CouchPotatoCache { get; set; }
+        DbSet<SickRageCache> SickRageCache { get; set; }
+        DbSet<SickRageEpisodeCache> SickRageEpisodeCache { get; set; }
     }
 }

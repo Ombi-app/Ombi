@@ -53,7 +53,7 @@
                     <label for="select" class="control-label">Quality Profiles</label>
                     <div id="profiles">
                         <select class="form-control form-control-custom"  [ngClass]="{'form-error': form.get('qualityProfile').hasError('required')}" id="select" formControlName="qualityProfile">
-                            <option *ngFor="let quality of qualities" value="{{quality.id}}" >{{quality.name}}</option>
+                            <option *ngFor="let quality of qualities" value="{{quality.value}}" >{{quality.display}}</option>
                         </select>
                     </div>
                     <small *ngIf="form.get('qualityProfile').hasError('required')" class="error-text">A Default Quality Profile is required</small>

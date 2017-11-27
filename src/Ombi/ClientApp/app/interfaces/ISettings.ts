@@ -1,4 +1,4 @@
-﻿import { IDictionary, ISettings } from "./ICommon";
+﻿import { ISettings } from "./ICommon";
 
 export interface IExternalSettings extends ISettings {
   ssl: boolean;
@@ -115,6 +115,7 @@ export interface IJobSettings {
   couchPotatoSync: string;
   automaticUpdater: string;
   userImporter: string;
+  sickRageSync: string;
 }
 
 export interface IAuthenticationSettings extends ISettings {
@@ -158,7 +159,12 @@ export interface ISickRageSettings extends IExternalSettings {
   enabled: boolean;
   apiKey: string;
   qualityProfile: string;
-  qualities: IDictionary<string>;
+  qualities: IDropDownModel[];
+}
+
+export interface IDropDownModel {
+  value: string;
+  display: string;
 }
 
 export interface IDogNzbSettings extends ISettings {

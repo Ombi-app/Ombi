@@ -26,7 +26,3 @@ export interface IUsersModel {
     id: string;
     username: string;
 }
-
-export interface IDictionary<T> {
-    [Key: string]: T;
-}

@@ -1,9 +1,7 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
-import { ISonarrProfile, ISonarrRootFolder } from "../../interfaces";
-
-import { ISickRageSettings } from "../../interfaces";
+import { IDropDownModel, ISickRageSettings } from "../../interfaces";
 import { TesterService } from "../../services";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
@@ -13,14 +11,8 @@ import { SettingsService } from "../../services";
 })
 export class SickRageComponent implements OnInit {
 
-    public qualities: ISonarrProfile[];
-    public rootFolders: ISonarrRootFolder[];
-    public selectedRootFolder: ISonarrRootFolder;
-    public selectedQuality: ISonarrProfile;
-    public profilesRunning: boolean;
-    public rootFoldersRunning: boolean;
+    public qualities: IDropDownModel[];
     public form: FormGroup;
-    public advanced = false;
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
@@ -34,13 +26,12 @@ export class SickRageComponent implements OnInit {
                     enabled: [x.enabled],
                     apiKey: [x.apiKey, [Validators.required]],
                     qualityProfile: [x.qualityProfile, [Validators.required]],
-                    qualities: [x.qualities],
                     ssl: [x.ssl],
                     subDir: [x.subDir],
                     ip: [x.ip, [Validators.required]],
                     port: [x.port, [Validators.required]],
                 });
-
+                this.qualities = x.qualities;
             });
     }
 

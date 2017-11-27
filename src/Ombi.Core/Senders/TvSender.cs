@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Ombi.Api.DogNzb;
 using Ombi.Api.DogNzb.Models;
 using Ombi.Api.SickRage;
+using Ombi.Api.SickRage.Models;
 using Ombi.Api.Sonarr;
 using Ombi.Api.Sonarr.Models;
 using Ombi.Core.Settings;
@@ -69,6 +70,20 @@ namespace Ombi.Core.Senders
                 {
                     Message = result.ErrorMessage
                 };
+            }
+            var sr = await SickRageSettings.GetSettingsAsync();
+            if (sr.Enabled)
+            {
+                var result = await SendToSickRage(model, sr);
+                if (result)
+                {
+                    return new SenderResult
+                    {
+                        Sent = true,
+                        Success = true
+                    };
+                }
+                return new SenderResult();
             }
             return new SenderResult
             {
@@ -246,24 +261,64 @@ namespace Ombi.Core.Senders
             }
         }
 
-        public async Task SendToSickRage(ChildRequests model, string qualityId = null)
+        private async Task<bool> SendToSickRage(ChildRequests model, SickRageSettings settings, string qualityId = null)
         {
-            var settings = await SickRageSettings.GetSettingsAsync();
-            if (qualityId.HasValue())
+            var tvdbid = model.ParentRequest.TvDbId;
+            if (qualityId.HasValue())            {                var id = qualityId;                if (settings.Qualities.All(x => x.Value != id))                {                    qualityId = settings.QualityProfile;                }            }
+            // Check if the show exists
+            var existingShow = await SickRageApi.GetShow(tvdbid, settings.ApiKey, settings.FullUri);
+
+            if (existingShow == null)
             {
-                if (settings.Qualities.All(x => x.Key != qualityId))
+                var addResult = await SickRageApi.AddSeries(model.ParentRequest.TvDbId, SickRageStatus.Wanted,
+                    qualityId,
+                    settings.ApiKey, settings.FullUri);
+
+                Logger.LogDebug("Added the show (tvdbid) {0}. The result is '{2}' : '{3}'", tvdbid, addResult.result, addResult.message);
+                if (addResult.result.Equals("failure"))
                 {
-                    qualityId = settings.QualityProfile;
+                    // Do something
+                    return false;
                 }
             }
 
-            //var apiResult = SickRageApi.AddSeries(model.ParentRequest.TvDbId, model.SeasonCount, model.SeasonList, qualityId,
-            //    sickRageSettings.ApiKey, sickRageSettings.FullUri);
+            foreach (var seasonRequests in model.SeasonRequests)
+            {
+                var srEpisodes = await SickRageApi.GetEpisodesForSeason(tvdbid, seasonRequests.SeasonNumber, settings.ApiKey, settings.FullUri);
+                var totalSrEpisodes = srEpisodes.data.Count;
 
-            //var result = apiResult.Result;
+                if (totalSrEpisodes == seasonRequests.Episodes.Count)
+                {
+                    // This is a request for the whole season
+                    var wholeSeasonResult = await SickRageApi.SetEpisodeStatus(settings.ApiKey, settings.FullUri, tvdbid, SickRageStatus.Wanted,
+                        seasonRequests.SeasonNumber);
 
+                    Logger.LogDebug("Set the status to Wanted for season {0}. The result is '{1}' : '{2}'", seasonRequests.SeasonNumber, wholeSeasonResult.result, wholeSeasonResult.message);
+                    continue;
+                }
 
-            //return result;
+                foreach (var srEp in srEpisodes.data)
+                {
+                    var epNumber = srEp.Key;
+                    var epData = srEp.Value;
+
+                    var epRequest = seasonRequests.Episodes.FirstOrDefault(x => x.EpisodeNumber == epNumber);
+                    if (epRequest != null)
+                    {
+                        // We want to monior this episode since we have a request for it
+                        // Let's check to see if it's wanted first, save an api call
+                        if (epData.status.Equals(SickRageStatus.Wanted, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            continue;
+                        }
+                        var epResult = await SickRageApi.SetEpisodeStatus(settings.ApiKey, settings.FullUri, tvdbid,
+                            SickRageStatus.Wanted, seasonRequests.SeasonNumber, epNumber);
+
+                        Logger.LogDebug("Set the status to Wanted for Episode {0} in season {1}. The result is '{2}' : '{3}'", seasonRequests.SeasonNumber, epNumber, epResult.result, epResult.message);
+                    }
+                }
+            }
+            return true;
         }
 
         private async Task SearchForRequest(ChildRequests model, IEnumerable<Episode> sonarrEpList, SonarrSeries existingSeries, SonarrSettings s,

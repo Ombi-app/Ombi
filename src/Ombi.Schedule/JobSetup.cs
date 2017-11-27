@@ -6,6 +6,7 @@ using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Jobs.Radarr;
+using Ombi.Schedule.Jobs.SickRage;
 using Ombi.Schedule.Jobs.Sonarr;
 using Ombi.Settings.Settings.Models;
 
@@ -16,7 +17,7 @@ namespace Ombi.Schedule
         public JobSetup(IPlexContentSync plexContentSync, IRadarrSync radarrSync,
             IOmbiAutomaticUpdater updater, IEmbyContentSync embySync, IPlexUserImporter userImporter,
             IEmbyUserImporter embyUserImporter, ISonarrSync cache, ICouchPotatoSync cpCache,
-            ISettingsService<JobSettings> jobsettings)
+            ISettingsService<JobSettings> jobsettings, ISickRageSync srSync)
         {
             PlexContentSync = plexContentSync;
             RadarrSync = radarrSync;
@@ -37,6 +38,7 @@ namespace Ombi.Schedule
         private IEmbyUserImporter EmbyUserImporter { get; }
         private ISonarrSync SonarrSync { get; }
         private ICouchPotatoSync CpCache { get; }
+        private ISickRageSync SrSync { get; }
         private ISettingsService<JobSettings> JobSettings { get; set; }
 
         public void Setup()
@@ -48,6 +50,7 @@ namespace Ombi.Schedule
             RecurringJob.AddOrUpdate(() => RadarrSync.CacheContent(), JobSettingsHelper.Radarr(s));
             RecurringJob.AddOrUpdate(() => PlexContentSync.CacheContent(), JobSettingsHelper.PlexContent(s));
             RecurringJob.AddOrUpdate(() => CpCache.Start(), JobSettingsHelper.CouchPotato(s));
+            RecurringJob.AddOrUpdate(() => SrSync.Start(), JobSettingsHelper.SickRageSync(s));
 
             RecurringJob.AddOrUpdate(() => Updater.Update(null), JobSettingsHelper.Updater(s));
 
