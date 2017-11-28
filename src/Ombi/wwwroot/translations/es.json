@@ -14,9 +14,11 @@
     "Available": "Available",
     "ProcessingRequest": "Processing Request",
     "PendingApproval": "Pending Approval",
+    "RequestDenied": "Request Denied",
     "NotRequested": "Not Requested",
     "Requested": "Requested",
     "Request": "Request",
+    "Denied": "Denied",
     "Errors": {
       "Validation": "Please check your entered values"
     }
@@ -75,5 +77,29 @@
       "HomePage": "Home Page",
       "Trailer": "Trailer"
     }
+  },
+  "Requests": {
+    "Title": "Requests",
+    "Paragraph": "Below you can see yours and all other requests, as well as their download and approval status.",
+    "MoviesTab": "Movies",
+    "TvTab": "TV Shows",
+    "RequestedBy": "Requested By:",
+    "Status": "Status:",
+    "RequestStatus:": "Request status:",
+    "Denied": " Denied:",
+    "ReleaseDate": "Release Date:",
+    "RequestDate": "Request Date:",
+    "QualityOverride": "Quality Override:",
+    "RootFolderOverride": "Root Folder Override:",
+    "ChangeRootFolder": "Change Root Folder",
+    "ChangeQualityProfile": "Change Quality Profile",
+    "MarkUnavailable": "Mark Unavailable",
+    "MarkAvailable": "Mark Available",
+    "Remove": "Remove",
+    "Deny": "Deny",
+    "Season": "Season:",
+    "GridTitle": "Title",
+    "AirDate": "AirDate",
+    "GridStatus": "Status"
   }
 }
