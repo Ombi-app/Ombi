@@ -461,6 +461,7 @@ namespace Ombi.Controllers
             j.EmbyContentSync = j.EmbyContentSync.HasValue() ? j.EmbyContentSync : JobSettingsHelper.EmbyContent(j);
             j.PlexContentSync = j.PlexContentSync.HasValue() ? j.PlexContentSync : JobSettingsHelper.PlexContent(j);
             j.UserImporter = j.UserImporter.HasValue() ? j.UserImporter : JobSettingsHelper.UserImporter(j);
+            j.SickRageSync = j.SickRageSync.HasValue() ? j.SickRageSync : JobSettingsHelper.SickRageSync(j);
 
             return j;
         }
