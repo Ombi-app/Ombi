@@ -45,7 +45,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task NewRequest(NotificationOptions model, PushbulletSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.NewRequest, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.NewRequest} is disabled for {NotificationAgent.Pushbullet}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -57,7 +61,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task Issue(NotificationOptions model, PushbulletSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.Issue, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.Issue} is disabled for {NotificationAgent.Pushbullet}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -90,7 +98,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task RequestDeclined(NotificationOptions model, PushbulletSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.RequestDeclined, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.RequestDeclined} is disabled for {NotificationAgent.Pushbullet}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -101,7 +113,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task RequestApproved(NotificationOptions model, PushbulletSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.RequestApproved, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.RequestApproved} is disabled for {NotificationAgent.Pushbullet}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -113,7 +129,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task AvailableRequest(NotificationOptions model, PushbulletSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.RequestAvailable, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.RequestAvailable} is disabled for {NotificationAgent.Pushbullet}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,

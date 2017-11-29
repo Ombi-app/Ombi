@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
+using Ombi.Notifications.Exceptions;
 using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
@@ -134,9 +135,13 @@ namespace Ombi.Notifications.Interfaces
         protected virtual async Task<NotificationMessageContent> LoadTemplate(NotificationAgent agent, NotificationType type, NotificationOptions model)
         {
             var template = await TemplateRepository.GetTemplate(agent, type);
+            if (template == null)
+            {
+                throw new TemplateMissingException($"The template for {agent} and type {type} is missing");
+            }
             if (!template.Enabled)
             {
-                return null;
+                return new NotificationMessageContent {Disabled = true};
             }
             var parsed = Parse(model, template);
 

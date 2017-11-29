@@ -46,7 +46,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task NewRequest(NotificationOptions model, PushoverSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Pushover, NotificationType.NewRequest, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.NewRequest} is disabled for {NotificationAgent.Pushover}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -58,7 +62,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task Issue(NotificationOptions model, PushoverSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Pushover, NotificationType.Issue, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.Issue} is disabled for {NotificationAgent.Pushover}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -91,7 +99,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task RequestDeclined(NotificationOptions model, PushoverSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Pushover, NotificationType.RequestDeclined, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.RequestDeclined} is disabled for {NotificationAgent.Pushover}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -102,7 +114,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task RequestApproved(NotificationOptions model, PushoverSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Pushover, NotificationType.RequestApproved, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.RequestApproved} is disabled for {NotificationAgent.Pushover}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -114,6 +130,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task AvailableRequest(NotificationOptions model, PushoverSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Pushover, NotificationType.RequestAvailable, model);
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.RequestAvailable} is disabled for {NotificationAgent.Pushover}");
+                return;
+            }
 
             var notification = new NotificationMessage
             {

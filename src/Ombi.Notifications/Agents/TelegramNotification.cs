@@ -39,7 +39,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task NewRequest(NotificationOptions model, TelegramSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Telegram, NotificationType.NewRequest, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.NewRequest} is disabled for {NotificationAgent.Telegram}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -51,7 +55,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task Issue(NotificationOptions model, TelegramSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Telegram, NotificationType.Issue, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.Issue} is disabled for {NotificationAgent.Telegram}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -87,7 +95,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task RequestDeclined(NotificationOptions model, TelegramSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Telegram, NotificationType.RequestDeclined, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.RequestDeclined} is disabled for {NotificationAgent.Telegram}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -98,7 +110,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task RequestApproved(NotificationOptions model, TelegramSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Telegram, NotificationType.RequestApproved, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.RequestApproved} is disabled for {NotificationAgent.Telegram}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message ?? string.Empty,
@@ -110,7 +126,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task AvailableRequest(NotificationOptions model, TelegramSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Telegram, NotificationType.RequestAvailable, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.RequestAvailable} is disabled for {NotificationAgent.Telegram}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -122,7 +142,6 @@ namespace Ombi.Notifications.Agents
         {
             try
             {
-                
                 await Api.Send(model.Message, settings.BotApi, settings.ChatId, settings.ParseMode);
             }
             catch (Exception e)

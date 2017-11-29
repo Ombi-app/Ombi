@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
+using Microsoft.Extensions.Logging;
 using MimeKit;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
@@ -17,11 +18,14 @@ namespace Ombi.Notifications.Agents
 {
     public class EmailNotification : BaseNotification<EmailNotificationSettings>, IEmailNotification
     {
-        public EmailNotification(ISettingsService<EmailNotificationSettings> settings, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t, IEmailProvider prov, ISettingsService<CustomizationSettings> c) : base(settings, r, m, t, c)
+        public EmailNotification(ISettingsService<EmailNotificationSettings> settings, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t, IEmailProvider prov, ISettingsService<CustomizationSettings> c,
+            ILogger<EmailNotification> log) : base(settings, r, m, t, c)
         {
             EmailProvider = prov;
+            Logger = log;
         }
         private IEmailProvider EmailProvider { get; }
+        private ILogger<EmailNotification> Logger { get; }
         public override string NotificationName => nameof(EmailNotification);
 
         protected override bool ValidateConfiguration(EmailNotificationSettings settings)
@@ -48,7 +52,11 @@ namespace Ombi.Notifications.Agents
         private async Task<NotificationMessage> LoadTemplate(NotificationType type, NotificationOptions model, EmailNotificationSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Email, type, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {type} is disabled for {NotificationAgent.Email}");
+                return null;
+            }
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(parsed.Subject, parsed.Message,parsed.Image, Customization.Logo);
             
