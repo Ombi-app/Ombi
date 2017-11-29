@@ -43,10 +43,7 @@ namespace Ombi.Schedule.Jobs.Plex
             var plexEpisodes = _repo.GetAllEpisodes().Include(x => x.Series);
 
             foreach (var child in tv)
-            {
-
-                PlexServerContent item = null;
-                var useImdb = false;
+            {                var useImdb = false;
                 var useTvDb = false;
                 if (child.ParentRequest.ImdbId.HasValue())
                 {
