@@ -6,7 +6,6 @@ import { NgbAccordionModule, NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { ClipboardModule } from "ngx-clipboard/dist";
 
 import { AuthGuard } from "../auth/auth.guard";
-import { AuthModule } from "../auth/auth.module";
 import { AuthService } from "../auth/auth.service";
 import { CouchPotatoService, JobService, RadarrService, SonarrService, TesterService, ValidationService } from "../services";
 
@@ -72,7 +71,6 @@ const routes: Routes = [
         MenuModule,
         InputSwitchModule,
         InputTextModule,
-        AuthModule,
         NgbModule,
         TooltipModule,
         NgbAccordionModule,

@@ -8,6 +8,8 @@ import {BrowserModule} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {RouterModule, Routes} from "@angular/router";
 
+import { JwtModule } from "@auth0/angular-jwt";
+
 // Third Party
 //import { DragulaModule, DragulaService } from 'ng2-dragula/ng2-dragula';
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
@@ -27,7 +29,6 @@ import { TokenResetPasswordComponent } from "./login/tokenresetpassword.componen
 
 // Services
 import { AuthGuard } from "./auth/auth.guard";
-import { AuthModule } from "./auth/auth.module";
 import { AuthService } from "./auth/auth.service";
 import { IdentityService } from "./services";
 import { ImageService } from "./services";
@@ -78,7 +79,6 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
         SettingsModule,
         DataTableModule,
         SharedModule,
-        AuthModule,
         WizardModule,
         SearchModule,
         DialogModule,
@@ -93,7 +93,18 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
         CaptchaModule,
         TooltipModule,
         ConfirmDialogModule,
-        CommonModule,
+        CommonModule, 
+        JwtModule.forRoot({
+            config: {
+              tokenGetter: () => {
+                  const token = localStorage.getItem("id_token");
+                  if (!token) {
+                      return "";
+                  }
+                  return token;
+                },
+            },
+          }),
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

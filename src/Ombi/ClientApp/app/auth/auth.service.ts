@@ -1,7 +1,7 @@
 ﻿import { PlatformLocation } from "@angular/common";
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Headers, Http } from "@angular/http";
-import { JwtHelper, tokenNotExpired } from "angular2-jwt";
+import { JwtHelperService } from "@auth0/angular-jwt";
 import { Observable } from "rxjs/Rx";
 
 import { ServiceHelpers } from "../services";
@@ -9,22 +9,24 @@ import { ILocalUser, IUserLogin } from "./IUserLogin";
 
 @Injectable()
 export class AuthService extends ServiceHelpers {
-    public jwtHelper: JwtHelper = new JwtHelper();
 
-    constructor(http: Http, public platformLocation: PlatformLocation) {
+    constructor(http: HttpClient, public platformLocation: PlatformLocation, private jwtHelperService: JwtHelperService) {
         super(http, "/api/v1/token", platformLocation);
     }
 
     public login(login: IUserLogin): Observable<any> {
-        this.headers = new Headers();
-        this.headers.append("Content-Type", "application/json");
-
-        return this.http.post(`${this.url}/`, JSON.stringify(login), { headers: this.headers })
-            .map(this.extractData);
+        return this.http.post(`${this.url}/`, JSON.stringify(login), {headers: this.headers});
     }
 
-    public loggedIn() {
-        return tokenNotExpired("id_token");
+    public loggedIn() {    
+        const token: string = this.jwtHelperService.tokenGetter();
+        
+        if (!token) {
+            return false;
+        }
+        
+        const tokenExpired: boolean = this.jwtHelperService.isTokenExpired(token);
+        return !tokenExpired;
     }
 
     public claims(): ILocalUser {
@@ -33,7 +35,7 @@ export class AuthService extends ServiceHelpers {
             if (!token) {
                 throw new Error("Invalid token");
             }
-            const json = this.jwtHelper.decodeToken(token);
+            const json = this.jwtHelperService.decodeToken(token);
             const roles = json.role;
             const name = json.sub;
 

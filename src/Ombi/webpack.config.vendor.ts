@@ -62,7 +62,7 @@ module.exports = (env: any) => {
                 "event-source-polyfill",
                 "bootstrap/dist/js/bootstrap",
                 "ngx-clipboard",
-                "angular2-jwt",
+                "@auth0/angular-jwt",
                 "ng2-cookies",
                 "@ngx-translate/core",
                 "@ngx-translate/http-loader",
