@@ -19,6 +19,7 @@
     "Requested": "Anmodet",
     "Request": "Anmod",
     "Denied": "Denied",
+    "Approve": "Approve",
     "Errors": {
       "Validation": "Tjek venligst dine indtastede værdier"
     }
