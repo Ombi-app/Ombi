@@ -379,7 +379,9 @@ namespace Ombi.Controllers
         [HttpGet("Update")]
         public async Task<UpdateSettings> UpdateSettings()
         {
-            return await Get<UpdateSettings>();
+            var settings =  await Get<UpdateSettings>();
+
+            return Mapper.Map<UpdateSettingsViewModel>(settings);
         }
 
         /// <summary>

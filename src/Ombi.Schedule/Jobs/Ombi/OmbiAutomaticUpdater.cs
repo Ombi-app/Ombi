@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Console;
@@ -144,7 +145,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                     // Temp Path
                     Directory.CreateDirectory(tempPath);
 
-                    if (settings.UseScript)
+
+                    if (settings.UseScript && !settings.WindowsService)
                     {
                         RunScript(settings, download.Url);
                         return;
@@ -188,7 +190,6 @@ namespace Ombi.Schedule.Jobs.Ombi
                     var updaterFile = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
                         "TempUpdate", $"Ombi.Updater{updaterExtension}");
 
-
                     // There must be an update
                     var start = new ProcessStartInfo
                     {
@@ -229,7 +230,31 @@ namespace Ombi.Schedule.Jobs.Ombi
             var currentLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             var processName = (settings.ProcessName.HasValue() ? settings.ProcessName : "Ombi");
 
-            return string.Join(" ", currentLocation, processName, url?.Value ?? string.Empty, storage?.Value ?? string.Empty);
+            var sb = new StringBuilder();
+            sb.Append($"--applicationPath \"{currentLocation}\" --processname \"{processName}\" " );
+            if (settings.WindowsService)
+            {
+                sb.Append($"--windowsServiceName \"{settings.WindowsServiceName}\" ");
+            }
+            var sb2 = new StringBuilder();
+            var hasStartupArgs = false;
+            if (url?.Value.HasValue() ?? false)
+            {
+                hasStartupArgs = true;
+                sb2.Append(url.Value);
+            }
+            if (storage?.Value.HasValue() ?? false)
+            {
+                hasStartupArgs = true;
+                sb2.Append(storage.Value);
+            }
+            if (hasStartupArgs)
+            {
+                sb.Append($"--startupArgs {sb2.ToString()}");
+            }
+
+            return sb.ToString();
+            //return string.Join(" ", currentLocation, processName, url?.Value ?? string.Empty, storage?.Value ?? string.Empty);
         }
 
         private void RunScript(UpdateSettings settings, string downloadUrl)

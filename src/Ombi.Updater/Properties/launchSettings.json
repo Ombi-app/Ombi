@@ -2,7 +2,7 @@
   "profiles": {
     "Ombi.Updater": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\Users\\Jamie.Rees\\Source\\Repos\\PlexRequests.Net\\src\\Ombi\\bin\\Debug\\netcoreapp1.1 zip"
+      "commandLineArgs": "--applicationPath C:\\\\Users\\\\Jamie.Rees\\\\Source\\\\Repos\\\\test\\\\Ombi\\\\src\\\\Ombi\\\\bin\\\\Debug\\\\netcoreapp2.0 --processname Ombi --windowsServiceName \"World Wide Publishing Service\" --startupArgs http://*:5000"
     }
   }
 }

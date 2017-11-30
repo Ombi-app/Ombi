@@ -21,7 +21,7 @@ namespace Ombi.Updater
         {
             // Kill Ombi Process
             var p = new ProcessProvider();
-            p.Kill(opt.OmbiProcessId);
+            p.Kill(opt);
             
             // Make sure the process has been killed
             while (p.FindProcessByName(opt.ProcessName).Any())
@@ -32,7 +32,8 @@ namespace Ombi.Updater
                 if (proc != null)
                 {
                     _log.LogDebug($"[{proc.Id}] - {proc.Name} - Path: {proc.StartPath}");
-                    p.Kill(proc.Id);
+                    opt.OmbiProcessId = proc.Id;
+                    p.Kill(opt);
                 }
             }
 
@@ -51,18 +52,36 @@ namespace Ombi.Updater
             {
                 fileName = "Ombi";
             }
+            if (options.IsWindowsService)
+            {
+                var startInfo =
+                    new ProcessStartInfo
+                    {
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        FileName = "cmd.exe",
+                        Arguments = $"/C net start \"{options.WindowsServiceName}\""
+                    };
 
-            var start = new ProcessStartInfo
-            {
-                UseShellExecute = false,
-                FileName = Path.Combine(options.ApplicationPath,fileName),
-                WorkingDirectory = options.ApplicationPath,
-                Arguments = options.StartupArgs
-            };
-            using (var proc = new Process { StartInfo = start })
-            {
-                proc.Start();
+                using (var process = new Process{StartInfo = startInfo})
+                {
+                    process.Start();
+                }
             }
+            else
+            {
+                var start = new ProcessStartInfo
+                {
+                    UseShellExecute = false,
+                    FileName = Path.Combine(options.ApplicationPath, fileName),
+                    WorkingDirectory = options.ApplicationPath,
+                    Arguments = options.StartupArgs
+                };
+                using (var proc = new Process { StartInfo = start })
+                {
+                    proc.Start();
+                }
+            }
+
             _log.LogDebug("Ombi started, now exiting");
             Environment.Exit(0);
         }

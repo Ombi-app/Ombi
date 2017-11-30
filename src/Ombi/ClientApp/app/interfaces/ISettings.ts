@@ -22,6 +22,9 @@ export interface IUpdateSettings extends ISettings {
   processName: string;
   useScript: boolean;
   scriptLocation: string;
+  windowsService: boolean;
+  windowsServiceName: string;
+  isWindows: boolean;
 }
 
 export interface IEmbySettings extends ISettings {

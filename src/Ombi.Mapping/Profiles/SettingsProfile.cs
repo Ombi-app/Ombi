@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Ombi.Core.Models.UI;
+using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.Notifications;
 
 namespace Ombi.Mapping.Profiles
@@ -15,6 +16,7 @@ namespace Ombi.Mapping.Profiles
             CreateMap<PushoverNotificationViewModel, PushoverSettings>().ReverseMap();
             CreateMap<MattermostNotificationsViewModel, MattermostNotificationSettings>().ReverseMap();
             CreateMap<TelegramNotificationsViewModel, TelegramSettings>().ReverseMap();
+            CreateMap<UpdateSettingsViewModel, UpdateSettings>().ReverseMap();
         }
     }
 }
