@@ -190,6 +190,15 @@ namespace Ombi.Core.Engine
             }
             request.Approved = true;
             request.Denied = false;
+
+            foreach (var s in request.SeasonRequests)
+            {
+                foreach (var ep in s.Episodes)
+                {
+                    ep.Approved = true;
+                }
+            }
+
             await TvRepository.UpdateChild(request);
 
             if (request.Approved)
