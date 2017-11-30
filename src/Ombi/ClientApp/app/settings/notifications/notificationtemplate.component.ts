@@ -8,5 +8,6 @@ import { INotificationTemplates, NotificationType } from "../../interfaces";
 })
 export class NotificationTemplate {
     @Input() public templates: INotificationTemplates[];
+    @Input() public showSubject = true; // True by default
     public NotificationType = NotificationType;
 }
