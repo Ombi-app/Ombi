@@ -19,6 +19,7 @@
     "Requested": "Begärd önskan",
     "Request": "Begär",
     "Denied": "Denied",
+    "Approve": "Approve",
     "Errors": {
       "Validation": "Vänligen kontrollera din angivna värden"
     }
