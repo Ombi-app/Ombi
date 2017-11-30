@@ -19,6 +19,7 @@
     "Requested": "Demandé",
     "Request": "Demander",
     "Denied": "Denied",
+    "Approve": "Approve",
     "Errors": {
       "Validation": "Veuillez vérifier les valeurs entrées"
     }
