@@ -42,7 +42,6 @@ export class AppComponent implements OnInit {
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
 
         this.router.events.subscribe((event: NavigationStart) => {
-            console.log(event.url);
             this.currentUrl = event.url;
             if (event instanceof NavigationStart) {
                 this.user = this.authService.claims();
