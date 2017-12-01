@@ -14,12 +14,12 @@
     "Available": "Disponible",
     "ProcessingRequest": "En cours de traitement",
     "PendingApproval": "En attente de validation",
-    "RequestDenied": "Request Denied",
+    "RequestDenied": "Requête refusée",
     "NotRequested": "Non demandé",
     "Requested": "Demandé",
     "Request": "Demander",
-    "Denied": "Denied",
-    "Approve": "Approve",
+    "Denied": "Refusé",
+    "Approve": "Approuver",
     "Errors": {
       "Validation": "Veuillez vérifier les valeurs entrées"
     }
@@ -80,14 +80,14 @@
     }
   },
   "Requests": {
-    "Title": "Requests",
-    "Paragraph": "Below you can see yours and all other requests, as well as their download and approval status.",
-    "MoviesTab": "Movies",
-    "TvTab": "TV Shows",
-    "RequestedBy": "Requested By:",
-    "Status": "Status:",
-    "RequestStatus:": "Request status:",
-    "Denied": " Denied:",
+    "Title": "Requêtes",
+    "Paragraph": "Ci-dessous, vous pouvez votre demande et toutes les autres ainsi que leur status de téléchargement et d'approbation.",
+    "MoviesTab": "Films",
+    "TvTab": "Séries TV",
+    "RequestedBy": "Demandé par :",
+    "Status": "État :",
+    "RequestStatus:": "État de la requête :",
+    "Denied": " Refusé:",
     "ReleaseDate": "Release Date:",
     "RequestDate": "Request Date:",
     "QualityOverride": "Quality Override:",
