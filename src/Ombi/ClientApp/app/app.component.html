@@ -12,10 +12,10 @@
                 <div *ngIf="customizationSettings">
                     <div *ngIf="customizationSettings.applicationName; then aplicationNameBlock; else ombiBlock"></div>
                     <ng-template #aplicationNameBlock>
-                        <a class="navbar-brand" [routerLink]="['/']">{{customizationSettings.applicationName}}</a>
+                        <a class="navbar-brand" [routerLink]="['/search']">{{customizationSettings.applicationName}}</a>
                     </ng-template>
                     <ng-template #ombiBlock>
-                        <a class="navbar-brand" [routerLink]="['/']">Ombi</a>
+                        <a class="navbar-brand" [routerLink]="['/search']">Ombi</a>
                     </ng-template>
                 </div>
 
