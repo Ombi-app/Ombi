@@ -86,7 +86,7 @@ Search the existing requests to see if your suggestion has already been submitte
 
 # Preview
 
-![Preview](http://i.imgur.com/yrz2pzl.gif)
+![Preview](http://i.imgur.com/rTBEt6K.gif)
 
 # Installation
 
