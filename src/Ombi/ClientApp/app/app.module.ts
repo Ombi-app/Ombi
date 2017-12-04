@@ -12,11 +12,13 @@ import { JwtModule } from "@auth0/angular-jwt";
 
 // Third Party
 //import { DragulaModule, DragulaService } from 'ng2-dragula/ng2-dragula';
+1import { CookieService } from "ng2-cookies";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { GrowlModule } from "primeng/components/growl/growl";
 import { ButtonModule, CaptchaModule,ConfirmationService, ConfirmDialogModule, DataTableModule,DialogModule, SharedModule, TooltipModule } from "primeng/primeng";
+
 
 // Components
 import { AppComponent } from "./app.component";
@@ -26,6 +28,7 @@ import { LandingPageComponent } from "./landingpage/landingpage.component";
 import { LoginComponent } from "./login/login.component";
 import { ResetPasswordComponent } from "./login/resetpassword.component";
 import { TokenResetPasswordComponent } from "./login/tokenresetpassword.component";
+import { CookieComponent } from "./auth/cookie.component";
 
 // Services
 import { AuthGuard } from "./auth/auth.guard";
@@ -55,6 +58,7 @@ const routes: Routes = [
     { path: "reset", component: ResetPasswordComponent },
     { path: "token", component: TokenResetPasswordComponent },
     { path: "landingpage", component: LandingPageComponent },
+    { path: "auth/cookie", component: CookieComponent },
 ];
 
 // AoT requires an exported function for factories
@@ -120,6 +124,7 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
         LandingPageComponent,
         ResetPasswordComponent,
         TokenResetPasswordComponent,
+        CookieComponent,
     ],
     providers: [
         RequestService,
@@ -132,6 +137,7 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
         LandingPageService,
         ConfirmationService,
         ImageService,
+        CookieService,
     ],
     bootstrap: [AppComponent],
 })
