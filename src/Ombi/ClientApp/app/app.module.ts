@@ -12,10 +12,10 @@ import { JwtModule } from "@auth0/angular-jwt";
 
 // Third Party
 //import { DragulaModule, DragulaService } from 'ng2-dragula/ng2-dragula';
-1import { CookieService } from "ng2-cookies";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { CookieService } from "ng2-cookies";
 import { GrowlModule } from "primeng/components/growl/growl";
 import { ButtonModule, CaptchaModule,ConfirmationService, ConfirmDialogModule, DataTableModule,DialogModule, SharedModule, TooltipModule } from "primeng/primeng";
 
@@ -23,12 +23,12 @@ import { ButtonModule, CaptchaModule,ConfirmationService, ConfirmDialogModule, D
 // Components
 import { AppComponent } from "./app.component";
 
+import { CookieComponent } from "./auth/cookie.component";
 import { PageNotFoundComponent } from "./errors/not-found.component";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
 import { LoginComponent } from "./login/login.component";
 import { ResetPasswordComponent } from "./login/resetpassword.component";
 import { TokenResetPasswordComponent } from "./login/tokenresetpassword.component";
-import { CookieComponent } from "./auth/cookie.component";
 
 // Services
 import { AuthGuard } from "./auth/auth.guard";
