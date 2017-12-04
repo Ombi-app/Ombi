@@ -19,7 +19,6 @@ import { CookieService } from "ng2-cookies";
 import { GrowlModule } from "primeng/components/growl/growl";
 import { ButtonModule, CaptchaModule,ConfirmationService, ConfirmDialogModule, DataTableModule,DialogModule, SharedModule, TooltipModule } from "primeng/primeng";
 
-
 // Components
 import { AppComponent } from "./app.component";
 
