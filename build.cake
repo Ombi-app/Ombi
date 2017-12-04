@@ -154,7 +154,6 @@ Task("Package")
 });
 
 Task("Publish")
-    .IsDependentOn("Run-Unit-Tests")
     .IsDependentOn("PrePublish")
     .IsDependentOn("Publish-Windows")
     .IsDependentOn("Publish-OSX").IsDependentOn("Publish-Linux")
@@ -202,12 +201,6 @@ Task("Publish-Linux")
     DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
     CopyFile(buildDir + "/netcoreapp2.0/linux-x64/Swagger.xml", buildDir + "/netcoreapp2.0/linux-x64/published/Swagger.xml");
     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
-});
-
-Task("Run-Unit-Tests")
-    .Does(() =>
-{  
-	DotNetCoreBuild(csProj, buildSettings);
 });
 
 //////////////////////////////////////////////////////////////////////
