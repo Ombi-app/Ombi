@@ -176,3 +176,7 @@ export interface IDogNzbSettings extends ISettings {
   movies: boolean;
   tvShows: boolean;
 }
+
+export interface IIssueCategory extends ISettings {
+  value: string;
+}

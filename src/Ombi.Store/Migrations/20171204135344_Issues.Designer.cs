@@ -13,9 +13,10 @@ using System;
 namespace Ombi.Store.Migrations
 {
     [DbContext(typeof(OmbiContext))]
-    partial class OmbiContextModelSnapshot : ModelSnapshot
+    [Migration("20171204135344_Issues")]
+    partial class Issues
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,0 +1,42 @@
+﻿<settings-menu></settings-menu>
+<wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Issue-Settings'"></wiki>
+
+<fieldset>
+    <legend>Issues</legend>
+    <div class="col-md-6">
+
+    </div>
+
+
+
+
+
+
+    <div class="col-md-6">
+        <div *ngIf="categories">
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <label for="categoryToAdd" class="control-label">Add Category</label>
+                </div>
+                <div class="col-md-9">
+                    <input type="text" [(ngModel)]="categoryToAdd.value" class="form-control form-control-custom " id="categoryToAdd" name="categoryToAdd"
+                        value="{{categoryToAdd.value}}">
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-primary-outline" (click)="addCategory()">Add</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div *ngFor="let cat of categories">
+                    <div class="col-md-9">
+                        {{cat.value}}
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-sm btn-danger-outline" (click)="deleteCategory(cat.id)">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</fieldset>

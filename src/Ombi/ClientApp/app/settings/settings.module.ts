@@ -7,7 +7,7 @@ import { ClipboardModule } from "ngx-clipboard/dist";
 
 import { AuthGuard } from "../auth/auth.guard";
 import { AuthService } from "../auth/auth.service";
-import { CouchPotatoService, JobService, RadarrService, SonarrService, TesterService, ValidationService } from "../services";
+import { CouchPotatoService, IssuesService, JobService, RadarrService, SonarrService, TesterService, ValidationService } from "../services";
 
 import { PipeModule } from "../pipes/pipe.module";
 import { AboutComponent } from "./about/about.component";
@@ -15,6 +15,7 @@ import { CouchPotatoComponent } from "./couchpotato/couchpotato.component";
 import { CustomizationComponent } from "./customization/customization.component";
 import { DogNzbComponent } from "./dognzb/dognzb.component";
 import { EmbyComponent } from "./emby/emby.component";
+import { IssuesComponent } from "./issues/issues.component";
 import { JobsComponent } from "./jobs/jobs.component";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
 import { DiscordComponent } from "./notifications/discord.component";
@@ -60,6 +61,7 @@ const routes: Routes = [
     { path: "Settings/Telegram", component: TelegramComponent, canActivate: [AuthGuard] },
     { path: "Settings/Jobs", component: JobsComponent, canActivate: [AuthGuard] },
     { path: "Settings/SickRage", component: SickRageComponent, canActivate: [AuthGuard] },
+    { path: "Settings/Issues", component: IssuesComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -105,6 +107,7 @@ const routes: Routes = [
         DogNzbComponent,
         SickRageComponent,
         TelegramComponent,
+        IssuesComponent,
     ],
     exports: [
         RouterModule,
@@ -118,6 +121,7 @@ const routes: Routes = [
         TesterService,
         JobService,
         CouchPotatoService,
+        IssuesService,
     ],
 
 })
