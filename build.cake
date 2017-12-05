@@ -95,6 +95,10 @@ Task("SetVersionInfo")
 	{
 		fullVer = buildVersion + "-PR";
 	}
+    if(fullVer.Contains("_"))
+    {
+        fullVer = fullVer.Replace("_","");
+    }
 
 	buildSettings.ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.AssemblySemVer);
 	buildSettings.ArgumentCustomization = args => args.Append("/p:FullVer=" + fullVer);

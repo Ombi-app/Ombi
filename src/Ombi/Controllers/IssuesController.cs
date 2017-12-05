@@ -5,6 +5,7 @@ using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Ombi.Attributes;
 
 namespace Ombi.Controllers
 {
@@ -39,6 +40,7 @@ namespace Ombi.Controllers
         /// </summary>
         /// <param name="cat"></param>
         /// <returns></returns>
+        [PowerUser]
         [HttpPost("categories")]
         public async Task<bool> CreateCategory([FromBody]IssueCategory cat)
         {
@@ -55,6 +57,7 @@ namespace Ombi.Controllers
         /// </summary>
         /// <param name="catId"></param>
         /// <returns></returns>
+        [PowerUser]
         [HttpDelete("categories/{catId}")]
         public async Task<bool> DeleteCategory([FromRoute]int catId)
         {
