@@ -93,9 +93,12 @@ namespace Ombi.Schedule.Jobs.Plex
                         }
                         if (userManagementSettings.DefaultRoles.Any())
                         {
+                            // Get the new user object to avoid any concurrency failures
+                            var dbUser =
+                                await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == newUser.UserName);
                             foreach (var defaultRole in userManagementSettings.DefaultRoles)
                             {
-                                await _userManager.AddToRoleAsync(newUser, defaultRole);
+                                await _userManager.AddToRoleAsync(dbUser, defaultRole);
                             }
                         }
                     }
