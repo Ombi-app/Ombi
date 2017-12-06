@@ -6,9 +6,9 @@ import "rxjs/add/operator/map";
 import { Subject } from "rxjs/Subject";
 
 import { AuthService } from "../auth/auth.service";
-import { NotificationService, RadarrService, RequestService } from "../services";
+import { IssuesService, NotificationService, RadarrService, RequestService } from "../services";
 
-import { IMovieRequests, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
+import { IIssueCategory, IMovieIssues, IMovieRequests, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
 
 @Component({
     selector: "movie-requests",
@@ -25,6 +25,10 @@ export class MovieRequestsComponent implements OnInit {
     public radarrProfiles: IRadarrProfile[];
     public radarrRootFolders: IRadarrRootFolder[];
 
+    public issueCategories: IIssueCategory[];
+    public currentIssue: IMovieIssues;
+    public issuesBarVisible = false;
+
     private currentlyLoaded: number;
     private amountToLoad: number;
 
@@ -32,7 +36,8 @@ export class MovieRequestsComponent implements OnInit {
                 private auth: AuthService,
                 private notificationService: NotificationService,
                 private radarrService: RadarrService,
-                private sanitizer: DomSanitizer) {
+                private sanitizer: DomSanitizer,
+                private issuesService: IssuesService) {
         this.searchChanged
             .debounceTime(600) // Wait Xms after the last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -55,6 +60,7 @@ export class MovieRequestsComponent implements OnInit {
         this.currentlyLoaded = 100;
         this.loadInit();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+        this.issuesService.getCategories().subscribe(x => this.issueCategories = x);
     }
 
     public loadMore() {
@@ -119,6 +125,15 @@ export class MovieRequestsComponent implements OnInit {
         searchResult.qualityOverride = profileSelected.id;
         this.setOverride(searchResult);
         this.updateRequest(searchResult);
+    }
+
+    public reportIssue(catId: number) {
+        console.log(catId);
+        this.issuesBarVisible = true;
+    }
+
+    public ignore(event: any): void {
+        event.preventDefault();
     }
 
     private loadRequests(amountToLoad: number, currentlyLoaded: number) {

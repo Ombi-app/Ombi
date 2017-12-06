@@ -83,7 +83,10 @@ namespace Ombi.Core.Senders
                         Success = true
                     };
                 }
-                return new SenderResult();
+                return new SenderResult
+                {
+                    Message = "Could not send to SickRage!"
+                };
             }
             return new SenderResult
             {
@@ -264,7 +267,14 @@ namespace Ombi.Core.Senders
         private async Task<bool> SendToSickRage(ChildRequests model, SickRageSettings settings, string qualityId = null)
         {
             var tvdbid = model.ParentRequest.TvDbId;
-            if (qualityId.HasValue())            {                var id = qualityId;                if (settings.Qualities.All(x => x.Value != id))                {                    qualityId = settings.QualityProfile;                }            }
+            if (qualityId.HasValue())
+            {
+                var id = qualityId;
+                if (settings.Qualities.All(x => x.Value != id))
+                {
+                    qualityId = settings.QualityProfile;
+                }
+            }
             // Check if the show exists
             var existingShow = await SickRageApi.GetShow(tvdbid, settings.ApiKey, settings.FullUri);
 

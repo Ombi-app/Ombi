@@ -12,6 +12,7 @@ import {
     IDogNzbSettings,
     IEmailNotificationSettings,
     IEmbySettings,
+    IIssueSettings,
     IJobSettings,
     ILandingPageSettings,
     IMattermostNotifcationSettings,
@@ -232,5 +233,14 @@ export class SettingsService extends ServiceHelpers {
     public saveSickRageSettings(settings: ISickRageSettings): Observable<boolean> {
         return this.http
             .post<boolean>(`${this.url}/sickrage`, JSON.stringify(settings), {headers: this.headers});
+    }
+
+    public getIssueSettings(): Observable<IIssueSettings> {
+        return this.http.get<IIssueSettings>(`${this.url}/issues`, {headers: this.headers});
+    }
+
+    public saveIssueSettings(settings: IIssueSettings): Observable<boolean> {
+        return this.http
+            .post<boolean>(`${this.url}/issues`, JSON.stringify(settings), {headers: this.headers});
     }
 }

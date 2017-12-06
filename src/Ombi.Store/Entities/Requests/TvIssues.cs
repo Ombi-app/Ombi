@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ombi.Store.Entities.Requests
 {
@@ -8,5 +9,7 @@ namespace Ombi.Store.Entities.Requests
         public int TvId { get; set; }
         [ForeignKey(nameof(TvId))]
         public ChildRequests Child { get; set; }
+
+        public List<IssueComments> Comments { get; set; }
     }
 }

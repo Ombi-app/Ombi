@@ -121,6 +121,11 @@ export interface IJobSettings {
   sickRageSync: string;
 }
 
+export interface IIssueSettings extends ISettings {
+  enabled: boolean;
+  enableInProgress: boolean;
+}
+
 export interface IAuthenticationSettings extends ISettings {
   allowExternalUsersToAuthenticate: boolean;
   // Password

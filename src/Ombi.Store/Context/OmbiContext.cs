@@ -36,6 +36,7 @@ namespace Ombi.Store.Context
         public DbSet<MovieIssues> MovieIssues { get; set; }
         public DbSet<TvIssues> TvIssues { get; set; }
         public DbSet<IssueCategory> IssueCategories { get; set; }
+        public DbSet<IssueComments> IssueComments { get; set; }
 
         public DbSet<Audit> Audit { get; set; }
         public DbSet<Tokens> Tokens { get; set; }

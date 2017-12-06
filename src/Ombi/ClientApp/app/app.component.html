@@ -34,6 +34,12 @@
                             <i class="fa fa-plus"></i> {{ 'NavigationBar.Requests' | translate }}</a>
                     </li>
                 </ul>
+                <ul *ngIf="issuesEnabled" class="nav navbar-nav">
+                    <li id="Requests" [routerLinkActive]="['active']">
+                        <a [routerLink]="['/issues']">
+                            <i class="fa fa-exclamation-circle"></i> {{ 'NavigationBar.Issues' | translate }}</a>
+                    </li>
+                </ul>
                 <ul *ngIf="hasRole('Admin') || hasRole('PowerUser')" class="nav navbar-nav">
                     <li id="UserManagement" [routerLinkActive]="['active']">
                         <a [routerLink]="['/usermanagement']">

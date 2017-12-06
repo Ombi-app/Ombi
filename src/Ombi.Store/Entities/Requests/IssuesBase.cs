@@ -12,7 +12,6 @@ namespace Ombi.Store.Entities.Requests
         public IssueCategory IssueCategory { get; set; }
 
         public IssueStatus Status { get; set; }
-        public string AdminComment { get; set; }
         public DateTime? ResovledDate { get; set; }
     }
 

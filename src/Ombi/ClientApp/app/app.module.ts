@@ -41,6 +41,7 @@ import { SettingsService } from "./services";
 import { StatusService } from "./services";
 
 // Modules
+import { IssuesModule } from "./issues/issues.module";
 import { RequestsModule } from "./requests/requests.module";
 import { SearchModule } from "./search/search.module";
 import { SettingsModule } from "./settings/settings.module";
@@ -115,6 +116,7 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
                 deps: [HttpClient, PlatformLocation],
             },
         }),
+        IssuesModule,
     ],
     declarations: [
         AppComponent,
