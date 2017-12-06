@@ -447,7 +447,7 @@ namespace Ombi.Store.Migrations
 
                     b.Property<int>("MovieId");
 
-                    b.Property<string>("Subect");
+                    b.Property<string>("Subject");
 
                     b.HasKey("Id");
 
@@ -513,7 +513,7 @@ namespace Ombi.Store.Migrations
 
                     b.Property<int?>("IssueId");
 
-                    b.Property<string>("Subect");
+                    b.Property<string>("Subject");
 
                     b.Property<int>("TvId");
 

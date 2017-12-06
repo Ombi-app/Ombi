@@ -493,7 +493,7 @@ namespace Ombi.Store.Migrations
 
                     b.Property<int>("Status");
 
-                    b.Property<string>("Subect");
+                    b.Property<string>("Subject");
 
                     b.HasKey("Id");
 
@@ -569,7 +569,7 @@ namespace Ombi.Store.Migrations
 
                     b.Property<int>("Status");
 
-                    b.Property<string>("Subect");
+                    b.Property<string>("Subject");
 
                     b.Property<int>("TvId");
 

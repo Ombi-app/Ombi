@@ -113,7 +113,7 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            <li *ngFor="let cat of issueCategories"><a [routerLink]="" (click)="reportIssue(cat.id)">{{cat.value}}</a></li>
+                            <li *ngFor="let cat of issueCategories"><a [routerLink]="" (click)="reportIssue(cat, request)">{{cat.value}}</a></li>
                         </ul>
                     </div>
 
@@ -132,7 +132,5 @@
 </div>
 
 
-
-<p-sidebar [(visible)]="issuesBarVisible" position="right" styleClass="ui-sidebar-lg side-back">
-    Content
-</p-sidebar>
+<issues-report [movie]="true" [visible]="issuesBarVisible" [title]="issueRequest?.title"
+[issueCategory]="issueCategorySelected" [id]="issueRequest?.id" (hide)="issuesBarVisible = true"></issues-report>

@@ -19,6 +19,7 @@ import { RequestService } from "../services";
 
 import { AuthGuard } from "../auth/auth.guard";
 
+import { IssuesReportComponent } from "../shared/issues-report.component";
 import { SharedModule } from "../shared/shared.module";
 
 const routes: Routes = [
@@ -42,6 +43,7 @@ const routes: Routes = [
         MovieRequestsComponent,
         TvRequestsComponent,
         TvRequestChildrenComponent,
+        IssuesReportComponent,
     ],
     exports: [
         RouterModule,

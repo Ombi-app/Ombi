@@ -504,7 +504,7 @@ namespace Ombi.Store.Migrations
                     Description = table.Column<string>(type: "TEXT", nullable: true),
                     IssueId = table.Column<int>(type: "INTEGER", nullable: true),
                     MovieId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Subect = table.Column<string>(type: "TEXT", nullable: true)
+                    Subject = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -551,7 +551,7 @@ namespace Ombi.Store.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
                     IssueId = table.Column<int>(type: "INTEGER", nullable: true),
-                    Subect = table.Column<string>(type: "TEXT", nullable: true),
+                    Subject = table.Column<string>(type: "TEXT", nullable: true),
                     TvId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>

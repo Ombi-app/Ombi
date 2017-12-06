@@ -4,7 +4,7 @@ export interface IIssues {
     description: string;
     issueCategoryId: number;
     status: IssueStatus;
-    resolvedDate: Date;
+    resolvedDate?: Date;
 }
 
 export interface ITvIssues extends IIssues {
@@ -18,5 +18,5 @@ export interface IMovieIssues extends IIssues {
 export enum IssueStatus {
     Pending = 0,
     InProgress = 1,
-    Resovled = 2,
+    Resolved = 2,
 }

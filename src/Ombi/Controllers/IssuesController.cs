@@ -95,7 +95,7 @@ namespace Ombi.Controllers
         /// <param name="movie"></param>
         /// <returns></returns>
         [HttpPost("movie")]
-        public async Task<int> CreateMovieIssue(MovieIssues movie)
+        public async Task<int> CreateMovieIssue([FromBody]MovieIssues movie)
         {
             await _movieIssues.Add(movie);
             return movie.Id;
@@ -107,20 +107,20 @@ namespace Ombi.Controllers
         /// <param name="tv"></param>
         /// <returns></returns>
         [HttpPost("tv")]
-        public async Task<int> CreateTvIssue(TvIssues tv)
+        public async Task<int> CreateTvIssue([FromBody]TvIssues tv)
         {
             await _tvIssues.Add(tv);
             return tv.Id;
         }
 
         [HttpGet("movie/comments/{movieId}")]
-        public async Task<IEnumerable<IssueComments>> GetMovieComments(int movieId)
+        public async Task<IEnumerable<IssueComments>> GetMovieComments([FromRoute]int movieId)
         {
             return await _issueComments.GetAll().Where(x => x.MovieIssueId == movieId).ToListAsync();
         }
 
         [HttpGet("tv/comments/{tvId}")]
-        public async Task<IEnumerable<IssueComments>> GetTvComments(int tvId)
+        public async Task<IEnumerable<IssueComments>> GetTvComments([FromRoute]int tvId)
         {
             return await _issueComments.GetAll().Where(x => x.TvIssueId == tvId).ToListAsync();
         }

@@ -8,7 +8,7 @@ import { Subject } from "rxjs/Subject";
 import { AuthService } from "../auth/auth.service";
 import { IssuesService, NotificationService, RadarrService, RequestService } from "../services";
 
-import { IIssueCategory, IMovieIssues, IMovieRequests, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
+import { IIssueCategory, IMovieRequests, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
 
 @Component({
     selector: "movie-requests",
@@ -26,8 +26,9 @@ export class MovieRequestsComponent implements OnInit {
     public radarrRootFolders: IRadarrRootFolder[];
 
     public issueCategories: IIssueCategory[];
-    public currentIssue: IMovieIssues;
     public issuesBarVisible = false;
+    public issueRequest: IMovieRequests;
+    public issueCategorySelected: IIssueCategory;
 
     private currentlyLoaded: number;
     private amountToLoad: number;
@@ -127,8 +128,9 @@ export class MovieRequestsComponent implements OnInit {
         this.updateRequest(searchResult);
     }
 
-    public reportIssue(catId: number) {
-        console.log(catId);
+    public reportIssue(catId: IIssueCategory, req: IMovieRequests) {
+        this.issueRequest = req;
+        this.issueCategorySelected = catId;
         this.issuesBarVisible = true;
     }
 
