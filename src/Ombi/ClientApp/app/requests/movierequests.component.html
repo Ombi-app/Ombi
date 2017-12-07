@@ -107,7 +107,7 @@
                         <button *ngIf="!request.available" (click)="changeAvailability(request, true)" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change"><i class="fa fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}</button>
                     </form>
 
-                    <div class="dropdown" *ngIf="issueCategories">
+                    <div class="dropdown" *ngIf="issueCategories && issuesEnabled">
                         <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                             <i class="fa fa-plus"></i> Report Issue
                             <span class="caret"></span>

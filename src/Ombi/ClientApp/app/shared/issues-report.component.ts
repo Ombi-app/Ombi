@@ -26,7 +26,7 @@ export class IssuesReportComponent {
             issueCategoryId: -1,
             status: IssueStatus.Pending,
             resolvedDate: undefined,
-            id:-1,
+            id: undefined,
         };
     }
 
@@ -48,6 +48,7 @@ export class IssuesReportComponent {
             this.issueService.createTvIssue(tvIssue).subscribe(x => {
                 if(x) {
                     this.notification.success("Issue Created");
+                    this.visible = false;
                 }
             });
         }

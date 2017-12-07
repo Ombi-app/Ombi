@@ -6,7 +6,7 @@ import "rxjs/add/operator/map";
 import { Subject } from "rxjs/Subject";
 
 import { AuthService } from "../auth/auth.service";
-import { IssuesService, NotificationService, RadarrService, RequestService } from "../services";
+import { IssuesService, NotificationService, RadarrService, RequestService, SettingsService } from "../services";
 
 import { IIssueCategory, IMovieRequests, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
 
@@ -29,6 +29,7 @@ export class MovieRequestsComponent implements OnInit {
     public issuesBarVisible = false;
     public issueRequest: IMovieRequests;
     public issueCategorySelected: IIssueCategory;
+    public issuesEnabled = false;
 
     private currentlyLoaded: number;
     private amountToLoad: number;
@@ -38,7 +39,8 @@ export class MovieRequestsComponent implements OnInit {
                 private notificationService: NotificationService,
                 private radarrService: RadarrService,
                 private sanitizer: DomSanitizer,
-                private issuesService: IssuesService) {
+                private issuesService: IssuesService,
+                private settingsService: SettingsService) {
         this.searchChanged
             .debounceTime(600) // Wait Xms after the last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -62,6 +64,7 @@ export class MovieRequestsComponent implements OnInit {
         this.loadInit();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
         this.issuesService.getCategories().subscribe(x => this.issueCategories = x);
+        this.settingsService.getIssueSettings().subscribe(x => this.issuesEnabled = x.enabled);
     }
 
     public loadMore() {

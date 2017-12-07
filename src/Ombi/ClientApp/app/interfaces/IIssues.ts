@@ -1,5 +1,5 @@
 export interface IIssues {
-    id: number;
+    id?: number;
     subject: string;
     description: string;
     issueCategoryId: number;
