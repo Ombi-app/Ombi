@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "vendor": "gulp vendor",
+    "main": "gulp main",
     "publish": "gulp publish",
     "lint": "tslint ClientApp/**/*.ts",
     "restore": "dotnet restore && npm install"
