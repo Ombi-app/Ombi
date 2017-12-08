@@ -43,7 +43,7 @@ namespace Ombi.Api.Plex.Models
         public string grandparentArt { get; set; }
         public string grandparentTheme { get; set; }
         public string chapterSource { get; set; }
-        //    public Medium[] Media { get; set; }
+        public Medium[] Media { get; set; }
         //    public Director[] Director { get; set; }
         //    public Writer[] Writer { get; set; }
     }
