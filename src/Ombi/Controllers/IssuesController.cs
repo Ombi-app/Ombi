@@ -76,7 +76,7 @@ namespace Ombi.Controllers
         [HttpGet("movie")]
         public async Task<IEnumerable<MovieIssues>> GetMovieIssues()
         {
-            return await _movieIssues.GetAll().ToListAsync();
+            return await _movieIssues.GetAll().Include(x => x.Movie).Include(x => x.IssueCategory).ToListAsync();
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Ombi.Controllers
         [HttpGet("tv")]
         public async Task<IEnumerable<TvIssues>> GetTvIssues()
         {
-            return await _tvIssues.GetAll().ToListAsync();
+            return await _tvIssues.GetAll().Include(x => x.Child).Include(x => x.IssueCategory).ToListAsync();
         }
 
         /// <summary>

@@ -2,6 +2,7 @@
 import { RouterModule, Routes } from "@angular/router";
 
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { OrderModule } from "ngx-order-pipe";
 
 import { IdentityService } from "../services";
 
@@ -20,6 +21,7 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         NgbModule.forRoot(),
         SharedModule,
+        OrderModule,
     ],
     declarations: [
         IssuesComponent,

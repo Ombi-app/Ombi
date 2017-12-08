@@ -1,18 +1,22 @@
+import { IIssueCategory, IMovieRequests, ITvRequests } from "./";
+
 export interface IIssues {
     id?: number;
     subject: string;
     description: string;
-    issueCategoryId: number;
+    issueCategory: IIssueCategory;
     status: IssueStatus;
     resolvedDate?: Date;
 }
 
 export interface ITvIssues extends IIssues {
     tvId: number;
+    child: ITvRequests;
 }
 
 export interface IMovieIssues extends IIssues {
     movieId: number;
+    movie: IMovieRequests;
 }
 
 export enum IssueStatus {

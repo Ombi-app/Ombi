@@ -23,56 +23,9 @@ export interface IMediaBase {
   released: boolean;
 }
 
-//export interface IMovieRequestModel extends IMediaBase { }
-
-export interface ITvRequestModel extends IMediaBase {
-  imdbId: string;
-  tvDbId: string;
-  childRequests: IChildTvRequest[];
-  rootFolderSelected: number;
-  firstAired: string;
-}
-
-export interface IRequestCountModel {
-  pending: number;
-  approved: number;
-  available: number;
-}
-
-export interface IChildTvRequest extends IMediaBase {
-  requestAll: boolean;
-  seasonRequests: ISeasonRequests[];
-}
-
-export interface ISeasonRequests {
-  seasonNumber: number;
-  episodes: IEpisodesRequested[];
-}
-
-export interface IEpisodesRequested {
-  episodeNumber: number;
-  title: string;
-  airDate: Date;
-  url: string;
-  requested: boolean;
-  status: string;
-  available: boolean;
-}
-
 export enum RequestType {
   movie = 1,
   tvShow = 2,
-}
-
-export interface IRequestsPageScroll {
-  count: number;
-  position: number;
-}
-
-export interface IRequestGrid<T> {
-  available: T[];
-  new: T[];
-  approved: T[];
 }
 
 // NEW WORLD

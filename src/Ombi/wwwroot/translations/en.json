@@ -110,6 +110,8 @@
     "GridStatus":"Status"
   },
   "Issues":{
-    "Title":"Issues"
+    "Title":"Issues",
+    "MovieTitle":"Movie Title",
+    "Category":"Category"
   }
 }
