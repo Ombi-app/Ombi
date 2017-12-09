@@ -57,6 +57,21 @@
             </div>
         </div>
 
+        <h4>Default Request Limits</h4>
+        <div class="form-group">
+            <label for="movieRequestLimit" class="control-label">Movie Request Limit</label>
+            <div>
+                <input type="text" [(ngModel)]="settings.movieRequestLimit" class="form-control form-small form-control-custom " id="movieRequestLimit" name="movieRequestLimit" value="{{settings?.movieRequestLimit}}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="episodeRequestLimit" class="control-label">Episode Request Limit</label>
+            <div>
+                <input type="text" [(ngModel)]="settings.episodeRequestLimit" class="form-control form-small form-control-custom " id="episodeRequestLimit" name="episodeRequestLimit" value="{{settings?.episodeRequestLimit}}">
+            </div>
+        </div>
+
     </div>
     <div class="col-md-6">
         <div class="form-group">
