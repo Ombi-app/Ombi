@@ -81,10 +81,10 @@
   },
   "Requests": {
     "Title": "Requêtes",
-    "Paragraph": "Ci-dessous, vous pouvez votre demande et toutes les autres ainsi que leur status de téléchargement et d'approbation.",
+    "Paragraph": "Vous pouvez voir ci-dessous les vôtres et toutes les autres demandes, ainsi que leur statut de téléchargement et d'approbation.",
     "MoviesTab": "Films",
     "TvTab": "Séries TV",
-    "RequestedBy": "Demandé par :",
+    "RequestedBy": "Proposé par:",
     "Status": "État :",
     "RequestStatus:": "État de la requête :",
     "Denied": " Refusé :",
