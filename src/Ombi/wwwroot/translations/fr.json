@@ -93,14 +93,14 @@
     "QualityOverride": "Quality Override:",
     "RootFolderOverride": "Root Folder Override:",
     "ChangeRootFolder": "Modifier le dossier racine",
-    "ChangeQualityProfile": "Change Quality Profile",
-    "MarkUnavailable": "Mark Unavailable",
-    "MarkAvailable": "Mark Available",
-    "Remove": "Remove",
-    "Deny": "Deny",
-    "Season": "Season:",
-    "GridTitle": "Title",
-    "AirDate": "AirDate",
-    "GridStatus": "Status"
+    "ChangeQualityProfile": "Changer le profil de qualité",
+    "MarkUnavailable": "Marque non disponible",
+    "MarkAvailable": "Marquer comme disponible",
+    "Remove": "Supprimer",
+    "Deny": "Refuser",
+    "Season": "Saison:",
+    "GridTitle": "Titre",
+    "AirDate": "Date de diffusion",
+    "GridStatus": "État "
   }
 }
