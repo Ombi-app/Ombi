@@ -58,6 +58,9 @@ namespace Ombi.Core.Rule.Rules.Request
             var requestLog = _requestLog.GetAll().Where(x => x.UserId == obj.RequestedUserId);
             if (obj.RequestType == RequestType.Movie)
             {
+                if (movieLimit <= 0)
+                    return Success();
+                
                 var movieLogs = requestLog.Where(x => x.RequestType == RequestType.Movie);
                 
                 // Count how many requests in the past 7 days
@@ -70,6 +73,9 @@ namespace Ombi.Core.Rule.Rules.Request
             }
             else
             {
+                if (episodeLimit <= 0)
+                    return Success();
+                
                 var child = (ChildRequests) obj;
                 var requestCount = 0;
                 // Get the count of requests to be made
