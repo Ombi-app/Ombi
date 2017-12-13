@@ -27,6 +27,7 @@ export class MovieSearchComponent implements OnInit {
     public issuesBarVisible = false;
     public issueRequestTitle: string;
     public issueRequestId: number;
+    public issueProviderId: string;
     public issueCategorySelected: IIssueCategory;
         
     constructor(private searchService: SearchService, private requestService: RequestService,
@@ -142,6 +143,7 @@ export class MovieSearchComponent implements OnInit {
         this.issueRequestTitle = req.title;
         this.issueCategorySelected = catId;
         this.issuesBarVisible = true;
+        this.issueProviderId = req.id.toString();
     }
 
    private getExtraInfo() {

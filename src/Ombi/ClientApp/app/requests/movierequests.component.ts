@@ -29,6 +29,7 @@ export class MovieRequestsComponent implements OnInit {
     @Input() public issuesEnabled: boolean;
     public issuesBarVisible = false;
     public issueRequest: IMovieRequests;
+    public issueProviderId: string;
     public issueCategorySelected: IIssueCategory;
 
     private currentlyLoaded: number;
@@ -131,6 +132,7 @@ export class MovieRequestsComponent implements OnInit {
         this.issueRequest = req;
         this.issueCategorySelected = catId;
         this.issuesBarVisible = true;
+        this.issueProviderId = req.theMovieDbId.toString();
     }
 
     public ignore(event: any): void {

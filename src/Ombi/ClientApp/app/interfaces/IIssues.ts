@@ -1,7 +1,10 @@
-import { IIssueCategory, IMovieRequests, ITvRequests, IUser } from "./";
+import { IIssueCategory, IUser, RequestType } from "./";
 
 export interface IIssues {
     id?: number;
+    title: string;
+    requestType: RequestType;
+    providerId: string;
     subject: string;
     description: string;
     issueCategory: IIssueCategory;
@@ -9,21 +12,7 @@ export interface IIssues {
     status: IssueStatus;
     resolvedDate?: Date;
     comments: IIssueComments[];
-}
-
-export interface IIssueDetails extends IIssues {
-    child: ITvRequests | undefined;
-    movie: IMovieRequests | undefined;
-}
-
-export interface ITvIssues extends IIssues {
-    tvId: number;
-    child: ITvRequests;
-}
-
-export interface IMovieIssues extends IIssues {
-    movieId: number;
-    movie: IMovieRequests;
+    requestId: number | undefined;
 }
 
 export enum IssueStatus {
@@ -39,8 +28,7 @@ export interface IIssueComments {
     tvIssueId: number | undefined;
     date: Date;
     user: IUser;
-    movieIssues: IMovieIssues | undefined;
-    tvIssues: ITvIssues | undefined;
+    issues: IIssues | undefined;
 }
 
 export interface IIssuesChat {
@@ -52,6 +40,5 @@ export interface IIssuesChat {
 
 export interface INewIssueComments {
     comment: string;
-    movieIssueId: number | undefined;
-    tvIssueId: number | undefined;
+    issueId: number;
 }

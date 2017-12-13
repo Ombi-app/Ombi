@@ -32,6 +32,7 @@ export class TvRequestsComponent implements OnInit {
 
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
+    public issueProviderId: string;
 
     private currentlyLoaded: number;
     private amountToLoad: number;

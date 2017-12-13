@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output  } from "@angular/core";
 
-import { IIssueCategory, IIssues, IMovieIssues, IssueStatus, ITvIssues } from "./../interfaces";
+import { IIssueCategory, IIssues, IssueStatus, RequestType } from "./../interfaces";
 import { IssuesService, NotificationService } from "./../services";
 
 @Component({
@@ -10,10 +10,11 @@ import { IssuesService, NotificationService } from "./../services";
 })
 export class IssuesReportComponent {
     @Input() public visible: boolean;
-    @Input() public id: number;
+    @Input() public id: number; // RequestId
     @Input() public title: string;
     @Input() public issueCategory: IIssueCategory;
     @Input() public movie: boolean;
+    @Input() public providerId: string;
 
     @Output() public visibleChange = new EventEmitter<boolean>();
 
@@ -34,32 +35,29 @@ export class IssuesReportComponent {
             id: undefined,
             issueCategoryId: 0,
             comments: [],
+            requestId: undefined,
+            requestType: RequestType.movie,
+            title: "",
+            providerId:"",
         };
     }
 
     public submit() {
+        const issue = this.issue;
+        issue.requestId = this.id;
+        issue.issueCategory = this.issueCategory;
+        issue.issueCategoryId = this.issueCategory.id;
+        issue.title = this.title;
+        issue.providerId = this.providerId;
         if(this.movie) {
-            const movieIssue = <IMovieIssues>this.issue;
-            movieIssue.movieId = this.id;
-            movieIssue.issueCategory = this.issueCategory;
-            movieIssue.issueCategoryId = this.issueCategory.id;
-            this.issueService.createMovieIssue(movieIssue).subscribe(x => {
-                if(x) {
-                    this.notification.success("Issue Created");
-                }});
+            issue.requestType = RequestType.movie;
         } else {
-            
-            const tvIssue = <ITvIssues>this.issue;
-            tvIssue.tvId = this.id;
-            tvIssue.issueCategory = this.issueCategory;
-            tvIssue.issueCategoryId = this.issueCategory.id;
-            this.issueService.createTvIssue(tvIssue).subscribe(x => {
-                if(x) {
-                    this.notification.success("Issue Created");
-                    this.visible = false;
-                }
-            });
+            issue.requestType = RequestType.tvShow;
         }
+        this.issueService.createIssue(issue).subscribe(x => {
+            if(x) {
+                this.notification.success("Issue Created");
+        }});
     }
 
     public hide(): void {

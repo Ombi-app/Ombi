@@ -2,15 +2,14 @@ import { Component, OnInit } from "@angular/core";
 
 import { IssuesService } from "../services";
 
-import { IMovieIssues, IssueStatus, ITvIssues } from "../interfaces";
+import { IIssues, IssueStatus } from "../interfaces";
 
 @Component({
     templateUrl: "issues.component.html",
 })
 export class IssuesComponent implements OnInit {
 
-    public movieIssues: IMovieIssues[];
-    public tvIssues: ITvIssues[];
+    public issues: IIssues[];
 
     public IssueStatus = IssueStatus;
 
@@ -21,8 +20,7 @@ export class IssuesComponent implements OnInit {
 
     public ngOnInit() { 
         // Load Issues
-        this.issueService.getMovieIssues().subscribe(x => this.movieIssues = x);
-        this.issueService.getTvIssues().subscribe(x => this.tvIssues = x);
+        this.issueService.getIssues().subscribe(x => this.issues = x);
     }
 
     public setOrder(value: string) {

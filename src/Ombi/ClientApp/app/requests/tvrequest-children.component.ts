@@ -16,6 +16,7 @@ export class TvRequestChildrenComponent {
 
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
+    @Input() public issueProviderId: string;
     public issuesBarVisible = false;
     public issueRequest: IChildRequests;
     public issueCategorySelected: IIssueCategory;

@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Rx";
 
-import { IIssueCategory, IIssueComments, IIssuesChat, IMovieIssues, INewIssueComments,ITvIssues } from "../interfaces";
+import { IIssueCategory, IIssueComments, IIssues, IIssuesChat, INewIssueComments } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()
@@ -25,36 +25,20 @@ export class IssuesService extends ServiceHelpers {
         return this.http.delete<boolean>(`${this.url}categories/${cat}`, {headers: this.headers});
     }
 
-    public getMovieIssues(): Observable<IMovieIssues[]> {
-        return this.http.get<IMovieIssues[]>(`${this.url}movie/`,  {headers: this.headers});
+    public getIssues(): Observable<IIssues[]> {
+        return this.http.get<IIssues[]>(this.url,  {headers: this.headers});
     }
 
-    public getTvIssues(): Observable<ITvIssues[]> {
-        return this.http.get<ITvIssues[]>(`${this.url}tv/`,  {headers: this.headers});
-    }
-
-    public createMovieIssue(issue: IMovieIssues): Observable<number> {
-        return this.http.post<number>(`${this.url}movie/`, JSON.stringify(issue), {headers: this.headers});
-    }
-
-    public createTvIssue(issue: ITvIssues): Observable<number> {
-        return this.http.post<number>(`${this.url}tv/`, JSON.stringify(issue), {headers: this.headers});
+    public createIssue(issue: IIssues): Observable<number> {
+        return this.http.post<number>(this.url, JSON.stringify(issue), {headers: this.headers});
     }
     
-    public getTvIssue(id: number): Observable<ITvIssues> {
-        return this.http.get<ITvIssues>(`${this.url}tv/${id}`,  {headers: this.headers});
+    public getIssue(id: number): Observable<IIssues> {
+        return this.http.get<IIssues>(`${this.url}${id}`,  {headers: this.headers});
     }    
 
-    public getMovieIssue(id: number): Observable<IMovieIssues> {
-        return this.http.get<IMovieIssues>(`${this.url}movie/${id}`,  {headers: this.headers});
-    }
-
-    public getMovieComments(id: number): Observable<IIssuesChat[]> {
-        return this.http.get<IIssuesChat[]>(`${this.url}movie/${id}/comments`,  {headers: this.headers});
-    }
-
-    public getTvComments(id: number): Observable<IIssuesChat[]> {
-        return this.http.get<IIssuesChat[]>(`${this.url}tv/${id}/comments`,  {headers: this.headers});
+    public getComments(id: number): Observable<IIssuesChat[]> {
+        return this.http.get<IIssuesChat[]>(`${this.url}${id}/comments`,  {headers: this.headers});
     }
 
     public addComment(comment: INewIssueComments): Observable<IIssueComments> {
