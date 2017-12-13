@@ -501,6 +501,14 @@ namespace Ombi.Controllers
             return await Get<IssueSettings>();
         }
 
+        [AllowAnonymous]
+        [HttpGet("issuesenabled")]
+        public async Task<bool> IssuesEnabled()
+        {
+            var issues = await Get<IssueSettings>();
+            return issues.Enabled;
+        }
+
         /// <summary>
         /// Saves the email notification settings.
         /// </summary>

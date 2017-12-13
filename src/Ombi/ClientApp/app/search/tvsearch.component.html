@@ -109,7 +109,7 @@
                     </div>
                     <!--This is the section that holds the child seasons if they want to specify specific episodes-->
                     <div *ngIf="node.leaf">
-                        <seriesinformation [seriesId]="node.data.id"></seriesinformation>
+                        <seriesinformation [seriesId]="node.data.id" [issueCategories]="issueCategories" [issuesEnabled]="issuesEnabled"></seriesinformation>
                     </div>
                     
                     <br/>

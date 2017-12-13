@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 
 import { IssuesService } from "../services";
 
-import { IMovieIssues, ITvIssues } from "../interfaces";
+import { IMovieIssues, IssueStatus, ITvIssues } from "../interfaces";
 
 @Component({
     templateUrl: "issues.component.html",
@@ -11,7 +11,11 @@ export class IssuesComponent implements OnInit {
 
     public movieIssues: IMovieIssues[];
     public tvIssues: ITvIssues[];
-    public orderValue: string;
+
+    public IssueStatus = IssueStatus;
+
+    public order: string = "movie.title";
+    public reverse = false;
 
     constructor(private issueService: IssuesService) { }
 
@@ -21,7 +25,11 @@ export class IssuesComponent implements OnInit {
         this.issueService.getTvIssues().subscribe(x => this.tvIssues = x);
     }
 
-    public order(title: string) {
-        this.orderValue = title;
-    }
+    public setOrder(value: string) {
+        if (this.order === value) {
+          this.reverse = !this.reverse;
+        }
+    
+        this.order = value;
+      }
 }

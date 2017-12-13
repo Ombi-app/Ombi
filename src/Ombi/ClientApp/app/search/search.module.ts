@@ -11,6 +11,8 @@ import { SearchComponent } from "./search.component";
 import { SeriesInformationComponent } from "./seriesinformation.component";
 import { TvSearchComponent } from "./tvsearch.component";
 
+import { IssuesReportComponent } from "../shared/issues-report.component";
+
 import { TreeTableModule } from "primeng/primeng";
 
 import { RequestService } from "../services";
@@ -26,7 +28,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [
+    imports: [        
         CommonModule,
         FormsModule,
         RouterModule.forChild(routes),
@@ -40,9 +42,11 @@ const routes: Routes = [
         TvSearchComponent,
         SeriesInformationComponent,
         MovieSearchGridComponent,
+        IssuesReportComponent,
     ],
     exports: [
         RouterModule,
+        IssuesReportComponent,
     ],
     providers: [
         SearchService,

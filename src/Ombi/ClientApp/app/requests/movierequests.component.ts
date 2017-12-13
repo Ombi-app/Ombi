@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from "@angular/core";
+﻿import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
@@ -6,7 +6,7 @@ import "rxjs/add/operator/map";
 import { Subject } from "rxjs/Subject";
 
 import { AuthService } from "../auth/auth.service";
-import { IssuesService, NotificationService, RadarrService, RequestService, SettingsService } from "../services";
+import { NotificationService, RadarrService, RequestService } from "../services";
 
 import { IIssueCategory, IMovieRequests, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
 
@@ -25,11 +25,11 @@ export class MovieRequestsComponent implements OnInit {
     public radarrProfiles: IRadarrProfile[];
     public radarrRootFolders: IRadarrRootFolder[];
 
-    public issueCategories: IIssueCategory[];
+    @Input() public issueCategories: IIssueCategory[];
+    @Input() public issuesEnabled: boolean;
     public issuesBarVisible = false;
     public issueRequest: IMovieRequests;
     public issueCategorySelected: IIssueCategory;
-    public issuesEnabled = false;
 
     private currentlyLoaded: number;
     private amountToLoad: number;
@@ -38,9 +38,7 @@ export class MovieRequestsComponent implements OnInit {
                 private auth: AuthService,
                 private notificationService: NotificationService,
                 private radarrService: RadarrService,
-                private sanitizer: DomSanitizer,
-                private issuesService: IssuesService,
-                private settingsService: SettingsService) {
+                private sanitizer: DomSanitizer) {
         this.searchChanged
             .debounceTime(600) // Wait Xms after the last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -63,8 +61,6 @@ export class MovieRequestsComponent implements OnInit {
         this.currentlyLoaded = 100;
         this.loadInit();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
-        this.issuesService.getCategories().subscribe(x => this.issueCategories = x);
-        this.settingsService.getIssueSettings().subscribe(x => this.issuesEnabled = x.enabled);
     }
 
     public loadMore() {

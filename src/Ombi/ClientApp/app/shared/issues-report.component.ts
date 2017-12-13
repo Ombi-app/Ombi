@@ -4,8 +4,9 @@ import { IIssueCategory, IIssues, IMovieIssues, IssueStatus, ITvIssues } from ".
 import { IssuesService, NotificationService } from "./../services";
 
 @Component({
-    selector: "issues-report",
+    selector: "issue-report",
     templateUrl: "issues-report.component.html",
+    
 })
 export class IssuesReportComponent {
     @Input() public visible: boolean;
@@ -14,7 +15,11 @@ export class IssuesReportComponent {
     @Input() public issueCategory: IIssueCategory;
     @Input() public movie: boolean;
 
-    @Output() public close = new EventEmitter();
+    @Output() public visibleChange = new EventEmitter<boolean>();
+
+    get getTitle(): string {
+        return this.title;
+    }
 
     public issue: IIssues;
 
@@ -23,10 +28,12 @@ export class IssuesReportComponent {
         this.issue = {
             subject: "",
             description: "",
-            issueCategoryId: -1,
+            issueCategory: { value: "", id:0},
             status: IssueStatus.Pending,
             resolvedDate: undefined,
             id: undefined,
+            issueCategoryId: 0,
+            comments: [],
         };
     }
 
@@ -34,6 +41,7 @@ export class IssuesReportComponent {
         if(this.movie) {
             const movieIssue = <IMovieIssues>this.issue;
             movieIssue.movieId = this.id;
+            movieIssue.issueCategory = this.issueCategory;
             movieIssue.issueCategoryId = this.issueCategory.id;
             this.issueService.createMovieIssue(movieIssue).subscribe(x => {
                 if(x) {
@@ -43,8 +51,8 @@ export class IssuesReportComponent {
             
             const tvIssue = <ITvIssues>this.issue;
             tvIssue.tvId = this.id;
+            tvIssue.issueCategory = this.issueCategory;
             tvIssue.issueCategoryId = this.issueCategory.id;
-            
             this.issueService.createTvIssue(tvIssue).subscribe(x => {
                 if(x) {
                     this.notification.success("Issue Created");
@@ -55,7 +63,7 @@ export class IssuesReportComponent {
     }
 
     public hide(): void {
-        this.visible = false;
-        this.close.emit(true);
+        this.visible = !this.visible; 
+        this.visibleChange.emit(this.visible);
     }
 }

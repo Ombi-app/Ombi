@@ -12,14 +12,13 @@ import { RequestComponent } from "./request.component";
 import { TvRequestChildrenComponent } from "./tvrequest-children.component";
 import { TvRequestsComponent } from "./tvrequests.component";
 
-import { SidebarModule, TreeTableModule } from "primeng/primeng";
+import { TreeTableModule } from "primeng/primeng";
 
 import { IdentityService } from "../services";
 import { RequestService } from "../services";
 
 import { AuthGuard } from "../auth/auth.guard";
 
-import { IssuesReportComponent } from "../shared/issues-report.component";
 import { SharedModule } from "../shared/shared.module";
 
 const routes: Routes = [
@@ -36,14 +35,12 @@ const routes: Routes = [
         DialogModule,
         TreeTableModule,
         SharedModule,
-        SidebarModule,
     ],
     declarations: [
         RequestComponent,
         MovieRequestsComponent,
         TvRequestsComponent,
         TvRequestChildrenComponent,
-        IssuesReportComponent,
     ],
     exports: [
         RouterModule,

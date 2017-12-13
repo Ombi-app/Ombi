@@ -1,31 +1,27 @@
-﻿import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+﻿import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { IChildRequests, IIssueCategory } from "../interfaces";
 
-import { IssuesService, NotificationService, RequestService } from "../services";
+import { NotificationService, RequestService } from "../services";
 
 @Component({
     selector:"tvrequests-children",
     templateUrl: "./tvrequest-children.component.html",
 })
-export class TvRequestChildrenComponent implements OnInit {
+export class TvRequestChildrenComponent {
     @Input() public childRequests: IChildRequests[];
     @Input() public isAdmin: boolean;
     @Input() public seriesTitle: string;
 
     @Output() public requestDeleted = new EventEmitter<number>();
 
-    public issueCategories: IIssueCategory[];
+    @Input() public issueCategories: IIssueCategory[];
+    @Input() public issuesEnabled: boolean;
     public issuesBarVisible = false;
     public issueRequest: IChildRequests;
     public issueCategorySelected: IIssueCategory;
 
     constructor(private requestService: RequestService,
-                private notificationService: NotificationService,
-                private issuesService: IssuesService) { }
-
-    public ngOnInit(): void {  
-        this.issuesService.getCategories().subscribe(x => this.issueCategories = x);
-    }
+                private notificationService: NotificationService) { }
 
     public removeRequest(request: IChildRequests) {
         this.requestService.deleteChild(request)

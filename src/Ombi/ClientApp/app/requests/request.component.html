@@ -14,10 +14,10 @@
 <!-- Tab panes -->
 <div class="tab-content">
     <div [hidden]="!showMovie">
-        <movie-requests></movie-requests>
+        <movie-requests [issueCategories]="issueCategories" [issuesEnabled]="issuesEnabled"></movie-requests>
     </div>
     <div [hidden]="!showTv">
-        <tv-requests></tv-requests>
+        <tv-requests [issueCategories]="issueCategories" [issuesEnabled]="issuesEnabled"></tv-requests>
     </div>
 </div>
 

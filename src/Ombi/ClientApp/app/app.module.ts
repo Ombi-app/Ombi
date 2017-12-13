@@ -10,14 +10,12 @@ import {RouterModule, Routes} from "@angular/router";
 
 import { JwtModule } from "@auth0/angular-jwt";
 
-// Third Party
-//import { DragulaModule, DragulaService } from 'ng2-dragula/ng2-dragula';
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { CookieService } from "ng2-cookies";
 import { GrowlModule } from "primeng/components/growl/growl";
-import { ButtonModule, CaptchaModule,ConfirmationService, ConfirmDialogModule, DataTableModule,DialogModule, SharedModule, TooltipModule } from "primeng/primeng";
+import { ButtonModule, CaptchaModule,ConfirmationService, ConfirmDialogModule, DataTableModule,DialogModule, SharedModule, SidebarModule, TooltipModule } from "primeng/primeng";
 
 // Components
 import { AppComponent } from "./app.component";
@@ -51,8 +49,6 @@ import { WizardModule } from "./wizard/wizard.module";
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
     { path: "", redirectTo: "/search", pathMatch: "full" },
-
-    //{ path: 'requests-grid', component: RequestGridComponent },
     { path: "login", component: LoginComponent },
     { path: "login/:landing", component: LoginComponent },
     { path: "reset", component: ResetPasswordComponent },
@@ -117,6 +113,7 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
             },
         }),
         IssuesModule,
+        SidebarModule,
     ],
     declarations: [
         AppComponent,
@@ -126,7 +123,7 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
         ResetPasswordComponent,
         TokenResetPasswordComponent,
         CookieComponent,
-    ],
+        ],
     providers: [
         RequestService,
         NotificationService,

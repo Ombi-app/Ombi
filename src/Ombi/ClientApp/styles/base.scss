@@ -8,7 +8,7 @@ $info-colour: #5bc0de;
 $warning-colour: #f0ad4e;
 $danger-colour: #d9534f;
 $success-colour: #5cb85c;
-$i:!important;
+$i: !important;
 
 @media (min-width: 768px ) {
     .row {
@@ -309,6 +309,10 @@ $border-radius: 10px;
 
 
 .no-search-results {
+    text-align: center;
+}
+
+.text-center {
     text-align: center;
 }
 
@@ -852,3 +856,6 @@ a > h4:hover {
     font-size: 0.9rem !important
 }
 
+.card {
+    padding-top:15px;
+}

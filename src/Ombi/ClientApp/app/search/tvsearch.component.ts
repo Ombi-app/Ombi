@@ -1,4 +1,4 @@
-﻿import { Component, OnDestroy, OnInit } from "@angular/core";
+﻿import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router } from "@angular/router";
 import { Subject } from "rxjs/Subject";
@@ -8,14 +8,14 @@ import { ImageService, NotificationService, RequestService, SearchService} from 
 
 import { TreeNode } from "primeng/primeng";
 import { IRequestEngineResult } from "../interfaces";
-import { ISearchTvResult } from "../interfaces";
+import { IIssueCategory, ISearchTvResult } from "../interfaces";
 
 @Component({
     selector: "tv-search",
     templateUrl: "./tvsearch.component.html",
     styleUrls: ["./../requests/tvrequests.component.scss"],
 })
-export class TvSearchComponent implements OnInit, OnDestroy {
+export class TvSearchComponent implements OnInit {
 
     public searchText: string;
     public searchChanged = new Subject<string>();
@@ -23,7 +23,8 @@ export class TvSearchComponent implements OnInit, OnDestroy {
     public result: IRequestEngineResult;
     public searchApplied = false;
 
-    private subscriptions = new Subject<void>();
+    @Input() public issueCategories: IIssueCategory[];
+    @Input() public issuesEnabled: boolean;
 
     constructor(private searchService: SearchService, private requestService: RequestService,
                 private notificationService: NotificationService, private route: Router, private authService: AuthService,
@@ -32,7 +33,6 @@ export class TvSearchComponent implements OnInit, OnDestroy {
         this.searchChanged
             .debounceTime(600) // Wait Xms after the last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
-            .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.searchText = x as string;
                 if (this.searchText === "") {
@@ -40,7 +40,6 @@ export class TvSearchComponent implements OnInit, OnDestroy {
                     return;
                 }
                 this.searchService.searchTvTreeNode(this.searchText)
-                    .takeUntil(this.subscriptions)
                     .subscribe(x => {
                         this.tvResults = x;
                         this.searchApplied = true;
@@ -91,7 +90,6 @@ export class TvSearchComponent implements OnInit, OnDestroy {
     public popularShows() {
         this.clearResults();
         this.searchService.popularTv()
-            .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.tvResults = x;
                 this.getExtraInfo();
@@ -101,7 +99,6 @@ export class TvSearchComponent implements OnInit, OnDestroy {
     public trendingShows() {
         this.clearResults();
         this.searchService.trendingTv()
-            .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.tvResults = x;
                 this.getExtraInfo();
@@ -111,7 +108,6 @@ export class TvSearchComponent implements OnInit, OnDestroy {
     public mostWatchedShows() {
         this.clearResults();
         this.searchService.mostWatchedTv()
-            .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.tvResults = x;
                 this.getExtraInfo();
@@ -121,7 +117,6 @@ export class TvSearchComponent implements OnInit, OnDestroy {
     public anticipatedShows() {
         this.clearResults();
         this.searchService.anticipatedTv()
-            .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.tvResults = x;
                 this.getExtraInfo();
@@ -138,7 +133,6 @@ export class TvSearchComponent implements OnInit, OnDestroy {
                 ("linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%),url(" + x + ")");
             });
             this.searchService.getShowInformationTreeNode(val.data.id)
-                .takeUntil(this.subscriptions)
                 .subscribe(x => {
                     if (x.data) {
                         this.updateItem(val, x);
@@ -158,7 +152,6 @@ export class TvSearchComponent implements OnInit, OnDestroy {
             searchResult.approved = true;
         }
         this.requestService.requestTv(searchResult)
-            .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.result = x;
                 if (this.result.result) {
@@ -194,11 +187,6 @@ export class TvSearchComponent implements OnInit, OnDestroy {
 
     public selectSeason(searchResult: ISearchTvResult) {
         this.route.navigate(["/search/show", searchResult.id]);
-    }
-
-    public ngOnDestroy() {
-        this.subscriptions.next();
-        this.subscriptions.complete();
     }
 
     private updateItem(key: TreeNode, updated: TreeNode) {

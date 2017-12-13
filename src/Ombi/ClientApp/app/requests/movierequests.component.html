@@ -132,5 +132,5 @@
 </div>
 
 
-<issues-report [movie]="true" [visible]="issuesBarVisible" [title]="issueRequest?.title"
-[issueCategory]="issueCategorySelected" [id]="issueRequest?.id" (hide)="issuesBarVisible = true"></issues-report>
+<issue-report [movie]="true" [visible]="issuesBarVisible" (visibleChange)="issuesBarVisible = $event;" [title]="issueRequest?.title"
+[issueCategory]="issueCategorySelected" [id]="issueRequest?.id" ></issue-report>

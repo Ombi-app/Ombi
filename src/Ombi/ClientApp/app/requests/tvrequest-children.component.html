@@ -22,15 +22,15 @@
            
                     <button type="button" (click)="removeRequest(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> {{ 'Requests.Remove' | translate }}</button>
                 </div>
-                <div class="dropdown" *ngIf="issueCategories">
-                    <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        <i class="fa fa-plus"></i> Report Issue
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li *ngFor="let cat of issueCategories"><a [routerLink]="" (click)="reportIssue(cat, child)">{{cat.value}}</a></li>
-                    </ul>
-                </div>
+                <div class="dropdown" *ngIf="issueCategories && issuesEnabled">
+                        <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <i class="fa fa-plus"></i> Report Issue
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li *ngFor="let cat of issueCategories"><a [routerLink]="" (click)="reportIssue(cat, child)">{{cat.value}}</a></li>
+                        </ul>
+                    </div>
                 
             </div>
         </div>
@@ -104,5 +104,5 @@
 
 
 
-<issues-report [movie]="false" [visible]="issuesBarVisible" [title]="seriesTitle"
-[issueCategory]="issueCategorySelected" [id]="issueRequest?.id" (hide)="issuesBarVisible = true"></issues-report>
+<issue-report [movie]="false" [visible]="issuesBarVisible" [title]="seriesTitle"
+[issueCategory]="issueCategorySelected" [id]="issueRequest?.id" (visibleChange)="issuesBarVisible = $event;"></issue-report>

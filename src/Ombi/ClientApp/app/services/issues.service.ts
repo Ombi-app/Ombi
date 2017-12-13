@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Rx";
 
-import { IIssueCategory, IMovieIssues, ITvIssues } from "../interfaces";
+import { IIssueCategory, IIssueComments, IIssuesChat, IMovieIssues, INewIssueComments,ITvIssues } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()
@@ -41,4 +41,23 @@ export class IssuesService extends ServiceHelpers {
         return this.http.post<number>(`${this.url}tv/`, JSON.stringify(issue), {headers: this.headers});
     }
     
+    public getTvIssue(id: number): Observable<ITvIssues> {
+        return this.http.get<ITvIssues>(`${this.url}tv/${id}`,  {headers: this.headers});
+    }    
+
+    public getMovieIssue(id: number): Observable<IMovieIssues> {
+        return this.http.get<IMovieIssues>(`${this.url}movie/${id}`,  {headers: this.headers});
+    }
+
+    public getMovieComments(id: number): Observable<IIssuesChat[]> {
+        return this.http.get<IIssuesChat[]>(`${this.url}movie/${id}/comments`,  {headers: this.headers});
+    }
+
+    public getTvComments(id: number): Observable<IIssuesChat[]> {
+        return this.http.get<IIssuesChat[]>(`${this.url}tv/${id}/comments`,  {headers: this.headers});
+    }
+
+    public addComment(comment: INewIssueComments): Observable<IIssueComments> {
+        return this.http.post<IIssueComments>(`${this.url}comments`, JSON.stringify(comment),  {headers: this.headers});
+    }
 }

@@ -239,6 +239,10 @@ export class SettingsService extends ServiceHelpers {
         return this.http.get<IIssueSettings>(`${this.url}/issues`, {headers: this.headers});
     }
 
+    public issueEnabled(): Observable<boolean> {
+        return this.http.get<boolean>(`${this.url}/issuesenabled`, {headers: this.headers});
+    }
+
     public saveIssueSettings(settings: IIssueSettings): Observable<boolean> {
         return this.http
             .post<boolean>(`${this.url}/issues`, JSON.stringify(settings), {headers: this.headers});
