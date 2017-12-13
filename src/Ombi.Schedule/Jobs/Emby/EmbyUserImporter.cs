@@ -100,7 +100,9 @@ namespace Ombi.Schedule.Jobs.Emby
                             UserName = embyUser.Name,
                             ProviderUserId = embyUser.Id,
                             Alias = string.Empty,
-                            EmbyConnectUserId = embyUser.ConnectUserId.HasValue() ? embyUser.ConnectUserId : string.Empty
+                            EmbyConnectUserId = embyUser.ConnectUserId.HasValue() ? embyUser.ConnectUserId : string.Empty,
+                            MovieRequestLimit = userManagementSettings.MovieRequestLimit,
+                            EpisodeRequestLimit = userManagementSettings.EpisodeRequestLimit
                         };
                         var result = await _userManager.CreateAsync(newUser);
                         if (!result.Succeeded)

@@ -83,7 +83,9 @@ namespace Ombi.Schedule.Jobs.Plex
                             UserName = plexUser?.Username ?? plexUser.Id,
                             ProviderUserId = plexUser.Id,
                             Email = plexUser?.Email ?? string.Empty,
-                            Alias = string.Empty
+                            Alias = string.Empty,
+                            MovieRequestLimit = userManagementSettings.MovieRequestLimit,
+                            EpisodeRequestLimit = userManagementSettings.EpisodeRequestLimit
                         };
                         _log.LogInformation("Creating Plex user {0}", newUser.UserName);
                         var result = await _userManager.CreateAsync(newUser);

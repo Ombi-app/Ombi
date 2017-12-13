@@ -137,6 +137,8 @@ export interface IUserManagementSettings extends ISettings {
   importPlexAdmin: boolean;
   importEmbyUsers: boolean;
   defaultRoles: string[];
+  movieRequestLimit: number;
+  episodeRequestLimit: number;
   bannedPlexUserIds: string[];
   bannedEmbyUserIds: string[];
 }

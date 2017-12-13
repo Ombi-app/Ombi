@@ -15,6 +15,7 @@ using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities.Requests;
+using Ombi.Store.Repository;
 
 namespace Ombi.Core.Engine
 {
@@ -22,18 +23,20 @@ namespace Ombi.Core.Engine
     {
         public MovieRequestEngine(IMovieDbApi movieApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log,
-            OmbiUserManager manager) : base(user, requestService, r, manager)
+            OmbiUserManager manager, IRepository<RequestLog> rl) : base(user, requestService, r, manager)
         {
             MovieApi = movieApi;
             NotificationHelper = helper;
             Sender = sender;
             Logger = log;
+            _requestLog = rl;
         }
 
         private IMovieDbApi MovieApi { get; }
         private INotificationHelper NotificationHelper { get; }
         private IMovieSender Sender { get; }
         private ILogger<MovieRequestEngine> Logger { get; }
+        private readonly IRepository<RequestLog> _requestLog;
 
         /// <summary>
         /// Requests the movie.
@@ -320,6 +323,14 @@ namespace Ombi.Core.Engine
             {
                 NotificationHelper.NewRequest(model);
             }
+
+            await _requestLog.Add(new RequestLog
+            {
+                UserId = (await GetUser()).Id,
+                RequestDate = DateTime.UtcNow,
+                RequestId = model.Id,
+                RequestType = RequestType.Movie,
+            });
 
             return new RequestEngineResult { Result = true, Message = $"{movieName} has been successfully added!" };
         }

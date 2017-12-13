@@ -27,7 +27,7 @@
             </div>
 
             <div class="form-group">
-                <label for="alias" class="control-label">Email Address</label>
+                <label for="emailAddress" class="control-label">Email Address</label>
                 <div>
                     <input type="text" [(ngModel)]="user.emailAddress" class="form-control form-control-custom " id="emailAddress" name="emailAddress" value="{{user?.emailAddress}}" [disabled]="user?.userType == 2">
                 </div>
@@ -42,6 +42,19 @@
                         <label for="create{{c.value}}">{{c.value | humanize}}</label>
 
                     </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="movieRequestLimit" class="control-label">Movie Request Limit</label>
+                <div>
+                    <input type="text" [(ngModel)]="user.movieRequestLimit" class="form-control form-small form-control-custom " id="movieRequestLimit" name="movieRequestLimit" value="{{user?.movieRequestLimit}}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="episodeRequestLimit" class="control-label">Episode Request Limit</label>
+                <div>
+                    <input type="text" [(ngModel)]="user.episodeRequestLimit" class="form-control form-small form-control-custom " id="episodeRequestLimit" name="episodeRequestLimit" value="{{user?.episodeRequestLimit}}">
                 </div>
             </div>
         </div>
