@@ -12,7 +12,8 @@ import { RequestComponent } from "./request.component";
 import { TvRequestChildrenComponent } from "./tvrequest-children.component";
 import { TvRequestsComponent } from "./tvrequests.component";
 
-import { TreeTableModule } from "primeng/primeng";
+
+import { SidebarModule, TreeTableModule } from "primeng/primeng";
 
 import { IdentityService } from "../services";
 import { RequestService } from "../services";
@@ -35,6 +36,7 @@ const routes: Routes = [
         DialogModule,
         TreeTableModule,
         SharedModule,
+        SidebarModule,
     ],
     declarations: [
         RequestComponent,

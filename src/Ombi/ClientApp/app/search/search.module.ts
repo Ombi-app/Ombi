@@ -11,9 +11,7 @@ import { SearchComponent } from "./search.component";
 import { SeriesInformationComponent } from "./seriesinformation.component";
 import { TvSearchComponent } from "./tvsearch.component";
 
-import { IssuesReportComponent } from "../shared/issues-report.component";
-
-import { TreeTableModule } from "primeng/primeng";
+import { SidebarModule, TreeTableModule } from "primeng/primeng";
 
 import { RequestService } from "../services";
 import { SearchService } from "../services";
@@ -35,6 +33,7 @@ const routes: Routes = [
         NgbModule.forRoot(),
         TreeTableModule,
         SharedModule,
+        SidebarModule,
     ],
     declarations: [
         SearchComponent,
@@ -42,11 +41,9 @@ const routes: Routes = [
         TvSearchComponent,
         SeriesInformationComponent,
         MovieSearchGridComponent,
-        IssuesReportComponent,
     ],
     exports: [
         RouterModule,
-        IssuesReportComponent,
     ],
     providers: [
         SearchService,
