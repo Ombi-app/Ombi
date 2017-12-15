@@ -21,6 +21,8 @@ export class AppComponent implements OnInit {
     public updateAvailable: boolean;
     public currentUrl: string;
 
+    private checkedForUpdate: boolean;
+
     constructor(public notificationService: NotificationService,
                 public authService: AuthService,
                 private readonly router: Router,
@@ -47,7 +49,8 @@ export class AppComponent implements OnInit {
                 this.user = this.authService.claims();
                 this.showNav = this.authService.loggedIn();
 
-                if (this.user !== null && this.user.name) {
+                if (this.user !== null && this.user.name && !this.checkedForUpdate) {
+                    this.checkedForUpdate = true;
                     this.jobService.getCachedUpdate().subscribe(x => {
                         this.updateAvailable = x;
                     });
