@@ -111,11 +111,13 @@ namespace Ombi.Core.Authentication
                     // We cannot update the email address in the user importer due to there is no way 
                     // To get this info from Emby Connect without the username and password.
                     // So we do it here!
-                    if (!user.Email.Equals(result.User?.Email))
+                    var email = user.Email ?? string.Empty;
+                    if (!email.Equals(result.User?.Email))
                     {
                         user.Email = result.User?.Email;
                         await UpdateAsync(user);
                     }
+
                     return true;
                 }
             }
