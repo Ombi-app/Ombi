@@ -16,8 +16,8 @@ import { IssuesComponent } from "./issues.component";
 import { PipeModule } from "../pipes/pipe.module";
 
 const routes: Routes = [
-    { path: "issues", component: IssuesComponent, canActivate: [AuthGuard] },
-    { path: "issues/:id", component: IssueDetailsComponent, canActivate: [AuthGuard] },
+    { path: "", component: IssuesComponent, canActivate: [AuthGuard] },
+    { path: ":id", component: IssueDetailsComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({

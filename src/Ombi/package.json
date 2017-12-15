@@ -31,6 +31,7 @@
     "@types/intro.js": "^2.4.3",
     "@types/node": "^8.0.53",
     "@types/webpack": "^3.8.1",
+    "angular-router-loader": "^0.8.0",
     "angular2-moment": "^1.7.0",
     "angular2-template-loader": "^0.6.2",
     "aspnet-webpack": "^2.0.1",

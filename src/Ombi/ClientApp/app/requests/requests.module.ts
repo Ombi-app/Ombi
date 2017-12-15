@@ -14,18 +14,16 @@ import { TvRequestsComponent } from "./tvrequests.component";
 
 import { SidebarModule, TreeTableModule } from "primeng/primeng";
 
-import { IdentityService } from "../services";
-import { RequestService } from "../services";
+import { IdentityService, RadarrService, RequestService } from "../services";
 
 import { AuthGuard } from "../auth/auth.guard";
 
 import { SharedModule } from "../shared/shared.module";
 
 const routes: Routes = [
-    { path: "requests", component: RequestComponent, canActivate: [AuthGuard] },
-    { path: "requests/:id", component: TvRequestChildrenComponent, canActivate: [AuthGuard] },
+    { path: "", component: RequestComponent, canActivate: [AuthGuard] },
+    { path: ":id", component: TvRequestChildrenComponent, canActivate: [AuthGuard] },
 ];
-
 @NgModule({
     imports: [
         RouterModule.forChild(routes),
@@ -49,6 +47,7 @@ const routes: Routes = [
     providers: [
         IdentityService,
         RequestService,
+        RadarrService,
     ],
 
 })

@@ -21,10 +21,9 @@ import { AuthGuard } from "../auth/auth.guard";
 import { SharedModule } from "../shared/shared.module";
 
 const routes: Routes = [
-    { path: "search", component: SearchComponent, canActivate: [AuthGuard] },
-    { path: "search/show/:id", component: SeriesInformationComponent, canActivate: [AuthGuard] },
+    { path: "", component: SearchComponent, canActivate: [AuthGuard] },
+    { path: "show/:id", component: SeriesInformationComponent, canActivate: [AuthGuard] },
 ];
-
 @NgModule({
     imports: [        
         CommonModule,
