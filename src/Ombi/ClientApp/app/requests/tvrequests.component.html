@@ -58,7 +58,7 @@
                 </div>
                 <!--This is the section that holds the child seasons if they want to specify specific episodes-->
                 <div *ngIf="node.leaf">
-                    <tvrequests-children [childRequests]="node.data" [isAdmin] ="isAdmin" (requestDeleted)="childRequestDeleted($event)" [seriesTitle]="'Tv Show'" [issueCategories]="issueCategories" [issuesEnabled]="issuesEnabled" [issueProviderId]="node.data.tvDbId" ></tvrequests-children>
+                    <tvrequests-children [childRequests]="node.data" [isAdmin] ="isAdmin" (requestDeleted)="childRequestDeleted($event)" [issueCategories]="issueCategories" [issuesEnabled]="issuesEnabled" [issueProviderId]="node.data.tvDbId" ></tvrequests-children>
                 </div>
             </ng-template>
         </p-column>

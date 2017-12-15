@@ -24,9 +24,9 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
 
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
+    @Input() public seriesTitle: string;
 
     public issuesBarVisible = false;
-    public issueTitle: string;
     public issueId: number;
     public issueCategorySelected: IIssueCategory;
 

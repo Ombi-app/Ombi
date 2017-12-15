@@ -10,7 +10,6 @@ import { NotificationService, RequestService } from "../services";
 export class TvRequestChildrenComponent {
     @Input() public childRequests: IChildRequests[];
     @Input() public isAdmin: boolean;
-    @Input() public seriesTitle: string;
 
     @Output() public requestDeleted = new EventEmitter<number>();
 

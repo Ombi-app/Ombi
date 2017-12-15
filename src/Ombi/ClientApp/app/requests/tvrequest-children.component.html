@@ -104,5 +104,5 @@
 
 
 
-<issue-report [movie]="false" [visible]="issuesBarVisible" [title]="seriesTitle"
+<issue-report [movie]="false" [visible]="issuesBarVisible" [title]="issueRequest?.title"
 [issueCategory]="issueCategorySelected" [id]="issueRequest?.id" (visibleChange)="issuesBarVisible = $event;"></issue-report>

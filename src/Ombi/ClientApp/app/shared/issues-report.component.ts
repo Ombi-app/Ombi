@@ -58,6 +58,7 @@ export class IssuesReportComponent {
             if(x) {
                 this.notification.success("Issue Created");
         }});
+        
     }
 
     public hide(): void {

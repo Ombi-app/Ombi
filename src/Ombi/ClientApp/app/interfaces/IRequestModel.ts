@@ -70,6 +70,7 @@ export interface IBaseRequest {
   requestType: RequestType;
   requestedUser: IUser;
   canApprove: boolean;
+  title: string;
 }
 
 export interface ITvRequests {

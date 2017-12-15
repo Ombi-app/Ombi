@@ -3,7 +3,7 @@
 
         <h3>Reporting an Issue for "{{title}}"</h3>
 
-        <h4>Issue type: {{issueCategory.value}}</h4>
+        <h4 *ngIf="issueCategory">Issue type: {{issueCategory.value}}</h4>
 
         <div class="form-group">
             <label for="subject" class="control-label">Subject</label>
