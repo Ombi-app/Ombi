@@ -111,7 +111,7 @@
   },
   "Issues":{
     "Title":"Issues",
-    "MovieTitle":"Movie Title",
+    "ColumnTitle":"Title",
     "Category":"Category",
     "Status": "Status",
     "Details": "Details"

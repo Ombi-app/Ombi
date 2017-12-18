@@ -9,25 +9,24 @@ import { IIssues, IssueStatus } from "../interfaces";
 })
 export class IssuesComponent implements OnInit {
 
-    public issues: IIssues[];
-
-    public IssueStatus = IssueStatus;
-
-    public order: string = "movie.title";
-    public reverse = false;
+    public pendingIssues: IIssues[];
+    public inProgressIssues: IIssues[];
+    public resolvedIssues: IIssues[];
 
     constructor(private issueService: IssuesService) { }
 
     public ngOnInit() { 
         // Load Issues
-        this.issueService.getIssues().subscribe(x => this.issues = x);
+        this.issueService.getIssues().subscribe(x => {
+            this.pendingIssues = x.filter(item => {
+                return item.status === IssueStatus.Pending;
+            });
+            this.inProgressIssues = x.filter(item => {
+                return item.status === IssueStatus.InProgress;
+            });
+            this.resolvedIssues = x.filter(item => {
+                return item.status === IssueStatus.Resolved;
+            });
+        });
     }
-
-    public setOrder(value: string) {
-        if (this.order === value) {
-          this.reverse = !this.reverse;
-        }
-    
-        this.order = value;
-      }
 }
