@@ -285,7 +285,7 @@ namespace Ombi.Core.Senders
                     settings.ApiKey, settings.FullUri);
 
                 Logger.LogDebug("Added the show (tvdbid) {0}. The result is '{2}' : '{3}'", tvdbid, addResult.result, addResult.message);
-                if (addResult.result.Equals("failure"))
+                if (addResult.result.Equals("failure") || addResult.result.Equals("fatal"))
                 {
                     // Do something
                     return false;

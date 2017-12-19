@@ -77,15 +77,14 @@ namespace Ombi.Schedule.Jobs.Plex
             try
             {
                 await StartTheCache(plexSettings);
-
-
-                Logger.LogInformation("Starting EP Cacher");
-                BackgroundJob.Enqueue(() => EpisodeSync.Start());
             }
             catch (Exception e)
             {
                 Logger.LogWarning(LoggingEvents.Cacher, e, "Exception thrown when attempting to cache the Plex Content");
             }
+
+            Logger.LogInformation("Starting EP Cacher");
+            BackgroundJob.Enqueue(() => EpisodeSync.Start());
         }
 
         private async Task StartTheCache(PlexSettings plexSettings)
