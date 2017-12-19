@@ -32,6 +32,10 @@ namespace Ombi.Api.SickRage
             request.AddQueryString("tvdbid", tvdbId.ToString());
             request.AddQueryString("status", status);
 
+            if (string.IsNullOrEmpty(quality))
+            {
+                quality = "default";
+            }
             if (!quality.Equals("default", StringComparison.CurrentCultureIgnoreCase))
             {
                 request.AddQueryString("initial", quality);
@@ -88,7 +92,7 @@ namespace Ombi.Api.SickRage
         /// The episode number is optional, if not supplied it will set the whole season as the status passed in
         /// </summary>
         /// <returns></returns>
-        public async Task<SickRageEpisodeStatus> SetEpisodeStatus(string apiKey, string baseUrl, int tvdbid, string status, int season, int episode = -1)
+        public async Task<SickRageEpisodeSetStatus> SetEpisodeStatus(string apiKey, string baseUrl, int tvdbid, string status, int season, int episode = -1)
         {
             var request = new Request($"/api/{apiKey}/?cmd=episode.setstatus", baseUrl, HttpMethod.Get);
             request.AddQueryString("tvdbid", tvdbid.ToString());
@@ -100,7 +104,7 @@ namespace Ombi.Api.SickRage
                 request.AddQueryString("episode", episode.ToString());
             }
 
-            return await _api.Request<SickRageEpisodeStatus>(request);
+            return await _api.Request<SickRageEpisodeSetStatus>(request);
         }
 
         public async Task<SeasonList> GetSeasonList(int tvdbId, string apikey, string baseurl)

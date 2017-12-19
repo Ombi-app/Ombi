@@ -4,6 +4,6 @@
     {
         public const string Wanted = "wanted";
         public const string Skipped = "skipped";
-        public const string Ignored = "Ignored";
+        public const string Ignored = "ignored";
     }
 }

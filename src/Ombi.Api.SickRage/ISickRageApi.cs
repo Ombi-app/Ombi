@@ -11,7 +11,7 @@ namespace Ombi.Api.SickRage
         Task<SickRagePing> Ping(string apiKey, string baseUrl);
         Task<SickRageSeasonList> VerifyShowHasLoaded(int tvdbId, string apiKey, string baseUrl);
         Task<SickRageShowInformation> GetShow(int tvdbid, string apikey, string baseUrl);
-        Task<SickRageEpisodeStatus> SetEpisodeStatus(string apiKey, string baseUrl, int tvdbid, string status,
+        Task<SickRageEpisodeSetStatus> SetEpisodeStatus(string apiKey, string baseUrl, int tvdbid, string status,
             int season, int episode = -1);
         Task<SickRageEpisodes> GetEpisodesForSeason(int tvdbid, int season, string apikey, string baseUrl);
         Task<SeasonList> GetSeasonList(int tvdbId, string apikey, string baseurl);
