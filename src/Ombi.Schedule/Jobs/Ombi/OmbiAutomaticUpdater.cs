@@ -217,6 +217,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             catch (Exception e)
             {
                 Logger.LogError(e, "Exception thrown in the OmbiUpdater, see previous messages");
+
                 throw;
             }
         }

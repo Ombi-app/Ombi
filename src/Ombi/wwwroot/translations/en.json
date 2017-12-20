@@ -45,6 +45,7 @@
     "Search": "Search",
     "Requests": "Requests",
     "UserManagement": "User Management",
+    "Issues":"Issues",
     "Donate": "Donate!",
     "DonateTooltip":
       "This is how I convince my wife to let me spend my spare time developing Ombi ;)",
@@ -107,5 +108,12 @@
     "GridTitle":"Title",
     "AirDate":"AirDate",
     "GridStatus":"Status"
+  },
+  "Issues":{
+    "Title":"Issues",
+    "ColumnTitle":"Title",
+    "Category":"Category",
+    "Status": "Status",
+    "Details": "Details"
   }
 }

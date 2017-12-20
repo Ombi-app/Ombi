@@ -1,0 +1,65 @@
+<div *ngIf="issue">
+    <h1>{{issue.title}}</h1>
+    <div class="col-md-6">
+        <h3>Subject: {{issue.subject}}</h3>
+        <h4>{{IssueStatus[issue.status]}}</h4>
+        <h3>{{issue.issueCategory.value}}</h3>
+        <p>{{issue.description}}</p>
+
+        <div *ngIf="isAdmin && settings">
+            <div *ngIf="issue.status === IssueStatus.Pending && settings.enableInProgress">
+                <button class="btn btn-primary btn-sm" (click)="inProgress()">Mark In Progress</button>
+            </div>
+            <div *ngIf="issue.status === IssueStatus.Pending && !settings.enableInProgress || issue.status == IssueStatus.InProgress">
+                <button class="btn btn-primary btn-sm" (click)="resolve()">Mark Resolved</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row chat-window col-xs-7 col-md-5" id="chat_window_1" style="margin-left:10px;">
+        <div class="col-xs-12 col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading top-bar">
+                    <div class="col-md-8 col-xs-8">
+                        <h3 class="panel-title">
+                            <span class="glyphicon glyphicon-comment"></span> Comments</h3>
+                    </div>
+                </div>
+
+                <div *ngIf="comments" class="panel-body msg_container_base">
+                    <div *ngIf="comments.length <= 0" class="row msg_container base_receive">
+                        <div class="col-md-10 col-xs-10">
+                            <div class="messages msg_sent">
+                                <p>No Comments!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngFor="let comment of comments" class="row msg_container" [ngClass]="{'base_sent': comment.adminComment, 'base_receive': !comment.adminComment}">
+                        <div class="col-md-10 col-xs-10">
+                            <div class="messages msg_sent">
+                                <p>{{comment.comment}}</p>
+                                <time>{{comment.username}} • {{comment.date | date:'short'}}</time>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-footer">
+                    <div class="input-group">
+                        <input id="btn-input" type="text" class="form-control input-sm chat_input" [(ngModel)]="newComment.comment" placeholder="Write your message here..."
+                        />
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary btn-sm" id="btn-chat" (click)="addComment()">Send</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>

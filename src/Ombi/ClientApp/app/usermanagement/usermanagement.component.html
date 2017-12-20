@@ -65,7 +65,7 @@
             <td>
                 {{u.lastLoggedIn | date: 'short'}}
             </td>
-            <td ng-hide="hideColumns">
+            <td>
                 <span *ngIf="u.userType === 1">Local User</span>
                 <span *ngIf="u.userType === 2">Plex User</span>
                 <span *ngIf="u.userType === 3">Emby User</span>

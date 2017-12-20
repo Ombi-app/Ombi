@@ -479,6 +479,36 @@ namespace Ombi.Controllers
             return await Save(settings);
         }
 
+
+        /// <summary>
+        /// Save the Issues settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("Issues")]
+        public async Task<bool> IssueSettings([FromBody]IssueSettings settings)
+        {
+            return await Save(settings);
+        }
+
+        /// <summary>
+        /// Gets the Issues Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("Issues")]
+        public async Task<IssueSettings> IssueSettings()
+        {
+            return await Get<IssueSettings>();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("issuesenabled")]
+        public async Task<bool> IssuesEnabled()
+        {
+            var issues = await Get<IssueSettings>();
+            return issues.Enabled;
+        }
+
         /// <summary>
         /// Saves the email notification settings.
         /// </summary>
