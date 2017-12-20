@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Rx";
 
-import { IIssueCategory, IIssueComments, IIssues, IIssuesChat, INewIssueComments } from "../interfaces";
+import { IIssueCategory, IIssueComments, IIssues, IIssuesChat, INewIssueComments, IUpdateStatus } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()
@@ -43,5 +43,9 @@ export class IssuesService extends ServiceHelpers {
 
     public addComment(comment: INewIssueComments): Observable<IIssueComments> {
         return this.http.post<IIssueComments>(`${this.url}comments`, JSON.stringify(comment),  {headers: this.headers});
+    }
+
+    public updateStatus(model: IUpdateStatus): Observable<any> {
+        return this.http.post(`${this.url}status`, JSON.stringify(model),   {headers: this.headers.append("content-type","string")});
     }
 }

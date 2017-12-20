@@ -145,5 +145,20 @@ namespace Ombi.Controllers
             };
             return await _issueComments.Add(newComment);
         }
+
+        [HttpPost("status")]
+        public async Task<StatusCodeResult> UpdateStatus([FromBody] IssueStateViewModel model)
+        {
+            var issue = await _issues.Find(model.IssueId);
+            if (issue == null)
+            {
+                return NotFound();
+            }
+
+            issue.Status = model.Status;
+            await _issues.SaveChangesAsync();
+
+            return Ok();
+        }
     }
 }

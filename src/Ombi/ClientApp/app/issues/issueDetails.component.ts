@@ -1,9 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
-import { IssuesService } from "../services";
+import { AuthService } from "../auth/auth.service";
+import { IssuesService, SettingsService } from "../services";
 
-import { IIssues, IIssuesChat, INewIssueComments, IssueStatus } from "../interfaces";
+import { IIssues, IIssuesChat, IIssueSettings, INewIssueComments, IssueStatus } from "../interfaces";
 
 @Component({
     templateUrl: "issueDetails.component.html",
@@ -19,15 +20,22 @@ export class IssueDetailsComponent implements OnInit {
     };
 
     public IssueStatus = IssueStatus;
+    public isAdmin: boolean;
+    public settings: IIssueSettings;
     
     private issueId: number;
 
     constructor(private issueService: IssuesService,
-                private route: ActivatedRoute) { 
-        this.route.params
-        .subscribe((params: any) => {
-            this.issueId = parseInt(params.id);    
-            });
+                private route: ActivatedRoute,
+                private authService: AuthService,
+                private settingsService: SettingsService) { 
+            this.route.params
+            .subscribe((params: any) => {
+                  this.issueId = parseInt(params.id);    
+                });
+
+            this.isAdmin = this.authService.hasRole("Admin") || this.authService.hasRole("PowerUser");
+            this.settingsService.getIssueSettings().subscribe(x => this.settings = x);
         }
                 
     public ngOnInit() { 
@@ -56,6 +64,14 @@ export class IssueDetailsComponent implements OnInit {
         this.issueService.addComment(this.newComment).subscribe(x => {
             this.loadComments();
         });
+    }
+
+    public inProgress() {
+        this.issueService.updateStatus({issueId: this.issueId, status: IssueStatus.InProgress}).subscribe();
+    }
+
+    public resolve() {
+        this.issueService.updateStatus({issueId: this.issueId, status: IssueStatus.Resolved}).subscribe();
     }
 
     private loadComments() {

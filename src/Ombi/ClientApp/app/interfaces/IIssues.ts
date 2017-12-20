@@ -42,3 +42,8 @@ export interface INewIssueComments {
     comment: string;
     issueId: number;
 }
+
+export interface IUpdateStatus {
+    issueId: number;
+    status: IssueStatus;
+}
