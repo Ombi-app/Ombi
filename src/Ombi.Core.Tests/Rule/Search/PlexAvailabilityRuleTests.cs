@@ -25,9 +25,14 @@ namespace Ombi.Core.Tests.Rule.Search
         {
             ContextMock.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(new PlexServerContent
             {
-                Url = "TestUrl"
+                Url = "TestUrl",
+                ImdbId = "132"
             });
-            var search = new SearchMovieViewModel();
+
+            var search = new SearchMovieViewModel
+            {
+                ImdbId = "123",
+            };
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);
