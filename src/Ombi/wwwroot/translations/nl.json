@@ -43,7 +43,6 @@
     "Search": "Zoeken",
     "Requests": "Aanvragen",
     "UserManagement": "Gebruikersbeheer",
-    "Issues": "Issues",
     "Donate": "Doneer!",
     "DonateTooltip": "Dit is hoe ik mijn vrouw heb laten overtuigen dat ik Ombi mag ontwikkelen ;-)",
     "UpdateAvailableTooltip": "Update beschikbaar!",
@@ -103,12 +102,5 @@
     "GridTitle": "Title",
     "AirDate": "AirDate",
     "GridStatus": "Status"
-  },
-  "Issues": {
-    "Title": "Issues",
-    "ColumnTitle": "Title",
-    "Category": "Category",
-    "Status": "Status",
-    "Details": "Details"
   }
 }
