@@ -43,7 +43,8 @@ namespace Ombi.Schedule.Jobs.Plex
             var plexEpisodes = _repo.GetAllEpisodes().Include(x => x.Series);
 
             foreach (var child in tv)
-            {                var useImdb = false;
+            {
+                var useImdb = false;
                 var useTvDb = false;
                 if (child.ParentRequest.ImdbId.HasValue())
                 {
@@ -104,7 +105,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private async Task ProcessMovies()
         {
             // Get all non available
-            var movies = _movieRepo.GetAll().Where(x => !x.Available);
+            var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available);
 
             foreach (var movie in movies)
             {
