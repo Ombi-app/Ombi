@@ -43,7 +43,6 @@
     "Search": "Ricerca",
     "Requests": "Richieste",
     "UserManagement": "Gestione degli utenti",
-    "Issues": "Issues",
     "Donate": "Fai una donazione!",
     "DonateTooltip": "Questo è come convincere mia moglie a farmi spendere il mio tempo libero lo sviluppo di Ombi ;)",
     "UpdateAvailableTooltip": "Aggiornamento disponibile!",
@@ -103,12 +102,5 @@
     "GridTitle": "Title",
     "AirDate": "AirDate",
     "GridStatus": "Status"
-  },
-  "Issues": {
-    "Title": "Issues",
-    "ColumnTitle": "Title",
-    "Category": "Category",
-    "Status": "Status",
-    "Details": "Details"
   }
 }
