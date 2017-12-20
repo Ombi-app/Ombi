@@ -16,6 +16,6 @@ namespace Ombi.Api.Plex.Models
         public string videoFrameRate { get; set; }
         public string audioProfile { get; set; }
         public string videoProfile { get; set; }
-        public Part[] Part { get; set; }
+        //public Part[] Part { get; set; }
     }
 }

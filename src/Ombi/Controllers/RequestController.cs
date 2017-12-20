@@ -284,9 +284,10 @@ namespace Ombi.Controllers
         /// <param name="requestId">The model.</param>
         /// <returns></returns>
         [HttpDelete("tv/child/{requestId:int}")]
-        public async Task DeleteChildRequest(int requestId)
+        public async Task<bool> DeleteChildRequest(int requestId)
         {
             await TvRequestEngine.RemoveTvChild(requestId);
+            return true;
         }
 
 

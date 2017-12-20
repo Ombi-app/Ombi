@@ -19,6 +19,9 @@ namespace Ombi.Store.Entities
 
         public string EmbyConnectUserId { get; set; }
 
+        public int? MovieRequestLimit { get; set; }
+        public int? EpisodeRequestLimit { get; set; }
+
         [NotMapped]
         public bool IsEmbyConnect => UserType == UserType.EmbyUser && EmbyConnectUserId.HasValue();
 

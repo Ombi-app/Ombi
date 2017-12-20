@@ -11,6 +11,7 @@ import { CouchPotatoService, IssuesService, JobService, RadarrService, SonarrSer
 
 import { PipeModule } from "../pipes/pipe.module";
 import { AboutComponent } from "./about/about.component";
+import { AuthenticationComponent } from "./authentication/authentication.component";
 import { CouchPotatoComponent } from "./couchpotato/couchpotato.component";
 import { CustomizationComponent } from "./customization/customization.component";
 import { DogNzbComponent } from "./dognzb/dognzb.component";
@@ -40,6 +41,7 @@ import { SettingsMenuComponent } from "./settingsmenu.component";
 import { AutoCompleteModule, CalendarModule, InputSwitchModule, InputTextModule, MenuModule, RadioButtonModule, TooltipModule } from "primeng/primeng";
 
 const routes: Routes = [
+
     { path: "Ombi", component: OmbiComponent, canActivate: [AuthGuard] },
     { path: "About", component: AboutComponent, canActivate: [AuthGuard] },
     { path: "Plex", component: PlexComponent, canActivate: [AuthGuard] },
@@ -62,6 +64,7 @@ const routes: Routes = [
     { path: "Jobs", component: JobsComponent, canActivate: [AuthGuard] },
     { path: "SickRage", component: SickRageComponent, canActivate: [AuthGuard] },
     { path: "Issues", component: IssuesComponent, canActivate: [AuthGuard] },
+    { path: "Authentication", component: AuthenticationComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -107,6 +110,7 @@ const routes: Routes = [
         DogNzbComponent,
         SickRageComponent,
         TelegramComponent,
+        AuthenticationComponent,
         IssuesComponent,
     ],
     exports: [

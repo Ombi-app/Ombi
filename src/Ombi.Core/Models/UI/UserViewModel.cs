@@ -14,6 +14,8 @@ namespace Ombi.Core.Models.UI
         public DateTime? LastLoggedIn { get; set; }
         public bool HasLoggedIn { get; set; }
         public UserType UserType { get; set; }
+        public int MovieRequestLimit { get; set; }
+        public int EpisodeRequestLimit { get; set; }
     }
 
     public class ClaimCheckboxes

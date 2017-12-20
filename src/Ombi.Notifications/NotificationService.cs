@@ -52,7 +52,6 @@ namespace Ombi.Notifications
         /// <returns></returns>
         public async Task Publish(NotificationOptions model)
         {
-            //var notificationTasks = NotificationAgents.Select(notification => NotifyAsync(notification, model));
             var notificationTasks = new List<Task>();
 
             foreach (var agent in NotificationAgents)

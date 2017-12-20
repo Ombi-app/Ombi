@@ -40,5 +40,6 @@ namespace Ombi.Store.Context
         DbSet<CouchPotatoCache> CouchPotatoCache { get; set; }
         DbSet<SickRageCache> SickRageCache { get; set; }
         DbSet<SickRageEpisodeCache> SickRageEpisodeCache { get; set; }
+        DbSet<RequestLog> RequestLogs { get; set; }
     }
 }

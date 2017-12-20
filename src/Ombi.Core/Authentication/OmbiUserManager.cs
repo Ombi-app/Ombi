@@ -37,6 +37,7 @@ using Ombi.Api.Plex.Models;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 
 namespace Ombi.Core.Authentication
@@ -47,20 +48,36 @@ namespace Ombi.Core.Authentication
             IPasswordHasher<OmbiUser> passwordHasher, IEnumerable<IUserValidator<OmbiUser>> userValidators,
             IEnumerable<IPasswordValidator<OmbiUser>> passwordValidators, ILookupNormalizer keyNormalizer,
             IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<OmbiUser>> logger, IPlexApi plexApi,
-            IEmbyApi embyApi, ISettingsService<EmbySettings> embySettings)
+            IEmbyApi embyApi, ISettingsService<EmbySettings> embySettings, ISettingsService<AuthenticationSettings> auth)
             : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
             _plexApi = plexApi;
             _embyApi = embyApi;
             _embySettings = embySettings;
+            _authSettings = auth;
         }
 
         private readonly IPlexApi _plexApi;
         private readonly IEmbyApi _embyApi;
         private readonly ISettingsService<EmbySettings> _embySettings;
+        private readonly ISettingsService<AuthenticationSettings> _authSettings;
 
         public override async Task<bool> CheckPasswordAsync(OmbiUser user, string password)
         {
+            var authSettings = await _authSettings.GetSettingsAsync();
+            if (authSettings.AllowNoPassword)
+            {
+                // Check their roles
+                var roles = await GetRolesAsync(user);
+                if (roles.Contains(OmbiRoles.Admin) || roles.Contains(OmbiRoles.PowerUser))
+                {
+                    // Do nothing, let it continue to check the password
+                }
+                else
+                {
+                    return true;
+                }
+            }
             if (user.UserType == UserType.LocalUser)
             {
                 return await base.CheckPasswordAsync(user, password);
@@ -111,11 +128,13 @@ namespace Ombi.Core.Authentication
                     // We cannot update the email address in the user importer due to there is no way 
                     // To get this info from Emby Connect without the username and password.
                     // So we do it here!
-                    if (!user.Email.Equals(result.User?.Email))
+                    var email = user.Email ?? string.Empty;
+                    if (!email.Equals(result.User?.Email))
                     {
                         user.Email = result.User?.Email;
                         await UpdateAsync(user);
                     }
+
                     return true;
                 }
             }

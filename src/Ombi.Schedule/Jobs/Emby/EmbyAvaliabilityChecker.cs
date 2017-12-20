@@ -30,6 +30,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Ombi.Core.Notifications;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
@@ -42,18 +43,20 @@ namespace Ombi.Schedule.Jobs.Emby
     public class EmbyAvaliabilityChecker : IEmbyAvaliabilityChecker
     {
         public EmbyAvaliabilityChecker(IEmbyContentRepository repo, ITvRequestRepository t, IMovieRequestRepository m,
-            INotificationService n)
+            INotificationService n, ILogger<EmbyAvaliabilityChecker> log)
         {
             _repo = repo;
             _tvRepo = t;
             _movieRepo = m;
             _notificationService = n;
+            _log = log;
         }
 
         private readonly ITvRequestRepository _tvRepo;
         private readonly IMovieRequestRepository _movieRepo;
         private readonly IEmbyContentRepository _repo;
         private readonly INotificationService _notificationService;
+        private readonly ILogger<EmbyAvaliabilityChecker> _log;
 
         public async Task Start()
         {
@@ -63,7 +66,7 @@ namespace Ombi.Schedule.Jobs.Emby
 
         private async Task ProcessMovies()
         {
-            var movies = _movieRepo.GetAll().Where(x => !x.Available);
+            var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available);
 
             foreach (var movie in movies)
             {
@@ -74,16 +77,22 @@ namespace Ombi.Schedule.Jobs.Emby
                     continue;
                 }
 
+                _log.LogInformation("We have found the request {0} on Emby, sending the notification", movie.Title);
+
                 movie.Available = true;
                 if (movie.Available)
                 {
+                    var recipient = movie.RequestedUser.Email.HasValue() ? movie.RequestedUser.Email : string.Empty;
+
+                    _log.LogDebug("MovieId: {0}, RequestUser: {1}", movie.Id, recipient);
+
                     BackgroundJob.Enqueue(() => _notificationService.Publish(new NotificationOptions
                     {
                         DateTime = DateTime.Now,
                         NotificationType = NotificationType.RequestAvailable,
                         RequestId = movie.Id,
                         RequestType = RequestType.Movie,
-                        Recipient = movie.RequestedUser.Email.HasValue() ? movie.RequestedUser.Email : string.Empty,
+                        Recipient = recipient,
                     }));
                 }
             }

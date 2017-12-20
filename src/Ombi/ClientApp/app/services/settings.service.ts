@@ -117,7 +117,7 @@ export class SettingsService extends ServiceHelpers {
     }
 
     public getThemeContent(themeUrl: string): Observable<string> {
-        return this.http.get<string>(`${this.url}/themecontent?url=${themeUrl}`, {headers: this.headers});
+        return this.http.get(`${this.url}/themecontent?url=${themeUrl}`, {responseType: "text", headers: this.headers});
     }
 
     public getEmailNotificationSettings(): Observable<IEmailNotificationSettings> {
