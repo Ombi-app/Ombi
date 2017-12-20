@@ -53,22 +53,23 @@ namespace Ombi.Schedule.Jobs.Sonarr
                     var entites = ids.Select(id => new SonarrCache { TvDbId = id }).ToList();
 
                     await _ctx.SonarrCache.AddRangeAsync(entites);
-
-                    var episodesToAdd = new List<SonarrEpisodeCache>();
+                    
                     await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM SonarrEpisodeCache");
                     foreach (var s in sonarrSeries)
                     {
+                        _log.LogDebug("Syncing series: {0}", s.title);
                         var episodes = await _api.GetEpisodes(s.id, settings.ApiKey, settings.FullUri);
                         var monitoredEpisodes = episodes.Where(x => x.monitored || x.hasFile);
-                        episodesToAdd.AddRange(monitoredEpisodes.Select(episode => new SonarrEpisodeCache
+                        _log.LogDebug("We have the episodes, adding to db transaction");
+                        await _ctx.SonarrEpisodeCache.AddRangeAsync(monitoredEpisodes.Select(episode => new SonarrEpisodeCache
                         {
                             EpisodeNumber = episode.episodeNumber,
                             SeasonNumber = episode.seasonNumber,
                             TvDbId = s.tvdbId
                         }));
                     }
-
-                    await _ctx.SonarrEpisodeCache.AddRangeAsync(episodesToAdd);
+                    
+                    _log.LogDebug("Commiting the transaction");
                     await _ctx.SaveChangesAsync();
                 }
             }
