@@ -1,5 +1,6 @@
-﻿using System.Security.Principal;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Ombi.Core.Authentication;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
@@ -9,40 +10,38 @@ namespace Ombi.Core.Rule.Rules.Specific
 {
     public class SendNotificationRule : SpecificRule, ISpecificRule<object>
     {
-        public SendNotificationRule(IPrincipal principal)
+        public SendNotificationRule(OmbiUserManager um)
         {
-            User = principal;
+            UserManager = um;
         }
 
         public override SpecificRules Rule => SpecificRules.CanSendNotification;
-        private IPrincipal User { get; }
+        private OmbiUserManager UserManager { get; }
 
-        public Task<RuleResult> Execute(object obj)
+        public async Task<RuleResult> Execute(object obj)
         {
             var req = (BaseRequest)obj;
             var sendNotification = !req.Approved; /*|| !prSettings.IgnoreNotifyForAutoApprovedRequests;*/
-
+            var requestedUser = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == req.RequestedUserId);
             if (req.RequestType == RequestType.Movie)
             {
-                sendNotification = !User.IsInRole(OmbiRoles.AutoApproveMovie);
+                sendNotification = !await UserManager.IsInRoleAsync(requestedUser, OmbiRoles.AutoApproveMovie);
             }
             else if(req.RequestType ==  RequestType.TvShow)
             {
-                sendNotification = !User.IsInRole(OmbiRoles.AutoApproveTv);
+                sendNotification = !await UserManager.IsInRoleAsync(requestedUser, OmbiRoles.AutoApproveTv);
             }
 
-
-            if (User.IsInRole(OmbiRoles.Admin))
+            if (await UserManager.IsInRoleAsync(requestedUser, OmbiRoles.Admin))
             {
                 sendNotification = false; // Don't bother sending a notification if the user is an admin
             }
+            
 
- 
-
-            return Task.FromResult(new RuleResult
+            return new RuleResult
             {
                 Success = sendNotification
-            });
+            };
         }
     }
 }

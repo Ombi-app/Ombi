@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Ombi.Api.TvMaze;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
@@ -25,18 +26,20 @@ namespace Ombi.Core.Engine
     {
         public TvRequestEngine(ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IRuleEvaluator rule, OmbiUserManager manager,
-            ITvSender sender, IAuditRepository audit) : base(user, requestService, rule, manager)
+            ITvSender sender, IAuditRepository audit, IRepository<RequestLog> rl) : base(user, requestService, rule, manager)
         {
             TvApi = tvApi;
             NotificationHelper = helper;
             TvSender = sender;
             Audit = audit;
+            _requestLog = rl;
         }
 
         private INotificationHelper NotificationHelper { get; }
         private ITvMazeApi TvApi { get; }
         private ITvSender TvSender { get; }
         private IAuditRepository Audit { get; }
+        private readonly IRepository<RequestLog> _requestLog;
 
         public async Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv)
         {
@@ -190,6 +193,15 @@ namespace Ombi.Core.Engine
             }
             request.Approved = true;
             request.Denied = false;
+
+            foreach (var s in request.SeasonRequests)
+            {
+                foreach (var ep in s.Episodes)
+                {
+                    ep.Approved = true;
+                }
+            }
+
             await TvRepository.UpdateChild(request);
 
             if (request.Approved)
@@ -391,6 +403,14 @@ namespace Ombi.Core.Engine
                     ErrorMessage = result.Message
                 };
             }
+
+            await _requestLog.Add(new RequestLog
+            {
+                UserId = (await GetUser()).Id,
+                RequestDate = DateTime.UtcNow,
+                RequestId = model.Id,
+                RequestType = RequestType.TvShow,
+            });
 
             return new RequestEngineResult {Result = true};
         }

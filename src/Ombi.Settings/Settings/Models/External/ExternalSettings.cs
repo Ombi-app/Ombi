@@ -17,7 +17,7 @@ namespace Ombi.Settings.Settings.Models.External
             {
                 if (!string.IsNullOrEmpty(SubDir))
                 {
-                    var formattedSubDir = Ip.ReturnUriWithSubDir(Port, Ssl, SubDir);
+                    var formattedSubDir = Ip.ReturnUriWithSubDir(Port, Ssl, SubDir.Trim());
                     return formattedSubDir.ToString();
                 }
                 var formatted = Ip.ReturnUri(Port, Ssl);

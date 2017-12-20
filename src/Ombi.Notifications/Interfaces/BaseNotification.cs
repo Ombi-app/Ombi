@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
+using Ombi.Notifications.Exceptions;
 using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
@@ -22,6 +23,8 @@ namespace Ombi.Notifications.Interfaces
             MovieRepository = movie;
             TvRepository = tv;
             CustomizationSettings = customization;
+            Settings.ClearCache();
+            CustomizationSettings.ClearCache();
         }
         
         protected ISettingsService<T> Settings { get; }
@@ -45,6 +48,7 @@ namespace Ombi.Notifications.Interfaces
 
         public async Task NotifyAsync(NotificationOptions model, Settings.Settings.Models.Settings settings)
         {
+            Settings.ClearCache();
             if (settings == null) await NotifyAsync(model);
             
             var notificationSettings = (T)settings;
@@ -134,9 +138,13 @@ namespace Ombi.Notifications.Interfaces
         protected virtual async Task<NotificationMessageContent> LoadTemplate(NotificationAgent agent, NotificationType type, NotificationOptions model)
         {
             var template = await TemplateRepository.GetTemplate(agent, type);
+            if (template == null)
+            {
+                throw new TemplateMissingException($"The template for {agent} and type {type} is missing");
+            }
             if (!template.Enabled)
             {
-                return null;
+                return new NotificationMessageContent {Disabled = true};
             }
             var parsed = Parse(model, template);
 

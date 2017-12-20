@@ -1,23 +1,23 @@
 ﻿import { PlatformLocation } from "@angular/common";
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { AuthHttp } from "angular2-jwt";
 import { Observable } from "rxjs/Rx";
 
-import { ServiceAuthHelpers } from "../service.helpers";
+import { ServiceHelpers } from "../service.helpers";
 
 import { ICouchPotatoApiKey, ICouchPotatoProfiles, ICouchPotatoSettings } from "../../interfaces";
 
 @Injectable()
-export class CouchPotatoService extends ServiceAuthHelpers {
-    constructor(http: AuthHttp, public platformLocation: PlatformLocation) {
+export class CouchPotatoService extends ServiceHelpers {
+    constructor(http: HttpClient, public platformLocation: PlatformLocation) {
         super(http, "/api/v1/CouchPotato/", platformLocation);
     }
 
     public getProfiles(settings: ICouchPotatoSettings): Observable<ICouchPotatoProfiles> {
-        return this.http.post(`${this.url}profile`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
+        return this.http.post<ICouchPotatoProfiles>(`${this.url}profile`, JSON.stringify(settings),  {headers: this.headers});
     }
 
     public getApiKey(settings: ICouchPotatoSettings): Observable<ICouchPotatoApiKey> {
-        return this.http.post(`${this.url}apikey`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
+        return this.http.post<ICouchPotatoApiKey>(`${this.url}apikey`, JSON.stringify(settings),  {headers: this.headers});
     }
 }

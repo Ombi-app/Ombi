@@ -274,11 +274,15 @@ namespace Ombi.Store.Migrations
 
                     b.Property<string>("EmbyConnectUserId");
 
+                    b.Property<int?>("EpisodeRequestLimit");
+
                     b.Property<DateTime?>("LastLoggedIn");
 
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<int?>("MovieRequestLimit");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256);
@@ -507,6 +511,28 @@ namespace Ombi.Store.Migrations
                     b.ToTable("MovieRequests");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.Requests.RequestLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("EpisodeCount");
+
+                    b.Property<DateTime>("RequestDate");
+
+                    b.Property<int>("RequestId");
+
+                    b.Property<int>("RequestType");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RequestLog");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.Requests.TvIssues", b =>
                 {
                     b.Property<int>("Id")
@@ -553,6 +579,34 @@ namespace Ombi.Store.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TvRequests");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.SickRageCache", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("TvDbId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SickRageCache");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.SickRageEpisodeCache", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("EpisodeNumber");
+
+                    b.Property<int>("SeasonNumber");
+
+                    b.Property<int>("TvDbId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SickRageEpisodeCache");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.SonarrCache", b =>
@@ -741,6 +795,13 @@ namespace Ombi.Store.Migrations
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "RequestedUser")
                         .WithMany()
                         .HasForeignKey("RequestedUserId");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.Requests.RequestLog", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.TvIssues", b =>

@@ -22,6 +22,9 @@ export interface IUpdateSettings extends ISettings {
   processName: string;
   useScript: boolean;
   scriptLocation: string;
+  windowsService: boolean;
+  windowsServiceName: string;
+  isWindows: boolean;
 }
 
 export interface IEmbySettings extends ISettings {
@@ -119,7 +122,7 @@ export interface IJobSettings {
 }
 
 export interface IAuthenticationSettings extends ISettings {
-  allowExternalUsersToAuthenticate: boolean;
+  allowNoPassword: boolean;
   // Password
 
   requiredDigit: boolean;
@@ -134,6 +137,8 @@ export interface IUserManagementSettings extends ISettings {
   importPlexAdmin: boolean;
   importEmbyUsers: boolean;
   defaultRoles: string[];
+  movieRequestLimit: number;
+  episodeRequestLimit: number;
   bannedPlexUserIds: string[];
   bannedEmbyUserIds: string[];
 }

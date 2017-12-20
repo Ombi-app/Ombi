@@ -50,6 +50,7 @@ namespace Ombi.Schedule.Jobs.Emby
             _embySettings = embySettings;
             _userManagementSettings = ums;
             _userManagementSettings.ClearCache();
+            _embySettings.ClearCache();
         }
 
         private readonly IEmbyApi _api;
@@ -97,10 +98,12 @@ namespace Ombi.Schedule.Jobs.Emby
                         var newUser = new OmbiUser
                         {
                             UserType = UserType.EmbyUser,
-                            UserName = embyUser.Name,
+                            UserName = embyUser.ConnectUserName.HasValue() ? embyUser.ConnectUserName : embyUser.Name,
                             ProviderUserId = embyUser.Id,
                             Alias = string.Empty,
-                            EmbyConnectUserId = embyUser.ConnectUserId.HasValue() ? embyUser.ConnectUserId : string.Empty
+                            EmbyConnectUserId = embyUser.ConnectUserId.HasValue() ? embyUser.ConnectUserId : string.Empty,
+                            MovieRequestLimit = userManagementSettings.MovieRequestLimit,
+                            EpisodeRequestLimit = userManagementSettings.EpisodeRequestLimit
                         };
                         var result = await _userManager.CreateAsync(newUser);
                         if (!result.Succeeded)

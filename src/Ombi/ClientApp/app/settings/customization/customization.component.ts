@@ -31,7 +31,7 @@ export class CustomizationComponent implements OnInit {
                     }
                 }
                 if(x.hasPresetTheme) {
-                    this.themes.unshift({displayName: x.presetThemeDisplayName, fullName: x.presetThemeName, url: "", version: x.presetThemeVersion});
+                    this.themes.unshift({displayName: x.presetThemeDisplayName, fullName: x.presetThemeName, url: existingTheme.url, version: x.presetThemeVersion});
                     this.themes.unshift({displayName: "None", fullName: "None", url: "", version: ""});
                 } else {
                     this.themes.unshift({displayName: "Please Select", fullName: "-1", url: "-1", version: ""});

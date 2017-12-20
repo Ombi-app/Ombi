@@ -55,7 +55,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task NewRequest(NotificationOptions model, SlackNotificationSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Slack, NotificationType.NewRequest, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.NewRequest} is disabled for {NotificationAgent.Slack}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -68,7 +72,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task Issue(NotificationOptions model, SlackNotificationSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Slack, NotificationType.Issue, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.Issue} is disabled for {NotificationAgent.Slack}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -102,7 +110,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task RequestDeclined(NotificationOptions model, SlackNotificationSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Slack, NotificationType.RequestDeclined, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.RequestDeclined} is disabled for {NotificationAgent.Slack}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -114,7 +126,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task RequestApproved(NotificationOptions model, SlackNotificationSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Slack, NotificationType.RequestApproved, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.RequestApproved} is disabled for {NotificationAgent.Slack}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -127,7 +143,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task AvailableRequest(NotificationOptions model, SlackNotificationSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Slack, NotificationType.RequestAvailable, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.RequestAvailable} is disabled for {NotificationAgent.Slack}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,

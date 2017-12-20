@@ -48,12 +48,9 @@ namespace Ombi.Notifications
                     Body = body.ToMessageBody(),
                     Subject = model.Subject
                 };
-                message.From.Add(new MailboxAddress(settings.SenderAddress, settings.SenderAddress));
+                message.From.Add(new MailboxAddress(string.IsNullOrEmpty(settings.SenderName) ? settings.SenderAddress : settings.SenderName, settings.SenderAddress));
                 message.To.Add(new MailboxAddress(model.To, model.To));
-
                 
-
-
                 using (var client = new SmtpClient())
                 {
                     if (settings.DisableCertificateChecking)

@@ -73,29 +73,46 @@ namespace Ombi.Updater
             process.PriorityClass = priority;
         }
 
-        public void Kill(int processId)
+        public void Kill(StartupOptions opts)
         {
-            var process = Process.GetProcesses().FirstOrDefault(p => p.Id == processId);
-
-            if (process == null)
+            if (opts.IsWindowsService)
             {
-                Console.WriteLine("Cannot find process with id: {0}", processId);
-                return;
+                Console.WriteLine("Stopping Service {0}", opts.WindowsServiceName);
+                var process = new Process();
+                var startInfo =
+                    new ProcessStartInfo
+                    {
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        FileName = "cmd.exe",
+                        Arguments = $"/C net stop \"{opts.WindowsServiceName}\""
+                    };
+                process.StartInfo = startInfo;
+                process.Start();
             }
-
-            process.Refresh();
-
-            if (process.Id != Process.GetCurrentProcess().Id && process.HasExited)
+            else
             {
-                Console.WriteLine("Process has already exited");
-                return;
-            }
+                var process = Process.GetProcesses().FirstOrDefault(p => p.Id == opts.OmbiProcessId);
 
-            Console.WriteLine("[{0}]: Killing process", process.Id);
-            process.Kill();
-            Console.WriteLine("[{0}]: Waiting for exit", process.Id);
-            process.WaitForExit();
-            Console.WriteLine("[{0}]: Process terminated successfully", process.Id);
+                if (process == null)
+                {
+                    Console.WriteLine("Cannot find process with id: {0}", opts.OmbiProcessId);
+                    return;
+                }
+
+                process.Refresh();
+
+                if (process.Id != Process.GetCurrentProcess().Id && process.HasExited)
+                {
+                    Console.WriteLine("Process has already exited");
+                    return;
+                }
+
+                Console.WriteLine("[{0}]: Killing process", process.Id);
+                process.Kill();
+                Console.WriteLine("[{0}]: Waiting for exit", process.Id);
+                process.WaitForExit();
+                Console.WriteLine("[{0}]: Process terminated successfully", process.Id);
+            }
         }
 
         public void KillAll(string processName)
@@ -113,7 +130,7 @@ namespace Ombi.Updater
                 }
 
                 Console.WriteLine("Killing process: {0} [{1}]", processInfo.Id, processInfo.ProcessName);
-                Kill(processInfo.Id);
+                Kill(new StartupOptions{OmbiProcessId = processInfo.Id});
             }
         }
 

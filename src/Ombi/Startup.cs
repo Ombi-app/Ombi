@@ -202,6 +202,7 @@ namespace Ombi
                 c.ShowJsonEditor();
             });
 
+            app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

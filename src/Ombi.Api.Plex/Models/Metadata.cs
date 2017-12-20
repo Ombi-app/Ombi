@@ -26,7 +26,7 @@ namespace Ombi.Api.Plex.Models
         public int addedAt { get; set; }
         public int updatedAt { get; set; }
         public Genre[] Genre { get; set; }
-        public Role[] Role { get; set; }
+        //public Role[] Role { get; set; }
         public string primaryExtraKey { get; set; }
         public int parentRatingKey { get; set; }
         public int grandparentRatingKey { get; set; }
@@ -44,7 +44,7 @@ namespace Ombi.Api.Plex.Models
         public string grandparentTheme { get; set; }
         public string chapterSource { get; set; }
         public Medium[] Media { get; set; }
-        public Director[] Director { get; set; }
-        public Writer[] Writer { get; set; }
+        //    public Director[] Director { get; set; }
+        //    public Writer[] Writer { get; set; }
     }
 }

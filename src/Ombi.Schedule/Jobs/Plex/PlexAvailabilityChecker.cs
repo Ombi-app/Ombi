@@ -44,8 +44,6 @@ namespace Ombi.Schedule.Jobs.Plex
 
             foreach (var child in tv)
             {
-
-                PlexServerContent item = null;
                 var useImdb = false;
                 var useTvDb = false;
                 if (child.ParentRequest.ImdbId.HasValue())
@@ -107,7 +105,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private async Task ProcessMovies()
         {
             // Get all non available
-            var movies = _movieRepo.GetAll().Where(x => !x.Available);
+            var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available);
 
             foreach (var movie in movies)
             {

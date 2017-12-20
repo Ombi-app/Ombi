@@ -2,7 +2,7 @@
 
 <wiki [url]="'https://github.com/tidusjar/Ombi/wiki/User-Management-Settings'"></wiki>
 <fieldset *ngIf="settings">
-    <legend>User Management Settings</legend>
+    <legend>User Importer Settings</legend>
 
     <div class="col-md-6">
         <div *ngIf="plexEnabled">
@@ -54,6 +54,21 @@
                     <input type="checkbox" [(ngModel)]="c.enabled" [value]="c.value" id="create{{c.value}}" [attr.name]="'create' + c.value" ng-checked="c.enabled">
                     <label for="create{{c.value}}">{{c.value | humanize}}</label>
                 </div>
+            </div>
+        </div>
+
+        <h4>Default Request Limits</h4>
+        <div class="form-group">
+            <label for="movieRequestLimit" class="control-label">Movie Request Limit</label>
+            <div>
+                <input type="text" [(ngModel)]="settings.movieRequestLimit" class="form-control form-small form-control-custom " id="movieRequestLimit" name="movieRequestLimit" value="{{settings?.movieRequestLimit}}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="episodeRequestLimit" class="control-label">Episode Request Limit</label>
+            <div>
+                <input type="text" [(ngModel)]="settings.episodeRequestLimit" class="form-control form-small form-control-custom " id="episodeRequestLimit" name="episodeRequestLimit" value="{{settings?.episodeRequestLimit}}">
             </div>
         </div>
 

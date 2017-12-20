@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using CommandLine;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -62,39 +63,26 @@ namespace Ombi.Updater
 
         private static StartupOptions CheckArgs(string[] args)
         {
-            if(args.Length <= 1)
-            {
-                Console.WriteLine("No Args Provided... Exiting");
-                Environment.Exit(1);
-            }
-            var startup = new StartupOptions
-            {
-                ApplicationPath = args[0],
-                ProcessName = args[1],
-            };
-            if (args.Length == 4)
-            {
-                startup.StartupArgs = args[2] + " " + args[3];
-            }
-            else if (args.Length == 3)
-            {
-                startup.StartupArgs = args[2];
-            }
-
-            var p = new ProcessProvider();
-            var ombiProc = p.FindProcessByName(startup.ProcessName).FirstOrDefault();
-
-            startup.OmbiProcessId = ombiProc?.Id ?? -1;
-
-            return startup;
+            var result = Parser.Default.ParseArguments<StartupOptions>(args);
+            StartupOptions opts = null;
+            result.WithParsed(options => opts = options);
+            return opts;
         }
     }
 
     public class StartupOptions
     {
+        [Option("processname", Required = false, Default = "Ombi")]
         public string ProcessName { get; set; }
+        [Option("applicationPath", Required = false)]
         public string ApplicationPath { get; set; }
+        [Option("processId", Required = false)]
         public int OmbiProcessId { get; set; }
+        [Option("startupArgs", Required = false)]
         public string StartupArgs { get; set; }
+        [Option("windowsServiceName", Required = false)]
+        public string WindowsServiceName { get; set; }
+
+        public bool IsWindowsService => !string.IsNullOrEmpty(WindowsServiceName);
     }
 }

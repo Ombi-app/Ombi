@@ -49,7 +49,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task NewRequest(NotificationOptions model, MattermostNotificationSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Mattermost, NotificationType.NewRequest, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.NewRequest} is disabled for {NotificationAgent.Mattermost}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -62,7 +66,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task Issue(NotificationOptions model, MattermostNotificationSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Mattermost, NotificationType.Issue, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.Issue} is disabled for {NotificationAgent.Mattermost}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -100,7 +108,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task RequestDeclined(NotificationOptions model, MattermostNotificationSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Mattermost, NotificationType.RequestDeclined, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.RequestDeclined} is disabled for {NotificationAgent.Mattermost}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -112,7 +124,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task RequestApproved(NotificationOptions model, MattermostNotificationSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Mattermost, NotificationType.RequestApproved, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.RequestApproved} is disabled for {NotificationAgent.Mattermost}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
@@ -125,7 +141,11 @@ namespace Ombi.Notifications.Agents
         protected override async Task AvailableRequest(NotificationOptions model, MattermostNotificationSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Mattermost, NotificationType.RequestAvailable, model);
-
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.RequestAvailable} is disabled for {NotificationAgent.Mattermost}");
+                return;
+            }
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,

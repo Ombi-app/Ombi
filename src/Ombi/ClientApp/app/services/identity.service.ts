@@ -1,66 +1,66 @@
 ﻿import { PlatformLocation } from "@angular/common";
 import { Injectable } from "@angular/core";
-import { Http } from "@angular/http";
-import { AuthHttp } from "angular2-jwt";
+
+import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Rx";
 
 import { ICheckbox, ICreateWizardUser, IIdentityResult, IResetPasswordToken, IUpdateLocalUser, IUser } from "../interfaces";
-import { ServiceAuthHelpers } from "./service.helpers";
+import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()
-export class IdentityService extends ServiceAuthHelpers {
-    constructor(http: AuthHttp, private regularHttp: Http, public platformLocation: PlatformLocation) {
+export class IdentityService extends ServiceHelpers {
+    constructor(http: HttpClient, public platformLocation: PlatformLocation) {
         super(http, "/api/v1/Identity/", platformLocation);
     }
     public createWizardUser(user: ICreateWizardUser): Observable<boolean> {
-        return this.regularHttp.post(`${this.url}Wizard/`, JSON.stringify(user), { headers: this.headers }).map(this.extractData);
+        return this.http.post<boolean>(`${this.url}Wizard/`, JSON.stringify(user),  {headers: this.headers});
     }
 
     public getUser(): Observable<IUser> {
-        return this.http.get(this.url).map(this.extractData);
+        return this.http.get<IUser>(this.url,  {headers: this.headers});
     }
 
     public getUserById(id: string): Observable<IUser> {
-        return this.http.get(`${this.url}User/${id}`).map(this.extractData);
+        return this.http.get<IUser>(`${this.url}User/${id}`,  {headers: this.headers});
     }
 
     public getUsers(): Observable<IUser[]> {
-        return this.http.get(`${this.url}Users`).map(this.extractData);
+        return this.http.get<IUser[]>(`${this.url}Users`,  {headers: this.headers});
     }
 
     public getAllAvailableClaims(): Observable<ICheckbox[]> {
-        return this.http.get(`${this.url}Claims`).map(this.extractData);
+        return this.http.get<ICheckbox[]>(`${this.url}Claims`,  {headers: this.headers});
     }
 
     public createUser(user: IUser): Observable<IIdentityResult> {
-        return this.http.post(this.url, JSON.stringify(user), { headers: this.headers }).map(this.extractData);
+        return this.http.post<IIdentityResult>(this.url, JSON.stringify(user), {headers: this.headers});
     }
 
     public updateUser(user: IUser): Observable<IIdentityResult> {
-        return this.http.put(this.url, JSON.stringify(user), { headers: this.headers }).map(this.extractData);
+        return this.http.put<IIdentityResult>(this.url, JSON.stringify(user), {headers: this.headers});
     }
     public updateLocalUser(user: IUpdateLocalUser): Observable<IIdentityResult> {
-        return this.http.put(this.url + "local", JSON.stringify(user), { headers: this.headers }).map(this.extractData);
+        return this.http.put<IIdentityResult>(this.url + "local", JSON.stringify(user), {headers: this.headers});
     }
 
     public deleteUser(user: IUser): Observable<IIdentityResult> {
-        return this.http.delete(`${this.url}${user.id}`, { headers: this.headers }).map(this.extractData);
+        return this.http.delete<IIdentityResult>(`${this.url}${user.id}`, {headers: this.headers});
     }
 
     public hasUserRequested(userId: string): Observable<boolean> {
-         return this.http.get(`${this.url}userhasrequest/${userId}`).map(this.extractData);
+         return this.http.get<boolean>(`${this.url}userhasrequest/${userId}`, {headers: this.headers});
     }
 
     public submitResetPassword(email: string): Observable<IIdentityResult> {
-        return this.regularHttp.post(this.url + "reset", JSON.stringify({email}), { headers: this.headers }).map(this.extractData);
+        return this.http.post<IIdentityResult>(this.url + "reset", JSON.stringify({email}), {headers: this.headers});
     }
 
     public resetPassword(token: IResetPasswordToken): Observable<IIdentityResult> {
-        return this.regularHttp.post(this.url + "resetpassword", JSON.stringify(token), { headers: this.headers }).map(this.extractData);
+        return this.http.post<IIdentityResult>(this.url + "resetpassword", JSON.stringify(token), {headers: this.headers});
     }
 
     public sendWelcomeEmail(user: IUser): Observable<null> {
-        return this.http.post(`${this.url}welcomeEmail`, JSON.stringify(user), { headers: this.headers }).map(this.extractData);
+        return this.http.post<any>(`${this.url}welcomeEmail`, JSON.stringify(user), {headers: this.headers});
     }
 
     public hasRole(role: string): boolean {

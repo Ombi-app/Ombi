@@ -62,7 +62,7 @@ module.exports = (env: any) => {
                 "event-source-polyfill",
                 "bootstrap/dist/js/bootstrap",
                 "ngx-clipboard",
-                "angular2-jwt",
+                "@auth0/angular-jwt",
                 "ng2-cookies",
                 "@ngx-translate/core",
                 "@ngx-translate/http-loader",
@@ -79,6 +79,7 @@ module.exports = (env: any) => {
         },
         plugins: [
             new webpack.ProvidePlugin({ $: "jquery", jQuery: "jquery", Hammer: "hammerjs/hammer" }), // Global identifiers
+            new webpack.ContextReplacementPlugin(/\@angular(\\|\/)core(\\|\/)esm5/, path.join(__dirname, './client')), // Workaround for https://github.com/angular/angular/issues/20357
             new webpack.ContextReplacementPlugin(/\@angular\b.*\b(bundles|linker)/, path.join(__dirname, "./ClientApp")), // Workaround for https://github.com/angular/angular/issues/11580
             new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)@angular/, path.join(__dirname, "./ClientApp")), // Workaround for https://github.com/angular/angular/issues/14898
             extractCSS,

@@ -15,7 +15,7 @@
                         </div>
                     </div>
                     
-                    <div class="form-group">
+                    <div class="form-group" *ngIf="showSubject">
                         <label class="control-label">Subject</label>
                         <div>
                             <input type="text" class="form-control form-control-custom" [(ngModel)]="template.subject" value="{{template.subject}}">

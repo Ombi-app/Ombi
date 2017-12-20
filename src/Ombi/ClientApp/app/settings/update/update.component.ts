@@ -12,9 +12,9 @@ export class UpdateComponent implements OnInit {
     public form: FormGroup;
     public updateAvailable = false;
     public enableUpdateButton = false;
+    public isWindows = false;
     public get useScript() {
         const control = this.form.get("useScript");
-        console.log(control);
         return control!.value!;
     }
 
@@ -33,7 +33,10 @@ export class UpdateComponent implements OnInit {
                     processName: [x.processName],
                     useScript: [x.useScript],
                     scriptLocation: [x.scriptLocation],
+                    windowsService: [x.windowsService],
+                    windowsServiceName: [x.windowsServiceName],
                 });
+                this.isWindows = x.isWindows;
                 this.enableUpdateButton = x.autoUpdateEnabled;
             });
     }

@@ -26,10 +26,12 @@ export class UserManagementAddComponent implements OnInit {
             password: "",
             userName: "",
             userType: UserType.LocalUser,
-            checked:false,
+            checked: false,
             hasLoggedIn: false,
-            lastLoggedIn:new Date(),
-        };
+            lastLoggedIn: new Date(),
+            episodeRequestLimit: 0,
+            movieRequestLimit: 0,
+    };
     }
 
     public create() {

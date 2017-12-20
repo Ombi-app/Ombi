@@ -379,7 +379,9 @@ namespace Ombi.Controllers
         [HttpGet("Update")]
         public async Task<UpdateSettings> UpdateSettings()
         {
-            return await Get<UpdateSettings>();
+            var settings =  await Get<UpdateSettings>();
+
+            return Mapper.Map<UpdateSettingsViewModel>(settings);
         }
 
         /// <summary>
@@ -461,6 +463,7 @@ namespace Ombi.Controllers
             j.EmbyContentSync = j.EmbyContentSync.HasValue() ? j.EmbyContentSync : JobSettingsHelper.EmbyContent(j);
             j.PlexContentSync = j.PlexContentSync.HasValue() ? j.PlexContentSync : JobSettingsHelper.PlexContent(j);
             j.UserImporter = j.UserImporter.HasValue() ? j.UserImporter : JobSettingsHelper.UserImporter(j);
+            j.SickRageSync = j.SickRageSync.HasValue() ? j.SickRageSync : JobSettingsHelper.SickRageSync(j);
 
             return j;
         }
