@@ -43,6 +43,7 @@
     "Search": "Søg",
     "Requests": "Anmodninger",
     "UserManagement": "Brugeradministration",
+    "Issues": "Issues",
     "Donate": "Donér!",
     "DonateTooltip": "Sådan overbeviser jeg min kone om, at jeg skal bruge min fritid på at udvikle Ombi :)",
     "UpdateAvailableTooltip": "Ny opdatering venter!",
@@ -102,5 +103,12 @@
     "GridTitle": "Titel",
     "AirDate": "Sendt",
     "GridStatus": "Status"
+  },
+  "Issues": {
+    "Title": "Issues",
+    "ColumnTitle": "Title",
+    "Category": "Category",
+    "Status": "Status",
+    "Details": "Details"
   }
 }
