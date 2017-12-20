@@ -122,7 +122,7 @@ export interface IJobSettings {
 }
 
 export interface IAuthenticationSettings extends ISettings {
-  allowExternalUsersToAuthenticate: boolean;
+  allowNoPassword: boolean;
   // Password
 
   requiredDigit: boolean;
