@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
 import { AuthService } from "../auth/auth.service";
-import { IssuesService, SettingsService } from "../services";
+import { IssuesService, NotificationService, SettingsService } from "../services";
 
 import { IIssues, IIssuesChat, IIssueSettings, INewIssueComments, IssueStatus } from "../interfaces";
 
@@ -28,7 +28,8 @@ export class IssueDetailsComponent implements OnInit {
     constructor(private issueService: IssuesService,
                 private route: ActivatedRoute,
                 private authService: AuthService,
-                private settingsService: SettingsService) { 
+                private settingsService: SettingsService,
+                private notificationService: NotificationService) { 
             this.route.params
             .subscribe((params: any) => {
                   this.issueId = parseInt(params.id);    
@@ -67,11 +68,17 @@ export class IssueDetailsComponent implements OnInit {
     }
 
     public inProgress() {
-        this.issueService.updateStatus({issueId: this.issueId, status: IssueStatus.InProgress}).subscribe();
+        this.issueService.updateStatus({issueId: this.issueId, status: IssueStatus.InProgress}).subscribe(x => {
+            this.notificationService.success("Marked issue as In Progress");
+            this.issue.status = IssueStatus.InProgress;
+        });
     }
 
     public resolve() {
-        this.issueService.updateStatus({issueId: this.issueId, status: IssueStatus.Resolved}).subscribe();
+        this.issueService.updateStatus({issueId: this.issueId, status: IssueStatus.Resolved}).subscribe(x => {
+            this.notificationService.success("Marked issue as Resolved");
+            this.issue.status = IssueStatus.Resolved;
+        });
     }
 
     private loadComments() {

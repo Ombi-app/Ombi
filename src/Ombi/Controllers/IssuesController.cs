@@ -76,13 +76,38 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
-        /// Returns all the movie issues
+        /// Returns all the issues
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IEnumerable<Issues>> GetMovieIssues()
+        public async Task<IEnumerable<Issues>> GetIssues()
         {
             return await _issues.GetAll().Include(x => x.IssueCategory).ToListAsync();
+        }
+
+        /// <summary>
+        /// Returns all the issues
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("{take}/{skip}/{status}")]
+        public async Task<IEnumerable<Issues>> GetIssues(int take, int skip, IssueStatus status)
+        {
+            return await _issues.GetAll().Where(x => x.Status == status).Include(x => x.IssueCategory).Skip(skip).Take(take).ToListAsync();
+        }
+
+        /// <summary>
+        /// Returns all the issues count
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("count")]
+        public async Task<IssueCountModel> GetIssueCount()
+        {
+            return new IssueCountModel
+            {
+                Pending = await _issues.GetAll().Where(x => x.Status == IssueStatus.Pending).CountAsync(),
+                InProgress = await _issues.GetAll().Where(x => x.Status == IssueStatus.InProgress).CountAsync(),
+                Resolved = await _issues.GetAll().Where(x => x.Status == IssueStatus.Resolved).CountAsync()
+            };
         }
 
         /// <summary>
@@ -97,19 +122,19 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
-        /// Returns the Movie issue by Id
+        /// Returns the issue by Id
         /// </summary>
         [HttpGet("{id}")]
-        public async Task<Issues> GetMovieIssue([FromRoute] int id)
+        public async Task<Issues> GetIssue([FromRoute] int id)
         {
             return await _issues.GetAll().Where(x => x.Id == id).Include(x => x.IssueCategory).FirstOrDefaultAsync();
         }
 
         /// <summary>
-        /// Get's all the movie issue comments by id
+        /// Get's all the issue comments by id
         /// </summary>
         [HttpGet("{id}/comments")]
-        public async Task<IEnumerable<IssueCommentChatViewModel>> GetMovieComments([FromRoute]int id)
+        public async Task<IEnumerable<IssueCommentChatViewModel>> GetComments([FromRoute]int id)
         {
             var comment = await _issueComments.GetAll().Where(x => x.IssuesId == id).Include(x => x.User).ToListAsync();
             var vm = new List<IssueCommentChatViewModel>();
@@ -147,18 +172,18 @@ namespace Ombi.Controllers
         }
 
         [HttpPost("status")]
-        public async Task<StatusCodeResult> UpdateStatus([FromBody] IssueStateViewModel model)
+        public async Task<bool> UpdateStatus([FromBody] IssueStateViewModel model)
         {
             var issue = await _issues.Find(model.IssueId);
             if (issue == null)
             {
-                return NotFound();
+                return false;
             }
 
             issue.Status = model.Status;
             await _issues.SaveChangesAsync();
 
-            return Ok();
+            return true;
         }
     }
 }

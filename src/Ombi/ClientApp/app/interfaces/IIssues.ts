@@ -21,6 +21,19 @@ export enum IssueStatus {
     Resolved = 2,
 }
 
+export interface IIssueCount {
+    pending: number;
+    inProgress: number;
+    resolved: number;
+}
+
+export interface IPagenator {
+        first: number;
+        rows: number;
+        page: number;
+        pageCount: number;
+}
+
 export interface IIssueComments {
     userId: string;
     comment: string;

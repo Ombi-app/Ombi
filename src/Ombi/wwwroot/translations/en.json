@@ -111,9 +111,20 @@
   },
   "Issues":{
     "Title":"Issues",
+    "PendingTitle":"Pending Issues",
+    "InProgressTitle":"In Progress Issues",
+    "ResolvedTitle":"Resolved Issues",
     "ColumnTitle":"Title",
     "Category":"Category",
     "Status": "Status",
-    "Details": "Details"
+    "Details": "Details",
+    "Description":"Description",
+    "NoComments":"No Comments!",
+    "MarkInProgress":"Mark In Progress",
+    "MarkResolved":"Mark Resolved",
+    "SendMessageButton":"Send",
+    "Subject":"Subject",
+    "Comments":"Comments",
+    "WriteMessagePlaceholder":"Write your message here..."
   }
 }

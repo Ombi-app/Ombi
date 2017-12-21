@@ -3,7 +3,7 @@ import { RouterModule, Routes } from "@angular/router";
 
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { OrderModule } from "ngx-order-pipe";
-import { PaginatorModule, SharedModule } from "primeng/primeng";
+import { PaginatorModule, SharedModule, TabViewModule } from "primeng/primeng";
 
 import { IdentityService } from "../services";
 
@@ -31,6 +31,7 @@ const routes: Routes = [
         PipeModule,
         OmbiShared,
         PaginatorModule,
+        TabViewModule,
     ],
     declarations: [
         IssuesComponent,

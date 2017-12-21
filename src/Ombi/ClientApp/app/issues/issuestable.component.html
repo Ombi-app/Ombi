@@ -40,4 +40,4 @@
             </tr>
         </tbody>
     </table>
-    <p-paginator rows="10" totalRecords="100"></p-paginator>
+    <p-paginator [rows]="rowCount" [totalRecords]="totalRecords" (onPageChange)="paginate($event)"></p-paginator>
