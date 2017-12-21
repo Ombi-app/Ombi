@@ -54,6 +54,7 @@ export class IssueDetailsComponent implements OnInit {
                 requestType: x.requestType,
                 requestId: x.requestId,
                 providerId: x.providerId,
+                userReported: x.userReported,
             };
         });
         

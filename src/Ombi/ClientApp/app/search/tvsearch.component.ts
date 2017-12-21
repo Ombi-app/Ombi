@@ -1,6 +1,5 @@
 ﻿import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { Router } from "@angular/router";
 import { Subject } from "rxjs/Subject";
 
 import { AuthService } from "../auth/auth.service";
@@ -25,9 +24,14 @@ export class TvSearchComponent implements OnInit {
 
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
+    public issuesBarVisible = false;
+    public issueRequestTitle: string;
+    public issueRequestId: number;
+    public issueProviderId: string;
+    public issueCategorySelected: IIssueCategory;
 
     constructor(private searchService: SearchService, private requestService: RequestService,
-                private notificationService: NotificationService, private route: Router, private authService: AuthService,
+                private notificationService: NotificationService, private authService: AuthService,
                 private imageService: ImageService, private sanitizer: DomSanitizer) {
 
         this.searchChanged
@@ -185,8 +189,12 @@ export class TvSearchComponent implements OnInit {
         this.request(searchResult);
     }
 
-    public selectSeason(searchResult: ISearchTvResult) {
-        this.route.navigate(["/search/show", searchResult.id]);
+    public reportIssue(catId: IIssueCategory, req: ISearchTvResult) {
+        this.issueRequestId = req.id;
+        this.issueRequestTitle = req.title;
+        this.issueCategorySelected = catId;
+        this.issuesBarVisible = true;
+        this.issueProviderId = req.id.toString();
     }
 
     private updateItem(key: TreeNode, updated: TreeNode) {

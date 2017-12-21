@@ -497,11 +497,15 @@ namespace Ombi.Store.Migrations
 
                     b.Property<string>("Title");
 
+                    b.Property<string>("UserReportedId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IssueCategoryId");
 
                     b.HasIndex("IssueId");
+
+                    b.HasIndex("UserReportedId");
 
                     b.ToTable("Issues");
                 });
@@ -802,6 +806,10 @@ namespace Ombi.Store.Migrations
                     b.HasOne("Ombi.Store.Entities.Requests.MovieRequests")
                         .WithMany("Issues")
                         .HasForeignKey("IssueId");
+
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "UserReported")
+                        .WithMany()
+                        .HasForeignKey("UserReportedId");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.MovieRequests", b =>

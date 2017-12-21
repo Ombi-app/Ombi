@@ -21,6 +21,6 @@
         </div>
 
 
-        <button type="button" class="btn btn-primary-outline" (click)="submit()">Submit</button>
+        <button type="button" [disabled]="submitted" class="btn btn-primary-outline" (click)="submit()">Submit</button>
      </div>
 </p-sidebar>

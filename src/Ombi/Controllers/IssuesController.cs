@@ -6,11 +6,15 @@ using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using System.Collections.Generic;
 using System.Linq;
+using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Attributes;
+using Ombi.Core;
+using Ombi.Core.Notifications;
 using Ombi.Helpers;
 using Ombi.Models;
+using Ombi.Notifications.Models;
 using Ombi.Store.Entities;
 
 namespace Ombi.Controllers
@@ -21,18 +25,20 @@ namespace Ombi.Controllers
     public class IssuesController : Controller
     {
         public IssuesController(IRepository<IssueCategory> categories, IRepository<Issues> issues, IRepository<IssueComments> comments,
-            UserManager<OmbiUser> userManager)
+            UserManager<OmbiUser> userManager, INotificationService notify)
         {
             _categories = categories;
             _issues = issues;
             _issueComments = comments;
             _userManager = userManager;
+            _notification = notify;
         }
 
         private readonly IRepository<IssueCategory> _categories;
         private readonly IRepository<Issues> _issues;
         private readonly IRepository<IssueComments> _issueComments;
         private readonly UserManager<OmbiUser> _userManager;
+        private readonly INotificationService _notification;
 
         /// <summary>
         /// Get's all categories
@@ -92,7 +98,14 @@ namespace Ombi.Controllers
         [HttpGet("{take}/{skip}/{status}")]
         public async Task<IEnumerable<Issues>> GetIssues(int take, int skip, IssueStatus status)
         {
-            return await _issues.GetAll().Where(x => x.Status == status).Include(x => x.IssueCategory).Skip(skip).Take(take).ToListAsync();
+            return await _issues
+                .GetAll()
+                .Where(x => x.Status == status)
+                .Include(x => x.IssueCategory)
+                .Include(x => x.UserReported)
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync();
         }
 
         /// <summary>
@@ -117,7 +130,21 @@ namespace Ombi.Controllers
         public async Task<int> CreateIssue([FromBody]Issues i)
         {
             i.IssueCategory = null;
+            i.UserReportedId = (await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name)).Id;
             await _issues.Add(i);
+
+            var notificationModel = new NotificationOptions
+            {
+                RequestId = 0,
+                DateTime = DateTime.Now,
+                NotificationType = NotificationType.Issue,
+                RequestType = i.RequestType,
+                Recipient = string.Empty,
+                AdditionalInformation = $"{i.Subject} | {i.Description}"
+            };
+
+            BackgroundJob.Enqueue(() => _notification.Publish(notificationModel));
+
             return i.Id;
         }
 
@@ -127,7 +154,10 @@ namespace Ombi.Controllers
         [HttpGet("{id}")]
         public async Task<Issues> GetIssue([FromRoute] int id)
         {
-            return await _issues.GetAll().Where(x => x.Id == id).Include(x => x.IssueCategory).FirstOrDefaultAsync();
+            return await _issues.GetAll().Where(x => x.Id == id)
+                .Include(x => x.IssueCategory)
+                .Include(x => x.UserReported)
+                .FirstOrDefaultAsync();
         }
 
         /// <summary>

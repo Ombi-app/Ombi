@@ -19,6 +19,12 @@
                             <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
                     </span>
                 </th>
+                <th (click)="setOrder('issue.reportedUser')">
+                    <a [translate]="'Issues.ReportedBy'"></a>
+                    <span *ngIf="order === 'issue.reportedUser'">
+                            <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
+                    </span>
+                </th>
                 <th>
                 </th>
             </tr>
@@ -33,6 +39,12 @@
                 </td>
                 <td>
                     {{IssueStatus[issue.status] | humanize}}
+                </td>
+                <td *ngIf="issue.userReported?.alias">
+                    {{issue.userReported.alias}}
+                </td>
+                <td *ngIf="!issue.userReported?.alias">
+                    {{issue.userReported.userName}}
                 </td>
                 <td>
                         <a [routerLink]="['/issues/' + issue.id]" class="btn btn-sm btn-info-outline" [translate]="'Issues.Details'"></a>

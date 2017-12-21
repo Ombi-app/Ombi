@@ -9,7 +9,7 @@ import { SearchService } from "../services";
 
 import { IRequestEngineResult } from "../interfaces";
 import { IEpisodesRequests } from "../interfaces";
-import { IIssueCategory, ISearchTvResult } from "../interfaces";
+import { ISearchTvResult } from "../interfaces";
 
 @Component({
     selector: "seriesinformation",
@@ -21,14 +21,6 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
     public result: IRequestEngineResult;
     public series: ISearchTvResult;
     public requestedEpisodes: IEpisodesRequests[] = [];
-
-    @Input() public issueCategories: IIssueCategory[];
-    @Input() public issuesEnabled: boolean;
-    @Input() public seriesTitle: string;
-
-    public issuesBarVisible = false;
-    public issueId: number;
-    public issueCategorySelected: IIssueCategory;
 
     @Input() private seriesId: number;
     private subscriptions = new Subject<void>();

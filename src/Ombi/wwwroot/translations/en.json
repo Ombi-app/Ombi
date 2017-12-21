@@ -125,6 +125,7 @@
     "SendMessageButton":"Send",
     "Subject":"Subject",
     "Comments":"Comments",
-    "WriteMessagePlaceholder":"Write your message here..."
+    "WriteMessagePlaceholder":"Write your message here...",
+    "ReportedBy":"Reported By"
   }
 }

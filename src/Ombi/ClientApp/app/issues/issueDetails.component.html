@@ -4,6 +4,8 @@
             <span class="label label-info">{{IssueStatus[issue.status]}}</span>
             <span class="label label-success">{{issue.issueCategory.value}}</span>
         
+            <h3 *ngIf="issue.userReported?.alias">{{'Issues.ReportedBy' | translate}}: {{issue.userReported.alias}}</h3>
+            <h3 *ngIf="!issue.userReported?.alias">{{'Issues.ReportedBy' | translate}}: {{issue.userReported.userName}}</h3>
         <h3 *ngIf="issue.subject">{{'Issues.Subject' | translate}}: {{issue.subject}}</h3>
 <br>
         <div class="form-group">
@@ -52,7 +54,7 @@
                         <input id="btn-input" type="text" class="form-control input-sm chat_input" [(ngModel)]="newComment.comment"  [attr.placeholder]="'Issues.WriteMessagePlaceholder' | translate"
                         />
                         <span class="input-group-btn">
-                            <button class="btn btn-primary btn-sm" id="btn-chat" (click)="addComment()" [translate]="'Issues.Send'"></button>
+                            <button class="btn btn-primary btn-sm" id="btn-chat" (click)="addComment()" [translate]="'Issues.SendMessageButton'"></button>
                         </span>
                     </div>
                 </div>

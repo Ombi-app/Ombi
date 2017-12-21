@@ -13,6 +13,7 @@ export interface IIssues {
     resolvedDate?: Date;
     comments: IIssueComments[];
     requestId: number | undefined;
+    userReported: IUser | undefined;
 }
 
 export enum IssueStatus {

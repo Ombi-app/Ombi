@@ -18,7 +18,9 @@ namespace Ombi.Store.Entities.Requests
         public IssueCategory IssueCategory { get; set; }
         public IssueStatus Status { get; set; }
         public DateTime? ResovledDate { get; set; }
-
+        [ForeignKey(nameof(UserReported))]
+        public string UserReportedId { get; set; }
+        public OmbiUser UserReported { get; set; }
         public List<IssueComments> Comments { get; set; }
     }
 

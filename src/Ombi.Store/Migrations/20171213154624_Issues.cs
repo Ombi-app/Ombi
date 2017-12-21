@@ -36,7 +36,8 @@ namespace Ombi.Store.Migrations
                     ResovledDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
                     Subject = table.Column<string>(type: "TEXT", nullable: true),
-                    Title = table.Column<string>(type: "TEXT", nullable: true)
+                    Title = table.Column<string>(type: "TEXT", nullable: true),
+                    UserReportedId = table.Column<string>(type: "TEXT", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -57,6 +58,12 @@ namespace Ombi.Store.Migrations
                         name: "FK_Issues_MovieRequests_IssueId",
                         column: x => x.IssueId,
                         principalTable: "MovieRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Issues_AspNetUsers_UserReportedId",
+                        column: x => x.UserReportedId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -108,6 +115,12 @@ namespace Ombi.Store.Migrations
                 name: "IX_Issues_IssueId",
                 table: "Issues",
                 column: "IssueId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Issues_UserReportedId",
+                table: "Issues",
+                column: "UserReportedId");
+
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
