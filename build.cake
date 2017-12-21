@@ -45,6 +45,7 @@ var windowsArtifactsFolder = artifactsFolder + "win10-x64/published";
 var windows32BitArtifactsFolder = artifactsFolder + "win10-x32/published";
 var osxArtifactsFolder = artifactsFolder + "osx-x64/published";
 var linuxArtifactsFolder = artifactsFolder + "linux-x64/published";
+var linuxArmArtifactsFolder = artifactsFolder + "linux-arm/published";
 
 
 
@@ -151,13 +152,16 @@ Task("Package")
     Zip(windows32BitArtifactsFolder +"/",artifactsFolder + "windows-32bit.zip");
 	GZipCompress(osxArtifactsFolder, artifactsFolder + "osx.tar.gz");
 	GZipCompress(linuxArtifactsFolder, artifactsFolder + "linux.tar.gz");
+	GZipCompress(linuxArmArtifactsFolder, artifactsFolder + "linux-arm.tar.gz");
 });
 
 Task("Publish")
     .IsDependentOn("Run-Unit-Tests")
     .IsDependentOn("PrePublish")
     .IsDependentOn("Publish-Windows")
-    .IsDependentOn("Publish-OSX").IsDependentOn("Publish-Linux")
+    .IsDependentOn("Publish-OSX")
+    .IsDependentOn("Publish-Linux")
+    .IsDependentOn("Publish-Linux-ARM")
     .IsDependentOn("Package");
 
 Task("Publish-Windows")
@@ -201,6 +205,17 @@ Task("Publish-Linux")
 
     DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
     CopyFile(buildDir + "/netcoreapp2.0/linux-x64/Swagger.xml", buildDir + "/netcoreapp2.0/linux-x64/published/Swagger.xml");
+    DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
+});
+
+Task("Publish-Linux-ARM")
+    .Does(() =>
+{
+    publishSettings.Runtime = "linux-arm";
+    publishSettings.OutputDirectory = Directory(buildDir) + Directory("netcoreapp2.0/linux-arm/published");
+
+    DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
+    CopyFile(buildDir + "/netcoreapp2.0/linux-x64/Swagger.xml", buildDir + "/netcoreapp2.0/linux-arm/published/Swagger.xml");
     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 
