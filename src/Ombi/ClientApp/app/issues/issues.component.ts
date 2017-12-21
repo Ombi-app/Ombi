@@ -44,7 +44,7 @@ export class IssuesComponent implements OnInit {
         this.getResolved();
     }
 
-    private getPending(){
+    private getPending() {
         this.issueService.getIssuesPage(this.takeAmount, this.pendingSkip, IssueStatus.Pending).subscribe(x => {
             this.pendingIssues = x;
         });
