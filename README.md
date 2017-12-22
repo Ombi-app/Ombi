@@ -69,11 +69,11 @@ We are planning to bring back these features in V3 but for now you can find a li
 | Custom Notification Messages | Yes | No |
 | Sending newsletters | Planned | Yes |
 | Send a Mass Email | Planned | Yes |
-| SickRage | Planned | Yes |
+| SickRage | Yes | Yes |
 | CouchPotato | Yes | Yes |
 | Watcher | Planned | Yes |
 | DogNzb | Yes | No |
-| Issues | Planned | Yes |
+| Issues | Yes | Yes |
 | Headphones | No (support dropped) | Yes |
 
 # Feature Requests

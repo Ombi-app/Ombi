@@ -19,6 +19,7 @@
     "Requested": "Angefordert",
     "Request": "Anfrage",
     "Denied": "Denied",
+    "Approve": "Approve",
     "Errors": {
       "Validation": "Bitte überprüfen Sie die eingegebenen Werte"
     }

@@ -2,15 +2,9 @@
 
 namespace Ombi.Settings.Settings.Models
 {
-    public class AuthenticationSettings
+    public class AuthenticationSettings : Settings
     {
-        /// <summary>
-        /// This determins if Plex and/or Emby users can log into Ombi
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [allow external users to authenticate]; otherwise, <c>false</c>.
-        /// </value>
-        public bool AllowExternalUsersToAuthenticate { get; set; }
+        public bool AllowNoPassword { get; set; }
         
         // Password Options
         public bool RequireDigit { get; set; }

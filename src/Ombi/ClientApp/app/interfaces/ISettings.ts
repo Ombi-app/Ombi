@@ -13,6 +13,7 @@ export interface IOmbiSettings extends ISettings {
   wizard: boolean;
   apiKey: string;
   ignoreCertificateErrors: boolean;
+  doNotSendNotificationsForAutoApprove: boolean;
 }
 
 export interface IUpdateSettings extends ISettings {
@@ -127,7 +128,7 @@ export interface IIssueSettings extends ISettings {
 }
 
 export interface IAuthenticationSettings extends ISettings {
-  allowExternalUsersToAuthenticate: boolean;
+  allowNoPassword: boolean;
   // Password
 
   requiredDigit: boolean;
@@ -142,6 +143,8 @@ export interface IUserManagementSettings extends ISettings {
   importPlexAdmin: boolean;
   importEmbyUsers: boolean;
   defaultRoles: string[];
+  movieRequestLimit: number;
+  episodeRequestLimit: number;
   bannedPlexUserIds: string[];
   bannedEmbyUserIds: string[];
 }

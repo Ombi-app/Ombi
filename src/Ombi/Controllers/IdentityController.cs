@@ -252,7 +252,9 @@ namespace Ombi.Controllers
                 UserType = (Core.Models.UserType)(int)user.UserType,
                 Claims = new List<ClaimCheckboxes>(),
                 LastLoggedIn = user.LastLoggedIn,
-                HasLoggedIn = user.LastLoggedIn.HasValue
+                HasLoggedIn = user.LastLoggedIn.HasValue,
+                EpisodeRequestLimit = user.EpisodeRequestLimit ?? 0,
+                MovieRequestLimit = user.MovieRequestLimit ?? 0
             };
 
             foreach (var role in userRoles)
@@ -302,6 +304,8 @@ namespace Ombi.Controllers
                 Email = user.EmailAddress,
                 UserName = user.UserName,
                 UserType = UserType.LocalUser,
+                MovieRequestLimit = user.MovieRequestLimit,
+                EpisodeRequestLimit = user.EpisodeRequestLimit
             };
             var userResult = await UserManager.CreateAsync(ombiUser, user.Password);
 
@@ -442,6 +446,8 @@ namespace Ombi.Controllers
             var user = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == ui.Id);
             user.Alias = ui.Alias;
             user.Email = ui.EmailAddress;
+            user.MovieRequestLimit = ui.MovieRequestLimit;
+            user.EpisodeRequestLimit = ui.EpisodeRequestLimit;
             var updateResult = await UserManager.UpdateAsync(user);
             if (!updateResult.Succeeded)
             {
@@ -553,11 +559,6 @@ namespace Ombi.Controllers
             }
             return claims;
         }
-
-        //public async Task SendWelcomeEmail([FromBody] UserViewModel user)
-        //{
-
-        //}
 
         /// <summary>
         /// Send out the email with the reset link

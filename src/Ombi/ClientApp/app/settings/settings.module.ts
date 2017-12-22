@@ -11,6 +11,7 @@ import { CouchPotatoService, EmbyService, IssuesService, JobService, PlexService
 
 import { PipeModule } from "../pipes/pipe.module";
 import { AboutComponent } from "./about/about.component";
+import { AuthenticationComponent } from "./authentication/authentication.component";
 import { CouchPotatoComponent } from "./couchpotato/couchpotato.component";
 import { CustomizationComponent } from "./customization/customization.component";
 import { DogNzbComponent } from "./dognzb/dognzb.component";
@@ -62,6 +63,7 @@ const routes: Routes = [
     { path: "Jobs", component: JobsComponent, canActivate: [AuthGuard] },
     { path: "SickRage", component: SickRageComponent, canActivate: [AuthGuard] },
     { path: "Issues", component: IssuesComponent, canActivate: [AuthGuard] },
+    { path: "Authentication", component: AuthenticationComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -108,6 +110,7 @@ const routes: Routes = [
         SickRageComponent,
         TelegramComponent,
         IssuesComponent,
+        AuthenticationComponent,
     ],
     exports: [
         RouterModule,

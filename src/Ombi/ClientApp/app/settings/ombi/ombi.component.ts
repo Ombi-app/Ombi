@@ -22,6 +22,7 @@ export class OmbiComponent implements OnInit {
                 apiKey: [x.apiKey],
                 ignoreCertificateErrors: [x.ignoreCertificateErrors],
                 baseUrl: [x.baseUrl],
+                doNotSendNotificationsForAutoApprove: [x.doNotSendNotificationsForAutoApprove],
             });
         });
     }

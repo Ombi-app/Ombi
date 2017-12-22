@@ -67,40 +67,40 @@ namespace Ombi.Schedule.Jobs.Ombi
         public async Task Update(PerformContext c)
         {
             Ctx = c;
-            Ctx.WriteLine("Starting the updater");
+            Logger.LogInformation("Starting the updater");
 
             var settings = await Settings.GetSettingsAsync();
             if (!settings.AutoUpdateEnabled)
             {
-                Ctx.WriteLine("Auto update is not enabled");
+                Logger.LogInformation("Auto update is not enabled");
                 return;
             }
 
             var currentLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            Ctx.WriteLine("Path: {0}", currentLocation);
+            Logger.LogInformation("Path: {0}", currentLocation);
 
             var productVersion = AssemblyHelper.GetRuntimeVersion();
             Logger.LogInformation(LoggingEvents.Updater, "Product Version {0}", productVersion);
-            Ctx.WriteLine("Product Version {0}", productVersion);
+            Logger.LogInformation("Product Version {0}", productVersion);
 
             try
             {
                 var productArray = GetVersion();
                 var version = productArray[0];
-                Ctx.WriteLine("Version {0}", version);
+                Logger.LogInformation("Version {0}", version);
                 var branch = productArray[1];
-                Ctx.WriteLine("Branch Version {0}", branch);
+                Logger.LogInformation("Branch Version {0}", branch);
 
                 Logger.LogInformation(LoggingEvents.Updater, "Version {0}", version);
                 Logger.LogInformation(LoggingEvents.Updater, "Branch {0}", branch);
 
-                Ctx.WriteLine("Looking for updates now");
+                Logger.LogInformation("Looking for updates now");
                 var updates = await OmbiService.GetUpdates(branch);
-                Ctx.WriteLine("Updates: {0}", updates);
+                Logger.LogInformation("Updates: {0}", updates);
                 var serverVersion = updates.UpdateVersionString;
 
                 Logger.LogInformation(LoggingEvents.Updater, "Service Version {0}", updates.UpdateVersionString);
-                Ctx.WriteLine("Service Version {0}", updates.UpdateVersionString);
+                Logger.LogInformation("Service Version {0}", updates.UpdateVersionString);
 
                 if (!serverVersion.Equals(version, StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -109,7 +109,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     var proce = RuntimeInformation.ProcessArchitecture;
 
                     Logger.LogInformation(LoggingEvents.Updater, "OS Information: {0} {1}", desc, proce);
-                    Ctx.WriteLine("OS Information: {0} {1}", desc, proce);
+                    Logger.LogInformation("OS Information: {0} {1}", desc, proce);
                     Download download;
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
@@ -128,14 +128,14 @@ namespace Ombi.Schedule.Jobs.Ombi
                     }
                     if (download == null)
                     {
-                        Ctx.WriteLine("There were no downloads");
+                        Logger.LogInformation("There were no downloads");
                         return;
                     }
 
-                    Ctx.WriteLine("Found the download! {0}", download.Name);
-                    Ctx.WriteLine("URL {0}", download.Url);
+                    Logger.LogInformation("Found the download! {0}", download.Name);
+                    Logger.LogInformation("URL {0}", download.Url);
 
-                    Ctx.WriteLine("Clearing out Temp Path");
+                    Logger.LogInformation("Clearing out Temp Path");
                     var tempPath = Path.Combine(currentLocation, "TempUpdate");
                     if (Directory.Exists(tempPath))
                     {
@@ -156,7 +156,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     Logger.LogInformation(LoggingEvents.Updater, "Downloading the file {0} from {1}", download.Name, download.Url);
                     var extension = download.Name.Split('.').Last();
                     var zipDir = Path.Combine(currentLocation, $"Ombi.{extension}");
-                    Ctx.WriteLine("Zip Dir: {0}", zipDir);
+                    Logger.LogInformation("Zip Dir: {0}", zipDir);
                     try
                     {
                         if (File.Exists(zipDir))
@@ -164,24 +164,24 @@ namespace Ombi.Schedule.Jobs.Ombi
                             File.Delete(zipDir);
                         }
 
-                        Ctx.WriteLine("Starting Download");
+                        Logger.LogInformation("Starting Download");
                         await DownloadAsync(download.Url, zipDir, c);
-                        Ctx.WriteLine("Finished Download");
+                        Logger.LogInformation("Finished Download");
                     }
                     catch (Exception e)
                     {
-                        Ctx.WriteLine("Error when downloading");
-                        Ctx.WriteLine(e.Message);
+                        Logger.LogInformation("Error when downloading");
+                        Logger.LogInformation(e.Message);
                         Logger.LogError(LoggingEvents.Updater, e, "Error when downloading the zip");
                         throw;
                     }
 
                     // Extract it
-                    Ctx.WriteLine("Extracting ZIP");
+                    Logger.LogInformation("Extracting ZIP");
                     Extract(zipDir, tempPath);
 
-                    Ctx.WriteLine("Finished Extracting files");
-                    Ctx.WriteLine("Starting the Ombi.Updater process");
+                    Logger.LogInformation("Finished Extracting files");
+                    Logger.LogInformation("Starting the Ombi.Updater process");
                     var updaterExtension = string.Empty;
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
@@ -211,13 +211,12 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         proc.Start();
                     }
-                    Ctx.WriteLine("Bye bye");
+                    Logger.LogInformation("Bye bye");
                 }
             }
             catch (Exception e)
             {
-                Ctx.WriteLine(e);
-
+                Logger.LogError(e, "Exception thrown in the OmbiUpdater, see previous messages");
                 throw;
             }
         }

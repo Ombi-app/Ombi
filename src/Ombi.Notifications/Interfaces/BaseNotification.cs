@@ -23,6 +23,8 @@ namespace Ombi.Notifications.Interfaces
             MovieRepository = movie;
             TvRepository = tv;
             CustomizationSettings = customization;
+            Settings.ClearCache();
+            CustomizationSettings.ClearCache();
         }
         
         protected ISettingsService<T> Settings { get; }
@@ -46,6 +48,7 @@ namespace Ombi.Notifications.Interfaces
 
         public async Task NotifyAsync(NotificationOptions model, Settings.Settings.Models.Settings settings)
         {
+            Settings.ClearCache();
             if (settings == null) await NotifyAsync(model);
             
             var notificationSettings = (T)settings;

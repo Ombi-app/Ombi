@@ -19,7 +19,7 @@ namespace Ombi.Core.Senders
     public class TvSender : ITvSender
     {
         public TvSender(ISonarrApi sonarrApi, ILogger<TvSender> log, ISettingsService<SonarrSettings> sonarrSettings,
-            ISettingsService<DogNzbSettings> dog, IDogNzbApi dogApi, ISettingsService<SickRageSettings> srSettings, 
+            ISettingsService<DogNzbSettings> dog, IDogNzbApi dogApi, ISettingsService<SickRageSettings> srSettings,
             ISickRageApi srApi)
         {
             SonarrApi = sonarrApi;
@@ -114,7 +114,7 @@ namespace Ombi.Core.Senders
             {
                 return null;
             }
-            if(string.IsNullOrEmpty(s.ApiKey))
+            if (string.IsNullOrEmpty(s.ApiKey))
             {
                 return null;
             }
@@ -275,17 +275,20 @@ namespace Ombi.Core.Senders
                     qualityId = settings.QualityProfile;
                 }
             }
+            else
+            {
+                qualityId = settings.QualityProfile;
+            }
             // Check if the show exists
             var existingShow = await SickRageApi.GetShow(tvdbid, settings.ApiKey, settings.FullUri);
 
-            if (existingShow == null)
+            if (existingShow.message.Equals("Show not found", StringComparison.CurrentCultureIgnoreCase))
             {
-                var addResult = await SickRageApi.AddSeries(model.ParentRequest.TvDbId, SickRageStatus.Wanted,
-                    qualityId,
+                var addResult = await SickRageApi.AddSeries(model.ParentRequest.TvDbId, qualityId, SickRageStatus.Ignored,
                     settings.ApiKey, settings.FullUri);
 
                 Logger.LogDebug("Added the show (tvdbid) {0}. The result is '{2}' : '{3}'", tvdbid, addResult.result, addResult.message);
-                if (addResult.result.Equals("failure"))
+                if (addResult.result.Equals("failure") || addResult.result.Equals("fatal"))
                 {
                     // Do something
                     return false;
@@ -295,6 +298,12 @@ namespace Ombi.Core.Senders
             foreach (var seasonRequests in model.SeasonRequests)
             {
                 var srEpisodes = await SickRageApi.GetEpisodesForSeason(tvdbid, seasonRequests.SeasonNumber, settings.ApiKey, settings.FullUri);
+                while (srEpisodes.message.Equals("Show not found", StringComparison.CurrentCultureIgnoreCase) && srEpisodes.data.Count <= 0)
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(1));
+                    srEpisodes = await SickRageApi.GetEpisodesForSeason(tvdbid, seasonRequests.SeasonNumber, settings.ApiKey, settings.FullUri);
+                }
+
                 var totalSrEpisodes = srEpisodes.data.Count;
 
                 if (totalSrEpisodes == seasonRequests.Episodes.Count)

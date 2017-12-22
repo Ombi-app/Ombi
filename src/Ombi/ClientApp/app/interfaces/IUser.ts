@@ -10,6 +10,8 @@ export interface IUser {
     userType: UserType;
     lastLoggedIn: Date;
     hasLoggedIn: boolean;
+    movieRequestLimit: number;
+    episodeRequestLimit: number;
     // FOR UI
     checked: boolean;
 }

@@ -1,26 +1,27 @@
 {
   "Login": {
-    "SignInButton": "Inicia sesión",
+    "SignInButton": "Entrar",
     "UsernamePlaceholder": "Nombre de usuario",
     "PasswordPlaceholder": "Contraseña",
-    "RememberMe": "Acuérdate de mí",
-    "ForgottenPassword": "¿Olvidó su contraseña?",
+    "RememberMe": "Recordarme",
+    "ForgottenPassword": "Has olvidado tu contraseña?",
     "Errors": {
-      "IncorrectCredentials": "Incorrect username or password"
+      "IncorrectCredentials": "Nombre de usuario o contraseña\nincorrectos"
     }
   },
   "Common": {
     "ContinueButton": "Continuar",
-    "Available": "Available",
-    "ProcessingRequest": "Processing Request",
-    "PendingApproval": "Pending Approval",
-    "RequestDenied": "Request Denied",
-    "NotRequested": "Not Requested",
-    "Requested": "Requested",
-    "Request": "Request",
-    "Denied": "Denied",
+    "Available": "Disponible",
+    "ProcessingRequest": "Procesando solicitud",
+    "PendingApproval": "Pendiente de aprobación",
+    "RequestDenied": "Solicitud denegada",
+    "NotRequested": "No solicitados",
+    "Requested": "Solicitado",
+    "Request": "Solicitar",
+    "Denied": "Denegado",
+    "Approve": "Aprobar",
     "Errors": {
-      "Validation": "Please check your entered values"
+      "Validation": "Por favor, compruebe los valores introducidos"
     }
   },
   "PasswordReset": {
@@ -36,7 +37,7 @@
     "SingleServerUnavailable": "Hay {{serversUnavailable}} servidor offline fuera de {{totalServers}}.",
     "OfflineHeading": "Actualmente fuera de línea",
     "OfflineParagraph": "El servidor de medios está actualmente fuera de línea.",
-    "CheckPageForUpdates": "Check this page for continuous site updates."
+    "CheckPageForUpdates": "Consulte esta página para estar actualizado con las últiimas novedades."
   },
   "NavigationBar": {
     "Search": "Búsqueda de",
@@ -60,46 +61,46 @@
     }
   },
   "Search": {
-    "Title": "Search",
-    "Paragraph": "Want to watch something that is not currently available? No problem, just search for it below and request it!",
-    "MoviesTab": "Movies",
-    "TvTab": "TV Shows",
-    "Suggestions": "Suggestions",
-    "NoResults": "Sorry, we didn't find any results!",
-    "ReleaseDate": "Release Date",
-    "ViewOnPlex": "View On Plex",
-    "RequestAdded": "Request for {{title}} has been added successfully",
+    "Title": "Buscar",
+    "Paragraph": "¿Quieres ver algo que no está disponible actualmente? No hay problema, sólo tienes que buscarlo debajo y solicitarlo!",
+    "MoviesTab": "Películas",
+    "TvTab": "Series",
+    "Suggestions": "Sugerencias",
+    "NoResults": "¡Lo sentimos, no encontramos ningún resultado!",
+    "ReleaseDate": "Fecha de estreno",
+    "ViewOnPlex": "Ver en Plex",
+    "RequestAdded": "La solicitud de {{title}} se ha agregado con éxito",
     "Movies": {
-      "PopularMovies": "Popular Movies",
-      "UpcomingMovies": "Upcoming Movies",
-      "TopRatedMovies": "Top Rated Movies",
-      "NowPlayingMovies": "Now Playing Movies",
-      "HomePage": "Home Page",
-      "Trailer": "Trailer"
+      "PopularMovies": "Películas populares",
+      "UpcomingMovies": "Próximas películas",
+      "TopRatedMovies": "Mejores películas",
+      "NowPlayingMovies": "Películas en cartelera",
+      "HomePage": "Inicio",
+      "Trailer": "Tráiler"
     }
   },
   "Requests": {
-    "Title": "Requests",
-    "Paragraph": "Below you can see yours and all other requests, as well as their download and approval status.",
-    "MoviesTab": "Movies",
-    "TvTab": "TV Shows",
-    "RequestedBy": "Requested By:",
-    "Status": "Status:",
-    "RequestStatus:": "Request status:",
-    "Denied": " Denied:",
-    "ReleaseDate": "Release Date:",
-    "RequestDate": "Request Date:",
-    "QualityOverride": "Quality Override:",
-    "RootFolderOverride": "Root Folder Override:",
-    "ChangeRootFolder": "Change Root Folder",
-    "ChangeQualityProfile": "Change Quality Profile",
-    "MarkUnavailable": "Mark Unavailable",
-    "MarkAvailable": "Mark Available",
-    "Remove": "Remove",
-    "Deny": "Deny",
-    "Season": "Season:",
-    "GridTitle": "Title",
-    "AirDate": "AirDate",
-    "GridStatus": "Status"
+    "Title": "Solicitudes",
+    "Paragraph": "A continuación puedes ver tanto las tuyas como las demás solicitudes, así como su estado de descarga y aprobación.",
+    "MoviesTab": "Películas",
+    "TvTab": "Series",
+    "RequestedBy": "Solicitado por:",
+    "Status": "Estado:",
+    "RequestStatus:": "Estado de la solicitud:",
+    "Denied": " Denegado:",
+    "ReleaseDate": "Fecha de estreno:",
+    "RequestDate": "Fecha de solicitud:",
+    "QualityOverride": "Sobreescribir calidad:",
+    "RootFolderOverride": "Sobreescribir carpeta raíz:",
+    "ChangeRootFolder": "Cambiar Carpeta Raíz",
+    "ChangeQualityProfile": "Cambiar Perfil de Calidad",
+    "MarkUnavailable": "Marcar como no disponible",
+    "MarkAvailable": "Marcar como disponible",
+    "Remove": "Eliminar",
+    "Deny": "Denegar",
+    "Season": "Temporada:",
+    "GridTitle": "Título",
+    "AirDate": "Fecha de estreno",
+    "GridStatus": "Estado"
   }
 }

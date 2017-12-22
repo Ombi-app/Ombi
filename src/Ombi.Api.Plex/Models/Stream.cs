@@ -13,7 +13,7 @@
         public float frameRate { get; set; }
         public bool hasScalingMatrix { get; set; }
         public int height { get; set; }
-        public int level { get; set; }
+        public string level { get; set; }
         public string profile { get; set; }
         public int refFrames { get; set; }
         public string scanType { get; set; }
