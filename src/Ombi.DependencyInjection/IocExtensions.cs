@@ -131,6 +131,7 @@ namespace Ombi.DependencyInjection
             services.AddSingleton<INotificationService, NotificationService>();
             services.AddSingleton<IEmailProvider, GenericEmailProvider>();
             services.AddTransient<INotificationHelper, NotificationHelper>();
+            services.AddTransient<ICacheService, CacheService>();
 
             services.AddTransient<IDiscordNotification, DiscordNotification>();
             services.AddTransient<IEmailNotification, EmailNotification>();
@@ -140,7 +141,6 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMattermostNotification, MattermostNotification>();
             services.AddTransient<IPushoverNotification, PushoverNotification>();
             services.AddTransient<ITelegramNotification, TelegramNotification>();
-
         }
 
         public static void RegisterJobs(this IServiceCollection services)

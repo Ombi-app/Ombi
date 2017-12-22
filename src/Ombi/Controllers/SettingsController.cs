@@ -56,7 +56,7 @@ namespace Ombi.Controllers
             INotificationTemplatesRepository templateRepo,
             IEmbyApi embyApi,
             IRadarrSync radarrSync,
-            IMemoryCache memCache,
+            ICacheService memCache,
             IGithubApi githubApi)
         {
             SettingsResolver = resolver;
@@ -73,7 +73,7 @@ namespace Ombi.Controllers
         private INotificationTemplatesRepository TemplateRepository { get; }
         private readonly IEmbyApi _embyApi;
         private readonly IRadarrSync _radarrSync;
-        private readonly IMemoryCache _cache;
+        private readonly ICacheService _cache;
         private readonly IGithubApi _githubApi;
 
         /// <summary>
