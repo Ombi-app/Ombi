@@ -52,7 +52,6 @@ namespace Ombi.Notifications
         /// <returns></returns>
         public async Task Publish(NotificationOptions model)
         {
-            //var notificationTasks = NotificationAgents.Select(notification => NotifyAsync(notification, model));
             var notificationTasks = new List<Task>();
 
             foreach (var agent in NotificationAgents)
@@ -68,7 +67,7 @@ namespace Ombi.Notifications
         /// <param name="model">The model.</param>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
-        public async Task Publish(NotificationOptions model, Ombi.Settings.Settings.Models.Settings settings)
+        public async Task Publish(NotificationOptions model, Settings.Settings.Models.Settings settings)
         {
             var notificationTasks = NotificationAgents.Select(notification => NotifyAsync(notification, model, settings));
 

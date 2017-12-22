@@ -128,8 +128,8 @@ namespace Ombi.DependencyInjection
         public static void RegisterServices(this IServiceCollection services)
         {
             services.AddTransient<IRequestServiceMain, RequestService>();
-            services.AddSingleton<INotificationService, NotificationService>();
-            services.AddSingleton<IEmailProvider, GenericEmailProvider>();
+            services.AddTransient<INotificationService, NotificationService>();
+            services.AddTransient<IEmailProvider, GenericEmailProvider>();
             services.AddTransient<INotificationHelper, NotificationHelper>();
             services.AddTransient<ICacheService, CacheService>();
 
