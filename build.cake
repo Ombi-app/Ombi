@@ -215,7 +215,9 @@ Task("Publish-Linux-ARM")
     publishSettings.OutputDirectory = Directory(buildDir) + Directory("netcoreapp2.0/linux-arm/published");
 
     DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
-    CopyFile(buildDir + "/netcoreapp2.0/linux-x64/Swagger.xml", buildDir + "/netcoreapp2.0/linux-arm/published/Swagger.xml");
+    CopyFile(
+      buildDir + "/netcoreapp2.0/linux-arm/Swagger.xml",
+      buildDir + "/netcoreapp2.0/linux-arm/published/Swagger.xml");
     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 
