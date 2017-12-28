@@ -43,6 +43,7 @@
     "Search": "Zoeken",
     "Requests": "Aanvragen",
     "UserManagement": "Gebruikersbeheer",
+    "Issues": "Issues",
     "Donate": "Doneer!",
     "DonateTooltip": "Dit is hoe ik mijn vrouw heb laten overtuigen dat ik Ombi mag ontwikkelen ;-)",
     "UpdateAvailableTooltip": "Update beschikbaar!",
@@ -102,5 +103,24 @@
     "GridTitle": "Title",
     "AirDate": "AirDate",
     "GridStatus": "Status"
+  },
+  "Issues": {
+    "Title": "Issues",
+    "PendingTitle": "Pending Issues",
+    "InProgressTitle": "In Progress Issues",
+    "ResolvedTitle": "Resolved Issues",
+    "ColumnTitle": "Title",
+    "Category": "Category",
+    "Status": "Status",
+    "Details": "Details",
+    "Description": "Description",
+    "NoComments": "No Comments!",
+    "MarkInProgress": "Mark In Progress",
+    "MarkResolved": "Mark Resolved",
+    "SendMessageButton": "Send",
+    "Subject": "Subject",
+    "Comments": "Comments",
+    "WriteMessagePlaceholder": "Write your message here...",
+    "ReportedBy": "Reported By"
   }
 }
