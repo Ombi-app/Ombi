@@ -486,6 +486,7 @@ namespace Ombi.Controllers
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("Issues")]
+        [AllowAnonymous]
         public async Task<bool> IssueSettings([FromBody]IssueSettings settings)
         {
             return await Save(settings);
