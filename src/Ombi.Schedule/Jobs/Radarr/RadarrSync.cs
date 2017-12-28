@@ -37,7 +37,7 @@ namespace Ombi.Schedule.Jobs.Radarr
             await SemaphoreSlim.WaitAsync();
             try
             {
-                var settings = RadarrSettings.GetSettings();
+                var settings = await RadarrSettings.GetSettingsAsync();
                 if (settings.Enabled)
                 {
                     try

@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from "@angular/core";
+﻿import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
@@ -14,7 +14,7 @@ import { AuthService } from "../auth/auth.service";
 import { RequestService } from "../services";
 
 import { TreeNode } from "primeng/primeng";
-import { ITvRequests } from "../interfaces";
+import { IIssueCategory, ITvRequests } from "../interfaces";
 
 @Component({
     selector: "tv-requests",
@@ -29,6 +29,10 @@ export class TvRequestsComponent implements OnInit {
     public isAdmin: boolean;
     public showChildDialogue = false; // This is for the child modal popup
     public selectedSeason: ITvRequests;
+
+    @Input() public issueCategories: IIssueCategory[];
+    @Input() public issuesEnabled: boolean;
+    public issueProviderId: string;
 
     private currentlyLoaded: number;
     private amountToLoad: number;

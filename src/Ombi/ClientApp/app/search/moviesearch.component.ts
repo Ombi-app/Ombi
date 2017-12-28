@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from "@angular/core";
+﻿import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateService } from "@ngx-translate/core";
 import "rxjs/add/operator/debounceTime";
@@ -7,9 +7,8 @@ import "rxjs/add/operator/map";
 import { Subject } from "rxjs/Subject";
 
 import { AuthService } from "../auth/auth.service";
+import { IIssueCategory, IRequestEngineResult, ISearchMovieResult } from "../interfaces";
 import { NotificationService, RequestService, SearchService } from "../services";
-
-import { IRequestEngineResult, ISearchMovieResult } from "../interfaces";
 
 @Component({
     selector: "movie-search",
@@ -22,6 +21,14 @@ export class MovieSearchComponent implements OnInit {
     public movieResults: ISearchMovieResult[];
     public result: IRequestEngineResult;
     public searchApplied = false;
+    
+    @Input() public issueCategories: IIssueCategory[];
+    @Input() public issuesEnabled: boolean;
+    public issuesBarVisible = false;
+    public issueRequestTitle: string;
+    public issueRequestId: number;
+    public issueProviderId: string;
+    public issueCategorySelected: IIssueCategory;
         
     constructor(private searchService: SearchService, private requestService: RequestService,
                 private notificationService: NotificationService, private authService: AuthService,
@@ -129,6 +136,14 @@ export class MovieSearchComponent implements OnInit {
                 this.movieResults = x;
                 this.getExtraInfo();
             });
+    }
+
+    public reportIssue(catId: IIssueCategory, req: ISearchMovieResult) {
+        this.issueRequestId = req.id;
+        this.issueRequestTitle = req.title;
+        this.issueCategorySelected = catId;
+        this.issuesBarVisible = true;
+        this.issueProviderId = req.id.toString();
     }
 
    private getExtraInfo() {

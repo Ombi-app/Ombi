@@ -7,7 +7,7 @@ import { ClipboardModule } from "ngx-clipboard/dist";
 
 import { AuthGuard } from "../auth/auth.guard";
 import { AuthService } from "../auth/auth.service";
-import { CouchPotatoService, JobService, RadarrService, SonarrService, TesterService, ValidationService } from "../services";
+import { CouchPotatoService, EmbyService, IssuesService, JobService, PlexService, RadarrService, SonarrService, TesterService, ValidationService } from "../services";
 
 import { PipeModule } from "../pipes/pipe.module";
 import { AboutComponent } from "./about/about.component";
@@ -16,6 +16,7 @@ import { CouchPotatoComponent } from "./couchpotato/couchpotato.component";
 import { CustomizationComponent } from "./customization/customization.component";
 import { DogNzbComponent } from "./dognzb/dognzb.component";
 import { EmbyComponent } from "./emby/emby.component";
+import { IssuesComponent } from "./issues/issues.component";
 import { JobsComponent } from "./jobs/jobs.component";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
 import { DiscordComponent } from "./notifications/discord.component";
@@ -40,28 +41,29 @@ import { SettingsMenuComponent } from "./settingsmenu.component";
 import { AutoCompleteModule, CalendarModule, InputSwitchModule, InputTextModule, MenuModule, RadioButtonModule, TooltipModule } from "primeng/primeng";
 
 const routes: Routes = [
-    { path: "Settings/Ombi", component: OmbiComponent, canActivate: [AuthGuard] },
-    { path: "Settings/About", component: AboutComponent, canActivate: [AuthGuard] },
-    { path: "Settings/Plex", component: PlexComponent, canActivate: [AuthGuard] },
-    { path: "Settings/Emby", component: EmbyComponent, canActivate: [AuthGuard] },
-    { path: "Settings/Sonarr", component: SonarrComponent, canActivate: [AuthGuard] },
-    { path: "Settings/Radarr", component: RadarrComponent, canActivate: [AuthGuard] },
-    { path: "Settings/LandingPage", component: LandingPageComponent, canActivate: [AuthGuard] },
-    { path: "Settings/Customization", component: CustomizationComponent, canActivate: [AuthGuard] },
-    { path: "Settings/Email", component: EmailNotificationComponent, canActivate: [AuthGuard] },
-    { path: "Settings/Discord", component: DiscordComponent, canActivate: [AuthGuard] },
-    { path: "Settings/Slack", component: SlackComponent, canActivate: [AuthGuard] },
-    { path: "Settings/Pushover", component: PushoverComponent, canActivate: [AuthGuard] },
-    { path: "Settings/Pushbullet", component: PushbulletComponent, canActivate: [AuthGuard] },
-    { path: "Settings/Mattermost", component: MattermostComponent, canActivate: [AuthGuard] },
-    { path: "Settings/UserManagement", component: UserManagementComponent, canActivate: [AuthGuard] },
-    { path: "Settings/Update", component: UpdateComponent, canActivate: [AuthGuard] },
-    { path: "Settings/CouchPotato", component: CouchPotatoComponent, canActivate: [AuthGuard] },
-    { path: "Settings/DogNzb", component: DogNzbComponent, canActivate: [AuthGuard] },
-    { path: "Settings/Telegram", component: TelegramComponent, canActivate: [AuthGuard] },
-    { path: "Settings/Jobs", component: JobsComponent, canActivate: [AuthGuard] },
-    { path: "Settings/SickRage", component: SickRageComponent, canActivate: [AuthGuard] },
-    { path: "Settings/Authentication", component: AuthenticationComponent, canActivate: [AuthGuard] },
+    { path: "Ombi", component: OmbiComponent, canActivate: [AuthGuard] },
+    { path: "About", component: AboutComponent, canActivate: [AuthGuard] },
+    { path: "Plex", component: PlexComponent, canActivate: [AuthGuard] },
+    { path: "Emby", component: EmbyComponent, canActivate: [AuthGuard] },
+    { path: "Sonarr", component: SonarrComponent, canActivate: [AuthGuard] },
+    { path: "Radarr", component: RadarrComponent, canActivate: [AuthGuard] },
+    { path: "LandingPage", component: LandingPageComponent, canActivate: [AuthGuard] },
+    { path: "Customization", component: CustomizationComponent, canActivate: [AuthGuard] },
+    { path: "Email", component: EmailNotificationComponent, canActivate: [AuthGuard] },
+    { path: "Discord", component: DiscordComponent, canActivate: [AuthGuard] },
+    { path: "Slack", component: SlackComponent, canActivate: [AuthGuard] },
+    { path: "Pushover", component: PushoverComponent, canActivate: [AuthGuard] },
+    { path: "Pushbullet", component: PushbulletComponent, canActivate: [AuthGuard] },
+    { path: "Mattermost", component: MattermostComponent, canActivate: [AuthGuard] },
+    { path: "UserManagement", component: UserManagementComponent, canActivate: [AuthGuard] },
+    { path: "Update", component: UpdateComponent, canActivate: [AuthGuard] },
+    { path: "CouchPotato", component: CouchPotatoComponent, canActivate: [AuthGuard] },
+    { path: "DogNzb", component: DogNzbComponent, canActivate: [AuthGuard] },
+    { path: "Telegram", component: TelegramComponent, canActivate: [AuthGuard] },
+    { path: "Jobs", component: JobsComponent, canActivate: [AuthGuard] },
+    { path: "SickRage", component: SickRageComponent, canActivate: [AuthGuard] },
+    { path: "Issues", component: IssuesComponent, canActivate: [AuthGuard] },
+    { path: "Authentication", component: AuthenticationComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -107,6 +109,7 @@ const routes: Routes = [
         DogNzbComponent,
         SickRageComponent,
         TelegramComponent,
+        IssuesComponent,
         AuthenticationComponent,
     ],
     exports: [
@@ -121,6 +124,9 @@ const routes: Routes = [
         TesterService,
         JobService,
         CouchPotatoService,
+        IssuesService,
+        PlexService,
+        EmbyService,
     ],
 
 })

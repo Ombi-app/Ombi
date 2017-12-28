@@ -66,6 +66,7 @@ module.exports = (env: any) => {
                 "ng2-cookies",
                 "@ngx-translate/core",
                 "@ngx-translate/http-loader",
+                "ngx-order-pipe",
             ],
         },
         output: {

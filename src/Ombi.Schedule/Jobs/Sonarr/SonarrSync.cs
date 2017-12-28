@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using Ombi.Api.Sonarr;
 using Ombi.Api.Sonarr.Models;
 using Ombi.Core.Settings;
-using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Context;
@@ -60,6 +59,8 @@ namespace Ombi.Schedule.Jobs.Sonarr
                         _log.LogDebug("Syncing series: {0}", s.title);
                         var episodes = await _api.GetEpisodes(s.id, settings.ApiKey, settings.FullUri);
                         var monitoredEpisodes = episodes.Where(x => x.monitored || x.hasFile);
+                        
+                        // Add to DB
                         _log.LogDebug("We have the episodes, adding to db transaction");
                         await _ctx.SonarrEpisodeCache.AddRangeAsync(monitoredEpisodes.Select(episode => new SonarrEpisodeCache
                         {
@@ -82,58 +83,5 @@ namespace Ombi.Schedule.Jobs.Sonarr
                 SemaphoreSlim.Release();
             }
         }
-
-
-        //public void Queued()
-        //{
-        //    var settings = SonarrSettings.GetSettings();
-        //    if (settings.Enabled)
-        //    {
-        //        Job.SetRunning(true, JobNames.SonarrCacher);
-        //        try
-        //        {
-        //            var series = SonarrApi.GetSeries(settings.ApiKey, settings.FullUri);
-        //            if (series != null)
-        //            {
-        //                Cache.Set(CacheKeys.SonarrQueued, series, CacheKeys.TimeFrameMinutes.SchedulerCaching);
-        //            }
-        //        }
-        //        catch (System.Exception ex)
-        //        {
-        //            Log.Error(ex, "Failed caching queued items from Sonarr");
-        //        }
-        //        finally
-        //        {
-        //            Job.Record(JobNames.SonarrCacher);
-        //            Job.SetRunning(false, JobNames.SonarrCacher);
-        //        }
-        //    }
-        //}
-
-        //// we do not want to set here...
-        //public IEnumerable<SonarrCachedResult> QueuedIds()
-        //{
-        //    var result = new List<SonarrCachedResult>();
-
-        //    var series = Cache.Get<List<Series>>(CacheKeys.SonarrQueued);
-        //    if (series != null)
-        //    {
-        //        foreach (var s in series)
-        //        {
-        //            var cached = new SonarrCachedResult { TvdbId = s.tvdbId };
-        //            foreach (var season in s.seasons)
-        //            {
-        //                cached.Seasons.Add(new SonarrSeasons
-        //                {
-        //                    SeasonNumber = season.seasonNumber,
-        //                    Monitored = season.monitored
-        //                });
-        //            }
-
-        //            result.Add(cached);
-        //        }
-        //    }
-        //    return result;
-        //}
     }
 }

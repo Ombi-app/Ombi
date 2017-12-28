@@ -10,14 +10,12 @@ import {RouterModule, Routes} from "@angular/router";
 
 import { JwtModule } from "@auth0/angular-jwt";
 
-// Third Party
-//import { DragulaModule, DragulaService } from 'ng2-dragula/ng2-dragula';
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { CookieService } from "ng2-cookies";
 import { GrowlModule } from "primeng/components/growl/growl";
-import { ButtonModule, CaptchaModule,ConfirmationService, ConfirmDialogModule, DataTableModule,DialogModule, SharedModule, TooltipModule } from "primeng/primeng";
+import { ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, DataTableModule,DialogModule, SharedModule, SidebarModule, TooltipModule } from "primeng/primeng";
 
 // Components
 import { AppComponent } from "./app.component";
@@ -36,28 +34,24 @@ import { IdentityService } from "./services";
 import { ImageService } from "./services";
 import { LandingPageService } from "./services";
 import { NotificationService } from "./services";
-import { RequestService } from "./services";
 import { SettingsService } from "./services";
-import { StatusService } from "./services";
-
-// Modules
-import { RequestsModule } from "./requests/requests.module";
-import { SearchModule } from "./search/search.module";
-import { SettingsModule } from "./settings/settings.module";
-import { UserManagementModule } from "./usermanagement/usermanagement.module";
-import { WizardModule } from "./wizard/wizard.module";
+import { IssuesService, JobService, StatusService } from "./services";
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
     { path: "", redirectTo: "/search", pathMatch: "full" },
-
-    //{ path: 'requests-grid', component: RequestGridComponent },
     { path: "login", component: LoginComponent },
     { path: "login/:landing", component: LoginComponent },
     { path: "reset", component: ResetPasswordComponent },
     { path: "token", component: TokenResetPasswordComponent },
     { path: "landingpage", component: LandingPageComponent },
     { path: "auth/cookie", component: CookieComponent },
+    { loadChildren: "./issues/issues.module#IssuesModule", path: "issues" },
+    { loadChildren: "./settings/settings.module#SettingsModule", path: "Settings" },
+    { loadChildren: "./wizard/wizard.module#WizardModule", path: "Wizard" },
+    { loadChildren: "./usermanagement/usermanagement.module#UserManagementModule", path: "usermanagement" },
+    { loadChildren: "./requests/requests.module#RequestsModule", path: "requests" },
+    { loadChildren: "./search/search.module#SearchModule", path: "search" },
 ];
 
 // AoT requires an exported function for factories
@@ -79,11 +73,8 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
         GrowlModule,
         ButtonModule,
         FormsModule,
-        SettingsModule,
         DataTableModule,
         SharedModule,
-        WizardModule,
-        SearchModule,
         DialogModule,
         MatButtonModule,
         NgbModule.forRoot(),
@@ -91,8 +82,6 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
         MatInputModule,
         MatTabsModule,
         ReactiveFormsModule,
-        UserManagementModule,
-        RequestsModule,
         CaptchaModule,
         TooltipModule,
         ConfirmDialogModule,
@@ -115,6 +104,7 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
                 deps: [HttpClient, PlatformLocation],
             },
         }),
+        SidebarModule,
     ],
     declarations: [
         AppComponent,
@@ -124,9 +114,8 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
         ResetPasswordComponent,
         TokenResetPasswordComponent,
         CookieComponent,
-    ],
+        ],
     providers: [
-        RequestService,
         NotificationService,
         AuthService,
         AuthGuard,
@@ -137,6 +126,8 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
         ConfirmationService,
         ImageService,
         CookieService,
+        JobService,
+        IssuesService,
     ],
     bootstrap: [AppComponent],
 })

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
@@ -9,7 +10,7 @@ namespace Ombi.Notifications
     public class NotificationMessageCurlys
     {
 
-        public void Setup(FullBaseRequest req, CustomizationSettings s)
+        public void Setup(NotificationOptions opts, FullBaseRequest req, CustomizationSettings s)
         {
             ApplicationUrl = s.ApplicationUrl;
             ApplicationName = string.IsNullOrEmpty(s.ApplicationName) ? "Ombi" : s.ApplicationName;
@@ -23,9 +24,10 @@ namespace Ombi.Notifications
             Year = req.ReleaseDate.Year.ToString();
             PosterImage = req.RequestType == RequestType.Movie ?
                 $"https://image.tmdb.org/t/p/w300{req.PosterPath}" : req.PosterPath;
+            AdditionalInformation = opts.AdditionalInformation;
         }
 
-        public void Setup(ChildRequests req, CustomizationSettings s)
+        public void Setup(NotificationOptions opts, ChildRequests req, CustomizationSettings s)
         {
             ApplicationUrl = s.ApplicationUrl;
             ApplicationName = string.IsNullOrEmpty(s.ApplicationName) ? "Ombi" : s.ApplicationName;
@@ -39,6 +41,7 @@ namespace Ombi.Notifications
             Year = req.ParentRequest.ReleaseDate.Year.ToString();
             PosterImage = req.RequestType == RequestType.Movie ?
                 $"https://image.tmdb.org/t/p/w300{req.ParentRequest.PosterPath}" : req.ParentRequest.PosterPath;
+            AdditionalInformation = opts.AdditionalInformation;
             // DO Episode and Season Lists
         }
 
@@ -54,7 +57,7 @@ namespace Ombi.Notifications
         public string Title { get; set; }
         public string RequestedDate { get; set; }
         public string Type { get; set; }
-        public string Issue { get; set; }
+        public string AdditionalInformation { get; set; }
         public string Overview { get; set; }
         public string Year { get; set; }
         public string EpisodesList { get; set; }
@@ -75,7 +78,7 @@ namespace Ombi.Notifications
             {nameof(Title), Title },
             {nameof(RequestedDate), RequestedDate },
             {nameof(Type), Type },
-            {nameof(Issue), Issue },
+            {nameof(AdditionalInformation), AdditionalInformation },
             {nameof(LongDate),LongDate},
             {nameof(ShortDate),ShortDate},
             {nameof(LongTime),LongTime},

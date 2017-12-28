@@ -33,8 +33,15 @@ namespace Ombi
 
             //if (exception is NotFoundException) code = HttpStatusCode.NotFound;
             if (exception is UnauthorizedAccessException) code = HttpStatusCode.Unauthorized;
-
-            var result = JsonConvert.SerializeObject(new { error = exception.Message });
+            string result;
+            if (exception.InnerException != null)
+            {
+                result = JsonConvert.SerializeObject(new { error = exception.InnerException.Message });
+            }
+            else
+            {
+                result = JsonConvert.SerializeObject(new { error = exception.Message });
+            }
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
             return context.Response.WriteAsync(result);

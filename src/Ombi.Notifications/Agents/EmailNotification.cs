@@ -90,6 +90,9 @@ namespace Ombi.Notifications.Agents
                 return;
             }
             
+            // Issues should be sent to admin
+            message.To = settings.AdminEmail;
+
             await Send(message, settings);
         }
 

@@ -45,6 +45,7 @@
     "Search": "Search",
     "Requests": "Requests",
     "UserManagement": "User Management",
+    "Issues":"Issues",
     "Donate": "Donate!",
     "DonateTooltip":
       "This is how I convince my wife to let me spend my spare time developing Ombi ;)",
@@ -107,5 +108,24 @@
     "GridTitle":"Title",
     "AirDate":"AirDate",
     "GridStatus":"Status"
+  },
+  "Issues":{
+    "Title":"Issues",
+    "PendingTitle":"Pending Issues",
+    "InProgressTitle":"In Progress Issues",
+    "ResolvedTitle":"Resolved Issues",
+    "ColumnTitle":"Title",
+    "Category":"Category",
+    "Status": "Status",
+    "Details": "Details",
+    "Description":"Description",
+    "NoComments":"No Comments!",
+    "MarkInProgress":"Mark In Progress",
+    "MarkResolved":"Mark Resolved",
+    "SendMessageButton":"Send",
+    "Subject":"Subject",
+    "Comments":"Comments",
+    "WriteMessagePlaceholder":"Write your message here...",
+    "ReportedBy":"Reported By"
   }
 }

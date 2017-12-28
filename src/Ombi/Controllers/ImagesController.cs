@@ -18,7 +18,7 @@ namespace Ombi.Controllers
     public class ImagesController : Controller
     {
         public ImagesController(IFanartTvApi api, IApplicationConfigRepository config,
-            IOptions<LandingPageBackground> options, IMemoryCache c)
+            IOptions<LandingPageBackground> options, ICacheService c)
         {
             Api = api;
             Config = config;
@@ -29,16 +29,12 @@ namespace Ombi.Controllers
         private IFanartTvApi Api { get; }
         private IApplicationConfigRepository Config { get; }
         private LandingPageBackground Options { get; }
-        private readonly IMemoryCache _cache;
+        private readonly ICacheService _cache;
         
         [HttpGet("tv/{tvdbid}")]
         public async Task<string> GetTvBanner(int tvdbid)
         {
-            var key = await _cache.GetOrCreateAsync(CacheKeys.FanartTv, async entry =>
-            {
-                entry.SlidingExpiration = TimeSpan.FromDays(1);
-                return await Config.Get(Store.Entities.ConfigurationTypes.FanartTv);
-            });
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
 
             var images = await Api.GetTvImages(tvdbid, key.Value);
             if (images.tvbanner != null)
@@ -62,11 +58,7 @@ namespace Ombi.Controllers
             var movieUrl = string.Empty;
             var tvUrl = string.Empty;
 
-            var key = await _cache.GetOrCreateAsync(CacheKeys.FanartTv, async entry =>
-            {
-                entry.SlidingExpiration = TimeSpan.FromDays(1);
-                return await Config.Get(Store.Entities.ConfigurationTypes.FanartTv);
-            });
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
 
             if (moviesArray.Any())
             {

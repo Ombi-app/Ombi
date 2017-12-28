@@ -14,7 +14,7 @@ namespace Ombi.Store.Entities.Requests
 
 
         [ForeignKey(nameof(IssueId))]
-        public List<TvIssues> Issues { get; set; }
+        public List<Issues> Issues { get; set; }
 
         public List<SeasonRequests> SeasonRequests { get; set; }
     }

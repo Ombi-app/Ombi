@@ -16,7 +16,7 @@ namespace Ombi.Api
 {
     public class Api : IApi
     {
-        public Api(ILogger<Api> log, ISettingsService<OmbiSettings> s, IMemoryCache cache)
+        public Api(ILogger<Api> log, ISettingsService<OmbiSettings> s, ICacheService cache)
         {
             Logger = log;
             _settings = s;
@@ -25,15 +25,11 @@ namespace Ombi.Api
 
         private ILogger<Api> Logger { get; }
         private readonly ISettingsService<OmbiSettings> _settings;
-        private readonly IMemoryCache _cache;
+        private readonly ICacheService _cache;
 
         private async Task<HttpMessageHandler> GetHandler()
         {
-            var settings = await _cache.GetOrCreateAsync(CacheKeys.OmbiSettings, async entry =>
-            {
-                entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(1);
-                return await _settings.GetSettingsAsync();
-            });
+            var settings = await _cache.GetOrAdd(CacheKeys.OmbiSettings, async () => await _settings.GetSettingsAsync(), DateTime.Now.AddHours(1));
             if (settings.IgnoreCertificateErrors)
             {
                 return new HttpClientHandler
