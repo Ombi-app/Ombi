@@ -843,10 +843,7 @@ namespace Ombi.Store.Migrations
                         .WithMany()
                         .HasForeignKey("UserId");
                 });
-
-            modelBuilder.Entity("Ombi.Store.Entities.Requests.TvIssues", b =>
-                {
-                    
+                   
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.MovieRequests", b =>
                 {

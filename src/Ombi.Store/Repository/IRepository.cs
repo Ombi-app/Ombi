@@ -18,7 +18,6 @@ namespace Ombi.Store.Repository
         Task DeleteRange(IEnumerable<T> req);
         Task Delete(T request);
         Task<int> SaveChangesAsync();
-        Task<T> Add(T content);
 
         IIncludableQueryable<TEntity, TProperty> Include<TEntity, TProperty>(
             IQueryable<TEntity> source, Expression<Func<TEntity, TProperty>> navigationPropertyPath)
