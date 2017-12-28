@@ -43,6 +43,7 @@
     "Search": "Sök",
     "Requests": "Förfrågningar",
     "UserManagement": "Användarhantering",
+    "Issues": "Issues",
     "Donate": "Donera!",
     "DonateTooltip": "Det är så här jag övertygar min fru att jag vill spendera min fritid att utveckla Ombi ;)",
     "UpdateAvailableTooltip": "Uppdatering tillgänglig!",
@@ -102,5 +103,24 @@
     "GridTitle": "Titel",
     "AirDate": "Sändningsdatum",
     "GridStatus": "Status"
+  },
+  "Issues": {
+    "Title": "Issues",
+    "PendingTitle": "Pending Issues",
+    "InProgressTitle": "In Progress Issues",
+    "ResolvedTitle": "Resolved Issues",
+    "ColumnTitle": "Title",
+    "Category": "Category",
+    "Status": "Status",
+    "Details": "Details",
+    "Description": "Description",
+    "NoComments": "No Comments!",
+    "MarkInProgress": "Mark In Progress",
+    "MarkResolved": "Mark Resolved",
+    "SendMessageButton": "Send",
+    "Subject": "Subject",
+    "Comments": "Comments",
+    "WriteMessagePlaceholder": "Write your message here...",
+    "ReportedBy": "Reported By"
   }
 }
