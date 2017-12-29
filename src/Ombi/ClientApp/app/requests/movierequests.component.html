@@ -1,4 +1,4 @@
-﻿<div class="form-group">
+<div class="form-group">
     <div>
         <input type="text" id="search" class="form-control form-control-custom" placeholder="Search" (keyup)="search($event)">
     </div>
@@ -107,17 +107,18 @@
                         <button *ngIf="!request.available" (click)="changeAvailability(request, true)" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change"><i class="fa fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}</button>
                     </form>
 
-                    <div class="dropdown" *ngIf="issueCategories && issuesEnabled">
-                        <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            <i class="fa fa-plus"></i> Report Issue
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            <li *ngFor="let cat of issueCategories"><a [routerLink]="" (click)="reportIssue(cat, request)">{{cat.value}}</a></li>
-                        </ul>
-                    </div>
 
 
+                </div>
+                    
+                <div class="dropdown" *ngIf="issueCategories && issuesEnabled">
+                    <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <i class="fa fa-plus"></i> Report Issue
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li *ngFor="let cat of issueCategories"><a [routerLink]="" (click)="reportIssue(cat, request)">{{cat.value}}</a></li>
+                    </ul>
                 </div>
 
             </div>
