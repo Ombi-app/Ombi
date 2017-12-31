@@ -58,7 +58,6 @@ export class TvRequestsComponent implements OnInit {
             });
     }
     public openClosestTab(el: any) {
-        debugger;
         const rowclass = "undefined ng-star-inserted";
         el = el.toElement || el.relatedTarget || el.target;
         while (el.className !== rowclass) {
