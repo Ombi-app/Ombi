@@ -86,6 +86,7 @@ namespace Ombi.DependencyInjection
         public static void RegisterApi(this IServiceCollection services)
         {
             services.AddTransient<IApi, Api.Api>();
+            services.AddSingleton<IOmbiHttpClient, OmbiHttpClient>(); // https://blogs.msdn.microsoft.com/alazarev/2017/12/29/disposable-finalizers-and-httpclient/
             services.AddTransient<IMovieDbApi, Api.TheMovieDb.TheMovieDbApi>();
             services.AddTransient<IPlexApi, PlexApi>();
             services.AddTransient<IEmbyApi, EmbyApi>();
