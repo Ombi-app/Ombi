@@ -58,7 +58,8 @@ export class TvRequestsComponent implements OnInit {
             });
     }
     public openClosestTab(el: any) {
-        const rowclass = "undefined";
+        debugger;
+        const rowclass = "undefined ng-star-inserted";
         el = el.toElement || el.relatedTarget || el.target;
         while (el.className !== rowclass) {
             // Increment the loop to the parent node until we find the row we need
@@ -68,12 +69,12 @@ export class TvRequestsComponent implements OnInit {
         // the class you specified
 
         // Then we loop through the children to find the caret which we want to click
-        const caretright = "ui-treetable-toggler fa fa-fw ui-clickable fa-caret-right";
-        const caretdown = "ui-treetable-toggler fa fa-fw ui-clickable fa-caret-down";
+        const caretright = "fa-caret-right";
+        const caretdown = "fa-caret-down";
         for (const value of el.children) {
             // the caret from the ui has 2 class selectors depending on if expanded or not
             // we search for both since we want to still toggle the clicking
-            if (value.className === caretright || value.className === caretdown) {
+            if (value.className.includes(caretright) || value.className.includes(caretdown)) {
                 // Then we tell JS to click the element even though we hid it from the UI
                 value.click();
                 //Break from loop since we no longer need to continue looking
