@@ -10,7 +10,7 @@ namespace Ombi.Store.Entities.Requests
         public int TheMovieDbId { get; set; }
         public int? IssueId { get; set; }
         [ForeignKey(nameof(IssueId))]
-        public List<MovieIssues> Issues { get; set; }
+        public List<Issues> Issues { get; set; }
 
         public int RootPathOverride { get; set; }
         public int QualityOverride { get; set; }

@@ -1,5 +1,4 @@
 ﻿import { Component, Input, OnDestroy, OnInit} from "@angular/core";
-//import { ActivatedRoute } from '@angular/router';
 import { Subject } from "rxjs/Subject";
 
 import "rxjs/add/operator/takeUntil";
@@ -37,7 +36,6 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
     }
 
     public submitRequests() {
-
         // Make sure something has been selected
         const selected = this.series.seasonRequests.some((season) => {
             return  season.episodes.some((ep) => {

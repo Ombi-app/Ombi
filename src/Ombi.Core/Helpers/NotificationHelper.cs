@@ -51,6 +51,7 @@ namespace Ombi.Core
                 RequestType = model.RequestType,
                 Recipient = model.RequestedUser?.Email ?? string.Empty
             };
+            
             BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel));
         }
         public void Notify(ChildRequests model, NotificationType type)

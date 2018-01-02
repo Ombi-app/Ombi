@@ -30,8 +30,8 @@ namespace Ombi.Store.Context
         DbSet<MovieRequests> MovieRequests { get; set; }
         DbSet<TvRequests> TvRequests { get; set; }
         DbSet<ChildRequests> ChildRequests { get; set; }
-        DbSet<MovieIssues> MovieIssues { get; set; }
-        DbSet<TvIssues> TvIssues { get; set; }
+        DbSet<Issues> Issues { get; set; }
+        DbSet<IssueCategory> IssueCategories { get; set; }
         DbSet<Tokens> Tokens { get; set; }
         DbSet<SonarrCache> SonarrCache { get; set; }
         DbSet<SonarrEpisodeCache> SonarrEpisodeCache { get; set; }

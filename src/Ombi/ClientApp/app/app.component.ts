@@ -16,6 +16,7 @@ import { ICustomizationSettings } from "./interfaces";
 export class AppComponent implements OnInit {
 
     public customizationSettings: ICustomizationSettings;
+    public issuesEnabled = false;
     public user: ILocalUser;
     public showNav: boolean;
     public updateAvailable: boolean;
@@ -42,6 +43,7 @@ export class AppComponent implements OnInit {
         this.user = this.authService.claims();
 
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
+        this.settingsService.issueEnabled().subscribe(x => this.issuesEnabled = x);
 
         this.router.events.subscribe((event: NavigationStart) => {
             this.currentUrl = event.url;

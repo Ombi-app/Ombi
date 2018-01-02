@@ -52,7 +52,8 @@ namespace Ombi.Core.Helpers
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
                 RequestedUserId = userId,
-                SeasonRequests = new List<SeasonRequests>()
+                SeasonRequests = new List<SeasonRequests>(),
+                Title = model.Title
             };
 
             return this;

@@ -86,6 +86,7 @@ namespace Ombi.DependencyInjection
         public static void RegisterApi(this IServiceCollection services)
         {
             services.AddTransient<IApi, Api.Api>();
+            services.AddSingleton<IOmbiHttpClient, OmbiHttpClient>(); // https://blogs.msdn.microsoft.com/alazarev/2017/12/29/disposable-finalizers-and-httpclient/
             services.AddTransient<IMovieDbApi, Api.TheMovieDb.TheMovieDbApi>();
             services.AddTransient<IPlexApi, PlexApi>();
             services.AddTransient<IEmbyApi, EmbyApi>();
@@ -128,9 +129,10 @@ namespace Ombi.DependencyInjection
         public static void RegisterServices(this IServiceCollection services)
         {
             services.AddTransient<IRequestServiceMain, RequestService>();
-            services.AddSingleton<INotificationService, NotificationService>();
-            services.AddSingleton<IEmailProvider, GenericEmailProvider>();
+            services.AddTransient<INotificationService, NotificationService>();
+            services.AddTransient<IEmailProvider, GenericEmailProvider>();
             services.AddTransient<INotificationHelper, NotificationHelper>();
+            services.AddTransient<ICacheService, CacheService>();
 
             services.AddTransient<IDiscordNotification, DiscordNotification>();
             services.AddTransient<IEmailNotification, EmailNotification>();
@@ -140,7 +142,6 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMattermostNotification, MattermostNotification>();
             services.AddTransient<IPushoverNotification, PushoverNotification>();
             services.AddTransient<ITelegramNotification, TelegramNotification>();
-
         }
 
         public static void RegisterJobs(this IServiceCollection services)

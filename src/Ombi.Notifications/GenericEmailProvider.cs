@@ -40,7 +40,7 @@ namespace Ombi.Notifications
                 var body = new BodyBuilder
                 {
                     HtmlBody = html,
-                    //TextBody = model.Other["PlainTextBody"]
+                    TextBody = model.Other["PlainTextBody"]
                 };
 
                 var message = new MimeMessage
@@ -104,7 +104,7 @@ namespace Ombi.Notifications
                 var body = new BodyBuilder
                 {
                     HtmlBody = model.Message,
-                    //TextBody = model.Other["PlainTextBody"]
+                    TextBody = model.Other["PlainTextBody"]
                 };
 
                 var message = new MimeMessage

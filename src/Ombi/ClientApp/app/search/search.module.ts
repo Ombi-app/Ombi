@@ -11,7 +11,7 @@ import { SearchComponent } from "./search.component";
 import { SeriesInformationComponent } from "./seriesinformation.component";
 import { TvSearchComponent } from "./tvsearch.component";
 
-import { TreeTableModule } from "primeng/primeng";
+import { SidebarModule, TreeTableModule } from "primeng/primeng";
 
 import { RequestService } from "../services";
 import { SearchService } from "../services";
@@ -21,18 +21,18 @@ import { AuthGuard } from "../auth/auth.guard";
 import { SharedModule } from "../shared/shared.module";
 
 const routes: Routes = [
-    { path: "search", component: SearchComponent, canActivate: [AuthGuard] },
-    { path: "search/show/:id", component: SeriesInformationComponent, canActivate: [AuthGuard] },
+    { path: "", component: SearchComponent, canActivate: [AuthGuard] },
+    { path: "show/:id", component: SeriesInformationComponent, canActivate: [AuthGuard] },
 ];
-
 @NgModule({
-    imports: [
+    imports: [        
         CommonModule,
         FormsModule,
         RouterModule.forChild(routes),
         NgbModule.forRoot(),
         TreeTableModule,
         SharedModule,
+        SidebarModule,
     ],
     declarations: [
         SearchComponent,

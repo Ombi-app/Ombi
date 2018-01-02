@@ -83,7 +83,10 @@ namespace Ombi.Core.Senders
                         Success = true
                     };
                 }
-                return new SenderResult();
+                return new SenderResult
+                {
+                    Message = "Could not send to SickRage!"
+                };
             }
             return new SenderResult
             {

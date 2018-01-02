@@ -19,7 +19,7 @@ namespace Ombi.Controllers
     public class JobController : Controller
     {
         public JobController(IOmbiAutomaticUpdater updater, IPlexUserImporter userImporter,
-            IMemoryCache mem, IEmbyUserImporter embyImporter, IPlexContentSync plexContentSync,
+            ICacheService mem, IEmbyUserImporter embyImporter, IPlexContentSync plexContentSync,
             IEmbyContentSync embyContentSync)
         {
             _updater = updater;
@@ -33,7 +33,7 @@ namespace Ombi.Controllers
         private readonly IOmbiAutomaticUpdater _updater;
         private readonly IPlexUserImporter _plexUserImporter;
         private readonly IEmbyUserImporter _embyUserImporter;
-        private readonly IMemoryCache _memCache;
+        private readonly ICacheService _memCache;
         private readonly IPlexContentSync _plexContentSync;
         private readonly IEmbyContentSync _embyContentSync;
 
@@ -74,9 +74,8 @@ namespace Ombi.Controllers
         [HttpGet("updateCached")]
         public async Task<bool> CheckForUpdateCached()
         {
-            var val = await _memCache.GetOrCreateAsync(CacheKeys.Update, async entry =>
+            var val = await _memCache.GetOrAdd(CacheKeys.Update, async () =>
             {
-                entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(1);
                 var productArray = _updater.GetVersion();
                 var version = productArray[0];
                 var branch = productArray[1];
