@@ -12,16 +12,16 @@
   "Common": {
     "ContinueButton": "Fortsätt",
     "Available": "Tillgänglig",
-    "ProcessingRequest": "Bearbetar förfrågan",
+    "ProcessingRequest": "Bearbetar efterfrågan",
     "PendingApproval": "I väntan på godkännande",
-    "RequestDenied": "Begäran nekas",
-    "NotRequested": "Inte önskad",
-    "Requested": "Begärd önskan",
-    "Request": "Begär",
+    "RequestDenied": "Efterfrågan nekad",
+    "NotRequested": "Inte efterfrågad",
+    "Requested": "Efterfrågad",
+    "Request": "Efterfråga",
     "Denied": "Nekad",
     "Approve": "Godkänd",
     "Errors": {
-      "Validation": "Vänligen kontrollera din angivna värden"
+      "Validation": "Vänligen kontrollera dina angivna värden"
     }
   },
   "PasswordReset": {
@@ -41,9 +41,9 @@
   },
   "NavigationBar": {
     "Search": "Sök",
-    "Requests": "Förfrågningar",
+    "Requests": "Efterfrågningar",
     "UserManagement": "Användarhantering",
-    "Issues": "Issues",
+    "Issues": "Problem",
     "Donate": "Donera!",
     "DonateTooltip": "Det är så här jag övertygar min fru att jag vill spendera min fritid att utveckla Ombi ;)",
     "UpdateAvailableTooltip": "Uppdatering tillgänglig!",
@@ -63,14 +63,14 @@
   },
   "Search": {
     "Title": "Sök",
-    "Paragraph": "Vill du titta på något som inte är tillgängligt? Inga problem, Sök efter det nedan och önska det!",
+    "Paragraph": "Vill du titta på något som inte är tillgängligt? Inga problem, Sök efter det nedan och efterfråga det!",
     "MoviesTab": "Filmer",
     "TvTab": "TV-serier",
     "Suggestions": "Förslag",
     "NoResults": "Tyvärr, hittade vi inte några resultat!",
     "ReleaseDate": "Publiceringsdatum",
     "ViewOnPlex": "Visa på Plex",
-    "RequestAdded": "Begäran om {{title}} har lagts till framgångsrikt",
+    "RequestAdded": "Efterfrågan om {{title}} har lagts till",
     "Movies": {
       "PopularMovies": "Populära filmer",
       "UpcomingMovies": "Kommande filmer",
@@ -81,16 +81,16 @@
     }
   },
   "Requests": {
-    "Title": "Förfrågningar",
-    "Paragraph": "Nedan kan du se din och andra förfrågningar, samt status och godkännande.",
+    "Title": "Efterfrågningar",
+    "Paragraph": "Nedan kan du se din och andra efterfrågningar, samt status och godkännande.",
     "MoviesTab": "Filmer",
     "TvTab": "TV-serier",
-    "RequestedBy": "Begärts av:",
+    "RequestedBy": "Efterfrågat av:",
     "Status": "Status:",
-    "RequestStatus:": "Begärandestatus för:",
+    "RequestStatus:": "Efterfrågandestatus för:",
     "Denied": " Nekad:",
     "ReleaseDate": "Releasedatum:",
-    "RequestDate": "Datum för begäran:",
+    "RequestDate": "Datum för Efterfrågan:",
     "QualityOverride": "Kvalité överskridande:",
     "RootFolderOverride": "Root mapp överskridande:",
     "ChangeRootFolder": "Byt Root mapp",
@@ -105,22 +105,22 @@
     "GridStatus": "Status"
   },
   "Issues": {
-    "Title": "Issues",
-    "PendingTitle": "Pending Issues",
-    "InProgressTitle": "In Progress Issues",
-    "ResolvedTitle": "Resolved Issues",
-    "ColumnTitle": "Title",
-    "Category": "Category",
+    "Title": "Problem",
+    "PendingTitle": "Väntande Problem",
+    "InProgressTitle": "Pågående Problem",
+    "ResolvedTitle": "Lösta Problem",
+    "ColumnTitle": "Titel",
+    "Category": "Kategori",
     "Status": "Status",
-    "Details": "Details",
-    "Description": "Description",
-    "NoComments": "No Comments!",
-    "MarkInProgress": "Mark In Progress",
-    "MarkResolved": "Mark Resolved",
-    "SendMessageButton": "Send",
-    "Subject": "Subject",
-    "Comments": "Comments",
-    "WriteMessagePlaceholder": "Write your message here...",
-    "ReportedBy": "Reported By"
+    "Details": "Detaljer",
+    "Description": "Beskrivning",
+    "NoComments": "Inga kommentarer!",
+    "MarkInProgress": "Markera som pågående",
+    "MarkResolved": "Markera som löst",
+    "SendMessageButton": "Skicka",
+    "Subject": "Ämne",
+    "Comments": "Kommentarer",
+    "WriteMessagePlaceholder": "Skriv ditt meddelande här...",
+    "ReportedBy": "Rapporterat av"
   }
 }
