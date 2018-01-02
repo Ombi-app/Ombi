@@ -497,6 +497,7 @@ namespace Ombi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("Issues")]
+        [AllowAnonymous]
         public async Task<IssueSettings> IssueSettings()
         {
             return await Get<IssueSettings>();
