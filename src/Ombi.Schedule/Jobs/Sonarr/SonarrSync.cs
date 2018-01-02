@@ -66,7 +66,8 @@ namespace Ombi.Schedule.Jobs.Sonarr
                         {
                             EpisodeNumber = episode.episodeNumber,
                             SeasonNumber = episode.seasonNumber,
-                            TvDbId = s.tvdbId
+                            TvDbId = s.tvdbId,
+                            HasFile = episode.hasFile
                         }));
                     }
                     
