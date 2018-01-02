@@ -71,7 +71,7 @@ namespace Ombi.Notifications.Agents
             return message;
         }
 
-        private async Task<string> LoadMessage(NotificationType type, NotificationOptions model, EmailNotificationSettings settings)
+        private async Task<string> LoadPlainTextMessage(NotificationType type, NotificationOptions model, EmailNotificationSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Email, type, model);
 
@@ -86,7 +86,7 @@ namespace Ombi.Notifications.Agents
                 return;
             }
 
-            var plaintext = await LoadMessage(NotificationType.NewRequest, model, settings);
+            var plaintext = await LoadPlainTextMessage(NotificationType.NewRequest, model, settings);
             message.Other.Add("PlainTextBody", plaintext);
 
             await Send(message, settings);
@@ -100,7 +100,7 @@ namespace Ombi.Notifications.Agents
                 return;
             }
 
-            var plaintext = await LoadMessage(NotificationType.Issue, model, settings);
+            var plaintext = await LoadPlainTextMessage(NotificationType.Issue, model, settings);
             message.Other.Add("PlainTextBody", plaintext);
 
             // Issues should be sent to admin
@@ -153,7 +153,7 @@ namespace Ombi.Notifications.Agents
                 return;
             }
 
-            var plaintext = await LoadMessage(NotificationType.RequestDeclined, model, settings);
+            var plaintext = await LoadPlainTextMessage(NotificationType.RequestDeclined, model, settings);
             message.Other.Add("PlainTextBody", plaintext);
 
             message.To = model.RequestType == RequestType.Movie
@@ -170,7 +170,7 @@ namespace Ombi.Notifications.Agents
                 return;
             }
 
-            var plaintext = await LoadMessage(NotificationType.RequestApproved, model, settings);
+            var plaintext = await LoadPlainTextMessage(NotificationType.RequestApproved, model, settings);
             message.Other.Add("PlainTextBody", plaintext);
 
             message.To = model.RequestType == RequestType.Movie
@@ -187,7 +187,7 @@ namespace Ombi.Notifications.Agents
                 return;
             }
 
-            var plaintext = await LoadMessage(NotificationType.RequestAvailable, model, settings);
+            var plaintext = await LoadPlainTextMessage(NotificationType.RequestAvailable, model, settings);
             message.Other.Add("PlainTextBody", plaintext);
 
             message.To = model.RequestType == RequestType.Movie
