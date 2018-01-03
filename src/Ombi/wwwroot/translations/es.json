@@ -1,10 +1,10 @@
 {
   "Login": {
     "SignInButton": "Entrar",
-    "UsernamePlaceholder": "Nombre de usuario",
+    "UsernamePlaceholder": "Usuario",
     "PasswordPlaceholder": "Contraseña",
     "RememberMe": "Recordarme",
-    "ForgottenPassword": "Has olvidado tu contraseña?",
+    "ForgottenPassword": "¿Has olvidado tu contraseña?",
     "Errors": {
       "IncorrectCredentials": "Nombre de usuario o contraseña\nincorrectos"
     }
@@ -21,7 +21,7 @@
     "Denied": "Denegado",
     "Approve": "Aprobar",
     "Errors": {
-      "Validation": "Por favor, compruebe los valores introducidos"
+      "Validation": "Por favor, compruebe los datos introducidos"
     }
   },
   "PasswordReset": {
@@ -29,28 +29,28 @@
     "ResetPasswordButton": "Restablecer contraseña"
   },
   "LandingPage": {
-    "OnlineHeading": "Actualmente en línea",
-    "OnlineParagraph": "El servidor de medios es actualmente en línea",
+    "OnlineHeading": "En línea",
+    "OnlineParagraph": "El servidor de medios está en línea",
     "PartiallyOnlineHeading": "Parcialmente en línea",
-    "PartiallyOnlineParagraph": "El servidor de medios es parcialmente en línea.",
-    "MultipleServersUnavailable": "Hay servidores de {{serversUnavailable}} línea de {{totalServers}}.",
-    "SingleServerUnavailable": "Hay {{serversUnavailable}} servidor offline fuera de {{totalServers}}.",
-    "OfflineHeading": "Actualmente fuera de línea",
-    "OfflineParagraph": "El servidor de medios está actualmente fuera de línea.",
-    "CheckPageForUpdates": "Consulte esta página para estar actualizado con las últiimas novedades."
+    "PartiallyOnlineParagraph": "El servidor de medios está parcialmente en línea.",
+    "MultipleServersUnavailable": "{{serversUnavailable}} de {{totalServers}} servidores están en línea.",
+    "SingleServerUnavailable": "{{serversUnavailable}} servidor está fuera de línea {{totalServers}}.",
+    "OfflineHeading": "Fuera de línea",
+    "OfflineParagraph": "El servidor de medios está fuera de línea.",
+    "CheckPageForUpdates": "Consulte esta página para ver las últimas novedades."
   },
   "NavigationBar": {
-    "Search": "Búsqueda de",
-    "Requests": "Solicitudes de",
+    "Search": "Buscar",
+    "Requests": "Solicitar",
     "UserManagement": "Gestión de usuarios",
-    "Issues": "Issues",
+    "Issues": "Incidencias",
     "Donate": "¡Dona!",
-    "DonateTooltip": "Esto es cómo convencer a mi esposa que me dejara pasar mi tiempo libre desarrollando Ombi ;)",
+    "DonateTooltip": "Esta es la motivación para que mi mujer me deje desarrollar Ombi",
     "UpdateAvailableTooltip": "¡Actualización disponible!",
-    "Settings": "Configuración",
+    "Settings": "Ajustes",
     "Welcome": "Bienvenido {{username}}",
     "UpdateDetails": "Actualizar datos",
-    "Logout": "Cierre de sesión",
+    "Logout": "Cerrar sesión",
     "Language": {
       "English": "Inglés",
       "French": "Francés",
@@ -63,14 +63,14 @@
   },
   "Search": {
     "Title": "Buscar",
-    "Paragraph": "¿Quieres ver algo que no está disponible actualmente? No hay problema, sólo tienes que buscarlo debajo y solicitarlo!",
+    "Paragraph": "¿Quieres ver algo que no está disponible? No hay problema, búscalo y solicítalo.",
     "MoviesTab": "Películas",
     "TvTab": "Series",
     "Suggestions": "Sugerencias",
-    "NoResults": "¡Lo sentimos, no encontramos ningún resultado!",
+    "NoResults": "¡Lo sentimos, no hay ningún resultado!",
     "ReleaseDate": "Fecha de estreno",
     "ViewOnPlex": "Ver en Plex",
-    "RequestAdded": "La solicitud de {{title}} se ha agregado con éxito",
+    "RequestAdded": "{{title}} solicitada con éxito",
     "Movies": {
       "PopularMovies": "Películas populares",
       "UpcomingMovies": "Próximas películas",
@@ -105,22 +105,22 @@
     "GridStatus": "Estado"
   },
   "Issues": {
-    "Title": "Issues",
-    "PendingTitle": "Pending Issues",
-    "InProgressTitle": "In Progress Issues",
-    "ResolvedTitle": "Resolved Issues",
-    "ColumnTitle": "Title",
-    "Category": "Category",
-    "Status": "Status",
-    "Details": "Details",
-    "Description": "Description",
-    "NoComments": "No Comments!",
-    "MarkInProgress": "Mark In Progress",
-    "MarkResolved": "Mark Resolved",
-    "SendMessageButton": "Send",
-    "Subject": "Subject",
-    "Comments": "Comments",
-    "WriteMessagePlaceholder": "Write your message here...",
-    "ReportedBy": "Reported By"
+    "Title": "Incidencias",
+    "PendingTitle": "Incidencias pendientes",
+    "InProgressTitle": "Incidencias en progreso",
+    "ResolvedTitle": "Incidencias resueltas",
+    "ColumnTitle": "Título",
+    "Category": "Categoría",
+    "Status": "Estado",
+    "Details": "Detalles",
+    "Description": "Descripción",
+    "NoComments": "Sin comentarios",
+    "MarkInProgress": "Marcar en progreso",
+    "MarkResolved": "Marcar resuelta",
+    "SendMessageButton": "Enviar",
+    "Subject": "Asunto",
+    "Comments": "Comentarios",
+    "WriteMessagePlaceholder": "Escribe aquí tu mensaje...",
+    "ReportedBy": "Notificado por"
   }
 }
