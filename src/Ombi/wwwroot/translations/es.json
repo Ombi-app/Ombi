@@ -1,10 +1,10 @@
 {
   "Login": {
-    "SignInButton": "Entrar",
-    "UsernamePlaceholder": "Nombre de usuario",
+    "SignInButton": "Iniciar sesión",
+    "UsernamePlaceholder": "Usuario",
     "PasswordPlaceholder": "Contraseña",
-    "RememberMe": "Recordarme",
-    "ForgottenPassword": "Has olvidado tu contraseña?",
+    "RememberMe": "Recuérdame",
+    "ForgottenPassword": "¿Has olvidado tu contraseña?",
     "Errors": {
       "IncorrectCredentials": "Nombre de usuario o contraseña\nincorrectos"
     }
@@ -21,36 +21,36 @@
     "Denied": "Denegado",
     "Approve": "Aprobar",
     "Errors": {
-      "Validation": "Por favor, compruebe los valores introducidos"
+      "Validation": "Por favor, comprueba los datos introducidos"
     }
   },
   "PasswordReset": {
-    "EmailAddressPlaceholder": "Dirección de correo electrónico",
+    "EmailAddressPlaceholder": "Correo electrónico",
     "ResetPasswordButton": "Restablecer contraseña"
   },
   "LandingPage": {
-    "OnlineHeading": "Actualmente en línea",
-    "OnlineParagraph": "El servidor de medios es actualmente en línea",
+    "OnlineHeading": "En línea",
+    "OnlineParagraph": "El servidor de medios esta en línea",
     "PartiallyOnlineHeading": "Parcialmente en línea",
-    "PartiallyOnlineParagraph": "El servidor de medios es parcialmente en línea.",
-    "MultipleServersUnavailable": "Hay servidores de {{serversUnavailable}} línea de {{totalServers}}.",
+    "PartiallyOnlineParagraph": "El servidor de medios está parcialmente en línea.",
+    "MultipleServersUnavailable": "{{serversUnavailable}} de {{totalServers}} servidores están fuera de línea.",
     "SingleServerUnavailable": "Hay {{serversUnavailable}} servidor offline fuera de {{totalServers}}.",
-    "OfflineHeading": "Actualmente fuera de línea",
-    "OfflineParagraph": "El servidor de medios está actualmente fuera de línea.",
-    "CheckPageForUpdates": "Consulte esta página para estar actualizado con las últiimas novedades."
+    "OfflineHeading": "Fuera de línea",
+    "OfflineParagraph": "El servidor de medios está fuera de línea.",
+    "CheckPageForUpdates": "Consulte esta página para ver las últimas novedades."
   },
   "NavigationBar": {
-    "Search": "Búsqueda de",
-    "Requests": "Solicitudes de",
+    "Search": "Buscar",
+    "Requests": "Solicitar",
     "UserManagement": "Gestión de usuarios",
     "Issues": "Incidencias",
-    "Donate": "¡Dona!",
-    "DonateTooltip": "Esto es cómo convencer a mi esposa que me dejara pasar mi tiempo libre desarrollando Ombi ;)",
+    "Donate": "¡Donar!",
+    "DonateTooltip": "Para que mi esposa me deje desarrollar Ombi ;)",
     "UpdateAvailableTooltip": "¡Actualización disponible!",
-    "Settings": "Configuración",
+    "Settings": "Ajustes",
     "Welcome": "Bienvenido {{username}}",
     "UpdateDetails": "Actualizar datos",
-    "Logout": "Cierre de sesión",
+    "Logout": "Cerrar sesión",
     "Language": {
       "English": "Inglés",
       "French": "Francés",
@@ -63,7 +63,7 @@
   },
   "Search": {
     "Title": "Buscar",
-    "Paragraph": "¿Quieres ver algo que no está disponible actualmente? No hay problema, sólo tienes que buscarlo debajo y solicitarlo!",
+    "Paragraph": "¿Quieres ver algo que no está disponible? No hay problema, búscalo y solicítalo!",
     "MoviesTab": "Películas",
     "TvTab": "Series",
     "Suggestions": "Sugerencias",
@@ -120,7 +120,7 @@
     "SendMessageButton": "Enviar",
     "Subject": "Asunto",
     "Comments": "Comentarios",
-    "WriteMessagePlaceholder": "Write your message here...",
-    "ReportedBy": "Reported By"
+    "WriteMessagePlaceholder": "Escribe tu mensaje aquí...",
+    "ReportedBy": "Informado por"
   }
 }
