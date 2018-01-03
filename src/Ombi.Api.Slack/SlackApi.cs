@@ -23,6 +23,7 @@ namespace Ombi.Api.Slack
             body.channel = message.channel;
             body.text = message.text;
             body.username = message.username;
+            body.link_names = 1;
 
             if (!string.IsNullOrEmpty(message.icon_url))
             {
