@@ -10,7 +10,7 @@
     }
   },
   "Common": {
-    "ContinueButton": "Continuar",
+    "ContinueButton": "Continue",
     "Available": "Disponible",
     "ProcessingRequest": "Procesando solicitud",
     "PendingApproval": "Pendiente de aprobación",
@@ -26,15 +26,15 @@
   },
   "PasswordReset": {
     "EmailAddressPlaceholder": "Correo electrónico",
-    "ResetPasswordButton": "Restablecer contraseña"
+    "ResetPasswordButton": "Reset Password"
   },
   "LandingPage": {
     "OnlineHeading": "En línea",
     "OnlineParagraph": "El servidor de medios esta en línea",
-    "PartiallyOnlineHeading": "Parcialmente en línea",
+    "PartiallyOnlineHeading": "Partially Online",
     "PartiallyOnlineParagraph": "El servidor de medios está parcialmente en línea.",
     "MultipleServersUnavailable": "{{serversUnavailable}} de {{totalServers}} servidores están fuera de línea.",
-    "SingleServerUnavailable": "Hay {{serversUnavailable}} servidor offline fuera de {{totalServers}}.",
+    "SingleServerUnavailable": "There is {{serversUnavailable}} server offline out of {{totalServers}}.",
     "OfflineHeading": "Fuera de línea",
     "OfflineParagraph": "El servidor de medios está fuera de línea.",
     "CheckPageForUpdates": "Consulte esta página para ver las últimas novedades."
@@ -42,14 +42,14 @@
   "NavigationBar": {
     "Search": "Buscar",
     "Requests": "Solicitar",
-    "UserManagement": "Gestión de usuarios",
+    "UserManagement": "User Management",
     "Issues": "Incidencias",
     "Donate": "¡Donar!",
     "DonateTooltip": "Para que mi esposa me deje desarrollar Ombi ;)",
-    "UpdateAvailableTooltip": "¡Actualización disponible!",
+    "UpdateAvailableTooltip": "Update Available!",
     "Settings": "Ajustes",
-    "Welcome": "Bienvenido {{username}}",
-    "UpdateDetails": "Actualizar datos",
+    "Welcome": "Welcome {{username}}",
+    "UpdateDetails": "Update Details",
     "Logout": "Cerrar sesión",
     "Language": {
       "English": "Inglés",
