@@ -29,6 +29,7 @@ using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
+using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
 using IdentityResult = Microsoft.AspNetCore.Identity.IdentityResult;
@@ -52,7 +53,10 @@ namespace Ombi.Controllers
             ITvRequestRepository t,
             ILogger<IdentityController> l,
             IPlexApi plexApi,
-            ISettingsService<PlexSettings> settings)
+            ISettingsService<PlexSettings> settings,
+            IRepository<RequestLog> requestLog,
+            IRepository<Issues> issues,
+            IRepository<IssueComments> issueComments)
         {
             UserManager = user;
             Mapper = mapper;
@@ -66,6 +70,9 @@ namespace Ombi.Controllers
             _log = l;
             _plexApi = plexApi;
             _plexSettings = settings;
+            _issuesRepository = issues;
+            _requestLogRepository = requestLog;
+            _issueCommentsRepository = issueComments;
         }
 
         private OmbiUserManager UserManager { get; }
@@ -80,6 +87,10 @@ namespace Ombi.Controllers
         private readonly ILogger<IdentityController> _log;
         private readonly IPlexApi _plexApi;
         private readonly ISettingsService<PlexSettings> _plexSettings;
+        private readonly IRepository<Issues> _issuesRepository;
+        private readonly IRepository<IssueComments> _issueCommentsRepository;
+        private readonly IRepository<RequestLog> _requestLogRepository;
+
 
         /// <summary>
         /// This is what the Wizard will call when creating the user for the very first time.
@@ -510,7 +521,7 @@ namespace Ombi.Controllers
                 // We need to delete all the requests first
                 var moviesUserRequested = MovieRepo.GetAll().Where(x => x.RequestedUserId == userId);
                 var tvUserRequested = TvRepo.GetChild().Where(x => x.RequestedUserId == userId);
-
+                
                 if (moviesUserRequested.Any())
                 {
                     await MovieRepo.DeleteRange(moviesUserRequested);
@@ -518,6 +529,23 @@ namespace Ombi.Controllers
                 if (tvUserRequested.Any())
                 {
                     await TvRepo.DeleteChildRange(tvUserRequested);
+                }
+
+                // Delete any issues and request logs
+                var issues = _issuesRepository.GetAll().Where(x => x.UserReportedId == userId);
+                var issueComments = _issueCommentsRepository.GetAll().Where(x => x.UserId == userId);
+                var requestLog = _requestLogRepository.GetAll().Where(x => x.UserId == userId);
+                if (issues.Any())
+                {
+                    await _issuesRepository.DeleteRange(issues);
+                }
+                if (requestLog.Any())
+                {
+                    await _requestLogRepository.DeleteRange(requestLog);
+                }
+                if (issueComments.Any())
+                {
+                    await _issueCommentsRepository.DeleteRange(issueComments);
                 }
 
                 var result = await UserManager.DeleteAsync(userToDelete);
