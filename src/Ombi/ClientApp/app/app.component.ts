@@ -51,11 +51,13 @@ export class AppComponent implements OnInit {
                 this.user = this.authService.claims();
                 this.showNav = this.authService.loggedIn();
 
-                if (this.user !== null && this.user.name && !this.checkedForUpdate) {
+                // tslint:disable-next-line:no-string-literal
+                if (this.user !== null && this.user.name && !this.checkedForUpdate && this.user.roles["Admin"]) {
                     this.checkedForUpdate = true;
                     this.jobService.getCachedUpdate().subscribe(x => {
                         this.updateAvailable = x;
-                    });
+                    },
+                    err => this.checkedForUpdate = true );
                 }
             }
         });
