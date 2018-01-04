@@ -55,7 +55,7 @@ namespace Ombi.Api
                 {
                     if (!httpResponseMessage.IsSuccessStatusCode)
                     {
-                        Logger.LogError(LoggingEvents.Api, $"StatusCode: {httpResponseMessage.StatusCode}, Reason: {httpResponseMessage.ReasonPhrase}");
+                        LogError(request, httpResponseMessage);
                     }
                     // do something with the response
                     var data = httpResponseMessage.Content;
@@ -98,7 +98,7 @@ namespace Ombi.Api
                 {
                     if (!httpResponseMessage.IsSuccessStatusCode)
                     {
-                        Logger.LogError(LoggingEvents.Api, $"StatusCode: {httpResponseMessage.StatusCode}, Reason: {httpResponseMessage.ReasonPhrase}");
+                        LogError(request, httpResponseMessage);
                     }
                     // do something with the response
                     var data = httpResponseMessage.Content;
@@ -112,28 +112,34 @@ namespace Ombi.Api
 
         public async Task Request(Request request)
         {
-                using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, request.FullUri))
+            using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, request.FullUri))
+            {
+                // Add the Json Body
+                if (request.JsonBody != null)
                 {
-                    // Add the Json Body
-                    if (request.JsonBody != null)
-                    {
-                        httpRequestMessage.Content = new JsonContent(request.JsonBody);
-                    }
+                    httpRequestMessage.Content = new JsonContent(request.JsonBody);
+                }
 
-                    // Add headers
-                    foreach (var header in request.Headers)
-                    {
-                        httpRequestMessage.Headers.Add(header.Key, header.Value);
+                // Add headers
+                foreach (var header in request.Headers)
+                {
+                    httpRequestMessage.Headers.Add(header.Key, header.Value);
 
-                    }
-                    using (var httpResponseMessage = await _client.SendAsync(httpRequestMessage))
+                }
+                using (var httpResponseMessage = await _client.SendAsync(httpRequestMessage))
+                {
+                    if (!httpResponseMessage.IsSuccessStatusCode)
                     {
-                        if (!httpResponseMessage.IsSuccessStatusCode)
-                        {
-                            Logger.LogError(LoggingEvents.Api, $"StatusCode: {httpResponseMessage.StatusCode}, Reason: {httpResponseMessage.ReasonPhrase}");
-                        }
+                        LogError(request, httpResponseMessage);
                     }
                 }
+            }
+        }
+
+        private void LogError(Request request, HttpResponseMessage httpResponseMessage)
+        {
+            Logger.LogError(LoggingEvents.Api,
+                $"StatusCode: {httpResponseMessage.StatusCode}, Reason: {httpResponseMessage.ReasonPhrase}, RequestUri: {request.FullUri}");
         }
     }
 }
