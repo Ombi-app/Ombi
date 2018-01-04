@@ -37,10 +37,13 @@ namespace Ombi.Notifications
                 var customization = await CustomizationSettings.GetSettingsAsync();
                 var html = email.LoadTemplate(model.Subject, model.Message, null, customization.Logo);
 
+                var textBody = string.Empty;
+
+                model.Other.TryGetValue("PlainTextBody", out textBody);
                 var body = new BodyBuilder
                 {
                     HtmlBody = html,
-                    TextBody = model.Other["PlainTextBody"]
+                    TextBody = textBody
                 };
 
                 var message = new MimeMessage
