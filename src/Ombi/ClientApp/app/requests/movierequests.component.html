@@ -55,7 +55,7 @@
 
 
                 <div id="releaseDate">{{ 'Requests.ReleaseDate' | translate }} {{request.releaseDate | date}}</div>
-                <div id="requestedDate">{{ 'Requests.RequestedDate' | translate }} {{request.requestedDate | date}}</div>
+                <div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{request.requestedDate | date}}</div>
                 <br />
                 <div *ngIf="isAdmin">
                     <div *ngIf="request.qualityOverrideTitle">{{ 'Requests.QualityOverride' | translate }} <span>{{request.qualityOverrideTitle}} </span></div>
