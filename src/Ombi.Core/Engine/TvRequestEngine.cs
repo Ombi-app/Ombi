@@ -294,7 +294,6 @@ namespace Ombi.Core.Engine
                 }
             }
             await TvRepository.UpdateChild(request);
-            NotificationHelper.Notify(request, NotificationType.RequestAvailable);
             return new RequestEngineResult
             {
                 Result = true,
