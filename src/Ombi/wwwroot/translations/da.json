@@ -87,7 +87,7 @@
     "TvTab": "Tv-serier",
     "RequestedBy": "Anmodet af:",
     "Status": "Status:",
-    "RequestStatus:": "Status for anmodning:",
+    "RequestStatus": "Request status:",
     "Denied": " Afvist:",
     "ReleaseDate": "Udgivelsesdato:",
     "RequestDate": "Dato for anmodning:",
