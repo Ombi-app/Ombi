@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "C:\\Users\\Jamie.Rees\\Source\\Repos\\test2\\ombi\\src"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"dockerfile.*": "dockerfile"
+		},
+		"typescript.tsdk": "node_modules\\typescript\\lib"
+	}
+}

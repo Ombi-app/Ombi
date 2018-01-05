@@ -17,10 +17,10 @@ import { IdentityService } from "../services";
 import { AuthGuard } from "../auth/auth.guard";
 
 const routes: Routes = [
-    { path: "usermanagement", component: UserManagementComponent, canActivate: [AuthGuard] },
-    { path: "usermanagement/add", component: UserManagementAddComponent, canActivate: [AuthGuard] },
-    { path: "usermanagement/edit/:id", component: UserManagementEditComponent, canActivate: [AuthGuard] },
-    { path: "usermanagement/updatedetails", component: UpdateDetailsComponent, canActivate: [AuthGuard] },
+    { path: "", component: UserManagementComponent, canActivate: [AuthGuard] },
+    { path: "add", component: UserManagementAddComponent, canActivate: [AuthGuard] },
+    { path: "edit/:id", component: UserManagementEditComponent, canActivate: [AuthGuard] },
+    { path: "updatedetails", component: UpdateDetailsComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({

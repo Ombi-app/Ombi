@@ -25,6 +25,10 @@ namespace Ombi.Core.Rule.Rules.Search
                 if (result != null)
                 {
                     obj.Approved = true; // It's in radarr so it's approved... Maybe have a new property called "Processing" or something?
+                    if (result.HasFile)
+                    {
+                        obj.Available = true;
+                    }
                 }
             }
             return Task.FromResult(Success());

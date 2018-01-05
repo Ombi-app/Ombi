@@ -326,3 +326,12 @@ button.list-group-item:focus {
 .ui-radiobutton, .ui-radiobutton-label{
     vertical-align: baseline;
 }
+
+.side-back {
+    padding-top:5%;    
+    box-shadow: 0px 0px 3.5em #000000;
+}
+
+.ui-widget-overlay .ui-sidebar-mask {
+    background: black;
+}

@@ -13,6 +13,7 @@ export interface IOmbiSettings extends ISettings {
   wizard: boolean;
   apiKey: string;
   ignoreCertificateErrors: boolean;
+  doNotSendNotificationsForAutoApprove: boolean;
 }
 
 export interface IUpdateSettings extends ISettings {
@@ -121,6 +122,11 @@ export interface IJobSettings {
   sickRageSync: string;
 }
 
+export interface IIssueSettings extends ISettings {
+  enabled: boolean;
+  enableInProgress: boolean;
+}
+
 export interface IAuthenticationSettings extends ISettings {
   allowNoPassword: boolean;
   // Password
@@ -177,4 +183,8 @@ export interface IDogNzbSettings extends ISettings {
   apiKey: string;
   movies: boolean;
   tvShows: boolean;
+}
+
+export interface IIssueCategory extends ISettings {
+  value: string;
 }

@@ -9,6 +9,8 @@ install:
   - ps: Install-Product node $env:nodejs_version
 build_script:
   - ps: ./build.ps1 --settings_skipverification=true
+
+test: off
   
 after_build:
 - cmd: >-

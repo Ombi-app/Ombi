@@ -12,5 +12,7 @@ namespace Ombi.Notifications.Models
         public NotificationType NotificationType { get; set; }
         public RequestType RequestType { get; set; }
         public string Recipient { get; set; }
+        public string AdditionalInformation { get; set; }
+        
     }
 }

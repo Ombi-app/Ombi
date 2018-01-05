@@ -1,4 +1,4 @@
-﻿<div class="form-group">
+<div class="form-group">
     <div>
         <input type="text" id="search" class="form-control form-control-custom" placeholder="Search" (keyup)="search($event)">
     </div>
@@ -109,24 +109,17 @@
 
 
 
-
                 </div>
-
-
-
-                <!--<div class="dropdown">
-                    <button id="{{request.requestId}}" class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    
+                <div class="dropdown" *ngIf="issueCategories && issuesEnabled">
+                    <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                         <i class="fa fa-plus"></i> Report Issue
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li><a issue-select="0">@UI.Issues_WrongAudio</a></li>
-                        <li><a issue-select="1">@UI.Issues_NoSubs</a></li>
-                        <li><a issue-select="2">@UI.Issues_WrongContent</a></li>
-                        <li><a issue-select="3">@UI.Issues_Playback</a></li>
-                        <li><a issue-select="4" data-toggle="modal" data-target="#myModal">@UI.Issues_Other</a></li>
+                        <li *ngFor="let cat of issueCategories"><a [routerLink]="" (click)="reportIssue(cat, request)">{{cat.value}}</a></li>
                     </ul>
-                </div>-->
+                </div>
 
             </div>
         </div>
@@ -138,3 +131,7 @@
 
     </div>
 </div>
+
+
+<issue-report [movie]="true" [visible]="issuesBarVisible" (visibleChange)="issuesBarVisible = $event;" [title]="issueRequest?.title"
+[issueCategory]="issueCategorySelected" [id]="issueRequest?.id" [providerId]=""></issue-report>

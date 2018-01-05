@@ -7,6 +7,7 @@
         public bool Wizard { get; set; }
         public string ApiKey { get; set; }
         public bool IgnoreCertificateErrors { get; set; }
+        public bool DoNotSendNotificationsForAutoApprove {get;set;}
 
     }
 }

@@ -37,7 +37,7 @@ namespace Ombi.Schedule.Jobs.Radarr
             await SemaphoreSlim.WaitAsync();
             try
             {
-                var settings = RadarrSettings.GetSettings();
+                var settings = await RadarrSettings.GetSettingsAsync();
                 if (settings.Enabled)
                 {
                     try
@@ -53,7 +53,11 @@ namespace Ombi.Schedule.Jobs.Radarr
                             {
                                 if (m.tmdbId > 0)
                                 {
-                                    movieIds.Add(new RadarrCache {TheMovieDbId = m.tmdbId});
+                                    movieIds.Add(new RadarrCache
+                                    {
+                                        TheMovieDbId = m.tmdbId,
+                                        HasFile = m.hasFile
+                                    });
                                 }
                                 else
                                 {

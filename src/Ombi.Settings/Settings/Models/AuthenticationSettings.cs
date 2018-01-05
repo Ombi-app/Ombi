@@ -2,7 +2,7 @@
 
 namespace Ombi.Settings.Settings.Models
 {
-    public class AuthenticationSettings
+    public class AuthenticationSettings : Settings
     {
         public bool AllowNoPassword { get; set; }
         

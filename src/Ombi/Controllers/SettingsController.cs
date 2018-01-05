@@ -56,7 +56,7 @@ namespace Ombi.Controllers
             INotificationTemplatesRepository templateRepo,
             IEmbyApi embyApi,
             IRadarrSync radarrSync,
-            IMemoryCache memCache,
+            ICacheService memCache,
             IGithubApi githubApi)
         {
             SettingsResolver = resolver;
@@ -73,7 +73,7 @@ namespace Ombi.Controllers
         private INotificationTemplatesRepository TemplateRepository { get; }
         private readonly IEmbyApi _embyApi;
         private readonly IRadarrSync _radarrSync;
-        private readonly IMemoryCache _cache;
+        private readonly ICacheService _cache;
         private readonly IGithubApi _githubApi;
 
         /// <summary>
@@ -477,6 +477,38 @@ namespace Ombi.Controllers
         public async Task<bool> JobSettings([FromBody]JobSettings settings)
         {
             return await Save(settings);
+        }
+
+
+        /// <summary>
+        /// Save the Issues settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("Issues")]
+        [AllowAnonymous]
+        public async Task<bool> IssueSettings([FromBody]IssueSettings settings)
+        {
+            return await Save(settings);
+        }
+
+        /// <summary>
+        /// Gets the Issues Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("Issues")]
+        [AllowAnonymous]
+        public async Task<IssueSettings> IssueSettings()
+        {
+            return await Get<IssueSettings>();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("issuesenabled")]
+        public async Task<bool> IssuesEnabled()
+        {
+            var issues = await Get<IssueSettings>();
+            return issues.Enabled;
         }
 
         /// <summary>

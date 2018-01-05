@@ -4,6 +4,80 @@
 
 ### **New Features**
 
+- Added user request limits, We can now set the limit for a user. [tidusjar]
+
+- Updated the UI JWT framework. [Jamie]
+
+- Added missing migrations #1744. [Jamie]
+
+- Added the SickRage API integration. [Jamie]
+
+- Update the Emby Connect Username in the user importer. To update the emby connect email address we do it when the user logs in, since the only way to get that information is to use the users Username and Password, since we do not keep this information we cannot do it in the User Importer, but if they have successfully logged in via Emby Connect then we check if we need to update the email address on login. [Jamie]
+
+- Update the connectuserid for emby users. [tidusjar]
+
+- Added the ability to customize job scheudles. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Added the option to import the plex admin. [tidusjar]
+
+- Added the route name as an Id on the container div #1698. [Jamie]
+
+- Updated packages including uglify-es and the package-lock #1683. [Jamie]
+
+- Updated to Angular5 with best practises. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Added the new backgrounds for the requests pages. [tidusjar]
+
+- Added caching to the settings. [tidusjar]
+
+- Added some better handling when adding existing seasons to a tv show in the Plex cacher. [tidusjar]
+
+- Added Telegram Notification support, Not tested. [Jamie]
+
+- Added the new banner background for tv shows. [tidusjar]
+
+- Added a new customization option to provide a css link. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Changed to discord link. [tidusjar]
+
+- Added more translations. [Jamie]
+
+- Added more logging for #1643. [tidusjar]
+
+- Update README.md. [Jamie]
+
+- Update Crowdin configuration file. [Jamie]
+
+- Added more translations. [Jamie]
+
+- Update da.json (#1634) [Lixumos]
+
+- Added 32bit version of Ombi. [Jamie]
+
+- Added more translations. [Jamie]
+
+- Added translations. [Jamie]
+
+- Updated the npm packages. [Jamie.Rees]
+
+- Added four new endpoints to change the availability for TV shows and Movies #1601. [Jamie.Rees]
+
+- Added the ability to run a user defined update script #1460. [Jamie.Rees]
+
+- Added logging around creating the wizard user #1604. [tidusjar]
+
+- Added the option to run the content cacher from the settings page, it will no longer get triggered when we press save. [tidusjar]
+
+- Added the ability to specify how many episodes we should cache at a time. #1598. [tidusjar]
+
 - Added usersname and password option for the updater #1460. [Jamie.Rees]
 
 - Changed the way we download the .zip files in the auto updater #1460 This might make a difference to the permissions issue. but not 100% sure. [Jamie.Rees]
@@ -96,7 +170,383 @@
 
 - Updated CHangelog. [Jamie.Rees]
 
+- Updated changelog. [Jamie.Rees]
+
+- Updated assembly versions. [Jamie.Rees]
+
+- Added the logo in the email notifications to use the application image #1459. [Jamie.Rees]
+
+- Change Os to VS2015. [Jamie.Rees]
+
+- Added multiple emby server support and enabled it for Plex #865. [tidusjar]
+
+- Update ISSUE_TEMPLATE.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Added slack #1459 #865. [Jamie.Rees]
+
+- Added a checkbox to the usermanagement screen.. Does nothing yet #865 #1456. [Jamie.Rees]
+
+- Update build.cake. [Jamie]
+
+- Added swagger into the .zips. [Jamie.Rees]
+
+- Added Cake build #865. [Jamie.Rees]
+
+- Added Pushbullet notifications #1459 #865. [Jamie.Rees]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Added the logging endpoint at /api/v1/Logging for the UI logs #1465. [tidusjar]
+
+- Change the RID. [Jamie.Rees]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Updated Changelog. [Jamie.Rees]
+
+- Added changelog. [Jamie.Rees]
+
+- Update README.md. [Jamie]
+
+- Updated stuff. [Jamie.Rees]
+
+- Update ISSUE_TEMPLATE.md. [PotatoQuality]
+
+- Update ISSUE_TEMPLATE.md. [PotatoQuality]
+
+- Added the Ombi or customized logo onto the login page #865. [TidusJar]
+
+- Added new login page #865. [Jamie]
+
+- Added Migrations rather than a manual DB Script #865. [Jamie.Rees]
+
+- Updated all the packages. [tidusjar]
+
+- Added a skip options #865. [tidusjar]
+
+- Added the minimumAvailability #865. [tidusjar]
+
+- Updater build script. [Jamie.Rees]
+
+- Added the testing notifications and discord notification #865. [Jamie.Rees]
+
+- Added tests into the build. [Jamie.Rees]
+
+- Added Swagger. [Jamie.Rees]
+
+- Added Discord notification #865. [Jamie.Rees]
+
+- Added the Movie Sender, Movies will be sent to Radarr now #865. [Jamie.Rees]
+
+- Added SQLite storage for Hangfire. [Jamie.Rees]
+
+- Added the Radarr cacher #865. [tidusjar]
+
+- Added Radarr and Sonarr settings pages #865. [Jamie.Rees]
+
+- Update appveyor.yml. [Jamie]
+
+- Update appveyor.yml. [Jamie]
+
+- Update appveyor.yml. [Jamie]
+
+- Update appveyor.yml. [Jamie]
+
+- Updated build script. [tidusjar]
+
+- Added the Rules Engine Pattern and the Auto approve and request rules #865. [tidusjar]
+
+- Update .gitattributes. [Jamie]
+
+- Added the TraktApi back. [tidusjar]
+
+- Changes. [Jamie.Rees]
+
+- Added some sonarr stuff. [Jamie.Rees]
+
+- Added Hangfire #865. [tidusjar]
+
+- Update node again... [Jamie.Rees]
+
+- Update node. [Jamie.Rees]
+
+- Changes. [Jamie.Rees]
+
+- Update StringCipher.cs. [Jamie]
+
 ### **Fixes**
+
+- #1659 Made the option to ignore notifcations for auto approve. [Jamie]
+
+- New Crowdin translations (#1806) [Jamie]
+
+- Fixed a launch issue. [Jamie]
+
+- Allow users to login without a password. [Jamie]
+
+- Fixed the emby notifications not being sent. [Jamie]
+
+- #1802 and other small fixes. [tidusjar]
+
+- So... This sickrage thing should work now. [tidusjar]
+
+- Fixed emby connect login issue. [tidusjar]
+
+- Stop making unnecessary calls to the update service. [Jamie]
+
+- Fixed a bug where it blocked users with 0 limits. [Jamie]
+
+- Done #1788. [tidusjar]
+
+- More logging. [Jamie]
+
+- Fixed #1738. [Jamie]
+
+- Fixed build. [Jamie]
+
+- Fixed the issue where notifications were not sendind unless we restarted #1732. [tidusjar]
+
+- Fixed an issue with a trailing space in the subdir. [tidusjar]
+
+- Fixed #1774. [Jamie]
+
+- #1773. [Jamie]
+
+- Roll back rxjs (#1778) [bazhip]
+
+- Fixed build. [Jamie]
+
+- Fixed #1763. [Jamie]
+
+- Fix "content length error" on preview gif (#1768) [OoGuru]
+
+- New preview gif for Ombi V3 README (#1767) [OoGuru]
+
+- Remove debug code. [tidusjar]
+
+- Fix #1762. [tidusjar]
+
+- Fixed the preset themes not loading. [tidusjar]
+
+- Fixed #1760 and improvements on the auto updater. We may now support windows services... #1460. [Jamie]
+
+- Fixed #1754. [Jamie]
+
+- Hide the subject when it's not being used. [Jamie]
+
+- Error handling #1749. [Jamie]
+
+- New Crowdin translations (#1741) [Jamie]
+
+- #1732  #1722 #1711. [Jamie]
+
+- Fixed an issue with switching the preset themes. [Jamie]
+
+- Fixed #1743. [Jamie]
+
+- Fixed #1742. [tidusjar]
+
+- Fix #1742. [tidusjar]
+
+- Fixed landing page. [Jamie]
+
+- Fixed. [Jamie]
+
+- Translated the Requests page and fixed #1740. [Jamie]
+
+- Fix crash. [Jamie]
+
+- Sickrage done. Ish... So i've written all the code by looking at the API. the key there is i've looked at the api. I have not tested anything so expect this to fail. [Jamie]
+
+- SickRage settings UI. [Jamie]
+
+- Fixed #1721. [tidusjar]
+
+- Fixed the preset themes issue. [tidusjar]
+
+- New Crowdin translations (#1654) [Jamie]
+
+- Fix build. [Jamie]
+
+- #1460. [Jamie]
+
+- Fixed tests. [Jamie]
+
+- Return css as MIME text/css. [Jamie]
+
+- More added for the preset themes. [Jamie]
+
+- Moved around the custom styles. [Jamie]
+
+- More renames. [Jamie]
+
+- Renames. [Jamie]
+
+- Load the first 100 requests. [Jamie]
+
+- Reduce the memory consumption #1720. [Jamie]
+
+- Moved the schedules jobs into it's own database, see if it helps with the db locking #1720. [Jamie]
+
+- Fixed #1712. [tidusjar]
+
+- Potential fix for #1702. [tidusjar]
+
+- Fixed #1708. [tidusjar]
+
+- Fixed #1677. [tidusjar]
+
+- Fixed build. [tidusjar]
+
+- Potential fix for the DB locking issue #1720. [tidusjar]
+
+- #1698. [Jamie]
+
+- Fixed #1705. [tidusjar]
+
+- Fixed #1703. [tidusjar]
+
+- Finished adding preset themes. [Jamie]
+
+- Fixed #17000. [Jamie]
+
+- Remove the themes because waiting for a merge from lerams project. [Jamie]
+
+- Finsihed adding preset themes. [Jamie]
+
+- Fixed #1677. [Jamie]
+
+- Temp fix for #1683. [Jamie]
+
+- Fixed #1685. [Jamie]
+
+- Lossless Compression of images saves 83 KB (#1676) [Fish2]
+
+- Fixed the availability checker. [tidusjar]
+
+- Fixed build. [tidusjar]
+
+- Push out missing migration. [tidusjar]
+
+- Potential fix for #1674. [tidusjar]
+
+- Fixed an issue with the caching. [tidusjar]
+
+- Fixed telegram #1667. [tidusjar]
+
+- Fixed #1663. [tidusjar]
+
+- Should fix #1663. [tidusjar]
+
+- Stop logged in users going to the login page. [Jamie]
+
+- Fixed it not updating. Styles should be good now. [Jamie]
+
+- Re did some of the styling on the movie search page, let me know your thoughts. [Jamie]
+
+- Fixed #1657. [Jamie]
+
+- Fixed #1655. [Jamie]
+
+- Removed authentication resul. [Jamie]
+
+- New Crowdin translations (#1651) [Jamie]
+
+- New Crowdin translations (#1648) [Jamie]
+
+- New Crowdin translations (#1638) [Jamie]
+
+- Fixed #1644. [Jamie]
+
+- Moar logs #1643. [tidusjar]
+
+- Fixed #1640. [tidusjar]
+
+- Fixed the null ref exception #1460. [tidusjar]
+
+- Fixed landing page. [TidusJar]
+
+- Fixed #1641. [TidusJar]
+
+- Fixed #1641. [TidusJar]
+
+- New Crowdin translations (#1635) [Jamie]
+
+- Fixed #1631 and improved translation support Included startup args for the auto updater #1460 Mark TV requests as available #1632. [tidusjar]
+
+- Remove 32bit. [Jamie]
+
+- More 32bit support. [Jamie]
+
+- We now show "Available" for tv shows that is fully available #1602. [tidusjar]
+
+- Fixed the issue where we have got an episode but not the related series. #1620. [tidusjar]
+
+- Fixed the dropdown not working on iOS in the settings #1615. [tidusjar]
+
+- Fixed sonarr not monitoring the latest season #1534. [tidusjar]
+
+- Fixed the issue with firefox #1544. [tidusjar]
+
+- Fixed discord #1623. [tidusjar]
+
+- Add browserstack thanks (#1627) [Matt Jeanes]
+
+- Fix the exception #1613. [Jamie]
+
+- Found where we potentially are setting a new poster path, looks like the entity was being modified and being set as Tracked by entity framework, so the next time we called SaveChangesAsync() it would save the new posterpath on the entity. [Jamie]
+
+- Small modifications. [Jamie]
+
+- Fixed #1622. [Jamie]
+
+- Various improvements to webpack/gulp/vscode support (#1617) [Matt Jeanes]
+
+- Episodes in requests are now in order #1597 (#1614) [masterhuck]
+
+- Fixed a null reference issue in the Plex Content Cacher. [Jamie.Rees]
+
+- Fixed #1610. [tidusjar]
+
+- Really fixed the build this time. [tidusjar]
+
+- Fixed build. [tidusjar]
+
+- Made the updater work again #1460. [tidusjar]
+
+- Adding logging into the auto updater and also added more logging around the create inital user for #1604. [tidusjar]
+
+- Fixed the issue where we did not check if they are already in sonarr when choosing certain options #1540. [tidusjar]
+
+- We can now delete tv child requests and the parent will get remove #1603. [tidusjar]
+
+- Finished the api changes requested #1601. [tidusjar]
+
+- Fixed the Hangfire server timeout issue #1605. [tidusjar]
+
+- Fixed notifications not sending #1594. [tidusjar]
+
+- Fixed #1583 you can now delete users. Fixed the issue where the requested by was not showing. Finally fixed the broken poster paths. [tidusjar]
+
+- Fixed the issue where movie requests were no longer being requested. [tidusjar]
+
+- Started adding some more unit tests #1596. [Jamie.Rees]
+
+- #1588 When we make changes to any requests that we can trigger a notification, always send it to all notification agents, even if the user wont recieve it. [Jamie.Rees]
+
+- Add a message when email notifications are not setup when requesting a password reset. #1590. [Jamie.Rees]
+
+- Removed text that we no longer need. [Jamie.Rees]
+
+- Fixed #1574. [Jamie.Rees]
 
 - #1460 looks like the permissions issue has been resolved. Just need to make sure the Ombi process is terminated. [Jamie.Rees]
 
@@ -309,120 +759,6 @@
 - Fixed a bunch of bugs in Ombi #865. [tidusjar]
 
 - Build versioning. [Jamie.Rees]
-
-- Updated changelog. [Jamie.Rees]
-
-- Updated assembly versions. [Jamie.Rees]
-
-- Added the logo in the email notifications to use the application image #1459. [Jamie.Rees]
-
-- Change Os to VS2015. [Jamie.Rees]
-
-- Added multiple emby server support and enabled it for Plex #865. [tidusjar]
-
-- Update ISSUE_TEMPLATE.md. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Added slack #1459 #865. [Jamie.Rees]
-
-- Added a checkbox to the usermanagement screen.. Does nothing yet #865 #1456. [Jamie.Rees]
-
-- Update build.cake. [Jamie]
-
-- Added swagger into the .zips. [Jamie.Rees]
-
-- Added Cake build #865. [Jamie.Rees]
-
-- Added Pushbullet notifications #1459 #865. [Jamie.Rees]
-
-- Update README.md. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Added the logging endpoint at /api/v1/Logging for the UI logs #1465. [tidusjar]
-
-- Change the RID. [Jamie.Rees]
-
-- Update README.md. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Updated Changelog. [Jamie.Rees]
-
-- Added changelog. [Jamie.Rees]
-
-- Update README.md. [Jamie]
-
-- Updated stuff. [Jamie.Rees]
-
-- Update ISSUE_TEMPLATE.md. [PotatoQuality]
-
-- Update ISSUE_TEMPLATE.md. [PotatoQuality]
-
-- Added the Ombi or customized logo onto the login page #865. [TidusJar]
-
-- Added new login page #865. [Jamie]
-
-- Added Migrations rather than a manual DB Script #865. [Jamie.Rees]
-
-- Updated all the packages. [tidusjar]
-
-- Added a skip options #865. [tidusjar]
-
-- Added the minimumAvailability #865. [tidusjar]
-
-- Updater build script. [Jamie.Rees]
-
-- Added the testing notifications and discord notification #865. [Jamie.Rees]
-
-- Added tests into the build. [Jamie.Rees]
-
-- Added Swagger. [Jamie.Rees]
-
-- Added Discord notification #865. [Jamie.Rees]
-
-- Added the Movie Sender, Movies will be sent to Radarr now #865. [Jamie.Rees]
-
-- Added SQLite storage for Hangfire. [Jamie.Rees]
-
-- Added the Radarr cacher #865. [tidusjar]
-
-- Added Radarr and Sonarr settings pages #865. [Jamie.Rees]
-
-- Update appveyor.yml. [Jamie]
-
-- Update appveyor.yml. [Jamie]
-
-- Update appveyor.yml. [Jamie]
-
-- Update appveyor.yml. [Jamie]
-
-- Updated build script. [tidusjar]
-
-- Added the Rules Engine Pattern and the Auto approve and request rules #865. [tidusjar]
-
-- Update .gitattributes. [Jamie]
-
-- Added the TraktApi back. [tidusjar]
-
-- Changes. [Jamie.Rees]
-
-- Added some sonarr stuff. [Jamie.Rees]
-
-- Added Hangfire #865. [tidusjar]
-
-- Update node again... [Jamie.Rees]
-
-- Update node. [Jamie.Rees]
-
-- Changes. [Jamie.Rees]
-
-- Update StringCipher.cs. [Jamie]
-
-### **Fixes**
 
 - #1460 The assembly versioning seems to work correctly now. [Jamie.Rees]
 
@@ -1790,7 +2126,7 @@
 
 - WIP hide tv request options based on admin settings. [Matt McHughes]
 
-- Set meta charset to be utf-8. [Madeleine Schï¿½nemann]
+- Set meta charset to be utf-8. [Madeleine Schönemann]
 
 - F#552: updated labels text. [Jim MacKenize]
 
@@ -2147,7 +2483,7 @@
 
 - Fixed issues from the merge. [tidusjar]
 
-- Stupid &$(*ï¿½ merge. [tidusjar]
+- Stupid &$(*£ merge. [tidusjar]
 
 - Angular. [tidusjar]
 

@@ -18,7 +18,7 @@ namespace Ombi.Controllers.External
     public class RadarrController : Controller
     {
         public RadarrController(IRadarrApi radarr, ISettingsService<RadarrSettings> settings,
-            IMemoryCache mem)
+            ICacheService mem)
         {
             RadarrApi = radarr;
             RadarrSettings = settings;
@@ -27,7 +27,7 @@ namespace Ombi.Controllers.External
 
         private IRadarrApi RadarrApi { get; }
         private ISettingsService<RadarrSettings> RadarrSettings { get; }
-        private IMemoryCache Cache { get; }
+        private ICacheService Cache { get; }
         /// <summary>
         /// Gets the Radarr profiles.
         /// </summary>
@@ -58,16 +58,15 @@ namespace Ombi.Controllers.External
         [HttpGet("Profiles")]
         public async Task<IEnumerable<RadarrProfile>> GetProfiles()
         {
-            return await Cache.GetOrCreate(CacheKeys.RadarrQualityProfiles, async entry =>
+            return await Cache.GetOrAdd(CacheKeys.RadarrQualityProfiles, async () =>
             {
-                entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(1);
                 var settings = await RadarrSettings.GetSettingsAsync();
                 if (settings.Enabled)
                 {
                     return await RadarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
                 }
                 return null;
-            });
+            }, DateTime.Now.AddHours(1));
         }
 
         /// <summary>
@@ -78,16 +77,15 @@ namespace Ombi.Controllers.External
         [HttpGet("RootFolders")]
         public async Task<IEnumerable<RadarrRootFolder>> GetRootFolders()
         {
-            return await Cache.GetOrCreate(CacheKeys.RadarrRootProfiles, async entry =>
+            return await Cache.GetOrAdd(CacheKeys.RadarrRootProfiles, async () =>
             {
-                entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(1);
                 var settings = await RadarrSettings.GetSettingsAsync();
                 if (settings.Enabled)
                 {
                     return await RadarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
                 }
                 return null;
-            });
+            }, DateTime.Now.AddHours(1));
         }
     }
 }
