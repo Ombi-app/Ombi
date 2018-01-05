@@ -77,7 +77,7 @@ namespace Ombi.Schedule.Jobs.Emby
                     continue;
                 }
 
-                _log.LogInformation("We have found the request {0} on Emby, sending the notification", movie.Title);
+                _log.LogInformation("We have found the request {0} on Emby, sending the notification", movie?.Title ?? string.Empty);
 
                 movie.Available = true;
                 if (movie.Available)
