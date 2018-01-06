@@ -10,7 +10,7 @@
     }
   },
   "Common": {
-    "ContinueButton": "Continue",
+    "ContinueButton": "Continuar",
     "Available": "Disponible",
     "ProcessingRequest": "Procesando solicitud",
     "PendingApproval": "Pendiente de aprobación",
@@ -26,30 +26,30 @@
   },
   "PasswordReset": {
     "EmailAddressPlaceholder": "Correo electrónico",
-    "ResetPasswordButton": "Reset Password"
+    "ResetPasswordButton": "Restablecer Contraseña"
   },
   "LandingPage": {
     "OnlineHeading": "En línea",
     "OnlineParagraph": "El servidor de medios esta en línea",
-    "PartiallyOnlineHeading": "Partially Online",
+    "PartiallyOnlineHeading": "Parcialmente en línea",
     "PartiallyOnlineParagraph": "El servidor de medios está parcialmente en línea.",
     "MultipleServersUnavailable": "{{serversUnavailable}} de {{totalServers}} servidores están fuera de línea.",
-    "SingleServerUnavailable": "There is {{serversUnavailable}} server offline out of {{totalServers}}.",
+    "SingleServerUnavailable": "Hay {{serversUnavailable}} de {{totalServers}} servidores fuera de línea.",
     "OfflineHeading": "Fuera de línea",
     "OfflineParagraph": "El servidor de medios está fuera de línea.",
     "CheckPageForUpdates": "Consulte esta página para ver las últimas novedades."
   },
   "NavigationBar": {
     "Search": "Buscar",
-    "Requests": "Solicitar",
-    "UserManagement": "User Management",
+    "Requests": "Solicitudes",
+    "UserManagement": "Gestión de usuarios",
     "Issues": "Incidencias",
     "Donate": "¡Donar!",
     "DonateTooltip": "Para que mi esposa me deje desarrollar Ombi ;)",
-    "UpdateAvailableTooltip": "Update Available!",
+    "UpdateAvailableTooltip": "¡Actualización disponible!",
     "Settings": "Ajustes",
-    "Welcome": "Welcome {{username}}",
-    "UpdateDetails": "Update Details",
+    "Welcome": "Bienvenido {{username}}",
+    "UpdateDetails": "Detalles de la actualización",
     "Logout": "Cerrar sesión",
     "Language": {
       "English": "Inglés",
@@ -87,7 +87,7 @@
     "TvTab": "Series",
     "RequestedBy": "Solicitado por:",
     "Status": "Estado:",
-    "RequestStatus": "Request status:",
+    "RequestStatus": "Estado de la solicitud:",
     "Denied": " Denegado:",
     "ReleaseDate": "Fecha de estreno:",
     "RequestDate": "Fecha de solicitud:",
