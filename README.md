@@ -1,5 +1,5 @@
 ![](http://i.imgur.com/qQsN78U.png)   
-____
+____ 
 [![Discord](https://img.shields.io/discord/102860784329052160.svg)](https://discord.gg/KxYZ64w)
 [![Docker Pulls](https://img.shields.io/docker/pulls/linuxserver/ombi.svg)](https://hub.docker.com/r/linuxserver/ombi/)
 [![Github All Releases](https://img.shields.io/github/downloads/tidusjar/Ombi/total.svg)](https://github.com/tidusjar/Ombi)
