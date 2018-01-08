@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -141,6 +142,27 @@ namespace Ombi.Schedule.Jobs.Emby
                     }
                 }
             }
+        }
+
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                _userManager?.Dispose();
+                _embySettings?.Dispose();
+                _userManagementSettings?.Dispose();
+            }
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

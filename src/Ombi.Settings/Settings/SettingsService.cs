@@ -155,5 +155,24 @@ namespace Ombi.Settings.Settings
             return settings.Content;
             //return _protector.Unprotect(settings.Content);
         }
+
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                Repo?.Dispose();
+            }
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

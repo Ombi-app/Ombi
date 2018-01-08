@@ -2,7 +2,7 @@
 
 namespace Ombi.Schedule.Jobs.Emby
 {
-    public interface IEmbyEpisodeSync
+    public interface IEmbyEpisodeSync : IBaseJob
     {
         Task Start();
     }

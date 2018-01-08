@@ -121,5 +121,26 @@ namespace Ombi.Schedule.Jobs.Emby
                 await _repo.AddRange(epToAdd);
             }
         }
+
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                _settings?.Dispose();
+                _repo?.Dispose();
+                _avaliabilityChecker?.Dispose();
+            }
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

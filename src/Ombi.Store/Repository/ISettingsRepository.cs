@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public interface ISettingsRepository
+    public interface ISettingsRepository : IDisposable
     {
         /// <summary>
         /// Inserts the specified entity.

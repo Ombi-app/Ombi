@@ -139,6 +139,26 @@ namespace Ombi.Schedule.Jobs.Emby
 
             return true;
         }
+
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                _settings?.Dispose();
+                _repo?.Dispose();
+            }
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 
 }

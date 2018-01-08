@@ -50,6 +50,7 @@ using Ombi.Store.Repository.Requests;
 using Ombi.Updater;
 using PlexContentCacher = Ombi.Schedule.Jobs.Plex;
 using Ombi.Api.Telegram;
+using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.SickRage;
 
 namespace Ombi.DependencyInjection
@@ -85,7 +86,7 @@ namespace Ombi.DependencyInjection
 
         public static void RegisterApi(this IServiceCollection services)
         {
-            services.AddTransient<IApi, Api.Api>();
+            services.AddSingleton<IApi, Api.Api>();
             services.AddSingleton<IOmbiHttpClient, OmbiHttpClient>(); // https://blogs.msdn.microsoft.com/alazarev/2017/12/29/disposable-finalizers-and-httpclient/
             services.AddTransient<IMovieDbApi, Api.TheMovieDb.TheMovieDbApi>();
             services.AddTransient<IPlexApi, PlexApi>();

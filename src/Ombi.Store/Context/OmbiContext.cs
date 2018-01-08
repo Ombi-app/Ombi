@@ -18,7 +18,6 @@ namespace Ombi.Store.Context
             
             _created = true;
             Database.Migrate();
-            
         }
 
         public DbSet<NotificationTemplates> NotificationTemplates { get; set; }

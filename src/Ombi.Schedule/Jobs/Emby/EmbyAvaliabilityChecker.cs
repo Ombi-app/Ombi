@@ -148,5 +148,24 @@ namespace Ombi.Schedule.Jobs.Emby
 
             await _tvRepo.Save();
         }
+
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                _movieRepo?.Dispose();
+            }
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

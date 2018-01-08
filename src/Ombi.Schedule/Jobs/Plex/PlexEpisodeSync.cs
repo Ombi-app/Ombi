@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 
@@ -99,7 +101,7 @@ namespace Ombi.Schedule.Jobs.Plex
             var currentPosition = 0;
             var resultCount = settings.EpisodeBatchSize == 0 ? 50 : settings.EpisodeBatchSize;
             var episodes = await _api.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, section.key, currentPosition, resultCount);
-            var currentData = _repo.GetAllEpisodes();
+            var currentData = _repo.GetAllEpisodes().AsNoTracking();
             _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Total Epsiodes found for {episodes.MediaContainer.librarySectionTitle} = {episodes.MediaContainer.totalSize}");
 
             await ProcessEpsiodes(episodes, currentData);
@@ -158,6 +160,26 @@ namespace Ombi.Schedule.Jobs.Plex
             }
 
             return true;
+        }
+
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                _repo?.Dispose();
+                _settings?.Dispose();
+            }
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

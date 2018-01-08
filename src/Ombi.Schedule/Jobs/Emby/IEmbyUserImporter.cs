@@ -2,7 +2,7 @@
 
 namespace Ombi.Schedule.Jobs.Emby
 {
-    public interface IEmbyUserImporter
+    public interface IEmbyUserImporter : IBaseJob
     {
         Task Start();
     }
