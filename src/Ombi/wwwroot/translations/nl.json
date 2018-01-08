@@ -41,11 +41,11 @@
   },
   "NavigationBar": {
     "Search": "Zoeken",
-    "Requests": "Aanvragen",
+    "Requests": "Verzoeklijst",
     "UserManagement": "Gebruikersbeheer",
     "Issues": "Problemen",
     "Donate": "Doneer!",
-    "DonateTooltip": "Dit is hoe ik mijn vrouw heb laten overtuigen dat ik Ombi mag ontwikkelen ;-)",
+    "DonateTooltip": "Zo heb ik mijn vrouw overtuigd dat ik Ombi mag ontwikkelen ;)",
     "UpdateAvailableTooltip": "Update beschikbaar!",
     "Settings": "Instellingen",
     "Welcome": "Welkom {{username}}",
