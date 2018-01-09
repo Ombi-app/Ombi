@@ -2,7 +2,7 @@
 
 namespace Ombi.Schedule.Jobs.SickRage
 {
-    public interface ISickRageSync
+    public interface ISickRageSync : IBaseJob
     {
         Task Start();
     }

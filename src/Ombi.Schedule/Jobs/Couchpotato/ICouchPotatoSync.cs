@@ -2,7 +2,7 @@
 
 namespace Ombi.Schedule.Jobs.Couchpotato
 {
-    public interface ICouchPotatoSync
+    public interface ICouchPotatoSync : IBaseJob
     {
         Task Start();
     }
