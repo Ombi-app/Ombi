@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -134,6 +135,7 @@ namespace Ombi.Controllers
         [HttpGet("tv/info/{tvdbId}/tree")]
         public async Task<TreeNode<SearchTvShowViewModel>> GetShowInfoTreeNode(int tvdbId)
         {
+            if (tvdbId == 0) return new TreeNode<SearchTvShowViewModel>();
             return await TvEngine.GetShowInformationTreeNode(tvdbId);
         }
 
