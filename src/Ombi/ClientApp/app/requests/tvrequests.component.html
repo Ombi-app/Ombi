@@ -27,7 +27,10 @@
             <ng-template let-col let-node="rowData" pTemplate="body">
                 <!--This is the section that holds the parent level results set-->
                 <div *ngIf="!node.leaf">
-                    <div class="row backdrop" [style.background-image]="node?.data?.background">
+                    <div class="row">                        
+                        <div class="myBg backdrop" [style.background-image]="node?.data?.background"></div>
+                        <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
+
                         <div class="col-sm-2  small-padding" >
 
                             <img class="img-responsive poster" src="{{node.data.posterPath || null}}" alt="poster">

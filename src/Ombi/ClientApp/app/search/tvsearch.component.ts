@@ -134,7 +134,7 @@ export class TvSearchComponent implements OnInit {
                 
                 val.data.background = this.sanitizer.
                 bypassSecurityTrustStyle
-                ("linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%),url(" + x + ")");
+                ("url(" + x + ")");
             });
             this.searchService.getShowInformationTreeNode(val.data.id)
                 .subscribe(x => {

@@ -239,6 +239,6 @@ export class MovieRequestsComponent implements OnInit {
 
     private setBackground(req: IMovieRequests): void {
         req.backgroundPath = this.sanitizer.bypassSecurityTrustStyle
-        ("linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%),url(" + "https://image.tmdb.org/t/p/w1280" + req.background + ")");
+        ("url(" + "https://image.tmdb.org/t/p/w1280" + req.background + ")");
     }
 }

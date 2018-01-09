@@ -14,8 +14,10 @@
     <div *ngFor="let request of movieRequests">
 
 
-        <div class="row backdrop" [style.background-image]="request.backgroundPath">
-            <div class="col-sm-2  small-padding">
+        <div class="row">
+                <div class="myBg backdrop" [style.background-image]="request.backgroundPath"></div>
+                <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
+            <div class="col-sm-2 small-padding">
 
                 <img class="img-responsive poster" src="https://image.tmdb.org/t/p/w150/{{request.posterPath}}" alt="poster">
 

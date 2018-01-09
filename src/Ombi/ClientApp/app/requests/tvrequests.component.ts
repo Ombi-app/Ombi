@@ -134,7 +134,7 @@ export class TvRequestsComponent implements OnInit {
     private loadBackdrop(val: TreeNode): void {
         this.imageService.getTvBanner(val.data.id).subscribe(x => {
             val.data.background = this.sanitizer.bypassSecurityTrustStyle
-                ("linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%),url(" + x + ")");
+                ("url(" + x + ")");
             });
     }
 }

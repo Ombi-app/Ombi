@@ -152,7 +152,7 @@ export class MovieSearchComponent implements OnInit {
            
             val.background = this.sanitizer.
             bypassSecurityTrustStyle
-            ("linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%),url(" + "https://image.tmdb.org/t/p/w1280" + val.backdropPath + ")");
+            ("url(" + "https://image.tmdb.org/t/p/w1280" + val.backdropPath + ")");
             this.searchService.getMovieInformation(val.id)
                 .subscribe(m => {
                     this.updateItem(val, m);
