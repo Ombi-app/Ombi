@@ -69,40 +69,38 @@ namespace Ombi.Schedule.Jobs.Ombi
         public async Task Update(PerformContext c)
         {
             Ctx = c;
-            Logger.LogInformation("Starting the updater");
+            Logger.LogDebug(LoggingEvents.Updater, "Starting Update job");
 
             var settings = await Settings.GetSettingsAsync();
             if (!settings.AutoUpdateEnabled)
             {
-                Logger.LogInformation("Auto update is not enabled");
+                Logger.LogDebug(LoggingEvents.Updater, "Auto update is not enabled");
                 return;
             }
 
             var currentLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            Logger.LogInformation("Path: {0}", currentLocation);
+            Logger.LogDebug(LoggingEvents.Updater, "Path: {0}", currentLocation);
 
             var productVersion = AssemblyHelper.GetRuntimeVersion();
-            Logger.LogInformation(LoggingEvents.Updater, "Product Version {0}", productVersion);
-            Logger.LogInformation("Product Version {0}", productVersion);
+            Logger.LogDebug(LoggingEvents.Updater, "Product Version {0}", productVersion);
 
             try
             {
                 var productArray = GetVersion();
                 var version = productArray[0];
-                Logger.LogInformation("Version {0}", version);
+                Logger.LogDebug(LoggingEvents.Updater, "Version {0}", version);
                 var branch = productArray[1];
-                Logger.LogInformation("Branch Version {0}", branch);
+                Logger.LogDebug(LoggingEvents.Updater, "Branch Version {0}", branch);
 
-                Logger.LogInformation(LoggingEvents.Updater, "Version {0}", version);
-                Logger.LogInformation(LoggingEvents.Updater, "Branch {0}", branch);
+                Logger.LogDebug(LoggingEvents.Updater, "Version {0}", version);
+                Logger.LogDebug(LoggingEvents.Updater, "Branch {0}", branch);
 
-                Logger.LogInformation("Looking for updates now");
+                Logger.LogDebug(LoggingEvents.Updater, "Looking for updates now");
                 var updates = await Processor.Process(branch);
-                Logger.LogInformation("Updates: {0}", updates);
+                Logger.LogDebug(LoggingEvents.Updater, "Updates: {0}", updates);
                 var serverVersion = updates.UpdateVersionString;
 
-                Logger.LogInformation(LoggingEvents.Updater, "Service Version {0}", updates.UpdateVersionString);
-                Logger.LogInformation("Service Version {0}", updates.UpdateVersionString);
+                Logger.LogDebug(LoggingEvents.Updater, "Service Version {0}", updates.UpdateVersionString);
 
                 if (!serverVersion.Equals(version, StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -110,38 +108,37 @@ namespace Ombi.Schedule.Jobs.Ombi
                     var desc = RuntimeInformation.OSDescription;
                     var proce = RuntimeInformation.ProcessArchitecture;
 
-                    Logger.LogInformation(LoggingEvents.Updater, "OS Information: {0} {1}", desc, proce);
-                    Logger.LogInformation("OS Information: {0} {1}", desc, proce);
+                    Logger.LogDebug(LoggingEvents.Updater, "OS Information: {0} {1}", desc, proce);
                     Downloads download;
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
-                        Logger.LogInformation(LoggingEvents.Updater, "We are Windows");
+                        Logger.LogDebug(LoggingEvents.Updater, "We are Windows");
                         download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("windows.zip", CompareOptions.IgnoreCase));
                     }
                     else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                     {
-                        Logger.LogInformation(LoggingEvents.Updater, "We are OSX");
+                        Logger.LogDebug(LoggingEvents.Updater, "We are OSX");
                         download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("osx", CompareOptions.IgnoreCase));
                     }
                     else
                     {
-                        Logger.LogInformation(LoggingEvents.Updater, "We are linux");
+                        Logger.LogDebug(LoggingEvents.Updater, "We are linux");
                         download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("linux", CompareOptions.IgnoreCase));
                     }
                     if (download == null)
                     {
-                        Logger.LogInformation("There were no downloads");
+                        Logger.LogDebug(LoggingEvents.Updater, "There were no downloads");
                         return;
                     }
 
-                    Logger.LogInformation("Found the download! {0}", download.Name);
-                    Logger.LogInformation("URL {0}", download.Url);
+                    Logger.LogDebug(LoggingEvents.Updater, "Found the download! {0}", download.Name);
+                    Logger.LogDebug(LoggingEvents.Updater, "URL {0}", download.Url);
 
-                    Logger.LogInformation("Clearing out Temp Path");
+                    Logger.LogDebug(LoggingEvents.Updater, "Clearing out Temp Path");
                     var tempPath = Path.Combine(currentLocation, "TempUpdate");
                     if (Directory.Exists(tempPath))
                     {
-                        Directory.Delete(tempPath, true);
+                        DeleteDirectory(tempPath);
                     }
 
                     // Temp Path
@@ -155,10 +152,10 @@ namespace Ombi.Schedule.Jobs.Ombi
                     }
 
                     // Download it
-                    Logger.LogInformation(LoggingEvents.Updater, "Downloading the file {0} from {1}", download.Name, download.Url);
+                    Logger.LogDebug(LoggingEvents.Updater, "Downloading the file {0} from {1}", download.Name, download.Url);
                     var extension = download.Name.Split('.').Last();
                     var zipDir = Path.Combine(currentLocation, $"Ombi.{extension}");
-                    Logger.LogInformation("Zip Dir: {0}", zipDir);
+                    Logger.LogDebug(LoggingEvents.Updater, "Zip Dir: {0}", zipDir);
                     try
                     {
                         if (File.Exists(zipDir))
@@ -166,24 +163,24 @@ namespace Ombi.Schedule.Jobs.Ombi
                             File.Delete(zipDir);
                         }
 
-                        Logger.LogInformation("Starting Download");
+                        Logger.LogDebug(LoggingEvents.Updater, "Starting Download");
                         await DownloadAsync(download.Url, zipDir, c);
-                        Logger.LogInformation("Finished Download");
+                        Logger.LogDebug(LoggingEvents.Updater, "Finished Download");
                     }
                     catch (Exception e)
                     {
-                        Logger.LogInformation("Error when downloading");
-                        Logger.LogInformation(e.Message);
+                        Logger.LogDebug(LoggingEvents.Updater, "Error when downloading");
+                        Logger.LogDebug(LoggingEvents.Updater, e.Message);
                         Logger.LogError(LoggingEvents.Updater, e, "Error when downloading the zip");
                         throw;
                     }
 
                     // Extract it
-                    Logger.LogInformation("Extracting ZIP");
+                    Logger.LogDebug(LoggingEvents.Updater, "Extracting ZIP");
                     Extract(zipDir, tempPath);
 
-                    Logger.LogInformation("Finished Extracting files");
-                    Logger.LogInformation("Starting the Ombi.Updater process");
+                    Logger.LogDebug(LoggingEvents.Updater, "Finished Extracting files");
+                    Logger.LogDebug(LoggingEvents.Updater, "Starting the Ombi.Updater process");
                     var updaterExtension = string.Empty;
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
@@ -196,7 +193,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     var start = new ProcessStartInfo
                     {
                         UseShellExecute = false,
-                        CreateNoWindow = true,
+                        CreateNoWindow = false,
                         FileName = updaterFile,
                         Arguments = GetArgs(settings),
                         WorkingDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "TempUpdate"),
@@ -209,11 +206,12 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         start.Password = settings.Password.ToSecureString();
                     }
-                    using (var proc = new Process { StartInfo = start })
-                    {
+                    var proc = new Process {StartInfo = start};
+
+
                         proc.Start();
-                    }
-                    Logger.LogInformation("Bye bye");
+
+                    Logger.LogDebug(LoggingEvents.Updater, "Bye bye");
                 }
             }
             catch (Exception e)
@@ -233,7 +231,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             var processName = (settings.ProcessName.HasValue() ? settings.ProcessName : "Ombi");
 
             var sb = new StringBuilder();
-            sb.Append($"--applicationPath \"{currentLocation}\" --processname \"{processName}\" " );
+            sb.Append($"--applicationPath \"{currentLocation}\" --processname \"{processName}\" ");
             if (settings.WindowsService)
             {
                 sb.Append($"--windowsServiceName \"{settings.WindowsServiceName}\" ");
@@ -273,10 +271,10 @@ namespace Ombi.Schedule.Jobs.Ombi
                 Logger.LogError("Cannot find the file {0}", scriptToRun);
                 return;
             }
-            
+
             _processProvider.Start(scriptToRun, downloadUrl + " " + GetArgs(settings));
 
-            Logger.LogInformation("Script started");
+            Logger.LogDebug(LoggingEvents.Updater, "Script started");
         }
 
         private void Extract(string zipDir, string tempPath)
@@ -311,7 +309,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         public async Task DownloadAsync(string requestUri, string filename, PerformContext ctx)
         {
-            Logger.LogDebug("Starting the DownloadAsync");
+            Logger.LogDebug(LoggingEvents.Updater, "Starting the DownloadAsync");
             using (var client = new WebClient())
             {
                 await client.DownloadFileTaskAsync(requestUri, filename);
@@ -336,6 +334,31 @@ namespace Ombi.Schedule.Jobs.Ombi
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Depth-first recursive delete, with handling for descendant 
+        /// directories open in Windows Explorer.
+        /// </summary>
+        public static void DeleteDirectory(string path)
+        {
+            foreach (string directory in Directory.GetDirectories(path))
+            {
+                DeleteDirectory(directory);
+            }
+
+            try
+            {
+                Directory.Delete(path, true);
+            }
+            catch (IOException)
+            {
+                Directory.Delete(path, true);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Directory.Delete(path, true);
+            }
         }
     }
 }
