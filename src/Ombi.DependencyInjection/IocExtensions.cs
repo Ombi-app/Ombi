@@ -50,8 +50,10 @@ using Ombi.Store.Repository.Requests;
 using Ombi.Updater;
 using PlexContentCacher = Ombi.Schedule.Jobs.Plex;
 using Ombi.Api.Telegram;
+using Ombi.Core.Processor;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.SickRage;
+using Ombi.Schedule.Processor;
 
 namespace Ombi.DependencyInjection
 {
@@ -107,6 +109,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ITelegramApi, TelegramApi>();
             services.AddTransient<IGithubApi, GithubApi>();
             services.AddTransient<ISickRageApi, SickRageApi>();
+            services.AddTransient<IAppVeyorApi, AppVeyorApi>();
         }
 
         public static void RegisterStore(this IServiceCollection services) { 
@@ -143,6 +146,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMattermostNotification, MattermostNotification>();
             services.AddTransient<IPushoverNotification, PushoverNotification>();
             services.AddTransient<ITelegramNotification, TelegramNotification>();
+            services.AddTransient<IChangeLogProcessor, ChangeLogProcessor>();
         }
 
         public static void RegisterJobs(this IServiceCollection services)

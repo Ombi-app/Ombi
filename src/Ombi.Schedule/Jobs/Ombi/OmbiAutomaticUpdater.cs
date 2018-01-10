@@ -17,8 +17,10 @@ using Microsoft.Extensions.Logging;
 
 using Ombi.Api.Service;
 using Ombi.Api.Service.Models;
+using Ombi.Core.Processor;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
+using Ombi.Schedule.Processor;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -30,11 +32,11 @@ namespace Ombi.Schedule.Jobs.Ombi
 {
     public class OmbiAutomaticUpdater : IOmbiAutomaticUpdater
     {
-        public OmbiAutomaticUpdater(ILogger<OmbiAutomaticUpdater> log, IOmbiService service,
+        public OmbiAutomaticUpdater(ILogger<OmbiAutomaticUpdater> log, IChangeLogProcessor service,
             ISettingsService<UpdateSettings> s, IProcessProvider proc, IRepository<ApplicationConfiguration> appConfig)
         {
             Logger = log;
-            OmbiService = service;
+            Processor = service;
             Settings = s;
             _processProvider = proc;
             _appConfig = appConfig;
@@ -42,7 +44,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         }
 
         private ILogger<OmbiAutomaticUpdater> Logger { get; }
-        private IOmbiService OmbiService { get; }
+        private IChangeLogProcessor Processor { get; }
         private ISettingsService<UpdateSettings> Settings { get; }
         private readonly IProcessProvider _processProvider;
         private static PerformContext Ctx { get; set; }
@@ -57,7 +59,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         public async Task<bool> UpdateAvailable(string branch, string currentVersion)
         {
 
-            var updates = await OmbiService.GetUpdates(branch);
+            var updates = await Processor.Process(branch);
             var serverVersion = updates.UpdateVersionString;
             return !serverVersion.Equals(currentVersion, StringComparison.CurrentCultureIgnoreCase);
 
@@ -95,7 +97,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 Logger.LogInformation(LoggingEvents.Updater, "Branch {0}", branch);
 
                 Logger.LogInformation("Looking for updates now");
-                var updates = await OmbiService.GetUpdates(branch);
+                var updates = await Processor.Process(branch);
                 Logger.LogInformation("Updates: {0}", updates);
                 var serverVersion = updates.UpdateVersionString;
 
@@ -110,7 +112,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                     Logger.LogInformation(LoggingEvents.Updater, "OS Information: {0} {1}", desc, proce);
                     Logger.LogInformation("OS Information: {0} {1}", desc, proce);
-                    Download download;
+                    Downloads download;
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
                         Logger.LogInformation(LoggingEvents.Updater, "We are Windows");

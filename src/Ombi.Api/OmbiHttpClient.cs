@@ -57,6 +57,18 @@ namespace Ombi.Api
 
         public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
         {
+            await Setup();
+            return await _client.SendAsync(request);
+        }
+
+        public async Task<string> GetStringAsync(Uri requestUri)
+        {
+            await Setup();
+            return await _client.GetStringAsync(requestUri);
+        }
+
+        private async Task Setup()
+        {
             if (_client == null)
             {
                 if (_handler == null)
@@ -66,8 +78,6 @@ namespace Ombi.Api
                 }
                 _client = new HttpClient(_handler);
             }
-
-            return await _client.SendAsync(request);
         }
 
         private async Task<HttpMessageHandler> GetHandler()
