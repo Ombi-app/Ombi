@@ -30,11 +30,9 @@ namespace Ombi.Schedule.Jobs.Sonarr
         private readonly ISonarrApi _api;
         private readonly ILogger<SonarrSync> _log;
         private readonly IOmbiContext _ctx;
-
-        private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
+        
         public async Task Start()
         {
-            await SemaphoreSlim.WaitAsync();
             try
             {
                 var settings = await _settings.GetSettingsAsync();
@@ -78,10 +76,6 @@ namespace Ombi.Schedule.Jobs.Sonarr
             catch (Exception e)
             {
                 _log.LogError(LoggingEvents.SonarrCacher, e, "Exception when trying to cache Sonarr");
-            }
-            finally
-            {
-                SemaphoreSlim.Release();
             }
         }
 

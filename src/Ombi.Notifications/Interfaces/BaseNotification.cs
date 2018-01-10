@@ -42,6 +42,7 @@ namespace Ombi.Notifications.Interfaces
 
         public async Task NotifyAsync(NotificationOptions model)
         {
+            Settings.ClearCache();
             var configuration = await GetConfiguration();
             await NotifyAsync(model, configuration);
         }
