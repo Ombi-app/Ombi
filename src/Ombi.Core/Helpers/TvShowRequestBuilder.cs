@@ -53,7 +53,8 @@ namespace Ombi.Core.Helpers
                 Approved = false,
                 RequestedUserId = userId,
                 SeasonRequests = new List<SeasonRequests>(),
-                Title = model.Title
+                Title = model.Title,
+                SeriesType = ShowInfo.type.Equals("Animation", StringComparison.CurrentCultureIgnoreCase) ? SeriesType.Anime : SeriesType.Standard
             };
 
             return this;

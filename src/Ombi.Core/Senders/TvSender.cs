@@ -205,6 +205,12 @@ namespace Ombi.Core.Senders
             var episodesToUpdate = new List<Episode>();
             // Ok, now let's sort out the episodes.
 
+            if (model.SeriesType == SeriesType.Anime)
+            {
+                result.seriesType = "anime";
+                await SonarrApi.UpdateSeries(result, s.ApiKey, s.FullUri);
+            }
+
             var sonarrEpisodes = await SonarrApi.GetEpisodes(result.id, s.ApiKey, s.FullUri);
             var sonarrEpList = sonarrEpisodes.ToList() ?? new List<Episode>();
             while (!sonarrEpList.Any())
