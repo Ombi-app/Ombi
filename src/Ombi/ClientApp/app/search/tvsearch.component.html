@@ -66,6 +66,7 @@
                                         <h4>{{node.data.title}} ({{node.data.firstAired | date: 'yyyy'}})</h4>
 
                                     </a>
+                                    <span class="tags">
                                     <span *ngIf="node.data.status" class="label label-primary" id="statusLabel" target="_blank">{{node.data.status}}</span>
 
 
@@ -73,11 +74,7 @@
 
                                     <span *ngIf="node.data.network" class="label label-info" id="networkLabel" target="_blank">{{node.data.network}}</span>
 
-                      
-                                    <ng-template [ngIf]="node.data.available"><span class="label label-success" id="availableLabel">Available</span></ng-template>
-                                    <ng-template [ngIf]="node.data.partlyAvailable"><span class="label label-warning" id="partiallyAvailableLabel">Partially Available</span></ng-template>
-
-
+                    
                                     <ng-template [ngIf]="node.data.available">
                                         <span class="label label-success">Available</span>
                                     </ng-template>
@@ -89,7 +86,7 @@
 
                                     <a *ngIf="node.data.trailer" href="{{node.data.trailer}}" target="_blank"><span class="label label-info" id="trailerLabel">Trailer</span></a>
 
-
+                                </span>
 
                                     <br />
                                     <br />
