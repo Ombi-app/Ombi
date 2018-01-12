@@ -59,7 +59,7 @@
       "Italian": "Italiensk",
       "Danish": "Dansk",
       "Dutch": "Nederlandsk",
-      "Norwegian": "Norwegian"
+      "Norwegian": "Norsk"
     }
   },
   "Search": {
@@ -89,7 +89,7 @@
     "RequestedBy": "Etterspurt av:",
     "Status": "Status:",
     "RequestStatus": "Status for forespørsel:",
-    "Denied": " Denied:",
+    "Denied": " Avslått:",
     "ReleaseDate": "Utgivelsesdato:",
     "RequestDate": "Dato for forespørsel:",
     "QualityOverride": "Overstyr kvalitet:",
@@ -116,12 +116,12 @@
     "Details": "Detaljer",
     "Description": "Beskrivelse",
     "NoComments": "Ingen kommentarer!",
-    "MarkInProgress": "Merk som pågår",
+    "MarkInProgress": "Marker som pågår",
     "MarkResolved": "Marker som løst",
     "SendMessageButton": "Send",
-    "Subject": "Subject",
-    "Comments": "Comments",
-    "WriteMessagePlaceholder": "Write your message here...",
+    "Subject": "Emne",
+    "Comments": "Kommentarer",
+    "WriteMessagePlaceholder": "Skriv meldingen din her...",
     "ReportedBy": "Rapportert av"
   }
 }
