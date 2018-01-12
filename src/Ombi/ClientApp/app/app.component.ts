@@ -78,7 +78,7 @@ export class AppComponent implements OnInit {
         }
 
         this.identityService.getAccessToken().subscribe(x => {
-            const url = `ombi://${this.customizationSettings.applicationUrl}/${x}`;
+            const url = `ombi://${this.customizationSettings.applicationUrl}_${x}`;
             window.location.assign(url);
         });
     }
