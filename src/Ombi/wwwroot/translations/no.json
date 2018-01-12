@@ -109,7 +109,7 @@
   "Issues": {
     "Title": "Mangler",
     "PendingTitle": "Ventende løsninger",
-    "InProgressTitle": "Pågår-problemer",
+    "InProgressTitle": "Mangler under behandling",
     "ResolvedTitle": "Løste mangler",
     "ColumnTitle": "Tittel",
     "Category": "Kategori",
