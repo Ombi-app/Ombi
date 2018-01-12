@@ -87,7 +87,7 @@
     "TvTab": "Séries TV",
     "RequestedBy": "Demandé par :",
     "Status": "Statut :",
-    "RequestStatus:": "Statut de la demande :",
+    "RequestStatus": "Statut de la demande :",
     "Denied": " Refusé :",
     "ReleaseDate": "Date de sortie :",
     "RequestDate": "Date de la demande :",
@@ -120,7 +120,7 @@
     "SendMessageButton": "Envoyer",
     "Subject": "Sujet",
     "Comments": "Commentaires",
-    "WriteMessagePlaceholder": "Ecrivez votre message ici...",
+    "WriteMessagePlaceholder": "Écrivez votre message ici...",
     "ReportedBy": "Signalé par"
   }
 }
