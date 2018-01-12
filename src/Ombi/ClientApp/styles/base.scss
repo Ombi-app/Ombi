@@ -865,6 +865,7 @@ a > h4:hover {
     .table-usermanagement {
         /* Force table to not be like tables anymore */
         display: block;
+
         thead, tbody, th, td, tr {
             display: block;
         }
@@ -895,33 +896,9 @@ a > h4:hover {
             padding-right: 10px;
             white-space: nowrap;
         }
-    }
-    /* Label the data */
-    .td-checkbox:before {
-        content: "Select:";
-    }
-
-    .td-username:before {
-        content: "Username:";
-    }
-
-    .td-alias:before {
-        content: "Alias:";
-    }
-
-    .td-email:before {
-        content: "Email:";
-    }
-
-    .td-claims:before {
-        content: "Roles:";
-    }
-
-    .td-last-logged-in:before {
-        content: "Last Logged In:";
-    }
-
-    .td-user-type:before {
-        content: "User Type:";
+        /* Label the data */
+        .td-labelled:before {
+            content: attr(data-label)
+        }
     }
 }

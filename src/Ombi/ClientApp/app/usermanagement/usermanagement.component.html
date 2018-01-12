@@ -44,28 +44,28 @@
     </thead>
     <tbody>
         <tr *ngFor="let u of users">
-            <td class="td-checkbox">
+            <td class="td-labelled" data-label="Select:">
                 <input type="checkbox" [(ngModel)]="u.checked">
             </td>
-            <td class="td-username">
+            <td class="td-labelled" data-label="Username:">
                 {{u.userName}}
             </td>
-            <td class="td-alias">
+            <td class="td-labelled" data-label="Alias:">
                 {{u.alias}}
             </td>
-            <td class="td-email">
+            <td class="td-labelled" data-label="Email:">
                 {{u.emailAddress}}
             </td>
-            <td class="td-claims">
+            <td class="td-labelled" data-label="Roles:">
                 <div *ngFor="let claim of u.claims">
                     <span *ngIf="claim.enabled">{{claim.value}}</span>
                 </div>
 
             </td>
-            <td class="td-last-logged-in">
+            <td class="td-labelled" data-label="Last Logged In:">
                 {{u.lastLoggedIn | date: 'short'}}
             </td>
-            <td class="td-user-type">
+            <td class="td-labelled" data-label="User Type:">
                 <span *ngIf="u.userType === 1">Local User</span>
                 <span *ngIf="u.userType === 2">Plex User</span>
                 <span *ngIf="u.userType === 3">Emby User</span>
