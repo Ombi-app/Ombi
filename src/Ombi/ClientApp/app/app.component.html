@@ -110,6 +110,9 @@
                             <li [ngClass]="{'active': 'nl' === translate.currentLang}">
                                 <a (click)="translate.use('nl')" [translate]="'NavigationBar.Language.Dutch'"></a>
                             </li>
+                            <li [ngClass]="{'active': 'no' === translate.currentLang}">
+                                <a (click)="translate.use('no')" [translate]="'NavigationBar.Language.Norwegian'"></a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
