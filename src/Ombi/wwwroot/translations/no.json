@@ -1,21 +1,21 @@
 {
   "Login": {
-    "SignInButton": "Sign in",
-    "UsernamePlaceholder": "Username",
-    "PasswordPlaceholder": "Password",
-    "RememberMe": "Remember Me",
-    "ForgottenPassword": "Forgot your password?",
+    "SignInButton": "Logg på",
+    "UsernamePlaceholder": "Brukernavn",
+    "PasswordPlaceholder": "Passord",
+    "RememberMe": "Husk meg",
+    "ForgottenPassword": "Glemt passord?",
     "Errors": {
-      "IncorrectCredentials": "Incorrect username or password"
+      "IncorrectCredentials": "Ugyldig brukernavn eller passord"
     }
   },
   "Common": {
-    "ContinueButton": "Continue",
-    "Available": "Available",
-    "ProcessingRequest": "Processing Request",
-    "PendingApproval": "Pending Approval",
-    "RequestDenied": "Request Denied",
-    "NotRequested": "Not Requested",
+    "ContinueButton": "Gå videre",
+    "Available": "Tilgjengelig",
+    "ProcessingRequest": "Behandler forespørsel",
+    "PendingApproval": "Venter på godkjenning",
+    "RequestDenied": "Forespørsel avslått",
+    "NotRequested": "Ikke forespurt",
     "Requested": "Requested",
     "Request": "Request",
     "Denied": "Denied",
