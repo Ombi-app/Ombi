@@ -31,6 +31,7 @@ export class UserManagementAddComponent implements OnInit {
             lastLoggedIn: new Date(),
             episodeRequestLimit: 0,
             movieRequestLimit: 0,
+            userAccessToken: "",
     };
     }
 

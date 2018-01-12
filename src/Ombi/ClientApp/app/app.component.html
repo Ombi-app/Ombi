@@ -76,6 +76,10 @@
                                 <a [routerLink]="['/usermanagement/updatedetails']">
                                     <i class="fa fa-key"></i>{{ 'NavigationBar.UpdateDetails' | translate }}</a>
                             </li>
+                            <li *ngIf="showMobileLink" [routerLinkActive]="['active']">
+                                    <a href="#" (click)="openMobileApp($event)">
+                                        <i class="fa fa-mobile"></i>{{ 'NavigationBar.OpenMobileApp' | translate }}</a>
+                            </li>
                             <li [routerLinkActive]="['active']">
                                 <a (click)="logOut()">
                                     <i class="fa fa-sign-out"></i> {{ 'NavigationBar.Logout' | translate }}</a>

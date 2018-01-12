@@ -316,7 +316,8 @@ namespace Ombi.Controllers
                 UserName = user.UserName,
                 UserType = UserType.LocalUser,
                 MovieRequestLimit = user.MovieRequestLimit,
-                EpisodeRequestLimit = user.EpisodeRequestLimit
+                EpisodeRequestLimit = user.EpisodeRequestLimit,
+                UserAccessToken = Guid.NewGuid().ToString("N"),
             };
             var userResult = await UserManager.CreateAsync(ombiUser, user.Password);
 
@@ -684,9 +685,32 @@ namespace Ombi.Controllers
             BackgroundJob.Enqueue(() => WelcomeEmail.SendEmail(ombiUser));
         }
 
-        private async Task<List<Microsoft.AspNetCore.Identity.IdentityResult>> AddRoles(IEnumerable<ClaimCheckboxes> roles, OmbiUser ombiUser)
+        [HttpGet("accesstoken")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<string> GetUserAccessToken()
         {
-            var roleResult = new List<Microsoft.AspNetCore.Identity.IdentityResult>();
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+            if (user == null)
+            {
+                return Guid.Empty.ToString("N");
+            }
+            if (user.UserAccessToken.IsNullOrEmpty())
+            {
+                // Let's create an access token for this user
+                user.UserAccessToken = Guid.NewGuid().ToString("N");
+                var result = await UserManager.UpdateAsync(user);
+                if (!result.Succeeded)
+                {
+                    LogErrors(result);
+                    return Guid.Empty.ToString("N");
+                }
+            }
+            return user.UserAccessToken;
+        }
+
+        private async Task<List<IdentityResult>> AddRoles(IEnumerable<ClaimCheckboxes> roles, OmbiUser ombiUser)
+        {
+            var roleResult = new List<IdentityResult>();
             foreach (var role in roles)
             {
                 if (role.Enabled)

@@ -41,7 +41,6 @@ export class AuthService extends ServiceHelpers {
 
             const u = { name, roles: [] as string[] };
             if (roles instanceof Array) {
-
                 u.roles  = roles;
             } else {
                 u.roles.push(roles);
