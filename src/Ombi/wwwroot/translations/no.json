@@ -18,7 +18,7 @@
     "NotRequested": "Ikke forespurt",
     "Requested": "Forespurt",
     "Request": "Forespørsel",
-    "Denied": "Nektet",
+    "Denied": "Avslått",
     "Approve": "Godkjenn",
     "Errors": {
       "Validation": "Kontroller de angitte verdiene"
@@ -30,12 +30,12 @@
   },
   "LandingPage": {
     "OnlineHeading": "For øyeblikket online",
-    "OnlineParagraph": "Medieserveren er tilkoblet for øyeblikket",
+    "OnlineParagraph": "Medieserveren er online",
     "PartiallyOnlineHeading": "Delvis online",
     "PartiallyOnlineParagraph": "Medieserveren er delvis utilgjengelig.",
-    "MultipleServersUnavailable": "Det er {{serversUnavailable}} servere frakoblet ut av {{totalServers}}.",
-    "SingleServerUnavailable": "Det er {{serversUnavailable}} servere frakoblet ut av {{totalServers}}.",
-    "OfflineHeading": "For øyeblikket utilgjengelig",
+    "MultipleServersUnavailable": "Det er {{serversUnavailable}} servere offline av totalt {{totalServers}}.",
+    "SingleServerUnavailable": "Det er {{serversUnavailable}} server offline av totalt {{totalServers}}.",
+    "OfflineHeading": "For øyeblikket offline",
     "OfflineParagraph": "Medieserveren er for øyeblikket utilgjengelig.",
     "CheckPageForUpdates": "Sjekk denne siden for kontinuerlige oppdateringer."
   },
@@ -45,7 +45,7 @@
     "UserManagement": "Brukeradministrasjon",
     "Issues": "Mangler",
     "Donate": "Doner!",
-    "DonateTooltip": "Dette er hvordan jeg overbevise min kone til å la meg bruke min fritid til å utvikle Ombi;)",
+    "DonateTooltip": "Dette er hvordan jeg overbevise min kone til å la meg bruke min fritid til å utvikle Ombi ;)",
     "UpdateAvailableTooltip": "Ny opdatering venter!",
     "Settings": "Innstillinger",
     "Welcome": "Velkommen {{username}}",
