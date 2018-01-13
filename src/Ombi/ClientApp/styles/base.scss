@@ -11,10 +11,6 @@ $success-colour: #5cb85c;
 $i: !important;
 
 @media (min-width: 768px ) {
-    .row {
-        position: relative;
-    }
-
     .bottom-align-text {
         position: absolute;
         bottom: 0;
@@ -36,6 +32,10 @@ $i: !important;
     .home {
         padding-top: 4rem;
     }
+}
+
+.row {
+    position: relative;
 }
 
 .navbar-default .navbar-nav > .active > a,
