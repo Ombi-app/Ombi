@@ -58,8 +58,10 @@
       "German": "Tedesco",
       "Italian": "Italiano",
       "Danish": "Danese",
-      "Dutch": "Olandese"
-    }
+      "Dutch": "Olandese",
+      "Norwegian": "Norwegian"
+    },
+    "OpenMobileApp": "Open Mobile App"
   },
   "Search": {
     "Title": "Search",

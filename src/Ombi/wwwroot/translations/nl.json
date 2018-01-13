@@ -58,8 +58,10 @@
       "German": "Duits",
       "Italian": "Italiaans",
       "Danish": "Deens",
-      "Dutch": "Nederlands"
-    }
+      "Dutch": "Nederlands",
+      "Norwegian": "Norwegian"
+    },
+    "OpenMobileApp": "Open Mobile App"
   },
   "Search": {
     "Title": "Zoeken",
