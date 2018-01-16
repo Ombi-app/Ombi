@@ -20,17 +20,17 @@ namespace Ombi.Notifications.Templates
         
         private const string SubjectKey = "{@SUBJECT}";
         private const string BodyKey = "{@BODY}";
-        private const string ImgSrc = "{@IMGSRC}";
+        private const string Poster = "{@POSTER}";
         private const string DateKey = "{@DATENOW}";
         private const string Logo = "{@LOGO}";
 
-        public string LoadTemplate(string subject, string body, string img = default(string), string logo = default(string))
+        public string LoadTemplate(string subject, string body, string imgsrc = default(string), string logo = default(string))
         {
             var sb = new StringBuilder(File.ReadAllText(TemplateLocation));
             sb.Replace(SubjectKey, subject);
             sb.Replace(BodyKey, body);
             sb.Replace(DateKey, DateTime.Now.ToString("f"));
-            sb.Replace(ImgSrc, string.IsNullOrEmpty(img) ? string.Empty : img);
+            sb.Replace(Poster, string.IsNullOrEmpty(imgsrc) ? string.Empty : $"<tr><td align=\"center\"><img src=\"{imgsrc}\" alt=\"Poster\" width=\"400px\" text-align=\"center\"/></td></tr>");
             sb.Replace(Logo, string.IsNullOrEmpty(logo) ? "http://i.imgur.com/qQsN78U.png" : logo);
 
             return sb.ToString();
