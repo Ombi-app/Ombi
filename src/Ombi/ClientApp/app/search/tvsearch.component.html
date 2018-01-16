@@ -67,6 +67,10 @@
 
                                     </a>
                                     <span class="tags">
+                                            <a *ngIf="node.data.homepage" id="homepageLabel" href="{{node.data.homepage}}" target="_blank"><span class="label label-info" >HomePage</span></a>
+  
+                                            <a *ngIf="node.data.trailer"  id="trailerLabel" href="{{node.data.trailer}}" target="_blank"><span class="label label-info">Trailer</span></a>
+
                                     <span *ngIf="node.data.status" class="label label-primary" id="statusLabel" target="_blank">{{node.data.status}}</span>
 
 
@@ -76,16 +80,13 @@
 
                     
                                     <ng-template [ngIf]="node.data.available">
-                                        <span class="label label-success">Available</span>
+                                        <span class="label label-success" id="availableLabel">Available</span>
                                     </ng-template>
                                     <ng-template [ngIf]="node.data.partlyAvailable">
-                                        <span class="label label-warning">Partially Available</span>
+                                        <span class="label label-warning" id="partiallyAvailableLabel">Partially Available</span>
                                     </ng-template>
 
-                                    <a *ngIf="node.data.homepage" href="{{node.data.homepage}}" target="_blank"><span class="label label-info" id="homepageLabel">HomePage</span></a>
-
-                                    <a *ngIf="node.data.trailer" href="{{node.data.trailer}}" target="_blank"><span class="label label-info" id="trailerLabel">Trailer</span></a>
-
+                                 
                                 </span>
 
                                     <br />
@@ -122,11 +123,11 @@
                                         <i class="fa fa-check"></i> Available</button>
                                 </div>
                                 <br />
-                                <div *ngIf="node.data.available">
-                                    <a *ngIf="node.data.plexUrl" style="text-align: right" class="btn btn-sm btn-success-outline" href="{{node.data.plexUrl}}"
+                                <div *ngIf="node.data.plexUrl && node.data.available">
+                                    <a  style="text-align: right" class="btn btn-sm btn-success-outline" href="{{node.data.plexUrl}}"
                                         target="_blank">
                                         <i class="fa fa-eye"></i> View On Plex</a>
-                                </div>
+  </div>
                                 <div class="dropdown" *ngIf="issueCategories && issuesEnabled">
                                     <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="true">

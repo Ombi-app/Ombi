@@ -52,7 +52,7 @@ namespace Ombi.Controllers
         /// <param name="movie">The movie.</param>
         /// <returns></returns>
         [HttpPost("movie")]
-        public async Task<RequestEngineResult> RequestMovie([FromBody] SearchMovieViewModel movie)
+        public async Task<RequestEngineResult> RequestMovie([FromBody] MovieRequestViewModel movie)
         {
             return await MovieRequestEngine.RequestMovie(movie);
         }

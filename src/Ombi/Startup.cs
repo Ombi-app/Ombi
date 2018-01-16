@@ -194,6 +194,8 @@ namespace Ombi
 
             app.UseAuthentication();
 
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+
             app.ApiKeyMiddlewear(serviceProvider);
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -202,7 +204,6 @@ namespace Ombi
                 c.ShowJsonEditor();
             });
             
-            app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

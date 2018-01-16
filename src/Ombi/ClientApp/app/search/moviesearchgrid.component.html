@@ -72,26 +72,26 @@
 
                         <span *ngIf="result.releaseDate" class="label label-info" target="_blank">Release Date: {{result.releaseDate | date: 'dd/MM/yyyy'}}</span>
 
-                        <a *ngIf="result.homepage" href="{{result.homepage}}" target="_blank">
+                        <a *ngIf="result.homepage" href="{{result.homepage}}" id="homepageLabel" target="_blank">
                             <span class="label label-info">HomePage</span>
                         </a>
 
-                        <a *ngIf="result.trailer" href="{{result.trailer}}" target="_blank">
+                        <a *ngIf="result.trailer" href="{{result.trailer}}" id="trailerLabel" target="_blank">
                             <span class="label label-info">Trailer</span>
                         </a>
-                        <span *ngIf="result.quality" class="label label-success">{{result.quality}}p</span>
+                        <span *ngIf="result.quality" class="label label-success" id="qualityLabel">{{result.quality}}p</span>
 
                         <ng-template [ngIf]="result.available">
-                            <span class="label label-success">Available</span>
+                            <span class="label label-success"  id="availableLabel">Available</span>
                         </ng-template>
                         <ng-template [ngIf]="result.approved && !result.available">
-                            <span class="label label-info">Processing Request</span>
+                            <span class="label label-info" id="processingRequestLabel">Processing Request</span>
                         </ng-template>
                         <ng-template [ngIf]="result.requested && !result.approved && !result.available">
-                            <span class="label label-warning">Pending Approval</span>
+                            <span class="label label-warning" id="pendingApprovalLabel">Pending Approval</span>
                         </ng-template>
                         <ng-template [ngIf]="!result.requested && !result.available && !result.approved">
-                            <span class="label label-danger">Not Requested</span>
+                            <span class="label label-danger" id="notRequetsedLabel">Not Requested</span>
                         </ng-template>
 
 
