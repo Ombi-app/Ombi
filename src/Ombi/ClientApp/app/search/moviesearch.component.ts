@@ -76,7 +76,7 @@ export class MovieSearchComponent implements OnInit {
         }
 
         try {
-            this.requestService.requestMovie(searchResult)
+            this.requestService.requestMovie({ theMovieDbId: searchResult.id })
                 .subscribe(x => {
                     this.result = x;
 
