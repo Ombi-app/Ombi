@@ -6,22 +6,22 @@
     "RememberMe": "Ricordati di Me",
     "ForgottenPassword": "Hai dimenticato la password?",
     "Errors": {
-      "IncorrectCredentials": "Incorrect username or password"
+      "IncorrectCredentials": "Username o password non corretta"
     }
   },
   "Common": {
     "ContinueButton": "Continuare",
-    "Available": "Available",
-    "ProcessingRequest": "Processing Request",
-    "PendingApproval": "Pending Approval",
-    "RequestDenied": "Request Denied",
-    "NotRequested": "Not Requested",
-    "Requested": "Requested",
-    "Request": "Request",
-    "Denied": "Denied",
-    "Approve": "Approve",
+    "Available": "Disponibile",
+    "ProcessingRequest": "Elaborazione richiesta",
+    "PendingApproval": "In attesa di approvazione",
+    "RequestDenied": "Richiesta negata",
+    "NotRequested": "Non richiesto",
+    "Requested": "Richiesto",
+    "Request": "Richiesta",
+    "Denied": "Rifiutato",
+    "Approve": "Approva",
     "Errors": {
-      "Validation": "Please check your entered values"
+      "Validation": "Per favore, controlla i valori che hai inserito"
     }
   },
   "PasswordReset": {
