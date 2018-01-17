@@ -25,31 +25,31 @@
     }
   },
   "PasswordReset": {
-    "EmailAddressPlaceholder": "Indirizzo di posta elettronica",
-    "ResetPasswordButton": "Reimpostare la Password"
+    "EmailAddressPlaceholder": "Indirizzo e-mail",
+    "ResetPasswordButton": "Reimposta la password"
   },
   "LandingPage": {
     "OnlineHeading": "Attualmente Online",
     "OnlineParagraph": "Il media server è attualmente online",
     "PartiallyOnlineHeading": "Parzialmente in linea",
     "PartiallyOnlineParagraph": "Il media server è parzialmente in linea.",
-    "MultipleServersUnavailable": "Ci sono {{serversUnavailable}} server offline fuori {{totalServers}}.",
-    "SingleServerUnavailable": "C'è {{serversUnavailable}} il server offline fuori {{totalServers}}.",
+    "MultipleServersUnavailable": "Ci sono {{serversUnavailable}} server offline su {{totalServers}}.",
+    "SingleServerUnavailable": "C'è {{serversUnavailable}} server offline su {{totalServers}}.",
     "OfflineHeading": "Attualmente Offline",
     "OfflineParagraph": "Il media server è attualmente offline.",
     "CheckPageForUpdates": "Controlla questa pagina per ottenere aggiornamenti del sito."
   },
   "NavigationBar": {
-    "Search": "Ricerca",
+    "Search": "Cerca",
     "Requests": "Richieste",
     "UserManagement": "Gestione degli utenti",
     "Issues": "Problemi",
     "Donate": "Fai una donazione!",
-    "DonateTooltip": "Questo è come convincere mia moglie a farmi spendere il mio tempo libero lo sviluppo di Ombi ;)",
+    "DonateTooltip": "Questo è come convinco mia moglie a farmi spendere il mio tempo libero nello sviluppo di Ombi ;)",
     "UpdateAvailableTooltip": "Aggiornamento disponibile!",
     "Settings": "Impostazioni",
     "Welcome": "Benvenuto {{username}}",
-    "UpdateDetails": "Aggiornare i dettagli",
+    "UpdateDetails": "Aggiorna i tuoi dati",
     "Logout": "Logout",
     "Language": {
       "English": "Inglese",
@@ -61,11 +61,11 @@
       "Dutch": "Olandese",
       "Norwegian": "Norvegese"
     },
-    "OpenMobileApp": "Apri app mobile"
+    "OpenMobileApp": "Apri l'applicazione mobile"
   },
   "Search": {
     "Title": "Cerca",
-    "Paragraph": "Vuoi vedere qualcosa che non è attualmente disponibile? Nessun problema, basta cercare sotto e richiederlo!",
+    "Paragraph": "Vuoi vedere qualcosa che non è attualmente disponibile? Nessun problema, basta cercare qui sotto e richiederlo!",
     "MoviesTab": "Film",
     "TvTab": "Serie TV",
     "Suggestions": "Suggerimenti",
@@ -74,17 +74,17 @@
     "ViewOnPlex": "Guarda su Plex",
     "RequestAdded": "La richiesta per {{title}} è stata aggiunta correttamente",
     "Movies": {
-      "PopularMovies": "Film famosi",
-      "UpcomingMovies": "Film in uscita",
+      "PopularMovies": "Film popolari",
+      "UpcomingMovies": "Film in arrivo",
       "TopRatedMovies": "Film più votati",
       "NowPlayingMovies": "Film ora in riproduzione",
-      "HomePage": "Pagina principale",
+      "HomePage": "Pagina iniziale",
       "Trailer": "Trailer"
     }
   },
   "Requests": {
     "Title": "Richieste",
-    "Paragraph": "Qui sotto potete vedere le vostre e tutte le altre richieste, così come il loro stato di download e approvazione.",
+    "Paragraph": "Qui sotto puoi vedere le tue e tutte le altre richieste con il loro stato di download e approvazione.",
     "MoviesTab": "Film",
     "TvTab": "Serie TV",
     "RequestedBy": "Richiesta da:",
