@@ -59,9 +59,9 @@
       "Italian": "Italienska",
       "Danish": "Danska",
       "Dutch": "Holländska",
-      "Norwegian": "Norwegian"
+      "Norwegian": "Norska"
     },
-    "OpenMobileApp": "Open Mobile App"
+    "OpenMobileApp": "Öppna Mobil App"
   },
   "Search": {
     "Title": "Sök",
@@ -89,7 +89,7 @@
     "TvTab": "TV-serier",
     "RequestedBy": "Efterfrågats av:",
     "Status": "Status:",
-    "RequestStatus": "Request status:",
+    "RequestStatus": "Status för begäran:",
     "Denied": " Nekad:",
     "ReleaseDate": "Releasedatum:",
     "RequestDate": "Datum för efterfrågan:",
