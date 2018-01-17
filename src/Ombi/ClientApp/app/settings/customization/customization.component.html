@@ -43,6 +43,14 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <label for="customDonation" class="control-label">Custom Donation URL</label>
+            <div>
+                <input type="text" [(ngModel)]="settings.customDonationUrl" class="form-control form-control-custom " name="customDonation" value="{{settings.customDonationUrl}}"
+                    tooltipPosition="top" pTooltip="A link to a Paypal address, or your custom donation url.">
+            </div>
+        </div>
+
 
 
         <div class="form-group">
