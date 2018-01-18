@@ -97,6 +97,9 @@ export interface ICustomizationSettings extends ISettings {
   applicationUrl: string;
   logo: string;
   customCssLink: string;
+  enableCustomDonations: boolean;
+  customDonationUrl: string;
+  customDonationMessage: string;
   hasPresetTheme: boolean;
   presetThemeName: string;
   presetThemeContent: string;

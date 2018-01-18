@@ -47,6 +47,7 @@
     "UserManagement": "User Management",
     "Issues":"Issues",
     "Donate": "Donate!",
+    "DonateLibraryMaintainer": "Donate to Library Maintainer",
     "DonateTooltip":
       "This is how I convince my wife to let me spend my spare time developing Ombi ;)",
     "UpdateAvailableTooltip": "Update Available!",
