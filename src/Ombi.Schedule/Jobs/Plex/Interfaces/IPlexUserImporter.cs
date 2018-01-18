@@ -2,7 +2,7 @@
 
 namespace Ombi.Schedule.Jobs.Plex
 {
-    public interface IPlexUserImporter
+    public interface IPlexUserImporter : IBaseJob
     {
         Task Start();
     }

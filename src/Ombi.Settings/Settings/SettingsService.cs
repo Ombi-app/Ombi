@@ -5,7 +5,6 @@ using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Ombi.Settings.Settings
 {
@@ -13,7 +12,7 @@ namespace Ombi.Settings.Settings
         where T : Models.Settings, new()
     {
 
-        public SettingsService(ISettingsRepository repo, IMemoryCache cache)
+        public SettingsService(ISettingsRepository repo, ICacheService cache)
         {
             Repo = repo;
             EntityName = typeof(T).Name;
@@ -23,13 +22,12 @@ namespace Ombi.Settings.Settings
         private ISettingsRepository Repo { get; }
         private string EntityName { get; }
         private string CacheName => $"Settings{EntityName}";
-        private readonly IMemoryCache _cache;
+        private readonly ICacheService _cache;
 
         public T GetSettings()
         {
-            return _cache.GetOrCreate(CacheName, entry =>
+            return _cache.GetOrAdd(CacheName, () =>
             {
-                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(2);
                 var result = Repo.Get(EntityName);
                 if (result == null)
                 {
@@ -43,14 +41,13 @@ namespace Ombi.Settings.Settings
                 var model = obj;
 
                 return model;
-            });
+            }, DateTime.Now.AddHours(2));
         }
 
         public async Task<T> GetSettingsAsync()
         {
-            return await _cache.GetOrCreateAsync(CacheName, async entry =>
+            return await _cache.GetOrAdd(CacheName, async () =>
             {
-                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(2);
                 var result = await Repo.GetAsync(EntityName);
                 if (result == null)
                 {
@@ -64,7 +61,7 @@ namespace Ombi.Settings.Settings
                 var model = obj;
 
                 return model;
-            });
+            }, DateTime.Now.AddHours(2));
         }
 
         public bool SaveSettings(T model)
@@ -157,6 +154,25 @@ namespace Ombi.Settings.Settings
         {
             return settings.Content;
             //return _protector.Unprotect(settings.Content);
+        }
+
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                Repo?.Dispose();
+            }
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

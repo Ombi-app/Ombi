@@ -37,7 +37,7 @@ namespace Ombi.Schedule.Jobs.Radarr
             await SemaphoreSlim.WaitAsync();
             try
             {
-                var settings = RadarrSettings.GetSettings();
+                var settings = await RadarrSettings.GetSettingsAsync();
                 if (settings.Enabled)
                 {
                     try
@@ -53,7 +53,11 @@ namespace Ombi.Schedule.Jobs.Radarr
                             {
                                 if (m.tmdbId > 0)
                                 {
-                                    movieIds.Add(new RadarrCache {TheMovieDbId = m.tmdbId});
+                                    movieIds.Add(new RadarrCache
+                                    {
+                                        TheMovieDbId = m.tmdbId,
+                                        HasFile = m.hasFile
+                                    });
                                 }
                                 else
                                 {
@@ -84,6 +88,26 @@ namespace Ombi.Schedule.Jobs.Radarr
         public async Task<IEnumerable<RadarrCache>> GetCachedContent()
         {
             return await _ctx.RadarrCache.ToListAsync();
+        }
+
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                _ctx?.Dispose();
+                RadarrSettings?.Dispose();
+            }
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

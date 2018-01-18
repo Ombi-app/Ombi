@@ -21,30 +21,39 @@ namespace Ombi.Updater
         {
             // Kill Ombi Process
             var p = new ProcessProvider();
-            p.Kill(opt);
-            
-            // Make sure the process has been killed
-            while (p.FindProcessByName(opt.ProcessName).Any())
+            try
             {
-                Thread.Sleep(500);
-                _log.LogDebug("Found another process called {0}, KILLING!", opt.ProcessName);
-                var proc = p.FindProcessByName(opt.ProcessName).FirstOrDefault();
-                if (proc != null)
-                {
-                    _log.LogDebug($"[{proc.Id}] - {proc.Name} - Path: {proc.StartPath}");
-                    opt.OmbiProcessId = proc.Id;
-                    p.Kill(opt);
-                }
+
+
+                p.Kill(opt);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
 
-            _log.LogDebug("Starting to move the files");
-            MoveFiles(opt);
-            _log.LogDebug("Files replaced");
-            // Start Ombi
-            StartOmbi(opt);
-        }
+            // Make sure the process has been killed
+                while (p.FindProcessByName(opt.ProcessName).Any())
+                {
+                    Thread.Sleep(500);
+                    _log.LogDebug("Found another process called {0}, KILLING!", opt.ProcessName);
+                    var proc = p.FindProcessByName(opt.ProcessName).FirstOrDefault();
+                    if (proc != null)
+                    {
+                        _log.LogDebug($"[{proc.Id}] - {proc.Name} - Path: {proc.StartPath}");
+                        opt.OmbiProcessId = proc.Id;
+                        p.Kill(opt);
+                    }
+                }
 
-        private void StartOmbi(StartupOptions options)
+                _log.LogDebug("Starting to move the files");
+                MoveFiles(opt);
+                _log.LogDebug("Files replaced");
+                // Start Ombi
+                StartOmbi(opt);
+            }
+
+            private void StartOmbi(StartupOptions options)
         {
             _log.LogDebug("Starting ombi");
             var fileName = "Ombi.exe";

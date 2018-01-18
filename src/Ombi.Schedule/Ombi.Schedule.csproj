@@ -19,6 +19,9 @@
     <PackageReference Include="Serilog" Version="2.6.0-dev-00892" />
     <PackageReference Include="SharpCompress" Version="0.18.2" />
     <PackageReference Include="System.Diagnostics.Process" Version="4.3.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.6.13" />
+    <PackageReference Include="Markdig" Version="0.14.8" />
+    <PackageReference Include="Octokit" Version="0.28.0" />
   </ItemGroup>
 
   <ItemGroup>

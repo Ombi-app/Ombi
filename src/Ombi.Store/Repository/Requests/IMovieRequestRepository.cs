@@ -6,7 +6,6 @@ namespace Ombi.Store.Repository.Requests
 {
     public interface IMovieRequestRepository : IRepository<MovieRequests>
     {
-        Task<MovieRequests> Add(MovieRequests request);
         Task<MovieRequests> GetRequestAsync(int theMovieDbId);
         MovieRequests GetRequest(int theMovieDbId);
         Task Update(MovieRequests request);

@@ -42,6 +42,7 @@ namespace Ombi.Notifications.Interfaces
 
         public async Task NotifyAsync(NotificationOptions model)
         {
+            Settings.ClearCache();
             var configuration = await GetConfiguration();
             await NotifyAsync(model, configuration);
         }
@@ -60,6 +61,7 @@ namespace Ombi.Notifications.Interfaces
             
             // Is this a test?
             // The request id for tests is -1
+            // Also issues are 0 since there might not be a request associated
             if (model.RequestId > 0)
             {
                 await LoadRequest(model.RequestId, model.RequestType);
@@ -157,11 +159,11 @@ namespace Ombi.Notifications.Interfaces
             var curlys = new NotificationMessageCurlys();
             if (model.RequestType == RequestType.Movie)
             {
-                curlys.Setup(MovieRequest, Customization);
+                curlys.Setup(model, MovieRequest, Customization);
             }
             else
             {
-                curlys.Setup(TvRequest, Customization);
+                curlys.Setup(model, TvRequest, Customization);
             }
             var parsed = resolver.ParseMessage(template, curlys);
 

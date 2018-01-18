@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using Hangfire;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Ombi.Schedule
 {
@@ -15,8 +16,13 @@ namespace Ombi.Schedule
 
         public override object ActivateJob(Type type)
         {
-            var i = type.GetTypeInfo().ImplementedInterfaces.FirstOrDefault();
-            return _container.GetService(i);
+            var scopeFactory = _container.GetService<IServiceScopeFactory>();
+            var scope = scopeFactory.CreateScope();
+            var scopedContainer = scope.ServiceProvider;
+
+            var interfaceType = type.GetTypeInfo().ImplementedInterfaces.FirstOrDefault();
+            var implementation = scopedContainer.GetRequiredService(interfaceType);
+            return implementation;
         }
     }
 }

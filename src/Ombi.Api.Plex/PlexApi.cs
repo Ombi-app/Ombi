@@ -26,8 +26,7 @@ namespace Ombi.Api.Plex
         /// This is for authenticating users credentials with Plex
         /// <para>NOTE: Plex "Managed" users do not work</para>
         /// </summary>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
+        /// <param name="user"></param>
         /// <returns></returns>
         public async Task<PlexAuthentication> SignIn(UserRequest user)
         {

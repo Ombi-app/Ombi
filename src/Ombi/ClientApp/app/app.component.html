@@ -31,7 +31,13 @@
                 <ul class="nav navbar-nav">
                     <li id="Requests" [routerLinkActive]="['active']">
                         <a [routerLink]="['/requests']">
-                            <i class="fa fa-plus"></i> {{ 'NavigationBar.Requests' | translate }}</a>
+                            <i class="fa fa-th-list"></i> {{ 'NavigationBar.Requests' | translate }}</a>
+                    </li>
+                </ul>
+                <ul *ngIf="issuesEnabled" class="nav navbar-nav">
+                    <li id="Issues" [routerLinkActive]="['active']">
+                        <a [routerLink]="['/issues']">
+                            <i class="fa fa-exclamation-circle"></i> {{ 'NavigationBar.Issues' | translate }}</a>
                     </li>
                 </ul>
                 <ul *ngIf="hasRole('Admin') || hasRole('PowerUser')" class="nav navbar-nav">
@@ -46,6 +52,14 @@
                             <i class="fa fa-heart" style="color:red"></i> {{ 'NavigationBar.Donate' | translate }}</a>
                     </li>
                 </ul>
+                <div *ngIf="customizationSettings">
+                    <ul *ngIf="customizationSettings.enableCustomDonations" class="nav navbar-nav">
+                        <li>
+                            <a href="{{customizationSettings.customDonationUrl}}" target="_blank">
+                                <i class="fa fa-heart" style="color:yellow"></i> {{ customizationSettings.customDonationMessage ? customizationSettings.customDonationMessage : ('NavigationBar.DonateLibraryMaintainer' | translate) }}</a>
+                        </li>
+                    </ul>
+                </div>
 
 
                 <ul class="nav navbar-nav navbar-right">
@@ -69,6 +83,10 @@
                             <li [routerLinkActive]="['active']">
                                 <a [routerLink]="['/usermanagement/updatedetails']">
                                     <i class="fa fa-key"></i>{{ 'NavigationBar.UpdateDetails' | translate }}</a>
+                            </li>
+                            <li *ngIf="showMobileLink" [routerLinkActive]="['active']">
+                                    <a href="#" (click)="openMobileApp($event)">
+                                        <i class="fa fa-mobile"></i>{{ 'NavigationBar.OpenMobileApp' | translate }}</a>
                             </li>
                             <li [routerLinkActive]="['active']">
                                 <a (click)="logOut()">
@@ -103,6 +121,9 @@
                             </li>
                             <li [ngClass]="{'active': 'nl' === translate.currentLang}">
                                 <a (click)="translate.use('nl')" [translate]="'NavigationBar.Language.Dutch'"></a>
+                            </li>
+                            <li [ngClass]="{'active': 'no' === translate.currentLang}">
+                                <a (click)="translate.use('no')" [translate]="'NavigationBar.Language.Norwegian'"></a>
                             </li>
                         </ul>
                     </li>

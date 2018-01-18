@@ -18,7 +18,6 @@ namespace Ombi.Store.Context
             
             _created = true;
             Database.Migrate();
-            
         }
 
         public DbSet<NotificationTemplates> NotificationTemplates { get; set; }
@@ -33,9 +32,12 @@ namespace Ombi.Store.Context
         public DbSet<MovieRequests> MovieRequests { get; set; }
         public DbSet<TvRequests> TvRequests { get; set; }
         public DbSet<ChildRequests> ChildRequests { get; set; }
-        public DbSet<MovieIssues> MovieIssues { get; set; }
-        public DbSet<TvIssues> TvIssues { get; set; }
+
+        public DbSet<Issues> Issues { get; set; }
+        public DbSet<IssueCategory> IssueCategories { get; set; }
+        public DbSet<IssueComments> IssueComments { get; set; }
         public DbSet<RequestLog> RequestLogs { get; set; }
+
 
         public DbSet<Audit> Audit { get; set; }
         public DbSet<Tokens> Tokens { get; set; }

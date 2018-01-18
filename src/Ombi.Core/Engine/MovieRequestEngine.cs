@@ -43,16 +43,16 @@ namespace Ombi.Core.Engine
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public async Task<RequestEngineResult> RequestMovie(SearchMovieViewModel model)
+        public async Task<RequestEngineResult> RequestMovie(MovieRequestViewModel model)
         {
-            var movieInfo = await MovieApi.GetMovieInformation(model.Id);
+            var movieInfo = await MovieApi.GetMovieInformation(model.TheMovieDbId);
             if (movieInfo == null || movieInfo.Id == 0)
             {
                 return new RequestEngineResult
                 {
                     Result = false,
                     Message = "There was an issue adding this movie!",
-                    ErrorMessage = $"TheMovieDb didn't have any information for ID {model.Id}"
+                    ErrorMessage = $"TheMovieDb didn't have any information for ID {model.TheMovieDbId}"
                 };
             }
             var fullMovieName =

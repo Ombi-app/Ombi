@@ -2,7 +2,7 @@
 
 namespace Ombi.Schedule.Jobs.Plex
 {
-    public interface IPlexAvailabilityChecker
+    public interface IPlexAvailabilityChecker : IBaseJob
     {
         Task Start();
     }

@@ -45,7 +45,9 @@
     "Search": "Search",
     "Requests": "Requests",
     "UserManagement": "User Management",
+    "Issues":"Issues",
     "Donate": "Donate!",
+    "DonateLibraryMaintainer": "Donate to Library Maintainer",
     "DonateTooltip":
       "This is how I convince my wife to let me spend my spare time developing Ombi ;)",
     "UpdateAvailableTooltip": "Update Available!",
@@ -60,8 +62,10 @@
       "German": "German",
       "Italian": "Italian",
       "Danish": "Danish",
-      "Dutch": "Dutch"
-    }
+      "Dutch": "Dutch",
+      "Norwegian":"Norwegian"
+    },
+    "OpenMobileApp":"Open Mobile App"
   },
   "Search": {
     "Title": "Search",
@@ -91,7 +95,7 @@
     "TvTab": "TV Shows",
     "RequestedBy": "Requested By:",
     "Status": "Status:",
-    "RequestStatus:": "Request status:",
+    "RequestStatus": "Request status:",
     "Denied": " Denied:",
     "ReleaseDate": "Release Date:",
     "RequestDate": "Request Date:",
@@ -107,5 +111,24 @@
     "GridTitle":"Title",
     "AirDate":"AirDate",
     "GridStatus":"Status"
+  },
+  "Issues":{
+    "Title":"Issues",
+    "PendingTitle":"Pending Issues",
+    "InProgressTitle":"In Progress Issues",
+    "ResolvedTitle":"Resolved Issues",
+    "ColumnTitle":"Title",
+    "Category":"Category",
+    "Status": "Status",
+    "Details": "Details",
+    "Description":"Description",
+    "NoComments":"No Comments!",
+    "MarkInProgress":"Mark In Progress",
+    "MarkResolved":"Mark Resolved",
+    "SendMessageButton":"Send",
+    "Subject":"Subject",
+    "Comments":"Comments",
+    "WriteMessagePlaceholder":"Write your message here...",
+    "ReportedBy":"Reported By"
   }
 }

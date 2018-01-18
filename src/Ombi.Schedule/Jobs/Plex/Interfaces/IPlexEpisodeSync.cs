@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
-namespace Ombi.Schedule.Jobs.Plex
+namespace Ombi.Schedule.Jobs.Plex.Interfaces
 {
-    public interface IPlexEpisodeSync
+    public interface IPlexEpisodeSync : IBaseJob
     {
         Task Start();
     }

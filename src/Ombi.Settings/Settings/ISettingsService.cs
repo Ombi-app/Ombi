@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Ombi.Core.Settings
 {
-    public interface ISettingsService<T>
+    public interface ISettingsService<T> : IDisposable
     {
         T GetSettings();
         Task<T> GetSettingsAsync();

@@ -91,27 +91,24 @@ namespace Ombi.Updater
             }
             else
             {
-                var process = Process.GetProcesses().FirstOrDefault(p => p.Id == opts.OmbiProcessId);
+                var process = Process.GetProcesses().FirstOrDefault(p => p.ProcessName == opts.ProcessName);
 
                 if (process == null)
                 {
-                    Console.WriteLine("Cannot find process with id: {0}", opts.OmbiProcessId);
+                    Console.WriteLine("Cannot find process with name: {0}", opts.ProcessName);
                     return;
                 }
 
                 process.Refresh();
 
-                if (process.Id != Process.GetCurrentProcess().Id && process.HasExited)
+                if (process.Id > 0)
                 {
-                    Console.WriteLine("Process has already exited");
-                    return;
+                    Console.WriteLine("[{0}]: Killing process", process.Id);
+                    process.Kill();
+                    Console.WriteLine("[{0}]: Waiting for exit", process.Id);
+                    process.WaitForExit();
+                    Console.WriteLine("[{0}]: Process terminated successfully", process.Id);
                 }
-
-                Console.WriteLine("[{0}]: Killing process", process.Id);
-                process.Kill();
-                Console.WriteLine("[{0}]: Waiting for exit", process.Id);
-                process.WaitForExit();
-                Console.WriteLine("[{0}]: Process terminated successfully", process.Id);
             }
         }
 

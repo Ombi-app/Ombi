@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Ombi.Api.FanartTv.Models;
 
 namespace Ombi.Api.FanartTv
@@ -20,8 +21,15 @@ namespace Ombi.Api.FanartTv
         {
             var request = new Request($"tv/{tvdbId}", Endpoint, HttpMethod.Get);
             request.AddHeader("api-key", token);
-
-            return await Api.Request<TvResult>(request);
+            try
+            {
+                return await Api.Request<TvResult>(request);
+            }
+            catch (JsonSerializationException)
+            {
+                // Usually this is when it's not found
+                return null;
+            }
         }
 
         public async Task<MovieResult> GetMovieImages(int theMovieDbId, string token)

@@ -2,7 +2,7 @@
 
 namespace Ombi.Schedule.Jobs.Emby
 {
-    public interface IEmbyAvaliabilityChecker
+    public interface IEmbyAvaliabilityChecker : IBaseJob
     {
         Task Start();
     }

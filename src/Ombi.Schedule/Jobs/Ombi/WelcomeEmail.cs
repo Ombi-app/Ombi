@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Notifications;
@@ -61,6 +62,26 @@ namespace Ombi.Schedule.Jobs.Ombi
             var parsed = resolver.ParseMessage(template, curlys);
 
             return parsed;
+        }
+
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                _emailSettings?.Dispose();
+                _customizationSettings?.Dispose();
+            }
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

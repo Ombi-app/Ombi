@@ -67,12 +67,16 @@ namespace Ombi.Core.Rule.Rules
                             foreach (var ep in season.Episodes)
                             {
                                 // Check if we have it
-                                var monitoredInSonarr = sonarrEpisodes.Any(x =>
+                                var monitoredInSonarr = await sonarrEpisodes.FirstOrDefaultAsync(x =>
                                     x.EpisodeNumber == ep.EpisodeNumber && x.SeasonNumber == season.SeasonNumber
                                     && x.TvDbId == vm.Id);
-                                if (monitoredInSonarr)
+                                if (monitoredInSonarr != null)
                                 {
                                     ep.Approved = true;
+                                    if (monitoredInSonarr.HasFile)
+                                    {
+                                        obj.Available = true;
+                                    }
                                 }
                             }
                         }

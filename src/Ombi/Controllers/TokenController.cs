@@ -15,6 +15,7 @@ using Ombi.Models;
 using Ombi.Models.Identity;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using StackExchange.Profiling.Helpers;
 
 namespace Ombi.Controllers
 {
@@ -127,6 +128,26 @@ namespace Ombi.Controllers
                 
 
             throw new NotImplementedException();
+        }
+
+        [HttpPost("requirePassword")]
+        public async Task<bool> DoesUserRequireAPassword([FromBody] UserAuthModel model)
+        {
+            var user = await _userManager.FindByNameAsync(model.Username);
+
+            if (user == null)
+            {
+                // Could this be an email login?
+                user = await _userManager.FindByEmailAsync(model.Username);
+
+                if (user == null)
+                {
+                    return true;
+                }
+            }
+
+            var requires = await _userManager.RequiresPassword(user);
+            return requires;
         }
 
         public class TokenRefresh

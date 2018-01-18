@@ -71,6 +71,13 @@ namespace Ombi.Notifications.Agents
             return message;
         }
 
+        private async Task<string> LoadPlainTextMessage(NotificationType type, NotificationOptions model, EmailNotificationSettings settings)
+        {
+            var parsed = await LoadTemplate(NotificationAgent.Email, type, model);
+
+            return parsed.Message;
+        }
+
         protected override async Task NewRequest(NotificationOptions model, EmailNotificationSettings settings)
         {
             var message = await LoadTemplate(NotificationType.NewRequest, model, settings);
@@ -78,7 +85,10 @@ namespace Ombi.Notifications.Agents
             {
                 return;
             }
-            
+
+            var plaintext = await LoadPlainTextMessage(NotificationType.NewRequest, model, settings);
+            message.Other.Add("PlainTextBody", plaintext);
+
             await Send(message, settings);
         }
 
@@ -89,7 +99,13 @@ namespace Ombi.Notifications.Agents
             {
                 return;
             }
-            
+
+            var plaintext = await LoadPlainTextMessage(NotificationType.Issue, model, settings);
+            message.Other.Add("PlainTextBody", plaintext);
+
+            // Issues should be sent to admin
+            message.To = settings.AdminEmail;
+
             await Send(message, settings);
         }
 
@@ -122,7 +138,10 @@ namespace Ombi.Notifications.Agents
                 Subject = $"{Customization.ApplicationName}: A request could not be added",
                 To = settings.AdminEmail,
             };
-            
+
+            var plaintext = $"Hello! The user '{user}' has requested {title} but it could not be added. This has been added into the requests queue and will keep retrying";
+            message.Other.Add("PlainTextBody", plaintext);
+
             await Send(message, settings);
         }
 
@@ -133,6 +152,10 @@ namespace Ombi.Notifications.Agents
             {
                 return;
             }
+
+            var plaintext = await LoadPlainTextMessage(NotificationType.RequestDeclined, model, settings);
+            message.Other.Add("PlainTextBody", plaintext);
+
             message.To = model.RequestType == RequestType.Movie
                 ? MovieRequest.RequestedUser.Email
                 : TvRequest.RequestedUser.Email;
@@ -146,6 +169,10 @@ namespace Ombi.Notifications.Agents
             {
                 return;
             }
+
+            var plaintext = await LoadPlainTextMessage(NotificationType.RequestApproved, model, settings);
+            message.Other.Add("PlainTextBody", plaintext);
+
             message.To = model.RequestType == RequestType.Movie
                 ? MovieRequest.RequestedUser.Email
                 : TvRequest.RequestedUser.Email;
@@ -159,6 +186,10 @@ namespace Ombi.Notifications.Agents
             {
                 return;
             }
+
+            var plaintext = await LoadPlainTextMessage(NotificationType.RequestAvailable, model, settings);
+            message.Other.Add("PlainTextBody", plaintext);
+
             message.To = model.RequestType == RequestType.Movie
                 ? MovieRequest.RequestedUser.Email
                 : TvRequest.RequestedUser.Email;

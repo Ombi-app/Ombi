@@ -3,7 +3,7 @@ import { NavigationStart, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { AuthService } from "./auth/auth.service";
 import { ILocalUser } from "./auth/IUserLogin";
-import { NotificationService } from "./services";
+import { IdentityService, NotificationService } from "./services";
 import { JobService, SettingsService } from "./services";
 
 import { ICustomizationSettings } from "./interfaces";
@@ -16,10 +16,13 @@ import { ICustomizationSettings } from "./interfaces";
 export class AppComponent implements OnInit {
 
     public customizationSettings: ICustomizationSettings;
+    public issuesEnabled = false;
     public user: ILocalUser;
     public showNav: boolean;
     public updateAvailable: boolean;
     public currentUrl: string;
+    public userAccessToken: string;
+    public showMobileLink = false;
 
     private checkedForUpdate: boolean;
 
@@ -28,20 +31,22 @@ export class AppComponent implements OnInit {
                 private readonly router: Router,
                 private readonly settingsService: SettingsService,
                 private readonly jobService: JobService,
-                public readonly translate: TranslateService) { 
-                    this.translate.addLangs(["en", "de", "fr","da","es","it","nl","sv"]);
+                public readonly translate: TranslateService,
+                private readonly identityService: IdentityService) { 
+                    this.translate.addLangs(["en", "de", "fr","da","es","it","nl","sv","no"]);
                     // this language will be used as a fallback when a translation isn't found in the current language
                     this.translate.setDefaultLang("en");
                     
                     // See if we can match the supported langs with the current browser lang
                     const browserLang: string = translate.getBrowserLang();
-                    this.translate.use(browserLang.match(/en|fr|da|de|es|it|nl|sv/) ? browserLang : "en");
+                    this.translate.use(browserLang.match(/en|fr|da|de|es|it|nl|sv|no/) ? browserLang : "en");
                 }
 
     public ngOnInit() {
         this.user = this.authService.claims();
 
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
+        this.settingsService.issueEnabled().subscribe(x => this.issuesEnabled = x);
 
         this.router.events.subscribe((event: NavigationStart) => {
             this.currentUrl = event.url;
@@ -49,11 +54,13 @@ export class AppComponent implements OnInit {
                 this.user = this.authService.claims();
                 this.showNav = this.authService.loggedIn();
 
-                if (this.user !== null && this.user.name && !this.checkedForUpdate) {
+                // tslint:disable-next-line:no-string-literal
+                if (this.user !== null && this.user.name && !this.checkedForUpdate && this.user.roles["Admin"]) {
                     this.checkedForUpdate = true;
                     this.jobService.getCachedUpdate().subscribe(x => {
                         this.updateAvailable = x;
-                    });
+                    },
+                    err => this.checkedForUpdate = true );
                 }
             }
         });
@@ -61,6 +68,19 @@ export class AppComponent implements OnInit {
 
     public hasRole(role: string): boolean {
         return this.user.roles.some(r => r === role);
+    }
+
+    public openMobileApp(event: any) {
+        event.preventDefault();
+        if(!this.customizationSettings.applicationUrl) {
+            this.notificationService.warning("Mobile","Please ask your admin to setup the Application URL!");
+            return;
+        }
+
+        this.identityService.getAccessToken().subscribe(x => {
+            const url = `ombi://${this.customizationSettings.applicationUrl}_${x}`;
+            window.location.assign(url);
+        });
     }
 
     public logOut() {

@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from "@angular/core";
+﻿import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
@@ -8,7 +8,7 @@ import { Subject } from "rxjs/Subject";
 import { AuthService } from "../auth/auth.service";
 import { NotificationService, RadarrService, RequestService } from "../services";
 
-import { IMovieRequests, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
+import { IIssueCategory, IMovieRequests, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
 
 @Component({
     selector: "movie-requests",
@@ -24,6 +24,13 @@ export class MovieRequestsComponent implements OnInit {
 
     public radarrProfiles: IRadarrProfile[];
     public radarrRootFolders: IRadarrRootFolder[];
+
+    @Input() public issueCategories: IIssueCategory[];
+    @Input() public issuesEnabled: boolean;
+    public issuesBarVisible = false;
+    public issueRequest: IMovieRequests;
+    public issueProviderId: string;
+    public issueCategorySelected: IIssueCategory;
 
     private currentlyLoaded: number;
     private amountToLoad: number;
@@ -119,6 +126,17 @@ export class MovieRequestsComponent implements OnInit {
         searchResult.qualityOverride = profileSelected.id;
         this.setOverride(searchResult);
         this.updateRequest(searchResult);
+    }
+
+    public reportIssue(catId: IIssueCategory, req: IMovieRequests) {
+        this.issueRequest = req;
+        this.issueCategorySelected = catId;
+        this.issuesBarVisible = true;
+        this.issueProviderId = req.theMovieDbId.toString();
+    }
+
+    public ignore(event: any): void {
+        event.preventDefault();
     }
 
     private loadRequests(amountToLoad: number, currentlyLoaded: number) {
@@ -221,6 +239,6 @@ export class MovieRequestsComponent implements OnInit {
 
     private setBackground(req: IMovieRequests): void {
         req.backgroundPath = this.sanitizer.bypassSecurityTrustStyle
-        ("linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%),url(" + "https://image.tmdb.org/t/p/w1280" + req.background + ")");
+        ("url(" + "https://image.tmdb.org/t/p/w1280" + req.background + ")");
     }
 }

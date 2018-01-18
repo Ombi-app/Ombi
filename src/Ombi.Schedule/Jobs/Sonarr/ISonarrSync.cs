@@ -2,7 +2,7 @@
 
 namespace Ombi.Schedule.Jobs.Sonarr
 {
-    public interface ISonarrSync
+    public interface ISonarrSync : IBaseJob
     {
         Task Start();
     }

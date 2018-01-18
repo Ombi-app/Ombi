@@ -3,7 +3,7 @@ using Hangfire.Server;
 
 namespace Ombi.Schedule.Jobs.Ombi
 {
-    public interface IOmbiAutomaticUpdater
+    public interface IOmbiAutomaticUpdater : IBaseJob
     {
         Task Update(PerformContext context);
         string[] GetVersion();

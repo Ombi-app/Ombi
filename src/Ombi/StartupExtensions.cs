@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using Ombi.Config;
+using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Models.Identity;
@@ -60,7 +62,7 @@ namespace Ombi
                     In = "header",
                     Type = "apiKey",
                 });
-                
+
                 c.OperationFilter<SwaggerOperationFilter>();
                 c.DescribeAllParametersInCamelCase();
             });
@@ -135,6 +137,12 @@ namespace Ombi
                             await ValidateApiKey(serviceProvider, context, next, queryKey);
                         }
                     }
+                    // User access token used by the mobile app
+                    else if (context.Request.Headers["UserAccessToken"].Any())
+                    {
+                        var headerKey = context.Request.Headers["UserAccessToken"].FirstOrDefault();
+                        await ValidateUserAccessToken(serviceProvider, context, next, headerKey);
+                    }
                     else
                     {
                         await next();
@@ -145,6 +153,32 @@ namespace Ombi
                     await next();
                 }
             });
+        }
+
+        private static async Task ValidateUserAccessToken(IServiceProvider serviceProvider, HttpContext context, Func<Task> next, string key)
+        {
+            if (key.IsNullOrEmpty())
+            {
+                await context.Response.WriteAsync("Invalid User Access Token");
+                return;
+            }
+            
+            var um = serviceProvider.GetService<OmbiUserManager>();
+            var user = await um.Users.FirstOrDefaultAsync(x => x.UserAccessToken == key);
+            if (user == null)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                await context.Response.WriteAsync("Invalid User Access Token");
+            }
+            else
+            {
+
+                var identity = new GenericIdentity(user.UserName);
+                var roles = await um.GetRolesAsync(user);
+                var principal = new GenericPrincipal(identity, roles.ToArray());
+                context.User = principal;
+                await next();
+            }
         }
 
         private static async Task ValidateApiKey(IServiceProvider serviceProvider, HttpContext context, Func<Task> next, string key)

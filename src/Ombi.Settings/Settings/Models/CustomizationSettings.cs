@@ -10,6 +10,9 @@ namespace Ombi.Settings.Settings.Models
         public string ApplicationName { get; set; }
         public string ApplicationUrl { get; set; }
         public string CustomCssLink { get; set; }
+        public bool EnableCustomDonations { get; set; }
+        public string CustomDonationUrl { get; set; }
+        public string CustomDonationMessage { get; set; }
         public string Logo { get; set; }
 
         public string PresetThemeName { get; set; }

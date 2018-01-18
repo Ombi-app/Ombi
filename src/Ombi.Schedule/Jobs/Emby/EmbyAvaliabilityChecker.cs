@@ -77,7 +77,7 @@ namespace Ombi.Schedule.Jobs.Emby
                     continue;
                 }
 
-                _log.LogInformation("We have found the request {0} on Emby, sending the notification", movie.Title);
+                _log.LogInformation("We have found the request {0} on Emby, sending the notification", movie?.Title ?? string.Empty);
 
                 movie.Available = true;
                 if (movie.Available)
@@ -147,6 +147,25 @@ namespace Ombi.Schedule.Jobs.Emby
             }
 
             await _tvRepo.Save();
+        }
+
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                _movieRepo?.Dispose();
+            }
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

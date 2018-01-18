@@ -43,6 +43,7 @@
     "Search": "Søg",
     "Requests": "Anmodninger",
     "UserManagement": "Brugeradministration",
+    "Issues": "Problemer",
     "Donate": "Donér!",
     "DonateTooltip": "Sådan overbeviser jeg min kone om, at jeg skal bruge min fritid på at udvikle Ombi :)",
     "UpdateAvailableTooltip": "Ny opdatering venter!",
@@ -57,8 +58,10 @@
       "German": "Tysk",
       "Italian": "Italiensk",
       "Danish": "Dansk",
-      "Dutch": "Hollandsk"
-    }
+      "Dutch": "Hollandsk",
+      "Norwegian": "Norwegian"
+    },
+    "OpenMobileApp": "Open Mobile App"
   },
   "Search": {
     "Title": "Søg",
@@ -86,7 +89,7 @@
     "TvTab": "Tv-serier",
     "RequestedBy": "Anmodet af:",
     "Status": "Status:",
-    "RequestStatus:": "Status for anmodning:",
+    "RequestStatus": "Status for anmodning:",
     "Denied": " Afvist:",
     "ReleaseDate": "Udgivelsesdato:",
     "RequestDate": "Dato for anmodning:",
@@ -102,5 +105,24 @@
     "GridTitle": "Titel",
     "AirDate": "Sendt",
     "GridStatus": "Status"
+  },
+  "Issues": {
+    "Title": "Problemer",
+    "PendingTitle": "Afventende problemer",
+    "InProgressTitle": "Igangværende probemer",
+    "ResolvedTitle": "Løste problemer",
+    "ColumnTitle": "Titel",
+    "Category": "Kategori",
+    "Status": "Status",
+    "Details": "Detaljer",
+    "Description": "Beskrivelse",
+    "NoComments": "Ingen kommentarer!",
+    "MarkInProgress": "Markér som igangværende",
+    "MarkResolved": "Markér som løst",
+    "SendMessageButton": "Send",
+    "Subject": "Emne",
+    "Comments": "Kommentarer",
+    "WriteMessagePlaceholder": "Indtast din besked her...",
+    "ReportedBy": "Anmeldt af"
   }
 }

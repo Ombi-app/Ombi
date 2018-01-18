@@ -43,6 +43,29 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <div class="checkbox">
+                <input type="checkbox" id="enableCustomDonations" name="enableCustomDonations" [(ngModel)]="settings.enableCustomDonations">
+                <label for="enableCustomDonations" tooltipPosition="top" pTooltip="Enable to show a custom donation link in the navigation bar">Enable custom donation link</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="customDonation" class="control-label">Custom Donation URL</label>
+            <div>
+                <input [disabled]="!settings.enableCustomDonations" type="text" [(ngModel)]="settings.customDonationUrl" class="form-control form-control-custom " name="customDonation" value="{{settings.customDonationUrl}}"
+                    tooltipPosition="top" pTooltip="A link to a Paypal address, or your custom donation url.">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="customDonationMessage" class="control-label">Donation Button Message</label>
+            <div>
+                <input [disabled]="!settings.enableCustomDonations" type="text" [(ngModel)]="settings.customDonationMessage" class="form-control form-control-custom " name="customDonationMessage" value="{{settings.customDonationMessage}}"
+                    tooltipPosition="top" pTooltip="Set a custom message to be displayed in the navigation bar.">
+            </div>
+        </div>
+
 
 
         <div class="form-group">

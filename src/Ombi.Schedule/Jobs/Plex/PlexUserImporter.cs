@@ -169,5 +169,26 @@ namespace Ombi.Schedule.Jobs.Plex
             }
             return result.Succeeded;
         }
+
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                _userManager?.Dispose();
+                _plexSettings?.Dispose();
+                _userManagementSettings?.Dispose();
+            }
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

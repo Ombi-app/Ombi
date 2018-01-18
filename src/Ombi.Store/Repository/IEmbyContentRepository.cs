@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public interface IEmbyContentRepository
+    public interface IEmbyContentRepository : IDisposable
     {
         Task<EmbyContent> Add(EmbyContent content);
         Task AddRange(IEnumerable<EmbyContent> content);

@@ -2,7 +2,7 @@
 
 namespace Ombi.Schedule.Jobs
 {
-    public interface IPlexContentSync
+    public interface IPlexContentSync : IBaseJob
     {
         Task CacheContent();
     }

@@ -64,19 +64,11 @@ namespace Ombi.Core.Authentication
 
         public override async Task<bool> CheckPasswordAsync(OmbiUser user, string password)
         {
-            var authSettings = await _authSettings.GetSettingsAsync();
-            if (authSettings.AllowNoPassword)
+            var requiresPassword = await RequiresPassword(user);
+            if (!requiresPassword)
             {
-                // Check their roles
-                var roles = await GetRolesAsync(user);
-                if (roles.Contains(OmbiRoles.Admin) || roles.Contains(OmbiRoles.PowerUser))
-                {
-                    // Do nothing, let it continue to check the password
-                }
-                else
-                {
-                    return true;
-                }
+                // Let them through!
+                return true;
             }
             if (user.UserType == UserType.LocalUser)
             {
@@ -91,6 +83,22 @@ namespace Ombi.Core.Authentication
                 return await CheckEmbyPasswordAsync(user, password);
             }
             return false;
+        }
+
+        public async Task<bool> RequiresPassword(OmbiUser user)
+        {
+            var authSettings = await _authSettings.GetSettingsAsync();
+            if (authSettings.AllowNoPassword)
+            {
+                var roles = await GetRolesAsync(user);
+                if (roles.Contains(OmbiRoles.Admin) || roles.Contains(OmbiRoles.PowerUser))
+                {
+                    // We require a password
+                    return true;
+                }
+                return false;
+            }
+            return true;
         }
 
         /// <summary>

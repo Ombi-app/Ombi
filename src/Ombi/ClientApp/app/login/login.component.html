@@ -4,7 +4,7 @@ include the remember me checkbox
 -->
 <div *ngIf="form && customizationSettings">
 
-    <img *ngIf="background" class="landingDiv bg" [style.background-image]="background" />
+    <div *ngIf="background" class="bg" [style.background-image]="background"></div>
     <div class="container" id="login">
         <div class="card card-container">
             <!-- <img class="profile-img-card" src="//lh3.googleusercontent.com/-6V8xOA6M7BA/AAAAAAAAAAI/AAAAAAAAAAA/rzlHcD0KYwo/photo.jpg?sz=120" alt="" /> -->
@@ -12,11 +12,11 @@ include the remember me checkbox
             <div *ngIf="customizationSettings.logo"><img id="profile-img" class="center" [src]="customizationSettings.logo" /></div>
             <p id="profile-name" class="profile-name-card"></p>
 
-            <form class="form-signin" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+            <form *ngIf="authenticationSettings" class="form-signin" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
                 
                
                 <input type="email" id="inputEmail" class="form-control" formControlName="username" [attr.placeholder]="'Login.UsernamePlaceholder' | translate" autofocus>
-                <input type="password" id="inputPassword" class="form-control" formControlName="password" [attr.placeholder]="'Login.PasswordPlaceholder' | translate">
+                <input *ngIf="!authenticationSettings.allowNoPassword" type="password" id="inputPassword" class="form-control" formControlName="password" [attr.placeholder]="'Login.PasswordPlaceholder' | translate">
                 <div class="form-group">
                     <div class="checkbox">
                         <input type="checkbox" id="RememberMe" formControlName="rememberMe" >

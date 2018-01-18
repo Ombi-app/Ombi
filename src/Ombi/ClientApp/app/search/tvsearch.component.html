@@ -9,12 +9,21 @@
                     <i class="fa fa-chevron-down"></i>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a (click)="popularShows()">Popular Shows</a></li>
-                    <li><a (click)="trendingShows()">Trending Shows</a></li>
-                    <li><a (click)="mostWatchedShows()">Most Watched Shows</a></li>
-                    <li><a (click)="anticipatedShows()">Most Anticipated Shows</a></li>
+                    <li>
+                        <a (click)="popularShows()">Popular Shows</a>
+                    </li>
+                    <li>
+                        <a (click)="trendingShows()">Trending Shows</a>
+                    </li>
+                    <li>
+                        <a (click)="mostWatchedShows()">Most Watched Shows</a>
+                    </li>
+                    <li>
+                        <a (click)="anticipatedShows()">Most Anticipated Shows</a>
+                    </li>
                 </ul>
-            </div><i id="tvSearchButton" class="fa fa-search"></i>
+            </div>
+            <i id="tvSearchButton" class="fa fa-search"></i>
         </div>
     </div>
     <br />
@@ -24,13 +33,14 @@
     </div>
 
 
-<br />
+    <br />
     <br />
     <!-- TV content -->
     <div id="tvList">
-        
+
         <div *ngIf="searchApplied && tvResults?.length <= 0" class='no-search-results'>
-            <i class='fa fa-film no-search-results-icon'></i><div class='no-search-results-text'>Sorry, we didn't find any results!</div>
+            <i class='fa fa-film no-search-results-icon'></i>
+            <div class='no-search-results-text'>Sorry, we didn't find any results!</div>
         </div>
         <p-treeTable [value]="tvResults">
             <p-column>
@@ -40,7 +50,10 @@
                 <ng-template let-col let-node="rowData" pTemplate="body">
                     <!--This is the section that holds the parent level search results set-->
                     <div *ngIf="!node.leaf">
-                        <div class="row backdrop" [style.background-image]="node?.data?.background">
+                        <div class="row" >
+                            
+                <div class="myBg backdrop" [style.background-image]="node?.data?.background"></div>
+                <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
                             <div class="col-sm-2 small-padding">
 
                                 <img *ngIf="node?.data?.banner" class="img-responsive poster" width="150" [src]="node.data.banner" alt="poster">
@@ -53,6 +66,11 @@
                                         <h4>{{node.data.title}} ({{node.data.firstAired | date: 'yyyy'}})</h4>
 
                                     </a>
+                                    <span class="tags">
+                                            <a *ngIf="node.data.homepage" id="homepageLabel" href="{{node.data.homepage}}" target="_blank"><span class="label label-info" >HomePage</span></a>
+  
+                                            <a *ngIf="node.data.trailer"  id="trailerLabel" href="{{node.data.trailer}}" target="_blank"><span class="label label-info">Trailer</span></a>
+
                                     <span *ngIf="node.data.status" class="label label-primary" id="statusLabel" target="_blank">{{node.data.status}}</span>
 
 
@@ -60,15 +78,16 @@
 
                                     <span *ngIf="node.data.network" class="label label-info" id="networkLabel" target="_blank">{{node.data.network}}</span>
 
-                       
-                                    <ng-template [ngIf]="node.data.available"><span class="label label-success" id="availableLabel">Available</span></ng-template>
-                                    <ng-template [ngIf]="node.data.partlyAvailable"><span class="label label-warning" id="partiallyAvailableLabel">Partially Available</span></ng-template>
+                    
+                                    <ng-template [ngIf]="node.data.available">
+                                        <span class="label label-success" id="availableLabel">Available</span>
+                                    </ng-template>
+                                    <ng-template [ngIf]="node.data.partlyAvailable">
+                                        <span class="label label-warning" id="partiallyAvailableLabel">Partially Available</span>
+                                    </ng-template>
 
-
-                                    <a *ngIf="node.data.homepage" href="{{node.data.homepage}}" target="_blank"><span class="label label-info" id="homepageLabel">HomePage</span></a>
-
-                                    <a *ngIf="node.data.trailer" href="{{node.data.trailer}}" target="_blank"><span class="label label-info" id="trailerLabel">Trailer</span></a>
-
+                                 
+                                </span>
 
                                     <br />
                                     <br />
@@ -84,19 +103,42 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                        <li><a href="#" (click)="allSeasons(node.data, $event)">All Seasons</a></li>
-                                        <li><a href="#" (click)="firstSeason(node.data, $event)">First Season</a></li>
-                                        <li><a href="#" (click)="latestSeason(node.data, $event)">Latest Season</a></li>
-                                        <li><a href="#" (click)="openClosestTab($event)">Select ...</a></li>
+                                        <li>
+                                            <a href="#" (click)="allSeasons(node.data, $event)">All Seasons</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" (click)="firstSeason(node.data, $event)">First Season</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" (click)="latestSeason(node.data, $event)">Latest Season</a>
+                                        </li>
+                                        <li>
+                                            <a href="#" (click)="openClosestTab($event)">Select ...</a>
+                                        </li>
                                     </ul>
                                 </div>
-                                
+
                                 <div *ngIf="node.data.fullyAvailable">
-                                    <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> Available</button>
+                                    <button style="text-align: right" class="btn btn-success-outline disabled" disabled>
+                                        <i class="fa fa-check"></i> Available</button>
                                 </div>
                                 <br />
-                                <div *ngIf="node.data.available">
-                                    <a *ngIf="node.data.plexUrl" style="text-align: right" class="btn btn-sm btn-success-outline" href="{{node.data.plexUrl}}" target="_blank"><i class="fa fa-eye"></i> View On Plex</a>
+                                <div *ngIf="node.data.plexUrl && node.data.available">
+                                    <a  style="text-align: right" class="btn btn-sm btn-success-outline" href="{{node.data.plexUrl}}"
+                                        target="_blank">
+                                        <i class="fa fa-eye"></i> View On Plex</a>
+  </div>
+                                <div class="dropdown" *ngIf="issueCategories && issuesEnabled">
+                                    <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="true">
+                                        <i class="fa fa-plus"></i> Report Issue
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                        <li *ngFor="let cat of issueCategories">
+                                            <a [routerLink]="" (click)="reportIssue(cat, node.data)">{{cat.value}}</a>
+                                        </li>
+                                    </ul>
                                 </div>
                                 <div *ngIf="!node.data.available">
                                     <br/>
@@ -111,7 +153,7 @@
                     <div *ngIf="node.leaf">
                         <seriesinformation [seriesId]="node.data.id"></seriesinformation>
                     </div>
-                    
+
                     <br/>
                     <br/>
                 </ng-template>
@@ -119,3 +161,7 @@
         </p-treeTable>
     </div>
 </div>
+
+
+<issue-report [movie]="false" [visible]="issuesBarVisible" (visibleChange)="issuesBarVisible = $event;" [title]="issueRequestTitle"
+    [issueCategory]="issueCategorySelected" [id]="issueRequestId" [providerId]="issueProviderId"></issue-report>

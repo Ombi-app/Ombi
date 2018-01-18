@@ -16,13 +16,12 @@ import { PlexService } from "../services";
 import { IdentityService } from "../services";
 
 const routes: Routes = [
-    { path: "Wizard", component: WelcomeComponent},
-    { path: "Wizard/MediaServer", component: MediaServerComponent},
-    { path: "Wizard/Plex", component: PlexComponent},
-    { path: "Wizard/Emby", component: EmbyComponent},
-    { path: "Wizard/CreateAdmin", component: CreateAdminComponent},
+    { path: "", component: WelcomeComponent},
+    { path: "MediaServer", component: MediaServerComponent},
+    { path: "Plex", component: PlexComponent},
+    { path: "Emby", component: EmbyComponent},
+    { path: "CreateAdmin", component: CreateAdminComponent},
 ];
-
 @NgModule({
     imports: [
         CommonModule,

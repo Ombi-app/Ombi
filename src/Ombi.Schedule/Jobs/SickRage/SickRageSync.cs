@@ -30,11 +30,9 @@ namespace Ombi.Schedule.Jobs.SickRage
         private readonly ISickRageApi _api;
         private readonly ILogger<SickRageSync> _log;
         private readonly IOmbiContext _ctx;
-
-        private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
+        
         public async Task Start()
         {
-            await SemaphoreSlim.WaitAsync();
             try
             {
                 var settings = await _settings.GetSettingsAsync();
@@ -42,6 +40,7 @@ namespace Ombi.Schedule.Jobs.SickRage
                 {
                     return;
                 }
+                
                 var shows = await _api.GetShows(settings.ApiKey, settings.FullUri);
                 if (shows != null)
                 {
@@ -83,10 +82,26 @@ namespace Ombi.Schedule.Jobs.SickRage
             {
                 _log.LogError(LoggingEvents.SickRageCacher, e, "Exception when trying to cache SickRage");
             }
-            finally
+        }
+
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
             {
-                SemaphoreSlim.Release();
+                _settings?.Dispose();
+                _ctx?.Dispose();
             }
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

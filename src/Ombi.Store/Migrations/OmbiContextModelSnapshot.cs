@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.Internal;
 using Ombi.Helpers;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
+using Ombi.Store.Entities.Requests;
 using System;
 
 namespace Ombi.Store.Migrations
@@ -302,6 +303,8 @@ namespace Ombi.Store.Migrations
 
                     b.Property<bool>("TwoFactorEnabled");
 
+                    b.Property<string>("UserAccessToken");
+
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
 
@@ -400,6 +403,8 @@ namespace Ombi.Store.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<bool>("HasFile");
+
                     b.Property<int>("TheMovieDbId");
 
                     b.HasKey("Id");
@@ -430,6 +435,8 @@ namespace Ombi.Store.Migrations
 
                     b.Property<string>("RequestedUserId");
 
+                    b.Property<int>("SeriesType");
+
                     b.Property<string>("Title");
 
                     b.HasKey("Id");
@@ -441,26 +448,76 @@ namespace Ombi.Store.Migrations
                     b.ToTable("ChildRequests");
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.Requests.MovieIssues", b =>
+            modelBuilder.Entity("Ombi.Store.Entities.Requests.IssueCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Value");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IssueCategory");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.Requests.IssueComments", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Comment");
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<int?>("IssuesId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IssuesId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("IssueComments");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.Requests.Issues", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description");
 
+                    b.Property<int>("IssueCategoryId");
+
                     b.Property<int?>("IssueId");
 
-                    b.Property<int>("MovieId");
+                    b.Property<string>("ProviderId");
 
-                    b.Property<string>("Subect");
+                    b.Property<int?>("RequestId");
+
+                    b.Property<int>("RequestType");
+
+                    b.Property<DateTime?>("ResovledDate");
+
+                    b.Property<int>("Status");
+
+                    b.Property<string>("Subject");
+
+                    b.Property<string>("Title");
+
+                    b.Property<string>("UserReportedId");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IssueCategoryId");
+
                     b.HasIndex("IssueId");
 
-                    b.HasIndex("MovieId");
+                    b.HasIndex("UserReportedId");
 
-                    b.ToTable("MovieIssues");
+                    b.ToTable("Issues");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.MovieRequests", b =>
@@ -531,28 +588,6 @@ namespace Ombi.Store.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("RequestLog");
-                });
-
-            modelBuilder.Entity("Ombi.Store.Entities.Requests.TvIssues", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Description");
-
-                    b.Property<int?>("IssueId");
-
-                    b.Property<string>("Subect");
-
-                    b.Property<int>("TvId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IssueId");
-
-                    b.HasIndex("TvId");
-
-                    b.ToTable("TvIssues");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.TvRequests", b =>
@@ -627,6 +662,8 @@ namespace Ombi.Store.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("EpisodeNumber");
+
+                    b.Property<bool>("HasFile");
 
                     b.Property<int>("SeasonNumber");
 
@@ -778,16 +815,35 @@ namespace Ombi.Store.Migrations
                         .HasForeignKey("RequestedUserId");
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.Requests.MovieIssues", b =>
+            modelBuilder.Entity("Ombi.Store.Entities.Requests.IssueComments", b =>
                 {
+                    b.HasOne("Ombi.Store.Entities.Requests.Issues", "Issues")
+                        .WithMany("Comments")
+                        .HasForeignKey("IssuesId");
+
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.Requests.Issues", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.Requests.IssueCategory", "IssueCategory")
+                        .WithMany()
+                        .HasForeignKey("IssueCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Ombi.Store.Entities.Requests.ChildRequests")
+                        .WithMany("Issues")
+                        .HasForeignKey("IssueId");
+
                     b.HasOne("Ombi.Store.Entities.Requests.MovieRequests")
                         .WithMany("Issues")
                         .HasForeignKey("IssueId");
 
-                    b.HasOne("Ombi.Store.Entities.Requests.MovieRequests", "Movie")
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "UserReported")
                         .WithMany()
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserReportedId");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.MovieRequests", b =>
@@ -802,18 +858,6 @@ namespace Ombi.Store.Migrations
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Ombi.Store.Entities.Requests.TvIssues", b =>
-                {
-                    b.HasOne("Ombi.Store.Entities.Requests.ChildRequests")
-                        .WithMany("Issues")
-                        .HasForeignKey("IssueId");
-
-                    b.HasOne("Ombi.Store.Entities.Requests.ChildRequests", "Child")
-                        .WithMany()
-                        .HasForeignKey("TvId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Tokens", b =>

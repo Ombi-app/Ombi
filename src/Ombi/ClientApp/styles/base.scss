@@ -8,13 +8,9 @@ $info-colour: #5bc0de;
 $warning-colour: #f0ad4e;
 $danger-colour: #d9534f;
 $success-colour: #5cb85c;
-$i:!important;
+$i: !important;
 
 @media (min-width: 768px ) {
-    .row {
-        position: relative;
-    }
-
     .bottom-align-text {
         position: absolute;
         bottom: 0;
@@ -36,6 +32,10 @@ $i:!important;
     .home {
         padding-top: 4rem;
     }
+}
+
+.row {
+    position: relative;
 }
 
 .navbar-default .navbar-nav > .active > a,
@@ -309,6 +309,10 @@ $border-radius: 10px;
 
 
 .no-search-results {
+    text-align: center;
+}
+
+.text-center {
     text-align: center;
 }
 
@@ -850,4 +854,51 @@ a > h4:hover {
     -webkit-text-stroke-width: 0.3px;
     -webkit-text-stroke-color: black;
     font-size: 0.9rem !important
+}
+
+.card {
+    padding-top:15px;
+}
+
+@media only screen and (max-width: 768px) {
+
+    .table-usermanagement {
+        /* Force table to not be like tables anymore */
+        display: block;
+
+        thead, tbody, th, td, tr {
+            display: block;
+        }
+
+        /* Hide table headers (but not display: none;, for accessibility) */
+        thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+
+        td {
+            /* Behave  like a "row" */
+            border: none;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            padding-left: 50% $i;
+            min-height: 25px;
+        }
+
+        td:before {
+            /* Now like a table header */
+            position: absolute;
+            /* Top/left values mimic padding */
+            top: 6px;
+            left: 6px;
+            width: 45%;
+            padding-right: 10px;
+            white-space: nowrap;
+        }
+        /* Label the data */
+        .td-labelled:before {
+            content: attr(data-label)
+        }
+    }
 }

@@ -71,5 +71,27 @@ namespace Ombi.Store.Repository
         {
             return source.Include(navigationPropertyPath);
         }
+
+
+        private bool _disposed;
+        // Protected implementation of Dispose pattern.
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                _ctx?.Dispose();
+            }
+            
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

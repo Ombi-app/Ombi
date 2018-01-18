@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Ombi.Helpers;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
 
@@ -11,14 +12,14 @@ namespace Ombi.Store.Repository
 {
     public class SettingsJsonRepository : ISettingsRepository
     {
-        public SettingsJsonRepository(IOmbiContext ctx, IMemoryCache mem)
+        public SettingsJsonRepository(IOmbiContext ctx, ICacheService mem)
         {
             Db = ctx;
             _cache = mem;
         }
 
         private IOmbiContext Db { get; }
-        private readonly IMemoryCache _cache;
+        private readonly ICacheService _cache;
 
         public GlobalSettings Insert(GlobalSettings entity)
         {
@@ -87,6 +88,25 @@ namespace Ombi.Store.Repository
         private string GetName(string entity)
         {
             return $"{entity}Json";
+        }
+
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                Db?.Dispose();
+            }
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

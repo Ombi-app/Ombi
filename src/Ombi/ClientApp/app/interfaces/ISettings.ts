@@ -97,6 +97,9 @@ export interface ICustomizationSettings extends ISettings {
   applicationUrl: string;
   logo: string;
   customCssLink: string;
+  enableCustomDonations: boolean;
+  customDonationUrl: string;
+  customDonationMessage: string;
   hasPresetTheme: boolean;
   presetThemeName: string;
   presetThemeContent: string;
@@ -120,6 +123,11 @@ export interface IJobSettings {
   automaticUpdater: string;
   userImporter: string;
   sickRageSync: string;
+}
+
+export interface IIssueSettings extends ISettings {
+  enabled: boolean;
+  enableInProgress: boolean;
 }
 
 export interface IAuthenticationSettings extends ISettings {
@@ -178,4 +186,8 @@ export interface IDogNzbSettings extends ISettings {
   apiKey: string;
   movies: boolean;
   tvShows: boolean;
+}
+
+export interface IIssueCategory extends ISettings {
+  value: string;
 }
