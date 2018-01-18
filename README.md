@@ -91,7 +91,7 @@ Search the existing requests to see if your suggestion has already been submitte
 # Installation
 
 [Click Here](https://github.com/tidusjar/Ombi/wiki/Installation)
-[Here for Reverse Proxy Config Examples](https://github.com/tidusjar/Ombi/wiki/Nginx-and-Apache-Reverse-Proxy-examples-(Linux))
+[Here for Reverse Proxy Config Examples](https://github.com/tidusjar/Ombi/wiki/Reverse-Proxy-Examples)
 
 # Contributors
 
