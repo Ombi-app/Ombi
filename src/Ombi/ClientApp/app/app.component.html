@@ -52,6 +52,14 @@
                             <i class="fa fa-heart" style="color:red"></i> {{ 'NavigationBar.Donate' | translate }}</a>
                     </li>
                 </ul>
+                <div *ngIf="customizationSettings">
+                    <ul *ngIf="customizationSettings.enableCustomDonations" class="nav navbar-nav">
+                        <li>
+                            <a href="{{customizationSettings.customDonationUrl}}" target="_blank">
+                                <i class="fa fa-heart" style="color:yellow"></i> {{ customizationSettings.customDonationMessage ? customizationSettings.customDonationMessage : ('NavigationBar.DonateLibraryMaintainer' | translate) }}</a>
+                        </li>
+                    </ul>
+                </div>
 
 
                 <ul class="nav navbar-nav navbar-right">

@@ -111,3 +111,7 @@ export interface IEpisodesRequests {
   approved: boolean;
   selected: boolean; // This is for the UI only
 }
+
+export interface IMovieRequestModel {
+  theMovieDbId: number;
+}

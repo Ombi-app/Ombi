@@ -6,8 +6,7 @@ import { Observable } from "rxjs/Rx";
 
 import { TreeNode } from "primeng/primeng";
 import { IRequestEngineResult } from "../interfaces";
-import { IChildRequests, IMovieRequests, IMovieUpdateModel, ITvRequests, ITvUpdateModel } from "../interfaces";
-import { ISearchMovieResult } from "../interfaces";
+import { IChildRequests, IMovieRequestModel, IMovieRequests, IMovieUpdateModel, ITvRequests, ITvUpdateModel } from "../interfaces";
 import { ISearchTvResult } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
@@ -17,7 +16,7 @@ export class RequestService extends ServiceHelpers {
         super(http, "/api/v1/Request/", platformLocation);
     }
 
-    public requestMovie(movie: ISearchMovieResult): Observable<IRequestEngineResult> {
+    public requestMovie(movie: IMovieRequestModel): Observable<IRequestEngineResult> {
         return this.http.post<IRequestEngineResult>(`${this.url}Movie/`, JSON.stringify(movie),  {headers: this.headers});
     }
 
