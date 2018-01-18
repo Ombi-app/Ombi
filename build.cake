@@ -90,6 +90,10 @@ Task("SetVersionInfo")
 		buildVersion = AppVeyor.Environment.Build.Version;
 	}
 
+	if(versionInfo.BranchName.Contains("_"))
+	{
+		versionInfo.BranchName = versionInfo.BranchName.Replace("_","-")
+	}
 	var fullVer = buildVersion + "-" + versionInfo.BranchName;
 
 	if(versionInfo.PreReleaseTag.Contains("PullRequest"))
