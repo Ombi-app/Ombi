@@ -123,7 +123,14 @@ namespace Ombi.Schedule.Jobs.Ombi
                     else
                     {
                         Logger.LogDebug(LoggingEvents.Updater, "We are linux");
-                        download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("linux", CompareOptions.IgnoreCase));
+                        if (RuntimeInformation.OSDescription.Contains("arm", CompareOptions.IgnoreCase))
+                        {
+                            download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("arm", CompareOptions.IgnoreCase));
+                        }
+                        else
+                        {
+                            download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("linux", CompareOptions.IgnoreCase));
+                        }
                     }
                     if (download == null)
                     {
@@ -206,10 +213,10 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         start.Password = settings.Password.ToSecureString();
                     }
-                    var proc = new Process {StartInfo = start};
+                    var proc = new Process { StartInfo = start };
 
 
-                        proc.Start();
+                    proc.Start();
 
                     Logger.LogDebug(LoggingEvents.Updater, "Bye bye");
                 }
