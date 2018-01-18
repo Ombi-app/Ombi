@@ -5,7 +5,7 @@ import { TranslateService } from "@ngx-translate/core";
 
 import { PlatformLocation } from "@angular/common";
 import { AuthService } from "../auth/auth.service";
-import { ICustomizationSettings } from "../interfaces";
+import { IAuthenticationSettings, ICustomizationSettings } from "../interfaces";
 import { NotificationService } from "../services";
 import { SettingsService } from "../services";
 import { StatusService } from "../services";
@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit {
 
     public form: FormGroup;
     public customizationSettings: ICustomizationSettings;
+    public authenticationSettings: IAuthenticationSettings;
     public background: any;
     public landingFlag: boolean;
     public baseUrl: string;
@@ -61,6 +62,7 @@ export class LoginComponent implements OnInit {
     }
 
     public ngOnInit() {
+        this.settingsService.getAuthentication().subscribe(x => this.authenticationSettings = x);
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
         this.images.getRandomBackground().subscribe(x => {
             this.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%),url(" + x.url + ")");
@@ -80,16 +82,24 @@ export class LoginComponent implements OnInit {
             return;
         }
         const value = form.value;
-        this.authService.login({ password: value.password, username: value.username, rememberMe:value.rememberMe })
-            .subscribe(x => {
-                localStorage.setItem("id_token", x.access_token);
+        const user = { password: value.password, username: value.username, rememberMe:value.rememberMe };
+        this.authService.requiresPassword(user).subscribe(x => {
+            if(x && this.authenticationSettings.allowNoPassword) {
+                // Looks like this user requires a password
+                this.authenticationSettings.allowNoPassword = false;
+                return;
+            }
+            this.authService.login(user)
+                .subscribe(x => {
+                    localStorage.setItem("id_token", x.access_token);
 
-                if (this.authService.loggedIn()) {
-                    this.router.navigate(["search"]);
-                } else {
-                    this.notify.error(this.errorBody);
-                }
+                    if (this.authService.loggedIn()) {
+                        this.router.navigate(["search"]);
+                    } else {
+                        this.notify.error(this.errorBody);
+                    }
 
-            }, err => this.notify.error(this.errorBody));
+                }, err => this.notify.error(this.errorBody));
+        });
     }
 }

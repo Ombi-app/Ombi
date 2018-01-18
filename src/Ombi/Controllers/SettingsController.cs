@@ -317,6 +317,7 @@ namespace Ombi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("authentication")]
+        [AllowAnonymous]
         public async Task<AuthenticationSettings> AuthenticationsSettings()
         {
             return await Get<AuthenticationSettings>();

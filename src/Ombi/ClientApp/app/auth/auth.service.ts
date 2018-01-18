@@ -18,6 +18,10 @@ export class AuthService extends ServiceHelpers {
         return this.http.post(`${this.url}/`, JSON.stringify(login), {headers: this.headers});
     }
 
+    public requiresPassword(login: IUserLogin): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}/requirePassword`, JSON.stringify(login), {headers: this.headers});
+    }
+
     public loggedIn() {    
         const token: string = this.jwtHelperService.tokenGetter();
         
