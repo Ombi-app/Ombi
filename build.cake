@@ -92,7 +92,7 @@ Task("SetVersionInfo")
 
 	if(versionInfo.BranchName.Contains("_"))
 	{
-		versionInfo.BranchName = versionInfo.BranchName.Replace("_","-")
+		versionInfo.BranchName = versionInfo.BranchName.Replace("_","-");
 	}
 	var fullVer = buildVersion + "-" + versionInfo.BranchName;
 
