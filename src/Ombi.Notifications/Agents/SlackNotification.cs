@@ -69,12 +69,28 @@ namespace Ombi.Notifications.Agents
             await Send(notification, settings);
         }
 
-        protected override async Task Issue(NotificationOptions model, SlackNotificationSettings settings)
+        protected override async Task NewIssue(NotificationOptions model, SlackNotificationSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Slack, NotificationType.Issue, model);
             if (parsed.Disabled)
             {
                 Logger.LogInformation($"Template {NotificationType.Issue} is disabled for {NotificationAgent.Slack}");
+                return;
+            }
+            var notification = new NotificationMessage
+            {
+                Message = parsed.Message,
+            };
+            notification.Other.Add("image", parsed.Image);
+            await Send(notification, settings);
+        }
+
+        protected override async Task IssueResolved(NotificationOptions model, SlackNotificationSettings settings)
+        {
+            var parsed = await LoadTemplate(NotificationAgent.Slack, NotificationType.IssueResolved, model);
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.IssueResolved} is disabled for {NotificationAgent.Slack}");
                 return;
             }
             var notification = new NotificationMessage

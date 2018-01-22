@@ -76,7 +76,7 @@ namespace Ombi.Notifications.Interfaces
                         await NewRequest(model, notificationSettings);
                         break;
                     case NotificationType.Issue:
-                        await Issue(model, notificationSettings);
+                        await NewIssue(model, notificationSettings);
                         break;
                     case NotificationType.RequestAvailable:
                         await AvailableRequest(model, notificationSettings);
@@ -84,9 +84,6 @@ namespace Ombi.Notifications.Interfaces
                     case NotificationType.RequestApproved:
                         await RequestApproved(model, notificationSettings);
                         break;
-                    case NotificationType.AdminNote:
-                        throw new NotImplementedException();
-
                     case NotificationType.Test:
                         await Test(model, notificationSettings);
                         break;
@@ -95,6 +92,9 @@ namespace Ombi.Notifications.Interfaces
                         break;
                     case NotificationType.ItemAddedToFaultQueue:
                         await AddedToRequestQueue(model, notificationSettings);
+                        break;
+                    case NotificationType.IssueResolved:
+                        await IssueResolved(model, notificationSettings);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -173,7 +173,8 @@ namespace Ombi.Notifications.Interfaces
 
         protected abstract bool ValidateConfiguration(T settings);
         protected abstract Task NewRequest(NotificationOptions model, T settings);
-        protected abstract Task Issue(NotificationOptions model, T settings);
+        protected abstract Task NewIssue(NotificationOptions model, T settings);
+        protected abstract Task IssueResolved(NotificationOptions model, T settings);
         protected abstract Task AddedToRequestQueue(NotificationOptions model, T settings);
         protected abstract Task RequestDeclined(NotificationOptions model, T settings);
         protected abstract Task RequestApproved(NotificationOptions model, T settings);

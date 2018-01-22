@@ -4,9 +4,9 @@
     {
         NewRequest,
         Issue,
+        IssueResolved,
         RequestAvailable,
         RequestApproved,
-        AdminNote,
         Test,
         RequestDeclined,
         ItemAddedToFaultQueue,

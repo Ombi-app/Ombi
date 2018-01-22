@@ -63,12 +63,28 @@ namespace Ombi.Notifications.Agents
             await Send(notification, settings);
         }
 
-        protected override async Task Issue(NotificationOptions model, MattermostNotificationSettings settings)
+        protected override async Task NewIssue(NotificationOptions model, MattermostNotificationSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Mattermost, NotificationType.Issue, model);
             if (parsed.Disabled)
             {
                 Logger.LogInformation($"Template {NotificationType.Issue} is disabled for {NotificationAgent.Mattermost}");
+                return;
+            }
+            var notification = new NotificationMessage
+            {
+                Message = parsed.Message,
+            };
+            notification.Other.Add("image", parsed.Image);
+            await Send(notification, settings);
+        }
+
+        protected override async Task IssueResolved(NotificationOptions model, MattermostNotificationSettings settings)
+        {
+            var parsed = await LoadTemplate(NotificationAgent.Mattermost, NotificationType.IssueResolved, model);
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.IssueResolved} is disabled for {NotificationAgent.Mattermost}");
                 return;
             }
             var notification = new NotificationMessage

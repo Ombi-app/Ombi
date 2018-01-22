@@ -16,6 +16,7 @@ using Ombi.Helpers;
 using Ombi.Models;
 using Ombi.Notifications.Models;
 using Ombi.Store.Entities;
+using StackExchange.Profiling.Helpers;
 
 namespace Ombi.Controllers
 {
@@ -212,6 +213,19 @@ namespace Ombi.Controllers
 
             issue.Status = model.Status;
             await _issues.SaveChangesAsync();
+
+            var notificationModel = new NotificationOptions
+            {
+                RequestId = 0,
+                DateTime = DateTime.Now,
+                NotificationType = NotificationType.Issue,
+                RequestType = issue.RequestType,
+                Recipient = !string.IsNullOrEmpty(issue.UserReported?.Email) ? issue.UserReported.Email : string.Empty,
+                AdditionalInformation = $"{issue.Subject} | {issue.Description}"
+            };
+
+            BackgroundJob.Enqueue(() => _notification.Publish(notificationModel));
+
 
             return true;
         }

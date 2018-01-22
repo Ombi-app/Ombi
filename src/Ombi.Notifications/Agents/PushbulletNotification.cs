@@ -58,12 +58,27 @@ namespace Ombi.Notifications.Agents
             await Send(notification, settings);
         }
 
-        protected override async Task Issue(NotificationOptions model, PushbulletSettings settings)
+        protected override async Task NewIssue(NotificationOptions model, PushbulletSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.Issue, model);
             if (parsed.Disabled)
             {
                 Logger.LogInformation($"Template {NotificationType.Issue} is disabled for {NotificationAgent.Pushbullet}");
+                return;
+            }
+            var notification = new NotificationMessage
+            {
+                Message = parsed.Message,
+            };
+            await Send(notification, settings);
+        }
+
+        protected override async Task IssueResolved(NotificationOptions model, PushbulletSettings settings)
+        {
+            var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.IssueResolved, model);
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.IssueResolved} is disabled for {NotificationAgent.Pushbullet}");
                 return;
             }
             var notification = new NotificationMessage

@@ -92,7 +92,7 @@ namespace Ombi.Notifications.Agents
             await Send(message, settings);
         }
 
-        protected override async Task Issue(NotificationOptions model, EmailNotificationSettings settings)
+        protected override async Task NewIssue(NotificationOptions model, EmailNotificationSettings settings)
         {
             var message = await LoadTemplate(NotificationType.Issue, model, settings);
             if (message == null)
@@ -101,6 +101,23 @@ namespace Ombi.Notifications.Agents
             }
 
             var plaintext = await LoadPlainTextMessage(NotificationType.Issue, model, settings);
+            message.Other.Add("PlainTextBody", plaintext);
+
+            // Issues should be sent to admin
+            message.To = settings.AdminEmail;
+
+            await Send(message, settings);
+        }
+
+        protected override async Task IssueResolved(NotificationOptions model, EmailNotificationSettings settings)
+        {
+            var message = await LoadTemplate(NotificationType.IssueResolved, model, settings);
+            if (message == null)
+            {
+                return;
+            }
+
+            var plaintext = await LoadPlainTextMessage(NotificationType.IssueResolved, model, settings);
             message.Other.Add("PlainTextBody", plaintext);
 
             // Issues should be sent to admin

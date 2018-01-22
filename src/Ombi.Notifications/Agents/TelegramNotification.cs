@@ -52,12 +52,27 @@ namespace Ombi.Notifications.Agents
             await Send(notification, settings);
         }
 
-        protected override async Task Issue(NotificationOptions model, TelegramSettings settings)
+        protected override async Task NewIssue(NotificationOptions model, TelegramSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Telegram, NotificationType.Issue, model);
             if (parsed.Disabled)
             {
                 Logger.LogInformation($"Template {NotificationType.Issue} is disabled for {NotificationAgent.Telegram}");
+                return;
+            }
+            var notification = new NotificationMessage
+            {
+                Message = parsed.Message,
+            };
+            await Send(notification, settings);
+        }
+
+        protected override async Task IssueResolved(NotificationOptions model, TelegramSettings settings)
+        {
+            var parsed = await LoadTemplate(NotificationAgent.Telegram, NotificationType.IssueResolved, model);
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.IssueResolved} is disabled for {NotificationAgent.Telegram}");
                 return;
             }
             var notification = new NotificationMessage

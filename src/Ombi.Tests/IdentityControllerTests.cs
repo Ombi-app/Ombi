@@ -82,7 +82,7 @@ namespace Ombi.Tests
             _userManager = _serviceProvider.GetRequiredService<OmbiUserManager>();
             
             Controller = new IdentityController(_userManager, _mapper.Object, _serviceProvider.GetService<RoleManager<IdentityRole>>(), _emailProvider.Object,
-                _emailSettings.Object, _customizationSettings.Object,_welcomeEmail.Object, null, null, null, null, null);
+                _emailSettings.Object, _customizationSettings.Object,_welcomeEmail.Object, null, null, null, null, null, null, null, null);
         }
 
         private OmbiUserManager _userManager;

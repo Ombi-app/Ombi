@@ -102,10 +102,6 @@ namespace Ombi.Store.Context
 
             //Check if templates exist
             var templates = NotificationTemplates.ToList();
-            //if (templates.Any())
-            //{
-            //    return;
-            //}
 
             var allAgents = Enum.GetValues(typeof(NotificationAgent)).Cast<NotificationAgent>().ToList();
             var allTypes = Enum.GetValues(typeof(NotificationType)).Cast<NotificationType>().ToList();
@@ -162,8 +158,6 @@ namespace Ombi.Store.Context
                                 Enabled = true,
                             };
                             break;
-                        case NotificationType.AdminNote:
-                            continue;
                         case NotificationType.Test:
                             continue;
                         case NotificationType.RequestDeclined:
@@ -184,6 +178,16 @@ namespace Ombi.Store.Context
                                 NotificationType = notificationType,
                                 Message = "Hello! You have been invited to use {ApplicationName}! You can login here: {ApplicationUrl}",
                                 Subject = "Invite to {ApplicationName}",
+                                Agent = agent,
+                                Enabled = true,
+                            };
+                            break;
+                        case NotificationType.IssueResolved:
+                            notificationToAdd = new NotificationTemplates
+                            {
+                                NotificationType = notificationType,
+                                Message = "Hello {RequestedUser} Your issue for {Title} has now been resolved.",
+                                Subject = "{ApplicationName}: Issue has been resolved for {Title}!",
                                 Agent = agent,
                                 Enabled = true,
                             };

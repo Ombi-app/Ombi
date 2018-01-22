@@ -68,12 +68,28 @@ namespace Ombi.Notifications.Agents
             await Send(notification, settings);
         }
 
-        protected override async Task Issue(NotificationOptions model, DiscordNotificationSettings settings)
+        protected override async Task NewIssue(NotificationOptions model, DiscordNotificationSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.Issue, model);
             if (parsed.Disabled)
             {
                 Logger.LogInformation($"Template {NotificationType.Issue} is disabled for {NotificationAgent.Discord}");
+                return;
+            }
+            var notification = new NotificationMessage
+            {
+                Message = parsed.Message,
+            };
+            notification.Other.Add("image", parsed.Image);
+            await Send(notification, settings);
+        }
+
+        protected override async Task IssueResolved(NotificationOptions model, DiscordNotificationSettings settings)
+        {
+            var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.IssueResolved, model);
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.IssueResolved} is disabled for {NotificationAgent.Discord}");
                 return;
             }
             var notification = new NotificationMessage

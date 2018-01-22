@@ -59,12 +59,27 @@ namespace Ombi.Notifications.Agents
             await Send(notification, settings);
         }
 
-        protected override async Task Issue(NotificationOptions model, PushoverSettings settings)
+        protected override async Task NewIssue(NotificationOptions model, PushoverSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Pushover, NotificationType.Issue, model);
             if (parsed.Disabled)
             {
                 Logger.LogInformation($"Template {NotificationType.Issue} is disabled for {NotificationAgent.Pushover}");
+                return;
+            }
+            var notification = new NotificationMessage
+            {
+                Message = parsed.Message,
+            };
+            await Send(notification, settings);
+        }
+
+        protected override async Task IssueResolved(NotificationOptions model, PushoverSettings settings)
+        {
+            var parsed = await LoadTemplate(NotificationAgent.Pushover, NotificationType.IssueResolved, model);
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.IssueResolved} is disabled for {NotificationAgent.Pushover}");
                 return;
             }
             var notification = new NotificationMessage
