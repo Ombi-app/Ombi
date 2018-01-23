@@ -77,6 +77,7 @@ namespace Ombi.Api
                     _handler = await GetHandler();
                 }
                 _client = new HttpClient(_handler);
+                _client.DefaultRequestHeaders.Add("User-Agent","Ombi");
             }
         }
 
