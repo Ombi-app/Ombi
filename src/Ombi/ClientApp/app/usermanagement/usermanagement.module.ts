@@ -16,6 +16,8 @@ import { IdentityService } from "../services";
 
 import { AuthGuard } from "../auth/auth.guard";
 
+import { OrderModule } from "ngx-order-pipe";
+
 const routes: Routes = [
     { path: "", component: UserManagementComponent, canActivate: [AuthGuard] },
     { path: "add", component: UserManagementAddComponent, canActivate: [AuthGuard] },
@@ -34,6 +36,7 @@ const routes: Routes = [
         PipeModule,
         ConfirmDialogModule,
         TooltipModule,
+        OrderModule,
     ],
     declarations: [
         UserManagementComponent,

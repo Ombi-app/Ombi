@@ -13,6 +13,9 @@ export class UserManagementComponent implements OnInit {
     public emailSettings: IEmailNotificationSettings; 
     public customizationSettings: ICustomizationSettings;
 
+    public order: string = "u.userName";
+    public reverse = false;
+
     constructor(private readonly identityService: IdentityService,
                 private readonly settingsService: SettingsService,
                 private readonly notificationService: NotificationService) { }
@@ -46,4 +49,12 @@ export class UserManagementComponent implements OnInit {
             user.checked = this.checkAll;
         });
     }
+    
+    public setOrder(value: string) {
+        if (this.order === value) {
+          this.reverse = !this.reverse;
+        }
+    
+        this.order = value;
+      }
 }
