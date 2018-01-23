@@ -2,14 +2,15 @@
 {
     public enum NotificationType
     {
-        NewRequest,
-        Issue,
-        IssueResolved,
-        RequestAvailable,
-        RequestApproved,
-        Test,
-        RequestDeclined,
-        ItemAddedToFaultQueue,
-        WelcomeEmail
+        NewRequest = 0,
+        Issue = 1,
+        RequestAvailable = 2,
+        RequestApproved = 3,
+        AdminNote = 4,
+        Test = 5,
+        RequestDeclined = 6,
+        ItemAddedToFaultQueue = 7,
+        WelcomeEmail = 8,
+        IssueResolved = 9,
     }
 }
