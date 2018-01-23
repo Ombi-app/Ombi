@@ -12,15 +12,15 @@
   "Common": {
     "ContinueButton": "Weiter",
     "Available": "Verfügbar",
-    "NotAvailable": "Not Available",
+    "NotAvailable": "Nicht verfügbar",
     "ProcessingRequest": "Anfrage wird bearbeitet",
     "PendingApproval": "Genehmigung ausstehend",
-    "RequestDenied": "Request Denied",
+    "RequestDenied": "Anfrage abgelehnt",
     "NotRequested": "Nicht angefragt",
     "Requested": "Angefordert",
     "Request": "Anfrage",
-    "Denied": "Denied",
-    "Approve": "Approve",
+    "Denied": "Abgelehnt",
+    "Approve": "Genehmigen",
     "Errors": {
       "Validation": "Bitte überprüfen Sie die eingegebenen Werte"
     }
@@ -44,9 +44,9 @@
     "Search": "Suche",
     "Requests": "Anfragen",
     "UserManagement": "Benutzerverwaltung",
-    "Issues": "Issues",
+    "Issues": "Probleme",
     "Donate": "Spenden!",
-    "DonateLibraryMaintainer": "Donate to Library Maintainer",
+    "DonateLibraryMaintainer": "Spende sie an den Bibliotheks Betreuer",
     "DonateTooltip": "So überzeuge ich meine Frau, meine Freizeit mit der Entwicklung von Ombi zu verbringen ;)",
     "UpdateAvailableTooltip": "Update verfügbar!",
     "Settings": "Einstellungen",
@@ -61,9 +61,9 @@
       "Italian": "Italienisch",
       "Danish": "Dänisch",
       "Dutch": "Niederländisch",
-      "Norwegian": "Norwegian"
+      "Norwegian": "Norwegisch"
     },
-    "OpenMobileApp": "Open Mobile App"
+    "OpenMobileApp": "Mobile App"
   },
   "Search": {
     "Title": "Suche",
@@ -85,7 +85,7 @@
     }
   },
   "Requests": {
-    "Title": "Requests",
+    "Title": "Anfragen",
     "Paragraph": "Below you can see yours and all other requests, as well as their download and approval status.",
     "MoviesTab": "Movies",
     "TvTab": "TV Shows",
