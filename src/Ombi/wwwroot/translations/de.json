@@ -95,7 +95,7 @@
     "Denied": " Abgelehnt:",
     "ReleaseDate": "Veröffentlichungsdatum:",
     "RequestDate": "Datum der Anfrage:",
-    "QualityOverride": "Quality Override:",
+    "QualityOverride": "Qualitäts Überschreiben:",
     "RootFolderOverride": "Stammverzeichnis Überschreiben:",
     "ChangeRootFolder": "Stammordner ändern",
     "ChangeQualityProfile": "Qualitätsprofil ändern",
@@ -113,7 +113,7 @@
   "Issues": {
     "Title": "Probleme",
     "PendingTitle": "Ausstehende Probleme",
-    "InProgressTitle": "In Progress Issues",
+    "InProgressTitle": "Probleme in bearbeitung",
     "ResolvedTitle": "Behobene Probleme",
     "ColumnTitle": "Titel",
     "Category": "Kategorie",
@@ -131,8 +131,8 @@
   },
   "Filter": {
     "ClearFilter": "Filter zurücksetzen",
-    "FilterHeaderAvailability": "Availability",
+    "FilterHeaderAvailability": "Verfügbarkeit",
     "FilterHeaderRequestStatus": "Status",
-    "Approved": "Approved"
+    "Approved": "Bestätigt"
   }
 }
