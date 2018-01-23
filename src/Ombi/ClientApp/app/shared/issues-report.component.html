@@ -1,6 +1,7 @@
 <p-sidebar [(visible)]="visible" position="right" styleClass="ui-sidebar-md side-back" (onHide)="hide()">
     <div *ngIf="title">
 
+       
         <h3>Reporting an Issue for "{{title}}"</h3>
 
         <h4 *ngIf="issueCategory">Issue type: {{issueCategory.value}}</h4>

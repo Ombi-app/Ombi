@@ -421,6 +421,43 @@ $border-radius: 10px;
     margin-bottom: 10px;
 }
 
+.radio label {
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+    padding-left: 25px;
+    margin-right: 15px;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.radio label:before {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    position: absolute;
+    left: 0;
+    bottom: 1px;
+    border: 2px solid #eee;
+    border-radius: 3px;
+}
+
+.radio input[type=radio] {
+    display: none;
+}
+
+.radio input[type=radio]:checked + label:before {
+    content: "\2713";
+    font-size: 13px;
+    color: #fafafa;
+    text-align: center;
+    line-height: 13px;
+}
+
+
+
 .small-checkbox label:before {
     content: "";
     display: inline-block;
@@ -901,4 +938,8 @@ a > h4:hover {
             content: attr(data-label)
         }
     }
+}
+
+.searchWidth {
+    width: 94%;
 }

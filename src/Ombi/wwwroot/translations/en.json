@@ -12,6 +12,7 @@
   "Common": {
     "ContinueButton": "Continue",
     "Available": "Available",
+    "NotAvailable": "Not Available",
     "ProcessingRequest": "Processing Request",
     "PendingApproval": "Pending Approval",
     "RequestDenied":"Request Denied",
@@ -110,7 +111,9 @@
     "Season":"Season:",
     "GridTitle":"Title",
     "AirDate":"AirDate",
-    "GridStatus":"Status"
+    "GridStatus":"Status",
+    "ReportIssue":"Report Issue",
+    "Filter":"Filter"
   },
   "Issues":{
     "Title":"Issues",
@@ -130,5 +133,11 @@
     "Comments":"Comments",
     "WriteMessagePlaceholder":"Write your message here...",
     "ReportedBy":"Reported By"
+  },
+  "Filter":{
+    "ClearFilter":"Clear Filter",
+    "FilterHeaderAvailability":"Availability",
+    "FilterHeaderRequestStatus":"Status",
+    "Approved":"Approved"
   }
 }

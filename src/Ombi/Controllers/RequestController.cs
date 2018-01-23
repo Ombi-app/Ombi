@@ -328,40 +328,15 @@ namespace Ombi.Controllers
             return movies || tv;
         }
 
-
-        ///// <summary>
-        ///// Gets the specific grid model for the requests (for modelling the UI).
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpGet("tv/grid")]
-        //[ApiExplorerSettings(IgnoreApi = true)]
-        //public async Task<RequestGridModel<TvRequests>> GetTvRequestsGrid()
-        //{
-        //    return await GetGrid(TvRequestEngine);
-        //}
-
-        ///// <summary>
-        ///// Gets the specific grid model for the requests (for modelling the UI).
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpGet("movie/grid")]
-        //[ApiExplorerSettings(IgnoreApi = true)]
-        //public async Task<RequestGridModel<MovieRequests>> GetMovieRequestsGrid()
-        //{
-        //    return await GetGrid(MovieRequestEngine);
-        //}
-
-        //private async Task<RequestGridModel<T>> GetGrid<T>(IRequestEngine<T> engine) where T : BaseRequestModel
-        //{
-        //    var allRequests = await engine.GetRequests();
-        //    var r = allRequests.ToList();
-        //    var model = new RequestGridModel<T>
-        //    {
-        //        Available = r.Where(x => x.Available && !x.Approved),
-        //        Approved = r.Where(x => x.Approved && !x.Available),
-        //        New = r.Where(x => !x.Available && !x.Approved)
-        //    };
-        //    return model;
-        //}
+        /// <summary>
+        /// Returns a filtered list
+        /// </summary>
+        /// <param name="vm"></param>
+        /// <returns></returns>
+        [HttpPost("movie/filter")]
+        public IEnumerable<MovieRequests> Filter([FromBody] FilterViewModel vm)
+        {
+            return MovieRequestEngine.Filter(vm);
+        }
     }
 }

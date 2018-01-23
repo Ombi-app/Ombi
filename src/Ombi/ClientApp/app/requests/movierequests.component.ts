@@ -8,7 +8,7 @@ import { Subject } from "rxjs/Subject";
 import { AuthService } from "../auth/auth.service";
 import { NotificationService, RadarrService, RequestService } from "../services";
 
-import { IIssueCategory, IMovieRequests, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
+import { FilterType, IFilter, IIssueCategory, IMovieRequests, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
 
 @Component({
     selector: "movie-requests",
@@ -31,6 +31,10 @@ export class MovieRequestsComponent implements OnInit {
     public issueRequest: IMovieRequests;
     public issueProviderId: string;
     public issueCategorySelected: IIssueCategory;
+
+    public filterDisplay: boolean;
+    public filter: IFilter;
+    public filterType = FilterType;
 
     private currentlyLoaded: number;
     private amountToLoad: number;
@@ -62,6 +66,9 @@ export class MovieRequestsComponent implements OnInit {
         this.currentlyLoaded = 100;
         this.loadInit();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+        this.filter = {
+            availabilityFilter: FilterType.None,
+            statusFilter: FilterType.None};
     }
 
     public loadMore() {
@@ -137,6 +144,32 @@ export class MovieRequestsComponent implements OnInit {
 
     public ignore(event: any): void {
         event.preventDefault();
+    }
+
+    public clearFilter() {
+        this.filterDisplay = false;
+        this.filter.availabilityFilter = FilterType.None;
+        this.filter.statusFilter = FilterType.None;
+        
+        this.resetSearch();
+    }
+
+    public filterAvailability(filter: FilterType) {
+        this.filter.availabilityFilter = filter;
+        this.requestService.filterMovies(this.filter)
+        .subscribe(x => {
+            this.setOverrides(x);
+            this.movieRequests = x;
+        });
+    }
+
+    public filterStatus(filter: FilterType) {
+        this.filter.statusFilter = filter;
+        this.requestService.filterMovies(this.filter)
+        .subscribe(x => {
+            this.setOverrides(x);
+            this.movieRequests = x;
+        });
     }
 
     private loadRequests(amountToLoad: number, currentlyLoaded: number) {

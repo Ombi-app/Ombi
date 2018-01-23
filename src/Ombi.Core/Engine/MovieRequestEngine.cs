@@ -335,22 +335,41 @@ namespace Ombi.Core.Engine
             return new RequestEngineResult { Result = true, Message = $"{movieName} has been successfully added!" };
         }
 
-        public async Task<IEnumerable<MovieRequests>> GetApprovedRequests()
+        public IEnumerable<MovieRequests> Filter(FilterViewModel vm)
         {
-            var allRequests = MovieRepository.GetWithUser();
-            return await allRequests.Where(x => x.Approved && !x.Available).ToListAsync();
-        }
+            var requests = MovieRepository.GetWithUser();
+            switch (vm.AvailabilityFilter)
+            {
+                case FilterType.None:
+                    break;
+                case FilterType.Available:
+                    requests = requests.Where(x => x.Available);
+                    break;
+                case FilterType.NotAvailable:
+                    requests = requests.Where(x => !x.Available);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
-        public async Task<IEnumerable<MovieRequests>> GetNewRequests()
-        {
-            var allRequests = MovieRepository.GetWithUser();
-            return await allRequests.Where(x => !x.Approved && !x.Available).ToListAsync();
-        }
+            switch (vm.StatusFilter)
+            {
+                case FilterType.None:
+                    break;
+                case FilterType.Approved:
+                    requests = requests.Where(x => x.Approved);
+                    break;
+                case FilterType.Processing:
+                    requests = requests.Where(x => x.Approved && !x.Available);
+                    break;
+                case FilterType.PendingApproval:
+                    requests = requests.Where(x => !x.Approved && !x.Available && !(x.Denied ?? false));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
-        public async Task<IEnumerable<MovieRequests>> GetAvailableRequests()
-        {
-            var allRequests = MovieRepository.GetWithUser();
-            return await allRequests.Where(x => !x.Approved && x.Available).ToListAsync();
+            return requests;
         }
     }
 }

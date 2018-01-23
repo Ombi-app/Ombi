@@ -332,6 +332,10 @@ button.list-group-item:focus {
     box-shadow: 0px 0px 3.5em #000000;
 }
 
+.side-small {
+    width:20em $i;
+}
+
 .ui-widget-overlay .ui-sidebar-mask {
     background: black;
 }

@@ -115,3 +115,17 @@ export interface IEpisodesRequests {
 export interface IMovieRequestModel {
   theMovieDbId: number;
 }
+
+export interface IFilter {
+  availabilityFilter: FilterType;
+  statusFilter: FilterType;
+}
+
+export enum FilterType {
+  None = 0,
+  Available = 1,
+  NotAvailable = 2,
+  Approved = 3,
+  Processing = 4,
+  PendingApproval = 5,
+}

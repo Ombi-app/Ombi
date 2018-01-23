@@ -12,8 +12,8 @@ namespace Ombi.Notifications
 
         public void Setup(NotificationOptions opts, FullBaseRequest req, CustomizationSettings s)
         {
-            ApplicationUrl = s.ApplicationUrl;
-            ApplicationName = string.IsNullOrEmpty(s.ApplicationName) ? "Ombi" : s.ApplicationName;
+            ApplicationUrl = s?.ApplicationUrl;
+            ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
             RequestedUser = string.IsNullOrEmpty(req.RequestedUser.Alias)
                 ? req.RequestedUser.UserName
                 : req.RequestedUser.Alias;
@@ -29,8 +29,8 @@ namespace Ombi.Notifications
 
         public void Setup(NotificationOptions opts, ChildRequests req, CustomizationSettings s)
         {
-            ApplicationUrl = s.ApplicationUrl;
-            ApplicationName = string.IsNullOrEmpty(s.ApplicationName) ? "Ombi" : s.ApplicationName;
+            ApplicationUrl = s?.ApplicationUrl;
+            ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
             RequestedUser = string.IsNullOrEmpty(req.RequestedUser.Alias)
                 ? req.RequestedUser.UserName
                 : req.RequestedUser.Alias;
@@ -47,8 +47,8 @@ namespace Ombi.Notifications
 
         public void Setup(OmbiUser user, CustomizationSettings s)
         {
-            ApplicationUrl = s.ApplicationUrl;
-            ApplicationName = string.IsNullOrEmpty(s.ApplicationName) ? "Ombi" : s.ApplicationName;
+            ApplicationUrl = s?.ApplicationUrl;
+            ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
             RequestedUser = user.UserName;
         }
 
