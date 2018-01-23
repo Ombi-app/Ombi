@@ -12,6 +12,7 @@
   "Common": {
     "ContinueButton": "Fortsæt",
     "Available": "Tilgængelig",
+    "NotAvailable": "Not Available",
     "ProcessingRequest": "Behandler anmodning",
     "PendingApproval": "Afventer godkendelse",
     "RequestDenied": "Anmodning afvist",
@@ -105,7 +106,9 @@
     "Season": "Sæson:",
     "GridTitle": "Titel",
     "AirDate": "Sendt",
-    "GridStatus": "Status"
+    "GridStatus": "Status",
+    "ReportIssue": "Report Issue",
+    "Filter": "Filter"
   },
   "Issues": {
     "Title": "Problemer",
@@ -125,5 +128,11 @@
     "Comments": "Kommentarer",
     "WriteMessagePlaceholder": "Indtast din besked her...",
     "ReportedBy": "Anmeldt af"
+  },
+  "Filter": {
+    "ClearFilter": "Clear Filter",
+    "FilterHeaderAvailability": "Availability",
+    "FilterHeaderRequestStatus": "Status",
+    "Approved": "Approved"
   }
 }
