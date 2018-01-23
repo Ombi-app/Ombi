@@ -14,17 +14,17 @@
 
             <div class="col-md-1 col-md-push-9">
               <div *ngIf="isAdmin"> 
-                    <button *ngIf="child.canApprove && !child.approved" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> {{ 'Common.Approve' | translate }}</button>
-                    <button *ngIf="child.available" (click)="changeAvailability(child, false)" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change"><i class="fa fa-minus"></i> {{ 'Requests.MarkUnavailable' | translate }}</button>
-                    <button *ngIf="!child.available" (click)="changeAvailability(child, true)" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change"><i class="fa fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}</button>
+                    <button id="approveBtn" *ngIf="child.canApprove && !child.approved" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> {{ 'Common.Approve' | translate }}</button>
+                    <button id="unavailableBtn" *ngIf="child.available" (click)="changeAvailability(child, false)" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change"><i class="fa fa-minus"></i> {{ 'Requests.MarkUnavailable' | translate }}</button>
+                    <button id="availableBtn" *ngIf="!child.available" (click)="changeAvailability(child, true)" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change"><i class="fa fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}</button>
 
-                    <button *ngIf="!child.denied" type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> {{ 'Requests.Deny' | translate }}</button>
+                    <button id="denyBtn" *ngIf="!child.denied" type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> {{ 'Requests.Deny' | translate }}</button>
            
-                    <button type="button" (click)="removeRequest(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> {{ 'Requests.Remove' | translate }}</button>
+                    <button id="removeBtn" type="button" (click)="removeRequest(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> {{ 'Requests.Remove' | translate }}</button>
                 </div>
-                <div class="dropdown" *ngIf="issueCategories && issuesEnabled">
+                <div class="dropdown" *ngIf="issueCategories && issuesEnabled" id="issueBtn">
                         <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            <i class="fa fa-plus"></i> Report Issue
+                            <i class="fa fa-plus"></i> {{ 'Requests.ReportIssue' | translate }}
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">

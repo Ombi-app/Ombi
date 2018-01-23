@@ -80,14 +80,14 @@
             </div>
             <div class="col-sm-3 col-sm-push-3  small-padding">
                 <div *ngIf="isAdmin">
-                    <div *ngIf="!request.approved">
+                    <div *ngIf="!request.approved" id="approveBtn">
                         <form>
                             <button (click)="approve(request)" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit">
                                 <i class="fa fa-plus"></i> {{ 'Common.Approve' | translate }}</button>
                         </form>
 
                         <!--Radarr Root Folder-->
-                        <div *ngIf="radarrRootFolders" class="btn-group btn-split">
+                        <div *ngIf="radarrRootFolders" class="btn-group btn-split" id="rootFolderBtn">
                             <button type="button" class="btn btn-sm btn-warning-outline">
                                 <i class="fa fa-plus"></i> {{ 'Requests.ChangeRootFolder' | translate }}</button>
                             <button type="button" class="btn btn-warning-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -102,7 +102,7 @@
                         </div>
 
                         <!--Radarr Quality Profiles -->
-                        <div *ngIf="radarrProfiles" class="btn-group btn-split">
+                        <div *ngIf="radarrProfiles" class="btn-group btn-split" id="changeQualityBtn">
                             <button type="button" class="btn btn-sm btn-warning-outline">
                                 <i class="fa fa-plus"></i> {{ 'Requests.ChangeQualityProfile' | translate }}</button>
                             <button type="button" class="btn btn-warning-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -116,20 +116,20 @@
                             </ul>
                         </div>
 
-                        <div *ngIf="!request.denied">
+                        <div *ngIf="!request.denied" id="denyBtn">
                             <button type="button" (click)="deny(request)" class="btn btn-sm btn-danger-outline deny">
                                 <i class="fa fa-times"></i> {{ 'Requests.Deny' | translate }}</button>
                         </div>
                     </div>
-                    <form>
+                    <form id="removeBtn">
                         <button (click)="removeRequest(request)" style="text-align: right" class="btn btn-sm btn-danger-outline delete">
                             <i class="fa fa-minus"></i> {{ 'Requests.Remove' | translate }}</button>
                     </form>
 
-                    <form>
-                        <button *ngIf="request.available" (click)="changeAvailability(request, false)" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change">
+                    <form id="markBtnGroup">
+                        <button id="unavailableBtn" *ngIf="request.available" (click)="changeAvailability(request, false)" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change">
                             <i class="fa fa-minus"></i> {{ 'Requests.MarkUnavailable' | translate }}</button>
-                        <button *ngIf="!request.available" (click)="changeAvailability(request, true)" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change">
+                        <button id="availableBtn" *ngIf="!request.available" (click)="changeAvailability(request, true)" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change">
                             <i class="fa fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}</button>
                     </form>
 
@@ -137,7 +137,7 @@
 
                 </div>
 
-                <div class="dropdown" *ngIf="issueCategories && issuesEnabled">
+                <div class="dropdown" *ngIf="issueCategories && issuesEnabled" id="issuesBtn">
                     <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="true">
                         <i class="fa fa-plus"></i> {{ 'Requests.ReportIssue' | translate }}
