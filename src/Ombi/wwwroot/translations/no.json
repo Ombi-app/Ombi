@@ -12,6 +12,7 @@
   "Common": {
     "ContinueButton": "Gå videre",
     "Available": "Tilgjengelig",
+    "NotAvailable": "Not Available",
     "ProcessingRequest": "Behandler forespørsel",
     "PendingApproval": "Venter på godkjenning",
     "RequestDenied": "Forespørsel avslått",
@@ -45,6 +46,7 @@
     "UserManagement": "Brukeradministrasjon",
     "Issues": "Mangler",
     "Donate": "Doner!",
+    "DonateLibraryMaintainer": "Doner til vedlikeholderen av biblioteket",
     "DonateTooltip": "Dette er hvordan jeg overbevise min kone til å la meg bruke min fritid til å utvikle Ombi ;)",
     "UpdateAvailableTooltip": "Ny opdatering venter!",
     "Settings": "Innstillinger",
@@ -104,7 +106,9 @@
     "Season": "Sesong:",
     "GridTitle": "Tittel",
     "AirDate": "Sendedato",
-    "GridStatus": "Status"
+    "GridStatus": "Status",
+    "ReportIssue": "Report Issue",
+    "Filter": "Filter"
   },
   "Issues": {
     "Title": "Mangler",
@@ -124,5 +128,11 @@
     "Comments": "Kommentarer",
     "WriteMessagePlaceholder": "Skriv meldingen din her...",
     "ReportedBy": "Rapportert av"
+  },
+  "Filter": {
+    "ClearFilter": "Clear Filter",
+    "FilterHeaderAvailability": "Availability",
+    "FilterHeaderRequestStatus": "Status",
+    "Approved": "Approved"
   }
 }
