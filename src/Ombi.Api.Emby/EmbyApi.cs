@@ -51,6 +51,7 @@ namespace Ombi.Api.Emby
             var body = new
             {
                 username,
+                pw = password,
                 password = password.GetSha1Hash().ToLower(),
                 passwordMd5 = password.CalcuateMd5Hash()
             };
