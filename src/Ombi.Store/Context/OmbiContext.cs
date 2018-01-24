@@ -192,6 +192,8 @@ namespace Ombi.Store.Context
                                 Enabled = true,
                             };
                             break;
+                        case NotificationType.AdminNote:
+                            continue;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
