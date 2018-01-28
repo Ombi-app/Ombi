@@ -12,7 +12,7 @@
   "Common": {
     "ContinueButton": "Gå videre",
     "Available": "Tilgjengelig",
-    "NotAvailable": "Not Available",
+    "NotAvailable": "Ikke tilgjengelig",
     "ProcessingRequest": "Behandler forespørsel",
     "PendingApproval": "Venter på godkjenning",
     "RequestDenied": "Forespørsel avslått",
@@ -107,7 +107,7 @@
     "GridTitle": "Tittel",
     "AirDate": "Sendedato",
     "GridStatus": "Status",
-    "ReportIssue": "Report Issue",
+    "ReportIssue": "Rapportér en feil",
     "Filter": "Filter"
   },
   "Issues": {
@@ -130,9 +130,9 @@
     "ReportedBy": "Rapportert av"
   },
   "Filter": {
-    "ClearFilter": "Clear Filter",
-    "FilterHeaderAvailability": "Availability",
+    "ClearFilter": "Tøm filter",
+    "FilterHeaderAvailability": "Tilgjengelighet",
     "FilterHeaderRequestStatus": "Status",
-    "Approved": "Approved"
+    "Approved": "Godkjent"
   }
 }
