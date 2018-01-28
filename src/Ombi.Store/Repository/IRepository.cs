@@ -22,5 +22,7 @@ namespace Ombi.Store.Repository
         IIncludableQueryable<TEntity, TProperty> Include<TEntity, TProperty>(
             IQueryable<TEntity> source, Expression<Func<TEntity, TProperty>> navigationPropertyPath)
             where TEntity : class;
+
+        Task ExecuteSql(string sql);
     }
 }

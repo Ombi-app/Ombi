@@ -72,6 +72,11 @@ namespace Ombi.Store.Repository
             return source.Include(navigationPropertyPath);
         }
 
+        public async Task ExecuteSql(string sql)
+        {
+            await _ctx.Database.ExecuteSqlCommandAsync(sql);
+        }
+
 
         private bool _disposed;
         // Protected implementation of Dispose pattern.
