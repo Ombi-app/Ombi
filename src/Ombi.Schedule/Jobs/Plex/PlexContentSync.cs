@@ -122,7 +122,12 @@ namespace Ombi.Schedule.Jobs.Plex
                             }
 
                             // Do we already have this item?
-                            var existingContent = await Repo.GetByKey(show.ratingKey);
+                            // Let's try and match
+                            var existingContent = await Repo.GetFirstContentByCustom(x => x.Title == show.title 
+                                                        && x.ReleaseYear == show.year.ToString()
+                                                        && x.Type == PlexMediaTypeEntity.Show);
+                            // The ratingKey keeps changing...
+                            //var existingContent = await Repo.GetByKey(show.ratingKey);
                             if (existingContent != null)
                             {
                                 try
@@ -197,7 +202,12 @@ namespace Ombi.Schedule.Jobs.Plex
                         foreach (var movie in content?.Metadata ?? new Metadata[] { })
                         {
                             // Let's check if we have this movie
-                            var existing = await Repo.GetByKey(movie.ratingKey);
+
+                            var existing = await Repo.GetFirstContentByCustom(x => x.Title == movie.title
+                                                                                          && x.ReleaseYear == movie.year.ToString()
+                                                                                          && x.Type == PlexMediaTypeEntity.Movie);
+                            // The rating key keeps changing
+                            //var existing = await Repo.GetByKey(movie.ratingKey);
                             if (existing != null)
                             {
                                 continue;

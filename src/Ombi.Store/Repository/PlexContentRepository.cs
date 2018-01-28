@@ -25,8 +25,10 @@
 //  ************************************************************************/
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Store.Context;
@@ -72,6 +74,16 @@ namespace Ombi.Store.Repository
         public async Task<PlexServerContent> GetByKey(int key)
         {
             return await Db.PlexServerContent.Include(x => x.Seasons).FirstOrDefaultAsync(x => x.Key == key);
+        }
+
+        public IEnumerable<PlexServerContent> GetWhereContentByCustom(Expression<Func<PlexServerContent, bool>> predicate)
+        {
+            return Db.PlexServerContent.Where(predicate);
+        }
+
+        public async Task<PlexServerContent> GetFirstContentByCustom(Expression<Func<PlexServerContent, bool>>  predicate)
+        {
+            return await Db.PlexServerContent.FirstOrDefaultAsync(predicate);
         }
 
         public async Task Update(PlexServerContent existingContent)
