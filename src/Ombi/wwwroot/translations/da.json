@@ -12,7 +12,7 @@
   "Common": {
     "ContinueButton": "Fortsæt",
     "Available": "Tilgængelig",
-    "NotAvailable": "Not Available",
+    "NotAvailable": "Ikke tilgængelig",
     "ProcessingRequest": "Behandler anmodning",
     "PendingApproval": "Afventer godkendelse",
     "RequestDenied": "Anmodning afvist",
@@ -21,7 +21,7 @@
     "Request": "Anmod",
     "Denied": "Afvist",
     "Approve": "Godkendt",
-    "PartlyAvailable": "Partly Available",
+    "PartlyAvailable": "Delvist tilgængelig",
     "Errors": {
       "Validation": "Tjek venligst dine indtastede værdier"
     }
@@ -85,16 +85,16 @@
       "Trailer": "Trailer"
     },
     "TvShows": {
-      "Popular": "Popular",
-      "Trending": "Trending",
-      "MostWatched": "Most Watched",
-      "MostAnticipated": "Most Anticipated",
-      "Results": "Results",
-      "AirDate": "Air Date:",
-      "AllSeasons": "All Seasons",
-      "FirstSeason": "First Season",
-      "LatestSeason": "Latest Season",
-      "Select": "Select ..."
+      "Popular": "Populære",
+      "Trending": "Aktuelle",
+      "MostWatched": "Mest sete",
+      "MostAnticipated": "Mest ventede",
+      "Results": "Resultat",
+      "AirDate": "Sendt den:",
+      "AllSeasons": "Alle sæsoner",
+      "FirstSeason": "Første sæson",
+      "LatestSeason": "Seneste sæson",
+      "Select": "Vælg ..."
     }
   },
   "Requests": {
@@ -120,7 +120,7 @@
     "GridTitle": "Titel",
     "AirDate": "Sendt",
     "GridStatus": "Status",
-    "ReportIssue": "Report Issue",
+    "ReportIssue": "Rapportér problem",
     "Filter": "Filter"
   },
   "Issues": {
@@ -143,9 +143,9 @@
     "ReportedBy": "Anmeldt af"
   },
   "Filter": {
-    "ClearFilter": "Clear Filter",
-    "FilterHeaderAvailability": "Availability",
+    "ClearFilter": "Nulstil filter",
+    "FilterHeaderAvailability": "Tilgængelighed",
     "FilterHeaderRequestStatus": "Status",
-    "Approved": "Approved"
+    "Approved": "Godkendt"
   }
 }
