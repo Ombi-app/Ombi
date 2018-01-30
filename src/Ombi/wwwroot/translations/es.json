@@ -21,6 +21,7 @@
     "Request": "Solicitar",
     "Denied": "Denegado",
     "Approve": "Aprobar",
+    "PartlyAvailable": "Partly Available",
     "Errors": {
       "Validation": "Por favor, comprueba los datos introducidos"
     }
@@ -82,6 +83,18 @@
       "NowPlayingMovies": "Películas en cartelera",
       "HomePage": "Inicio",
       "Trailer": "Tráiler"
+    },
+    "TvShows": {
+      "Popular": "Popular",
+      "Trending": "Trending",
+      "MostWatched": "Most Watched",
+      "MostAnticipated": "Most Anticipated",
+      "Results": "Results",
+      "AirDate": "Air Date:",
+      "AllSeasons": "All Seasons",
+      "FirstSeason": "First Season",
+      "LatestSeason": "Latest Season",
+      "Select": "Select ..."
     }
   },
   "Requests": {
