@@ -21,6 +21,7 @@
     "Request": "Anmod",
     "Denied": "Afvist",
     "Approve": "Godkendt",
+    "PartlyAvailable": "Partly Available",
     "Errors": {
       "Validation": "Tjek venligst dine indtastede værdier"
     }
@@ -82,6 +83,18 @@
       "NowPlayingMovies": "Aktuelle film",
       "HomePage": "Startside",
       "Trailer": "Trailer"
+    },
+    "TvShows": {
+      "Popular": "Popular",
+      "Trending": "Trending",
+      "MostWatched": "Most Watched",
+      "MostAnticipated": "Most Anticipated",
+      "Results": "Results",
+      "AirDate": "Air Date:",
+      "AllSeasons": "All Seasons",
+      "FirstSeason": "First Season",
+      "LatestSeason": "Latest Season",
+      "Select": "Select ..."
     }
   },
   "Requests": {
