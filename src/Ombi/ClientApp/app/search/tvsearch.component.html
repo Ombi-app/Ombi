@@ -5,21 +5,21 @@
         <div class="input-group-addon right-radius">
             <div class="btn-group">
                 <a href="#" class="btn btn-sm btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    Suggestions
+                    {{ 'Search.Suggestions' | translate }} 
                     <i class="fa fa-chevron-down"></i>
                 </a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a (click)="popularShows()">Popular Shows</a>
+                        <a (click)="popularShows()">{{ 'Search.TvShows.Popular' | translate }} </a>
                     </li>
                     <li>
-                        <a (click)="trendingShows()">Trending Shows</a>
+                        <a (click)="trendingShows()">{{ 'Search.TvShows.Trending' | translate }}</a>
                     </li>
                     <li>
-                        <a (click)="mostWatchedShows()">Most Watched Shows</a>
+                        <a (click)="mostWatchedShows()">{{ 'Search.TvShows.MostWatched' | translate }}</a>
                     </li>
                     <li>
-                        <a (click)="anticipatedShows()">Most Anticipated Shows</a>
+                        <a (click)="anticipatedShows()">{{ 'Search.TvShows.MostAnticipated' | translate }}</a>
                     </li>
                 </ul>
             </div>
@@ -40,12 +40,12 @@
 
         <div *ngIf="searchApplied && tvResults?.length <= 0" class='no-search-results'>
             <i class='fa fa-film no-search-results-icon'></i>
-            <div class='no-search-results-text'>Sorry, we didn't find any results!</div>
+            <div class='no-search-results-text'>{{ 'Search.NoResults' | translate }}</div>
         </div>
         <p-treeTable [value]="tvResults">
             <p-column>
                 <ng-template let-col let-node="rowData" pTemplate="header">
-                    Results
+                    {{ 'Search.TvShows.Results' | translate }}
                 </ng-template>
                 <ng-template let-col let-node="rowData" pTemplate="body">
                     <!--This is the section that holds the parent level search results set-->
@@ -67,21 +67,21 @@
 
                                     </a>
                                     <span class="tags">
-                                            <a *ngIf="node.data.homepage" id="homepageLabel" href="{{node.data.homepage}}" target="_blank"><span class="label label-info" >HomePage</span></a>
+                                            <a *ngIf="node.data.homepage" id="homepageLabel" href="{{node.data.homepage}}" target="_blank"><span class="label label-info" >{{ 'Search.Movies.HomePage' | translate }}</span></a>
   
-                                            <a *ngIf="node.data.trailer"  id="trailerLabel" href="{{node.data.trailer}}" target="_blank"><span class="label label-info">Trailer</span></a>
+                                            <a *ngIf="node.data.trailer"  id="trailerLabel" href="{{node.data.trailer}}" target="_blank"><span class="label label-info">{{ 'Search.Movies.Trailer' | translate }}</span></a>
 
                                     <span *ngIf="node.data.status" class="label label-primary" id="statusLabel" target="_blank">{{node.data.status}}</span>
 
 
-                                    <span *ngIf="node.data.firstAired" class="label label-info" target="_blank" id="airDateLabel">Air Date: {{node.data.firstAired | date: 'dd/MM/yyyy'}}</span>
+                                    <span *ngIf="node.data.firstAired" class="label label-info" target="_blank" id="airDateLabel">{{ 'Search.TvShows.AirDate' | translate }} {{node.data.firstAired | date: 'dd/MM/yyyy'}}</span>
 
                                     <span *ngIf="node.data.network" class="label label-info" id="networkLabel" target="_blank">{{node.data.network}}</span>
 
                     
-                                        <span *ngIf="node.data.available" class="label label-success" id="availableLabel">Available</span>
+                                        <span *ngIf="node.data.available" class="label label-success" id="availableLabel">{{ 'Common.Available' | translate }}</span>
                                     
-                                        <span *ngIf="node.data.partlyAvailable" class="label label-warning" id="partiallyAvailableLabel">Partially Available</span>
+                                        <span *ngIf="node.data.partlyAvailable" class="label label-warning" id="partiallyAvailableLabel">{{ 'Common.PartlyAvailable' | translate }}</span>
                                    
 
                                  
@@ -97,21 +97,21 @@
                             <div class="col-sm-2 small-padding">
                                 <div *ngIf="!node.data.fullyAvailable" class="dropdown">
                                     <button class="btn btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        <i class="fa fa-plus"></i> Request
+                                        <i class="fa fa-plus"></i> {{ 'Common.Request' | translate }}
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                                         <li>
-                                            <a href="#" (click)="allSeasons(node.data, $event)">All Seasons</a>
+                                            <a href="#" (click)="allSeasons(node.data, $event)">{{ 'Search.TvShows.AllSeasons' | translate }}</a>
                                         </li>
                                         <li>
-                                            <a href="#" (click)="firstSeason(node.data, $event)">First Season</a>
+                                            <a href="#" (click)="firstSeason(node.data, $event)">{{ 'Search.TvShows.FirstSeason' | translate }}</a>
                                         </li>
                                         <li>
-                                            <a href="#" (click)="latestSeason(node.data, $event)">Latest Season</a>
+                                            <a href="#" (click)="latestSeason(node.data, $event)">{{ 'Search.TvShows.LatestSeason' | translate }}</a>
                                         </li>
                                         <li>
-                                            <a href="#" (click)="openClosestTab($event)">Select ...</a>
+                                            <a href="#" (click)="openClosestTab($event)">{{ 'Search.TvShows.Select' | translate }}</a>
                                         </li>
                                     </ul>
                                 </div>

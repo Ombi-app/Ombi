@@ -21,6 +21,7 @@
     "Request": "Request",
     "Denied":"Denied",
     "Approve":"Approve",
+    "PartlyAvailable": "Partly Available",
     "Errors": {
       "Validation": "Please check your entered values"
     }
@@ -86,6 +87,18 @@
       "NowPlayingMovies": "Now Playing Movies",
       "HomePage": "Home Page",
       "Trailer": "Trailer"
+    },
+    "TvShows": {
+      "Popular":"Popular",
+      "Trending":"Trending",
+      "MostWatched":"Most Watched",
+      "MostAnticipated":"Most Anticipated",
+      "Results":"Results",
+      "AirDate":"Air Date:",
+      "AllSeasons":"All Seasons",
+      "FirstSeason":"First Season",
+      "LatestSeason":"Latest Season",
+      "Select":"Select ..."
     }
   },
   "Requests": {
