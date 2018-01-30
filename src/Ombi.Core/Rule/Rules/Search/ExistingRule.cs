@@ -83,11 +83,11 @@ namespace Ombi.Core.Rule.Rules.Search
                     }
                 }
 
-                if (request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.All(e => e.Approved)))
+                if (request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.All(e => e.Available)))
                 {
                     request.FullyAvailable = true;
                 }
-                if (request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.Any(e => e.Approved)))
+                if (request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.Any(e => e.Available)))
                 {
                     request.PartlyAvailable = true;
                 }

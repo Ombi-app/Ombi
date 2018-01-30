@@ -79,12 +79,10 @@
                                     <span *ngIf="node.data.network" class="label label-info" id="networkLabel" target="_blank">{{node.data.network}}</span>
 
                     
-                                    <ng-template [ngIf]="node.data.available">
-                                        <span class="label label-success" id="availableLabel">Available</span>
-                                    </ng-template>
-                                    <ng-template [ngIf]="node.data.partlyAvailable">
-                                        <span class="label label-warning" id="partiallyAvailableLabel">Partially Available</span>
-                                    </ng-template>
+                                        <span *ngIf="node.data.available" class="label label-success" id="availableLabel">Available</span>
+                                    
+                                        <span *ngIf="node.data.partlyAvailable" class="label label-warning" id="partiallyAvailableLabel">Partially Available</span>
+                                   
 
                                  
                                 </span>

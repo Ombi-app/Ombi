@@ -1,13 +1,11 @@
-﻿import { Component, Input, OnDestroy, OnInit} from "@angular/core";
-import { Subject } from "rxjs/Subject";
-
+﻿import { Component, Input, OnInit} from "@angular/core";
 import "rxjs/add/operator/takeUntil";
 
 import { NotificationService } from "../services";
 import { RequestService } from "../services";
 import { SearchService } from "../services";
 
-import { IRequestEngineResult } from "../interfaces";
+import { INewSeasonRequests, IRequestEngineResult } from "../interfaces";
 import { IEpisodesRequests } from "../interfaces";
 import { ISearchTvResult } from "../interfaces";
 
@@ -16,20 +14,18 @@ import { ISearchTvResult } from "../interfaces";
     templateUrl: "./seriesinformation.component.html",
     styleUrls: ["./seriesinformation.component.scss"],
 })
-export class SeriesInformationComponent implements OnInit, OnDestroy {
+export class SeriesInformationComponent implements OnInit {
 
     public result: IRequestEngineResult;
     public series: ISearchTvResult;
     public requestedEpisodes: IEpisodesRequests[] = [];
 
     @Input() private seriesId: number;
-    private subscriptions = new Subject<void>();
 
     constructor(private searchService: SearchService, private requestService: RequestService, private notificationService: NotificationService) { }
 
     public ngOnInit() {
         this.searchService.getShowInformation(this.seriesId)
-            .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.series = x;
             });
@@ -51,7 +47,6 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
         this.series.requested = true;
 
         this.requestService.requestTv(this.series)
-            .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.result = x as IRequestEngineResult;
                 if (this.result.result) {
@@ -80,8 +75,7 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
         episode.selected = false;
     }
 
-    public ngOnDestroy() {
-        this.subscriptions.next();
-        this.subscriptions.complete();
+    public addAllEpisodes(season: INewSeasonRequests) {
+        season.episodes.forEach((ep) => this.addRequest(ep));
     }
 }
