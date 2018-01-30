@@ -12,6 +12,7 @@
   "Common": {
     "ContinueButton": "Fortsätt",
     "Available": "Tillgänglig",
+    "NotAvailable": "Not Available",
     "ProcessingRequest": "Bearbetar förfrågan",
     "PendingApproval": "I väntan på godkännande",
     "RequestDenied": "Efterfrågan nekas",
@@ -45,6 +46,7 @@
     "UserManagement": "Användarhantering",
     "Issues": "Problem",
     "Donate": "Donera!",
+    "DonateLibraryMaintainer": "Donera till bibliotekets utvecklare",
     "DonateTooltip": "Det är så här jag övertygar min fru att jag vill spendera min fritid att utveckla Ombi ;)",
     "UpdateAvailableTooltip": "Uppdatering tillgänglig!",
     "Settings": "Inställningar",
@@ -59,9 +61,9 @@
       "Italian": "Italienska",
       "Danish": "Danska",
       "Dutch": "Holländska",
-      "Norwegian": "Norwegian"
+      "Norwegian": "Norska"
     },
-    "OpenMobileApp": "Open Mobile App"
+    "OpenMobileApp": "Öppna Mobil App"
   },
   "Search": {
     "Title": "Sök",
@@ -89,7 +91,7 @@
     "TvTab": "TV-serier",
     "RequestedBy": "Efterfrågats av:",
     "Status": "Status:",
-    "RequestStatus": "Request status:",
+    "RequestStatus": "Status för efterfrågan:",
     "Denied": " Nekad:",
     "ReleaseDate": "Releasedatum:",
     "RequestDate": "Datum för efterfrågan:",
@@ -104,7 +106,9 @@
     "Season": "Säsong:",
     "GridTitle": "Titel",
     "AirDate": "Sändningsdatum",
-    "GridStatus": "Status"
+    "GridStatus": "Status",
+    "ReportIssue": "Report Issue",
+    "Filter": "Filter"
   },
   "Issues": {
     "Title": "Problem",
@@ -124,5 +128,11 @@
     "Comments": "Kommentarer",
     "WriteMessagePlaceholder": "Skriv ditt meddelande här...",
     "ReportedBy": "Rapporterad av"
+  },
+  "Filter": {
+    "ClearFilter": "Clear Filter",
+    "FilterHeaderAvailability": "Availability",
+    "FilterHeaderRequestStatus": "Status",
+    "Approved": "Approved"
   }
 }

@@ -101,17 +101,20 @@ namespace Ombi.Schedule.Jobs.Plex
             var currentPosition = 0;
             var resultCount = settings.EpisodeBatchSize == 0 ? 50 : settings.EpisodeBatchSize;
             var episodes = await _api.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, section.key, currentPosition, resultCount);
-            var currentData = _repo.GetAllEpisodes().AsNoTracking();
             _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Total Epsiodes found for {episodes.MediaContainer.librarySectionTitle} = {episodes.MediaContainer.totalSize}");
 
-            await ProcessEpsiodes(episodes, currentData);
+            // Delete all the episodes because we cannot uniquly match an episode to series every time, 
+            // see comment below.
+            await _repo.ExecuteSql("DELETE FROM PlexEpisode");
+
+            await ProcessEpsiodes(episodes);
             currentPosition += resultCount;
 
             while (currentPosition < episodes.MediaContainer.totalSize)
             {
                 var ep = await _api.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, section.key, currentPosition,
                     resultCount);
-                await ProcessEpsiodes(ep, currentData);
+                await ProcessEpsiodes(ep);
                 _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Processed {resultCount} more episodes. Total Remaining {episodes.MediaContainer.totalSize - currentPosition}");
                 currentPosition += resultCount;
             }
@@ -121,7 +124,7 @@ namespace Ombi.Schedule.Jobs.Plex
             await _repo.SaveChangesAsync();
         }
 
-        private async Task ProcessEpsiodes(PlexContainer episodes, IQueryable<PlexEpisode> currentEpisodes)
+        private async Task ProcessEpsiodes(PlexContainer episodes)
         {
             var ep = new HashSet<PlexEpisode>();
 
@@ -131,12 +134,13 @@ namespace Ombi.Schedule.Jobs.Plex
                 // We have the parent and grandparent rating keys to link up to the season and series
                 //var metadata = _api.GetEpisodeMetaData(server.PlexAuthToken, server.FullUri, episode.ratingKey);
 
-                var epExists = currentEpisodes.Any(x => episode.ratingKey == x.Key &&
-                                                          episode.grandparentRatingKey == x.GrandparentKey);
-                if (epExists)
-                {
-                    continue;
-                }
+                // This does seem to work, it looks like we can somehow get different rating, grandparent and parent keys with episodes. Not sure how.
+                //var epExists = currentEpisodes.Any(x => episode.ratingKey == x.Key &&
+                //                                          episode.grandparentRatingKey == x.GrandparentKey);
+                //if (epExists)
+                //{
+                //    continue;
+                //}
 
                 ep.Add(new PlexEpisode
                 {

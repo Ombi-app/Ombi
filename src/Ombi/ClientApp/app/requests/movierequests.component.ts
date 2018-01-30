@@ -118,7 +118,7 @@ export class MovieRequestsComponent implements OnInit {
 
     public deny(request: IMovieRequests) {
         request.denied = true;
-        this.updateRequest(request);
+        this.denyRequest(request);
     }
 
     public selectRootFolder(searchResult: IMovieRequests, rootFolderSelected: IRadarrRootFolder, event: any) {
@@ -195,13 +195,26 @@ export class MovieRequestsComponent implements OnInit {
     private approveRequest(request: IMovieRequests) {
         this.requestService.approveMovie({ id: request.id })
             .subscribe(x => {
-
+                request.approved = true;
                 if (x.result) {
                     this.notificationService.success(
                         `Request for ${request.title} has been approved successfully`);
                 } else {
                     this.notificationService.warning("Request Approved", x.message ? x.message : x.errorMessage);
                     request.approved = false;
+                }
+            });
+    }
+
+    private denyRequest(request: IMovieRequests) {
+        this.requestService.denyMovie({ id: request.id })
+            .subscribe(x => {
+                if (x.result) {
+                    this.notificationService.success(
+                        `Request for ${request.title} has been denied successfully`);
+                } else {
+                    this.notificationService.warning("Request Denied", x.message ? x.message : x.errorMessage);
+                    request.denied = false;
                 }
             });
     }

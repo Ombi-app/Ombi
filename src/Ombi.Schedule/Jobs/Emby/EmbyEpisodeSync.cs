@@ -99,7 +99,7 @@ namespace Ombi.Schedule.Jobs.Emby
                     continue;
                 }
 
-                var existingEpisode = await _repo.GetByEmbyId(ep.Id);
+                var existingEpisode = await _repo.GetEpisodeByEmbyId(ep.Id);
                 if (existingEpisode == null)
                 {
                     // add it

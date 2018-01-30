@@ -12,6 +12,7 @@
   "Common": {
     "ContinueButton": "Doorgaan",
     "Available": "Beschikbaar",
+    "NotAvailable": "Not Available",
     "ProcessingRequest": "Verzoek wordt verwerkt",
     "PendingApproval": "Wacht op goedkeuring",
     "RequestDenied": "Verzoek geweigerd",
@@ -45,6 +46,7 @@
     "UserManagement": "Gebruikersbeheer",
     "Issues": "Problemen",
     "Donate": "Doneer!",
+    "DonateLibraryMaintainer": "Donate to Library Maintainer",
     "DonateTooltip": "Zo heb ik mijn vrouw overtuigd dat ik Ombi mag ontwikkelen ;)",
     "UpdateAvailableTooltip": "Update beschikbaar!",
     "Settings": "Instellingen",
@@ -104,7 +106,9 @@
     "Season": "Seizoen:",
     "GridTitle": "Titel",
     "AirDate": "Uitzenddatum",
-    "GridStatus": "Status"
+    "GridStatus": "Status",
+    "ReportIssue": "Report Issue",
+    "Filter": "Filter"
   },
   "Issues": {
     "Title": "Problemen",
@@ -124,5 +128,11 @@
     "Comments": "Opmerkingen",
     "WriteMessagePlaceholder": "Schrijf hier je bericht...",
     "ReportedBy": "Gerapporteerd door"
+  },
+  "Filter": {
+    "ClearFilter": "Clear Filter",
+    "FilterHeaderAvailability": "Availability",
+    "FilterHeaderRequestStatus": "Status",
+    "Approved": "Approved"
   }
 }
