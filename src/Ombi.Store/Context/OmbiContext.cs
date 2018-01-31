@@ -100,6 +100,9 @@ namespace Ombi.Store.Context
                 SaveChanges();
             }
 
+            // VACUUM;
+            Database.ExecuteSqlCommand("VACUUM;");
+
             //Check if templates exist
             var templates = NotificationTemplates.ToList();
 
