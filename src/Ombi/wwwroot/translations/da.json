@@ -94,7 +94,10 @@
       "AllSeasons": "Alle sæsoner",
       "FirstSeason": "Første sæson",
       "LatestSeason": "Seneste sæson",
-      "Select": "Vælg ..."
+      "Select": "Vælg ...",
+      "SubmitRequest": "Submit Request",
+      "Season": "Season: {{seasonNumber}}",
+      "SelectAllInSeason": "Select All in Season {{seasonNumber}}"
     }
   },
   "Requests": {
