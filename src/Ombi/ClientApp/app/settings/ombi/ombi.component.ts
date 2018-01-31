@@ -1,6 +1,7 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 
+import { IOmbiSettings } from "../../interfaces";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
 
@@ -37,6 +38,14 @@ export class OmbiComponent implements OnInit {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;
+        }
+
+        const result = <IOmbiSettings>form.value;
+        if(result.baseUrl.length > 0) {
+            if(result.baseUrl.indexOf("/") <= 0) {
+                this.notificationService.error("Please ensure your base url start with a '/'");
+                return;
+            }
         }
 
         this.settingsService.saveOmbi(form.value).subscribe(x => {

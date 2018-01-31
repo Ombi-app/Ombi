@@ -98,7 +98,10 @@
       "AllSeasons":"All Seasons",
       "FirstSeason":"First Season",
       "LatestSeason":"Latest Season",
-      "Select":"Select ..."
+      "Select":"Select ...",
+      "SubmitRequest":"Submit Request",
+      "Season":"Season: {{seasonNumber}}",
+      "SelectAllInSeason":"Select All in Season {{seasonNumber}}"
     }
   },
   "Requests": {
