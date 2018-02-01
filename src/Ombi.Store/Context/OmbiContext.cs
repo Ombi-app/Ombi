@@ -99,7 +99,7 @@ namespace Ombi.Store.Context
                 });
                 SaveChanges();
             }
-            var notification = ApplicationConfigurations.FirstOrDefault(x => x.Type != ConfigurationTypes.Notification);
+            var notification = ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.Notification);
             if (notification == null)
             {
                 ApplicationConfigurations.Add(new ApplicationConfiguration
