@@ -99,6 +99,16 @@ namespace Ombi.Store.Context
                 });
                 SaveChanges();
             }
+            var notification = ApplicationConfigurations.FirstOrDefault(x => x.Type != ConfigurationTypes.Notification);
+            if (notification == null)
+            {
+                ApplicationConfigurations.Add(new ApplicationConfiguration
+                {
+                    Type = ConfigurationTypes.Notification,
+                    Value = "4f0260c4-9c3d-41ab-8d68-27cb5a593f0e"
+                });
+                SaveChanges();
+            }
 
             // VACUUM;
             Database.ExecuteSqlCommand("VACUUM;");
