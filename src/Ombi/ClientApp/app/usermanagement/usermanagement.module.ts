@@ -2,7 +2,7 @@
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
-import { ConfirmationService, ConfirmDialogModule, MultiSelectModule, TooltipModule } from "primeng/primeng";
+import { ConfirmationService, ConfirmDialogModule, MultiSelectModule, SidebarModule, TooltipModule } from "primeng/primeng";
 
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
@@ -37,6 +37,7 @@ const routes: Routes = [
         ConfirmDialogModule,
         TooltipModule,
         OrderModule,
+        SidebarModule,
     ],
     declarations: [
         UserManagementComponent,
