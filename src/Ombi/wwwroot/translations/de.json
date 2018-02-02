@@ -124,7 +124,8 @@
     "AirDate": "Erstausstrahlung",
     "GridStatus": "Status",
     "ReportIssue": "Problem melden",
-    "Filter": "Filter"
+    "Filter": "Filter",
+    "SeasonNumberHeading": "Season: {seasonNumber}"
   },
   "Issues": {
     "Title": "Probleme",
