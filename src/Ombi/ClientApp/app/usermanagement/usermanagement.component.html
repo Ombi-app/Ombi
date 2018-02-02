@@ -3,6 +3,7 @@
 
 
 <button type="button" class="btn btn-success-outline" [routerLink]="['/usermanagement/add']">Add User</button>
+<button type="button" style="float:right;" class="btn btn-primary-outline"(click)="showBulkEdit = !showBulkEdit" [disabled]="!hasChecked()">Bulk Edit</button>
 <!-- Table -->
 <table class="table table-striped table-hover table-responsive table-condensed table-usermanagement">
     <thead>
@@ -96,3 +97,33 @@
         </tr>
     </tbody>
 </table>
+
+
+<p-sidebar [(visible)]="showBulkEdit" position="right" styleClass="ui-sidebar-md side-back">
+<h3>Bulk Edit</h3>
+<hr/>
+<div *ngFor="let c of availableClaims">
+        <div class="form-group">
+            <div class="checkbox">
+                <input type="checkbox" [(ngModel)]="c.enabled" [value]="c.value" id="create{{c.value}}" [attr.name]="'create' + c.value" ng-checked="c.enabled">
+                <label for="create{{c.value}}">{{c.value | humanize}}</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+            <label for="movieRequestLimit" class="control-label">Movie Request Limit</label>
+            <div>
+                <input type="text" [(ngModel)]="bulkMovieLimit" class="form-control form-small form-control-custom " id="movieRequestLimit" name="movieRequestLimit" value="{{bulkMovieLimit}}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="episodeRequestLimit" class="control-label">Episode Request Limit</label>
+            <div>
+                <input type="text" [(ngModel)]="bulkEpisodeLimit" class="form-control form-small form-control-custom " id="episodeRequestLimit" name="episodeRequestLimit" value="{{bulkEpisodeLimit}}">
+            </div>
+        </div>
+    
+<button type="button" class="btn btn-success-outline" (click)="bulkUpdate()">Update Users</button>
+</p-sidebar>
