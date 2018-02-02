@@ -124,7 +124,8 @@
     "AirDate": "Sendt",
     "GridStatus": "Status",
     "ReportIssue": "Rapportér problem",
-    "Filter": "Filter"
+    "Filter": "Filter",
+    "SeasonNumberHeading": "Season: {seasonNumber}"
   },
   "Issues": {
     "Title": "Problemer",
