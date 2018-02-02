@@ -124,7 +124,8 @@
     "AirDate": "Sendedato",
     "GridStatus": "Status",
     "ReportIssue": "Rapportér en feil",
-    "Filter": "Filter"
+    "Filter": "Filter",
+    "SeasonNumberHeading": "Season: {seasonNumber}"
   },
   "Issues": {
     "Title": "Mangler",
