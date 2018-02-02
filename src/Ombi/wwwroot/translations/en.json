@@ -129,7 +129,8 @@
     "AirDate":"AirDate",
     "GridStatus":"Status",
     "ReportIssue":"Report Issue",
-    "Filter":"Filter"
+    "Filter":"Filter",
+    "SeasonNumberHeading":"Season: {seasonNumber}"
   },
   "Issues":{
     "Title":"Issues",

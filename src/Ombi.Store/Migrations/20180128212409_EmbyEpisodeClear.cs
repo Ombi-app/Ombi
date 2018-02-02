@@ -8,8 +8,7 @@ namespace Ombi.Store.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"
-DELETE FROM EmbyEpisode");
+            
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
