@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Ombi.Attributes;
 using Ombi.Core.Authentication;
 using Ombi.Helpers;
 using Ombi.Models;
@@ -26,6 +29,7 @@ namespace Ombi.Controllers
         private readonly OmbiUserManager _userManager;
 
         [HttpPost("Notification")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> AddNotitficationId([FromBody] NotificationIdBody body)
         {
             if (body?.PlayerId.HasValue() ?? false)
@@ -49,6 +53,26 @@ namespace Ombi.Controllers
                 return Ok();
             }
             return BadRequest();
+        }
+
+        [HttpGet("Notification")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [Admin]
+        public IEnumerable<MobileUsersViewModel> GetRegisteredMobileUsers()
+        {
+            var users = _userManager.Users.Include(x => x.NotificationUserIds).Where(x => x.NotificationUserIds.Any());
+
+            var vm = new List<MobileUsersViewModel>();
+
+            foreach (var u in users)
+            {
+                vm.Add(new MobileUsersViewModel
+                {
+                    Username = u.UserAlias,
+                    Devices = u.NotificationUserIds.Count
+                });
+            }
+            return vm;
         }
     }
 }

@@ -7,7 +7,7 @@ import { ClipboardModule } from "ngx-clipboard/dist";
 
 import { AuthGuard } from "../auth/auth.guard";
 import { AuthService } from "../auth/auth.service";
-import { CouchPotatoService, EmbyService, IssuesService, JobService, PlexService, RadarrService, SonarrService, TesterService, ValidationService } from "../services";
+import { CouchPotatoService, EmbyService, IssuesService, JobService, MobileService, PlexService, RadarrService, SonarrService, TesterService, ValidationService } from "../services";
 
 import { PipeModule } from "../pipes/pipe.module";
 import { AboutComponent } from "./about/about.component";
@@ -22,6 +22,7 @@ import { LandingPageComponent } from "./landingpage/landingpage.component";
 import { DiscordComponent } from "./notifications/discord.component";
 import { EmailNotificationComponent } from "./notifications/emailnotification.component";
 import { MattermostComponent } from "./notifications/mattermost.component";
+import { MobileComponent } from "./notifications/mobile.component";
 import { NotificationTemplate } from "./notifications/notificationtemplate.component";
 import { PushbulletComponent } from "./notifications/pushbullet.component";
 import { PushoverComponent } from "./notifications/pushover.component";
@@ -64,6 +65,7 @@ const routes: Routes = [
     { path: "SickRage", component: SickRageComponent, canActivate: [AuthGuard] },
     { path: "Issues", component: IssuesComponent, canActivate: [AuthGuard] },
     { path: "Authentication", component: AuthenticationComponent, canActivate: [AuthGuard] },
+    { path: "Mobile", component: MobileComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -111,6 +113,7 @@ const routes: Routes = [
         TelegramComponent,
         IssuesComponent,
         AuthenticationComponent,
+        MobileComponent,
     ],
     exports: [
         RouterModule,
@@ -127,6 +130,7 @@ const routes: Routes = [
         IssuesService,
         PlexService,
         EmbyService,
+        MobileService,
     ],
 
 })

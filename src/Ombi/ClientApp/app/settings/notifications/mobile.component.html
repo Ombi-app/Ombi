@@ -1,0 +1,39 @@
+﻿
+<settings-menu></settings-menu>
+<div *ngIf="form">
+    <fieldset>
+        <legend>Mobile Notifications</legend>
+        <div class="col-md-6">
+            <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+
+                <div *ngFor="let user of userList">
+                    <span>{{user.username}} - {{user.devices}}</span>
+                </div>
+
+               
+
+                <div class="form-group">
+                    <div>
+                        <button [disabled]="form.invalid" type="button" (click)="test(form)" class="btn btn-primary-outline">
+                            Test
+                            <div id="spinner"></div>
+                        </button>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <div>
+                        <button [disabled]="form.invalid" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        <div class="col-md-6">
+            <notification-templates [templates]="templates" [showSubject]="false"></notification-templates>
+        </div>
+    </fieldset>
+</div>

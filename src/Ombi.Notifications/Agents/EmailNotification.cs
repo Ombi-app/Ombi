@@ -120,8 +120,10 @@ namespace Ombi.Notifications.Agents
             var plaintext = await LoadPlainTextMessage(NotificationType.IssueResolved, model, settings);
             message.Other.Add("PlainTextBody", plaintext);
 
-            // Issues should be sent to admin
-            message.To = settings.AdminEmail;
+            // Issues resolved should be sent to the user
+            message.To = model.RequestType == RequestType.Movie
+                ? MovieRequest.RequestedUser.Email
+                : TvRequest.RequestedUser.Email;
 
             await Send(message, settings);
         }

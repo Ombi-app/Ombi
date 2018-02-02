@@ -39,7 +39,7 @@ namespace Ombi.Notifications.Agents
 
         protected override bool ValidateConfiguration(MobileNotificationSettings settings)
         {
-            return false;
+            return true;
         }
 
         protected override async Task NewRequest(NotificationOptions model, MobileNotificationSettings settings)
@@ -56,9 +56,7 @@ namespace Ombi.Notifications.Agents
             };
 
             // Get admin devices
-            var adminUsers = (await _userManager.GetUsersInRoleAsync(OmbiRoles.Admin)).Select(x => x.Id).ToList();
-            var notificationUsers = _notifications.GetAll().Include(x => x.User).Where(x => adminUsers.Contains(x.UserId));
-            var playerIds = await notificationUsers.Select(x => x.PlayerId).ToListAsync();
+            var playerIds = await GetAdmins(NotificationType.NewRequest);
             await Send(playerIds, notification, settings);
         }
 
@@ -74,8 +72,10 @@ namespace Ombi.Notifications.Agents
             {
                 Message = parsed.Message,
             };
-            notification.Other.Add("image", parsed.Image);
-            await Send(notification, settings);
+
+            // Get admin devices
+            var playerIds = await GetAdmins(NotificationType.Issue);
+            await Send(playerIds, notification, settings);
         }
 
         protected override async Task IssueResolved(NotificationOptions model, MobileNotificationSettings settings)
@@ -90,34 +90,36 @@ namespace Ombi.Notifications.Agents
             {
                 Message = parsed.Message,
             };
-            notification.Other.Add("image", parsed.Image);
-            await Send(notification, settings);
+
+            // Send to user
+            var playerIds = GetUsers(model, NotificationType.IssueResolved);
+
+            await Send(playerIds, notification, settings);
         }
+
 
         protected override async Task AddedToRequestQueue(NotificationOptions model, MobileNotificationSettings settings)
         {
-            var user = string.Empty;
-            var title = string.Empty;
-            var image = string.Empty;
+            string user;
+            string title;
             if (model.RequestType == RequestType.Movie)
             {
                 user = MovieRequest.RequestedUser.UserAlias;
                 title = MovieRequest.Title;
-                image = MovieRequest.PosterPath;
             }
             else
             {
                 user = TvRequest.RequestedUser.UserAlias;
                 title = TvRequest.ParentRequest.Title;
-                image = TvRequest.ParentRequest.PosterPath;
             }
             var message = $"Hello! The user '{user}' has requested {title} but it could not be added. This has been added into the requests queue and will keep retrying";
             var notification = new NotificationMessage
             {
                 Message = message
             };
-            notification.Other.Add("image", image);
-            await Send(notification, settings);
+            // Get admin devices
+            var playerIds = await GetAdmins(NotificationType.Test);
+            await Send(playerIds, notification, settings);
         }
 
         protected override async Task RequestDeclined(NotificationOptions model, MobileNotificationSettings settings)
@@ -132,8 +134,10 @@ namespace Ombi.Notifications.Agents
             {
                 Message = parsed.Message,
             };
-            notification.Other.Add("image", parsed.Image);
-            await Send(notification, settings);
+
+            // Send to user
+            var playerIds = GetUsers(model, NotificationType.RequestDeclined);
+            await Send(playerIds, notification, settings);
         }
 
         protected override async Task RequestApproved(NotificationOptions model, MobileNotificationSettings settings)
@@ -149,8 +153,9 @@ namespace Ombi.Notifications.Agents
                 Message = parsed.Message,
             };
 
-            notification.Other.Add("image", parsed.Image);
-            await Send(notification, settings);
+            // Send to user
+            var playerIds = GetUsers(model, NotificationType.RequestApproved);
+            await Send(playerIds, notification, settings);
         }
 
         protected override async Task AvailableRequest(NotificationOptions model, MobileNotificationSettings settings)
@@ -165,8 +170,9 @@ namespace Ombi.Notifications.Agents
             {
                 Message = parsed.Message,
             };
-            notification.Other.Add("image", parsed.Image);
-            await Send(notification, settings);
+            // Send to user
+            var playerIds = GetUsers(model, NotificationType.RequestAvailable);
+            await Send(playerIds, notification, settings);
         }
         protected override Task Send(NotificationMessage model, MobileNotificationSettings settings)
         {
@@ -175,6 +181,10 @@ namespace Ombi.Notifications.Agents
 
         protected async Task Send(List<string> playerIds, NotificationMessage model, MobileNotificationSettings settings)
         {
+            if (!playerIds.Any())
+            {
+                return;
+            }
             var response = await _api.PushNotification(playerIds, model.Message);
             _logger.LogDebug("Sent message to {0} recipients with message id {1}", response.recipients, response.id);
         }
@@ -186,7 +196,39 @@ namespace Ombi.Notifications.Agents
             {
                 Message = message,
             };
-            await Send(notification, settings);
+            // Send to user
+            var playerIds = await GetAdmins(NotificationType.RequestAvailable);
+            await Send(playerIds, notification, settings);
         }
+
+        private async Task<List<string>> GetAdmins(NotificationType type)
+        {
+            var adminUsers = (await _userManager.GetUsersInRoleAsync(OmbiRoles.Admin)).Select(x => x.Id).ToList();
+            var notificationUsers = _notifications.GetAll().Include(x => x.User).Where(x => adminUsers.Contains(x.UserId));
+            var playerIds = await notificationUsers.Select(x => x.PlayerId).ToListAsync();
+            if (!playerIds.Any())
+            {
+                _logger.LogInformation(
+                    $"there are no admins to send a notification for {type}, for agent {NotificationAgent.Mobile}");
+                return null;
+            }
+            return playerIds;
+        }
+        private List<string> GetUsers(NotificationOptions model, NotificationType type)
+        {
+            var notificationIds = model.RequestType == RequestType.Movie
+                ? MovieRequest.RequestedUser.NotificationUserIds
+                : TvRequest.RequestedUser.NotificationUserIds;
+            if (!notificationIds.Any())
+            {
+                _logger.LogInformation(
+                    $"there are no admins to send a notification for {type}, for agent {NotificationAgent.Mobile}");
+                return null;
+            }
+            var playerIds = notificationIds.Select(x => x.PlayerId).ToList();
+            return playerIds;
+        }
+
+
     }
 }

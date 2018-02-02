@@ -44,6 +44,7 @@ namespace Ombi.Store.Repository.Requests
         {
             return Db.MovieRequests
                 .Include(x => x.RequestedUser)
+                .ThenInclude(x => x.NotificationUserIds)
                 .AsQueryable();
         }
 

@@ -87,3 +87,7 @@ export interface IMattermostNotifcationSettings extends INotificationSettings {
     iconUrl: string;
     notificationTemplates: INotificationTemplates[];
 }
+
+export interface IMobileNotifcationSettings extends INotificationSettings {
+    notificationTemplates: INotificationTemplates[];
+}
