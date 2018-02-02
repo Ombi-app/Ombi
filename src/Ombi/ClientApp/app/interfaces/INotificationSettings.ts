@@ -44,6 +44,7 @@ export enum NotificationType {
     RequestDeclined,
     ItemAddedToFaultQueue,
     WelcomeEmail,
+    IssueResolved,
 }
 
 export interface IDiscordNotifcationSettings extends INotificationSettings {
