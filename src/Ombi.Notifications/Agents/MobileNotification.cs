@@ -39,7 +39,7 @@ namespace Ombi.Notifications.Agents
 
         protected override bool ValidateConfiguration(MobileNotificationSettings settings)
         {
-            return true;
+            return false;
         }
 
         protected override async Task NewRequest(NotificationOptions model, MobileNotificationSettings settings)
