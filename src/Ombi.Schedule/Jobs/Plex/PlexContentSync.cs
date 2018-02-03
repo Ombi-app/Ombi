@@ -252,6 +252,11 @@ namespace Ombi.Schedule.Jobs.Plex
                             contentToAdd.Add(item);
                         }
                     }
+                    if (contentToAdd.Count > 500)
+                    {
+                        await Repo.AddRange(contentToAdd);
+                        contentToAdd = new List<PlexServerContent>();
+                    }
                 }
 
                 if (contentToAdd.Any())

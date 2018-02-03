@@ -99,7 +99,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private async Task GetEpisodes(PlexServers settings, Directory section)
         {
             var currentPosition = 0;
-            var resultCount = settings.EpisodeBatchSize == 0 ? 50 : settings.EpisodeBatchSize;
+            var resultCount = settings.EpisodeBatchSize == 0 ? 150 : settings.EpisodeBatchSize;
             var episodes = await _api.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, section.key, currentPosition, resultCount);
             _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Total Epsiodes found for {episodes.MediaContainer.librarySectionTitle} = {episodes.MediaContainer.totalSize}");
 
