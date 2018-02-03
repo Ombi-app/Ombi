@@ -120,12 +120,23 @@ namespace Ombi.Schedule.Jobs.Plex
                                     PlexContentId = show.ratingKey
                                 });
                             }
-
+                            
                             // Do we already have this item?
                             // Let's try and match
                             var existingContent = await Repo.GetFirstContentByCustom(x => x.Title == show.title 
                                                         && x.ReleaseYear == show.year.ToString()
                                                         && x.Type == PlexMediaTypeEntity.Show);
+
+                            if (existingContent == null)
+                            {
+                                // Just check the key
+                                var hasSameKey = await Repo.GetByKey(show.ratingKey);
+                                if (hasSameKey != null)
+                                {
+                                    existingContent = hasSameKey;
+                                }
+
+                            }
                             // The ratingKey keeps changing...
                             //var existingContent = await Repo.GetByKey(show.ratingKey);
                             if (existingContent != null)
