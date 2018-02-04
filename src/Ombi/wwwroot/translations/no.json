@@ -88,16 +88,16 @@
       "Popular": "Populært",
       "Trending": "Trending",
       "MostWatched": "Mest sett",
-      "MostAnticipated": "Most Anticipated",
-      "Results": "Results",
-      "AirDate": "Air Date:",
-      "AllSeasons": "All Seasons",
-      "FirstSeason": "First Season",
-      "LatestSeason": "Latest Season",
-      "Select": "Select ...",
-      "SubmitRequest": "Submit Request",
-      "Season": "Season: {{seasonNumber}}",
-      "SelectAllInSeason": "Select All in Season {{seasonNumber}}"
+      "MostAnticipated": "Mest etterlengtede",
+      "Results": "Resultater",
+      "AirDate": "Sendingsdato:",
+      "AllSeasons": "Alle Sesonger",
+      "FirstSeason": "Første sesong",
+      "LatestSeason": "Siste sesong",
+      "Select": "Velg...",
+      "SubmitRequest": "Send forespørsel",
+      "Season": "Sesong: {{seasonNumber}}",
+      "SelectAllInSeason": "Velg alle i sesong {{seasonNumber}}"
     }
   },
   "Requests": {
@@ -125,7 +125,7 @@
     "GridStatus": "Status",
     "ReportIssue": "Rapportér en feil",
     "Filter": "Filter",
-    "SeasonNumberHeading": "Season: {seasonNumber}"
+    "SeasonNumberHeading": "Sesong: {seasonNumber}"
   },
   "Issues": {
     "Title": "Mangler",
