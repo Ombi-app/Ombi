@@ -21,7 +21,7 @@
     "Request": "Forespørsel",
     "Denied": "Avslått",
     "Approve": "Godkjenn",
-    "PartlyAvailable": "Partly Available",
+    "PartlyAvailable": "Delvis tilgjengelig",
     "Errors": {
       "Validation": "Kontroller de angitte verdiene"
     }
@@ -85,9 +85,9 @@
       "Trailer": "Trailer"
     },
     "TvShows": {
-      "Popular": "Popular",
+      "Popular": "Populært",
       "Trending": "Trending",
-      "MostWatched": "Most Watched",
+      "MostWatched": "Mest sett",
       "MostAnticipated": "Most Anticipated",
       "Results": "Results",
       "AirDate": "Air Date:",
