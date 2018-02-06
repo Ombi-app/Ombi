@@ -95,9 +95,9 @@
       "FirstSeason": "Første sæson",
       "LatestSeason": "Seneste sæson",
       "Select": "Vælg ...",
-      "SubmitRequest": "Submit Request",
-      "Season": "Season: {{seasonNumber}}",
-      "SelectAllInSeason": "Select All in Season {{seasonNumber}}"
+      "SubmitRequest": "Send anmodning",
+      "Season": "Sæson: {{seasonNumber}}",
+      "SelectAllInSeason": "Vælg alle i sæson {{seasonNumber}}"
     }
   },
   "Requests": {
@@ -125,7 +125,7 @@
     "GridStatus": "Status",
     "ReportIssue": "Rapportér problem",
     "Filter": "Filter",
-    "SeasonNumberHeading": "Season: {seasonNumber}"
+    "SeasonNumberHeading": "Sæson: {seasonNumber}"
   },
   "Issues": {
     "Title": "Problemer",
