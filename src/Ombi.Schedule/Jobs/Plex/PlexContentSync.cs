@@ -221,6 +221,7 @@ namespace Ombi.Schedule.Jobs.Plex
                             //var existing = await Repo.GetByKey(movie.ratingKey);
                             if (existing != null)
                             {
+                                Logger.LogInformation("We already have movie {0}", movie.title);
                                 continue;
                             }
 

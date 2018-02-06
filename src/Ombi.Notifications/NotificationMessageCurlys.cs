@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ombi.Helpers;
 using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
@@ -12,7 +13,7 @@ namespace Ombi.Notifications
 
         public void Setup(NotificationOptions opts, FullBaseRequest req, CustomizationSettings s)
         {
-            ApplicationUrl = s?.ApplicationUrl;
+            ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
             RequestedUser = string.IsNullOrEmpty(req.RequestedUser.Alias)
                 ? req.RequestedUser.UserName
@@ -24,12 +25,12 @@ namespace Ombi.Notifications
             Year = req.ReleaseDate.Year.ToString();
             PosterImage = req.RequestType == RequestType.Movie ?
                 $"https://image.tmdb.org/t/p/w300{req.PosterPath}" : req.PosterPath;
-            AdditionalInformation = opts.AdditionalInformation;
+            AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
         }
 
         public void Setup(NotificationOptions opts, ChildRequests req, CustomizationSettings s)
         {
-            ApplicationUrl = s?.ApplicationUrl;
+            ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
             RequestedUser = string.IsNullOrEmpty(req.RequestedUser.Alias)
                 ? req.RequestedUser.UserName
@@ -47,7 +48,7 @@ namespace Ombi.Notifications
 
         public void Setup(OmbiUser user, CustomizationSettings s)
         {
-            ApplicationUrl = s?.ApplicationUrl;
+            ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
             RequestedUser = user.UserName;
         }
