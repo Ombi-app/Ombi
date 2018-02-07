@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Notifications.Exceptions;
@@ -16,7 +17,7 @@ namespace Ombi.Notifications.Interfaces
     public abstract class BaseNotification<T> : INotification where T : Settings.Settings.Models.Settings, new()
     {
         protected BaseNotification(ISettingsService<T> settings, INotificationTemplatesRepository templateRepo, IMovieRequestRepository movie, ITvRequestRepository tv,
-            ISettingsService<CustomizationSettings> customization)
+            ISettingsService<CustomizationSettings> customization, ILogger<BaseNotification<T>> log)
         {
             Settings = settings;
             TemplateRepository = templateRepo;
@@ -25,6 +26,7 @@ namespace Ombi.Notifications.Interfaces
             CustomizationSettings = customization;
             Settings.ClearCache();
             CustomizationSettings.ClearCache();
+            _log = log;
         }
         
         protected ISettingsService<T> Settings { get; }
@@ -33,6 +35,7 @@ namespace Ombi.Notifications.Interfaces
         protected ITvRequestRepository TvRepository { get; }
         protected CustomizationSettings Customization { get; set; }
         private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
+        private readonly ILogger<BaseNotification<T>> _log;
 
 
         protected ChildRequests TvRequest { get; set; }
@@ -159,10 +162,13 @@ namespace Ombi.Notifications.Interfaces
             var curlys = new NotificationMessageCurlys();
             if (model.RequestType == RequestType.Movie)
             {
+                _log.LogDebug("Notification options: {@model}, Req: {@MovieRequest}, Settings: {@Customization}", model, MovieRequest, Customization);
+            
                 curlys.Setup(model, MovieRequest, Customization);
             }
             else
             {
+                _log.LogDebug("Notification options: {@model}, Req: {@TvRequest}, Settings: {@Customization}", model, TvRequest, Customization);
                 curlys.Setup(model, TvRequest, Customization);
             }
             var parsed = resolver.ParseMessage(template, curlys);

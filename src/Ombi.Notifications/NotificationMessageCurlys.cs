@@ -11,16 +11,8 @@ namespace Ombi.Notifications
 {
     public class NotificationMessageCurlys
     {
-        public NotificationMessageCurlys(ILogger<NotificationMessageCurlys> log)
-        {
-            _log = log;
-        }
-
-        private readonly ILogger<NotificationMessageCurlys> _log;
-
         public void Setup(NotificationOptions opts, FullBaseRequest req, CustomizationSettings s)
         {
-            _log.LogDebug("Notification options: {@Opts}, Req: {@Req}, Settings: {@S}", opts, req, s);
             ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
             RequestedUser = string.IsNullOrEmpty(req.RequestedUser.Alias)
@@ -39,8 +31,7 @@ namespace Ombi.Notifications
         public void Setup(NotificationOptions opts, ChildRequests req, CustomizationSettings s)
         {
 
-            _log.LogDebug("Notification options: {@Opts}, Req: {@Req}, Settings: {@S}", opts, req, s);
-            ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
+           ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
             RequestedUser = string.IsNullOrEmpty(req.RequestedUser.Alias)
                 ? req.RequestedUser.UserName
