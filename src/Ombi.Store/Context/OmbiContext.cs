@@ -205,6 +205,17 @@ namespace Ombi.Store.Context
                                 Enabled = true,
                             };
                             break;
+
+                        case NotificationType.IssueComment:
+                            notificationToAdd = new NotificationTemplates
+                            {
+                                NotificationType = notificationType,
+                                Message = "Hello, There is a new comment on your issue {IssueSubject}, The comment is: {NewIssueComment}",
+                                Subject = "{ApplicationName}: New comment on issue {IssueSubject}!",
+                                Agent = agent,
+                                Enabled = true,
+                            };
+                            break;
                         case NotificationType.AdminNote:
                             continue;
                         default:

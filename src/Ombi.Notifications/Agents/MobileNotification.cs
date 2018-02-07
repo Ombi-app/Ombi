@@ -78,6 +78,36 @@ namespace Ombi.Notifications.Agents
             await Send(playerIds, notification, settings);
         }
 
+        protected override async Task IssueComment(NotificationOptions model, MobileNotificationSettings settings)
+        {
+            var parsed = await LoadTemplate(NotificationAgent.Mobile, NotificationType.IssueComment, model);
+            if (parsed.Disabled)
+            {
+                _logger.LogInformation($"Template {NotificationType.IssueComment} is disabled for {NotificationAgent.Mobile}");
+                return;
+            }
+            var notification = new NotificationMessage
+            {
+                Message = parsed.Message,
+            };
+            if (model.Substitutes.TryGetValue("AdminComment", out var isAdminString))
+            {
+                var isAdmin = bool.Parse(isAdminString);
+                if (isAdmin)
+                {
+                    // Send to user
+                    var playerIds = GetUsers(model, NotificationType.IssueComment);
+                    await Send(playerIds, notification, settings);
+                }
+                else
+                {
+                    // Send to admin
+                    var playerIds = await GetAdmins(NotificationType.IssueComment);
+                    await Send(playerIds, notification, settings);
+                }
+            }
+        }
+
         protected override async Task IssueResolved(NotificationOptions model, MobileNotificationSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Mobile, NotificationType.IssueResolved, model);
@@ -216,9 +246,19 @@ namespace Ombi.Notifications.Agents
         }
         private List<string> GetUsers(NotificationOptions model, NotificationType type)
         {
-            var notificationIds = model.RequestType == RequestType.Movie
-                ? MovieRequest.RequestedUser.NotificationUserIds
-                : TvRequest.RequestedUser.NotificationUserIds;
+            var notificationIds = new List<NotificationUserId>();
+            if (MovieRequest != null || TvRequest != null)
+            {
+                notificationIds = model.RequestType == RequestType.Movie
+                    ? MovieRequest?.RequestedUser?.NotificationUserIds
+                    : TvRequest?.RequestedUser?.NotificationUserIds;
+            }
+            if (model.UserId.HasValue() && !notificationIds.Any())
+            {
+               var user= _userManager.Users.Include(x => x.NotificationUserIds).FirstOrDefault(x => x.Id == model.UserId);
+                notificationIds = user.NotificationUserIds;
+            }
+
             if (!notificationIds.Any())
             {
                 _logger.LogInformation(

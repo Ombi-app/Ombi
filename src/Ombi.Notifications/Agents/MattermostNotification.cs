@@ -79,6 +79,22 @@ namespace Ombi.Notifications.Agents
             await Send(notification, settings);
         }
 
+        protected override async Task IssueComment(NotificationOptions model, MattermostNotificationSettings settings)
+        {
+            var parsed = await LoadTemplate(NotificationAgent.Mattermost, NotificationType.IssueComment, model);
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.IssueComment} is disabled for {NotificationAgent.Mattermost}");
+                return;
+            }
+            var notification = new NotificationMessage
+            {
+                Message = parsed.Message,
+            };
+            notification.Other.Add("image", parsed.Image);
+            await Send(notification, settings);
+        }
+
         protected override async Task IssueResolved(NotificationOptions model, MattermostNotificationSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Mattermost, NotificationType.IssueResolved, model);

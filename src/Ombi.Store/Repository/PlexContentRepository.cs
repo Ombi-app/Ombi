@@ -66,7 +66,11 @@ namespace Ombi.Store.Repository
             var item = await Db.PlexServerContent.FirstOrDefaultAsync(x => x.ImdbId == providerId);
             if (item == null)
             {
-                item = await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TheMovieDbId == providerId) ?? await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TvDbId == providerId);
+                item = await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TheMovieDbId == providerId);
+                if (item == null)
+                {
+                    item = await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TvDbId == providerId);
+                }
             }
             return item;
         }

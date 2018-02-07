@@ -99,6 +99,9 @@ namespace Ombi.Notifications.Interfaces
                     case NotificationType.IssueResolved:
                         await IssueResolved(model, notificationSettings);
                         break;
+                    case NotificationType.IssueComment:
+                        await IssueComment(model, notificationSettings);
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -180,6 +183,7 @@ namespace Ombi.Notifications.Interfaces
         protected abstract bool ValidateConfiguration(T settings);
         protected abstract Task NewRequest(NotificationOptions model, T settings);
         protected abstract Task NewIssue(NotificationOptions model, T settings);
+        protected abstract Task IssueComment(NotificationOptions model, T settings);
         protected abstract Task IssueResolved(NotificationOptions model, T settings);
         protected abstract Task AddedToRequestQueue(NotificationOptions model, T settings);
         protected abstract Task RequestDeclined(NotificationOptions model, T settings);
