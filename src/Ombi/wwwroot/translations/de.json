@@ -21,7 +21,7 @@
     "Request": "Anfrage",
     "Denied": "Abgelehnt",
     "Approve": "Genehmigen",
-    "PartlyAvailable": "Partly Available",
+    "PartlyAvailable": "Teilweise verfügbar",
     "Errors": {
       "Validation": "Bitte überprüfen Sie die eingegebenen Werte"
     }
@@ -85,10 +85,10 @@
       "Trailer": "Trailer"
     },
     "TvShows": {
-      "Popular": "Popular",
-      "Trending": "Trending",
-      "MostWatched": "Most Watched",
-      "MostAnticipated": "Most Anticipated",
+      "Popular": "Beliebt",
+      "Trending": "im Trend",
+      "MostWatched": "Meist gesehen",
+      "MostAnticipated": "Meist erwartet",
       "Results": "Results",
       "AirDate": "Air Date:",
       "AllSeasons": "All Seasons",
