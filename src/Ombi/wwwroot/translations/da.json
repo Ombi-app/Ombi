@@ -12,7 +12,7 @@
   "Common": {
     "ContinueButton": "Fortsæt",
     "Available": "Tilgængelig",
-    "NotAvailable": "Not Available",
+    "NotAvailable": "Ikke tilgængelig",
     "ProcessingRequest": "Behandler anmodning",
     "PendingApproval": "Afventer godkendelse",
     "RequestDenied": "Anmodning afvist",
@@ -21,6 +21,7 @@
     "Request": "Anmod",
     "Denied": "Afvist",
     "Approve": "Godkendt",
+    "PartlyAvailable": "Delvist tilgængelig",
     "Errors": {
       "Validation": "Tjek venligst dine indtastede værdier"
     }
@@ -82,6 +83,21 @@
       "NowPlayingMovies": "Aktuelle film",
       "HomePage": "Startside",
       "Trailer": "Trailer"
+    },
+    "TvShows": {
+      "Popular": "Populære",
+      "Trending": "Aktuelle",
+      "MostWatched": "Mest sete",
+      "MostAnticipated": "Mest ventede",
+      "Results": "Resultat",
+      "AirDate": "Sendt den:",
+      "AllSeasons": "Alle sæsoner",
+      "FirstSeason": "Første sæson",
+      "LatestSeason": "Seneste sæson",
+      "Select": "Vælg ...",
+      "SubmitRequest": "Send anmodning",
+      "Season": "Sæson: {{seasonNumber}}",
+      "SelectAllInSeason": "Vælg alle i sæson {{seasonNumber}}"
     }
   },
   "Requests": {
@@ -107,8 +123,9 @@
     "GridTitle": "Titel",
     "AirDate": "Sendt",
     "GridStatus": "Status",
-    "ReportIssue": "Report Issue",
-    "Filter": "Filter"
+    "ReportIssue": "Rapportér problem",
+    "Filter": "Filter",
+    "SeasonNumberHeading": "Sæson: {seasonNumber}"
   },
   "Issues": {
     "Title": "Problemer",
@@ -130,9 +147,9 @@
     "ReportedBy": "Anmeldt af"
   },
   "Filter": {
-    "ClearFilter": "Clear Filter",
-    "FilterHeaderAvailability": "Availability",
+    "ClearFilter": "Nulstil filter",
+    "FilterHeaderAvailability": "Tilgængelighed",
     "FilterHeaderRequestStatus": "Status",
-    "Approved": "Approved"
+    "Approved": "Godkendt"
   }
 }

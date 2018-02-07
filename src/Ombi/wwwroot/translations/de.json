@@ -21,6 +21,7 @@
     "Request": "Anfrage",
     "Denied": "Abgelehnt",
     "Approve": "Genehmigen",
+    "PartlyAvailable": "Partly Available",
     "Errors": {
       "Validation": "Bitte überprüfen Sie die eingegebenen Werte"
     }
@@ -82,6 +83,21 @@
       "NowPlayingMovies": "Im Kino",
       "HomePage": "Startseite",
       "Trailer": "Trailer"
+    },
+    "TvShows": {
+      "Popular": "Popular",
+      "Trending": "Trending",
+      "MostWatched": "Most Watched",
+      "MostAnticipated": "Most Anticipated",
+      "Results": "Results",
+      "AirDate": "Air Date:",
+      "AllSeasons": "All Seasons",
+      "FirstSeason": "First Season",
+      "LatestSeason": "Latest Season",
+      "Select": "Select ...",
+      "SubmitRequest": "Submit Request",
+      "Season": "Season: {{seasonNumber}}",
+      "SelectAllInSeason": "Select All in Season {{seasonNumber}}"
     }
   },
   "Requests": {
@@ -108,7 +124,8 @@
     "AirDate": "Erstausstrahlung",
     "GridStatus": "Status",
     "ReportIssue": "Problem melden",
-    "Filter": "Filter"
+    "Filter": "Filter",
+    "SeasonNumberHeading": "Season: {seasonNumber}"
   },
   "Issues": {
     "Title": "Probleme",
