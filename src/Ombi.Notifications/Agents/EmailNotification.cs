@@ -151,6 +151,10 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task IssueResolved(NotificationOptions model, EmailNotificationSettings settings)
         {
+            if (!model.Recipient.HasValue())
+            {
+                return;
+            }
             var message = await LoadTemplate(NotificationType.IssueResolved, model, settings);
             if (message == null)
             {
@@ -161,10 +165,8 @@ namespace Ombi.Notifications.Agents
             message.Other.Add("PlainTextBody", plaintext);
 
             // Issues resolved should be sent to the user
-            message.To = model.RequestType == RequestType.Movie
-                ? MovieRequest.RequestedUser.Email
-                : TvRequest.RequestedUser.Email;
-
+            message.To = model.Recipient;
+            
             await Send(message, settings);
         }
 

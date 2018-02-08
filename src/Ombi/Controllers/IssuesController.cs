@@ -233,7 +233,7 @@ namespace Ombi.Controllers
         {
             var user = await _userManager.Users.Where(x => User.Identity.Name == x.UserName)
                 .FirstOrDefaultAsync();
-            var issue = await _issues.Find(model.IssueId);
+            var issue = await _issues.GetAll().Include(x => x.UserReported).FirstOrDefaultAsync(x => x.Id == model.IssueId);
             if (issue == null)
             {
                 return false;
@@ -254,7 +254,8 @@ namespace Ombi.Controllers
                         ? issue.UserReported.Email
                         : string.Empty,
                     AdditionalInformation = $"{issue.Subject} | {issue.Description}",
-                    UserId = user.Id
+                    UserId = user.Id,
+                    
                 };
                 AddIssueNotificationSubstitutes(notificationModel, issue);
 
