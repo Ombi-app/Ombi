@@ -86,6 +86,12 @@ namespace Ombi.Notifications.Agents
                     message.To = settings.AdminEmail;
                 }
             }
+            else
+            {
+
+                // Send to admin
+                message.To = settings.AdminEmail;
+            }
 
             return message;
         }
