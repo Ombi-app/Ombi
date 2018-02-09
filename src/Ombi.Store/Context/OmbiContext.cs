@@ -145,7 +145,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello! The user '{RequestedUser}' has reported a new issue for the title {Title}! </br> {IssueCategory} - {IssueSubject} : {IssueDescription}",
+                                Message = "Hello! The user '{IssueUser}' has reported a new issue for the title {Title}! </br> {IssueCategory} - {IssueSubject} : {IssueDescription}",
                                 Subject = "{ApplicationName}: New issue for {Title}!",
                                 Agent = agent,
                                 Enabled = true,
@@ -199,7 +199,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello {RequestedUser} Your issue for {Title} has now been resolved.",
+                                Message = "Hello {IssueUser} Your issue for {Title} has now been resolved.",
                                 Subject = "{ApplicationName}: Issue has been resolved for {Title}!",
                                 Agent = agent,
                                 Enabled = true,
