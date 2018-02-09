@@ -150,6 +150,10 @@ namespace Ombi.Notifications.Agents
                 var isAdmin = bool.Parse(isAdminString);
                 message.To = isAdmin ? model.Recipient : settings.AdminEmail;
             }
+            else
+            {
+                message.To = model.Recipient;
+            }
             
 
             await Send(message, settings);

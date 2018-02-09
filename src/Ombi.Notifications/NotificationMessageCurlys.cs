@@ -81,6 +81,7 @@ namespace Ombi.Notifications
             IssueStatus = opts.Substitutes.TryGetValue("IssueStatus", out val) ? val : string.Empty;
             IssueSubject = opts.Substitutes.TryGetValue("IssueSubject", out val) ? val : string.Empty;
             NewIssueComment = opts.Substitutes.TryGetValue("NewIssueComment", out val) ? val : string.Empty;
+            IssueUser = opts.Substitutes.TryGetValue("IssueUser", out val) ? val : string.Empty;
         }
 
         // User Defined
@@ -101,6 +102,7 @@ namespace Ombi.Notifications
         public string IssueStatus { get; set; }
         public string IssueSubject { get; set; }
         public string NewIssueComment { get; set; }
+        public string IssueUser { get; set; }
 
         // System Defined
         private string LongDate => DateTime.Now.ToString("D");
@@ -131,6 +133,7 @@ namespace Ombi.Notifications
             {nameof(IssueStatus),IssueStatus},
             {nameof(IssueSubject),IssueSubject},
             {nameof(NewIssueComment),NewIssueComment},
+            {nameof(IssueUser),IssueUser},
         };
     }
 }

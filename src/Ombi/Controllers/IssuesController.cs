@@ -145,7 +145,7 @@ namespace Ombi.Controllers
                 UserId =  i.UserReportedId
             };
 
-            AddIssueNotificationSubstitutes(notificationModel, i);
+            AddIssueNotificationSubstitutes(notificationModel, i, User.Identity.Name);
 
             BackgroundJob.Enqueue(() => _notification.Publish(notificationModel));
 
@@ -195,7 +195,7 @@ namespace Ombi.Controllers
         {
             var user = await _userManager.Users.Where(x => User.Identity.Name == x.UserName)
                 .FirstOrDefaultAsync();
-            var issue = await _issues.Find(comment.IssueId ?? 0);
+            var issue = await _issues.GetAll().Include(x => x.UserReported).FirstOrDefaultAsync(x => x.Id == comment.IssueId);
             if (issue == null)
             {
                 return null;
@@ -214,14 +214,23 @@ namespace Ombi.Controllers
                 DateTime = DateTime.Now,
                 NotificationType = NotificationType.IssueComment,
                 RequestType = issue.RequestType,
-                Recipient = user.Email,
                 UserId = user.Id
             };
 
             var isAdmin = await _userManager.IsInRoleAsync(user, OmbiRoles.Admin);
-            AddIssueNotificationSubstitutes(notificationModel, issue);
+            AddIssueNotificationSubstitutes(notificationModel, issue, issue.UserReported.UserAlias);
             notificationModel.Substitutes.Add("NewIssueComment", comment.Comment);
             notificationModel.Substitutes.Add("AdminComment", isAdmin.ToString());
+
+            if (isAdmin)
+            {
+                // Send to user
+                notificationModel.Recipient = issue.UserReported.Email;
+            }
+            else
+            {
+                notificationModel.Recipient = user.Email;
+            }
 
             BackgroundJob.Enqueue(() => _notification.Publish(notificationModel));
 
@@ -257,7 +266,7 @@ namespace Ombi.Controllers
                     UserId = user.Id,
                     
                 };
-                AddIssueNotificationSubstitutes(notificationModel, issue);
+                AddIssueNotificationSubstitutes(notificationModel, issue, issue.UserReported?.UserAlias ?? string.Empty);
 
                 BackgroundJob.Enqueue(() => _notification.Publish(notificationModel));
             }
@@ -266,13 +275,14 @@ namespace Ombi.Controllers
             return true;
         }
 
-        private static void AddIssueNotificationSubstitutes(NotificationOptions notificationModel, Issues issue)
+        private static void AddIssueNotificationSubstitutes(NotificationOptions notificationModel, Issues issue, string issueReportedUsername)
         {
             notificationModel.Substitutes.Add("Title", issue.Title);
             notificationModel.Substitutes.Add("IssueDescription", issue.Description);
             notificationModel.Substitutes.Add("IssueCategory", issue.IssueCategory?.Value);
             notificationModel.Substitutes.Add("IssueStatus", issue.Status.ToString());
             notificationModel.Substitutes.Add("IssueSubject", issue.Subject);
+            notificationModel.Substitutes.Add("IssueUser", issueReportedUsername);
         }
     }
 }
