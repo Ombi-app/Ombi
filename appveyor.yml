@@ -1,6 +1,5 @@
-version: 2.2.{build}
+version: 3.0.{build}
 configuration: Release
-<<<<<<< HEAD
 os: Visual Studio 2017
 environment:
   nodejs_version: "7.8.0"
@@ -23,33 +22,13 @@ after_build:
     
     
     appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.0\linux.tar.gz"
-=======
-assembly_info:
-  patch: true
-  file: '**\AssemblyInfo.*'
-  assembly_version: '2.2.1'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '2.2.1'
-before_build:
-- cmd: appveyor-retry nuget restore
-build:
-  verbosity: minimal
-after_build:
-- cmd: >-
-    7z a Ombi.zip %APPVEYOR_BUILD_FOLDER%\Ombi.UI\bin\Release\
->>>>>>> origin/master
 
-    appveyor PushArtifact Ombi.zip
-    
-<<<<<<< HEAD
     appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.0\linux-arm.tar.gz"
     
     
 
 #cache:
 #- '%USERPROFILE%\.nuget\packages'
-=======
->>>>>>> origin/master
 deploy:
 - provider: GitHub
   release: Ombi v$(appveyor_build_version)
@@ -58,11 +37,3 @@ deploy:
   draft: true
   on:
     branch: master
-<<<<<<< HEAD
-
-=======
-- provider: Environment
-  name: Microserver
-  on:
-    branch: dev
->>>>>>> origin/master
