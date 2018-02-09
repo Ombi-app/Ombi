@@ -94,20 +94,8 @@ Search the existing requests to see if your suggestion has already been submitte
 
 # Installation
 
-<<<<<<< HEAD
 [Click Here](https://github.com/tidusjar/Ombi/wiki/Installation)
 [Here for Reverse Proxy Config Examples](https://github.com/tidusjar/Ombi/wiki/Reverse-Proxy-Examples)
-=======
-[Windows Guide!](https://forums.ombi.io/viewtopic.php?f=6&t=4)  
-[Ubuntu Guide!](http://www.htpcguides.com/install-plex-requests-net-ubuntu-14-x/)
-
-# FAQ
-Do you have an issue or a question? if so check out our [FAQ](https://github.com/tidusjar/Ombi/wiki/FAQ)!
-
-# Docker
-
-Looking for a Docker Image? Well [rogueosb](https://github.com/rogueosb/) has created a docker image for us, You can find it [here](https://github.com/rogueosb/docker-plexrequestsnet) :smile:
->>>>>>> origin/master
 
 # Contributors
 
