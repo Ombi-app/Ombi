@@ -1,0 +1,27 @@
+<p-sidebar [(visible)]="visible" position="right" styleClass="ui-sidebar-md side-back" (onHide)="hide()">
+    <div *ngIf="title">
+
+       
+        <h3>Reporting an Issue for "{{title}}"</h3>
+
+        <h4 *ngIf="issueCategory">Issue type: {{issueCategory.value}}</h4>
+
+        <div class="form-group">
+            <label for="subject" class="control-label">Subject</label>
+            <div>
+                <input type="text" [(ngModel)]="issue.subject" class="form-control form-control-custom " id="subject" name="subject"
+                    value="{{issue?.subject}}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="description" class="control-label">Description</label>
+            <div>
+                <textarea class="form-control-custom form-control" [(ngModel)]="issue.description" rows="5" type="text"></textarea>
+            </div>
+        </div>
+
+
+        <button type="button" [disabled]="submitted" class="btn btn-primary-outline" (click)="submit()">Submit</button>
+     </div>
+</p-sidebar>

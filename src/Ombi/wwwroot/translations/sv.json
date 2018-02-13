@@ -1,0 +1,155 @@
+{
+  "Login": {
+    "SignInButton": "Logga in",
+    "UsernamePlaceholder": "Användarnamn",
+    "PasswordPlaceholder": "Lösenord",
+    "RememberMe": "Kom ihåg mig",
+    "ForgottenPassword": "Glömt ditt lösenord?",
+    "Errors": {
+      "IncorrectCredentials": "Felaktigt användarnamn eller lösenord"
+    }
+  },
+  "Common": {
+    "ContinueButton": "Fortsätt",
+    "Available": "Tillgänglig",
+    "NotAvailable": "Not Available",
+    "ProcessingRequest": "Bearbetar förfrågan",
+    "PendingApproval": "Väntar på godkännande",
+    "RequestDenied": "Efterfrågan nekas",
+    "NotRequested": "Inte önskad",
+    "Requested": "Begärd önskan",
+    "Request": "Begär",
+    "Denied": "Nekad",
+    "Approve": "Godkän",
+    "PartlyAvailable": "Partly Available",
+    "Errors": {
+      "Validation": "Vänligen kontrollera din angivna värden"
+    }
+  },
+  "PasswordReset": {
+    "EmailAddressPlaceholder": "E-postadress",
+    "ResetPasswordButton": "Återställ lösenord"
+  },
+  "LandingPage": {
+    "OnlineHeading": "Online just nu",
+    "OnlineParagraph": "Medieservern är online för tillfället",
+    "PartiallyOnlineHeading": "Delvis online",
+    "PartiallyOnlineParagraph": "Medieservern är delvis online.",
+    "MultipleServersUnavailable": "Det är {{serversUnavailable}} servrar offline just nu utav {{totalServers}} servrar totalt.",
+    "SingleServerUnavailable": "Det finns {{serversUnavailable}} servrar offline utav {{totalServers}}.",
+    "OfflineHeading": "För närvarande Offline",
+    "OfflineParagraph": "Medieservern är för närvarande offline.",
+    "CheckPageForUpdates": "Kontrollera sidan för kontinuerlig platsuppdateringar."
+  },
+  "NavigationBar": {
+    "Search": "Sök",
+    "Requests": "Förfrågningar",
+    "UserManagement": "Användarhantering",
+    "Issues": "Problem",
+    "Donate": "Donera!",
+    "DonateLibraryMaintainer": "Donera till bibliotekets utvecklare",
+    "DonateTooltip": "Det är så här jag övertygar min fru att jag vill spendera min fritid att utveckla Ombi ;)",
+    "UpdateAvailableTooltip": "Uppdatering tillgänglig!",
+    "Settings": "Inställningar",
+    "Welcome": "Välkommen {{username}}",
+    "UpdateDetails": "Uppdatera information",
+    "Logout": "Logga ut",
+    "Language": {
+      "English": "Engelska",
+      "French": "Franska",
+      "Spanish": "Spanska",
+      "German": "Tyska",
+      "Italian": "Italienska",
+      "Danish": "Danska",
+      "Dutch": "Holländska",
+      "Norwegian": "Norska"
+    },
+    "OpenMobileApp": "Öppna Mobil App"
+  },
+  "Search": {
+    "Title": "Sök",
+    "Paragraph": "Vill du titta på något som inte är tillgängligt? Inga problem, Sök efter det nedan och önska det!",
+    "MoviesTab": "Filmer",
+    "TvTab": "TV-serier",
+    "Suggestions": "Förslag",
+    "NoResults": "Tyvärr, hittade vi inte några resultat!",
+    "ReleaseDate": "Publiceringsdatum",
+    "ViewOnPlex": "Visa på Plex",
+    "RequestAdded": "Efterfrågan om {{title}} har lagts till",
+    "Movies": {
+      "PopularMovies": "Populära filmer",
+      "UpcomingMovies": "Kommande filmer",
+      "TopRatedMovies": "Topprankade filmer",
+      "NowPlayingMovies": "Aktuella Filmer",
+      "HomePage": "Hemsida",
+      "Trailer": "Trailer"
+    },
+    "TvShows": {
+      "Popular": "Popular",
+      "Trending": "Trending",
+      "MostWatched": "Most Watched",
+      "MostAnticipated": "Most Anticipated",
+      "Results": "Results",
+      "AirDate": "Air Date:",
+      "AllSeasons": "All Seasons",
+      "FirstSeason": "First Season",
+      "LatestSeason": "Latest Season",
+      "Select": "Select ...",
+      "SubmitRequest": "Submit Request",
+      "Season": "Season: {{seasonNumber}}",
+      "SelectAllInSeason": "Select All in Season {{seasonNumber}}"
+    }
+  },
+  "Requests": {
+    "Title": "Efterfrågningar",
+    "Paragraph": "Nedan kan du se din och andras efterfrågningar, samt nedladdnings och godkännande status.",
+    "MoviesTab": "Filmer",
+    "TvTab": "TV-serier",
+    "RequestedBy": "Efterfrågats av:",
+    "Status": "Status:",
+    "RequestStatus": "Status för efterfrågan:",
+    "Denied": " Nekad:",
+    "ReleaseDate": "Releasedatum:",
+    "RequestDate": "Datum för efterfrågan:",
+    "QualityOverride": "Kvalité överskridande:",
+    "RootFolderOverride": "Root mapp överskridande:",
+    "ChangeRootFolder": "Byt Root mapp",
+    "ChangeQualityProfile": "Byt kvalité profil",
+    "MarkUnavailable": "Markera Otillgänglig",
+    "MarkAvailable": "Markera Tillgänglig",
+    "Remove": "Ta bort",
+    "Deny": "Neka",
+    "Season": "Säsong:",
+    "GridTitle": "Titel",
+    "AirDate": "Sändningsdatum",
+    "GridStatus": "Status",
+    "ReportIssue": "Report Issue",
+    "Filter": "Filter",
+    "SeasonNumberHeading": "Season: {seasonNumber}"
+  },
+  "Issues": {
+    "Title": "Problem",
+    "PendingTitle": "Väntande Problem",
+    "InProgressTitle": "Pågående problem",
+    "ResolvedTitle": "Lösta problem",
+    "ColumnTitle": "Titel",
+    "Category": "Kategori",
+    "Status": "Status",
+    "Details": "Detaljer",
+    "Description": "Beskrivning",
+    "NoComments": "Inga Kommentarer!",
+    "MarkInProgress": "Markera som pågående",
+    "MarkResolved": "Markera som löst",
+    "SendMessageButton": "Skicka",
+    "Subject": "Ämne",
+    "Comments": "Kommentarer",
+    "WriteMessagePlaceholder": "Skriv ditt meddelande här...",
+    "ReportedBy": "Rapporterad av"
+  },
+  "Filter": {
+    "ClearFilter": "Clear Filter",
+    "FilterHeaderAvailability": "Availability",
+    "FilterHeaderRequestStatus": "Status",
+    "Approved": "Approved"
+  }
+}

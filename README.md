@@ -1,10 +1,13 @@
-![](http://i.imgur.com/qQsN78U.png)
-____
-[![Gitter](https://badges.gitter.im/tidusjar/Ombi.svg)](https://gitter.im/tidusjar/Ombi?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex)
-[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/tidusjar/Ombi.svg)](http://isitmaintained.com/project/tidusjar/Ombi "Average time to resolve an issue")
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/tidusjar/Ombi.svg)](http://isitmaintained.com/project/tidusjar/Ombi "Percentage of issues still open")
+![](http://i.imgur.com/qQsN78U.png)   
+____ 
+[![Discord](https://img.shields.io/discord/102860784329052160.svg)](https://discord.gg/KxYZ64w)
+[![Docker Pulls](https://img.shields.io/docker/pulls/linuxserver/ombi.svg)](https://hub.docker.com/r/linuxserver/ombi/)
 [![Github All Releases](https://img.shields.io/github/downloads/tidusjar/Ombi/total.svg)](https://github.com/tidusjar/Ombi)
+[![firsttimersonly](http://img.shields.io/badge/first--timers--only-friendly-blue.svg?style=flat-square)](http://www.firsttimersonly.com/)
+[![Crowdin](https://d322cqt584bo4o.cloudfront.net/ombi/localized.svg)](https://crowdin.com/project/ombi)
+
+[![Patreon](https://www.ombi.io/img/patreondonate.svg)](https://patreon.com/tidusjar/Ombi)
+[![Paypal](https://www.ombi.io/img/paypaldonate.svg)](https://paypal.me/PlexRequestsNet)
 
 [![Patreon](https://www.ombi.io/img/patreondonate.svg)](https://patreon.com/tidusjar/Ombi)
 [![Paypal](https://www.ombi.io/img/paypaldonate.svg)](https://paypal.me/PlexRequestsNet)
@@ -13,52 +16,69 @@ ___
 
 [![Report a bug](http://i.imgur.com/xSpw482.png)](https://forums.ombi.io/viewforum.php?f=10) [![Feature request](http://i.imgur.com/mFO0OuX.png)](https://forums.ombi.io/posting.php?mode=post&f=20)
 
-| Service  | Master                      | Early Access                 | Dev                          |
-|----------|:---------------------------:|:----------------------------:|:----------------------------:|
-| AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/master?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/eap?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/eap) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/dev?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/dev)
-| Download |[![Download](http://i.imgur.com/odToka3.png)](https://github.com/tidusjar/Ombi/releases)             |      [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/eap/artifacts)       |  [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/dev/artifacts)            |
-
-We now have a forums!
-Check it out: [https://forums.ombi.io/](https://forums.ombi.io)
-
-Want to keep up to date with the rewrite? Follow [this issue](https://github.com/tidusjar/Ombi/issues/865)
-
+| Service  | Master (V2)                | Open Beta     (V3 - Recommended)          |
+|----------|:---------------------------:|:----------------------------:|
+| AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/master?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/DotNetCore?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/DotNetCore) | 
+| Download |[![Download](http://i.imgur.com/odToka3.png)](https://github.com/tidusjar/Ombi/releases)            |      [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/DotNetCore/artifacts)       | 
 # Features
-Here some of the features Ombi has:
-* All your users to Request Movies, TV Shows (Whole series, whole seasons or even single episodes!) and Albums
+Here are some of the features Ombi V3 has:
+* Now working without crashes on Linux.
+* Lets users request Movies and TV Shows (whether it being the entire series, an entire season, or even single episodes.)
 * Easily manage your requests
-* User management system (supports plex.tv accounts and local accounts)
-* Sending newsletters
-* Fault Queue for requests (Buffer requests if Sonar/Couchpotato/SickRage is offline)
-* Allow your users to report issues and manage them separately
-* A landing page that will give you the availability of your Plex server and also add custom notification text to inform your users of downtime.
-* Allow your users to get notifications!
-* Secure authentication so you don't have to worry about those script kiddies
-* We check to see if the request is already in Plex, if it's already in Plex then why you requesting it?!
-* We have allowed the ability for a user to add a custom note on a request
-* It automatically updates the status of requests when they are available on Plex
+* User management system (supports plex.tv, Emby and local accounts)
+* A landing page that will give you the availability of your Plex/Emby server and also add custom notification text to inform your users of downtime.
+* Allows your users to get custom notifications!
+* Secure authentication using best practises
+* Will show if the request is already on plex or even if it's already monitored.
+* Automatically updates the status of requests when they are available on Plex/Emby
 * Slick, responsive and mobile friendly UI
-
+* Ombi will automatically update itself :)
+* Very fast!
 
 ### Integration 
 We integrate with the following applications:
-* Plex server 1.2 (and higher)
-* Emby (beta)
+* Plex Media Server
+* Emby
 * Sonarr
-* SickRage
-* CouchPotato
-* Radarr (beta)
-* Watcher (beta)
-* Headphones
+* Radarr
+* DogNzb
+* Couch Potato
+
 
 ### Notifications
 Supported notifications:
 * SMTP Notifications (Email)
+* Discord
+* Slack
 * Pushbullet
 * Pushover
-* Slack
-* Discord
-* Weekly Recently Added email notification to all of your Plex Users!
+* Mattermost
+* Telegram
+
+### The difference between Version 3 and 2
+
+Over the last 8 months, we focused on the main functions on Ombi, a complete rewrite while making it better, faster and more stable.
+We have already done most of the work, but some features are still be missing in this first version.
+We are planning to bring back these features in V3 but for now you can find a list below with a quick comparison of features between v2 and v3.
+
+
+| Service  | Version 3 | Version 2 |
+|----------|:----------:|:----------:|
+| Multiple Plex/Emby Servers| Yes | No |
+| Emby & Plex support | Yes | Yes |
+| Mono dependency | No | Yes |
+| Notifications support | Yes| Yes |
+| Landing page | Yes (brand new) | Yes |
+| Login page | Yes (brand new) | Yes |
+| Custom Notification Messages | Yes | No |
+| Sending newsletters | Planned | Yes |
+| Send a Mass Email | Planned | Yes |
+| SickRage | Yes | Yes |
+| CouchPotato | Yes | Yes |
+| Watcher | Planned | Yes |
+| DogNzb | Yes | No |
+| Issues | Yes | Yes |
+| Headphones | No (support dropped) | Yes |
 
 # Feature Requests
 Feature requests are handled on FeatHub.
@@ -70,19 +90,12 @@ Search the existing requests to see if your suggestion has already been submitte
 
 # Preview
 
-![Preview](http://i.imgur.com/yrz2pzl.gif)
+![Preview](http://i.imgur.com/Nn1BwAM.gif)
 
 # Installation
 
-[Windows Guide!](https://forums.ombi.io/viewtopic.php?f=6&t=4)  
-[Ubuntu Guide!](http://www.htpcguides.com/install-plex-requests-net-ubuntu-14-x/)
-
-# FAQ
-Do you have an issue or a question? if so check out our [FAQ](https://github.com/tidusjar/Ombi/wiki/FAQ)!
-
-# Docker
-
-Looking for a Docker Image? Well [rogueosb](https://github.com/rogueosb/) has created a docker image for us, You can find it [here](https://github.com/rogueosb/docker-plexrequestsnet) :smile:
+[Click Here](https://github.com/tidusjar/Ombi/wiki/Installation)
+[Here for Reverse Proxy Config Examples](https://github.com/tidusjar/Ombi/wiki/Reverse-Proxy-Examples)
 
 # Contributors
 
@@ -104,3 +117,4 @@ If you feel like donating you can donate with the below buttons!
 ### Sponsors ###
 - [JetBrains](http://www.jetbrains.com/) for providing us with free licenses to their great tools
     - [ReSharper](http://www.jetbrains.com/resharper/)
+- [BrowserStack](https://www.browserstack.com) for allowing us to use their platform for testing

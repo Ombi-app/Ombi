@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+    <Version></Version>
+    <PackageVersion></PackageVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="6.1.1" />
+    <PackageReference Include="AutoMapper.Collection" Version="3.1.2" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ombi.Api\Ombi.Api.csproj" />
+    <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
+    <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
+    <ProjectReference Include="..\Ombi.Store\Ombi.Store.csproj" />
+  </ItemGroup>
+
+</Project>

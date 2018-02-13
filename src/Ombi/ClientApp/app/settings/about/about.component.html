@@ -1,0 +1,90 @@
+﻿
+<settings-menu></settings-menu>
+<div *ngIf="about">
+    <fieldset>
+        <legend>About</legend>
+        <form>
+            <div class="col-md-8">
+                <table class="table table-striped table-hover table-responsive table-condensed">
+                    <thead>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span>Version</span>
+                            </td>
+                            <td>
+                                <span>{{about.version}} <a [routerLink]="['/Settings/Update']" *ngIf="newUpdate" style="color:#df691a"><b>(New Update Available)</b></a></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>Branch</span>
+                            </td>
+                            <td>
+                                <span>{{about.branch}}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>Github</span>
+                            </td>
+                            <td>
+                                <a href="https://github.com/tidusjar/Ombi" target="_blank">https://github.com/tidusjar/Ombi</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>Discord</span>
+                            </td>
+                            <td>
+                                <a href="https://discord.gg/KxYZ64w" target="_blank">https://discord.gg/KxYZ64w</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <span>Reddit</span>
+                            </td>
+                            <td>
+                                <a href="https://www.reddit.com/r/Ombi/" target="_blank">https://www.reddit.com/r/Ombi/</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>OS Architecture</span>
+                            </td>
+                            <td>
+                                <span>{{about.osArchitecture}}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>OS Description</span>
+                            </td>
+                            <td>
+                                <span>{{about.osDescription}}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>Process Architecture</span>
+                            </td>
+                            <td>
+                                <span>{{about.processArchitecture}}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>Application Base Path</span>
+                            </td>
+                            <td>
+                                <span>{{about.applicationBasePath}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </fieldset>
+</div>

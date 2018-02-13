@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+    <Version></Version>
+    <PackageVersion></PackageVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TraktApiSharp" Version="1.0.0-alpha1-fixed-issue59" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ombi.Api\Ombi.Api.csproj" />
+    <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
+  </ItemGroup>
+
+</Project>

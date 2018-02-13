@@ -1,0 +1,70 @@
+﻿<settings-menu>
+</settings-menu>
+
+<wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Job-Settings'"></wiki>
+<div *ngIf="form">
+    <fieldset>
+        <legend>Job Settings</legend>
+        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:5%;">
+            <div class="col-md-6">
+                <small>Changes to any of the below requires you to restart Ombi.</small>
+                <div class="form-group">
+                    <label for="sonarrSync" class="control-label">Sonarr Sync</label>              
+                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('sonarrSync').hasError('required')}" id="sonarrSync" name="sonarrSync" formControlName="sonarrSync">
+                        <small *ngIf="form.get('sonarrSync').hasError('required')" class="error-text">The Sonarr Sync is required</small>
+                </div>
+                <div class="form-group">
+                    <label for="sickRageSync" class="control-label">SickRage Sync</label>              
+                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('sonarrSync').hasError('required')}" id="sickRageSync" name="sickRageSync" formControlName="sickRageSync">
+                        <small *ngIf="form.get('sickRageSync').hasError('required')" class="error-text">The SickRage Sync is required</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="radarrSync" class="control-label">Radarr Sync</label>              
+                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('radarrSync').hasError('required')}" id="radarrSync" name="radarrSync" formControlName="radarrSync">
+                        <small *ngIf="form.get('radarrSync').hasError('required')" class="error-text">The Radarr Sync is required</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="couchPotatoSync" class="control-label">CouchPotato Sync</label>              
+                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('radarrSync').hasError('required')}" id="couchPotatoSync" name="couchPotatoSync" formControlName="couchPotatoSync">
+                        <small *ngIf="form.get('couchPotatoSync').hasError('required')" class="error-text">The CouchPotato Sync is required</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="automaticUpdater" class="control-label">Automatic Update</label>              
+                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('automaticUpdater').hasError('required')}" id="automaticUpdater" name="automaticUpdater" formControlName="automaticUpdater">
+                        <small *ngIf="form.get('automaticUpdater').hasError('required')" class="error-text">The Automatic Update is required</small>
+                </div>
+
+
+
+                <div class="form-group">
+                    <div>
+                        <button type="submit" [disabled]="form.invalid" class="btn btn-primary-outline">Submit</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="plexContentSync" class="control-label">Plex Sync</label>              
+                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('plexContentSync').hasError('required')}" id="plexContentSync" name="plexContentSync" formControlName="plexContentSync">
+                        <small *ngIf="form.get('plexContentSync').hasError('required')" class="error-text">The Plex Sync is required</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="embyContentSync" class="control-label">Emby Sync</label>              
+                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('embyContentSync').hasError('required')}" id="embyContentSync" name="embyContentSync" formControlName="embyContentSync">
+                        <small *ngIf="form.get('embyContentSync').hasError('required')" class="error-text">The Emby Sync is required</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="userImporter" class="control-label">User Importer</label>              
+                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('userImporter').hasError('required')}" id="userImporter" name="userImporter" formControlName="userImporter">
+                        <small *ngIf="form.get('userImporter').hasError('required')" class="error-text">The User Importer is required</small>
+                </div>
+
+            </div>
+        </form>
+    </fieldset>
+</div>

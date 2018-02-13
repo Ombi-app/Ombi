@@ -1,0 +1,108 @@
+﻿<div *ngIf="childRequests">
+    <hr />
+    <div *ngFor="let child of childRequests">
+        <div class="col-md-12">
+
+            <div class="col-md-2">
+                <span [translate]="'Requests.RequestedBy'"></span>
+                
+                <span *ngIf="!isAdmin">{{child.requestedUser.userName}}</span>
+                <span *ngIf="isAdmin && child.requestedUser.alias">{{child.requestedUser.alias}}</span>
+                <span *ngIf="isAdmin && !child.requestedUser.alias">{{child.requestedUser.userName}}</span>
+            </div>
+
+
+            <div class="col-md-1 col-md-push-9">
+              <div *ngIf="isAdmin"> 
+                    <button id="approveBtn" *ngIf="child.canApprove && !child.approved" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> {{ 'Common.Approve' | translate }}</button>
+                    <button id="unavailableBtn" *ngIf="child.available" (click)="changeAvailability(child, false)" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change"><i class="fa fa-minus"></i> {{ 'Requests.MarkUnavailable' | translate }}</button>
+                    <button id="availableBtn" *ngIf="!child.available" (click)="changeAvailability(child, true)" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change"><i class="fa fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}</button>
+
+                    <button id="denyBtn" *ngIf="!child.denied" type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> {{ 'Requests.Deny' | translate }}</button>
+           
+                    <button id="removeBtn" type="button" (click)="removeRequest(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> {{ 'Requests.Remove' | translate }}</button>
+                </div>
+                <div class="dropdown" *ngIf="issueCategories && issuesEnabled" id="issueBtn">
+                        <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <i class="fa fa-plus"></i> {{ 'Requests.ReportIssue' | translate }}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li *ngFor="let cat of issueCategories"><a [routerLink]="" (click)="reportIssue(cat, child)">{{cat.value}}</a></li>
+                        </ul>
+                    </div>
+                
+            </div>
+        </div>
+        <div class="col-md-12">
+            <ngb-tabset>
+
+                <div *ngFor="let season of child.seasonRequests">
+                    <ngb-tab [id]="season.seasonNumber" [title]="season.seasonNumber">
+                        <ng-template ngbTabContent>
+                            <h2>{{ 'Requests.Season' | translate }} {{season.seasonNumber}}</h2>
+
+                            <table class="table table-striped table-hover table-responsive table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <a>
+                                                #
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a>
+                                                {{ 'Requests.GridTitle' | translate }}
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a>
+                                                {{ 'Requests.AirDate' | translate }}
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a>
+                                                {{ 'Requests.GridStatus' | translate }}
+                                            </a>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let ep of season.episodes">
+                                        <td>
+                                            {{ep.episodeNumber}}
+                                        </td>
+                                        <td>
+                                            {{ep.title}}
+                                        </td>
+                                        <td>
+                                            {{ep.airDate | date: 'dd/MM/yyyy' }}
+                                        </td>
+                                        <td>
+                                            <span *ngIf="child.denied" class="label label-danger" id="deniedLabel" [translate]="'Common.Denied'"></span>
+                                            <span *ngIf="!child.denied && ep.available" class="label label-success" id="availableLabel" [translate]="'Common.Available'"></span>
+                                            <span *ngIf="!child.denied &&ep.approved && !ep.available" class="label label-info" id="processingRequestLabel" [translate]="'Common.ProcessingRequest'"></span>
+                                            <div *ngIf="!child.denied && !ep.approved">
+                                                <div *ngIf="!ep.available"><span class="label label-warning" id="pendingApprovalLabel" [translate]="'Common.PendingApproval'"></span></div>
+                                            </div>
+                                            
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </ng-template>
+                    </ngb-tab>
+                </div>
+            </ngb-tabset>
+        </div>
+        <br />
+        <br />
+        <hr />
+    </div>
+
+</div>
+
+
+
+<issue-report [movie]="false" [visible]="issuesBarVisible" [title]="issueRequest?.title"
+[issueCategory]="issueCategorySelected" [id]="issueRequest?.id" (visibleChange)="issuesBarVisible = $event;"></issue-report>

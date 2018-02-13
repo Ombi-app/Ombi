@@ -1,0 +1,22 @@
+{
+    "version": "0.1.0",
+    "command": "dotnet",
+    "isShellCommand": true,
+    "args": [],
+    "tasks": [
+        {
+            "taskName": "build",
+            "args": [
+                "${workspaceRoot}/Ombi/Ombi.csproj"
+            ],
+            "isBuildCommand": true,
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "taskName": "lint",
+            "command": "npm",
+            "isShellCommand": true,
+            "args": ["run", "lint"]
+        }
+    ]
+}

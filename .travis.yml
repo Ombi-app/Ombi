@@ -1,5 +1,5 @@
 language: csharp
-solution: Ombi.sln
+solution: src/Ombi.sln
 install:
  - mono Tools/nuget.exe restore Ombi.sln
  - nuget install NUnit.Runners -OutputDirectory testrunner  

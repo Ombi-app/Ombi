@@ -1,0 +1,81 @@
+﻿.app-loading-container {
+    display: flex;
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -moz-box-direction: normal;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #1f1f1f;
+    color: white;
+}
+
+.app-loading {
+    margin: auto;
+    font-size: 2em;
+}
+
+.app-loading-one {
+    opacity: 0;
+    -webkit-animation: dot 1.3s infinite;
+    -moz-animation: dot 1.3s infinite;
+    -webkit-animation-delay: 0.0s;
+    -moz-animation-delay: 0.0s;
+    animation: app-loading-dot 1.3s infinite;
+    animation-delay: 0.0s;
+}
+
+.app-loading-two {
+    opacity: 0;
+    -webkit-animation: dot 1.3s infinite;
+    -moz-animation: dot 1.3s infinite;
+    -webkit-animation-delay: 0.2s;
+    -moz-animation-delay: 0.2s;
+    animation: app-loading-dot 1.3s infinite;
+    animation-delay: 0.2s;
+}
+
+.app-loading-three {
+    opacity: 0;
+    -webkit-animation: dot 1.3s infinite;
+    -moz-animation: dot 1.3s infinite;
+    -webkit-animation-delay: 0.3s;
+    -moz-animation-delay: 0.3s;
+    animation: app-loading-dot 1.3s infinite;
+    animation-delay: 0.3s;
+}
+
+@-webkit-keyframes app-loading-dot {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes app-loading-dot {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}

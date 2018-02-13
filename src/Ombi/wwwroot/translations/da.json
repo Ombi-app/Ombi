@@ -1,0 +1,155 @@
+{
+  "Login": {
+    "SignInButton": "Log ind",
+    "UsernamePlaceholder": "Brugernavn",
+    "PasswordPlaceholder": "Adgangskode",
+    "RememberMe": "Husk mig",
+    "ForgottenPassword": "Glemt adgangskode?",
+    "Errors": {
+      "IncorrectCredentials": "Forkert brugernavn eller adgangskode"
+    }
+  },
+  "Common": {
+    "ContinueButton": "Fortsæt",
+    "Available": "Tilgængelig",
+    "NotAvailable": "Ikke tilgængelig",
+    "ProcessingRequest": "Behandler anmodning",
+    "PendingApproval": "Afventer godkendelse",
+    "RequestDenied": "Anmodning afvist",
+    "NotRequested": "Ikke anmodet",
+    "Requested": "Anmodet",
+    "Request": "Anmod",
+    "Denied": "Afvist",
+    "Approve": "Godkendt",
+    "PartlyAvailable": "Delvist tilgængelig",
+    "Errors": {
+      "Validation": "Tjek venligst dine indtastede værdier"
+    }
+  },
+  "PasswordReset": {
+    "EmailAddressPlaceholder": "E-mail-adresse",
+    "ResetPasswordButton": "Nulstil adgangskode"
+  },
+  "LandingPage": {
+    "OnlineHeading": "Online nu",
+    "OnlineParagraph": "Medieserveren er online",
+    "PartiallyOnlineHeading": "Delvist online",
+    "PartiallyOnlineParagraph": "Medieserveren er delvist online.",
+    "MultipleServersUnavailable": "Der er {{serversUnavailable}} servere offline ud af {{totalServers}}.",
+    "SingleServerUnavailable": "Der er {{serversUnavailable}} server offline ud af {{totalServers}}.",
+    "OfflineHeading": "Offline nu",
+    "OfflineParagraph": "Medieserveren er offline.",
+    "CheckPageForUpdates": "Tjek denne side for løbende opdateringer."
+  },
+  "NavigationBar": {
+    "Search": "Søg",
+    "Requests": "Anmodninger",
+    "UserManagement": "Brugeradministration",
+    "Issues": "Problemer",
+    "Donate": "Donér!",
+    "DonateLibraryMaintainer": "Donér til vedligeholder af bibliotek",
+    "DonateTooltip": "Sådan overbeviser jeg min kone om, at jeg skal bruge min fritid på at udvikle Ombi :)",
+    "UpdateAvailableTooltip": "Ny opdatering venter!",
+    "Settings": "Indstillinger",
+    "Welcome": "Velkommen til {{username}}",
+    "UpdateDetails": "Opdater loginoplysninger",
+    "Logout": "Log af",
+    "Language": {
+      "English": "Engelsk",
+      "French": "Fransk",
+      "Spanish": "Spansk",
+      "German": "Tysk",
+      "Italian": "Italiensk",
+      "Danish": "Dansk",
+      "Dutch": "Hollandsk",
+      "Norwegian": "Norsk"
+    },
+    "OpenMobileApp": "Åbn mobilapp"
+  },
+  "Search": {
+    "Title": "Søg",
+    "Paragraph": "Ønsker du at se noget, som er utilgængeligt? intet problem, bare søg efter det nedenfor og anmod om det!",
+    "MoviesTab": "Film",
+    "TvTab": "Tv-serier",
+    "Suggestions": "Forslag",
+    "NoResults": "Beklager, vi fandt ingen resultater!",
+    "ReleaseDate": "Udgivelsesdato",
+    "ViewOnPlex": "Se på Plex",
+    "RequestAdded": "{{title}} er anmodet med succes",
+    "Movies": {
+      "PopularMovies": "Populære film",
+      "UpcomingMovies": "Kommende film",
+      "TopRatedMovies": "Bedst bedømte film",
+      "NowPlayingMovies": "Aktuelle film",
+      "HomePage": "Startside",
+      "Trailer": "Trailer"
+    },
+    "TvShows": {
+      "Popular": "Populære",
+      "Trending": "Aktuelle",
+      "MostWatched": "Mest sete",
+      "MostAnticipated": "Mest ventede",
+      "Results": "Resultat",
+      "AirDate": "Sendt den:",
+      "AllSeasons": "Alle sæsoner",
+      "FirstSeason": "Første sæson",
+      "LatestSeason": "Seneste sæson",
+      "Select": "Vælg ...",
+      "SubmitRequest": "Send anmodning",
+      "Season": "Sæson: {{seasonNumber}}",
+      "SelectAllInSeason": "Vælg alle i sæson {{seasonNumber}}"
+    }
+  },
+  "Requests": {
+    "Title": "Anmodninger",
+    "Paragraph": "Herunder kan du se dine og alle andre anmodninger, samt status for download og godkendelse.",
+    "MoviesTab": "Film",
+    "TvTab": "Tv-serier",
+    "RequestedBy": "Anmodet af:",
+    "Status": "Status:",
+    "RequestStatus": "Status for anmodning:",
+    "Denied": " Afvist:",
+    "ReleaseDate": "Udgivelsesdato:",
+    "RequestDate": "Dato for anmodning:",
+    "QualityOverride": "Tilsidesæt kvalitet:",
+    "RootFolderOverride": "Tilsidesæt rodmappe:",
+    "ChangeRootFolder": "Skift rodmappe",
+    "ChangeQualityProfile": "Skift kvalitetsprofil",
+    "MarkUnavailable": "Markér som utilgængelig",
+    "MarkAvailable": "Markér som tilgængelig",
+    "Remove": "Fjern",
+    "Deny": "Afvis",
+    "Season": "Sæson:",
+    "GridTitle": "Titel",
+    "AirDate": "Sendt",
+    "GridStatus": "Status",
+    "ReportIssue": "Rapportér problem",
+    "Filter": "Filter",
+    "SeasonNumberHeading": "Sæson: {seasonNumber}"
+  },
+  "Issues": {
+    "Title": "Problemer",
+    "PendingTitle": "Afventende problemer",
+    "InProgressTitle": "Igangværende probemer",
+    "ResolvedTitle": "Løste problemer",
+    "ColumnTitle": "Titel",
+    "Category": "Kategori",
+    "Status": "Status",
+    "Details": "Detaljer",
+    "Description": "Beskrivelse",
+    "NoComments": "Ingen kommentarer!",
+    "MarkInProgress": "Markér som igangværende",
+    "MarkResolved": "Markér som løst",
+    "SendMessageButton": "Send",
+    "Subject": "Emne",
+    "Comments": "Kommentarer",
+    "WriteMessagePlaceholder": "Indtast din besked her...",
+    "ReportedBy": "Anmeldt af"
+  },
+  "Filter": {
+    "ClearFilter": "Nulstil filter",
+    "FilterHeaderAvailability": "Tilgængelighed",
+    "FilterHeaderRequestStatus": "Status",
+    "Approved": "Godkendt"
+  }
+}

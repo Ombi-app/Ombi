@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Ombi.Api.TheMovieDb</AssemblyName>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+    <Version></Version>
+    <PackageVersion></PackageVersion>
+    <!--<NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>-->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="6.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ombi.Api\Ombi.Api.csproj" />
+    <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
+  </ItemGroup>
+
+</Project>

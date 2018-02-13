@@ -1,0 +1,60 @@
+﻿<settings-menu></settings-menu>
+
+<wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Authentication-Settings'"></wiki>
+<fieldset *ngIf="form">
+    <legend>Authentication</legend>
+    <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+
+        <div class="col-md-6">
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" id="allowNoPassword" name="allowNoPassword" formControlName="allowNoPassword">
+                    <label for="allowNoPassword" tooltipPosition="top" pTooltip="Allow users to login with out a password">Allow users to login without a password</label>
+                </div>
+            </div>
+
+            <!-- <hr/>
+            <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" id="requiredDigit" name="requiredDigit" formControlName="requiredDigit">
+                    <label for="requiredDigit">Require a digit in the password</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="requiredLength" class="control-label">Required password length</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="requiredLength" name="requiredLength" formControlName="requiredLength">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" id="requiredLowercase" name="requiredLowercase" formControlName="requiredLowercase">
+                    <label for="requiredLowercase">Require a lowercase character in the password</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" id="requireNonAlphanumeric" name="requireNonAlphanumeric" formControlName="requireNonAlphanumeric">
+                    <label for="requireNonAlphanumeric">Require a NonAlphanumeric character in the password</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" id="requireUppercase" name="requireUppercase" formControlName="requireUppercase">
+                    <label for="requireUppercase">Require a uppercase character in the password</label>
+                </div>
+            </div> -->
+
+            <div class="form-group">
+                <div>
+                    <button [disabled]="form.invalid" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</fieldset>

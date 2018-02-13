@@ -237,3 +237,9 @@ _Pvt_Extensions
 *.ncrunchproject
 *.ncrunchsolution
 
+*.txt
+
+
+# CAKE - C# Make
+/Tools/*
+*.db-journal

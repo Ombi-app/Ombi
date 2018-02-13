@@ -1,0 +1,70 @@
+﻿<div class="form-group">
+    <div>
+        <input type="text" id="search" class="form-control form-control-custom" placeholder="Search" (keyup)="search($event)">
+    </div>
+</div>
+<br />
+<!--TODO: I believe this +1 is causing off by one error skipping loading of tv shows
+    When removed and scrolling very slowly everything works as expected, however
+    if you scroll really quickly then you start getting duplicates of movies
+    since it's async and some subsequent results return first and then incrementer
+    is increased so you see movies which had already been gotten show up...
+    
+    Removing infinte-scroll and setting max to 1000 till we work out some sort of fix
+
+    -->
+<!--<div infinite-scroll
+     [infiniteScrollDistance]="1"
+     [infiniteScrollThrottle]="100"
+     (scrolled)="loadMore()">-->
+    <div>
+    <p-treeTable [value]="tvRequests">
+
+        <p-column>
+            <ng-template let-col let-node="rowData" pTemplate="header">
+                Results
+            </ng-template>
+            <ng-template let-col let-node="rowData" pTemplate="body">
+                <!--This is the section that holds the parent level results set-->
+                <div *ngIf="!node.leaf">
+                    <div class="row">                        
+                        <div class="myBg backdrop" [style.background-image]="node?.data?.background"></div>
+                        <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
+
+                        <div class="col-sm-2  small-padding" >
+
+                            <img class="img-responsive poster" src="{{node.data.posterPath || null}}" alt="poster">
+
+                        </div>
+
+                        <div class="col-sm-5  small-padding">
+                            <div>
+                                <a href="http://www.imdb.com/title/{{node.data.imdbId}}/" target="_blank">
+                                    <h4 class="request-title">{{node.data.title}} ({{node.data.releaseDate | date: 'yyyy'}})</h4>
+                                </a>
+                            </div>
+                            <br />
+                            <div>
+                                <span>Status: </span>
+                                <span class="label label-success">{{node.data.status}}</span>
+                            </div>
+
+    
+                            <div>Release Date: {{node.data.releaseDate | date}}</div>
+                            <br />
+                        </div>
+                        <div class="col-sm-3 col-sm-push-3  small-padding">
+
+                            <button  style="text-align: right" class="btn btn-sm btn-success-outline" (click)="openClosestTab($event)"><i class="fa fa-plus"></i> View</button>
+                        </div>
+                    </div>
+                </div>
+                <!--This is the section that holds the child seasons if they want to specify specific episodes-->
+                <div *ngIf="node.leaf">
+                    <tvrequests-children [childRequests]="node.data" [isAdmin] ="isAdmin" (requestDeleted)="childRequestDeleted($event)" [issueCategories]="issueCategories" [issuesEnabled]="issuesEnabled" [issueProviderId]="node.data.tvDbId" ></tvrequests-children>
+                </div>
+            </ng-template>
+        </p-column>
+    </p-treeTable>
+
+</div>

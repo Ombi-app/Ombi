@@ -1,0 +1,155 @@
+{
+  "Login": {
+    "SignInButton": "Iniciar sesión",
+    "UsernamePlaceholder": "Usuario",
+    "PasswordPlaceholder": "Contraseña",
+    "RememberMe": "Recuérdame",
+    "ForgottenPassword": "¿Has olvidado tu contraseña?",
+    "Errors": {
+      "IncorrectCredentials": "Nombre de usuario o contraseña\nincorrectos"
+    }
+  },
+  "Common": {
+    "ContinueButton": "Continuar",
+    "Available": "Disponible",
+    "NotAvailable": "Not Available",
+    "ProcessingRequest": "Procesando solicitud",
+    "PendingApproval": "Pendiente de aprobación",
+    "RequestDenied": "Solicitud denegada",
+    "NotRequested": "No solicitados",
+    "Requested": "Solicitado",
+    "Request": "Solicitar",
+    "Denied": "Denegado",
+    "Approve": "Aprobar",
+    "PartlyAvailable": "Partly Available",
+    "Errors": {
+      "Validation": "Por favor, comprueba los datos introducidos"
+    }
+  },
+  "PasswordReset": {
+    "EmailAddressPlaceholder": "Correo electrónico",
+    "ResetPasswordButton": "Restablecer Contraseña"
+  },
+  "LandingPage": {
+    "OnlineHeading": "En línea",
+    "OnlineParagraph": "El servidor de medios esta en línea",
+    "PartiallyOnlineHeading": "Parcialmente en línea",
+    "PartiallyOnlineParagraph": "El servidor de medios está parcialmente en línea.",
+    "MultipleServersUnavailable": "{{serversUnavailable}} de {{totalServers}} servidores están fuera de línea.",
+    "SingleServerUnavailable": "Hay {{serversUnavailable}} de {{totalServers}} servidores fuera de línea.",
+    "OfflineHeading": "Fuera de línea",
+    "OfflineParagraph": "El servidor de medios está fuera de línea.",
+    "CheckPageForUpdates": "Consulte esta página para ver las últimas novedades."
+  },
+  "NavigationBar": {
+    "Search": "Buscar",
+    "Requests": "Solicitudes",
+    "UserManagement": "Gestión de usuarios",
+    "Issues": "Incidencias",
+    "Donate": "¡Donar!",
+    "DonateLibraryMaintainer": "Donate to Library Maintainer",
+    "DonateTooltip": "Para que mi esposa me deje desarrollar Ombi ;)",
+    "UpdateAvailableTooltip": "¡Actualización disponible!",
+    "Settings": "Ajustes",
+    "Welcome": "Bienvenido {{username}}",
+    "UpdateDetails": "Detalles de la actualización",
+    "Logout": "Cerrar sesión",
+    "Language": {
+      "English": "Inglés",
+      "French": "Francés",
+      "Spanish": "Español",
+      "German": "Alemán",
+      "Italian": "Italiano",
+      "Danish": "Danés",
+      "Dutch": "Holandés",
+      "Norwegian": "Norwegian"
+    },
+    "OpenMobileApp": "Open Mobile App"
+  },
+  "Search": {
+    "Title": "Buscar",
+    "Paragraph": "¿Quieres ver algo que no está disponible? No hay problema, búscalo y solicítalo!",
+    "MoviesTab": "Películas",
+    "TvTab": "Series",
+    "Suggestions": "Sugerencias",
+    "NoResults": "¡Lo sentimos, no encontramos ningún resultado!",
+    "ReleaseDate": "Fecha de estreno",
+    "ViewOnPlex": "Ver en Plex",
+    "RequestAdded": "La solicitud de {{title}} se ha agregado con éxito",
+    "Movies": {
+      "PopularMovies": "Películas populares",
+      "UpcomingMovies": "Próximas películas",
+      "TopRatedMovies": "Mejores películas",
+      "NowPlayingMovies": "Películas en cartelera",
+      "HomePage": "Inicio",
+      "Trailer": "Tráiler"
+    },
+    "TvShows": {
+      "Popular": "Popular",
+      "Trending": "Trending",
+      "MostWatched": "Most Watched",
+      "MostAnticipated": "Most Anticipated",
+      "Results": "Results",
+      "AirDate": "Air Date:",
+      "AllSeasons": "All Seasons",
+      "FirstSeason": "First Season",
+      "LatestSeason": "Latest Season",
+      "Select": "Select ...",
+      "SubmitRequest": "Submit Request",
+      "Season": "Season: {{seasonNumber}}",
+      "SelectAllInSeason": "Select All in Season {{seasonNumber}}"
+    }
+  },
+  "Requests": {
+    "Title": "Solicitudes",
+    "Paragraph": "A continuación puedes ver tanto las tuyas como las demás solicitudes, así como su estado de descarga y aprobación.",
+    "MoviesTab": "Películas",
+    "TvTab": "Series",
+    "RequestedBy": "Solicitado por:",
+    "Status": "Estado:",
+    "RequestStatus": "Estado de la solicitud:",
+    "Denied": " Denegado:",
+    "ReleaseDate": "Fecha de estreno:",
+    "RequestDate": "Fecha de solicitud:",
+    "QualityOverride": "Sobreescribir calidad:",
+    "RootFolderOverride": "Sobreescribir carpeta raíz:",
+    "ChangeRootFolder": "Cambiar Carpeta Raíz",
+    "ChangeQualityProfile": "Cambiar Perfil de Calidad",
+    "MarkUnavailable": "Marcar como no disponible",
+    "MarkAvailable": "Marcar como disponible",
+    "Remove": "Eliminar",
+    "Deny": "Denegar",
+    "Season": "Temporada:",
+    "GridTitle": "Título",
+    "AirDate": "Fecha de estreno",
+    "GridStatus": "Estado",
+    "ReportIssue": "Report Issue",
+    "Filter": "Filter",
+    "SeasonNumberHeading": "Season: {seasonNumber}"
+  },
+  "Issues": {
+    "Title": "Incidencias",
+    "PendingTitle": "Incidencias pendientes",
+    "InProgressTitle": "Incidencias en progreso",
+    "ResolvedTitle": "Incidencias resueltas",
+    "ColumnTitle": "Título",
+    "Category": "Categoría",
+    "Status": "Estado",
+    "Details": "Detalles",
+    "Description": "Descripción",
+    "NoComments": "¡Sin comentarios!",
+    "MarkInProgress": "Marcar En Proceso",
+    "MarkResolved": "Marcar resuelto",
+    "SendMessageButton": "Enviar",
+    "Subject": "Asunto",
+    "Comments": "Comentarios",
+    "WriteMessagePlaceholder": "Escribe tu mensaje aquí...",
+    "ReportedBy": "Informado por"
+  },
+  "Filter": {
+    "ClearFilter": "Clear Filter",
+    "FilterHeaderAvailability": "Availability",
+    "FilterHeaderRequestStatus": "Status",
+    "Approved": "Approved"
+  }
+}

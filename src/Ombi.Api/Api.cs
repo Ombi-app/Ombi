@@ -1,0 +1,115 @@
+﻿using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
+using Ombi.Helpers;
+
+namespace Ombi.Api
+{
+    public class Api : IApi
+    {
+        public Api(ILogger<Api> log, IOmbiHttpClient client)
+        {
+            Logger = log;
+            _client = client;
+        }
+
+        private ILogger<Api> Logger { get; }
+        private readonly IOmbiHttpClient _client;
+
+        private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore
+        };
+
+        public async Task<T> Request<T>(Request request)
+        {
+            using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, request.FullUri))
+            {
+                AddHeadersBody(request, httpRequestMessage);
+
+                var httpResponseMessage = await _client.SendAsync(httpRequestMessage);
+
+                if (!httpResponseMessage.IsSuccessStatusCode)
+                {
+                    LogError(request, httpResponseMessage);
+                }
+
+                // do something with the response
+                var receivedString = await httpResponseMessage.Content.ReadAsStringAsync();
+                if (request.ContentType == ContentType.Json)
+                {
+                    request.OnBeforeDeserialization?.Invoke(receivedString);
+                    return JsonConvert.DeserializeObject<T>(receivedString, Settings);
+                }
+                else
+                {
+                    // XML
+                    XmlSerializer serializer = new XmlSerializer(typeof(T));
+                    StringReader reader = new StringReader(receivedString);
+                    var value = (T)serializer.Deserialize(reader);
+                    return value;
+                }
+            }
+
+        }
+
+        public async Task<string> RequestContent(Request request)
+        {
+            using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, request.FullUri))
+            {
+                AddHeadersBody(request, httpRequestMessage);
+
+                var httpResponseMessage = await _client.SendAsync(httpRequestMessage);
+                if (!httpResponseMessage.IsSuccessStatusCode)
+                {
+                    LogError(request, httpResponseMessage);
+                }
+                // do something with the response
+                var data = httpResponseMessage.Content;
+
+                return await data.ReadAsStringAsync();
+            }
+
+        }
+
+        public async Task Request(Request request)
+        {
+            using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, request.FullUri))
+            {
+                AddHeadersBody(request, httpRequestMessage);
+                var httpResponseMessage = await _client.SendAsync(httpRequestMessage);
+                if (!httpResponseMessage.IsSuccessStatusCode)
+                {
+                    LogError(request, httpResponseMessage);
+                }
+            }
+        }
+
+        private static void AddHeadersBody(Request request, HttpRequestMessage httpRequestMessage)
+        {
+            // Add the Json Body
+            if (request.JsonBody != null)
+            {
+                httpRequestMessage.Content = new JsonContent(request.JsonBody);
+                httpRequestMessage.Content.Headers.ContentType =
+                    new MediaTypeHeaderValue("application/json"); // Emby connect fails if we have the charset in the header
+            }
+
+            // Add headers
+            foreach (var header in request.Headers)
+            {
+                httpRequestMessage.Headers.Add(header.Key, header.Value);
+            }
+        }
+
+        private void LogError(Request request, HttpResponseMessage httpResponseMessage)
+        {
+            Logger.LogError(LoggingEvents.Api,
+                $"StatusCode: {httpResponseMessage.StatusCode}, Reason: {httpResponseMessage.ReasonPhrase}, RequestUri: {request.FullUri}");
+        }
+    }
+}

@@ -1,0 +1,139 @@
+﻿<div class="{{ user.name && (hasRole('Admin') || hasRole('PowerUser')) ? 'adminUser' : 'user'}}">
+    <p-growl [value]="notificationService.messages" [life]="3000"></p-growl>
+    <nav *ngIf="showNav" class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div *ngIf="customizationSettings">
+                    <div *ngIf="customizationSettings.applicationName; then aplicationNameBlock; else ombiBlock"></div>
+                    <ng-template #aplicationNameBlock>
+                        <a class="navbar-brand" [routerLink]="['/search']">{{customizationSettings.applicationName}}</a>
+                    </ng-template>
+                    <ng-template #ombiBlock>
+                        <a class="navbar-brand" [routerLink]="['/search']">Ombi</a>
+                    </ng-template>
+                </div>
+
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li id="Search" [routerLinkActive]="['active']">
+                        <a [routerLink]="['/search']">
+                            <i class="fa fa-search"></i> {{ 'NavigationBar.Search' | translate }}</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav">
+                    <li id="Requests" [routerLinkActive]="['active']">
+                        <a [routerLink]="['/requests']">
+                            <i class="fa fa-th-list"></i> {{ 'NavigationBar.Requests' | translate }}</a>
+                    </li>
+                </ul>
+                <ul *ngIf="issuesEnabled" class="nav navbar-nav">
+                    <li id="Issues" [routerLinkActive]="['active']">
+                        <a [routerLink]="['/issues']">
+                            <i class="fa fa-exclamation-circle"></i> {{ 'NavigationBar.Issues' | translate }}</a>
+                    </li>
+                </ul>
+                <ul *ngIf="hasRole('Admin') || hasRole('PowerUser')" class="nav navbar-nav">
+                    <li id="UserManagement" [routerLinkActive]="['active']">
+                        <a [routerLink]="['/usermanagement']">
+                            <i class="fa fa-user"></i> {{ 'NavigationBar.UserManagement' | translate }}</a>
+                    </li>
+                </ul>
+                <ul *ngIf="hasRole('Admin') || hasRole('PowerUser')" class="nav navbar-nav">
+                    <li>
+                        <a href="https://www.paypal.me/PlexRequestsNet" target="_blank" pTooltip="{{ 'NavigationBar.DonateTooltip' | translate }}">
+                            <i class="fa fa-heart" style="color:red"></i> {{ 'NavigationBar.Donate' | translate }}</a>
+                    </li>
+                </ul>
+                <div *ngIf="customizationSettings">
+                    <ul *ngIf="customizationSettings.enableCustomDonations" class="nav navbar-nav">
+                        <li>
+                            <a href="{{customizationSettings.customDonationUrl}}" target="_blank">
+                                <i class="fa fa-heart" style="color:yellow"></i> {{ customizationSettings.customDonationMessage ? customizationSettings.customDonationMessage : ('NavigationBar.DonateLibraryMaintainer' | translate) }}</a>
+                        </li>
+                    </ul>
+                </div>
+
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li *ngIf="hasRole('Admin') " [routerLinkActive]="['active']">
+                        <a [routerLink]="['/Settings/About']">
+
+                            <i *ngIf="!updateAvailable" class="fa fa-cog"></i>
+                            <i *ngIf="updateAvailable" class="fa fa-warning" style="color:#f57f17" pTooltip="{{ 'NavigationBar.UpdateAvailableTooltip' | translate }}"
+                                tooltipPosition="left" [tooltipZIndex]="999999"></i>
+
+                            {{ 'NavigationBar.Settings' | translate }}
+
+                        </a>
+                    </li>
+                    <li [routerLinkActive]="['active']" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            <i class="fa fa-user"></i>{{ 'NavigationBar.Welcome' | translate: {username: user.name} }}
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li [routerLinkActive]="['active']">
+                                <a [routerLink]="['/usermanagement/updatedetails']">
+                                    <i class="fa fa-key"></i>{{ 'NavigationBar.UpdateDetails' | translate }}</a>
+                            </li>
+                            <li *ngIf="showMobileLink" [routerLinkActive]="['active']">
+                                    <a href="#" (click)="openMobileApp($event)">
+                                        <i class="fa fa-mobile"></i>{{ 'NavigationBar.OpenMobileApp' | translate }}</a>
+                            </li>
+                            <li [routerLinkActive]="['active']">
+                                <a (click)="logOut()">
+                                    <i class="fa fa-sign-out"></i> {{ 'NavigationBar.Logout' | translate }}</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            <i class="fa fa-language" aria-hidden="true">
+                                <span class="caret"></span>
+                            </i>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li [ngClass]="{'active': 'en' === translate.currentLang}">
+                                <a (click)="translate.use('en')" [translate]="'NavigationBar.Language.English'"></a>
+                            </li>
+                            <li [ngClass]="{'active': 'fr' === translate.currentLang}">
+                                <a (click)="translate.use('fr')" [translate]="'NavigationBar.Language.French'"></a>
+                            </li>
+                            <li [ngClass]="{'active': 'da' === translate.currentLang}">
+                                <a (click)="translate.use('da')" [translate]="'NavigationBar.Language.Danish'"></a>
+                            </li>
+                            <li [ngClass]="{'active': 'de' === translate.currentLang}">
+                                <a (click)="translate.use('de')" [translate]="'NavigationBar.Language.German'"></a>
+                            </li>
+                            <li [ngClass]="{'active': 'it' === translate.currentLang}">
+                                <a (click)="translate.use('it')" [translate]="'NavigationBar.Language.Italian'"></a>
+                            </li>
+                            <li [ngClass]="{'active': 'es' === translate.currentLang}">
+                                <a (click)="translate.use('es')" [translate]="'NavigationBar.Language.Spanish'"></a>
+                            </li>
+                            <li [ngClass]="{'active': 'nl' === translate.currentLang}">
+                                <a (click)="translate.use('nl')" [translate]="'NavigationBar.Language.Dutch'"></a>
+                            </li>
+                            <li [ngClass]="{'active': 'no' === translate.currentLang}">
+                                <a (click)="translate.use('no')" [translate]="'NavigationBar.Language.Norwegian'"></a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div [ngClass]="{'container top-spacing': showNav}" id="{{currentUrl}}">
+        <router-outlet></router-outlet>
+    </div>
+</div>

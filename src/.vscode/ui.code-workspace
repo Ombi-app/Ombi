@@ -1,0 +1,10 @@
+{
+	"folders": [
+		{
+			"path": "C:\\Users\\Jamie.Rees\\Source\\Repos\\test2\\ombi\\src\\Ombi"
+		}
+	],
+	"settings": {
+		"typescript.tsdk": "node_modules\\typescript\\lib"
+	}
+}

@@ -1,0 +1,112 @@
+﻿@using Ombi.Core.Settings
+@using Ombi.Settings.Settings.Models
+@inject ISettingsService<OmbiSettings> Settings
+@inject ISettingsService<CustomizationSettings> CustomizationSettings
+@{
+    var s = await Settings.GetSettingsAsync();
+    var customization = await CustomizationSettings.GetSettingsAsync();
+    var baseUrl = s?.BaseUrl ?? string.Empty;
+
+    if (!baseUrl.EndsWith("/"))
+    {
+        baseUrl = baseUrl.TrimEnd('/');
+    }
+    if (baseUrl.StartsWith("/"))
+    {
+        baseUrl = baseUrl.TrimStart('/');
+    }
+
+    var appName = customization.ApplicationName;
+    if(string.IsNullOrEmpty(appName))
+    {
+        appName = "Ombi";
+    }
+
+    
+}
+<!DOCTYPE html>
+<html>
+<head>
+        <!--
+
+
+
+             
+                                                                      
+                                          bbbbbbbb                    
+     OOOOOOOOO                            b::::::b              iiii  
+   OO:::::::::OO                          b::::::b             i::::i 
+ OO:::::::::::::OO                        b::::::b              iiii  
+O:::::::OOO:::::::O                        b:::::b                    
+O::::::O   O::::::O   mmmmmmm    mmmmmmm   b:::::bbbbbbbbb    iiiiiii 
+O:::::O     O:::::O mm:::::::m  m:::::::mm b::::::::::::::bb  i:::::i 
+O:::::O     O:::::Om::::::::::mm::::::::::mb::::::::::::::::b  i::::i 
+O:::::O     O:::::Om::::::::::::::::::::::mb:::::bbbbb:::::::b i::::i 
+O:::::O     O:::::Om:::::mmm::::::mmm:::::mb:::::b    b::::::b i::::i 
+O:::::O     O:::::Om::::m   m::::m   m::::mb:::::b     b:::::b i::::i 
+O:::::O     O:::::Om::::m   m::::m   m::::mb:::::b     b:::::b i::::i 
+O::::::O   O::::::Om::::m   m::::m   m::::mb:::::b     b:::::b i::::i 
+O:::::::OOO:::::::Om::::m   m::::m   m::::mb:::::bbbbbb::::::bi::::::i
+ OO:::::::::::::OO m::::m   m::::m   m::::mb::::::::::::::::b i::::::i
+   OO:::::::::OO   m::::m   m::::m   m::::mb:::::::::::::::b  i::::::i
+     OOOOOOOOO     mmmmmm   mmmmmm   mmmmmmbbbbbbbbbbbbbbbb   iiiiiiii
+                                                                      
+                                                                      
+                                                                      
+                                                                      
+                                                                      
+                                                                      
+
+     -->
+    <meta charset="utf-8"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="Ombi, media request tool">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@appName</title>
+    <base href="/@baseUrl"/>
+    <link rel="SHORTCUT ICON" href="~/images/favicon/favicon.ico"/>
+    <link rel="icon" href="~/images/favicon/favicon.ico" type="image/ico"/>
+
+    <link rel="apple-touch-icon" sizes="57x57" href="~/images/favicon/apple-icon-57x57.png"/>
+    <link rel="apple-touch-icon" sizes="60x60" href="~/images/favicon/apple-icon-60x60.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="~/images/favicon/apple-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="76x76" href="~/images/favicon/apple-icon-76x76.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="~/images/favicon/apple-icon-114x114.png"/>
+    <link rel="apple-touch-icon" sizes="120x120" href="~/images/favicon/apple-icon-120x120.png"/>
+    <link rel="apple-touch-icon" sizes="144x144" href="~/images/favicon/apple-icon-144x144.png"/>
+    <link rel="apple-touch-icon" sizes="152x152" href="~/images/favicon/apple-icon-152x152.png"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="~/images/favicon/apple-icon-180x180.png"/>
+    <link rel="icon" type="image/png" sizes="192x192" href="~/images/favicon/android-icon-192x192.png"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="~/images/favicon/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="96x96" href="~/images/favicon/favicon-96x96.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="~/images/favicon/favicon-16x16.png"/>
+    <link rel="manifest" href="~/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff"/>
+    <meta name="msapplication-TileImage" content="~/images/favicon/ms-icon-144x144.png"/>
+    <meta name="theme-color" content="#ffffff"/>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/loading.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/dist/vendor.css" asp-append-version="true"/>
+    <script src="~/dist/vendor.js" asp-append-version="true" defer></script>
+    <script src="~/dist/main.js" asp-append-version="true" defer></script>
+</head>
+<body>
+       @{
+        if (customization.HasPresetTheme)
+        {
+            <style>
+                @Html.Raw(customization.PresetThemeContent)
+                </style>
+        }
+
+        if (!string.IsNullOrEmpty(customization.CustomCssLink))
+        {
+            <link rel="stylesheet" href="@customization.CustomCssLink" asp-append-version="true"/>
+        }
+    }
+
+    @RenderBody()
+</body>
+</html>

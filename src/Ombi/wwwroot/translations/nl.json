@@ -1,0 +1,155 @@
+{
+  "Login": {
+    "SignInButton": "Aanmelden",
+    "UsernamePlaceholder": "Gebruikersnaam",
+    "PasswordPlaceholder": "Wachtwoord",
+    "RememberMe": "Onthoud Mij",
+    "ForgottenPassword": "Wachtwoord vergeten?",
+    "Errors": {
+      "IncorrectCredentials": "Onjuiste gebruikersnaam of wachtwoord"
+    }
+  },
+  "Common": {
+    "ContinueButton": "Doorgaan",
+    "Available": "Beschikbaar",
+    "NotAvailable": "Not Available",
+    "ProcessingRequest": "Verzoek wordt verwerkt",
+    "PendingApproval": "Wacht op goedkeuring",
+    "RequestDenied": "Verzoek geweigerd",
+    "NotRequested": "Niet verzocht",
+    "Requested": "Verzocht",
+    "Request": "Verzoek",
+    "Denied": "Geweigerd",
+    "Approve": "Accepteer",
+    "PartlyAvailable": "Partly Available",
+    "Errors": {
+      "Validation": "Fout: Controleer de ingevulde waardes"
+    }
+  },
+  "PasswordReset": {
+    "EmailAddressPlaceholder": "E-mail adres",
+    "ResetPasswordButton": "Herstel wachtwoord"
+  },
+  "LandingPage": {
+    "OnlineHeading": "Online",
+    "OnlineParagraph": "De mediaserver is momenteel online",
+    "PartiallyOnlineHeading": "Gedeeltelijk Online",
+    "PartiallyOnlineParagraph": "De mediaserver is gedeeltelijk online.",
+    "MultipleServersUnavailable": "Er zijn {{serversUnavailable}} servers offline van de in totaal {{totalServers}}.",
+    "SingleServerUnavailable": "Er is {{serversUnavailable}} server offline uit {{totalServers}}.",
+    "OfflineHeading": "Op dit moment Offline",
+    "OfflineParagraph": "De mediaserver is momenteel offline.",
+    "CheckPageForUpdates": "Controleer deze pagina voor updates."
+  },
+  "NavigationBar": {
+    "Search": "Zoeken",
+    "Requests": "Verzoeklijst",
+    "UserManagement": "Gebruikersbeheer",
+    "Issues": "Problemen",
+    "Donate": "Doneer!",
+    "DonateLibraryMaintainer": "Donate to Library Maintainer",
+    "DonateTooltip": "Zo heb ik mijn vrouw overtuigd dat ik Ombi mag ontwikkelen ;)",
+    "UpdateAvailableTooltip": "Update beschikbaar!",
+    "Settings": "Instellingen",
+    "Welcome": "Welkom {{username}}",
+    "UpdateDetails": "Update gegevens",
+    "Logout": "Logout",
+    "Language": {
+      "English": "Engels",
+      "French": "Frans",
+      "Spanish": "Spaans",
+      "German": "Duits",
+      "Italian": "Italiaans",
+      "Danish": "Deens",
+      "Dutch": "Nederlands",
+      "Norwegian": "Norwegian"
+    },
+    "OpenMobileApp": "Open Mobile App"
+  },
+  "Search": {
+    "Title": "Zoeken",
+    "Paragraph": "Wil je iets kijken dat momenteel niet beschikbaar is? Geen probleem, zoek het hieronder op en vraag het aan!",
+    "MoviesTab": "Films",
+    "TvTab": "TV Series",
+    "Suggestions": "Suggesties",
+    "NoResults": "Sorry, we hebben geen resultaten gevonden!",
+    "ReleaseDate": "Releasedatum",
+    "ViewOnPlex": "Bekijk op Plex",
+    "RequestAdded": "Aanvraag voor {{title}} is succesvol toegevoegd",
+    "Movies": {
+      "PopularMovies": "Populaire films",
+      "UpcomingMovies": "Aankomende Films",
+      "TopRatedMovies": "Best Beoordeelde Films",
+      "NowPlayingMovies": "In Cinema Films",
+      "HomePage": "Startpagina",
+      "Trailer": "Trailer"
+    },
+    "TvShows": {
+      "Popular": "Popular",
+      "Trending": "Trending",
+      "MostWatched": "Most Watched",
+      "MostAnticipated": "Most Anticipated",
+      "Results": "Results",
+      "AirDate": "Air Date:",
+      "AllSeasons": "All Seasons",
+      "FirstSeason": "First Season",
+      "LatestSeason": "Latest Season",
+      "Select": "Select ...",
+      "SubmitRequest": "Submit Request",
+      "Season": "Season: {{seasonNumber}}",
+      "SelectAllInSeason": "Select All in Season {{seasonNumber}}"
+    }
+  },
+  "Requests": {
+    "Title": "Verzoeken",
+    "Paragraph": "Hieronder zie je jouw en alle andere verzoeken, evenals hun download en goedkeuring status.",
+    "MoviesTab": "Films",
+    "TvTab": "TV Series",
+    "RequestedBy": "Verzocht Door:",
+    "Status": "Status:",
+    "RequestStatus": "Aanvraagstatus:",
+    "Denied": " Geweigerd:",
+    "ReleaseDate": "Releasedatum:",
+    "RequestDate": "Aanvraag Datum:",
+    "QualityOverride": "Kwaliteit overschrijven:",
+    "RootFolderOverride": "Hoofdmap overschrijven:",
+    "ChangeRootFolder": "Hoofdmap wijzigen",
+    "ChangeQualityProfile": "Kwaliteitsprofiel wijzigen",
+    "MarkUnavailable": "Markeren als onbeschikbaar",
+    "MarkAvailable": "Markeren als beschikbaar",
+    "Remove": "Verwijderen",
+    "Deny": "Weigeren",
+    "Season": "Seizoen:",
+    "GridTitle": "Titel",
+    "AirDate": "Uitzenddatum",
+    "GridStatus": "Status",
+    "ReportIssue": "Report Issue",
+    "Filter": "Filter",
+    "SeasonNumberHeading": "Season: {seasonNumber}"
+  },
+  "Issues": {
+    "Title": "Problemen",
+    "PendingTitle": "Onopgeloste Problemen",
+    "InProgressTitle": "Problemen in Behandeling",
+    "ResolvedTitle": "Opgeloste Problemen",
+    "ColumnTitle": "Titel",
+    "Category": "Categorie",
+    "Status": "Status",
+    "Details": "Details",
+    "Description": "Beschrijving",
+    "NoComments": "Geen reacties!",
+    "MarkInProgress": "Markeer In Behandeling",
+    "MarkResolved": "Markeer Opgelost",
+    "SendMessageButton": "Verstuur",
+    "Subject": "Onderwerp",
+    "Comments": "Opmerkingen",
+    "WriteMessagePlaceholder": "Schrijf hier je bericht...",
+    "ReportedBy": "Gerapporteerd door"
+  },
+  "Filter": {
+    "ClearFilter": "Clear Filter",
+    "FilterHeaderAvailability": "Availability",
+    "FilterHeaderRequestStatus": "Status",
+    "Approved": "Approved"
+  }
+}

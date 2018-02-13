@@ -1,0 +1,85 @@
+﻿
+<settings-menu></settings-menu>
+<wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Update-Settings'"></wiki>
+<div *ngIf="form">
+    <fieldset>
+        <legend>Update Settings</legend>
+        <div class="form-group"  style="float: right">
+            <div *ngIf="updateAvailable">
+                <button (click)="update()" [disabled]="!enableUpdateButton" class="btn btn-success-outline">Update</button>
+            </div>
+            <div *ngIf="!updateAvailable">
+                <button (click)="checkForUpdate()" class="btn btn-primary-outline">Check For Update</button>
+            </div>
+        </div>
+        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:5%;">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="autoUpdateEnabled" formControlName="autoUpdateEnabled">
+                        <label for="autoUpdateEnabled">Enable Automatic Update</label>
+                    </div>
+                </div>
+
+                <div class="form-group" *ngIf="isWindows">
+                    <div class="checkbox">
+                        <input type="checkbox" id="windowsService" formControlName="windowsService">
+                        <label for="windowsService">Running as a Windows Service</label>
+                    </div>
+                </div>
+                
+                <div class="form-group" *ngIf="!form.value.windowsService">
+                    <div class="checkbox">
+                        <input type="checkbox" id="useScript" formControlName="useScript">
+                        <label for="useScript">Use your own updater script</label>
+                    </div>
+                </div>
+                
+                
+                <div *ngIf="form.value.windowsService">
+                    <div class="form-group">
+                        <label for="windowsServiceName" class="control-label">Windows Service Name</label>
+                        <input type="text" class="form-control form-control-custom " id="windowsServiceName" name="windowsServiceName" formControlName="windowsServiceName">
+                    </div>
+                </div>
+
+
+                <div [hidden]="!useScript || form.value.windowsService">
+                    <small>For information how to use this, please press the wiki button at the top of the page</small>
+                    <div class="form-group">
+                        <label for="scriptLocation" class="control-label">Script Path</label>
+                        <input type="text" class="form-control form-control-custom " id="scriptLocation" name="scriptLocation" formControlName="scriptLocation">
+                    </div>
+                </div>
+
+                
+                <div [hidden]="useScript || form.value.windowsService">
+                <small >By default the process name is Ombi, but this could be different for your system. We need to know the process name so we can kill that process to update the files.</small>
+                    <div class="form-group">
+                        <label for="processName">Ombi Process Name</label>
+                        <input type="text" id="processName" class="form-control form-control-custom" placeholder="Ombi" formControlName="processName">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div>
+                        <button type="submit" class="btn btn-primary-outline ">Submit</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6" [hidden]="useScript" *ngIf="isWindows">
+                <small>If you are getting any permissions issues, you can specify a user for the update process to run under.</small>
+
+                <div class="form-group">
+                    <label for="username" class="control-label">Username</label>
+                    <input type="text" class="form-control form-control-custom " id="username" name="username" formControlName="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control form-control-custom" formControlName="password">
+                </div>
+            </div>
+        </form>
+    </fieldset>
+</div>

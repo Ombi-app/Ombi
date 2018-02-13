@@ -1,0 +1,13 @@
+{
+    "files.exclude": {
+        "**/*.js": {"when": "$(basename).ts"},
+        "**/*.js.map": true,
+        "node_modules": true,
+        "obj": true,
+        "bin": true
+    },
+    "typescript.tsdk": "node_modules\\typescript\\lib",
+    "cSpell.words": [
+        "usermanagement"
+    ]
+}
