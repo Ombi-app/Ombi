@@ -23,6 +23,7 @@ after_build:
     
     appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.0\linux.tar.gz"
 
+    
     appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.0\linux-arm.tar.gz"
     
     
