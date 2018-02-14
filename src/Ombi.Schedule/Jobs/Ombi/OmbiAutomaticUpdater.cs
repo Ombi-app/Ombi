@@ -196,11 +196,14 @@ namespace Ombi.Schedule.Jobs.Ombi
                     var updaterFile = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
                         "TempUpdate", $"Ombi.Updater{updaterExtension}");
 
+                    // Make sure the file is an executable
+                    ExecLinuxCommand($"chmod +x {updaterFile}");
+
                     // There must be an update
                     var start = new ProcessStartInfo
                     {
-                        UseShellExecute = false,
-                        CreateNoWindow = false,
+                        UseShellExecute = true,
+                        CreateNoWindow = false, // Ignored if UseShellExecute is set to true
                         FileName = updaterFile,
                         Arguments = GetArgs(settings),
                         WorkingDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "TempUpdate"),
@@ -366,6 +369,31 @@ namespace Ombi.Schedule.Jobs.Ombi
             {
                 Directory.Delete(path, true);
             }
+        }
+
+        public static void ExecLinuxCommand(string cmd)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return;
+            }
+            var escapedArgs = cmd.Replace("\"", "\\\"");
+
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = "/bin/bash",
+                    Arguments = $"-c \"{escapedArgs}\""
+                }
+            };
+
+            process.Start();
+            process.WaitForExit();
         }
     }
 }
