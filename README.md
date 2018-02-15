@@ -9,14 +9,12 @@ ____
 [![Patreon](https://www.ombi.io/img/patreondonate.svg)](https://patreon.com/tidusjar/Ombi)
 [![Paypal](https://www.ombi.io/img/paypaldonate.svg)](https://paypal.me/PlexRequestsNet)
 
-[![Patreon](https://www.ombi.io/img/patreondonate.svg)](https://patreon.com/tidusjar/Ombi)
-[![Paypal](https://www.ombi.io/img/paypaldonate.svg)](https://paypal.me/PlexRequestsNet)
 ___
 
 
 [![Report a bug](http://i.imgur.com/xSpw482.png)](https://forums.ombi.io/viewforum.php?f=10) [![Feature request](http://i.imgur.com/mFO0OuX.png)](https://forums.ombi.io/posting.php?mode=post&f=20)
 
-| Service  | Master (V2)                | Open Beta     (V3 - Recommended)          |
+| Service  | V3         | Beta          |
 |----------|:---------------------------:|:----------------------------:|
 | AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/master?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/DotNetCore?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/DotNetCore) | 
 | Download |[![Download](http://i.imgur.com/odToka3.png)](https://github.com/tidusjar/Ombi/releases)            |      [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/DotNetCore/artifacts)       | 
