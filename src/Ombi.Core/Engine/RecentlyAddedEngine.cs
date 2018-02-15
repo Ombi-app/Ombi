@@ -11,7 +11,7 @@ using Ombi.Store.Repository;
 
 namespace Ombi.Core.Engine
 {
-    public class RecentlyAddedEngine
+    public class RecentlyAddedEngine : IRecentlyAddedEngine
     {
         public RecentlyAddedEngine(IPlexContentRepository plex, IEmbyContentRepository emby)
         {
@@ -22,11 +22,11 @@ namespace Ombi.Core.Engine
         private readonly IPlexContentRepository _plex;
         private readonly IEmbyContentRepository _emby;
 
-        public IEnumerable<RecentlyAddedMovieModel> GetRecentlyAddedMovies(TimeSpan from)
+        public IEnumerable<RecentlyAddedMovieModel> GetRecentlyAddedMovies(DateTime from, DateTime to)
         {
             var model = new HashSet<RecentlyAddedMovieModel>();
-            var plexMovies = _plex.GetAll().Where(x => x.Type == PlexMediaTypeEntity.Movie && x.AddedAt.Subtract(from) <= x.AddedAt);
-            var embyMovies = _emby.GetAll().Where(x => x.Type == EmbyMediaType.Movie && x.AddedAt.Subtract(from) <= x.AddedAt);
+            var plexMovies = _plex.GetAll().Where(x => x.Type == PlexMediaTypeEntity.Movie && x.AddedAt > from && x.AddedAt < to);
+            var embyMovies = _emby.GetAll().Where(x => x.Type == EmbyMediaType.Movie && x.AddedAt > from && x.AddedAt < to);
 
             TransformPlexMovies(plexMovies, model);
             TransformEmbyMovies(embyMovies, model);

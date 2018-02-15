@@ -79,6 +79,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ITvSearchEngine, TvSearchEngine>();
             services.AddTransient<IRuleEvaluator, RuleEvaluator>();
             services.AddTransient<IMovieSender, MovieSender>();
+            services.AddTransient<IRecentlyAddedEngine, RecentlyAddedEngine>();
             services.AddTransient<ITvSender, TvSender>();
         }
         public static void RegisterHttp(this IServiceCollection services)
