@@ -12,3 +12,4 @@ export * from "./status.service";
 export * from "./job.service";
 export * from "./issues.service";
 export * from "./mobile.service";
+export * from "./recentlyAdded.service";
