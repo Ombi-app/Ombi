@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -10,7 +9,7 @@ using Ombi.Helpers;
 
 namespace Ombi.Api.Radarr
 {
-    public class RadarrApi : IRadarrApi
+    public partial class RadarrApi : IRadarrApi
     {
         public RadarrApi(ILogger<RadarrApi> logger, IApi api)
         {
@@ -51,6 +50,23 @@ namespace Ombi.Api.Radarr
             AddHeaders(request, apiKey);
 
             return await Api.Request<List<MovieResponse>>(request);
+        }
+
+        public async Task<MovieResponse> GetMovie(int id, string apiKey, string baseUrl)
+        {
+            var request = new Request($"/api/movie/{id}", baseUrl, HttpMethod.Get);
+            AddHeaders(request, apiKey);
+
+            return await Api.Request<MovieResponse>(request);
+        }
+
+        public async Task<MovieResponse> UpdateMovie(MovieResponse movie, string apiKey, string baseUrl)
+        {
+            var request = new Request($"/api/movie/", baseUrl, HttpMethod.Put);
+            AddHeaders(request, apiKey);
+            request.AddJsonBody(movie);
+
+            return await Api.Request<MovieResponse>(request);
         }
 
         public async Task<RadarrAddMovieResponse> AddMovie(int tmdbId, string title, int year, int qualityId, string rootPath, string apiKey, string baseUrl, bool searchNow, string minimumAvailability)
@@ -103,6 +119,19 @@ namespace Ombi.Api.Radarr
             return null;
         }
 
+        public async Task<bool> MovieSearch(int[] movieIds, string apiKey, string baseUrl)
+        {
+            var result = await Command(apiKey, baseUrl, new { name = "MoviesSearch", movieIds });
+            return result != null;
+        }
+
+        private async Task<CommandResult> Command(string apiKey, string baseUrl, object body)
+        {
+            var request = new Request($"/api/Command/", baseUrl, HttpMethod.Post);
+            request.AddHeader("X-Api-Key", apiKey);
+            request.AddJsonBody(body);
+            return await Api.Request<CommandResult>(request);
+        }
 
         /// <summary>
         /// Adds the required headers and also the authorization header
