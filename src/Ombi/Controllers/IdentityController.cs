@@ -472,8 +472,16 @@ namespace Ombi.Controllers
             // Get the roles
             var userRoles = await UserManager.GetRolesAsync(user);
 
+            // Am I modifying myself?
+            var modifyingSelf = user.UserName.Equals(User.Identity.Name, StringComparison.CurrentCultureIgnoreCase);
+
             foreach (var role in userRoles)
             {
+                if (modifyingSelf && role.Equals(OmbiRoles.Admin))
+                {
+                    // We do not want to remove the admin role from yourself, this must be an accident
+                    continue;
+                }
                 await UserManager.RemoveFromRoleAsync(user, role);
             }
 
