@@ -28,6 +28,12 @@ namespace Ombi
                 {
                     host = o.Host;
                     storagePath = o.StoragePath;
+                }).WithNotParsed(err =>
+                {
+                    foreach (var e in err)
+                    {
+                        Console.WriteLine(e);
+                    }
                 });
 
             Console.WriteLine(HelpOutput(result));
