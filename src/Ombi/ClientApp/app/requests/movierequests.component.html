@@ -1,7 +1,7 @@
 
 <div class="form-group">
     <div class="input-group">
-        <input type="text" id="search" class="form-control form-control-custom searchwidth" placeholder="Search" (keyup)="search($event)">
+        <input type="text" id="search" class="form-control form-control-custom searchwidth" placeholder="search for an existing movie request here..." (keyup)="search($event)">
         <span class="input-group-btn">       
         <button id="filterBtn" class="btn btn-sm btn-info-outline" (click)="filterDisplay = true" >
             <i class="fa fa-filter"></i> {{ 'Requests.Filter' | translate }}</button>

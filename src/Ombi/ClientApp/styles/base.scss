@@ -10,6 +10,11 @@ $danger-colour: #d9534f;
 $success-colour: #5cb85c;
 $i: !important;
 
+* {
+    font-family: 'Montserrat', sans-serif;
+    font-size:14px;
+}
+
 @media (min-width: 768px ) {
     .bottom-align-text {
         position: absolute;
@@ -126,6 +131,10 @@ label {
 
 .nav-tabs > li > a > .fa {
     padding: 3px 5px 3px 3px;
+}
+
+.nav-tabs > li > a {
+    cursor: pointer;
 }
 
 .nav-tabs > li.nav-tab-right {
