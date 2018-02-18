@@ -82,7 +82,8 @@
       "TopRatedMovies": "Film più votati",
       "NowPlayingMovies": "Film ora in riproduzione",
       "HomePage": "Pagina iniziale",
-      "Trailer": "Trailer"
+      "Trailer": "Trailer",
+      "PlaceholderText": "search for a movie here..."
     },
     "TvShows": {
       "Popular": "Popular",
@@ -97,7 +98,8 @@
       "Select": "Select ...",
       "SubmitRequest": "Submit Request",
       "Season": "Season: {{seasonNumber}}",
-      "SelectAllInSeason": "Select All in Season {{seasonNumber}}"
+      "SelectAllInSeason": "Select All in Season {{seasonNumber}}",
+      "PlaceholderText": "search for a tv show here..."
     }
   },
   "Requests": {
@@ -125,7 +127,13 @@
     "GridStatus": "Stato",
     "ReportIssue": "Report Issue",
     "Filter": "Filter",
-    "SeasonNumberHeading": "Season: {seasonNumber}"
+    "SeasonNumberHeading": "Season: {seasonNumber}",
+    "Movies": {
+      "PlaceholderText": "search for an existing movie request here..."
+    },
+    "TvShows": {
+      "PlaceholderText": "search for an existing tv show request here..."
+    }
   },
   "Issues": {
     "Title": "Problemi",

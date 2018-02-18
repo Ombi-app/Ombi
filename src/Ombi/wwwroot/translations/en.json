@@ -86,28 +86,29 @@
       "TopRatedMovies": "Top Rated Movies",
       "NowPlayingMovies": "Now Playing Movies",
       "HomePage": "Home Page",
-      "Trailer": "Trailer"
+      "Trailer": "Trailer",
+      "PlaceholderText": "search for a movie here..."
     },
     "TvShows": {
-      "Popular":"Popular",
-      "Trending":"Trending",
-      "MostWatched":"Most Watched",
-      "MostAnticipated":"Most Anticipated",
-      "Results":"Results",
-      "AirDate":"Air Date:",
-      "AllSeasons":"All Seasons",
-      "FirstSeason":"First Season",
-      "LatestSeason":"Latest Season",
-      "Select":"Select ...",
-      "SubmitRequest":"Submit Request",
-      "Season":"Season: {{seasonNumber}}",
-      "SelectAllInSeason":"Select All in Season {{seasonNumber}}"
+      "Popular": "Popular",
+      "Trending": "Trending",
+      "MostWatched": "Most Watched",
+      "MostAnticipated": "Most Anticipated",
+      "Results": "Results",
+      "AirDate": "Air Date:",
+      "AllSeasons": "All Seasons",
+      "FirstSeason": "First Season",
+      "LatestSeason": "Latest Season",
+      "Select": "Select ...",
+      "SubmitRequest": "Submit Request",
+      "Season": "Season: {{seasonNumber}}",
+      "SelectAllInSeason": "Select All in Season {{seasonNumber}}",
+      "PlaceholderText": "search for a tv show here..."
     }
   },
   "Requests": {
     "Title": "Requests",
-    "Paragraph":
-      "Below you can see yours and all other requests, as well as their download and approval status.",
+    "Paragraph": "Below you can see yours and all other requests, as well as their download and approval status.",
     "MoviesTab": "Movies",
     "TvTab": "TV Shows",
     "RequestedBy": "Requested By:",
@@ -118,19 +119,25 @@
     "RequestDate": "Request Date:",
     "QualityOverride": "Quality Override:",
     "RootFolderOverride": "Root Folder Override:",
-    "ChangeRootFolder":"Change Root Folder",
-    "ChangeQualityProfile":"Change Quality Profile",
-    "MarkUnavailable":"Mark Unavailable",
-    "MarkAvailable":"Mark Available",
-    "Remove":"Remove",
-    "Deny":"Deny",
-    "Season":"Season:",
-    "GridTitle":"Title",
-    "AirDate":"AirDate",
-    "GridStatus":"Status",
-    "ReportIssue":"Report Issue",
-    "Filter":"Filter",
-    "SeasonNumberHeading":"Season: {seasonNumber}"
+    "ChangeRootFolder": "Change Root Folder",
+    "ChangeQualityProfile": "Change Quality Profile",
+    "MarkUnavailable": "Mark Unavailable",
+    "MarkAvailable": "Mark Available",
+    "Remove": "Remove",
+    "Deny": "Deny",
+    "Season": "Season:",
+    "GridTitle": "Title",
+    "AirDate": "AirDate",
+    "GridStatus": "Status",
+    "ReportIssue": "Report Issue",
+    "Filter": "Filter",
+    "SeasonNumberHeading": "Season: {seasonNumber}",
+    "Movies": {
+      "PlaceholderText": "search for an existing movie request here..."
+    },
+    "TvShows": {
+      "PlaceholderText": "search for an existing tv show request here..."
+    }
   },
   "Issues":{
     "Title":"Issues",
