@@ -82,7 +82,8 @@
       "TopRatedMovies": "Kritikerroste filmer",
       "NowPlayingMovies": "Aktuelle Filmer",
       "HomePage": "Startside",
-      "Trailer": "Trailer"
+      "Trailer": "Trailer",
+      "PlaceholderText": "search for a movie here..."
     },
     "TvShows": {
       "Popular": "Populært",
@@ -97,7 +98,8 @@
       "Select": "Velg...",
       "SubmitRequest": "Send forespørsel",
       "Season": "Sesong: {{seasonNumber}}",
-      "SelectAllInSeason": "Velg alle i sesong {{seasonNumber}}"
+      "SelectAllInSeason": "Velg alle i sesong {{seasonNumber}}",
+      "PlaceholderText": "search for a tv show here..."
     }
   },
   "Requests": {
@@ -125,7 +127,13 @@
     "GridStatus": "Status",
     "ReportIssue": "Rapportér en feil",
     "Filter": "Filter",
-    "SeasonNumberHeading": "Sesong: {seasonNumber}"
+    "SeasonNumberHeading": "Sesong: {seasonNumber}",
+    "Movies": {
+      "PlaceholderText": "search for an existing movie request here..."
+    },
+    "TvShows": {
+      "PlaceholderText": "search for an existing tv show request here..."
+    }
   },
   "Issues": {
     "Title": "Mangler",
