@@ -9,7 +9,7 @@ using Ombi.Helpers;
 
 namespace Ombi.Api.Radarr
 {
-    public partial class RadarrApi : IRadarrApi
+    public class RadarrApi : IRadarrApi
     {
         public RadarrApi(ILogger<RadarrApi> logger, IApi api)
         {
