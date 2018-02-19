@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Ombi.Api.Sonarr.Models
+namespace Ombi.Api.Radarr
 {
-
     public class CommandResult
     {
         public string name { get; set; }
     }
-
 }

@@ -82,7 +82,7 @@ namespace Ombi.Api.Radarr
                 titleSlug = title,
                 monitored = true,
                 year = year,
-                minimumAvailability = minimumAvailability,
+                minimumAvailability = minimumAvailability
             };
 
             if (searchNow)
@@ -97,9 +97,9 @@ namespace Ombi.Api.Radarr
             request.AddHeader("X-Api-Key", apiKey);
             request.AddJsonBody(options);
 
+            var response = await Api.RequestContent(request);
             try
             {
-                var response = await Api.RequestContent(request);
                 if (response.Contains("\"message\":"))
                 {
                     var error = JsonConvert.DeserializeObject<RadarrError>(response);
@@ -114,7 +114,7 @@ namespace Ombi.Api.Radarr
             }
             catch (JsonSerializationException jse)
             {
-                Logger.LogError(LoggingEvents.RadarrApi, jse, "Error When adding movie to Radarr");
+                Logger.LogError(LoggingEvents.RadarrApi, jse, "Error When adding movie to Radarr, Reponse: {0}", response);
             }
             return null;
         }
