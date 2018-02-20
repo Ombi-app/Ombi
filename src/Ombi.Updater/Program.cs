@@ -78,8 +78,10 @@ namespace Ombi.Updater
         public string ApplicationPath { get; set; }
         [Option("processId", Required = false)]
         public int OmbiProcessId { get; set; }
-        [Option("startupArgs", Required = false)]
-        public string StartupArgs { get; set; }
+        [Option("host", Required = false)]
+        public string Host { get; set; }
+        [Option("storage", Required = false)]
+        public string Storage { get; set; }
         [Option("windowsServiceName", Required = false)]
         public string WindowsServiceName { get; set; }
 

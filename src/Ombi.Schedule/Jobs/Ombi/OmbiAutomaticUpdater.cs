@@ -247,24 +247,16 @@ namespace Ombi.Schedule.Jobs.Ombi
                 sb.Append($"--windowsServiceName \"{settings.WindowsServiceName}\" ");
             }
             var sb2 = new StringBuilder();
-            var hasStartupArgs = false;
             if (url?.Value.HasValue() ?? false)
             {
-                hasStartupArgs = true;
-                sb2.Append(url.Value);
+                sb2.Append($" --host {url.Value}");
             }
             if (storage?.Value.HasValue() ?? false)
             {
-                hasStartupArgs = true;
-                sb2.Append(storage.Value);
-            }
-            if (hasStartupArgs)
-            {
-                sb.Append($"--startupArgs {sb2.ToString()}");
+                sb2.Append($" --storage {storage.Value}");
             }
 
             return sb.ToString();
-            //return string.Join(" ", currentLocation, processName, url?.Value ?? string.Empty, storage?.Value ?? string.Empty);
         }
 
         private void RunScript(UpdateSettings settings, string downloadUrl)

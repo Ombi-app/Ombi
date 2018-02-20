@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 
@@ -78,12 +79,22 @@ namespace Ombi.Updater
             }
             else
             {
+                var startupArgsBuilder = new StringBuilder();
+                if (!string.IsNullOrEmpty(options.Host))
+                {
+                    startupArgsBuilder.Append($"--host {options.Host} ");
+                }
+                if (!string.IsNullOrEmpty(options.Storage))
+                {
+                    startupArgsBuilder.Append($"--storage {options.Storage}");
+                }
+
                 var start = new ProcessStartInfo
                 {
                     UseShellExecute = false,
                     FileName = Path.Combine(options.ApplicationPath, fileName),
                     WorkingDirectory = options.ApplicationPath,
-                    Arguments = options.StartupArgs
+                    Arguments = startupArgsBuilder.ToString()
                 };
                 using (var proc = new Process { StartInfo = start })
                 {
