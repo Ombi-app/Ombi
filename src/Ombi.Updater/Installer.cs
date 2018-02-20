@@ -34,27 +34,27 @@ namespace Ombi.Updater
             }
 
             // Make sure the process has been killed
-                while (p.FindProcessByName(opt.ProcessName).Any())
+            while (p.FindProcessByName(opt.ProcessName).Any())
+            {
+                Thread.Sleep(500);
+                _log.LogDebug("Found another process called {0}, KILLING!", opt.ProcessName);
+                var proc = p.FindProcessByName(opt.ProcessName).FirstOrDefault();
+                if (proc != null)
                 {
-                    Thread.Sleep(500);
-                    _log.LogDebug("Found another process called {0}, KILLING!", opt.ProcessName);
-                    var proc = p.FindProcessByName(opt.ProcessName).FirstOrDefault();
-                    if (proc != null)
-                    {
-                        _log.LogDebug($"[{proc.Id}] - {proc.Name} - Path: {proc.StartPath}");
-                        opt.OmbiProcessId = proc.Id;
-                        p.Kill(opt);
-                    }
+                    _log.LogDebug($"[{proc.Id}] - {proc.Name} - Path: {proc.StartPath}");
+                    opt.OmbiProcessId = proc.Id;
+                    p.Kill(opt);
                 }
-
-                _log.LogDebug("Starting to move the files");
-                MoveFiles(opt);
-                _log.LogDebug("Files replaced");
-                // Start Ombi
-                StartOmbi(opt);
             }
 
-            private void StartOmbi(StartupOptions options)
+            _log.LogDebug("Starting to move the files");
+            MoveFiles(opt);
+            _log.LogDebug("Files replaced");
+            // Start Ombi
+            StartOmbi(opt);
+        }
+
+        private void StartOmbi(StartupOptions options)
         {
             _log.LogDebug("Starting ombi");
             var fileName = "Ombi.exe";
@@ -72,7 +72,7 @@ namespace Ombi.Updater
                         Arguments = $"/C net start \"{options.WindowsServiceName}\""
                     };
 
-                using (var process = new Process{StartInfo = startInfo})
+                using (var process = new Process { StartInfo = startInfo })
                 {
                     process.Start();
                 }
