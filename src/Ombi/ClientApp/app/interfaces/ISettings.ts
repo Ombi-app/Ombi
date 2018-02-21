@@ -14,6 +14,7 @@ export interface IOmbiSettings extends ISettings {
   apiKey: string;
   ignoreCertificateErrors: boolean;
   doNotSendNotificationsForAutoApprove: boolean;
+  hideRequestsUsers: boolean;
 }
 
 export interface IUpdateSettings extends ISettings {

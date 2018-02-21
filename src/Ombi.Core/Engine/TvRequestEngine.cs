@@ -17,6 +17,8 @@ using Ombi.Core.Helpers;
 using Ombi.Core.Rule;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Senders;
+using Ombi.Core.Settings;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 
@@ -26,13 +28,15 @@ namespace Ombi.Core.Engine
     {
         public TvRequestEngine(ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IRuleEvaluator rule, OmbiUserManager manager,
-            ITvSender sender, IAuditRepository audit, IRepository<RequestLog> rl) : base(user, requestService, rule, manager)
+            ITvSender sender, IAuditRepository audit, IRepository<RequestLog> rl, ISettingsService<OmbiSettings> settings, ICacheService cache) : base(user, requestService, rule, manager)
         {
             TvApi = tvApi;
             NotificationHelper = helper;
             TvSender = sender;
             Audit = audit;
             _requestLog = rl;
+            _ombiSettings = settings;
+            _cache = cache;
         }
 
         private INotificationHelper NotificationHelper { get; }
@@ -40,6 +44,8 @@ namespace Ombi.Core.Engine
         private ITvSender TvSender { get; }
         private IAuditRepository Audit { get; }
         private readonly IRepository<RequestLog> _requestLog;
+        private readonly ISettingsService<OmbiSettings> _ombiSettings;
+        private readonly ICacheService _cache;
 
         public async Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv)
         {
@@ -128,27 +134,46 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<TvRequests>> GetRequests(int count, int position)
         {
-            var allRequests = await TvRepository.Get()
+            var hide = await HideFromOtherUsers();
+            var allRequests = TvRepository.Get()
                 .Include(x => x.ChildRequests)
                     .ThenInclude(x => x.SeasonRequests)
-                    .ThenInclude(x => x.Episodes)
-                .Skip(position).Take(count).ToListAsync();
-            return allRequests;
+                    .ThenInclude(x => x.Episodes);
+
+            if (hide)
+            {
+                var user = await GetUser();
+                var filtered = allRequests.Where(x => x.ChildRequests.All(c => c.RequestedUserId == user.Id));
+                return await filtered.Skip(position).Take(count).ToListAsync();
+            }
+            return await allRequests.Skip(position).Take(count).ToListAsync();
         }
 
         public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> GetRequestsTreeNode(int count, int position)
         {
-            var allRequests = await TvRepository.Get()
+            var allRequests = TvRepository.Get()
                 .Include(x => x.ChildRequests)
                     .ThenInclude(x => x.SeasonRequests)
-                    .ThenInclude(x=>x.Episodes)
-                .Skip(position).Take(count).ToListAsync();
-            return ParseIntoTreeNode(allRequests);
+                    .ThenInclude(x => x.Episodes);
+
+            var hide = await HideFromOtherUsers();
+            if (hide)
+            {
+                var user = await GetUser();
+                var filtered = allRequests.Where(x => x.ChildRequests.All(c => c.RequestedUserId == user.Id));
+                
+                var filteredReq = await filtered.Skip(position).Take(count).ToListAsync();
+                return ParseIntoTreeNode(filteredReq);
+            }
+
+            var req = await allRequests.Skip(position).Take(count).ToListAsync();
+            return ParseIntoTreeNode(req);
         }
 
         public async Task<IEnumerable<TvRequests>> GetRequests()
         {
             var allRequests = TvRepository.Get();
+
             return await allRequests.ToListAsync();
         }
 
@@ -395,7 +420,7 @@ namespace Ombi.Core.Engine
                 var result = await TvSender.Send(model);
                 if (result.Success)
                 {
-                    return new RequestEngineResult {Result = true};
+                    return new RequestEngineResult { Result = true };
                 }
                 return new RequestEngineResult
                 {
@@ -411,7 +436,13 @@ namespace Ombi.Core.Engine
                 RequestType = RequestType.TvShow,
             });
 
-            return new RequestEngineResult {Result = true};
+            return new RequestEngineResult { Result = true };
+        }
+
+        private async Task<bool> HideFromOtherUsers()
+        {
+            var settings = await _cache.GetOrAdd(CacheKeys.OmbiSettings, async () => await _ombiSettings.GetSettingsAsync());
+            return settings.HideRequestsUsers;
         }
     }
 }
