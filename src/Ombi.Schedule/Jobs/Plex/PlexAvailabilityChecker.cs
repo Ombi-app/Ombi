@@ -67,6 +67,16 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     seriesEpisodes = plexEpisodes.Where(x => x.Series.TvDbId == tvDbId.ToString());
                 }
+
+                if (!seriesEpisodes.Any())
+                {
+                    // Let's try and match the series by name
+                    seriesEpisodes = plexEpisodes.Where(x =>
+                        x.Series.Title.Equals(child.Title, StringComparison.CurrentCultureIgnoreCase) &&
+                        x.Series.ReleaseYear == child.ParentRequest.ReleaseDate.Year.ToString());
+
+                }
+
                 foreach (var season in child.SeasonRequests)
                 {
                     foreach (var episode in season.Episodes)

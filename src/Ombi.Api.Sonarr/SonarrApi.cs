@@ -66,8 +66,10 @@ namespace Ombi.Api.Sonarr
             var request = new Request($"/api/series/{id}", baseUrl, HttpMethod.Get);
             request.AddHeader("X-Api-Key", apiKey);
             var result = await Api.Request<SonarrSeries>(request);
-            result.seasons.ToList().RemoveAt(0);
-
+            if (result?.seasons?.Length > 0)
+            {
+                result?.seasons?.ToList().RemoveAt(0);
+            }
             return result;
         }
 

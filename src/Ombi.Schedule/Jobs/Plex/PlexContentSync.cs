@@ -127,13 +127,32 @@ namespace Ombi.Schedule.Jobs.Plex
                                                         && x.ReleaseYear == show.year.ToString()
                                                         && x.Type == PlexMediaTypeEntity.Show);
 
-                            if (existingContent == null)
+                            if (existingContent != null)
                             {
                                 // Just check the key
-                                var hasSameKey = await Repo.GetByKey(show.ratingKey);
-                                if (hasSameKey != null)
+                                var existingKey = await Repo.GetByKey(show.ratingKey);
+                                if (existingKey != null)
                                 {
-                                    existingContent = hasSameKey;
+                                    // The rating key is all good!
+                                    existingContent = existingKey;
+                                }
+                                else
+                                {
+                                    // This means the rating key has changed somehow.
+                                    // We need to reset the correct keys
+                                    var oldKey = existingContent.Key;
+                                    existingContent.Key = show.ratingKey;
+
+                                    // Because we have changed the rating key, we need to change all children too
+                                    var episodeToChange = Repo.GetAllEpisodes().Where(x => x.GrandparentKey == oldKey);
+                                    if (episodeToChange.Any())
+                                    {
+                                        foreach (var e in episodeToChange)
+                                        {
+                                            e.GrandparentKey = existingContent.Key;
+                                        }
+                                    }
+                                    await Repo.SaveChangesAsync();
                                 }
 
                             }
