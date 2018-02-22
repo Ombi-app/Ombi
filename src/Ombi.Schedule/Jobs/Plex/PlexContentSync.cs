@@ -135,14 +135,13 @@ namespace Ombi.Schedule.Jobs.Plex
                                 if (existingKey != null)
                                 {
                                     // The rating key is all good!
-                                    existingContent = existingKey;
                                 }
                                 else
                                 {
                                     // This means the rating key has changed somehow.
-                                    // We need to reset the correct keys
+                                    // Should probably delete this and get the new one
                                     var oldKey = existingContent.Key;
-                                    existingContent.Key = show.ratingKey;
+                                    Repo.DeleteWithoutSave(existingContent);
 
                                     // Because we have changed the rating key, we need to change all children too
                                     var episodeToChange = Repo.GetAllEpisodes().Where(x => x.GrandparentKey == oldKey);
@@ -150,10 +149,11 @@ namespace Ombi.Schedule.Jobs.Plex
                                     {
                                         foreach (var e in episodeToChange)
                                         {
-                                            e.GrandparentKey = existingContent.Key;
+                                            Repo.DeleteWithoutSave(e);
                                         }
                                     }
                                     await Repo.SaveChangesAsync();
+                                    existingContent = null;
                                 }
 
                             }
