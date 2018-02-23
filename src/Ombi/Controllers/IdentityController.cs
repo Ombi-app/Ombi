@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-
+using System.Web;
 using AutoMapper;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
@@ -621,25 +621,54 @@ namespace Ombi.Controllers
                 return defaultMessage;
             }
 
-            // We have the user
-            var token = await UserManager.GeneratePasswordResetTokenAsync(user);
-            // We now need to email the user with this token
-            var emailSettings = await EmailSettings.GetSettingsAsync();
+
             var customizationSettings = await CustomizationSettings.GetSettingsAsync();
             var appName = (string.IsNullOrEmpty(customizationSettings.ApplicationName)
                 ? "Ombi"
                 : customizationSettings.ApplicationName);
 
+            var emailSettings = await EmailSettings.GetSettingsAsync();
+
             customizationSettings.AddToUrl("/token?token=");
             var url = customizationSettings.ApplicationUrl;
 
-            await EmailProvider.SendAdHoc(new NotificationMessage
+            if (user.UserType == UserType.PlexUser)
             {
-                To = user.Email,
-                Subject = $"{appName} Password Reset",
-                Message = $"You recently made a request to reset your {appName} account. Please click the link below to complete the process.<br/><br/>" +
-                          $"<a href=\"{url}{token}\"> Reset </a>"
-            }, emailSettings);
+                await EmailProvider.SendAdHoc(new NotificationMessage
+                {
+                    To = user.Email,
+                    Subject = $"{appName} Password Reset",
+                    Message =
+                        $"You recently made a request to reset your {appName} account. Please click the link below to complete the process.<br/><br/>" +
+                        $"<a href=\"https://www.plex.tv/sign-in/password-reset/\"> Reset </a>"
+                }, emailSettings);
+            }
+            else if (user.UserType == UserType.EmbyUser && user.IsEmbyConnect)
+            {
+                await EmailProvider.SendAdHoc(new NotificationMessage
+                {
+                    To = user.Email,
+                    Subject = $"{appName} Password Reset",
+                    Message =
+                        $"You recently made a request to reset your {appName} account.<br/><br/>" +
+                        $"To reset your password you need to go to <a href=\"https://emby.media/community/index.php\">Emby.Media</a> and then click on your Username > Edit Profile > Email and Password"
+                }, emailSettings);
+            }
+            else
+            {
+                // We have the user
+                var token = await UserManager.GeneratePasswordResetTokenAsync(user);
+                var encodedToken = WebUtility.UrlEncode(token);
+
+                await EmailProvider.SendAdHoc(new NotificationMessage
+                {
+                    To = user.Email,
+                    Subject = $"{appName} Password Reset",
+                    Message =
+                        $"You recently made a request to reset your {appName} account. Please click the link below to complete the process.<br/><br/>" +
+                        $"<a href=\"{url}{encodedToken}\"> Reset </a>"
+                }, emailSettings);
+            }
 
             return defaultMessage;
         }
