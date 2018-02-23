@@ -7,6 +7,9 @@ export interface IRecentlyAddedMovies {
     releaseYear: string;
     addedAt: Date;
     quality: string;
+
+    // For UI only
+    posterPath: string;
 }
 
 export interface IRecentlyAddedRangeModel {

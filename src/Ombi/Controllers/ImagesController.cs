@@ -37,6 +37,10 @@ namespace Ombi.Controllers
             var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
 
             var images = await Api.GetTvImages(tvdbid, key.Value);
+            if (images == null)
+            {
+                return string.Empty;
+            }
             if (images.tvbanner != null)
             {
                 return images.tvbanner.FirstOrDefault()?.url ?? string.Empty;
@@ -45,6 +49,56 @@ namespace Ombi.Controllers
             {
                 return images.showbackground.FirstOrDefault()?.url ?? string.Empty;
             }
+            return string.Empty;
+        }
+
+        [HttpGet("poster/movie/{movieDbId}")]
+        public async Task<string> GetMoviePoster(int movieDbId)
+        {
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
+
+            var images = await Api.GetMovieImages(movieDbId, key.Value);
+
+            if (images == null)
+            {
+                return string.Empty;
+            }
+
+            if (images.movieposter?.Any() ?? false)
+            {
+                return images.movieposter.OrderBy(x => x.likes).Select(x => x.url).FirstOrDefault();
+            }
+
+            if (images.hdmovieclearart?.Any() ?? false)
+            {
+                return images.hdmovieclearart.OrderBy(x => x.likes).Select(x => x.url).FirstOrDefault();
+            }
+
+            return string.Empty;
+        }
+
+        [HttpGet("poster/tv/{tvdbid}")]
+        public async Task<string> GetTvPoster(int tvdbid)
+        {
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
+
+            var images = await Api.GetTvImages(tvdbid, key.Value);
+
+            if (images == null)
+            {
+                return string.Empty;
+            }
+
+            if (images.tvposter?.Any() ?? false)
+            {
+                return images.tvposter.OrderBy(x => x.likes).Select(x => x.url).FirstOrDefault();
+            }
+
+            if (images.tvthumb?.Any() ?? false)
+            {
+                return images.tvthumb.OrderBy(x => x.likes).Select(x => x.url).FirstOrDefault();
+            }
+
             return string.Empty;
         }
 
@@ -64,7 +118,7 @@ namespace Ombi.Controllers
             {
                 var item = rand.Next(moviesArray.Length);
                 var result = await Api.GetMovieImages(moviesArray[item], key.Value);
-
+ 
                 while (!result.moviebackground.Any())
                 {
                     result = await Api.GetMovieImages(moviesArray[item], key.Value);

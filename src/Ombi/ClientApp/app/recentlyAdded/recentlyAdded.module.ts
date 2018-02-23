@@ -3,9 +3,9 @@ import { RouterModule, Routes } from "@angular/router";
 
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { OrderModule } from "ngx-order-pipe";
-import { CalendarModule, PaginatorModule, SharedModule, TabViewModule } from "primeng/primeng";
+import { CalendarModule, CarouselModule, PaginatorModule, SharedModule, TabViewModule } from "primeng/primeng";
 
-import { IdentityService, RecentlyAddedService } from "../services";
+import { IdentityService, ImageService, RecentlyAddedService } from "../services";
 
 import { AuthGuard } from "../auth/auth.guard";
 
@@ -27,6 +27,7 @@ const routes: Routes = [
         PaginatorModule,
         TabViewModule,
         CalendarModule,
+        CarouselModule,
     ],
     declarations: [
         RecentlyAddedComponent,
@@ -37,6 +38,7 @@ const routes: Routes = [
     providers: [
         IdentityService,
         RecentlyAddedService,
+        ImageService,
     ],
 
 })
