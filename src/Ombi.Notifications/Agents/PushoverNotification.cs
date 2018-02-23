@@ -17,8 +17,8 @@ namespace Ombi.Notifications.Agents
 {
     public class PushoverNotification : BaseNotification<PushoverSettings>, IPushoverNotification
     {
-        public PushoverNotification(IPushoverApi api, ISettingsService<PushoverSettings> sn, ILogger<PushbulletNotification> log, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t,
-            ISettingsService<CustomizationSettings> s) : base(sn, r, m, t, s)
+        public PushoverNotification(IPushoverApi api, ISettingsService<PushoverSettings> sn, ILogger<PushoverNotification> log, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t,
+            ISettingsService<CustomizationSettings> s) : base(sn, r, m, t, s, log)
         {
             Api = api;
             Logger = log;
@@ -27,7 +27,7 @@ namespace Ombi.Notifications.Agents
         public override string NotificationName => "PushoverNotification";
 
         private IPushoverApi Api { get; }
-        private ILogger<PushbulletNotification> Logger { get; }
+        private ILogger<PushoverNotification> Logger { get; }
 
         protected override bool ValidateConfiguration(PushoverSettings settings)
         {
@@ -65,6 +65,21 @@ namespace Ombi.Notifications.Agents
             if (parsed.Disabled)
             {
                 Logger.LogInformation($"Template {NotificationType.Issue} is disabled for {NotificationAgent.Pushover}");
+                return;
+            }
+            var notification = new NotificationMessage
+            {
+                Message = parsed.Message,
+            };
+            await Send(notification, settings);
+        }
+
+        protected override async Task IssueComment(NotificationOptions model, PushoverSettings settings)
+        {
+            var parsed = await LoadTemplate(NotificationAgent.Pushover, NotificationType.IssueComment, model);
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.IssueComment} is disabled for {NotificationAgent.Pushover}");
                 return;
             }
             var notification = new NotificationMessage

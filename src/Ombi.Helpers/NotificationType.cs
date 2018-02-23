@@ -12,5 +12,6 @@
         ItemAddedToFaultQueue = 7,
         WelcomeEmail = 8,
         IssueResolved = 9,
+        IssueComment = 10,
     }
 }

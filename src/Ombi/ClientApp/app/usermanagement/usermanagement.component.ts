@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit } from "@angular/core";
 
-import { ICustomizationSettings, IEmailNotificationSettings, IUser } from "../interfaces";
+import { ICheckbox, ICustomizationSettings, IEmailNotificationSettings,IUser } from "../interfaces";
 import { IdentityService, NotificationService, SettingsService } from "../services";
 
 @Component({
@@ -16,6 +16,11 @@ export class UserManagementComponent implements OnInit {
     public order: string = "u.userName";
     public reverse = false;
 
+    public showBulkEdit = false;
+    public availableClaims: ICheckbox[];
+    public bulkMovieLimit?: number;
+    public bulkEpisodeLimit?: number;
+
     constructor(private readonly identityService: IdentityService,
                 private readonly settingsService: SettingsService,
                 private readonly notificationService: NotificationService) { }
@@ -26,6 +31,7 @@ export class UserManagementComponent implements OnInit {
             this.users = x;
         });
 
+        this.identityService.getAllAvailableClaims().subscribe(x => this.availableClaims = x);
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
         this.settingsService.getEmailNotificationSettings().subscribe(x => this.emailSettings = x);
     }
@@ -48,6 +54,43 @@ export class UserManagementComponent implements OnInit {
         this.users.forEach(user => {
             user.checked = this.checkAll;
         });
+    }
+
+    public hasChecked(): boolean {
+        return this.users.some(x => {
+            return x.checked;
+        });
+    }
+
+    public bulkUpdate() {
+        const anyRoles = this.availableClaims.some(x => {
+            return x.enabled;
+        });
+
+        this.users.forEach(x => {
+            if(!x.checked) {
+                return;
+            }
+            if(anyRoles) {
+                x.claims = this.availableClaims;
+            }
+            if(this.bulkEpisodeLimit && this.bulkEpisodeLimit > 0) {
+                x.episodeRequestLimit = this.bulkEpisodeLimit;
+            }
+            if(this.bulkMovieLimit && this.bulkMovieLimit > 0) {
+                x.movieRequestLimit = this.bulkMovieLimit;
+            }
+            this.identityService.updateUser(x).subscribe(y => {
+                if(!y.successful) {
+                    this.notificationService.error(`Could not update user ${x.userName}. Reason ${y.errors[0]}`);
+                }
+            });
+        });
+        
+        this.notificationService.success(`Updated users`);
+        this.showBulkEdit = false;
+        this.bulkMovieLimit = undefined;
+        this.bulkEpisodeLimit = undefined;
     }
     
     public setOrder(value: string) {

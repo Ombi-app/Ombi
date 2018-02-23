@@ -44,3 +44,8 @@ export interface IResetPasswordToken {
     token: string;
     password: string;
 }
+
+export interface IMobileUsersViewModel {
+    username: string;
+    devices: number;
+}

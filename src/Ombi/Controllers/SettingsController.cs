@@ -765,6 +765,40 @@ namespace Ombi.Controllers
             return model;
         }
 
+        /// <summary>
+        /// Saves the Mobile notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/mobile")]
+        public async Task<bool> MobileNotificationSettings([FromBody] MobileNotificationsViewModel model)
+        {
+            // Save the email settings
+            var settings = Mapper.Map<MobileNotificationSettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.UpdateRange(model.NotificationTemplates);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the Mobile Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/mobile")]
+        public async Task<MobileNotificationsViewModel> MobileNotificationSettings()
+        {
+            var settings = await Get<MobileNotificationSettings>();
+            var model = Mapper.Map<MobileNotificationsViewModel>(settings);
+
+            // Lookup to see if we have any templates saved
+            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Mobile);
+
+            return model;
+        }
+
         private async Task<List<NotificationTemplates>> BuildTemplates(NotificationAgent agent)
         {
             var templates = await TemplateRepository.GetAllTemplates(agent);

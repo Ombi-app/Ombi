@@ -66,7 +66,11 @@ namespace Ombi.Store.Repository
             var item = await Db.PlexServerContent.FirstOrDefaultAsync(x => x.ImdbId == providerId);
             if (item == null)
             {
-                item = await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TheMovieDbId == providerId) ?? await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TvDbId == providerId);
+                item = await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TheMovieDbId == providerId);
+                if (item == null)
+                {
+                    item = await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TvDbId == providerId);
+                }
             }
             return item;
         }
@@ -83,7 +87,9 @@ namespace Ombi.Store.Repository
 
         public async Task<PlexServerContent> GetFirstContentByCustom(Expression<Func<PlexServerContent, bool>>  predicate)
         {
-            return await Db.PlexServerContent.FirstOrDefaultAsync(predicate);
+            return await Db.PlexServerContent
+                .Include(x => x.Seasons)
+                .FirstOrDefaultAsync(predicate);
         }
 
         public async Task Update(PlexServerContent existingContent)
@@ -94,7 +100,17 @@ namespace Ombi.Store.Repository
 
         public IQueryable<PlexEpisode> GetAllEpisodes()
         {
-            return Db.PlexEpisode.AsQueryable();
+            return Db.PlexEpisode.Include(x => x.Series).AsQueryable();
+        }
+
+        public void DeleteWithoutSave(PlexServerContent content)
+        {
+            Db.PlexServerContent.Remove(content);
+        }
+
+        public void DeleteWithoutSave(PlexEpisode content)
+        {
+            Db.PlexEpisode.Remove(content);
         }
 
         public async Task<PlexEpisode> Add(PlexEpisode content)
@@ -103,6 +119,13 @@ namespace Ombi.Store.Repository
             await Db.SaveChangesAsync();
             return content;
         }
+
+        public async Task DeleteEpisode(PlexEpisode content)
+        {
+            Db.PlexEpisode.Remove(content);
+            await Db.SaveChangesAsync();
+        }
+
         public async Task<PlexEpisode> GetEpisodeByKey(int key)
         {
             return await Db.PlexEpisode.FirstOrDefaultAsync(x => x.Key == key);

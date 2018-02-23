@@ -57,7 +57,6 @@ namespace Ombi
                 config = new LoggerConfiguration()
                     .MinimumLevel.Debug()
                     .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "Logs", "log-{Date}.txt"))
-                    .WriteTo.SQLite("Ombi.db", "Logs", LogEventLevel.Debug)
                     .CreateLogger();
             }
             else
@@ -65,7 +64,6 @@ namespace Ombi
                 config = new LoggerConfiguration()
                     .MinimumLevel.Debug()
                     .WriteTo.RollingFile(Path.Combine(StoragePath.StoragePath, "Logs", "log-{Date}.txt"))
-                    .WriteTo.SQLite(Path.Combine(StoragePath.StoragePath, "Ombi.db"), "Logs", LogEventLevel.Debug)
                     .CreateLogger();
             }
             Log.Logger = config;

@@ -99,6 +99,19 @@ namespace Ombi.Store.Context
                 });
                 SaveChanges();
             }
+            var notification = ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.Notification);
+            if (notification == null)
+            {
+                ApplicationConfigurations.Add(new ApplicationConfiguration
+                {
+                    Type = ConfigurationTypes.Notification,
+                    Value = "4f0260c4-9c3d-41ab-8d68-27cb5a593f0e"
+                });
+                SaveChanges();
+            }
+
+            // VACUUM;
+            Database.ExecuteSqlCommand("VACUUM;");
 
             //Check if templates exist
             var templates = NotificationTemplates.ToList();
@@ -132,7 +145,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello! The user '{RequestedUser}' has reported a new issue for the title {Title}! </br> {Issue}",
+                                Message = "Hello! The user '{IssueUser}' has reported a new issue for the title {Title}! </br> {IssueCategory} - {IssueSubject} : {IssueDescription}",
                                 Subject = "{ApplicationName}: New issue for {Title}!",
                                 Agent = agent,
                                 Enabled = true,
@@ -186,8 +199,19 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello {RequestedUser} Your issue for {Title} has now been resolved.",
+                                Message = "Hello {IssueUser} Your issue for {Title} has now been resolved.",
                                 Subject = "{ApplicationName}: Issue has been resolved for {Title}!",
+                                Agent = agent,
+                                Enabled = true,
+                            };
+                            break;
+
+                        case NotificationType.IssueComment:
+                            notificationToAdd = new NotificationTemplates
+                            {
+                                NotificationType = notificationType,
+                                Message = "Hello, There is a new comment on your issue {IssueSubject}, The comment is: {NewIssueComment}",
+                                Subject = "{ApplicationName}: New comment on issue {IssueSubject}!",
                                 Agent = agent,
                                 Enabled = true,
                             };

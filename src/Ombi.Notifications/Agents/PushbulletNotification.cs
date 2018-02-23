@@ -17,7 +17,7 @@ namespace Ombi.Notifications.Agents
     public class PushbulletNotification : BaseNotification<PushbulletSettings>, IPushbulletNotification
     {
         public PushbulletNotification(IPushbulletApi api, ISettingsService<PushbulletSettings> sn, ILogger<PushbulletNotification> log, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t,
-            ISettingsService<CustomizationSettings> s) : base(sn, r, m, t,s)
+            ISettingsService<CustomizationSettings> s) : base(sn, r, m, t,s,log)
         {
             Api = api;
             Logger = log;
@@ -64,6 +64,21 @@ namespace Ombi.Notifications.Agents
             if (parsed.Disabled)
             {
                 Logger.LogInformation($"Template {NotificationType.Issue} is disabled for {NotificationAgent.Pushbullet}");
+                return;
+            }
+            var notification = new NotificationMessage
+            {
+                Message = parsed.Message,
+            };
+            await Send(notification, settings);
+        }
+
+        protected override async Task IssueComment(NotificationOptions model, PushbulletSettings settings)
+        {
+            var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.IssueComment, model);
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.IssueComment} is disabled for {NotificationAgent.Pushbullet}");
                 return;
             }
             var notification = new NotificationMessage

@@ -48,7 +48,7 @@ namespace Ombi.Core.Senders
             var dogSettings = await DogNzbSettings.GetSettingsAsync();
             if (dogSettings.Enabled)
             {
-                await SendToDogNzb(model,dogSettings);
+                await SendToDogNzb(model, dogSettings);
                 return new SenderResult
                 {
                     Success = true,
@@ -95,18 +95,40 @@ namespace Ombi.Core.Senders
             }
 
             var rootFolderPath = model.RootPathOverride <= 0 ? settings.DefaultRootPath : await RadarrRootPath(model.RootPathOverride, settings);
-            var result = await RadarrApi.AddMovie(model.TheMovieDbId, model.Title, model.ReleaseDate.Year, qualityToUse, rootFolderPath, settings.ApiKey, settings.FullUri, !settings.AddOnly, settings.MinimumAvailability);
 
-            if (!string.IsNullOrEmpty(result.Error?.message))
+            // Check if the movie already exists? Since it could be unmonitored
+            var movies = await RadarrApi.GetMovies(settings.ApiKey, settings.FullUri);
+            var existingMovie = movies.FirstOrDefault(x => x.tmdbId == model.TheMovieDbId);
+            if (existingMovie == null)
             {
-                Log.LogError(LoggingEvents.RadarrCacher,result.Error.message);
-                return new SenderResult { Success = false, Message = result.Error.message, Sent = false };
-            }
-            if (!string.IsNullOrEmpty(result.title))
-            {
+                var result = await RadarrApi.AddMovie(model.TheMovieDbId, model.Title, model.ReleaseDate.Year,
+                    qualityToUse, rootFolderPath, settings.ApiKey, settings.FullUri, !settings.AddOnly,
+                    settings.MinimumAvailability);
+
+                if (!string.IsNullOrEmpty(result.Error?.message))
+                {
+                    Log.LogError(LoggingEvents.RadarrCacher, result.Error.message);
+                    return new SenderResult { Success = false, Message = result.Error.message, Sent = false };
+                }
+                if (!string.IsNullOrEmpty(result.title))
+                {
+                    return new SenderResult { Success = true, Sent = false };
+                }
                 return new SenderResult { Success = true, Sent = false };
             }
-            return new SenderResult { Success = true, Sent = false };
+            // We have the movie, check if we can request it or change the status
+            if (!existingMovie.monitored)
+            {
+                // let's set it to monitored and search for it
+                existingMovie.monitored = true;
+                await RadarrApi.UpdateMovie(existingMovie, settings.ApiKey, settings.FullUri);
+                // Search for it
+                await RadarrApi.MovieSearch(new[] { existingMovie.id }, settings.ApiKey, settings.FullUri);
+
+                return new SenderResult { Success = true, Sent = true };
+            }
+
+            return new SenderResult { Success = false, Sent = false, Message = "Movie is already monitored" };
         }
 
         private async Task<string> RadarrRootPath(int overrideId, RadarrSettings settings)

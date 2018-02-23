@@ -48,8 +48,9 @@ namespace Ombi.Schedule.Jobs.Plex
                 foreach (var server in s.Servers)
                 {
                     await Cache(server);
-                    BackgroundJob.Enqueue(() => _availabilityChecker.Start());
                 }
+
+                BackgroundJob.Enqueue(() => _availabilityChecker.Start());
             }
             catch (Exception e)
             {
@@ -99,7 +100,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private async Task GetEpisodes(PlexServers settings, Directory section)
         {
             var currentPosition = 0;
-            var resultCount = settings.EpisodeBatchSize == 0 ? 50 : settings.EpisodeBatchSize;
+            var resultCount = settings.EpisodeBatchSize == 0 ? 150 : settings.EpisodeBatchSize;
             var episodes = await _api.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, section.key, currentPosition, resultCount);
             _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Total Epsiodes found for {episodes.MediaContainer.librarySectionTitle} = {episodes.MediaContainer.totalSize}");
 
@@ -127,7 +128,10 @@ namespace Ombi.Schedule.Jobs.Plex
         private async Task ProcessEpsiodes(PlexContainer episodes)
         {
             var ep = new HashSet<PlexEpisode>();
+            try
+            {
 
+ 
             foreach (var episode in episodes?.MediaContainer?.Metadata ?? new Metadata[]{})
             {
                 // I don't think we need to get the metadata, we only need to get the metadata if we need the provider id (TheTvDbid). Why do we need it for episodes?
@@ -142,6 +146,25 @@ namespace Ombi.Schedule.Jobs.Plex
                 //    continue;
                 //}
 
+                // Let's check if we have the parent
+                var seriesExists = await _repo.GetByKey(episode.grandparentRatingKey);
+                if (seriesExists == null)
+                {
+                    // Ok let's try and match it to a title. TODO (This is experimental)
+                    var seriesMatch = await _repo.GetAll().FirstOrDefaultAsync(x =>
+                        x.Title.Equals(episode.grandparentTitle, StringComparison.CurrentCultureIgnoreCase));
+                    if (seriesMatch == null)
+                    {
+                        _log.LogWarning(
+                            "The episode title {0} we cannot find the parent series. The episode grandparentKey = {1}, grandparentTitle = {2}",
+                            episode.title, episode.grandparentRatingKey, episode.grandparentTitle);
+                        continue;
+                    }
+
+                    // Set the rating key to the correct one
+                    episode.grandparentRatingKey = seriesMatch.Key;
+                }
+
                 ep.Add(new PlexEpisode
                 {
                     EpisodeNumber = episode.index,
@@ -154,6 +177,12 @@ namespace Ombi.Schedule.Jobs.Plex
             }
 
             await _repo.AddRange(ep);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         private bool Validate(PlexServers settings)

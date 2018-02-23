@@ -18,7 +18,7 @@ namespace Ombi.Notifications.Agents
     public class SlackNotification : BaseNotification<SlackNotificationSettings>, ISlackNotification
     {
         public SlackNotification(ISlackApi api, ISettingsService<SlackNotificationSettings> sn, ILogger<SlackNotification> log, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t,
-            ISettingsService<CustomizationSettings> s) : base(sn, r, m, t, s)
+            ISettingsService<CustomizationSettings> s) : base(sn, r, m, t, s, log)
         {
             Api = api;
             Logger = log;
@@ -75,6 +75,22 @@ namespace Ombi.Notifications.Agents
             if (parsed.Disabled)
             {
                 Logger.LogInformation($"Template {NotificationType.Issue} is disabled for {NotificationAgent.Slack}");
+                return;
+            }
+            var notification = new NotificationMessage
+            {
+                Message = parsed.Message,
+            };
+            notification.Other.Add("image", parsed.Image);
+            await Send(notification, settings);
+        }
+
+        protected override async Task IssueComment(NotificationOptions model, SlackNotificationSettings settings)
+        {
+            var parsed = await LoadTemplate(NotificationAgent.Slack, NotificationType.IssueComment, model);
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.IssueComment} is disabled for {NotificationAgent.Slack}");
                 return;
             }
             var notification = new NotificationMessage

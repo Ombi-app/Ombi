@@ -136,13 +136,16 @@ namespace Ombi.Controllers
 
             var notificationModel = new NotificationOptions
             {
-                RequestId = 0,
+                RequestId = i.RequestId ?? 0,
                 DateTime = DateTime.Now,
                 NotificationType = NotificationType.Issue,
                 RequestType = i.RequestType,
                 Recipient = string.Empty,
-                AdditionalInformation = $"{i.Subject} | {i.Description}"
+                AdditionalInformation = $"{i.Subject} | {i.Description}",
+                UserId =  i.UserReportedId
             };
+
+            AddIssueNotificationSubstitutes(notificationModel, i, User.Identity.Name);
 
             BackgroundJob.Enqueue(() => _notification.Publish(notificationModel));
 
@@ -190,22 +193,56 @@ namespace Ombi.Controllers
         [HttpPost("comments")]
         public async Task<IssueComments> AddComment([FromBody] NewIssueCommentViewModel comment)
         {
-            var userId = await _userManager.Users.Where(x => User.Identity.Name == x.UserName).Select(x => x.Id)
+            var user = await _userManager.Users.Where(x => User.Identity.Name == x.UserName)
                 .FirstOrDefaultAsync();
+            var issue = await _issues.GetAll().Include(x => x.UserReported).FirstOrDefaultAsync(x => x.Id == comment.IssueId);
+            if (issue == null)
+            {
+                return null;
+            }
             var newComment = new IssueComments
             {
                 Comment = comment.Comment,
                 Date = DateTime.UtcNow,
-                UserId = userId,
+                UserId = user.Id,
                 IssuesId = comment.IssueId,
             };
+
+            var notificationModel = new NotificationOptions
+            {
+                RequestId = issue.RequestId ?? 0,
+                DateTime = DateTime.Now,
+                NotificationType = NotificationType.IssueComment,
+                RequestType = issue.RequestType,
+                UserId = user.Id
+            };
+
+            var isAdmin = await _userManager.IsInRoleAsync(user, OmbiRoles.Admin);
+            AddIssueNotificationSubstitutes(notificationModel, issue, issue.UserReported.UserAlias);
+            notificationModel.Substitutes.Add("NewIssueComment", comment.Comment);
+            notificationModel.Substitutes.Add("AdminComment", isAdmin.ToString());
+
+            if (isAdmin)
+            {
+                // Send to user
+                notificationModel.Recipient = issue.UserReported.Email;
+            }
+            else
+            {
+                notificationModel.Recipient = user.Email;
+            }
+
+            BackgroundJob.Enqueue(() => _notification.Publish(notificationModel));
+
             return await _issueComments.Add(newComment);
         }
 
         [HttpPost("status")]
         public async Task<bool> UpdateStatus([FromBody] IssueStateViewModel model)
         {
-            var issue = await _issues.Find(model.IssueId);
+            var user = await _userManager.Users.Where(x => User.Identity.Name == x.UserName)
+                .FirstOrDefaultAsync();
+            var issue = await _issues.GetAll().Include(x => x.UserReported).FirstOrDefaultAsync(x => x.Id == model.IssueId);
             if (issue == null)
             {
                 return false;
@@ -214,20 +251,38 @@ namespace Ombi.Controllers
             issue.Status = model.Status;
             await _issues.SaveChangesAsync();
 
-            var notificationModel = new NotificationOptions
+            if (issue.Status == IssueStatus.Resolved)
             {
-                RequestId = 0,
-                DateTime = DateTime.Now,
-                NotificationType = NotificationType.Issue,
-                RequestType = issue.RequestType,
-                Recipient = !string.IsNullOrEmpty(issue.UserReported?.Email) ? issue.UserReported.Email : string.Empty,
-                AdditionalInformation = $"{issue.Subject} | {issue.Description}"
-            };
+                var notificationModel = new NotificationOptions
+                {
+                    RequestId = 0,
+                    DateTime = DateTime.Now,
+                    NotificationType = NotificationType.IssueResolved,
+                    RequestType = issue.RequestType,
+                    Recipient = !string.IsNullOrEmpty(issue.UserReported?.Email)
+                        ? issue.UserReported.Email
+                        : string.Empty,
+                    AdditionalInformation = $"{issue.Subject} | {issue.Description}",
+                    UserId = user.Id,
+                    
+                };
+                AddIssueNotificationSubstitutes(notificationModel, issue, issue.UserReported?.UserAlias ?? string.Empty);
 
-            BackgroundJob.Enqueue(() => _notification.Publish(notificationModel));
+                BackgroundJob.Enqueue(() => _notification.Publish(notificationModel));
+            }
 
 
             return true;
+        }
+
+        private static void AddIssueNotificationSubstitutes(NotificationOptions notificationModel, Issues issue, string issueReportedUsername)
+        {
+            notificationModel.Substitutes.Add("Title", issue.Title);
+            notificationModel.Substitutes.Add("IssueDescription", issue.Description);
+            notificationModel.Substitutes.Add("IssueCategory", issue.IssueCategory?.Value);
+            notificationModel.Substitutes.Add("IssueStatus", issue.Status.ToString());
+            notificationModel.Substitutes.Add("IssueSubject", issue.Subject);
+            notificationModel.Substitutes.Add("IssueUser", issueReportedUsername);
         }
     }
 }

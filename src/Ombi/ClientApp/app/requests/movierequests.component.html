@@ -2,7 +2,8 @@
 <div class="form-group">
     <div class="input-group">
         <input type="text" id="search" class="form-control form-control-custom searchwidth" placeholder="Search" (keyup)="search($event)">
-        <span class="input-group-btn">        <button class="btn btn-sm btn-info-outline" (click)="filterDisplay = true" >
+        <span class="input-group-btn">       
+        <button id="filterBtn" class="btn btn-sm btn-info-outline" (click)="filterDisplay = true" >
             <i class="fa fa-filter"></i> {{ 'Requests.Filter' | translate }}</button>
        </span>
 
@@ -24,7 +25,7 @@
             <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
             <div class="col-sm-2 small-padding">
 
-                <img class="img-responsive poster" src="https://image.tmdb.org/t/p/w150/{{request.posterPath}}" alt="poster">
+                <img class="img-responsive poster" src="https://image.tmdb.org/t/p/w300/{{request.posterPath}}" alt="poster">
 
             </div>
 
@@ -189,12 +190,6 @@
         <div class="radio">
             <input type="radio" id="approved" name="Status" (click)="filterStatus(filterType.Approved)">
             <label for="approved">{{ 'Filter.Approved' | translate }}</label>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="radio">
-            <input type="radio" id="notApproved" name="Status" (click)="filterStatus(filterType.NotApproved)">
-            <label for="notApproved">{{ 'Filter.NotApproved' | translate }}</label>
         </div>
     </div>
     <div class="form-group">

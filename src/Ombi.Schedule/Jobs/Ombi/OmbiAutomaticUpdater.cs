@@ -196,11 +196,14 @@ namespace Ombi.Schedule.Jobs.Ombi
                     var updaterFile = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
                         "TempUpdate", $"Ombi.Updater{updaterExtension}");
 
+                    // Make sure the file is an executable
+                    ExecLinuxCommand($"chmod +x {updaterFile}");
+
                     // There must be an update
                     var start = new ProcessStartInfo
                     {
-                        UseShellExecute = false,
-                        CreateNoWindow = false,
+                        UseShellExecute = true,
+                        CreateNoWindow = false, // Ignored if UseShellExecute is set to true
                         FileName = updaterFile,
                         Arguments = GetArgs(settings),
                         WorkingDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "TempUpdate"),
@@ -244,24 +247,16 @@ namespace Ombi.Schedule.Jobs.Ombi
                 sb.Append($"--windowsServiceName \"{settings.WindowsServiceName}\" ");
             }
             var sb2 = new StringBuilder();
-            var hasStartupArgs = false;
             if (url?.Value.HasValue() ?? false)
             {
-                hasStartupArgs = true;
-                sb2.Append(url.Value);
+                sb2.Append($" --host {url.Value}");
             }
             if (storage?.Value.HasValue() ?? false)
             {
-                hasStartupArgs = true;
-                sb2.Append(storage.Value);
-            }
-            if (hasStartupArgs)
-            {
-                sb.Append($"--startupArgs {sb2.ToString()}");
+                sb2.Append($" --storage {storage.Value}");
             }
 
             return sb.ToString();
-            //return string.Join(" ", currentLocation, processName, url?.Value ?? string.Empty, storage?.Value ?? string.Empty);
         }
 
         private void RunScript(UpdateSettings settings, string downloadUrl)
@@ -366,6 +361,31 @@ namespace Ombi.Schedule.Jobs.Ombi
             {
                 Directory.Delete(path, true);
             }
+        }
+
+        public static void ExecLinuxCommand(string cmd)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return;
+            }
+            var escapedArgs = cmd.Replace("\"", "\\\"");
+
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = "/bin/bash",
+                    Arguments = $"-c \"{escapedArgs}\""
+                }
+            };
+
+            process.Start();
+            process.WaitForExit();
         }
     }
 }

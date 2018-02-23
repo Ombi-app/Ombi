@@ -4,6 +4,66 @@
 
 ### **New Features**
 
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update ISSUE_TEMPLATE.md. [Jamie]
+
+- Update appveyor.yml. [Jamie]
+
+- Update ISSUE_TEMPLATE.md. [PotatoQuality]
+
+- Update ISSUE_TEMPLATE.md. [PotatoQuality]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [PotatoQuality]
+
+- Change the default templates to use {IssueUser} [Jamie]
+
+- Changed the base url validation. [tidusjar]
+
+- Added bulk editing (#1941) [Jamie]
+
+- Change the poster size to w300 #1932. [Jamie]
+
+- Added a default user agent on all API calls. [tidusjar]
+
+- Update request.service.ts. [Jamie]
+
+- Added a filter onto the movies requests page for some inital feedback. [Jamie]
+
+- Added ordering to the User Management screen. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Added custom donation url (#1902) [m4tta]
+
+- Changed the url scheme to make it easier to parse. [Jamie]
+
+- Added Norwegian to the translation code, forgot to check this in. [Jamie]
+
+- Added Norwegian to the language dropdown. [Jamie]
+
+- Added the stuff needed for omBlur. [tidusjar]
+
+- Update README.md (#1872) [xnaas]
+
+- Update README.md. [Jamie]
+
+- Update plex.component.html. [Jamie]
+
+- Change plus to list in menu (#1855) [Louis Laureys]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
 - Added user request limits, We can now set the limit for a user. [tidusjar]
 
 - Updated the UI JWT framework. [Jamie]
@@ -283,6 +343,174 @@
 - Update StringCipher.cs. [Jamie]
 
 ### **Fixes**
+
+- Small changes that might fix #1985 but doubt it. [Jamie]
+
+- Should fix #1975. [tidusjar]
+
+- Fixed #1789. [tidusjar]
+
+- Fixed #1968. [tidusjar]
+
+- Fixed #1978. [tidusjar]
+
+- Fixed #1954. [tidusjar]
+
+- Small changes to the auto updater, let's see how this works. [Jamie]
+
+- Fixed build. [Jamie]
+
+- Fixed the update check for the master build. [Jamie]
+
+- Removed accidently merged files. [Jamie]
+
+- Create CODE_OF_CONDUCT.md. [Jamie]
+
+- Windows installation guide link update. [PotatoQuality]
+
+- Fixed the issue comment issue #1914 also added another variable for issues {IssueUser} which is the user that reported the issue. [Jamie]
+
+- Fix #1914. [tidusjar]
+
+- Fixed #1914. [tidusjar]
+
+- Fixed build and added logging. [TidusJar]
+
+- New Crowdin translations (#1934) [Jamie]
+
+- Potential fix for #1942. [Jamie]
+
+- Quick change to the Emby Availability rule to make it in line slightly with the Plex one. #1950. [Jamie]
+
+- Turn off mobile notifications. [tidusjar]
+
+- FIXED PLEX!!!!! [tidusjar]
+
+- Batch the PlexContentSync and increase the plex episode batch size. [tidusjar]
+
+- Fixed the migration issue, it's too difficult to migrate the tables. [tidusjar]
+
+- Fixed #1942. [tidusjar]
+
+- Fixed checkboxes style. [Jamie]
+
+- These are not the droids you are looking for. [Jamie]
+
+- Fixed the wrong translation and see if we can VACUUM the db. [tidusjar]
+
+- More translations and added a check on the baseurl to ensure it starts with a '/' [Jamie]
+
+- More translations. [Jamie]
+
+- Fixed #1878 and added a Request all button when selecting episodes. [Jamie]
+
+- Working on the movie matching. Stop dupes #1869. [tidusjar]
+
+- Delete plex episodes on every run due to a bug, need to spend quite a bit of time on this. [tidusjar]
+
+- Fixed the issue where we were always adding emby episodes. Also fixed #1933. [tidusjar]
+
+- New Crowdin translations (#1906) [Jamie]
+
+- Add plain password for emby login (#1925) [dorian ALKOUM]
+
+- Fixed #1924. [Jamie]
+
+- Fixed the issue where I knocked out the ordering of notifications, oops. [tidusjar]
+
+- #1914 for the issue resolved notification. [Jamie]
+
+- #1916. [Jamie]
+
+- Remove the placeholder. [Jamie]
+
+- Feature arm (#1909) [Jamie]
+
+- New Crowdin translations (#1897) [Jamie]
+
+- Fix logo cut off on login screen (#1896) [Louis Laureys]
+
+- E-Mails: Only add poster table row if img is set (#1899) [Louis Laureys]
+
+- New Crowdin translations (#1884) [Jamie]
+
+- Fix mobile layout (#1888) [Louis Laureys]
+
+- Smal changes to the api. [tidusjar]
+
+- OmBlur. [tidusjar]
+
+- Hide the password field if it's not needed #1815. [Jamie]
+
+- Should fix #1885. [Jamie]
+
+- Make user management table responsive (#1882) [Louis Laureys]
+
+- Fixed some stuff for omBlur. [Jamie]
+
+- Some work... No one take a look at this, it's a suprise. [Jamie]
+
+- New Crowdin translations (#1858) [Jamie]
+
+- When requesting Anime, we now mark it correctly as Anime in Sonarr. [tidusjar]
+
+- Fixed #1879 and added the spans. [tidusjar]
+
+- Some work on the auto updater #1460. [tidusjar]
+
+- Removed the potential locking. [tidusjar]
+
+- Fixed #1863. [tidusjar]
+
+- Moved the update check code from the External azure service into Ombi at /api/v1/update/BRANCH. [Jamie]
+
+- Fixed the UI erroring out, also dont show tv with no externals. [tidusjar]
+
+- More memory management and improvements. [tidusjar]
+
+- These are not needed, added accidentally (#1860) [Louis Laureys]
+
+- Some memory management improvements. [tidusjar]
+
+- Fixed #1857. [tidusjar]
+
+- Delete old v2 ombi from v3 branch. [tidusjar]
+
+- New Crowdin translations (#1840) [Jamie]
+
+- Better login backgrounds! (#1852) [Louis Laureys]
+
+- Fixed #1851. [tidusjar]
+
+- Fixed #1826. [tidusjar]
+
+- Redo change #1848. [tidusjar]
+
+- Fix the issue for welcome emails not sending. [tidusjar]
+
+- Fix typo (#1845) [Kyle Lucy]
+
+- Fix user mentions in Slack notifications (#1846) [Aljosa Asanovic]
+
+- If Radarr/Sonarr has noticed that the media is available, then mark it as available in the UI. [Jamie]
+
+- Fixed #1835. [Jamie]
+
+- Enable Multi MIME and add alt tags to images (#1838) [Louis Laureys]
+
+- New Crowdin translations (#1816) [Jamie]
+
+- Fixed #1832. [tidusjar]
+
+- Switch to use a single HTTPClient rather than a new one every request !dev. [tidusjar]
+
+- Fix non-admin rights (#1820) [Rob Gökemeijer]
+
+- Fix duplicated "Requests" element ID on new Issues link (#1817) [Shoghi Cervantes]
+
+- Add the Issue Reporting functionality  (#1811) [Jamie]
+
+- Removed the forum. [tidusjar]
 
 - #1659 Made the option to ignore notifcations for auto approve. [Jamie]
 

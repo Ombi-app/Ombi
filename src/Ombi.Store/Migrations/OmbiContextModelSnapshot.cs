@@ -256,6 +256,24 @@ namespace Ombi.Store.Migrations
                     b.ToTable("NotificationTemplates");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.NotificationUserId", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("AddedAt");
+
+                    b.Property<string>("PlayerId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("NotificationUserId");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.OmbiUser", b =>
                 {
                     b.Property<string>("Id")
@@ -785,6 +803,13 @@ namespace Ombi.Store.Migrations
                         .WithMany("Episodes")
                         .HasForeignKey("ParentId")
                         .HasPrincipalKey("EmbyId");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.NotificationUserId", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
+                        .WithMany("NotificationUserIds")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.PlexEpisode", b =>

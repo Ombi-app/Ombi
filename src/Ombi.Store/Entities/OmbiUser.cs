@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 using Ombi.Helpers;
@@ -23,6 +24,8 @@ namespace Ombi.Store.Entities
         public int? EpisodeRequestLimit { get; set; }
 
         public string UserAccessToken { get; set; }
+
+        public List<NotificationUserId> NotificationUserIds { get; set; }
 
         [NotMapped]
         public bool IsEmbyConnect => UserType == UserType.EmbyUser && EmbyConnectUserId.HasValue();

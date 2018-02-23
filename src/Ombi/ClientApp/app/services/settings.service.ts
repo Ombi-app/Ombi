@@ -16,6 +16,7 @@ import {
     IJobSettings,
     ILandingPageSettings,
     IMattermostNotifcationSettings,
+    IMobileNotifcationSettings,
     IOmbiSettings,
     IPlexSettings,
     IPushbulletNotificationSettings,
@@ -139,14 +140,15 @@ export class SettingsService extends ServiceHelpers {
         return this.http.get<IMattermostNotifcationSettings>(`${this.url}/notifications/mattermost`, {headers: this.headers});
     }
 
+    public saveMattermostNotificationSettings(settings: IMattermostNotifcationSettings): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}/notifications/mattermost`, JSON.stringify(settings), {headers: this.headers});
+    }
+
     public saveDiscordNotificationSettings(settings: IDiscordNotifcationSettings): Observable<boolean> {
         return this.http
             .post<boolean>(`${this.url}/notifications/discord`, JSON.stringify(settings), {headers: this.headers});
     }
 
-    public saveMattermostNotificationSettings(settings: IMattermostNotifcationSettings): Observable<boolean> {
-        return this.http.post<boolean>(`${this.url}/notifications/mattermost`, JSON.stringify(settings), {headers: this.headers});
-    }
     public getPushbulletNotificationSettings(): Observable<IPushbulletNotificationSettings> {
         return this.http.get<IPushbulletNotificationSettings>(`${this.url}/notifications/pushbullet`, {headers: this.headers});
     }
@@ -170,6 +172,14 @@ export class SettingsService extends ServiceHelpers {
     public saveSlackNotificationSettings(settings: ISlackNotificationSettings): Observable<boolean> {
         return this.http
             .post<boolean>(`${this.url}/notifications/slack`, JSON.stringify(settings), {headers: this.headers});
+    }
+
+    public getMobileNotificationSettings(): Observable<IMobileNotifcationSettings> {
+        return this.http.get<IMobileNotifcationSettings>(`${this.url}/notifications/mobile`, {headers: this.headers});
+    }
+    
+    public saveMobileNotificationSettings(settings: IMobileNotifcationSettings): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}/notifications/mobile`, JSON.stringify(settings), {headers: this.headers});
     }
 
     public getUpdateSettings(): Observable<IUpdateSettings> {

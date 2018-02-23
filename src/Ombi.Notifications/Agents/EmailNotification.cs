@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 using Ombi.Core.Settings;
@@ -19,14 +21,16 @@ namespace Ombi.Notifications.Agents
     public class EmailNotification : BaseNotification<EmailNotificationSettings>, IEmailNotification
     {
         public EmailNotification(ISettingsService<EmailNotificationSettings> settings, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t, IEmailProvider prov, ISettingsService<CustomizationSettings> c,
-            ILogger<EmailNotification> log) : base(settings, r, m, t, c)
+            ILogger<EmailNotification> log, UserManager<OmbiUser> um) : base(settings, r, m, t, c, log)
         {
             EmailProvider = prov;
             Logger = log;
+            _userManager = um;
         }
         private IEmailProvider EmailProvider { get; }
         private ILogger<EmailNotification> Logger { get; }
         public override string NotificationName => nameof(EmailNotification);
+        private readonly UserManager<OmbiUser> _userManager;
 
         protected override bool ValidateConfiguration(EmailNotificationSettings settings)
         {
@@ -65,8 +69,29 @@ namespace Ombi.Notifications.Agents
             {
                 Message = html,
                 Subject = parsed.Subject,
-                To = model.Recipient.HasValue() ? model.Recipient : settings.AdminEmail,
             };
+
+            if (model.Substitutes.TryGetValue("AdminComment", out var isAdminString))
+            {
+                var isAdmin = bool.Parse(isAdminString);
+                if (isAdmin)
+                {
+                    var user = _userManager.Users.FirstOrDefault(x => x.Id == model.UserId);
+                    // Send to user
+                    message.To = user.Email;
+                }
+                else
+                {
+                    // Send to admin
+                    message.To = settings.AdminEmail;
+                }
+            }
+            else
+            {
+
+                // Send to admin
+                message.To = settings.AdminEmail;
+            }
 
             return message;
         }
@@ -109,8 +134,37 @@ namespace Ombi.Notifications.Agents
             await Send(message, settings);
         }
 
+        protected override async Task IssueComment(NotificationOptions model, EmailNotificationSettings settings)
+        {
+            var message = await LoadTemplate(NotificationType.IssueComment, model, settings);
+            if (message == null)
+            {
+                return;
+            }
+
+            var plaintext = await LoadPlainTextMessage(NotificationType.IssueComment, model, settings);
+            message.Other.Add("PlainTextBody", plaintext);
+
+            if (model.Substitutes.TryGetValue("AdminComment", out var isAdminString))
+            {
+                var isAdmin = bool.Parse(isAdminString);
+                message.To = isAdmin ? model.Recipient : settings.AdminEmail;
+            }
+            else
+            {
+                message.To = model.Recipient;
+            }
+            
+
+            await Send(message, settings);
+        }
+
         protected override async Task IssueResolved(NotificationOptions model, EmailNotificationSettings settings)
         {
+            if (!model.Recipient.HasValue())
+            {
+                return;
+            }
             var message = await LoadTemplate(NotificationType.IssueResolved, model, settings);
             if (message == null)
             {
@@ -120,9 +174,9 @@ namespace Ombi.Notifications.Agents
             var plaintext = await LoadPlainTextMessage(NotificationType.IssueResolved, model, settings);
             message.Other.Add("PlainTextBody", plaintext);
 
-            // Issues should be sent to admin
-            message.To = settings.AdminEmail;
-
+            // Issues resolved should be sent to the user
+            message.To = model.Recipient;
+            
             await Send(message, settings);
         }
 

@@ -18,7 +18,10 @@ namespace Ombi.Notifications.Agents
 {
     public class DiscordNotification : BaseNotification<DiscordNotificationSettings>, IDiscordNotification
     {
-        public DiscordNotification(IDiscordApi api, ISettingsService<DiscordNotificationSettings> sn, ILogger<DiscordNotification> log, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t, ISettingsService<CustomizationSettings> s) : base(sn, r, m, t,s)
+        public DiscordNotification(IDiscordApi api, ISettingsService<DiscordNotificationSettings> sn,
+                                   ILogger<DiscordNotification> log, INotificationTemplatesRepository r,
+                                   IMovieRequestRepository m, ITvRequestRepository t, ISettingsService<CustomizationSettings> s)
+            : base(sn, r, m, t,s,log)
         {
             Api = api;
             Logger = log;
@@ -74,6 +77,22 @@ namespace Ombi.Notifications.Agents
             if (parsed.Disabled)
             {
                 Logger.LogInformation($"Template {NotificationType.Issue} is disabled for {NotificationAgent.Discord}");
+                return;
+            }
+            var notification = new NotificationMessage
+            {
+                Message = parsed.Message,
+            };
+            notification.Other.Add("image", parsed.Image);
+            await Send(notification, settings);
+        }
+
+        protected override async Task IssueComment(NotificationOptions model, DiscordNotificationSettings settings)
+        {
+            var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.IssueComment, model);
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {NotificationType.IssueComment} is disabled for {NotificationAgent.Discord}");
                 return;
             }
             var notification = new NotificationMessage

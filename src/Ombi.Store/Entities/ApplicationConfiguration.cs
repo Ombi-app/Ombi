@@ -15,6 +15,7 @@ namespace Ombi.Store.Entities
         // 2 was used for Port before the beta
         FanartTv = 3,
         TheMovieDb = 4,
-        StoragePath = 5
+        StoragePath = 5,
+        Notification = 6,
     }
 }

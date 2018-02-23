@@ -8,15 +8,16 @@
     }
 </style>
 <div *ngIf="series">
-    <button class="btn btn-sm btn-success pull-right" (click)="submitRequests()" title="Go to top">Submit Request</button>
+    <button class="btn btn-sm btn-success pull-right" (click)="submitRequests()" title="Go to top">{{ 'Search.TvShows.SubmitRequest' | translate }}</button>
     
     <ngb-tabset>
              
         <div *ngFor="let season of series.seasonRequests">
             <ngb-tab [id]="season.seasonNumber" [title]="season.seasonNumber">
                 <ng-template ngbTabContent>
-                    <h2>Season: {{season.seasonNumber}}</h2>
-
+                    <h2 [translate]="'Requests.SeasonNumberHeading'" [translateParams]="{seasonNumber: season.seasonNumber}">Season: {{season.seasonNumber}}</h2>
+                    
+                    <button (click)="addAllEpisodes(season)" class="btn btn-sm btn-primary-outline" [translate]="'Search.TvShows.SelectAllInSeason'" [translateParams]="{seasonNumber: season.seasonNumber}">Select All in Season {{season.seasonNumber}}</button>
                     <table class="table table-striped table-hover table-responsive table-condensed">
                         <thead>
                         <tr>

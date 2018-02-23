@@ -9,8 +9,12 @@ ____
 [![Patreon](https://www.ombi.io/img/patreondonate.svg)](https://patreon.com/tidusjar/Ombi)
 [![Paypal](https://www.ombi.io/img/paypaldonate.svg)](https://paypal.me/PlexRequestsNet)
 
-[![Report a bug](http://i.imgur.com/xSpw482.png)](https://github.com/tidusjar/Ombi/issues/new) [![Feature request](http://i.imgur.com/mFO0OuX.png)](http://feathub.com/tidusjar/Ombi)
+[![Patreon](https://www.ombi.io/img/patreondonate.svg)](https://patreon.com/tidusjar/Ombi)
+[![Paypal](https://www.ombi.io/img/paypaldonate.svg)](https://paypal.me/PlexRequestsNet)
+___
 
+
+[![Report a bug](http://i.imgur.com/xSpw482.png)](https://forums.ombi.io/viewforum.php?f=10) [![Feature request](http://i.imgur.com/mFO0OuX.png)](https://forums.ombi.io/posting.php?mode=post&f=20)
 
 | Service  | Master (V2)                | Open Beta     (V3 - Recommended)          |
 |----------|:---------------------------:|:----------------------------:|
