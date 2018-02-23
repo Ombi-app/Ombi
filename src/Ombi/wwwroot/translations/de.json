@@ -21,7 +21,7 @@
     "Request": "Anfrage",
     "Denied": "Abgelehnt",
     "Approve": "Genehmigen",
-    "PartlyAvailable": "Partly Available",
+    "PartlyAvailable": "Teilweise verfügbar",
     "Errors": {
       "Validation": "Bitte überprüfen Sie die eingegebenen Werte"
     }
@@ -85,19 +85,19 @@
       "Trailer": "Trailer"
     },
     "TvShows": {
-      "Popular": "Popular",
-      "Trending": "Trending",
-      "MostWatched": "Most Watched",
-      "MostAnticipated": "Most Anticipated",
-      "Results": "Results",
-      "AirDate": "Air Date:",
-      "AllSeasons": "All Seasons",
-      "FirstSeason": "First Season",
-      "LatestSeason": "Latest Season",
-      "Select": "Select ...",
-      "SubmitRequest": "Submit Request",
-      "Season": "Season: {{seasonNumber}}",
-      "SelectAllInSeason": "Select All in Season {{seasonNumber}}"
+      "Popular": "Beliebt",
+      "Trending": "im Trend",
+      "MostWatched": "Meist gesehen",
+      "MostAnticipated": "Meist erwartet",
+      "Results": "Ergebnisse",
+      "AirDate": "Veröffentlicht am:",
+      "AllSeasons": "Alle Staffeln",
+      "FirstSeason": "erste Staffel",
+      "LatestSeason": "aktuellste Staffel",
+      "Select": "Wähle...",
+      "SubmitRequest": "Anfrage einreichen",
+      "Season": "Staffel: {{seasonNumber}}",
+      "SelectAllInSeason": "Markiere alles in Staffel {{seasonNumber}}"
     }
   },
   "Requests": {
@@ -125,7 +125,7 @@
     "GridStatus": "Status",
     "ReportIssue": "Problem melden",
     "Filter": "Filter",
-    "SeasonNumberHeading": "Season: {seasonNumber}"
+    "SeasonNumberHeading": "Staffel: {seasonNumber}"
   },
   "Issues": {
     "Title": "Probleme",

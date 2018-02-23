@@ -12,7 +12,7 @@
   "Common": {
     "ContinueButton": "Doorgaan",
     "Available": "Beschikbaar",
-    "NotAvailable": "Not Available",
+    "NotAvailable": "Niet Beschikbaar",
     "ProcessingRequest": "Verzoek wordt verwerkt",
     "PendingApproval": "Wacht op goedkeuring",
     "RequestDenied": "Verzoek geweigerd",
@@ -21,7 +21,7 @@
     "Request": "Verzoek",
     "Denied": "Geweigerd",
     "Approve": "Accepteer",
-    "PartlyAvailable": "Partly Available",
+    "PartlyAvailable": "Deels Beschikbaar",
     "Errors": {
       "Validation": "Fout: Controleer de ingevulde waardes"
     }
@@ -47,7 +47,7 @@
     "UserManagement": "Gebruikersbeheer",
     "Issues": "Problemen",
     "Donate": "Doneer!",
-    "DonateLibraryMaintainer": "Donate to Library Maintainer",
+    "DonateLibraryMaintainer": "Doneren aan bibliotheek beheerder",
     "DonateTooltip": "Zo heb ik mijn vrouw overtuigd dat ik Ombi mag ontwikkelen ;)",
     "UpdateAvailableTooltip": "Update beschikbaar!",
     "Settings": "Instellingen",
@@ -62,9 +62,9 @@
       "Italian": "Italiaans",
       "Danish": "Deens",
       "Dutch": "Nederlands",
-      "Norwegian": "Norwegian"
+      "Norwegian": "Noors"
     },
-    "OpenMobileApp": "Open Mobile App"
+    "OpenMobileApp": "Open Mobiele App"
   },
   "Search": {
     "Title": "Zoeken",
@@ -85,19 +85,19 @@
       "Trailer": "Trailer"
     },
     "TvShows": {
-      "Popular": "Popular",
+      "Popular": "Populair",
       "Trending": "Trending",
-      "MostWatched": "Most Watched",
-      "MostAnticipated": "Most Anticipated",
-      "Results": "Results",
-      "AirDate": "Air Date:",
-      "AllSeasons": "All Seasons",
-      "FirstSeason": "First Season",
-      "LatestSeason": "Latest Season",
-      "Select": "Select ...",
-      "SubmitRequest": "Submit Request",
-      "Season": "Season: {{seasonNumber}}",
-      "SelectAllInSeason": "Select All in Season {{seasonNumber}}"
+      "MostWatched": "Meest Bekeken",
+      "MostAnticipated": "Meest Verwacht",
+      "Results": "Resultaten",
+      "AirDate": "Uitzenddatum:",
+      "AllSeasons": "Alle Seizoenen",
+      "FirstSeason": "Eerste Seizoen",
+      "LatestSeason": "Laatste Seizoen",
+      "Select": "Selecteer...",
+      "SubmitRequest": "Verzoek Indienen",
+      "Season": "Seizoen: {{seasonNumber}}",
+      "SelectAllInSeason": "Selecteer Alles in het Seizoen {{seasonNumber}}"
     }
   },
   "Requests": {
@@ -123,9 +123,9 @@
     "GridTitle": "Titel",
     "AirDate": "Uitzenddatum",
     "GridStatus": "Status",
-    "ReportIssue": "Report Issue",
+    "ReportIssue": "Probleem Melden",
     "Filter": "Filter",
-    "SeasonNumberHeading": "Season: {seasonNumber}"
+    "SeasonNumberHeading": "Seizoen: {seasonNumber}"
   },
   "Issues": {
     "Title": "Problemen",
@@ -147,9 +147,9 @@
     "ReportedBy": "Gerapporteerd door"
   },
   "Filter": {
-    "ClearFilter": "Clear Filter",
-    "FilterHeaderAvailability": "Availability",
+    "ClearFilter": "Verwijder Filter",
+    "FilterHeaderAvailability": "Beschikbaarheid",
     "FilterHeaderRequestStatus": "Status",
-    "Approved": "Approved"
+    "Approved": "Goedgekeurd"
   }
 }
