@@ -10,9 +10,13 @@ namespace Ombi.Core.Engine.Interfaces
         Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> SearchTreeNode(string searchTerm);
         Task<TreeNode<SearchTvShowViewModel>> GetShowInformationTreeNode(int tvdbid);
         Task<SearchTvShowViewModel> GetShowInformation(int tvdbid);
-        Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> Popular();
-        Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> Anticipated();
-        Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> MostWatches();
-        Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> Trending();
+        Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> PopularTree();
+        Task<IEnumerable<SearchTvShowViewModel>> Popular();
+        Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> AnticipatedTree();
+        Task<IEnumerable<SearchTvShowViewModel>> Anticipated();
+        Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> MostWatchesTree();
+        Task<IEnumerable<SearchTvShowViewModel>> MostWatches();
+        Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> TrendingTree();
+        Task<IEnumerable<SearchTvShowViewModel>> Trending();
     }
 }

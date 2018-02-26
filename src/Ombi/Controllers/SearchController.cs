@@ -156,38 +156,86 @@ namespace Ombi.Controllers
         /// </summary>
         /// <remarks>We use Trakt.tv as the Provider</remarks>
         /// <returns></returns>
+        [HttpGet("tv/popular/tree")]
+        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> PopularTvTree()
+        {
+            return await TvEngine.PopularTree();
+        }
+
+        /// <summary>
+        /// Returns Popular Tv Shows
+        /// </summary>
+        /// <remarks>We use Trakt.tv as the Provider</remarks>
+        /// <returns></returns>
         [HttpGet("tv/popular")]
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> PopularTv()
+        public async Task<IEnumerable<SearchTvShowViewModel>> PopularTv()
         {
             return await TvEngine.Popular();
         }
+
+        /// <summary>
+        /// Returns most Anticiplateds tv shows.
+        /// </summary>
+        /// <remarks>We use Trakt.tv as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("tv/anticipated/tree")]
+        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> AnticipatedTvTree()
+        {
+            return await TvEngine.AnticipatedTree();
+        }
+
+
         /// <summary>
         /// Returns most Anticiplateds tv shows.
         /// </summary>
         /// <remarks>We use Trakt.tv as the Provider</remarks>
         /// <returns></returns>
         [HttpGet("tv/anticipated")]
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> AnticiplatedTv()
+        public async Task<IEnumerable<SearchTvShowViewModel>> AnticipatedTv()
         {
             return await TvEngine.Anticipated();
         }
+
+        /// <summary>
+        /// Returns Most watched shows.
+        /// </summary>
+        /// <remarks>We use Trakt.tv as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("tv/mostwatched/tree")]
+        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> MostWatchedTree()
+        {
+            return await TvEngine.MostWatchesTree();
+        }
+
         /// <summary>
         /// Returns Most watched shows.
         /// </summary>
         /// <remarks>We use Trakt.tv as the Provider</remarks>
         /// <returns></returns>
         [HttpGet("tv/mostwatched")]
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> MostWatched()
+        public async Task<IEnumerable<SearchTvShowViewModel>> MostWatched()
         {
             return await TvEngine.MostWatches();
         }
+
+        /// <summary>
+        /// Returns trending shows
+        /// </summary>
+        /// <remarks>We use Trakt.tv as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("tv/trending/tree")]
+        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> TrendingTree()
+        {
+            return await TvEngine.TrendingTree();
+        }
+
         /// <summary>
         /// Returns trending shows
         /// </summary>
         /// <remarks>We use Trakt.tv as the Provider</remarks>
         /// <returns></returns>
         [HttpGet("tv/trending")]
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> Trending()
+        public async Task<IEnumerable<SearchTvShowViewModel>> Trending()
         {
             return await TvEngine.Trending();
         }
