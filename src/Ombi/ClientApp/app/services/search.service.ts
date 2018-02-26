@@ -54,15 +54,15 @@ export class SearchService extends ServiceHelpers {
     }
 
     public popularTv(): Observable<TreeNode[]> {
-        return this.http.get<TreeNode[]>(`${this.url}/Tv/popular`, {headers: this.headers});
+        return this.http.get<TreeNode[]>(`${this.url}/Tv/popular/tree`, {headers: this.headers});
     }
     public mostWatchedTv(): Observable<TreeNode[]> {
-        return this.http.get<TreeNode[]>(`${this.url}/Tv/mostwatched`, {headers: this.headers});
+        return this.http.get<TreeNode[]>(`${this.url}/Tv/mostwatched/tree`, {headers: this.headers});
     }
     public anticipatedTv(): Observable<TreeNode[]> {
-        return this.http.get<TreeNode[]>(`${this.url}/Tv/anticipated`, {headers: this.headers});
+        return this.http.get<TreeNode[]>(`${this.url}/Tv/anticipated/tree`, {headers: this.headers});
     }
     public trendingTv(): Observable<TreeNode[]> {
-        return this.http.get<TreeNode[]>(`${this.url}/Tv/trending`, {headers: this.headers});
+        return this.http.get<TreeNode[]>(`${this.url}/Tv/trending/tree`, {headers: this.headers});
     }
 }
