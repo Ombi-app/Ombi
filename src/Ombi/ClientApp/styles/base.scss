@@ -884,6 +884,10 @@ textarea {
     border: 1px solid $form-color-lighter;
 }
 
+.ui-treetable tfoot td, .ui-treetable th {
+    text-align: left;
+}
+
 .ui-treetable tbody td {
     white-space: inherit;
     overflow: visible;
