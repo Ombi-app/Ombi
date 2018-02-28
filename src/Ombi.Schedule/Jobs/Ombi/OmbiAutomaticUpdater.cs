@@ -106,14 +106,23 @@ namespace Ombi.Schedule.Jobs.Ombi
                 {
                     // Let's download the correct zip
                     var desc = RuntimeInformation.OSDescription;
-                    var proce = RuntimeInformation.ProcessArchitecture;
+                    var process = RuntimeInformation.ProcessArchitecture;
 
-                    Logger.LogDebug(LoggingEvents.Updater, "OS Information: {0} {1}", desc, proce);
+                    Logger.LogDebug(LoggingEvents.Updater, "OS Information: {0} {1}", desc, process);
                     Downloads download;
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
                         Logger.LogDebug(LoggingEvents.Updater, "We are Windows");
-                        download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("windows.zip", CompareOptions.IgnoreCase));
+                        if (process == Architecture.X64)
+                        {
+                            download = updates.Downloads.FirstOrDefault(x =>
+                                x.Name.Contains("windows.", CompareOptions.IgnoreCase));
+                        }
+                        else
+                        {
+                            download = updates.Downloads.FirstOrDefault(x =>
+                                x.Name.Contains("windows-32bit", CompareOptions.IgnoreCase));
+                        }
                     }
                     else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                     {
@@ -123,13 +132,16 @@ namespace Ombi.Schedule.Jobs.Ombi
                     else
                     {
                         Logger.LogDebug(LoggingEvents.Updater, "We are linux");
-                        if (RuntimeInformation.OSDescription.Contains("arm", CompareOptions.IgnoreCase))
+                        if (process == Architecture.Arm)
                         {
-                            download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("arm", CompareOptions.IgnoreCase));
+                            download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("arm.", CompareOptions.IgnoreCase));
+                        } else if (process == Architecture.Arm64)
+                        {
+                            download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("arm64.", CompareOptions.IgnoreCase));
                         }
                         else
                         {
-                            download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("linux", CompareOptions.IgnoreCase));
+                            download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("linux.", CompareOptions.IgnoreCase));
                         }
                     }
                     if (download == null)
