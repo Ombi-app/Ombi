@@ -62,6 +62,19 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Returns similar movies to the movie id passed in
+        /// </summary>
+        /// <param name="theMovieDbId">ID of the movie</param>
+        /// <remarks>
+        /// We use TheMovieDb as the Movie Provider
+        /// </remarks>
+        [HttpGet("movie/{theMovieDbId}/similar")]
+        public async Task<IEnumerable<SearchMovieViewModel>> SimilarMovies(int theMovieDbId)
+        {
+            return await MovieEngine.SimilarMovies(theMovieDbId);
+        }
+
+        /// <summary>
         /// Returns Popular Movies
         /// </summary>
         /// <remarks>We use TheMovieDb as the Movie Provider</remarks>

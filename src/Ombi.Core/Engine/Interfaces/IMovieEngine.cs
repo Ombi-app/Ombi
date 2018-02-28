@@ -17,5 +17,7 @@ namespace Ombi.Core
         Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies();
         
         Task<SearchMovieViewModel> LookupImdbInformation(int theMovieDbId);
+
+        Task<IEnumerable<SearchMovieViewModel>> SimilarMovies(int theMovieDbId);
     }
 }

@@ -30,6 +30,15 @@ namespace Ombi.Api.TheMovieDb
             return Mapper.Map<MovieResponseDto>(result);
         }
 
+        public async Task<List<MovieSearchResult>> SimilarMovies(int movieId)
+        {
+            var request = new Request($"movie/{movieId}/similar", BaseUri, HttpMethod.Get);
+            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+
+            var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
+            return Mapper.Map<List<MovieSearchResult>>(result.results);
+        }
+
         public async Task<MovieResponseDto> GetMovieInformationWithExtraInfo(int movieId)
         {
             var request = new Request($"movie/{movieId}", BaseUri, HttpMethod.Get);
