@@ -42,7 +42,19 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(dest => dest.Runtime, opts => opts.MapFrom(src => src.runtime))
                 .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.status))
                 .ForMember(dest => dest.Tagline, opts => opts.MapFrom(src => src.tagline))
-                .ForMember(dest => dest.VoteCount, opts => opts.MapFrom(src => src.vote_count));
+                .ForMember(dest => dest.VoteCount, opts => opts.MapFrom(src => src.vote_count))
+                .ForMember(dest => dest.ReleaseDates, opts => opts.MapFrom(src => src.release_dates));
+
+            CreateMap<ReleaseDates, ReleaseDatesDto>()
+                .ForMember(x => x.Results, o => o.MapFrom(src => src.results));
+
+            CreateMap<ReleaseResults, ReleaseResultsDto>()
+                .ForMember(x => x.ReleaseDate, o => o.MapFrom(s => s.release_dates))
+                .ForMember(x => x.IsoCode, o => o.MapFrom(s => s.iso_3166_1));
+            CreateMap<ReleaseDate, ReleaseDateDto>()
+                .ForMember(x => x.ReleaseDate, o => o.MapFrom(s => s.release_date))
+                .ForMember(x => x.Type, o => o.MapFrom(s => s.Type));
+
             CreateMap<Genre, GenreDto>();
 
             CreateMap<MovieSearchResult, SearchMovieViewModel>().ReverseMap();

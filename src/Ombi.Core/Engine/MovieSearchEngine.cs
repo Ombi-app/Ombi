@@ -40,7 +40,7 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<SearchMovieViewModel> LookupImdbInformation(int theMovieDbId)
         {
-            var movieInfo = await MovieApi.GetMovieInformationWithVideo(theMovieDbId);
+            var movieInfo = await MovieApi.GetMovieInformationWithExtraInfo(theMovieDbId);
             var viewMovie = Mapper.Map<SearchMovieViewModel>(movieInfo);
 
             return await ProcessSingleMovie(viewMovie, true);
@@ -141,6 +141,8 @@ namespace Ombi.Core.Engine
                 var showInfo = await MovieApi.GetMovieInformation(viewMovie.Id);
                 viewMovie.Id = showInfo.Id; // TheMovieDbId
                 viewMovie.ImdbId = showInfo.ImdbId;
+                var usDates = viewMovie.ReleaseDates?.Results?.FirstOrDefault(x => x.IsoCode == "US");
+                viewMovie.DigitalReleaseDate = usDates?.ReleaseDate?.FirstOrDefault(x => x.Type == ReleaseDateType.Digital)?.ReleaseDate;
             }
 
             viewMovie.TheMovieDbId = viewMovie.Id.ToString();

@@ -24,6 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System;
+using System.Collections.Generic;
+
 namespace Ombi.TheMovieDbApi.Models
 {
 
@@ -54,5 +58,26 @@ namespace Ombi.TheMovieDbApi.Models
         public bool video { get; set; }
         public float vote_average { get; set; }
         public int vote_count { get; set; }
+        public ReleaseDates release_dates { get; set; }
+    }
+
+    public class ReleaseDates
+    {
+        public List<ReleaseResults> results { get; set; }
+    }
+
+    public class ReleaseResults
+    {
+        public string iso_3166_1 { get; set; }
+        public List<ReleaseDate> release_dates { get; set; }
+    }
+
+    public class ReleaseDate
+    {
+        public string Certification { get; set; }
+        public string iso_639_1 { get; set; }
+        public string note { get; set; }
+        public DateTime release_date { get; set; }
+        public int Type { get; set; }
     }
 }

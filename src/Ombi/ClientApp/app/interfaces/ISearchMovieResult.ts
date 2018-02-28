@@ -22,6 +22,7 @@
     available: boolean;
     plexUrl: string;
     quality: string;
+    digitalReleaseDate: Date;
 
     // for the UI
     requestProcessing: boolean;

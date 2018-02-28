@@ -11,6 +11,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Rule.Interfaces;
@@ -45,7 +46,7 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<RequestEngineResult> RequestMovie(MovieRequestViewModel model)
         {
-            var movieInfo = await MovieApi.GetMovieInformation(model.TheMovieDbId);
+            var movieInfo = await MovieApi.GetMovieInformationWithExtraInfo(model.TheMovieDbId);
             if (movieInfo == null || movieInfo.Id == 0)
             {
                 return new RequestEngineResult
@@ -77,6 +78,9 @@ namespace Ombi.Core.Engine
                 RequestedUserId = userDetails.Id,
                 Background = movieInfo.BackdropPath
             };
+
+            var usDates = movieInfo.ReleaseDates?.Results?.FirstOrDefault(x => x.IsoCode == "US");
+            requestModel.DigitalReleaseDate = usDates?.ReleaseDate?.FirstOrDefault(x => x.Type == ReleaseDateType.Digital)?.ReleaseDate;
 
             var ruleResults = (await RunRequestRules(requestModel)).ToList();
             if (ruleResults.Any(x => !x.Success))

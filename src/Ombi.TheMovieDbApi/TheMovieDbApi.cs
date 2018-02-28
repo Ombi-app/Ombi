@@ -30,11 +30,11 @@ namespace Ombi.Api.TheMovieDb
             return Mapper.Map<MovieResponseDto>(result);
         }
 
-        public async Task<MovieResponseDto> GetMovieInformationWithVideo(int movieId)
+        public async Task<MovieResponseDto> GetMovieInformationWithExtraInfo(int movieId)
         {
             var request = new Request($"movie/{movieId}", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
-            request.FullUri = request.FullUri.AddQueryParameter("append_to_response", "videos");
+            request.FullUri = request.FullUri.AddQueryParameter("append_to_response", "videos,release_dates");
             var result = await Api.Request<MovieResponse>(request);
             return Mapper.Map<MovieResponseDto>(result);
         }
