@@ -64,6 +64,22 @@ namespace Ombi.Core.Engine
         }
 
         /// <summary>
+        /// Get similar movies to the id passed in
+        /// </summary>
+        /// <param name="theMovieDbId"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<SearchMovieViewModel>> SimilarMovies(int theMovieDbId)
+        {
+            var result = await MovieApi.SimilarMovies(theMovieDbId);
+            if (result != null)
+            {
+                Logger.LogDebug("Search Result: {result}", result);
+                return await TransformMovieResultsToResponse(result.Take(10)); // Take 10 to stop us overloading the API
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Gets popular movies.
         /// </summary>
         /// <returns></returns>
