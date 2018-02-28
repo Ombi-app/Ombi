@@ -480,6 +480,8 @@ namespace Ombi.Controllers
                 if (modifyingSelf && role.Equals(OmbiRoles.Admin))
                 {
                     // We do not want to remove the admin role from yourself, this must be an accident
+                    var claim = ui.Claims.FirstOrDefault(x => x.Value == OmbiRoles.Admin && x.Enabled);
+                    ui.Claims.Remove(claim);
                     continue;
                 }
                 await UserManager.RemoveFromRoleAsync(user, role);
