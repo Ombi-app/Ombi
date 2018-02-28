@@ -42,7 +42,8 @@
                             <h4>{{result.title}} ({{result.releaseDate | date: 'yyyy'}})</h4>
                         </a>
 <span class="tags">
-                        <span *ngIf="result.releaseDate" class="label label-info" id="releaseDateLabel" target="_blank">{{ 'Search.ReleaseDate' | translate }} {{result.releaseDate | date: 'dd/MM/yyyy'}}</span>
+    <span *ngIf="result.releaseDate" class="label label-info" id="releaseDateLabel" target="_blank">{{ 'Search.TheatricalRelease' | translate: {date: result.releaseDate | date: 'mediumDate'} }}</span>
+    <span *ngIf="result.digitalReleaseDate" class="label label-info" id="releaseDateLabel" target="_blank">{{ 'Search.DigitalDate' | translate: {date: result.digitalReleaseDate | date: 'mediumDate'} }}</span>
 
                         <a *ngIf="result.homepage" href="{{result.homepage}}" id="homePageLabel" target="_blank"><span class="label label-info" [translate]="'Search.Movies.HomePage'"></span></a>
 

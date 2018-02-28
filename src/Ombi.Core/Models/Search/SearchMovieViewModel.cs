@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ombi.Api.TheMovieDb.Models;
 using Ombi.Store.Entities;
 
 namespace Ombi.Core.Models.Search
@@ -25,5 +26,7 @@ namespace Ombi.Core.Models.Search
         public int RootPathOverride { get; set; }
         public int QualityOverride { get; set; }
         public override RequestType Type => RequestType.Movie;
+        public ReleaseDatesDto ReleaseDates { get; set; }
+        public DateTime? DigitalReleaseDate { get; set; }
     }
 }
