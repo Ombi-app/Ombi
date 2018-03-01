@@ -49,3 +49,8 @@ export interface IMobileUsersViewModel {
     username: string;
     devices: number;
 }
+
+export interface IMassEmailModel {
+    user: IUser;
+    selected: boolean;
+}
