@@ -4,6 +4,8 @@
 
 ### **New Features**
 
+- Added a similar button to the movie searches. Makes movie discoverablility easier. [tidusjar]
+
 - Update README.md. [Jamie]
 
 - Update README.md. [Jamie]
@@ -344,6 +346,34 @@
 
 ### **Fixes**
 
+- Publish 32bit build of windows. [tidusjar]
+
+- Fixing incorrect filter translation targets (#1987) [Jono Cairns]
+
+- New Crowdin translations (#2017) [Jamie]
+
+- Fixed #1997. [tidusjar]
+
+- We now show the digital release date in the search if available #1962. [tidusjar]
+
+- Css fixes (#2014) [Louis Laureys]
+
+- API improvements. [Jamie]
+
+- Fix #1599 (#2008) [Louis Laureys]
+
+- Issue button fix (#2006) [Louis Laureys]
+
+- Fixed #1886 #1865. [Jamie]
+
+- Fixed the outstanding issue on #1995. [Jamie]
+
+- Fixed an issue for #1951. [tidusjar]
+
+- Try and fuzzy match the title and release if we cannot get the tvdb id or imdbid (depends on the media agents in Plex) #1951. [tidusjar]
+
+- Fixed #1989 #1719. [Jamie]
+
 - Small changes that might fix #1985 but doubt it. [Jamie]
 
 - Should fix #1975. [tidusjar]
@@ -403,6 +433,72 @@
 - More translations. [Jamie]
 
 - Fixed #1878 and added a Request all button when selecting episodes. [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
 
 - Working on the movie matching. Stop dupes #1869. [tidusjar]
 
