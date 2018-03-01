@@ -122,33 +122,60 @@ namespace Ombi.Core.Engine
             return ParseIntoTreeNode(result);
         }
 
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> Popular()
+        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> PopularTree()
         {
             var result = await MemCache.GetOrAdd(CacheKeys.PopularTv, async () => await TraktApi.GetPopularShows(), DateTime.Now.AddHours(12));
             var processed = await ProcessResults(result);
             return processed.Select(ParseIntoTreeNode).ToList();
         }
 
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> Anticipated()
+        public async Task<IEnumerable<SearchTvShowViewModel>> Popular()
         {
-            var result = await MemCache.GetOrAdd(CacheKeys.AnticipatedTv, async () => await TraktApi.GetAnticipatedShows(), DateTime.Now.AddHours(12));
-            var processed= await ProcessResults(result);
-            return processed.Select(ParseIntoTreeNode).ToList();
+            var result = await MemCache.GetOrAdd(CacheKeys.PopularTv, async () => await TraktApi.GetPopularShows(), DateTime.Now.AddHours(12));
+            var processed = await ProcessResults(result);
+            return processed;
         }
 
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> MostWatches()
+        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> AnticipatedTree()
+        {
+            var result = await MemCache.GetOrAdd(CacheKeys.AnticipatedTv, async () => await TraktApi.GetAnticipatedShows(), DateTime.Now.AddHours(12));
+            var processed = await ProcessResults(result);
+            return processed.Select(ParseIntoTreeNode).ToList();
+        }
+        public async Task<IEnumerable<SearchTvShowViewModel>> Anticipated()
+        {
+            var result = await MemCache.GetOrAdd(CacheKeys.AnticipatedTv, async () => await TraktApi.GetAnticipatedShows(), DateTime.Now.AddHours(12));
+            var processed = await ProcessResults(result);
+            return processed;
+        }
+
+        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> MostWatchesTree()
         {
             var result = await MemCache.GetOrAdd(CacheKeys.MostWatchesTv, async () => await TraktApi.GetMostWatchesShows(), DateTime.Now.AddHours(12));
             var processed = await ProcessResults(result);
             return processed.Select(ParseIntoTreeNode).ToList();
         }
+        public async Task<IEnumerable<SearchTvShowViewModel>> MostWatches()
+        {
+            var result = await MemCache.GetOrAdd(CacheKeys.MostWatchesTv, async () => await TraktApi.GetMostWatchesShows(), DateTime.Now.AddHours(12));
+            var processed = await ProcessResults(result);
+            return processed;
+        }
 
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> Trending()
+        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> TrendingTree()
         {
             var result = await MemCache.GetOrAdd(CacheKeys.TrendingTv, async () => await TraktApi.GetTrendingShows(), DateTime.Now.AddHours(12));
             var processed = await ProcessResults(result);
             return processed.Select(ParseIntoTreeNode).ToList();
         }
+
+        public async Task<IEnumerable<SearchTvShowViewModel>> Trending()
+        {
+            var result = await MemCache.GetOrAdd(CacheKeys.TrendingTv, async () => await TraktApi.GetTrendingShows(), DateTime.Now.AddHours(12));
+            var processed = await ProcessResults(result);
+            return processed;
+        }
+
         private static TreeNode<SearchTvShowViewModel> ParseIntoTreeNode(SearchTvShowViewModel result)
         {
             return new TreeNode<SearchTvShowViewModel>

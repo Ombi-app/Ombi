@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -53,6 +52,23 @@ namespace Ombi.Api.Radarr
             return await Api.Request<List<MovieResponse>>(request);
         }
 
+        public async Task<MovieResponse> GetMovie(int id, string apiKey, string baseUrl)
+        {
+            var request = new Request($"/api/movie/{id}", baseUrl, HttpMethod.Get);
+            AddHeaders(request, apiKey);
+
+            return await Api.Request<MovieResponse>(request);
+        }
+
+        public async Task<MovieResponse> UpdateMovie(MovieResponse movie, string apiKey, string baseUrl)
+        {
+            var request = new Request($"/api/movie/", baseUrl, HttpMethod.Put);
+            AddHeaders(request, apiKey);
+            request.AddJsonBody(movie);
+
+            return await Api.Request<MovieResponse>(request);
+        }
+
         public async Task<RadarrAddMovieResponse> AddMovie(int tmdbId, string title, int year, int qualityId, string rootPath, string apiKey, string baseUrl, bool searchNow, string minimumAvailability)
         {
             var request = new Request("/api/movie", baseUrl, HttpMethod.Post);
@@ -66,7 +82,7 @@ namespace Ombi.Api.Radarr
                 titleSlug = title,
                 monitored = true,
                 year = year,
-                minimumAvailability = minimumAvailability,
+                minimumAvailability = minimumAvailability
             };
 
             if (searchNow)
@@ -81,9 +97,9 @@ namespace Ombi.Api.Radarr
             request.AddHeader("X-Api-Key", apiKey);
             request.AddJsonBody(options);
 
+            var response = await Api.RequestContent(request);
             try
             {
-                var response = await Api.RequestContent(request);
                 if (response.Contains("\"message\":"))
                 {
                     var error = JsonConvert.DeserializeObject<RadarrError>(response);
@@ -98,11 +114,24 @@ namespace Ombi.Api.Radarr
             }
             catch (JsonSerializationException jse)
             {
-                Logger.LogError(LoggingEvents.RadarrApi, jse, "Error When adding movie to Radarr");
+                Logger.LogError(LoggingEvents.RadarrApi, jse, "Error When adding movie to Radarr, Reponse: {0}", response);
             }
             return null;
         }
 
+        public async Task<bool> MovieSearch(int[] movieIds, string apiKey, string baseUrl)
+        {
+            var result = await Command(apiKey, baseUrl, new { name = "MoviesSearch", movieIds });
+            return result != null;
+        }
+
+        private async Task<CommandResult> Command(string apiKey, string baseUrl, object body)
+        {
+            var request = new Request($"/api/Command/", baseUrl, HttpMethod.Post);
+            request.AddHeader("X-Api-Key", apiKey);
+            request.AddJsonBody(body);
+            return await Api.Request<CommandResult>(request);
+        }
 
         /// <summary>
         /// Adds the required headers and also the authorization header

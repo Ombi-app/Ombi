@@ -17,7 +17,7 @@ namespace Ombi.Controllers
         }
         
         private ILogger Logger { get; }
-        private const string Message = "Exception: {0} at {1}. Stacktrade {2}";
+        private const string Message = "Exception: {0} at {1}. Stacktrace {2}";
 
         [HttpPost]
         public IActionResult Log([FromBody]UiLoggingModel l)

@@ -17,10 +17,7 @@ namespace Ombi.Api.Radarr.Models
         public bool monitored { get; set; }
         public int tmdbId { get; set; }
         public List<string> images { get; set; }
-        public string cleanTitle { get; set; }
-        public string imdbId { get; set; }
         public string titleSlug { get; set; }
-        public int id { get; set; }
         public int year { get; set; }
         public string minimumAvailability { get; set; }
     }

@@ -1,4 +1,7 @@
-﻿namespace Ombi.Api.TheMovieDb.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace Ombi.Api.TheMovieDb.Models
 {
     public class MovieResponseDto
     {
@@ -23,5 +26,33 @@
         public bool Video { get; set; }
         public float VoteAverage { get; set; }
         public int VoteCount { get; set; }
+        public ReleaseDatesDto ReleaseDates { get; set; }
+    }
+
+    public class ReleaseDatesDto
+    {
+        public List<ReleaseResultsDto> Results { get; set; }
+    }
+
+    public class ReleaseResultsDto
+    {
+        public string IsoCode { get; set; }
+        public List<ReleaseDateDto> ReleaseDate { get; set; }
+    }
+
+    public class ReleaseDateDto
+    {
+        public DateTime ReleaseDate { get; set; }
+        public ReleaseDateType Type { get; set; }
+    }
+
+    public enum ReleaseDateType
+    {
+        Premiere = 1,
+        TheatricalLimited = 2,
+        Theatrical = 3,
+        Digital = 4,
+        Physical = 5,
+        Tv = 6
     }
 }

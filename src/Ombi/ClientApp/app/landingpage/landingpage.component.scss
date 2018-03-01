@@ -1,4 +1,13 @@
-﻿div.centered {
+﻿@media only screen and (max-width: 992px) {
+    div.centered {
+        max-height: 100%;
+        overflow-y: auto;
+        width: 100%;
+        padding: 50% 12.5%;
+    }
+}
+
+div.centered {
     position: fixed;
     top: 50%;
     left: 50%;

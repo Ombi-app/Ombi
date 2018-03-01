@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Octokit;
 using Ombi.Api;
 using Ombi.Api.Service;
 using Ombi.Core.Processor;
+using Ombi.Helpers;
 
 namespace Ombi.Schedule.Processor
 {
@@ -44,7 +46,8 @@ namespace Ombi.Schedule.Processor
             if (masterBranch)
             {
                 latestRelease = doc.DocumentNode.Descendants("h2")
-                    .FirstOrDefault(x => x.InnerText != "(unreleased)");
+                    .FirstOrDefault(x => x.InnerText == "(unreleased)");
+                // TODO: Change this to InnterText != "(unreleased)" once we go live and it's not a prerelease
             }
             else
             {
@@ -173,10 +176,13 @@ namespace Ombi.Schedule.Processor
 
             var releases = await client.Repository.Release.GetAll("tidusjar", "ombi");
             var latest = releases.FirstOrDefault(x => x.TagName == releaseTag);
-
+            if (latest.Name.Contains("V2", CompareOptions.IgnoreCase))
+            {
+                latest = null;
+            }
             if (latest == null)
             {
-                latest = releases.OrderBy(x => x.CreatedAt).FirstOrDefault();
+                latest = releases.OrderByDescending(x => x.CreatedAt).FirstOrDefault();
             }
             foreach (var item in latest.Assets)
             {

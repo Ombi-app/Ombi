@@ -66,7 +66,8 @@
                 </div>
 
 
-                <div id="releaseDate">{{ 'Requests.ReleaseDate' | translate }} {{request.releaseDate | date}}</div>
+                <div id="releaseDate">{{ 'Requests.TheatricalRelease' | translate: {date: request.releaseDate | date: 'mediumDate'} }}</div>
+                <div *ngIf="request.digitalReleaseDate" id="digitalReleaseDate">{{ 'Requests.DigitalRelease' | translate: {date: request.digitalReleaseDate | date: 'mediumDate'} }}</div>
                 <div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{request.requestedDate | date}}</div>
                 <br />
                 <div *ngIf="isAdmin">
@@ -168,7 +169,7 @@
 
 
 <p-sidebar [(visible)]="filterDisplay" styleClass="ui-sidebar-md side-back side-small">
-    <h3>{{ 'Filter.Filter' | translate }}</h3>
+    <h3>{{ 'Requests.Filter' | translate }}</h3>
     <hr>
 
     <h4>{{ 'Filter.FilterHeaderAvailability' | translate }}</h4>
@@ -200,5 +201,5 @@
     </div>
 
     <button class="btn btn-sm btn-primary-outline" (click)="clearFilter()">
-        <i class="fa fa-filter"></i> {{ 'Requests.ClearFilter' | translate }}</button>
+        <i class="fa fa-filter"></i> {{ 'Filter.ClearFilter' | translate }}</button>
 </p-sidebar>
