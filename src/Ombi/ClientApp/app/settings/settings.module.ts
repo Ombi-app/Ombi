@@ -36,6 +36,7 @@ import { SonarrComponent } from "./sonarr/sonarr.component";
 import { UpdateComponent } from "./update/update.component";
 import { UserManagementComponent } from "./usermanagement/usermanagement.component";
 import { WikiComponent } from "./wiki.component";
+import { MassEmailComponent } from "./massemail/massemail.component";
 
 import { SettingsMenuComponent } from "./settingsmenu.component";
 
@@ -114,6 +115,7 @@ const routes: Routes = [
         IssuesComponent,
         AuthenticationComponent,
         MobileComponent,
+        MassEmailComponent,
     ],
     exports: [
         RouterModule,
