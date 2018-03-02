@@ -27,6 +27,7 @@ export class MassEmailComponent implements OnInit {
     }
 
     public selectAllUsers() {
+        
         this.users.forEach(u => u.selected = !u.selected);
     }
 
