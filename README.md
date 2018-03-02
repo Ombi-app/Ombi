@@ -94,6 +94,7 @@ Search the existing requests to see if your suggestion has already been submitte
 
 [Click Here](https://github.com/tidusjar/Ombi/wiki/Installation)
 [Here for Reverse Proxy Config Examples](https://github.com/tidusjar/Ombi/wiki/Reverse-Proxy-Examples)
+[PlexGuide.com - Ombi Deployment & 101 Demonstration!](https://www.youtube.com/watch?v=QPNlqqkjNJw&feature=youtu.be)
 
 # Contributors
 
