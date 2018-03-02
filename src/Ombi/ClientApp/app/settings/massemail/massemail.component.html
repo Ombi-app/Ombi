@@ -6,11 +6,20 @@
 
     <div class="col-md-6">
             <div class="form-group" >
-                    <textarea rows="25" type="text" class="form-control-custom form-control " id="themeContent" name="themeContent" [(ngModel)]="message"></textarea>
+                    <textarea rows="10" type="text" class="form-control-custom form-control " id="themeContent" name="themeContent" [(ngModel)]="message"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="logo" class="control-label">Message Preview</label>
+              <br/>
+                    <small>May appear differently on email clients</small>
+                    <hr/>
+                    <div [innerHTML]="message"></div>
                 </div>
     </div>
     <div class="col-md-6">
-        <!--Users Section-->
+        <!--Users Section--> 
+         <label class="control-label">Recipients</label>
         <div class="form-group">
                 <div class="checkbox">
                     <input type="checkbox" id="all" (click)="selectAllUsers()">
@@ -20,8 +29,8 @@
 
             <div class="form-group" *ngFor="let u of users">
                     <div class="checkbox">
-                        <input type="checkbox" id="{{u.user.id}}" (click)="selectSingleUser(u)">
-                        <label for="{{u.user.id}}">{{u.user.alias}}</label>
+                        <input type="checkbox" id="{{u.user.id}}" [(ngModel)]="u.selected" (click)="selectSingleUser(u)">
+                        <label for="{{u.user.id}}">{{u.user.userName}}</label>
                     </div>
                 </div>
     </div>

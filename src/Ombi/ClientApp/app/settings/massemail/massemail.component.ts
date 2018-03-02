@@ -1,17 +1,17 @@
 ﻿import { Component, OnInit } from "@angular/core";
 
-import { IMassEmailModel, IUser } from "../../interfaces";
-import { IdentityService, NotificationService, SettingsService } from "../../services";
+import { IMassEmailUserModel } from "../../interfaces";
+import { IdentityService } from "../../services";
 
 @Component({
     templateUrl: "./massemail.component.html",
 })
 export class MassEmailComponent implements OnInit {
 
-    public users: IMassEmailModel[];
+    public users: IMassEmailUserModel[] = [];
+    public message: string;
 
-    constructor(private readonly settingsService: SettingsService,
-                private readonly notificationService: NotificationService,
+    constructor(
                 private readonly identityService: IdentityService) {
     }
 
@@ -20,18 +20,18 @@ export class MassEmailComponent implements OnInit {
         x.forEach(u => {
             this.users.push({
                 user: u,
-                selected: true,
+                selected: false,
             });
         });
        });
     }
 
     public selectAllUsers() {
-        this.users.forEach(u => u.selected = true);
+        this.users.forEach(u => u.selected = !u.selected);
     }
 
-    public selectSingleUser(user: IMassEmailModel) {
-        user.selected = true;
+    public selectSingleUser(user: IMassEmailUserModel) {
+        user.selected = !user.selected;
     }
 
 }

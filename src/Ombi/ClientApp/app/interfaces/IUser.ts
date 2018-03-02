@@ -50,7 +50,7 @@ export interface IMobileUsersViewModel {
     devices: number;
 }
 
-export interface IMassEmailModel {
+export interface IMassEmailUserModel {
     user: IUser;
     selected: boolean;
 }

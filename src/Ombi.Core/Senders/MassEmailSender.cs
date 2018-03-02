@@ -42,10 +42,10 @@ namespace Ombi.Core.Senders
 
         public async Task SendMassEmail()
         {
-            _email.SendAdHoc(new NotificationMessage()
-            {
+            //_email.SendAdHoc(new NotificationMessage()
+            //{
                 
-            }, )
+            //}, )
         }
     }
 }

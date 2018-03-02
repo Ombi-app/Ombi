@@ -67,6 +67,7 @@ const routes: Routes = [
     { path: "Issues", component: IssuesComponent, canActivate: [AuthGuard] },
     { path: "Authentication", component: AuthenticationComponent, canActivate: [AuthGuard] },
     { path: "Mobile", component: MobileComponent, canActivate: [AuthGuard] },
+    { path: "MassEmail", component: MassEmailComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
