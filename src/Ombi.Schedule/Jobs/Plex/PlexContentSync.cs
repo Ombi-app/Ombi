@@ -227,11 +227,21 @@ namespace Ombi.Schedule.Jobs.Plex
                                     var existingImdb = false;
                                     var existingMovieDbId = false;
                                     var existingTvDbId = false;
-
-                                    existingImdb = await Repo.GetAll().AnyAsync(x => x.ImdbId == item.ImdbId && x.Type == PlexMediaTypeEntity.Show);
-                                    existingMovieDbId = await Repo.GetAll().AnyAsync(x => x.TheMovieDbId == item.TheMovieDbId && x.Type == PlexMediaTypeEntity.Show);
-                                    existingTvDbId = await Repo.GetAll().AnyAsync(x => x.TvDbId == item.TvDbId && x.Type == PlexMediaTypeEntity.Show);
-
+                                    if (item.ImdbId.HasValue())
+                                    {
+                                        existingImdb = await Repo.GetAll().AnyAsync(x =>
+                                            x.ImdbId == item.ImdbId && x.Type == PlexMediaTypeEntity.Show);
+                                    }
+                                    if (item.TheMovieDbId.HasValue())
+                                    {
+                                        existingMovieDbId = await Repo.GetAll().AnyAsync(x =>
+                                            x.TheMovieDbId == item.TheMovieDbId && x.Type == PlexMediaTypeEntity.Show);
+                                    }
+                                    if (item.TvDbId.HasValue())
+                                    {
+                                        existingTvDbId = await Repo.GetAll().AnyAsync(x =>
+                                            x.TvDbId == item.TvDbId && x.Type == PlexMediaTypeEntity.Show);
+                                    }
                                     if (existingImdb || existingTvDbId || existingMovieDbId)
                                     {
                                         // We already have it!
