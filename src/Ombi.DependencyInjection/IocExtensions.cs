@@ -80,6 +80,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IRuleEvaluator, RuleEvaluator>();
             services.AddTransient<IMovieSender, MovieSender>();
             services.AddTransient<ITvSender, TvSender>();
+            services.AddTransient<IMassEmailSender, MassEmailSender>();
         }
         public static void RegisterHttp(this IServiceCollection services)
         {

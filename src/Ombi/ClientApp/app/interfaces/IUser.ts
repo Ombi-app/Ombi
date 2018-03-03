@@ -49,3 +49,14 @@ export interface IMobileUsersViewModel {
     username: string;
     devices: number;
 }
+
+export interface IMassEmailUserModel {
+    user: IUser;
+    selected: boolean;
+}
+
+export interface IMassEmailModel {
+    subject: string;
+    body: string;
+    users: IUser[];
+}
