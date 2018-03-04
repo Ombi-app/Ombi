@@ -11,10 +11,10 @@ import "rxjs/add/operator/distinctUntilChanged";
 import "rxjs/add/operator/map";
 
 import { AuthService } from "../auth/auth.service";
-import { RequestService } from "../services";
+import { RequestService, SonarrService } from "../services";
 
 import { TreeNode } from "primeng/primeng";
-import { IIssueCategory, ITvRequests } from "../interfaces";
+import { IIssueCategory, ISonarrProfile,  ISonarrRootFolder, ITvRequests } from "../interfaces";
 
 @Component({
     selector: "tv-requests",
@@ -34,13 +34,17 @@ export class TvRequestsComponent implements OnInit {
     @Input() public issuesEnabled: boolean;
     public issueProviderId: string;
 
+    public sonarrProfiles: ISonarrProfile[];
+    public sonarrRootFolders: ISonarrRootFolder[];
+
     private currentlyLoaded: number;
     private amountToLoad: number;
 
     constructor(private requestService: RequestService,
                 private auth: AuthService,
                 private sanitizer: DomSanitizer,
-                private imageService: ImageService) {
+                private imageService: ImageService,
+                private sonarrService: SonarrService) {
         this.searchChanged
             .debounceTime(600) // Wait Xms after the last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -57,6 +61,7 @@ export class TvRequestsComponent implements OnInit {
                     });
             });
     }
+
     public openClosestTab(el: any) {
         const rowclass = "undefined ng-star-inserted";
         el = el.toElement || el.relatedTarget || el.target;
@@ -86,8 +91,9 @@ export class TvRequestsComponent implements OnInit {
         this.amountToLoad = 1000;
         this.currentlyLoaded = 1000;
         this.tvRequests = [];
-        this.loadInit();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+        
+        this.loadInit();
     }
 
     public loadMore() {
@@ -117,6 +123,54 @@ export class TvRequestsComponent implements OnInit {
         this.ngOnInit();
     }
 
+    public selectRootFolder(searchResult: ITvRequests, rootFolderSelected: ISonarrRootFolder, event: any) {
+        event.preventDefault();
+        searchResult.rootFolder = rootFolderSelected.id;
+        this.setOverride(searchResult);
+        this.updateRequest(searchResult);
+    }
+
+    public selectQualityProfile(searchResult: ITvRequests, profileSelected: ISonarrProfile, event: any) {
+        event.preventDefault();
+        searchResult.qualityOverride = profileSelected.id;
+        this.setOverride(searchResult);
+        this.updateRequest(searchResult);
+    }
+
+    private setOverride(req: ITvRequests): void {
+        this.setQualityOverrides(req);
+        this.setRootFolderOverrides(req);
+    }
+
+    private updateRequest(request: ITvRequests) {
+        this.requestService.updateTvRequest(request)
+            .subscribe(x => {
+                this.setOverride(x);
+                request = x;
+            });
+    }
+
+    private setQualityOverrides(req: ITvRequests): void {
+        if (this.sonarrProfiles) {
+            // const profile = this.sonarrProfiles.filter((p) => {
+            //     return p.id === req.qualityOverride;
+            // });
+            // if (profile.length > 0) {
+            //     req.qualityOverrideTitle = profile[0].name;
+            // }
+        }
+    }
+    private setRootFolderOverrides(req: ITvRequests): void {
+        if (this.sonarrRootFolders) {
+            // const path = this.sonarrRootFolders.filter((folder) => {
+            //     return folder.id === req.rootFolder;
+            // });
+            // if (path.length > 0) {
+            //     req.rootPathOverrideTitle = path[0].path;
+            // }
+        }
+    }
+
     private loadInit() {
         this.requestService.getTvRequestsTree(this.amountToLoad, 0)
             .subscribe(x => {
@@ -125,6 +179,14 @@ export class TvRequestsComponent implements OnInit {
                     this.loadBackdrop(val);
             });     
         });
+
+        if(this.isAdmin) {
+            this.sonarrService.getQualityProfilesWithoutSettings()
+                .subscribe(x => this.sonarrProfiles = x);
+        
+            this.sonarrService.getRootFoldersWithoutSettings()
+                .subscribe(x => this.sonarrRootFolders = x);
+        }
     }
 
     private resetSearch() {

@@ -46,5 +46,27 @@ namespace Ombi.Controllers.External
         {
             return await SonarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
         }
+
+        /// <summary>
+        /// Gets the Sonarr profiles.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("Profiles")]
+        public async Task<IEnumerable<SonarrProfile>> GetProfiles()
+        {
+            var settings = await SonarrSettings.GetSettingsAsync();
+            return await SonarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
+        }
+
+        /// <summary>
+        /// Gets the Sonarr root folders.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("RootFolders")]
+        public async Task<IEnumerable<SonarrRootFolder>> GetRootFolders()
+        {
+            var settings = await SonarrSettings.GetSettingsAsync();
+            return await SonarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+        }
     }
 }

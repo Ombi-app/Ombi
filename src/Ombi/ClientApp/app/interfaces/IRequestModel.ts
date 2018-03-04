@@ -85,6 +85,7 @@ export interface ITvRequests {
   releaseDate: Date;
   status: string;
   childRequests: IChildRequests[];
+  qualityOverride: number;
 }
 
 export interface IChildRequests extends IBaseRequest {

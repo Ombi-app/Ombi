@@ -8,6 +8,7 @@ namespace Ombi.Store.Entities.Requests
     {
         public int TvDbId { get; set; }
         public string ImdbId { get; set; }
+        public int? QualityOverride { get; set; }
         public int? RootFolder { get; set; }
         public string Overview { get; set; }
         public string Title { get; set; }

@@ -133,6 +133,7 @@
     "GridStatus":"Status",
     "ReportIssue":"Report Issue",
     "Filter":"Filter",
+    "Sort":"Sort",
     "SeasonNumberHeading":"Season: {seasonNumber}"
   },
   "Issues":{
