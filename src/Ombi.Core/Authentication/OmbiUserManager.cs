@@ -110,7 +110,8 @@ namespace Ombi.Core.Authentication
         /// <returns></returns>
         private async Task<bool> CheckPlexPasswordAsync(OmbiUser user, string password)
         {
-            var result = await _plexApi.SignIn(new UserRequest { password = password, login = user.UserName });
+            var login = user.EmailLogin ? user.Email : user.UserName;
+            var result = await _plexApi.SignIn(new UserRequest { password = password, login = login });
             if (result.user?.authentication_token != null)
             {
                 return true;

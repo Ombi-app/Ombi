@@ -58,6 +58,8 @@ namespace Ombi.Controllers
                 {
                     return new UnauthorizedResult();
                 }
+
+                user.EmailLogin = true;
             }
 
             // Verify Password
