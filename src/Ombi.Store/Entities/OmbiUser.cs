@@ -32,5 +32,8 @@ namespace Ombi.Store.Entities
 
         [NotMapped]
         public string UserAlias => string.IsNullOrEmpty(Alias) ? UserName : Alias;
+
+        [NotMapped]
+        public bool EmailLogin { get; set; }
     }
 }
