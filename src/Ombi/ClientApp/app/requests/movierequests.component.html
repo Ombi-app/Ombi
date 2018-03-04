@@ -199,6 +199,13 @@
             <label for="Processing">{{ 'Common.ProcessingRequest' | translate }}</label>
         </div>
     </div>
+    <div class="form-group">
+        <div class="radio">
+            <input type="radio" id="approved" name="Status" (click)="filterStatus(filterType.PendingApproval)">
+            <label for="approved">{{ 'Filter.PendingApproval' | translate }}</label>
+        </div>
+    </div>
+
 
     <button class="btn btn-sm btn-primary-outline" (click)="clearFilter()">
         <i class="fa fa-filter"></i> {{ 'Filter.ClearFilter' | translate }}</button>
