@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 using Ombi.Helpers;
 
 namespace Ombi.Store.Entities
@@ -35,5 +36,29 @@ namespace Ombi.Store.Entities
 
         [NotMapped]
         public bool EmailLogin { get; set; }
+
+        [NotMapped]
+        [JsonIgnore]
+        public override string PasswordHash
+        {
+            get => base.PasswordHash;
+            set => base.PasswordHash = value;
+        }
+
+        [NotMapped]
+        [JsonIgnore]
+        public override string SecurityStamp
+        {
+            get => base.SecurityStamp;
+            set => base.SecurityStamp = value;
+        }
+
+        [NotMapped]
+        [JsonIgnore]
+        public override string ConcurrencyStamp
+        {
+            get => base.ConcurrencyStamp;
+            set => base.ConcurrencyStamp = value;
+        }
     }
 }
