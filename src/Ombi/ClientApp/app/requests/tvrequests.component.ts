@@ -11,7 +11,7 @@ import "rxjs/add/operator/distinctUntilChanged";
 import "rxjs/add/operator/map";
 
 import { AuthService } from "../auth/auth.service";
-import { RequestService, SonarrService } from "../services";
+import { NotificationService, RequestService, SonarrService } from "../services";
 
 import { TreeNode } from "primeng/primeng";
 import { IIssueCategory, ISonarrProfile,  ISonarrRootFolder, ITvRequests } from "../interfaces";
@@ -34,8 +34,8 @@ export class TvRequestsComponent implements OnInit {
     @Input() public issuesEnabled: boolean;
     public issueProviderId: string;
 
-    public sonarrProfiles: ISonarrProfile[];
-    public sonarrRootFolders: ISonarrRootFolder[];
+    public sonarrProfiles: ISonarrProfile[] = [];
+    public sonarrRootFolders: ISonarrRootFolder[] = [];
 
     private currentlyLoaded: number;
     private amountToLoad: number;
@@ -44,7 +44,8 @@ export class TvRequestsComponent implements OnInit {
                 private auth: AuthService,
                 private sanitizer: DomSanitizer,
                 private imageService: ImageService,
-                private sonarrService: SonarrService) {
+                private sonarrService: SonarrService,
+                private notificationService: NotificationService) {
         this.searchChanged
             .debounceTime(600) // Wait Xms after the last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -58,6 +59,7 @@ export class TvRequestsComponent implements OnInit {
                     .subscribe(m => {
                         this.tvRequests = m;
                         this.tvRequests.forEach((val) => this.loadBackdrop(val));
+                        this.tvRequests.forEach((val) => this.setOverride(val.data));
                     });
             });
     }
@@ -88,6 +90,12 @@ export class TvRequestsComponent implements OnInit {
     }
 
     public ngOnInit() {
+        
+        const profile = <ISonarrProfile>{name:"test",id:1 };
+        const folder = <ISonarrRootFolder>{path:"testpath", id:1};
+
+        this.sonarrProfiles.push(profile);
+        this.sonarrRootFolders.push(folder);
         this.amountToLoad = 1000;
         this.currentlyLoaded = 1000;
         this.tvRequests = [];
@@ -145,6 +153,7 @@ export class TvRequestsComponent implements OnInit {
     private updateRequest(request: ITvRequests) {
         this.requestService.updateTvRequest(request)
             .subscribe(x => {
+                this.notificationService.success("Request Updated");
                 this.setOverride(x);
                 request = x;
             });
@@ -152,22 +161,22 @@ export class TvRequestsComponent implements OnInit {
 
     private setQualityOverrides(req: ITvRequests): void {
         if (this.sonarrProfiles) {
-            // const profile = this.sonarrProfiles.filter((p) => {
-            //     return p.id === req.qualityOverride;
-            // });
-            // if (profile.length > 0) {
-            //     req.qualityOverrideTitle = profile[0].name;
-            // }
+            const profile = this.sonarrProfiles.filter((p) => {
+                return p.id === req.qualityOverride;
+            });
+            if (profile.length > 0) {
+                req.qualityOverrideTitle = profile[0].name;
+            }
         }
     }
     private setRootFolderOverrides(req: ITvRequests): void {
         if (this.sonarrRootFolders) {
-            // const path = this.sonarrRootFolders.filter((folder) => {
-            //     return folder.id === req.rootFolder;
-            // });
-            // if (path.length > 0) {
-            //     req.rootPathOverrideTitle = path[0].path;
-            // }
+            const path = this.sonarrRootFolders.filter((folder) => {
+                return folder.id === req.rootFolder;
+            });
+            if (path.length > 0) {
+                req.rootPathOverrideTitle = path[0].path;
+            }
         }
     }
 
@@ -177,6 +186,7 @@ export class TvRequestsComponent implements OnInit {
                 this.tvRequests = x;
                 this.tvRequests.forEach((val, index) => {
                     this.loadBackdrop(val);
+                    this.setOverride(val.data);
             });     
         });
 

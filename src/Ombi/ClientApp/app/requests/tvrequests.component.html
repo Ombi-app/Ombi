@@ -51,6 +51,15 @@
 
     
                             <div>Release Date: {{node.data.releaseDate | date}}</div>
+                            <div *ngIf="isAdmin">
+                                <div *ngIf="node.data.qualityOverrideTitle">{{ 'Requests.QualityOverride' | translate }}
+                                    <span>{{node.data.qualityOverrideTitle}} </span>
+                                </div>
+                                <div *ngIf="node.data.rootPathOverrideTitle">{{ 'Requests.RootFolderOverride' | translate }}
+                                    <span>{{node.data.rootPathOverrideTitle}} </span>
+                                </div>
+                            </div>
+            
                             <br />
                         </div>
                         <div class="col-sm-3 col-sm-push-3  small-padding">

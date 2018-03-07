@@ -36,16 +36,14 @@ namespace Ombi.Store.Entities
 
         [NotMapped]
         public bool EmailLogin { get; set; }
-
-        [NotMapped]
+        
         [JsonIgnore]
         public override string PasswordHash
         {
             get => base.PasswordHash;
             set => base.PasswordHash = value;
         }
-
-        [NotMapped]
+        
         [JsonIgnore]
         public override string SecurityStamp
         {
@@ -53,7 +51,6 @@ namespace Ombi.Store.Entities
             set => base.SecurityStamp = value;
         }
 
-        [NotMapped]
         [JsonIgnore]
         public override string ConcurrencyStamp
         {

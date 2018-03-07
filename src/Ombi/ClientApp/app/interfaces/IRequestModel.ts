@@ -1,28 +1,5 @@
 ﻿import { IUser } from "./IUser";
 
-export interface IMediaBase {
-  imdbId: string;
-  id: number;
-  providerId: number;
-  title: string;
-  overview: string;
-  posterPath: string;
-  releaseDate: Date;
-  status: string;
-  requestedDate: Date;
-  approved: boolean;
-  type: RequestType;
-  requested: boolean;
-  available: boolean;
-  otherMessage: string;
-  adminNote: string;
-  requestedUser: string;
-  issueId: number;
-  denied: boolean;
-  deniedReason: string;
-  released: boolean;
-}
-
 export enum RequestType {
   movie = 1,
   tvShow = 2,
@@ -36,6 +13,7 @@ export interface IMovieRequests extends IFullBaseRequest {
   qualityOverride: number;
   digitalReleaseDate: Date;
 
+  // For the UI
   rootPathOverrideTitle: string;
   qualityOverrideTitle: string;
 }
@@ -86,6 +64,10 @@ export interface ITvRequests {
   status: string;
   childRequests: IChildRequests[];
   qualityOverride: number;
+
+  // For UI display
+  qualityOverrideTitle: string;
+  rootPathOverrideTitle: string;
 }
 
 export interface IChildRequests extends IBaseRequest {
