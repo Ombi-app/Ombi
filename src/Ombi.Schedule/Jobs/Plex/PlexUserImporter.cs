@@ -75,6 +75,12 @@ namespace Ombi.Schedule.Jobs.Plex
                     var existingPlexUser = allUsers.FirstOrDefault(x => x.ProviderUserId == plexUser.Id);
                     if (existingPlexUser == null)
                     {
+
+                        if (!plexUser.Username.HasValue())
+                        {
+                            _log.LogInformation("Could not create Plex user since the have no username, PlexUserId: {0}", plexUser.Id);
+                            continue;
+                        }
                         // Create this users
                         // We do not store a password against the user since they will authenticate via Plex
                         var newUser = new OmbiUser
