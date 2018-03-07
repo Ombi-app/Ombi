@@ -36,6 +36,8 @@ export class MovieRequestsComponent implements OnInit {
     public filter: IFilter;
     public filterType = FilterType;
 
+    public sortDisplay: boolean;
+
     private currentlyLoaded: number;
     private amountToLoad: number;
 

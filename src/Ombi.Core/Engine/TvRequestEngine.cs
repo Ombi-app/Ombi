@@ -177,6 +177,13 @@ namespace Ombi.Core.Engine
             var allRequests = TvRepository.Get();
             var results = await allRequests.FirstOrDefaultAsync(x => x.Id == request.Id);
 
+            results.TvDbId = request.TvDbId;
+            results.ImdbId = request.ImdbId;
+            results.Overview = request.Overview;
+            results.PosterPath = PosterPathHelper.FixPosterPath(request.PosterPath);
+            results.QualityOverride = request.QualityOverride;
+            results.RootFolder = request.RootFolder;
+            
             await TvRepository.Update(results);
             return results;
         }

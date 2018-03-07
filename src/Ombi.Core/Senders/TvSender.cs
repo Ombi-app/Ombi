@@ -105,9 +105,8 @@ namespace Ombi.Core.Senders
         /// </summary>
         /// <param name="s"></param>
         /// <param name="model"></param>
-        /// <param name="qualityId">This is for any qualities overriden from the UI</param>
         /// <returns></returns>
-        public async Task<NewSeries> SendToSonarr(ChildRequests model, string qualityId = null)
+        public async Task<NewSeries> SendToSonarr(ChildRequests model)
         {
             var s = await SonarrSettings.GetSettingsAsync();
             if (!s.Enabled)
@@ -118,15 +117,12 @@ namespace Ombi.Core.Senders
             {
                 return null;
             }
-            var qualityProfile = 0;
-            if (!string.IsNullOrEmpty(qualityId)) // try to parse the passed in quality, otherwise use the settings default quality
-            {
-                int.TryParse(qualityId, out qualityProfile);
-            }
 
-            if (qualityProfile <= 0)
+            int.TryParse(s.QualityProfile, out var qualityToUse);
+
+            if (model.ParentRequest.QualityOverride.HasValue)
             {
-                int.TryParse(s.QualityProfile, out qualityProfile);
+                qualityToUse = model.ParentRequest.QualityOverride.Value;
             }
 
             // Get the root path from the rootfolder selected.
@@ -151,7 +147,7 @@ namespace Ombi.Core.Senders
                         monitored = true,
                         seasonFolder = s.SeasonFolders,
                         rootFolderPath = rootFolderPath,
-                        qualityProfileId = qualityProfile,
+                        qualityProfileId = qualityToUse,
                         titleSlug = model.ParentRequest.Title,
                         addOptions = new AddOptions
                         {
