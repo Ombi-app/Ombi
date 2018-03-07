@@ -16,5 +16,6 @@ namespace Ombi.Api.TheMovieDb
         Task<List<MovieSearchResult>> Upcoming();
         Task<List<MovieSearchResult>> SimilarMovies(int movieId);
         Task<FindResult> Find(string externalId, ExternalSource source);
+        Task<TvExternals> GetTvExternals(int theMovieDbId);
     }
 }

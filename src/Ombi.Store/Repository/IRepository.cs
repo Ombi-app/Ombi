@@ -25,6 +25,6 @@ namespace Ombi.Store.Repository
             where TEntity : class;
 
         Task ExecuteSql(string sql);
-        DbSet<T> _db;
+        DbSet<T> _db { get; }
     }
 }

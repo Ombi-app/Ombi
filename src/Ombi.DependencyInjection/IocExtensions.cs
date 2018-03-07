@@ -172,6 +172,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ICouchPotatoSync, CouchPotatoSync>();
             services.AddTransient<IProcessProvider, ProcessProvider>();
             services.AddTransient<ISickRageSync, SickRageSync>();
+            services.AddTransient<IRefreshMetadata, RefreshMetadata>();
         }
     }
 }
