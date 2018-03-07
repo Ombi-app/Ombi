@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simplelightbox/1.12.1/simplelightbox.min.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Krona+One" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>Ombi</title>
+  </head>
+  <body>
+    <div class="loader">
+      <span>Loading images</span>
+      <div class="sk-folding-cube">
+        <div class="sk-cube1 sk-cube"></div>
+        <div class="sk-cube2 sk-cube"></div>
+        <div class="sk-cube4 sk-cube"></div>
+        <div class="sk-cube3 sk-cube"></div>
+      </div>
+    </div>
+    <div class="intro-container">
+      <preload-images hidden="hidden">
+        <img src="/img/fanart/1.jpg">
+        <img src="/img/fanart/2.jpg">
+        <img src="/img/fanart/3.jpg">
+        <img src="/img/fanart/4.jpg">
+        <img src="/img/fanart/5.jpg">
+        <img src="/img/fanart/6.jpg">
+        <img src="/img/fanart/7.jpg">
+        <img src="/img/fanart/8.jpg">
+        <img src="/img/fanart/9.jpg">
+        <img src="/img/fanart/10.jpg">
+        <img src="/img/fanart/11.jpg">
+        <img src="/img/fanart/12.jpg">
+      </preload-images>
+      <div
+        class="intro-bg"
+        data-slides='[
+          "/img/fanart/1.jpg",
+          "/img/fanart/2.jpg",
+          "/img/fanart/3.jpg",
+          "/img/fanart/4.jpg",
+          "/img/fanart/5.jpg",
+          "/img/fanart/6.jpg",
+          "/img/fanart/7.jpg",
+          "/img/fanart/8.jpg",
+          "/img/fanart/9.jpg",
+          "/img/fanart/10.jpg",
+          "/img/fanart/11.jpg",
+          "/img/fanart/12.jpg"
+      ]'></div>
+      <svg class="triangle-top" fill="white" width="100vw" height="25vh" preserveaspectratio="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 500 103">
+        <polygon points="-0.5,-0.3 500.5,-0.3 -0.5,100"/>
+      </svg>
+      <svg
+        class="triangle-bottom"
+        fill="white"
+        width="100vw"
+        height="25vh"
+        preserveaspectratio="none"
+        xmlns="http://www.w3.org/2000/svg"
+        ;=";"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewbox="0 0 500 103">
+        <polygon points="501,105.3 500.5,0.7 0.5,103"/>
+      </svg>
+      <div class="intro">
+        <img src="img/logo-orange-small.png" alt="Ombi logo">
+        <a class="button-white" href="https://github.com/tidusjar/Ombi">Download</a>
+        <a class="button-white" href="http://google.com">Demo</a>
+      </div>
+      <div class="intro-read-more">
+        <p>more info</p>
+        <a href="#main">
+          <svg xmlns="http://www.w3.org/2000/svg" width="96" height="53.76" viewbox="0 0 96 53.76">
+            <polygon points="96 5.97 90.03 0 48 42.03 5.97 0 0 5.97 47.79 53.76 48 53.55 48.21 53.76 96 5.97"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <main id="main">
+      <div class="what-container float-container">
+        <div class="left text-center">
+          <h1>What is Ombi?</h1>
+          <p>
+            Ombi is a self-hosted web application that automatically gives your shared Plex or Emby users the ability to request content by themselves! Ombi can be linked to multiple TV Show and Movie DVR tools
+            to create a seamless end-to-end experience for your users.
+          </p>
+        </div>
+        <div class="right text-center">
+          <h1>That's great and all, but how?</h1>
+          <ol>
+            <li>
+              <b>1.</b>
+              User visits website and requests content
+            </li>
+            <li>
+              <b>2.</b>
+              Ombi matches request and sends to DVR app
+            </li>
+            <li>
+              <b>3.</b>
+              DVR app retreives content and pushes to Plex/Emby
+            </li>
+            <li>
+              <br>
+              (there's also a
+              <a href="https://google.com/">demo)</a>
+            </li>
+          </ol>
+          <br>
+        </div>
+      </div>
+      <div class="screenshots-container">
+        <h1>Screenshots? ok.</h1>
+        <div class="screenshots">
+          <a href="/img/screens/1.png">
+            <img src="/img/screens/1-thumb.png" alt="Screenshot">
+          </a>
+          <a href="/img/screens/2.png">
+            <img src="/img/screens/2-thumb.png" alt="Screenshot">
+          </a>
+          <a href="/img/screens/3.png">
+            <img src="/img/screens/3-thumb.png" alt="Screenshot">
+          </a>
+        </div>
+      </div>
+      <div class="install-container">
+        <div class="center text-center">
+          <h1>I'm ready. How do I install it?</h1>
+          <a class="button-white" href="https://github.com/tidusjar/Ombi/wiki/Installation">Here you go!</a>
+        </div>
+      </div>
+      <div class="madeby-container float-container">
+        <div class="left text-center">
+          <h1>Who made this? Can I thank them?</h1>
+          <p>
+            Ombi is made by
+            <a href="https://www.linkedin.com/in/jamiearees">Jamie Rees</a>
+            and
+            <a href="https://github.com/tidusjar/Ombi/graphs/contributors">contributors</a>. This site is made by
+            <a href="https://louislaureys.com">Louis</a>.
+            <br>
+            You can donate to Jamie here:
+          </p>
+          <a class="button-black" href="https://www.paypal.me/PlexRequestsNet/25">PayPal</a>
+          <a class="button-black" href="https://www.patreon.com/tidusjar">Patreon</a>
+        </div>
+        <div class="right text-center">
+          <h1>HAAAALP! I'm stuck!</h1>
+          <p>
+            There's probably someone out there who can help you.
+            <br>
+            Check Discord, or report an issue on GitHub.
+          </p>
+          <a class="button-black" href="https://discord.gg/KxYZ64w">Discord</a>
+          <a class="button-black" href="https://github.com/tidusjar/Ombi/issues/new">Report an issue</a>
+        </div>
+      </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simplelightbox/1.12.1/simple-lightbox.min.js"></script>
+    <script src="/js/javascript.js" charset="utf-8"></script>
+  </body>
+</html>
