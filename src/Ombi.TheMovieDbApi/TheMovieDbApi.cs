@@ -30,6 +30,16 @@ namespace Ombi.Api.TheMovieDb
             return Mapper.Map<MovieResponseDto>(result);
         }
 
+        public async Task<FindResult> Find(string externalId, ExternalSource source)
+        {
+            var request = new Request($"find/{externalId}", BaseUri, HttpMethod.Get);
+            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+
+            request.AddQueryString("external_source", source.ToString());
+
+            return await Api.Request<FindResult>(request);
+        }
+
         public async Task<List<MovieSearchResult>> SimilarMovies(int movieId)
         {
             var request = new Request($"movie/{movieId}/similar", BaseUri, HttpMethod.Get);

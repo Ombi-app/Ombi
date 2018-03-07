@@ -98,6 +98,12 @@ namespace Ombi.Store.Repository
             await Db.SaveChangesAsync();
         }
 
+        public async Task UpdateRange(IEnumerable<PlexServerContent> existingContent)
+        {
+            Db.PlexServerContent.UpdateRange(existingContent);
+            await Db.SaveChangesAsync();
+        }
+
         public IQueryable<PlexEpisode> GetAllEpisodes()
         {
             return Db.PlexEpisode.Include(x => x.Series).AsQueryable();

@@ -34,6 +34,7 @@
     <ProjectReference Include="..\Ombi.Api.Sonarr\Ombi.Api.Sonarr.csproj" />
     <ProjectReference Include="..\Ombi.Notifications\Ombi.Notifications.csproj" />
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
+    <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj" />
   </ItemGroup>
 
 </Project>

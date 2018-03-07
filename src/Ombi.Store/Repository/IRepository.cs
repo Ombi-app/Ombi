@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Ombi.Store.Entities;
 
@@ -24,5 +25,6 @@ namespace Ombi.Store.Repository
             where TEntity : class;
 
         Task ExecuteSql(string sql);
+        DbSet<T> _db;
     }
 }
