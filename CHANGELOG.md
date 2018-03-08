@@ -1,5 +1,18 @@
 # Changelog
 
+## (unreleased)
+
+### **New Features**
+
+- Added the ability to override root and quality options in Sonarr (#2049) [Jamie]
+
+- Added Pending Approval into the filters list. [tidusjar]
+
+### **Fixes**
+
+- Fixed #2042. [Jamie]
+
+
 ## v3.0.0 (2018-03-04)
 
 ### **New Features**
