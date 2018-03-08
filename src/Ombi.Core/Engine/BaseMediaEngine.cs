@@ -14,6 +14,8 @@ using Ombi.Store.Repository.Requests;
 using Ombi.Store.Entities;
 using Microsoft.AspNetCore.Identity;
 using Ombi.Core.Authentication;
+using Ombi.Core.Settings;
+using Ombi.Settings.Settings.Models;
 
 namespace Ombi.Core.Engine
 {
@@ -24,14 +26,18 @@ namespace Ombi.Core.Engine
         private Dictionary<int, TvRequests> _dbTv;
 
         protected BaseMediaEngine(IPrincipal identity, IRequestServiceMain requestService,
-            IRuleEvaluator rules, OmbiUserManager um) : base(identity, um, rules)
+            IRuleEvaluator rules, OmbiUserManager um, ICacheService cache, ISettingsService<OmbiSettings> ombiSettings) : base(identity, um, rules)
         {
             RequestService = requestService;
+            Cache = cache;
+            OmbiSettings = ombiSettings;
         }
 
         protected IRequestServiceMain RequestService { get; }
         protected IMovieRequestRepository MovieRepository => RequestService.MovieRequestService;
         protected ITvRequestRepository TvRepository => RequestService.TvRequestService;
+        protected readonly ICacheService Cache;
+        protected readonly ISettingsService<OmbiSettings> OmbiSettings;
 
         protected async Task<Dictionary<int, MovieRequests>> GetMovieRequests()
         {
@@ -98,6 +104,27 @@ namespace Ombi.Core.Engine
                 Available = availableTv + availableMovies,
                 Pending = pendingMovies + pendingTv
             };
+        }
+
+        protected async Task<HideResult> HideFromOtherUsers()
+        {
+            var settings = await Cache.GetOrAdd(CacheKeys.OmbiSettings, async () => await OmbiSettings.GetSettingsAsync());
+            var result = new HideResult
+            {
+                Hide = settings.HideRequestsUsers
+            };
+            if (settings.HideRequestsUsers)
+            {
+                var user = await GetUser();
+                result.UserId = user.Id;
+            }
+            return result;
+        }
+
+        public class HideResult
+        {
+            public bool Hide { get; set; }
+            public string UserId { get; set; }
         }
     }
 }

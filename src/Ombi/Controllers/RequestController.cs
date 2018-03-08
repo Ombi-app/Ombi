@@ -334,9 +334,9 @@ namespace Ombi.Controllers
         /// <param name="vm"></param>
         /// <returns></returns>
         [HttpPost("movie/filter")]
-        public IEnumerable<MovieRequests> Filter([FromBody] FilterViewModel vm)
+        public async Task<IEnumerable<MovieRequests>> Filter([FromBody] FilterViewModel vm)
         {
-            return MovieRequestEngine.Filter(vm);
+            return await MovieRequestEngine.Filter(vm);
         }
     }
 }

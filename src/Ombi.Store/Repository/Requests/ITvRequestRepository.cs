@@ -14,11 +14,13 @@ namespace Ombi.Store.Repository.Requests
         Task Delete(TvRequests request);
         Task DeleteChild(ChildRequests request);
         IQueryable<TvRequests> Get();
+        IQueryable<TvRequests> Get(string userId);
         Task<TvRequests> GetRequestAsync(int tvDbId);
         TvRequests GetRequest(int tvDbId);
         Task Update(TvRequests request);
         Task UpdateChild(ChildRequests request);
         IQueryable<ChildRequests> GetChild();
+        IQueryable<ChildRequests> GetChild(string userId);
         Task Save();
         Task DeleteChildRange(IEnumerable<ChildRequests> request);
     }

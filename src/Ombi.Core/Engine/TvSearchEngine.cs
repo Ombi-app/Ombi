@@ -19,6 +19,7 @@ using Ombi.Store.Repository.Requests;
 using Microsoft.Extensions.Caching.Memory;
 using Ombi.Core.Authentication;
 using Ombi.Helpers;
+using Ombi.Settings.Settings.Models;
 
 namespace Ombi.Core.Engine
 {
@@ -26,8 +27,8 @@ namespace Ombi.Core.Engine
     {
         public TvSearchEngine(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper, ISettingsService<PlexSettings> plexSettings,
             ISettingsService<EmbySettings> embySettings, IPlexContentRepository repo, IEmbyContentRepository embyRepo, ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um,
-            ICacheService memCache)
-            : base(identity, service, r, um)
+            ICacheService memCache, ISettingsService<OmbiSettings> s)
+            : base(identity, service, r, um, memCache, s)
         {
             TvMazeApi = tvMaze;
             Mapper = mapper;
@@ -36,7 +37,6 @@ namespace Ombi.Core.Engine
             PlexContentRepo = repo;
             TraktApi = trakt;
             EmbyContentRepo = embyRepo;
-            MemCache = memCache;
         }
 
         private ITvMazeApi TvMazeApi { get; }
@@ -46,7 +46,6 @@ namespace Ombi.Core.Engine
         private IPlexContentRepository PlexContentRepo { get; }
         private IEmbyContentRepository EmbyContentRepo { get; }
         private ITraktApi TraktApi { get; }
-        private ICacheService MemCache { get; }
 
         public async Task<IEnumerable<SearchTvShowViewModel>> Search(string searchTerm)
         {
@@ -124,7 +123,7 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> PopularTree()
         {
-            var result = await MemCache.GetOrAdd(CacheKeys.PopularTv, async () => await TraktApi.GetPopularShows(), DateTime.Now.AddHours(12));
+            var result = await Cache.GetOrAdd(CacheKeys.PopularTv, async () => await TraktApi.GetPopularShows(), DateTime.Now.AddHours(12));
             var processed = await ProcessResults(result);
             return processed.Select(ParseIntoTreeNode).ToList();
         }
@@ -138,8 +137,8 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> AnticipatedTree()
         {
-            var result = await MemCache.GetOrAdd(CacheKeys.AnticipatedTv, async () => await TraktApi.GetAnticipatedShows(), DateTime.Now.AddHours(12));
-            var processed = await ProcessResults(result);
+            var result = await Cache.GetOrAdd(CacheKeys.AnticipatedTv, async () => await TraktApi.GetAnticipatedShows(), DateTime.Now.AddHours(12));
+            var processed= await ProcessResults(result);
             return processed.Select(ParseIntoTreeNode).ToList();
         }
         public async Task<IEnumerable<SearchTvShowViewModel>> Anticipated()
@@ -151,7 +150,7 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> MostWatchesTree()
         {
-            var result = await MemCache.GetOrAdd(CacheKeys.MostWatchesTv, async () => await TraktApi.GetMostWatchesShows(), DateTime.Now.AddHours(12));
+            var result = await Cache.GetOrAdd(CacheKeys.MostWatchesTv, async () => await TraktApi.GetMostWatchesShows(), DateTime.Now.AddHours(12));
             var processed = await ProcessResults(result);
             return processed.Select(ParseIntoTreeNode).ToList();
         }
@@ -164,7 +163,7 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> TrendingTree()
         {
-            var result = await MemCache.GetOrAdd(CacheKeys.TrendingTv, async () => await TraktApi.GetTrendingShows(), DateTime.Now.AddHours(12));
+            var result = await Cache.GetOrAdd(CacheKeys.TrendingTv, async () => await TraktApi.GetTrendingShows(), DateTime.Now.AddHours(12));
             var processed = await ProcessResults(result);
             return processed.Select(ParseIntoTreeNode).ToList();
         }

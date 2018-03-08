@@ -24,6 +24,7 @@ export class OmbiComponent implements OnInit {
                 ignoreCertificateErrors: [x.ignoreCertificateErrors],
                 baseUrl: [x.baseUrl],
                 doNotSendNotificationsForAutoApprove: [x.doNotSendNotificationsForAutoApprove],
+                hideRequestsUsers: [x.hideRequestsUsers],
             });
         });
     }
