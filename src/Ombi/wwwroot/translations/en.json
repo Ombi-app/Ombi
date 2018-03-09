@@ -158,6 +158,7 @@
     "ClearFilter":"Clear Filter",
     "FilterHeaderAvailability":"Availability",
     "FilterHeaderRequestStatus":"Status",
-    "Approved":"Approved"
+    "Approved":"Approved", 
+    "PendingApproval": "Pending Approval"
   }
 }

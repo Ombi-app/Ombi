@@ -9,7 +9,7 @@ namespace Ombi.Helpers
             var version = Assembly.GetEntryAssembly()
                 .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
                 .InformationalVersion;
-            return version.Equals("1.0.0") ? "3.0.0-DotNetCore" : version;
+            return version.Equals("1.0.0") ? "3.0.0-develop" : version;
         }
     }
 }
