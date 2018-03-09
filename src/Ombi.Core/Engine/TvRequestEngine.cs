@@ -139,6 +139,10 @@ namespace Ombi.Core.Engine
                     .ThenInclude(x => x.SeasonRequests)
                     .ThenInclude(x => x.Episodes)
                     .Skip(position).Take(count).ToListAsync();
+
+                // Filter out children
+
+                FilterChildren(allRequests, shouldHide);
             }
             else
             {
@@ -163,6 +167,8 @@ namespace Ombi.Core.Engine
                     .ThenInclude(x => x.SeasonRequests)
                     .ThenInclude(x => x.Episodes)
                     .Skip(position).Take(count).ToListAsync();
+
+                FilterChildren(allRequests, shouldHide);
             }
             else
             {
@@ -182,6 +188,8 @@ namespace Ombi.Core.Engine
             if (shouldHide.Hide)
             {
                 allRequests = TvRepository.Get(shouldHide.UserId);
+
+                FilterChildren(allRequests, shouldHide);
             }
             else
             {
@@ -189,6 +197,23 @@ namespace Ombi.Core.Engine
             }
 
             return await allRequests.ToListAsync();
+        }
+
+        private static void FilterChildren(IEnumerable<TvRequests> allRequests, HideResult shouldHide)
+        {
+            // Filter out children
+            foreach (var t in allRequests)
+            {
+                for (var j = 0; j < t.ChildRequests.Count; j++)
+                {
+                    var child = t.ChildRequests[j];
+                    if (child.RequestedUserId != shouldHide.UserId)
+                    {
+                        t.ChildRequests.RemoveAt(j);
+                        j--;
+                    }
+                }
+            }
         }
 
         public async Task<IEnumerable<ChildRequests>> GetAllChldren(int tvId)

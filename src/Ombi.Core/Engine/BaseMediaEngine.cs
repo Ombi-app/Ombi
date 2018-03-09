@@ -108,6 +108,10 @@ namespace Ombi.Core.Engine
 
         protected async Task<HideResult> HideFromOtherUsers()
         {
+            if (await IsInRole(OmbiRoles.Admin) || await IsInRole(OmbiRoles.PowerUser))
+            {
+                return new HideResult();
+            }
             var settings = await Cache.GetOrAdd(CacheKeys.OmbiSettings, async () => await OmbiSettings.GetSettingsAsync());
             var result = new HideResult
             {
