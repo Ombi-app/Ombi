@@ -1,4 +1,5 @@
-﻿using Ombi.Core.Rule;
+﻿using System;
+using Ombi.Core.Rule;
 using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Authentication;
+using Ombi.Helpers;
 
 namespace Ombi.Core.Engine.Interfaces
 {
@@ -30,6 +32,13 @@ namespace Ombi.Core.Engine.Interfaces
         private OmbiUser _user;
         protected async Task<OmbiUser> GetUser()
         {
+            if (IsApiUser)
+            {
+                return new OmbiUser
+                {
+                    UserName = Username,
+                };
+            }
             return _user ?? (_user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName == Username));
         }
 
@@ -40,6 +49,10 @@ namespace Ombi.Core.Engine.Interfaces
 
         protected async Task<bool> IsInRole(string roleName)
         {
+            if (IsApiUser && roleName != OmbiRoles.Disabled)
+            {
+                return true;
+            }
             return await UserManager.IsInRoleAsync(await GetUser(), roleName);
         }
         
@@ -59,5 +72,7 @@ namespace Ombi.Core.Engine.Interfaces
             var ruleResults = await Rules.StartSpecificRules(model, rule);
             return ruleResults;
         }
+
+        private bool IsApiUser => Username.Equals("Api", StringComparison.CurrentCultureIgnoreCase);
     }
 }
