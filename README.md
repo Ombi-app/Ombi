@@ -14,10 +14,11 @@ ___
 
 [![Report a bug](http://i.imgur.com/xSpw482.png)](https://forums.ombi.io/viewforum.php?f=10) [![Feature request](http://i.imgur.com/mFO0OuX.png)](https://forums.ombi.io/posting.php?mode=post&f=20)
 
-| Service  | V3         | Beta          |
+
+| Service  | Stable         | Develop          |
 |----------|:---------------------------:|:----------------------------:|
-| AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/master?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/DotNetCore?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/DotNetCore) | 
-| Download |[![Download](http://i.imgur.com/odToka3.png)](https://github.com/tidusjar/Ombi/releases)            |      [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/DotNetCore/artifacts)       | 
+| AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/master?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/develop?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/develop) | 
+| Download |[![Download](http://i.imgur.com/odToka3.png)](https://github.com/tidusjar/Ombi/releases)            |      [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/develop/artifacts)       | 
 # Features
 Here are some of the features Ombi V3 has:
 * Now working without crashes on Linux.
@@ -91,9 +92,9 @@ Search the existing requests to see if your suggestion has already been submitte
 
 # Installation
 
-[Click Here](https://github.com/tidusjar/Ombi/wiki/Installation)
-[Here for Reverse Proxy Config Examples](https://github.com/tidusjar/Ombi/wiki/Reverse-Proxy-Examples)
-[PlexGuide.com - Ombi Deployment & 101 Demonstration!](https://www.youtube.com/watch?v=QPNlqqkjNJw&feature=youtu.be)
+[Installation Guide](https://github.com/tidusjar/Ombi/wiki/Installation)  
+[Here for Reverse Proxy Config Examples](https://github.com/tidusjar/Ombi/wiki/Reverse-Proxy-Examples)  
+[PlexGuide.com - Ombi Deployment & 101 Demonstration!](https://www.youtube.com/watch?v=QPNlqqkjNJw&feature=youtu.be)  
 
 # Contributors
 

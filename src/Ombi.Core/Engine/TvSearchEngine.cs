@@ -135,14 +135,15 @@ namespace Ombi.Core.Engine
             return processed;
         }
 
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> AnticipatedTree()
+                public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> AnticipatedTree()
         {
             var result = await Cache.GetOrAdd(CacheKeys.AnticipatedTv, async () => await TraktApi.GetAnticipatedShows(), DateTime.Now.AddHours(12));
-            var processed= await ProcessResults(result);
+            var processed = await ProcessResults(result);
             return processed.Select(ParseIntoTreeNode).ToList();
         }
         public async Task<IEnumerable<SearchTvShowViewModel>> Anticipated()
         {
+
             var result = await Cache.GetOrAdd(CacheKeys.AnticipatedTv, async () => await TraktApi.GetAnticipatedShows(), DateTime.Now.AddHours(12));
             var processed = await ProcessResults(result);
             return processed;
