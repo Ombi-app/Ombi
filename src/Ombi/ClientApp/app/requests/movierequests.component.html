@@ -3,8 +3,10 @@
     <div class="input-group">
         <input type="text" id="search" class="form-control form-control-custom searchwidth" placeholder="Search" (keyup)="search($event)">
         <span class="input-group-btn">       
-        <button id="filterBtn" class="btn btn-sm btn-info-outline" (click)="filterDisplay = true" >
-            <i class="fa fa-filter"></i> {{ 'Requests.Filter' | translate }}</button>
+            <button id="filterBtn" class="btn btn-sm btn-info-outline" (click)="filterDisplay = !filterDisplay" >
+                <i class="fa fa-filter"></i> {{ 'Requests.Filter' | translate }}</button>
+                <!-- <button id="filterBtn" class="btn btn-sm btn-warning-outline" (click)="sortDisplay = !sortDisplay" >
+                    <i class="fa fa-sort"></i> {{ 'Requests.Sort' | translate }}</button> -->
        </span>
 
         </div>

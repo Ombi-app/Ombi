@@ -94,6 +94,13 @@ namespace Ombi.Schedule.Jobs.Emby
                     var existingEmbyUser = allUsers.FirstOrDefault(x => x.ProviderUserId == embyUser.Id);
                     if (existingEmbyUser == null)
                     {
+
+                        if (!embyUser.ConnectUserName.HasValue() && !embyUser.Name.HasValue())
+                        {
+                            _log.LogInformation("Could not create Emby user since the have no username, PlexUserId: {0}", embyUser.Id);
+                            continue;
+                        }
+
                         // Create this users
                         // We do not store a password against the user since they will authenticate via Plex
                         var newUser = new OmbiUser

@@ -121,8 +121,8 @@
     "RequestDate": "Request Date:",
     "QualityOverride": "Quality Override:",
     "RootFolderOverride": "Root Folder Override:",
-    "ChangeRootFolder":"Change Root Folder",
-    "ChangeQualityProfile":"Change Quality Profile",
+    "ChangeRootFolder":"Root Folder",
+    "ChangeQualityProfile":"Quality Profile",
     "MarkUnavailable":"Mark Unavailable",
     "MarkAvailable":"Mark Available",
     "Remove":"Remove",
@@ -133,6 +133,7 @@
     "GridStatus":"Status",
     "ReportIssue":"Report Issue",
     "Filter":"Filter",
+    "Sort":"Sort",
     "SeasonNumberHeading":"Season: {seasonNumber}"
   },
   "Issues":{
