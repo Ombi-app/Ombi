@@ -23,7 +23,7 @@ namespace Ombi.Api.Plex.Models
         public int leafCount { get; set; }
         public int viewedLeafCount { get; set; }
         public int childCount { get; set; }
-        public int addedAt { get; set; }
+        public long addedAt { get; set; }
         public int updatedAt { get; set; }
         public Genre[] Genre { get; set; }
         //public Role[] Role { get; set; }
