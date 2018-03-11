@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "^5.1.2",
     "@angular/platform-server": "5.0.0",
     "@angular/router": "^5.1.2",
-    "@auth0/angular-jwt": "^1.0.0-beta.9",
+    "@auth0/angular-jwt": "1.0.0-beta.9",
     "@ng-bootstrap/ng-bootstrap": "^1.0.0-beta.8",
     "@ngx-translate/core": "^8.0.0",
     "@ngx-translate/http-loader": "^2.0.1",
