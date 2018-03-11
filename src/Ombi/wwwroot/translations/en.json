@@ -117,6 +117,7 @@
     "RequestStatus": "Request status:",
     "Denied": " Denied:",
     "TheatricalRelease": "Theatrical Release: {{date}}",
+    "TheatricalReleaseSort": "Theatrical Release",
     "DigitalRelease": "Digital Release: {{date}}",
     "RequestDate": "Request Date:",
     "QualityOverride": "Quality Override:",
@@ -134,7 +135,11 @@
     "ReportIssue":"Report Issue",
     "Filter":"Filter",
     "Sort":"Sort",
-    "SeasonNumberHeading":"Season: {seasonNumber}"
+    "SeasonNumberHeading":"Season: {seasonNumber}",
+    "SortTitle":"Title",
+    "SortRequestDate": "Request Date",
+    "SortRequestedBy":"Requested By",
+    "SortStatus":"Status"
   },
   "Issues":{
     "Title":"Issues",

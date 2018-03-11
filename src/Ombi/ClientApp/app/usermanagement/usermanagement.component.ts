@@ -13,7 +13,7 @@ export class UserManagementComponent implements OnInit {
     public emailSettings: IEmailNotificationSettings; 
     public customizationSettings: ICustomizationSettings;
 
-    public order: string = "u.userName";
+    public order: string = "userName";
     public reverse = false;
 
     public showBulkEdit = false;
