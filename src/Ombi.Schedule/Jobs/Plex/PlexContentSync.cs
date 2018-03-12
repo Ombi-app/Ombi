@@ -112,7 +112,7 @@ namespace Ombi.Schedule.Jobs.Plex
             Logger.LogInformation("We found {0} items", allContent.Count);
 
             // Let's now process this.
-            var contentToAdd = new List<PlexServerContent>();
+            var contentToAdd = new HashSet<PlexServerContent>();
             foreach (var content in allContent)
             {
                 if (content.viewGroup.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
@@ -291,6 +291,11 @@ namespace Ombi.Schedule.Jobs.Plex
                                     show.title);
                             }
                         }
+                        if (contentToAdd.Count > 500)
+                        {
+                            await Repo.AddRange(contentToAdd);
+                            contentToAdd.Clear();
+                        }
                     }
                 }
                 if (content.viewGroup.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase))
@@ -356,12 +361,18 @@ namespace Ombi.Schedule.Jobs.Plex
                             Logger.LogError(LoggingEvents.PlexContentCacher, e, "Exception when adding new Movie {0}",
                                 movie.title);
                         }
+
+                        if (contentToAdd.Count > 500)
+                        {
+                            await Repo.AddRange(contentToAdd);
+                            contentToAdd.Clear();
+                        }
                     }
                 }
                 if (contentToAdd.Count > 500)
                 {
                     await Repo.AddRange(contentToAdd);
-                    contentToAdd = new List<PlexServerContent>();
+                    contentToAdd.Clear();
                 }
             }
 
