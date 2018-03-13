@@ -1,6 +1,6 @@
 # Changelog
 
-## (unreleased)
+## v3.0.3020 (2018-03-13)
 
 ### **Fixes**
 
@@ -21,6 +21,8 @@
 - Fixed #2056. [tidusjar]
 
 - Experimental, set the Webpack base root to the ombi base path if we have it. This should hopefully fix the reverse proxy issues. [Jamie]
+
+- Fixed #2056. [tidusjar]
 
 
 ## v3.0.3000 (2018-03-09)
