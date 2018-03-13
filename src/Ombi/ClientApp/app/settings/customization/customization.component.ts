@@ -11,6 +11,7 @@ export class CustomizationComponent implements OnInit {
 
     public settings: ICustomizationSettings;
     public themes: IThemes[];
+    public advanced: boolean;
 
     constructor(private settingsService: SettingsService, private notificationService: NotificationService) {  }
 

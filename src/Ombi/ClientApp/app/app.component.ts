@@ -23,7 +23,6 @@ export class AppComponent implements OnInit {
     public updateAvailable: boolean;
     public currentUrl: string;
     public userAccessToken: string;
-    public showMobileLink = false;
 
     private checkedForUpdate: boolean;
 
