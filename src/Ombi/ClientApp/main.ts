@@ -18,12 +18,6 @@ import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { AppModule } from "./app/app.module";
 
 declare var module: any;
-declare var __webpack_public_path__: any;
-__webpack_public_path__ = "Test/";
-
-if(__webpack_public_path__) {
-    //
-}
 
 if (module.hot) {
     module.hot.accept();
