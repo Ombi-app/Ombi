@@ -48,9 +48,32 @@ namespace Ombi.Store.Repository.Requests
                 .ThenInclude(x => x.Episodes)
                 .AsQueryable();
         }
+
+        public IQueryable<TvRequests> Get(string userId)
+        {
+            return Db.TvRequests
+                .Include(x => x.ChildRequests)
+                .ThenInclude(x => x.RequestedUser)
+                .Include(x => x.ChildRequests)
+                .ThenInclude(x => x.SeasonRequests)
+                .ThenInclude(x => x.Episodes)
+                .Where(x => x.ChildRequests.Any(a => a.RequestedUserId == userId))
+                .AsQueryable();
+        }
         public IQueryable<ChildRequests> GetChild()
         {
             return Db.ChildRequests
+                .Include(x => x.RequestedUser)
+                .Include(x => x.ParentRequest)
+                .Include(x => x.SeasonRequests)
+                .ThenInclude(x => x.Episodes)
+                .AsQueryable();
+        }
+
+        public IQueryable<ChildRequests> GetChild(string userId)
+        {
+            return Db.ChildRequests
+                .Where(x => x.RequestedUserId == userId)
                 .Include(x => x.RequestedUser)
                 .Include(x => x.ParentRequest)
                 .Include(x => x.SeasonRequests)

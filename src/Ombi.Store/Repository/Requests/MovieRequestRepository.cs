@@ -33,6 +33,11 @@ namespace Ombi.Store.Repository.Requests
 
         }
 
+        public IQueryable<MovieRequests> GetAll(string userId)
+        {
+            return GetWithUser().Where(x => x.RequestedUserId == userId);
+        }
+
         public MovieRequests GetRequest(int theMovieDbId)
         {
             return Db.MovieRequests.Where(x => x.TheMovieDbId == theMovieDbId)
@@ -43,6 +48,16 @@ namespace Ombi.Store.Repository.Requests
         public IQueryable<MovieRequests> GetWithUser()
         {
             return Db.MovieRequests
+                .Include(x => x.RequestedUser)
+                .ThenInclude(x => x.NotificationUserIds)
+                .AsQueryable();
+        }
+
+
+        public IQueryable<MovieRequests> GetWithUser(string userId)
+        {
+            return Db.MovieRequests
+                 .Where(x => x.RequestedUserId == userId)
                 .Include(x => x.RequestedUser)
                 .ThenInclude(x => x.NotificationUserIds)
                 .AsQueryable();

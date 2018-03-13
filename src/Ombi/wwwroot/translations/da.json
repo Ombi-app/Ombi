@@ -21,7 +21,11 @@
     "Request": "Anmod",
     "Denied": "Afvist",
     "Approve": "Godkendt",
+<<<<<<< HEAD
     "PartlyAvailable": "Delvist tilgængelig",
+=======
+    "PartlyAvailable": "Partly Available",
+>>>>>>> New translations en.json (Danish)
     "Errors": {
       "Validation": "Tjek venligst dine indtastede værdier"
     }
@@ -73,9 +77,11 @@
     "TvTab": "Tv-serier",
     "Suggestions": "Forslag",
     "NoResults": "Beklager, vi fandt ingen resultater!",
-    "ReleaseDate": "Udgivelsesdato",
+    "DigitalDate": "Digital Release: {{date}}",
+    "TheatricalRelease": "Theatrical Release: {{date}}",
     "ViewOnPlex": "Se på Plex",
     "RequestAdded": "{{title}} er anmodet med succes",
+    "Similar": "Similar",
     "Movies": {
       "PopularMovies": "Populære film",
       "UpcomingMovies": "Kommende film",
@@ -85,6 +91,7 @@
       "Trailer": "Trailer"
     },
     "TvShows": {
+<<<<<<< HEAD
       "Popular": "Populære",
       "Trending": "Aktuelle",
       "MostWatched": "Mest sete",
@@ -98,6 +105,18 @@
       "SubmitRequest": "Send anmodning",
       "Season": "Sæson: {{seasonNumber}}",
       "SelectAllInSeason": "Vælg alle i sæson {{seasonNumber}}"
+=======
+      "Popular": "Popular",
+      "Trending": "Trending",
+      "MostWatched": "Most Watched",
+      "MostAnticipated": "Most Anticipated",
+      "Results": "Results",
+      "AirDate": "Air Date:",
+      "AllSeasons": "All Seasons",
+      "FirstSeason": "First Season",
+      "LatestSeason": "Latest Season",
+      "Select": "Select ..."
+>>>>>>> New translations en.json (Danish)
     }
   },
   "Requests": {
@@ -109,7 +128,8 @@
     "Status": "Status:",
     "RequestStatus": "Status for anmodning:",
     "Denied": " Afvist:",
-    "ReleaseDate": "Udgivelsesdato:",
+    "TheatricalRelease": "Theatrical Release: {{date}}",
+    "DigitalRelease": "Digital Release: {{date}}",
     "RequestDate": "Dato for anmodning:",
     "QualityOverride": "Tilsidesæt kvalitet:",
     "RootFolderOverride": "Tilsidesæt rodmappe:",

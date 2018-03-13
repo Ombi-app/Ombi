@@ -2,6 +2,7 @@
 import { RouterModule, Routes } from "@angular/router";
 
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { OrderModule } from "ngx-order-pipe";
 
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 
@@ -14,7 +15,7 @@ import { TvRequestsComponent } from "./tvrequests.component";
 
 import { SidebarModule, TreeTableModule } from "primeng/primeng";
 
-import { IdentityService, RadarrService, RequestService } from "../services";
+import { IdentityService, RadarrService, RequestService, SonarrService } from "../services";
 
 import { AuthGuard } from "../auth/auth.guard";
 
@@ -34,6 +35,7 @@ const routes: Routes = [
         TreeTableModule,
         SharedModule,
         SidebarModule,
+        OrderModule,
     ],
     declarations: [
         RequestComponent,
@@ -48,7 +50,8 @@ const routes: Routes = [
         IdentityService,
         RequestService,
         RadarrService,
-    ],
+        SonarrService,
+        ],
 
 })
 export class RequestsModule { }

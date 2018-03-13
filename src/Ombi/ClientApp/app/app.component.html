@@ -92,7 +92,7 @@
                                 <a [routerLink]="['/usermanagement/updatedetails']">
                                     <i class="fa fa-key"></i>{{ 'NavigationBar.UpdateDetails' | translate }}</a>
                             </li>
-                            <li *ngIf="showMobileLink" [routerLinkActive]="['active']">
+                            <li *ngIf="customizationSettings.mobile" [routerLinkActive]="['active']">
                                     <a href="#" (click)="openMobileApp($event)">
                                         <i class="fa fa-mobile"></i>{{ 'NavigationBar.OpenMobileApp' | translate }}</a>
                             </li>

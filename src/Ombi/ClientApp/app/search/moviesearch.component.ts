@@ -146,6 +146,15 @@ export class MovieSearchComponent implements OnInit {
         this.issueProviderId = req.id.toString();
     }
 
+    public similarMovies(theMovieDbId: number) {
+        this.clearResults();
+        this.searchService.similarMovies(theMovieDbId)
+        .subscribe(x => {
+            this.movieResults = x;
+            this.getExtraInfo();
+        });
+    }
+
    private getExtraInfo() {
 
         this.movieResults.forEach((val, index) => {

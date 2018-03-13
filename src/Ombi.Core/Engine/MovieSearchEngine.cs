@@ -12,26 +12,26 @@ using System.Threading.Tasks;
 using Ombi.Core.Rule.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using Ombi.Core.Authentication;
+using Ombi.Core.Settings;
 using Ombi.Helpers;
+using Ombi.Settings.Settings.Models;
 
 namespace Ombi.Core.Engine
 {
     public class MovieSearchEngine : BaseMediaEngine, IMovieEngine
     {
         public MovieSearchEngine(IPrincipal identity, IRequestServiceMain service, IMovieDbApi movApi, IMapper mapper,
-            ILogger<MovieSearchEngine> logger, IRuleEvaluator r, OmbiUserManager um, ICacheService mem)
-            : base(identity, service, r, um)
+            ILogger<MovieSearchEngine> logger, IRuleEvaluator r, OmbiUserManager um, ICacheService mem, ISettingsService<OmbiSettings> s)
+            : base(identity, service, r, um, mem, s)
         {
             MovieApi = movApi;
             Mapper = mapper;
             Logger = logger;
-            MemCache = mem;
         }
 
         private IMovieDbApi MovieApi { get; }
         private IMapper Mapper { get; }
         private ILogger<MovieSearchEngine> Logger { get; }
-        private ICacheService MemCache { get; }
 
         /// <summary>
         /// Lookups the imdb information.
@@ -40,7 +40,7 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<SearchMovieViewModel> LookupImdbInformation(int theMovieDbId)
         {
-            var movieInfo = await MovieApi.GetMovieInformationWithVideo(theMovieDbId);
+            var movieInfo = await MovieApi.GetMovieInformationWithExtraInfo(theMovieDbId);
             var viewMovie = Mapper.Map<SearchMovieViewModel>(movieInfo);
 
             return await ProcessSingleMovie(viewMovie, true);
@@ -64,12 +64,28 @@ namespace Ombi.Core.Engine
         }
 
         /// <summary>
+        /// Get similar movies to the id passed in
+        /// </summary>
+        /// <param name="theMovieDbId"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<SearchMovieViewModel>> SimilarMovies(int theMovieDbId)
+        {
+            var result = await MovieApi.SimilarMovies(theMovieDbId);
+            if (result != null)
+            {
+                Logger.LogDebug("Search Result: {result}", result);
+                return await TransformMovieResultsToResponse(result.Take(10)); // Take 10 to stop us overloading the API
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Gets popular movies.
         /// </summary>
         /// <returns></returns>
         public async Task<IEnumerable<SearchMovieViewModel>> PopularMovies()
         {
-            var result = await MemCache.GetOrAdd(CacheKeys.PopularMovies, async () => await MovieApi.PopularMovies(), DateTime.Now.AddHours(12));
+            var result = await Cache.GetOrAdd(CacheKeys.PopularMovies, async () => await MovieApi.PopularMovies(), DateTime.Now.AddHours(12));
             if (result != null)
             {
                 Logger.LogDebug("Search Result: {result}", result);
@@ -84,7 +100,7 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<SearchMovieViewModel>> TopRatedMovies()
         {
-            var result = await MemCache.GetOrAdd(CacheKeys.TopRatedMovies, async () => await MovieApi.TopRated(), DateTime.Now.AddHours(12));
+            var result = await Cache.GetOrAdd(CacheKeys.TopRatedMovies, async () => await MovieApi.TopRated(), DateTime.Now.AddHours(12));
             if (result != null)
             {
                 Logger.LogDebug("Search Result: {result}", result);
@@ -99,7 +115,7 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies()
         {
-            var result = await MemCache.GetOrAdd(CacheKeys.UpcomingMovies, async () => await MovieApi.Upcoming(), DateTime.Now.AddHours(12));
+            var result = await Cache.GetOrAdd(CacheKeys.UpcomingMovies, async () => await MovieApi.Upcoming(), DateTime.Now.AddHours(12));
             if (result != null)
             {
                 Logger.LogDebug("Search Result: {result}", result);
@@ -114,7 +130,7 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies()
         {
-            var result = await MemCache.GetOrAdd(CacheKeys.NowPlayingMovies, async () => await MovieApi.NowPlaying(), DateTime.Now.AddHours(12));
+            var result = await Cache.GetOrAdd(CacheKeys.NowPlayingMovies, async () => await MovieApi.NowPlaying(), DateTime.Now.AddHours(12));
             if (result != null)
             {
                 Logger.LogDebug("Search Result: {result}", result);
@@ -141,6 +157,8 @@ namespace Ombi.Core.Engine
                 var showInfo = await MovieApi.GetMovieInformation(viewMovie.Id);
                 viewMovie.Id = showInfo.Id; // TheMovieDbId
                 viewMovie.ImdbId = showInfo.ImdbId;
+                var usDates = viewMovie.ReleaseDates?.Results?.FirstOrDefault(x => x.IsoCode == "US");
+                viewMovie.DigitalReleaseDate = usDates?.ReleaseDate?.FirstOrDefault(x => x.Type == ReleaseDateType.Digital)?.ReleaseDate;
             }
 
             viewMovie.TheMovieDbId = viewMovie.Id.ToString();

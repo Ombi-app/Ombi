@@ -1,6 +1,5 @@
 ﻿using Ombi.Api.TheMovieDb;
 using Ombi.Core.Models.Requests;
-using Ombi.Core.Models.Search;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using System;
@@ -11,9 +10,12 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Core.Settings;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 
@@ -23,7 +25,7 @@ namespace Ombi.Core.Engine
     {
         public MovieRequestEngine(IMovieDbApi movieApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log,
-            OmbiUserManager manager, IRepository<RequestLog> rl) : base(user, requestService, r, manager)
+            OmbiUserManager manager, IRepository<RequestLog> rl, ICacheService cache, ISettingsService<OmbiSettings> ombiSettings) : base(user, requestService, r, manager, cache, ombiSettings)
         {
             MovieApi = movieApi;
             NotificationHelper = helper;
@@ -45,7 +47,7 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<RequestEngineResult> RequestMovie(MovieRequestViewModel model)
         {
-            var movieInfo = await MovieApi.GetMovieInformation(model.TheMovieDbId);
+            var movieInfo = await MovieApi.GetMovieInformationWithExtraInfo(model.TheMovieDbId);
             if (movieInfo == null || movieInfo.Id == 0)
             {
                 return new RequestEngineResult
@@ -78,6 +80,9 @@ namespace Ombi.Core.Engine
                 Background = movieInfo.BackdropPath
             };
 
+            var usDates = movieInfo.ReleaseDates?.Results?.FirstOrDefault(x => x.IsoCode == "US");
+            requestModel.DigitalReleaseDate = usDates?.ReleaseDate?.FirstOrDefault(x => x.Type == ReleaseDateType.Digital)?.ReleaseDate;
+
             var ruleResults = (await RunRequestRules(requestModel)).ToList();
             if (ruleResults.Any(x => !x.Success))
             {
@@ -106,7 +111,7 @@ namespace Ombi.Core.Engine
 
                     return requestEngineResult;
                 }
-                
+
                 // If there are no providers then it's successful but movie has not been sent
             }
 
@@ -122,7 +127,16 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<MovieRequests>> GetRequests(int count, int position)
         {
-            var allRequests = await MovieRepository.GetWithUser().Skip(position).Take(count).ToListAsync();
+            var shouldHide = await HideFromOtherUsers();
+            List<MovieRequests> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests = await MovieRepository.GetWithUser(shouldHide.UserId).Skip(position).Take(count).ToListAsync();
+            }
+            else
+            {
+                allRequests = await MovieRepository.GetWithUser().Skip(position).Take(count).ToListAsync();
+            }
             allRequests.ForEach(x =>
             {
                 x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
@@ -136,7 +150,16 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<MovieRequests>> GetRequests()
         {
-            var allRequests = await MovieRepository.GetWithUser().ToListAsync();
+            var shouldHide = await HideFromOtherUsers();
+            List<MovieRequests> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests = await MovieRepository.GetWithUser(shouldHide.UserId).ToListAsync();
+            }
+            else
+            {
+                allRequests = await MovieRepository.GetWithUser().ToListAsync();
+            }
             return allRequests;
         }
 
@@ -147,7 +170,16 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<MovieRequests>> SearchMovieRequest(string search)
         {
-            var allRequests = await MovieRepository.GetWithUser().ToListAsync();
+            var shouldHide = await HideFromOtherUsers();
+            List<MovieRequests> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests = await MovieRepository.GetWithUser(shouldHide.UserId).ToListAsync();
+            }
+            else
+            {
+                allRequests = await MovieRepository.GetWithUser().ToListAsync();
+            }
             var results = allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToList();
             results.ForEach(x =>
             {
@@ -155,7 +187,7 @@ namespace Ombi.Core.Engine
             });
             return results;
         }
-        
+
         public async Task<RequestEngineResult> ApproveMovieById(int requestId)
         {
             var request = await MovieRepository.Find(requestId);
@@ -175,7 +207,7 @@ namespace Ombi.Core.Engine
             request.Denied = true;
             // We are denying a request
             NotificationHelper.Notify(request, NotificationType.RequestDeclined);
-                await MovieRepository.Update(request);
+            await MovieRepository.Update(request);
 
             return new RequestEngineResult
             {
@@ -335,9 +367,10 @@ namespace Ombi.Core.Engine
             return new RequestEngineResult { Result = true, Message = $"{movieName} has been successfully added!" };
         }
 
-        public IEnumerable<MovieRequests> Filter(FilterViewModel vm)
+        public async Task<IEnumerable<MovieRequests>> Filter(FilterViewModel vm)
         {
-            var requests = MovieRepository.GetWithUser();
+            var shouldHide = await HideFromOtherUsers();
+            var requests = shouldHide.Hide ? MovieRepository.GetWithUser(shouldHide.UserId) : MovieRepository.GetWithUser();
             switch (vm.AvailabilityFilter)
             {
                 case FilterType.None:

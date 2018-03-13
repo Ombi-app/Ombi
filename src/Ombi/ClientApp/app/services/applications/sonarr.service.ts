@@ -20,4 +20,11 @@ export class SonarrService extends ServiceHelpers {
     public getQualityProfiles(settings: ISonarrSettings): Observable<ISonarrProfile[]> {
         return this.http.post<ISonarrProfile[]>(`${this.url}/Profiles/`, JSON.stringify(settings),  {headers: this.headers});
     }
+
+    public getRootFoldersWithoutSettings(): Observable<ISonarrRootFolder[]> {
+        return this.http.get<ISonarrRootFolder[]>(`${this.url}/RootFolders/`,  {headers: this.headers});
+    }
+    public getQualityProfilesWithoutSettings(): Observable<ISonarrProfile[]> {
+        return this.http.get<ISonarrProfile[]>(`${this.url}/Profiles/`, {headers: this.headers});
+    }
 }

@@ -103,12 +103,29 @@ namespace Ombi.Store.Repository
             return Db.PlexEpisode.Include(x => x.Series).AsQueryable();
         }
 
+        public void DeleteWithoutSave(PlexServerContent content)
+        {
+            Db.PlexServerContent.Remove(content);
+        }
+
+        public void DeleteWithoutSave(PlexEpisode content)
+        {
+            Db.PlexEpisode.Remove(content);
+        }
+
         public async Task<PlexEpisode> Add(PlexEpisode content)
         {
             await Db.PlexEpisode.AddAsync(content);
             await Db.SaveChangesAsync();
             return content;
         }
+
+        public async Task DeleteEpisode(PlexEpisode content)
+        {
+            Db.PlexEpisode.Remove(content);
+            await Db.SaveChangesAsync();
+        }
+
         public async Task<PlexEpisode> GetEpisodeByKey(int key)
         {
             return await Db.PlexEpisode.FirstOrDefaultAsync(x => x.Key == key);

@@ -22,6 +22,49 @@ $i: !important;
     }
 }
 
+@media only screen and (max-width: 768px) {
+
+    .table-usermanagement {
+        /* Force table to not be like tables anymore */
+        display: block;
+
+        thead, tbody, th, td, tr {
+            display: block;
+        }
+
+        /* Hide table headers (but not display: none;, for accessibility) */
+        thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+
+        td {
+            /* Behave  like a "row" */
+            border: none;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            padding-left: 50% $i;
+            min-height: 25px;
+        }
+
+        td:before {
+            /* Now like a table header */
+            position: absolute;
+            /* Top/left values mimic padding */
+            top: 6px;
+            left: 6px;
+            width: 45%;
+            padding-right: 10px;
+            white-space: nowrap;
+        }
+        /* Label the data */
+        .td-labelled:before {
+            content: attr(data-label)
+        }
+    }
+}
+
 @media (max-width: 48em) {
     .home {
         padding-top: 1rem;
@@ -841,8 +884,13 @@ textarea {
     border: 1px solid $form-color-lighter;
 }
 
+.ui-treetable tfoot td, .ui-treetable th {
+    text-align: left;
+}
+
 .ui-treetable tbody td {
     white-space: inherit;
+    overflow: visible;
 }
 
 table a:not(.btn) {
@@ -895,49 +943,6 @@ a > h4:hover {
 
 .card {
     padding-top:15px;
-}
-
-@media only screen and (max-width: 768px) {
-
-    .table-usermanagement {
-        /* Force table to not be like tables anymore */
-        display: block;
-
-        thead, tbody, th, td, tr {
-            display: block;
-        }
-
-        /* Hide table headers (but not display: none;, for accessibility) */
-        thead tr {
-            position: absolute;
-            top: -9999px;
-            left: -9999px;
-        }
-
-        td {
-            /* Behave  like a "row" */
-            border: none;
-            border-bottom: 1px solid #eee;
-            position: relative;
-            padding-left: 50% $i;
-            min-height: 25px;
-        }
-
-        td:before {
-            /* Now like a table header */
-            position: absolute;
-            /* Top/left values mimic padding */
-            top: 6px;
-            left: 6px;
-            width: 45%;
-            padding-right: 10px;
-            white-space: nowrap;
-        }
-        /* Label the data */
-        .td-labelled:before {
-            content: attr(data-label)
-        }
-    }
 }
 
 .searchWidth {

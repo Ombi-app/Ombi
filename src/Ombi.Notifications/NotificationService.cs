@@ -45,7 +45,7 @@ namespace Ombi.Notifications
         private List<INotification> NotificationAgents { get; }
         private ILogger<NotificationService> Log { get; }
 
-        /// <summary>
+        /// <summary>^
         /// Sends a notification to the user. This one is used in normal notification scenarios 
         /// </summary>
         /// <param name="model">The model.</param>

@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using CommandLine;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Serilog.Events;
-using ILogger = Serilog.ILogger;
 
 namespace Ombi.Updater
 {
@@ -78,8 +74,10 @@ namespace Ombi.Updater
         public string ApplicationPath { get; set; }
         [Option("processId", Required = false)]
         public int OmbiProcessId { get; set; }
-        [Option("startupArgs", Required = false)]
-        public string StartupArgs { get; set; }
+        [Option("host", Required = false)]
+        public string Host { get; set; }
+        [Option("storage", Required = false)]
+        public string Storage { get; set; }
         [Option("windowsServiceName", Required = false)]
         public string WindowsServiceName { get; set; }
 

@@ -1,0 +1,50 @@
+﻿<settings-menu></settings-menu>
+
+<wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Mass-Email'"></wiki>
+<fieldset>
+    <legend>Mass Email</legend>
+
+    <div class="col-md-6">
+            <div class="form-group">
+                        <input type="text" class="form-control form-control-custom " id="subject" name="subject" placeholder="Subject" [(ngModel)]="subject" [ngClass]="{'form-error': missingSubject}">
+                        <small *ngIf="missingSubject" class="error-text">Hey! We need a subject!</small>
+                </div>
+
+            <div class="form-group" >
+                    <textarea rows="10" type="text" class="form-control-custom form-control " id="themeContent" name="themeContent" [(ngModel)]="message"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="logo" class="control-label">Message Preview</label>
+                    <br/>
+                    <small>May appear differently on email clients</small>
+                    <hr/>
+                    <div [innerHTML]="message"></div>
+                </div>
+                <div class="form-group">
+                        <div>
+                            <button type="submit" id="save" (click)="send()" class="btn btn-primary-outline">Send</button>
+                        </div>
+                    </div>
+    </div>
+    <div class="col-md-6">
+        <!--Users Section--> 
+         <label class="control-label">Recipients</label>
+        <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" id="all" (click)="selectAllUsers()">
+                    <label for="all">Select All</label>
+                </div>
+            </div>
+
+            <div class="form-group" *ngFor="let u of users">
+                    <div class="checkbox">
+                        <input type="checkbox" id="{{u.user.id}}" [(ngModel)]="u.selected" (click)="selectSingleUser(u)">
+                        <label for="{{u.user.id}}">{{u.user.userName}}</label>
+                    </div>
+                </div>
+    </div>
+
+
+
+</fieldset>

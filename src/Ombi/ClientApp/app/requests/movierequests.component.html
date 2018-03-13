@@ -3,8 +3,50 @@
     <div class="input-group">
         <input type="text" id="search" class="form-control form-control-custom searchwidth" placeholder="Search" (keyup)="search($event)">
         <span class="input-group-btn">       
-        <button id="filterBtn" class="btn btn-sm btn-info-outline" (click)="filterDisplay = true" >
-            <i class="fa fa-filter"></i> {{ 'Requests.Filter' | translate }}</button>
+            <button id="filterBtn" class="btn btn-sm btn-info-outline" (click)="filterDisplay = !filterDisplay" >
+                <i class="fa fa-filter"></i> {{ 'Requests.Filter' | translate }}
+            </button>
+
+
+                <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <i class="fa fa-sort"></i> {{ 'Requests.Sort' | translate }}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                        <li>
+                                <a (click)="setOrder('requestedDate')">{{ 'Requests.SortRequestDate' | translate }}
+                                        <span *ngIf="order === 'requestedDate'">
+                                        <span [hidden]="reverse"><small><i class="fa fa-arrow-down" aria-hidden="true"></i></small></span>
+                                        <span [hidden]="!reverse"><small><i class="fa fa-arrow-up" aria-hidden="true"></i></small></span>
+                                        </span>
+                                    </a>
+                            <a (click)="setOrder('title')">{{ 'Requests.SortTitle' | translate}}
+                                    <span *ngIf="order === 'title'">
+                                            <span [hidden]="reverse"><small><i class="fa fa-arrow-down" aria-hidden="true"></i></small></span>
+                                            <span [hidden]="!reverse"><small><i class="fa fa-arrow-up" aria-hidden="true"></i></small></span>
+                                            </span>
+                            </a>                       
+                            <a (click)="setOrder('releaseDate')">{{ 'Requests.TheatricalReleaseSort' | translate }}
+                                    <span *ngIf="order === 'releaseDate'">
+                                            <span [hidden]="reverse"><small><i class="fa fa-arrow-down" aria-hidden="true"></i></small></span>
+                                            <span [hidden]="!reverse"><small><i class="fa fa-arrow-up" aria-hidden="true"></i></small></span>
+                                            </span>
+                            </a>                      
+                            <a (click)="setOrder('requestedUser.userAlias')">{{ 'Requests.SortRequestedBy' | translate }}
+                                    <span *ngIf="order === 'requestedUser.userAlias'">
+                                            <span [hidden]="reverse"><small><i class="fa fa-arrow-down" aria-hidden="true"></i></small></span>
+                                            <span [hidden]="!reverse"><small><i class="fa fa-arrow-up" aria-hidden="true"></i></small></span>
+                                            </span>
+                                        </a>
+
+                            <a (click)="setOrder('status')">{{ 'Requests.SortStatus' | translate }}
+                                    <span *ngIf="order === 'status'">
+                                            <span [hidden]="reverse"><small><i class="fa fa-arrow-down" aria-hidden="true"></i></small></span>
+                                            <span [hidden]="!reverse"><small><i class="fa fa-arrow-up" aria-hidden="true"></i></small></span>
+                                            </span>
+                            </a>
+                        </li>
+                    </ul>
        </span>
 
         </div>
@@ -17,7 +59,7 @@
 <div infinite-scroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="100" (scrolled)="loadMore()">
 
 
-    <div *ngFor="let request of movieRequests">
+    <div *ngFor="let request of movieRequests | orderBy: order : reverse : 'case-insensitive'">
 
 
         <div class="row">
@@ -66,7 +108,8 @@
                 </div>
 
 
-                <div id="releaseDate">{{ 'Requests.ReleaseDate' | translate }} {{request.releaseDate | date}}</div>
+                <div id="releaseDate">{{ 'Requests.TheatricalRelease' | translate: {date: request.releaseDate | date: 'mediumDate'} }}</div>
+                <div *ngIf="request.digitalReleaseDate" id="digitalReleaseDate">{{ 'Requests.DigitalRelease' | translate: {date: request.digitalReleaseDate | date: 'mediumDate'} }}</div>
                 <div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{request.requestedDate | date}}</div>
                 <br />
                 <div *ngIf="isAdmin">
@@ -168,7 +211,7 @@
 
 
 <p-sidebar [(visible)]="filterDisplay" styleClass="ui-sidebar-md side-back side-small">
-    <h3>{{ 'Filter.Filter' | translate }}</h3>
+    <h3>{{ 'Requests.Filter' | translate }}</h3>
     <hr>
 
     <h4>{{ 'Filter.FilterHeaderAvailability' | translate }}</h4>
@@ -198,7 +241,14 @@
             <label for="Processing">{{ 'Common.ProcessingRequest' | translate }}</label>
         </div>
     </div>
+    <div class="form-group">
+        <div class="radio">
+            <input type="radio" id="pendingApproval" name="Status" (click)="filterStatus(filterType.PendingApproval, $event)">
+            <label for="pendingApproval">{{ 'Filter.PendingApproval' | translate }}</label>
+        </div>
+    </div>
+
 
     <button class="btn btn-sm btn-primary-outline" (click)="clearFilter()">
-        <i class="fa fa-filter"></i> {{ 'Requests.ClearFilter' | translate }}</button>
+        <i class="fa fa-filter"></i> {{ 'Filter.ClearFilter' | translate }}</button>
 </p-sidebar>

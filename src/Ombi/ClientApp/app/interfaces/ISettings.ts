@@ -14,6 +14,7 @@ export interface IOmbiSettings extends ISettings {
   apiKey: string;
   ignoreCertificateErrors: boolean;
   doNotSendNotificationsForAutoApprove: boolean;
+  hideRequestsUsers: boolean;
 }
 
 export interface IUpdateSettings extends ISettings {
@@ -96,6 +97,7 @@ export interface ICustomizationSettings extends ISettings {
   applicationName: string;
   applicationUrl: string;
   logo: string;
+  mobile: boolean;
   customCssLink: string;
   enableCustomDonations: boolean;
   customDonationUrl: string;

@@ -17,6 +17,8 @@ using Ombi.Core.Helpers;
 using Ombi.Core.Rule;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Senders;
+using Ombi.Core.Settings;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 
@@ -26,7 +28,7 @@ namespace Ombi.Core.Engine
     {
         public TvRequestEngine(ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IRuleEvaluator rule, OmbiUserManager manager,
-            ITvSender sender, IAuditRepository audit, IRepository<RequestLog> rl) : base(user, requestService, rule, manager)
+            ITvSender sender, IAuditRepository audit, IRepository<RequestLog> rl, ISettingsService<OmbiSettings> settings, ICacheService cache) : base(user, requestService, rule, manager, cache, settings)
         {
             TvApi = tvApi;
             NotificationHelper = helper;
@@ -128,45 +130,136 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<TvRequests>> GetRequests(int count, int position)
         {
-            var allRequests = await TvRepository.Get()
-                .Include(x => x.ChildRequests)
+            var shouldHide = await HideFromOtherUsers();
+            List<TvRequests> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests = await TvRepository.Get(shouldHide.UserId)
+                    .Include(x => x.ChildRequests)
                     .ThenInclude(x => x.SeasonRequests)
                     .ThenInclude(x => x.Episodes)
-                .Skip(position).Take(count).ToListAsync();
+                    .Skip(position).Take(count).ToListAsync();
+
+                // Filter out children
+
+                FilterChildren(allRequests, shouldHide);
+            }
+            else
+            {
+                allRequests = await TvRepository.Get()
+                    .Include(x => x.ChildRequests)
+                    .ThenInclude(x => x.SeasonRequests)
+                    .ThenInclude(x => x.Episodes)
+                    .Skip(position).Take(count).ToListAsync();
+            }
+
             return allRequests;
         }
 
         public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> GetRequestsTreeNode(int count, int position)
         {
-            var allRequests = await TvRepository.Get()
-                .Include(x => x.ChildRequests)
+            var shouldHide = await HideFromOtherUsers();
+            List<TvRequests> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests = await TvRepository.Get(shouldHide.UserId)
+                    .Include(x => x.ChildRequests)
                     .ThenInclude(x => x.SeasonRequests)
-                    .ThenInclude(x=>x.Episodes)
-                .Skip(position).Take(count).ToListAsync();
+                    .ThenInclude(x => x.Episodes)
+                    .Skip(position).Take(count).ToListAsync();
+
+                FilterChildren(allRequests, shouldHide);
+            }
+            else
+            {
+                allRequests = await TvRepository.Get()
+                    .Include(x => x.ChildRequests)
+                    .ThenInclude(x => x.SeasonRequests)
+                    .ThenInclude(x => x.Episodes)
+                    .Skip(position).Take(count).ToListAsync();
+            }
             return ParseIntoTreeNode(allRequests);
         }
 
         public async Task<IEnumerable<TvRequests>> GetRequests()
         {
-            var allRequests = TvRepository.Get();
+            var shouldHide = await HideFromOtherUsers();
+            IQueryable<TvRequests> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests = TvRepository.Get(shouldHide.UserId);
+
+                FilterChildren(allRequests, shouldHide);
+            }
+            else
+            {
+                allRequests = TvRepository.Get();
+            }
+
             return await allRequests.ToListAsync();
+        }
+
+        private static void FilterChildren(IEnumerable<TvRequests> allRequests, HideResult shouldHide)
+        {
+            // Filter out children
+            foreach (var t in allRequests)
+            {
+                for (var j = 0; j < t.ChildRequests.Count; j++)
+                {
+                    var child = t.ChildRequests[j];
+                    if (child.RequestedUserId != shouldHide.UserId)
+                    {
+                        t.ChildRequests.RemoveAt(j);
+                        j--;
+                    }
+                }
+            }
         }
 
         public async Task<IEnumerable<ChildRequests>> GetAllChldren(int tvId)
         {
-            return await TvRepository.GetChild().Include(x => x.SeasonRequests).Where(x => x.ParentRequestId == tvId).ToListAsync();
+            var shouldHide = await HideFromOtherUsers();
+            List<ChildRequests> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests = await TvRepository.GetChild(shouldHide.UserId).Include(x => x.SeasonRequests).Where(x => x.ParentRequestId == tvId).ToListAsync();
+            }
+            else
+            {
+                allRequests = await TvRepository.GetChild().Include(x => x.SeasonRequests).Where(x => x.ParentRequestId == tvId).ToListAsync();
+            }
+
+            return allRequests;
         }
 
         public async Task<IEnumerable<TvRequests>> SearchTvRequest(string search)
         {
-            var allRequests = TvRepository.Get();
+            var shouldHide = await HideFromOtherUsers();
+            IQueryable<TvRequests> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests = TvRepository.Get(shouldHide.UserId);
+            }
+            else
+            {
+                allRequests = TvRepository.Get();
+            }
             var results = await allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToListAsync();
             return results;
         }
 
         public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> SearchTvRequestTree(string search)
         {
-            var allRequests = TvRepository.Get();
+            var shouldHide = await HideFromOtherUsers();
+            IQueryable<TvRequests> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests = TvRepository.Get(shouldHide.UserId);
+            }
+            else
+            {
+                allRequests = TvRepository.Get();
+            }
             var results = await allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToListAsync();
             return ParseIntoTreeNode(results);
         }
@@ -177,6 +270,13 @@ namespace Ombi.Core.Engine
             var allRequests = TvRepository.Get();
             var results = await allRequests.FirstOrDefaultAsync(x => x.Id == request.Id);
 
+            results.TvDbId = request.TvDbId;
+            results.ImdbId = request.ImdbId;
+            results.Overview = request.Overview;
+            results.PosterPath = PosterPathHelper.FixPosterPath(request.PosterPath);
+            results.QualityOverride = request.QualityOverride;
+            results.RootFolder = request.RootFolder;
+            
             await TvRepository.Update(results);
             return results;
         }
@@ -395,7 +495,7 @@ namespace Ombi.Core.Engine
                 var result = await TvSender.Send(model);
                 if (result.Success)
                 {
-                    return new RequestEngineResult {Result = true};
+                    return new RequestEngineResult { Result = true };
                 }
                 return new RequestEngineResult
                 {
@@ -411,7 +511,7 @@ namespace Ombi.Core.Engine
                 RequestType = RequestType.TvShow,
             });
 
-            return new RequestEngineResult {Result = true};
+            return new RequestEngineResult { Result = true };
         }
     }
 }

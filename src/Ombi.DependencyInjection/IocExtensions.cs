@@ -81,6 +81,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMovieSender, MovieSender>();
             services.AddTransient<IRecentlyAddedEngine, RecentlyAddedEngine>();
             services.AddTransient<ITvSender, TvSender>();
+            services.AddTransient<IMassEmailSender, MassEmailSender>();
         }
         public static void RegisterHttp(this IServiceCollection services)
         {

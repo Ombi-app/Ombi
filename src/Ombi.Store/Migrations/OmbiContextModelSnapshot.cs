@@ -553,6 +553,8 @@ namespace Ombi.Store.Migrations
 
                     b.Property<string>("DeniedReason");
 
+                    b.Property<DateTime?>("DigitalReleaseDate");
+
                     b.Property<string>("ImdbId");
 
                     b.Property<int?>("IssueId");
@@ -618,6 +620,8 @@ namespace Ombi.Store.Migrations
                     b.Property<string>("Overview");
 
                     b.Property<string>("PosterPath");
+
+                    b.Property<int?>("QualityOverride");
 
                     b.Property<DateTime>("ReleaseDate");
 

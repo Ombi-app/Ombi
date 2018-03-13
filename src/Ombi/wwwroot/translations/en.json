@@ -78,9 +78,11 @@
     "TvTab": "TV Shows",
     "Suggestions": "Suggestions",
     "NoResults": "Sorry, we didn't find any results!",
-    "ReleaseDate": "Release Date",
+    "DigitalDate": "Digital Release: {{date}}",
+    "TheatricalRelease":"Theatrical Release: {{date}}",
     "ViewOnPlex": "View On Plex",
     "RequestAdded": "Request for {{title}} has been added successfully",
+    "Similar":"Similar",
     "Movies": {
       "PopularMovies": "Popular Movies",
       "UpcomingMovies": "Upcoming Movies",
@@ -115,12 +117,14 @@
     "Status": "Status:",
     "RequestStatus": "Request status:",
     "Denied": " Denied:",
-    "ReleaseDate": "Release Date:",
+    "TheatricalRelease": "Theatrical Release: {{date}}",
+    "TheatricalReleaseSort": "Theatrical Release",
+    "DigitalRelease": "Digital Release: {{date}}",
     "RequestDate": "Request Date:",
     "QualityOverride": "Quality Override:",
     "RootFolderOverride": "Root Folder Override:",
-    "ChangeRootFolder":"Change Root Folder",
-    "ChangeQualityProfile":"Change Quality Profile",
+    "ChangeRootFolder":"Root Folder",
+    "ChangeQualityProfile":"Quality Profile",
     "MarkUnavailable":"Mark Unavailable",
     "MarkAvailable":"Mark Available",
     "Remove":"Remove",
@@ -131,7 +135,12 @@
     "GridStatus":"Status",
     "ReportIssue":"Report Issue",
     "Filter":"Filter",
-    "SeasonNumberHeading":"Season: {seasonNumber}"
+    "Sort":"Sort",
+    "SeasonNumberHeading":"Season: {seasonNumber}",
+    "SortTitle":"Title",
+    "SortRequestDate": "Request Date",
+    "SortRequestedBy":"Requested By",
+    "SortStatus":"Status"
   },
   "Issues":{
     "Title":"Issues",
@@ -156,6 +165,7 @@
     "ClearFilter":"Clear Filter",
     "FilterHeaderAvailability":"Availability",
     "FilterHeaderRequestStatus":"Status",
-    "Approved":"Approved"
+    "Approved":"Approved", 
+    "PendingApproval": "Pending Approval"
   }
 }
