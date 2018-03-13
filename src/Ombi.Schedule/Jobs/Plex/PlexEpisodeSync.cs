@@ -62,7 +62,6 @@ namespace Ombi.Schedule.Jobs.Plex
         {
             if (!Validate(settings))
             {
-
                 _log.LogWarning("Validation failed");
                 return;
             }
@@ -101,21 +100,25 @@ namespace Ombi.Schedule.Jobs.Plex
         {
             var currentPosition = 0;
             var resultCount = settings.EpisodeBatchSize == 0 ? 150 : settings.EpisodeBatchSize;
+            var currentEpisodes = _repo.GetAllEpisodes();
             var episodes = await _api.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, section.key, currentPosition, resultCount);
             _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Total Epsiodes found for {episodes.MediaContainer.librarySectionTitle} = {episodes.MediaContainer.totalSize}");
 
             // Delete all the episodes because we cannot uniquly match an episode to series every time, 
             // see comment below.
-            await _repo.ExecuteSql("DELETE FROM PlexEpisode");
 
-            await ProcessEpsiodes(episodes);
+            // 12.03.2017 - I think we should be able to match them now
+            //await _repo.ExecuteSql("DELETE FROM PlexEpisode");
+
+            await ProcessEpsiodes(episodes, currentEpisodes);
             currentPosition += resultCount;
 
             while (currentPosition < episodes.MediaContainer.totalSize)
             {
                 var ep = await _api.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, section.key, currentPosition,
                     resultCount);
-                await ProcessEpsiodes(ep);
+
+                await ProcessEpsiodes(ep, currentEpisodes);
                 _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Processed {resultCount} more episodes. Total Remaining {episodes.MediaContainer.totalSize - currentPosition}");
                 currentPosition += resultCount;
             }
@@ -125,58 +128,56 @@ namespace Ombi.Schedule.Jobs.Plex
             await _repo.SaveChangesAsync();
         }
 
-        private async Task ProcessEpsiodes(PlexContainer episodes)
+        private async Task ProcessEpsiodes(PlexContainer episodes, IQueryable<PlexEpisode> currentEpisodes)
         {
             var ep = new HashSet<PlexEpisode>();
             try
             {
-
- 
-            foreach (var episode in episodes?.MediaContainer?.Metadata ?? new Metadata[]{})
-            {
-                // I don't think we need to get the metadata, we only need to get the metadata if we need the provider id (TheTvDbid). Why do we need it for episodes?
-                // We have the parent and grandparent rating keys to link up to the season and series
-                //var metadata = _api.GetEpisodeMetaData(server.PlexAuthToken, server.FullUri, episode.ratingKey);
-
-                // This does seem to work, it looks like we can somehow get different rating, grandparent and parent keys with episodes. Not sure how.
-                //var epExists = currentEpisodes.Any(x => episode.ratingKey == x.Key &&
-                //                                          episode.grandparentRatingKey == x.GrandparentKey);
-                //if (epExists)
-                //{
-                //    continue;
-                //}
-
-                // Let's check if we have the parent
-                var seriesExists = await _repo.GetByKey(episode.grandparentRatingKey);
-                if (seriesExists == null)
+                foreach (var episode in episodes?.MediaContainer?.Metadata ?? new Metadata[] { })
                 {
-                    // Ok let's try and match it to a title. TODO (This is experimental)
-                    var seriesMatch = await _repo.GetAll().FirstOrDefaultAsync(x =>
-                        x.Title.Equals(episode.grandparentTitle, StringComparison.CurrentCultureIgnoreCase));
-                    if (seriesMatch == null)
+                    // I don't think we need to get the metadata, we only need to get the metadata if we need the provider id (TheTvDbid). Why do we need it for episodes?
+                    // We have the parent and grandparent rating keys to link up to the season and series
+                    //var metadata = _api.GetEpisodeMetaData(server.PlexAuthToken, server.FullUri, episode.ratingKey);
+
+                    // This does seem to work, it looks like we can somehow get different rating, grandparent and parent keys with episodes. Not sure how.
+                    var epExists = currentEpisodes.Any(x => episode.ratingKey == x.Key &&
+                                                              episode.grandparentRatingKey == x.GrandparentKey);
+                    if (epExists)
                     {
-                        _log.LogWarning(
-                            "The episode title {0} we cannot find the parent series. The episode grandparentKey = {1}, grandparentTitle = {2}",
-                            episode.title, episode.grandparentRatingKey, episode.grandparentTitle);
                         continue;
                     }
 
-                    // Set the rating key to the correct one
-                    episode.grandparentRatingKey = seriesMatch.Key;
+                    // Let's check if we have the parent
+                    var seriesExists = await _repo.GetByKey(episode.grandparentRatingKey);
+                    if (seriesExists == null)
+                    {
+                        // Ok let's try and match it to a title. TODO (This is experimental)
+                        seriesExists = await _repo.GetAll().FirstOrDefaultAsync(x =>
+                            x.Title.Equals(episode.grandparentTitle, StringComparison.CurrentCultureIgnoreCase));
+                        if (seriesExists == null)
+                        {
+                            _log.LogWarning(
+                                "The episode title {0} we cannot find the parent series. The episode grandparentKey = {1}, grandparentTitle = {2}",
+                                episode.title, episode.grandparentRatingKey, episode.grandparentTitle);
+                            continue;
+                        }
+
+                        // Set the rating key to the correct one
+                        episode.grandparentRatingKey = seriesExists.Key;
+                    }
+
+                    ep.Add(new PlexEpisode
+                    {
+                        EpisodeNumber = episode.index,
+                        SeasonNumber = episode.parentIndex,
+                        GrandparentKey = episode.grandparentRatingKey,
+                        ParentKey = episode.parentRatingKey,
+                        Key = episode.ratingKey,
+                        Title = episode.title
+                    });
                 }
 
-                ep.Add(new PlexEpisode
-                {
-                    EpisodeNumber = episode.index,
-                    SeasonNumber = episode.parentIndex,
-                    GrandparentKey = episode.grandparentRatingKey,
-                    ParentKey = episode.parentRatingKey,
-                    Key = episode.ratingKey,
-                    Title = episode.title
-                });
-            }
-
-            await _repo.AddRange(ep);
+                await _repo.AddRange(ep);
             }
             catch (Exception e)
             {
@@ -189,7 +190,7 @@ namespace Ombi.Schedule.Jobs.Plex
         {
             if (string.IsNullOrEmpty(settings.PlexAuthToken))
             {
-                return false ;
+                return false;
             }
 
             return true;

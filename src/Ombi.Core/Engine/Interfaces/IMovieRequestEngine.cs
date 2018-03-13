@@ -17,6 +17,6 @@ namespace Ombi.Core.Engine.Interfaces
         Task<RequestEngineResult> ApproveMovie(MovieRequests request);
         Task<RequestEngineResult> ApproveMovieById(int requestId);
         Task<RequestEngineResult> DenyMovieById(int modelId);
-        IEnumerable<MovieRequests> Filter(FilterViewModel vm);
+        Task<IEnumerable<MovieRequests>> Filter(FilterViewModel vm);
     }
 }

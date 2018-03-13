@@ -1,12 +1,18 @@
 # Changelog
 
-## (unreleased)
+## v3.0.3000 (2018-03-09)
 
 ### **New Features**
 
 - Added the ability to override root and quality options in Sonarr (#2049) [Jamie]
 
 - Added Pending Approval into the filters list. [tidusjar]
+
+- Added the ability to hide requests that have not been made by that user (#2052) [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Louis Laureys]
 
 ### **Fixes**
 
