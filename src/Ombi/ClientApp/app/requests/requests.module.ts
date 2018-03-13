@@ -2,6 +2,7 @@
 import { RouterModule, Routes } from "@angular/router";
 
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { OrderModule } from "ngx-order-pipe";
 
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 
@@ -34,6 +35,7 @@ const routes: Routes = [
         TreeTableModule,
         SharedModule,
         SidebarModule,
+        OrderModule,
     ],
     declarations: [
         RequestComponent,

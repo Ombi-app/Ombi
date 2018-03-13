@@ -16,44 +16,45 @@
                             </td>
                 </a>
             </th>
-            <th (click)="setOrder('u.userName')">
+            <th (click)="setOrder('userName')">
                 <a>
                     Username
                 </a>
-                <span *ngIf="order === 'u.userName'">
+                <span *ngIf="order === 'userName'">
                     <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
                 </span>
             </th>
-            <th (click)="setOrder('u.alias')">
+            <th (click)="setOrder('alias')">
                 <a>
                     Alias
                 </a>
-                <span *ngIf="order === 'u.alias'">
+                <span *ngIf="order === 'alias'">
                     <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
                 </span>
             </th>
-            <th (click)="setOrder('u.emailAddress')">
+            <th (click)="setOrder('emailAddress')">
                 <a>
                     Email
                 </a>
-                <span *ngIf="order === 'u.emailAddress'">
-                    <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
+                <span *ngIf="order === 'emailAddress'">
+                    <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span>
+                    <span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
                 </span>
             </th>
             <th>
                 Roles
             </th>
-            <th (click)="setOrder('u.lastLoggedIn')">
+            <th (click)="setOrder('lastLoggedIn')">
                <a> Last Logged In</a>
-               <span *ngIf="order === 'u.lastLoggedIn'">
+               <span *ngIf="order === 'lastLoggedIn'">
                 <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
             </span>
             </th>
-            <th (click)="setOrder('u.userType')">
+            <th (click)="setOrder('userType')">
                 <a>
                     User Type
                 </a>
-                <span *ngIf="order === 'u.userType'">
+                <span *ngIf="order === 'userType'">
                     <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
                 </span>
             </th>

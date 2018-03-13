@@ -1,5 +1,28 @@
 # Changelog
 
+## (unreleased)
+
+### **Fixes**
+
+- Small memory improvements in the Plex Sync. [Jamie]
+
+- Fixed the sort issue on the user Management page. Also added sorting to the Movie Requests page. [tidusjar]
+
+- Downgraded the angular2-jwt library since it has a bug in it. #2064. [tidusjar]
+
+- Fixed an issue when Plex decideds to reuse the Plex Key for a different media item... #2038. [tidusjar]
+
+- Fixed an issue where we might show the Imdb link when we do not have a imdbid #1797. [tidusjar]
+
+- Fixed the issue where we can no longer select Pending Approval in the filters #2057. [tidusjar]
+
+- Fixed the API key not working when attempting to get requests #2058. [tidusjar]
+
+- Fixed #2056. [tidusjar]
+
+- Experimental, set the Webpack base root to the ombi base path if we have it. This should hopefully fix the reverse proxy issues. [Jamie]
+
+
 ## v3.0.3000 (2018-03-09)
 
 ### **New Features**

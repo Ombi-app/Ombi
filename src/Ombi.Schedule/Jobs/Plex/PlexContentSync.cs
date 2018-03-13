@@ -93,217 +93,155 @@ namespace Ombi.Schedule.Jobs.Plex
         {
             foreach (var servers in plexSettings.Servers ?? new List<PlexServers>())
             {
-
-                Logger.LogInformation("Getting all content from server {0}", servers.Name);
-                var allContent = await GetAllContent(servers);
-                Logger.LogInformation("We found {0} items", allContent.Count);
-
-                // Let's now process this.
-                var contentToAdd = new List<PlexServerContent>();
-                foreach (var content in allContent)
+                try
                 {
-                    if (content.viewGroup.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                    Logger.LogInformation("Starting to cache the content on server {0}", servers.Name);
+                    await ProcessServer(servers);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogWarning(LoggingEvents.PlexContentCacher, e, "Exception thrown when attempting to cache the Plex Content in server {0}", servers.Name);
+                }
+            }
+        }
+
+        private async Task ProcessServer(PlexServers servers)
+        {
+            Logger.LogInformation("Getting all content from server {0}", servers.Name);
+            var allContent = await GetAllContent(servers);
+            Logger.LogInformation("We found {0} items", allContent.Count);
+
+            // Let's now process this.
+            var contentToAdd = new HashSet<PlexServerContent>();
+            foreach (var content in allContent)
+            {
+                if (content.viewGroup.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                {
+                    // Process Shows
+                    Logger.LogInformation("Processing TV Shows");
+                    foreach (var show in content.Metadata ?? new Metadata[] { })
                     {
-                        // Process Shows
-                        Logger.LogInformation("Processing TV Shows");
-                        foreach (var show in content.Metadata ?? new Metadata[] { })
+                        var seasonList = await PlexApi.GetSeasons(servers.PlexAuthToken, servers.FullUri,
+                            show.ratingKey);
+                        var seasonsContent = new List<PlexSeasonsContent>();
+                        foreach (var season in seasonList.MediaContainer.Metadata)
                         {
-                            var seasonList = await PlexApi.GetSeasons(servers.PlexAuthToken, servers.FullUri,
-                                show.ratingKey);
-                            var seasonsContent = new List<PlexSeasonsContent>();
-                            foreach (var season in seasonList.MediaContainer.Metadata)
+                            seasonsContent.Add(new PlexSeasonsContent
                             {
-                                seasonsContent.Add(new PlexSeasonsContent
-                                {
-                                    ParentKey = season.parentRatingKey,
-                                    SeasonKey = season.ratingKey,
-                                    SeasonNumber = season.index,
-                                    PlexContentId = show.ratingKey
-                                });
+                                ParentKey = season.parentRatingKey,
+                                SeasonKey = season.ratingKey,
+                                SeasonNumber = season.index,
+                                PlexContentId = show.ratingKey
+                            });
+                        }
+
+                        // Do we already have this item?
+                        // Let's try and match
+                        var existingContent = await Repo.GetFirstContentByCustom(x => x.Title == show.title
+                                                                                      && x.ReleaseYear == show.year.ToString()
+                                                                                      && x.Type == PlexMediaTypeEntity.Show);
+
+                        // Just double check the rating key, since this is our unique constraint
+                        var existingKey = await Repo.GetByKey(show.ratingKey);
+
+                        if (existingKey != null)
+                        {
+                            // Damn son.
+                            // Let's check if they match up
+                            var doesMatch = show.title.Equals(existingKey.Title,
+                                StringComparison.CurrentCulture);
+                            if (!doesMatch)
+                            {
+                                // Something fucked up on Plex at somepoint... Damn, rebuild of lib maybe?
+                                // Lets delete the matching key
+                                await Repo.Delete(existingKey);
+                                existingKey = null;
                             }
+                        }
 
-                            // Do we already have this item?
-                            // Let's try and match
-                            var existingContent = await Repo.GetFirstContentByCustom(x => x.Title == show.title
-                                                        && x.ReleaseYear == show.year.ToString()
-                                                        && x.Type == PlexMediaTypeEntity.Show);
-
-                            if (existingContent != null)
+                        if (existingContent != null)
+                        {
+                            // Just check the key
+                            if (existingKey != null)
                             {
-                                // Just check the key
-                                var existingKey = await Repo.GetByKey(show.ratingKey);
-                                if (existingKey != null)
-                                {
-                                    // The rating key is all good!
-                                }
-                                else
-                                {
-                                    // This means the rating key has changed somehow.
-                                    // Should probably delete this and get the new one
-                                    var oldKey = existingContent.Key;
-                                    Repo.DeleteWithoutSave(existingContent);
-
-                                    // Because we have changed the rating key, we need to change all children too
-                                    var episodeToChange = Repo.GetAllEpisodes().Where(x => x.GrandparentKey == oldKey);
-                                    if (episodeToChange.Any())
-                                    {
-                                        foreach (var e in episodeToChange)
-                                        {
-                                            Repo.DeleteWithoutSave(e);
-                                        }
-                                    }
-                                    await Repo.SaveChangesAsync();
-                                    existingContent = null;
-                                }
-
-                            }
-                            // The ratingKey keeps changing...
-                            //var existingContent = await Repo.GetByKey(show.ratingKey);
-                            if (existingContent != null)
-                            {
-                                try
-                                {
-                                    Logger.LogInformation("We already have show {0} checking for new seasons", existingContent.Title);
-                                    // Ok so we have it, let's check if there are any new seasons
-                                    var itemAdded = false;
-                                    foreach (var season in seasonsContent)
-                                    {
-                                        var seasonExists = existingContent.Seasons.FirstOrDefault(x => x.SeasonKey == season.SeasonKey);
-
-                                        if (seasonExists != null)
-                                        {
-                                            // We already have this season
-                                            continue;
-                                        }
-
-                                        existingContent.Seasons.Add(season);
-                                        itemAdded = true;
-                                    }
-
-                                    if (itemAdded) await Repo.Update(existingContent);
-                                }
-                                catch (Exception e)
-                                {
-                                    Logger.LogError(LoggingEvents.PlexContentCacher, e, "Exception when adding new seasons to title {0}", existingContent.Title);
-                                }
+                                // The rating key is all good!
                             }
                             else
                             {
-                                try
+                                // This means the rating key has changed somehow.
+                                // Should probably delete this and get the new one
+                                var oldKey = existingContent.Key;
+                                Repo.DeleteWithoutSave(existingContent);
+
+                                // Because we have changed the rating key, we need to change all children too
+                                var episodeToChange = Repo.GetAllEpisodes().Where(x => x.GrandparentKey == oldKey);
+                                if (episodeToChange.Any())
                                 {
+                                    foreach (var e in episodeToChange)
+                                    {
+                                        Repo.DeleteWithoutSave(e);
+                                    }
+                                }
+                                await Repo.SaveChangesAsync();
+                                existingContent = null;
+                            }
+                        }
+                        // The ratingKey keeps changing...
+                        //var existingContent = await Repo.GetByKey(show.ratingKey);
+                        if (existingContent != null)
+                        {
+                            try
+                            {
+                                Logger.LogInformation("We already have show {0} checking for new seasons",
+                                    existingContent.Title);
+                                // Ok so we have it, let's check if there are any new seasons
+                                var itemAdded = false;
+                                foreach (var season in seasonsContent)
+                                {
+                                    var seasonExists =
+                                        existingContent.Seasons.FirstOrDefault(x => x.SeasonKey == season.SeasonKey);
 
-                                    Logger.LogInformation("New show {0}, so add it", show.title);
-
-                                    // Get the show metadata... This sucks since the `metadata` var contains all information about the show
-                                    // But it does not contain the `guid` property that we need to pull out thetvdb id...
-                                    var showMetadata = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
-                                        show.ratingKey);
-                                    var providerIds = PlexHelper.GetProviderIdFromPlexGuid(showMetadata.MediaContainer.Metadata.FirstOrDefault().guid);
-
-                                    var item = new PlexServerContent
+                                    if (seasonExists != null)
                                     {
-                                        AddedAt = DateTime.Now,
-                                        Key = show.ratingKey,
-                                        ReleaseYear = show.year.ToString(),
-                                        Type = PlexMediaTypeEntity.Show,
-                                        Title = show.title,
-                                        Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, show.ratingKey),
-                                        Seasons = new List<PlexSeasonsContent>()
-                                    };
-                                    if (providerIds.Type == ProviderType.ImdbId)
-                                    {
-                                        item.ImdbId = providerIds.ImdbId;
-                                    }
-                                    if (providerIds.Type == ProviderType.TheMovieDbId)
-                                    {
-                                        item.TheMovieDbId = providerIds.TheMovieDb;
-                                    }
-                                    if (providerIds.Type == ProviderType.TvDbId)
-                                    {
-                                        item.TvDbId = providerIds.TheTvDb;
-                                    }
-
-                                    // Let's just double check to make sure we do not have it now we have some id's
-                                    var existingImdb = false;
-                                    var existingMovieDbId = false;
-                                    var existingTvDbId = false;
-                                    if (item.ImdbId.HasValue())
-                                    {
-                                        existingImdb = await Repo.GetAll().AnyAsync(x =>
-                                            x.ImdbId == item.ImdbId && x.Type == PlexMediaTypeEntity.Show);
-                                    }
-                                    if (item.TheMovieDbId.HasValue())
-                                    {
-                                        existingMovieDbId = await Repo.GetAll().AnyAsync(x =>
-                                            x.TheMovieDbId == item.TheMovieDbId && x.Type == PlexMediaTypeEntity.Show);
-                                    }
-                                    if (item.TvDbId.HasValue())
-                                    {
-                                        existingTvDbId = await Repo.GetAll().AnyAsync(x =>
-                                            x.TvDbId == item.TvDbId && x.Type == PlexMediaTypeEntity.Show);
-                                    }
-                                    if (existingImdb || existingTvDbId || existingMovieDbId)
-                                    {
-                                        // We already have it!
+                                        // We already have this season
                                         continue;
                                     }
 
-                                    item.Seasons.ToList().AddRange(seasonsContent);
-
-                                    contentToAdd.Add(item);
-
-                                }
-                                catch (Exception e)
-                                {
-                                    Logger.LogError(LoggingEvents.PlexContentCacher, e, "Exception when adding tv show {0}", show.title);
+                                    existingContent.Seasons.Add(season);
+                                    itemAdded = true;
                                 }
 
+                                if (itemAdded) await Repo.Update(existingContent);
+                            }
+                            catch (Exception e)
+                            {
+                                Logger.LogError(LoggingEvents.PlexContentCacher, e,
+                                    "Exception when adding new seasons to title {0}", existingContent.Title);
                             }
                         }
-                    }
-                    if (content.viewGroup.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        Logger.LogInformation("Processing Movies");
-                        foreach (var movie in content?.Metadata ?? new Metadata[] { })
+                        else
                         {
-                            // Let's check if we have this movie
-
                             try
                             {
-                                var existing = await Repo.GetFirstContentByCustom(x => x.Title == movie.title
-                                                                                              && x.ReleaseYear == movie.year.ToString()
-                                                                                              && x.Type == PlexMediaTypeEntity.Movie);
-                                // The rating key keeps changing
-                                //var existing = await Repo.GetByKey(movie.ratingKey);
-                                if (existing != null)
-                                {
-                                    Logger.LogInformation("We already have movie {0}", movie.title);
-                                    continue;
-                                }
+                                Logger.LogInformation("New show {0}, so add it", show.title);
 
-                                var hasSameKey = await Repo.GetByKey(movie.ratingKey);
-                                if (hasSameKey != null)
-                                {
-                                    await Repo.Delete(hasSameKey);
-                                }
-
-                                Logger.LogInformation("Adding movie {0}", movie.title);
-                                var metaData = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
-                                    movie.ratingKey);
-                                var providerIds = PlexHelper.GetProviderIdFromPlexGuid(metaData.MediaContainer.Metadata
-                                    .FirstOrDefault()
-                                    .guid);
+                                // Get the show metadata... This sucks since the `metadata` var contains all information about the show
+                                // But it does not contain the `guid` property that we need to pull out thetvdb id...
+                                var showMetadata = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
+                                    show.ratingKey);
+                                var providerIds =
+                                    PlexHelper.GetProviderIdFromPlexGuid(showMetadata.MediaContainer.Metadata.FirstOrDefault()
+                                        .guid);
 
                                 var item = new PlexServerContent
                                 {
                                     AddedAt = DateTime.Now,
-                                    Key = movie.ratingKey,
-                                    ReleaseYear = movie.year.ToString(),
-                                    Type = PlexMediaTypeEntity.Movie,
-                                    Title = movie.title,
-                                    Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, movie.ratingKey),
-                                    Seasons = new List<PlexSeasonsContent>(),
-                                    Quality = movie.Media?.FirstOrDefault()?.videoResolution ?? string.Empty
+                                    Key = show.ratingKey,
+                                    ReleaseYear = show.year.ToString(),
+                                    Type = PlexMediaTypeEntity.Show,
+                                    Title = show.title,
+                                    Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, show.ratingKey),
+                                    Seasons = new List<PlexSeasonsContent>()
                                 };
                                 if (providerIds.Type == ProviderType.ImdbId)
                                 {
@@ -317,26 +255,130 @@ namespace Ombi.Schedule.Jobs.Plex
                                 {
                                     item.TvDbId = providerIds.TheTvDb;
                                 }
+
+                                // Let's just double check to make sure we do not have it now we have some id's
+                                var existingImdb = false;
+                                var existingMovieDbId = false;
+                                var existingTvDbId = false;
+                                if (item.ImdbId.HasValue())
+                                {
+                                    existingImdb = await Repo.GetAll().AnyAsync(x =>
+                                        x.ImdbId == item.ImdbId && x.Type == PlexMediaTypeEntity.Show);
+                                }
+                                if (item.TheMovieDbId.HasValue())
+                                {
+                                    existingMovieDbId = await Repo.GetAll().AnyAsync(x =>
+                                        x.TheMovieDbId == item.TheMovieDbId && x.Type == PlexMediaTypeEntity.Show);
+                                }
+                                if (item.TvDbId.HasValue())
+                                {
+                                    existingTvDbId = await Repo.GetAll().AnyAsync(x =>
+                                        x.TvDbId == item.TvDbId && x.Type == PlexMediaTypeEntity.Show);
+                                }
+                                if (existingImdb || existingTvDbId || existingMovieDbId)
+                                {
+                                    // We already have it!
+                                    continue;
+                                }
+
+                                item.Seasons.ToList().AddRange(seasonsContent);
+
                                 contentToAdd.Add(item);
                             }
                             catch (Exception e)
                             {
-                                Logger.LogError(LoggingEvents.PlexContentCacher, e, "Exception when adding new Movie {0}", movie.title);
+                                Logger.LogError(LoggingEvents.PlexContentCacher, e, "Exception when adding tv show {0}",
+                                    show.title);
                             }
                         }
-                    }
-                    if (contentToAdd.Count > 500)
-                    {
-                        await Repo.AddRange(contentToAdd);
-                        contentToAdd = new List<PlexServerContent>();
+                        if (contentToAdd.Count > 500)
+                        {
+                            await Repo.AddRange(contentToAdd);
+                            contentToAdd.Clear();
+                        }
                     }
                 }
+                if (content.viewGroup.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                {
+                    Logger.LogInformation("Processing Movies");
+                    foreach (var movie in content?.Metadata ?? new Metadata[] { })
+                    {
+                        // Let's check if we have this movie
 
-                if (contentToAdd.Any())
+                        try
+                        {
+                            var existing = await Repo.GetFirstContentByCustom(x => x.Title == movie.title
+                                                                                   && x.ReleaseYear == movie.year.ToString()
+                                                                                   && x.Type == PlexMediaTypeEntity.Movie);
+                            // The rating key keeps changing
+                            //var existing = await Repo.GetByKey(movie.ratingKey);
+                            if (existing != null)
+                            {
+                                Logger.LogInformation("We already have movie {0}", movie.title);
+                                continue;
+                            }
+
+                            var hasSameKey = await Repo.GetByKey(movie.ratingKey);
+                            if (hasSameKey != null)
+                            {
+                                await Repo.Delete(hasSameKey);
+                            }
+
+                            Logger.LogInformation("Adding movie {0}", movie.title);
+                            var metaData = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
+                                movie.ratingKey);
+                            var providerIds = PlexHelper.GetProviderIdFromPlexGuid(metaData.MediaContainer.Metadata
+                                .FirstOrDefault()
+                                .guid);
+
+                            var item = new PlexServerContent
+                            {
+                                AddedAt = DateTime.Now,
+                                Key = movie.ratingKey,
+                                ReleaseYear = movie.year.ToString(),
+                                Type = PlexMediaTypeEntity.Movie,
+                                Title = movie.title,
+                                Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, movie.ratingKey),
+                                Seasons = new List<PlexSeasonsContent>(),
+                                Quality = movie.Media?.FirstOrDefault()?.videoResolution ?? string.Empty
+                            };
+                            if (providerIds.Type == ProviderType.ImdbId)
+                            {
+                                item.ImdbId = providerIds.ImdbId;
+                            }
+                            if (providerIds.Type == ProviderType.TheMovieDbId)
+                            {
+                                item.TheMovieDbId = providerIds.TheMovieDb;
+                            }
+                            if (providerIds.Type == ProviderType.TvDbId)
+                            {
+                                item.TvDbId = providerIds.TheTvDb;
+                            }
+                            contentToAdd.Add(item);
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.LogError(LoggingEvents.PlexContentCacher, e, "Exception when adding new Movie {0}",
+                                movie.title);
+                        }
+
+                        if (contentToAdd.Count > 500)
+                        {
+                            await Repo.AddRange(contentToAdd);
+                            contentToAdd.Clear();
+                        }
+                    }
+                }
+                if (contentToAdd.Count > 500)
                 {
                     await Repo.AddRange(contentToAdd);
+                    contentToAdd.Clear();
                 }
+            }
 
+            if (contentToAdd.Any())
+            {
+                await Repo.AddRange(contentToAdd);
             }
         }
 

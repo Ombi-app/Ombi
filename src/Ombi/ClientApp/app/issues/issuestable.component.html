@@ -13,15 +13,15 @@
                             <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
                     </span>
                 </th>
-                <th (click)="setOrder('issue.status')">
+                <th (click)="setOrder('status')">
                     <a [translate]="'Issues.Status'"></a>
-                    <span *ngIf="order === 'issue.status'">
+                    <span *ngIf="order === 'status'">
                             <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
                     </span>
                 </th>
-                <th (click)="setOrder('issue.reportedUser')">
+                <th (click)="setOrder('reportedUser')">
                     <a [translate]="'Issues.ReportedBy'"></a>
-                    <span *ngIf="order === 'issue.reportedUser'">
+                    <span *ngIf="order === 'reportedUser'">
                             <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
                     </span>
                 </th>

@@ -36,7 +36,8 @@ export class MovieRequestsComponent implements OnInit {
     public filter: IFilter;
     public filterType = FilterType;
 
-    public sortDisplay: boolean;
+    public order: string = "requestedDate";
+    public reverse = false;
 
     private currentlyLoaded: number;
     private amountToLoad: number;
@@ -173,6 +174,14 @@ export class MovieRequestsComponent implements OnInit {
             this.movieRequests = x;
         });
     }
+
+    public setOrder(value: string) {
+        if (this.order === value) {
+          this.reverse = !this.reverse;
+        }
+    
+        this.order = value;
+      }
 
     private loadRequests(amountToLoad: number, currentlyLoaded: number) {
         this.requestService.getMovieRequests(amountToLoad, currentlyLoaded + 1)
