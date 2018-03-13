@@ -52,13 +52,8 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 if (!hasImdb && hasTheMovieDb)
                 {
-                    _log.LogInformation("The movie {0} has TheMovieDb but not ImdbId, searching for ImdbId", movie.Title);
-                    if (int.TryParse(movie.TheMovieDbId, out var id))
-                    {
-                        var result = await _movieApi.GetMovieInformation(id);
-                        movie.ImdbId = result.ImdbId;
-                        _log.LogInformation("Setting movie {0} Imdbid to {1}", movie.Title, movie.ImdbId);
-                    }
+                    var imdbId = await GetImdbWithTheMovieDbId("movie", movie.Title, movie.TheMovieDbId);
+                    movie.ImdbId = imdbId;
                 }
                 if (!hasTheMovieDb && hasImdb)
                 {
@@ -167,6 +162,19 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
             }
 
+        }
+
+        private async Task<string> GetImdbWithTheMovieDbId(string movieDbId, string title, string type)
+        {
+            _log.LogInformation("The {0} {1} has TheMovieDb but not ImdbId, searching for ImdbId", type, title);
+            if (int.TryParse(movieDbId, out var id))
+            {
+                var result = await _movieApi.GetMovieInformation(id);
+              
+                _log.LogInformation("Setting {0} {1} Imdbid to {2}", type, title, result.ImdbId);
+                return result.ImdbId;
+            }
+            return string.Empty;
         }
 
         private async Task StartEmby()
