@@ -3,7 +3,7 @@ import { RouterModule, Routes } from "@angular/router";
 
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { OrderModule } from "ngx-order-pipe";
-import { CalendarModule, CarouselModule, PaginatorModule, SharedModule, TabViewModule } from "primeng/primeng";
+import { CalendarModule, PaginatorModule, SharedModule, TabViewModule } from "primeng/primeng";
 
 import { IdentityService, ImageService, RecentlyAddedService } from "../services";
 
@@ -12,6 +12,8 @@ import { AuthGuard } from "../auth/auth.guard";
 import { SharedModule as OmbiShared } from "../shared/shared.module";
 
 import { RecentlyAddedComponent } from "./recentlyAdded.component";
+
+import { NguCarouselModule } from "@ngu/carousel";
 
 const routes: Routes = [
     { path: "", component: RecentlyAddedComponent, canActivate: [AuthGuard] },
@@ -27,7 +29,7 @@ const routes: Routes = [
         PaginatorModule,
         TabViewModule,
         CalendarModule,
-        CarouselModule,
+        NguCarouselModule,
     ],
     declarations: [
         RecentlyAddedComponent,

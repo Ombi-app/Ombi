@@ -4,14 +4,16 @@
 <p-calendar [(ngModel)]="range" showButtonBar="true" selectionMode="range" (onClose)="close()"></p-calendar>
 <hr />
 
-<p-carousel [value]="movies" [headerText]="'Movies'" (onPage)="page($event)">
-    <ng-template let-movie pTemplate="movie">
-            <img class="img-responsive poster" src="{{movie.posterPath}}" style="width: 30px" alt="poster">
+<ngu-carousel
+      [inputs]="carouselTile">
 
-        {{movie.title}}
-    </ng-template>
-</p-carousel>
+            <ngu-tile NguCarouselItem *ngFor="let movie of movies">
+                <img class="img-responsive poster" src="{{movie.posterPath}}" style="width: 300px" alt="poster">
+            </ngu-tile>
+
+          <button NguCarouselPrev class='leftRs'>&lt;</button>
+          <button NguCarouselNext class='rightRs'>&gt;</button>
+    </ngu-carousel>
 
 
 <hr/>
-{{movies | json}}

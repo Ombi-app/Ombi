@@ -31,7 +31,7 @@ namespace Ombi.Core.Engine
             TransformPlexMovies(plexMovies, model);
             TransformEmbyMovies(embyMovies, model);
 
-            return model;
+            return model.Take(30);
         }
 
         public IEnumerable<RecentlyAddedMovieModel> GetRecentlyAddedMovies()
