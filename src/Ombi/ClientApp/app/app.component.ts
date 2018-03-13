@@ -1,4 +1,5 @@
-﻿import { Component, OnInit } from "@angular/core";
+﻿import { PlatformLocation } from "@angular/common";
+import { Component, OnInit } from "@angular/core";
 import { NavigationStart, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { AuthService } from "./auth/auth.service";
@@ -32,7 +33,14 @@ export class AppComponent implements OnInit {
                 private readonly settingsService: SettingsService,
                 private readonly jobService: JobService,
                 public readonly translate: TranslateService,
-                private readonly identityService: IdentityService) { 
+                private readonly identityService: IdentityService,
+                private readonly platformLocation: PlatformLocation) { 
+
+                    const base = this.platformLocation.getBaseHrefFromDOM();   
+                    if (base.length > 1) {
+                        __webpack_public_path__ = base + "/dist/";
+                    }
+                
                     this.translate.addLangs(["en", "de", "fr","da","es","it","nl","sv","no"]);
                     // this language will be used as a fallback when a translation isn't found in the current language
                     this.translate.setDefaultLang("en");
