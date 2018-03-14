@@ -36,38 +36,31 @@ namespace Ombi.Schedule.Jobs.Ombi
         public async Task Start()
         {
             _log.LogInformation("Starting the Metadata refresh");
-            await StartPlex();
-            await StartEmby();
+            try
+            {
+                await StartPlex();
+                await StartEmby();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         private async Task StartPlex()
         {
-            var allMovies = _plexRepo.GetAll().Where(x => x.Type == PlexMediaTypeEntity.Movie);
-
-            foreach (var movie in allMovies)
-            {
-                var hasImdb = movie.ImdbId.HasValue();
-                var hasTheMovieDb = movie.TheMovieDbId.HasValue();
-                // Movies don't really use TheTvDb
-
-                if (!hasImdb && hasTheMovieDb)
-                {
-                    var imdbId = await GetImdbWithTheMovieDbId("movie", movie.Title, movie.TheMovieDbId);
-                    movie.ImdbId = imdbId;
-                }
-                if (!hasTheMovieDb && hasImdb)
-                {
-                    _log.LogInformation("The movie {0} has an ImdbId but not TheMovieDbId, searching for TheMovieDbId", movie.Title);
-                    var result = await _movieApi.Find(movie.ImdbId, ExternalSource.imdb_id);
-                    movie.TheMovieDbId = result.movie_results?[0]?.id.ToString() ?? string.Empty;
-                    _log.LogInformation("Setting movie {0} TheMovieDbId to {1}", movie.Title, movie.TheMovieDbId);
-                }
-            }
-
-            await _plexRepo.UpdateRange(allMovies);
+            await StartPlexMovies();
 
             // Now Tv
-            var allTv = _plexRepo.GetAll().Where(x => x.Type == PlexMediaTypeEntity.Show);
+            await StartPlexTv();
+        }
+
+        private async Task StartPlexTv()
+        {
+            var allTv = _plexRepo.GetAll().Where(x =>
+                x.Type == PlexMediaTypeEntity.Show && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue() || !x.TvDbId.HasValue()));
+            var tvCount = 0;
             foreach (var show in allTv)
             {
                 var hasImdb = show.ImdbId.HasValue();
@@ -76,101 +69,156 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 if (!hasTheMovieDb)
                 {
-                    _log.LogInformation("The TV Show {0} does not have a TheMovieDbId, searching for TheMovieDbId", show.Title);
-                    FindResult result = null;
-                    var hasResult = false;
-                    if (hasTvDbId)
-                    {
-                        result = await _movieApi.Find(show.TvDbId, ExternalSource.tvdb_id);
-                        hasResult = result != null;
-
-                        _log.LogInformation("Setting Show {0} because we have TvDbId, result: {1}", show.Title, hasResult);
-                    }
-                    if (hasImdb && !hasResult)
-                    {
-                        result = await _movieApi.Find(show.ImdbId, ExternalSource.imdb_id);
-                        hasResult = result != null;
-
-                        _log.LogInformation("Setting Show {0} because we have ImdbId, result: {1}", show.Title, hasResult);
-                    }
-                    if (hasResult)
-                    {
-                        show.TheMovieDbId = result.tv_results?[0]?.id.ToString() ?? string.Empty;
-                        _log.LogInformation("Setting Show {0} TheMovieDbId to {1}", show.Title, show.TheMovieDbId);
-                    }
+                    var id = await GetTheMovieDbId(hasTvDbId, hasImdb, show.TvDbId, show.ImdbId, show.Title);
+                    show.TheMovieDbId = id;
                 }
 
                 if (!hasImdb)
                 {
-                    var nowHasValue = false;
-                    _log.LogInformation("The TV Show {0} does not have a ImdbId, searching for ImdbId", show.Title);
-                    // Looks like TV Maze does not provide the moviedb id, neither does the TV endpoint on TheMovieDb
-                    if (hasTheMovieDb)
-                    {
-                        _log.LogInformation("The show {0} has TheMovieDbId but not ImdbId, searching for ImdbId", show.Title);
-                        if (int.TryParse(show.TheMovieDbId, out var id))
-                        {
-                            var result = await _movieApi.GetTvExternals(id);
-
-                            show.ImdbId = result.imdb_id;
-                            _log.LogInformation("Setting show {0} Imdbid to {1}", show.Title, show.ImdbId);
-                            nowHasValue = true;
-                        }
-                    }
-
-                    if (hasTvDbId && !nowHasValue)
-                    {
-                        _log.LogInformation("The show {0} has tvdbid but not ImdbId, searching for ImdbId", show.Title);
-                        if (int.TryParse(show.TvDbId, out var id))
-                        {
-                            var result = await _tvApi.ShowLookupByTheTvDbId(id);
-                            show.ImdbId = result?.externals?.imdb;
-                            _log.LogInformation("Setting show {0} ImdbId to {1}", show.Title, show.ImdbId);
-                        }
-                    }
+                    var id = await GetImdbId(hasTheMovieDb, hasTvDbId, show.Title, show.TheMovieDbId, show.TvDbId);
+                    show.ImdbId = id;
+                    _plexRepo.UpdateWithoutSave(show);
                 }
 
                 if (!hasTvDbId)
                 {
-                    _log.LogInformation("The TV Show {0} does not have a TvDbId, searching for TvDbId", show.Title);
-                    var nowHasValue = false;
-                    if (hasTheMovieDb)
-                    {
-                        _log.LogInformation("The show {0} has theMovieDBId but not ImdbId, searching for ImdbId", show.Title);
-                        if (int.TryParse(show.TheMovieDbId, out var id))
-                        {
-                            var result = await _movieApi.GetTvExternals(id);
+                    var id = await GetTvDbId(hasTheMovieDb, hasImdb, show.TheMovieDbId, show.ImdbId, show.Title);
+                    show.TvDbId = id;
+                    _plexRepo.UpdateWithoutSave(show);
+                }
+                tvCount++;
+                if (tvCount >= 20)
+                {
+                    await _plexRepo.SaveChangesAsync();
+                    tvCount = 0;
+                }
+            }
+            await _plexRepo.SaveChangesAsync();
+        }
 
-                            show.TvDbId = result.tvdb_id.ToString();
-                            _log.LogInformation("Setting show {0} TvDbId to {1}", show.Title, show.TvDbId);
-                            nowHasValue = true;
-                        }
-                    }
+        private async Task StartPlexMovies()
+        {
+            var allMovies = _plexRepo.GetAll().Where(x =>
+                x.Type == PlexMediaTypeEntity.Movie && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue()));
+            int movieCount = 0;
+            foreach (var movie in allMovies)
+            {
+                var hasImdb = movie.ImdbId.HasValue();
+                var hasTheMovieDb = movie.TheMovieDbId.HasValue();
+                // Movies don't really use TheTvDb
 
-                    if (hasImdb && !nowHasValue)
-                    {
-
-                        _log.LogInformation("The show {0} has ImdbId but not ImdbId, searching for ImdbId", show.Title);
-                        var result = await _movieApi.Find(show.ImdbId, ExternalSource.imdb_id);
-                        var theMovieDbId = result.tv_results?[0]?.id ?? 0;
-
-                        var externalResult = await _movieApi.GetTvExternals(theMovieDbId);
-
-                        show.TvDbId = externalResult.imdb_id;
-                        _log.LogInformation("Setting show {0} ImdbId to {1}", show.Title, show.TvDbId);
-                    }
+                if (!hasImdb)
+                {
+                    var imdbId = await GetImdbId(hasTheMovieDb, false, movie.Title, movie.TheMovieDbId, string.Empty);
+                    movie.ImdbId = imdbId;
+                    _plexRepo.UpdateWithoutSave(movie);
+                }
+                if (!hasTheMovieDb)
+                {
+                    var id = await GetTheMovieDbId(false, hasImdb, string.Empty, movie.ImdbId, movie.Title);
+                    movie.TheMovieDbId = id;
+                    _plexRepo.UpdateWithoutSave(movie);
+                }
+                movieCount++;
+                if (movieCount >= 20)
+                {
+                    await _plexRepo.SaveChangesAsync();
+                    movieCount = 0;
                 }
             }
 
+            await _plexRepo.SaveChangesAsync();
         }
 
+        private async Task<string> GetTheMovieDbId(bool hasTvDbId, bool hasImdb, string tvdbID, string imdbId, string title)
+        {
+            _log.LogInformation("The Media item {0} does not have a TheMovieDbId, searching for TheMovieDbId", title);
+            FindResult result = null;
+            var hasResult = false;
+            if (hasTvDbId)
+            {
+                result = await _movieApi.Find(tvdbID, ExternalSource.tvdb_id);
+                hasResult = result?.tv_results?.Length > 0;
+
+                _log.LogInformation("Setting Show {0} because we have TvDbId, result: {1}", title, hasResult);
+            }
+            if (hasImdb && !hasResult)
+            {
+                result = await _movieApi.Find(imdbId, ExternalSource.imdb_id);
+                hasResult = result?.tv_results?.Length > 0;
+
+                _log.LogInformation("Setting Show {0} because we have ImdbId, result: {1}", title, hasResult);
+            }
+            if (hasResult)
+            {
+                return result.tv_results?[0]?.id.ToString() ?? string.Empty;
+            }
+            return string.Empty;
+        }
+
+        private async Task<string> GetImdbId(bool hasTheMovieDb, bool hasTvDbId, string title, string theMovieDbId, string tvDbId)
+        {
+            _log.LogInformation("The media item {0} does not have a ImdbId, searching for ImdbId", title);
+            // Looks like TV Maze does not provide the moviedb id, neither does the TV endpoint on TheMovieDb
+            if (hasTheMovieDb)
+            {
+                _log.LogInformation("The show {0} has TheMovieDbId but not ImdbId, searching for ImdbId", title);
+                if (int.TryParse(theMovieDbId, out var id))
+                {
+                    var result = await _movieApi.GetTvExternals(id);
+
+                    return result.imdb_id;
+                }
+            }
+
+            if (hasTvDbId)
+            {
+                _log.LogInformation("The show {0} has tvdbid but not ImdbId, searching for ImdbId", title);
+                if (int.TryParse(tvDbId, out var id))
+                {
+                    var result = await _tvApi.ShowLookupByTheTvDbId(id);
+                    return result?.externals?.imdb;
+                }
+            }
+            return string.Empty;
+        }
+
+
+        private async Task<string> GetTvDbId(bool hasTheMovieDb, bool hasImdb, string theMovieDbId, string imdbId, string title)
+        {
+            _log.LogInformation("The media item {0} does not have a TvDbId, searching for TvDbId", title);
+            if (hasTheMovieDb)
+            {
+                _log.LogInformation("The show {0} has theMovieDBId but not ImdbId, searching for ImdbId", title);
+                if (int.TryParse(theMovieDbId, out var id))
+                {
+                    var result = await _movieApi.GetTvExternals(id);
+
+                   return result.tvdb_id.ToString();
+                }
+            }
+
+            if (hasImdb)
+            {
+                _log.LogInformation("The show {0} has ImdbId but not ImdbId, searching for ImdbId", title);
+                var result = await _movieApi.Find(imdbId, ExternalSource.imdb_id);
+                if (result?.tv_results?.Length > 0)
+                {
+                    var movieId = result.tv_results?[0]?.id ?? 0;
+
+                    var externalResult = await _movieApi.GetTvExternals(movieId);
+
+                    return externalResult.imdb_id;
+                }
+            }
+        }
         private async Task<string> GetImdbWithTheMovieDbId(string movieDbId, string title, string type)
         {
             _log.LogInformation("The {0} {1} has TheMovieDb but not ImdbId, searching for ImdbId", type, title);
             if (int.TryParse(movieDbId, out var id))
             {
                 var result = await _movieApi.GetMovieInformation(id);
-              
+
                 _log.LogInformation("Setting {0} {1} Imdbid to {2}", type, title, result.ImdbId);
                 return result.ImdbId;
             }

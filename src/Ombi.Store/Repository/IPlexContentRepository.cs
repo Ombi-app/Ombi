@@ -23,5 +23,6 @@ namespace Ombi.Store.Repository
         void DeleteWithoutSave(PlexServerContent content);
         void DeleteWithoutSave(PlexEpisode content);
         Task UpdateRange(IEnumerable<PlexServerContent> existingContent);
+        void UpdateWithoutSave(PlexServerContent existingContent);
     }
 }
