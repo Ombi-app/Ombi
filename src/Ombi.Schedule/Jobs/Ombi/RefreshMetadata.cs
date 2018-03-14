@@ -211,19 +211,9 @@ namespace Ombi.Schedule.Jobs.Ombi
                     return externalResult.imdb_id;
                 }
             }
-        }
-        private async Task<string> GetImdbWithTheMovieDbId(string movieDbId, string title, string type)
-        {
-            _log.LogInformation("The {0} {1} has TheMovieDb but not ImdbId, searching for ImdbId", type, title);
-            if (int.TryParse(movieDbId, out var id))
-            {
-                var result = await _movieApi.GetMovieInformation(id);
-
-                _log.LogInformation("Setting {0} {1} Imdbid to {2}", type, title, result.ImdbId);
-                return result.ImdbId;
-            }
             return string.Empty;
         }
+        
 
         private async Task StartEmby()
         {
