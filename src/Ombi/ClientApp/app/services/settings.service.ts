@@ -7,6 +7,8 @@ import {
     IAbout,
     IAuthenticationSettings,
     ICouchPotatoSettings,
+    ICronTestModel,
+    ICronViewModelBody,
     ICustomizationSettings,
     IDiscordNotifcationSettings,
     IDogNzbSettings,
@@ -14,6 +16,7 @@ import {
     IEmbySettings,
     IIssueSettings,
     IJobSettings,
+    IJobSettingsViewModel,
     ILandingPageSettings,
     IMattermostNotifcationSettings,
     IMobileNotifcationSettings,
@@ -231,10 +234,15 @@ export class SettingsService extends ServiceHelpers {
         return this.http.get<IJobSettings>(`${this.url}/jobs`, {headers: this.headers});
     }
 
-    public saveJobSettings(settings: IJobSettings): Observable<boolean> {
+    public saveJobSettings(settings: IJobSettings): Observable<IJobSettingsViewModel> {
         return this.http
-            .post<boolean>(`${this.url}/jobs`, JSON.stringify(settings), {headers: this.headers});
-    }   
+            .post<IJobSettingsViewModel>(`${this.url}/jobs`, JSON.stringify(settings), {headers: this.headers});
+    } 
+    
+    public testCron(body: ICronViewModelBody): Observable<ICronTestModel> {
+        return this.http
+            .post<ICronTestModel>(`${this.url}/testcron`, JSON.stringify(body), {headers: this.headers});
+    }
     
     public getSickRageSettings(): Observable<ISickRageSettings> {
         return this.http.get<ISickRageSettings>(`${this.url}/sickrage`, {headers: this.headers});
