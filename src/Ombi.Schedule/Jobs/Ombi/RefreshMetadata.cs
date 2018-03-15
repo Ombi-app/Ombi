@@ -17,7 +17,7 @@ namespace Ombi.Schedule.Jobs.Ombi
     public class RefreshMetadata : IRefreshMetadata
     {
         public RefreshMetadata(IPlexContentRepository plexRepo, IEmbyContentRepository embyRepo,
-            ILogger<RefreshMetadata> log, ITvMazeApi tvApi,
+            ILogger<RefreshMetadata> log, ITvMazeApi tvApi, ISettingsService<PlexSettings> plexSettings,
             IMovieDbApi movieApi)
         {
             _plexRepo = plexRepo;
@@ -25,6 +25,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             _log = log;
             _movieApi = movieApi;
             _tvApi = tvApi;
+            _plexSettings = plexSettings;
         }
 
         private readonly IPlexContentRepository _plexRepo;
@@ -32,18 +33,22 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly ILogger _log;
         private readonly IMovieDbApi _movieApi;
         private readonly ITvMazeApi _tvApi;
+        private readonly ISettingsService<PlexSettings> _plexSettings;
 
         public async Task Start()
         {
             _log.LogInformation("Starting the Metadata refresh");
             try
             {
-                await StartPlex();
-                await StartEmby();
+                var settings = await _plexSettings.GetSettingsAsync();
+                if (settings.Enable)
+                {
+                    await StartPlex();
+                }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _log.LogError(e, "Exception when refreshing the Plex Metadata");
                 throw;
             }
         }
@@ -130,7 +135,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             await _plexRepo.SaveChangesAsync();
         }
 
-        private async Task<string> GetTheMovieDbId(bool hasTvDbId, bool hasImdb, string tvdbID, string imdbId, string title)
+       private async Task<string> GetTheMovieDbId(bool hasTvDbId, bool hasImdb, string tvdbID, string imdbId, string title)
         {
             _log.LogInformation("The Media item {0} does not have a TheMovieDbId, searching for TheMovieDbId", title);
             FindResult result = null;

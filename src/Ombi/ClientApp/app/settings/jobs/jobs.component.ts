@@ -1,6 +1,10 @@
 ﻿import { Component, OnInit } from "@angular/core";
+import { ConfirmationService } from 'primeng/primeng';
+
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NotificationService, SettingsService } from "../../services";
+
+import { ICronTestModel } from "./../../interfaces";
 
 @Component({
     templateUrl: "./jobs.component.html",
@@ -10,6 +14,8 @@ export class JobsComponent implements OnInit {
     public form: FormGroup;
     
     public profilesRunning: boolean;
+    public testModel: ICronTestModel;
+    public displayTest: boolean;
     
     constructor(private readonly settingsService: SettingsService,
                 private readonly fb: FormBuilder,
@@ -26,7 +32,19 @@ export class JobsComponent implements OnInit {
                 sonarrSync:               [x.radarrSync, Validators.required],
                 radarrSync:               [x.sonarrSync, Validators.required],
                 sickRageSync:             [x.sickRageSync, Validators.required],  
-            });
+                refreshMetadata:          [x.refreshMetadata, Validators.required],
+            });  
+        });
+    }
+
+    public testCron(expression: string) {
+        this.settingsService.testCron({ expression }).subscribe(x => {
+            if(x.success) {
+                this.testModel = x;
+                this.displayTest = true;              
+            } else {
+                this.notificationService.error(x.message);
+            }
         });
     }
     
@@ -37,10 +55,10 @@ export class JobsComponent implements OnInit {
         }
         const settings = form.value;
         this.settingsService.saveJobSettings(settings).subscribe(x => {
-            if (x) {
+            if (x.result) {
                 this.notificationService.success("Successfully saved the job settings");
             } else {
-                this.notificationService.success("There was an error when saving the job settings");
+                this.notificationService.error("There was an error when saving the job settings. " + x.message);
             }
         });
     }

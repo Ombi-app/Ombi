@@ -54,8 +54,7 @@ namespace Ombi.Schedule
             RecurringJob.AddOrUpdate(() => _plexContentSync.CacheContent(), JobSettingsHelper.PlexContent(s));
             RecurringJob.AddOrUpdate(() => _cpCache.Start(), JobSettingsHelper.CouchPotato(s));
             RecurringJob.AddOrUpdate(() => _srSync.Start(), JobSettingsHelper.SickRageSync(s));
-            //RecurringJob.AddOrUpdate(() => _refreshMetadata.Start(), JobSettingsHelper.RefreshMetadata(s));
-            BackgroundJob.Enqueue(() => _refreshMetadata.Start());
+            RecurringJob.AddOrUpdate(() => _refreshMetadata.Start(), JobSettingsHelper.RefreshMetadata(s));
 
             RecurringJob.AddOrUpdate(() => _updater.Update(null), JobSettingsHelper.Updater(s));
 

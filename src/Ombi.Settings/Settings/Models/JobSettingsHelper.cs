@@ -41,7 +41,7 @@ namespace Ombi.Settings.Settings.Models
         }
         public static string RefreshMetadata(JobSettings s)
         {
-            return Get(s.RefreshMetadata, Cron.Hourly(40));
+            return Get(s.RefreshMetadata, Cron.Daily(3));
         }
 
 

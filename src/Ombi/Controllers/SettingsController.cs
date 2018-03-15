@@ -5,15 +5,18 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Hangfire;
+using Hangfire.RecurringJobExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.PlatformAbstractions;
+using NCrontab;
 using Ombi.Api.Emby;
 using Ombi.Attributes;
 using Ombi.Core.Models.UI;
@@ -465,7 +468,8 @@ namespace Ombi.Controllers
             j.PlexContentSync = j.PlexContentSync.HasValue() ? j.PlexContentSync : JobSettingsHelper.PlexContent(j);
             j.UserImporter = j.UserImporter.HasValue() ? j.UserImporter : JobSettingsHelper.UserImporter(j);
             j.SickRageSync = j.SickRageSync.HasValue() ? j.SickRageSync : JobSettingsHelper.SickRageSync(j);
-
+            j.RefreshMetadata = j.RefreshMetadata.HasValue() ? j.RefreshMetadata : JobSettingsHelper.RefreshMetadata(j);
+ 
             return j;
         }
 
@@ -475,9 +479,62 @@ namespace Ombi.Controllers
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("jobs")]
-        public async Task<bool> JobSettings([FromBody]JobSettings settings)
+        public async Task<JobSettingsViewModel> JobSettings([FromBody]JobSettings settings)
         {
-            return await Save(settings);
+            // Verify that we have correct CRON's
+            foreach (var propertyInfo in settings.GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                if (propertyInfo.Name.Equals("Id", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    continue;
+                }
+                var expression = (string)propertyInfo.GetValue(settings, null);
+
+                try
+                {
+                    CrontabSchedule.TryParse(expression);
+                }
+                catch (Exception)
+                {
+                    return new JobSettingsViewModel
+                    {
+                        Message = $"{propertyInfo.Name} does not have a valid CRON Expression"
+                    };
+                }
+            }
+            var result = await Save(settings);
+
+            return new JobSettingsViewModel
+            {
+                Result = result
+            };
+        }
+
+        [HttpPost("testcron")]
+        public CronTestModel TestCron([FromBody] CronViewModelBody body)
+        {
+            var model = new CronTestModel();
+            try
+            {
+                var baseTime = DateTime.UtcNow;
+                var result = CrontabSchedule.TryParse(body.Expression);
+                for (int i = 0; i < 10; i++)
+                {
+                    model.Schedule.Add(result.GetNextOccurrence(baseTime));
+                }
+                model.Success = true;
+                return model;
+            }
+            catch (Exception)
+            {
+                return new CronTestModel
+                {
+                    Message = $"CRON Expression {body.Expression} is not valid"
+                };
+            }
+
+
         }
 
 
