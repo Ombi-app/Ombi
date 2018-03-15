@@ -88,6 +88,7 @@ const routes: Routes = [
         ClipboardModule,
         PipeModule,
         RadioButtonModule,
+        DialogModule,
     ],
     declarations: [
         SettingsMenuComponent,
@@ -118,7 +119,6 @@ const routes: Routes = [
         AuthenticationComponent,
         MobileComponent,
         MassEmailComponent,
-        DialogModule,
     ],
     exports: [
         RouterModule,

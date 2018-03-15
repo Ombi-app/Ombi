@@ -493,7 +493,14 @@ namespace Ombi.Controllers
 
                 try
                 {
-                    CrontabSchedule.TryParse(expression);
+                    var r = CrontabSchedule.TryParse(expression);
+                    if (r == null)
+                    {
+                        return new JobSettingsViewModel
+                        {
+                            Message = $"{propertyInfo.Name} does not have a valid CRON Expression"
+                        };
+                    }
                 }
                 catch (Exception)
                 {
@@ -517,11 +524,13 @@ namespace Ombi.Controllers
             var model = new CronTestModel();
             try
             {
-                var baseTime = DateTime.UtcNow;
+                var time = DateTime.UtcNow;
                 var result = CrontabSchedule.TryParse(body.Expression);
                 for (int i = 0; i < 10; i++)
                 {
-                    model.Schedule.Add(result.GetNextOccurrence(baseTime));
+                    var next = result.GetNextOccurrence(time);
+                    model.Schedule.Add(next);
+                    time = next;
                 }
                 model.Success = true;
                 return model;

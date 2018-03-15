@@ -12,34 +12,34 @@
                     <label for="sonarrSync" class="control-label">Sonarr Sync</label>              
                         <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('sonarrSync').hasError('required')}" id="sonarrSync" name="sonarrSync" formControlName="sonarrSync">
                         <small *ngIf="form.get('sonarrSync').hasError('required')" class="error-text">The Sonarr Sync is required</small>
-                        <button class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('sonarrSync')?.value)">Test</button>
+                        <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('sonarrSync')?.value)">Test</button>
                 </div>
                 <div class="form-group">
                     <label for="sickRageSync" class="control-label">SickRage Sync</label>              
                         <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('sonarrSync').hasError('required')}" id="sickRageSync" name="sickRageSync" formControlName="sickRageSync">
                         <small *ngIf="form.get('sickRageSync').hasError('required')" class="error-text">The SickRage Sync is required</small>
-                        <button class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('sickRageSync')?.value)">Test</button>
+                        <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('sickRageSync')?.value)">Test</button>
                 </div>
 
                 <div class="form-group">
                     <label for="radarrSync" class="control-label">Radarr Sync</label>              
                         <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('radarrSync').hasError('required')}" id="radarrSync" name="radarrSync" formControlName="radarrSync">
                         <small *ngIf="form.get('radarrSync').hasError('required')" class="error-text">The Radarr Sync is required</small>
-                        <button class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('radarrSync')?.value)">Test</button>
+                        <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('radarrSync')?.value)">Test</button>
                 </div>
 
                 <div class="form-group">
                     <label for="couchPotatoSync" class="control-label">CouchPotato Sync</label>              
                         <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('radarrSync').hasError('required')}" id="couchPotatoSync" name="couchPotatoSync" formControlName="couchPotatoSync">
                         <small *ngIf="form.get('couchPotatoSync').hasError('required')" class="error-text">The CouchPotato Sync is required</small>
-                        <button class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('couchPotatoSync')?.value)">Test</button>
+                        <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('couchPotatoSync')?.value)">Test</button>
                 </div>
                 
                 <div class="form-group">
                     <label for="automaticUpdater" class="control-label">Automatic Update</label>              
                         <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('automaticUpdater').hasError('required')}" id="automaticUpdater" name="automaticUpdater" formControlName="automaticUpdater">
                         <small *ngIf="form.get('automaticUpdater').hasError('required')" class="error-text">The Automatic Update is required</small>
-                        <button class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('automaticUpdater')?.value)">Test</button>
+                        <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('automaticUpdater')?.value)">Test</button>
                 </div>
 
 
@@ -55,28 +55,28 @@
                     <label for="plexContentSync" class="control-label">Plex Sync</label>              
                         <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('plexContentSync').hasError('required')}" id="plexContentSync" name="plexContentSync" formControlName="plexContentSync">
                         <small *ngIf="form.get('plexContentSync').hasError('required')" class="error-text">The Plex Sync is required</small>
-                        <button class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('plexContentSync')?.value)">Test</button>
+                        <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('plexContentSync')?.value)">Test</button>
                 </div>
 
                 <div class="form-group">
                     <label for="embyContentSync" class="control-label">Emby Sync</label>              
                         <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('embyContentSync').hasError('required')}" id="embyContentSync" name="embyContentSync" formControlName="embyContentSync">
                         <small *ngIf="form.get('embyContentSync').hasError('required')" class="error-text">The Emby Sync is required</small>
-                        <button class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('embyContentSync')?.value)">Test</button>
+                        <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('embyContentSync')?.value)">Test</button>
                 </div>
 
                 <div class="form-group">
                     <label for="userImporter" class="control-label">User Importer</label>              
                         <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('userImporter').hasError('required')}" id="userImporter" name="userImporter" formControlName="userImporter">
                         <small *ngIf="form.get('userImporter').hasError('required')" class="error-text">The User Importer is required</small>
-                        <button class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('userImporter')?.value)">Test</button>
+                        <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('userImporter')?.value)">Test</button>
                 </div>
 
                 <div class="form-group">
                     <label for="userImporter" class="control-label">Refresh Metadata</label>              
                         <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('refreshMetadata').hasError('required')}" id="refreshMetadata" name="refreshMetadata" formControlName="refreshMetadata">
                         <small *ngIf="form.get('refreshMetadata').hasError('required')" class="error-text">The Refresh Metadata is required</small>
-                        <button class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('refreshMetadata')?.value)">Test</button>
+                        <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('refreshMetadata')?.value)">Test</button>
                 </div>
 
             </div>
@@ -85,7 +85,7 @@
 </div>
 
 <p-dialog header="CRON Schedule" [(visible)]="displayTest">
-    <ul>
-        <li *ngFor="let item of testModel.schedule">{{item}}</li>
-    </ul>>
+    <ul *ngIf="testModel">
+        <li *ngFor="let item of testModel.schedule">{{item | date:'short'}}</li>
+    </ul>
 </p-dialog>

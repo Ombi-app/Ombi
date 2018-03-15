@@ -1,5 +1,4 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { ConfirmationService } from 'primeng/primeng';
 
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NotificationService, SettingsService } from "../../services";
