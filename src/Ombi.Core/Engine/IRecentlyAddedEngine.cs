@@ -8,5 +8,7 @@ namespace Ombi.Core.Engine
     {
         IEnumerable<RecentlyAddedMovieModel> GetRecentlyAddedMovies();
         IEnumerable<RecentlyAddedMovieModel> GetRecentlyAddedMovies(DateTime from, DateTime to);
+        IEnumerable<RecentlyAddedTvModel> GetRecentlyAddedTv(DateTime from, DateTime to, bool groupBySeason);
+        IEnumerable<RecentlyAddedTvModel> GetRecentlyAddedTv(bool groupBySeason);
     }
 }

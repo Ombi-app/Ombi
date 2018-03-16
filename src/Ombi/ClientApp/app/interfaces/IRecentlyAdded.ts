@@ -12,6 +12,11 @@ export interface IRecentlyAddedMovies {
     posterPath: string;
 }
 
+export interface IRecentlyAddedTvShows extends IRecentlyAddedMovies {
+    seasonNumber: number;
+    episodeNumber: number;
+}
+
 export interface IRecentlyAddedRangeModel {
     from: Date;
     to: Date; 

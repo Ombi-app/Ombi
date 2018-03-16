@@ -67,12 +67,17 @@ namespace Ombi.Controllers
 
             if (images.movieposter?.Any() ?? false)
             {
-                return images.movieposter.OrderBy(x => x.likes).Select(x => x.url).FirstOrDefault();
+                var enImage =  images.movieposter.Where(x => x.lang == "en").OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                if (enImage == null)
+                {
+                    return images.movieposter.OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                }
+                return enImage;
             }
 
-            if (images.hdmovieclearart?.Any() ?? false)
+            if (images.moviethumb?.Any() ?? false)
             {
-                return images.hdmovieclearart.OrderBy(x => x.likes).Select(x => x.url).FirstOrDefault();
+                return images.moviethumb.OrderBy(x => x.likes).Select(x => x.url).FirstOrDefault();
             }
 
             return string.Empty;

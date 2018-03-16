@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { NguCarousel } from "@ngu/carousel";
 
 import { ImageService, RecentlyAddedService } from "../services";
-import { IRecentlyAddedMovies, IRecentlyAddedRangeModel } from "./../interfaces";
+import { IRecentlyAddedMovies, IRecentlyAddedTvShows } from "./../interfaces";
 
 @Component({
     templateUrl: "recentlyAdded.component.html",
@@ -15,8 +15,9 @@ import { IRecentlyAddedMovies, IRecentlyAddedRangeModel } from "./../interfaces"
         width: 50px;
         height: 50px;
         box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, .3);
-        border-radius: 999px;
+        border-radius: 100%;
         left: 0;
+        background: #df691a;
     }
 
     .rightRs {
@@ -27,14 +28,16 @@ import { IRecentlyAddedMovies, IRecentlyAddedRangeModel } from "./../interfaces"
         width: 50px;
         height: 50px;
         box-shadow: 1px 2px 10px -1px rgba(0, 0, 0, .3);
-        border-radius: 999px;
+        border-radius: 100%;
         right: 0;
+        background: #df691a;
     }
   `],
 })
 
 export class RecentlyAddedComponent implements OnInit {
     public movies: IRecentlyAddedMovies[];
+    public tv: IRecentlyAddedTvShows[];
     public range: Date[];
     
     // https://github.com/sheikalthaf/ngu-carousel
@@ -44,28 +47,8 @@ export class RecentlyAddedComponent implements OnInit {
                 private imageService: ImageService) {}
      
     public ngOnInit() {
-        const weekAgo = new Date();
-        weekAgo.setDate(weekAgo.getDate() - 7);
-
-        const today =new Date();
-        const initModel = <IRecentlyAddedRangeModel>{from: weekAgo, to: today}; 
-        this.recentlyAddedService.getRecentlyAddedMovies(initModel).subscribe(x => {
-            this.movies = x;
-
-            this.movies.forEach((movie) => {
-                if(movie.theMovieDbId) {
-                this.imageService.getMoviePoster(movie.theMovieDbId).subscribe(p => {
-                    movie.posterPath = p;
-                });
-                } else if(movie.imdbId) {
-                    this.imageService.getMoviePoster(movie.imdbId).subscribe(p => {
-                        movie.posterPath = p;
-                    });
-                } else {
-                    movie.posterPath = "";
-                }
-            });
-        });
+        this.getMovies();
+        this.getShows();
 
         this.carouselTile = {
           grid: {xs: 2, sm: 3, md: 3, lg: 5, all: 0},
@@ -89,12 +72,46 @@ export class RecentlyAddedComponent implements OnInit {
              // If we do not have a second date then just set it to now
             this.range[1] = new Date();
          }
-         const initModel = <IRecentlyAddedRangeModel>{from: this.range[0], to: this.range[1]}; 
-         this.recentlyAddedService.getRecentlyAddedMovies(initModel).subscribe(x => this.movies = x);
+         this.getMovies();
      }
-     
-     public page(event: any) {
-         debugger;
-         console.log(event);
+
+     private getShows() {
+        this.recentlyAddedService.getRecentlyAddedTv().subscribe(x => {
+            this.tv = x;
+
+            this.tv.forEach((t) => {
+                if(t.theMovieDbId) {
+                this.imageService.getTvPoster(t.imdbId).subscribe(p => {
+                    t.posterPath = p;
+                });
+                } else if(t.imdbId) {
+                    this.imageService.getMoviePoster(t.imdbId).subscribe(p => {
+                        t.posterPath = p;
+                    });
+                } else {
+                    t.posterPath = "";
+                }
+            });
+        });
+     }
+
+     private getMovies() {
+        this.recentlyAddedService.getRecentlyAddedMovies().subscribe(x => {
+            this.movies = x;
+
+            this.movies.forEach((movie) => {
+                if(movie.theMovieDbId) {
+                this.imageService.getMoviePoster(movie.theMovieDbId).subscribe(p => {
+                    movie.posterPath = p;
+                });
+                } else if(movie.imdbId) {
+                    this.imageService.getMoviePoster(movie.imdbId).subscribe(p => {
+                        movie.posterPath = p;
+                    });
+                } else {
+                    movie.posterPath = "";
+                }
+            });
+        });
      }
 }

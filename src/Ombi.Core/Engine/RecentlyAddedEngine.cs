@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Ombi.Core.Models;
+using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 
@@ -24,22 +25,54 @@ namespace Ombi.Core.Engine
 
         public IEnumerable<RecentlyAddedMovieModel> GetRecentlyAddedMovies(DateTime from, DateTime to)
         {
-            var model = new HashSet<RecentlyAddedMovieModel>();
             var plexMovies = _plex.GetAll().Where(x => x.Type == PlexMediaTypeEntity.Movie && x.AddedAt > from && x.AddedAt < to);
             var embyMovies = _emby.GetAll().Where(x => x.Type == EmbyMediaType.Movie && x.AddedAt > from && x.AddedAt < to);
-
-            TransformPlexMovies(plexMovies, model);
-            TransformEmbyMovies(embyMovies, model);
-
-            return model.Take(30);
+            
+            return GetRecentlyAddedMovies(plexMovies, embyMovies).Take(30);
         }
 
         public IEnumerable<RecentlyAddedMovieModel> GetRecentlyAddedMovies()
         {
-            var model = new HashSet<RecentlyAddedMovieModel>();
             var plexMovies = _plex.GetAll().Where(x => x.Type == PlexMediaTypeEntity.Movie);
             var embyMovies = _emby.GetAll().Where(x => x.Type == EmbyMediaType.Movie);
+            return GetRecentlyAddedMovies(plexMovies, embyMovies);
+        }
 
+        public IEnumerable<RecentlyAddedTvModel> GetRecentlyAddedTv(DateTime from, DateTime to, bool groupBySeason)
+        {
+            var plexTv = _plex.GetAll().Where(x => x.Type == PlexMediaTypeEntity.Show && x.AddedAt > from && x.AddedAt < to);
+            var embyTv = _emby.GetAll().Where(x => x.Type == EmbyMediaType.Series && x.AddedAt > from && x.AddedAt < to);
+
+            return GetRecentlyAddedTv(plexTv, embyTv, groupBySeason).Take(30);
+        }
+
+
+        public IEnumerable<RecentlyAddedTvModel> GetRecentlyAddedTv(bool groupBySeason)
+        {
+            var plexTv = _plex.GetAll().Where(x => x.Type == PlexMediaTypeEntity.Show);
+            var embyTv = _emby.GetAll().Where(x => x.Type == EmbyMediaType.Series);
+
+            return GetRecentlyAddedTv(plexTv, embyTv, groupBySeason);
+        }
+
+        private IEnumerable<RecentlyAddedTvModel> GetRecentlyAddedTv(IQueryable<PlexServerContent> plexTv, IQueryable<EmbyContent> embyTv,
+            bool groupBySeason)
+        {
+            var model = new HashSet<RecentlyAddedTvModel>();
+            TransformPlexShows(plexTv, model);
+            TransformEmbyShows(embyTv, model);
+
+            if (groupBySeason)
+            {
+                return model.DistinctBy(x => x.SeasonNumber);
+            }
+
+            return model;
+        }
+
+        private IEnumerable<RecentlyAddedMovieModel> GetRecentlyAddedMovies(IQueryable<PlexServerContent> plexMovies, IQueryable<EmbyContent> embyMovies)
+        {
+            var model = new HashSet<RecentlyAddedMovieModel>();
             TransformPlexMovies(plexMovies, model);
             TransformEmbyMovies(embyMovies, model);
 
@@ -74,6 +107,51 @@ namespace Ombi.Core.Engine
                     Quality = plex.Quality,
                     ReleaseYear = plex.ReleaseYear
                 });
+            }
+        }
+
+        private static void TransformPlexShows(IQueryable<PlexServerContent> plexShows, HashSet<RecentlyAddedTvModel> model)
+        {
+            foreach (var plex in plexShows)
+            {
+                foreach (var season in plex.Seasons)
+                {
+                    foreach (var episode in plex.Episodes)
+                    {
+                        model.Add(new RecentlyAddedTvModel
+                        {
+                            Id = plex.Id,
+                            ImdbId = plex.ImdbId,
+                            TheMovieDbId = plex.TheMovieDbId,
+                            AddedAt = plex.AddedAt,
+                            Title = plex.Title,
+                            Quality = plex.Quality,
+                            ReleaseYear = plex.ReleaseYear,
+                            TvDbId = plex.TvDbId,
+                            EpisodeNumber = episode.EpisodeNumber,
+                            SeasonNumber = season.SeasonNumber
+                        });
+                    }
+                }
+            }
+        }
+
+        private static void TransformEmbyShows(IQueryable<EmbyContent> embyShows, HashSet<RecentlyAddedTvModel> model)
+        {
+            foreach (var emby in embyShows)
+            {
+                foreach (var episode in emby.Episodes)
+                {
+                    model.Add(new RecentlyAddedTvModel
+                    {
+                        Id = emby.Id,
+                        ImdbId = emby.ProviderId,
+                        AddedAt = emby.AddedAt,
+                        Title = emby.Title,
+                        EpisodeNumber = episode.EpisodeNumber,
+                        SeasonNumber = episode.SeasonNumber
+                    });
+                }
             }
         }
     }
