@@ -41,7 +41,7 @@ import { WikiComponent } from "./wiki.component";
 
 import { SettingsMenuComponent } from "./settingsmenu.component";
 
-import { AutoCompleteModule, CalendarModule, InputSwitchModule, InputTextModule, MenuModule, RadioButtonModule, TooltipModule } from "primeng/primeng";
+import { AutoCompleteModule, CalendarModule, DialogModule, InputSwitchModule, InputTextModule, MenuModule, RadioButtonModule, TooltipModule } from "primeng/primeng";
 
 const routes: Routes = [
     { path: "Ombi", component: OmbiComponent, canActivate: [AuthGuard] },
@@ -88,6 +88,7 @@ const routes: Routes = [
         ClipboardModule,
         PipeModule,
         RadioButtonModule,
+        DialogModule,
     ],
     declarations: [
         SettingsMenuComponent,

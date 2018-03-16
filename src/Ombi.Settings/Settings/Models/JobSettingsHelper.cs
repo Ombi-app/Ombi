@@ -39,6 +39,10 @@ namespace Ombi.Settings.Settings.Models
         {
             return Get(s.SickRageSync, Cron.Hourly(35));
         }
+        public static string RefreshMetadata(JobSettings s)
+        {
+            return Get(s.RefreshMetadata, Cron.Daily(3));
+        }
 
 
         private static string Get(string settings, string defaultCron)

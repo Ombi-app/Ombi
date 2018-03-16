@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -6,6 +9,7 @@ using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
 using Ombi.Helpers;
+using Polly;
 
 namespace Ombi.Api
 {
@@ -36,6 +40,30 @@ namespace Ombi.Api
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
                     LogError(request, httpResponseMessage);
+                    if (request.Retry)
+                    {
+
+                        var result = Policy
+                            .Handle<HttpRequestException>()
+                            .OrResult<HttpResponseMessage>(r => request.StatusCodeToRetry.Contains(r.StatusCode))
+                            .WaitAndRetryAsync(new[]
+                            {
+                                TimeSpan.FromSeconds(10),
+                            }, (exception, timeSpan, context) =>
+                            {
+
+                                Logger.LogError(LoggingEvents.Api,
+                                    $"Retrying RequestUri: {request.FullUri} Because we got Status Code: {exception?.Result?.StatusCode}");
+                            });
+
+                        httpResponseMessage = await result.ExecuteAsync(async () =>
+                        {
+                            using (var req = await httpRequestMessage.Clone())
+                            {
+                                return await _client.SendAsync(req);
+                            }
+                        });
+                    }
                 }
 
                 // do something with the response

@@ -17,7 +17,7 @@ namespace Ombi.Store.Repository
             _ctx = ctx;
             _db = _ctx.Set<T>();
         }
-        private readonly DbSet<T> _db;
+        public DbSet<T> _db { get; }
         private readonly IOmbiContext _ctx;
 
         public async Task<T> Find(object key)
