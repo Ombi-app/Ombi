@@ -39,6 +39,8 @@ export class RecentlyAddedComponent implements OnInit {
     public movies: IRecentlyAddedMovies[];
     public tv: IRecentlyAddedTvShows[];
     public range: Date[];
+
+    public groupTv: boolean;
     
     // https://github.com/sheikalthaf/ngu-carousel
     public carouselTile: NguCarousel;
@@ -74,25 +76,33 @@ export class RecentlyAddedComponent implements OnInit {
          }
          this.getMovies();
      }
+     
+     public change() {
+         this.getShows();
+     }
 
      private getShows() {
-        this.recentlyAddedService.getRecentlyAddedTv().subscribe(x => {
-            this.tv = x;
-
-            this.tv.forEach((t) => {
-                if(t.theMovieDbId) {
-                this.imageService.getTvPoster(t.imdbId).subscribe(p => {
-                    t.posterPath = p;
-                });
-                } else if(t.imdbId) {
-                    this.imageService.getMoviePoster(t.imdbId).subscribe(p => {
+         if(this.groupTv) {
+            this.recentlyAddedService.getRecentlyAddedTvGrouped().subscribe(x => {
+                this.tv = x;
+    
+                this.tv.forEach((t) => {
+                    this.imageService.getTvPoster(t.tvDbId).subscribe(p => {
                         t.posterPath = p;
                     });
-                } else {
-                    t.posterPath = "";
-                }
+                });
             });
-        });
+         } else {
+            this.recentlyAddedService.getRecentlyAddedTv().subscribe(x => {
+                this.tv = x;
+    
+                this.tv.forEach((t) => {
+                    this.imageService.getTvPoster(t.tvDbId).subscribe(p => {
+                        t.posterPath = p;
+                    });
+                });
+            });
+         }
      }
 
      private getMovies() {

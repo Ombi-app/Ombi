@@ -40,8 +40,8 @@ namespace Ombi.Core.Engine
 
         public IEnumerable<RecentlyAddedTvModel> GetRecentlyAddedTv(DateTime from, DateTime to, bool groupBySeason)
         {
-            var plexTv = _plex.GetAll().Where(x => x.Type == PlexMediaTypeEntity.Show && x.AddedAt > from && x.AddedAt < to);
-            var embyTv = _emby.GetAll().Where(x => x.Type == EmbyMediaType.Series && x.AddedAt > from && x.AddedAt < to);
+            var plexTv = _plex.GetAll().Include(x => x.Seasons).Include(x => x.Episodes).Where(x => x.Type == PlexMediaTypeEntity.Show && x.AddedAt > from && x.AddedAt < to);
+            var embyTv = _emby.GetAll().Include(x => x.Episodes).Where(x => x.Type == EmbyMediaType.Series && x.AddedAt > from && x.AddedAt < to);
 
             return GetRecentlyAddedTv(plexTv, embyTv, groupBySeason).Take(30);
         }
@@ -49,8 +49,8 @@ namespace Ombi.Core.Engine
 
         public IEnumerable<RecentlyAddedTvModel> GetRecentlyAddedTv(bool groupBySeason)
         {
-            var plexTv = _plex.GetAll().Where(x => x.Type == PlexMediaTypeEntity.Show);
-            var embyTv = _emby.GetAll().Where(x => x.Type == EmbyMediaType.Series);
+            var plexTv = _plex.GetAll().Include(x => x.Seasons).Include(x => x.Episodes).Where(x => x.Type == PlexMediaTypeEntity.Show);
+            var embyTv = _emby.GetAll().Include(x => x.Episodes).Where(x => x.Type == EmbyMediaType.Series);
 
             return GetRecentlyAddedTv(plexTv, embyTv, groupBySeason);
         }
