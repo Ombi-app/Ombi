@@ -78,9 +78,9 @@ namespace Ombi.Schedule.Processor
                 Downloads = new List<Downloads>()
             };
 
-            var releaseTag = latestRelease.InnerText.Substring(0, 6);
             if (masterBranch)
             {
+                var releaseTag = latestRelease.InnerText.Substring(0, 9);
                 await GetGitubRelease(release, releaseTag);
             }
             else
@@ -147,7 +147,7 @@ namespace Ombi.Schedule.Processor
             var builds = await _api.Request<AppveyorBranchResult>(request);
             var jobId = builds.build.jobs.FirstOrDefault()?.jobId ?? string.Empty;
 
-            if (builds.build.finished == DateTime.MinValue)
+            if (builds.build.finished == DateTime.MinValue || builds.build.status.Equals("failed"))
             {
                 return;
             }
