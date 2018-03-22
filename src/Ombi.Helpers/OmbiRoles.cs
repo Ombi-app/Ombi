@@ -9,5 +9,6 @@
         public const string RequestTv = nameof(RequestTv);
         public const string RequestMovie = nameof(RequestMovie);
         public const string Disabled = nameof(Disabled);
+        public const string RecievesNewsletter = nameof(RecievesNewsletter);
     }
 }

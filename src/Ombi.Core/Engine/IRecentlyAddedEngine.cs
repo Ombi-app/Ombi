@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Ombi.Core.Models;
 
 namespace Ombi.Core.Engine
@@ -10,5 +11,6 @@ namespace Ombi.Core.Engine
         IEnumerable<RecentlyAddedMovieModel> GetRecentlyAddedMovies(DateTime from, DateTime to);
         IEnumerable<RecentlyAddedTvModel> GetRecentlyAddedTv(DateTime from, DateTime to, bool groupBySeason);
         IEnumerable<RecentlyAddedTvModel> GetRecentlyAddedTv(bool groupBySeason);
+        Task<bool> UpdateRecentlyAddedDatabase();
     }
 }

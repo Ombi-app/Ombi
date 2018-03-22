@@ -32,6 +32,7 @@ using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Api.Github;
+using Ombi.Core.Engine;
 
 namespace Ombi.Controllers
 {
@@ -60,7 +61,8 @@ namespace Ombi.Controllers
             IEmbyApi embyApi,
             IRadarrSync radarrSync,
             ICacheService memCache,
-            IGithubApi githubApi)
+            IGithubApi githubApi,
+            IRecentlyAddedEngine engine)
         {
             SettingsResolver = resolver;
             Mapper = mapper;
@@ -78,6 +80,7 @@ namespace Ombi.Controllers
         private readonly IRadarrSync _radarrSync;
         private readonly ICacheService _cache;
         private readonly IGithubApi _githubApi;
+        private readonly IRecentlyAddedEngine _recentlyAdded;
 
         /// <summary>
         /// Gets the Ombi settings.
@@ -865,12 +868,52 @@ namespace Ombi.Controllers
             return model;
         }
 
+        /// <summary>
+        /// Saves the Newsletter notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/newsletter")]
+        public async Task<bool> NewsletterSettings([FromBody] NewsletterNotificationViewModel model)
+        {
+            // Save the email settings
+            var settings = Mapper.Map<NewsletterSettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.Update(model.NotificationTemplate);
+
+            return result;
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpPost("notifications/newsletterdatabase")]
+        public async Task<bool> UpdateNewsletterDatabase()
+        {
+            return await _recentlyAdded.UpdateRecentlyAddedDatabase();
+        }
+
+        /// <summary>
+        /// Gets the Newsletter Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/newsletter")]
+        public async Task<NewsletterNotificationViewModel> NewsletterSettings()
+        {
+            var settings = await Get<NewsletterSettings>();
+            var model = Mapper.Map<NewsletterNotificationViewModel>(settings);
+
+            // Lookup to see if we have any templates saved
+            var templates = await BuildTemplates(NotificationAgent.Email);
+            model.NotificationTemplate = templates.FirstOrDefault(x => x.NotificationType == NotificationType.Newsletter);
+            return model;
+        }
+
         private async Task<List<NotificationTemplates>> BuildTemplates(NotificationAgent agent)
         {
             var templates = await TemplateRepository.GetAllTemplates(agent);
             return templates.OrderBy(x => x.NotificationType.ToString()).ToList();
         }
-
 
         private async Task<T> Get<T>()
         {

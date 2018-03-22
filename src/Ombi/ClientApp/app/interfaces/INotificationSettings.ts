@@ -54,6 +54,10 @@ export interface IDiscordNotifcationSettings extends INotificationSettings {
     notificationTemplates: INotificationTemplates[];
 }
 
+export interface INewsletterNotificationSettings extends INotificationSettings {
+    notificationTemplate: INotificationTemplates;
+}
+
 export interface ITelegramNotifcationSettings extends INotificationSettings {
     botApi: string;
     chatId: string;

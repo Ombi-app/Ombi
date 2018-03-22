@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
@@ -22,7 +24,8 @@ namespace Ombi.Schedule.Jobs.Ombi
     {
         public NewsletterJob(IPlexContentRepository plex, IEmbyContentRepository emby, IRepository<RecentlyAddedLog> addedLog,
             IMovieDbApi movieApi, ITvMazeApi tvApi, IEmailProvider email, ISettingsService<CustomizationSettings> custom,
-            ISettingsService<EmailNotificationSettings> emailSettings, INotificationTemplatesRepository templateRepo)
+            ISettingsService<EmailNotificationSettings> emailSettings, INotificationTemplatesRepository templateRepo,
+            UserManager<OmbiUser> um, ISettingsService<NewsletterSettings> newsletter)
         {
             _plex = plex;
             _emby = emby;
@@ -33,6 +36,8 @@ namespace Ombi.Schedule.Jobs.Ombi
             _customizationSettings = custom;
             _templateRepo = templateRepo;
             _emailSettings = emailSettings;
+            _newsletterSettings = newsletter;
+            _userManager = um;
         }
 
         private readonly IPlexContentRepository _plex;
@@ -44,9 +49,16 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly ISettingsService<CustomizationSettings> _customizationSettings;
         private readonly INotificationTemplatesRepository _templateRepo;
         private readonly ISettingsService<EmailNotificationSettings> _emailSettings;
+        private readonly ISettingsService<NewsletterSettings> _newsletterSettings;
+        private readonly UserManager<OmbiUser> _userManager;
 
         public async Task Start()
         {
+            var newsletterSettings = await _newsletterSettings.GetSettingsAsync();
+            if (!newsletterSettings.Enabled)
+            {
+                return;
+            }
             var template = await _templateRepo.GetTemplate(NotificationAgent.Email, NotificationType.Newsletter);
             if (!template.Enabled)
             {
@@ -59,40 +71,146 @@ namespace Ombi.Schedule.Jobs.Ombi
                 return;
             }
 
+            var customization = await _customizationSettings.GetSettingsAsync();
+
             // Get the Content
             var plexContent = _plex.GetAll().Include(x => x.Episodes);
             var embyContent = _emby.GetAll().Include(x => x.Episodes);
 
             var addedLog = _recentlyAddedLog.GetAll();
-            var addedPlexLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Plex).Select(x => x.ContentId);
-            var addedEmbyLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Emby).Select(x => x.ContentId);
+            var addedPlexMovieLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Parent).Select(x => x.ContentId);
+            var addedEmbyMoviesLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Emby && x.ContentType == ContentType.Parent).Select(x => x.ContentId);
+
+            var addedPlexEpisodesLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Episode).Select(x => x.ContentId);
+            var addedEmbyEpisodesLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Emby && x.ContentType == ContentType.Episode).Select(x => x.ContentId);
 
             // Filter out the ones that we haven't sent yet
-            var plexContentToSend = plexContent.Where(x => !addedPlexLogIds.Contains(x.Id));
-            var embyContentToSend = embyContent.Where(x => !addedEmbyLogIds.Contains(x.Id));
+            var plexContentMoviesToSend = plexContent.Where(x => !addedPlexMovieLogIds.Contains(x.Id));
+            var embyContentMoviesToSend = embyContent.Where(x => !addedEmbyMoviesLogIds.Contains(x.Id));
+
+            var plexContentTvToSend = plexContent.Where(x => x.Episodes.Any(e => !addedPlexEpisodesLogIds.Contains(e.Id)));
+            var embyContentTvToSend = embyContent.Where(x => x.Episodes.Any(e => !addedEmbyEpisodesLogIds.Contains(e.Id)));
+
+            var plexContentToSend = plexContentMoviesToSend.Union(plexContentTvToSend);
+            var embyContentToSend = embyContentMoviesToSend.Union(embyContentTvToSend);
+
 
             var body = await BuildHtml(plexContentToSend, embyContentToSend);
 
+            // Get the users to send it to
+            var users = await _userManager.GetUsersInRoleAsync(OmbiRoles.RecievesNewsletter);
+            if (!users.Any())
+            {
+                return;
+            }
+            var emailTasks = new List<Task>();
+            foreach (var user in users)
+            {
+                if (user.Email.IsNullOrEmpty())
+                {
+                    continue;
+                }
+
+                var html = LoadTemplate(body, template, customization, user.Alias);
+
+                emailTasks.Add(_email.Send(new NotificationMessage { Message = html, Subject = template.Subject, To = user.Email }, emailSettings));
+            }
+
+            // Now add all of this to the Recently Added log
+            var recentlyAddedLog = new HashSet<RecentlyAddedLog>();
+            foreach (var p in plexContentMoviesToSend)
+            {
+                if (p.Type == PlexMediaTypeEntity.Movie)
+                {
+                    recentlyAddedLog.Add(new RecentlyAddedLog
+                    {
+                        AddedAt = DateTime.Now,
+                        Type = RecentlyAddedType.Plex,
+                        ContentId = p.Id
+                    });
+                }
+                else
+                {
+                    // Add the episodes
+                    foreach (var ep in p.Episodes)
+                    {
+                        recentlyAddedLog.Add(new RecentlyAddedLog
+                        {
+                            AddedAt = DateTime.Now,
+                            Type = RecentlyAddedType.Plex,
+                            ContentId = ep.Id
+                        });
+                    }
+                }
+            }
+
+            foreach (var e in embyContentMoviesToSend)
+            {
+                if (e.Type == EmbyMediaType.Movie)
+                {
+                    recentlyAddedLog.Add(new RecentlyAddedLog
+                    {
+                        AddedAt = DateTime.Now,
+                        Type = RecentlyAddedType.Emby,
+                        ContentId = e.Id
+                    });
+                }
+                else
+                {
+                    // Add the episodes
+                    foreach (var ep in e.Episodes)
+                    {
+                        recentlyAddedLog.Add(new RecentlyAddedLog
+                        {
+                            AddedAt = DateTime.Now,
+                            Type = RecentlyAddedType.Plex,
+                            ContentId = ep.Id
+                        });
+                    }
+                }
+            }
+            await _recentlyAddedLog.AddRange(recentlyAddedLog);
+
+            await Task.WhenAll(emailTasks.ToArray());
+        }
+
+        private string LoadTemplate(string body, NotificationTemplates template, CustomizationSettings settings, string username)
+        {
             var email = new NewsletterTemplate();
 
-            var customization = await _customizationSettings.GetSettingsAsync();
+            var resolver = new NotificationMessageResolver();
+            var curlys = new NotificationMessageCurlys();
 
-            var html = email.LoadTemplate(template.Subject, template.Message, body, customization.Logo);
+            curlys.SetupNewsletter(settings, username);
 
-            await _email.Send(new NotificationMessage {Message = html, Subject = template.Subject, To = "tidusjar@gmail.com"}, emailSettings);
+            var parsed = resolver.ParseMessage(template, curlys);
+
+            var html = email.LoadTemplate(parsed.Subject, parsed.Message, body, settings.Logo);
+
+            return html;
         }
 
         private async Task<string> BuildHtml(IQueryable<PlexServerContent> plexContentToSend, IQueryable<EmbyContent> embyContentToSend)
         {
             var sb = new StringBuilder();
 
-            sb.Append("<h1>New Movies:</h1><br /><br />");
-            await ProcessPlexMovies(plexContentToSend.Where(x => x.Type == PlexMediaTypeEntity.Movie), sb);
-            await ProcessEmbyMovies(embyContentToSend.Where(x => x.Type == EmbyMediaType.Movie), sb);
+            var plexMovies = plexContentToSend.Where(x => x.Type == PlexMediaTypeEntity.Movie);
+            var embyMovies = embyContentToSend.Where(x => x.Type == EmbyMediaType.Movie);
+            if (plexMovies.Any() || embyMovies.Any())
+            {
+                sb.Append("<h1>New Movies:</h1><br /><br />");
+                await ProcessPlexMovies(plexMovies, sb);
+                await ProcessEmbyMovies(embyMovies, sb);
+            }
 
-            sb.Append("<h1>New Episodes:</h1><br /><br />");
-            await ProcessPlexTv(plexContentToSend.Where(x => x.Type == PlexMediaTypeEntity.Show), sb);
-            await ProcessEmbyMovies(embyContentToSend.Where(x => x.Type == EmbyMediaType.Series), sb);
+            var plexTv = plexContentToSend.Where(x => x.Type == PlexMediaTypeEntity.Show);
+            var embyTv = embyContentToSend.Where(x => x.Type == EmbyMediaType.Series);
+            if (plexTv.Any() || embyTv.Any())
+            {
+                sb.Append("<h1>New Episodes:</h1><br /><br />");
+                await ProcessPlexTv(plexTv, sb);
+                await ProcessEmbyMovies(embyTv, sb);
+            }
 
             return sb.ToString();
         }
@@ -330,7 +448,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     sb.Append("<tr>");
                     sb.Append(
                         "<td align=\"center\" style=\"font-family: sans-serif; font-size: 14px; vertical-align: top;\" valign=\"top\">");
-                    
+
                     Href(sb, $"https://www.imdb.com/title/{info.externals.imdb}/");
                     Header(sb, 3, t.Title);
                     EndTag(sb, "a");
@@ -426,6 +544,12 @@ namespace Ombi.Schedule.Jobs.Ombi
             {
                 _plex?.Dispose();
                 _emby?.Dispose();
+                _newsletterSettings?.Dispose();
+                _customizationSettings?.Dispose();
+                _emailSettings.Dispose();
+                _recentlyAddedLog.Dispose();
+                _templateRepo?.Dispose();
+                _userManager?.Dispose();
             }
             _disposed = true;
         }
