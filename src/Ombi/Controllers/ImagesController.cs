@@ -44,11 +44,15 @@ namespace Ombi.Controllers
             }
             if (images.tvbanner != null)
             {
-                return images.tvbanner.FirstOrDefault()?.url ?? string.Empty;
+                var enImage = images.tvbanner.Where(x => x.lang == "en").OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                if (enImage == null)
+                {
+                    return images.tvbanner.OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                }
             }
-            if (images.showbackground != null)
+            if (images.seasonposter != null)
             {
-                return images.showbackground.FirstOrDefault()?.url ?? string.Empty;
+                return images.seasonposter.FirstOrDefault()?.url ?? string.Empty;
             }
             return string.Empty;
         }
@@ -97,7 +101,12 @@ namespace Ombi.Controllers
 
             if (images.tvposter?.Any() ?? false)
             {
-                return images.tvposter.OrderBy(x => x.likes).Select(x => x.url).FirstOrDefault();
+                var enImage = images.tvposter.Where(x => x.lang == "en").OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                if (enImage == null)
+                {
+                    return images.tvposter.OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                }
+                return enImage;
             }
 
             if (images.tvthumb?.Any() ?? false)

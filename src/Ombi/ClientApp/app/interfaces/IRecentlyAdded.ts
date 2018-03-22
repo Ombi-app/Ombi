@@ -15,6 +15,7 @@ export interface IRecentlyAddedMovies {
 export interface IRecentlyAddedTvShows extends IRecentlyAddedMovies {
     seasonNumber: number;
     episodeNumber: number;
+    tvDbId: number;
 }
 
 export interface IRecentlyAddedRangeModel {
