@@ -18,6 +18,7 @@ namespace Ombi.Settings.Settings.Models
 
         public string PresetThemeName { get; set; }
         public string PresetThemeContent { get; set; }
+        public bool RecentlyAddedPage { get; set; }
 
         [NotMapped]
         public string PresetThemeVersion
