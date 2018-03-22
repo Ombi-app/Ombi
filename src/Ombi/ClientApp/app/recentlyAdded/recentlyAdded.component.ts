@@ -79,19 +79,19 @@ export class RecentlyAddedComponent implements OnInit {
         this.recentlyAddedService.getRecentlyAddedTv().subscribe(x => {
             this.tv = x;
 
-            this.tv.forEach((t) => {
-                if(t.theMovieDbId) {
-                this.imageService.getTvPoster(t.imdbId).subscribe(p => {
-                    t.posterPath = p;
-                });
-                } else if(t.imdbId) {
-                    this.imageService.getMoviePoster(t.imdbId).subscribe(p => {
-                        t.posterPath = p;
-                    });
-                } else {
-                    t.posterPath = "";
-                }
-            });
+            //this.tv.forEach((t) => {
+            //    if(t.theMovieDbId) {
+            //    this.imageService.getTvPoster(t.imdbId).subscribe(p => {
+            //        t.posterPath = p;
+            //    });
+            //    } else if(t.imdbId) {
+            //        this.imageService.getMoviePoster(t.imdbId).subscribe(p => {
+            //            t.posterPath = p;
+            //        });
+            //    } else {
+            //        t.posterPath = "";
+            //    }
+            //});
         });
      }
 

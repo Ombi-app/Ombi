@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Ombi.Notifications.Templates
 {
-    public class EmailBasicTemplate : TemplateBase, IEmailBasicTemplate
+    public class NewsletterTemplate : TemplateBase, INewsletterTemplate
     {
         public override string TemplateLocation
         {
@@ -13,10 +13,9 @@ namespace Ombi.Notifications.Templates
                 if (string.IsNullOrEmpty(_templateLocation))
                 {
 #if DEBUG
-                    _templateLocation = Path.Combine(Directory.GetCurrentDirectory(), "bin", "Debug", "netcoreapp2.0", "Templates",
-                        "BasicTemplate.html");
+                    _templateLocation = Path.Combine(Directory.GetCurrentDirectory(), "bin", "Debug", "netcoreapp2.0", "Templates", "NewsletterTemplate.html");
 #else
-                _templateLocation = Path.Combine(Directory.GetCurrentDirectory(), "Templates","BasicTemplate.html");
+                    _templateLocation = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "NewsletterTemplate.html");
 #endif
                 }
                 return _templateLocation;
@@ -26,18 +25,19 @@ namespace Ombi.Notifications.Templates
         private string _templateLocation;
         
         private const string SubjectKey = "{@SUBJECT}";
-        private const string BodyKey = "{@BODY}";
-        private const string Poster = "{@POSTER}";
         private const string DateKey = "{@DATENOW}";
         private const string Logo = "{@LOGO}";
+        private const string TableLocation = "{@RECENTLYADDED}";
+        private const string IntroText = "{@INTRO}";
 
-        public string LoadTemplate(string subject, string body, string imgsrc = default(string), string logo = default(string))
+
+        public string LoadTemplate(string subject, string intro, string tableHtml, string logo)
         {
             var sb = new StringBuilder(File.ReadAllText(TemplateLocation));
             sb.Replace(SubjectKey, subject);
-            sb.Replace(BodyKey, body);
+            sb.Replace(TableLocation, tableHtml);
+            sb.Replace(IntroText, intro);
             sb.Replace(DateKey, DateTime.Now.ToString("f"));
-            sb.Replace(Poster, string.IsNullOrEmpty(imgsrc) ? string.Empty : $"<tr><td align=\"center\"><img src=\"{imgsrc}\" alt=\"Poster\" width=\"400px\" text-align=\"center\"/></td></tr>");
             sb.Replace(Logo, string.IsNullOrEmpty(logo) ? OmbiLogo : logo);
 
             return sb.ToString();
