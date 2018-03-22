@@ -127,6 +127,7 @@ export interface IJobSettings {
   userImporter: string;
   sickRageSync: string;
   refreshMetadata: string;
+  newsletter: string;
 }
 
 export interface IIssueSettings extends ISettings {

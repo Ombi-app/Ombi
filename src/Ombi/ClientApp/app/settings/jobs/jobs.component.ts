@@ -32,6 +32,7 @@ export class JobsComponent implements OnInit {
                 radarrSync:               [x.sonarrSync, Validators.required],
                 sickRageSync:             [x.sickRageSync, Validators.required],  
                 refreshMetadata:          [x.refreshMetadata, Validators.required],
+                newsletter:               [x.newsletter, Validators.required],
             });  
         });
     }
