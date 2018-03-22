@@ -2,6 +2,26 @@
 
 ## (unreleased)
 
+### **New Features**
+
+- Added the ability to refresh out backend metadata (#2078) [Jamie]
+
+### **Fixes**
+
+- Fixed #2074 and #2079. [Jamie]
+
+- Small changes to the auto updater, let's see how this works. [Jamie]
+
+
+## v3.0.3030 (2018-03-14)
+
+### **New Features**
+
+- Updated the .Net core dependancies #2072. [Jamie]
+
+
+## v3.0.3020 (2018-03-13)
+
 ### **Fixes**
 
 - Small memory improvements in the Plex Sync. [Jamie]
@@ -21,6 +41,8 @@
 - Fixed #2056. [tidusjar]
 
 - Experimental, set the Webpack base root to the ombi base path if we have it. This should hopefully fix the reverse proxy issues. [Jamie]
+
+- Fixed #2056. [tidusjar]
 
 
 ## v3.0.3000 (2018-03-09)
