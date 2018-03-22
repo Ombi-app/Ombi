@@ -25,6 +25,7 @@ import { DiscordComponent } from "./notifications/discord.component";
 import { EmailNotificationComponent } from "./notifications/emailnotification.component";
 import { MattermostComponent } from "./notifications/mattermost.component";
 import { MobileComponent } from "./notifications/mobile.component";
+import { NewsletterComponent } from "./notifications/newsletter.component";
 import { NotificationTemplate } from "./notifications/notificationtemplate.component";
 import { PushbulletComponent } from "./notifications/pushbullet.component";
 import { PushoverComponent } from "./notifications/pushover.component";
@@ -42,6 +43,7 @@ import { WikiComponent } from "./wiki.component";
 import { SettingsMenuComponent } from "./settingsmenu.component";
 
 import { AutoCompleteModule, CalendarModule, DialogModule, InputSwitchModule, InputTextModule, MenuModule, RadioButtonModule, TooltipModule } from "primeng/primeng";
+
 
 const routes: Routes = [
     { path: "Ombi", component: OmbiComponent, canActivate: [AuthGuard] },
@@ -69,6 +71,7 @@ const routes: Routes = [
     { path: "Authentication", component: AuthenticationComponent, canActivate: [AuthGuard] },
     { path: "Mobile", component: MobileComponent, canActivate: [AuthGuard] },
     { path: "MassEmail", component: MassEmailComponent, canActivate: [AuthGuard] },
+    { path: "Newsletter", component: NewsletterComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -119,6 +122,7 @@ const routes: Routes = [
         AuthenticationComponent,
         MobileComponent,
         MassEmailComponent,
+        NewsletterComponent,
     ],
     exports: [
         RouterModule,

@@ -1,27 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Ombi.Core.Models;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using RecentlyAddedType = Ombi.Store.Entities.RecentlyAddedType;
 
 namespace Ombi.Core.Engine
 {
     public class RecentlyAddedEngine : IRecentlyAddedEngine
     {
-        public RecentlyAddedEngine(IPlexContentRepository plex, IEmbyContentRepository emby)
+        public RecentlyAddedEngine(IPlexContentRepository plex, IEmbyContentRepository emby, IRepository<RecentlyAddedLog> recentlyAdded)
         {
             _plex = plex;
             _emby = emby;
+            _recentlyAddedLog = recentlyAdded;
         }
 
         private readonly IPlexContentRepository _plex;
         private readonly IEmbyContentRepository _emby;
+        private readonly IRepository<RecentlyAddedLog> _recentlyAddedLog;
 
         public IEnumerable<RecentlyAddedMovieModel> GetRecentlyAddedMovies(DateTime from, DateTime to)
         {
@@ -53,6 +54,67 @@ namespace Ombi.Core.Engine
             var embyTv = _emby.GetAll().Include(x => x.Episodes).Where(x => x.Type == EmbyMediaType.Series);
 
             return GetRecentlyAddedTv(plexTv, embyTv, groupBySeason);
+        }
+
+        public async Task<bool> UpdateRecentlyAddedDatabase()
+        {
+            var plexContent = _plex.GetAll().Include(x => x.Episodes);
+            var embyContent = _emby.GetAll().Include(x => x.Episodes);
+            var recentlyAddedLog = new HashSet<RecentlyAddedLog>();
+            foreach (var p in plexContent)
+            {
+                if (p.Type == PlexMediaTypeEntity.Movie)
+                {
+                    recentlyAddedLog.Add(new RecentlyAddedLog
+                    {
+                        AddedAt = DateTime.Now,
+                        Type = RecentlyAddedType.Plex,
+                        ContentId = p.Id
+                    });
+                }
+                else
+                {
+                    // Add the episodes
+                    foreach (var ep in p.Episodes)
+                    {
+                        recentlyAddedLog.Add(new RecentlyAddedLog
+                        {
+                            AddedAt = DateTime.Now,
+                            Type = RecentlyAddedType.Plex,
+                            ContentId = ep.Id
+                        });
+                    }
+                }
+            }
+
+            foreach (var e in embyContent)
+            {
+                if (e.Type == EmbyMediaType.Movie)
+                {
+                    recentlyAddedLog.Add(new RecentlyAddedLog
+                    {
+                        AddedAt = DateTime.Now,
+                        Type = RecentlyAddedType.Emby,
+                        ContentId = e.Id
+                    });
+                }
+                else
+                {
+                    // Add the episodes
+                    foreach (var ep in e.Episodes)
+                    {
+                        recentlyAddedLog.Add(new RecentlyAddedLog
+                        {
+                            AddedAt = DateTime.Now,
+                            Type = RecentlyAddedType.Plex,
+                            ContentId = ep.Id
+                        });
+                    }
+                }
+            }
+            await _recentlyAddedLog.AddRange(recentlyAddedLog);
+
+            return true;
         }
 
         private IEnumerable<RecentlyAddedTvModel> GetRecentlyAddedTv(IQueryable<PlexServerContent> plexTv, IQueryable<EmbyContent> embyTv,

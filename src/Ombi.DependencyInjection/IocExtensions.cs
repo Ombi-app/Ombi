@@ -174,6 +174,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IProcessProvider, ProcessProvider>();
             services.AddTransient<ISickRageSync, SickRageSync>();
             services.AddTransient<IRefreshMetadata, RefreshMetadata>();
+            services.AddTransient<INewsletterJob, NewsletterJob>();
         }
     }
 }

@@ -34,13 +34,14 @@
                             <i class="fa fa-th-list"></i> {{ 'NavigationBar.Requests' | translate }}</a>
                     </li>
                 </ul>
-
-                <ul class="nav navbar-nav">
-                    <li id="Requests" [routerLinkActive]="['active']">
-                        <a [routerLink]="['/recentlyadded']">
-                            <i class="fa fa-check"></i> {{ 'NavigationBar.RecentlyAdded' | translate }}</a>
-                    </li>
-                </ul>
+                <div *ngIf="customizationSettings">
+                    <ul *ngIf="customizationSettings.recentlyAddedPage" class="nav navbar-nav">
+                        <li id="RecentlyAdded" [routerLinkActive]="['active']">
+                            <a [routerLink]="['/recentlyadded']">
+                                <i class="fa fa-check"></i> {{ 'NavigationBar.RecentlyAdded' | translate }}</a>
+                        </li>
+                    </ul>
+                </div>
                 <ul *ngIf="issuesEnabled" class="nav navbar-nav">
                     <li id="Issues" [routerLinkActive]="['active']">
                         <a [routerLink]="['/issues']">

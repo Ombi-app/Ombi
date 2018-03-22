@@ -18,6 +18,7 @@ namespace Ombi.Mapping.Profiles
             CreateMap<TelegramNotificationsViewModel, TelegramSettings>().ReverseMap();
             CreateMap<UpdateSettingsViewModel, UpdateSettings>().ReverseMap();
             CreateMap<MobileNotificationsViewModel, MobileNotificationSettings>().ReverseMap();
+            CreateMap<NewsletterNotificationViewModel, NewsletterSettings>().ReverseMap();
         }
     }
 }
