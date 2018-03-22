@@ -14,7 +14,7 @@ using System;
 namespace Ombi.Store.Migrations
 {
     [DbContext(typeof(OmbiContext))]
-    [Migration("20180322085345_RecentlyAddedLog")]
+    [Migration("20180322204610_RecentlyAddedLog")]
     partial class RecentlyAddedLog
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -439,6 +439,8 @@ namespace Ombi.Store.Migrations
                     b.Property<DateTime>("AddedAt");
 
                     b.Property<int>("ContentId");
+
+                    b.Property<int>("ContentType");
 
                     b.Property<int>("Type");
 

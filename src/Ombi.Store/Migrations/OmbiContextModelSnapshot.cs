@@ -439,6 +439,8 @@ namespace Ombi.Store.Migrations
 
                     b.Property<int>("ContentId");
 
+                    b.Property<int>("ContentType");
+
                     b.Property<int>("Type");
 
                     b.HasKey("Id");

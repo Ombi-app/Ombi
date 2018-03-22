@@ -12,6 +12,7 @@ import {
     IEmailNotificationSettings,
     IEmbyServer,
     IMattermostNotifcationSettings,
+    INewsletterNotificationSettings,
     IPlexServer,
     IPushbulletNotificationSettings,
     IPushoverNotificationSettings,
@@ -77,5 +78,8 @@ export class TesterService extends ServiceHelpers {
 
     public sickrageTest(settings: ISickRageSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}sickrage`, JSON.stringify(settings),  {headers: this.headers});
+    }    
+    public newsletterTest(settings: INewsletterNotificationSettings): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}newsletter`, JSON.stringify(settings),  {headers: this.headers});
     }
 }

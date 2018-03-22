@@ -71,6 +71,7 @@ namespace Ombi.Controllers
             _radarrSync = radarrSync;
             _cache = memCache;
             _githubApi = githubApi;
+            _recentlyAdded = engine;
         }
 
         private ISettingsResolver SettingsResolver { get; }

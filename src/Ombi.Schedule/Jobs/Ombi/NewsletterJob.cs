@@ -38,6 +38,9 @@ namespace Ombi.Schedule.Jobs.Ombi
             _emailSettings = emailSettings;
             _newsletterSettings = newsletter;
             _userManager = um;
+            _emailSettings.ClearCache();
+            _customizationSettings.ClearCache();
+            _newsletterSettings.ClearCache();
         }
 
         private readonly IPlexContentRepository _plex;
@@ -52,10 +55,9 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly ISettingsService<NewsletterSettings> _newsletterSettings;
         private readonly UserManager<OmbiUser> _userManager;
 
-        public async Task Start()
+        public async Task Start(NewsletterSettings settings, bool test)
         {
-            var newsletterSettings = await _newsletterSettings.GetSettingsAsync();
-            if (!newsletterSettings.Enabled)
+            if (!settings.Enabled)
             {
                 return;
             }
@@ -85,17 +87,33 @@ namespace Ombi.Schedule.Jobs.Ombi
             var addedEmbyEpisodesLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Emby && x.ContentType == ContentType.Episode).Select(x => x.ContentId);
 
             // Filter out the ones that we haven't sent yet
-            var plexContentMoviesToSend = plexContent.Where(x => !addedPlexMovieLogIds.Contains(x.Id));
-            var embyContentMoviesToSend = embyContent.Where(x => !addedEmbyMoviesLogIds.Contains(x.Id));
+            var plexContentMoviesToSend = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && !addedPlexMovieLogIds.Contains(x.Id));
+            var embyContentMoviesToSend = embyContent.Where(x => x.Type == EmbyMediaType.Movie && !addedEmbyMoviesLogIds.Contains(x.Id));
 
-            var plexContentTvToSend = plexContent.Where(x => x.Episodes.Any(e => !addedPlexEpisodesLogIds.Contains(e.Id)));
-            var embyContentTvToSend = embyContent.Where(x => x.Episodes.Any(e => !addedEmbyEpisodesLogIds.Contains(e.Id)));
+            var plexContentTvToSend = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Show && x.Episodes.Any(e => !addedPlexEpisodesLogIds.Contains(e.Id)));
+            var embyContentTvToSend = embyContent.Where(x => x.Type == EmbyMediaType.Series && x.Episodes.Any(e => !addedEmbyEpisodesLogIds.Contains(e.Id)));
 
             var plexContentToSend = plexContentMoviesToSend.Union(plexContentTvToSend);
             var embyContentToSend = embyContentMoviesToSend.Union(embyContentTvToSend);
 
+            var body = string.Empty;
+            if (test)
+            {
+                var plexm = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie).OrderByDescending(x => x.AddedAt).Take(10);
+                var embym = embyContent.Where(x => x.Type == EmbyMediaType.Movie).OrderByDescending(x => x.AddedAt).Take(10);
+                var plext = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Show).OrderByDescending(x => x.AddedAt).Take(10);
+                var embyt = embyContent.Where(x => x.Type == EmbyMediaType.Series).OrderByDescending(x => x.AddedAt).Take(10);
+                body = await BuildHtml(plexm.Union(plext), embym.Union(embyt));
+            }
+            else
+            {
+                body = await BuildHtml(plexContentToSend, embyContentToSend);
+                if (body.IsNullOrEmpty())
+                {
+                    return;
+                }
 
-            var body = await BuildHtml(plexContentToSend, embyContentToSend);
+            }
 
             // Get the users to send it to
             var users = await _userManager.GetUsersInRoleAsync(OmbiRoles.RecievesNewsletter);
@@ -172,6 +190,12 @@ namespace Ombi.Schedule.Jobs.Ombi
             await _recentlyAddedLog.AddRange(recentlyAddedLog);
 
             await Task.WhenAll(emailTasks.ToArray());
+        }
+
+        public async Task Start()
+        {
+            var newsletterSettings = await _newsletterSettings.GetSettingsAsync();
+            await Start(newsletterSettings, false);
         }
 
         private string LoadTemplate(string body, NotificationTemplates template, CustomizationSettings settings, string username)

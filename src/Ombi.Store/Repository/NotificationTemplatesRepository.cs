@@ -40,6 +40,11 @@ namespace Ombi.Store.Repository
 
         public async Task Update(NotificationTemplates template)
         {
+            if (Db.Entry(template).State == EntityState.Detached)
+            {
+                Db.Attach(template);
+                Db.Entry(template).State = EntityState.Modified;
+            }
             await Db.SaveChangesAsync();
         }
 

@@ -40,7 +40,7 @@ export class RecentlyAddedComponent implements OnInit {
     public tv: IRecentlyAddedTvShows[];
     public range: Date[];
 
-    public groupTv: boolean;
+    public groupTv: boolean = false;
     
     // https://github.com/sheikalthaf/ngu-carousel
     public carouselTile: NguCarousel;
@@ -76,7 +76,7 @@ export class RecentlyAddedComponent implements OnInit {
          }
          this.getMovies();
      }
-     
+
      public change() {
          this.getShows();
      }

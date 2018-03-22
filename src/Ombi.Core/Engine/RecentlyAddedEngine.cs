@@ -69,7 +69,8 @@ namespace Ombi.Core.Engine
                     {
                         AddedAt = DateTime.Now,
                         Type = RecentlyAddedType.Plex,
-                        ContentId = p.Id
+                        ContentId = p.Id,
+                        ContentType = ContentType.Parent
                     });
                 }
                 else
@@ -81,7 +82,8 @@ namespace Ombi.Core.Engine
                         {
                             AddedAt = DateTime.Now,
                             Type = RecentlyAddedType.Plex,
-                            ContentId = ep.Id
+                            ContentId = ep.Id,
+                            ContentType = ContentType.Episode
                         });
                     }
                 }
@@ -95,7 +97,8 @@ namespace Ombi.Core.Engine
                     {
                         AddedAt = DateTime.Now,
                         Type = RecentlyAddedType.Emby,
-                        ContentId = e.Id
+                        ContentId = e.Id,
+                        ContentType = ContentType.Parent
                     });
                 }
                 else
@@ -106,8 +109,9 @@ namespace Ombi.Core.Engine
                         recentlyAddedLog.Add(new RecentlyAddedLog
                         {
                             AddedAt = DateTime.Now,
-                            Type = RecentlyAddedType.Plex,
-                            ContentId = ep.Id
+                            Type = RecentlyAddedType.Emby,
+                            ContentId = ep.Id,
+                            ContentType = ContentType.Episode
                         });
                     }
                 }

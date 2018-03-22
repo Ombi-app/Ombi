@@ -16,6 +16,7 @@ namespace Ombi.Store.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     AddedAt = table.Column<DateTime>(nullable: false),
                     ContentId = table.Column<int>(nullable: false),
+                    ContentType = table.Column<int>(nullable: false),
                     Type = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
