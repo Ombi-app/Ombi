@@ -44,7 +44,6 @@ import { SettingsMenuComponent } from "./settingsmenu.component";
 
 import { AutoCompleteModule, CalendarModule, DialogModule, InputSwitchModule, InputTextModule, MenuModule, RadioButtonModule, TooltipModule } from "primeng/primeng";
 
-
 const routes: Routes = [
     { path: "Ombi", component: OmbiComponent, canActivate: [AuthGuard] },
     { path: "About", component: AboutComponent, canActivate: [AuthGuard] },
