@@ -1,6 +1,4 @@
-﻿import {  } from './../../services/job.service';
-
-import { Component, OnInit } from "@angular/core";
+﻿import { Component, OnInit } from "@angular/core";
 
 import { INewsletterNotificationSettings, NotificationType } from "../../interfaces";
 import { JobService, NotificationService, SettingsService } from "../../services";
