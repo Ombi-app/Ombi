@@ -8,6 +8,7 @@ namespace Ombi.Core.Models
         public int Id { get; set; }
         public string Username { get; set; }
         public string Alias { get; set; }
+        public string DiscordUserID { get; set; }
         public List<Claim> Claims { get; set; }
         public string EmailAddress { get; set; }
         public string Password { get; set; }
