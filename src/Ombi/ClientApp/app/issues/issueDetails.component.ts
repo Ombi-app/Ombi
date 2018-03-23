@@ -93,11 +93,11 @@ export class IssueDetailsComponent implements OnInit {
 
     private setBackground(issue: any) {
         if (issue.requestType === 1) {
-            this.imageService.getMovieBackground(Number(issue.providerId)).subscribe(x => {
+            this.imageService.getMovieBackground(issue.providerId).subscribe(x => {
                 this.backgroundPath = this.sanitizer.bypassSecurityTrustStyle
                     ("url(" + x + ")");
             });
-            this.imageService.getMoviePoster(Number(issue.providerId)).subscribe(x => {
+            this.imageService.getMoviePoster(issue.providerId).subscribe(x => {
                 this.posterPath = x.toString();
             });
 
