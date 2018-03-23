@@ -1,9 +1,10 @@
-﻿import { TesterService } from './../../services/applications/tester.service';
+﻿
 import { Component, OnInit } from "@angular/core";
 
 import { INewsletterNotificationSettings, NotificationType } from "../../interfaces";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
+import { TesterService } from "./../../services/applications/tester.service";
 
 @Component({
     templateUrl: "./newsletter.component.html",
@@ -28,7 +29,7 @@ export class NewsletterComponent implements OnInit {
     }
 
     public test() {
-        this.testService.testNewsletter(this.settings).subscribe();
+        this.testService.newsletterTest(this.settings).subscribe();
     }
 
     public onSubmit() {
