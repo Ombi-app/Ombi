@@ -146,7 +146,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello! The user '{RequestedUser}' has requested the {Type} '{Title}'! Please log in to approve this request. Request Date: {RequestedDate}",
+                                Message = "Hello! The user '{UserName}' has requested the {Type} '{Title}'! Please log in to approve this request. Request Date: {RequestedDate}",
                                 Subject = "{ApplicationName}: New {Type} request for {Title}!",
                                 Agent = agent,
                                 Enabled = true,
@@ -156,7 +156,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello! The user '{IssueUser}' has reported a new issue for the title {Title}! </br> {IssueCategory} - {IssueSubject} : {IssueDescription}",
+                                Message = "Hello! The user '{UserName}' has reported a new issue for the title {Title}! </br> {IssueCategory} - {IssueSubject} : {IssueDescription}",
                                 Subject = "{ApplicationName}: New issue for {Title}!",
                                 Agent = agent,
                                 Enabled = true,
@@ -166,7 +166,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello! You requested {Title} on {ApplicationName}! This is now available! :)",
+                                Message = "Hello! You   {Title} on {ApplicationName}! This is now available! :)",
                                 Subject = "{ApplicationName}: {Title} is now available!",
                                 Agent = agent,
                                 Enabled = true,
@@ -210,7 +210,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello {IssueUser} Your issue for {Title} has now been resolved.",
+                                Message = "Hello {UserName} Your issue for {Title} has now been resolved.",
                                 Subject = "{ApplicationName}: Issue has been resolved for {Title}!",
                                 Agent = agent,
                                 Enabled = true,

@@ -20,7 +20,7 @@ namespace Ombi.Controllers
     {
         public JobController(IOmbiAutomaticUpdater updater, IPlexUserImporter userImporter,
             ICacheService mem, IEmbyUserImporter embyImporter, IPlexContentSync plexContentSync,
-            IEmbyContentSync embyContentSync)
+            IEmbyContentSync embyContentSync, INewsletterJob newsletter)
         {
             _updater = updater;
             _plexUserImporter = userImporter;
@@ -28,6 +28,7 @@ namespace Ombi.Controllers
             _memCache = mem;
             _plexContentSync = plexContentSync;
             _embyContentSync = embyContentSync;
+            _newsletterJob = newsletter;
         }
 
         private readonly IOmbiAutomaticUpdater _updater;
@@ -36,6 +37,7 @@ namespace Ombi.Controllers
         private readonly ICacheService _memCache;
         private readonly IPlexContentSync _plexContentSync;
         private readonly IEmbyContentSync _embyContentSync;
+        private readonly INewsletterJob _newsletterJob;
 
         /// <summary>
         /// Runs the update job
@@ -127,6 +129,17 @@ namespace Ombi.Controllers
         public bool StartEmbyContentCacher()
         {
             BackgroundJob.Enqueue(() => _embyContentSync.Start());
+            return true;
+        }
+
+        /// <summary>
+        /// Runs the newsletter
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("newsletter")]
+        public bool StartNewsletter()
+        {
+            BackgroundJob.Enqueue(() => _newsletterJob.Start());
             return true;
         }
     }
