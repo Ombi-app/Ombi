@@ -1,4 +1,4 @@
-﻿import { AfterViewInit, Component, OnDestroy, OnInit } from "@angular/core";
+﻿import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
@@ -20,7 +20,7 @@ import { fadeInOutAnimation } from "../animations/fadeinout";
     animations: [fadeInOutAnimation],
     styleUrls: ["./login.component.scss"],
 })
-export class LoginComponent implements AfterViewInit, OnDestroy, OnInit {
+export class LoginComponent implements OnDestroy, OnInit {
 
     public form: FormGroup;
     public customizationSettings: ICustomizationSettings;
@@ -28,6 +28,7 @@ export class LoginComponent implements AfterViewInit, OnDestroy, OnInit {
     public background: any;
     public landingFlag: boolean;
     public baseUrl: string;
+    private timer: any;
     
     private errorBody: string;
     private errorValidation: string;
@@ -70,6 +71,10 @@ export class LoginComponent implements AfterViewInit, OnDestroy, OnInit {
         this.images.getRandomBackground().subscribe(x => {
             this.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%),url(" + x.url + ")");
         });
+        this.timer = setInterval(() => {
+            this.cycleBackground();
+        }, 10000);
+
         const base = this.location.getBaseHrefFromDOM();
         if (base.length > 1) {
             this.baseUrl = base;
@@ -107,6 +112,10 @@ export class LoginComponent implements AfterViewInit, OnDestroy, OnInit {
     }
 
     public ngOnDestroy() {
+        clearInterval(this.timer);
+    }
+
+    private cycleBackground() {
         setTimeout(() => {
             this.images.getRandomBackground().subscribe(x => {
                 this.background = "";
@@ -120,9 +129,4 @@ export class LoginComponent implements AfterViewInit, OnDestroy, OnInit {
         }, 1000);
     }
 
-    public ngAfterViewInit() {
-        setInterval(() => {
-            this.ngOnDestroy();
-        }, 10000);
-    }
 }

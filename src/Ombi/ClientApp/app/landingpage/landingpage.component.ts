@@ -1,5 +1,5 @@
 ﻿import { PlatformLocation } from "@angular/common";
-import { AfterViewInit, Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 
 import { IMediaServerStatus } from "../interfaces";
 import { ICustomizationSettings, ILandingPageSettings } from "../interfaces";
@@ -17,13 +17,14 @@ import { fadeInOutAnimation } from "../animations/fadeinout";
     animations: [fadeInOutAnimation],
     styleUrls: ["./landingpage.component.scss"],
 })
-export class LandingPageComponent implements AfterViewInit, OnInit, OnDestroy {
+export class LandingPageComponent implements OnDestroy, OnInit {
 
     public customizationSettings: ICustomizationSettings;
     public landingPageSettings: ILandingPageSettings;
     public background: any;
     public mediaServerStatus: IMediaServerStatus;
     public baseUrl: string;
+    private timer: any;
 
     constructor(private settingsService: SettingsService,
                 private images: ImageService, private sanitizer: DomSanitizer, private landingPageService: LandingPageService,
@@ -35,6 +36,9 @@ export class LandingPageComponent implements AfterViewInit, OnInit, OnDestroy {
         this.images.getRandomBackground().subscribe(x => {
             this.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%), url(" + x.url + ")");
         });
+        this.timer = setInterval(() => {
+            this.cycleBackground();
+        }, 10000);
 
         const base = this.location.getBaseHrefFromDOM();
         if (base.length > 1) {
@@ -47,6 +51,10 @@ export class LandingPageComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     public ngOnDestroy() {
+        clearInterval(this.timer);
+    }
+
+    public cycleBackground() {
         setTimeout(() => {
             this.images.getRandomBackground().subscribe(x => {
                 this.background = "";
@@ -58,11 +66,5 @@ export class LandingPageComponent implements AfterViewInit, OnInit, OnDestroy {
                     .bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%), url(" + x.url + ")");
             });
         }, 1000);
-    }
-
-    public ngAfterViewInit() {
-        setInterval(() => {
-            this.ngOnDestroy();
-        }, 10000);
     }
 }
