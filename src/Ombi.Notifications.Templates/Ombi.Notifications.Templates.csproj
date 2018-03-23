@@ -9,6 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Update="Templates\NewsletterTemplate.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Templates\BasicTemplate.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -34,6 +34,13 @@
         </div>
 
         <div class="form-group">
+            <div class="checkbox">
+                <input type="checkbox" id="enable" [(ngModel)]="settings.recentlyAddedPage" [checked]="settings.recentlyAddedPage">
+                <label for="enable">Enable Recently Added Page</label>
+            </div>
+        </div>
+
+        <div class="form-group">
             <label for="logo" class="control-label">Custom Logo</label>
             <div>
                 <input type="text" [(ngModel)]="settings.logo" class="form-control form-control-custom " id="logo" name="logo" value="{{settings.logo}}"

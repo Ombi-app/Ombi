@@ -17,7 +17,8 @@ namespace Ombi.Schedule
         public JobSetup(IPlexContentSync plexContentSync, IRadarrSync radarrSync,
             IOmbiAutomaticUpdater updater, IEmbyContentSync embySync, IPlexUserImporter userImporter,
             IEmbyUserImporter embyUserImporter, ISonarrSync cache, ICouchPotatoSync cpCache,
-            ISettingsService<JobSettings> jobsettings, ISickRageSync srSync, IRefreshMetadata refresh)
+            ISettingsService<JobSettings> jobsettings, ISickRageSync srSync, IRefreshMetadata refresh,
+            INewsletterJob newsletter)
         {
             _plexContentSync = plexContentSync;
             _radarrSync = radarrSync;
@@ -30,6 +31,7 @@ namespace Ombi.Schedule
             _jobSettings = jobsettings;
             _srSync = srSync;
             _refreshMetadata = refresh;
+            _newsletter = newsletter;
         }
 
         private readonly IPlexContentSync _plexContentSync;
@@ -43,6 +45,7 @@ namespace Ombi.Schedule
         private readonly ISickRageSync _srSync;
         private readonly ISettingsService<JobSettings> _jobSettings;
         private readonly IRefreshMetadata _refreshMetadata;
+        private readonly INewsletterJob _newsletter;
 
         public void Setup()
         {
@@ -60,6 +63,7 @@ namespace Ombi.Schedule
 
             RecurringJob.AddOrUpdate(() => _embyUserImporter.Start(), JobSettingsHelper.UserImporter(s));
             RecurringJob.AddOrUpdate(() => _plexUserImporter.Start(), JobSettingsHelper.UserImporter(s));
+            BackgroundJob.Enqueue(() => _newsletter.Start());
         }
     }
 }

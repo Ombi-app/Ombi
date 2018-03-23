@@ -107,8 +107,12 @@ namespace Ombi.Notifications
                 var body = new BodyBuilder
                 {
                     HtmlBody = model.Message,
-                    TextBody = model.Other["PlainTextBody"]
                 };
+
+                if (model.Other.ContainsKey("PlainTextBody"))
+                {
+                    body.TextBody = model.Other["PlainTextBody"];
+                }
 
                 var message = new MimeMessage
                 {

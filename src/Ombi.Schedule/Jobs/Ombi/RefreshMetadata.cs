@@ -218,12 +218,6 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
             return string.Empty;
         }
-        
-
-        private async Task StartEmby()
-        {
-
-        }
 
 
         private bool _disposed;
@@ -236,6 +230,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             {
                 _plexRepo?.Dispose();
                 _embyRepo?.Dispose();
+                _plexSettings?.Dispose();
             }
             _disposed = true;
         }
