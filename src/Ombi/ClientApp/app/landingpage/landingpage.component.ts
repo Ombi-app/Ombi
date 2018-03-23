@@ -59,12 +59,12 @@ export class LandingPageComponent implements OnDestroy, OnInit {
             this.images.getRandomBackground().subscribe(x => {
                 this.background = "";
             });
-        }, 1000);
+        }, 10000);
         setTimeout(() => {
             this.images.getRandomBackground().subscribe(x => {
                 this.background = this.sanitizer
                     .bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%), url(" + x.url + ")");
             });
-        }, 1000);
+        }, 10000);
     }
 }
