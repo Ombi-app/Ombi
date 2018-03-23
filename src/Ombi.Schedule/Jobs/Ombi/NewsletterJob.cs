@@ -288,22 +288,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
                 try
                 {
-                    AddImageInsideTable(sb, $"https://image.tmdb.org/t/p/original{info.BackdropPath}");
-
-                    sb.Append("<tr>");
-                    TableData(sb);
-
-                    Href(sb, $"https://www.imdb.com/title/{info.ImdbId}/");
-                    Header(sb, 3, $"{info.Title} {info.ReleaseDate ?? string.Empty}");
-                    EndTag(sb, "a");
-
-                    if (info.Genres.Any())
-                    {
-                        AddParagraph(sb,
-                            $"Genre: {string.Join(", ", info.Genres.Select(x => x.Name.ToString()).ToArray())}");
-                    }
-
-                    AddParagraph(sb, info.Overview);
+                    CreateMovieHtmlContent(sb, info);
                 }
                 catch (Exception e)
                 {
@@ -316,6 +301,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
             }
         }
+
         private async Task ProcessEmbyMovies(IQueryable<EmbyContent> embyContent, StringBuilder sb)
         {
             sb.Append(
@@ -331,22 +317,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
                 try
                 {
-                    AddImageInsideTable(sb, $"https://image.tmdb.org/t/p/original{info.BackdropPath}");
-
-                    sb.Append("<tr>");
-                    TableData(sb);
-
-                    Href(sb, $"https://www.imdb.com/title/{info.ImdbId}/");
-                    Header(sb, 3, $"{info.Title} {info.ReleaseDate ?? string.Empty}");
-                    EndTag(sb, "a");
-
-                    if (info.Genres.Any())
-                    {
-                        AddParagraph(sb,
-                            $"Genre: {string.Join(", ", info.Genres.Select(x => x.Name.ToString()).ToArray())}");
-                    }
-
-                    AddParagraph(sb, info.Overview);
+                    CreateMovieHtmlContent(sb, info);
                 }
                 catch (Exception e)
                 {
@@ -358,6 +329,26 @@ namespace Ombi.Schedule.Jobs.Ombi
                     EndLoopHtml(sb);
                 }
             }
+        }
+
+        private void CreateMovieHtmlContent(StringBuilder sb, MovieResponseDto info)
+        {
+            AddImageInsideTable(sb, $"https://image.tmdb.org/t/p/original{info.PosterPath}");
+
+            sb.Append("<tr>");
+            TableData(sb);
+
+            Href(sb, $"https://www.imdb.com/title/{info.ImdbId}/");
+            Header(sb, 3, $"{info.Title} {info.ReleaseDate ?? string.Empty}");
+            EndTag(sb, "a");
+
+            if (info.Genres.Any())
+            {
+                AddParagraph(sb,
+                    $"Genre: {string.Join(", ", info.Genres.Select(x => x.Name.ToString()).ToArray())}");
+            }
+
+            AddParagraph(sb, info.Overview);
         }
 
         private async Task ProcessPlexTv(IQueryable<PlexServerContent> plexContent, StringBuilder sb)

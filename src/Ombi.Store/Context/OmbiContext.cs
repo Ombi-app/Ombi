@@ -119,7 +119,10 @@ namespace Ombi.Store.Context
             var roles = Roles.Where(x => x.Name == OmbiRoles.RecievesNewsletter);
             if (!roles.Any())
             {
-                Roles.Add(new IdentityRole(OmbiRoles.RecievesNewsletter));
+                Roles.Add(new IdentityRole(OmbiRoles.RecievesNewsletter)
+                {
+                    NormalizedName = OmbiRoles.RecievesNewsletter.ToUpper()
+                });
             }
             //Check if templates exist
             var templates = NotificationTemplates.ToList();
