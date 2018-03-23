@@ -107,6 +107,7 @@ export interface ICustomizationSettings extends ISettings {
   presetThemeContent: string;
   presetThemeDisplayName: string;
   presetThemeVersion: string;
+  recentlyAddedPage: boolean;
 }
 
 export interface IThemes {
@@ -125,6 +126,8 @@ export interface IJobSettings {
   automaticUpdater: string;
   userImporter: string;
   sickRageSync: string;
+  refreshMetadata: string;
+  newsletter: string;
 }
 
 export interface IIssueSettings extends ISettings {
@@ -192,4 +195,19 @@ export interface IDogNzbSettings extends ISettings {
 
 export interface IIssueCategory extends ISettings {
   value: string;
+}
+
+export interface ICronTestModel {
+  success: boolean;
+  message: string;
+  schedule: Date[];
+}
+
+export interface ICronViewModelBody {
+  expression: string;
+}
+
+export interface IJobSettingsViewModel {
+  result: boolean;
+  message: string;
 }

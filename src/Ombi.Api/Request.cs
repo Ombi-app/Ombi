@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 
@@ -24,6 +25,9 @@ namespace Ombi.Api
         public string Endpoint { get; }
         public string BaseUrl { get; }
         public HttpMethod HttpMethod { get; }
+
+        public bool Retry { get; set; }
+        public List<HttpStatusCode> StatusCodeToRetry { get; set; } = new List<HttpStatusCode>();
 
         public Action<string> OnBeforeDeserialization { get; set; }
 

@@ -1,4 +1,5 @@
-﻿using Ombi.Helpers;
+﻿using System;
+using Ombi.Helpers;
 
 namespace Ombi.Settings.Settings.Models
 {
@@ -35,9 +36,17 @@ namespace Ombi.Settings.Settings.Models
         {
             return Get(s.UserImporter, Cron.Daily());
         }
+        public static string Newsletter(JobSettings s)
+        {
+            return Get(s.Newsletter, Cron.Weekly(DayOfWeek.Friday, 12));
+        }
         public static string SickRageSync(JobSettings s)
         {
             return Get(s.SickRageSync, Cron.Hourly(35));
+        }
+        public static string RefreshMetadata(JobSettings s)
+        {
+            return Get(s.RefreshMetadata, Cron.Daily(3));
         }
 
 

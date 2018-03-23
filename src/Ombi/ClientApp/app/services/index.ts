@@ -1,4 +1,4 @@
-﻿export * from "./applications";
+export * from "./applications";
 export * from "./helpers";
 export * from "./identity.service";
 export * from "./image.service";
@@ -13,3 +13,4 @@ export * from "./job.service";
 export * from "./issues.service";
 export * from "./mobile.service";
 export * from "./notificationMessage.service";
+export * from "./recentlyAdded.service";

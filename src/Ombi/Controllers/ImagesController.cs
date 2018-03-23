@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using Ombi.Api.TheMovieDb;
 using Ombi.Config;
 using Ombi.Helpers;
 
@@ -17,16 +18,16 @@ namespace Ombi.Controllers
     [Produces("application/json")]
     public class ImagesController : Controller
     {
-        public ImagesController(IFanartTvApi api, IApplicationConfigRepository config,
+        public ImagesController(IFanartTvApi fanartTvApi, IApplicationConfigRepository config,
             IOptions<LandingPageBackground> options, ICacheService c)
         {
-            Api = api;
+            FanartTvApi = fanartTvApi;
             Config = config;
             Options = options.Value;
             _cache = c;
         }
 
-        private IFanartTvApi Api { get; }
+        private IFanartTvApi FanartTvApi { get; }
         private IApplicationConfigRepository Config { get; }
         private LandingPageBackground Options { get; }
         private readonly ICacheService _cache;
@@ -36,15 +37,83 @@ namespace Ombi.Controllers
         {
             var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
 
-            var images = await Api.GetTvImages(tvdbid, key.Value);
+            var images = await FanartTvApi.GetTvImages(tvdbid, key.Value);
+            if (images == null)
+            {
+                return string.Empty;
+            }
             if (images.tvbanner != null)
             {
-                return images.tvbanner.FirstOrDefault()?.url ?? string.Empty;
+                var enImage = images.tvbanner.Where(x => x.lang == "en").OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                if (enImage == null)
+                {
+                    return images.tvbanner.OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                }
             }
-            if (images.showbackground != null)
+            if (images.seasonposter != null)
             {
-                return images.showbackground.FirstOrDefault()?.url ?? string.Empty;
+                return images.seasonposter.FirstOrDefault()?.url ?? string.Empty;
             }
+            return string.Empty;
+        }
+
+        [HttpGet("poster/movie/{movieDbId}")]
+        public async Task<string> GetMoviePoster(string movieDbId)
+        {
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
+
+            var images = await FanartTvApi.GetMovieImages(movieDbId, key.Value);
+
+            if (images == null)
+            {
+                return string.Empty;
+            }
+
+            if (images.movieposter?.Any() ?? false)
+            {
+                var enImage =  images.movieposter.Where(x => x.lang == "en").OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                if (enImage == null)
+                {
+                    return images.movieposter.OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                }
+                return enImage;
+            }
+
+            if (images.moviethumb?.Any() ?? false)
+            {
+                return images.moviethumb.OrderBy(x => x.likes).Select(x => x.url).FirstOrDefault();
+            }
+
+            return string.Empty;
+        }
+
+        [HttpGet("poster/tv/{tvdbid}")]
+        public async Task<string> GetTvPoster(int tvdbid)
+        {
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
+
+            var images = await FanartTvApi.GetTvImages(tvdbid, key.Value);
+
+            if (images == null)
+            {
+                return string.Empty;
+            }
+
+            if (images.tvposter?.Any() ?? false)
+            {
+                var enImage = images.tvposter.Where(x => x.lang == "en").OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                if (enImage == null)
+                {
+                    return images.tvposter.OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                }
+                return enImage;
+            }
+
+            if (images.tvthumb?.Any() ?? false)
+            {
+                return images.tvthumb.OrderBy(x => x.likes).Select(x => x.url).FirstOrDefault();
+            }
+
             return string.Empty;
         }
 
@@ -63,11 +132,11 @@ namespace Ombi.Controllers
             if (moviesArray.Any())
             {
                 var item = rand.Next(moviesArray.Length);
-                var result = await Api.GetMovieImages(moviesArray[item], key.Value);
-
+                var result = await FanartTvApi.GetMovieImages(moviesArray[item].ToString(), key.Value);
+ 
                 while (!result.moviebackground.Any())
                 {
-                    result = await Api.GetMovieImages(moviesArray[item], key.Value);
+                    result = await FanartTvApi.GetMovieImages(moviesArray[item].ToString(), key.Value);
                 }
 
                 movieUrl = result.moviebackground[0].url;
@@ -75,11 +144,11 @@ namespace Ombi.Controllers
             if(tvArray.Any())
             {
                 var item = rand.Next(tvArray.Length);
-                var result = await Api.GetTvImages(tvArray[item], key.Value);
+                var result = await FanartTvApi.GetTvImages(tvArray[item], key.Value);
 
                 while (!result.showbackground.Any())
                 {
-                    result = await Api.GetTvImages(tvArray[item], key.Value);
+                    result = await FanartTvApi.GetTvImages(tvArray[item], key.Value);
                 }
 
                 tvUrl = result.showbackground[0].url;

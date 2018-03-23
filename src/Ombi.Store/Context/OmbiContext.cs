@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Helpers;
@@ -15,7 +16,7 @@ namespace Ombi.Store.Context
         public OmbiContext()
         {
             if (_created) return;
-            
+
             _created = true;
             Database.Migrate();
         }
@@ -37,6 +38,7 @@ namespace Ombi.Store.Context
         public DbSet<IssueCategory> IssueCategories { get; set; }
         public DbSet<IssueComments> IssueComments { get; set; }
         public DbSet<RequestLog> RequestLogs { get; set; }
+        public DbSet<RecentlyAddedLog> RecentlyAddedLogs { get; set; }
 
 
         public DbSet<Audit> Audit { get; set; }
@@ -55,7 +57,7 @@ namespace Ombi.Store.Context
             {
                 i.StoragePath = string.Empty;
             }
-            optionsBuilder.UseSqlite($"Data Source={Path.Combine(i.StoragePath,"Ombi.db")}");
+            optionsBuilder.UseSqlite($"Data Source={Path.Combine(i.StoragePath, "Ombi.db")}");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -70,7 +72,7 @@ namespace Ombi.Store.Context
                 .WithMany(b => b.Episodes)
                 .HasPrincipalKey(x => x.EmbyId)
                 .HasForeignKey(p => p.ParentId);
-            
+
             base.OnModelCreating(builder);
         }
 
@@ -113,6 +115,12 @@ namespace Ombi.Store.Context
             // VACUUM;
             Database.ExecuteSqlCommand("VACUUM;");
 
+            // Make sure we have the roles
+            var roles = Roles.Where(x => x.Name == OmbiRoles.RecievesNewsletter);
+            if (!roles.Any())
+            {
+                Roles.Add(new IdentityRole(OmbiRoles.RecievesNewsletter));
+            }
             //Check if templates exist
             var templates = NotificationTemplates.ToList();
 
@@ -218,6 +226,16 @@ namespace Ombi.Store.Context
                             break;
                         case NotificationType.AdminNote:
                             continue;
+                        case NotificationType.Newsletter:
+                            notificationToAdd = new NotificationTemplates
+                            {
+                                NotificationType = notificationType,
+                                Message = "Here is a list of Movies and TV Shows that have recently been added!",
+                                Subject = "{ApplicationName}: Recently Added Content!",
+                                Agent = agent,
+                                Enabled = true,
+                            };
+                            break;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }

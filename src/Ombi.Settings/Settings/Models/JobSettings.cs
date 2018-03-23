@@ -10,5 +10,7 @@
         public string AutomaticUpdater { get; set; }
         public string UserImporter { get; set; }
         public string SickRageSync { get; set; }
+        public string RefreshMetadata { get; set; }
+        public string Newsletter { get; set; }
     }
 }
