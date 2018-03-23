@@ -54,7 +54,7 @@ namespace Ombi.Core.Engine
                 {
                     Result = false,
                     Message = "There was an issue adding this movie!",
-                    ErrorMessage = $"TheMovieDb didn't have any information for ID {model.TheMovieDbId}"
+                    ErrorMessage = $"Please try again later"
                 };
             }
             var fullMovieName =
