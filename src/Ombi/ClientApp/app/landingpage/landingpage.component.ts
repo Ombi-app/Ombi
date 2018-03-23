@@ -9,7 +9,6 @@ import { SettingsService } from "../services";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ImageService } from "../services";
 
-import { setTimeout } from "core-js/library/web/timers";
 import { fadeInOutAnimation } from "../animations/fadeinout";
 
 @Component({
@@ -55,16 +54,12 @@ export class LandingPageComponent implements OnDestroy, OnInit {
     }
 
     public cycleBackground() {
-        setTimeout(() => {
             this.images.getRandomBackground().subscribe(x => {
                 this.background = "";
             });
-        }, 10000);
-        setTimeout(() => {
             this.images.getRandomBackground().subscribe(x => {
                 this.background = this.sanitizer
                     .bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%), url(" + x.url + ")");
             });
-        }, 10000);
     }
 }
