@@ -64,6 +64,15 @@ body{
     overflow: hidden;
     display: flex;
 }
+.myBg {
+    z-index: -1;
+}
+.tint {
+    z-index: -1;
+}
+img-responsive poster {
+    display:block;
+}
 img {
     display: block;
     width: 100%;
