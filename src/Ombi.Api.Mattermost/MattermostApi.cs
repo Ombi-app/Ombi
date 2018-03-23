@@ -14,14 +14,10 @@ namespace Ombi.Api.Mattermost
 
         private readonly IApi _api;
 
-        public async Task<string> PushAsync(string webhook, MattermostBody message)
+        public async Task PushAsync(string webhook, MattermostMessage message)
         {
-            var request = new Request(string.Empty, webhook, HttpMethod.Post);
-
-            request.AddJsonBody(message);
-
-            var result = await _api.RequestContent(request);
-            return result;
+            var client = new MatterhookClient(webhook);
+            await client.PostAsync(_api, message);
         }
     }
 }

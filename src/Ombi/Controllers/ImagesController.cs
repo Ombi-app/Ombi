@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Ombi.Api.FanartTv;
 using Ombi.Store.Repository;
 using System;

@@ -5,15 +5,18 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Hangfire;
+using Hangfire.RecurringJobExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.PlatformAbstractions;
+using NCrontab;
 using Ombi.Api.Emby;
 using Ombi.Attributes;
 using Ombi.Core.Models.UI;
@@ -29,6 +32,7 @@ using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Api.Github;
+using Ombi.Core.Engine;
 
 namespace Ombi.Controllers
 {
@@ -57,7 +61,8 @@ namespace Ombi.Controllers
             IEmbyApi embyApi,
             IRadarrSync radarrSync,
             ICacheService memCache,
-            IGithubApi githubApi)
+            IGithubApi githubApi,
+            IRecentlyAddedEngine engine)
         {
             SettingsResolver = resolver;
             Mapper = mapper;
@@ -66,6 +71,7 @@ namespace Ombi.Controllers
             _radarrSync = radarrSync;
             _cache = memCache;
             _githubApi = githubApi;
+            _recentlyAdded = engine;
         }
 
         private ISettingsResolver SettingsResolver { get; }
@@ -75,6 +81,7 @@ namespace Ombi.Controllers
         private readonly IRadarrSync _radarrSync;
         private readonly ICacheService _cache;
         private readonly IGithubApi _githubApi;
+        private readonly IRecentlyAddedEngine _recentlyAdded;
 
         /// <summary>
         /// Gets the Ombi settings.
@@ -465,7 +472,8 @@ namespace Ombi.Controllers
             j.PlexContentSync = j.PlexContentSync.HasValue() ? j.PlexContentSync : JobSettingsHelper.PlexContent(j);
             j.UserImporter = j.UserImporter.HasValue() ? j.UserImporter : JobSettingsHelper.UserImporter(j);
             j.SickRageSync = j.SickRageSync.HasValue() ? j.SickRageSync : JobSettingsHelper.SickRageSync(j);
-
+            j.RefreshMetadata = j.RefreshMetadata.HasValue() ? j.RefreshMetadata : JobSettingsHelper.RefreshMetadata(j);
+ 
             return j;
         }
 
@@ -475,9 +483,71 @@ namespace Ombi.Controllers
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("jobs")]
-        public async Task<bool> JobSettings([FromBody]JobSettings settings)
+        public async Task<JobSettingsViewModel> JobSettings([FromBody]JobSettings settings)
         {
-            return await Save(settings);
+            // Verify that we have correct CRON's
+            foreach (var propertyInfo in settings.GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                if (propertyInfo.Name.Equals("Id", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    continue;
+                }
+                var expression = (string)propertyInfo.GetValue(settings, null);
+
+                try
+                {
+                    var r = CrontabSchedule.TryParse(expression);
+                    if (r == null)
+                    {
+                        return new JobSettingsViewModel
+                        {
+                            Message = $"{propertyInfo.Name} does not have a valid CRON Expression"
+                        };
+                    }
+                }
+                catch (Exception)
+                {
+                    return new JobSettingsViewModel
+                    {
+                        Message = $"{propertyInfo.Name} does not have a valid CRON Expression"
+                    };
+                }
+            }
+            var result = await Save(settings);
+
+            return new JobSettingsViewModel
+            {
+                Result = result
+            };
+        }
+
+        [HttpPost("testcron")]
+        public CronTestModel TestCron([FromBody] CronViewModelBody body)
+        {
+            var model = new CronTestModel();
+            try
+            {
+                var time = DateTime.UtcNow;
+                var result = CrontabSchedule.TryParse(body.Expression);
+                for (int i = 0; i < 10; i++)
+                {
+                    var next = result.GetNextOccurrence(time);
+                    model.Schedule.Add(next);
+                    time = next;
+                }
+                model.Success = true;
+                return model;
+            }
+            catch (Exception)
+            {
+                return new CronTestModel
+                {
+                    Message = $"CRON Expression {body.Expression} is not valid"
+                };
+            }
+
+
         }
 
 
@@ -541,7 +611,7 @@ namespace Ombi.Controllers
             var model = Mapper.Map<EmailNotificationsViewModel>(emailSettings);
 
             // Lookup to see if we have any templates saved
-            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Email);
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Email);
 
             return model;
         }
@@ -588,7 +658,7 @@ namespace Ombi.Controllers
             var model = Mapper.Map<DiscordNotificationsViewModel>(emailSettings);
 
             // Lookup to see if we have any templates saved
-            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Discord);
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Discord);
 
             return model;
         }
@@ -623,7 +693,7 @@ namespace Ombi.Controllers
             var model = Mapper.Map<TelegramNotificationsViewModel>(emailSettings);
 
             // Lookup to see if we have any templates saved
-            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Telegram);
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Telegram);
 
             return model;
         }
@@ -657,7 +727,7 @@ namespace Ombi.Controllers
             var model = Mapper.Map<PushbulletNotificationViewModel>(settings);
 
             // Lookup to see if we have any templates saved
-            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Pushbullet);
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Pushbullet);
 
             return model;
         }
@@ -691,7 +761,7 @@ namespace Ombi.Controllers
             var model = Mapper.Map<PushoverNotificationViewModel>(settings);
 
             // Lookup to see if we have any templates saved
-            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Pushover);
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Pushover);
 
             return model;
         }
@@ -726,7 +796,7 @@ namespace Ombi.Controllers
             var model = Mapper.Map<SlackNotificationsViewModel>(settings);
 
             // Lookup to see if we have any templates saved
-            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Slack);
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Slack);
 
             return model;
         }
@@ -760,7 +830,7 @@ namespace Ombi.Controllers
             var model = Mapper.Map<MattermostNotificationsViewModel>(settings);
 
             // Lookup to see if we have any templates saved
-            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Mattermost);
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Mattermost);
 
             return model;
         }
@@ -794,17 +864,62 @@ namespace Ombi.Controllers
             var model = Mapper.Map<MobileNotificationsViewModel>(settings);
 
             // Lookup to see if we have any templates saved
-            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Mobile);
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Mobile);
 
             return model;
         }
 
-        private async Task<List<NotificationTemplates>> BuildTemplates(NotificationAgent agent)
+        /// <summary>
+        /// Saves the Newsletter notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/newsletter")]
+        public async Task<bool> NewsletterSettings([FromBody] NewsletterNotificationViewModel model)
         {
-            var templates = await TemplateRepository.GetAllTemplates(agent);
-            return templates.OrderBy(x => x.NotificationType.ToString()).ToList();
+            // Save the email settings
+            var settings = Mapper.Map<NewsletterSettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.Update(model.NotificationTemplate);
+
+            return result;
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpPost("notifications/newsletterdatabase")]
+        public async Task<bool> UpdateNewsletterDatabase()
+        {
+            return await _recentlyAdded.UpdateRecentlyAddedDatabase();
+        }
+
+        /// <summary>
+        /// Gets the Newsletter Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/newsletter")]
+        public async Task<NewsletterNotificationViewModel> NewsletterSettings()
+        {
+            var settings = await Get<NewsletterSettings>();
+            var model = Mapper.Map<NewsletterNotificationViewModel>(settings);
+
+            // Lookup to see if we have any templates saved
+            var templates = BuildTemplates(NotificationAgent.Email, true);
+            model.NotificationTemplate = templates.FirstOrDefault(x => x.NotificationType == NotificationType.Newsletter);
+            return model;
+        }
+
+        private List<NotificationTemplates> BuildTemplates(NotificationAgent agent, bool showNewsletter = false)
+        {
+            var templates = TemplateRepository.GetAllTemplates(agent);
+            if (!showNewsletter)
+            {
+                // Make sure we do not display the newsletter
+                templates = templates.Where(x => x.NotificationType != NotificationType.Newsletter);
+            }
+            return templates.OrderBy(x => x.NotificationType.ToString()).ToList();
+        }
 
         private async Task<T> Get<T>()
         {

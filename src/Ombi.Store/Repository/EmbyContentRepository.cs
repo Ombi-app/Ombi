@@ -45,9 +45,9 @@ namespace Ombi.Store.Repository
 
         private IOmbiContext Db { get; }
 
-        public async Task<IEnumerable<EmbyContent>> GetAll()
+        public IQueryable<EmbyContent> GetAll()
         {
-            return await Db.EmbyContent.ToListAsync();
+            return Db.EmbyContent.AsQueryable();
         }
 
         public async Task AddRange(IEnumerable<EmbyContent> content)

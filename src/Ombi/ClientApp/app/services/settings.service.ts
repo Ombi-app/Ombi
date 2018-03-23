@@ -7,6 +7,8 @@ import {
     IAbout,
     IAuthenticationSettings,
     ICouchPotatoSettings,
+    ICronTestModel,
+    ICronViewModelBody,
     ICustomizationSettings,
     IDiscordNotifcationSettings,
     IDogNzbSettings,
@@ -14,9 +16,11 @@ import {
     IEmbySettings,
     IIssueSettings,
     IJobSettings,
+    IJobSettingsViewModel,
     ILandingPageSettings,
     IMattermostNotifcationSettings,
     IMobileNotifcationSettings,
+    INewsletterNotificationSettings,
     IOmbiSettings,
     IPlexSettings,
     IPushbulletNotificationSettings,
@@ -231,10 +235,15 @@ export class SettingsService extends ServiceHelpers {
         return this.http.get<IJobSettings>(`${this.url}/jobs`, {headers: this.headers});
     }
 
-    public saveJobSettings(settings: IJobSettings): Observable<boolean> {
+    public saveJobSettings(settings: IJobSettings): Observable<IJobSettingsViewModel> {
         return this.http
-            .post<boolean>(`${this.url}/jobs`, JSON.stringify(settings), {headers: this.headers});
-    }   
+            .post<IJobSettingsViewModel>(`${this.url}/jobs`, JSON.stringify(settings), {headers: this.headers});
+    } 
+    
+    public testCron(body: ICronViewModelBody): Observable<ICronTestModel> {
+        return this.http
+            .post<ICronTestModel>(`${this.url}/testcron`, JSON.stringify(body), {headers: this.headers});
+    }
     
     public getSickRageSettings(): Observable<ISickRageSettings> {
         return this.http.get<ISickRageSettings>(`${this.url}/sickrage`, {headers: this.headers});
@@ -256,5 +265,18 @@ export class SettingsService extends ServiceHelpers {
     public saveIssueSettings(settings: IIssueSettings): Observable<boolean> {
         return this.http
             .post<boolean>(`${this.url}/issues`, JSON.stringify(settings), {headers: this.headers});
+    }
+
+    public getNewsletterSettings(): Observable<INewsletterNotificationSettings> {
+        return this.http.get<INewsletterNotificationSettings>(`${this.url}/notifications/newsletter`, {headers: this.headers});
+    }  
+
+    public updateNewsletterDatabase(): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}/notifications/newsletterdatabase`, {headers: this.headers});
+    }    
+
+    public saveNewsletterSettings(settings: INewsletterNotificationSettings): Observable<boolean> {
+        return this.http
+            .post<boolean>(`${this.url}/notifications/newsletter`, JSON.stringify(settings), {headers: this.headers});
     }
 }

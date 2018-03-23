@@ -129,7 +129,6 @@ export class TvSearchComponent implements OnInit {
 
     public getExtraInfo() {
         this.tvResults.forEach((val, index) => {
-
             this.imageService.getTvBanner(val.data.id).subscribe(x => {
                 
                 val.data.background = this.sanitizer.

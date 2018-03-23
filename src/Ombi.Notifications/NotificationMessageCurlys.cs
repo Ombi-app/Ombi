@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
+using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Notifications
 {
@@ -25,9 +28,9 @@ namespace Ombi.Notifications
             }
             ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
-            RequestedUser = string.IsNullOrEmpty(req?.RequestedUser?.Alias)
-                ? req?.RequestedUser?.UserName
-                : req?.RequestedUser?.Alias;
+            RequestedUser = req?.RequestedUser?.UserName;
+            UserName = req?.RequestedUser?.UserName;
+            Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
             Title = title;
             RequestedDate = req?.RequestedDate.ToString("D");
             Type = req?.RequestType.ToString();
@@ -36,6 +39,15 @@ namespace Ombi.Notifications
             PosterImage = req?.RequestType == RequestType.Movie ?
                 string.Format("https://image.tmdb.org/t/p/w300{0}", req?.PosterPath) : req?.PosterPath;
             AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
+        }
+
+        public void SetupNewsletter(CustomizationSettings s, OmbiUser username)
+        {
+            ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
+            ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
+            RequestedUser = username.UserName;
+            UserName = username.UserName;
+            Alias = username.Alias.HasValue() ? username.Alias : username.UserName;
         }
 
         public void Setup(NotificationOptions opts, ChildRequests req, CustomizationSettings s)
@@ -52,9 +64,9 @@ namespace Ombi.Notifications
             }
             ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
-            RequestedUser = string.IsNullOrEmpty(req?.RequestedUser.Alias)
-                ? req?.RequestedUser.UserName
-                : req?.RequestedUser.Alias;
+            RequestedUser = req?.RequestedUser?.UserName;
+            UserName = req?.RequestedUser?.UserName;
+            Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
             Title = title;
             RequestedDate = req?.RequestedDate.ToString("D");
             Type = req?.RequestType.ToString();
@@ -64,6 +76,40 @@ namespace Ombi.Notifications
                 $"https://image.tmdb.org/t/p/w300{req?.ParentRequest.PosterPath}" : req?.ParentRequest.PosterPath;
             AdditionalInformation = opts.AdditionalInformation;
             // DO Episode and Season Lists
+
+            var episodes = req?.SeasonRequests?.SelectMany(x => x.Episodes) ?? new List<EpisodeRequests>();
+            var seasons = req?.SeasonRequests?.OrderBy(x => x.SeasonNumber).ToList() ?? new List<SeasonRequests>();
+            var orderedEpisodes = episodes.OrderBy(x => x.EpisodeNumber).ToList();
+            var epSb = new StringBuilder();
+            var seasonSb = new StringBuilder();
+            for (var i = 0; i < orderedEpisodes.Count; i++)
+            {
+                var ep = orderedEpisodes[i];
+                if (i < orderedEpisodes.Count - 1)
+                {
+                    epSb.Append($"{ep.EpisodeNumber},");
+                }
+                else
+                {
+                    epSb.Append($"{ep.EpisodeNumber}");
+                }
+            }
+
+            for (var i = 0; i < seasons.Count; i++)
+            {
+                var ep = seasons[i];
+                if (i < seasons.Count - 1)
+                {
+                    seasonSb.Append($"{ep.SeasonNumber},");
+                }
+                else
+                {
+                    seasonSb.Append($"{ep.SeasonNumber}");
+                }
+            }
+
+            EpisodesList = epSb.ToString();
+            SeasonsList = seasonSb.ToString();
         }
 
         public void Setup(OmbiUser user, CustomizationSettings s)
@@ -81,13 +127,14 @@ namespace Ombi.Notifications
             IssueStatus = opts.Substitutes.TryGetValue("IssueStatus", out val) ? val : string.Empty;
             IssueSubject = opts.Substitutes.TryGetValue("IssueSubject", out val) ? val : string.Empty;
             NewIssueComment = opts.Substitutes.TryGetValue("NewIssueComment", out val) ? val : string.Empty;
-            RequestedUser = opts.Substitutes.TryGetValue("IssueUser", out val) ? val : string.Empty;
+            UserName = opts.Substitutes.TryGetValue("IssueUser", out val) ? val : string.Empty;
         }
 
         // User Defined
         public string RequestedUser { get; set; }
-        public string UserName => RequestedUser;
-        public string IssueUser => RequestedUser;
+        public string UserName { get; set; }
+        public string IssueUser => UserName;
+        public string Alias { get; set; }
 
         public string Title { get; set; }
         public string RequestedDate { get; set; }
@@ -137,6 +184,7 @@ namespace Ombi.Notifications
             {nameof(NewIssueComment),NewIssueComment},
             {nameof(IssueUser),IssueUser},
             {nameof(UserName),UserName},
+            {nameof(Alias),Alias},
         };
     }
 }

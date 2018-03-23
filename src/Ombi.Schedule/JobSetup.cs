@@ -17,46 +17,53 @@ namespace Ombi.Schedule
         public JobSetup(IPlexContentSync plexContentSync, IRadarrSync radarrSync,
             IOmbiAutomaticUpdater updater, IEmbyContentSync embySync, IPlexUserImporter userImporter,
             IEmbyUserImporter embyUserImporter, ISonarrSync cache, ICouchPotatoSync cpCache,
-            ISettingsService<JobSettings> jobsettings, ISickRageSync srSync)
+            ISettingsService<JobSettings> jobsettings, ISickRageSync srSync, IRefreshMetadata refresh,
+            INewsletterJob newsletter)
         {
-            PlexContentSync = plexContentSync;
-            RadarrSync = radarrSync;
-            Updater = updater;
-            EmbyContentSync = embySync;
-            PlexUserImporter = userImporter;
-            EmbyUserImporter = embyUserImporter;
-            SonarrSync = cache;
-            CpCache = cpCache;
-            JobSettings = jobsettings;
-            SrSync = srSync;
+            _plexContentSync = plexContentSync;
+            _radarrSync = radarrSync;
+            _updater = updater;
+            _embyContentSync = embySync;
+            _plexUserImporter = userImporter;
+            _embyUserImporter = embyUserImporter;
+            _sonarrSync = cache;
+            _cpCache = cpCache;
+            _jobSettings = jobsettings;
+            _srSync = srSync;
+            _refreshMetadata = refresh;
+            _newsletter = newsletter;
         }
 
-        private IPlexContentSync PlexContentSync { get; }
-        private IRadarrSync RadarrSync { get; }
-        private IOmbiAutomaticUpdater Updater { get; }
-        private IPlexUserImporter PlexUserImporter { get; }
-        private IEmbyContentSync EmbyContentSync { get; }
-        private IEmbyUserImporter EmbyUserImporter { get; }
-        private ISonarrSync SonarrSync { get; }
-        private ICouchPotatoSync CpCache { get; }
-        private ISickRageSync SrSync { get; }
-        private ISettingsService<JobSettings> JobSettings { get; set; }
+        private readonly IPlexContentSync _plexContentSync;
+        private readonly IRadarrSync _radarrSync;
+        private readonly IOmbiAutomaticUpdater _updater;
+        private readonly IPlexUserImporter _plexUserImporter;
+        private readonly IEmbyContentSync _embyContentSync;
+        private readonly IEmbyUserImporter _embyUserImporter;
+        private readonly ISonarrSync _sonarrSync;
+        private readonly ICouchPotatoSync _cpCache;
+        private readonly ISickRageSync _srSync;
+        private readonly ISettingsService<JobSettings> _jobSettings;
+        private readonly IRefreshMetadata _refreshMetadata;
+        private readonly INewsletterJob _newsletter;
 
         public void Setup()
         {
-            var s = JobSettings.GetSettings();
+            var s = _jobSettings.GetSettings();
 
-            RecurringJob.AddOrUpdate(() => EmbyContentSync.Start(), JobSettingsHelper.EmbyContent(s));
-            RecurringJob.AddOrUpdate(() => SonarrSync.Start(), JobSettingsHelper.Sonarr(s));
-            RecurringJob.AddOrUpdate(() => RadarrSync.CacheContent(), JobSettingsHelper.Radarr(s));
-            RecurringJob.AddOrUpdate(() => PlexContentSync.CacheContent(), JobSettingsHelper.PlexContent(s));
-            RecurringJob.AddOrUpdate(() => CpCache.Start(), JobSettingsHelper.CouchPotato(s));
-            RecurringJob.AddOrUpdate(() => SrSync.Start(), JobSettingsHelper.SickRageSync(s));
+            RecurringJob.AddOrUpdate(() => _embyContentSync.Start(), JobSettingsHelper.EmbyContent(s));
+            RecurringJob.AddOrUpdate(() => _sonarrSync.Start(), JobSettingsHelper.Sonarr(s));
+            RecurringJob.AddOrUpdate(() => _radarrSync.CacheContent(), JobSettingsHelper.Radarr(s));
+            RecurringJob.AddOrUpdate(() => _plexContentSync.CacheContent(), JobSettingsHelper.PlexContent(s));
+            RecurringJob.AddOrUpdate(() => _cpCache.Start(), JobSettingsHelper.CouchPotato(s));
+            RecurringJob.AddOrUpdate(() => _srSync.Start(), JobSettingsHelper.SickRageSync(s));
+            RecurringJob.AddOrUpdate(() => _refreshMetadata.Start(), JobSettingsHelper.RefreshMetadata(s));
 
-            RecurringJob.AddOrUpdate(() => Updater.Update(null), JobSettingsHelper.Updater(s));
+            RecurringJob.AddOrUpdate(() => _updater.Update(null), JobSettingsHelper.Updater(s));
 
-            RecurringJob.AddOrUpdate(() => EmbyUserImporter.Start(), JobSettingsHelper.UserImporter(s));
-            RecurringJob.AddOrUpdate(() => PlexUserImporter.Start(), JobSettingsHelper.UserImporter(s));
+            RecurringJob.AddOrUpdate(() => _embyUserImporter.Start(), JobSettingsHelper.UserImporter(s));
+            RecurringJob.AddOrUpdate(() => _plexUserImporter.Start(), JobSettingsHelper.UserImporter(s));
+            RecurringJob.AddOrUpdate(() => _newsletter.Start(), JobSettingsHelper.Newsletter(s));
         }
     }
 }

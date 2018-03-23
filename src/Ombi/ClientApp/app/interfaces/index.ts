@@ -13,3 +13,4 @@ export * from "./ISettings";
 export * from "./ISonarr";
 export * from "./IUser";
 export * from "./IIssues";
+export * from "./IRecentlyAdded";
