@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from "@angular/core";
+﻿import { AfterViewInit, Component, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
@@ -13,11 +13,14 @@ import { StatusService } from "../services";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ImageService } from "../services";
 
+import { fadeInOutAnimation } from "../animations/fadeinout";
+
 @Component({
     templateUrl: "./login.component.html",
+    animations: [fadeInOutAnimation],
     styleUrls: ["./login.component.scss"],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements AfterViewInit, OnDestroy, OnInit {
 
     public form: FormGroup;
     public customizationSettings: ICustomizationSettings;
@@ -101,5 +104,25 @@ export class LoginComponent implements OnInit {
 
                 }, err => this.notify.error(this.errorBody));
         });
+    }
+
+    public ngOnDestroy() {
+        setTimeout(() => {
+            this.images.getRandomBackground().subscribe(x => {
+                this.background = "";
+            });
+        }, 1000);
+        setTimeout(() => {
+            this.images.getRandomBackground().subscribe(x => {
+                this.background = this.sanitizer
+                    .bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%), url(" + x.url + ")");
+            });
+        }, 1000);
+    }
+
+    public ngAfterViewInit() {
+        setInterval(() => {
+            this.ngOnDestroy();
+        }, 10000);
     }
 }
