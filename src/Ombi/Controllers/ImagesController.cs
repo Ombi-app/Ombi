@@ -41,9 +41,57 @@ namespace Ombi.Controllers
             {
                 return images.tvbanner.FirstOrDefault()?.url ?? string.Empty;
             }
+            return string.Empty;
+        }
+
+        [HttpGet("background/tv/{tvdbid}")]
+        public async Task<string> GetTvBackground(int tvdbid)
+        {
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
+
+            var images = await Api.GetTvImages(tvdbid, key.Value);
             if (images.showbackground != null)
             {
                 return images.showbackground.FirstOrDefault()?.url ?? string.Empty;
+            }
+            return string.Empty;
+        }
+
+        [HttpGet("poster/tv/{tvdbid}")]
+        public async Task<string> GetTvPoster(int tvdbid)
+        {
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
+
+            var images = await Api.GetTvImages(tvdbid, key.Value);
+            if (images.tvposter != null)
+            {
+                return images.tvposter.FirstOrDefault()?.url ?? string.Empty;
+            }
+            return string.Empty;
+        }
+
+        [HttpGet("movies/{themoviedb}")]
+        public async Task<string> GetMovieBackground(int themoviedb)
+        {
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
+
+            var images = await Api.GetMovieImages(themoviedb, key.Value);
+            if (images.moviebackground != null)
+            {
+                return images.moviebackground.FirstOrDefault()?.url ?? string.Empty;
+            }
+            return string.Empty;
+        }
+
+        [HttpGet("poster/movies/{themoviedb}")]
+        public async Task<string> GetMoviePoster(int themoviedb)
+        {
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
+
+            var images = await Api.GetMovieImages(themoviedb, key.Value);
+            if (images.movieposter != null)
+            {
+                return images.movieposter.FirstOrDefault()?.url ?? string.Empty;
             }
             return string.Empty;
         }

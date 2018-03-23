@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
 import { AuthService } from "../auth/auth.service";
-import { ImageService, IssuesService, NotificationService, SearchService, SettingsService } from "../services";
+import { ImageService, IssuesService, NotificationService, SettingsService } from "../services";
 
 import { DomSanitizer } from "@angular/platform-browser";
 import { IIssues, IIssuesChat, IIssueSettings, INewIssueComments, IssueStatus } from "../interfaces";
@@ -34,7 +34,6 @@ export class IssueDetailsComponent implements OnInit {
                 private settingsService: SettingsService,
                 private notificationService: NotificationService,
                 private imageService: ImageService,
-                private searchService: SearchService,
                 private sanitizer: DomSanitizer) { 
             this.route.params
             .subscribe((params: any) => {
@@ -94,19 +93,21 @@ export class IssueDetailsComponent implements OnInit {
 
     private setBackground(issue: any) {
         if (issue.requestType === 1) {
-            this.searchService.getMovieInformation(Number(issue.providerId)).subscribe(x => {
-                this.backgroundPath = this.sanitizer.bypassSecurityTrustStyle
-                    ("url(" + "https://image.tmdb.org/t/p/w1280" + x.backdropPath + ")");
-                this.posterPath = "https://image.tmdb.org/t/p/w300/" + x.posterPath;
-            });
-            
-        } else {
-            this.imageService.getTvBanner(Number(issue.providerId)).subscribe(x => {
+            this.imageService.getMovieBackground(Number(issue.providerId)).subscribe(x => {
                 this.backgroundPath = this.sanitizer.bypassSecurityTrustStyle
                     ("url(" + x + ")");
             });
-            this.searchService.getShowInformationTreeNode(Number(issue.providerId)).subscribe(x => {
-                this.posterPath = x.data.banner;
+            this.imageService.getMoviePoster(Number(issue.providerId)).subscribe(x => {
+                this.posterPath = x.toString();
+            });
+
+        } else {
+            this.imageService.getTvBackground(Number(issue.providerId)).subscribe(x => {
+                this.backgroundPath = this.sanitizer.bypassSecurityTrustStyle
+                    ("url(" + x + ")");
+            });
+            this.imageService.getTvPoster(Number(issue.providerId)).subscribe(x => {
+                this.posterPath = x.toString();
             });
         }
 
