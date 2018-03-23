@@ -203,6 +203,10 @@ namespace Ombi.Schedule.Jobs.Ombi
                 var admins = await _userManager.GetUsersInRoleAsync(OmbiRoles.Admin);
                 foreach (var a in admins)
                 {
+                    if (a.Email.IsNullOrEmpty())
+                    {
+                        continue;
+                    }
                     var messageContent = ParseTemplate(template, customization, a);
 
                     var email = new NewsletterTemplate();
