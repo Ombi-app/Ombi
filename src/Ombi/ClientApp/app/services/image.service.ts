@@ -29,11 +29,11 @@ export class ImageService extends ServiceHelpers {
         return this.http.get<string>(`${this.url}poster/tv/${tvdbid}`, { headers: this.headers });
     }
 
-    public getMovieBackground(themoviedb: number): Observable<string> {
-        return this.http.get<string>(`${this.url}movies/${themoviedb}`, { headers: this.headers });
+    public getMovieBackground(movieDbId: number): Observable<string> {
+        return this.http.get<string>(`${this.url}background/movie/${movieDbId}`, { headers: this.headers });
     }
 
-    public getMoviePoster(themoviedb: number): Observable<string> {
-        return this.http.get<string>(`${this.url}poster/movies/${themoviedb}`, { headers: this.headers });
+    public getMoviePoster(movieDbId: number): Observable<string> {
+        return this.http.get<string>(`${this.url}poster/movie/${movieDbId}`, { headers: this.headers });
     }
 }
