@@ -32,6 +32,15 @@
                     <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
                 </span>
             </th>
+            <th (click)="setOrder('discordUserID')">
+                <a>
+                    Discord UserID
+                </a>
+                <span *ngIf="order === 'discordUserID'">
+                    <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span>
+                    <span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
+                </span>
+            </th>            
             <th (click)="setOrder('emailAddress')">
                 <a>
                     Email

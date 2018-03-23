@@ -25,7 +25,14 @@
                     <input type="text" [(ngModel)]="user.alias" class="form-control form-control-custom " id="alias" name="alias" value="{{user?.alias}}">
                 </div>
             </div>
-
+            
+            <div class="form-group">
+                <label for="discordUserID" class="control-label">Discord User ID</label>
+                <div>
+                    <input type="text" [(ngModel)]="user.discordUserID" class="form-control form-control-custom " id="discordUserID" name="discordUserID" value="{{user?.discordUserID}}" [disabled]="user?.userType == 2">
+                </div>
+            </div>
+            
             <div class="form-group">
                 <label for="emailAddress" class="control-label">Email Address</label>
                 <div>
