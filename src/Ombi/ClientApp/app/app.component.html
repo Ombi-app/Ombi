@@ -34,6 +34,14 @@
                             <i class="fa fa-th-list"></i> {{ 'NavigationBar.Requests' | translate }}</a>
                     </li>
                 </ul>
+                <div *ngIf="customizationSettings">
+                    <ul *ngIf="customizationSettings.recentlyAddedPage" class="nav navbar-nav">
+                        <li id="RecentlyAdded" [routerLinkActive]="['active']">
+                            <a [routerLink]="['/recentlyadded']">
+                                <i class="fa fa-check"></i> {{ 'NavigationBar.RecentlyAdded' | translate }}</a>
+                        </li>
+                    </ul>
+                </div>
                 <ul *ngIf="issuesEnabled" class="nav navbar-nav">
                     <li id="Issues" [routerLinkActive]="['active']">
                         <a [routerLink]="['/issues']">
@@ -46,6 +54,7 @@
                             <i class="fa fa-user"></i> {{ 'NavigationBar.UserManagement' | translate }}</a>
                     </li>
                 </ul>
+                
                 <ul *ngIf="hasRole('Admin') || hasRole('PowerUser')" class="nav navbar-nav">
                     <li>
                         <a href="https://www.paypal.me/PlexRequestsNet" target="_blank" pTooltip="{{ 'NavigationBar.DonateTooltip' | translate }}">
@@ -84,7 +93,7 @@
                                 <a [routerLink]="['/usermanagement/updatedetails']">
                                     <i class="fa fa-key"></i>{{ 'NavigationBar.UpdateDetails' | translate }}</a>
                             </li>
-                            <li *ngIf="customizationSettings.mobile" [routerLinkActive]="['active']">
+                            <li *ngIf="customizationSettings?.mobile" [routerLinkActive]="['active']">
                                     <a href="#" (click)="openMobileApp($event)">
                                         <i class="fa fa-mobile"></i>{{ 'NavigationBar.OpenMobileApp' | translate }}</a>
                             </li>

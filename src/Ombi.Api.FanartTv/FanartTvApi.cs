@@ -32,9 +32,9 @@ namespace Ombi.Api.FanartTv
             }
         }
 
-        public async Task<MovieResult> GetMovieImages(int theMovieDbId, string token)
+        public async Task<MovieResult> GetMovieImages(string movieOrImdbId, string token)
         {
-            var request = new Request($"movies/{theMovieDbId}", Endpoint, HttpMethod.Get);
+            var request = new Request($"movies/{movieOrImdbId}", Endpoint, HttpMethod.Get);
             request.AddHeader("api-key", token);
 
             return await Api.Request<MovieResult>(request);

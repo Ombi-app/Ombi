@@ -20,6 +20,7 @@ import {
     ILandingPageSettings,
     IMattermostNotifcationSettings,
     IMobileNotifcationSettings,
+    INewsletterNotificationSettings,
     IOmbiSettings,
     IPlexSettings,
     IPushbulletNotificationSettings,
@@ -264,5 +265,18 @@ export class SettingsService extends ServiceHelpers {
     public saveIssueSettings(settings: IIssueSettings): Observable<boolean> {
         return this.http
             .post<boolean>(`${this.url}/issues`, JSON.stringify(settings), {headers: this.headers});
+    }
+
+    public getNewsletterSettings(): Observable<INewsletterNotificationSettings> {
+        return this.http.get<INewsletterNotificationSettings>(`${this.url}/notifications/newsletter`, {headers: this.headers});
+    }  
+
+    public updateNewsletterDatabase(): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}/notifications/newsletterdatabase`, {headers: this.headers});
+    }    
+
+    public saveNewsletterSettings(settings: INewsletterNotificationSettings): Observable<boolean> {
+        return this.http
+            .post<boolean>(`${this.url}/notifications/newsletter`, JSON.stringify(settings), {headers: this.headers});
     }
 }

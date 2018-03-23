@@ -32,6 +32,7 @@ using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Api.Github;
+using Ombi.Core.Engine;
 
 namespace Ombi.Controllers
 {
@@ -60,7 +61,8 @@ namespace Ombi.Controllers
             IEmbyApi embyApi,
             IRadarrSync radarrSync,
             ICacheService memCache,
-            IGithubApi githubApi)
+            IGithubApi githubApi,
+            IRecentlyAddedEngine engine)
         {
             SettingsResolver = resolver;
             Mapper = mapper;
@@ -69,6 +71,7 @@ namespace Ombi.Controllers
             _radarrSync = radarrSync;
             _cache = memCache;
             _githubApi = githubApi;
+            _recentlyAdded = engine;
         }
 
         private ISettingsResolver SettingsResolver { get; }
@@ -78,6 +81,7 @@ namespace Ombi.Controllers
         private readonly IRadarrSync _radarrSync;
         private readonly ICacheService _cache;
         private readonly IGithubApi _githubApi;
+        private readonly IRecentlyAddedEngine _recentlyAdded;
 
         /// <summary>
         /// Gets the Ombi settings.
@@ -607,7 +611,7 @@ namespace Ombi.Controllers
             var model = Mapper.Map<EmailNotificationsViewModel>(emailSettings);
 
             // Lookup to see if we have any templates saved
-            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Email);
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Email);
 
             return model;
         }
@@ -654,7 +658,7 @@ namespace Ombi.Controllers
             var model = Mapper.Map<DiscordNotificationsViewModel>(emailSettings);
 
             // Lookup to see if we have any templates saved
-            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Discord);
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Discord);
 
             return model;
         }
@@ -689,7 +693,7 @@ namespace Ombi.Controllers
             var model = Mapper.Map<TelegramNotificationsViewModel>(emailSettings);
 
             // Lookup to see if we have any templates saved
-            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Telegram);
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Telegram);
 
             return model;
         }
@@ -723,7 +727,7 @@ namespace Ombi.Controllers
             var model = Mapper.Map<PushbulletNotificationViewModel>(settings);
 
             // Lookup to see if we have any templates saved
-            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Pushbullet);
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Pushbullet);
 
             return model;
         }
@@ -757,7 +761,7 @@ namespace Ombi.Controllers
             var model = Mapper.Map<PushoverNotificationViewModel>(settings);
 
             // Lookup to see if we have any templates saved
-            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Pushover);
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Pushover);
 
             return model;
         }
@@ -792,7 +796,7 @@ namespace Ombi.Controllers
             var model = Mapper.Map<SlackNotificationsViewModel>(settings);
 
             // Lookup to see if we have any templates saved
-            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Slack);
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Slack);
 
             return model;
         }
@@ -826,7 +830,7 @@ namespace Ombi.Controllers
             var model = Mapper.Map<MattermostNotificationsViewModel>(settings);
 
             // Lookup to see if we have any templates saved
-            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Mattermost);
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Mattermost);
 
             return model;
         }
@@ -860,17 +864,62 @@ namespace Ombi.Controllers
             var model = Mapper.Map<MobileNotificationsViewModel>(settings);
 
             // Lookup to see if we have any templates saved
-            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Mobile);
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Mobile);
 
             return model;
         }
 
-        private async Task<List<NotificationTemplates>> BuildTemplates(NotificationAgent agent)
+        /// <summary>
+        /// Saves the Newsletter notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/newsletter")]
+        public async Task<bool> NewsletterSettings([FromBody] NewsletterNotificationViewModel model)
         {
-            var templates = await TemplateRepository.GetAllTemplates(agent);
-            return templates.OrderBy(x => x.NotificationType.ToString()).ToList();
+            // Save the email settings
+            var settings = Mapper.Map<NewsletterSettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.Update(model.NotificationTemplate);
+
+            return result;
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpPost("notifications/newsletterdatabase")]
+        public async Task<bool> UpdateNewsletterDatabase()
+        {
+            return await _recentlyAdded.UpdateRecentlyAddedDatabase();
+        }
+
+        /// <summary>
+        /// Gets the Newsletter Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/newsletter")]
+        public async Task<NewsletterNotificationViewModel> NewsletterSettings()
+        {
+            var settings = await Get<NewsletterSettings>();
+            var model = Mapper.Map<NewsletterNotificationViewModel>(settings);
+
+            // Lookup to see if we have any templates saved
+            var templates = BuildTemplates(NotificationAgent.Email, true);
+            model.NotificationTemplate = templates.FirstOrDefault(x => x.NotificationType == NotificationType.Newsletter);
+            return model;
+        }
+
+        private List<NotificationTemplates> BuildTemplates(NotificationAgent agent, bool showNewsletter = false)
+        {
+            var templates = TemplateRepository.GetAllTemplates(agent);
+            if (!showNewsletter)
+            {
+                // Make sure we do not display the newsletter
+                templates = templates.Where(x => x.NotificationType != NotificationType.Newsletter);
+            }
+            return templates.OrderBy(x => x.NotificationType.ToString()).ToList();
+        }
 
         private async Task<T> Get<T>()
         {

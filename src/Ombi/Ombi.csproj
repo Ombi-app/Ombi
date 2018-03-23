@@ -28,15 +28,19 @@
   
   <ItemGroup>
     <!-- Files not to show in IDE -->
+    <Compile Remove="Logs\**" />
     <Compile Remove="Styles\**" />
     <Compile Remove="wwwroot\dist\**" />
 
     <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
     <Content Remove="ClientApp\**" />
+    <Content Remove="Logs\**" />
     <Content Remove="Styles\**" />
     <Content Remove="wwwroot\dist\**" />
+    <EmbeddedResource Remove="Logs\**" />
     <EmbeddedResource Remove="Styles\**" />
     <EmbeddedResource Remove="wwwroot\dist\**" />
+    <None Remove="Logs\**" />
     <None Remove="Styles\**" />
     <None Remove="wwwroot\dist\**" />
   </ItemGroup>

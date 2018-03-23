@@ -79,6 +79,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ITvSearchEngine, TvSearchEngine>();
             services.AddTransient<IRuleEvaluator, RuleEvaluator>();
             services.AddTransient<IMovieSender, MovieSender>();
+            services.AddTransient<IRecentlyAddedEngine, RecentlyAddedEngine>();
             services.AddTransient<ITvSender, TvSender>();
             services.AddTransient<IMassEmailSender, MassEmailSender>();
         }
@@ -173,6 +174,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IProcessProvider, ProcessProvider>();
             services.AddTransient<ISickRageSync, SickRageSync>();
             services.AddTransient<IRefreshMetadata, RefreshMetadata>();
+            services.AddTransient<INewsletterJob, NewsletterJob>();
         }
     }
 }

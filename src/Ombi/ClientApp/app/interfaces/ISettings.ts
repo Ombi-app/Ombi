@@ -107,6 +107,7 @@ export interface ICustomizationSettings extends ISettings {
   presetThemeContent: string;
   presetThemeDisplayName: string;
   presetThemeVersion: string;
+  recentlyAddedPage: boolean;
 }
 
 export interface IThemes {
@@ -126,6 +127,7 @@ export interface IJobSettings {
   userImporter: string;
   sickRageSync: string;
   refreshMetadata: string;
+  newsletter: string;
 }
 
 export interface IIssueSettings extends ISettings {

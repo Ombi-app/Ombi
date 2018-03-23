@@ -46,7 +46,8 @@ namespace Ombi.Schedule.Processor
             if (masterBranch)
             {
                 latestRelease = doc.DocumentNode.Descendants("h2")
-                    .FirstOrDefault(x => x.InnerText != "(unreleased)");
+                    .FirstOrDefault(x => x.InnerText == "(unreleased)");
+                // TODO: Change this to InnterText != "(unreleased)" once we go live and it's not a prerelease
             }
             else
             {
