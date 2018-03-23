@@ -92,5 +92,13 @@
     <None Include="wwwroot\loading.css" />
     <None Include="wwwroot\translations\*.json" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ClientApp\app\animations\fadeinout.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\app\animations\fadeinout.ts" />
+  </ItemGroup>
  
 </Project>
