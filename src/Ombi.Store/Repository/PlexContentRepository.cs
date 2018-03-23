@@ -97,6 +97,16 @@ namespace Ombi.Store.Repository
             Db.PlexServerContent.Update(existingContent);
             await Db.SaveChangesAsync();
         }
+        public void UpdateWithoutSave(PlexServerContent existingContent)
+        {
+            Db.PlexServerContent.Update(existingContent);
+        }
+
+        public async Task UpdateRange(IEnumerable<PlexServerContent> existingContent)
+        {
+            Db.PlexServerContent.UpdateRange(existingContent);
+            await Db.SaveChangesAsync();
+        }
 
         public IQueryable<PlexEpisode> GetAllEpisodes()
         {

@@ -56,6 +56,15 @@ namespace Ombi.Store.Entities
         public int Key { get; set; }
         public DateTime AddedAt { get; set; }
         public string Quality { get; set; }
+
+        [NotMapped]
+        public bool HasImdb => !string.IsNullOrEmpty(ImdbId);
+
+        [NotMapped]
+        public bool HasTvDb => !string.IsNullOrEmpty(TvDbId);
+
+        [NotMapped]
+        public bool HasTheMovieDb => !string.IsNullOrEmpty(TheMovieDbId);
     }
 
     [Table("PlexSeasonsContent")]
