@@ -23,14 +23,14 @@ namespace Ombi.Store.Repository
             return Db.NotificationTemplates.AsQueryable();
         }
 
-        public async Task<IEnumerable<NotificationTemplates>> GetAllTemplates()
+        public IQueryable<NotificationTemplates> GetAllTemplates()
         {
-            return await Db.NotificationTemplates.ToListAsync();
+            return Db.NotificationTemplates;
         }
 
-        public async Task<IEnumerable<NotificationTemplates>> GetAllTemplates(NotificationAgent agent)
+        public IQueryable<NotificationTemplates> GetAllTemplates(NotificationAgent agent)
         {
-            return await Db.NotificationTemplates.Where(x => x.Agent == agent).ToListAsync();
+            return Db.NotificationTemplates.Where(x => x.Agent == agent);
         }
 
         public async Task<NotificationTemplates> GetTemplate(NotificationAgent agent, NotificationType type)
@@ -40,6 +40,11 @@ namespace Ombi.Store.Repository
 
         public async Task Update(NotificationTemplates template)
         {
+            if (Db.Entry(template).State == EntityState.Detached)
+            {
+                Db.Attach(template);
+                Db.Entry(template).State = EntityState.Modified;
+            }
             await Db.SaveChangesAsync();
         }
 
@@ -59,6 +64,27 @@ namespace Ombi.Store.Repository
             var settings = await Db.NotificationTemplates.AddAsync(entity).ConfigureAwait(false);
             await Db.SaveChangesAsync().ConfigureAwait(false);
             return settings.Entity;
+        }
+
+        private bool _disposed;
+        // Protected implementation of Dispose pattern.
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                Db?.Dispose();
+            }
+
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
