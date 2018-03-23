@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Helpers;
@@ -114,6 +115,12 @@ namespace Ombi.Store.Context
             // VACUUM;
             Database.ExecuteSqlCommand("VACUUM;");
 
+            // Make sure we have the roles
+            var roles = Roles.Where(x => x.Name == OmbiRoles.RecievesNewsletter);
+            if (!roles.Any())
+            {
+                Roles.Add(new IdentityRole(OmbiRoles.RecievesNewsletter));
+            }
             //Check if templates exist
             var templates = NotificationTemplates.ToList();
 
