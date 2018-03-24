@@ -18,6 +18,14 @@ namespace Ombi.Notifications.Agents
 {
     public class DiscordNotification : BaseNotification<DiscordNotificationSettings>, IDiscordNotification
     {
+        // constants I needed but could not find
+        public const string IMDB_BASE_URL = "http://www.imdb.com/title/";
+        public const string TVDB_BASE_URL = "https://www.thetvdb.com/?tab=series&id=";
+
+        // if true mentionAlias will post the alias to discord and trigger an @mention if set up as <@id>.  
+        // It will also use the username instead of alias when talking about a user. e.g. "Requested by username on 16 March"
+        public bool mentionAlias { get; set; } = true;
+
         public DiscordNotification(IDiscordApi api, ISettingsService<DiscordNotificationSettings> sn,
                                    ILogger<DiscordNotification> log, INotificationTemplatesRepository r,
                                    IMovieRequestRepository m, ITvRequestRepository t, ISettingsService<CustomizationSettings> s)
@@ -67,7 +75,39 @@ namespace Ombi.Notifications.Agents
                 Message = parsed.Message,
             };
 
+            string userString = TvRequest.RequestedUser.Alias;
             notification.Other.Add("image", parsed.Image);
+            if (Customization.ApplicationUrl.HasValue()) notification.Other.Add("authorUrl", Customization.ApplicationUrl + "requests");
+
+            if (model.RequestType == RequestType.Movie)
+            {
+                if (mentionAlias)
+                {
+                    notification.Other.Add("mention", userString);
+                    userString = TvRequest.RequestedUser.UserName;
+                }
+                notification.Other.Add("footer", "Requested by " + MovieRequest.RequestedUser + " on " + MovieRequest.RequestedDate.ToLongDateString());
+                notification.Other.Add("author", "🎬 New Movie Request!");
+                notification.Other.Add("title", MovieRequest.Title + " (" + MovieRequest.ReleaseDate.Year + ")");
+                notification.Other.Add("description", MovieRequest.Overview);
+                notification.Other.Add("titleUrl", IMDB_BASE_URL + MovieRequest.ImdbId);
+                Logger.LogDebug(MovieRequest.Background);
+            }
+
+            if (model.RequestType == RequestType.TvShow)
+            {
+                if (mentionAlias)
+                {
+                    notification.Other.Add("mention", userString);
+                    userString = TvRequest.RequestedUser.UserName;
+                }
+                notification.Other.Add("footer", "Requested by " + userString + " on " + TvRequest.RequestedDate.ToLongDateString());
+                notification.Other.Add("author", "📺 New TV Request!");
+                notification.Other.Add("title", TvRequest.Title + " (" + TvRequest.ParentRequest.ReleaseDate.Year + ")");
+                notification.Other.Add("description", TvRequest.ParentRequest.Overview);
+                notification.Other.Add("titleUrl", TVDB_BASE_URL + TvRequest.ParentRequest.TvDbId);
+            }
+
             await Send(notification, settings);
         }
 
@@ -200,25 +240,70 @@ namespace Ombi.Notifications.Agents
             {
                 var discordBody = new DiscordWebhookBody
                 {
-                    content = model.Message,
+                    // content = model.Message,
                     username = settings.Username,
                 };
 
+                string author;
+                model.Other.TryGetValue("author", out author);
+
+                string title;
+                model.Other.TryGetValue("title", out title);
+
+                string titleUrl;
+                model.Other.TryGetValue("titleUrl", out titleUrl);
+
                 string image;
-                if (model.Other.TryGetValue("image", out image))
+                model.Other.TryGetValue("image", out image);
+
+                string footer;
+                model.Other.TryGetValue("footer", out footer);
+
+                string authorUrl;
+                model.Other.TryGetValue("authorUrl", out authorUrl);
+
+                string description;
+                model.Other.TryGetValue("description", out description);
+
+                string mention;
+                model.Other.TryGetValue("mention", out mention);
+
+                List<DiscordField> fields = new List<DiscordField>();
+                if (mentionAlias && mention.HasValue())
                 {
-                    discordBody.embeds = new List<DiscordEmbeds>
-                    {
-                        new DiscordEmbeds
+                    fields.Add
+                    (
+                        new DiscordField
                         {
-                            image = new DiscordImage
-                            {
-                                url = image
-                            }
+                            name = "Honourable Mentions",
+                            value = mention
                         }
-                    };
+                    );
                 }
 
+                discordBody.embeds = new List<DiscordEmbeds>
+                {
+                    new DiscordEmbeds
+                    {
+                        title = title,
+                        url = titleUrl,
+                        image = new DiscordImage
+                        {
+                            url = image
+                        },
+                        author = new DiscordAuthor
+                        {
+                            name = author,
+                            url = authorUrl
+                        },
+                        description = description,
+                        footer = new DiscordFooter
+                        {
+                            text = footer
+                        },
+                        fields = fields
+                    }
+                };
                 await Api.SendMessage(discordBody, settings.WebHookId, settings.Token);
             }
             catch (Exception e)
