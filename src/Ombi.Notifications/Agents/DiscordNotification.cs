@@ -83,7 +83,7 @@ namespace Ombi.Notifications.Agents
             if (model.RequestType == RequestType.Movie)
             {
                 string userString = MovieRequest.RequestedUser.Alias;
-                if (mentionAlias)
+                if (MentionAlias)
                 {
                     notification.Other.Add("mention", userString);
                     userString = MovieRequest.RequestedUser.UserName;
@@ -98,7 +98,7 @@ namespace Ombi.Notifications.Agents
             if (model.RequestType == RequestType.TvShow)
             {
                 string userString = TvRequest.RequestedUser.Alias;
-                if (mentionAlias)
+                if (MentionAlias)
                 {
                     notification.Other.Add("mention", userString);
                     userString = TvRequest.RequestedUser.UserName;
@@ -256,7 +256,7 @@ namespace Ombi.Notifications.Agents
                 model.Other.TryGetValue("mention", out var mention);
 
                 List<DiscordField> fields = new List<DiscordField>();
-                if (mentionAlias && mention.HasValue())
+                if (MentionAlias && mention.HasValue())
                 {
                     fields.Add
                     (
