@@ -33,7 +33,7 @@ namespace Ombi.Notifications.Agents
 
         // if true mentionAlias will post the alias to discord and trigger an @mention if set up as <@id>.  
         // It will also use the username instead of alias when talking about a user. e.g. "Requested by username on 16 March"
-        public bool mentionAlias { get; set; } = true;
+        public bool MentionAlias { get; set; } = true;
 
         public override string NotificationName => "DiscordNotification";
 
