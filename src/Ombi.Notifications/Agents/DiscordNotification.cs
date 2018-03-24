@@ -126,6 +126,8 @@ namespace Ombi.Notifications.Agents
                 Message = parsed.Message,
             };
             notification.Other.Add("image", parsed.Image);
+            notification.Other.Add("author", "New Issue!");
+            notification.Other.Add("description", notification.Message);
             await Send(notification, settings);
         }
 
@@ -142,6 +144,8 @@ namespace Ombi.Notifications.Agents
                 Message = parsed.Message,
             };
             notification.Other.Add("image", parsed.Image);
+            notification.Other.Add("author", "New Comment on Issue!");
+            notification.Other.Add("description", notification.Message);
             await Send(notification, settings);
         }
 
@@ -158,6 +162,8 @@ namespace Ombi.Notifications.Agents
                 Message = parsed.Message,
             };
             notification.Other.Add("image", parsed.Image);
+            notification.Other.Add("author", "Issue Resolved!");
+            notification.Other.Add("description", notification.Message);
             await Send(notification, settings);
         }
 
@@ -184,6 +190,8 @@ namespace Ombi.Notifications.Agents
                 Message = message
             };
             notification.Other.Add("image", image);
+            notification.Other.Add("author", "Request Added to Queue!");
+            notification.Other.Add("description", notification.Message);
             await Send(notification, settings);
         }
 
@@ -200,6 +208,8 @@ namespace Ombi.Notifications.Agents
                 Message = parsed.Message,
             };
             notification.Other.Add("image", parsed.Image);
+            notification.Other.Add("author", "Request Declined.");
+            notification.Other.Add("description", notification.Message);
             await Send(notification, settings);
         }
 
@@ -217,6 +227,8 @@ namespace Ombi.Notifications.Agents
             };
 
             notification.Other.Add("image", parsed.Image);
+            notification.Other.Add("author", "Request Approved!");
+            notification.Other.Add("description", notification.Message);
             await Send(notification, settings);
         }
 
@@ -233,6 +245,8 @@ namespace Ombi.Notifications.Agents
                 Message = parsed.Message,
             };
             notification.Other.Add("image", parsed.Image);
+            notification.Other.Add("author", "Request Available!");
+            notification.Other.Add("description", notification.Message);
             await Send(notification, settings);
         }
 
