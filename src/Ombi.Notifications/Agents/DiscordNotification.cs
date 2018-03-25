@@ -102,11 +102,11 @@ namespace Ombi.Notifications.Agents
             DiscordEmbeds embed = null;
             if (model.RequestType == RequestType.Movie)
             {
-                embed = CreateDiscordEmbed(author, MovieRequest, NotificationType.NewRequest, parsed.Image);
+                embed = CreateDiscordEmbed(author, MovieRequest, NotificationType.NewRequest, parsed.Image, parsed.Message);
             }
             else if (model.RequestType == RequestType.TvShow)
             {
-                embed = CreateDiscordEmbed(author, TvRequest, NotificationType.NewRequest, parsed.Image);
+                embed = CreateDiscordEmbed(author, TvRequest, NotificationType.NewRequest, parsed.Image, parsed.Message);
             }
             await Send(notification, settings, embed);
         }
@@ -207,11 +207,11 @@ namespace Ombi.Notifications.Agents
             DiscordEmbeds embed = null;
             if (model.RequestType == RequestType.Movie)
             {
-                embed = CreateDiscordEmbed(author, MovieRequest, NotificationType.RequestDeclined, parsed.Image);
+                embed = CreateDiscordEmbed(author, MovieRequest, NotificationType.RequestDeclined, parsed.Image, parsed.Message);
             }
             else if (model.RequestType == RequestType.TvShow)
             {
-                embed = CreateDiscordEmbed(author, TvRequest, NotificationType.RequestDeclined, parsed.Image);
+                embed = CreateDiscordEmbed(author, TvRequest, NotificationType.RequestDeclined, parsed.Image, parsed.Message);
             }
             await Send(notification, settings, embed);
         }
@@ -238,11 +238,11 @@ namespace Ombi.Notifications.Agents
             DiscordEmbeds embed = null;
             if (model.RequestType == RequestType.Movie)
             {
-                embed = CreateDiscordEmbed(author, MovieRequest, NotificationType.RequestApproved, parsed.Image);
+                embed = CreateDiscordEmbed(author, MovieRequest, NotificationType.RequestApproved, parsed.Image, parsed.Message);
             }
             else if (model.RequestType == RequestType.TvShow)
             {
-                embed = CreateDiscordEmbed(author, TvRequest, NotificationType.RequestApproved, parsed.Image);
+                embed = CreateDiscordEmbed(author, TvRequest, NotificationType.RequestApproved, parsed.Image, parsed.Message);
             }
             await Send(notification, settings, embed);
         }
@@ -278,11 +278,11 @@ namespace Ombi.Notifications.Agents
             DiscordEmbeds embed = null;
             if (model.RequestType == RequestType.Movie)
             {
-                embed = CreateDiscordEmbed(author, MovieRequest, NotificationType.RequestAvailable, parsed.Image);
+                embed = CreateDiscordEmbed(author, MovieRequest, NotificationType.RequestAvailable, parsed.Image, parsed.Message);
             }
             else if (model.RequestType == RequestType.TvShow)
             {
-                embed = CreateDiscordEmbed(author, TvRequest, NotificationType.RequestAvailable, parsed.Image);
+                embed = CreateDiscordEmbed(author, TvRequest, NotificationType.RequestAvailable, parsed.Image, parsed.Message);
             }
 
             await Send(notification, settings, embed);
@@ -349,44 +349,54 @@ namespace Ombi.Notifications.Agents
             await Send(notification, settings);
         }
 
-        private DiscordEmbeds CreateDiscordEmbed(DiscordAuthor author, BaseRequest req, NotificationType type, string imageUrl)
+        private DiscordEmbeds CreateDiscordEmbed(DiscordAuthor author, BaseRequest req, NotificationType type, string imageUrl, string description)
         {
             MentionAlias.TryGetValue(type, out var mentionUser);
             ShowCompactEmbed.TryGetValue(type, out var compactEmbed);
             // Grab info specific to TV / Movie requests
-            string description = null;
+            string overview = null;
             int releaseYear = 0;
             string titleUrl = null;
             if (req is ChildRequests)
             {
                 ChildRequests tvReq = req as ChildRequests;
-                description = tvReq.ParentRequest.Overview;
+                overview = tvReq.ParentRequest.Overview;
                 releaseYear = tvReq.ParentRequest.ReleaseDate.Year;
                 titleUrl = $"{TVDB_BASE_URL}{tvReq.ParentRequest.TvDbId}";
             }
             else if (req is MovieRequests)
             {
                 MovieRequests movieReq = req as MovieRequests;
-                description = movieReq.Overview;
+                overview = movieReq.Overview;
                 releaseYear = movieReq.ReleaseDate.Year;
                 titleUrl = $"{IMDB_BASE_URL}{movieReq.ImdbId}";
             }
 
             // Compact embed
-            DiscordImage image = null;
+            // TODO: check imageUrl is valid - if malformed discord will throw error and not post at all
+            DiscordImage image = new DiscordImage { url = imageUrl };
             DiscordImage thumbnail = null;
             if (compactEmbed)
             {
+                image = null;
                 thumbnail = new DiscordImage { url = imageUrl };
+                overview = null;
                 description = null;
-            }
-            else
-            {
-                image = new DiscordImage { url = imageUrl };
-            }
-            
+            }            
+
             // Fields
             List<DiscordField> fields = new List<DiscordField>();
+            if (overview.HasValue())
+            {
+                fields.Add
+                (
+                    new DiscordField
+                    {
+                        name = "Overview",
+                        value = overview
+                    }
+                );
+            }
             // Field : mention user
             string alias = req.RequestedUser.Alias;
             if (UsingAliasAsMention && mentionUser && alias.HasValue())
@@ -400,7 +410,7 @@ namespace Ombi.Notifications.Agents
                     }
                 );
             }
-
+            
             // Use appropriate user reference
             if (UsingAliasAsMention || !alias.HasValue())
                 alias = req.RequestedUser.UserName;
@@ -409,6 +419,8 @@ namespace Ombi.Notifications.Agents
             {
                 text = $"Requested by {alias}  on {req.RequestedDate.ToLongDateString()}"
             };
+
+            
 
             DiscordEmbeds embed = new DiscordEmbeds
             {
