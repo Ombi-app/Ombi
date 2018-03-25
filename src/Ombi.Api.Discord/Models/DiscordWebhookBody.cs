@@ -6,10 +6,10 @@ namespace Ombi.Api.Discord.Models
     {
         public string content { get; set; }
         public string username { get; set; }
-        public List<DiscordEmbeds> embeds { get; set; }
+        public List<DiscordEmbed> embeds { get; set; }
     }
 
-    public class DiscordEmbeds
+    public class DiscordEmbed
     {  
         public string title { get; set; }
         public string url { get; set; }
@@ -20,13 +20,13 @@ namespace Ombi.Api.Discord.Models
         public string description { get; set; } // Don't really need to set this
         public DiscordImage image { get; set; }
         public List<DiscordField> fields { get; set; } 
+        public DiscordImage thumbnail { get; set; }
     }
 
     public class DiscordImage
     {
         public string url { get; set; }
-        public int width { get; set; }
-        public int height { get; set; }
+        // discord webhook does not allow width / height changes
     }
 
     public class DiscordAuthor
