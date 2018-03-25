@@ -28,7 +28,9 @@ namespace Ombi.Notifications.Agents
             Logger = log;
             ShowCompactEmbed = new Dictionary<NotificationType, bool>();
             // Temporary defaults
-            ShowCompactEmbed.Add(NotificationType.RequestAvailable, true);
+            ShowCompactEmbed.Add(NotificationType.NewRequest, true);
+            ShowCompactEmbed.Add(NotificationType.RequestApproved, true);
+            ShowCompactEmbed.Add(NotificationType.RequestDeclined, true);
         }
 
         // constants I needed but could not find
@@ -88,14 +90,21 @@ namespace Ombi.Notifications.Agents
 
             ShowCompactEmbed.TryGetValue(NotificationType.NewRequest, out var compact);
 
+            DiscordAuthor author = new DiscordAuthor
+            {
+                name = "New Request!",
+                url = authorUrl,
+                icon_url = "https://i.imgur.com/EPuxVav.png"
+            };
+
             DiscordEmbed embed = null;
             if (model.RequestType == RequestType.Movie)
             {
-                embed = createDiscordEmbed("🎬 New Movie Request!", authorUrl, parsed.Image, MovieRequest, compact);
+                embed = createDiscordEmbed(author, parsed.Image, MovieRequest, compact);
             }
             else if (model.RequestType == RequestType.TvShow)
             {
-                embed = createDiscordEmbed("📺 New TV Show Request!", authorUrl, parsed.Image, TvRequest, compact);
+                embed = createDiscordEmbed(author, parsed.Image, TvRequest, compact);
             }
             await Send(notification, settings, embed);
         }
@@ -186,8 +195,25 @@ namespace Ombi.Notifications.Agents
             {
                 Message = parsed.Message,
             };
-            notification.Other.Add("image", parsed.Image);
-            await Send(notification, settings);
+
+            ShowCompactEmbed.TryGetValue(NotificationType.RequestDeclined, out var compact);
+
+            DiscordAuthor author = new DiscordAuthor
+            {
+                name = "Request Declined!",
+                icon_url = "https://i.imgur.com/i1X39I2.png"
+            };
+
+            DiscordEmbed embed = null;
+            if (model.RequestType == RequestType.Movie)
+            {
+                embed = createDiscordEmbed(author, parsed.Image, MovieRequest, compact);
+            }
+            else if (model.RequestType == RequestType.TvShow)
+            {
+                embed = createDiscordEmbed(author, parsed.Image, TvRequest, compact);
+            }
+            await Send(notification, settings, embed);
         }
 
         protected override async Task RequestApproved(NotificationOptions model, DiscordNotificationSettings settings)
@@ -203,8 +229,24 @@ namespace Ombi.Notifications.Agents
                 Message = parsed.Message,
             };
 
-            notification.Other.Add("image", parsed.Image);
-            await Send(notification, settings);
+            ShowCompactEmbed.TryGetValue(NotificationType.RequestApproved, out var compact);
+
+            DiscordAuthor author = new DiscordAuthor
+            {
+                name = "Request Approved!",
+                icon_url = "https://i.imgur.com/sodXDGW.png"
+            };
+
+            DiscordEmbed embed = null;
+            if (model.RequestType == RequestType.Movie)
+            {
+                embed = createDiscordEmbed(author, parsed.Image, MovieRequest, compact);
+            }
+            else if (model.RequestType == RequestType.TvShow)
+            {
+                embed = createDiscordEmbed(author, parsed.Image, TvRequest, compact);
+            }
+            await Send(notification, settings, embed);
         }
 
         protected override async Task AvailableRequest(NotificationOptions model, DiscordNotificationSettings settings)
@@ -225,18 +267,24 @@ namespace Ombi.Notifications.Agents
             /*
             if (Customization.ApplicationUrl.HasValue())
                 authorUrl = $"{Customization.ApplicationUrl}requests";
-            
             */
             ShowCompactEmbed.TryGetValue(NotificationType.RequestAvailable, out var compact);
+
+            DiscordAuthor author = new DiscordAuthor
+            {
+                name = "Request Now Available!",
+                url = authorUrl,
+                icon_url = "https://i.imgur.com/k4bX9KM.png"
+            };
 
             DiscordEmbed embed = null;
             if (model.RequestType == RequestType.Movie)
             {
-                embed = createDiscordEmbed("🎬 Requested Movie Available!", authorUrl, parsed.Image, MovieRequest, compact);
+                embed = createDiscordEmbed(author, parsed.Image, MovieRequest, compact);
             }
             else if (model.RequestType == RequestType.TvShow)
             {
-                embed = createDiscordEmbed("📺 Requested TV Show Available!", authorUrl, parsed.Image, TvRequest, compact);
+                embed = createDiscordEmbed(author, parsed.Image, TvRequest, compact);
             }
 
             await Send(notification, settings, embed);
@@ -303,18 +351,9 @@ namespace Ombi.Notifications.Agents
             await Send(notification, settings);
         }
 
-        private DiscordEmbed createDiscordEmbed(string authorName, string authorUrl, string imageUrl, MovieRequests req, bool compact)
+        private DiscordEmbed createDiscordEmbed(DiscordAuthor author, string imageUrl, MovieRequests req, bool compact)
         {
-            DiscordAuthor author = null;
-            if (authorName.HasValue())
-            {
-                author = new DiscordAuthor
-                {
-                    name = authorName,
-                    url = authorUrl
-                };
-            }
-
+            author.name = $"{author.name} 🎬";
             DiscordImage image = null;
             DiscordImage thumbnail = null;
             if (compact)
@@ -360,18 +399,9 @@ namespace Ombi.Notifications.Agents
             return embed;
         }
 
-        private DiscordEmbed createDiscordEmbed(string authorName, string authorUrl, string imageUrl, ChildRequests req, bool compact)
+        private DiscordEmbed createDiscordEmbed(DiscordAuthor author, string imageUrl, ChildRequests req, bool compact)
         {
-            DiscordAuthor author = null;
-            if (authorName.HasValue())
-            {
-                author = new DiscordAuthor
-                {
-                    name = authorName,
-                    url = authorUrl
-                };
-            }
-
+            author.name = $"{author.name} 📺";
             DiscordImage image = null;
             DiscordImage thumbnail = null;
             if (compact)
