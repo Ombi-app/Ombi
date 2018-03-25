@@ -6,10 +6,10 @@ namespace Ombi.Api.Discord.Models
     {
         public string content { get; set; }
         public string username { get; set; }
-        public List<DiscordEmbed> embeds { get; set; }
+        public List<DiscordEmbeds> embeds { get; set; }
     }
 
-    public class DiscordEmbed
+    public class DiscordEmbeds
     {  
         public string title { get; set; }
         public string url { get; set; }
