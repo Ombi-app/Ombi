@@ -407,7 +407,7 @@ namespace Ombi.Notifications.Agents
             {
                 author = author,
                 title = $"{req.Title} ({req.ParentRequest.ReleaseDate.Year})",
-                url = $"{IMDB_BASE_URL}{req.ParentRequest.ImdbId}",
+                url = $"{TVDB_BASE_URL}{req.ParentRequest.TvDbId}",
                 thumbnail = thumbnail,
                 image = image,
                 description = description,
