@@ -5,7 +5,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { OrderModule } from "ngx-order-pipe";
 import { PaginatorModule, SharedModule, TabViewModule } from "primeng/primeng";
 
-import { IdentityService } from "../services";
+import { IdentityService, SearchService } from "../services";
 
 import { AuthGuard } from "../auth/auth.guard";
 
@@ -43,6 +43,7 @@ const routes: Routes = [
     ],
     providers: [
         IdentityService,
+        SearchService,
     ],
 
 })

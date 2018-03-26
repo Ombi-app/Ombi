@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Ombi.Api.FanartTv;
 using Ombi.Store.Repository;
 using System;
@@ -31,7 +31,7 @@ namespace Ombi.Controllers
         private IApplicationConfigRepository Config { get; }
         private LandingPageBackground Options { get; }
         private readonly ICacheService _cache;
-        
+
         [HttpGet("tv/{tvdbid}")]
         public async Task<string> GetTvBanner(int tvdbid)
         {
@@ -71,7 +71,7 @@ namespace Ombi.Controllers
 
             if (images.movieposter?.Any() ?? false)
             {
-                var enImage =  images.movieposter.Where(x => x.lang == "en").OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                var enImage = images.movieposter.Where(x => x.lang == "en").OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
                 if (enImage == null)
                 {
                     return images.movieposter.OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
@@ -117,6 +117,56 @@ namespace Ombi.Controllers
             return string.Empty;
         }
 
+        [HttpGet("background/movie/{movieDbId}")]
+        public async Task<string> GetMovieBackground(string movieDbId)
+        {
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
+
+            var images = await FanartTvApi.GetMovieImages(movieDbId, key.Value);
+
+            if (images == null)
+            {
+                return string.Empty;
+            }
+
+            if (images.moviebackground?.Any() ?? false)
+            {
+                var enImage = images.moviebackground.Where(x => x.lang == "en").OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                if (enImage == null)
+                {
+                    return images.moviebackground.OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                }
+                return enImage;
+            }
+
+            return string.Empty;
+        }
+
+        [HttpGet("background/tv/{tvdbid}")]
+        public async Task<string> GetTvBackground(int tvdbid)
+        {
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
+
+            var images = await FanartTvApi.GetTvImages(tvdbid, key.Value);
+
+            if (images == null)
+            {
+                return string.Empty;
+            }
+
+            if (images.showbackground?.Any() ?? false)
+            {
+                var enImage = images.showbackground.Where(x => x.lang == "en").OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                if (enImage == null)
+                {
+                    return images.showbackground.OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                }
+                return enImage;
+            }
+
+            return string.Empty;
+        }
+
         [HttpGet("background")]
         public async Task<object> GetBackgroundImage()
         {
@@ -133,7 +183,7 @@ namespace Ombi.Controllers
             {
                 var item = rand.Next(moviesArray.Length);
                 var result = await FanartTvApi.GetMovieImages(moviesArray[item].ToString(), key.Value);
- 
+
                 while (!result.moviebackground.Any())
                 {
                     result = await FanartTvApi.GetMovieImages(moviesArray[item].ToString(), key.Value);
@@ -141,7 +191,7 @@ namespace Ombi.Controllers
 
                 movieUrl = result.moviebackground[0].url;
             }
-            if(tvArray.Any())
+            if (tvArray.Any())
             {
                 var item = rand.Next(tvArray.Length);
                 var result = await FanartTvApi.GetTvImages(tvArray[item], key.Value);
@@ -157,8 +207,8 @@ namespace Ombi.Controllers
             if (!string.IsNullOrEmpty(movieUrl) && !string.IsNullOrEmpty(tvUrl))
             {
                 var result = rand.Next(2);
-                if (result == 0) return new { url = movieUrl }; 
-                if (result == 1) return new { url = tvUrl }; 
+                if (result == 0) return new { url = movieUrl };
+                if (result == 1) return new { url = tvUrl };
             }
 
             if (!string.IsNullOrEmpty(movieUrl))

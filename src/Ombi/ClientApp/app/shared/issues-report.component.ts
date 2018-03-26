@@ -15,6 +15,8 @@ export class IssuesReportComponent {
     @Input() public issueCategory: IIssueCategory;
     @Input() public movie: boolean;
     @Input() public providerId: string;
+    @Input() public background: string;
+    @Input() public posterPath: string;
 
     @Output() public visibleChange = new EventEmitter<boolean>();
 
