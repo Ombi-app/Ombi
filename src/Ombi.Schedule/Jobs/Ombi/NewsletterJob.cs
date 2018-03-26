@@ -330,7 +330,8 @@ namespace Ombi.Schedule.Jobs.Ombi
             TableData(sb);
 
             Href(sb, $"https://www.imdb.com/title/{info.ImdbId}/");
-            Header(sb, 3, $"{info.Title} {info.ReleaseDate ?? string.Empty}");
+            var releaseDate = DateTime.Parse(info.ReleaseDate);
+            Header(sb, 3, $"{info.Title} ({releaseDate.Year})");
             EndTag(sb, "a");
 
             if (info.Genres.Any())
@@ -413,8 +414,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                     sb.Append("<tr>");
                     sb.Append(
                         "<td align=\"center\" style=\"font-family: sans-serif; font-size: 14px; vertical-align: top;\" valign=\"top\">");
-
-                    var title = $"{t.Title} {t.ReleaseYear}";
+                    
+                    var title = $"{t.Title} ({t.ReleaseYear})";
 
                     Href(sb, $"https://www.imdb.com/title/{info.externals.imdb}/");
                     Header(sb, 3, title);
