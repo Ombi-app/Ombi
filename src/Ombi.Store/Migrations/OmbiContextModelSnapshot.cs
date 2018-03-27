@@ -20,7 +20,7 @@ namespace Ombi.Store.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.0-rtm-26452");
+                .HasAnnotation("ProductVersion", "2.0.2-rtm-10011");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -428,6 +428,24 @@ namespace Ombi.Store.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RadarrCache");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.RecentlyAddedLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("AddedAt");
+
+                    b.Property<int>("ContentId");
+
+                    b.Property<int>("ContentType");
+
+                    b.Property<int>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RecentlyAddedLog");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.ChildRequests", b =>

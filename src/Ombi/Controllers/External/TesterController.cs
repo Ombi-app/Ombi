@@ -10,12 +10,14 @@ using Ombi.Api.Radarr;
 using Ombi.Api.SickRage;
 using Ombi.Api.Sonarr;
 using Ombi.Attributes;
+using Ombi.Core.Models.UI;
 using Ombi.Core.Notifications;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Notifications;
 using Ombi.Notifications.Agents;
 using Ombi.Notifications.Models;
+using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Settings.Settings.Models.Notifications;
 
@@ -35,7 +37,7 @@ namespace Ombi.Controllers.External
         public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN,
             IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
             IPlexApi plex, IEmbyApi emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider,
-            ICouchPotatoApi cpApi, ITelegramNotification telegram, ISickRageApi srApi)
+            ICouchPotatoApi cpApi, ITelegramNotification telegram, ISickRageApi srApi, INewsletterJob newsletter)
         {
             Service = service;
             DiscordNotification = notification;
@@ -53,6 +55,7 @@ namespace Ombi.Controllers.External
             CouchPotatoApi = cpApi;
             TelegramNotification = telegram;
             SickRageApi = srApi;
+            Newsletter = newsletter;
         }
 
         private INotificationService Service { get; }
@@ -71,6 +74,7 @@ namespace Ombi.Controllers.External
         private IEmailProvider EmailProvider { get; }
         private ITelegramNotification TelegramNotification { get; }
         private ISickRageApi SickRageApi { get; }
+        private INewsletterJob Newsletter { get; }
 
 
         /// <summary>
@@ -365,6 +369,22 @@ namespace Ombi.Controllers.External
             catch (Exception e)
             {
                 Log.LogError(LoggingEvents.Api, e, "Could not test SickRage");
+                return false;
+            }
+        }
+
+        [HttpPost("newsletter")]
+        public async Task<bool> NewsletterTest([FromBody] NewsletterNotificationViewModel settings)
+        {
+            try
+            {
+                settings.Enabled = true;
+                await Newsletter.Start(settings, true);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test Newsletter");
                 return false;
             }
         }
