@@ -59,8 +59,16 @@ namespace Ombi.Notifications.Agents
                 Message = parsed.Message,
             };
 
-            notification.Other.Add("image", parsed.Image);
+            AddOtherInformation(model, notification, parsed);
+            //notification.Other.Add("overview", model.RequestType == RequestType.Movie ? base.MovieRequest.Overview : TvRequest.);
             await Send(notification, settings);
+        }
+
+        private void AddOtherInformation(NotificationOptions model, NotificationMessage notification,
+            NotificationMessageContent parsed)
+        {
+            notification.Other.Add("image", parsed.Image);
+            notification.Other.Add("title", model.RequestType == RequestType.Movie ? MovieRequest.Title : TvRequest.Title);
         }
 
         protected override async Task NewIssue(NotificationOptions model, MattermostNotificationSettings settings)
@@ -75,7 +83,7 @@ namespace Ombi.Notifications.Agents
             {
                 Message = parsed.Message,
             };
-            notification.Other.Add("image", parsed.Image);
+            AddOtherInformation(model, notification, parsed);
             await Send(notification, settings);
         }
 
@@ -91,7 +99,7 @@ namespace Ombi.Notifications.Agents
             {
                 Message = parsed.Message,
             };
-            notification.Other.Add("image", parsed.Image);
+            AddOtherInformation(model, notification, parsed);
             await Send(notification, settings);
         }
 
@@ -107,7 +115,7 @@ namespace Ombi.Notifications.Agents
             {
                 Message = parsed.Message,
             };
-            notification.Other.Add("image", parsed.Image);
+            AddOtherInformation(model, notification, parsed);
             await Send(notification, settings);
         }
 
@@ -149,7 +157,7 @@ namespace Ombi.Notifications.Agents
             {
                 Message = parsed.Message,
             };
-            notification.Other.Add("image", parsed.Image);
+            AddOtherInformation(model, notification, parsed);
             await Send(notification, settings);
         }
 
@@ -166,7 +174,7 @@ namespace Ombi.Notifications.Agents
                 Message = parsed.Message,
             };
 
-            notification.Other.Add("image", parsed.Image);
+            AddOtherInformation(model, notification, parsed);
             await Send(notification, settings);
         }
 
@@ -182,7 +190,7 @@ namespace Ombi.Notifications.Agents
             {
                 Message = parsed.Message,
             };
-            notification.Other.Add("image", parsed.Image);
+            AddOtherInformation(model, notification, parsed);
             await Send(notification, settings);
         }
 
@@ -190,12 +198,20 @@ namespace Ombi.Notifications.Agents
         {
             try
             {
-                var body = new MattermostBody
+                var body = new MattermostMessage
                 {
-                    username = string.IsNullOrEmpty(settings.Username) ? "Ombi" : settings.Username,
-                    channel = settings.Channel,
-                    text = model.Message,
-                    icon_url = settings.IconUrl
+                    Username = string.IsNullOrEmpty(settings.Username) ? "Ombi" : settings.Username,
+                    Channel = settings.Channel,
+                    Text = model.Message,
+                    IconUrl = new Uri(settings.IconUrl),
+                    Attachments = new List<MattermostAttachment>
+                    {
+                        new MattermostAttachment
+                        {
+                            Title = model.Other.ContainsKey("title") ? model.Other["title"] : string.Empty,
+                            ImageUrl = model.Other.ContainsKey("image") ? new Uri(model.Other["image"]) : null,
+                        }
+                    }
                 };
                 await Api.PushAsync(settings.WebhookUrl, body);
             }

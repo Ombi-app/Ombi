@@ -105,6 +105,7 @@ export class TvRequestChildrenComponent {
         this.issueRequest = req;
         this.issueCategorySelected = catId;
         this.issuesBarVisible = true;
+        this.issueProviderId = req.id.toString();
     }
 
     private removeRequestFromUi(key: IChildRequests) {

@@ -13,5 +13,6 @@
         WelcomeEmail = 8,
         IssueResolved = 9,
         IssueComment = 10,
+        Newsletter = 11,
     }
 }

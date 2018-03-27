@@ -165,6 +165,12 @@ namespace Ombi
             var ombiService =
                 app.ApplicationServices.GetService<ISettingsService<OmbiSettings>>();
             var settings = ombiService.GetSettings();
+            if (settings.ApiKey.IsNullOrEmpty())
+            {
+                // Generate a API Key
+                settings.ApiKey = Guid.NewGuid().ToString("N");
+                ombiService.SaveSettings(settings);
+            }
             if (settings.BaseUrl.HasValue())
             {
                 app.UsePathBase(settings.BaseUrl);

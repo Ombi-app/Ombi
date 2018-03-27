@@ -4,19 +4,26 @@ using System.Text;
 
 namespace Ombi.Notifications.Templates
 {
-    public class EmailBasicTemplate : IEmailBasicTemplate
+    public class EmailBasicTemplate : TemplateBase, IEmailBasicTemplate
     {
-        public string TemplateLocation
+        public override string TemplateLocation
         {
             get
             {
+                if (string.IsNullOrEmpty(_templateLocation))
+                {
 #if DEBUG
-                return Path.Combine(Directory.GetCurrentDirectory(), "bin", "Debug", "netcoreapp2.0", "Templates", "BasicTemplate.html");
+                    _templateLocation = Path.Combine(Directory.GetCurrentDirectory(), "bin", "Debug", "netcoreapp2.0", "Templates",
+                        "BasicTemplate.html");
 #else
-                return Path.Combine(Directory.GetCurrentDirectory(), "Templates","BasicTemplate.html");
+                _templateLocation = Path.Combine(Directory.GetCurrentDirectory(), "Templates","BasicTemplate.html");
 #endif
+                }
+                return _templateLocation;
             }
         }
+
+        private string _templateLocation;
         
         private const string SubjectKey = "{@SUBJECT}";
         private const string BodyKey = "{@BODY}";
@@ -31,7 +38,7 @@ namespace Ombi.Notifications.Templates
             sb.Replace(BodyKey, body);
             sb.Replace(DateKey, DateTime.Now.ToString("f"));
             sb.Replace(Poster, string.IsNullOrEmpty(imgsrc) ? string.Empty : $"<tr><td align=\"center\"><img src=\"{imgsrc}\" alt=\"Poster\" width=\"400px\" text-align=\"center\"/></td></tr>");
-            sb.Replace(Logo, string.IsNullOrEmpty(logo) ? "http://i.imgur.com/qQsN78U.png" : logo);
+            sb.Replace(Logo, string.IsNullOrEmpty(logo) ? OmbiLogo : logo);
 
             return sb.ToString();
         }

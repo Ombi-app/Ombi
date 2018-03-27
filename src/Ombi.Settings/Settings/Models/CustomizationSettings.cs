@@ -9,6 +9,7 @@ namespace Ombi.Settings.Settings.Models
     {
         public string ApplicationName { get; set; }
         public string ApplicationUrl { get; set; }
+        public bool Mobile { get; set; }
         public string CustomCssLink { get; set; }
         public bool EnableCustomDonations { get; set; }
         public string CustomDonationUrl { get; set; }
@@ -17,6 +18,7 @@ namespace Ombi.Settings.Settings.Models
 
         public string PresetThemeName { get; set; }
         public string PresetThemeContent { get; set; }
+        public bool RecentlyAddedPage { get; set; }
 
         [NotMapped]
         public string PresetThemeVersion

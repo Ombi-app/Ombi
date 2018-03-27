@@ -28,15 +28,19 @@
   
   <ItemGroup>
     <!-- Files not to show in IDE -->
+    <Compile Remove="Logs\**" />
     <Compile Remove="Styles\**" />
     <Compile Remove="wwwroot\dist\**" />
 
     <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
     <Content Remove="ClientApp\**" />
+    <Content Remove="Logs\**" />
     <Content Remove="Styles\**" />
     <Content Remove="wwwroot\dist\**" />
+    <EmbeddedResource Remove="Logs\**" />
     <EmbeddedResource Remove="Styles\**" />
     <EmbeddedResource Remove="wwwroot\dist\**" />
+    <None Remove="Logs\**" />
     <None Remove="Styles\**" />
     <None Remove="wwwroot\dist\**" />
   </ItemGroup>
@@ -66,6 +70,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.0.2" />
     <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.0.0-alpha6-79" />
+    <PackageReference Include="ncrontab" Version="3.3.0" />
     <PackageReference Include="Serilog" Version="2.6.0-dev-00892" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
     <PackageReference Include="Serilog.Sinks.File" Version="3.2.0" />
@@ -91,6 +96,14 @@
   <ItemGroup>
     <None Include="wwwroot\loading.css" />
     <None Include="wwwroot\translations\*.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ClientApp\app\animations\fadeinout.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\app\animations\fadeinout.ts" />
   </ItemGroup>
  
 </Project>

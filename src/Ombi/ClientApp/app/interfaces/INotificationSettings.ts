@@ -46,12 +46,17 @@ export enum NotificationType {
     WelcomeEmail = 8,
     IssueResolved = 9,
     IssueComment = 10,
+    Newsletter = 11,
 }
 
 export interface IDiscordNotifcationSettings extends INotificationSettings {
     webhookUrl: string;
     username: string;
     notificationTemplates: INotificationTemplates[];
+}
+
+export interface INewsletterNotificationSettings extends INotificationSettings {
+    notificationTemplate: INotificationTemplates;
 }
 
 export interface ITelegramNotifcationSettings extends INotificationSettings {

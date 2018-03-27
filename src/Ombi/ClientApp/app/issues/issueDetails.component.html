@@ -1,13 +1,16 @@
 <div *ngIf="issue">
+    <div class="myBg backdrop" [style.background-image]="backgroundPath"></div>
+    <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
     <h1>{{issue.title}} </h1>
     <div class="col-md-6">
-            <span class="label label-info">{{IssueStatus[issue.status]}}</span>
-            <span class="label label-success">{{issue.issueCategory.value}}</span>
-        
-            <h3 *ngIf="issue.userReported?.alias">{{'Issues.ReportedBy' | translate}}: {{issue.userReported.alias}}</h3>
-            <h3 *ngIf="!issue.userReported?.alias">{{'Issues.ReportedBy' | translate}}: {{issue.userReported.userName}}</h3>
+        <img class="img-responsive poster" src="{{posterPath}}" alt="poster">
+        <span class="label label-info">{{IssueStatus[issue.status]}}</span>
+        <span class="label label-success">{{issue.issueCategory.value}}</span>
+
+        <h3 *ngIf="issue.userReported?.alias">{{'Issues.ReportedBy' | translate}}: {{issue.userReported.alias}}</h3>
+        <h3 *ngIf="!issue.userReported?.alias">{{'Issues.ReportedBy' | translate}}: {{issue.userReported.userName}}</h3>
         <h3 *ngIf="issue.subject">{{'Issues.Subject' | translate}}: {{issue.subject}}</h3>
-<br>
+        <br>
         <div class="form-group">
             <label for="description" class="control-label" [translate]="'Issues.Description'"></label>
             <div>
@@ -26,7 +29,8 @@
                 <div class="panel-heading top-bar">
                     <div class="col-md-8 col-xs-8">
                         <h3 class="panel-title">
-                            <span class="glyphicon glyphicon-comment"></span> {{'Issues.Comments' | translate}}</h3>
+                            <span class="glyphicon glyphicon-comment"></span> {{'Issues.Comments' | translate}}
+                        </h3>
                     </div>
                 </div>
 
@@ -51,8 +55,7 @@
                 </div>
                 <div class="panel-footer">
                     <div class="input-group">
-                        <input id="btn-input" type="text" class="form-control input-sm chat_input" [(ngModel)]="newComment.comment"  [attr.placeholder]="'Issues.WriteMessagePlaceholder' | translate"
-                        />
+                        <input id="btn-input" type="text" class="form-control input-sm chat_input" [(ngModel)]="newComment.comment" [attr.placeholder]="'Issues.WriteMessagePlaceholder' | translate" />
                         <span class="input-group-btn">
                             <button class="btn btn-primary btn-sm" id="btn-chat" (click)="addComment()" [translate]="'Issues.SendMessageButton'"></button>
                         </span>

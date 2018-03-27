@@ -13,7 +13,7 @@ namespace Ombi.Store.Repository
         Task<bool> ContentExists(string providerId);
         IQueryable<EmbyContent> Get();
         Task<EmbyContent> Get(string providerId);
-        Task<IEnumerable<EmbyContent>> GetAll();
+        IQueryable<EmbyContent> GetAll();
         Task<EmbyContent> GetByEmbyId(string embyId);
         Task Update(EmbyContent existingContent);
         IQueryable<EmbyEpisode> GetAllEpisodes();
