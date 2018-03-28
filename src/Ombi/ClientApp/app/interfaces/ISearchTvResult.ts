@@ -30,3 +30,20 @@ export interface ISearchTvResult {
     firstSeason: boolean;
     latestSeason: boolean;
 }
+
+export interface ITvRequestViewModel {
+    requestAll: boolean;
+    firstSeason: boolean;
+    latestSeason: boolean;
+    tvDbId: number;
+    seasons: ISeasonsViewModel[];
+}
+
+export interface ISeasonsViewModel {
+    seasonNumber: number;
+    episodes: IEpisodesViewModel[];
+}
+
+export interface IEpisodesViewModel {
+    episodeNumber: number;
+}

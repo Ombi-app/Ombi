@@ -10,7 +10,7 @@ namespace Ombi.Store.Repository.Requests
     public class SeasonRequests : Entity
     {
         public int SeasonNumber { get; set; }
-        public List<EpisodeRequests> Episodes { get; set; }
+        public List<EpisodeRequests> Episodes { get; set; } = new List<EpisodeRequests>();
         
         public int ChildRequestId { get; set; }
         [ForeignKey(nameof(ChildRequestId))]

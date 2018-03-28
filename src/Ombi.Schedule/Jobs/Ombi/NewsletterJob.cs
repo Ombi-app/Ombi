@@ -336,8 +336,16 @@ namespace Ombi.Schedule.Jobs.Ombi
             TableData(sb);
 
             Href(sb, $"https://www.imdb.com/title/{info.ImdbId}/");
-            var releaseDate = DateTime.Parse(info.ReleaseDate);
-            Header(sb, 3, $"{info.Title} ({releaseDate.Year})");
+            var releaseDate = string.Empty;
+            try
+            {
+                releaseDate = $"({DateTime.Parse(info.ReleaseDate).Year})";
+            }
+            catch (Exception)
+            {
+                // Swallow, couldn't parse the date
+            }
+            Header(sb, 3, $"{info.Title} {releaseDate}");
             EndTag(sb, "a");
 
             if (info.Genres.Any())

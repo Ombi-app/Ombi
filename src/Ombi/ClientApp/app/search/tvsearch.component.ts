@@ -7,7 +7,7 @@ import { ImageService, NotificationService, RequestService, SearchService} from 
 
 import { TreeNode } from "primeng/primeng";
 import { IRequestEngineResult } from "../interfaces";
-import { IIssueCategory, ISearchTvResult } from "../interfaces";
+import { IIssueCategory, ISearchTvResult, ISeasonsViewModel, ITvRequestViewModel } from "../interfaces";
 
 @Component({
     selector: "tv-search",
@@ -154,7 +154,23 @@ export class TvSearchComponent implements OnInit {
         if (this.authService.hasRole("admin") || this.authService.hasRole("AutoApproveMovie")) {
             searchResult.approved = true;
         }
-        this.requestService.requestTv(searchResult)
+        
+        const viewModel = <ITvRequestViewModel>{ firstSeason: searchResult.firstSeason, latestSeason: searchResult.latestSeason, requestAll: searchResult.requestAll, tvDbId: searchResult.id};
+        viewModel.seasons = [];
+        searchResult.seasonRequests.forEach((season) => {
+            const seasonsViewModel = <ISeasonsViewModel>{seasonNumber: season.seasonNumber, episodes: []};
+            season.episodes.forEach(ep => {
+                if(!searchResult.latestSeason || !searchResult.requestAll || !searchResult.firstSeason) {
+                    if(ep.requested) {
+                        seasonsViewModel.episodes.push({episodeNumber: ep.episodeNumber});
+                    }
+                }
+            });
+            
+            viewModel.seasons.push(seasonsViewModel);
+        });
+
+        this.requestService.requestTv(viewModel)
             .subscribe(x => {
                 this.result = x;
                 if (this.result.result) {
