@@ -43,13 +43,13 @@ namespace Ombi.Core.Engine
         private IAuditRepository Audit { get; }
         private readonly IRepository<RequestLog> _requestLog;
 
-        public async Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv)
+        public async Task<RequestEngineResult> RequestTvShow(TvRequestViewModel tv)
         {
             var user = await GetUser();
 
             var tvBuilder = new TvShowRequestBuilder(TvApi);
             (await tvBuilder
-                .GetShowInfo(tv.Id))
+                .GetShowInfo(tv.TvDbId))
                 .CreateTvList(tv)
                 .CreateChild(tv, user.Id);
 
@@ -78,9 +78,9 @@ namespace Ombi.Core.Engine
                 }
             }
 
-            await Audit.Record(AuditType.Added, AuditArea.TvRequest, $"Added Request {tv.Title}", Username);
+            await Audit.Record(AuditType.Added, AuditArea.TvRequest, $"Added Request {tvBuilder.ChildRequest.Title}", Username);
 
-            var existingRequest = await TvRepository.Get().FirstOrDefaultAsync(x => x.TvDbId == tv.Id);
+            var existingRequest = await TvRepository.Get().FirstOrDefaultAsync(x => x.TvDbId == tv.TvDbId);
             if (existingRequest != null)
             {
                 // Remove requests we already have, we just want new ones
@@ -127,7 +127,7 @@ namespace Ombi.Core.Engine
             var newRequest = tvBuilder.CreateNewRequest(tv);
             return await AddRequest(newRequest.NewRequest);
         }
-
+        
         public async Task<IEnumerable<TvRequests>> GetRequests(int count, int position)
         {
             var shouldHide = await HideFromOtherUsers();
