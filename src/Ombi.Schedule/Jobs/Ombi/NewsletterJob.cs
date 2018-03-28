@@ -300,8 +300,14 @@ namespace Ombi.Schedule.Jobs.Ombi
             var ordered = embyContent.OrderByDescending(x => x.AddedAt);
             foreach (var content in ordered)
             {
-                int.TryParse(content.ProviderId, out var movieDbId);
-                var info = await _movieApi.GetMovieInformationWithExtraInfo(movieDbId);
+                var imdbId = content.ProviderId;
+                var findResult = await _movieApi.Find(imdbId, ExternalSource.imdb_id);
+                var result = findResult.movie_results?.FirstOrDefault();
+                if(result == null)
+                {
+                    continue;
+                }
+                var info = await _movieApi.GetMovieInformationWithExtraInfo(result.id);
                 if (info == null)
                 {
                     continue;
