@@ -38,4 +38,8 @@ export class JobService extends ServiceHelpers {
     public runEmbyCacher(): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}embycontentcacher/`, {headers: this.headers});
     }
+
+    public runNewsletter(): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}newsletter/`, {headers: this.headers});
+    }
 }

@@ -4,13 +4,67 @@
 
 ### **New Features**
 
+- Added the Recently Added Newsletter! You are welcome. [tidusjar]
+
+- Added a new scrollbar to Ombi. [tidusjar]
+
+- Added the ability to automatically generate the API Key on startup if it does not exist #2070. [tidusjar]
+
+- Updated npm dependancies. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update ISSUE_TEMPLATE.md. [Jamie]
+
+- Update appveyor.yml. [Jamie]
+
+- Added recently added stuff. [Jamie]
+
+- Added the recently added engine with some basic methods. [Jamie]
+
 - Added the ability to refresh out backend metadata (#2078) [Jamie]
 
 ### **Fixes**
 
-- Fixed #2074 and #2079. [Jamie]
+- Specific favicons for different platforms. [louis-lau]
+
+- MovieDbId was switched to string fron number so accomodated for change. [Anojh]
+
+- Removing duplicate functions. [Anojh Thayaparan]
+
+- Conflict resolving and adopting Jamie's new method. [Anojh]
+
+- Wrote new calls to just get poster and bg. [Anojh]
+
+- Fix for issue #1907, which is to add content poster and bg to issue details page. [Anojh]
+
+- Dynamic Background Animation. [Anojh]
+
+- Improved the message for #2037. [tidusjar]
+
+- Improved the way we use the notification variables, we have now split out the Username and Alias (Requested User is depricated but not removed) [tidusjar]
+
+- Removed redundant timers. [Anojh]
+
+- More optimizations by reducing requests. [Anojh]
+
+- Improved version. [Anojh]
+
+- Dynamic Background Animation. [Anojh]
+
+- Fixed #2055 and #1903. [Jamie]
 
 - Small changes to the auto updater, let's see how this works. [Jamie]
+
+- Fixed build. [Jamie]
+
+- Fixed the update check for the master build. [Jamie]
+
+- Fixed build. [Jamie]
+
+- Fixed #2074 and #2079. [Jamie]
 
 
 ## v3.0.3030 (2018-03-14)
@@ -18,6 +72,10 @@
 ### **New Features**
 
 - Updated the .Net core dependancies #2072. [Jamie]
+
+### **Fixes**
+
+- Delete Ombi.testdb. [Jamie]
 
 
 ## v3.0.3020 (2018-03-13)

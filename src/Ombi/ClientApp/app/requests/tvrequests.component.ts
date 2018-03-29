@@ -90,12 +90,6 @@ export class TvRequestsComponent implements OnInit {
     }
 
     public ngOnInit() {
-        
-        const profile = <ISonarrProfile>{name:"test",id:1 };
-        const folder = <ISonarrRootFolder>{path:"testpath", id:1};
-
-        this.sonarrProfiles.push(profile);
-        this.sonarrRootFolders.push(folder);
         this.amountToLoad = 1000;
         this.currentlyLoaded = 1000;
         this.tvRequests = [];
@@ -204,7 +198,7 @@ export class TvRequestsComponent implements OnInit {
         this.loadInit();
     }
     private loadBackdrop(val: TreeNode): void {
-        this.imageService.getTvBanner(val.data.id).subscribe(x => {
+        this.imageService.getTvBanner(val.data.tvDbId).subscribe(x => {
             val.data.background = this.sanitizer.bypassSecurityTrustStyle
                 ("url(" + x + ")");
             });

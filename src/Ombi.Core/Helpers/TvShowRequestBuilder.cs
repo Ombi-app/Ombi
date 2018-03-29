@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Ombi.Api.TvMaze;
 using Ombi.Api.TvMaze.Models;
+using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
@@ -23,7 +24,7 @@ namespace Ombi.Core.Helpers
         private ITvMazeApi TvApi { get; }
 
         public ChildRequests ChildRequest { get; set; }
-        public List<SeasonRequests> TvRequests { get; protected set; }
+        public List<SeasonsViewModel> TvRequests { get; protected set; }
         public string PosterPath { get; protected set; }
         public DateTime FirstAir { get; protected set; }
         public TvRequests NewRequest { get; protected set; }
@@ -33,7 +34,7 @@ namespace Ombi.Core.Helpers
         {
             ShowInfo = await TvApi.ShowLookupByTheTvDbId(id);
 
-            DateTime.TryParse(ShowInfo.premiered, out DateTime dt);
+            DateTime.TryParse(ShowInfo.premiered, out var dt);
 
             FirstAir = dt;
 
@@ -43,37 +44,29 @@ namespace Ombi.Core.Helpers
             return this;
         }
         
-        public TvShowRequestBuilder CreateChild(SearchTvShowViewModel model, string userId)
+        public TvShowRequestBuilder CreateChild(TvRequestViewModel model, string userId)
         {
             ChildRequest = new ChildRequests
             {
-                Id = model.Id,
+                Id = model.TvDbId,
                 RequestType = RequestType.TvShow,
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
                 RequestedUserId = userId,
                 SeasonRequests = new List<SeasonRequests>(),
-                Title = model.Title,
+                Title = ShowInfo.name,
                 SeriesType = ShowInfo.type.Equals("Animation", StringComparison.CurrentCultureIgnoreCase) ? SeriesType.Anime : SeriesType.Standard
             };
 
             return this;
         }
 
-        public TvShowRequestBuilder CreateTvList(SearchTvShowViewModel tv)
+        public TvShowRequestBuilder CreateTvList(TvRequestViewModel tv)
         {
-            TvRequests = new List<SeasonRequests>();
+            TvRequests = new List<SeasonsViewModel>();
             // Only have the TV requests we actually requested and not everything
-            foreach (var season in tv.SeasonRequests)
+            foreach (var season in tv.Seasons)
             {
-                for (int i = season.Episodes.Count - 1; i >= 0; i--)
-                {
-                    if (!season.Episodes[i].Requested)
-                    {
-                        season.Episodes.RemoveAt(i); // Remove the episode since it's not requested
-                    }
-                }
-
                 if (season.Episodes.Any())
                 {
                     TvRequests.Add(season);
@@ -81,11 +74,10 @@ namespace Ombi.Core.Helpers
             }
 
             return this;
-
         }
 
 
-        public async Task<TvShowRequestBuilder> BuildEpisodes(SearchTvShowViewModel tv)
+        public async Task<TvShowRequestBuilder> BuildEpisodes(TvRequestViewModel tv)
         {
             if (tv.RequestAll)
             {
@@ -173,26 +165,68 @@ namespace Ombi.Core.Helpers
             else
             {
                 // It's a custom request
-                ChildRequest.SeasonRequests = TvRequests;
+                var seasonRequests = new List<SeasonRequests>();
+                var episodes = await TvApi.EpisodeLookup(ShowInfo.id);
+                foreach (var ep in episodes)
+                {
+                    var existingSeasonRequest = seasonRequests.FirstOrDefault(x => x.SeasonNumber == ep.season);
+                    if (existingSeasonRequest != null)
+                    {
+                        var requestedSeason = tv.Seasons.FirstOrDefault(x => x.SeasonNumber == ep.season);
+                        var requestedEpisode = requestedSeason?.Episodes?.Any(x => x.EpisodeNumber == ep.number) ?? false;
+                        if (requestedSeason != null && requestedEpisode)
+                        {
+                            // We already have this, let's just add the episodes to it
+                            existingSeasonRequest.Episodes.Add(new EpisodeRequests
+                            {
+                                EpisodeNumber = ep.number,
+                                AirDate = FormatDate(ep.airdate),
+                                Title = ep.name,
+                                Url = ep.url,
+                            });
+                        }
+                    }
+                    else
+                    {
+                        var newRequest = new SeasonRequests {SeasonNumber = ep.season};
+                        var requestedSeason = tv.Seasons.FirstOrDefault(x => x.SeasonNumber == ep.season);
+                        var requestedEpisode = requestedSeason?.Episodes?.Any(x => x.EpisodeNumber == ep.number) ?? false;
+                        if (requestedSeason != null && requestedEpisode)
+                        {
+                            newRequest.Episodes.Add(new EpisodeRequests
+                            {
+                                EpisodeNumber = ep.number,
+                                AirDate = FormatDate(ep.airdate),
+                                Title = ep.name,
+                                Url = ep.url,
+                            });
+                            seasonRequests.Add(newRequest);
+                        }
+                    }
+                }
+
+                foreach (var s in seasonRequests)
+                {
+                    ChildRequest.SeasonRequests.Add(s);
+                }
             }
             return this;
         }
         
         
-        public TvShowRequestBuilder CreateNewRequest(SearchTvShowViewModel tv)
+        public TvShowRequestBuilder CreateNewRequest(TvRequestViewModel tv)
         {
             NewRequest = new TvRequests
             {
-                Id = tv.Id,
                 Overview = ShowInfo.summary.RemoveHtml(),
                 PosterPath = PosterPath,
                 Title = ShowInfo.name,
                 ReleaseDate = FirstAir,
                 Status = ShowInfo.status,
                 ImdbId = ShowInfo.externals?.imdb ?? string.Empty,
-                TvDbId = tv.Id,
+                TvDbId = tv.TvDbId,
                 ChildRequests = new List<ChildRequests>(),
-                TotalSeasons = tv.SeasonRequests.Count()
+                TotalSeasons = tv.Seasons.Count()
             };
             NewRequest.ChildRequests.Add(ChildRequest);
 

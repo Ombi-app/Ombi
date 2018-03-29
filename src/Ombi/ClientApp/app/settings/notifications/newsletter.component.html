@@ -1,6 +1,6 @@
 ﻿<settings-menu></settings-menu>
 
-<wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Newsletter'"></wiki>
+<wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Newsletter-Settings'"></wiki>
 <div *ngIf="settings">
     <fieldset>
         <legend>Newsletter</legend>
@@ -30,14 +30,18 @@
                         <button type="button" (click)="test()" class="btn btn-danger-outline">Test</button>
                         <button type="button" (click)="updateDatabase()" class="btn btn-info-outline" tooltipPosition="top" pTooltip="I recommend running this with a fresh Ombi install, this will set all the current *found* content to have been sent via Newsletter, 
                         if you do not do this then everything that Ombi has found in your libraries will go out on the first email!">Update Database</button>
+                        
+                        <button type="button" (click)="trigger()" class="btn btn-danger-outline">Trigger now</button>
                     </div>
-                    <small>NOTE: Please see the tooltip on the Update Database button.</small>
-                    <small>When testing, the test newsletter will go to all users that have the Admin role, please ensure that there are valid email addresses for this. The test will also only grab the latest 10 movies and 10 shows just to give you an example.</small>
-                </div>
+                                 </div>
         </div>
 
 
         <div class="col-md-6">
+            <small>NOTE: Please see the tooltip on the Update Database button - Please see the wiki for more information</small>
+            <br/>
+            <br/>
+            <small>When testing, the test newsletter will go to all users that have the Admin role, please ensure that there are valid email addresses for this. The test will also only grab the latest 10 movies and 10 shows just to give you an example.</small>
 
         </div>
     </fieldset>

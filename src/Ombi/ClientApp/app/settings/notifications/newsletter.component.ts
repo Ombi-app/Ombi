@@ -1,9 +1,7 @@
-﻿
-import { Component, OnInit } from "@angular/core";
+﻿import { Component, OnInit } from "@angular/core";
 
 import { INewsletterNotificationSettings, NotificationType } from "../../interfaces";
-import { NotificationService } from "../../services";
-import { SettingsService } from "../../services";
+import { JobService, NotificationService, SettingsService } from "../../services";
 import { TesterService } from "./../../services/applications/tester.service";
 
 @Component({
@@ -16,7 +14,8 @@ export class NewsletterComponent implements OnInit {
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
-                private testService: TesterService) { }
+                private testService: TesterService,
+                private jobService: JobService) { }
 
     public ngOnInit() {
         this.settingsService.getNewsletterSettings().subscribe(x => {
@@ -26,10 +25,17 @@ export class NewsletterComponent implements OnInit {
 
     public updateDatabase() {
         this.settingsService.updateNewsletterDatabase().subscribe();
+        this.notificationService.success("Database updated");
     }
 
     public test() {
         this.testService.newsletterTest(this.settings).subscribe();
+        this.notificationService.success("Test message queued");
+    }
+
+    public trigger() {
+        this.jobService.runNewsletter().subscribe();
+        this.notificationService.success("Triggered newsletter job");
     }
 
     public onSubmit() {
