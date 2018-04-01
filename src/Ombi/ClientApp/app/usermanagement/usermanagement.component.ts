@@ -93,9 +93,21 @@ export class UserManagementComponent implements OnInit {
         this.bulkEpisodeLimit = undefined;
     }
     
-    public setOrder(value: string) {
+    public setOrder(value: string, el: any) {
+        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
+
+        if (el.nodeName === "A") {
+            el = el.parentElement;
+        }
+
+        let parent = el.parentElement;
+        let previousFilter = parent.querySelector(".active");
+
         if (this.order === value) {
-          this.reverse = !this.reverse;
+            this.reverse = !this.reverse;
+        } else {
+            previousFilter.className = "";
+            el.className = "active";
         }
     
         this.order = value;

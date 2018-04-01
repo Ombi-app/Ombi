@@ -175,11 +175,18 @@ export class MovieRequestsComponent implements OnInit {
         });
     }
 
-    public setOrder(value: string) {
+    public setOrder(value: string, el: any) {
+        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
+
+        let parent = el.parentElement;
+        let previousFilter = parent.querySelector(".active");
+
         if (this.order === value) {
-          this.reverse = !this.reverse;
+            this.reverse = !this.reverse;
+        } else {
+            previousFilter.className = "";
+            el.className = "active";
         }
-    
         this.order = value;
       }
 
