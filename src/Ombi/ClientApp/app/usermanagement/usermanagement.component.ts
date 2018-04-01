@@ -100,8 +100,8 @@ export class UserManagementComponent implements OnInit {
             el = el.parentElement;
         }
 
-        let parent = el.parentElement;
-        let previousFilter = parent.querySelector(".active");
+        const parent = el.parentElement;
+        const previousFilter = parent.querySelector(".active");
 
         if (this.order === value) {
             this.reverse = !this.reverse;

@@ -178,8 +178,8 @@ export class MovieRequestsComponent implements OnInit {
     public setOrder(value: string, el: any) {
         el = el.toElement || el.relatedTarget || el.target || el.srcElement;
 
-        let parent = el.parentElement;
-        let previousFilter = parent.querySelector(".active");
+        const parent = el.parentElement;
+        const previousFilter = parent.querySelector(".active");
 
         if (this.order === value) {
             this.reverse = !this.reverse;

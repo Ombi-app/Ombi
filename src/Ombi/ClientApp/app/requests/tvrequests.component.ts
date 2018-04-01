@@ -70,7 +70,7 @@ export class TvRequestsComponent implements OnInit {
 
         if (el.nodeName === "BUTTON") {
 
-            let isButtonAlreadyActive = el.parentElement.querySelector(".active");
+            const isButtonAlreadyActive = el.parentElement.querySelector(".active");
             // if a Button already has Class: .active
             if (isButtonAlreadyActive) {
                 isButtonAlreadyActive.classList.remove("active");
