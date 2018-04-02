@@ -11,8 +11,12 @@ ____
 
 ___
 
+We also now have merch up on Teespring!
 
-[![Report a bug](http://i.imgur.com/xSpw482.png)](https://forums.ombi.io/viewforum.php?f=10) [![Feature request](http://i.imgur.com/mFO0OuX.png)](https://forums.ombi.io/posting.php?mode=post&f=20)
+[EU Store](https://teespring.com/stores/ombi-eu)   
+[US Store](https://teespring.com/stores/ombi-us)
+
+___
 
 
 | Service  | Stable         | Develop          |
@@ -56,7 +60,7 @@ Supported notifications:
 
 ### The difference between Version 3 and 2
 
-Over the last 8 months, we focused on the main functions on Ombi, a complete rewrite while making it better, faster and more stable.
+Over the last year, we focused on the main functions on Ombi, a complete rewrite while making it better, faster and more stable.
 We have already done most of the work, but some features are still be missing in this first version.
 We are planning to bring back these features in V3 but for now you can find a list below with a quick comparison of features between v2 and v3.
 
@@ -70,13 +74,13 @@ We are planning to bring back these features in V3 but for now you can find a li
 | Landing page | Yes (brand new) | Yes |
 | Login page | Yes (brand new) | Yes |
 | Custom Notification Messages | Yes | No |
-| Sending newsletters | Planned | Yes |
+| Sending newsletters | Yes | Yes |
 | Send a Mass Email | Yes | Yes |
 | SickRage | Yes | Yes |
 | CouchPotato | Yes | Yes |
 | DogNzb | Yes | No |
 | Issues | Yes | Yes |
-| Headphones | No (support dropped) | Yes |
+| Headphones | No | Yes |
 
 # Feature Requests
 Feature requests are handled on FeatHub.
