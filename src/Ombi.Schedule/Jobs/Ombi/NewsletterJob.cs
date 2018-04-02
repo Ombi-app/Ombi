@@ -111,7 +111,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
 
             }
-
+            
             if (!test)
             {
                 // Get the users to send it to
@@ -259,19 +259,11 @@ namespace Ombi.Schedule.Jobs.Ombi
             var ordered = plexContentToSend.OrderByDescending(x => x.AddedAt);
             foreach (var content in ordered)
             {
-                if (content.TheMovieDbId.IsNullOrEmpty())
-                {
-                    // Maybe we should try the ImdbId?
-                    if (content.ImdbId.HasValue())
-                    {
-                        var findResult = await _movieApi.Find(content.ImdbId, ExternalSource.imdb_id);
-
-                        var movieId = findResult.movie_results?[0]?.id ?? 0;
-                        content.TheMovieDbId = movieId.ToString();
-                    }
-                }
-
                 int.TryParse(content.TheMovieDbId, out var movieDbId);
+                if (movieDbId <= 0)
+                {
+                    continue;
+                }
                 var info = await _movieApi.GetMovieInformationWithExtraInfo(movieDbId);
                 if (info == null)
                 {
