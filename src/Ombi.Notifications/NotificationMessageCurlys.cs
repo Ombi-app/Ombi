@@ -29,11 +29,19 @@ namespace Ombi.Notifications
             ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
             RequestedUser = req?.RequestedUser?.UserName;
-            UserName = req?.RequestedUser?.UserName;
+            if (UserName.IsNullOrEmpty())
+            {
+                // Can be set if it's an issue
+                UserName = req?.RequestedUser?.UserName;
+            }
+
             Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
             Title = title;
             RequestedDate = req?.RequestedDate.ToString("D");
-            Type = req?.RequestType.ToString();
+            if (Type.IsNullOrEmpty())
+            {
+                Type = req?.RequestType.ToString();
+            }
             Overview = req?.Overview;
             Year = req?.ReleaseDate.Year.ToString();
             PosterImage = req?.RequestType == RequestType.Movie ?
@@ -65,11 +73,19 @@ namespace Ombi.Notifications
             ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
             RequestedUser = req?.RequestedUser?.UserName;
-            UserName = req?.RequestedUser?.UserName;
+            if (UserName.IsNullOrEmpty())
+            {
+                // Can be set if it's an issue
+                UserName = req?.RequestedUser?.UserName;
+            }
             Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
             Title = title;
             RequestedDate = req?.RequestedDate.ToString("D");
-            Type = req?.RequestType.ToString();
+            if (Type.IsNullOrEmpty())
+            {
+                Type = req?.RequestType.ToString();
+            }
+
             Overview = req?.ParentRequest.Overview;
             Year = req?.ParentRequest.ReleaseDate.Year.ToString();
             PosterImage = req?.RequestType == RequestType.Movie ?
@@ -128,6 +144,7 @@ namespace Ombi.Notifications
             IssueSubject = opts.Substitutes.TryGetValue("IssueSubject", out val) ? val : string.Empty;
             NewIssueComment = opts.Substitutes.TryGetValue("NewIssueComment", out val) ? val : string.Empty;
             UserName = opts.Substitutes.TryGetValue("IssueUser", out val) ? val : string.Empty;
+            Type = opts.Substitutes.TryGetValue("RequestType", out val) ? val : string.Empty;
         }
 
         // User Defined
