@@ -349,3 +349,6 @@ button.list-group-item:focus {
     height: 100%;
     position: absolute;
  }
+ table.table > thead > tr > th.active {
+    background-color: transparent;
+}

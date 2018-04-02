@@ -10,6 +10,10 @@ $danger-colour: #d9534f;
 $success-colour: #5cb85c;
 $i: !important;
 
+
+table > thead > tr > th.active {
+    background-color: transparent;
+}
 @media (min-width: 768px ) {
     .bottom-align-text {
         position: absolute;
@@ -952,3 +956,4 @@ a > h4:hover {
 .searchWidth {
     width: 94%;
 }
+
