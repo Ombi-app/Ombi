@@ -44,8 +44,8 @@ namespace Ombi
             Console.WriteLine(env.ContentRootPath);
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", false, true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
+                .AddJsonFile("appsettings.json", false, false)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", false)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
 
