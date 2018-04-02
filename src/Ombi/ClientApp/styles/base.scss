@@ -131,6 +131,10 @@ h1 {
     font-size: 1.9rem $i;
 }
 
+a.active {
+    background-color: $primary-colour;
+}
+
 p {
     font-size: 1.1rem $i;
 }

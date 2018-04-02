@@ -16,7 +16,7 @@
                             </td>
                 </a>
             </th>
-            <th (click)="setOrder('userName')">
+            <th class="active" (click)="setOrder('userName', $event)">
                 <a>
                     Username
                 </a>
@@ -24,7 +24,7 @@
                     <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
                 </span>
             </th>
-            <th (click)="setOrder('alias')">
+            <th (click)="setOrder('alias', $event)">
                 <a>
                     Alias
                 </a>
@@ -32,7 +32,7 @@
                     <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
                 </span>
             </th>
-            <th (click)="setOrder('emailAddress')">
+            <th (click)="setOrder('emailAddress', $event)">
                 <a>
                     Email
                 </a>
@@ -44,13 +44,13 @@
             <th>
                 Roles
             </th>
-            <th (click)="setOrder('lastLoggedIn')">
+            <th (click)="setOrder('lastLoggedIn', $event)">
                <a> Last Logged In</a>
                <span *ngIf="order === 'lastLoggedIn'">
                 <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
             </span>
             </th>
-            <th (click)="setOrder('userType')">
+            <th (click)="setOrder('userType', $event)">
                 <a>
                     User Type
                 </a>

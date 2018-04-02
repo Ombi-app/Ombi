@@ -70,8 +70,9 @@ body{
 .tint {
     z-index: -1;
 }
-img-responsive poster {
-    display:block;
+.img-responsive.poster {
+    margin-bottom: 21px;
+    width: 60%;
 }
 img {
     display: block;
