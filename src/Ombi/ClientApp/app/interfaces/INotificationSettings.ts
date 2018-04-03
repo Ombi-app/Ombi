@@ -24,6 +24,7 @@ export interface INotificationTemplates {
     notificationType: NotificationType;
     notificationAgent: NotificationAgent;
     enabled: boolean;
+    compact: boolean;
 }
 
 export enum NotificationAgent {

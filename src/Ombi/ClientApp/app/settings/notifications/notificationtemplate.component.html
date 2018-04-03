@@ -14,6 +14,13 @@
                             <input type="checkbox" id="enabled" [(ngModel)]="template.enabled" ng-checked="template.enabled"><label for="enabled">Enable</label>
                         </div>
                     </div>
+                             
+                    <div class="form-group" *ngIf="showAdvancedOptions">
+                        <div class="checkbox">
+                            <input type="checkbox" id="enabled" [(ngModel)]="template.compact" ng-checked="template.compact"><label for="enabled">Show Compact</label>
+                        </div>
+                    </div>                    
+
                     
                     <div class="form-group" *ngIf="showSubject">
                         <label class="control-label">Subject</label>
