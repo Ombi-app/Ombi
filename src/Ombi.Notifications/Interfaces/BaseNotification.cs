@@ -155,7 +155,7 @@ namespace Ombi.Notifications.Interfaces
                 return new NotificationMessageContent {Disabled = true};
             }
             var parsed = Parse(model, template);
-
+            parsed.ShowCompact = template.Compact;
             return parsed;
         }
 

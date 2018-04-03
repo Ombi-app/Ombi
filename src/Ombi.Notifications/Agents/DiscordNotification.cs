@@ -26,25 +26,19 @@ namespace Ombi.Notifications.Agents
         {
             Api = api;
             Logger = log;
-            ShowCompactEmbed = new Dictionary<NotificationType, bool>();
-            // Temporary defaults
-            ShowCompactEmbed.Add(NotificationType.NewRequest, true);
-            ShowCompactEmbed.Add(NotificationType.RequestApproved, true);
-            ShowCompactEmbed.Add(NotificationType.RequestDeclined, true);
 
-            MentionAlias = new Dictionary<NotificationType, bool>();
+            MentionAlias = new Dictionary<NotificationType, bool>
+            {
+                {NotificationType.RequestAvailable, true},
+                {NotificationType.RequestApproved, true},
+                {NotificationType.RequestDeclined, true}
+            };
             // Temporary defaults
-            MentionAlias.Add(NotificationType.RequestAvailable, true);
-            MentionAlias.Add(NotificationType.RequestApproved, true);
-            MentionAlias.Add(NotificationType.RequestDeclined, true);
         }
 
-        // constants I needed but could not find
-        public const string IMDB_BASE_URL = "http://www.imdb.com/title/";
-        public const string TVDB_BASE_URL = "https://www.thetvdb.com/?tab=series&id=";
+        public const string ImdbBaseUrl = "http://www.imdb.com/title/";
+        public const string TvdbBaseUrl = "https://www.thetvdb.com/?tab=series&id=";
 
-        // Whether or not to show a compact embed notification (thumbnail + no description)
-        public Dictionary<NotificationType, bool> ShowCompactEmbed;
         // Whether or not to post the alias to discord (for each notification type) which trigger an @mention if alias is set up as <@id>.  
         public Dictionary<NotificationType, bool> MentionAlias;
         // Whether to use alias or username when referencing a user
@@ -94,19 +88,22 @@ namespace Ombi.Notifications.Agents
             if (Customization.ApplicationUrl.HasValue())
                 authorUrl = $"{Customization.ApplicationUrl}requests";
 
-            DiscordAuthor author = new DiscordAuthor
+            var author = new DiscordAuthor
             {
                 name = parsed.Subject,
                 icon_url = "https://i.imgur.com/EPuxVav.png"
             };
+            if (authorUrl.HasValue())
+                author.url = authorUrl;
+
             DiscordEmbeds embed = null;
             if (model.RequestType == RequestType.Movie)
             {
-                embed = CreateDiscordEmbed(author, MovieRequest, NotificationType.NewRequest, parsed.Image, parsed.Message);
+                embed = CreateDiscordEmbed(author, MovieRequest, NotificationType.NewRequest, parsed);
             }
             else if (model.RequestType == RequestType.TvShow)
             {
-                embed = CreateDiscordEmbed(author, TvRequest, NotificationType.NewRequest, parsed.Image, parsed.Message);
+                embed = CreateDiscordEmbed(author, TvRequest, NotificationType.NewRequest, parsed);
             }
             await Send(notification, settings, embed);
         }
@@ -198,7 +195,7 @@ namespace Ombi.Notifications.Agents
                 Message = parsed.Message,
             };
 
-            DiscordAuthor author = new DiscordAuthor
+            var author = new DiscordAuthor
             {
                 name = parsed.Subject,
                 icon_url = "https://i.imgur.com/i1X39I2.png"
@@ -207,11 +204,11 @@ namespace Ombi.Notifications.Agents
             DiscordEmbeds embed = null;
             if (model.RequestType == RequestType.Movie)
             {
-                embed = CreateDiscordEmbed(author, MovieRequest, NotificationType.RequestDeclined, parsed.Image, parsed.Message);
+                embed = CreateDiscordEmbed(author, MovieRequest, NotificationType.RequestDeclined, parsed);
             }
             else if (model.RequestType == RequestType.TvShow)
             {
-                embed = CreateDiscordEmbed(author, TvRequest, NotificationType.RequestDeclined, parsed.Image, parsed.Message);
+                embed = CreateDiscordEmbed(author, TvRequest, NotificationType.RequestDeclined, parsed);
             }
             await Send(notification, settings, embed);
         }
@@ -229,7 +226,7 @@ namespace Ombi.Notifications.Agents
                 Message = parsed.Message,
             };
 
-            DiscordAuthor author = new DiscordAuthor
+            var author = new DiscordAuthor
             {
                 name = parsed.Subject,
                 icon_url = "https://i.imgur.com/sodXDGW.png"
@@ -238,11 +235,11 @@ namespace Ombi.Notifications.Agents
             DiscordEmbeds embed = null;
             if (model.RequestType == RequestType.Movie)
             {
-                embed = CreateDiscordEmbed(author, MovieRequest, NotificationType.RequestApproved, parsed.Image, parsed.Message);
+                embed = CreateDiscordEmbed(author, MovieRequest, NotificationType.RequestApproved, parsed);
             }
             else if (model.RequestType == RequestType.TvShow)
             {
-                embed = CreateDiscordEmbed(author, TvRequest, NotificationType.RequestApproved, parsed.Image, parsed.Message);
+                embed = CreateDiscordEmbed(author, TvRequest, NotificationType.RequestApproved, parsed);
             }
             await Send(notification, settings, embed);
         }
@@ -266,9 +263,8 @@ namespace Ombi.Notifications.Agents
             if (Customization.ApplicationUrl.HasValue())
                 authorUrl = $"{Customization.ApplicationUrl}requests";
             */
-            
 
-            DiscordAuthor author = new DiscordAuthor
+            var author = new DiscordAuthor
             {
                 name = parsed.Subject,
                 url = authorUrl,
@@ -278,11 +274,11 @@ namespace Ombi.Notifications.Agents
             DiscordEmbeds embed = null;
             if (model.RequestType == RequestType.Movie)
             {
-                embed = CreateDiscordEmbed(author, MovieRequest, NotificationType.RequestAvailable, parsed.Image, parsed.Message);
+                embed = CreateDiscordEmbed(author, MovieRequest, NotificationType.RequestAvailable, parsed);
             }
             else if (model.RequestType == RequestType.TvShow)
             {
-                embed = CreateDiscordEmbed(author, TvRequest, NotificationType.RequestAvailable, parsed.Image, parsed.Message);
+                embed = CreateDiscordEmbed(author, TvRequest, NotificationType.RequestAvailable, parsed);
             }
 
             await Send(notification, settings, embed);
@@ -295,10 +291,10 @@ namespace Ombi.Notifications.Agents
                 var discordBody = new DiscordWebhookBody
                 {
                     username = settings.Username,
-                };
-                discordBody.embeds = new List<DiscordEmbeds>
-                {
-                    embed
+                    embeds = new List<DiscordEmbeds>
+                    {
+                        embed
+                    },
                 };
                 await Api.SendMessage(discordBody, settings.WebHookId, settings.Token);
             }
@@ -320,7 +316,6 @@ namespace Ombi.Notifications.Agents
 
                 model.Other.TryGetValue("image", out var image);
                 discordBody.embeds = new List<DiscordEmbeds>
-
                 {
                     new DiscordEmbeds
                     {
@@ -349,43 +344,47 @@ namespace Ombi.Notifications.Agents
             await Send(notification, settings);
         }
 
-        private DiscordEmbeds CreateDiscordEmbed(DiscordAuthor author, BaseRequest req, NotificationType type, string imageUrl, string description)
+        private DiscordEmbeds CreateDiscordEmbed(DiscordAuthor author, BaseRequest req, NotificationType type, NotificationMessageContent content)
         {
             MentionAlias.TryGetValue(type, out var mentionUser);
-            ShowCompactEmbed.TryGetValue(type, out var compactEmbed);
             // Grab info specific to TV / Movie requests
             string overview = null;
-            int releaseYear = 0;
+            var releaseYear = 0;
             string titleUrl = null;
-            if (req is ChildRequests)
+            if (req is ChildRequests tvReq)
             {
-                ChildRequests tvReq = req as ChildRequests;
                 overview = tvReq.ParentRequest.Overview;
                 releaseYear = tvReq.ParentRequest.ReleaseDate.Year;
-                titleUrl = $"{TVDB_BASE_URL}{tvReq.ParentRequest.TvDbId}";
+                titleUrl = $"{TvdbBaseUrl}{tvReq.ParentRequest.TvDbId}";
             }
-            else if (req is MovieRequests)
+            else if (req is MovieRequests movieReq)
             {
-                MovieRequests movieReq = req as MovieRequests;
                 overview = movieReq.Overview;
                 releaseYear = movieReq.ReleaseDate.Year;
-                titleUrl = $"{IMDB_BASE_URL}{movieReq.ImdbId}";
+                titleUrl = $"{ImdbBaseUrl}{movieReq.ImdbId}";
             }
 
             // Compact embed
-            // TODO: check imageUrl is valid - if malformed discord will throw error and not post at all
-            DiscordImage image = new DiscordImage { url = imageUrl };
-            DiscordImage thumbnail = null;
-            if (compactEmbed)
+            // If the image url is invalid then Disscord will not send any message
+            var validImage = false;
+            Uri.TryCreate(content.Image, UriKind.Absolute, out var validUri);
+            if (validUri != null)
+            {
+                validImage = true;
+            }
+
+            var image = new DiscordImage { url = content.Image };
+            var thumbnail = new DiscordImage { url = content.Image };
+            if (content.ShowCompact)
             {
                 image = null;
-                thumbnail = new DiscordImage { url = imageUrl };
                 overview = null;
-                description = null;
+                content.Message = null;
             }            
+            
 
             // Fields
-            List<DiscordField> fields = new List<DiscordField>();
+            var fields = new List<DiscordField>();
             if (overview.HasValue())
             {
                 fields.Add
@@ -398,7 +397,7 @@ namespace Ombi.Notifications.Agents
                 );
             }
             // Field : mention user
-            string alias = req.RequestedUser.Alias;
+            var alias = req.RequestedUser.Alias;
             if (UsingAliasAsMention && mentionUser && alias.HasValue())
             {
                 fields.Add
@@ -415,24 +414,26 @@ namespace Ombi.Notifications.Agents
             if (UsingAliasAsMention || !alias.HasValue())
                 alias = req.RequestedUser.UserName;
 
-            DiscordFooter footer = new DiscordFooter
+            var footer = new DiscordFooter
             {
-                text = $"Requested by {alias}  on {req.RequestedDate.ToLongDateString()}"
+                text = $"Requested by {alias} on {req.RequestedDate.ToLongDateString()}"
             };
 
-            
-
-            DiscordEmbeds embed = new DiscordEmbeds
+            var embed = new DiscordEmbeds
             {
                 author = author,
                 title = $"{req.Title} ({releaseYear})",
                 url = titleUrl,
-                thumbnail = thumbnail,
-                image = image,
-                description = description,
+                description = content.Message,
                 footer = footer,
                 fields = fields
             };
+
+            if (validImage)
+            {
+                embed.thumbnail = thumbnail;
+                embed.image = image;
+            }
             return embed;
         }
     }

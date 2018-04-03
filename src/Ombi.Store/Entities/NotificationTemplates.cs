@@ -11,5 +11,6 @@ namespace Ombi.Store.Entities
         public string Subject { get; set; }
         public string Message { get; set; }
         public bool Enabled { get; set; }
+        public bool Compact { get; set; }
     }
 }
