@@ -25,6 +25,7 @@ namespace Ombi.Store.Context
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
         DbSet<NotificationTemplates> NotificationTemplates { get; set; }
         DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
+        DbSet<Votes> Votes { get; set; }
         void Seed();
         DbSet<Audit> Audit { get; set; }
         DbSet<MovieRequests> MovieRequests { get; set; }
