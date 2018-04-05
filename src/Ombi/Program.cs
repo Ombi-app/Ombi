@@ -67,9 +67,25 @@ namespace Ombi
                 }
             }
 
+            DeleteSchedulesDb();
+
             Console.WriteLine($"We are running on {urlValue}");
 
             BuildWebHost(args).Run();
+        }
+
+        private static void DeleteSchedulesDb()
+        {
+            try
+            {
+                if (File.Exists("Schedules.db"))
+                {
+                    File.Delete("Schedules.db");
+                }
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
@@ -98,9 +114,9 @@ namespace Ombi
             " Use \"*\" to indicate that the server should listen for requests on any IP address or hostname using the specified port and protocol (for example, http://*:5000). " +
             "The protocol (http:// or https://) must be included with each URL. Supported formats vary between servers.", Default = "http://*:5000")]
         public string Host { get; set; }
-   
+
         [Option("storage", Required = false, HelpText = "Storage path, where we save the logs and database")]
         public string StoragePath { get; set; }
-       
+
     }
 }

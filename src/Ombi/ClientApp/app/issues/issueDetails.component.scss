@@ -70,8 +70,9 @@ body{
 .tint {
     z-index: -1;
 }
-img-responsive poster {
-    display:block;
+.img-responsive.poster {
+    margin-bottom: 21px;
+    width: 50%;
 }
 img {
     display: block;
@@ -143,4 +144,8 @@ img {
     border-top: 1px solid transparent;
     border-bottom-right-radius: -1;
     border-bottom-left-radius: -1;
+}
+
+.bottom-btn{
+    margin-bottom: 10px;
 }

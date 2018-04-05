@@ -66,7 +66,19 @@ export class TvRequestsComponent implements OnInit {
 
     public openClosestTab(el: any) {
         const rowclass = "undefined ng-star-inserted";
-        el = el.toElement || el.relatedTarget || el.target;
+        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
+
+        if (el.nodeName === "BUTTON") {
+
+            const isButtonAlreadyActive = el.parentElement.querySelector(".active");
+            // if a Button already has Class: .active
+            if (isButtonAlreadyActive) {
+                isButtonAlreadyActive.classList.remove("active");
+            } else {
+                el.className += " active";
+            }
+        }
+
         while (el.className !== rowclass) {
             // Increment the loop to the parent node until we find the row we need
             el = el.parentNode;

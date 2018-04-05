@@ -1,6 +1,6 @@
 # Changelog
 
-## (unreleased)
+## v3.0.3111 (2018-03-27)
 
 ### **New Features**
 
@@ -25,6 +25,8 @@
 - Added the recently added engine with some basic methods. [Jamie]
 
 - Added the ability to refresh out backend metadata (#2078) [Jamie]
+
+- Update README.md. [zobe123]
 
 ### **Fixes**
 
