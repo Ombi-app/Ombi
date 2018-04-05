@@ -149,7 +149,16 @@ export class MovieRequestsComponent implements OnInit {
         event.preventDefault();
     }
 
-    public clearFilter() {
+    public clearFilter(el: any) {
+        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
+
+        el = el.parentElement;
+        el = el.querySelectorAll("INPUT");
+        for (var i = 0; i < el.length; i++) {
+            el[i].checked = false;
+            el[i].parentElement.classList.remove("active");
+        }
+
         this.filterDisplay = false;
         this.filter.availabilityFilter = FilterType.None;
         this.filter.statusFilter = FilterType.None;
@@ -157,7 +166,23 @@ export class MovieRequestsComponent implements OnInit {
         this.resetSearch();
     }
 
-    public filterAvailability(filter: FilterType) {
+    public filterAvailability(filter: FilterType, el: any) {
+        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
+
+        el = el.parentElement; //gets radio div
+        el = el.parentElement; //gets form group div
+        el = el.parentElement; //gets status filter div
+        el = el.querySelectorAll("INPUT");
+        for (var i = 0; i < el.length; i++) {
+            if (el[i].checked) {
+                if (!el[i].parentElement.classList.contains("active")) {
+                    el[i].parentElement.className += " active";
+                }
+            } else {
+                el[i].parentElement.classList.remove("active");
+            }
+        }
+
         this.filter.availabilityFilter = filter;
         this.requestService.filterMovies(this.filter)
         .subscribe(x => {
@@ -166,7 +191,23 @@ export class MovieRequestsComponent implements OnInit {
         });
     }
 
-    public filterStatus(filter: FilterType) {
+    public filterStatus(filter: FilterType, el: any) {
+        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
+
+        el = el.parentElement; //gets radio div
+        el = el.parentElement; //gets form group div
+        el = el.parentElement; //gets status filter div
+        el = el.querySelectorAll("INPUT");
+        for (var i = 0; i < el.length; i++) {
+            if (el[i].checked) {
+                if (!el[i].parentElement.classList.contains("active")) {
+                    el[i].parentElement.className += " active";
+                }
+            } else {
+                el[i].parentElement.classList.remove("active");
+            }
+        }
+
         this.filter.statusFilter = filter;
         this.requestService.filterMovies(this.filter)
         .subscribe(x => {

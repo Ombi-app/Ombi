@@ -20,11 +20,25 @@ export class IssuesTableComponent  {
 
     public rowCount = 10;
 
-    public setOrder(value: string) {
-        if (this.order === value) {
-          this.reverse = !this.reverse;
+    public setOrder(value: string, el: any) {
+        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
+
+        if (el.nodeName === "A") {
+            el = el.parentElement;
         }
-    
+
+        const parent = el.parentElement;
+        const previousFilter = parent.querySelector(".active");
+
+        if (this.order === value) {
+            this.reverse = !this.reverse;
+        } else {
+            if (previousFilter) {
+                previousFilter.className = "";
+            }
+            el.className = "active";
+        }
+
         this.order = value;
       }
 
