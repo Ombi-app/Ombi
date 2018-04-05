@@ -14,7 +14,7 @@ import { AuthService } from "../auth/auth.service";
 import { NotificationService, RequestService, SonarrService } from "../services";
 
 import { TreeNode } from "primeng/primeng";
-import { IIssueCategory, ISonarrProfile,  ISonarrRootFolder, ITvRequests } from "../interfaces";
+import { IIssueCategory, ISonarrProfile,  ISonarrRootFolder, ITvRequests, IChildRequests } from "../interfaces";
 
 @Component({
     selector: "tv-requests",
@@ -33,6 +33,9 @@ export class TvRequestsComponent implements OnInit {
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
     public issueProviderId: string;
+    public issuesBarVisible = false;
+    public issueRequest: IChildRequests;
+    public issueCategorySelected: IIssueCategory;
 
     public sonarrProfiles: ISonarrProfile[] = [];
     public sonarrRootFolders: ISonarrRootFolder[] = [];
@@ -203,6 +206,13 @@ export class TvRequestsComponent implements OnInit {
             this.sonarrService.getRootFoldersWithoutSettings()
                 .subscribe(x => this.sonarrRootFolders = x);
         }
+    }
+
+    public reportIssue(catId: IIssueCategory, req: IChildRequests) {
+        this.issueRequest = req;
+        this.issueCategorySelected = catId;
+        this.issuesBarVisible = true;
+        this.issueProviderId = req.id.toString();
     }
 
     private resetSearch() {
