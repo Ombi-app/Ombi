@@ -57,15 +57,15 @@ export class NewsletterComponent implements OnInit {
             if(match && match.length > 0) {
                 this.settings.externalEmails.push(this.emailToAdd);
                 this.emailToAdd = "";
-            } else{
-                this.notificationService.error("Please enter a valid email address")
+            } else {
+                this.notificationService.error("Please enter a valid email address");
             }
         }
     }
 
     public deleteEmail(email: string) {
-        var index = this.settings.externalEmails.indexOf(email);    // <-- Not supported in <IE9
-            if (index !== -1) {
+        const index = this.settings.externalEmails.indexOf(email);    // <-- Not supported in <IE9
+        if (index !== -1) {
                 this.settings.externalEmails.splice(index, 1);
             }
     }
