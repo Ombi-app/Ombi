@@ -163,10 +163,9 @@ export class MovieSearchComponent implements OnInit {
            } else {
                val.posterPath = "https://image.tmdb.org/t/p/w300/" + val.posterPath;
            }
-            val.background = this.sanitizer.
-            bypassSecurityTrustStyle
-            ("url(" + "https://image.tmdb.org/t/p/w1280" + val.backdropPath + ")");
-            this.searchService.getMovieInformation(val.id)
+           val.background = this.sanitizer.bypassSecurityTrustStyle
+           ("url(" + "https://image.tmdb.org/t/p/w1280" + val.backdropPath + ")");
+           this.searchService.getMovieInformation(val.id)
                 .subscribe(m => {
                     this.updateItem(val, m);
                 });

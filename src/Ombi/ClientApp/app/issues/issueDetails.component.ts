@@ -99,7 +99,7 @@ export class IssueDetailsComponent implements OnInit {
             });
             this.imageService.getMoviePoster(issue.providerId).subscribe(x => {
                 if (x.length === 0) {
-                    this.posterPath = "../../../images/default_movie_poster.png"
+                    this.posterPath = "../../../images/default_movie_poster.png";
                 } else {
                     this.posterPath = x.toString();
                 }
@@ -112,7 +112,7 @@ export class IssueDetailsComponent implements OnInit {
             });
             this.imageService.getTvPoster(Number(issue.providerId)).subscribe(x => {
                 if (x.length === 0) {
-                    this.posterPath = "../../../images/default_tv_poster.png"
+                    this.posterPath = "../../../images/default_tv_poster.png";
                 } else {
                     this.posterPath = x.toString();
                 }

@@ -154,6 +154,13 @@ export class TvRequestsComponent implements OnInit {
         this.updateRequest(searchResult);
     }
 
+    public reportIssue(catId: IIssueCategory, req: ITvRequests) {
+        this.issueRequest = req;
+        this.issueCategorySelected = catId;
+        this.issuesBarVisible = true;
+        this.issueProviderId = req.id.toString();
+    }
+
     private setOverride(req: ITvRequests): void {
         this.setQualityOverrides(req);
         this.setRootFolderOverrides(req);
@@ -195,7 +202,7 @@ export class TvRequestsComponent implements OnInit {
                 this.tvRequests = x;
                 this.tvRequests.forEach((val, index) => {
                     if (val.data.posterPath === null) {
-                        val.data.posterPath = "../../../images/default_tv_poster.png"
+                        val.data.posterPath = "../../../images/default_tv_poster.png";
                     }
                     this.loadBackdrop(val);
                     this.setOverride(val.data);
@@ -209,13 +216,6 @@ export class TvRequestsComponent implements OnInit {
             this.sonarrService.getRootFoldersWithoutSettings()
                 .subscribe(x => this.sonarrRootFolders = x);
         }
-    }
-
-    public reportIssue(catId: IIssueCategory, req: ITvRequests) {
-        this.issueRequest = req;
-        this.issueCategorySelected = catId;
-        this.issuesBarVisible = true;
-        this.issueProviderId = req.id.toString();
     }
 
     private resetSearch() {

@@ -154,7 +154,7 @@ export class MovieRequestsComponent implements OnInit {
 
         el = el.parentElement;
         el = el.querySelectorAll("INPUT");
-        for (var i = 0; i < el.length; i++) {
+        for (let i = 0; i < el.length; i++) {
             el[i].checked = false;
             el[i].parentElement.classList.remove("active");
         }
@@ -173,13 +173,13 @@ export class MovieRequestsComponent implements OnInit {
         el = el.parentElement; //gets form group div
         el = el.parentElement; //gets status filter div
         el = el.querySelectorAll("INPUT");
-        for (var i = 0; i < el.length; i++) {
-            if (el[i].checked) {
-                if (!el[i].parentElement.classList.contains("active")) {
-                    el[i].parentElement.className += " active";
+        for (el of el) {
+            if (el.checked) {
+                if (!el.parentElement.classList.contains("active")) {
+                    el.parentElement.className += " active";
                 }
             } else {
-                el[i].parentElement.classList.remove("active");
+                el.parentElement.classList.remove("active");
             }
         }
 
@@ -198,13 +198,13 @@ export class MovieRequestsComponent implements OnInit {
         el = el.parentElement; //gets form group div
         el = el.parentElement; //gets status filter div
         el = el.querySelectorAll("INPUT");
-        for (var i = 0; i < el.length; i++) {
-            if (el[i].checked) {
-                if (!el[i].parentElement.classList.contains("active")) {
-                    el[i].parentElement.className += " active";
+        for (el of el) {
+            if (el.checked) {
+                if (!el.parentElement.classList.contains("active")) {
+                    el.parentElement.className += " active";
                 }
             } else {
-                el[i].parentElement.classList.remove("active");
+                el.parentElement.classList.remove("active");
             }
         }
 
@@ -284,12 +284,8 @@ export class MovieRequestsComponent implements OnInit {
                 this.movieRequests = x;
 
                 this.movieRequests.forEach((req) => {
-                    this.movieRequests.forEach((req) => this.setBackground(req));
-                    if (req.posterPath === null) {
-                        req.posterPath = "../../../images/default_movie_poster.png"
-                    } else {
-                        req.posterPath = "https://image.tmdb.org/t/p/w300/" + req.posterPath;
-                    }
+                     this.setBackground(req);
+                     this.setPoster(req);
                 });
                 this.radarrService.getQualityProfilesFromSettings().subscribe(c => {
                     this.radarrProfiles = c;
@@ -342,9 +338,18 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     private setOverride(req: IMovieRequests): void {
+        this.setPoster(req);
         this.setBackground(req);
         this.setQualityOverrides(req);
         this.setRootFolderOverrides(req);
+    }
+
+    private setPoster(req: IMovieRequests): void {
+        if (req.posterPath === null) {
+            req.posterPath = "../../../images/default_movie_poster.png";
+        } else {
+            req.posterPath = "https://image.tmdb.org/t/p/w300/" + req.posterPath;
+        }
     }
 
     private setBackground(req: IMovieRequests): void {
