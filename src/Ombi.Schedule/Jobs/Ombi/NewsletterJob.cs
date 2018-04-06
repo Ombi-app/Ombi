@@ -229,20 +229,20 @@ namespace Ombi.Schedule.Jobs.Ombi
             return resolver.ParseMessage(template, curlys);
         }
 
-        private async Task<string> BuildHtml(IQueryable<PlexServerContent> plexContentToSend, IQueryable<EmbyContent> embyContentToSend, IQueryable<PlexEpisode> plexEpisodes, IQueryable<EmbyEpisode> embyEp)
+        private async Task<string> BuildHtml(IQueryable<PlexServerContent> plexContentToSend, IQueryable<EmbyContent> embyContentToSend, IQueryable<PlexEpisode> plexEpisodes, IQueryable<EmbyEpisode> embyEp, NewsletterSettings settings)
         {
             var sb = new StringBuilder();
 
             var plexMovies = plexContentToSend.Where(x => x.Type == PlexMediaTypeEntity.Movie);
             var embyMovies = embyContentToSend.Where(x => x.Type == EmbyMediaType.Movie);
-            if (plexMovies.Any() || embyMovies.Any())
+            if ((plexMovies.Any() || embyMovies.Any()) && !settings.DisableMovies)
             {
                 sb.Append("<h1>New Movies:</h1><br /><br />");
                 await ProcessPlexMovies(plexMovies, sb);
                 await ProcessEmbyMovies(embyMovies, sb);
             }
 
-            if (plexEpisodes.Any() || embyEp.Any())
+            if ((plexEpisodes.Any() || embyEp.Any()) && !settings.DisableTv)
             {
                 sb.Append("<h1>New Episodes:</h1><br /><br />");
                 await ProcessPlexTv(plexEpisodes, sb);
