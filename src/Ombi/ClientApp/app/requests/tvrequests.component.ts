@@ -11,7 +11,7 @@ import "rxjs/add/operator/distinctUntilChanged";
 import "rxjs/add/operator/map";
 
 import { AuthService } from "../auth/auth.service";
-import { NotificationService, RequestService, SonarrService, SearchService } from "../services";
+import { NotificationService, RequestService, SearchService, SonarrService } from "../services";
 
 import { TreeNode } from "primeng/primeng";
 import { IIssueCategory, ISonarrProfile,  ISonarrRootFolder, ITvRequests } from "../interfaces";
