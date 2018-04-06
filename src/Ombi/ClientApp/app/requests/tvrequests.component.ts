@@ -194,6 +194,9 @@ export class TvRequestsComponent implements OnInit {
             .subscribe(x => {
                 this.tvRequests = x;
                 this.tvRequests.forEach((val, index) => {
+                    if (val.data.posterPath === null) {
+                        val.data.posterPath = "../../../images/default_tv_poster.png"
+                    }
                     this.loadBackdrop(val);
                     this.setOverride(val.data);
             });     
@@ -219,6 +222,7 @@ export class TvRequestsComponent implements OnInit {
         this.currentlyLoaded = 5;
         this.loadInit();
     }
+
     private loadBackdrop(val: TreeNode): void {
         this.imageService.getTvBanner(val.data.tvDbId).subscribe(x => {
             val.data.background = this.sanitizer.bypassSecurityTrustStyle

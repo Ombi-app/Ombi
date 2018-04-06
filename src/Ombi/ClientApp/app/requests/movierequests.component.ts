@@ -285,6 +285,11 @@ export class MovieRequestsComponent implements OnInit {
 
                 this.movieRequests.forEach((req) => {
                     this.movieRequests.forEach((req) => this.setBackground(req));
+                    if (req.posterPath === null) {
+                        req.posterPath = "../../../images/default_movie_poster.png"
+                    } else {
+                        req.posterPath = "https://image.tmdb.org/t/p/w300/" + req.posterPath;
+                    }
                 });
                 this.radarrService.getQualityProfilesFromSettings().subscribe(c => {
                     this.radarrProfiles = c;

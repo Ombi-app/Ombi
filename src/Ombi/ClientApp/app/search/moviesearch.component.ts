@@ -157,8 +157,12 @@ export class MovieSearchComponent implements OnInit {
 
    private getExtraInfo() {
 
-        this.movieResults.forEach((val, index) => {
-           
+       this.movieResults.forEach((val, index) => {
+           if (val.posterPath === null) {
+               val.posterPath = "../../../images/default_movie_poster.png";
+           } else {
+               val.posterPath = "https://image.tmdb.org/t/p/w300/" + val.posterPath;
+           }
             val.background = this.sanitizer.
             bypassSecurityTrustStyle
             ("url(" + "https://image.tmdb.org/t/p/w1280" + val.backdropPath + ")");
@@ -174,7 +178,8 @@ export class MovieSearchComponent implements OnInit {
         if (index > -1) {
             const copy = { ...this.movieResults[index] };
             this.movieResults[index] = updated;  
-            this.movieResults[index].background = copy.background;     
+            this.movieResults[index].background = copy.background;
+            this.movieResults[index].posterPath = copy.posterPath;
         }
     }
     private clearResults() {
