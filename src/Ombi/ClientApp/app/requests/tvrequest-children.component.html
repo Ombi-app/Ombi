@@ -22,7 +22,15 @@
            
                     <button id="removeBtn" type="button" (click)="removeRequest(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> {{ 'Requests.Remove' | translate }}</button>
                 </div>
-                
+                <div class="dropdown" *ngIf="issueCategories && issuesEnabled" id="issueBtn">
+                    <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <i class="fa fa-plus"></i> {{ 'Requests.ReportIssue' | translate }}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li *ngFor="let cat of issueCategories"><a [routerLink]="" (click)="reportIssue(cat, child)">{{cat.value}}</a></li>
+                    </ul>
+                </div>
                 
             </div>
         </div>
@@ -93,3 +101,6 @@
     </div>
 
 </div>
+
+<issue-report [movie]="false" [visible]="issuesBarVisible" [title]="issueRequest?.title"
+              [issueCategory]="issueCategorySelected" [id]="issueRequest?.id" [providerId]="issueProviderId" (visibleChange)="issuesBarVisible = $event;"></issue-report>
