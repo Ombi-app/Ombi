@@ -129,7 +129,6 @@ export class TvSearchComponent implements OnInit {
 
     public getExtraInfo() {
         this.tvResults.forEach((val, index) => {
-            console.log(val);
             this.imageService.getTvBanner(val.data.id).subscribe(x => {
                 val.data.background = this.sanitizer.
                 bypassSecurityTrustStyle
@@ -230,7 +229,13 @@ export class TvSearchComponent implements OnInit {
     private setDefaults(x: any) {
         if (x.data.banner === null) {
             x.data.banner = "../../../images/default_tv_poster.png";
-        }      
+        }
+
+        if (x.data.imdbId === null) {
+            x.data.imdbId = "https://www.tvmaze.com/shows/" + x.data.seriesId;
+        } else {
+            x.data.imdbId = "http://www.imdb.com/title/" + x.data.imdbId + "/";
+        }
     }
 
     private clearResults() {
