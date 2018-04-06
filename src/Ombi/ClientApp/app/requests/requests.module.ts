@@ -15,7 +15,7 @@ import { TvRequestsComponent } from "./tvrequests.component";
 
 import { SidebarModule, TreeTableModule } from "primeng/primeng";
 
-import { IdentityService, RadarrService, RequestService, SonarrService } from "../services";
+import { IdentityService, RadarrService, RequestService, SonarrService, SearchService } from "../services";
 
 import { AuthGuard } from "../auth/auth.guard";
 
@@ -51,6 +51,7 @@ const routes: Routes = [
         RequestService,
         RadarrService,
         SonarrService,
+        SearchService,
         ],
 
 })

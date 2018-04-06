@@ -11,7 +11,7 @@ import "rxjs/add/operator/distinctUntilChanged";
 import "rxjs/add/operator/map";
 
 import { AuthService } from "../auth/auth.service";
-import { NotificationService, RequestService, SonarrService } from "../services";
+import { NotificationService, RequestService, SonarrService, SearchService } from "../services";
 
 import { TreeNode } from "primeng/primeng";
 import { IIssueCategory, ISonarrProfile,  ISonarrRootFolder, ITvRequests } from "../interfaces";
@@ -46,6 +46,7 @@ export class TvRequestsComponent implements OnInit {
     constructor(private requestService: RequestService,
                 private auth: AuthService,
                 private sanitizer: DomSanitizer,
+                private searchService: SearchService,
                 private imageService: ImageService,
                 private sonarrService: SonarrService,
                 private notificationService: NotificationService) {
@@ -201,9 +202,7 @@ export class TvRequestsComponent implements OnInit {
             .subscribe(x => {
                 this.tvRequests = x;
                 this.tvRequests.forEach((val, index) => {
-                    if (val.data.posterPath === null) {
-                        val.data.posterPath = "../../../images/default_tv_poster.png";
-                    }
+                    this.setDefaults(val);
                     this.loadBackdrop(val);
                     this.setOverride(val.data);
             });     
@@ -221,6 +220,22 @@ export class TvRequestsComponent implements OnInit {
     private resetSearch() {
         this.currentlyLoaded = 5;
         this.loadInit();
+    }
+
+    private setDefaults(val: any) {
+        if (val.data.posterPath === null) {
+            val.data.posterPath = "../../../images/default_tv_poster.png";
+        }
+
+        if (val.data.imdbId.length === 0) {
+            this.searchService.getShowInformationTreeNode(val.data.tvDbId).subscribe(x => {
+                    if (x.data) {
+                        val.data.imdbId = "https://www.tvmaze.com/shows/" + x.data.seriesId;
+                    }
+            });   
+        } else {
+            val.data.imdbId = "http://www.imdb.com/title/" + val.data.imdbId + "/";
+        }
     }
 
     private loadBackdrop(val: TreeNode): void {
