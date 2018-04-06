@@ -25,7 +25,7 @@ namespace Ombi.Core.Tests.Rule.Search
         [Test]
         public async Task Movie_ShouldBe_Available_WhenFoundInEmby()
         {
-            ContextMock.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(new EmbyContent
+            ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new EmbyContent
             {
                 ProviderId = "123"
             });
@@ -39,7 +39,7 @@ namespace Ombi.Core.Tests.Rule.Search
         [Test]
         public async Task Movie_ShouldBe_NotAvailable_WhenNotFoundInEmby()
         {
-            ContextMock.Setup(x => x.Get(It.IsAny<string>())).Returns(Task.FromResult(default(EmbyContent)));
+            ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).Returns(Task.FromResult(default(EmbyContent)));
             var search = new SearchMovieViewModel();
             var result = await Rule.Execute(search);
 

@@ -85,10 +85,10 @@ namespace Ombi.Schedule.Jobs.Emby
                 }
 
                 var epInfo = await _api.GetEpisodeInformation(ep.Id, server.ApiKey, server.AdministratorId, server.FullUri);
-                if (epInfo?.ProviderIds?.Tvdb == null)
-                {
-                    continue;
-                }
+                //if (epInfo?.ProviderIds?.Tvdb == null)
+                //{
+                //    continue;
+                //}
 
                 // Let's make sure we have the parent request, stop those pesky forign key errors,
                 // Damn me having data integrity
@@ -109,7 +109,9 @@ namespace Ombi.Schedule.Jobs.Emby
                         EpisodeNumber = ep.IndexNumber,
                         SeasonNumber = ep.ParentIndexNumber,
                         ParentId = ep.SeriesId,
-                        ProviderId = epInfo.ProviderIds.Tvdb,
+                        TvDbId = epInfo.ProviderIds.Tvdb,
+                        TheMovieDbId = epInfo.ProviderIds.Tmdb,
+                        ImdbId = epInfo.ProviderIds.Imdb,
                         Title = ep.Name,
                         AddedAt = DateTime.UtcNow
                     });

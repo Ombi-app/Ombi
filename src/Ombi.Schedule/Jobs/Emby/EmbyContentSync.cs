@@ -38,12 +38,21 @@ namespace Ombi.Schedule.Jobs.Emby
 
         public async Task Start()
         {
-           var embySettings = await _settings.GetSettingsAsync();
+            var embySettings = await _settings.GetSettingsAsync();
             if (!embySettings.Enable)
                 return;
 
             foreach (var server in embySettings.Servers)
-                await StartServerCache(server);
+            {
+                try
+                {
+                    await StartServerCache(server);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Exception when caching Emby for server {0}", server.Name);
+                }
+            }
 
             // Episodes
             BackgroundJob.Enqueue(() => _episodeSync.Start());
@@ -55,8 +64,11 @@ namespace Ombi.Schedule.Jobs.Emby
             if (!ValidateSettings(server))
                 return;
 
+            await _repo.ExecuteSql("DELETE FROM EmbyEpisode");
+            await _repo.ExecuteSql("DELETE FROM EmbyContent");
+
             var movies = await _api.GetAllMovies(server.ApiKey, server.AdministratorId, server.FullUri);
-            var mediaToAdd = new List<EmbyContent>();
+            var mediaToAdd = new HashSet<EmbyContent>();
             foreach (var movie in movies.Items)
             {
                 if (movie.Type.Equals("boxset", StringComparison.CurrentCultureIgnoreCase))
@@ -96,7 +108,9 @@ namespace Ombi.Schedule.Jobs.Emby
                 if (existingTv == null)
                     mediaToAdd.Add(new EmbyContent
                     {
-                        ProviderId = tvInfo.ProviderIds.Tvdb,
+                        TvDbId = tvInfo.ProviderIds?.Tvdb,
+                        ImdbId = tvInfo.ProviderIds?.Imdb,
+                        TheMovieDbId = tvInfo.ProviderIds?.Tmdb,
                         Title = tvInfo.Name,
                         Type = EmbyMediaType.Series,
                         EmbyId = tvShow.Id,
@@ -110,18 +124,14 @@ namespace Ombi.Schedule.Jobs.Emby
 
         private async Task ProcessMovies(MovieInformation movieInfo, ICollection<EmbyContent> content)
         {
-            if (string.IsNullOrEmpty(movieInfo.ProviderIds.Imdb))
-            {
-                Log.Error("Provider Id on movie {0} is null", movieInfo.Name);
-                return;
-            }
             // Check if it exists
             var existingMovie = await _repo.GetByEmbyId(movieInfo.Id);
 
             if (existingMovie == null)
                 content.Add(new EmbyContent
                 {
-                    ProviderId = movieInfo.ProviderIds.Imdb,
+                    ImdbId = movieInfo.ProviderIds.Imdb,
+                    TheMovieDbId = movieInfo.ProviderIds?.Tmdb,
                     Title = movieInfo.Name,
                     Type = EmbyMediaType.Movie,
                     EmbyId = movieInfo.Id,

@@ -292,14 +292,21 @@ namespace Ombi.Schedule.Jobs.Ombi
             var ordered = embyContent.OrderByDescending(x => x.AddedAt);
             foreach (var content in ordered)
             {
-                var imdbId = content.ProviderId;
-                var findResult = await _movieApi.Find(imdbId, ExternalSource.imdb_id);
-                var result = findResult.movie_results?.FirstOrDefault();
-                if(result == null)
+                var theMovieDbId = content.TheMovieDbId;
+                if (!content.TheMovieDbId.HasValue())
                 {
-                    continue;
+                    var imdbId = content.ImdbId;
+                    var findResult = await _movieApi.Find(imdbId, ExternalSource.imdb_id);
+                    var result = findResult.movie_results?.FirstOrDefault();
+                    if (result == null)
+                    {
+                        continue;
+                    }
+
+                    theMovieDbId = result.id.ToString();
                 }
-                var info = await _movieApi.GetMovieInformationWithExtraInfo(result.id);
+          
+                var info = await _movieApi.GetMovieInformationWithExtraInfo(int.Parse(theMovieDbId));
                 if (info == null)
                 {
                     continue;
@@ -503,7 +510,11 @@ namespace Ombi.Schedule.Jobs.Ombi
             {
                 try
                 {
-                    int.TryParse(t.ProviderId, out var tvdbId);
+                    if (!t.TvDbId.HasValue())
+                    {
+                        continue;
+                    }
+                    int.TryParse(t.TvDbId, out var tvdbId);
                     var info = await _tvApi.ShowLookupByTheTvDbId(tvdbId);
                     if (info == null)
                     {
