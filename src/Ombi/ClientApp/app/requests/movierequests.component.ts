@@ -154,9 +154,9 @@ export class MovieRequestsComponent implements OnInit {
 
         el = el.parentElement;
         el = el.querySelectorAll("INPUT");
-        for (let i = 0; i < el.length; i++) {
-            el[i].checked = false;
-            el[i].parentElement.classList.remove("active");
+        for (el of el) {
+            el.checked = false;
+            el.parentElement.classList.remove("active");
         }
 
         this.filterDisplay = false;
