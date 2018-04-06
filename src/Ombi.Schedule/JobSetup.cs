@@ -1,4 +1,5 @@
-﻿using Hangfire;
+﻿using System;
+using Hangfire;
 using Ombi.Core.Settings;
 using Ombi.Schedule.Jobs;
 using Ombi.Schedule.Jobs.Couchpotato;
@@ -12,7 +13,7 @@ using Ombi.Settings.Settings.Models;
 
 namespace Ombi.Schedule
 {
-    public class JobSetup : IJobSetup
+    public class JobSetup : IJobSetup, IDisposable
     {
         public JobSetup(IPlexContentSync plexContentSync, IRadarrSync radarrSync,
             IOmbiAutomaticUpdater updater, IEmbyContentSync embySync, IPlexUserImporter userImporter,
@@ -64,6 +65,37 @@ namespace Ombi.Schedule
             RecurringJob.AddOrUpdate(() => _embyUserImporter.Start(), JobSettingsHelper.UserImporter(s));
             RecurringJob.AddOrUpdate(() => _plexUserImporter.Start(), JobSettingsHelper.UserImporter(s));
             RecurringJob.AddOrUpdate(() => _newsletter.Start(), JobSettingsHelper.Newsletter(s));
+        }
+
+
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                _plexContentSync?.Dispose();
+                _radarrSync?.Dispose();
+                _updater?.Dispose();
+                _plexUserImporter?.Dispose();
+                _embyContentSync?.Dispose();
+                _embyUserImporter?.Dispose();
+                _sonarrSync?.Dispose();
+                _cpCache?.Dispose();
+                _srSync?.Dispose();
+                _jobSettings?.Dispose();
+                _refreshMetadata?.Dispose();
+                _newsletter?.Dispose();
+            }
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
