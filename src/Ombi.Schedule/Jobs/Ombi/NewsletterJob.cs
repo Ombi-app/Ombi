@@ -100,11 +100,11 @@ namespace Ombi.Schedule.Jobs.Ombi
                 var embym = embyContent.Where(x => x.Type == EmbyMediaType.Movie).OrderByDescending(x => x.AddedAt).Take(10);
                 var plext = _plex.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.Series.AddedAt).Take(10);
                 var embyt = _emby.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.AddedAt).Take(10);
-                body = await BuildHtml(plexm, embym, plext, embyt);
+                body = await BuildHtml(plexm, embym, plext, embyt, settings);
             }
             else
             {
-                body = await BuildHtml(plexContentMoviesToSend, embyContentMoviesToSend, plexEpisodesToSend, embyEpisodesToSend);
+                body = await BuildHtml(plexContentMoviesToSend, embyContentMoviesToSend, plexEpisodesToSend, embyEpisodesToSend, settings);
                 if (body.IsNullOrEmpty())
                 {
                     return;
