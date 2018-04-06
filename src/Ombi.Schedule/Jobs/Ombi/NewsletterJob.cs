@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MailKit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Api.TheMovieDb;
@@ -119,6 +120,15 @@ namespace Ombi.Schedule.Jobs.Ombi
                 if (!users.Any())
                 {
                     return;
+                }
+
+                foreach (var emails in settings.ExternalEmails)
+                {
+                    users.Add(new OmbiUser
+                    {
+                        UserName = emails,
+                        Email = emails
+                    });
                 }
                 var emailTasks = new List<Task>();
                 foreach (var user in users)

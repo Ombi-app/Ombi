@@ -59,6 +59,7 @@ export interface INewsletterNotificationSettings extends INotificationSettings {
     notificationTemplate: INotificationTemplates;
     disableMovies: boolean;
     disableTv: boolean;
+    externalEmails: string[];
 }
 
 export interface ITelegramNotifcationSettings extends INotificationSettings {
