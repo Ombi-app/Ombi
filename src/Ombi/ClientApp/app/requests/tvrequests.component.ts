@@ -32,6 +32,10 @@ export class TvRequestsComponent implements OnInit {
 
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
+    public issueProviderId: string;
+    public issuesBarVisible = false;
+    public issueRequest: ITvRequests;
+    public issueCategorySelected: IIssueCategory;
 
     public sonarrProfiles: ISonarrProfile[] = [];
     public sonarrRootFolders: ISonarrRootFolder[] = [];
@@ -205,6 +209,13 @@ export class TvRequestsComponent implements OnInit {
             this.sonarrService.getRootFoldersWithoutSettings()
                 .subscribe(x => this.sonarrRootFolders = x);
         }
+    }
+
+    public reportIssue(catId: IIssueCategory, req: ITvRequests) {
+        this.issueRequest = req;
+        this.issueCategorySelected = catId;
+        this.issuesBarVisible = true;
+        this.issueProviderId = req.id.toString();
     }
 
     private resetSearch() {

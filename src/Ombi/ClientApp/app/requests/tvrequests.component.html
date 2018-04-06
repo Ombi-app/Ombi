@@ -99,18 +99,28 @@
                                 </div>
 
                             </div>
+                            <div class="dropdown" *ngIf="issueCategories && issuesEnabled" id="issueBtn">
+                                <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <i class="fa fa-plus"></i> {{ 'Requests.ReportIssue' | translate }}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <li *ngFor="let cat of issueCategories"><a [routerLink]="" (click)="reportIssue(cat, node.data)">{{cat.value}}</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <!--This is the section that holds the child seasons if they want to specify specific episodes-->
                 <div *ngIf="node.leaf">
-                    <tvrequests-children [childRequests]="node.data" [isAdmin]="isAdmin"
-                    (requestDeleted)="childRequestDeleted($event)"
-                    [issueCategories]="issueCategories" [issuesEnabled]="issuesEnabled"
-                    [issueProviderId]="node.data.tvDbId"></tvrequests-children>
+                    <tvrequests-children [childRequests]="node.data" [isAdmin] ="isAdmin" 
+                    (requestDeleted)="childRequestDeleted($event)"></tvrequests-children>
                 </div>
             </ng-template>
         </p-column>
     </p-treeTable>
 
 </div>
+
+    <issue-report [movie]="false" [visible]="issuesBarVisible" [title]="issueRequest?.title"
+                  [issueCategory]="issueCategorySelected" [id]="issueRequest?.id" [providerId]="issueProviderId" (visibleChange)="issuesBarVisible = $event;"></issue-report>
