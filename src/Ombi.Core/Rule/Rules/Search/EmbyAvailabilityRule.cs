@@ -23,20 +23,20 @@ namespace Ombi.Core.Rule.Rules.Search
             EmbyContent item = null;
             if (obj.ImdbId.HasValue())
             {
-                item = await EmbyContentRepository.Get(obj.ImdbId);
+                item = await EmbyContentRepository.GetByImdbId(obj.ImdbId);
             }
             if (item == null)
             {
                 if (obj.TheMovieDbId.HasValue())
                 {
-                    item = await EmbyContentRepository.Get(obj.TheMovieDbId);
+                    item = await EmbyContentRepository.GetByTheMovieDbId(obj.TheMovieDbId);
                 }
 
                 if (item == null)
                 {
                     if (obj.TheTvDbId.HasValue())
                     {
-                        item = await EmbyContentRepository.Get(obj.TheTvDbId);
+                        item = await EmbyContentRepository.GetByTvDbId(obj.TheTvDbId);
                     }
                 }
             }

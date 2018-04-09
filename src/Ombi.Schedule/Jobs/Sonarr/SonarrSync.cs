@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -43,14 +45,15 @@ namespace Ombi.Schedule.Jobs.Sonarr
                 var series = await _api.GetSeries(settings.ApiKey, settings.FullUri);
                 if (series != null)
                 {
-                    var sonarrSeries = series as IList<SonarrSeries> ?? series.ToList();
+                    var sonarrSeries = series as ImmutableHashSet<SonarrSeries> ?? series.ToImmutableHashSet();
                     var ids = sonarrSeries.Select(x => x.tvdbId);
 
                     await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM SonarrCache");
-                    var entites = ids.Select(id => new SonarrCache { TvDbId = id }).ToList();
+                    var entites = ids.Select(id => new SonarrCache { TvDbId = id }).ToImmutableHashSet();
 
                     await _ctx.SonarrCache.AddRangeAsync(entites);
-                    
+                    entites.Clear();
+
                     await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM SonarrEpisodeCache");
                     foreach (var s in sonarrSeries)
                     {
@@ -67,10 +70,10 @@ namespace Ombi.Schedule.Jobs.Sonarr
                             TvDbId = s.tvdbId,
                             HasFile = episode.hasFile
                         }));
+                        _log.LogDebug("Commiting the transaction");
+                        await _ctx.SaveChangesAsync();
                     }
                     
-                    _log.LogDebug("Commiting the transaction");
-                    await _ctx.SaveChangesAsync();
                 }
             }
             catch (Exception e)

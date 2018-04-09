@@ -10,6 +10,16 @@
                         <input type="checkbox" id="enabled" [(ngModel)]="settings.enabled" ng-checked="settings.enabled"><label for="enabled">Enable</label>
                     </div>
                 </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="disableTv" [(ngModel)]="settings.disableTv" ng-checked="settings.disableTv"><label for="disableTv">Disable TV</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="disableMovies" [(ngModel)]="settings.disableMovies" ng-checked="settings.disableMovies"><label for="disableMovies">Disable Movies</label>
+                    </div>
+                </div>
                  <div class="form-group">
                     <label class="control-label">Subject</label>
                     <div>
@@ -43,6 +53,31 @@
             <br/>
             <small>When testing, the test newsletter will go to all users that have the Admin role, please ensure that there are valid email addresses for this. The test will also only grab the latest 10 movies and 10 shows just to give you an example.</small>
 
+            <br/>
+            <br/>
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <label for="emailToAdd" class="control-label">Add External Email (For users that are not in Ombi)</label>
+                </div>
+                <div class="col-md-9">
+                    <input type="text" [(ngModel)]="emailToAdd" class="form-control form-control-custom " id="emailToAdd" 
+                    email name="emailToAdd" value="{{emailToAdd}}">
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-primary-outline" (click)="addEmail()" pTooltip="Don't forget to press the Submit button!">Add</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div *ngFor="let email of settings.externalEmails">
+                    <div class="col-md-9">
+                        {{email}}
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-sm btn-danger-outline" (click)="deleteEmail(email)">Delete</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </fieldset>
 </div>

@@ -152,7 +152,9 @@ namespace Ombi.Core.Engine
                 model.Add(new RecentlyAddedMovieModel
                 {
                     Id = emby.Id,
-                    ImdbId = emby.ProviderId,
+                    ImdbId = emby.ImdbId,
+                    TheMovieDbId = emby.TheMovieDbId,
+                    TvDbId = emby.TvDbId,
                     AddedAt = emby.AddedAt,
                     Title = emby.Title,
                 });
@@ -211,7 +213,9 @@ namespace Ombi.Core.Engine
                     model.Add(new RecentlyAddedTvModel
                     {
                         Id = emby.Id,
-                        ImdbId = emby.ProviderId,
+                        ImdbId = emby.ImdbId,
+                        TvDbId = emby.TvDbId,
+                        TheMovieDbId = emby.TheMovieDbId,
                         AddedAt = emby.AddedAt,
                         Title = emby.Title,
                         EpisodeNumber = episode.EpisodeNumber,
