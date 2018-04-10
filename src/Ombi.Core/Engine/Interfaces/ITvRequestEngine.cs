@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Store.Entities.Requests;
 
@@ -9,7 +10,7 @@ namespace Ombi.Core.Engine.Interfaces
     {
 
         Task RemoveTvRequest(int requestId);
-        Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv);
+        Task<RequestEngineResult> RequestTvShow(TvRequestViewModel tv);
         Task<RequestEngineResult> DenyChildRequest(int requestId);
         Task<IEnumerable<TvRequests>> SearchTvRequest(string search);
         Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> SearchTvRequestTree(string search);

@@ -10,7 +10,6 @@ using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
-using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Schedule.Jobs.Ombi
 {
@@ -44,6 +43,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 if (settings.Enable)
                 {
                     await StartPlex();
+                    await StartEmby();
                 }
             }
             catch (Exception e)
@@ -59,6 +59,12 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             // Now Tv
             await StartPlexTv();
+        }
+
+        private async Task StartEmby()
+        {
+            await StartEmbyMovies();
+            await StartEmbyTv();
         }
 
         private async Task StartPlexTv()
@@ -101,6 +107,46 @@ namespace Ombi.Schedule.Jobs.Ombi
             await _plexRepo.SaveChangesAsync();
         }
 
+        private async Task StartEmbyTv()
+        {
+            var allTv = _embyRepo.GetAll().Where(x =>
+                x.Type == EmbyMediaType.Series && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue() || !x.TvDbId.HasValue()));
+            var tvCount = 0;
+            foreach (var show in allTv)
+            {
+                var hasImdb = show.ImdbId.HasValue();
+                var hasTheMovieDb = show.TheMovieDbId.HasValue();
+                var hasTvDbId = show.TvDbId.HasValue();
+
+                if (!hasTheMovieDb)
+                {
+                    var id = await GetTheMovieDbId(hasTvDbId, hasImdb, show.TvDbId, show.ImdbId, show.Title);
+                    show.TheMovieDbId = id;
+                }
+
+                if (!hasImdb)
+                {
+                    var id = await GetImdbId(hasTheMovieDb, hasTvDbId, show.Title, show.TheMovieDbId, show.TvDbId);
+                    show.ImdbId = id;
+                    _embyRepo.UpdateWithoutSave(show);
+                }
+
+                if (!hasTvDbId)
+                {
+                    var id = await GetTvDbId(hasTheMovieDb, hasImdb, show.TheMovieDbId, show.ImdbId, show.Title);
+                    show.TvDbId = id;
+                    _embyRepo.UpdateWithoutSave(show);
+                }
+                tvCount++;
+                if (tvCount >= 20)
+                {
+                    await _embyRepo.SaveChangesAsync();
+                    tvCount = 0;
+                }
+            }
+            await _embyRepo.SaveChangesAsync();
+        }
+
         private async Task StartPlexMovies()
         {
             var allMovies = _plexRepo.GetAll().Where(x =>
@@ -135,7 +181,41 @@ namespace Ombi.Schedule.Jobs.Ombi
             await _plexRepo.SaveChangesAsync();
         }
 
-       private async Task<string> GetTheMovieDbId(bool hasTvDbId, bool hasImdb, string tvdbID, string imdbId, string title)
+        private async Task StartEmbyMovies()
+        {
+            var allMovies = _embyRepo.GetAll().Where(x =>
+                x.Type == EmbyMediaType.Movie && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue()));
+            int movieCount = 0;
+            foreach (var movie in allMovies)
+            {
+                var hasImdb = movie.ImdbId.HasValue();
+                var hasTheMovieDb = movie.TheMovieDbId.HasValue();
+                // Movies don't really use TheTvDb
+
+                if (!hasImdb)
+                {
+                    var imdbId = await GetImdbId(hasTheMovieDb, false, movie.Title, movie.TheMovieDbId, string.Empty);
+                    movie.ImdbId = imdbId;
+                    _embyRepo.UpdateWithoutSave(movie);
+                }
+                if (!hasTheMovieDb)
+                {
+                    var id = await GetTheMovieDbId(false, hasImdb, string.Empty, movie.ImdbId, movie.Title);
+                    movie.TheMovieDbId = id;
+                    _embyRepo.UpdateWithoutSave(movie);
+                }
+                movieCount++;
+                if (movieCount >= 20)
+                {
+                    await _embyRepo.SaveChangesAsync();
+                    movieCount = 0;
+                }
+            }
+
+            await _embyRepo.SaveChangesAsync();
+        }
+
+        private async Task<string> GetTheMovieDbId(bool hasTvDbId, bool hasImdb, string tvdbID, string imdbId, string title)
         {
             _log.LogInformation("The Media item {0} does not have a TheMovieDbId, searching for TheMovieDbId", title);
             FindResult result = null;

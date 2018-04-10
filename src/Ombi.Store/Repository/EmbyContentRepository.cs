@@ -35,42 +35,28 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public class EmbyContentRepository : IEmbyContentRepository
+    public class EmbyContentRepository : Repository<EmbyContent>, IEmbyContentRepository
     {
 
-        public EmbyContentRepository(IOmbiContext db)
+        public EmbyContentRepository(IOmbiContext db):base(db)
         {
             Db = db;
         }
 
         private IOmbiContext Db { get; }
 
-        public IQueryable<EmbyContent> GetAll()
+        
+        public async Task<EmbyContent> GetByImdbId(string imdbid)
         {
-            return Db.EmbyContent.AsQueryable();
+            return await Db.EmbyContent.FirstOrDefaultAsync(x => x.ImdbId == imdbid);
         }
-
-        public async Task AddRange(IEnumerable<EmbyContent> content)
+        public async Task<EmbyContent> GetByTvDbId(string tv)
         {
-            Db.EmbyContent.AddRange(content);
-            await Db.SaveChangesAsync();
+            return await Db.EmbyContent.FirstOrDefaultAsync(x => x.TvDbId == tv);
         }
-
-        public async Task<bool> ContentExists(string providerId)
+        public async Task<EmbyContent> GetByTheMovieDbId(string mov)
         {
-            return await Db.EmbyContent.AnyAsync(x => x.ProviderId == providerId);
-        }
-
-        public async Task<EmbyContent> Add(EmbyContent content)
-        {
-            await Db.EmbyContent.AddAsync(content);
-            await Db.SaveChangesAsync();
-            return content;
-        }
-
-        public async Task<EmbyContent> Get(string providerId)
-        {
-            return await Db.EmbyContent.FirstOrDefaultAsync(x => x.ProviderId == providerId);
+            return await Db.EmbyContent.FirstOrDefaultAsync(x => x.TheMovieDbId == mov);
         }
 
         public IQueryable<EmbyContent> Get()
@@ -111,23 +97,9 @@ namespace Ombi.Store.Repository
             await Db.SaveChangesAsync();
         }
 
-        private bool _disposed;
-        protected virtual void Dispose(bool disposing)
+        public void UpdateWithoutSave(EmbyContent existingContent)
         {
-            if (_disposed)
-                return;
-
-            if (disposing)
-            {
-                Db?.Dispose();
-            }
-            _disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            Db.EmbyContent.Update(existingContent);
         }
     }
 }

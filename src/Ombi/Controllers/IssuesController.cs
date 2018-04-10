@@ -283,6 +283,7 @@ namespace Ombi.Controllers
             notificationModel.Substitutes.Add("IssueStatus", issue.Status.ToString());
             notificationModel.Substitutes.Add("IssueSubject", issue.Subject);
             notificationModel.Substitutes.Add("IssueUser", issueReportedUsername);
+            notificationModel.Substitutes.Add("RequestType", notificationModel.RequestType.ToString());
         }
     }
 }

@@ -66,7 +66,19 @@ export class TvRequestsComponent implements OnInit {
 
     public openClosestTab(el: any) {
         const rowclass = "undefined ng-star-inserted";
-        el = el.toElement || el.relatedTarget || el.target;
+        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
+
+        if (el.nodeName === "BUTTON") {
+
+            const isButtonAlreadyActive = el.parentElement.querySelector(".active");
+            // if a Button already has Class: .active
+            if (isButtonAlreadyActive) {
+                isButtonAlreadyActive.classList.remove("active");
+            } else {
+                el.className += " active";
+            }
+        }
+
         while (el.className !== rowclass) {
             // Increment the loop to the parent node until we find the row we need
             el = el.parentNode;
@@ -90,12 +102,6 @@ export class TvRequestsComponent implements OnInit {
     }
 
     public ngOnInit() {
-        
-        const profile = <ISonarrProfile>{name:"test",id:1 };
-        const folder = <ISonarrRootFolder>{path:"testpath", id:1};
-
-        this.sonarrProfiles.push(profile);
-        this.sonarrRootFolders.push(folder);
         this.amountToLoad = 1000;
         this.currentlyLoaded = 1000;
         this.tvRequests = [];
@@ -204,7 +210,7 @@ export class TvRequestsComponent implements OnInit {
         this.loadInit();
     }
     private loadBackdrop(val: TreeNode): void {
-        this.imageService.getTvBanner(val.data.id).subscribe(x => {
+        this.imageService.getTvBanner(val.data.tvDbId).subscribe(x => {
             val.data.background = this.sanitizer.bypassSecurityTrustStyle
                 ("url(" + x + ")");
             });

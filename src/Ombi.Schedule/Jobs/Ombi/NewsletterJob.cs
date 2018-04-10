@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MailKit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Api.TheMovieDb;
@@ -100,18 +101,18 @@ namespace Ombi.Schedule.Jobs.Ombi
                 var embym = embyContent.Where(x => x.Type == EmbyMediaType.Movie).OrderByDescending(x => x.AddedAt).Take(10);
                 var plext = _plex.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.Series.AddedAt).Take(10);
                 var embyt = _emby.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.AddedAt).Take(10);
-                body = await BuildHtml(plexm, embym, plext, embyt);
+                body = await BuildHtml(plexm, embym, plext, embyt, settings);
             }
             else
             {
-                body = await BuildHtml(plexContentMoviesToSend, embyContentMoviesToSend, plexEpisodesToSend, embyEpisodesToSend);
+                body = await BuildHtml(plexContentMoviesToSend, embyContentMoviesToSend, plexEpisodesToSend, embyEpisodesToSend, settings);
                 if (body.IsNullOrEmpty())
                 {
                     return;
                 }
 
             }
-
+            
             if (!test)
             {
                 // Get the users to send it to
@@ -119,6 +120,15 @@ namespace Ombi.Schedule.Jobs.Ombi
                 if (!users.Any())
                 {
                     return;
+                }
+
+                foreach (var emails in settings.ExternalEmails)
+                {
+                    users.Add(new OmbiUser
+                    {
+                        UserName = emails,
+                        Email = emails
+                    });
                 }
                 var emailTasks = new List<Task>();
                 foreach (var user in users)
@@ -229,20 +239,20 @@ namespace Ombi.Schedule.Jobs.Ombi
             return resolver.ParseMessage(template, curlys);
         }
 
-        private async Task<string> BuildHtml(IQueryable<PlexServerContent> plexContentToSend, IQueryable<EmbyContent> embyContentToSend, IQueryable<PlexEpisode> plexEpisodes, IQueryable<EmbyEpisode> embyEp)
+        private async Task<string> BuildHtml(IQueryable<PlexServerContent> plexContentToSend, IQueryable<EmbyContent> embyContentToSend, IQueryable<PlexEpisode> plexEpisodes, IQueryable<EmbyEpisode> embyEp, NewsletterSettings settings)
         {
             var sb = new StringBuilder();
 
             var plexMovies = plexContentToSend.Where(x => x.Type == PlexMediaTypeEntity.Movie);
             var embyMovies = embyContentToSend.Where(x => x.Type == EmbyMediaType.Movie);
-            if (plexMovies.Any() || embyMovies.Any())
+            if ((plexMovies.Any() || embyMovies.Any()) && !settings.DisableMovies)
             {
                 sb.Append("<h1>New Movies:</h1><br /><br />");
                 await ProcessPlexMovies(plexMovies, sb);
                 await ProcessEmbyMovies(embyMovies, sb);
             }
 
-            if (plexEpisodes.Any() || embyEp.Any())
+            if ((plexEpisodes.Any() || embyEp.Any()) && !settings.DisableTv)
             {
                 sb.Append("<h1>New Episodes:</h1><br /><br />");
                 await ProcessPlexTv(plexEpisodes, sb);
@@ -259,19 +269,11 @@ namespace Ombi.Schedule.Jobs.Ombi
             var ordered = plexContentToSend.OrderByDescending(x => x.AddedAt);
             foreach (var content in ordered)
             {
-                if (content.TheMovieDbId.IsNullOrEmpty())
-                {
-                    // Maybe we should try the ImdbId?
-                    if (content.ImdbId.HasValue())
-                    {
-                        var findResult = await _movieApi.Find(content.ImdbId, ExternalSource.imdb_id);
-
-                        var movieId = findResult.movie_results?[0]?.id ?? 0;
-                        content.TheMovieDbId = movieId.ToString();
-                    }
-                }
-
                 int.TryParse(content.TheMovieDbId, out var movieDbId);
+                if (movieDbId <= 0)
+                {
+                    continue;
+                }
                 var info = await _movieApi.GetMovieInformationWithExtraInfo(movieDbId);
                 if (info == null)
                 {
@@ -300,8 +302,21 @@ namespace Ombi.Schedule.Jobs.Ombi
             var ordered = embyContent.OrderByDescending(x => x.AddedAt);
             foreach (var content in ordered)
             {
-                int.TryParse(content.ProviderId, out var movieDbId);
-                var info = await _movieApi.GetMovieInformationWithExtraInfo(movieDbId);
+                var theMovieDbId = content.TheMovieDbId;
+                if (!content.TheMovieDbId.HasValue())
+                {
+                    var imdbId = content.ImdbId;
+                    var findResult = await _movieApi.Find(imdbId, ExternalSource.imdb_id);
+                    var result = findResult.movie_results?.FirstOrDefault();
+                    if (result == null)
+                    {
+                        continue;
+                    }
+
+                    theMovieDbId = result.id.ToString();
+                }
+          
+                var info = await _movieApi.GetMovieInformationWithExtraInfo(int.Parse(theMovieDbId));
                 if (info == null)
                 {
                     continue;
@@ -505,7 +520,11 @@ namespace Ombi.Schedule.Jobs.Ombi
             {
                 try
                 {
-                    int.TryParse(t.ProviderId, out var tvdbId);
+                    if (!t.TvDbId.HasValue())
+                    {
+                        continue;
+                    }
+                    int.TryParse(t.TvDbId, out var tvdbId);
                     var info = await _tvApi.ShowLookupByTheTvDbId(tvdbId);
                     if (info == null)
                     {

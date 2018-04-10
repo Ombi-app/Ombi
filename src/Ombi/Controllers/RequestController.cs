@@ -174,7 +174,7 @@ namespace Ombi.Controllers
         /// <param name="tv">The tv.</param>
         /// <returns></returns>
         [HttpPost("tv")]
-        public async Task<RequestEngineResult> RequestTv([FromBody] SearchTvShowViewModel tv)
+        public async Task<RequestEngineResult> RequestTv([FromBody] TvRequestViewModel tv)
         {
             return await TvRequestEngine.RequestTvShow(tv);
         }

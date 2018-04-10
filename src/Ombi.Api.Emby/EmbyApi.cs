@@ -77,11 +77,17 @@ namespace Ombi.Api.Emby
 
             request.AddJsonBody(body);
 
-            request.AddHeader("Accept", "application/json");
-            request.AddContentHeader("Content-Type", "application/json");
+            AddEmbyHeaders(request);
 
             var obj = await Api.Request<EmbyConnectUser>(request);
             return obj;
+        }
+
+        private static void AddEmbyHeaders(Request request)
+        {
+            request.AddHeader("Accept", "application/json");
+            request.AddHeader("X-Application", $"Ombi/{AssemblyHelper.GetRuntimeVersion()}");
+            request.AddContentHeader("Content-Type", "application/json");
         }
 
         public async Task<EmbyItemContainer<MovieInformation>> GetCollection(string mediaId, string apiKey, string userId, string baseUrl)

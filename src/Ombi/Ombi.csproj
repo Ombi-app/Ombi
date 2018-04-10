@@ -10,7 +10,9 @@
     <Version>$(FullVer)</Version>
     <PackageVersion></PackageVersion>
   </PropertyGroup>
-
+  <PropertyGroup>
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netcoreapp2.0\Swagger.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591;</NoWarn>

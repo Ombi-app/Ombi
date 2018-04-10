@@ -70,7 +70,16 @@ namespace Ombi.Schedule.Jobs.Emby
 
             foreach (var movie in movies)
             {
-                var embyContent = await _repo.Get(movie.ImdbId);
+                EmbyContent embyContent = null;
+                if (movie.TheMovieDbId > 0)
+                {
+                    embyContent = await _repo.GetByTheMovieDbId(movie.TheMovieDbId.ToString());
+                }
+                else if(movie.ImdbId.HasValue())
+                {
+                    embyContent = await _repo.GetByImdbId(movie.ImdbId);
+                }
+                
                 if (embyContent == null)
                 {
                     // We don't have this yet
@@ -112,8 +121,20 @@ namespace Ombi.Schedule.Jobs.Emby
 
             foreach (var child in tv)
             {
-                var tvDbId = child.ParentRequest.TvDbId;
-                var seriesEpisodes = embyEpisodes.Where(x => x.Series.ProviderId == tvDbId.ToString());
+                IQueryable<EmbyEpisode> seriesEpisodes;
+                if (child.ParentRequest.TvDbId > 0)
+                {
+                    seriesEpisodes = embyEpisodes.Where(x => x.Series.TvDbId == child.ParentRequest.TvDbId.ToString());
+                }
+                else if(child.ParentRequest.ImdbId.HasValue())
+                {
+                    seriesEpisodes = embyEpisodes.Where(x => x.Series.ImdbId == child.ParentRequest.ImdbId);
+                }
+                else
+                {
+                    continue;
+                }
+
                 foreach (var season in child.SeasonRequests)
                 {
                     foreach (var episode in season.Episodes)

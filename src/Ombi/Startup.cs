@@ -11,6 +11,7 @@ using Hangfire;
 using Hangfire.Console;
 using Hangfire.Dashboard;
 using Hangfire.SQLite;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -44,7 +45,7 @@ namespace Ombi
             Console.WriteLine(env.ContentRootPath);
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", false, true)
+                .AddJsonFile("appsettings.json", false, false)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
@@ -85,7 +86,7 @@ namespace Ombi
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-
+            TelemetryConfiguration.Active.DisableTelemetry = true;
             // Add framework services.
             services.AddDbContext<OmbiContext>();
 
@@ -183,12 +184,12 @@ namespace Ombi
                     Authorization = new[] { new HangfireAuthorizationFilter() }
                 });
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 3 });
-
+            
             // Setup the scheduler
             var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
             jobSetup.Setup();
             ctx.Seed();
-
+            
             var provider = new FileExtensionContentTypeProvider { Mappings = { [".map"] = "application/octet-stream" } };
 
             app.UseStaticFiles(new StaticFileOptions()
@@ -218,6 +219,8 @@ namespace Ombi
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
             });
+
+            ombiService.Dispose();
         }
     }
 

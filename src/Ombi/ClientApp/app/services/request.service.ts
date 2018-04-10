@@ -7,7 +7,7 @@ import { Observable } from "rxjs/Rx";
 import { TreeNode } from "primeng/primeng";
 import { IRequestEngineResult } from "../interfaces";
 import { IChildRequests, IFilter, IMovieRequestModel, IMovieRequests, IMovieUpdateModel, ITvRequests, ITvUpdateModel } from "../interfaces";
-import { ISearchTvResult } from "../interfaces";
+import { ITvRequestViewModel } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()
@@ -20,7 +20,7 @@ export class RequestService extends ServiceHelpers {
         return this.http.post<IRequestEngineResult>(`${this.url}Movie/`, JSON.stringify(movie),  {headers: this.headers});
     }
 
-    public requestTv(tv: ISearchTvResult): Observable<IRequestEngineResult> {
+    public requestTv(tv: ITvRequestViewModel): Observable<IRequestEngineResult> {
         return this.http.post<IRequestEngineResult>(`${this.url}TV/`, JSON.stringify(tv), {headers: this.headers});
     }
 

@@ -5,7 +5,7 @@ import { NotificationService } from "../services";
 import { RequestService } from "../services";
 import { SearchService } from "../services";
 
-import { INewSeasonRequests, IRequestEngineResult } from "../interfaces";
+import { INewSeasonRequests, IRequestEngineResult, ISeasonsViewModel, ITvRequestViewModel } from "../interfaces";
 import { IEpisodesRequests } from "../interfaces";
 import { ISearchTvResult } from "../interfaces";
 
@@ -46,7 +46,22 @@ export class SeriesInformationComponent implements OnInit {
 
         this.series.requested = true;
 
-        this.requestService.requestTv(this.series)
+        const viewModel = <ITvRequestViewModel>{ firstSeason: this.series.firstSeason, latestSeason: this.series.latestSeason, requestAll: this.series.requestAll, tvDbId: this.series.id};
+        viewModel.seasons = [];
+        this.series.seasonRequests.forEach((season) => {
+            const seasonsViewModel = <ISeasonsViewModel>{seasonNumber: season.seasonNumber, episodes: []};
+            season.episodes.forEach(ep => {
+                if(!this.series.latestSeason || !this.series.requestAll || !this.series.firstSeason) {
+                    if(ep.requested) {
+                        seasonsViewModel.episodes.push({episodeNumber: ep.episodeNumber});
+                    }
+                }
+            });
+            
+            viewModel.seasons.push(seasonsViewModel);
+        });
+
+        this.requestService.requestTv(viewModel)
             .subscribe(x => {
                 this.result = x as IRequestEngineResult;
                 if (this.result.result) {

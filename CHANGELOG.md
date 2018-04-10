@@ -1,5 +1,62 @@
 # Changelog
 
+## (unreleased)
+
+### **New Features**
+
+- Added the ability to send newsletter out to users that are not in Ombi. [Jamie]
+
+- Added the ability to turn off TV or Movies from the newsletter. [Jamie]
+
+- Update about.component.html. [Jamie]
+
+- Update about.component.html. [Jamie]
+
+- Added random versioning prefix to the translations so the users don't have to clear the cache. [Jamie]
+
+- Added more information to the about page. [Jamie]
+
+- Changed let to const to adhere to linting. [Anojh]
+
+- Update _Layout.cshtml. [goldenpipes]
+
+- Update _Layout.cshtml. [goldenpipes]
+
+- Changed the TV Request API. We now only require the TvDbId and the seasons and episodes that you want to request. This should make integration regarding TV a lot easier. [Jamie]
+
+### **Fixes**
+
+- Emby improvments on the way we sync/cache the data. [Jamie]
+
+- Memory improvements. [Jamie]
+
+- Made some improvements to the Sonarr Sync job #2127. [Jamie]
+
+- Turn off Server GC to hopefully help with #2127. [Jamie Rees]
+
+- Fixed #2109. [Jamie]
+
+- Fixed #2101. [Jamie]
+
+- Fixed #2105. [Jamie]
+
+- Fixed some styling on the issues detail page. [Jamie]
+
+- Fixed #2116. [Jamie]
+
+- Limit the amount of FileSystemWatchers being spawned. [Jamie]
+
+- Fixed the issue where Emby connect users could not log in #2115. [Jamie]
+
+- Had to update some base styles since currently some styling does not look right... [Anojh]
+
+- Adding wrappers and classes for LC and toggling active style for UI elements. [Anojh]
+
+- Fixed  a little bug in the newsletter. [Jamie]
+
+- Fixed the issue where movies were not appearing in the newsletter for users with Emby #2111. [Jamie]
+
+
 ## v3.0.3111 (2018-03-27)
 
 ### **New Features**
@@ -732,7 +789,7 @@
 
 - Switch to use a single HTTPClient rather than a new one every request !dev. [tidusjar]
 
-- Fix non-admin rights (#1820) [Rob Gökemeijer]
+- Fix non-admin rights (#1820) [Rob GÃ¶kemeijer]
 
 - Fix duplicated "Requests" element ID on new Issues link (#1817) [Shoghi Cervantes]
 
@@ -2582,7 +2639,7 @@
 
 - WIP hide tv request options based on admin settings. [Matt McHughes]
 
-- Set meta charset to be utf-8. [Madeleine Schönemann]
+- Set meta charset to be utf-8. [Madeleine SchÃ¶nemann]
 
 - F#552: updated labels text. [Jim MacKenize]
 
@@ -2939,7 +2996,7 @@
 
 - Fixed issues from the merge. [tidusjar]
 
-- Stupid &$(*£ merge. [tidusjar]
+- Stupid &$(*Â£ merge. [tidusjar]
 
 - Angular. [tidusjar]
 
