@@ -11,6 +11,7 @@ export class NewsletterComponent implements OnInit {
 
     public NotificationType = NotificationType;
     public settings: INewsletterNotificationSettings;
+    public emailToAdd: string;
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
@@ -47,5 +48,25 @@ export class NewsletterComponent implements OnInit {
             }
         });
 
+    }
+    public addEmail() { 
+
+        if(this.emailToAdd) {
+            const emailRegex = "[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}";
+            const match = this.emailToAdd.match(emailRegex)!;
+            if(match && match.length > 0) {
+                this.settings.externalEmails.push(this.emailToAdd);
+                this.emailToAdd = "";
+            } else {
+                this.notificationService.error("Please enter a valid email address");
+            }
+        }
+    }
+
+    public deleteEmail(email: string) {
+        const index = this.settings.externalEmails.indexOf(email);    // <-- Not supported in <IE9
+        if (index !== -1) {
+                this.settings.externalEmails.splice(index, 1);
+            }
     }
 }
