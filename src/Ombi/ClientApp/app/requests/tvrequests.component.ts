@@ -225,8 +225,6 @@ export class TvRequestsComponent implements OnInit {
         if (val.data.posterPath === null) {
             val.data.posterPath = "../../../images/default_tv_poster.png";
         }
-
-        val.data.imdbId = "http://www.imdb.com/title/" + val.data.imdbId + "/";
     }
 
     private loadBackdrop(val: TreeNode): void {
