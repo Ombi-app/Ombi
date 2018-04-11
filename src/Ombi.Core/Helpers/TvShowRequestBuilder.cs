@@ -33,13 +33,13 @@ namespace Ombi.Core.Helpers
         public DateTime FirstAir { get; protected set; }
         public TvRequests NewRequest { get; protected set; }
         protected TvMazeShow ShowInfo { get; set; }
-        protected List<TvSearchResult> Result { get; set; }
+        protected List<TvSearchResult> Results { get; set; }
 
         public async Task<TvShowRequestBuilder> GetShowInfo(int id)
         {
             ShowInfo = await TvApi.ShowLookupByTheTvDbId(id);
-            Result = await MovieDbApi.SearchTv(ShowInfo.name);
-            foreach (TvSearchResult result in Result) {
+            Results = await MovieDbApi.SearchTv(ShowInfo.name);
+            foreach (TvSearchResult result in Results) {
                 if (result.Name == ShowInfo.name)
                 {                  
                     var showIds = await MovieDbApi.GetTvExternals(result.Id);
