@@ -167,22 +167,7 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     public filterAvailability(filter: FilterType, el: any) {
-        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
-
-        el = el.parentElement; //gets radio div
-        el = el.parentElement; //gets form group div
-        el = el.parentElement; //gets status filter div
-        el = el.querySelectorAll("INPUT");
-        for (el of el) {
-            if (el.checked) {
-                if (!el.parentElement.classList.contains("active")) {
-                    el.parentElement.className += " active";
-                }
-            } else {
-                el.parentElement.classList.remove("active");
-            }
-        }
-
+        this.filterActiveStyle(el);
         this.filter.availabilityFilter = filter;
         this.requestService.filterMovies(this.filter)
         .subscribe(x => {
@@ -192,22 +177,7 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     public filterStatus(filter: FilterType, el: any) {
-        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
-
-        el = el.parentElement; //gets radio div
-        el = el.parentElement; //gets form group div
-        el = el.parentElement; //gets status filter div
-        el = el.querySelectorAll("INPUT");
-        for (el of el) {
-            if (el.checked) {
-                if (!el.parentElement.classList.contains("active")) {
-                    el.parentElement.className += " active";
-                }
-            } else {
-                el.parentElement.classList.remove("active");
-            }
-        }
-
+        this.filterActiveStyle(el);
         this.filter.statusFilter = filter;
         this.requestService.filterMovies(this.filter)
         .subscribe(x => {
@@ -230,6 +200,24 @@ export class MovieRequestsComponent implements OnInit {
         }
         this.order = value;
       }
+
+    private filterActiveStyle(el: any) {
+        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
+
+        el = el.parentElement; //gets radio div
+        el = el.parentElement; //gets form group div
+        el = el.parentElement; //gets status filter div
+        el = el.querySelectorAll("INPUT");
+        for (el of el) {
+            if (el.checked) {
+                if (!el.parentElement.classList.contains("active")) {
+                    el.parentElement.className += " active";
+                }
+            } else {
+                el.parentElement.classList.remove("active");
+            }
+        }
+    }
 
     private loadRequests(amountToLoad: number, currentlyLoaded: number) {
         this.requestService.getMovieRequests(amountToLoad, currentlyLoaded + 1)
