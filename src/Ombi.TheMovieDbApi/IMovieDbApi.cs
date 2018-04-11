@@ -12,6 +12,7 @@ namespace Ombi.Api.TheMovieDb
         Task<List<MovieSearchResult>> NowPlaying();
         Task<List<MovieSearchResult>> PopularMovies();
         Task<List<MovieSearchResult>> SearchMovie(string searchTerm);
+        Task<List<TvSearchResult>> SearchTv(string searchTerm);
         Task<List<MovieSearchResult>> TopRated();
         Task<List<MovieSearchResult>> Upcoming();
         Task<List<MovieSearchResult>> SimilarMovies(int movieId);
