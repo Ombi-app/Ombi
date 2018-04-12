@@ -168,7 +168,6 @@ namespace Ombi
             if (user == null)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                context.Response.RegisterForDispose(um);
                 await context.Response.WriteAsync("Invalid User Access Token");
             }
             else
@@ -178,7 +177,6 @@ namespace Ombi
                 var roles = await um.GetRolesAsync(user);
                 var principal = new GenericPrincipal(identity, roles.ToArray());
                 context.User = principal;
-                context.Response.RegisterForDispose(um);
                 await next();
             }
         }
@@ -191,7 +189,6 @@ namespace Ombi
             if (!valid)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                context.Response.RegisterForDispose(settingsProvider);
                 await context.Response.WriteAsync("Invalid API Key");
             }
             else
@@ -199,7 +196,6 @@ namespace Ombi
                 var identity = new GenericIdentity("API");
                 var principal = new GenericPrincipal(identity, new[] { "Admin", "ApiUser" });
                 context.User = principal;
-                context.Response.RegisterForDispose(settingsProvider);
                 await next();
             }
         }
