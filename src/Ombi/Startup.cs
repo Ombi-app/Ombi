@@ -32,6 +32,7 @@ using Ombi.Schedule;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
+using Ombi.Store.Repository;
 using Serilog;
 using Serilog.Events;
 
@@ -175,6 +176,19 @@ namespace Ombi
             if (settings.BaseUrl.HasValue())
             {
                 app.UsePathBase(settings.BaseUrl);
+            }
+            else
+            {
+                // Check if it's in the startup args
+                var appConfig = serviceProvider.GetService<IApplicationConfigRepository>();
+                var baseUrl = appConfig.Get(ConfigurationTypes.BaseUrl).Result;
+                if (baseUrl.Value.HasValue())
+                {
+                    settings.BaseUrl = baseUrl.Value;
+                    ombiService.SaveSettings(settings);
+
+                    app.UsePathBase(settings.BaseUrl);
+                }
             }
 
             app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1, ServerTimeout = TimeSpan.FromDays(1), ShutdownTimeout = TimeSpan.FromDays(1)});
