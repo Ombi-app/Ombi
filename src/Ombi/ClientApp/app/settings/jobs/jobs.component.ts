@@ -33,6 +33,7 @@ export class JobsComponent implements OnInit {
                 sickRageSync:             [x.sickRageSync, Validators.required],  
                 refreshMetadata:          [x.refreshMetadata, Validators.required],
                 newsletter:               [x.newsletter, Validators.required],
+                plexRecentlyAddedSync:    [x.plexRecentlyAddedSync, Validators.required]
             });  
         });
     }

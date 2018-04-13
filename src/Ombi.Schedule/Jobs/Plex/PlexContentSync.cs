@@ -62,7 +62,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private IPlexContentRepository Repo { get; }
         private IPlexEpisodeSync EpisodeSync { get; }
 
-        public async Task CacheContent()
+        public async Task CacheContent(bool recentlyAddedSearch = false)
         {
             var plexSettings = await Plex.GetSettingsAsync();
             if (!plexSettings.Enable)
@@ -78,7 +78,7 @@ namespace Ombi.Schedule.Jobs.Plex
             Logger.LogInformation("Starting Plex Content Cacher");
             try
             {
-                await StartTheCache(plexSettings);
+                await StartTheCache(plexSettings, recentlyAddedSearch);
             }
             catch (Exception e)
             {
@@ -89,14 +89,14 @@ namespace Ombi.Schedule.Jobs.Plex
             BackgroundJob.Enqueue(() => EpisodeSync.Start());
         }
 
-        private async Task StartTheCache(PlexSettings plexSettings)
+        private async Task StartTheCache(PlexSettings plexSettings, bool recentlyAddedSearch)
         {
             foreach (var servers in plexSettings.Servers ?? new List<PlexServers>())
             {
                 try
                 {
                     Logger.LogInformation("Starting to cache the content on server {0}", servers.Name);
-                    await ProcessServer(servers);
+                    await ProcessServer(servers, recentlyAddedSearch);
                 }
                 catch (Exception e)
                 {
@@ -105,10 +105,10 @@ namespace Ombi.Schedule.Jobs.Plex
             }
         }
 
-        private async Task ProcessServer(PlexServers servers)
+        private async Task ProcessServer(PlexServers servers, bool recentlyAddedSearch)
         {
             Logger.LogInformation("Getting all content from server {0}", servers.Name);
-            var allContent = await GetAllContent(servers);
+            var allContent = await GetAllContent(servers, recentlyAddedSearch);
             Logger.LogInformation("We found {0} items", allContent.Count);
 
             // Let's now process this.
@@ -388,8 +388,9 @@ namespace Ombi.Schedule.Jobs.Plex
         /// If they have not set the settings then we will monitor them all
         /// </summary>
         /// <param name="plexSettings">The plex settings.</param>
+        /// <param name="recentlyAddedSearch"></param>
         /// <returns></returns>
-        private async Task<List<Mediacontainer>> GetAllContent(PlexServers plexSettings)
+        private async Task<List<Mediacontainer>> GetAllContent(PlexServers plexSettings, bool recentlyAddedSearch)
         {
             var sections = await PlexApi.GetLibrarySections(plexSettings.PlexAuthToken, plexSettings.FullUri);
 
@@ -413,10 +414,23 @@ namespace Ombi.Schedule.Jobs.Plex
                             }
                         }
                     }
-                    var lib = await PlexApi.GetLibrary(plexSettings.PlexAuthToken, plexSettings.FullUri, dir.key);
-                    if (lib != null)
+
+                    if (recentlyAddedSearch)
                     {
-                        libs.Add(lib.MediaContainer);
+                        var container = await PlexApi.GetRecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri,
+                            dir.key);
+                        if (container != null)
+                        {
+                            libs.Add(container.MediaContainer);
+                        }
+                    }
+                    else
+                    {
+                        var lib = await PlexApi.GetLibrary(plexSettings.PlexAuthToken, plexSettings.FullUri, dir.key);
+                        if (lib != null)
+                        {
+                            libs.Add(lib.MediaContainer);
+                        }
                     }
                 }
             }

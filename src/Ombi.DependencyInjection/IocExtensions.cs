@@ -175,6 +175,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ISickRageSync, SickRageSync>();
             services.AddTransient<IRefreshMetadata, RefreshMetadata>();
             services.AddTransient<INewsletterJob, NewsletterJob>();
+            services.AddTransient<IPlexRecentlyAddedSync, PlexRecentlyAddedSync>();
         }
     }
 }

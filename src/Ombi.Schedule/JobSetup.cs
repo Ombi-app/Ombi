@@ -19,7 +19,7 @@ namespace Ombi.Schedule
             IOmbiAutomaticUpdater updater, IEmbyContentSync embySync, IPlexUserImporter userImporter,
             IEmbyUserImporter embyUserImporter, ISonarrSync cache, ICouchPotatoSync cpCache,
             ISettingsService<JobSettings> jobsettings, ISickRageSync srSync, IRefreshMetadata refresh,
-            INewsletterJob newsletter)
+            INewsletterJob newsletter, IPlexRecentlyAddedSync recentlyAddedSync)
         {
             _plexContentSync = plexContentSync;
             _radarrSync = radarrSync;
@@ -33,6 +33,7 @@ namespace Ombi.Schedule
             _srSync = srSync;
             _refreshMetadata = refresh;
             _newsletter = newsletter;
+            _plexRecentlyAddedSync = recentlyAddedSync;
         }
 
         private readonly IPlexContentSync _plexContentSync;
@@ -47,6 +48,7 @@ namespace Ombi.Schedule
         private readonly ISettingsService<JobSettings> _jobSettings;
         private readonly IRefreshMetadata _refreshMetadata;
         private readonly INewsletterJob _newsletter;
+        private readonly IPlexRecentlyAddedSync _plexRecentlyAddedSync;
 
         public void Setup()
         {
@@ -55,7 +57,8 @@ namespace Ombi.Schedule
             RecurringJob.AddOrUpdate(() => _embyContentSync.Start(), JobSettingsHelper.EmbyContent(s));
             RecurringJob.AddOrUpdate(() => _sonarrSync.Start(), JobSettingsHelper.Sonarr(s));
             RecurringJob.AddOrUpdate(() => _radarrSync.CacheContent(), JobSettingsHelper.Radarr(s));
-            RecurringJob.AddOrUpdate(() => _plexContentSync.CacheContent(), JobSettingsHelper.PlexContent(s));
+            RecurringJob.AddOrUpdate(() => _plexContentSync.CacheContent(false), JobSettingsHelper.PlexContent(s));
+            RecurringJob.AddOrUpdate(() => _plexContentSync.CacheContent(true), JobSettingsHelper.PlexRecentlyAdded(s));
             RecurringJob.AddOrUpdate(() => _cpCache.Start(), JobSettingsHelper.CouchPotato(s));
             RecurringJob.AddOrUpdate(() => _srSync.Start(), JobSettingsHelper.SickRageSync(s));
             RecurringJob.AddOrUpdate(() => _refreshMetadata.Start(), JobSettingsHelper.RefreshMetadata(s));

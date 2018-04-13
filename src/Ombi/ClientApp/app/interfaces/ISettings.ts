@@ -128,6 +128,7 @@ export interface IJobSettings {
   sickRageSync: string;
   refreshMetadata: string;
   newsletter: string;
+  plexRecentlyAddedSync: string;
 }
 
 export interface IIssueSettings extends ISettings {

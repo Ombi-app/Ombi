@@ -473,6 +473,7 @@ namespace Ombi.Controllers
             j.UserImporter = j.UserImporter.HasValue() ? j.UserImporter : JobSettingsHelper.UserImporter(j);
             j.SickRageSync = j.SickRageSync.HasValue() ? j.SickRageSync : JobSettingsHelper.SickRageSync(j);
             j.RefreshMetadata = j.RefreshMetadata.HasValue() ? j.RefreshMetadata : JobSettingsHelper.RefreshMetadata(j);
+            j.PlexRecentlyAddedSync = j.PlexRecentlyAddedSync.HasValue() ? j.PlexRecentlyAddedSync : JobSettingsHelper.PlexRecentlyAdded(j);
  
             return j;
         }
