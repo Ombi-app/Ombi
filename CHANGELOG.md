@@ -8,6 +8,8 @@
 
 ### **Fixes**
 
+- Add web-app-capable for IOS and Android. [Thomas]
+
 - Fixed the bug where the newsletter CRON was not appearing on the job settings page. [Jamie]
 
 - Add base url as a startup argument  #2153. [Jamie Rees]
