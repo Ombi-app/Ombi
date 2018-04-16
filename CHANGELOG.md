@@ -4,6 +4,30 @@
 
 ### **New Features**
 
+- Added a new Job. Plex Recently Added, this is a slimmed down version of the Plex Sync job, this will just scan the recently added list and not the whole library. I'd reccomend running this very regulary and the full scan not as regular. [Jamie]
+
+### **Fixes**
+
+- Add web-app-capable for IOS and Android. [Thomas]
+
+- Fixed the bug where the newsletter CRON was not appearing on the job settings page. [Jamie]
+
+- Add base url as a startup argument  #2153. [Jamie Rees]
+
+- Fixed a bug with the RefreshMetadata where we would never get TheMovieDBId's if it was missing it. [Jamie]
+
+
+## v3.0.3173 (2018-04-12)
+
+### **Fixes**
+
+- Removed some early disposition that seemed to be causing errors in the API. [Jamie]
+
+
+## v3.0.3164 (2018-04-10)
+
+### **New Features**
+
 - Added the ability to send newsletter out to users that are not in Ombi. [Jamie]
 
 - Added the ability to turn off TV or Movies from the newsletter. [Jamie]
@@ -55,6 +79,12 @@
 - Fixed  a little bug in the newsletter. [Jamie]
 
 - Fixed the issue where movies were not appearing in the newsletter for users with Emby #2111. [Jamie]
+
+- The fact that this button has another style really bothers me. [Louis Laureys]
+
+- Fix discord current user count. [Avi]
+
+- Fix broken images and new discord invite. [Avi]
 
 
 ## v3.0.3111 (2018-03-27)

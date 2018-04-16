@@ -21,7 +21,11 @@ namespace Ombi.Settings.Settings.Models
         }
         public static string PlexContent(JobSettings s)
         {
-            return Get(s.PlexContentSync, Cron.Hourly(20));
+            return Get(s.PlexContentSync, Cron.HourInterval(6));
+        }
+        public static string PlexRecentlyAdded(JobSettings s)
+        {
+            return Get(s.PlexRecentlyAddedSync, Cron.Hourly(0));
         }
         public static string CouchPotato(JobSettings s)
         {
@@ -48,7 +52,6 @@ namespace Ombi.Settings.Settings.Models
         {
             return Get(s.RefreshMetadata, Cron.Daily(3));
         }
-
 
         private static string Get(string settings, string defaultCron)
         {
