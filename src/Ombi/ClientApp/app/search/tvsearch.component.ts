@@ -130,7 +130,6 @@ export class TvSearchComponent implements OnInit {
     public getExtraInfo() {
         this.tvResults.forEach((val, index) => {
             this.imageService.getTvBanner(val.data.id).subscribe(x => {
-                
                 val.data.background = this.sanitizer.
                 bypassSecurityTrustStyle
                 ("url(" + x + ")");
@@ -138,6 +137,7 @@ export class TvSearchComponent implements OnInit {
             this.searchService.getShowInformationTreeNode(val.data.id)
                 .subscribe(x => {
                     if (x.data) {
+                        this.setDefaults(x);
                         this.updateItem(val, x);
                     } else {
                         const index = this.tvResults.indexOf(val, 0);
@@ -216,12 +216,25 @@ export class TvSearchComponent implements OnInit {
         const index = this.tvResults.indexOf(key, 0);
         if (index > -1) {
             // Update certain properties, otherwise we will loose some data
+            this.tvResults[index].data.title = updated.data.title;
             this.tvResults[index].data.banner = updated.data.banner;
             this.tvResults[index].data.imdbId = updated.data.imdbId;
             this.tvResults[index].data.seasonRequests = updated.data.seasonRequests;
             this.tvResults[index].data.seriesId = updated.data.seriesId;
             this.tvResults[index].data.fullyAvailable = updated.data.fullyAvailable;
             this.tvResults[index].data.backdrop = updated.data.backdrop;
+        }
+    }
+
+    private setDefaults(x: any) {
+        if (x.data.banner === null) {
+            x.data.banner = "../../../images/default_tv_poster.png";
+        }
+
+        if (x.data.imdbId === null) {
+            x.data.imdbId = "https://www.tvmaze.com/shows/" + x.data.seriesId;
+        } else {
+            x.data.imdbId = "http://www.imdb.com/title/" + x.data.imdbId + "/";
         }
     }
 
