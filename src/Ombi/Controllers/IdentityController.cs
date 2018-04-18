@@ -194,6 +194,7 @@ namespace Ombi.Controllers
             await CreateRole(OmbiRoles.RequestMovie);
             await CreateRole(OmbiRoles.RequestTv);
             await CreateRole(OmbiRoles.Disabled);
+            await CreateRole(OmbiRoles.RecievesNewsletter);
         }
 
         private async Task CreateRole(string role)

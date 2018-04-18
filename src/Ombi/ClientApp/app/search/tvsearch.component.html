@@ -62,7 +62,7 @@
                             <div class="col-sm-8 small-padding">
                                 <div>
 
-                                    <a *ngIf="node.data.imdbId" href="http://www.imdb.com/title/{{node.data.imdbId}}/" target="_blank">
+                                    <a *ngIf="node.data.imdbId" href="{{node.data.imdbId}}" target="_blank">
                                         <h4>{{node.data.title}} ({{node.data.firstAired | date: 'yyyy'}})</h4>
 
                                     </a>

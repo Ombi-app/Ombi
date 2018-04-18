@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Ombi.Api.TvMaze;
+using Ombi.Api.TheMovieDb;
 using Ombi.Api.TvMaze.Models;
+using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Helpers;
@@ -16,12 +18,14 @@ namespace Ombi.Core.Helpers
     public class TvShowRequestBuilder
     {
 
-        public TvShowRequestBuilder(ITvMazeApi tvApi)
+        public TvShowRequestBuilder(ITvMazeApi tvApi, IMovieDbApi movApi)
         {
             TvApi = tvApi;
+            MovieDbApi = movApi;
         }
         
         private ITvMazeApi TvApi { get; }
+        private IMovieDbApi MovieDbApi { get; }
 
         public ChildRequests ChildRequest { get; set; }
         public List<SeasonsViewModel> TvRequests { get; protected set; }
@@ -29,10 +33,20 @@ namespace Ombi.Core.Helpers
         public DateTime FirstAir { get; protected set; }
         public TvRequests NewRequest { get; protected set; }
         protected TvMazeShow ShowInfo { get; set; }
+        protected List<TvSearchResult> Results { get; set; }
 
         public async Task<TvShowRequestBuilder> GetShowInfo(int id)
         {
             ShowInfo = await TvApi.ShowLookupByTheTvDbId(id);
+            Results = await MovieDbApi.SearchTv(ShowInfo.name);
+            foreach (TvSearchResult result in Results) {
+                if (result.Name == ShowInfo.name)
+                {                  
+                    var showIds = await MovieDbApi.GetTvExternals(result.Id);
+                    ShowInfo.externals.imdb = showIds.imdb_id;
+                    break;
+                }
+            }
 
             DateTime.TryParse(ShowInfo.premiered, out var dt);
 

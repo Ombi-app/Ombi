@@ -57,6 +57,12 @@
                         <small *ngIf="form.get('plexContentSync').hasError('required')" class="error-text">The Plex Sync is required</small>
                         <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('plexContentSync')?.value)">Test</button>
                 </div>
+                <div class="form-group">
+                    <label for="plexRecentlyAddedSync" class="control-label">Plex Recently Added Sync</label>              
+                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('plexRecentlyAddedSync').hasError('required')}" id="plexRecentlyAddedSync" name="plexRecentlyAddedSync" formControlName="plexRecentlyAddedSync">
+                        <small *ngIf="form.get('plexRecentlyAddedSync').hasError('required')" class="error-text">The Plex Sync is required</small>
+                        <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('plexRecentlyAddedSync')?.value)">Test</button>
+                </div>
 
                 <div class="form-group">
                     <label for="embyContentSync" class="control-label">Emby Sync</label>              

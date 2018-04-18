@@ -80,7 +80,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 if (!hasTheMovieDb)
                 {
-                    var id = await GetTheMovieDbId(hasTvDbId, hasImdb, show.TvDbId, show.ImdbId, show.Title);
+                    var id = await GetTheMovieDbId(hasTvDbId, hasImdb, show.TvDbId, show.ImdbId, show.Title, false);
                     show.TheMovieDbId = id;
                 }
 
@@ -120,7 +120,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 if (!hasTheMovieDb)
                 {
-                    var id = await GetTheMovieDbId(hasTvDbId, hasImdb, show.TvDbId, show.ImdbId, show.Title);
+                    var id = await GetTheMovieDbId(hasTvDbId, hasImdb, show.TvDbId, show.ImdbId, show.Title, false);
                     show.TheMovieDbId = id;
                 }
 
@@ -166,7 +166,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
                 if (!hasTheMovieDb)
                 {
-                    var id = await GetTheMovieDbId(false, hasImdb, string.Empty, movie.ImdbId, movie.Title);
+                    var id = await GetTheMovieDbId(false, hasImdb, string.Empty, movie.ImdbId, movie.Title, true);
                     movie.TheMovieDbId = id;
                     _plexRepo.UpdateWithoutSave(movie);
                 }
@@ -200,7 +200,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
                 if (!hasTheMovieDb)
                 {
-                    var id = await GetTheMovieDbId(false, hasImdb, string.Empty, movie.ImdbId, movie.Title);
+                    var id = await GetTheMovieDbId(false, hasImdb, string.Empty, movie.ImdbId, movie.Title, true);
                     movie.TheMovieDbId = id;
                     _embyRepo.UpdateWithoutSave(movie);
                 }
@@ -215,7 +215,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             await _embyRepo.SaveChangesAsync();
         }
 
-        private async Task<string> GetTheMovieDbId(bool hasTvDbId, bool hasImdb, string tvdbID, string imdbId, string title)
+        private async Task<string> GetTheMovieDbId(bool hasTvDbId, bool hasImdb, string tvdbID, string imdbId, string title, bool movie)
         {
             _log.LogInformation("The Media item {0} does not have a TheMovieDbId, searching for TheMovieDbId", title);
             FindResult result = null;
@@ -230,13 +230,29 @@ namespace Ombi.Schedule.Jobs.Ombi
             if (hasImdb && !hasResult)
             {
                 result = await _movieApi.Find(imdbId, ExternalSource.imdb_id);
-                hasResult = result?.tv_results?.Length > 0;
+                if (movie)
+                {
+                    hasResult = result?.movie_results?.Length > 0;
+                }
+                else
+                {
+                    hasResult = result?.tv_results?.Length > 0;
+
+                }
 
                 _log.LogInformation("Setting Show {0} because we have ImdbId, result: {1}", title, hasResult);
             }
             if (hasResult)
             {
-                return result.tv_results?[0]?.id.ToString() ?? string.Empty;
+                if (movie)
+                {
+                    return result.movie_results?[0]?.id.ToString() ?? string.Empty;
+                }
+                else
+                {
+
+                    return result.tv_results?[0]?.id.ToString() ?? string.Empty;
+                }
             }
             return string.Empty;
         }

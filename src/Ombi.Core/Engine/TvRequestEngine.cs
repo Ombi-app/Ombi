@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using Ombi.Api.TvMaze;
+using Ombi.Api.TheMovieDb;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Helpers;
@@ -26,11 +27,12 @@ namespace Ombi.Core.Engine
 {
     public class TvRequestEngine : BaseMediaEngine, ITvRequestEngine
     {
-        public TvRequestEngine(ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user,
+        public TvRequestEngine(ITvMazeApi tvApi, IMovieDbApi movApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IRuleEvaluator rule, OmbiUserManager manager,
             ITvSender sender, IAuditRepository audit, IRepository<RequestLog> rl, ISettingsService<OmbiSettings> settings, ICacheService cache) : base(user, requestService, rule, manager, cache, settings)
         {
             TvApi = tvApi;
+            MovieDbApi = movApi;
             NotificationHelper = helper;
             TvSender = sender;
             Audit = audit;
@@ -39,6 +41,7 @@ namespace Ombi.Core.Engine
 
         private INotificationHelper NotificationHelper { get; }
         private ITvMazeApi TvApi { get; }
+        private IMovieDbApi MovieDbApi { get; }
         private ITvSender TvSender { get; }
         private IAuditRepository Audit { get; }
         private readonly IRepository<RequestLog> _requestLog;
@@ -47,7 +50,7 @@ namespace Ombi.Core.Engine
         {
             var user = await GetUser();
 
-            var tvBuilder = new TvShowRequestBuilder(TvApi);
+            var tvBuilder = new TvShowRequestBuilder(TvApi, MovieDbApi);
             (await tvBuilder
                 .GetShowInfo(tv.TvDbId))
                 .CreateTvList(tv)

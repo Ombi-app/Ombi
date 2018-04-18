@@ -117,7 +117,18 @@ namespace Ombi.Controllers
         [HttpPost("plexcontentcacher")]
         public bool StartPlexContentCacher()
         {
-            BackgroundJob.Enqueue(() => _plexContentSync.CacheContent());
+            BackgroundJob.Enqueue(() => _plexContentSync.CacheContent(false));
+            return true;
+        }
+
+        /// <summary>
+        /// Runs a smaller version of the content cacher
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("plexrecentlyadded")]
+        public bool StartRecentlyAdded()
+        {
+            BackgroundJob.Enqueue(() => _plexContentSync.CacheContent(true));
             return true;
         }
 
