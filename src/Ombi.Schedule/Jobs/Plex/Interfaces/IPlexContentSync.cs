@@ -4,6 +4,6 @@ namespace Ombi.Schedule.Jobs
 {
     public interface IPlexContentSync : IBaseJob
     {
-        Task CacheContent();
+        Task CacheContent(bool recentlyAddedSearch = false);
     }
 }

@@ -121,7 +121,15 @@ export class PlexComponent implements OnInit, OnDestroy {
     public runCacher(): void {
         this.jobService.runPlexCacher().subscribe(x => {
             if(x) {
-                this.notificationService.success("Triggered the Plex Content Cacher");
+                this.notificationService.success("Triggered the Plex Full Sync");
+            }
+        });
+    }
+
+    public runRecentlyAddedCacher(): void {
+        this.jobService.runPlexRecentlyAddedCacher().subscribe(x => {
+            if(x) {
+                this.notificationService.success("Triggered the Plex Recently Added Sync");
             }
         });
     }

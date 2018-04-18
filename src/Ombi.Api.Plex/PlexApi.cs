@@ -147,6 +147,15 @@ namespace Ombi.Api.Plex
             return await Api.Request<PlexFriends>(request);
         }
 
+        public async Task<PlexMetadata> GetRecentlyAdded(string authToken, string uri, string sectionId)
+        {
+            var request = new Request($"library/sections/{sectionId}/recentlyAdded", uri, HttpMethod.Get);
+            AddHeaders(request, authToken);
+            AddLimitHeaders(request, 0, 50);
+
+            return await Api.Request<PlexMetadata>(request);
+        }
+
         /// <summary>
         /// Adds the required headers and also the authorization header
         /// </summary>

@@ -1,5 +1,5 @@
 ﻿import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { IChildRequests, IIssueCategory } from "../interfaces";
+import { IChildRequests } from "../interfaces";
 
 import { NotificationService, RequestService } from "../services";
 
@@ -12,13 +12,6 @@ export class TvRequestChildrenComponent {
     @Input() public isAdmin: boolean;
 
     @Output() public requestDeleted = new EventEmitter<number>();
-
-    @Input() public issueCategories: IIssueCategory[];
-    @Input() public issuesEnabled: boolean;
-    @Input() public issueProviderId: string;
-    public issuesBarVisible = false;
-    public issueRequest: IChildRequests;
-    public issueCategorySelected: IIssueCategory;
 
     constructor(private requestService: RequestService,
                 private notificationService: NotificationService) { }
@@ -99,13 +92,6 @@ export class TvRequestChildrenComponent {
                     request.approved = false;
                 }
             });
-    }
-
-    public reportIssue(catId: IIssueCategory, req: IChildRequests) {
-        this.issueRequest = req;
-        this.issueCategorySelected = catId;
-        this.issuesBarVisible = true;
-        this.issueProviderId = req.id.toString();
     }
 
     private removeRequestFromUi(key: IChildRequests) {

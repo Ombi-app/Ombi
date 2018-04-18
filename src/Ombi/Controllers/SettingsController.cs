@@ -274,6 +274,12 @@ namespace Ombi.Controllers
         public async Task<IActionResult> GetThemeContent([FromQuery]string url)
         {
             var css = await _githubApi.GetThemesRawContent(url);
+            var ombiSettings = await OmbiSettings();
+            if (ombiSettings.BaseUrl != null)
+            {
+                int index = css.IndexOf("/api/");
+                css = css.Insert(index, ombiSettings.BaseUrl);
+            }
             return Content(css, "text/css");
         }
 
@@ -473,6 +479,8 @@ namespace Ombi.Controllers
             j.UserImporter = j.UserImporter.HasValue() ? j.UserImporter : JobSettingsHelper.UserImporter(j);
             j.SickRageSync = j.SickRageSync.HasValue() ? j.SickRageSync : JobSettingsHelper.SickRageSync(j);
             j.RefreshMetadata = j.RefreshMetadata.HasValue() ? j.RefreshMetadata : JobSettingsHelper.RefreshMetadata(j);
+            j.PlexRecentlyAddedSync = j.PlexRecentlyAddedSync.HasValue() ? j.PlexRecentlyAddedSync : JobSettingsHelper.PlexRecentlyAdded(j);
+            j.Newsletter = j.Newsletter.HasValue() ? j.Newsletter : JobSettingsHelper.Newsletter(j);
  
             return j;
         }

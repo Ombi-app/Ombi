@@ -33,6 +33,9 @@ export class TvRequestsComponent implements OnInit {
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
     public issueProviderId: string;
+    public issuesBarVisible = false;
+    public issueRequest: ITvRequests;
+    public issueCategorySelected: IIssueCategory;
 
     public sonarrProfiles: ISonarrProfile[] = [];
     public sonarrRootFolders: ISonarrRootFolder[] = [];
@@ -151,6 +154,13 @@ export class TvRequestsComponent implements OnInit {
         this.updateRequest(searchResult);
     }
 
+    public reportIssue(catId: IIssueCategory, req: ITvRequests) {
+        this.issueRequest = req;
+        this.issueCategorySelected = catId;
+        this.issuesBarVisible = true;
+        this.issueProviderId = req.id.toString();
+    }
+
     private setOverride(req: ITvRequests): void {
         this.setQualityOverrides(req);
         this.setRootFolderOverrides(req);
@@ -191,6 +201,7 @@ export class TvRequestsComponent implements OnInit {
             .subscribe(x => {
                 this.tvRequests = x;
                 this.tvRequests.forEach((val, index) => {
+                    this.setDefaults(val);
                     this.loadBackdrop(val);
                     this.setOverride(val.data);
             });     
@@ -209,6 +220,13 @@ export class TvRequestsComponent implements OnInit {
         this.currentlyLoaded = 5;
         this.loadInit();
     }
+
+    private setDefaults(val: any) {
+        if (val.data.posterPath === null) {
+            val.data.posterPath = "../../../images/default_tv_poster.png";
+        }
+    }
+
     private loadBackdrop(val: TreeNode): void {
         this.imageService.getTvBanner(val.data.tvDbId).subscribe(x => {
             val.data.background = this.sanitizer.bypassSecurityTrustStyle

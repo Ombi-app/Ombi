@@ -2,6 +2,8 @@
 {
     public static class OmbiRoles
     {
+        // DONT FORGET TO ADD TO IDENTITYCONTROLLER.CREATEROLES AND THE UI!
+
         public const string Admin = nameof(Admin);
         public const string AutoApproveMovie = nameof(AutoApproveMovie);
         public const string AutoApproveTv = nameof(AutoApproveTv);
