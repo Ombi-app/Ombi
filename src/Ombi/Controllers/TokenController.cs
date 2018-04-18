@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Ombi.Api;
 using Ombi.Core.Authentication;
 using Ombi.Helpers;
 using Ombi.Models;
@@ -62,50 +64,65 @@ namespace Ombi.Controllers
                 user.EmailLogin = true;
             }
 
-            // Verify Password
-            if (await _userManager.CheckPasswordAsync(user, model.Password))
+            if (!model.UsePlexOAuth)
             {
-                var roles = await _userManager.GetRolesAsync(user);
-
-                if (roles.Contains(OmbiRoles.Disabled))
+                // Verify Password
+                if (await _userManager.CheckPasswordAsync(user, model.Password))
                 {
-                    return new UnauthorizedResult();
+                    var roles = await _userManager.GetRolesAsync(user);
+
+                    if (roles.Contains(OmbiRoles.Disabled))
+                    {
+                        return new UnauthorizedResult();
+                    }
+
+                    user.LastLoggedIn = DateTime.UtcNow;
+                    await _userManager.UpdateAsync(user);
+
+                    var claims = new List<Claim>
+                    {
+                        new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                        new Claim(ClaimTypes.NameIdentifier, user.Id),
+                        new Claim(ClaimTypes.Name, user.UserName),
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    };
+                    claims.AddRange(roles.Select(role => new Claim("role", role)));
+
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenAuthenticationOptions.SecretKey));
+                    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+
+                    var token = new JwtSecurityToken(
+                        claims: claims,
+                        expires: model.RememberMe ? DateTime.UtcNow.AddDays(7) : DateTime.UtcNow.AddHours(5),
+                        signingCredentials: creds,
+                        audience: "Ombi", issuer: "Ombi"
+                    );
+                    var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
+                    if (model.RememberMe)
+                    {
+                        // Save the token so we can refresh it later
+                        //await _token.CreateToken(new Tokens() {Token = accessToken, User = user});
+                    }
+
+                    return new JsonResult(new
+                    {
+                        access_token = accessToken,
+                        expiration = token.ValidTo
+                    });
                 }
+            }
+            else
+            {
+                // Plex OAuth
+                // Redirect them to Plex
 
-                user.LastLoggedIn = DateTime.UtcNow;
-                await _userManager.UpdateAsync(user);
+                var request = new Request("auth", "https://app.plex.tv", HttpMethod.Get);
+                request.AddQueryString("clientID", "OMBIv3");
+                request.AddQueryString("forwardUrl", "http://localhost:5000");
+                request.AddQueryString("context-device-product", "http://localhost:5000");
+                return new RedirectResult("https://app.plex.tv/auth#?forwardUrl=http://localhost:5000/api/v1/plexoauth&clientID=OMBIv3&context%5Bdevice%5D%5Bproduct%5D=Ombi%20SSO");
 
-                var claims = new List<Claim>
-                        {
-                            new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                            new Claim(ClaimTypes.NameIdentifier, user.Id),
-                            new Claim(ClaimTypes.Name, user.UserName),
-                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                        };
-                claims.AddRange(roles.Select(role => new Claim("role", role)));
-
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenAuthenticationOptions.SecretKey));
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-
-                var token = new JwtSecurityToken(
-                    claims: claims,
-                    expires: model.RememberMe ? DateTime.UtcNow.AddDays(7) : DateTime.UtcNow.AddHours(5),
-                    signingCredentials: creds,
-                    audience: "Ombi", issuer:"Ombi"
-                );
-                var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
-                if (model.RememberMe)
-                {
-                    // Save the token so we can refresh it later
-                    //await _token.CreateToken(new Tokens() {Token = accessToken, User = user});
-                }
-
-                return new JsonResult(new
-                {
-                    access_token = accessToken,
-                    expiration = token.ValidTo
-                });
             }
 
             return new UnauthorizedResult();
