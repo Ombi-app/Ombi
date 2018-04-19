@@ -208,7 +208,7 @@ namespace Ombi.Api.Plex
             AddHeaders(request);
             var forwardUrl = wizard 
                 ? new Request($"Wizard/OAuth/{pinId}", applicationUrl, HttpMethod.Get) 
-                : new Request($"api/v1/PlexOAuth/{pinId}", applicationUrl, HttpMethod.Get);
+                : new Request($"Login/OAuth/{pinId}", applicationUrl, HttpMethod.Get);
 
             request.AddQueryString("forwardUrl", forwardUrl.FullUri.ToString());
             request.AddQueryString("pinID", pinId.ToString());

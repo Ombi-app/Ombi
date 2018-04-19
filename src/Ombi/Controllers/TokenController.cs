@@ -49,26 +49,27 @@ namespace Ombi.Controllers
         [HttpPost]
         public async Task<IActionResult> GetToken([FromBody] UserAuthModel model)
         {
-            await _audit.Record(AuditType.None, AuditArea.Authentication,
+            if (!model.UsePlexOAuth)
+            {
+                await _audit.Record(AuditType.None, AuditArea.Authentication,
                 $"UserName {model.Username} attempting to authenticate");
 
-            var user = await _userManager.FindByNameAsync(model.Username);
-
-            if (user == null)
-            {
-                // Could this be an email login?
-                user = await _userManager.FindByEmailAsync(model.Username);
+                var user = await _userManager.FindByNameAsync(model.Username);
 
                 if (user == null)
                 {
-                    return new UnauthorizedResult();
+                    // Could this be an email login?
+                    user = await _userManager.FindByEmailAsync(model.Username);
+
+                    if (user == null)
+                    {
+                        return new UnauthorizedResult();
+                    }
+
+                    user.EmailLogin = true;
                 }
 
-                user.EmailLogin = true;
-            }
 
-            if (!model.UsePlexOAuth)
-            {
                 // Verify Password
                 if (await _userManager.CheckPasswordAsync(user, model.Password))
                 {
@@ -91,7 +92,7 @@ namespace Ombi.Controllers
                         error = "Application URL has not been set"
                     });
                 }
-                return new RedirectResult(url.ToString());
+                return new JsonResult(new { url = url.ToString() });
             }
 
             return new UnauthorizedResult();
@@ -183,7 +184,7 @@ namespace Ombi.Controllers
             {
                 return new UnauthorizedResult();
             }
-                
+
 
             throw new NotImplementedException();
         }
