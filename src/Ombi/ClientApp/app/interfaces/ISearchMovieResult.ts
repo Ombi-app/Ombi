@@ -21,6 +21,7 @@
     requested: boolean;
     available: boolean;
     plexUrl: string;
+    embyUrl: string;
     quality: string;
     digitalReleaseDate: Date;
 

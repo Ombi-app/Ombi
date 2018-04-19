@@ -76,6 +76,7 @@
     "DigitalDate": "Digital utgivelse: {{date}}",
     "TheatricalRelease": "Kinopremiere: {{date}}",
     "ViewOnPlex": "Spill av på Plex",
+    "ViewOnEmby": "Spill av på Emby",
     "RequestAdded": "Forespørsel om {{title}} er lagt til",
     "Similar": "Lignende",
     "Movies": {
