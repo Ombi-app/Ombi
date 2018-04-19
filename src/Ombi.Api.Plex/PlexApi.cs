@@ -10,38 +10,42 @@ using Ombi.Api.Plex.Models.Status;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Settings.Settings.Models;
 
 namespace Ombi.Api.Plex
 {
     public class PlexApi : IPlexApi
     {
-        public PlexApi(IApi api, ISettingsService<PlexSettings> settings)
+        public PlexApi(IApi api, ISettingsService<CustomizationSettings> settings)
         {
             Api = api;
-            _plex = settings;
+            _custom = settings;
         }
 
         private IApi Api { get; }
-        private readonly ISettingsService<PlexSettings> _plex;
+        private readonly ISettingsService<CustomizationSettings> _custom;
 
-        private string _clientId;
-        private string ClientIdSecret
+        private string _app;
+        private string ApplicationName
         {
             get
             {
-                if (string.IsNullOrEmpty(_clientId))
+                if (string.IsNullOrEmpty(_app))
                 {
-                    var settings = _plex.GetSettings();
-                    if (settings.UniqueInstallCode.IsNullOrEmpty())
+                    var settings = _custom.GetSettings();
+                    if (settings.ApplicationName.IsNullOrEmpty())
                     {
-                        settings.UniqueInstallCode = Guid.NewGuid().ToString("N");
-                        _plex.SaveSettings(settings);
+                        _app = "Ombi";
+                    }
+                    else
+                    {
+                        _app = settings.ApplicationName;
                     }
 
-                    _clientId = settings.UniqueInstallCode;
+                    return _app;
                 }
 
-                return _clientId;
+                return _app;
             }
         }
 
@@ -215,7 +219,7 @@ namespace Ombi.Api.Plex
             request.AddQueryString("code", code);
             request.AddQueryString("context[device][product]", "Ombi");
             request.AddQueryString("context[device][environment]", "bundled");
-            request.AddQueryString("clientID", $"OmbiV3{ClientIdSecret}");
+            request.AddQueryString("clientID", $"OmbiV3");
 
             if (request.FullUri.Fragment.Equals("#"))
             {
@@ -246,8 +250,8 @@ namespace Ombi.Api.Plex
         /// <param name="request"></param>
         private void AddHeaders(Request request)
         {
-            request.AddHeader("X-Plex-Client-Identifier", $"OmbiV3{ClientIdSecret}");
-            request.AddHeader("X-Plex-Product", "Ombi");
+            request.AddHeader("X-Plex-Client-Identifier", $"OmbiV3");
+            request.AddHeader("X-Plex-Product", ApplicationName);
             request.AddHeader("X-Plex-Version", "3");
             request.AddContentHeader("Content-Type", request.ContentType == ContentType.Json ? "application/json" : "application/xml");
             request.AddHeader("Accept", "application/json");
