@@ -277,6 +277,7 @@ namespace Ombi.Core.Engine
             results.ImdbId = request.ImdbId;
             results.Overview = request.Overview;
             results.PosterPath = PosterPathHelper.FixPosterPath(request.PosterPath);
+            results.Background = PosterPathHelper.FixBackgroundPath(request.Background);
             results.QualityOverride = request.QualityOverride;
             results.RootFolder = request.RootFolder;
             
