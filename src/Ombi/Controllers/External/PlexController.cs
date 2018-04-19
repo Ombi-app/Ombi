@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
 using Ombi.Attributes;
+using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
@@ -21,16 +22,18 @@ namespace Ombi.Controllers.External
     public class PlexController : Controller
     {
         public PlexController(IPlexApi plexApi, ISettingsService<PlexSettings> plexSettings,
-            ILogger<PlexController> logger)
+            ILogger<PlexController> logger, IPlexOAuthManager manager)
         {
             PlexApi = plexApi;
             PlexSettings = plexSettings;
             _log = logger;
+            _plexOAuthManager = manager;
         }
 
         private IPlexApi PlexApi { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private readonly ILogger<PlexController> _log;
+        private readonly IPlexOAuthManager _plexOAuthManager;
 
         /// <summary>
         /// Signs into the Plex API.
@@ -66,6 +69,7 @@ namespace Ombi.Controllers.External
                     _log.LogDebug("Adding first server");
 
                     settings.Enable = true;
+                    settings.UniqueInstallCode = Guid.NewGuid().ToString("N");
                     settings.Servers = new List<PlexServers> {
                     new PlexServers
                     {
@@ -172,6 +176,38 @@ namespace Ombi.Controllers.External
 
             // Filter out any dupes
             return vm.DistinctBy(x => x.Id);
+        }
+
+        [HttpGet("oauth/{wizard:bool}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> OAuth(bool wizard)
+        {
+            //https://app.plex.tv/auth#?forwardUrl=http://google.com/&clientID=Ombi-Test&context%5Bdevice%5D%5Bproduct%5D=Ombi%20SSO&pinID=798798&code=4lgfd
+            // Plex OAuth
+            // Redirect them to Plex
+            // We need a PIN first
+            var pin = await _plexOAuthManager.RequestPin();
+
+            Uri url;
+            if (!wizard)
+            {
+                url = await _plexOAuthManager.GetOAuthUrl(pin.id, pin.code);
+            }
+            else
+            {
+                var websiteAddress =$"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+                url = _plexOAuthManager.GetWizardOAuthUrl(pin.id, pin.code, websiteAddress);
+            }
+
+            if (url == null)
+            {
+                return new JsonResult(new
+                {
+                    error = "Application URL has not been set"
+                });
+            }
+
+            return new JsonResult(new {url = url.ToString()});
         }
     }
 }

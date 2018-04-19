@@ -1,20 +1,49 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using Ombi.Api.Plex.Models;
 using Ombi.Api.Plex.Models.Friends;
+using Ombi.Api.Plex.Models.OAuth;
 using Ombi.Api.Plex.Models.Server;
 using Ombi.Api.Plex.Models.Status;
+using Ombi.Core.Settings;
+using Ombi.Core.Settings.Models.External;
+using Ombi.Helpers;
 
 namespace Ombi.Api.Plex
 {
     public class PlexApi : IPlexApi
     {
-        public PlexApi(IApi api)
+        public PlexApi(IApi api, ISettingsService<PlexSettings> settings)
         {
             Api = api;
+            _plex = settings;
         }
 
         private IApi Api { get; }
+        private readonly ISettingsService<PlexSettings> _plex;
+
+        private string _clientId;
+        private string ClientIdSecret
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_clientId))
+                {
+                    var settings = _plex.GetSettings();
+                    if (settings.UniqueInstallCode.IsNullOrEmpty())
+                    {
+                        settings.UniqueInstallCode = Guid.NewGuid().ToString("N");
+                        _plex.SaveSettings(settings);
+                    }
+
+                    _clientId = settings.UniqueInstallCode;
+                }
+
+                return _clientId;
+            }
+        }
 
         private const string SignInUri = "https://plex.tv/users/sign_in.json";
         private const string FriendsUri = "https://plex.tv/pms/friends/all";
@@ -156,6 +185,50 @@ namespace Ombi.Api.Plex
             return await Api.Request<PlexMetadata>(request);
         }
 
+        public async Task<OAuthPin> CreatePin()
+        {
+            var request = new Request($"api/v2/pins", "https://plex.tv/", HttpMethod.Post);
+            request.AddQueryString("strong", "true");
+            AddHeaders(request);
+
+            return await Api.Request<OAuthPin>(request);
+        }
+
+        public async Task<OAuthPin> GetPin(int pinId)
+        {
+            var request = new Request($"api/v2/pins/{pinId}", "https://plex.tv/", HttpMethod.Get);
+            AddHeaders(request);
+
+            return await Api.Request<OAuthPin>(request);
+        }
+
+        public Uri GetOAuthUrl(int pinId, string code, string applicationUrl, bool wizard)
+        {
+            var request = new Request("auth#", "https://app.plex.tv", HttpMethod.Get);
+            AddHeaders(request);
+            var forwardUrl = wizard 
+                ? new Request($"Wizard/OAuth/{pinId}", applicationUrl, HttpMethod.Get) 
+                : new Request($"api/v1/PlexOAuth/{pinId}", applicationUrl, HttpMethod.Get);
+
+            request.AddQueryString("forwardUrl", forwardUrl.FullUri.ToString());
+            request.AddQueryString("pinID", pinId.ToString());
+            request.AddQueryString("code", code);
+            request.AddQueryString("context[device][product]", "Ombi");
+            request.AddQueryString("context[device][environment]", "bundled");
+            request.AddQueryString("clientID", $"OmbiV3{ClientIdSecret}");
+
+            if (request.FullUri.Fragment.Equals("#"))
+            {
+                var uri = request.FullUri.ToString();
+                var withoutEnd = uri.Remove(uri.Length - 1, 1);
+                var startOfQueryLocation = withoutEnd.IndexOf('?');
+                var better = withoutEnd.Insert(startOfQueryLocation, "#");
+                request.FullUri = new Uri(better);
+            }
+
+            return request.FullUri;
+        }
+
         /// <summary>
         /// Adds the required headers and also the authorization header
         /// </summary>
@@ -173,7 +246,7 @@ namespace Ombi.Api.Plex
         /// <param name="request"></param>
         private void AddHeaders(Request request)
         {
-            request.AddHeader("X-Plex-Client-Identifier", $"OmbiV3");
+            request.AddHeader("X-Plex-Client-Identifier", $"OmbiV3{ClientIdSecret}");
             request.AddHeader("X-Plex-Product", "Ombi");
             request.AddHeader("X-Plex-Version", "3");
             request.AddContentHeader("Content-Type", request.ContentType == ContentType.Json ? "application/json" : "application/xml");

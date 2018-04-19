@@ -70,4 +70,12 @@ export class PlexComponent {
             });  
         });
     }
+
+    public oauth() {
+        this.plexService.oAuth(true).subscribe(x => {
+            if(x.url) {
+                window.location.href = x.url;
+            }
+        });
+    }
 }

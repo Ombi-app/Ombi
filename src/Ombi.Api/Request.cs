@@ -10,7 +10,7 @@ namespace Ombi.Api
     {
         public Request()
         {
-            
+
         }
 
         public Request(string endpoint, string baseUrl, HttpMethod http, ContentType contentType = ContentType.Json)
@@ -105,10 +105,10 @@ namespace Ombi.Api
                 hasQuery = true;
                 startingTag = builder.Query.Contains("?") ? "&" : "?";
             }
-
             builder.Query = hasQuery
                 ? $"{builder.Query}{startingTag}{key}={value}"
                 : $"{startingTag}{key}={value}";
+
             _modified = builder.Uri;
         }
 
