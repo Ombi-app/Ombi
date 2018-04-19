@@ -228,9 +228,14 @@ export class TvRequestsComponent implements OnInit {
     }
 
     private loadBackdrop(val: TreeNode): void {
-        this.imageService.getTvBanner(val.data.tvDbId).subscribe(x => {
+        if (val.data.background != null) {
             val.data.background = this.sanitizer.bypassSecurityTrustStyle
-                ("url(" + x + ")");
+                ("url(https://image.tmdb.org/t/p/w1280" + val.data.background + ")");
+        } else {
+            this.imageService.getTvBanner(val.data.tvDbId).subscribe(x => {
+                val.data.background = this.sanitizer.bypassSecurityTrustStyle
+                    ("url(" + x + ")");
             });
+        }
     }
 }
