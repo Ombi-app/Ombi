@@ -76,6 +76,7 @@
     "DigitalDate": "Digital Release: {{date}}",
     "TheatricalRelease": "Theatrical Release: {{date}}",
     "ViewOnPlex": "Se på Plex",
+    "ViewOnEmby": "Se på Emby",
     "RequestAdded": "{{title}} er anmodet med succes",
     "Similar": "Similar",
     "Movies": {

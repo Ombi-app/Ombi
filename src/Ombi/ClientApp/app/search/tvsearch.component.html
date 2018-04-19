@@ -118,17 +118,25 @@
 
                                 <div *ngIf="node.data.fullyAvailable">
                                     <button style="text-align: right" class="btn btn-success-outline disabled" disabled>
-                                        <i class="fa fa-check"></i> {{ 'Common.Available' | translate }}</button>
+                                        <i class="fa fa-check"></i> {{ 'Common.Available' | translate }}
+                                    </button>
                                 </div>
                                 <br />
                                 <div *ngIf="node.data.plexUrl && node.data.available">
-                                    <a  style="text-align: right" class="btn btn-sm btn-success-outline" href="{{node.data.plexUrl}}"
-                                        target="_blank">
-                                        <i class="fa fa-eye"></i> {{ 'Search.ViewOnPlex' | translate }}</a>
-  </div>
+                                    <a style="text-align: right" class="btn btn-sm btn-success-outline" href="{{node.data.plexUrl}}"
+                                       target="_blank">
+                                        <i class="fa fa-eye"></i> {{ 'Search.ViewOnPlex' | translate }}
+                                    </a>
+                                </div>
+                                <div *ngIf="node.data.embyUrl && node.data.available">
+                                    <a style="text-align: right" class="btn btn-sm btn-success-outline" href="{{node.data.embyUrl}}"
+                                       target="_blank">
+                                        <i class="fa fa-eye"></i> {{ 'Search.ViewOnEmby' | translate }}
+                                    </a>
+                                </div>
                                 <div class="dropdown" *ngIf="issueCategories && issuesEnabled">
                                     <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="true">
+                                            aria-expanded="true">
                                         <i class="fa fa-plus"></i> {{ 'Requests.ReportIssue' | translate }}
                                         <span class="caret"></span>
                                     </button>
@@ -139,8 +147,8 @@
                                     </ul>
                                 </div>
                                 <div *ngIf="!node.data.available">
-                                    <br/>
-                                    <br/>
+                                    <br />
+                                    <br />
                                 </div>
 
                             </div>
