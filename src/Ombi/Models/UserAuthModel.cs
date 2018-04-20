@@ -6,5 +6,6 @@
         public string Password { get; set; }
         public bool RememberMe { get; set; }
         public bool UsePlexAdminAccount { get; set; }
+        public bool UsePlexOAuth { get; set; }
     }
 }

@@ -142,7 +142,19 @@ namespace Ombi.Controllers
         [HttpGet("plex")]
         public async Task<PlexSettings> PlexSettings()
         {
-            return await Get<PlexSettings>();
+            var s = await Get<PlexSettings>();
+
+            return s;
+        }
+
+        [HttpGet("plexstatus")]
+        [AllowAnonymous]
+        public async Task<bool> PlexStatusSettings()
+        {
+            var s = await Get<PlexSettings>();
+           
+
+            return s.Enable;
         }
 
         /// <summary>

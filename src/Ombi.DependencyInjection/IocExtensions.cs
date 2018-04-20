@@ -51,6 +51,7 @@ using Ombi.Store.Repository.Requests;
 using Ombi.Updater;
 using PlexContentCacher = Ombi.Schedule.Jobs.Plex;
 using Ombi.Api.Telegram;
+using Ombi.Core.Authentication;
 using Ombi.Core.Processor;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.SickRage;
@@ -82,6 +83,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IRecentlyAddedEngine, RecentlyAddedEngine>();
             services.AddTransient<ITvSender, TvSender>();
             services.AddTransient<IMassEmailSender, MassEmailSender>();
+            services.AddTransient<IPlexOAuthManager, PlexOAuthManager>();
         }
         public static void RegisterHttp(this IServiceCollection services)
         {

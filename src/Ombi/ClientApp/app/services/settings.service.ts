@@ -71,6 +71,10 @@ export class SettingsService extends ServiceHelpers {
         return this.http.get<IPlexSettings>(`${this.url}/Plex/`, {headers: this.headers});
     }
 
+    public getStatusPlex(): Observable<boolean> {
+        return this.http.get<boolean>(`${this.url}/Plexstatus/`, {headers: this.headers});
+    }
+
     public savePlex(settings: IPlexSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}/Plex/`, JSON.stringify(settings), {headers: this.headers});
     }

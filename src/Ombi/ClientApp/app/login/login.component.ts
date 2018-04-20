@@ -25,9 +25,38 @@ export class LoginComponent implements OnDestroy, OnInit {
     public form: FormGroup;
     public customizationSettings: ICustomizationSettings;
     public authenticationSettings: IAuthenticationSettings;
+    public plexEnabled: boolean;
     public background: any;
     public landingFlag: boolean;
     public baseUrl: string;
+
+    public get showLoginForm(): boolean {
+        if(this.customizationSettings.applicationUrl && this.plexEnabled) {
+            this.loginWithOmbi = false;
+            return false;
+        }
+        if(!this.customizationSettings.applicationUrl || !this.plexEnabled) {
+
+            this.loginWithOmbi = true;
+            return true;
+        }
+        if(this.loginWithOmbi) {
+            return true;
+        }
+
+        this.loginWithOmbi = true;
+        return true;
+    }
+    public loginWithOmbi: boolean = false;
+
+    public get appName(): string {
+        if(this.customizationSettings.applicationName) {
+            return this.customizationSettings.applicationName;
+        } else {
+            return "Ombi";
+        }
+    }
+
     private timer: any;
     
     private errorBody: string;
@@ -68,6 +97,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     public ngOnInit() {
         this.settingsService.getAuthentication().subscribe(x => this.authenticationSettings = x);
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
+        this.settingsService.getStatusPlex().subscribe(x => this.plexEnabled = x);
         this.images.getRandomBackground().subscribe(x => {
             this.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%),url(" + x.url + ")");
         });
@@ -90,7 +120,7 @@ export class LoginComponent implements OnDestroy, OnInit {
             return;
         }
         const value = form.value;
-        const user = { password: value.password, username: value.username, rememberMe:value.rememberMe };
+        const user = { password: value.password, username: value.username, rememberMe: value.rememberMe, usePlexOAuth: false };
         this.authService.requiresPassword(user).subscribe(x => {
             if(x && this.authenticationSettings.allowNoPassword) {
                 // Looks like this user requires a password
@@ -111,6 +141,12 @@ export class LoginComponent implements OnDestroy, OnInit {
         });
     }
 
+    public oauth() {
+        this.authService.login({usePlexOAuth: true, password:"",rememberMe:true,username:""}).subscribe(x => {
+            window.location.href = x.url;
+        });
+    }
+
     public ngOnDestroy() {
         clearInterval(this.timer);
     }
@@ -124,5 +160,4 @@ export class LoginComponent implements OnDestroy, OnInit {
                     .bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%), url(" + x.url + ")");
             });
     }
-
 }
