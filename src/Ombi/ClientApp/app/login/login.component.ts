@@ -29,26 +29,8 @@ export class LoginComponent implements OnDestroy, OnInit {
     public background: any;
     public landingFlag: boolean;
     public baseUrl: string;
-
-    public get showLoginForm(): boolean {
-        if(this.customizationSettings.applicationUrl && this.plexEnabled) {
-            this.loginWithOmbi = false;
-            return false;
-        }
-        if(!this.customizationSettings.applicationUrl || !this.plexEnabled) {
-
-            this.loginWithOmbi = true;
-            return true;
-        }
-        if(this.loginWithOmbi) {
-            return true;
-        }
-
-        this.loginWithOmbi = true;
-        return true;
-    }
-    public loginWithOmbi: boolean = false;
-
+    public loginWithOmbi: boolean;
+   
     public get appName(): string {
         if(this.customizationSettings.applicationName) {
             return this.customizationSettings.applicationName;

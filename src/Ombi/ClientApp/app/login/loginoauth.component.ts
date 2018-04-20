@@ -8,6 +8,7 @@ import { AuthService } from "../auth/auth.service";
 })
 export class LoginOAuthComponent implements OnInit {
     public pin: number;
+    public error: string;
 
     constructor(private authService: AuthService, private router: Router,
                 private route: ActivatedRoute) {
@@ -24,11 +25,17 @@ export class LoginOAuthComponent implements OnInit {
 
     public auth() {
       this.authService.oAuth(this.pin).subscribe(x => {
+          if(x.access_token) {
             localStorage.setItem("id_token", x.access_token);
 
             if (this.authService.loggedIn()) {
                 this.router.navigate(["search"]);
+                return;
             } 
+        }
+          if(x.errorMessage) {
+            this.error = x.errorMessage;
+        }
 
         });
     }

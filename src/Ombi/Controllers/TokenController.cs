@@ -148,6 +148,15 @@ namespace Ombi.Controllers
         {
             var accessToken = await _plexOAuthManager.GetAccessTokenFromPin(pinId);
 
+            if (accessToken.IsNullOrEmpty())
+            {
+                // Looks like we are not authenticated.
+                return new JsonResult(new
+                {
+                    errorMessage = "Could not authenticate with Plex"
+                });
+            }
+
             // Let's look for the users account
             var account = await _plexOAuthManager.GetAccount(accessToken);
 
