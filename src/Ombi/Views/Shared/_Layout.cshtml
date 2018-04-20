@@ -85,8 +85,14 @@ O:::::::OOO:::::::Om::::m   m::::m   m::::mb:::::bbbbbb::::::bi::::::i
 </head>
 <body>
        @{
-        if (customization.HasPresetTheme)
-        {
+           if (customization.HasPresetTheme)
+           {
+               if (!string.IsNullOrEmpty(baseUrl))
+                   {
+                       var index = customization.PresetThemeContent.IndexOf("/api/");
+                       customization.PresetThemeContent = customization.PresetThemeContent.Insert(index, "/" + baseUrl);
+                   }
+
             <style>
                 @Html.Raw(customization.PresetThemeContent)
                 </style>
