@@ -143,10 +143,6 @@ namespace Ombi.Controllers
         public async Task<PlexSettings> PlexSettings()
         {
             var s = await Get<PlexSettings>();
-            if (s.UniqueInstallCode.IsNullOrEmpty())
-            {
-                s.UniqueInstallCode = Guid.NewGuid().ToString("N");
-            }
 
             return s;
         }

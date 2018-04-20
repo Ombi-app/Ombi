@@ -69,7 +69,6 @@ namespace Ombi.Controllers.External
                     _log.LogDebug("Adding first server");
 
                     settings.Enable = true;
-                    settings.UniqueInstallCode = Guid.NewGuid().ToString("N");
                     settings.Servers = new List<PlexServers> {
                     new PlexServers
                     {

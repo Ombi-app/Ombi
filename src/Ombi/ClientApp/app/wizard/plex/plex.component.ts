@@ -1,7 +1,6 @@
 ﻿import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 
-
 import { PlexService } from "../../services";
 import { IdentityService, NotificationService, SettingsService } from "../../services";
 import { AuthService } from "./../../auth/auth.service";
@@ -27,7 +26,7 @@ export class PlexComponent {
                 return;
             }
             
-                  this.identityService.createWizardUser({
+            this.identityService.createWizardUser({
                     username: "",
                     password: "",
                     usePlexAdminAccount: true,
@@ -57,7 +56,7 @@ export class PlexComponent {
                       return;
                     }
                   });
-              }
+              },
         );
     }
 

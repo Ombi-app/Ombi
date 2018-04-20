@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { AuthService } from "../auth/auth.service";
 
 @Component({
-    templateUrl: "./loginoauth.component.html"
+    templateUrl: "./loginoauth.component.html",
 })
 export class LoginOAuthComponent implements OnInit {
     public pin: number;
@@ -18,7 +18,7 @@ export class LoginOAuthComponent implements OnInit {
             });
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.auth();
     }
 

@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
-import { PlexOAuthService, IdentityService, SettingsService } from "../../services";
+import { IdentityService, PlexOAuthService, SettingsService } from "../../services";
 import { AuthService } from "./../../auth/auth.service";
 
 @Component({
@@ -23,15 +23,14 @@ export class PlexOAuthComponent implements OnInit {
             });
     }
             
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.plexOauth.oAuth(this.pinId).subscribe(x => {
             if(!x.accessToken) {
                 return;
                 // RETURN
             }
             
-         
-                    this.identityService.createWizardUser({
+            this.identityService.createWizardUser({
                       username: "",
                       password: "",
                       usePlexAdminAccount: true,
