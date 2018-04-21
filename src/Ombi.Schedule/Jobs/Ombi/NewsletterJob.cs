@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using MailKit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Api.TvMaze;
@@ -28,7 +29,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         public NewsletterJob(IPlexContentRepository plex, IEmbyContentRepository emby, IRepository<RecentlyAddedLog> addedLog,
             IMovieDbApi movieApi, ITvMazeApi tvApi, IEmailProvider email, ISettingsService<CustomizationSettings> custom,
             ISettingsService<EmailNotificationSettings> emailSettings, INotificationTemplatesRepository templateRepo,
-            UserManager<OmbiUser> um, ISettingsService<NewsletterSettings> newsletter)
+            UserManager<OmbiUser> um, ISettingsService<NewsletterSettings> newsletter, ILogger<NewsletterJob> log)
         {
             _plex = plex;
             _emby = emby;
@@ -44,6 +45,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             _emailSettings.ClearCache();
             _customizationSettings.ClearCache();
             _newsletterSettings.ClearCache();
+            _log = log;
         }
 
         private readonly IPlexContentRepository _plex;
@@ -57,6 +59,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly ISettingsService<EmailNotificationSettings> _emailSettings;
         private readonly ISettingsService<NewsletterSettings> _newsletterSettings;
         private readonly UserManager<OmbiUser> _userManager;
+        private readonly ILogger _log;
 
         public async Task Start(NewsletterSettings settings, bool test)
         {
@@ -76,15 +79,11 @@ namespace Ombi.Schedule.Jobs.Ombi
                 return;
             }
 
-            var customization = await _customizationSettings.GetSettingsAsync();
+            try
+            {
 
-            // Get the Content
-            var plexContent = _plex.GetAll().Include(x => x.Episodes).AsNoTracking();
-            var embyContent = _emby.GetAll().Include(x => x.Episodes).AsNoTracking();
 
-            var addedLog = _recentlyAddedLog.GetAll();
-            var addedPlexMovieLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Parent).Select(x => x.ContentId);
-            var addedEmbyMoviesLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Emby && x.ContentType == ContentType.Parent).Select(x => x.ContentId);
+                var customization = await _customizationSettings.GetSettingsAsync();
 
             var addedPlexEpisodesLogIds =
                 addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Episode);
@@ -94,13 +93,16 @@ namespace Ombi.Schedule.Jobs.Ombi
             // Filter out the ones that we haven't sent yet
             var plexContentMoviesToSend = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && !addedPlexMovieLogIds.Contains(int.Parse(x.TheMovieDbId)));
             var embyContentMoviesToSend = embyContent.Where(x => x.Type == EmbyMediaType.Movie && !addedEmbyMoviesLogIds.Contains(int.Parse(x.TheMovieDbId)));
-
+                _log.LogInformation("Plex Movies to send: {0}", plexContentMoviesToSend.Count());
+                _log.LogInformation("Emby Movies to send: {0}", embyContentMoviesToSend.Count());
 
             var plexEpisodesToSend =
                 FilterPlexEpisodes(_plex.GetAllEpisodes().Include(x => x.Series).AsNoTracking(), addedPlexEpisodesLogIds);
             var embyEpisodesToSend = FilterEmbyEpisodes(_emby.GetAllEpisodes().Include(x => x.Series).AsNoTracking(),
                 addedEmbyEpisodesLogIds);
 
+                _log.LogInformation("Plex Episodes to send: {0}", plexEpisodesToSend.Count());
+                _log.LogInformation("Emby Episodes to send: {0}", embyEpisodesToSend.Count());
             var body = string.Empty;
             if (test)
             {
@@ -128,50 +130,68 @@ namespace Ombi.Schedule.Jobs.Ombi
                     return;
                 }
 
-                //foreach (var emails in settings.ExternalEmails)
-                //{
-                //    users.Add(new OmbiUser
-                //    {
-                //        UserName = emails,
-                //        Email = emails
-                //    });
-                //}
+                foreach (var emails in settings.ExternalEmails)
+                {
+                    users.Add(new OmbiUser
+                    {
+                        UserName = emails,
+                        Email = emails
+                    });
+                }
                 var emailTasks = new List<Task>();
                 foreach (var user in users)
                 {
-                    if (user.Email.IsNullOrEmpty())
+                    // Get the users to send it to
+                    var users = await _userManager.GetUsersInRoleAsync(OmbiRoles.RecievesNewsletter);
+                    if (!users.Any())
                     {
-                        continue;
+                        return;
                     }
 
-                    var messageContent = ParseTemplate(template, customization, user);
-                    var email = new NewsletterTemplate();
-
-                    var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo);
-
-                    emailTasks.Add(_email.Send(
-                        new NotificationMessage { Message = html, Subject = messageContent.Subject, To = user.Email },
-                        emailSettings));
-                }
-
-                // Now add all of this to the Recently Added log
-                var recentlyAddedLog = new HashSet<RecentlyAddedLog>();
-                foreach (var p in plexContentMoviesToSend)
-                {
-                    recentlyAddedLog.Add(new RecentlyAddedLog
+                    foreach (var emails in settings.ExternalEmails)
                     {
+                        users.Add(new OmbiUser
+                        {
+                            UserName = emails,
+                            Email = emails
+                        });
+                    }
+                    var emailTasks = new List<Task>();
+                    foreach (var user in users)
+                    {
+                        if (user.Email.IsNullOrEmpty())
+                        {
+                            continue;
+                        }
+
+                        var messageContent = ParseTemplate(template, customization, user);
+                        var email = new NewsletterTemplate();
+
+                        var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo);
+
+                        emailTasks.Add(_email.Send(
+                            new NotificationMessage { Message = html, Subject = messageContent.Subject, To = user.Email },
+                            emailSettings));
+                    }
+
+                    // Now add all of this to the Recently Added log
+                    var recentlyAddedLog = new HashSet<RecentlyAddedLog>();
+                    foreach (var p in plexContentMoviesToSend)
+                    {
+                        recentlyAddedLog.Add(new RecentlyAddedLog
+                        {
                         AddedAt = DateTime.Now,
                         Type = RecentlyAddedType.Plex,
                         ContentType = ContentType.Parent,
                         ContentId = int.Parse(p.TheMovieDbId),
-                    });
+                      });
 
-                }
+                    }
 
-                foreach (var p in plexEpisodesToSend)
-                {
+                    foreach (var p in plexEpisodesToSend)
+                    {              
                     recentlyAddedLog.Add(new RecentlyAddedLog
-                    {
+                        {
                         AddedAt = DateTime.Now,
                         Type = RecentlyAddedType.Plex,
                         ContentType = ContentType.Episode,
@@ -180,56 +200,61 @@ namespace Ombi.Schedule.Jobs.Ombi
                         SeasonNumber = p.SeasonNumber
                     });
                 }
+                    foreach (var e in embyContentMoviesToSend)
+                    {
+                        if (e.Type == EmbyMediaType.Movie)
+                        {
+                            recentlyAddedLog.Add(new RecentlyAddedLog
+                            {
+                                AddedAt = DateTime.Now,
+                                Type = RecentlyAddedType.Emby,
+                                ContentType = ContentType.Parent,
+                                ContentId = int.Parse(e.TheMovieDbId),
+                            });
+                        }
+                    }
 
-                foreach (var e in embyContentMoviesToSend)
-                {
-                    if (e.Type == EmbyMediaType.Movie)
+                    foreach (var p in embyEpisodesToSend)
                     {
                         recentlyAddedLog.Add(new RecentlyAddedLog
                         {
                             AddedAt = DateTime.Now,
                             Type = RecentlyAddedType.Emby,
-                            ContentType = ContentType.Parent,
-                            ContentId = int.Parse(e.TheMovieDbId),
+                            ContentType = ContentType.Episode,
+                            ContentId = int.Parse(p.Series.TvDbId),
+                            EpisodeNumber = p.EpisodeNumber,
+                            SeasonNumber = p.SeasonNumber
                         });
                     }
+                    await _recentlyAddedLog.AddRange(recentlyAddedLog);
+                    await Task.WhenAll(emailTasks.ToArray());
                 }
-
-                foreach (var p in embyEpisodesToSend)
+                else
                 {
-                    recentlyAddedLog.Add(new RecentlyAddedLog
+                    var admins = await _userManager.GetUsersInRoleAsync(OmbiRoles.Admin);
+                    foreach (var a in admins)
                     {
-                        AddedAt = DateTime.Now,
-                        Type = RecentlyAddedType.Emby,
-                        ContentType = ContentType.Episode,
-                        ContentId = int.Parse(p.Series.TvDbId),
-                        EpisodeNumber = p.EpisodeNumber,
-                        SeasonNumber = p.SeasonNumber
-                    });
-                }
-                await _recentlyAddedLog.AddRange(recentlyAddedLog);
+                        if (a.Email.IsNullOrEmpty())
+                        {
+                            continue;
+                        }
+                        var messageContent = ParseTemplate(template, customization, a);
 
-                await Task.WhenAll(emailTasks.ToArray());
-            }
-            else
-            {
-                var admins = await _userManager.GetUsersInRoleAsync(OmbiRoles.Admin);
-                foreach (var a in admins)
-                {
-                    if (a.Email.IsNullOrEmpty())
-                    {
-                        continue;
+                        var email = new NewsletterTemplate();
+
+                        var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo);
+
+                        await _email.Send(
+                            new NotificationMessage { Message = html, Subject = messageContent.Subject, To = a.Email },
+                            emailSettings);
                     }
-                    var messageContent = ParseTemplate(template, customization, a);
-
-                    var email = new NewsletterTemplate();
-
-                    var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo);
-
-                    await _email.Send(
-                        new NotificationMessage { Message = html, Subject = messageContent.Subject, To = a.Email },
-                        emailSettings);
                 }
+
+            }
+            catch (Exception e)
+            {
+                _log.LogError(e, "Error when attempting to create newsletter");
+                throw;
             }
         }
 
@@ -329,8 +354,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
-                    throw;
+                    _log.LogError(e, "Error when Processing Plex Movies {0}", info.Title);
                 }
                 finally
                 {
@@ -359,7 +383,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                     theMovieDbId = result.id.ToString();
                 }
-          
+
                 var info = await _movieApi.GetMovieInformationWithExtraInfo(int.Parse(theMovieDbId));
                 if (info == null)
                 {
@@ -371,8 +395,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
-                    throw;
+                    _log.LogError(e, "Error when processing Emby Movies {0}", info.Title);
                 }
                 finally
                 {
@@ -481,7 +504,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     sb.Append("<tr>");
                     sb.Append(
                         "<td align=\"center\" style=\"font-family: sans-serif; font-size: 14px; vertical-align: top;\" valign=\"top\">");
-                    
+
                     var title = $"{t.Title} ({t.ReleaseYear})";
 
                     Href(sb, $"https://www.imdb.com/title/{info.externals.imdb}/");
@@ -527,7 +550,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
                 catch (Exception e)
                 {
-                    //Log.Error(e);
+                    _log.LogError(e, "Error when processing Plex TV {0}", t.Title);
                 }
                 finally
                 {
@@ -628,7 +651,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
                 catch (Exception e)
                 {
-                    //Log.Error(e);
+                    _log.LogError(e, "Error when processing Emby TV {0}", t.Title);
                 }
                 finally
                 {

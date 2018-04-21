@@ -43,11 +43,11 @@ include the remember me checkbox
             <!-- Main OAuth Flow -->
             <div class="form-signin" *ngIf="plexEnabled && customizationSettings.applicationUrl && !loginWithOmbi">
                 <button class="btn btn-success" type="button" (click)="loginWithOmbi = true">
-                    Login With {{appName}}</button>
+                    Sign In With {{appName}}</button>
             </div>
             <div class="form-signin" *ngIf="plexEnabled && customizationSettings.applicationUrl && !loginWithOmbi">
                 <button class="btn btn-primary" type="button" (click)="oauth()">
-                    Continue With Plex</button>
+                    Sign In With Plex</button>
             </div>
 
 
