@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using MailKit;
@@ -84,23 +86,28 @@ namespace Ombi.Schedule.Jobs.Ombi
             var addedPlexMovieLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Parent).Select(x => x.ContentId);
             var addedEmbyMoviesLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Emby && x.ContentType == ContentType.Parent).Select(x => x.ContentId);
 
-            var addedPlexEpisodesLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Episode).Select(x => x.ContentId);
-            var addedEmbyEpisodesLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Emby && x.ContentType == ContentType.Episode).Select(x => x.ContentId);
+            var addedPlexEpisodesLogIds =
+                addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Episode);
+            var addedEmbyEpisodesLogIds =
+                addedLog.Where(x => x.Type == RecentlyAddedType.Emby && x.ContentType == ContentType.Episode);
 
             // Filter out the ones that we haven't sent yet
-            var plexContentMoviesToSend = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && !addedPlexMovieLogIds.Contains(x.Id));
-            var embyContentMoviesToSend = embyContent.Where(x => x.Type == EmbyMediaType.Movie && !addedEmbyMoviesLogIds.Contains(x.Id));
+            var plexContentMoviesToSend = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && !addedPlexMovieLogIds.Contains(int.Parse(x.TheMovieDbId)));
+            var embyContentMoviesToSend = embyContent.Where(x => x.Type == EmbyMediaType.Movie && !addedEmbyMoviesLogIds.Contains(int.Parse(x.TheMovieDbId)));
 
-            var plexEpisodesToSend = _plex.GetAllEpisodes().Include(x => x.Series).Where(x => !addedPlexEpisodesLogIds.Contains(x.Id)).AsNoTracking();
-            var embyEpisodesToSend = _emby.GetAllEpisodes().Include(x => x.Series).Where(x => !addedEmbyEpisodesLogIds.Contains(x.Id)).AsNoTracking();
+
+            var plexEpisodesToSend =
+                FilterPlexEpisodes(_plex.GetAllEpisodes().Include(x => x.Series).AsNoTracking(), addedPlexEpisodesLogIds);
+            var embyEpisodesToSend = FilterEmbyEpisodes(_emby.GetAllEpisodes().Include(x => x.Series).AsNoTracking(),
+                addedEmbyEpisodesLogIds);
 
             var body = string.Empty;
             if (test)
             {
                 var plexm = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie).OrderByDescending(x => x.AddedAt).Take(10);
                 var embym = embyContent.Where(x => x.Type == EmbyMediaType.Movie).OrderByDescending(x => x.AddedAt).Take(10);
-                var plext = _plex.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.Series.AddedAt).Take(10);
-                var embyt = _emby.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.AddedAt).Take(10);
+                var plext = _plex.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.Series.AddedAt).Take(10).ToHashSet();
+                var embyt = _emby.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.AddedAt).Take(10).ToHashSet();
                 body = await BuildHtml(plexm, embym, plext, embyt, settings);
             }
             else
@@ -110,7 +117,6 @@ namespace Ombi.Schedule.Jobs.Ombi
                 {
                     return;
                 }
-
             }
             
             if (!test)
@@ -157,7 +163,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         AddedAt = DateTime.Now,
                         Type = RecentlyAddedType.Plex,
                         ContentType = ContentType.Parent,
-                        ContentId = p.Id
+                        ContentId = int.Parse(p.TheMovieDbId),
                     });
 
                 }
@@ -169,7 +175,9 @@ namespace Ombi.Schedule.Jobs.Ombi
                         AddedAt = DateTime.Now,
                         Type = RecentlyAddedType.Plex,
                         ContentType = ContentType.Episode,
-                        ContentId = p.Id
+                        ContentId = int.Parse(p.Series.TvDbId),
+                        EpisodeNumber = p.EpisodeNumber,
+                        SeasonNumber = p.SeasonNumber
                     });
                 }
 
@@ -182,7 +190,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                             AddedAt = DateTime.Now,
                             Type = RecentlyAddedType.Emby,
                             ContentType = ContentType.Parent,
-                            ContentId = e.Id
+                            ContentId = int.Parse(e.TheMovieDbId),
                         });
                     }
                 }
@@ -194,7 +202,9 @@ namespace Ombi.Schedule.Jobs.Ombi
                         AddedAt = DateTime.Now,
                         Type = RecentlyAddedType.Emby,
                         ContentType = ContentType.Episode,
-                        ContentId = p.Id
+                        ContentId = int.Parse(p.Series.TvDbId),
+                        EpisodeNumber = p.EpisodeNumber,
+                        SeasonNumber = p.SeasonNumber
                     });
                 }
                 await _recentlyAddedLog.AddRange(recentlyAddedLog);
@@ -229,6 +239,40 @@ namespace Ombi.Schedule.Jobs.Ombi
             await Start(newsletterSettings, false);
         }
 
+        private HashSet<PlexEpisode> FilterPlexEpisodes(IEnumerable<PlexEpisode> source, IQueryable<RecentlyAddedLog> recentlyAdded)
+        {
+            var itemsToReturn = new HashSet<PlexEpisode>();
+            foreach (var ep in source)
+            {
+                var tvDbId = int.Parse(ep.Series.TvDbId);
+                if (recentlyAdded.Any(x => x.ContentId == tvDbId && x.EpisodeNumber == ep.EpisodeNumber && x.SeasonNumber == ep.SeasonNumber))
+                {
+                    continue;
+                }
+
+                itemsToReturn.Add(ep);
+            }
+
+            return itemsToReturn;
+        }
+
+        private HashSet<EmbyEpisode> FilterEmbyEpisodes(IEnumerable<EmbyEpisode> source, IQueryable<RecentlyAddedLog> recentlyAdded)
+        {
+            var itemsToReturn = new HashSet<EmbyEpisode>();
+            foreach (var ep in source)
+            {
+                var tvDbId = int.Parse(ep.Series.TvDbId);
+                if (recentlyAdded.Any(x => x.ContentId == tvDbId && x.EpisodeNumber == ep.EpisodeNumber && x.SeasonNumber == ep.SeasonNumber))
+                {
+                    continue;
+                }
+
+                itemsToReturn.Add(ep);
+            }
+
+            return itemsToReturn;
+        }
+
         private NotificationMessageContent ParseTemplate(NotificationTemplates template, CustomizationSettings settings, OmbiUser username)
         {
             var resolver = new NotificationMessageResolver();
@@ -239,7 +283,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             return resolver.ParseMessage(template, curlys);
         }
 
-        private async Task<string> BuildHtml(IQueryable<PlexServerContent> plexContentToSend, IQueryable<EmbyContent> embyContentToSend, IQueryable<PlexEpisode> plexEpisodes, IQueryable<EmbyEpisode> embyEp, NewsletterSettings settings)
+        private async Task<string> BuildHtml(IQueryable<PlexServerContent> plexContentToSend, IQueryable<EmbyContent> embyContentToSend, HashSet<PlexEpisode> plexEpisodes, HashSet<EmbyEpisode> embyEp, NewsletterSettings settings)
         {
             var sb = new StringBuilder();
 
@@ -366,7 +410,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             AddParagraph(sb, info.Overview);
         }
 
-        private async Task ProcessPlexTv(IQueryable<PlexEpisode> plexContent, StringBuilder sb)
+        private async Task ProcessPlexTv(HashSet<PlexEpisode> plexContent, StringBuilder sb)
         {
             var series = new List<PlexServerContent>();
             foreach (var plexEpisode in plexContent)
@@ -494,7 +538,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         }
 
-        private async Task ProcessEmbyTv(IQueryable<EmbyEpisode> embyContent, StringBuilder sb)
+        private async Task ProcessEmbyTv(HashSet<EmbyEpisode> embyContent, StringBuilder sb)
         {
             var series = new List<EmbyContent>();
             foreach (var episode in embyContent)

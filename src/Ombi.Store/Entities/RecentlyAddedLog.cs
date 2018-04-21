@@ -8,7 +8,9 @@ namespace Ombi.Store.Entities
     {
         public RecentlyAddedType Type { get; set; }
         public ContentType ContentType { get; set; }
-        public int ContentId { get; set; } // This is dependant on the type
+        public int ContentId { get; set; } // This is dependant on the type, it's either TMDBID or TVDBID
+        public int? EpisodeNumber { get; set; }
+        public int? SeasonNumber { get; set; }
         public DateTime AddedAt { get; set; }
     }
 
