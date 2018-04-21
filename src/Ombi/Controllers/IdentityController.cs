@@ -213,7 +213,7 @@ namespace Ombi.Controllers
         [PowerUser]
         public async Task<IEnumerable<UserViewModel>> GetAllUsers()
         {
-            var users = await UserManager.Users
+            var users = await UserManager.Users.Where(x => x.UserType != UserType.LocalUser)
                 .ToListAsync();
 
             var model = new List<UserViewModel>();
