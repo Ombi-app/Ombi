@@ -81,6 +81,7 @@ namespace Ombi.Store.Repository
 
         public void Update(GlobalSettings entity)
         {
+            Db.Update(entity);
             //_cache.Remove(GetName(entity.SettingsName));
             Db.SaveChanges();
         }

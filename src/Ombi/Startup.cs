@@ -173,25 +173,21 @@ namespace Ombi
                 settings.ApiKey = Guid.NewGuid().ToString("N");
                 ombiService.SaveSettings(settings);
             }
+
+            // Check if it's in the startup args
+            var appConfig = serviceProvider.GetService<IApplicationConfigRepository>();
+            var baseUrl = appConfig.Get(ConfigurationTypes.BaseUrl).Result;
+            if (baseUrl != null)
+            {
+                if (baseUrl.Value.HasValue())
+                {
+                    settings.BaseUrl = baseUrl.Value;
+                    ombiService.SaveSettings(settings);
+                }
+            }
             if (settings.BaseUrl.HasValue())
             {
                 app.UsePathBase(settings.BaseUrl);
-            }
-            else
-            {
-                // Check if it's in the startup args
-                var appConfig = serviceProvider.GetService<IApplicationConfigRepository>();
-                var baseUrl = appConfig.Get(ConfigurationTypes.BaseUrl).Result;
-                if (baseUrl != null)
-                {
-                    if (baseUrl.Value.HasValue())
-                    {
-                        settings.BaseUrl = baseUrl.Value;
-                        ombiService.SaveSettings(settings);
-
-                        app.UsePathBase(settings.BaseUrl);
-                    }
-                }
             }
 
             app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1, ServerTimeout = TimeSpan.FromDays(1), ShutdownTimeout = TimeSpan.FromDays(1)});
