@@ -128,14 +128,14 @@ namespace Ombi.Schedule.Jobs.Ombi
                     return;
                 }
 
-                foreach (var emails in settings.ExternalEmails)
-                {
-                    users.Add(new OmbiUser
-                    {
-                        UserName = emails,
-                        Email = emails
-                    });
-                }
+                //foreach (var emails in settings.ExternalEmails)
+                //{
+                //    users.Add(new OmbiUser
+                //    {
+                //        UserName = emails,
+                //        Email = emails
+                //    });
+                //}
                 var emailTasks = new List<Task>();
                 foreach (var user in users)
                 {

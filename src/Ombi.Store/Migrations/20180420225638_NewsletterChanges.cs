@@ -17,6 +17,8 @@ namespace Ombi.Store.Migrations
                 name: "SeasonNumber",
                 table: "RecentlyAddedLog",
                 nullable: true);
+
+            migrationBuilder.Sql("DELETE FROM RecentlyAddedLog");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
