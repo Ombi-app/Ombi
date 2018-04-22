@@ -88,10 +88,20 @@ O:::::::OOO:::::::Om::::m   m::::m   m::::mb:::::bbbbbb::::::bi::::::i
            if (customization.HasPresetTheme)
            {
                if (!string.IsNullOrEmpty(baseUrl))
+               {
+                   if (!customization.PresetThemeContent.Contains("/" + baseUrl))
                    {
                        var index = customization.PresetThemeContent.IndexOf("/api/");
                        customization.PresetThemeContent = customization.PresetThemeContent.Insert(index, "/" + baseUrl);
+                   } else
+                   {
+                       var startIndex = customization.PresetThemeContent.IndexOf("href=");
+                       var index = customization.PresetThemeContent.IndexOf("/api/");
+                       customization.PresetThemeContent = customization.PresetThemeContent.Remove(startIndex+6, (index-(startIndex+6)));
+                       index = customization.PresetThemeContent.IndexOf("/api/");
+                       customization.PresetThemeContent = customization.PresetThemeContent.Insert(index, "/" + baseUrl);
                    }
+               }
 
             <style>
                 @Html.Raw(customization.PresetThemeContent)
