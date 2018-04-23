@@ -286,12 +286,6 @@ namespace Ombi.Controllers
         public async Task<IActionResult> GetThemeContent([FromQuery]string url)
         {
             var css = await _githubApi.GetThemesRawContent(url);
-            var ombiSettings = await OmbiSettings();
-            if (ombiSettings.BaseUrl != null)
-            {
-                int index = css.IndexOf("/api/");
-                css = css.Insert(index, ombiSettings.BaseUrl);
-            }
             return Content(css, "text/css");
         }
 
