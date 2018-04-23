@@ -17,56 +17,56 @@
     }
 
     var appName = customization.ApplicationName;
-    if(string.IsNullOrEmpty(appName))
+    if (string.IsNullOrEmpty(appName))
     {
         appName = "Ombi";
     }
 
-    
+
 }
 <!DOCTYPE html>
 <html>
 <head>
-        <!--
+    <!--
 
 
 
-             
-                                                                      
-                                          bbbbbbbb                    
-     OOOOOOOOO                            b::::::b              iiii  
-   OO:::::::::OO                          b::::::b             i::::i 
- OO:::::::::::::OO                        b::::::b              iiii  
-O:::::::OOO:::::::O                        b:::::b                    
-O::::::O   O::::::O   mmmmmmm    mmmmmmm   b:::::bbbbbbbbb    iiiiiii 
-O:::::O     O:::::O mm:::::::m  m:::::::mm b::::::::::::::bb  i:::::i 
-O:::::O     O:::::Om::::::::::mm::::::::::mb::::::::::::::::b  i::::i 
-O:::::O     O:::::Om::::::::::::::::::::::mb:::::bbbbb:::::::b i::::i 
-O:::::O     O:::::Om:::::mmm::::::mmm:::::mb:::::b    b::::::b i::::i 
-O:::::O     O:::::Om::::m   m::::m   m::::mb:::::b     b:::::b i::::i 
-O:::::O     O:::::Om::::m   m::::m   m::::mb:::::b     b:::::b i::::i 
-O::::::O   O::::::Om::::m   m::::m   m::::mb:::::b     b:::::b i::::i 
-O:::::::OOO:::::::Om::::m   m::::m   m::::mb:::::bbbbbb::::::bi::::::i
- OO:::::::::::::OO m::::m   m::::m   m::::mb::::::::::::::::b i::::::i
-   OO:::::::::OO   m::::m   m::::m   m::::mb:::::::::::::::b  i::::::i
-     OOOOOOOOO     mmmmmm   mmmmmm   mmmmmmbbbbbbbbbbbbbbbb   iiiiiiii
-                                                                      
-                                                                      
-                                                                      
-                                                                      
-                                                                      
-                                                                      
 
-     -->
-    <meta charset="utf-8"/>
+
+                                              bbbbbbbb
+         OOOOOOOOO                            b::::::b              iiii
+       OO:::::::::OO                          b::::::b             i::::i
+     OO:::::::::::::OO                        b::::::b              iiii
+    O:::::::OOO:::::::O                        b:::::b
+    O::::::O   O::::::O   mmmmmmm    mmmmmmm   b:::::bbbbbbbbb    iiiiiii
+    O:::::O     O:::::O mm:::::::m  m:::::::mm b::::::::::::::bb  i:::::i
+    O:::::O     O:::::Om::::::::::mm::::::::::mb::::::::::::::::b  i::::i
+    O:::::O     O:::::Om::::::::::::::::::::::mb:::::bbbbb:::::::b i::::i
+    O:::::O     O:::::Om:::::mmm::::::mmm:::::mb:::::b    b::::::b i::::i
+    O:::::O     O:::::Om::::m   m::::m   m::::mb:::::b     b:::::b i::::i
+    O:::::O     O:::::Om::::m   m::::m   m::::mb:::::b     b:::::b i::::i
+    O::::::O   O::::::Om::::m   m::::m   m::::mb:::::b     b:::::b i::::i
+    O:::::::OOO:::::::Om::::m   m::::m   m::::mb:::::bbbbbb::::::bi::::::i
+     OO:::::::::::::OO m::::m   m::::m   m::::mb::::::::::::::::b i::::::i
+       OO:::::::::OO   m::::m   m::::m   m::::mb:::::::::::::::b  i::::::i
+         OOOOOOOOO     mmmmmm   mmmmmm   mmmmmmbbbbbbbbbbbbbbbb   iiiiiiii
+
+
+
+
+
+
+
+         -->
+    <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="Ombi, media request tool">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@appName</title>
-    <meta property="og:title" content=“@appName”/>
-    <meta property="og:image" content="~/images/logo.png"/>
-    <meta property="og:site_name" content=“@appName”/>
-    <base href="/@baseUrl"/>
+    <meta property="og:title" content=“@appName” />
+    <meta property="og:image" content="~/images/logo.png" />
+    <meta property="og:site_name" content=“@appName” />
+    <base href="/@baseUrl" />
     <link rel="apple-touch-icon" sizes="180x180" href="~/images/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="~/images/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="~/images/favicon/favicon-16x16.png">
@@ -80,39 +80,35 @@ O:::::::OOO:::::::Om::::m   m::::m   m::::mb:::::bbbbbb::::::bi::::::i
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <link rel="stylesheet" href="~/loading.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/dist/vendor.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/loading.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/dist/vendor.css" asp-append-version="true" />
     <script src="~/dist/vendor.js" asp-append-version="true" defer></script>
     <script src="~/dist/main.js" asp-append-version="true" defer></script>
 </head>
 <body>
-       @{
-           if (customization.HasPresetTheme)
-           {
-               if (!string.IsNullOrEmpty(baseUrl))
-               {
-                   if (!customization.PresetThemeContent.Contains("/" + baseUrl))
-                   {
-                       var index = customization.PresetThemeContent.IndexOf("/api/");
-                       customization.PresetThemeContent = customization.PresetThemeContent.Insert(index, "/" + baseUrl);
-                   } else
-                   {
-                       var startIndex = customization.PresetThemeContent.IndexOf("href=");
-                       var index = customization.PresetThemeContent.IndexOf("/api/");
-                       customization.PresetThemeContent = customization.PresetThemeContent.Remove(startIndex+6, (index-(startIndex+6)));
-                       index = customization.PresetThemeContent.IndexOf("/api/");
-                       customization.PresetThemeContent = customization.PresetThemeContent.Insert(index, "/" + baseUrl);
-                   }
-               }
+    @{
+        if (customization.HasPresetTheme)
+        {
+            if (!string.IsNullOrEmpty(baseUrl))
+            {
+                if (!customization.PresetThemeContent.Contains("/" + baseUrl))
+                {
+                    var index = customization.PresetThemeContent.IndexOf("/api/");
+                    if (index > 0)
+                    {
+                        customization.PresetThemeContent = customization.PresetThemeContent.Insert(index, "/" + baseUrl);
+                    }
+                }
+            }
 
             <style>
                 @Html.Raw(customization.PresetThemeContent)
-                </style>
+            </style>
         }
 
         if (!string.IsNullOrEmpty(customization.CustomCssLink))
         {
-            <link rel="stylesheet" href="@customization.CustomCssLink" asp-append-version="true"/>
+            <link rel="stylesheet" href="@customization.CustomCssLink" asp-append-version="true" />
         }
     }
 
