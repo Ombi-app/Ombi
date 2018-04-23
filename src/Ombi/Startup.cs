@@ -219,7 +219,6 @@ namespace Ombi
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                c.ShowJsonEditor();
             });
             
             app.UseMvc(routes =>
