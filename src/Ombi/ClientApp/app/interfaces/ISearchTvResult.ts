@@ -27,6 +27,7 @@ export interface ISearchTvResult {
     requested: boolean;
     available: boolean;
     plexUrl: string;
+    embyUrl: string;
     firstSeason: boolean;
     latestSeason: boolean;
 }

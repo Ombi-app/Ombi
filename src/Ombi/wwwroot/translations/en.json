@@ -81,6 +81,7 @@
     "DigitalDate": "Digital Release: {{date}}",
     "TheatricalRelease":"Theatrical Release: {{date}}",
     "ViewOnPlex": "View On Plex",
+    "ViewOnEmby": "View On Emby",
     "RequestAdded": "Request for {{title}} has been added successfully",
     "Similar":"Similar",
     "Movies": {

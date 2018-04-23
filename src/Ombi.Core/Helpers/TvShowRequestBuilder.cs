@@ -30,6 +30,7 @@ namespace Ombi.Core.Helpers
         public ChildRequests ChildRequest { get; set; }
         public List<SeasonsViewModel> TvRequests { get; protected set; }
         public string PosterPath { get; protected set; }
+        public string BackdropPath { get; protected set; }
         public DateTime FirstAir { get; protected set; }
         public TvRequests NewRequest { get; protected set; }
         protected TvMazeShow ShowInfo { get; set; }
@@ -44,6 +45,7 @@ namespace Ombi.Core.Helpers
                 {                  
                     var showIds = await MovieDbApi.GetTvExternals(result.Id);
                     ShowInfo.externals.imdb = showIds.imdb_id;
+                    BackdropPath = result.BackdropPath;
                     break;
                 }
             }
@@ -240,7 +242,8 @@ namespace Ombi.Core.Helpers
                 ImdbId = ShowInfo.externals?.imdb ?? string.Empty,
                 TvDbId = tv.TvDbId,
                 ChildRequests = new List<ChildRequests>(),
-                TotalSeasons = tv.Seasons.Count()
+                TotalSeasons = tv.Seasons.Count(),
+                Background = BackdropPath
             };
             NewRequest.ChildRequests.Add(ChildRequest);
 

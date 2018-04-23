@@ -14,6 +14,8 @@ import { WelcomeComponent } from "./welcome/welcome.component";
 import { EmbyService } from "../services";
 import { PlexService } from "../services";
 import { IdentityService } from "../services";
+import { PlexOAuthService } from "../services";
+import { PlexOAuthComponent } from "./plex/plexoauth.component";
 
 const routes: Routes = [
     { path: "", component: WelcomeComponent},
@@ -21,6 +23,7 @@ const routes: Routes = [
     { path: "Plex", component: PlexComponent},
     { path: "Emby", component: EmbyComponent},
     { path: "CreateAdmin", component: CreateAdminComponent},
+    { path: "OAuth/:pin", component: PlexOAuthComponent},
 ];
 @NgModule({
     imports: [
@@ -33,6 +36,7 @@ const routes: Routes = [
         WelcomeComponent,
         MediaServerComponent,
         PlexComponent,
+        PlexOAuthComponent,
         CreateAdminComponent,
         EmbyComponent,
     ],
@@ -44,6 +48,7 @@ const routes: Routes = [
         IdentityService,
         EmbyService,
         ConfirmationService,
+        PlexOAuthService,
     ],
 
 })

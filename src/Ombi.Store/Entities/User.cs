@@ -29,6 +29,7 @@ namespace Ombi.Store.Entities
 {
     public enum UserType
     {
+        SystemUser = 0,
         LocalUser = 1,
         PlexUser = 2,
         EmbyUser = 3,

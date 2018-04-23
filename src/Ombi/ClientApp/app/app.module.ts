@@ -24,6 +24,7 @@ import { CookieComponent } from "./auth/cookie.component";
 import { PageNotFoundComponent } from "./errors/not-found.component";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
 import { LoginComponent } from "./login/login.component";
+import { LoginOAuthComponent } from "./login/loginoauth.component";
 import { ResetPasswordComponent } from "./login/resetpassword.component";
 import { TokenResetPasswordComponent } from "./login/tokenresetpassword.component";
 
@@ -41,6 +42,7 @@ const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
     { path: "", redirectTo: "/search", pathMatch: "full" },
     { path: "login", component: LoginComponent },
+    { path: "Login/OAuth/:pin", component: LoginOAuthComponent },
     { path: "login/:landing", component: LoginComponent },
     { path: "reset", component: ResetPasswordComponent },
     { path: "token", component: TokenResetPasswordComponent },
@@ -116,6 +118,7 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
         ResetPasswordComponent,
         TokenResetPasswordComponent,
         CookieComponent,
+        LoginOAuthComponent,
         ],
     providers: [
         NotificationService,

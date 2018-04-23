@@ -82,7 +82,7 @@ namespace Ombi
                         ctx.SaveChanges();
                     }
                 }
-                else if(!baseUrl.Equals(dbBaseUrl.Value))
+                else if(baseUrl.HasValue() && !baseUrl.Equals(dbBaseUrl.Value))
                 {
                     dbBaseUrl.Value = baseUrl;
                     ctx.SaveChanges();

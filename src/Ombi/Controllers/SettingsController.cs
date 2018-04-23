@@ -142,7 +142,19 @@ namespace Ombi.Controllers
         [HttpGet("plex")]
         public async Task<PlexSettings> PlexSettings()
         {
-            return await Get<PlexSettings>();
+            var s = await Get<PlexSettings>();
+
+            return s;
+        }
+
+        [HttpGet("plexstatus")]
+        [AllowAnonymous]
+        public async Task<bool> PlexStatusSettings()
+        {
+            var s = await Get<PlexSettings>();
+           
+
+            return s.Enable;
         }
 
         /// <summary>
@@ -274,12 +286,6 @@ namespace Ombi.Controllers
         public async Task<IActionResult> GetThemeContent([FromQuery]string url)
         {
             var css = await _githubApi.GetThemesRawContent(url);
-            var ombiSettings = await OmbiSettings();
-            if (ombiSettings.BaseUrl != null)
-            {
-                int index = css.IndexOf("/api/");
-                css = css.Insert(index, ombiSettings.BaseUrl);
-            }
             return Content(css, "text/css");
         }
 

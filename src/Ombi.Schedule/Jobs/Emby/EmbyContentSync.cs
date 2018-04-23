@@ -114,6 +114,7 @@ namespace Ombi.Schedule.Jobs.Emby
                         Title = tvInfo.Name,
                         Type = EmbyMediaType.Series,
                         EmbyId = tvShow.Id,
+                        Url = EmbyHelper.GetEmbyMediaUrl(tvShow.Id),
                         AddedAt = DateTime.UtcNow
                     });
             }
@@ -135,6 +136,7 @@ namespace Ombi.Schedule.Jobs.Emby
                     Title = movieInfo.Name,
                     Type = EmbyMediaType.Movie,
                     EmbyId = movieInfo.Id,
+                    Url = EmbyHelper.GetEmbyMediaUrl(movieInfo.Id),
                     AddedAt = DateTime.UtcNow,
                 });
         }

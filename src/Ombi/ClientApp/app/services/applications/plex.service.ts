@@ -29,4 +29,8 @@ export class PlexService extends ServiceHelpers {
     public getFriends(): Observable<IUsersModel[]> {
         return this.http.get<IUsersModel[]>(`${this.url}Friends`,  {headers: this.headers});
     }
+
+    public oAuth(wizard: boolean): Observable<any> {
+        return this.http.get<any>(`${this.url}oauth/${wizard}`,  {headers: this.headers});
+    }
 }

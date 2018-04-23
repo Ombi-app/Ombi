@@ -21,7 +21,7 @@ export class CreateAdminComponent {
         this.identityService.createWizardUser({username: this.username, password: this.password, usePlexAdminAccount: false}).subscribe(x => {
             if (x) {
                 // Log me in.
-                this.auth.login({ username: this.username, password: this.password, rememberMe:false }).subscribe(c => {
+                this.auth.login({ username: this.username, password: this.password, rememberMe: false, usePlexOAuth:false }).subscribe(c => {
 
                     localStorage.setItem("id_token", c.access_token);
 
