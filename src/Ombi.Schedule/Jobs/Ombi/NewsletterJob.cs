@@ -98,8 +98,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                     addedLog.Where(x => x.Type == RecentlyAddedType.Emby && x.ContentType == ContentType.Episode);
 
                 // Filter out the ones that we haven't sent yet
-                var plexContentMoviesToSend = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && !addedPlexMovieLogIds.Contains(int.Parse(x.TheMovieDbId)));
-                var embyContentMoviesToSend = embyContent.Where(x => x.Type == EmbyMediaType.Movie && !addedEmbyMoviesLogIds.Contains(int.Parse(x.TheMovieDbId)));
+                var plexContentMoviesToSend = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && !addedPlexMovieLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId)));
+                var embyContentMoviesToSend = embyContent.Where(x => x.Type == EmbyMediaType.Movie && !addedEmbyMoviesLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId)));
                 _log.LogInformation("Plex Movies to send: {0}", plexContentMoviesToSend.Count());
                 _log.LogInformation("Emby Movies to send: {0}", embyContentMoviesToSend.Count());
 
@@ -173,7 +173,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                             AddedAt = DateTime.Now,
                             Type = RecentlyAddedType.Plex,
                             ContentType = ContentType.Parent,
-                            ContentId = int.Parse(p.TheMovieDbId),
+                            ContentId = StringHelper.IntParseLinq(p.TheMovieDbId),
                         });
 
                     }
@@ -185,7 +185,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                             AddedAt = DateTime.Now,
                             Type = RecentlyAddedType.Plex,
                             ContentType = ContentType.Episode,
-                            ContentId = int.Parse(p.Series.TvDbId),
+                            ContentId = StringHelper.IntParseLinq(p.Series.TvDbId),
                             EpisodeNumber = p.EpisodeNumber,
                             SeasonNumber = p.SeasonNumber
                         });
@@ -199,7 +199,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                                 AddedAt = DateTime.Now,
                                 Type = RecentlyAddedType.Emby,
                                 ContentType = ContentType.Parent,
-                                ContentId = int.Parse(e.TheMovieDbId),
+                                ContentId = StringHelper.IntParseLinq(e.TheMovieDbId),
                             });
                         }
                     }
@@ -211,7 +211,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                             AddedAt = DateTime.Now,
                             Type = RecentlyAddedType.Emby,
                             ContentType = ContentType.Episode,
-                            ContentId = int.Parse(p.Series.TvDbId),
+                            ContentId = StringHelper.IntParseLinq(p.Series.TvDbId),
                             EpisodeNumber = p.EpisodeNumber,
                             SeasonNumber = p.SeasonNumber
                         });
@@ -259,7 +259,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             var itemsToReturn = new HashSet<PlexEpisode>();
             foreach (var ep in source)
             {
-                var tvDbId = int.Parse(ep.Series.TvDbId);
+                var tvDbId = StringHelper.IntParseLinq(ep.Series.TvDbId);
                 if (recentlyAdded.Any(x => x.ContentId == tvDbId && x.EpisodeNumber == ep.EpisodeNumber && x.SeasonNumber == ep.SeasonNumber))
                 {
                     continue;
@@ -276,7 +276,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             var itemsToReturn = new HashSet<EmbyEpisode>();
             foreach (var ep in source)
             {
-                var tvDbId = int.Parse(ep.Series.TvDbId);
+                var tvDbId = StringHelper.IntParseLinq(ep.Series.TvDbId);
                 if (recentlyAdded.Any(x => x.ContentId == tvDbId && x.EpisodeNumber == ep.EpisodeNumber && x.SeasonNumber == ep.SeasonNumber))
                 {
                     continue;
@@ -374,7 +374,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     theMovieDbId = result.id.ToString();
                 }
 
-                var info = await _movieApi.GetMovieInformationWithExtraInfo(int.Parse(theMovieDbId));
+                var info = await _movieApi.GetMovieInformationWithExtraInfo(StringHelper.IntParseLinq(theMovieDbId));
                 if (info == null)
                 {
                     continue;
