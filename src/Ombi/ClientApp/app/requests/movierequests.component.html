@@ -56,7 +56,7 @@
 <br />
 
 
-<div infinite-scroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="100" (scrolled)="loadMore()">
+<div>
 
 
     <div *ngFor="let request of movieRequests | orderBy: order : reverse : 'case-insensitive'">
@@ -212,6 +212,8 @@
 
 
     </div>
+    
+    <p-paginator [rows]="10" [totalRecords]="10000" (onPageChange)="paginate($event)"></p-paginator>
 </div>
 
 
