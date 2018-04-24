@@ -23,7 +23,7 @@ namespace Ombi.Controllers
 {
     [ApiV1]
     [Produces("application/json")]
-    public class TokenController
+    public class TokenController : Controller
     {
         public TokenController(OmbiUserManager um, IOptions<TokenAuthentication> ta, IAuditRepository audit, ITokenRepository token,
             IPlexOAuthManager oAuthManager)
@@ -83,8 +83,9 @@ namespace Ombi.Controllers
                 // We need a PIN first
                 var pin = await _plexOAuthManager.RequestPin();
 
+                var websiteAddress = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
                 //https://app.plex.tv/auth#?forwardUrl=http://google.com/&clientID=Ombi-Test&context%5Bdevice%5D%5Bproduct%5D=Ombi%20SSO&pinID=798798&code=4lgfd
-                var url = await _plexOAuthManager.GetOAuthUrl(pin.id, pin.code);
+                var url = await _plexOAuthManager.GetOAuthUrl(pin.id, pin.code, websiteAddress);
                 if (url == null)
                 {
                     return new JsonResult(new

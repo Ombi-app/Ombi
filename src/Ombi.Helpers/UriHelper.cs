@@ -112,6 +112,7 @@ namespace Ombi.Helpers
 
             return uriBuilder.Uri;
         }
+        
     }
 
     public class ApplicationSettingsException : Exception

@@ -17,7 +17,7 @@ include the remember me checkbox
             </div>
             <p id="profile-name" class="profile-name-card"></p>
 
-            <div *ngIf="!plexEnabled || !customizationSettings.applicationUrl || loginWithOmbi">
+            <div *ngIf="!plexEnabled || loginWithOmbi">
                 <form *ngIf="authenticationSettings" class="form-signin" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
 
 
@@ -41,15 +41,16 @@ include the remember me checkbox
                 <!-- /form -->
             </div>
             <!-- Main OAuth Flow -->
-            <div class="form-signin" *ngIf="plexEnabled && customizationSettings.applicationUrl && !loginWithOmbi">
+            <div *ngIf="plexEnabled && !loginWithOmbi">
+            <div class="form-signin">
                 <button class="btn btn-success" type="button" (click)="loginWithOmbi = true">
                     Sign In With {{appName}}</button>
             </div>
-            <div class="form-signin" *ngIf="plexEnabled && customizationSettings.applicationUrl && !loginWithOmbi">
+            <div class="form-signin">
                 <button class="btn btn-primary" type="button" (click)="oauth()">
                     Sign In With Plex</button>
             </div>
-
+        </div>
 
         </div>
         <!-- /card-container -->

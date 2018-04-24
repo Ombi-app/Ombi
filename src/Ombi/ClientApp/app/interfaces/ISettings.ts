@@ -43,6 +43,7 @@ export interface IEmbyServer extends IExternalSettings {
 
 export interface IPlexSettings extends ISettings {
   enable: boolean;
+  enableOAuth: boolean;
   servers: IPlexServer[];
 }
 

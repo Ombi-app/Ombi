@@ -125,7 +125,13 @@ export class LoginComponent implements OnDestroy, OnInit {
 
     public oauth() {
         this.authService.login({usePlexOAuth: true, password:"",rememberMe:true,username:""}).subscribe(x => {
-            window.location.href = x.url;
+            if (window.frameElement) {
+                // in frame
+                window.open(x.url, "_blank");
+              } else {
+                // not in frame
+                window.location.href = x.url;
+              }
         });
     }
 

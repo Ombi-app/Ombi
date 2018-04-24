@@ -154,7 +154,7 @@ namespace Ombi.Controllers
             var s = await Get<PlexSettings>();
            
 
-            return s.Enable;
+            return s.Enable && s.EnableOAuth;
         }
 
         /// <summary>
