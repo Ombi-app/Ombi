@@ -134,7 +134,7 @@ namespace Ombi
             {
                 x.UseSQLiteStorage(sqliteStorage);
                 x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
-                x.UseConsole();
+                //x.UseConsole();
             });
 
 
