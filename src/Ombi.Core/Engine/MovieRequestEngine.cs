@@ -144,6 +144,19 @@ namespace Ombi.Core.Engine
             return allRequests;
         }
 
+        public async Task<int> GetTotal()
+        {
+            var shouldHide = await HideFromOtherUsers();
+            if (shouldHide.Hide)
+            {
+                return await MovieRepository.GetWithUser(shouldHide.UserId).CountAsync();
+            }
+            else
+            {
+                return await MovieRepository.GetWithUser().CountAsync();
+            }
+        }
+
         /// <summary>
         /// Gets the requests.
         /// </summary>

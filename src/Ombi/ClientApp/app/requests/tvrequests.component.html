@@ -120,6 +120,7 @@
         </p-column>
     </p-treeTable>
 
+    <p-paginator [rows]="10" [totalRecords]="totalTv" (onPageChange)="paginate($event)"></p-paginator>
 </div>
 
     <issue-report [movie]="false" [visible]="issuesBarVisible" [title]="issueRequest?.title"

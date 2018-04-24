@@ -39,6 +39,7 @@ export class MovieRequestsComponent implements OnInit {
     public order: string = "requestedDate";
     public reverse = false;
 
+    public totalMovies: number = 100;
     private currentlyLoaded: number;
     private amountToLoad: number;
 
@@ -269,6 +270,7 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     private loadInit() {
+        this.requestService.getTotalMovies().subscribe(x => this.totalMovies = x);
         this.requestService.getMovieRequests(this.amountToLoad, 0)
             .subscribe(x => {
                 this.movieRequests = x;

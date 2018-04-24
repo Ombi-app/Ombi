@@ -14,7 +14,7 @@ import { AuthService } from "../auth/auth.service";
 import { NotificationService, RequestService, SonarrService } from "../services";
 
 import { TreeNode } from "primeng/primeng";
-import { IIssueCategory, ISonarrProfile,  ISonarrRootFolder, ITvRequests } from "../interfaces";
+import { IIssueCategory, IPagenator,  ISonarrProfile, ISonarrRootFolder, ITvRequests } from "../interfaces";
 
 @Component({
     selector: "tv-requests",
@@ -40,6 +40,7 @@ export class TvRequestsComponent implements OnInit {
     public sonarrProfiles: ISonarrProfile[] = [];
     public sonarrRootFolders: ISonarrRootFolder[] = [];
 
+    public totalTv: number = 100;
     private currentlyLoaded: number;
     private amountToLoad: number;
 
@@ -105,25 +106,22 @@ export class TvRequestsComponent implements OnInit {
     }
 
     public ngOnInit() {
-        this.amountToLoad = 1000;
-        this.currentlyLoaded = 1000;
+        this.amountToLoad = 10;
+        this.currentlyLoaded = 10;
         this.tvRequests = [];
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
         
         this.loadInit();
     }
 
-    public loadMore() {
-        //TODO: I believe this +1 is causing off by one error skipping loading of tv shows
-        //When removed and scrolling very slowly everything works as expected, however
-        //if you scroll really quickly then you start getting duplicates of movies
-        //since it's async and some subsequent results return first and then incrementer
-        //is increased so you see movies which had already been gotten show up...
-        this.requestService.getTvRequestsTree(this.amountToLoad, this.currentlyLoaded + 1)
-            .subscribe(x => {
-                this.tvRequests = x;
-                this.currentlyLoaded = this.currentlyLoaded + this.amountToLoad;
-            });
+    public paginate(event: IPagenator) {
+        const skipAmount = event.first;
+
+        this.requestService.getTvRequestsTree(this.amountToLoad, skipAmount)
+        .subscribe(x => {
+            this.tvRequests = x;
+            this.currentlyLoaded = this.currentlyLoaded + this.amountToLoad;
+        });
     }
 
     public search(text: any) {
@@ -197,6 +195,7 @@ export class TvRequestsComponent implements OnInit {
     }
 
     private loadInit() {
+        this.requestService.getTotalTv().subscribe(x => this.totalTv = x);
         this.requestService.getTvRequestsTree(this.amountToLoad, 0)
             .subscribe(x => {
                 this.tvRequests = x;
