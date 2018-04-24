@@ -43,7 +43,6 @@ export interface IEmbyServer extends IExternalSettings {
 
 export interface IPlexSettings extends ISettings {
   enable: boolean;
-  enableOAuth: boolean;
   servers: IPlexServer[];
 }
 
@@ -146,6 +145,7 @@ export interface IAuthenticationSettings extends ISettings {
   requiredLowercase: boolean;
   requireNonAlphanumeric: boolean;
   requireUppercase: boolean;
+  enableOAuth: boolean;
 }
 
 export interface IUserManagementSettings extends ISettings {

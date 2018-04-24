@@ -6,7 +6,6 @@ namespace Ombi.Core.Settings.Models.External
     public sealed class PlexSettings : Ombi.Settings.Settings.Models.Settings
     {
         public bool Enable { get; set; }
-        public bool EnableOAuth { get; set; }
         public List<PlexServers> Servers { get; set; }
     }
 

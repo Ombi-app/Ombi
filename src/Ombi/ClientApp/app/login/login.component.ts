@@ -79,7 +79,6 @@ export class LoginComponent implements OnDestroy, OnInit {
     public ngOnInit() {
         this.settingsService.getAuthentication().subscribe(x => this.authenticationSettings = x);
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
-        this.settingsService.getStatusPlex().subscribe(x => this.plexEnabled = x);
         this.images.getRandomBackground().subscribe(x => {
             this.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%),url(" + x.url + ")");
         });
