@@ -4,6 +4,10 @@
 
 ### **New Features**
 
+- Added paging to the TV Requests page. [Jamie Rees]
+
+- Added Paging to the Movie Requests Page. [Jamie Rees]
+
 - Updated Mailkit dependancy. [Jamie Rees]
 
 - Update Hangfire, Newtonsoft and Swagger. [Jamie Rees]
