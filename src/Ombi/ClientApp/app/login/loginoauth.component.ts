@@ -2,6 +2,7 @@
 import { ActivatedRoute, Router } from "@angular/router";
 
 import { AuthService } from "../auth/auth.service";
+import { NotificationService } from "../services";
 
 @Component({
     templateUrl: "./loginoauth.component.html",
@@ -11,7 +12,7 @@ export class LoginOAuthComponent implements OnInit {
     public error: string;
 
     constructor(private authService: AuthService, private router: Router,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute, private notify: NotificationService) {
         this.route.params
             .subscribe((params: any) => {
                 this.pin = params.pin;
@@ -37,6 +38,10 @@ export class LoginOAuthComponent implements OnInit {
             this.error = x.errorMessage;
         }
 
+        }, err => {
+            this.notify.error(err.statusText);
+            
+            this.router.navigate(["login"]);
         });
     }
 }
