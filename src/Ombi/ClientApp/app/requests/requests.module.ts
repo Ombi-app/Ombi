@@ -6,7 +6,7 @@ import { OrderModule } from "ngx-order-pipe";
 
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 
-import { ButtonModule, DialogModule } from "primeng/primeng";
+import { ButtonModule, DialogModule, PaginatorModule } from "primeng/primeng";
 import { MovieRequestsComponent } from "./movierequests.component";
 // Request
 import { RequestComponent } from "./request.component";
@@ -36,6 +36,7 @@ const routes: Routes = [
         SharedModule,
         SidebarModule,
         OrderModule,
+        PaginatorModule,
     ],
     declarations: [
         RequestComponent,

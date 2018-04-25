@@ -197,6 +197,8 @@ namespace Ombi.Store.Migrations
 
                     b.Property<int>("Type");
 
+                    b.Property<string>("Url");
+
                     b.HasKey("Id");
 
                     b.ToTable("EmbyContent");
@@ -453,6 +455,10 @@ namespace Ombi.Store.Migrations
 
                     b.Property<int>("ContentType");
 
+                    b.Property<int?>("EpisodeNumber");
+
+                    b.Property<int?>("SeasonNumber");
+
                     b.Property<int>("Type");
 
                     b.HasKey("Id");
@@ -644,6 +650,8 @@ namespace Ombi.Store.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Background");
 
                     b.Property<string>("ImdbId");
 

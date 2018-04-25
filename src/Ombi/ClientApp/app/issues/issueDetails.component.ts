@@ -98,7 +98,11 @@ export class IssueDetailsComponent implements OnInit {
                     ("url(" + x + ")");
             });
             this.imageService.getMoviePoster(issue.providerId).subscribe(x => {
-                this.posterPath = x.toString();
+                if (x.length === 0) {
+                    this.posterPath = "../../../images/default_movie_poster.png";
+                } else {
+                    this.posterPath = x.toString();
+                }
             });
 
         } else {
@@ -107,7 +111,11 @@ export class IssueDetailsComponent implements OnInit {
                     ("url(" + x + ")");
             });
             this.imageService.getTvPoster(Number(issue.providerId)).subscribe(x => {
-                this.posterPath = x.toString();
+                if (x.length === 0) {
+                    this.posterPath = "../../../images/default_tv_poster.png";
+                } else {
+                    this.posterPath = x.toString();
+                }
             });
         }
 

@@ -1,0 +1,16 @@
+﻿
+<div >
+
+   <div class="container" id="login">
+        <div class="card card-container">
+          <label>Please Wait...</label>
+
+          <div *ngIf="error">
+            <label>{{error}}</label>
+            
+            <a [routerLink]="['/login']">
+               Back </a>
+          </div>
+        </div><!-- /card-container -->
+    </div><!-- /container -->
+</div>

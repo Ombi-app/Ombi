@@ -8,7 +8,7 @@ import { Subject } from "rxjs/Subject";
 import { AuthService } from "../auth/auth.service";
 import { NotificationService, RadarrService, RequestService } from "../services";
 
-import { FilterType, IFilter, IIssueCategory, IMovieRequests, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
+import { FilterType, IFilter, IIssueCategory, IMovieRequests, IPagenator, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
 
 @Component({
     selector: "movie-requests",
@@ -39,6 +39,7 @@ export class MovieRequestsComponent implements OnInit {
     public order: string = "requestedDate";
     public reverse = false;
 
+    public totalMovies: number = 100;
     private currentlyLoaded: number;
     private amountToLoad: number;
 
@@ -65,8 +66,8 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     public ngOnInit() {
-        this.amountToLoad = 100;
-        this.currentlyLoaded = 100;
+        this.amountToLoad = 10;
+        this.currentlyLoaded = 10;
         this.loadInit();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
         this.filter = {
@@ -74,8 +75,10 @@ export class MovieRequestsComponent implements OnInit {
             statusFilter: FilterType.None};
     }
 
-    public loadMore() {
-        this.loadRequests(this.amountToLoad, this.currentlyLoaded);
+    public paginate(event: IPagenator) {
+        const skipAmount = event.first;
+        
+        this.loadRequests(this.amountToLoad, skipAmount);
     }
 
     public search(text: any) {
@@ -149,7 +152,16 @@ export class MovieRequestsComponent implements OnInit {
         event.preventDefault();
     }
 
-    public clearFilter() {
+    public clearFilter(el: any) {
+        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
+
+        el = el.parentElement;
+        el = el.querySelectorAll("INPUT");
+        for (el of el) {
+            el.checked = false;
+            el.parentElement.classList.remove("active");
+        }
+
         this.filterDisplay = false;
         this.filter.availabilityFilter = FilterType.None;
         this.filter.statusFilter = FilterType.None;
@@ -157,7 +169,8 @@ export class MovieRequestsComponent implements OnInit {
         this.resetSearch();
     }
 
-    public filterAvailability(filter: FilterType) {
+    public filterAvailability(filter: FilterType, el: any) {
+        this.filterActiveStyle(el);
         this.filter.availabilityFilter = filter;
         this.requestService.filterMovies(this.filter)
         .subscribe(x => {
@@ -166,7 +179,8 @@ export class MovieRequestsComponent implements OnInit {
         });
     }
 
-    public filterStatus(filter: FilterType) {
+    public filterStatus(filter: FilterType, el: any) {
+        this.filterActiveStyle(el);
         this.filter.statusFilter = filter;
         this.requestService.filterMovies(this.filter)
         .subscribe(x => {
@@ -190,6 +204,24 @@ export class MovieRequestsComponent implements OnInit {
         this.order = value;
       }
 
+    private filterActiveStyle(el: any) {
+        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
+
+        el = el.parentElement; //gets radio div
+        el = el.parentElement; //gets form group div
+        el = el.parentElement; //gets status filter div
+        el = el.querySelectorAll("INPUT");
+        for (el of el) {
+            if (el.checked) {
+                if (!el.parentElement.classList.contains("active")) {
+                    el.parentElement.className += " active";
+                }
+            } else {
+                el.parentElement.classList.remove("active");
+            }
+        }
+    }
+
     private loadRequests(amountToLoad: number, currentlyLoaded: number) {
         this.requestService.getMovieRequests(amountToLoad, currentlyLoaded + 1)
             .subscribe(x => {
@@ -197,7 +229,7 @@ export class MovieRequestsComponent implements OnInit {
                 if(!this.movieRequests) {
                     this.movieRequests = [];
                 }
-                this.movieRequests.push.apply(this.movieRequests, x);
+                this.movieRequests = x;
                 this.currentlyLoaded = currentlyLoaded + amountToLoad;
             });
     }
@@ -238,12 +270,14 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     private loadInit() {
+        this.requestService.getTotalMovies().subscribe(x => this.totalMovies = x);
         this.requestService.getMovieRequests(this.amountToLoad, 0)
             .subscribe(x => {
                 this.movieRequests = x;
 
                 this.movieRequests.forEach((req) => {
-                    this.movieRequests.forEach((req) => this.setBackground(req));
+                     this.setBackground(req);
+                     this.setPoster(req);
                 });
                 this.radarrService.getQualityProfilesFromSettings().subscribe(c => {
                     this.radarrProfiles = c;
@@ -296,9 +330,18 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     private setOverride(req: IMovieRequests): void {
+        this.setPoster(req);
         this.setBackground(req);
         this.setQualityOverrides(req);
         this.setRootFolderOverrides(req);
+    }
+
+    private setPoster(req: IMovieRequests): void {
+        if (req.posterPath === null) {
+            req.posterPath = "../../../images/default_movie_poster.png";
+        } else {
+            req.posterPath = "https://image.tmdb.org/t/p/w300/" + req.posterPath;
+        }
     }
 
     private setBackground(req: IMovieRequests): void {

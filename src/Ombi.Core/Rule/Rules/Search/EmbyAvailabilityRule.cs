@@ -44,6 +44,7 @@ namespace Ombi.Core.Rule.Rules.Search
             if (item != null)
             {
                 obj.Available = true;
+                obj.EmbyUrl = item.Url;
 
                 if (obj.Type == RequestType.TvShow)
                 {

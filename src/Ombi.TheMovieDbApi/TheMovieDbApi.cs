@@ -42,7 +42,18 @@ namespace Ombi.Api.TheMovieDb
 
             return await Api.Request<FindResult>(request);
         }
-        
+
+        public async Task<List<TvSearchResult>> SearchTv(string searchTerm)
+        {
+            var request = new Request($"search/tv", BaseUri, HttpMethod.Get);
+            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+            request.FullUri = request.FullUri.AddQueryParameter("query", searchTerm);
+            AddRetry(request);
+
+            var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
+            return Mapper.Map<List<TvSearchResult>>(result.results);
+        }
+
         public async Task<TvExternals> GetTvExternals(int theMovieDbId)
         {
             var request = new Request($"/tv/{theMovieDbId}/external_ids", BaseUri, HttpMethod.Get);

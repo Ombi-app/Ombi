@@ -541,6 +541,10 @@ $border-radius: 10px;
     cursor: pointer;
 }
 
+.table-usermanagement {
+    margin-top: 20px;
+}
+
 .input-group-sm {
     padding-top: 2px;
     padding-bottom: 2px;
@@ -955,3 +959,7 @@ a > h4:hover {
     width: 94%;
 }
 
+.ui-state-active {
+    background-color: $primary-colour-outline $i;
+    color: black $i;
+}

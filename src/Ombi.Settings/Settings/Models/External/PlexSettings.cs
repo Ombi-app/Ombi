@@ -7,7 +7,6 @@ namespace Ombi.Core.Settings.Models.External
     {
         public bool Enable { get; set; }
         public List<PlexServers> Servers { get; set; }
-
     }
 
     public class PlexServers : ExternalSettings

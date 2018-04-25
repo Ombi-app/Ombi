@@ -134,7 +134,7 @@ namespace Ombi
             {
                 x.UseSQLiteStorage(sqliteStorage);
                 x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
-                x.UseConsole();
+                //x.UseConsole();
             });
 
 
@@ -173,25 +173,21 @@ namespace Ombi
                 settings.ApiKey = Guid.NewGuid().ToString("N");
                 ombiService.SaveSettings(settings);
             }
+
+            // Check if it's in the startup args
+            var appConfig = serviceProvider.GetService<IApplicationConfigRepository>();
+            var baseUrl = appConfig.Get(ConfigurationTypes.BaseUrl).Result;
+            if (baseUrl != null)
+            {
+                if (baseUrl.Value.HasValue())
+                {
+                    settings.BaseUrl = baseUrl.Value;
+                    ombiService.SaveSettings(settings);
+                }
+            }
             if (settings.BaseUrl.HasValue())
             {
                 app.UsePathBase(settings.BaseUrl);
-            }
-            else
-            {
-                // Check if it's in the startup args
-                var appConfig = serviceProvider.GetService<IApplicationConfigRepository>();
-                var baseUrl = appConfig.Get(ConfigurationTypes.BaseUrl).Result;
-                if (baseUrl != null)
-                {
-                    if (baseUrl.Value.HasValue())
-                    {
-                        settings.BaseUrl = baseUrl.Value;
-                        ombiService.SaveSettings(settings);
-
-                        app.UsePathBase(settings.BaseUrl);
-                    }
-                }
             }
 
             app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1, ServerTimeout = TimeSpan.FromDays(1), ShutdownTimeout = TimeSpan.FromDays(1)});
@@ -223,7 +219,6 @@ namespace Ombi
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                c.ShowJsonEditor();
             });
             
             app.UseMvc(routes =>

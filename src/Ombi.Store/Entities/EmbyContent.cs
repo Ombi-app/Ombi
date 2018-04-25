@@ -48,6 +48,7 @@ namespace Ombi.Store.Entities
         public string TheMovieDbId { get; set; }
         public string TvDbId { get; set; }
 
+        public string Url { get; set; }
 
         public ICollection<EmbyEpisode> Episodes { get; set; }
     }

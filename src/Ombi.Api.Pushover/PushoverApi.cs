@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Ombi.Api.Pushover.Models;
@@ -17,7 +18,7 @@ namespace Ombi.Api.Pushover
 
         public async Task<PushoverResponse> PushAsync(string accessToken, string message, string userToken)
         {
-            var request = new Request($"messages.json?token={accessToken}&user={userToken}&message={message}", PushoverEndpoint, HttpMethod.Post);
+            var request = new Request($"messages.json?token={accessToken}&user={userToken}&message={WebUtility.HtmlEncode(message)}", PushoverEndpoint, HttpMethod.Post);
             
             var result = await _api.Request<PushoverResponse>(request);
             return result;

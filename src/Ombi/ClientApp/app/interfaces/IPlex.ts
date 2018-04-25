@@ -2,6 +2,10 @@
     user: IPlexUser;
 }
 
+export interface IPlexOAuthAccessToken {
+    accessToken: string;
+}
+
 export interface IPlexUser {
     email: string;
     uuid: string;

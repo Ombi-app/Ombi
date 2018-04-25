@@ -10,6 +10,7 @@ namespace Ombi.Core.Models.Search
         public bool Requested { get; set; }
         public bool Available { get; set; }
         public string PlexUrl { get; set; }
+        public string EmbyUrl { get; set; }
         public string Quality { get; set; }
         public abstract RequestType Type { get; }
 

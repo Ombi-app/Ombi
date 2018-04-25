@@ -56,7 +56,7 @@
 <br />
 
 
-<div infinite-scroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="100" (scrolled)="loadMore()">
+<div>
 
 
     <div *ngFor="let request of movieRequests | orderBy: order : reverse : 'case-insensitive'">
@@ -67,7 +67,7 @@
             <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
             <div class="col-sm-2 small-padding">
 
-                <img class="img-responsive poster" src="https://image.tmdb.org/t/p/w300/{{request.posterPath}}" alt="poster">
+                <img class="img-responsive poster" src="{{request.posterPath}}" alt="poster">
 
             </div>
 
@@ -212,6 +212,8 @@
 
 
     </div>
+    
+    <p-paginator [rows]="10" [totalRecords]="totalMovies" (onPageChange)="paginate($event)"></p-paginator>
 </div>
 
 
@@ -222,42 +224,43 @@
 <p-sidebar [(visible)]="filterDisplay" styleClass="ui-sidebar-md side-back side-small">
     <h3>{{ 'Requests.Filter' | translate }}</h3>
     <hr>
+    <div>
+        <h4>{{ 'Filter.FilterHeaderAvailability' | translate }}</h4>
+        <div class="form-group">
+            <div class="radio">
+                <input type="radio" id="Available" name="Availability" (click)="filterAvailability(filterType.Available, $event)">
+                <label for="Available">{{ 'Common.Available' | translate }}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="radio">
+                <input type="radio" id="notAvailable" name="Availability" (click)="filterAvailability(filterType.NotAvailable, $event)">
+                <label for="notAvailable">{{ 'Common.NotAvailable' | translate }}</label>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h4>{{ 'Filter.FilterHeaderRequestStatus' | translate }}</h4>
+        <div class="form-group">
+            <div class="radio">
+                <input type="radio" id="approved" name="Status" (click)="filterStatus(filterType.Approved, $event)">
+                <label for="approved">{{ 'Filter.Approved' | translate }}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="radio">
+                <input type="radio" id="Processing" name="Status" (click)="filterStatus(filterType.Processing, $event)">
+                <label for="Processing">{{ 'Common.ProcessingRequest' | translate }}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="radio">
+                <input type="radio" id="pendingApproval" name="Status" (click)="filterStatus(filterType.PendingApproval, $event)">
+                <label for="pendingApproval">{{ 'Filter.PendingApproval' | translate }}</label>
+            </div>
+        </div>
+    </div>
 
-    <h4>{{ 'Filter.FilterHeaderAvailability' | translate }}</h4>
-    <div class="form-group">
-        <div class="radio">
-            <input type="radio" id="Available" name="Availability" (click)="filterAvailability(filterType.Available)">
-            <label for="Available">{{ 'Common.Available' | translate }}</label>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="radio">
-            <input type="radio" id="notAvailable" name="Availability" (click)="filterAvailability(filterType.NotAvailable)">
-            <label for="notAvailable">{{ 'Common.NotAvailable' | translate }}</label>
-        </div>
-    </div>
-
-    <h4>{{ 'Filter.FilterHeaderRequestStatus' | translate }}</h4>
-    <div class="form-group">
-        <div class="radio">
-            <input type="radio" id="approved" name="Status" (click)="filterStatus(filterType.Approved)">
-            <label for="approved">{{ 'Filter.Approved' | translate }}</label>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="radio">
-            <input type="radio" id="Processing" name="Status" (click)="filterStatus(filterType.Processing)">
-            <label for="Processing">{{ 'Common.ProcessingRequest' | translate }}</label>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="radio">
-            <input type="radio" id="pendingApproval" name="Status" (click)="filterStatus(filterType.PendingApproval, $event)">
-            <label for="pendingApproval">{{ 'Filter.PendingApproval' | translate }}</label>
-        </div>
-    </div>
-
-
-    <button class="btn btn-sm btn-primary-outline" (click)="clearFilter()">
+    <button class="btn btn-sm btn-primary-outline" (click)="clearFilter($event)">
         <i class="fa fa-filter"></i> {{ 'Filter.ClearFilter' | translate }}</button>
 </p-sidebar>

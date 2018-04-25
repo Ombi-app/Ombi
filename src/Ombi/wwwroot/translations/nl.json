@@ -76,6 +76,7 @@
     "DigitalDate": "Digital Release: {{date}}",
     "TheatricalRelease": "Theatrical Release: {{date}}",
     "ViewOnPlex": "Bekijk op Plex",
+    "ViewOnEmby": "Bekijk op Emby",
     "RequestAdded": "Aanvraag voor {{title}} is succesvol toegevoegd",
     "Similar": "Similar",
     "Movies": {

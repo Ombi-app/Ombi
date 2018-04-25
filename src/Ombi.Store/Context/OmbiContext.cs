@@ -123,7 +123,23 @@ namespace Ombi.Store.Context
                 {
                     NormalizedName = OmbiRoles.RecievesNewsletter.ToUpper()
                 });
+                SaveChanges();
             }
+
+            // Make sure we have the API User
+            var apiUserExists = Users.Any(x => x.UserName.Equals("Api", StringComparison.CurrentCultureIgnoreCase));
+            if (!apiUserExists)
+            {
+                Users.Add(new OmbiUser
+                {
+                    UserName = "Api",
+                    UserType = UserType.SystemUser,
+                    NormalizedUserName = "API",
+
+                });
+                SaveChanges();
+            }
+
             //Check if templates exist
             var templates = NotificationTemplates.ToList();
 

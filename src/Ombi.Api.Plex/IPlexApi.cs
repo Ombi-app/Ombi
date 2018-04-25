@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Ombi.Api.Plex.Models;
 using Ombi.Api.Plex.Models.Friends;
+using Ombi.Api.Plex.Models.OAuth;
 using Ombi.Api.Plex.Models.Server;
 using Ombi.Api.Plex.Models.Status;
 
@@ -20,5 +22,8 @@ namespace Ombi.Api.Plex
         Task<PlexFriends> GetUsers(string authToken);
         Task<PlexAccount> GetAccount(string authToken);
         Task<PlexMetadata> GetRecentlyAdded(string authToken, string uri, string sectionId);
+        Task<OAuthPin> CreatePin();
+        Task<OAuthPin> GetPin(int pinId);
+        Uri GetOAuthUrl(int pinId, string code, string applicationUrl, bool wizard);
     }
 }
