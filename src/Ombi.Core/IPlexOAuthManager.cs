@@ -9,7 +9,7 @@ namespace Ombi.Core.Authentication
     {
         Task<string> GetAccessTokenFromPin(int pinId);
         Task<OAuthPin> RequestPin();
-        Task<Uri> GetOAuthUrl(int pinId, string code);
+        Task<Uri> GetOAuthUrl(int pinId, string code, string websiteAddress = null);
         Uri GetWizardOAuthUrl(int pinId, string code, string websiteAddress);
         Task<PlexAccount> GetAccount(string accessToken);
     }

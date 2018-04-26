@@ -17,5 +17,6 @@ namespace Ombi.Core.Engine.Interfaces
 
         Task<RequestEngineResult> MarkUnavailable(int modelId);
         Task<RequestEngineResult> MarkAvailable(int modelId);
+        Task<int> GetTotal();
     }
 }

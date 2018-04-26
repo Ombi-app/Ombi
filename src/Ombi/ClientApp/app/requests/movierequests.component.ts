@@ -8,7 +8,7 @@ import { Subject } from "rxjs/Subject";
 import { AuthService } from "../auth/auth.service";
 import { NotificationService, RadarrService, RequestService } from "../services";
 
-import { FilterType, IFilter, IIssueCategory, IMovieRequests, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
+import { FilterType, IFilter, IIssueCategory, IMovieRequests, IPagenator, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
 
 @Component({
     selector: "movie-requests",
@@ -39,6 +39,7 @@ export class MovieRequestsComponent implements OnInit {
     public order: string = "requestedDate";
     public reverse = false;
 
+    public totalMovies: number = 100;
     private currentlyLoaded: number;
     private amountToLoad: number;
 
@@ -65,8 +66,8 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     public ngOnInit() {
-        this.amountToLoad = 100;
-        this.currentlyLoaded = 100;
+        this.amountToLoad = 10;
+        this.currentlyLoaded = 10;
         this.loadInit();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
         this.filter = {
@@ -74,8 +75,10 @@ export class MovieRequestsComponent implements OnInit {
             statusFilter: FilterType.None};
     }
 
-    public loadMore() {
-        this.loadRequests(this.amountToLoad, this.currentlyLoaded);
+    public paginate(event: IPagenator) {
+        const skipAmount = event.first;
+        
+        this.loadRequests(this.amountToLoad, skipAmount);
     }
 
     public search(text: any) {
@@ -226,7 +229,7 @@ export class MovieRequestsComponent implements OnInit {
                 if(!this.movieRequests) {
                     this.movieRequests = [];
                 }
-                this.movieRequests.push.apply(this.movieRequests, x);
+                this.movieRequests = x;
                 this.currentlyLoaded = currentlyLoaded + amountToLoad;
             });
     }
@@ -267,6 +270,7 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     private loadInit() {
+        this.requestService.getTotalMovies().subscribe(x => this.totalMovies = x);
         this.requestService.getMovieRequests(this.amountToLoad, 0)
             .subscribe(x => {
                 this.movieRequests = x;

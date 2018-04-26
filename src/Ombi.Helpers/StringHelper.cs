@@ -65,5 +65,15 @@ namespace Ombi.Helpers
             securePassword.MakeReadOnly();
             return securePassword;
         }
+
+        public static int IntParseLinq(string stringIn)
+        {
+            if (int.TryParse(stringIn, out var result))
+            {
+                return result;
+            }
+
+            return -1;
+        }
     }
 }

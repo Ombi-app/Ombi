@@ -959,3 +959,7 @@ a > h4:hover {
     width: 94%;
 }
 
+.ui-state-active {
+    background-color: $primary-colour-outline $i;
+    color: black $i;
+}

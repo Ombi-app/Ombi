@@ -24,6 +24,7 @@ export class AuthenticationComponent implements OnInit {
                 requiredLowercase: [x.requiredLowercase],
                 requireNonAlphanumeric: [x.requireNonAlphanumeric],
                 requireUppercase: [x.requireUppercase],
+                enableOAuth: [x.enableOAuth],
             });
         });
     }

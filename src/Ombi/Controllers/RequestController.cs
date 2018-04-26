@@ -38,6 +38,15 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Gets the total amount of movie requests.
+        /// </summary>
+        [HttpGet("movie/total")]
+        public async Task<int> GetTotalMovies()
+        {
+            return await MovieRequestEngine.GetTotal();
+        }
+
+        /// <summary>
         /// Gets all movie requests.
         /// </summary>
         [HttpGet("movie")]
@@ -144,6 +153,15 @@ namespace Ombi.Controllers
         public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> GetTvRequestsTree(int count, int position)
         {
             return await TvRequestEngine.GetRequestsTreeNode(count, position);
+        }
+
+        /// <summary>
+        /// Gets the total amount of TV requests.
+        /// </summary>
+        [HttpGet("tv/total")]
+        public async Task<int> GetTotalTV()
+        {
+            return await TvRequestEngine.GetTotal();
         }
 
         /// <summary>
