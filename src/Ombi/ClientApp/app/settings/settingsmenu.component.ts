@@ -9,7 +9,7 @@ export class SettingsMenuComponent {
     }
 
     public ngOnInit() {
-        var element = document.getElementById("settings");
+        const element = document.getElementById("settings");
         if (element != null) {
             element.classList.add("active");
         }

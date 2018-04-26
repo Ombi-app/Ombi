@@ -74,9 +74,9 @@ export class AppComponent implements OnInit {
     }
 
     public roleClass() {
-        if (this.user.roles.some(r => r === 'Admin')) {
+        if (this.user.roles.some(r => r === "Admin")) {
             return "adminUser";
-        } else if (this.user.roles.some(r => r === 'PowerUser')) {
+        } else if (this.user.roles.some(r => r === "PowerUser")) {
             return "powerUser";
         }
         return "user";
