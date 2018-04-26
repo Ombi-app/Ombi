@@ -8,9 +8,11 @@
             <span class="label label-info">{{IssueStatus[issue.status]}}</span>
             <span class="label label-success">{{issue.issueCategory.value}}</span>
 
-            <h3 *ngIf="issue.userReported?.alias">{{'Issues.ReportedBy' | translate}}: {{issue.userReported.alias}}</h3>
-            <h3 *ngIf="!issue.userReported?.alias">{{'Issues.ReportedBy' | translate}}: {{issue.userReported.userName}}</h3>
-            <h3 *ngIf="issue.subject">{{'Issues.Subject' | translate}}: {{issue.subject}}</h3>
+            <span class="reported-user">
+                <h3 *ngIf="issue.userReported?.alias">{{'Issues.ReportedBy' | translate}}: {{issue.userReported.alias}}</h3>
+                <h3 *ngIf="!issue.userReported?.alias">{{'Issues.ReportedBy' | translate}}: {{issue.userReported.userName}}</h3>
+            </span>
+            <span class="issue-subject"><h3 *ngIf="issue.subject">{{'Issues.Subject' | translate}}: {{issue.subject}}</h3></span>
             <br>
             <div class="form-group">
                 <label for="description" class="control-label" [translate]="'Issues.Description'"></label>
