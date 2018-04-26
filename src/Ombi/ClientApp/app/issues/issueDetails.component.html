@@ -5,7 +5,12 @@
         <h1>{{issue.title}} </h1>
         <div class="col-md-6">
             <img class="img-responsive poster" src="{{posterPath}}" alt="poster">
-            <span class="label label-info">{{IssueStatus[issue.status]}}</span>
+
+            <div class="issue-status">
+                <span *ngIf="issue.status === IssueStatus.Pending" id="pendingLabel" class="label label-warning">{{IssueStatus[issue.status]}}</span>
+                <span *ngIf="issue.status === IssueStatus.InProgress" id="inprogressLabel" class="label label-info">{{IssueStatus[issue.status]}}</span>
+                <span *ngIf="issue.status === IssueStatus.Resolved" id="resolvedLabel" class="label label-success">{{IssueStatus[issue.status]}}</span>
+            </div>
             <span class="label label-success">{{issue.issueCategory.value}}</span>
 
             <span class="reported-user">
