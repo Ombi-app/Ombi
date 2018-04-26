@@ -55,15 +55,24 @@ namespace Ombi.Core.Authentication
             return await _api.GetAccount(accessToken);
         }
 
-        public async Task<Uri> GetOAuthUrl(int pinId, string code)
+        public async Task<Uri> GetOAuthUrl(int pinId, string code, string websiteAddress = null)
         {
-            var settings = await _customizationSettingsService.GetSettingsAsync();
-            if (settings.ApplicationUrl.IsNullOrEmpty())
+            Uri url;
+            if (websiteAddress.IsNullOrEmpty())
             {
-                return null;
+                var settings = await _customizationSettingsService.GetSettingsAsync();
+                if (settings.ApplicationUrl.IsNullOrEmpty())
+                {
+                    return null;
+                }
+
+                url = _api.GetOAuthUrl(pinId, code, settings.ApplicationUrl, false);
+            }
+            else
+            {
+                url = _api.GetOAuthUrl(pinId, code, websiteAddress, false);
             }
 
-            var url = _api.GetOAuthUrl(pinId, code, settings.ApplicationUrl, false);
             return url;
         }
 

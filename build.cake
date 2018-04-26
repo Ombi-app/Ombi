@@ -1,7 +1,7 @@
 
 #tool "nuget:?package=GitVersion.CommandLine"
 #addin "Cake.Gulp"
-#addin "Cake.Npm"
+#addin "nuget:?package=Cake.Npm&version=0.13.0"
 #addin "SharpZipLib"
 #addin nuget:?package=Cake.Compression&version=0.1.4
 #addin "Cake.Incubator"

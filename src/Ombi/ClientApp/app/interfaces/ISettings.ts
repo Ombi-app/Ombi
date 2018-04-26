@@ -145,6 +145,7 @@ export interface IAuthenticationSettings extends ISettings {
   requiredLowercase: boolean;
   requireNonAlphanumeric: boolean;
   requireUppercase: boolean;
+  enableOAuth: boolean;
 }
 
 export interface IUserManagementSettings extends ISettings {

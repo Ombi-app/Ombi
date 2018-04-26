@@ -130,7 +130,7 @@ namespace Ombi.Core.Engine
             var newRequest = tvBuilder.CreateNewRequest(tv);
             return await AddRequest(newRequest.NewRequest);
         }
-        
+
         public async Task<IEnumerable<TvRequests>> GetRequests(int count, int position)
         {
             var shouldHide = await HideFromOtherUsers();
@@ -280,7 +280,7 @@ namespace Ombi.Core.Engine
             results.Background = PosterPathHelper.FixBackgroundPath(request.Background);
             results.QualityOverride = request.QualityOverride;
             results.RootFolder = request.RootFolder;
-            
+
             await TvRepository.Update(results);
             return results;
         }
@@ -430,6 +430,19 @@ namespace Ombi.Core.Engine
                 Result = true,
                 Message = "Request is now available",
             };
+        }
+
+        public async Task<int> GetTotal()
+        {
+            var shouldHide = await HideFromOtherUsers();
+            if (shouldHide.Hide)
+            {
+                return await TvRepository.Get(shouldHide.UserId).CountAsync();
+            }
+            else
+            {
+                return await TvRepository.Get().CountAsync();
+            }
         }
 
         private async Task<RequestEngineResult> AddExistingRequest(ChildRequests newRequest, TvRequests existingRequest)
