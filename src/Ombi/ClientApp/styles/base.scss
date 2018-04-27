@@ -967,3 +967,10 @@ a > h4:hover {
 #themeContent {
     font-family: monospace;
 }
+
+.reported-by,
+.reported-user,
+.subject-category,
+.subject {
+    display: inline-block;
+}
