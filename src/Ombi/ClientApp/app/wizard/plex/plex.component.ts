@@ -32,25 +32,7 @@ export class PlexComponent {
                     usePlexAdminAccount: true,
                   }).subscribe(y => {
                     if (y) {
-                        this.auth.login({ username: this.login, password: this.password, rememberMe: false, usePlexOAuth: false }).subscribe(c => {
-                            localStorage.setItem("id_token", c.access_token);
-                  
-                            // Mark that we have done the settings now
-                            this.settings.getOmbi().subscribe(ombi => {
-                                ombi.wizard = true;
-
-                                this.settings.saveOmbi(ombi).subscribe(s => {
-                                    this.settings.getUserManagementSettings().subscribe(usr => {
-
-                                        usr.importPlexAdmin = true;
-                                        this.settings.saveUserManagementSettings(usr).subscribe(saved => {
-                                            this.router.navigate(["login"]);
-                                        });
-                                    });
-
-                                });
-                            });
-                    });
+                            this.router.navigate(["login"]);
                     } else {
                       this.notificationService.error("Could not get the Plex Admin Information");
                       return;
