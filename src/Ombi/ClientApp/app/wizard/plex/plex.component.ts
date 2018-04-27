@@ -2,8 +2,7 @@
 import { Router } from "@angular/router";
 
 import { PlexService } from "../../services";
-import { IdentityService, NotificationService, SettingsService } from "../../services";
-import { AuthService } from "./../../auth/auth.service";
+import { IdentityService, NotificationService, } from "../../services";
 
 @Component({
     templateUrl: "./plex.component.html",
@@ -15,9 +14,7 @@ export class PlexComponent {
 
     constructor(private plexService: PlexService, private router: Router,
                 private notificationService: NotificationService,
-                private identityService: IdentityService,
-                private settings: SettingsService,
-                private auth: AuthService) { }
+                private identityService: IdentityService) { }
 
     public requestAuthToken() {
         this.plexService.logIn(this.login, this.password).subscribe(x => {

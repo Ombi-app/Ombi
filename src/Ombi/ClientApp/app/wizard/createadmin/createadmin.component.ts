@@ -1,10 +1,8 @@
 ﻿import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { AuthService } from "../../auth/auth.service";
 import { IdentityService } from "../../services";
 import { NotificationService } from "../../services";
-import { SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./createadmin.component.html",
@@ -15,7 +13,7 @@ export class CreateAdminComponent {
     public password: string;
 
     constructor(private identityService: IdentityService, private notificationService: NotificationService,
-                private router: Router, private auth: AuthService, private settings: SettingsService) { }
+                private router: Router) { }
 
     public createUser() {
         this.identityService.createWizardUser({username: this.username, password: this.password, usePlexAdminAccount: false}).subscribe(x => {
