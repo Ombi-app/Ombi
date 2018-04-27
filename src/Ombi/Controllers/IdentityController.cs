@@ -110,7 +110,7 @@ namespace Ombi.Controllers
         public async Task<bool> CreateWizardUser([FromBody] CreateUserWizardModel user)
         {
             var users = UserManager.Users;
-            if (users.Any())
+            if (users.Any(x => !x.UserName.Equals("api", StringComparison.CurrentCultureIgnoreCase)))
             {
                 // No one should be calling this. Only the wizard
                 return false;
