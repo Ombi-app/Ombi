@@ -2,7 +2,7 @@
 import { Router } from "@angular/router";
 
 import { PlexService } from "../../services";
-import { IdentityService, NotificationService, } from "../../services";
+import { IdentityService, NotificationService } from "../../services";
 
 @Component({
     templateUrl: "./plex.component.html",
