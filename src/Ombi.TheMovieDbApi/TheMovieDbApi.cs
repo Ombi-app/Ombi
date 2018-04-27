@@ -129,6 +129,15 @@ namespace Ombi.Api.TheMovieDb
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
             return Mapper.Map<List<MovieSearchResult>>(result.results);
         }
+
+        public async Task<TvInfo> GetTVInfo(string themoviedbid)
+        {
+            var request = new Request($"/tv/{themoviedbid}", BaseUri, HttpMethod.Get);
+            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+            AddRetry(request);
+
+            return await Api.Request<TvInfo>(request);
+        }
         private static void AddRetry(Request request)
         {
             request.Retry = true;

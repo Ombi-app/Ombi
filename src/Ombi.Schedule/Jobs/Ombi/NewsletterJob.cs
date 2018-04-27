@@ -452,7 +452,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             {
                 // Swallow, couldn't parse the date
             }
-            
+
             AddTitle(sb, $"https://www.imdb.com/title/{info.ImdbId}/", $"{info.Title} {releaseDate}");
             AddParagraph(sb, info.Overview);
 
@@ -529,9 +529,17 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         banner = banner.Replace("http", "https"); // Always use the Https banners
                     }
+                    
+                    var tvInfo = await _movieApi.GetTVInfo(t.TheMovieDbId);
+                    if (tvInfo != null && tvInfo.backdrop_path.HasValue())
+                    {
 
-                    //GET BACKGROUND URL HERE AND CALL 
-                    AddBackgroundInsideTable(sb, $"https://image.tmdb.org/t/p/w1280/");
+                        AddBackgroundInsideTable(sb, $"https://image.tmdb.org/t/p/w500{tvInfo.backdrop_path}"); 
+                    }
+                    else
+                    {
+                        AddBackgroundInsideTable(sb, $"https://image.tmdb.org/t/p/w1280/");
+                    }
                     AddPosterInsideTable(sb, banner);
                     AddMediaServerUrl(sb, t.Url, overlay);
                     AddInfoTable(sb);
@@ -649,8 +657,16 @@ namespace Ombi.Schedule.Jobs.Ombi
                         banner = banner.Replace("http", "https"); // Always use the Https banners
                     }
 
-                    //GET BACKGROUND URL HERE AND CALL 
-                    AddBackgroundInsideTable(sb, $"https://image.tmdb.org/t/p/w1280/");
+                    var tvInfo = await _movieApi.GetTVInfo(t.TheMovieDbId);
+                    if (tvInfo != null && tvInfo.backdrop_path.HasValue())
+                    {
+
+                        AddBackgroundInsideTable(sb, $"https://image.tmdb.org/t/p/w500{tvInfo.backdrop_path}");
+                    }
+                    else
+                    {
+                        AddBackgroundInsideTable(sb, $"https://image.tmdb.org/t/p/w1280/");
+                    }
                     AddPosterInsideTable(sb, banner);
                     AddMediaServerUrl(sb, t.Url, overlay);
                     AddInfoTable(sb);
