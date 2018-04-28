@@ -2,7 +2,7 @@ version: 3.0.{build}
 configuration: Release
 os: Visual Studio 2017
 environment:
-  nodejs_version: "Current"
+  nodejs_version: "9.8.0"
 
 install:
   # Get the latest stable version of Node.js or io.js
