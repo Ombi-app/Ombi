@@ -2,6 +2,15 @@
 
 ## v3.0.3239 (2018-04-26)
 
+### **Fixes**
+
+- Potential fix for #2119. [Jamie Rees]
+
+- Use the Application URL if we have it to fix #2201. [Jamie]
+
+
+## v3.0.3239 (2018-04-26)
+
 ### **New Features**
 
 - Update appveyor.yml. [Jamie]

@@ -48,6 +48,7 @@ namespace Ombi.Controllers
         public IdentityController(OmbiUserManager user, IMapper mapper, RoleManager<IdentityRole> rm, IEmailProvider prov,
             ISettingsService<EmailNotificationSettings> s,
             ISettingsService<CustomizationSettings> c,
+            ISettingsService<OmbiSettings> ombiSettings,
             IWelcomeEmail welcome,
             IMovieRequestRepository m,
             ITvRequestRepository t,
@@ -73,6 +74,7 @@ namespace Ombi.Controllers
             _issuesRepository = issues;
             _requestLogRepository = requestLog;
             _issueCommentsRepository = issueComments;
+            OmbiSettings = ombiSettings;
         }
 
         private OmbiUserManager UserManager { get; }
@@ -81,6 +83,7 @@ namespace Ombi.Controllers
         private IEmailProvider EmailProvider { get; }
         private ISettingsService<EmailNotificationSettings> EmailSettings { get; }
         private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
+        private ISettingsService<OmbiSettings> OmbiSettings { get; }
         private IWelcomeEmail WelcomeEmail { get; }
         private IMovieRequestRepository MovieRepo { get; }
         private ITvRequestRepository TvRepo { get; }
@@ -107,7 +110,7 @@ namespace Ombi.Controllers
         public async Task<bool> CreateWizardUser([FromBody] CreateUserWizardModel user)
         {
             var users = UserManager.Users;
-            if (users.Any())
+            if (users.Any(x => !x.UserName.Equals("api", StringComparison.CurrentCultureIgnoreCase)))
             {
                 // No one should be calling this. Only the wizard
                 return false;
@@ -174,6 +177,12 @@ namespace Ombi.Controllers
             {
                 LogErrors(result);
             }
+
+            // Update the wizard flag
+            var settings = await OmbiSettings.GetSettingsAsync();
+            settings.Wizard = true;
+            await OmbiSettings.SaveSettingsAsync(settings);
+
             return result.Succeeded;
         }
 
