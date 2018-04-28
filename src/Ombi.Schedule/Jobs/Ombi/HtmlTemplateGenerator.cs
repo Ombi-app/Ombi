@@ -10,7 +10,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             sb.AppendFormat("<table class=\"card-bg\" style=\"background-image: url({0}); border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background-color: #1f1f1f; background-position: center; background-size: cover; background-repeat: no-repeat; background-clip: padding-box; border: 2px solid rgba(255,118,27,.4); \">", url);
             sb.Append("<tr>");
             sb.Append("<td>");
-            sb.Append("<table class=\"bg-tint\" style=\"background-color: rgba(0, 0, 0, .6); \">");
+            sb.Append("<table class=\"bg-tint\" style=\"background-color: rgba(0, 0, 0, .6); position: absolute; width: 490px; height: 239px; \">");
         }
 
         protected virtual void AddPosterInsideTable(StringBuilder sb, string url)
@@ -20,12 +20,12 @@ namespace Ombi.Schedule.Jobs.Ombi
             sb.AppendFormat("<table class=\"poster-img\" style=\"background-image: url({0}); border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background-color: transparent; background-position: center; background-size: cover; background-repeat: no-repeat; background-clip: padding-box; border: 1px solid rgba(255,255,255,.1); \">", url);
         }
 
-        protected virtual void AddMediaServerUrl(StringBuilder sb, string mediaurl, string overlay)
+        protected virtual void AddMediaServerUrl(StringBuilder sb, string mediaurl, string url)
         {
             sb.Append("<tr>");
             sb.Append("<td style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-size: 14px; vertical-align: top; \">");
             sb.AppendFormat("<a href=\"{0}\" target=\"_blank\">", mediaurl);
-            sb.AppendFormat("<img class=\"poster-overlay\" src=\"{0}\" width=\"150\" height=\"225\" style=\"border: none;-ms-interpolation-mode: bicubic; max-width: 100%;display: block; visibility: hidden; \">", overlay);
+            sb.AppendFormat("<img class=\"poster-overlay\" src=\"{0}\" width=\"150\" height=\"225\" style=\"border: none;-ms-interpolation-mode: bicubic; max-width: 100%;display: block; visibility: hidden; \">", url);
             sb.Append("</a>");
             sb.Append("</td>");
             sb.Append("</tr>");

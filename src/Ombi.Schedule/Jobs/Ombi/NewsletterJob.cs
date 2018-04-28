@@ -60,7 +60,6 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly ISettingsService<NewsletterSettings> _newsletterSettings;
         private readonly UserManager<OmbiUser> _userManager;
         private readonly ILogger _log;
-        private string overlay;
 
         public async Task Start(NewsletterSettings settings, bool test)
         {
@@ -347,7 +346,6 @@ namespace Ombi.Schedule.Jobs.Ombi
         private async Task ProcessPlexMovies(IQueryable<PlexServerContent> plexContentToSend, StringBuilder sb)
         {
             int count = 0;
-            overlay = "https://www.plex.tv/wp-content/themes/plex/img/plex-logo@2x.png";
             var ordered = plexContentToSend.OrderByDescending(x => x.AddedAt);
             foreach (var content in ordered)
             {
@@ -388,7 +386,6 @@ namespace Ombi.Schedule.Jobs.Ombi
         private async Task ProcessEmbyMovies(IQueryable<EmbyContent> embyContent, StringBuilder sb)
         {
             int count = 0;
-            overlay = "https://emby.media/resources/logowhite_1881.png";
             var ordered = embyContent.OrderByDescending(x => x.AddedAt);
             foreach (var content in ordered)
             {
@@ -440,7 +437,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             AddBackgroundInsideTable(sb, $"https://image.tmdb.org/t/p/w1280/{info.BackdropPath}");
             AddPosterInsideTable(sb, $"https://image.tmdb.org/t/p/original{info.PosterPath}");
 
-            AddMediaServerUrl(sb, mediaurl, overlay);
+            AddMediaServerUrl(sb, mediaurl, $"https://image.tmdb.org/t/p/original{info.PosterPath}");
             AddInfoTable(sb);
 
             var releaseDate = string.Empty;
@@ -485,7 +482,6 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
 
             int count = 0;
-            overlay = "https://www.plex.tv/wp-content/themes/plex/img/plex-logo@2x.png";
             var orderedTv = series.OrderByDescending(x => x.AddedAt);
             foreach (var t in orderedTv)
             {
@@ -541,7 +537,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         AddBackgroundInsideTable(sb, $"https://image.tmdb.org/t/p/w1280/");
                     }
                     AddPosterInsideTable(sb, banner);
-                    AddMediaServerUrl(sb, t.Url, overlay);
+                    AddMediaServerUrl(sb, t.Url, banner);
                     AddInfoTable(sb);
 
                     var title = $"{t.Title} ({t.ReleaseYear})";
@@ -633,7 +629,6 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
 
             int count = 0;
-            overlay = "https://emby.media/resources/logowhite_1881.png";
             var orderedTv = series.OrderByDescending(x => x.AddedAt);
             foreach (var t in orderedTv)
             {
@@ -668,7 +663,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         AddBackgroundInsideTable(sb, $"https://image.tmdb.org/t/p/w1280/");
                     }
                     AddPosterInsideTable(sb, banner);
-                    AddMediaServerUrl(sb, t.Url, overlay);
+                    AddMediaServerUrl(sb, t.Url, banner);
                     AddInfoTable(sb);
                     AddTitle(sb, $"https://www.imdb.com/title/{info.externals.imdb}/", $"{t.Title} ({info.premiered.Remove(4)})");
 
