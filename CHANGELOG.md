@@ -1,6 +1,6 @@
 # Changelog
 
-## (unreleased)
+## v3.0.3268 (2018-04-28)
 
 ### **Fixes**
 
