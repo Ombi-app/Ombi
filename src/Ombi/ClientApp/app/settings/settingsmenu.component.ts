@@ -14,4 +14,12 @@ export class SettingsMenuComponent {
             element.classList.add("active");
         }
     }
+
+    public ngOnDestroy() {
+        const element = document.getElementById("settings");
+        if (element != null) {
+            element.classList.remove("active");
+        }
+    }
+
  }
