@@ -37,6 +37,7 @@ using Ombi.Api.Plex.Models;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -46,13 +47,14 @@ namespace Ombi.Schedule.Jobs.Plex
     public class PlexContentSync : IPlexContentSync
     {
         public PlexContentSync(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentSync> logger, IPlexContentRepository repo,
-            IPlexEpisodeSync epsiodeSync)
+            IPlexEpisodeSync epsiodeSync, IRefreshMetadata metadataRefresh)
         {
             Plex = plex;
             PlexApi = plexApi;
             Logger = logger;
             Repo = repo;
             EpisodeSync = epsiodeSync;
+            Metadata = metadataRefresh;
             plex.ClearCache();
         }
 
@@ -61,6 +63,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private ILogger<PlexContentSync> Logger { get; }
         private IPlexContentRepository Repo { get; }
         private IPlexEpisodeSync EpisodeSync { get; }
+        private IRefreshMetadata Metadata { get; }
 
         public async Task CacheContent(bool recentlyAddedSearch = false)
         {
@@ -87,6 +90,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
             Logger.LogInformation("Starting EP Cacher");
             BackgroundJob.Enqueue(() => EpisodeSync.Start());
+            BackgroundJob.Enqueue(() => Metadata.Start());
         }
 
         private async Task StartTheCache(PlexSettings plexSettings, bool recentlyAddedSearch)
