@@ -98,14 +98,14 @@ namespace Ombi.Schedule.Jobs.Ombi
                     addedLog.Where(x => x.Type == RecentlyAddedType.Emby && x.ContentType == ContentType.Episode);
 
                 // Filter out the ones that we haven't sent yet
-                var plexContentMoviesToSend = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && !addedPlexMovieLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId)));
-                var embyContentMoviesToSend = embyContent.Where(x => x.Type == EmbyMediaType.Movie && !addedEmbyMoviesLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId)));
+                var plexContentMoviesToSend = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && x.HasTheMovieDb && !addedPlexMovieLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId)));
+                var embyContentMoviesToSend = embyContent.Where(x => x.Type == EmbyMediaType.Movie && x.HasTheMovieDb && !addedEmbyMoviesLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId)));
                 _log.LogInformation("Plex Movies to send: {0}", plexContentMoviesToSend.Count());
                 _log.LogInformation("Emby Movies to send: {0}", embyContentMoviesToSend.Count());
 
                 var plexEpisodesToSend =
-                    FilterPlexEpisodes(_plex.GetAllEpisodes().Include(x => x.Series).AsNoTracking(), addedPlexEpisodesLogIds);
-                var embyEpisodesToSend = FilterEmbyEpisodes(_emby.GetAllEpisodes().Include(x => x.Series).AsNoTracking(),
+                    FilterPlexEpisodes(_plex.GetAllEpisodes().Include(x => x.Series).Where(x => x.Series.HasTvDb).AsNoTracking(), addedPlexEpisodesLogIds);
+                var embyEpisodesToSend = FilterEmbyEpisodes(_emby.GetAllEpisodes().Include(x => x.Series).Where(x => x.Series.HasTvDb).AsNoTracking(),
                     addedEmbyEpisodesLogIds);
 
                 _log.LogInformation("Plex Episodes to send: {0}", plexEpisodesToSend.Count());
@@ -114,7 +114,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 if (test)
                 {
                     var plexm = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie).OrderByDescending(x => x.AddedAt).Take(10);
-                    var embym = embyContent.Where(x => x.Type == EmbyMediaType.Movie).OrderByDescending(x => x.AddedAt).Take(10);
+                    var embym = embyContent.Where(x => x.Type == EmbyMediaType.Movie ).OrderByDescending(x => x.AddedAt).Take(10);
                     var plext = _plex.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.Series.AddedAt).Take(10).ToHashSet();
                     var embyt = _emby.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.AddedAt).Take(10).ToHashSet();
                     body = await BuildHtml(plexm, embym, plext, embyt, settings);

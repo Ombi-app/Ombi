@@ -51,6 +51,15 @@ namespace Ombi.Store.Entities
         public string Url { get; set; }
 
         public ICollection<EmbyEpisode> Episodes { get; set; }
+
+        [NotMapped]
+        public bool HasImdb => !string.IsNullOrEmpty(ImdbId);
+
+        [NotMapped]
+        public bool HasTvDb => !string.IsNullOrEmpty(TvDbId);
+
+        [NotMapped]
+        public bool HasTheMovieDb => !string.IsNullOrEmpty(TheMovieDbId);
     }
 
     public enum EmbyMediaType
