@@ -41,14 +41,6 @@
                         <small *ngIf="form.get('automaticUpdater').hasError('required')" class="error-text">The Automatic Update is required</small>
                         <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('automaticUpdater')?.value)">Test</button>
                 </div>
-
-
-
-                <div class="form-group">
-                    <div>
-                        <button type="submit" [disabled]="form.invalid" class="btn btn-primary-outline">Submit</button>
-                    </div>
-                </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
@@ -92,8 +84,12 @@
                             <small *ngIf="form.get('newsletter').hasError('required')" class="error-text">The Newsletter is required</small>
                             <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('newsletter')?.value)">Test</button>
                     </div>
-
             </div>
+            <div class="form-group">
+                    <div>
+                        <button type="submit" [disabled]="form.invalid" class="btn btn-primary-outline">Submit</button>
+                    </div>
+                </div>
         </form>
     </fieldset>
 </div>
