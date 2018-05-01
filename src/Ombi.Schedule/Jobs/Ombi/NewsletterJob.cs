@@ -451,7 +451,14 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
 
             AddTitle(sb, $"https://www.imdb.com/title/{info.ImdbId}/", $"{info.Title} {releaseDate}");
-            AddParagraph(sb, info.Overview);
+
+            var summary = info.Overview;
+            if (summary.Length > 280)
+            {
+                summary = summary.Remove(280);
+                summary = summary + "...</p>";
+            }
+            AddParagraph(sb, summary);
 
             if (info.Genres.Any())
             {
