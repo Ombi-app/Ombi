@@ -31,6 +31,7 @@ namespace Ombi.Schedule.Jobs
     public enum PlexMediaType
     {
         Movie = 0,
-        Show = 1
+        Show = 1,
+        Episode = 2,
     }
 }
