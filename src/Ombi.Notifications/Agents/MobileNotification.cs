@@ -39,7 +39,7 @@ namespace Ombi.Notifications.Agents
 
         protected override bool ValidateConfiguration(MobileNotificationSettings settings)
         {
-            return false;
+            return true;
         }
 
         protected override async Task NewRequest(NotificationOptions model, MobileNotificationSettings settings)
@@ -211,7 +211,7 @@ namespace Ombi.Notifications.Agents
 
         protected async Task Send(List<string> playerIds, NotificationMessage model, MobileNotificationSettings settings)
         {
-            if (!playerIds.Any())
+            if (playerIds == null || !playerIds.Any())
             {
                 return;
             }
