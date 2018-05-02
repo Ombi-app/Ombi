@@ -37,7 +37,7 @@ export class MovieRequestsComponent implements OnInit {
     public filterType = FilterType;
 
     public order: string = "requestedDate";
-    public reverse = false;
+    public reverse = true;
 
     public totalMovies: number = 100;
     private currentlyLoaded: number;
@@ -72,7 +72,10 @@ export class MovieRequestsComponent implements OnInit {
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
         this.filter = {
             availabilityFilter: FilterType.None,
-            statusFilter: FilterType.None};
+            statusFilter: FilterType.None,
+            count: this.amountToLoad,
+            position: 0,        
+        };
     }
 
     public paginate(event: IPagenator) {
@@ -174,8 +177,9 @@ export class MovieRequestsComponent implements OnInit {
         this.filter.availabilityFilter = filter;
         this.requestService.filterMovies(this.filter)
         .subscribe(x => {
-            this.setOverrides(x);
-            this.movieRequests = x;
+            this.totalMovies = x.total;
+            this.setOverrides(x.collection);
+            this.movieRequests = x.collection;
         });
     }
 
@@ -184,8 +188,9 @@ export class MovieRequestsComponent implements OnInit {
         this.filter.statusFilter = filter;
         this.requestService.filterMovies(this.filter)
         .subscribe(x => {
-            this.setOverrides(x);
-            this.movieRequests = x;
+            this.totalMovies = x.total;
+            this.setOverrides(x.collection);
+            this.movieRequests = x.collection;
         });
     }
 
@@ -223,7 +228,8 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     private loadRequests(amountToLoad: number, currentlyLoaded: number) {
-        this.requestService.getMovieRequests(amountToLoad, currentlyLoaded + 1)
+        if(this.filter.availabilityFilter === FilterType.None && this.filter.statusFilter === FilterType.None) {
+            this.requestService.getMovieRequests(amountToLoad, currentlyLoaded + 1)
             .subscribe(x => {
                 this.setOverrides(x);
                 if(!this.movieRequests) {
@@ -232,6 +238,16 @@ export class MovieRequestsComponent implements OnInit {
                 this.movieRequests = x;
                 this.currentlyLoaded = currentlyLoaded + amountToLoad;
             });
+        } else {
+            this.filter.position = currentlyLoaded;
+            this.requestService.filterMovies(this.filter)
+                .subscribe(x => {
+                    this.setOverrides(x.collection);
+                    this.totalMovies = x.total;
+                    this.movieRequests = x.collection;
+                    this.currentlyLoaded = currentlyLoaded + amountToLoad;
+                });                
+        }
     }
 
     private updateRequest(request: IMovieRequests) {
