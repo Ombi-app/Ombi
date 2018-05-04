@@ -547,7 +547,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     AddMediaServerUrl(sb, t.Url, banner);
                     AddInfoTable(sb);
 
-                    var title = $"{t.Title} ({t.ReleaseYear})";
+                    var title = $"{t.Title} ({info.premiered.Remove(4)})";
                     AddTitle(sb, $"https://www.imdb.com/title/{info.externals.imdb}/", title);
 
                     // Group by the season number
