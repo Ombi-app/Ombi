@@ -547,7 +547,14 @@ namespace Ombi.Schedule.Jobs.Ombi
                     AddMediaServerUrl(sb, t.Url, banner);
                     AddInfoTable(sb);
 
-                    var title = $"{t.Title} ({info.premiered.Remove(4)})";
+                    var title = "";
+                    if (!String.IsNullOrEmpty(info.premiered) && info.premiered.Length > 4)
+                    {
+                        title = $"{t.Title} ({info.premiered.Remove(4)})";
+                    } else
+                    {
+                        title = $"{t.Title}";
+                    }
                     AddTitle(sb, $"https://www.imdb.com/title/{info.externals.imdb}/", title);
 
                     // Group by the season number
@@ -702,7 +709,17 @@ namespace Ombi.Schedule.Jobs.Ombi
                     AddPosterInsideTable(sb, banner);
                     AddMediaServerUrl(sb, t.Url, banner);
                     AddInfoTable(sb);
-                    AddTitle(sb, $"https://www.imdb.com/title/{info.externals.imdb}/", $"{t.Title} ({info.premiered.Remove(4)})");
+
+                    var title = "";
+                    if (!String.IsNullOrEmpty(info.premiered) && info.premiered.Length > 4)
+                    {
+                        title = $"{t.Title} ({info.premiered.Remove(4)})";
+                    }
+                    else
+                    {
+                        title = $"{t.Title}";
+                    }
+                    AddTitle(sb, $"https://www.imdb.com/title/{info.externals.imdb}/", title);
 
                     // Group by the season number
                     var results = t.Episodes?.GroupBy(p => p.SeasonNumber,
