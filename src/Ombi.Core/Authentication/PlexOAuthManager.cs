@@ -57,21 +57,8 @@ namespace Ombi.Core.Authentication
 
         public async Task<Uri> GetOAuthUrl(int pinId, string code, string websiteAddress = null)
         {
-            Uri url;
-            if (websiteAddress.IsNullOrEmpty())
-            {
-                var settings = await _customizationSettingsService.GetSettingsAsync();
-                if (settings.ApplicationUrl.IsNullOrEmpty())
-                {
-                    return null;
-                }
-
-                url = _api.GetOAuthUrl(pinId, code, settings.ApplicationUrl, false);
-            }
-            else
-            {
-                url = _api.GetOAuthUrl(pinId, code, websiteAddress, false);
-            }
+            var settings = await _customizationSettingsService.GetSettingsAsync();
+            var url = _api.GetOAuthUrl(pinId, code, settings.ApplicationUrl.IsNullOrEmpty() ? websiteAddress : settings.ApplicationUrl, false);
 
             return url;
         }

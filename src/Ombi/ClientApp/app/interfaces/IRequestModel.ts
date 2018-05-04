@@ -18,6 +18,11 @@ export interface IMovieRequests extends IFullBaseRequest {
   qualityOverrideTitle: string;
 }
 
+export interface IFilterResult<T> {
+  total: number;
+  collection: T[];
+}
+
 export interface IMovieUpdateModel {
   id: number;
 }
@@ -103,6 +108,8 @@ export interface IMovieRequestModel {
 export interface IFilter {
   availabilityFilter: FilterType;
   statusFilter: FilterType;
+  position: number;
+  count: number;
 }
 
 export enum FilterType {

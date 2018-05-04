@@ -5,12 +5,25 @@
         <h1>{{issue.title}} </h1>
         <div class="col-md-6">
             <img class="img-responsive poster" src="{{posterPath}}" alt="poster">
-            <span class="label label-info">{{IssueStatus[issue.status]}}</span>
-            <span class="label label-success">{{issue.issueCategory.value}}</span>
 
-            <h3 *ngIf="issue.userReported?.alias">{{'Issues.ReportedBy' | translate}}: {{issue.userReported.alias}}</h3>
-            <h3 *ngIf="!issue.userReported?.alias">{{'Issues.ReportedBy' | translate}}: {{issue.userReported.userName}}</h3>
-            <h3 *ngIf="issue.subject">{{'Issues.Subject' | translate}}: {{issue.subject}}</h3>
+            <div class="issue-status">
+                <span *ngIf="issue.status === IssueStatus.Pending" id="pendingLabel" class="label label-warning">{{IssueStatus[issue.status]}}</span>
+                <span *ngIf="issue.status === IssueStatus.InProgress" id="inprogressLabel" class="label label-info">{{IssueStatus[issue.status]}}</span>
+                <span *ngIf="issue.status === IssueStatus.Resolved" id="resolvedLabel" class="label label-success">{{IssueStatus[issue.status]}}</span>
+            </div>
+            <span class="label label-success">{{issue.issueCategory.value}}</span>
+            <br>
+            <span class="reported-by">
+                <h3 *ngIf="issue.userReported?.alias">{{'Issues.ReportedBy' | translate}}:</h3>
+                <h3 *ngIf="!issue.userReported?.alias">{{'Issues.ReportedBy' | translate}}:</h3>
+            </span>
+            <span class="reported-user">
+                <h3 *ngIf="issue.userReported?.alias">{{issue.userReported.alias}}</h3>
+                <h3 *ngIf="!issue.userReported?.alias">{{issue.userReported.userName}}</h3>
+            </span>
+            <br>
+            <span class="subject-category"><h3 *ngIf="issue.subject">{{'Issues.Subject' | translate}}:</h3></span>
+            <span class="subject"><h3 *ngIf="issue.subject">{{issue.subject}}</h3></span>
             <br>
             <div class="form-group">
                 <label for="description" class="control-label" [translate]="'Issues.Description'"></label>

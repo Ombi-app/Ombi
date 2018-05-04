@@ -50,12 +50,13 @@ namespace Ombi.Schedule.Jobs.Plex
                     await Cache(server);
                 }
 
-                BackgroundJob.Enqueue(() => _availabilityChecker.Start());
             }
             catch (Exception e)
             {
                 _log.LogError(LoggingEvents.Cacher, e, "Caching Episodes Failed");
             }
+
+            BackgroundJob.Enqueue(() => _availabilityChecker.Start());
         }
 
         private async Task Cache(PlexServers settings)

@@ -98,14 +98,14 @@ namespace Ombi.Schedule.Jobs.Ombi
                     addedLog.Where(x => x.Type == RecentlyAddedType.Emby && x.ContentType == ContentType.Episode);
 
                 // Filter out the ones that we haven't sent yet
-                var plexContentMoviesToSend = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && !addedPlexMovieLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId)));
-                var embyContentMoviesToSend = embyContent.Where(x => x.Type == EmbyMediaType.Movie && !addedEmbyMoviesLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId)));
+                var plexContentMoviesToSend = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && x.HasTheMovieDb && !addedPlexMovieLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId)));
+                var embyContentMoviesToSend = embyContent.Where(x => x.Type == EmbyMediaType.Movie && x.HasTheMovieDb && !addedEmbyMoviesLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId)));
                 _log.LogInformation("Plex Movies to send: {0}", plexContentMoviesToSend.Count());
                 _log.LogInformation("Emby Movies to send: {0}", embyContentMoviesToSend.Count());
 
                 var plexEpisodesToSend =
-                    FilterPlexEpisodes(_plex.GetAllEpisodes().Include(x => x.Series).AsNoTracking(), addedPlexEpisodesLogIds);
-                var embyEpisodesToSend = FilterEmbyEpisodes(_emby.GetAllEpisodes().Include(x => x.Series).AsNoTracking(),
+                    FilterPlexEpisodes(_plex.GetAllEpisodes().Include(x => x.Series).Where(x => x.Series.HasTvDb).AsNoTracking(), addedPlexEpisodesLogIds);
+                var embyEpisodesToSend = FilterEmbyEpisodes(_emby.GetAllEpisodes().Include(x => x.Series).Where(x => x.Series.HasTvDb).AsNoTracking(),
                     addedEmbyEpisodesLogIds);
 
                 _log.LogInformation("Plex Episodes to send: {0}", plexEpisodesToSend.Count());
@@ -114,7 +114,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 if (test)
                 {
                     var plexm = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie).OrderByDescending(x => x.AddedAt).Take(10);
-                    var embym = embyContent.Where(x => x.Type == EmbyMediaType.Movie).OrderByDescending(x => x.AddedAt).Take(10);
+                    var embym = embyContent.Where(x => x.Type == EmbyMediaType.Movie ).OrderByDescending(x => x.AddedAt).Take(10);
                     var plext = _plex.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.Series.AddedAt).Take(10).ToHashSet();
                     var embyt = _emby.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.AddedAt).Take(10).ToHashSet();
                     body = await BuildHtml(plexm, embym, plext, embyt, settings);
@@ -564,21 +564,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                     foreach (var epInformation in results.OrderBy(x => x.SeasonNumber))
                     {
                         var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
-                        var epSb = new StringBuilder();
-                        for (var i = 0; i < orderedEpisodes.Count; i++)
-                        {
-                            var ep = orderedEpisodes[i];
-                            if (i < orderedEpisodes.Count - 1)
-                            {
-                                epSb.Append($"{ep.EpisodeNumber},");
-                            }
-                            else
-                            {
-                                epSb.Append($"{ep.EpisodeNumber}");
-                            }
-
-                        }
-                        finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {epSb}");
+                        var episodeString = BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
+                        finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString}");
                         finalsb.Append("<br />");
                     }
 
@@ -613,6 +600,49 @@ namespace Ombi.Schedule.Jobs.Ombi
                     sb.Append("<tr>");
                 }
             }
+        }
+
+        public string BuildEpisodeList(IEnumerable<int> orderedEpisodes)
+        {
+            var epSb = new StringBuilder();
+            var previousEpisodes = new List<int>();
+            var previousEpisode = -1;
+            foreach (var ep in orderedEpisodes)
+            {
+                if (ep - 1 == previousEpisode)
+                {
+                    // This is the next one
+                    previousEpisodes.Add(ep);
+                }
+                else
+                {
+                    if (previousEpisodes.Count > 1)
+                    {
+                        // End it
+                        epSb.Append($"{previousEpisodes.First()}-{previousEpisodes.Last()}, ");
+                    }
+                    else if (previousEpisodes.Count == 1)
+                    {
+                        epSb.Append($"{previousEpisodes.FirstOrDefault()}, ");
+                    }
+                    // New one
+                    previousEpisodes.Clear();
+                    previousEpisodes.Add(ep);
+                }
+                previousEpisode = ep;
+            }
+
+            if (previousEpisodes.Count > 1)
+            {
+                // Got some left over
+                epSb.Append($"{previousEpisodes.First()}-{previousEpisodes.Last()}");
+            }
+            else if(previousEpisodes.Count == 1)
+            {
+                epSb.Append(previousEpisodes.FirstOrDefault());
+            }
+
+            return epSb.ToString();
         }
 
         private async Task ProcessEmbyTv(HashSet<EmbyEpisode> embyContent, StringBuilder sb)
@@ -688,21 +718,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                     foreach (var epInformation in results.OrderBy(x => x.SeasonNumber))
                     {
                         var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
-                        var epSb = new StringBuilder();
-                        for (var i = 0; i < orderedEpisodes.Count; i++)
-                        {
-                            var ep = orderedEpisodes[i];
-                            if (i < orderedEpisodes.Count - 1)
-                            {
-                                epSb.Append($"{ep.EpisodeNumber},");
-                            }
-                            else
-                            {
-                                epSb.Append($"{ep.EpisodeNumber}");
-                            }
-
-                        }
-                        finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {epSb}");
+                        var episodeString = BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
+                        finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString}");
                         finalsb.Append("<br />");
                     }
 

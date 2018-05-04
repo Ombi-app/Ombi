@@ -963,3 +963,14 @@ a > h4:hover {
     background-color: $primary-colour-outline $i;
     color: black $i;
 }
+
+#themeContent {
+    font-family: monospace;
+}
+
+.reported-by,
+.reported-user,
+.subject-category,
+.subject {
+    display: inline-block;
+}

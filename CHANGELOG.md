@@ -1,8 +1,19 @@
 # Changelog
 
-## (unreleased)
+## v3.0.3268 (2018-04-28)
+
+### **Fixes**
+
+- Potential fix for #2119. [Jamie Rees]
+
+- Use the Application URL if we have it to fix #2201. [Jamie]
+
+
+## v3.0.3239 (2018-04-26)
 
 ### **New Features**
+
+- Update appveyor.yml. [Jamie]
 
 - Added paging to the TV Requests page. [Jamie Rees]
 
@@ -17,6 +28,8 @@
 - Added background property to tvrequests API (#2172) [Anojh Thayaparan]
 
 ### **Fixes**
+
+- Clean up the error code when the OAuth user is not authorized. [Jamie]
 
 - More improvements to the Plex OAuth, Added the ability to turn it off if needed. [Jamie]
 
