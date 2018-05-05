@@ -9,6 +9,7 @@ using Ombi.Api.Emby.Models.Movie;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Serilog;
@@ -19,13 +20,14 @@ namespace Ombi.Schedule.Jobs.Emby
     public class EmbyContentSync : IEmbyContentSync
     {
         public EmbyContentSync(ISettingsService<EmbySettings> settings, IEmbyApi api, ILogger<EmbyContentSync> logger,
-            IEmbyContentRepository repo, IEmbyEpisodeSync epSync)
+            IEmbyContentRepository repo, IEmbyEpisodeSync epSync, IRefreshMetadata metadata)
         {
             _logger = logger;
             _settings = settings;
             _api = api;
             _repo = repo;
             _episodeSync = epSync;
+            _metadata = metadata;
             _settings.ClearCache();
         }
 
@@ -34,6 +36,7 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly IEmbyApi _api;
         private readonly IEmbyContentRepository _repo;
         private readonly IEmbyEpisodeSync _episodeSync;
+        private readonly IRefreshMetadata _metadata;
 
 
         public async Task Start()
@@ -56,6 +59,7 @@ namespace Ombi.Schedule.Jobs.Emby
 
             // Episodes
             BackgroundJob.Enqueue(() => _episodeSync.Start());
+            BackgroundJob.Enqueue(() => _metadata.Start());
         }
 
 

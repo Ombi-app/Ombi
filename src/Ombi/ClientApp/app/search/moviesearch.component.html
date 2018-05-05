@@ -85,7 +85,7 @@
                     <br/>
                     <div *ngIf="result.available">
                         <a *ngIf="result.plexUrl" style="text-align: right" class="btn btn-sm btn-success-outline" href="{{result.plexUrl}}" target="_blank"><i class="fa fa-eye"></i> View On Plex</a>
-                        <a *ngIf="result.embyUrl" style="text-align: right" class="btn btn-sm btn-success-outline" href="{{result.embyUrl}}" target="_blank"><i class="fa fa-eye"></i> View On Emby</a>
+                        <a *ngIf="result.embyUrl" style="text-align: right" id="embybtn" class="btn btn-sm btn-success-outline" href="{{result.embyUrl}}" target="_blank"><i class="fa fa-eye"></i> View On Emby</a>
                     </div>
                     <div class="dropdown" *ngIf="result.available && issueCategories && issuesEnabled">
                         <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">

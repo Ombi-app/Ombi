@@ -6,7 +6,7 @@ import { Observable } from "rxjs/Rx";
 
 import { TreeNode } from "primeng/primeng";
 import { IRequestEngineResult } from "../interfaces";
-import { IChildRequests, IFilter, IMovieRequestModel, IMovieRequests, IMovieUpdateModel, ITvRequests, ITvUpdateModel } from "../interfaces";
+import { IChildRequests, IFilter, IFilterResult, IMovieRequestModel, IMovieRequests, IMovieUpdateModel, ITvRequests,ITvUpdateModel } from "../interfaces";
 import { ITvRequestViewModel } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
@@ -114,7 +114,7 @@ export class RequestService extends ServiceHelpers {
     public deleteChild(child: IChildRequests): Observable<boolean> {
         return this.http.delete<boolean>(`${this.url}tv/child/${child.id}`, {headers: this.headers});
     }
-    public filterMovies(filter: IFilter): Observable<IMovieRequests[]> {
-        return this.http.post<IMovieRequests[]>(`${this.url}movie/filter`, JSON.stringify(filter), {headers: this.headers});
+    public filterMovies(filter: IFilter): Observable<IFilterResult<IMovieRequests>> {
+        return this.http.post<IFilterResult<IMovieRequests>>(`${this.url}movie/filter`, JSON.stringify(filter), {headers: this.headers});
     }
 }

@@ -30,7 +30,14 @@ export class MobileComponent implements OnInit {
             });
         });
 
-        this.mobileService.getUserDeviceList().subscribe(x => this.userList = x);
+        this.mobileService.getUserDeviceList().subscribe(x => {
+            if(x.length <= 0) {
+                this.userList = [];
+                this.userList.push({username:"None",devices:0});
+            } else {
+                this.userList = x;
+            }
+        });
     }
 
     public onSubmit(form: FormGroup) {

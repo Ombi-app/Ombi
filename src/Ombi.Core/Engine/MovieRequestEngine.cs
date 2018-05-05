@@ -131,11 +131,11 @@ namespace Ombi.Core.Engine
             List<MovieRequests> allRequests;
             if (shouldHide.Hide)
             {
-                allRequests = await MovieRepository.GetWithUser(shouldHide.UserId).Skip(position).Take(count).ToListAsync();
+                allRequests = await MovieRepository.GetWithUser(shouldHide.UserId).Skip(position).Take(count).OrderByDescending(x => x.ReleaseDate).ToListAsync();
             }
             else
             {
-                allRequests = await MovieRepository.GetWithUser().Skip(position).Take(count).ToListAsync();
+                allRequests = await MovieRepository.GetWithUser().Skip(position).Take(count).OrderByDescending(x => x.ReleaseDate).ToListAsync();
             }
             allRequests.ForEach(x =>
             {
@@ -380,10 +380,13 @@ namespace Ombi.Core.Engine
             return new RequestEngineResult { Result = true, Message = $"{movieName} has been successfully added!" };
         }
 
-        public async Task<IEnumerable<MovieRequests>> Filter(FilterViewModel vm)
+        public async Task<FilterResult<MovieRequests>> Filter(FilterViewModel vm)
         {
             var shouldHide = await HideFromOtherUsers();
-            var requests = shouldHide.Hide ? MovieRepository.GetWithUser(shouldHide.UserId) : MovieRepository.GetWithUser();
+            var requests = shouldHide.Hide 
+                ? MovieRepository.GetWithUser(shouldHide.UserId)
+                : MovieRepository.GetWithUser();
+
             switch (vm.AvailabilityFilter)
             {
                 case FilterType.None:
@@ -415,7 +418,14 @@ namespace Ombi.Core.Engine
                     throw new ArgumentOutOfRangeException();
             }
 
-            return requests;
+            var count = await requests.CountAsync();
+            requests = requests.Skip(vm.Position).Take(vm.Count);
+            var retVal = new FilterResult<MovieRequests>
+            {
+                Total = count,
+                Collection = requests
+            };
+            return retVal;
         }
     }
 }

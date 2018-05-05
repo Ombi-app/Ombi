@@ -1,5 +1,68 @@
 # Changelog
 
+## (unreleased)
+
+### **New Features**
+
+- Added a check for long movie descriptions and dealt with accordingly. [Anojh]
+
+- Update jobs.component.html. [D34DC3N73R]
+
+- Added id to emby button to distinguish for UI purposes. [Anojh]
+
+- Changed theme content textarea to use monospace font. [Anojh]
+
+- Added classes and ids to issue status. [Anojh]
+
+- Changed overlay picture to poster pic so we have fallback styling on older clients. [Anojh]
+
+### **Fixes**
+
+- Fixed #2224. [Jamie]
+
+- More robust check for release date. [Anojh]
+
+- Fixed duplicate titles in Plex Newsletter. [Anojh]
+
+- Fixed the filter on the Requests page #2219 and added the default sort to be most recent requests. [Jamie Rees]
+
+- Enable the mobile ntoifications inside Ombi. [Jamie Rees]
+
+- Made the episode list in the newsletter easier to read. Rather than 1,2,3,4,5,10 we will now show 1-5, 10. [Jamie Rees]
+
+- Moved the RecentlyAddedSync into it's own job, it still is calls the regular sync but this should make it easier to start the job from the UI (When I add that) [Jamie Rees]
+
+- Made a massive improvement on the Smaller more frequent Plex Job. This should pick up content a lot quicker now and also get their metadata a lot quicker. [Jamie Rees]
+
+- Trigger a metadata refresh when we finish scanning the libraries. [Jamie Rees]
+
+- Fixed a potential issue in the newsletter where it wouldn't send content due to missing metadata, but would mark it as if it was sent. [Jamie Rees]
+
+- Fixed settings retaining active class when elsewhere in UI. [Anojh]
+
+- Separated user and subject details into spans and fixed styling. [Anojh]
+
+- Fixed linting errors. [Anojh]
+
+- Fixed settings nav item not retaining active class when in other tabs in the settings page. [Anojh]
+
+- Separated reported by and subject and added classes. [Anojh]
+
+- Fix for issue #2152. [Anojh]
+
+- Fix genres being ambigious error. [Anojh]
+
+- Made text style justified. [Anojh]
+
+- V1.0, needs TV background and needs styles for outlook. [Anojh]
+
+- CSS done for the template. [Anojh]
+
+- Fixing some format issues. [Anojh]
+
+- Newsletter template structure done. [Anojh]
+
+
 ## v3.0.3268 (2018-04-28)
 
 ### **Fixes**

@@ -68,7 +68,7 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(x => x.ReleaseDate, o => o.MapFrom(s => s.release_date))
                 .ForMember(x => x.Type, o => o.MapFrom(s => s.Type));
 
-            CreateMap<Genre, GenreDto>();
+            CreateMap<TheMovieDbApi.Models.Genre, GenreDto>();
 
             CreateMap<MovieSearchResult, SearchMovieViewModel>().ReverseMap();
             CreateMap<MovieResponseDto, SearchMovieViewModel>().ReverseMap();
