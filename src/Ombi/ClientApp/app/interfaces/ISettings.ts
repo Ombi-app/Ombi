@@ -97,7 +97,6 @@ export interface ICustomizationSettings extends ISettings {
   applicationName: string;
   applicationUrl: string;
   logo: string;
-  mobile: boolean;
   customCssLink: string;
   enableCustomDonations: boolean;
   customDonationUrl: string;
