@@ -10,6 +10,9 @@ ____
 [![Paypal](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://paypal.me/PlexRequestsNet)
 
 ___
+<a href='https://play.google.com/store/apps/details?id=com.tidusjar.Ombi&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img width="150"   alt='Get it on Google Play' src='https://play.google.com/intl/en_gb/badges/images/generic/en_badge_web_generic.png'/></a>
+
+___
 
 We also now have merch up on Teespring!
 
