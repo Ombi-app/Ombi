@@ -115,10 +115,10 @@
                     <br />
                 </div>
                 <div *ngIf="isAdmin">
-                    <div *ngIf="request.qualityOverrideTitle">{{ 'Requests.QualityOverride' | translate }}
+                    <div *ngIf="request.qualityOverrideTitle" class="quality-override">{{ 'Requests.QualityOverride' | translate }}
                         <span>{{request.qualityOverrideTitle}} </span>
                     </div>
-                    <div *ngIf="request.rootPathOverrideTitle">{{ 'Requests.RootFolderOverride' | translate }}
+                    <div *ngIf="request.rootPathOverrideTitle" class="root-override">{{ 'Requests.RootFolderOverride' | translate }}
                         <span>{{request.rootPathOverrideTitle}} </span>
                     </div>
                 </div>

@@ -4,6 +4,21 @@
 
 ### **New Features**
 
+- Updated to prevent security vulnerability as noted here: https://github.com/aspnet/Announcements/issues/300. [Jamie Rees]
+
+### **Fixes**
+
+- [LC] - Added classes to root/quality override divs. [Anojh]
+
+- Fixed an issue where sometimes the OAuth wouldn't work when loading the login page. [Jamie Rees]
+
+- Alwats enable mobile link. [Jamie]
+
+
+## v3.0.3293 (2018-05-05)
+
+### **New Features**
+
 - Added a check for long movie descriptions and dealt with accordingly. [Anojh]
 
 - Update jobs.component.html. [D34DC3N73R]
