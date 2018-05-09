@@ -52,10 +52,10 @@
     
                             <div>Release Date: {{node.data.releaseDate | date}}</div>
                             <div *ngIf="isAdmin">
-                                <div *ngIf="node.data.qualityOverrideTitle">{{ 'Requests.QualityOverride' | translate }}
+                                <div *ngIf="node.data.qualityOverrideTitle" class="quality-override">{{ 'Requests.QualityOverride' | translate }}
                                     <span>{{node.data.qualityOverrideTitle}} </span>
                                 </div>
-                                <div *ngIf="node.data.rootPathOverrideTitle">{{ 'Requests.RootFolderOverride' | translate }}
+                                <div *ngIf="node.data.rootPathOverrideTitle" class="root-override">{{ 'Requests.RootFolderOverride' | translate }}
                                     <span>{{node.data.rootPathOverrideTitle}} </span>
                                 </div>
                             </div>
