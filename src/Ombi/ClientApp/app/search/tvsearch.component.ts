@@ -1,4 +1,5 @@
-﻿import { Component, Input, OnInit } from "@angular/core";
+﻿import { PlatformLocation } from "@angular/common";
+import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Subject } from "rxjs/Subject";
 
@@ -8,7 +9,7 @@ import { ImageService, NotificationService, RequestService, SearchService } from
 import { TreeNode } from "primeng/primeng";
 import { IRequestEngineResult } from "../interfaces";
 import { IIssueCategory, ISearchTvResult, ISeasonsViewModel, ITvRequestViewModel } from "../interfaces";
-import { PlatformLocation } from "@angular/common";
+
 
 @Component({
     selector: "tv-search",

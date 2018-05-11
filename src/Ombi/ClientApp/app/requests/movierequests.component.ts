@@ -1,4 +1,5 @@
-﻿import { Component, Input, OnInit } from "@angular/core";
+﻿import { PlatformLocation } from "@angular/common";
+import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
@@ -9,7 +10,6 @@ import { AuthService } from "../auth/auth.service";
 import { NotificationService, RadarrService, RequestService } from "../services";
 
 import { FilterType, IFilter, IIssueCategory, IMovieRequests, IPagenator, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
-import { PlatformLocation } from "@angular/common";
 
 @Component({
     selector: "movie-requests",

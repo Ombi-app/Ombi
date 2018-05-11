@@ -1,4 +1,5 @@
-﻿import { Component, Input, OnInit } from "@angular/core";
+﻿import { PlatformLocation } from "@angular/common";
+import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateService } from "@ngx-translate/core";
 import "rxjs/add/operator/debounceTime";
@@ -9,7 +10,6 @@ import { Subject } from "rxjs/Subject";
 import { AuthService } from "../auth/auth.service";
 import { IIssueCategory, IRequestEngineResult, ISearchMovieResult } from "../interfaces";
 import { NotificationService, RequestService, SearchService } from "../services";
-import { PlatformLocation } from "@angular/common";
 
 @Component({
     selector: "movie-search",
@@ -34,8 +34,8 @@ export class MovieSearchComponent implements OnInit {
         
     constructor(private searchService: SearchService, private requestService: RequestService,
                 private notificationService: NotificationService, private authService: AuthService,
-        private readonly translate: TranslateService, private sanitizer: DomSanitizer,
-        private readonly platformLocation: PlatformLocation) {
+                private readonly translate: TranslateService, private sanitizer: DomSanitizer,
+                private readonly platformLocation: PlatformLocation) {
 
         this.searchChanged
             .debounceTime(600) // Wait Xms after the last event before emitting last event

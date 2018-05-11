@@ -1,4 +1,5 @@
-﻿import { Component, Input, OnInit } from "@angular/core";
+﻿import { PlatformLocation } from "@angular/common";
+import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
@@ -15,7 +16,6 @@ import { NotificationService, RequestService, SonarrService } from "../services"
 
 import { TreeNode } from "primeng/primeng";
 import { IIssueCategory, IPagenator,  ISonarrProfile, ISonarrRootFolder, ITvRequests } from "../interfaces";
-import { PlatformLocation } from "@angular/common";
 
 @Component({
     selector: "tv-requests",

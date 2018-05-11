@@ -1,3 +1,4 @@
+import { PlatformLocation } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
@@ -6,7 +7,6 @@ import { ImageService, IssuesService, NotificationService, SettingsService } fro
 
 import { DomSanitizer } from "@angular/platform-browser";
 import { IIssues, IIssuesChat, IIssueSettings, INewIssueComments, IssueStatus } from "../interfaces";
-import { PlatformLocation } from "@angular/common";
 
 @Component({
     templateUrl: "issueDetails.component.html",
