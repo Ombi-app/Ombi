@@ -6,6 +6,7 @@ import { ImageService, IssuesService, NotificationService, SettingsService } fro
 
 import { DomSanitizer } from "@angular/platform-browser";
 import { IIssues, IIssuesChat, IIssueSettings, INewIssueComments, IssueStatus } from "../interfaces";
+import { PlatformLocation } from "@angular/common";
 
 @Component({
     templateUrl: "issueDetails.component.html",
@@ -35,7 +36,8 @@ export class IssueDetailsComponent implements OnInit {
                 private settingsService: SettingsService,
                 private notificationService: NotificationService,
                 private imageService: ImageService,
-                private sanitizer: DomSanitizer) { 
+                private sanitizer: DomSanitizer,
+                private readonly platformLocation: PlatformLocation) { 
             this.route.params
             .subscribe((params: any) => {
                   this.issueId = parseInt(params.id);    
@@ -43,13 +45,13 @@ export class IssueDetailsComponent implements OnInit {
 
             this.isAdmin = this.authService.hasRole("Admin") || this.authService.hasRole("PowerUser");
             this.settingsService.getIssueSettings().subscribe(x => this.settings = x);
-            this.settingsService.getOmbi().subscribe(x => {
-                if (x.baseUrl) {
-                    this.defaultPoster = "../../.." + x.baseUrl + "/images/";
-                } else {
-                    this.defaultPoster = "../../../images/";
-                }
-            });
+
+            const base = this.platformLocation.getBaseHrefFromDOM();
+            if (base) {
+                this.defaultPoster = "../../.." + base + "/images/";
+            } else {
+                this.defaultPoster = "../../../images/";
+            }
         }
                 
     public ngOnInit() { 

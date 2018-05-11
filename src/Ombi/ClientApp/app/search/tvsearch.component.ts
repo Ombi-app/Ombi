@@ -3,11 +3,12 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { Subject } from "rxjs/Subject";
 
 import { AuthService } from "../auth/auth.service";
-import { ImageService, NotificationService, RequestService, SearchService, SettingsService } from "../services";
+import { ImageService, NotificationService, RequestService, SearchService } from "../services";
 
 import { TreeNode } from "primeng/primeng";
 import { IRequestEngineResult } from "../interfaces";
 import { IIssueCategory, ISearchTvResult, ISeasonsViewModel, ITvRequestViewModel } from "../interfaces";
+import { PlatformLocation } from "@angular/common";
 
 @Component({
     selector: "tv-search",
@@ -34,7 +35,7 @@ export class TvSearchComponent implements OnInit {
     constructor(private searchService: SearchService, private requestService: RequestService,
                 private notificationService: NotificationService, private authService: AuthService,
                 private imageService: ImageService, private sanitizer: DomSanitizer,
-                private settingsService: SettingsService) {
+                private readonly platformLocation: PlatformLocation) {
 
         this.searchChanged
             .debounceTime(600) // Wait Xms after the last event before emitting last event
@@ -52,12 +53,11 @@ export class TvSearchComponent implements OnInit {
                         this.getExtraInfo();
                     });
             });
-        this.defaultPoster = "../../../images/default_tv_poster.png"
-        this.settingsService.getOmbi().subscribe(x => {
-            if (x.baseUrl) {
-                this.defaultPoster = "../../.." + x.baseUrl + "/images/default_tv_poster.png";
-            }
-        });
+        this.defaultPoster = "../../../images/default_tv_poster.png";
+        const base = this.platformLocation.getBaseHrefFromDOM();
+        if(base) {
+            this.defaultPoster = "../../.." + base + "/images/default_tv_poster.png";
+        }
     }
     public openClosestTab(el: any) {
         el.preventDefault();

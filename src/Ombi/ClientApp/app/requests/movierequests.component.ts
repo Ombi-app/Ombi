@@ -6,9 +6,10 @@ import "rxjs/add/operator/map";
 import { Subject } from "rxjs/Subject";
 
 import { AuthService } from "../auth/auth.service";
-import { NotificationService, RadarrService, RequestService, SettingsService } from "../services";
+import { NotificationService, RadarrService, RequestService } from "../services";
 
 import { FilterType, IFilter, IIssueCategory, IMovieRequests, IPagenator, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
+import { PlatformLocation } from "@angular/common";
 
 @Component({
     selector: "movie-requests",
@@ -49,7 +50,7 @@ export class MovieRequestsComponent implements OnInit {
                 private notificationService: NotificationService,
                 private radarrService: RadarrService,
                 private sanitizer: DomSanitizer,
-                private settingsService: SettingsService) {
+                private readonly platformLocation: PlatformLocation) {
         this.searchChanged
             .debounceTime(600) // Wait Xms after the last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -65,12 +66,11 @@ export class MovieRequestsComponent implements OnInit {
                         this.movieRequests = m;
                     });
             });
-        this.defaultPoster = "../../../images/default_movie_poster.png"
-        this.settingsService.getOmbi().subscribe(x => {
-            if (x.baseUrl) {
-                this.defaultPoster = "../../.." + x.baseUrl + "/images/default_movie_poster.png";
-            }
-        });
+        this.defaultPoster = "../../../images/default_movie_poster.png";
+        const base = this.platformLocation.getBaseHrefFromDOM();
+        if (base) {
+            this.defaultPoster = "../../.." + base + "/images/default_movie_poster.png";
+        }
     }
 
     public ngOnInit() {

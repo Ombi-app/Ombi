@@ -11,10 +11,11 @@ import "rxjs/add/operator/distinctUntilChanged";
 import "rxjs/add/operator/map";
 
 import { AuthService } from "../auth/auth.service";
-import { NotificationService, RequestService, SettingsService, SonarrService } from "../services";
+import { NotificationService, RequestService, SonarrService } from "../services";
 
 import { TreeNode } from "primeng/primeng";
 import { IIssueCategory, IPagenator,  ISonarrProfile, ISonarrRootFolder, ITvRequests } from "../interfaces";
+import { PlatformLocation } from "@angular/common";
 
 @Component({
     selector: "tv-requests",
@@ -51,7 +52,7 @@ export class TvRequestsComponent implements OnInit {
                 private imageService: ImageService,
                 private sonarrService: SonarrService,
                 private notificationService: NotificationService,
-                private settingsService: SettingsService) {
+                private readonly platformLocation: PlatformLocation) {
         this.searchChanged
             .debounceTime(600) // Wait Xms after the last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -68,12 +69,11 @@ export class TvRequestsComponent implements OnInit {
                         this.tvRequests.forEach((val) => this.setOverride(val.data));
                     });
             });
-        this.defaultPoster = "../../../images/default_tv_poster.png"
-        this.settingsService.getOmbi().subscribe(x => {
-            if (x.baseUrl) {
-                this.defaultPoster = "../../.." + x.baseUrl + "/images/default_tv_poster.png";
-            }
-        });
+        this.defaultPoster = "../../../images/default_tv_poster.png";
+        const base = this.platformLocation.getBaseHrefFromDOM();
+        if (base) {
+            this.defaultPoster = "../../.." + base + "/images/default_tv_poster.png";
+        }
     }
 
     public openClosestTab(el: any) {
