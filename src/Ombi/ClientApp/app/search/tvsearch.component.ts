@@ -3,7 +3,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { Subject } from "rxjs/Subject";
 
 import { AuthService } from "../auth/auth.service";
-import { ImageService, NotificationService, RequestService, SearchService} from "../services";
+import { ImageService, NotificationService, RequestService, SearchService, SettingsService } from "../services";
 
 import { TreeNode } from "primeng/primeng";
 import { IRequestEngineResult } from "../interfaces";
@@ -21,6 +21,7 @@ export class TvSearchComponent implements OnInit {
     public tvResults: TreeNode[];
     public result: IRequestEngineResult;
     public searchApplied = false;
+    public defaultPoster: string;
 
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
@@ -32,7 +33,8 @@ export class TvSearchComponent implements OnInit {
 
     constructor(private searchService: SearchService, private requestService: RequestService,
                 private notificationService: NotificationService, private authService: AuthService,
-                private imageService: ImageService, private sanitizer: DomSanitizer) {
+                private imageService: ImageService, private sanitizer: DomSanitizer,
+                private settingsService: SettingsService) {
 
         this.searchChanged
             .debounceTime(600) // Wait Xms after the last event before emitting last event
@@ -50,6 +52,12 @@ export class TvSearchComponent implements OnInit {
                         this.getExtraInfo();
                     });
             });
+        this.defaultPoster = "../../../images/default_tv_poster.png"
+        this.settingsService.getOmbi().subscribe(x => {
+            if (x.baseUrl) {
+                this.defaultPoster = "../../.." + x.baseUrl + "/images/default_tv_poster.png";
+            }
+        });
     }
     public openClosestTab(el: any) {
         el.preventDefault();
@@ -228,7 +236,7 @@ export class TvSearchComponent implements OnInit {
 
     private setDefaults(x: any) {
         if (x.data.banner === null) {
-            x.data.banner = "../../../images/default_tv_poster.png";
+            x.data.banner = this.defaultPoster;
         }
 
         if (x.data.imdbId === null) {

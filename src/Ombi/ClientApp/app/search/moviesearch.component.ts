@@ -8,7 +8,7 @@ import { Subject } from "rxjs/Subject";
 
 import { AuthService } from "../auth/auth.service";
 import { IIssueCategory, IRequestEngineResult, ISearchMovieResult } from "../interfaces";
-import { NotificationService, RequestService, SearchService } from "../services";
+import { NotificationService, RequestService, SearchService, SettingsService } from "../services";
 
 @Component({
     selector: "movie-search",
@@ -29,10 +29,12 @@ export class MovieSearchComponent implements OnInit {
     public issueRequestId: number;
     public issueProviderId: string;
     public issueCategorySelected: IIssueCategory;
+    public defaultPoster: string;
         
     constructor(private searchService: SearchService, private requestService: RequestService,
                 private notificationService: NotificationService, private authService: AuthService,
-                private readonly translate: TranslateService, private sanitizer: DomSanitizer) {
+                private readonly translate: TranslateService, private sanitizer: DomSanitizer,
+                private settingsService: SettingsService) {
 
         this.searchChanged
             .debounceTime(600) // Wait Xms after the last event before emitting last event
@@ -52,6 +54,12 @@ export class MovieSearchComponent implements OnInit {
                         this.getExtraInfo();
                     });
             });
+        this.defaultPoster = "../../../images/default_movie_poster.png"
+        this.settingsService.getOmbi().subscribe(x => {
+            if (x.baseUrl) {
+                this.defaultPoster = "../../.." + x.baseUrl + "/images/default_movie_poster.png";
+            }
+        });
     }
 
     public ngOnInit() {
@@ -159,7 +167,7 @@ export class MovieSearchComponent implements OnInit {
 
        this.movieResults.forEach((val, index) => {
            if (val.posterPath === null) {
-               val.posterPath = "../../../images/default_movie_poster.png";
+               val.posterPath = this.defaultPoster;
            } else {
                val.posterPath = "https://image.tmdb.org/t/p/w300/" + val.posterPath;
            }

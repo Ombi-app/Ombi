@@ -25,7 +25,8 @@ export class IssueDetailsComponent implements OnInit {
     public settings: IIssueSettings;
     public backgroundPath: any;
     public posterPath: any;
-    
+    public defaultPoster: string;
+
     private issueId: number;
 
     constructor(private issueService: IssuesService,
@@ -42,6 +43,13 @@ export class IssueDetailsComponent implements OnInit {
 
             this.isAdmin = this.authService.hasRole("Admin") || this.authService.hasRole("PowerUser");
             this.settingsService.getIssueSettings().subscribe(x => this.settings = x);
+            this.settingsService.getOmbi().subscribe(x => {
+                if (x.baseUrl) {
+                    this.defaultPoster = "../../.." + x.baseUrl + "/images/";
+                } else {
+                    this.defaultPoster = "../../../images/";
+                }
+            });
         }
                 
     public ngOnInit() { 
@@ -99,7 +107,7 @@ export class IssueDetailsComponent implements OnInit {
             });
             this.imageService.getMoviePoster(issue.providerId).subscribe(x => {
                 if (x.length === 0) {
-                    this.posterPath = "../../../images/default_movie_poster.png";
+                    this.posterPath = this.defaultPoster + "default_movie_poster.png";
                 } else {
                     this.posterPath = x.toString();
                 }
@@ -112,7 +120,7 @@ export class IssueDetailsComponent implements OnInit {
             });
             this.imageService.getTvPoster(Number(issue.providerId)).subscribe(x => {
                 if (x.length === 0) {
-                    this.posterPath = "../../../images/default_tv_poster.png";
+                    this.posterPath = this.defaultPoster + "default_tv_poster.png";
                 } else {
                     this.posterPath = x.toString();
                 }

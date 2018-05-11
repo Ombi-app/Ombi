@@ -6,7 +6,7 @@ import "rxjs/add/operator/map";
 import { Subject } from "rxjs/Subject";
 
 import { AuthService } from "../auth/auth.service";
-import { NotificationService, RadarrService, RequestService } from "../services";
+import { NotificationService, RadarrService, RequestService, SettingsService } from "../services";
 
 import { FilterType, IFilter, IIssueCategory, IMovieRequests, IPagenator, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
 
@@ -16,6 +16,7 @@ import { FilterType, IFilter, IIssueCategory, IMovieRequests, IPagenator, IRadar
 })
 export class MovieRequestsComponent implements OnInit {
     public movieRequests: IMovieRequests[];
+    public defaultPoster: string;
 
     public searchChanged: Subject<string> = new Subject<string>();
     public searchText: string;
@@ -47,7 +48,8 @@ export class MovieRequestsComponent implements OnInit {
                 private auth: AuthService,
                 private notificationService: NotificationService,
                 private radarrService: RadarrService,
-                private sanitizer: DomSanitizer) {
+                private sanitizer: DomSanitizer,
+                private settingsService: SettingsService) {
         this.searchChanged
             .debounceTime(600) // Wait Xms after the last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -63,6 +65,12 @@ export class MovieRequestsComponent implements OnInit {
                         this.movieRequests = m;
                     });
             });
+        this.defaultPoster = "../../../images/default_movie_poster.png"
+        this.settingsService.getOmbi().subscribe(x => {
+            if (x.baseUrl) {
+                this.defaultPoster = "../../.." + x.baseUrl + "/images/default_movie_poster.png";
+            }
+        });
     }
 
     public ngOnInit() {
@@ -354,7 +362,7 @@ export class MovieRequestsComponent implements OnInit {
 
     private setPoster(req: IMovieRequests): void {
         if (req.posterPath === null) {
-            req.posterPath = "../../../images/default_movie_poster.png";
+            req.posterPath = this.defaultPoster;
         } else {
             req.posterPath = "https://image.tmdb.org/t/p/w300/" + req.posterPath;
         }
