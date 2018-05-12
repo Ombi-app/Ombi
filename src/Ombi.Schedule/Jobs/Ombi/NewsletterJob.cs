@@ -306,7 +306,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             var embyMovies = embyContentToSend.Where(x => x.Type == EmbyMediaType.Movie);
             if ((plexMovies.Any() || embyMovies.Any()) && !settings.DisableMovies)
             {
-                sb.Append("<h1 style=\"text-align: center;\">New Movies</h1><br /><br />");
+                sb.Append("<h1 style=\"text-align: center; max-width: 1042px;\">New Movies</h1><br /><br />");
                 sb.Append(
                 "<table class=\"movies-table\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100 %; \">");
                 sb.Append("<tr>");
@@ -324,7 +324,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if ((plexEpisodes.Any() || embyEp.Any()) && !settings.DisableTv)
             {
-                sb.Append("<br /><br /><h1 style=\"text-align: center;\">New TV</h1><br /><br />");
+                sb.Append("<br /><br /><h1 style=\"text-align: center; max-width: 1042px;\">New TV</h1><br /><br />");
                 sb.Append(
                 "<table class=\"tv-table\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100 %; \">");
                 sb.Append("<tr>");
@@ -588,7 +588,6 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         AddGenres(sb, $"Genres: {string.Join(", ", info.genres.Select(x => x.ToString()).ToArray())}");
                     }
-                    count += 1;
 
                 }
                 catch (Exception e)
@@ -598,6 +597,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 finally
                 {
                     EndLoopHtml(sb);
+                    count += 1;
                 }
 
                 if (count == 2)
@@ -752,7 +752,6 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         AddGenres(sb, $"Genres: {string.Join(", ", info.genres.Select(x => x.ToString()).ToArray())}");
                     }
-                    count += 1;
 
                 }
                 catch (Exception e)
@@ -762,6 +761,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 finally
                 {
                     EndLoopHtml(sb);
+                    count += 1;
                 }
 
                 if (count == 2)
