@@ -10,7 +10,6 @@ import { TreeNode } from "primeng/primeng";
 import { IRequestEngineResult } from "../interfaces";
 import { IIssueCategory, ISearchTvResult, ISeasonsViewModel, ITvRequestViewModel } from "../interfaces";
 
-
 @Component({
     selector: "tv-search",
     templateUrl: "./tvsearch.component.html",
