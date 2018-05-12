@@ -18,6 +18,10 @@ namespace Ombi.Api.Pushover
 
         public async Task<PushoverResponse> PushAsync(string accessToken, string message, string userToken)
         {
+            if (message.Contains("'"))
+            {
+                message = message.Replace("'", "&#39;");
+            }
             var request = new Request($"messages.json?token={accessToken}&user={userToken}&message={WebUtility.HtmlEncode(message)}", PushoverEndpoint, HttpMethod.Post);
             
             var result = await _api.Request<PushoverResponse>(request);
