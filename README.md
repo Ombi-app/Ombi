@@ -12,6 +12,9 @@ ____
 ___
 <a href='https://play.google.com/store/apps/details?id=com.tidusjar.Ombi&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img width="150"   alt='Get it on Google Play' src='https://play.google.com/intl/en_gb/badges/images/generic/en_badge_web_generic.png'/></a>
 
+<a href='https://itunes.apple.com/us/app/ombi/id1335260043?ls=1&mt=8'><img width="150"   alt='Get it on App Store' src='https://i.imgur.com/cJFa0M4.png'/></a>
+
+
 ___
 
 We also now have merch up on Teespring!
