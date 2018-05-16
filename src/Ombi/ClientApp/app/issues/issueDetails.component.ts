@@ -1,3 +1,4 @@
+import { PlatformLocation } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
@@ -25,7 +26,8 @@ export class IssueDetailsComponent implements OnInit {
     public settings: IIssueSettings;
     public backgroundPath: any;
     public posterPath: any;
-    
+    public defaultPoster: string;
+
     private issueId: number;
 
     constructor(private issueService: IssuesService,
@@ -34,7 +36,8 @@ export class IssueDetailsComponent implements OnInit {
                 private settingsService: SettingsService,
                 private notificationService: NotificationService,
                 private imageService: ImageService,
-                private sanitizer: DomSanitizer) { 
+                private sanitizer: DomSanitizer,
+                private readonly platformLocation: PlatformLocation) { 
             this.route.params
             .subscribe((params: any) => {
                   this.issueId = parseInt(params.id);    
@@ -42,6 +45,13 @@ export class IssueDetailsComponent implements OnInit {
 
             this.isAdmin = this.authService.hasRole("Admin") || this.authService.hasRole("PowerUser");
             this.settingsService.getIssueSettings().subscribe(x => this.settings = x);
+
+            const base = this.platformLocation.getBaseHrefFromDOM();
+            if (base) {
+                this.defaultPoster = "../../.." + base + "/images/";
+            } else {
+                this.defaultPoster = "../../../images/";
+            }
         }
                 
     public ngOnInit() { 
@@ -99,7 +109,7 @@ export class IssueDetailsComponent implements OnInit {
             });
             this.imageService.getMoviePoster(issue.providerId).subscribe(x => {
                 if (x.length === 0) {
-                    this.posterPath = "../../../images/default_movie_poster.png";
+                    this.posterPath = this.defaultPoster + "default_movie_poster.png";
                 } else {
                     this.posterPath = x.toString();
                 }
@@ -112,7 +122,7 @@ export class IssueDetailsComponent implements OnInit {
             });
             this.imageService.getTvPoster(Number(issue.providerId)).subscribe(x => {
                 if (x.length === 0) {
-                    this.posterPath = "../../../images/default_tv_poster.png";
+                    this.posterPath = this.defaultPoster + "default_tv_poster.png";
                 } else {
                     this.posterPath = x.toString();
                 }

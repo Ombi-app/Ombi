@@ -1,4 +1,5 @@
-﻿import { Component, Input, OnInit } from "@angular/core";
+﻿import { PlatformLocation } from "@angular/common";
+import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
@@ -29,6 +30,7 @@ export class TvRequestsComponent implements OnInit {
     public isAdmin: boolean;
     public showChildDialogue = false; // This is for the child modal popup
     public selectedSeason: ITvRequests;
+    public defaultPoster: string;
 
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
@@ -49,7 +51,8 @@ export class TvRequestsComponent implements OnInit {
                 private sanitizer: DomSanitizer,
                 private imageService: ImageService,
                 private sonarrService: SonarrService,
-                private notificationService: NotificationService) {
+                private notificationService: NotificationService,
+                private readonly platformLocation: PlatformLocation) {
         this.searchChanged
             .debounceTime(600) // Wait Xms after the last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -66,6 +69,11 @@ export class TvRequestsComponent implements OnInit {
                         this.tvRequests.forEach((val) => this.setOverride(val.data));
                     });
             });
+        this.defaultPoster = "../../../images/default_tv_poster.png";
+        const base = this.platformLocation.getBaseHrefFromDOM();
+        if (base) {
+            this.defaultPoster = "../../.." + base + "/images/default_tv_poster.png";
+        }
     }
 
     public openClosestTab(el: any) {
@@ -222,7 +230,7 @@ export class TvRequestsComponent implements OnInit {
 
     private setDefaults(val: any) {
         if (val.data.posterPath === null) {
-            val.data.posterPath = "../../../images/default_tv_poster.png";
+            val.data.posterPath = this.defaultPoster;
         }
     }
 

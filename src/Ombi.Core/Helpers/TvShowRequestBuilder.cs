@@ -71,7 +71,7 @@ namespace Ombi.Core.Helpers
                 RequestedUserId = userId,
                 SeasonRequests = new List<SeasonRequests>(),
                 Title = ShowInfo.name,
-                SeriesType = ShowInfo.type.Equals("Animation", StringComparison.CurrentCultureIgnoreCase) ? SeriesType.Anime : SeriesType.Standard
+                SeriesType = ShowInfo.genres.Any( s => s.Equals("Anime", StringComparison.OrdinalIgnoreCase)) ? SeriesType.Anime : SeriesType.Standard
             };
 
             return this;

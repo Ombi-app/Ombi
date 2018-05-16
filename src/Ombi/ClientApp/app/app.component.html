@@ -55,13 +55,13 @@
                     </li>
                 </ul>
                 
-                <ul *ngIf="hasRole('Admin') || hasRole('PowerUser')" class="nav navbar-nav">
+                <ul *ngIf="hasRole('Admin') || hasRole('PowerUser')" class="nav navbar-nav donation">
                     <li>
                         <a href="https://www.paypal.me/PlexRequestsNet" target="_blank" pTooltip="{{ 'NavigationBar.DonateTooltip' | translate }}">
                             <i class="fa fa-heart" style="color:red"></i> {{ 'NavigationBar.Donate' | translate }}</a>
                     </li>
                 </ul>
-                <div *ngIf="customizationSettings">
+                <div *ngIf="customizationSettings" class="custom-donation">
                     <ul *ngIf="customizationSettings.enableCustomDonations" class="nav navbar-nav">
                         <li>
                             <a href="{{customizationSettings.customDonationUrl}}" target="_blank">
