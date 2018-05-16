@@ -88,8 +88,12 @@ namespace Ombi.Schedule.Jobs.Plex
                 Logger.LogWarning(LoggingEvents.PlexContentCacher, e, "Exception thrown when attempting to cache the Plex Content");
             }
 
-            Logger.LogInformation("Starting EP Cacher");
-            BackgroundJob.Enqueue(() => EpisodeSync.Start());
+            if (!recentlyAddedSearch)
+            {
+                Logger.LogInformation("Starting EP Cacher");
+                BackgroundJob.Enqueue(() => EpisodeSync.Start());
+            }
+
             BackgroundJob.Enqueue(() => Metadata.Start());
         }
 

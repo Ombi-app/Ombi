@@ -67,6 +67,8 @@ module.exports = (env: any) => {
                 "@ngx-translate/core",
                 "@ngx-translate/http-loader",
                 "ngx-order-pipe",
+                //"smartbanner.js/dist/smartbanner.js",
+                //"smartbanner.js/dist/smartbanner.css",
             ],
         },
         output: {
