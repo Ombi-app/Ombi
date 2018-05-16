@@ -157,6 +157,8 @@ namespace Ombi.Core.Engine
                     .Skip(position).Take(count).OrderByDescending(x => x.ReleaseDate).ToListAsync();
             }
 
+            allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
+
             return allRequests;
         }
 
@@ -182,25 +184,28 @@ namespace Ombi.Core.Engine
                     .ThenInclude(x => x.Episodes)
                     .Skip(position).Take(count).ToListAsync();
             }
+
+            allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
             return ParseIntoTreeNode(allRequests);
         }
 
         public async Task<IEnumerable<TvRequests>> GetRequests()
         {
             var shouldHide = await HideFromOtherUsers();
-            IQueryable<TvRequests> allRequests;
+            List<TvRequests> allRequests;
             if (shouldHide.Hide)
             {
-                allRequests = TvRepository.Get(shouldHide.UserId);
+                allRequests = await TvRepository.Get(shouldHide.UserId).ToListAsync();
 
                 FilterChildren(allRequests, shouldHide);
             }
             else
             {
-                allRequests = TvRepository.Get();
+                allRequests = await TvRepository.Get().ToListAsync();
             }
 
-            return await allRequests.ToListAsync();
+            allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
+            return allRequests;
         }
 
         private static void FilterChildren(IEnumerable<TvRequests> allRequests, HideResult shouldHide)
@@ -233,6 +238,8 @@ namespace Ombi.Core.Engine
                 allRequests = await TvRepository.GetChild().Include(x => x.SeasonRequests).Where(x => x.ParentRequestId == tvId).ToListAsync();
             }
 
+            allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
+
             return allRequests;
         }
 
@@ -249,6 +256,8 @@ namespace Ombi.Core.Engine
                 allRequests = TvRepository.Get();
             }
             var results = await allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToListAsync();
+
+            results.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
             return results;
         }
 
@@ -265,6 +274,7 @@ namespace Ombi.Core.Engine
                 allRequests = TvRepository.Get();
             }
             var results = await allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToListAsync();
+            results.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
             return ParseIntoTreeNode(results);
         }
 
@@ -443,6 +453,29 @@ namespace Ombi.Core.Engine
             else
             {
                 return await TvRepository.Get().CountAsync();
+            }
+        }
+
+        private async Task CheckForSubscription(HideResult shouldHide, TvRequests x)
+        {
+            foreach (var tv in x.ChildRequests)
+            {
+               await CheckForSubscription(shouldHide, tv);
+            }
+        }
+
+        private async Task CheckForSubscription(HideResult shouldHide, ChildRequests x)
+        {
+            if (shouldHide.UserId == x.RequestedUserId)
+            {
+                x.ShowSubscribe = false;
+            }
+            else
+            {
+                x.ShowSubscribe = true;
+                var sub = await _subscriptionRepository.GetAll().FirstOrDefaultAsync(s =>
+                    s.UserId == shouldHide.UserId && s.RequestId == x.Id && s.RequestType == RequestType.TvShow);
+                x.Subscribed = sub != null;
             }
         }
 

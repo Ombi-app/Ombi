@@ -79,7 +79,7 @@ namespace Ombi.Core.Engine
 
             var pendingTv = 0;
             var approvedTv = 0;
-                var availableTv = 0;
+            var availableTv = 0;
             foreach (var tv in tvQuery)
             {
                 foreach (var child in tv.ChildRequests)
@@ -120,12 +120,9 @@ namespace Ombi.Core.Engine
             var settings = await Cache.GetOrAdd(CacheKeys.OmbiSettings, async () => await OmbiSettings.GetSettingsAsync());
             var result = new HideResult
             {
-                Hide = settings.HideRequestsUsers
+                Hide = settings.HideRequestsUsers,
+                UserId = user.Id
             };
-            if (settings.HideRequestsUsers)
-            {
-                result.UserId = user.Id;
-            }
             return result;
         }
 

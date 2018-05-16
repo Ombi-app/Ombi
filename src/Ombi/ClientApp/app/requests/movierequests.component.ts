@@ -219,7 +219,7 @@ export class MovieRequestsComponent implements OnInit {
 
     public unSubscribe(request: IMovieRequests) {
         request.subscribed = false;
-        this.requestService.subscribeToMovie(request.id)
+        this.requestService.unSubscribeToMovie(request.id)
             .subscribe(x => {
                 this.notificationService.success("Unsubscribed Movie!");
             });
