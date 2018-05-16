@@ -22,7 +22,7 @@ namespace Ombi.Notifications.Agents
     {
         public MobileNotification(IOneSignalApi api, ISettingsService<MobileNotificationSettings> sn, ILogger<MobileNotification> log, INotificationTemplatesRepository r,
             IMovieRequestRepository m, ITvRequestRepository t, ISettingsService<CustomizationSettings> s, IRepository<NotificationUserId> notification,
-            UserManager<OmbiUser> um) : base(sn, r, m, t, s,log)
+            UserManager<OmbiUser> um, IRepository<RequestSubscription> sub) : base(sn, r, m, t, s,log, sub)
         {
             _api = api;
             _logger = log;
@@ -167,6 +167,7 @@ namespace Ombi.Notifications.Agents
 
             // Send to user
             var playerIds = GetUsers(model, NotificationType.RequestDeclined);
+            await AddSubscribedUsers(playerIds);
             await Send(playerIds, notification, settings);
         }
 
@@ -185,6 +186,8 @@ namespace Ombi.Notifications.Agents
 
             // Send to user
             var playerIds = GetUsers(model, NotificationType.RequestApproved);
+
+            await AddSubscribedUsers(playerIds);
             await Send(playerIds, notification, settings);
         }
 
@@ -202,6 +205,8 @@ namespace Ombi.Notifications.Agents
             };
             // Send to user
             var playerIds = GetUsers(model, NotificationType.RequestAvailable);
+
+            await AddSubscribedUsers(playerIds);
             await Send(playerIds, notification, settings);
         }
         protected override Task Send(NotificationMessage model, MobileNotificationSettings settings)
@@ -269,6 +274,20 @@ namespace Ombi.Notifications.Agents
             return playerIds;
         }
 
+        private async Task AddSubscribedUsers(List<string> playerIds)
+        {
+            if (await SubsribedUsers.AnyAsync())
+            {
+                foreach (var user in SubsribedUsers.Include(x => x.NotificationUserIds))
+                {
+                    var notificationId = user.NotificationUserIds;
+                    if (notificationId.Any())
+                    {
+                        playerIds.AddRange(notificationId.Select(x => x.PlayerId));
+                    }
+                }
+            }
+        }
 
     }
 }

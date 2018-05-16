@@ -13,7 +13,7 @@ import { RequestComponent } from "./request.component";
 import { TvRequestChildrenComponent } from "./tvrequest-children.component";
 import { TvRequestsComponent } from "./tvrequests.component";
 
-import { SidebarModule, TreeTableModule } from "primeng/primeng";
+import { SidebarModule, TooltipModule, TreeTableModule } from "primeng/primeng";
 
 import { IdentityService, RadarrService, RequestService, SonarrService } from "../services";
 
@@ -37,6 +37,7 @@ const routes: Routes = [
         SidebarModule,
         OrderModule,
         PaginatorModule,
+        TooltipModule,
     ],
     declarations: [
         RequestComponent,

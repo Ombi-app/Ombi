@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 using Ombi.Core.Settings;
@@ -21,7 +22,7 @@ namespace Ombi.Notifications.Agents
     public class EmailNotification : BaseNotification<EmailNotificationSettings>, IEmailNotification
     {
         public EmailNotification(ISettingsService<EmailNotificationSettings> settings, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t, IEmailProvider prov, ISettingsService<CustomizationSettings> c,
-            ILogger<EmailNotification> log, UserManager<OmbiUser> um) : base(settings, r, m, t, c, log)
+            ILogger<EmailNotification> log, UserManager<OmbiUser> um, IRepository<RequestSubscription> sub) : base(settings, r, m, t, c, log, sub)
         {
             EmailProvider = prov;
             Logger = log;
@@ -52,7 +53,7 @@ namespace Ombi.Notifications.Agents
 
             return true;
         }
-        
+
         private async Task<NotificationMessage> LoadTemplate(NotificationType type, NotificationOptions model, EmailNotificationSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Email, type, model);
@@ -62,8 +63,8 @@ namespace Ombi.Notifications.Agents
                 return null;
             }
             var email = new EmailBasicTemplate();
-            var html = email.LoadTemplate(parsed.Subject, parsed.Message,parsed.Image, Customization.Logo);
-            
+            var html = email.LoadTemplate(parsed.Subject, parsed.Message, parsed.Image, Customization.Logo);
+
 
             var message = new NotificationMessage
             {
@@ -154,7 +155,7 @@ namespace Ombi.Notifications.Agents
             {
                 message.To = model.Recipient;
             }
-            
+
 
             await Send(message, settings);
         }
@@ -176,7 +177,7 @@ namespace Ombi.Notifications.Agents
 
             // Issues resolved should be sent to the user
             message.To = model.Recipient;
-            
+
             await Send(message, settings);
         }
 
@@ -227,10 +228,12 @@ namespace Ombi.Notifications.Agents
             var plaintext = await LoadPlainTextMessage(NotificationType.RequestDeclined, model, settings);
             message.Other.Add("PlainTextBody", plaintext);
 
+            await SendToSubscribers(settings, message);
             message.To = model.RequestType == RequestType.Movie
                 ? MovieRequest.RequestedUser.Email
                 : TvRequest.RequestedUser.Email;
             await Send(message, settings);
+
         }
 
         protected override async Task RequestApproved(NotificationOptions model, EmailNotificationSettings settings)
@@ -244,10 +247,30 @@ namespace Ombi.Notifications.Agents
             var plaintext = await LoadPlainTextMessage(NotificationType.RequestApproved, model, settings);
             message.Other.Add("PlainTextBody", plaintext);
 
+            await SendToSubscribers(settings, message);
+
             message.To = model.RequestType == RequestType.Movie
                 ? MovieRequest.RequestedUser.Email
                 : TvRequest.RequestedUser.Email;
             await Send(message, settings);
+        }
+
+        private async Task SendToSubscribers(EmailNotificationSettings settings, NotificationMessage message)
+        {
+            if (await SubsribedUsers.AnyAsync())
+            {
+                foreach (var user in SubsribedUsers)
+                {
+                    if (user.Email.IsNullOrEmpty())
+                    {
+                        continue;
+                    }
+
+                    message.To = user.Email;
+
+                    await Send(message, settings);
+                }
+            }
         }
 
         protected override async Task AvailableRequest(NotificationOptions model, EmailNotificationSettings settings)
@@ -260,7 +283,7 @@ namespace Ombi.Notifications.Agents
 
             var plaintext = await LoadPlainTextMessage(NotificationType.RequestAvailable, model, settings);
             message.Other.Add("PlainTextBody", plaintext);
-
+            await SendToSubscribers(settings, message);
             message.To = model.RequestType == RequestType.Movie
                 ? MovieRequest.RequestedUser.Email
                 : TvRequest.RequestedUser.Email;

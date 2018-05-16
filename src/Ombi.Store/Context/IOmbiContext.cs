@@ -42,5 +42,6 @@ namespace Ombi.Store.Context
         DbSet<SickRageEpisodeCache> SickRageEpisodeCache { get; set; }
         DbSet<RequestLog> RequestLogs { get; set; }
         DbSet<RecentlyAddedLog> RecentlyAddedLogs { get; set; }
+        DbSet<RequestSubscription> RequestSubscription { get; set; }
     }
 }

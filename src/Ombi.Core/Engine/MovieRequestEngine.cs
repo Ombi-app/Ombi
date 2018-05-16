@@ -25,7 +25,8 @@ namespace Ombi.Core.Engine
     {
         public MovieRequestEngine(IMovieDbApi movieApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log,
-            OmbiUserManager manager, IRepository<RequestLog> rl, ICacheService cache, ISettingsService<OmbiSettings> ombiSettings) : base(user, requestService, r, manager, cache, ombiSettings)
+            OmbiUserManager manager, IRepository<RequestLog> rl, ICacheService cache, ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub) 
+            : base(user, requestService, r, manager, cache, ombiSettings, sub)
         {
             MovieApi = movieApi;
             NotificationHelper = helper;
@@ -140,6 +141,7 @@ namespace Ombi.Core.Engine
             allRequests.ForEach(x =>
             {
                 x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
+                CheckForSubscription(shouldHide, x);
             });
             return allRequests;
         }
@@ -173,7 +175,20 @@ namespace Ombi.Core.Engine
             {
                 allRequests = await MovieRepository.GetWithUser().ToListAsync();
             }
+
+            allRequests.ForEach(x =>
+            {
+                x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
+                CheckForSubscription(shouldHide, x);
+            });
             return allRequests;
+        }
+
+        private void CheckForSubscription(HideResult shouldHide, MovieRequests x)
+        {
+            var sub = _subscriptionRepository.GetAll().FirstOrDefaultAsync(s =>
+                s.UserId == shouldHide.UserId && s.RequestId == x.Id && s.RequestType == RequestType.Movie);
+            x.Subscribed = sub != null;
         }
 
         /// <summary>
@@ -197,6 +212,7 @@ namespace Ombi.Core.Engine
             results.ForEach(x =>
             {
                 x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
+                CheckForSubscription(shouldHide, x);
             });
             return results;
         }

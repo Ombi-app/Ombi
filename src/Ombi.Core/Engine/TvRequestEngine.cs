@@ -29,7 +29,8 @@ namespace Ombi.Core.Engine
     {
         public TvRequestEngine(ITvMazeApi tvApi, IMovieDbApi movApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IRuleEvaluator rule, OmbiUserManager manager,
-            ITvSender sender, IAuditRepository audit, IRepository<RequestLog> rl, ISettingsService<OmbiSettings> settings, ICacheService cache) : base(user, requestService, rule, manager, cache, settings)
+            ITvSender sender, IAuditRepository audit, IRepository<RequestLog> rl, ISettingsService<OmbiSettings> settings, ICacheService cache,
+            IRepository<RequestSubscription> sub) : base(user, requestService, rule, manager, cache, settings, sub)
         {
             TvApi = tvApi;
             MovieDbApi = movApi;

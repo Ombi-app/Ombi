@@ -16,6 +16,12 @@ namespace Ombi.Store.Entities.Requests
         public string Background { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string Status { get; set; }
+
+        /// <summary>
+        /// This is to see if the user is subscribed in the UI
+        /// </summary>
+        [NotMapped]
+        public bool Subscribed { get; set; }
         /// <summary>
         /// This is so we can correctly send the right amount of seasons to Sonarr
         /// </summary>

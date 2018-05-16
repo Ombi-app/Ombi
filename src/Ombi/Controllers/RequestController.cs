@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Ombi.Store.Entities.Requests;
 using System.Diagnostics;
 using Ombi.Models;
+using Ombi.Store.Entities;
 
 namespace Ombi.Controllers
 {
@@ -355,6 +356,46 @@ namespace Ombi.Controllers
         public async Task<FilterResult<MovieRequests>> Filter([FromBody] FilterViewModel vm)
         {
             return await MovieRequestEngine.Filter(vm);
+        }
+
+        /// <summary>
+        /// Subscribes for notifications to a movie request
+        /// </summary>
+        [HttpPost("movie/subscribe/{requestId:int}")]
+        public async Task<bool> SubscribeToMovie(int requestId)
+        {
+            await MovieRequestEngine.SubscribeToRequest(requestId, RequestType.Movie);
+            return true;
+        }
+
+        /// <summary>
+        /// Subscribes for notifications to a TV request
+        /// </summary>
+        [HttpPost("tv/subscribe/{requestId:int}")]
+        public async Task<bool> SubscribeToTv(int requestId)
+        {
+            await TvRequestEngine.SubscribeToRequest(requestId, RequestType.TvShow);
+            return true;
+        }
+
+        /// <summary>
+        /// UnSubscribes for notifications to a movie request
+        /// </summary>
+        [HttpPost("movie/unsubscribe/{requestId:int}")]
+        public async Task<bool> UnSubscribeToMovie(int requestId)
+        {
+            await MovieRequestEngine.UnSubscribeRequest(requestId, RequestType.Movie);
+            return true;
+        }
+
+        /// <summary>
+        /// UnSubscribes for notifications to a TV request
+        /// </summary>
+        [HttpPost("tv/unsubscribe/{requestId:int}")]
+        public async Task<bool> UnSubscribeToTv(int requestId)
+        {
+            await TvRequestEngine.UnSubscribeRequest(requestId, RequestType.TvShow);
+            return true;
         }
     }
 }
