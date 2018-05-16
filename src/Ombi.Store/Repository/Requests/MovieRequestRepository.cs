@@ -57,7 +57,7 @@ namespace Ombi.Store.Repository.Requests
         public IQueryable<MovieRequests> GetWithUser(string userId)
         {
             return Db.MovieRequests
-                 .Where(x => x.RequestedUserId == userId)
+                .Where(x => x.RequestedUserId == userId)
                 .Include(x => x.RequestedUser)
                 .ThenInclude(x => x.NotificationUserIds)
                 .AsQueryable();

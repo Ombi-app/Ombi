@@ -12,6 +12,8 @@ export interface IMovieRequests extends IFullBaseRequest {
   rootPathOverride: number;
   qualityOverride: number;
   digitalReleaseDate: Date;
+  subscribed: boolean;
+  showSubscribe: boolean;
 
   // For the UI
   rootPathOverrideTitle: string;
@@ -77,6 +79,8 @@ export interface ITvRequests {
 
 export interface IChildRequests extends IBaseRequest {
   seasonRequests: INewSeasonRequests[];
+  subscribed: boolean;
+  showSubscribe: boolean;
 }
 
 export interface ITvUpdateModel {

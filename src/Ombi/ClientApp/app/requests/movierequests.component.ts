@@ -208,6 +208,22 @@ export class MovieRequestsComponent implements OnInit {
         }
         this.order = value;
       }
+    
+      public subscribe(request: IMovieRequests) {
+        request.subscribed = true;
+        this.requestService.subscribeToMovie(request.id)
+            .subscribe(x => {
+                this.notificationService.success("Subscribed To Movie!");
+            });
+    }
+
+    public unSubscribe(request: IMovieRequests) {
+        request.subscribed = false;
+        this.requestService.unSubscribeToMovie(request.id)
+            .subscribe(x => {
+                this.notificationService.success("Unsubscribed Movie!");
+            });
+    }
 
     private filterActiveStyle(el: any) {
         el = el.toElement || el.relatedTarget || el.target || el.srcElement;
