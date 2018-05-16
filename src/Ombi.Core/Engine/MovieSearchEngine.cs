@@ -15,14 +15,16 @@ using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
+using Ombi.Store.Entities;
+using Ombi.Store.Repository;
 
 namespace Ombi.Core.Engine
 {
     public class MovieSearchEngine : BaseMediaEngine, IMovieEngine
     {
         public MovieSearchEngine(IPrincipal identity, IRequestServiceMain service, IMovieDbApi movApi, IMapper mapper,
-            ILogger<MovieSearchEngine> logger, IRuleEvaluator r, OmbiUserManager um, ICacheService mem, ISettingsService<OmbiSettings> s)
-            : base(identity, service, r, um, mem, s)
+            ILogger<MovieSearchEngine> logger, IRuleEvaluator r, OmbiUserManager um, ICacheService mem, ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub)
+            : base(identity, service, r, um, mem, s, sub)
         {
             MovieApi = movApi;
             Mapper = mapper;

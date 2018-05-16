@@ -117,4 +117,17 @@ export class RequestService extends ServiceHelpers {
     public filterMovies(filter: IFilter): Observable<IFilterResult<IMovieRequests>> {
         return this.http.post<IFilterResult<IMovieRequests>>(`${this.url}movie/filter`, JSON.stringify(filter), {headers: this.headers});
     }
+    
+    public subscribeToMovie(requestId: number): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}movie/subscribe/${requestId}`, {headers: this.headers});
+    }    
+    public unSubscribeToMovie(requestId: number): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}movie/unsubscribe/${requestId}`, {headers: this.headers});
+    }
+    public subscribeToTv(requestId: number): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}tv/subscribe/${requestId}`, {headers: this.headers});
+    }    
+    public unSubscribeToTv(requestId: number): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}tv/unsubscribe/${requestId}`, {headers: this.headers});
+    }
 }

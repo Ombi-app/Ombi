@@ -1,10 +1,12 @@
 # Changelog
 
-## (unreleased)
+## v3.0.3304 (2018-05-09)
 
 ### **New Features**
 
 - Updated to prevent security vulnerability as noted here: https://github.com/aspnet/Announcements/issues/300. [Jamie Rees]
+
+- Update README.md. [Jamie]
 
 ### **Fixes**
 

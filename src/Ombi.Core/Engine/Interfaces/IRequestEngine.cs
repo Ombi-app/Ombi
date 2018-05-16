@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ombi.Core.Models.Requests;
+using Ombi.Store.Entities;
 
 namespace Ombi.Core.Engine.Interfaces
 {
@@ -18,5 +19,7 @@ namespace Ombi.Core.Engine.Interfaces
         Task<RequestEngineResult> MarkUnavailable(int modelId);
         Task<RequestEngineResult> MarkAvailable(int modelId);
         Task<int> GetTotal();
+        Task UnSubscribeRequest(int requestId, RequestType type);
+        Task SubscribeToRequest(int requestId, RequestType type);
     }
 }
