@@ -15,7 +15,7 @@ export class MobileComponent implements OnInit {
     public templates: INotificationTemplates[];
     public form: FormGroup;
     public userList: IMobileUsersViewModel[];
-    public testUserId: string = "d164439a-6f23-43c6-bc12-6a8d3d89dbf5";
+    public testUserId: string;
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
