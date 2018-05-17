@@ -152,6 +152,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMattermostNotification, MattermostNotification>();
             services.AddTransient<IPushoverNotification, PushoverNotification>();
             services.AddTransient<ITelegramNotification, TelegramNotification>();
+            services.AddTransient<IMobileNotification, MobileNotification>();
             services.AddTransient<IChangeLogProcessor, ChangeLogProcessor>();
         }
 

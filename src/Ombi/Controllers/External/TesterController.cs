@@ -14,6 +14,7 @@ using Ombi.Core.Models.UI;
 using Ombi.Core.Notifications;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Models;
 using Ombi.Notifications;
 using Ombi.Notifications.Agents;
 using Ombi.Notifications.Models;
@@ -37,7 +38,7 @@ namespace Ombi.Controllers.External
         public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN,
             IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
             IPlexApi plex, IEmbyApi emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider,
-            ICouchPotatoApi cpApi, ITelegramNotification telegram, ISickRageApi srApi, INewsletterJob newsletter)
+            ICouchPotatoApi cpApi, ITelegramNotification telegram, ISickRageApi srApi, INewsletterJob newsletter, IMobileNotification mobileNotification)
         {
             Service = service;
             DiscordNotification = notification;
@@ -56,6 +57,7 @@ namespace Ombi.Controllers.External
             TelegramNotification = telegram;
             SickRageApi = srApi;
             Newsletter = newsletter;
+            MobileNotification = mobileNotification;
         }
 
         private INotificationService Service { get; }
@@ -75,6 +77,7 @@ namespace Ombi.Controllers.External
         private ITelegramNotification TelegramNotification { get; }
         private ISickRageApi SickRageApi { get; }
         private INewsletterJob Newsletter { get; }
+        private IMobileNotification MobileNotification { get; }
 
 
         /// <summary>
@@ -385,6 +388,22 @@ namespace Ombi.Controllers.External
             catch (Exception e)
             {
                 Log.LogError(LoggingEvents.Api, e, "Could not test Newsletter");
+                return false;
+            }
+        }
+
+        [HttpPost("mobile")]
+        public async Task<bool> MobileNotificationTest([FromBody] MobileNotificationTestViewModel settings)
+        {
+            try
+            {
+                await MobileNotification.NotifyAsync(new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1, UserId = settings.UserId}, settings.Settings);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test Mobile Notifications");
                 return false;
             }
         }

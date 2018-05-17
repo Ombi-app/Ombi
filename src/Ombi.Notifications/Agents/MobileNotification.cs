@@ -18,7 +18,7 @@ using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Notifications.Agents
 {
-    public class MobileNotification : BaseNotification<MobileNotificationSettings>
+    public class MobileNotification : BaseNotification<MobileNotificationSettings>, IMobileNotification
     {
         public MobileNotification(IOneSignalApi api, ISettingsService<MobileNotificationSettings> sn, ILogger<MobileNotification> log, INotificationTemplatesRepository r,
             IMovieRequestRepository m, ITvRequestRepository t, ISettingsService<CustomizationSettings> s, IRepository<NotificationUserId> notification,
@@ -232,7 +232,13 @@ namespace Ombi.Notifications.Agents
                 Message = message,
             };
             // Send to user
-            var playerIds = await GetAdmins(NotificationType.RequestAvailable);
+            var user = await _userManager.Users.Include(x => x.NotificationUserIds).FirstOrDefaultAsync(x => x.Id.Equals(model.UserId));
+            if (user == null)
+            {
+                return;
+            }
+
+            var playerIds = user.NotificationUserIds.Select(x => x.PlayerId).ToList();
             await Send(playerIds, notification, settings);
         }
 
