@@ -90,15 +90,15 @@ namespace Ombi.Schedule.Processor
             }
 
 
-            return TransformUpdate(release);
+            return TransformUpdate(release,!masterBranch);
 
         }
 
-        private UpdateModel TransformUpdate(Release release)
+        private UpdateModel TransformUpdate(Release release, bool develop)
         {
             var newUpdate = new UpdateModel
             {
-                UpdateVersionString = release.Version.Substring(1,8),
+                UpdateVersionString = develop ? release.Version : release.Version.Substring(1,8),
                 UpdateVersion = release.Version == "(unreleased)" ? 0 : int.Parse(release.Version.Substring(1, 5).Replace(".", "")),
                 UpdateDate = DateTime.Now,
                 ChangeLogs = new List<ChangeLog>(),

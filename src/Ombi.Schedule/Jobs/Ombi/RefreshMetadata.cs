@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -17,7 +18,7 @@ namespace Ombi.Schedule.Jobs.Ombi
     {
         public RefreshMetadata(IPlexContentRepository plexRepo, IEmbyContentRepository embyRepo,
             ILogger<RefreshMetadata> log, ITvMazeApi tvApi, ISettingsService<PlexSettings> plexSettings,
-            IMovieDbApi movieApi)
+            IMovieDbApi movieApi, ISettingsService<EmbySettings> embySettings)
         {
             _plexRepo = plexRepo;
             _embyRepo = embyRepo;
@@ -25,6 +26,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             _movieApi = movieApi;
             _tvApi = tvApi;
             _plexSettings = plexSettings;
+            _embySettings = embySettings;
         }
 
         private readonly IPlexContentRepository _plexRepo;
@@ -33,6 +35,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly IMovieDbApi _movieApi;
         private readonly ITvMazeApi _tvApi;
         private readonly ISettingsService<PlexSettings> _plexSettings;
+        private readonly ISettingsService<EmbySettings> _embySettings;
 
         public async Task Start()
         {
@@ -43,6 +46,11 @@ namespace Ombi.Schedule.Jobs.Ombi
                 if (settings.Enable)
                 {
                     await StartPlex();
+                }
+
+                var embySettings = await _embySettings.GetSettingsAsync();
+                if (embySettings.Enable)
+                {
                     await StartEmby();
                 }
             }
@@ -53,12 +61,45 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        private async Task StartPlex()
+        public async Task ProcessPlexServerContent(IEnumerable<int> contentIds)
         {
-            await StartPlexMovies();
+            _log.LogInformation("Starting the Metadata refresh from RecentlyAddedSync");
+            try
+            {
+                var settings = await _plexSettings.GetSettingsAsync();
+                if (settings.Enable)
+                {
+                    await StartPlexWithKnownContent(contentIds);
+                }
+            }
+            catch (Exception e)
+            {
+                _log.LogError(e, "Exception when refreshing the Plex Metadata");
+                throw;
+            }
+        }
+
+        private async Task StartPlexWithKnownContent(IEnumerable<int> contentids)
+        {
+            var everything = _plexRepo.GetAll().Where(x => contentids.Contains(x.Id));
+            var allMovies = everything.Where(x => x.Type == PlexMediaTypeEntity.Movie);
+            await StartPlexMovies(allMovies);
 
             // Now Tv
-            await StartPlexTv();
+            var allTv = everything.Where(x => x.Type == PlexMediaTypeEntity.Show);
+            await StartPlexTv(allTv);
+        }
+
+        private async Task StartPlex()
+        {
+            var allMovies = _plexRepo.GetAll().Where(x =>
+                x.Type == PlexMediaTypeEntity.Movie && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue()));
+            await StartPlexMovies(allMovies);
+
+            // Now Tv
+            var allTv = _plexRepo.GetAll().Where(x =>
+                x.Type == PlexMediaTypeEntity.Show && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue() || !x.TvDbId.HasValue()));
+            await StartPlexTv(allTv);
         }
 
         private async Task StartEmby()
@@ -67,10 +108,8 @@ namespace Ombi.Schedule.Jobs.Ombi
             await StartEmbyTv();
         }
 
-        private async Task StartPlexTv()
+        private async Task StartPlexTv(IQueryable<PlexServerContent> allTv)
         {
-            var allTv = _plexRepo.GetAll().Where(x =>
-                x.Type == PlexMediaTypeEntity.Show && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue() || !x.TvDbId.HasValue()));
             var tvCount = 0;
             foreach (var show in allTv)
             {
@@ -147,10 +186,8 @@ namespace Ombi.Schedule.Jobs.Ombi
             await _embyRepo.SaveChangesAsync();
         }
 
-        private async Task StartPlexMovies()
+        private async Task StartPlexMovies(IQueryable<PlexServerContent> allMovies)
         {
-            var allMovies = _plexRepo.GetAll().Where(x =>
-                x.Type == PlexMediaTypeEntity.Movie && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue()));
             int movieCount = 0;
             foreach (var movie in allMovies)
             {

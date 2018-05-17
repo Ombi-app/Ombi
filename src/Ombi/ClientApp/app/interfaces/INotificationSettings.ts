@@ -101,3 +101,8 @@ export interface IMattermostNotifcationSettings extends INotificationSettings {
 export interface IMobileNotifcationSettings extends INotificationSettings {
     notificationTemplates: INotificationTemplates[];
 }
+
+export interface IMobileNotificationTestSettings {
+    settings: IMobileNotifcationSettings;
+    userId: string;
+}

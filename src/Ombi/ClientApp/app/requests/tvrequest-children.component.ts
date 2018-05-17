@@ -94,6 +94,22 @@ export class TvRequestChildrenComponent {
             });
     }
 
+    public subscribe(request: IChildRequests) {
+        request.subscribed = true;
+        this.requestService.subscribeToTv(request.id)
+            .subscribe(x => {
+                this.notificationService.success("Subscribed To TV Show!");
+            });
+    }
+
+    public unSubscribe(request: IChildRequests) {
+        request.subscribed = false;
+        this.requestService.unSubscribeToTv(request.id)
+            .subscribe(x => {
+                this.notificationService.success("Unsubscribed TV Show!");
+            });
+    }
+
     private removeRequestFromUi(key: IChildRequests) {
         const index = this.childRequests.indexOf(key, 0);
         if (index > -1) {

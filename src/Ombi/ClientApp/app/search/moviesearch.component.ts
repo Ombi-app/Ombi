@@ -1,4 +1,5 @@
-﻿import { Component, Input, OnInit } from "@angular/core";
+﻿import { PlatformLocation } from "@angular/common";
+import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateService } from "@ngx-translate/core";
 import "rxjs/add/operator/debounceTime";
@@ -29,10 +30,12 @@ export class MovieSearchComponent implements OnInit {
     public issueRequestId: number;
     public issueProviderId: string;
     public issueCategorySelected: IIssueCategory;
+    public defaultPoster: string;
         
     constructor(private searchService: SearchService, private requestService: RequestService,
                 private notificationService: NotificationService, private authService: AuthService,
-                private readonly translate: TranslateService, private sanitizer: DomSanitizer) {
+                private readonly translate: TranslateService, private sanitizer: DomSanitizer,
+                private readonly platformLocation: PlatformLocation) {
 
         this.searchChanged
             .debounceTime(600) // Wait Xms after the last event before emitting last event
@@ -52,6 +55,11 @@ export class MovieSearchComponent implements OnInit {
                         this.getExtraInfo();
                     });
             });
+        this.defaultPoster = "../../../images/default_movie_poster.png";
+        const base = this.platformLocation.getBaseHrefFromDOM();
+        if (base) {
+            this.defaultPoster = "../../.." + base + "/images/default_movie_poster.png";
+        }
     }
 
     public ngOnInit() {
@@ -159,7 +167,7 @@ export class MovieSearchComponent implements OnInit {
 
        this.movieResults.forEach((val, index) => {
            if (val.posterPath === null) {
-               val.posterPath = "../../../images/default_movie_poster.png";
+               val.posterPath = this.defaultPoster;
            } else {
                val.posterPath = "https://image.tmdb.org/t/p/w300/" + val.posterPath;
            }

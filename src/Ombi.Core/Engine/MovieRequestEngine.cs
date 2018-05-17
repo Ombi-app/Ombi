@@ -25,7 +25,8 @@ namespace Ombi.Core.Engine
     {
         public MovieRequestEngine(IMovieDbApi movieApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log,
-            OmbiUserManager manager, IRepository<RequestLog> rl, ICacheService cache, ISettingsService<OmbiSettings> ombiSettings) : base(user, requestService, r, manager, cache, ombiSettings)
+            OmbiUserManager manager, IRepository<RequestLog> rl, ICacheService cache, ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub) 
+            : base(user, requestService, r, manager, cache, ombiSettings, sub)
         {
             MovieApi = movieApi;
             NotificationHelper = helper;
@@ -137,9 +138,10 @@ namespace Ombi.Core.Engine
             {
                 allRequests = await MovieRepository.GetWithUser().Skip(position).Take(count).OrderByDescending(x => x.ReleaseDate).ToListAsync();
             }
-            allRequests.ForEach(x =>
+            allRequests.ForEach(async x =>
             {
                 x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
+                await CheckForSubscription(shouldHide, x);
             });
             return allRequests;
         }
@@ -173,7 +175,28 @@ namespace Ombi.Core.Engine
             {
                 allRequests = await MovieRepository.GetWithUser().ToListAsync();
             }
+
+            allRequests.ForEach(async x =>
+            {
+                x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
+                await CheckForSubscription(shouldHide, x);
+            });
             return allRequests;
+        }
+
+        private async Task CheckForSubscription(HideResult shouldHide, MovieRequests x)
+        {
+            if (shouldHide.UserId == x.RequestedUserId)
+            {
+                x.ShowSubscribe = false;
+            }
+            else
+            {
+                x.ShowSubscribe = true;
+                var sub = await _subscriptionRepository.GetAll().FirstOrDefaultAsync(s =>
+                    s.UserId == shouldHide.UserId && s.RequestId == x.Id && s.RequestType == RequestType.Movie);
+                x.Subscribed = sub != null;
+            }
         }
 
         /// <summary>
@@ -194,9 +217,10 @@ namespace Ombi.Core.Engine
                 allRequests = await MovieRepository.GetWithUser().ToListAsync();
             }
             var results = allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToList();
-            results.ForEach(x =>
+            results.ForEach(async x =>
             {
                 x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
+                await CheckForSubscription(shouldHide, x);
             });
             return results;
         }

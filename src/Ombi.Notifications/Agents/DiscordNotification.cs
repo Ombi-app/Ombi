@@ -20,8 +20,8 @@ namespace Ombi.Notifications.Agents
     {
         public DiscordNotification(IDiscordApi api, ISettingsService<DiscordNotificationSettings> sn,
                                    ILogger<DiscordNotification> log, INotificationTemplatesRepository r,
-                                   IMovieRequestRepository m, ITvRequestRepository t, ISettingsService<CustomizationSettings> s)
-            : base(sn, r, m, t,s,log)
+                                   IMovieRequestRepository m, ITvRequestRepository t, ISettingsService<CustomizationSettings> s, IRepository<RequestSubscription> sub)
+            : base(sn, r, m, t,s,log, sub)
         {
             Api = api;
             Logger = log;

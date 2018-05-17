@@ -15,6 +15,7 @@ export class MobileComponent implements OnInit {
     public templates: INotificationTemplates[];
     public form: FormGroup;
     public userList: IMobileUsersViewModel[];
+    public testUserId: string;
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
@@ -64,8 +65,12 @@ export class MobileComponent implements OnInit {
             this.notificationService.error("Please check your entered values");
             return;
         }
+        if(!this.testUserId) {
+            this.notificationService.warning("Warning","Please select a user to send the test notification");
+            return;
+        }
 
-        this.testerService.discordTest(form.value).subscribe(x => {
+        this.testerService.mobileNotificationTest({settings: form.value, userId: this.testUserId}).subscribe(x => {
             if (x) {
                 this.notificationService.success("Successfully sent a Mobile message, please check the admin mobile device");
             } else {
