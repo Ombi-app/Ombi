@@ -36,6 +36,8 @@ namespace Ombi.Store.Entities
 
         [NotMapped]
         public bool EmailLogin { get; set; }
+
+        [NotMapped] public bool IsSystemUser => UserType == UserType.SystemUser;
         
         [JsonIgnore]
         public override string PasswordHash

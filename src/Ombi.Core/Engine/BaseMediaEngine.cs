@@ -110,7 +110,7 @@ namespace Ombi.Core.Engine
         protected async Task<HideResult> HideFromOtherUsers()
         {
             var user = await GetUser();
-            if (await IsInRole(OmbiRoles.Admin) || await IsInRole(OmbiRoles.PowerUser))
+            if (await IsInRole(OmbiRoles.Admin) || await IsInRole(OmbiRoles.PowerUser) || user.IsSystemUser)
             {
                 return new HideResult
                 {
