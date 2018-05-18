@@ -160,13 +160,13 @@ namespace Ombi.Core.Senders
                     // Montitor the correct seasons,
                     // If we have that season in the model then it's monitored!
                     var seasonsToAdd = new List<Season>();
-                    for (var i = 1; i < model.ParentRequest.TotalSeasons + 1; i++)
+                    for (var i = 0; i < model.ParentRequest.TotalSeasons + 1; i++)
                     {
                         var index = i;
                         var season = new Season
                         {
                             seasonNumber = i,
-                            monitored = model.SeasonRequests.Any(x => x.SeasonNumber == index)
+                            monitored = model.SeasonRequests.Any(x => x.SeasonNumber == index && x.SeasonNumber != 0)
                         };
                         seasonsToAdd.Add(season);
                     }
