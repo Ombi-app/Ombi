@@ -9,13 +9,12 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities.Requests;
-using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
-using Ombi.Store.Entities;
-using Microsoft.AspNetCore.Identity;
 using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models;
+using Ombi.Store.Entities;
+using Ombi.Store.Repository;
 
 namespace Ombi.Core.Engine
 {
@@ -26,11 +25,12 @@ namespace Ombi.Core.Engine
         private Dictionary<int, TvRequests> _dbTv;
 
         protected BaseMediaEngine(IPrincipal identity, IRequestServiceMain requestService,
-            IRuleEvaluator rules, OmbiUserManager um, ICacheService cache, ISettingsService<OmbiSettings> ombiSettings) : base(identity, um, rules)
+            IRuleEvaluator rules, OmbiUserManager um, ICacheService cache, ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub) : base(identity, um, rules)
         {
             RequestService = requestService;
             Cache = cache;
             OmbiSettings = ombiSettings;
+            _subscriptionRepository = sub;
         }
 
         protected IRequestServiceMain RequestService { get; }
@@ -38,6 +38,7 @@ namespace Ombi.Core.Engine
         protected ITvRequestRepository TvRepository => RequestService.TvRequestService;
         protected readonly ICacheService Cache;
         protected readonly ISettingsService<OmbiSettings> OmbiSettings;
+        protected readonly IRepository<RequestSubscription> _subscriptionRepository;
 
         protected async Task<Dictionary<int, MovieRequests>> GetMovieRequests()
         {
@@ -78,7 +79,7 @@ namespace Ombi.Core.Engine
 
             var pendingTv = 0;
             var approvedTv = 0;
-                var availableTv = 0;
+            var availableTv = 0;
             foreach (var tv in tvQuery)
             {
                 foreach (var child in tv.ChildRequests)
@@ -108,21 +109,51 @@ namespace Ombi.Core.Engine
 
         protected async Task<HideResult> HideFromOtherUsers()
         {
-            if (await IsInRole(OmbiRoles.Admin) || await IsInRole(OmbiRoles.PowerUser))
+            var user = await GetUser();
+            if (await IsInRole(OmbiRoles.Admin) || await IsInRole(OmbiRoles.PowerUser) || user.IsSystemUser)
             {
-                return new HideResult();
+                return new HideResult
+                {
+                    UserId = user.Id
+                };
             }
             var settings = await Cache.GetOrAdd(CacheKeys.OmbiSettings, async () => await OmbiSettings.GetSettingsAsync());
             var result = new HideResult
             {
-                Hide = settings.HideRequestsUsers
+                Hide = settings.HideRequestsUsers,
+                UserId = user.Id
             };
-            if (settings.HideRequestsUsers)
-            {
-                var user = await GetUser();
-                result.UserId = user.Id;
-            }
             return result;
+        }
+
+        public async Task SubscribeToRequest(int requestId, RequestType type)
+        {
+            var user = await GetUser();
+            var existingSub = await _subscriptionRepository.GetAll().FirstOrDefaultAsync(x =>
+                x.UserId.Equals(user.Id) && x.RequestId == requestId && x.RequestType == type);
+            if (existingSub != null)
+            {
+                return;
+            }
+            var sub = new RequestSubscription
+            {
+                UserId = user.Id,
+                RequestId = requestId,
+                RequestType = type
+            };
+
+            await _subscriptionRepository.Add(sub);
+        }
+
+        public async Task UnSubscribeRequest(int requestId, RequestType type)
+        {
+            var user = await GetUser();
+            var existingSub = await _subscriptionRepository.GetAll().FirstOrDefaultAsync(x =>
+                x.UserId.Equals(user.Id) && x.RequestId == requestId && x.RequestType == type);
+            if (existingSub != null)
+            {
+                await _subscriptionRepository.Delete(existingSub);
+            }
         }
 
         public class HideResult

@@ -4,7 +4,40 @@
 
 ### **New Features**
 
+- Finished adding subscriptions for TV Shows. [Jamie Rees]
+
+- Added the test button for mobile notifications. [Jamie Rees]
+
+- Added classes to donation html elements. [Anojh]
+
+- Enhanced newsletter styling to support more mail clients. [Anojh]
+
+- Improved the way we sync the plex content and then get the metadata. #2243. [Jamie Rees]
+
+### **Fixes**
+
+- Fixed #2257. [Jamie Rees]
+
+- Fixed the issue when enabling the Hide Request Users included system users e.g. API key user #2232. [Jamie Rees]
+
+- Fix #2167. [Anojh]
+
+- Fix #2228. [Anojh]
+
+- Fix #2246. [Anojh]
+
+- Fix #2234. [Anojh]
+
+- Fixed that sometimes there would be a hidden error on the login page. [Jamie Rees]
+
+
+## v3.0.3304 (2018-05-09)
+
+### **New Features**
+
 - Updated to prevent security vulnerability as noted here: https://github.com/aspnet/Announcements/issues/300. [Jamie Rees]
+
+- Update README.md. [Jamie]
 
 ### **Fixes**
 

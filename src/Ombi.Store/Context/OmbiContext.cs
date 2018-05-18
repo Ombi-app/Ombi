@@ -47,6 +47,7 @@ namespace Ombi.Store.Context
         public DbSet<SonarrEpisodeCache> SonarrEpisodeCache { get; set; }
         public DbSet<SickRageCache> SickRageCache { get; set; }
         public DbSet<SickRageEpisodeCache> SickRageEpisodeCache { get; set; }
+        public DbSet<RequestSubscription> RequestSubscription { get; set; }
 
         public DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
 

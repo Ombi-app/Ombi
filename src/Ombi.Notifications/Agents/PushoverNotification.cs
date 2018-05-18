@@ -18,7 +18,7 @@ namespace Ombi.Notifications.Agents
     public class PushoverNotification : BaseNotification<PushoverSettings>, IPushoverNotification
     {
         public PushoverNotification(IPushoverApi api, ISettingsService<PushoverSettings> sn, ILogger<PushoverNotification> log, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t,
-            ISettingsService<CustomizationSettings> s) : base(sn, r, m, t, s, log)
+            ISettingsService<CustomizationSettings> s, IRepository<RequestSubscription> sub) : base(sn, r, m, t, s, log, sub)
         {
             Api = api;
             Logger = log;

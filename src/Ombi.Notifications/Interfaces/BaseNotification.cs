@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -17,7 +19,7 @@ namespace Ombi.Notifications.Interfaces
     public abstract class BaseNotification<T> : INotification where T : Settings.Settings.Models.Settings, new()
     {
         protected BaseNotification(ISettingsService<T> settings, INotificationTemplatesRepository templateRepo, IMovieRequestRepository movie, ITvRequestRepository tv,
-            ISettingsService<CustomizationSettings> customization, ILogger<BaseNotification<T>> log)
+            ISettingsService<CustomizationSettings> customization, ILogger<BaseNotification<T>> log, IRepository<RequestSubscription> sub)
         {
             Settings = settings;
             TemplateRepository = templateRepo;
@@ -26,21 +28,24 @@ namespace Ombi.Notifications.Interfaces
             CustomizationSettings = customization;
             Settings.ClearCache();
             CustomizationSettings.ClearCache();
+            RequestSubscription = sub;
             _log = log;
         }
-        
+
         protected ISettingsService<T> Settings { get; }
         protected INotificationTemplatesRepository TemplateRepository { get; }
         protected IMovieRequestRepository MovieRepository { get; }
         protected ITvRequestRepository TvRepository { get; }
         protected CustomizationSettings Customization { get; set; }
+        protected IRepository<RequestSubscription> RequestSubscription { get; set; }
         private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
         private readonly ILogger<BaseNotification<T>> _log;
 
 
         protected ChildRequests TvRequest { get; set; }
         protected MovieRequests MovieRequest { get; set; }
-        
+        protected IQueryable<OmbiUser> SubsribedUsers { get; private set; }
+
         public abstract string NotificationName { get; }
 
         public async Task NotifyAsync(NotificationOptions model)
@@ -54,20 +59,21 @@ namespace Ombi.Notifications.Interfaces
         {
             Settings.ClearCache();
             if (settings == null) await NotifyAsync(model);
-            
+
             var notificationSettings = (T)settings;
-            
+
             if (!ValidateConfiguration(notificationSettings))
             {
                 return;
             }
-            
+
             // Is this a test?
             // The request id for tests is -1
             // Also issues are 0 since there might not be a request associated
             if (model.RequestId > 0)
             {
                 await LoadRequest(model.RequestId, model.RequestType);
+                SubsribedUsers = GetSubscriptions(model.RequestId, model.RequestType);
             }
 
             Customization = await CustomizationSettings.GetSettingsAsync();
@@ -126,7 +132,7 @@ namespace Ombi.Notifications.Interfaces
             }
             else
             {
-               TvRequest = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId);
+                TvRequest = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId);
             }
         }
 
@@ -152,11 +158,17 @@ namespace Ombi.Notifications.Interfaces
             }
             if (!template.Enabled)
             {
-                return new NotificationMessageContent {Disabled = true};
+                return new NotificationMessageContent { Disabled = true };
             }
             var parsed = Parse(model, template);
 
             return parsed;
+        }
+
+        protected IQueryable<OmbiUser> GetSubscriptions(int requestId, RequestType type)
+        {
+            var subs = RequestSubscription.GetAll().Include(x => x.User).Where(x => x.RequestId == requestId && type == x.RequestType);
+            return subs.Select(x => x.User);
         }
 
         private NotificationMessageContent Parse(NotificationOptions model, NotificationTemplates template)
@@ -166,7 +178,7 @@ namespace Ombi.Notifications.Interfaces
             if (model.RequestType == RequestType.Movie)
             {
                 _log.LogDebug("Notification options: {@model}, Req: {@MovieRequest}, Settings: {@Customization}", model, MovieRequest, Customization);
-            
+
                 curlys.Setup(model, MovieRequest, Customization);
             }
             else

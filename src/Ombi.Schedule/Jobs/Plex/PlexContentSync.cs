@@ -77,46 +77,86 @@ namespace Ombi.Schedule.Jobs.Plex
                 Logger.LogError("Plex Settings are not valid");
                 return;
             }
-
+            var processedContent = new HashSet<int>();
             Logger.LogInformation("Starting Plex Content Cacher");
             try
             {
-                await StartTheCache(plexSettings, recentlyAddedSearch);
+                if (recentlyAddedSearch)
+                {
+                    var result = await StartTheCache(plexSettings, true);
+                    foreach (var r in result)
+                    {
+                        processedContent.Add(r);
+                    }
+                }
+                else
+                {
+                    await StartTheCache(plexSettings, false);
+                }
             }
             catch (Exception e)
             {
                 Logger.LogWarning(LoggingEvents.PlexContentCacher, e, "Exception thrown when attempting to cache the Plex Content");
             }
 
-            Logger.LogInformation("Starting EP Cacher");
-            BackgroundJob.Enqueue(() => EpisodeSync.Start());
-            BackgroundJob.Enqueue(() => Metadata.Start());
+            if (!recentlyAddedSearch)
+            {
+                Logger.LogInformation("Starting EP Cacher");
+                BackgroundJob.Enqueue(() => EpisodeSync.Start());
+            }
+
+            if (processedContent.Any() && recentlyAddedSearch)
+            {
+                // Just check what we send it
+                BackgroundJob.Enqueue(() => Metadata.ProcessPlexServerContent(processedContent));
+            }
         }
 
-        private async Task StartTheCache(PlexSettings plexSettings, bool recentlyAddedSearch)
+        private async Task<IEnumerable<int>> StartTheCache(PlexSettings plexSettings, bool recentlyAddedSearch)
         {
+            var processedContent = new HashSet<int>();
             foreach (var servers in plexSettings.Servers ?? new List<PlexServers>())
             {
                 try
                 {
                     Logger.LogInformation("Starting to cache the content on server {0}", servers.Name);
-                    await ProcessServer(servers, recentlyAddedSearch);
+                    
+                    if (recentlyAddedSearch)
+                    {
+                        // If it's recently added search then we want the results to pass to the metadata job
+                        // This way the metadata job is smaller in size to process, it only need to look at newly added shit
+                        var result = await ProcessServer(servers, true);
+                        foreach (var plexServerContent in result)
+                        {
+                            processedContent.Add(plexServerContent);
+                        }
+                    }
+                    else
+                    {
+                        await ProcessServer(servers, false);
+                    }
                 }
                 catch (Exception e)
                 {
                     Logger.LogWarning(LoggingEvents.PlexContentCacher, e, "Exception thrown when attempting to cache the Plex Content in server {0}", servers.Name);
                 }
             }
+
+            return processedContent;
         }
 
-        private async Task ProcessServer(PlexServers servers, bool recentlyAddedSearch)
+        private async Task<IEnumerable<int>> ProcessServer(PlexServers servers, bool recentlyAddedSearch)
         {
+            var processedContent = new HashSet<int>();
             Logger.LogInformation("Getting all content from server {0}", servers.Name);
             var allContent = await GetAllContent(servers, recentlyAddedSearch);
             Logger.LogInformation("We found {0} items", allContent.Count);
 
             // Let's now process this.
             var contentToAdd = new HashSet<PlexServerContent>();
+
+            var allEps = Repo.GetAllEpisodes();
+
             foreach (var content in allContent)
             {
                 if (content.viewGroup.Equals(PlexMediaType.Episode.ToString(), StringComparison.CurrentCultureIgnoreCase))
@@ -133,8 +173,10 @@ namespace Ombi.Schedule.Jobs.Plex
                             continue;
                         }
 
-                        await ProcessTvShow(servers, show, contentToAdd, recentlyAddedSearch);
+                        await ProcessTvShow(servers, show, contentToAdd, recentlyAddedSearch, processedContent);
                     }
+
+                    await EpisodeSync.ProcessEpsiodes(content.Metadata, allEps);
                 }
                 if (content.viewGroup.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -142,7 +184,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     Logger.LogInformation("Processing TV Shows");
                     foreach (var show in content.Metadata ?? new Metadata[] { })
                     {
-                        await ProcessTvShow(servers, show, contentToAdd, recentlyAddedSearch);
+                        await ProcessTvShow(servers, show, contentToAdd, recentlyAddedSearch, processedContent);
                     }
                 }
                 if (content.viewGroup.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase))
@@ -212,6 +254,10 @@ namespace Ombi.Schedule.Jobs.Plex
                         if (contentToAdd.Count > 500)
                         {
                             await Repo.AddRange(contentToAdd);
+                            foreach (var c in contentToAdd)
+                            {
+                                processedContent.Add(c.Id);
+                            }
                             contentToAdd.Clear();
                         }
                     }
@@ -219,6 +265,10 @@ namespace Ombi.Schedule.Jobs.Plex
                 if (contentToAdd.Count > 500)
                 {
                     await Repo.AddRange(contentToAdd);
+                    foreach (var c in contentToAdd)
+                    {
+                        processedContent.Add(c.Id);
+                    }
                     contentToAdd.Clear();
                 }
             }
@@ -226,10 +276,16 @@ namespace Ombi.Schedule.Jobs.Plex
             if (contentToAdd.Any())
             {
                 await Repo.AddRange(contentToAdd);
+                foreach (var c in contentToAdd)
+                {
+                    processedContent.Add(c.Id);
+                }
             }
+
+            return processedContent;
         }
 
-        private async Task ProcessTvShow(PlexServers servers, Metadata show, HashSet<PlexServerContent> contentToAdd, bool recentlyAdded)
+        private async Task ProcessTvShow(PlexServers servers, Metadata show, HashSet<PlexServerContent> contentToAdd, bool recentlyAdded, HashSet<int> contentProcessed)
         {
             var seasonList = await PlexApi.GetSeasons(servers.PlexAuthToken, servers.FullUri,
                 show.ratingKey);
@@ -412,7 +468,16 @@ namespace Ombi.Schedule.Jobs.Plex
             if (contentToAdd.Count > 500 || recentlyAdded)
             {
                 await Repo.AddRange(contentToAdd);
+                foreach (var plexServerContent in contentToAdd)
+                {
+                    contentProcessed.Add(plexServerContent.Id);
+                }
                 contentToAdd.Clear();
+            }
+
+            if (contentToAdd.Any())
+            {
+                await Repo.AddRange(contentToAdd);
             }
         }
 

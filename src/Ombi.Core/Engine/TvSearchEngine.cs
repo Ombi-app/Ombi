@@ -20,6 +20,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Ombi.Core.Authentication;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
+using Ombi.Store.Entities;
 
 namespace Ombi.Core.Engine
 {
@@ -27,8 +28,8 @@ namespace Ombi.Core.Engine
     {
         public TvSearchEngine(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper, ISettingsService<PlexSettings> plexSettings,
             ISettingsService<EmbySettings> embySettings, IPlexContentRepository repo, IEmbyContentRepository embyRepo, ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um,
-            ICacheService memCache, ISettingsService<OmbiSettings> s)
-            : base(identity, service, r, um, memCache, s)
+            ICacheService memCache, ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub)
+            : base(identity, service, r, um, memCache, s, sub)
         {
             TvMazeApi = tvMaze;
             Mapper = mapper;
