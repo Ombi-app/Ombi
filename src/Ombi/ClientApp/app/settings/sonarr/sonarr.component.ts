@@ -15,7 +15,9 @@ import { SettingsService } from "../../services";
 export class SonarrComponent implements OnInit {
 
     public qualities: ISonarrProfile[];
+    public qualitiesAnime: ISonarrProfile[];
     public rootFolders: ISonarrRootFolder[];
+    public rootFoldersAnime: ISonarrRootFolder[];
     public selectedRootFolder: ISonarrRootFolder;
     public selectedQuality: ISonarrProfile;
     public profilesRunning: boolean;
@@ -37,6 +39,8 @@ export class SonarrComponent implements OnInit {
                     apiKey: [x.apiKey, [Validators.required]],
                     qualityProfile: [x.qualityProfile, [Validators.required]],
                     rootPath: [x.rootPath, [Validators.required]],
+                    qualityProfileAnime: [x.qualityProfileAnime],
+                    rootPathAnime: [x.rootPathAnime],
                     ssl: [x.ssl],
                     subDir: [x.subDir],
                     ip: [x.ip, [Validators.required]],
@@ -64,6 +68,7 @@ export class SonarrComponent implements OnInit {
             .subscribe(x => {
                 this.qualities = x;
                 this.qualities.unshift({ name: "Please Select", id: -1 });
+                this.qualitiesAnime = x;
 
                 this.profilesRunning = false;
                 this.notificationService.success("Successfully retrieved the Quality Profiles");
@@ -76,6 +81,7 @@ export class SonarrComponent implements OnInit {
             .subscribe(x => {
                 this.rootFolders = x;
                 this.rootFolders.unshift({ path: "Please Select", id: -1 });
+                this.rootFoldersAnime = x;
 
                 this.rootFoldersRunning = false;
                 this.notificationService.success("Successfully retrieved the Root Folders");

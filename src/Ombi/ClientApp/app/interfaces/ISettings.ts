@@ -65,8 +65,10 @@ export interface ISonarrSettings extends IExternalSettings {
   apiKey: string;
   enabled: boolean;
   qualityProfile: string;
+  qualityProfileAnime: string;
   seasonFolders: boolean;
   rootPath: string;
+  rootPathAnime: string;
   fullRootPath: string;
   addOnly: boolean;
 }

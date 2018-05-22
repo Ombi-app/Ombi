@@ -118,17 +118,31 @@ namespace Ombi.Core.Senders
                 return null;
             }
 
-            int.TryParse(s.QualityProfile, out var qualityToUse);
+            int qualityToUse;
+            string rootFolderPath;
+
+            if (model.SeriesType == SeriesType.Anime)
+            {
+                // Get the root path from the rootfolder selected.
+                // For some reason, if we haven't got one use the first root folder in Sonarr
+                // TODO make this overrideable via the UI
+                rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder ?? int.Parse(s.RootPathAnime), s);
+                int.TryParse(s.QualityProfileAnime, out qualityToUse);
+            }
+            else
+            {
+                int.TryParse(s.QualityProfile, out qualityToUse);
+            }
 
             if (model.ParentRequest.QualityOverride.HasValue)
             {
+                // Get the root path from the rootfolder selected.
+                // For some reason, if we haven't got one use the first root folder in Sonarr
+                // TODO make this overrideable via the UI
+                rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder ?? int.Parse(s.RootPath), s);
                 qualityToUse = model.ParentRequest.QualityOverride.Value;
             }
-
-            // Get the root path from the rootfolder selected.
-            // For some reason, if we haven't got one use the first root folder in Sonarr
-            // TODO make this overrideable via the UI
-            var rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder ?? int.Parse(s.RootPath), s);
+            
             try
             {
                 // Does the series actually exist?
