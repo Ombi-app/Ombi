@@ -142,7 +142,8 @@ namespace Ombi.Core.Engine
                     .Include(x => x.ChildRequests)
                     .ThenInclude(x => x.SeasonRequests)
                     .ThenInclude(x => x.Episodes)
-                    .Skip(position).Take(count).OrderByDescending(x => x.ReleaseDate).ToListAsync();
+                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
+                    .Skip(position).Take(count).ToListAsync();
 
                 // Filter out children
 
@@ -154,7 +155,8 @@ namespace Ombi.Core.Engine
                     .Include(x => x.ChildRequests)
                     .ThenInclude(x => x.SeasonRequests)
                     .ThenInclude(x => x.Episodes)
-                    .Skip(position).Take(count).OrderByDescending(x => x.ReleaseDate).ToListAsync();
+                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
+                    .Skip(position).Take(count).ToListAsync();
             }
 
             allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
@@ -172,6 +174,7 @@ namespace Ombi.Core.Engine
                     .Include(x => x.ChildRequests)
                     .ThenInclude(x => x.SeasonRequests)
                     .ThenInclude(x => x.Episodes)
+                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
                     .Skip(position).Take(count).ToListAsync();
 
                 FilterChildren(allRequests, shouldHide);
@@ -182,6 +185,7 @@ namespace Ombi.Core.Engine
                     .Include(x => x.ChildRequests)
                     .ThenInclude(x => x.SeasonRequests)
                     .ThenInclude(x => x.Episodes)
+                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
                     .Skip(position).Take(count).ToListAsync();
             }
 
