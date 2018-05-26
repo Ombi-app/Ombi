@@ -1,5 +1,26 @@
 # Changelog
 
+## (unreleased)
+
+### **New Features**
+
+- Added a default set of root folders and qualities for Anime in Sonarr. [Jamie Rees]
+
+### **Fixes**
+
+- Fixed #2243 The refresh metadata was being run everytime we launched Ombi... [Jamie]
+
+- Fixed a issue where the Plex Content Sync wouldn't pick up new shows #2276 #2244 #2261. [Jamie]
+
+- Sort TvRequests by latest request. [Joe Harvey]
+
+- Fixed build. [Jamie Rees]
+
+- Fix newsletter card background overflow when only one item is available. [Anojh]
+
+- Fix #1745. [Anojh]
+
+
 ## v3.0.3330 (2018-05-17)
 
 ### **New Features**

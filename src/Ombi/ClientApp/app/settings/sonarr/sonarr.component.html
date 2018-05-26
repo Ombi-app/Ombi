@@ -68,6 +68,14 @@
                     <small *ngIf="form.get('qualityProfile').hasError('required')" class="error-text">A Default Quality Profile is required</small>
                     
                 </div>
+                <div class="form-group">
+                    <label for="select" class="control-label">Quality Profiles (Anime)</label>
+                    <div id="qualityProfileAnime">
+                        <select class="form-control form-control-custom"  id="qualityProfileAnime" formControlName="qualityProfileAnime">
+                            <option *ngFor="let quality of qualities" value="{{quality.id}}" >{{quality.name}}</option>
+                        </select>
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <div>
@@ -83,6 +91,15 @@
                         </select>
                     </div>
                     <small *ngIf="form.get('rootPath').hasError('required')" class="error-text">A Default Root Path is required</small>
+                    
+                </div>
+                <div class="form-group">
+                    <label for="rootFoldersAnime" class="control-label">Default Root Folders (Anime)</label>
+                    <div id="rootFoldersAnime">
+                        <select class="form-control form-control-custom" formControlName="rootPathAnime">
+                            <option *ngFor="let folder of rootFoldersAnime" value="{{folder.id}}">{{folder.path}}</option>
+                        </select>
+                    </div>
                     
                 </div>
 

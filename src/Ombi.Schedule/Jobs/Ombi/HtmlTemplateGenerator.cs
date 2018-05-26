@@ -7,7 +7,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         protected virtual void AddBackgroundInsideTable(StringBuilder sb, string url)
         {
             sb.Append("<td align=\"center\" valign=\"top\" class=\"media-card\" style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-size: 12px; vertical-align: top; padding: 3px; width: 502px; min-width: 500px; max-width: 500px; height: 235px; \">");
-            sb.AppendFormat("<table class=\"card-bg\" style=\"background-image: url({0}); border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background-color: #1f1f1f; background-position: center; background-size: cover; background-repeat: no-repeat; background-clip: padding-box; border: 2px solid rgba(255,118,27,.4); height: 248px; max-height: 500px; \">", url);
+            sb.AppendFormat("<table class=\"card-bg\" style=\"background-image: url({0}); border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 500px; background-color: #1f1f1f; background-position: center; background-size: cover; background-repeat: no-repeat; background-clip: padding-box; border: 2px solid rgba(255,118,27,.4); height: 248px; max-height: 500px; \">", url);
             sb.Append("<tr>");
             sb.Append("<td>");
             sb.Append("<table class=\"bg-tint\" style=\"background-color: rgba(0, 0, 0, .6); position: absolute; width: 490px; height: 239px; \">");

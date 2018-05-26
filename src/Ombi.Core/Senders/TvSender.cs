@@ -118,17 +118,31 @@ namespace Ombi.Core.Senders
                 return null;
             }
 
-            int.TryParse(s.QualityProfile, out var qualityToUse);
+            int qualityToUse;
+            string rootFolderPath;
+
+            if (model.SeriesType == SeriesType.Anime)
+            {
+                // Get the root path from the rootfolder selected.
+                // For some reason, if we haven't got one use the first root folder in Sonarr
+                // TODO make this overrideable via the UI
+                rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder ?? int.Parse(s.RootPathAnime), s);
+                int.TryParse(s.QualityProfileAnime, out qualityToUse);
+            }
+            else
+            {
+                int.TryParse(s.QualityProfile, out qualityToUse);
+                // Get the root path from the rootfolder selected.
+                // For some reason, if we haven't got one use the first root folder in Sonarr
+                // TODO make this overrideable via the UI
+                rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder ?? int.Parse(s.RootPath), s);
+            }
 
             if (model.ParentRequest.QualityOverride.HasValue)
             {
                 qualityToUse = model.ParentRequest.QualityOverride.Value;
             }
-
-            // Get the root path from the rootfolder selected.
-            // For some reason, if we haven't got one use the first root folder in Sonarr
-            // TODO make this overrideable via the UI
-            var rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder ?? int.Parse(s.RootPath), s);
+            
             try
             {
                 // Does the series actually exist?
@@ -160,13 +174,13 @@ namespace Ombi.Core.Senders
                     // Montitor the correct seasons,
                     // If we have that season in the model then it's monitored!
                     var seasonsToAdd = new List<Season>();
-                    for (var i = 1; i < model.ParentRequest.TotalSeasons + 1; i++)
+                    for (var i = 0; i < model.ParentRequest.TotalSeasons + 1; i++)
                     {
                         var index = i;
                         var season = new Season
                         {
                             seasonNumber = i,
-                            monitored = model.SeasonRequests.Any(x => x.SeasonNumber == index)
+                            monitored = model.SeasonRequests.Any(x => x.SeasonNumber == index && x.SeasonNumber != 0)
                         };
                         seasonsToAdd.Add(season);
                     }

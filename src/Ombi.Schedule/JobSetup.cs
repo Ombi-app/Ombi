@@ -68,8 +68,6 @@ namespace Ombi.Schedule
             RecurringJob.AddOrUpdate(() => _embyUserImporter.Start(), JobSettingsHelper.UserImporter(s));
             RecurringJob.AddOrUpdate(() => _plexUserImporter.Start(), JobSettingsHelper.UserImporter(s));
             RecurringJob.AddOrUpdate(() => _newsletter.Start(), JobSettingsHelper.Newsletter(s));
-
-            BackgroundJob.Enqueue(() => _refreshMetadata.Start());
         }
 
 
