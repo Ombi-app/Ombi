@@ -119,7 +119,7 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 try
                 {
-                    Logger.LogInformation("Starting to cache the content on server {0}", servers.Name);
+                    Logger.LogInformation("Starting to cache the content on server {0}", servers.Name); 
                     
                     if (recentlyAddedSearch)
                     {
@@ -162,8 +162,10 @@ namespace Ombi.Schedule.Jobs.Plex
                 if (content.viewGroup.Equals(PlexMediaType.Episode.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 {
                     Logger.LogInformation("Found some episodes, this must be a recently added sync");
+                    var count = 0;
                     foreach (var epInfo in content.Metadata)
                     {
+                        count++;
                         var grandParentKey = epInfo.grandparentRatingKey;
                         // Lookup the rating key
                         var showMetadata = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri, grandParentKey);
@@ -174,7 +176,27 @@ namespace Ombi.Schedule.Jobs.Plex
                         }
 
                         await ProcessTvShow(servers, show, contentToAdd, recentlyAddedSearch, processedContent);
+                        if (contentToAdd.Any())
+                        {
+                            await Repo.AddRange(contentToAdd, false);
+                            if (recentlyAddedSearch)
+                            {
+                                foreach (var plexServerContent in contentToAdd)
+                                {
+                                    processedContent.Add(plexServerContent.Id);
+                                }
+                            }
+                            contentToAdd.Clear();
+                        }
+                        if (count > 200)
+                        {
+                            await Repo.SaveChangesAsync();
+
+                        }
                     }
+
+                    // Save just to make sure we don't leave anything hanging
+                    await Repo.SaveChangesAsync();
 
                     await EpisodeSync.ProcessEpsiodes(content.Metadata, allEps);
                 }
@@ -182,10 +204,31 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     // Process Shows
                     Logger.LogInformation("Processing TV Shows");
+                    var count = 0;
                     foreach (var show in content.Metadata ?? new Metadata[] { })
                     {
+                        count++;
                         await ProcessTvShow(servers, show, contentToAdd, recentlyAddedSearch, processedContent);
+
+                        if (contentToAdd.Any())
+                        {
+                            await Repo.AddRange(contentToAdd, false);
+                            if (recentlyAddedSearch)
+                            {
+                                foreach (var plexServerContent in contentToAdd)
+                                {
+                                    processedContent.Add(plexServerContent.Id);
+                                }
+                            }
+                            contentToAdd.Clear();
+                        }
+                        if (count > 200)
+                        {
+                            await Repo.SaveChangesAsync();
+                        }
                     }
+
+                    await Repo.SaveChangesAsync();
                 }
                 if (content.viewGroup.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -463,21 +506,6 @@ namespace Ombi.Schedule.Jobs.Plex
                     Logger.LogError(LoggingEvents.PlexContentCacher, e, "Exception when adding tv show {0}",
                         show.title);
                 }
-            }
-
-            if (contentToAdd.Count > 500 || recentlyAdded)
-            {
-                await Repo.AddRange(contentToAdd);
-                foreach (var plexServerContent in contentToAdd)
-                {
-                    contentProcessed.Add(plexServerContent.Id);
-                }
-                contentToAdd.Clear();
-            }
-
-            if (contentToAdd.Any())
-            {
-                await Repo.AddRange(contentToAdd);
             }
         }
 
