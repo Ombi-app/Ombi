@@ -4,25 +4,50 @@
 
 ### **New Features**
 
-- Finished adding subscriptions for TV Shows. [Jamie Rees]
+- Added a default set of root folders and qualities for Anime in Sonarr. [Jamie Rees]
+
+### **Fixes**
+
+- Fixed #2243 The refresh metadata was being run everytime we launched Ombi... [Jamie]
+
+- Fixed a issue where the Plex Content Sync wouldn't pick up new shows #2276 #2244 #2261. [Jamie]
+
+- Sort TvRequests by latest request. [Joe Harvey]
+
+- Fixed build. [Jamie Rees]
+
+- Fix newsletter card background overflow when only one item is available. [Anojh]
+
+- Fix #1745. [Anojh]
+
+
+## v3.0.3330 (2018-05-17)
+
+### **New Features**
 
 - Added the test button for mobile notifications. [Jamie Rees]
 
 - Added classes to donation html elements. [Anojh]
 
-- Enhanced newsletter styling to support more mail clients. [Anojh]
-
-- Improved the way we sync the plex content and then get the metadata. #2243. [Jamie Rees]
-
 ### **Fixes**
+
+- !changelog. [Jamie Rees]
 
 - Fixed #2257. [Jamie Rees]
 
+- Improved the way we sync the plex content and then get the metadata. #2243. [Jamie Rees]
+
 - Fixed the issue when enabling the Hide Request Users included system users e.g. API key user #2232. [Jamie Rees]
+
+- Removed the test button from the mobile screen since it did nada. [Jamie Rees]
+
+- Finished adding subscriptions for TV Shows. [Jamie Rees]
 
 - Fix #2167. [Anojh]
 
 - Fix #2228. [Anojh]
+
+- Enhanced newsletter styling to support more mail clients. [Anojh]
 
 - Fix #2246. [Anojh]
 
