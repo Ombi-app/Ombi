@@ -240,8 +240,10 @@ export class TvRequestsComponent implements OnInit {
                 ("url(https://image.tmdb.org/t/p/w1280" + val.data.background + ")");
         } else {
             this.imageService.getTvBanner(val.data.tvDbId).subscribe(x => {
-                val.data.background = this.sanitizer.bypassSecurityTrustStyle
+                if(x) {
+                    val.data.background = this.sanitizer.bypassSecurityTrustStyle
                     ("url(" + x + ")");
+                }
             });
         }
     }

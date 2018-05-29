@@ -138,9 +138,11 @@ export class TvSearchComponent implements OnInit {
     public getExtraInfo() {
         this.tvResults.forEach((val, index) => {
             this.imageService.getTvBanner(val.data.id).subscribe(x => {
-                val.data.background = this.sanitizer.
-                bypassSecurityTrustStyle
-                ("url(" + x + ")");
+                if(x) {
+                    val.data.background = this.sanitizer.
+                    bypassSecurityTrustStyle
+                    ("url(" + x + ")");
+                }
             });
             this.searchService.getShowInformationTreeNode(val.data.id)
                 .subscribe(x => {
