@@ -19,11 +19,14 @@
     imdbId: string;
     approved: boolean;
     requested: boolean;
+    requestId: number;
     available: boolean;
     plexUrl: string;
     embyUrl: string;
     quality: string;
     digitalReleaseDate: Date;
+    subscribed: boolean;
+    showSubscribe: boolean;
 
     // for the UI
     requestProcessing: boolean;

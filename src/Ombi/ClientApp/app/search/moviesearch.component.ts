@@ -162,6 +162,22 @@ export class MovieSearchComponent implements OnInit {
             this.getExtraInfo();
         });
     }
+        
+    public subscribe(r: ISearchMovieResult) {
+        r.subscribed = true;
+        this.requestService.subscribeToMovie(r.requestId)
+            .subscribe(x => {
+                this.notificationService.success("Subscribed To Movie!");
+            });
+    }
+
+    public unSubscribe(r: ISearchMovieResult) {
+        r.subscribed = false;
+        this.requestService.unSubscribeToMovie(r.requestId)
+            .subscribe(x => {
+                this.notificationService.success("Unsubscribed Movie!");
+            });
+    }
 
    private getExtraInfo() {
 
