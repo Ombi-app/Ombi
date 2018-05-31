@@ -120,8 +120,10 @@ namespace Ombi.Api.Mattermost.Models
                         var attIndex = outMessages[msgCount].Attachments.Count - 1;
 
                         //Get the text lines
-                        lines = att.Text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-
+                        if (!String.IsNullOrEmpty(att.Text))
+                        {
+                            lines = att.Text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+                        }
                         foreach (var line in lines)
                         {
                             //Get the total length of all attachments on the current outgoing message
@@ -155,6 +157,7 @@ namespace Ombi.Api.Mattermost.Models
                 {
                     var request = new Request("", _webhookUrl.ToString(), HttpMethod.Post);
                     request.AddJsonBody(msg);
+                    request.AddHeader("Host", _webhookUrl.Host);
                     await api.Request(request);
                 }
             }

@@ -106,7 +106,15 @@ namespace Ombi.Api
 
         public async Task Request(Request request)
         {
-            using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, request.FullUri))
+            object url;
+            if (request.JsonBody.ToString().Contains("Mattermost"))
+            {
+                url = request.BaseUrl;
+            } else
+            {
+                url = request.FullUri;
+            }
+            using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, url.ToString()))
             {
                 AddHeadersBody(request, httpRequestMessage);
                 var httpResponseMessage = await _client.SendAsync(httpRequestMessage);
