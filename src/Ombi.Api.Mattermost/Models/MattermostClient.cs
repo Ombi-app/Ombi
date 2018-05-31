@@ -155,7 +155,7 @@ namespace Ombi.Api.Mattermost.Models
 
                 foreach (var msg in outMessages)
                 {
-                    var request = new Request("", _webhookUrl.ToString(), HttpMethod.Post);
+                    var request = new Request(_webhookUrl.ToString(), "", HttpMethod.Post);
                     request.AddJsonBody(msg);
                     request.AddHeader("Host", _webhookUrl.Host);
                     await api.Request(request);
