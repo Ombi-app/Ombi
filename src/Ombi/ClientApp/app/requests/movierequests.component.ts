@@ -99,7 +99,7 @@ export class MovieRequestsComponent implements OnInit {
     public removeRequest(request: IMovieRequests) {
         this.requestService.removeMovieRequest(request);
         this.removeRequestFromUi(request);
-        this.loadRequests(1, this.currentlyLoaded);
+        this.loadRequests(this.amountToLoad, this.currentlyLoaded = 0);
     }
 
     public changeAvailability(request: IMovieRequests, available: boolean) {
