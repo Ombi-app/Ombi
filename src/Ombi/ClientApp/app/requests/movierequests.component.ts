@@ -183,12 +183,7 @@ export class MovieRequestsComponent implements OnInit {
     public filterAvailability(filter: FilterType, el: any) {
         this.filterActiveStyle(el);
         this.filter.availabilityFilter = filter;
-        this.requestService.filterMovies(this.filter)
-        .subscribe(x => {
-            this.totalMovies = x.total;
-            this.setOverrides(x.collection);
-            this.movieRequests = x.collection;
-        });
+        this.loadInit();
     }
 
     public filterStatus(filter: FilterType, el: any) {
