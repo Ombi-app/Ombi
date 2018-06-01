@@ -203,13 +203,13 @@ namespace Ombi.Notifications.Agents
                     Username = string.IsNullOrEmpty(settings.Username) ? "Ombi" : settings.Username,
                     Channel = settings.Channel,
                     Text = model.Message,
-                    IconUrl = new Uri(settings.IconUrl),
+                    IconUrl = settings.IconUrl,
                     Attachments = new List<MattermostAttachment>
                     {
                         new MattermostAttachment
                         {
                             Title = model.Other.ContainsKey("title") ? model.Other["title"] : string.Empty,
-                            ImageUrl = model.Other.ContainsKey("image") ? new Uri(model.Other["image"]) : null,
+                            ImageUrl = model.Other.ContainsKey("image") ? model.Other["image"] : string.Empty,
                         }
                     }
                 };

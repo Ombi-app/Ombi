@@ -314,9 +314,17 @@ namespace Ombi.Core.Senders
             foreach (var seasonRequests in model.SeasonRequests)
             {
                 var srEpisodes = await SickRageApi.GetEpisodesForSeason(tvdbid, seasonRequests.SeasonNumber, settings.ApiKey, settings.FullUri);
-                while (srEpisodes.message.Equals("Show not found", StringComparison.CurrentCultureIgnoreCase) && srEpisodes.data.Count <= 0)
+                int retryTimes = 10;
+                var currentRetry = 0;
+                while (srEpisodes.message.Equals("Show not found", StringComparison.CurrentCultureIgnoreCase) || srEpisodes.message.Equals("Season not found", StringComparison.CurrentCultureIgnoreCase) && srEpisodes.data.Count <= 0)
                 {
+                    if (currentRetry > retryTimes)
+                    {
+                        Logger.LogWarning("Couldnt find the SR Season or Show, message: {0}", srEpisodes.message);
+                        break;
+                    }
                     await Task.Delay(TimeSpan.FromSeconds(1));
+                    currentRetry++;
                     srEpisodes = await SickRageApi.GetEpisodesForSeason(tvdbid, seasonRequests.SeasonNumber, settings.ApiKey, settings.FullUri);
                 }
 

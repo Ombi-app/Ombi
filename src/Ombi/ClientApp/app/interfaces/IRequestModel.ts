@@ -20,7 +20,7 @@ export interface IMovieRequests extends IFullBaseRequest {
   qualityOverrideTitle: string;
 }
 
-export interface IFilterResult<T> {
+export interface IRequestsViewModel<T> {
   total: number;
   collection: T[];
 }
@@ -87,6 +87,15 @@ export interface ITvUpdateModel {
   id: number;
 }
 
+export enum OrderType {
+  RequestedDateAsc = 1,
+  RequestedDateDesc = 2,
+  TitleAsc = 3,
+  TitleDesc = 4,
+  StatusAsc = 5,
+  StatusDesc = 6,
+}
+
 export interface INewSeasonRequests {
   id: number;
   seasonNumber: number;
@@ -112,8 +121,6 @@ export interface IMovieRequestModel {
 export interface IFilter {
   availabilityFilter: FilterType;
   statusFilter: FilterType;
-  position: number;
-  count: number;
 }
 
 export enum FilterType {

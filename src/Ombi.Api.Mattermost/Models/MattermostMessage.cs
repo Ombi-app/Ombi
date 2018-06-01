@@ -33,7 +33,7 @@ namespace Ombi.Api.Mattermost.Models
         /// Bot/User Icon
         /// </summary>
         [JsonProperty(PropertyName = "icon_url")]
-        public Uri IconUrl { get; set; }
+        public string IconUrl { get; set; }
 
         /// <summary>
         /// Message body. Supports Markdown
@@ -142,7 +142,7 @@ namespace Ombi.Api.Mattermost.Models
         /// Large images are resized to a maximum width of 400px or a maximum height of 300px, while still maintaining the original aspect ratio.
         /// </summary>
         [JsonProperty(PropertyName = "image_url")]
-        public Uri ImageUrl { get; set; }
+        public string ImageUrl { get; set; }
 
         /// <summary>
         /// An optional URL to an image file(GIF, JPEG, PNG, or BMP) that is displayed as a 75x75 pixel thumbnail on the right side of an attachment.
