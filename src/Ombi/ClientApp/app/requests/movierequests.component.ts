@@ -180,7 +180,6 @@ export class MovieRequestsComponent implements OnInit {
     public filterAvailability(filter: FilterType, el: any) {
         this.filterActiveStyle(el);
         this.filter.availabilityFilter = filter;
-        debugger;
         this.loadInit();
     }
 
