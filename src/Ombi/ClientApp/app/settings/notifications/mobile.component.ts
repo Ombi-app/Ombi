@@ -34,7 +34,7 @@ export class MobileComponent implements OnInit {
         this.mobileService.getUserDeviceList().subscribe(x => {
             if(x.length <= 0) {
                 this.userList = [];
-                this.userList.push({username:"None",devices:0});
+                this.userList.push({username:"None",devices:0, userId:""});
             } else {
                 this.userList = x;
             }

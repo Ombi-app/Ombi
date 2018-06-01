@@ -39,7 +39,7 @@
                         <div>
                             <select class="form-control form-control-custom" id="select" [(ngModel)]="testUserId" [ngModelOptions]="{standalone: true}">
                                 <option value="">Please select</option>    
-                                <option *ngFor="let x of userList" [value]="x.id">{{x.username}}</option>
+                                <option *ngFor="let x of userList" [value]="x.userId">{{x.username}}</option>
                             </select>
                         </div>
                     </div>
