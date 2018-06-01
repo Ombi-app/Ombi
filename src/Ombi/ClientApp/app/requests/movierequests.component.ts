@@ -9,7 +9,7 @@ import { Subject } from "rxjs/Subject";
 import { AuthService } from "../auth/auth.service";
 import { NotificationService, RadarrService, RequestService } from "../services";
 
-import { FilterType, IFilter, IIssueCategory, IMovieRequests, IPagenator, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
+import { FilterType, IFilter, IIssueCategory, IMovieRequests, IPagenator, IRadarrProfile, IRadarrRootFolder, OrderType } from "../interfaces";
 
 @Component({
     selector: "movie-requests",
@@ -38,9 +38,9 @@ export class MovieRequestsComponent implements OnInit {
     public filter: IFilter;
     public filterType = FilterType;
 
-    public order: string = "requestedDate";
-    public reverse = true;
-
+    public orderType: OrderType = OrderType.RequestedDateDesc;
+    public OrderType = OrderType;
+    
     public totalMovies: number = 100;
     private currentlyLoaded: number;
     private amountToLoad: number;
@@ -75,20 +75,17 @@ export class MovieRequestsComponent implements OnInit {
 
     public ngOnInit() {
         this.amountToLoad = 10;
-        this.currentlyLoaded = 10;
-        this.loadInit();
-        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+        this.currentlyLoaded = 10;       
         this.filter = {
             availabilityFilter: FilterType.None,
             statusFilter: FilterType.None,
-            count: this.amountToLoad,
-            position: 0,        
         };
+        this.loadInit();
+        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
     }
 
     public paginate(event: IPagenator) {
-        const skipAmount = event.first;
-        
+        const skipAmount = event.first;        
         this.loadRequests(this.amountToLoad, skipAmount);
     }
 
@@ -189,27 +186,21 @@ export class MovieRequestsComponent implements OnInit {
     public filterStatus(filter: FilterType, el: any) {
         this.filterActiveStyle(el);
         this.filter.statusFilter = filter;
-        this.requestService.filterMovies(this.filter)
-        .subscribe(x => {
-            this.totalMovies = x.total;
-            this.setOverrides(x.collection);
-            this.movieRequests = x.collection;
-        });
+        this.loadInit();
     }
 
-    public setOrder(value: string, el: any) {
+    public setOrder(value: OrderType, el: any) {
         el = el.toElement || el.relatedTarget || el.target || el.srcElement;
 
         const parent = el.parentElement;
         const previousFilter = parent.querySelector(".active");
 
-        if (this.order === value) {
-            this.reverse = !this.reverse;
-        } else {
-            previousFilter.className = "";
-            el.className = "active";
-        }
-        this.order = value;
+        previousFilter.className = "";
+        el.className = "active";
+
+        this.orderType = value;
+        
+        this.loadInit();
       }
     
       public subscribe(request: IMovieRequests) {
@@ -247,26 +238,16 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     private loadRequests(amountToLoad: number, currentlyLoaded: number) {
-        if(this.filter.availabilityFilter === FilterType.None && this.filter.statusFilter === FilterType.None) {
-            this.requestService.getMovieRequests(amountToLoad, currentlyLoaded + 1)
+            this.requestService.getMovieRequests(amountToLoad, currentlyLoaded, this.orderType, this.filter)
             .subscribe(x => {
-                this.setOverrides(x);
+                this.setOverrides(x.collection);
                 if(!this.movieRequests) {
                     this.movieRequests = [];
                 }
-                this.movieRequests = x;
+                this.movieRequests = x.collection;
+                this.totalMovies = x.total;
                 this.currentlyLoaded = currentlyLoaded + amountToLoad;
             });
-        } else {
-            this.filter.position = currentlyLoaded;
-            this.requestService.filterMovies(this.filter)
-                .subscribe(x => {
-                    this.setOverrides(x.collection);
-                    this.totalMovies = x.total;
-                    this.movieRequests = x.collection;
-                    this.currentlyLoaded = currentlyLoaded + amountToLoad;
-                });                
-        }
     }
 
     private updateRequest(request: IMovieRequests) {
@@ -305,23 +286,25 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     private loadInit() {
-        this.requestService.getTotalMovies().subscribe(x => this.totalMovies = x);
-        this.requestService.getMovieRequests(this.amountToLoad, 0)
+        this.requestService.getMovieRequests(this.amountToLoad, 0, this.orderType, this.filter)
             .subscribe(x => {
-                this.movieRequests = x;
+                this.movieRequests = x.collection;
+                this.totalMovies = x.total;
 
                 this.movieRequests.forEach((req) => {
-                     this.setBackground(req);
-                     this.setPoster(req);
+                    this.setBackground(req);
+                    this.setPoster(req);
                 });
-                this.radarrService.getQualityProfilesFromSettings().subscribe(c => {
-                    this.radarrProfiles = c;
-                    this.movieRequests.forEach((req) => this.setQualityOverrides(req));
-                });
-                this.radarrService.getRootFoldersFromSettings().subscribe(c => {
-                    this.radarrRootFolders = c;
-                    this.movieRequests.forEach((req) => this.setRootFolderOverrides(req));
-                });
+                if (this.isAdmin) {
+                    this.radarrService.getQualityProfilesFromSettings().subscribe(c => {
+                        this.radarrProfiles = c;
+                        this.movieRequests.forEach((req) => this.setQualityOverrides(req));
+                    });
+                    this.radarrService.getRootFoldersFromSettings().subscribe(c => {
+                        this.radarrRootFolders = c;
+                        this.movieRequests.forEach((req) => this.setRootFolderOverrides(req));
+                    });
+                }
             });
     }
 
