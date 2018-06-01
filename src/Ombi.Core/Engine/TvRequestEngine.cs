@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Helpers;
+using Ombi.Core.Models.UI;
 using Ombi.Core.Rule;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Senders;
@@ -132,7 +133,7 @@ namespace Ombi.Core.Engine
             return await AddRequest(newRequest.NewRequest);
         }
 
-        public async Task<IEnumerable<TvRequests>> GetRequests(int count, int position)
+        public async Task<RequestsViewModel<TvRequests>> GetRequests(int count, int position, OrderFilterModel type)
         {
             var shouldHide = await HideFromOtherUsers();
             List<TvRequests> allRequests;
@@ -161,7 +162,10 @@ namespace Ombi.Core.Engine
 
             allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
 
-            return allRequests;
+            return new RequestsViewModel<TvRequests>
+            {
+                Collection = allRequests
+            };
         }
 
         public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> GetRequestsTreeNode(int count, int position)
