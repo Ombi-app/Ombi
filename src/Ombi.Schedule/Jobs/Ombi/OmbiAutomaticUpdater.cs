@@ -206,32 +206,34 @@ namespace Ombi.Schedule.Jobs.Ombi
                         updaterExtension = ".exe";
                     }
                     var updaterFile = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
-                        "TempUpdate", $"Ombi.Updater{updaterExtension}");
+                        "TempUpdate", "Updater", $"Ombi.Updater{updaterExtension}");
 
                     // Make sure the file is an executable
-                    ExecLinuxCommand($"chmod +x {updaterFile}");
+                    //ExecLinuxCommand($"chmod +x {updaterFile}");
+
 
                     // There must be an update
                     var start = new ProcessStartInfo
                     {
-                        UseShellExecute = true,
-                        CreateNoWindow = false, // Ignored if UseShellExecute is set to true
+                        UseShellExecute = false,
+                        CreateNoWindow = true, // Ignored if UseShellExecute is set to true
                         FileName = updaterFile,
                         Arguments = GetArgs(settings),
                         WorkingDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "TempUpdate"),
                     };
-                    if (settings.Username.HasValue())
+                    //if (settings.Username.HasValue())
+                    //{
+                    //    start.UserName = settings.Username;
+                    //}
+                    //if (settings.Password.HasValue())
+                    //{
+                    //    start.Password = settings.Password.ToSecureString();
+                    //}
+                    using (var proc = new Process { StartInfo = start })
                     {
-                        start.UserName = settings.Username;
+                        proc.Start();
                     }
-                    if (settings.Password.HasValue())
-                    {
-                        start.Password = settings.Password.ToSecureString();
-                    }
-                    var proc = new Process { StartInfo = start };
 
-
-                    proc.Start();
 
                     Logger.LogDebug(LoggingEvents.Updater, "Bye bye");
                 }
@@ -254,10 +256,10 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             var sb = new StringBuilder();
             sb.Append($"--applicationPath \"{currentLocation}\" --processname \"{processName}\" ");
-            if (settings.WindowsService)
-            {
-                sb.Append($"--windowsServiceName \"{settings.WindowsServiceName}\" ");
-            }
+            //if (settings.WindowsService)
+            //{
+            //    sb.Append($"--windowsServiceName \"{settings.WindowsServiceName}\" ");
+            //}
             var sb2 = new StringBuilder();
             if (url?.Value.HasValue() ?? false)
             {

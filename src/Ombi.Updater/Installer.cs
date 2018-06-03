@@ -22,29 +22,23 @@ namespace Ombi.Updater
         {
             // Kill Ombi Process
             var p = new ProcessProvider();
+            bool killed = false;
             try
             {
 
 
-                p.Kill(opt);
+                killed = p.Kill(opt);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
 
-            // Make sure the process has been killed
-            while (p.FindProcessByName(opt.ProcessName).Any())
+            if (!killed)
             {
-                Thread.Sleep(500);
-                _log.LogDebug("Found another process called {0}, KILLING!", opt.ProcessName);
-                var proc = p.FindProcessByName(opt.ProcessName).FirstOrDefault();
-                if (proc != null)
-                {
-                    _log.LogDebug($"[{proc.Id}] - {proc.Name} - Path: {proc.StartPath}");
-                    opt.OmbiProcessId = proc.Id;
-                    p.Kill(opt);
-                }
+
+                _log.LogDebug("Couldn't kill the ombi process");
+                return;
             }
 
             _log.LogDebug("Starting to move the files");
@@ -111,21 +105,23 @@ namespace Ombi.Updater
             var location = System.Reflection.Assembly.GetEntryAssembly().Location;
             location = Path.GetDirectoryName(location);
             _log.LogDebug("We are currently in dir {0}", location);
+            var updatedLocation = Directory.GetParent(location).FullName;
+            _log.LogDebug("The files are in {0}", updatedLocation);
             _log.LogDebug("Ombi is installed at {0}", options.ApplicationPath);
 
             //Now Create all of the directories
-            foreach (string dirPath in Directory.GetDirectories(location, "*",
+            foreach (string dirPath in Directory.GetDirectories(updatedLocation, "*",
                 SearchOption.AllDirectories))
             {
-                var newDir = dirPath.Replace(location, options.ApplicationPath);
+                var newDir = dirPath.Replace(updatedLocation, options.ApplicationPath);
                 Directory.CreateDirectory(newDir);
                 _log.LogDebug("Created dir {0}", newDir);
             }
             //Copy all the files & Replaces any files with the same name
-            foreach (string currentPath in Directory.GetFiles(location, "*.*",
+            foreach (string currentPath in Directory.GetFiles(updatedLocation, "*.*",
                 SearchOption.AllDirectories))
             {
-                var newFile = currentPath.Replace(location, options.ApplicationPath);
+                var newFile = currentPath.Replace(updatedLocation, options.ApplicationPath);
                 File.Copy(currentPath, newFile, true);
                 _log.LogDebug("Replaced file {0}", newFile);
             }

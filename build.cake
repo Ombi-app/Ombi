@@ -173,11 +173,11 @@ Task("Package")
 
 Task("Publish")
     .IsDependentOn("PrePublish")
-    .IsDependentOn("Publish-Windows")
+    //.IsDependentOn("Publish-Windows")
     .IsDependentOn("Publish-Windows-32bit")
-    .IsDependentOn("Publish-OSX")
-    .IsDependentOn("Publish-Linux")
-    .IsDependentOn("Publish-Linux-ARM")
+    //.IsDependentOn("Publish-OSX")
+    //.IsDependentOn("Publish-Linux")
+    //.IsDependentOn("Publish-Linux-ARM")
     //.IsDependentOn("Publish-Linux-ARM-64Bit")
     .IsDependentOn("Package");
 
@@ -189,6 +189,8 @@ Task("Publish-Windows")
 
     DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
     CopyFile(buildDir + "/"+frameworkVer+"/win10-x64/Swagger.xml", buildDir + "/"+frameworkVer+"/win10-x64/published/Swagger.xml");
+	
+    publishSettings.OutputDirectory = Directory(buildDir) + Directory(frameworkVer +"/win10-x64/published/updater");
     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 
