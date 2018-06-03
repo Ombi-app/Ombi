@@ -79,6 +79,7 @@ export class MovieSearchComponent implements OnInit {
     public request(searchResult: ISearchMovieResult) {
         searchResult.requested = true;
         searchResult.requestProcessing = true;
+        searchResult.showSubscribe = false;
         if (this.authService.hasRole("admin") || this.authService.hasRole("AutoApproveMovie")) {
             searchResult.approved = true;
         }
@@ -103,6 +104,7 @@ export class MovieSearchComponent implements OnInit {
                         searchResult.approved = false;
                         searchResult.processed = false;
                         searchResult.requestProcessing = false;
+                        
                     }
                 });
         } catch (e) {

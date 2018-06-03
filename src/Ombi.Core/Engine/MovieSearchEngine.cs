@@ -179,7 +179,7 @@ namespace Ombi.Core.Engine
             // Check if this user requested it
             var user = await GetUser();
             var request = await RequestService.MovieRequestService.GetAll()
-                .AnyAsync(x => x.RequestedUserId.Equals(user.Id) && x.Id == viewModel.Id);
+                .AnyAsync(x => x.RequestedUserId.Equals(user.Id) && x.TheMovieDbId == viewModel.Id);
             if (request)
             {
                 viewModel.ShowSubscribe = false;
