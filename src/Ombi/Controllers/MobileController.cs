@@ -68,6 +68,7 @@ namespace Ombi.Controllers
             {
                 vm.Add(new MobileUsersViewModel
                 {
+                    UserId = u.Id,
                     Username = u.UserAlias,
                     Devices = u.NotificationUserIds.Count
                 });

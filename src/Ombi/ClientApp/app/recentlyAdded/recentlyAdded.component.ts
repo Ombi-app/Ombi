@@ -88,7 +88,9 @@ export class RecentlyAddedComponent implements OnInit {
     
                 this.tv.forEach((t) => {
                     this.imageService.getTvPoster(t.tvDbId).subscribe(p => {
-                        t.posterPath = p;
+                        if(p) {
+                            t.posterPath = p;
+                        }
                     });
                 });
             });
@@ -98,7 +100,9 @@ export class RecentlyAddedComponent implements OnInit {
     
                 this.tv.forEach((t) => {
                     this.imageService.getTvPoster(t.tvDbId).subscribe(p => {
-                        t.posterPath = p;
+                        if(p) {
+                            t.posterPath = p;
+                        }
                     });
                 });
             });

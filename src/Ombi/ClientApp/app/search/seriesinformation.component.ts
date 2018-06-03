@@ -52,7 +52,7 @@ export class SeriesInformationComponent implements OnInit {
             const seasonsViewModel = <ISeasonsViewModel>{seasonNumber: season.seasonNumber, episodes: []};
             season.episodes.forEach(ep => {
                 if(!this.series.latestSeason || !this.series.requestAll || !this.series.firstSeason) {
-                    if(ep.requested) {
+                    if(ep.selected) {
                         seasonsViewModel.episodes.push({episodeNumber: ep.episodeNumber});
                     }
                 }

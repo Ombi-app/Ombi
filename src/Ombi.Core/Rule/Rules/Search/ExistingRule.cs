@@ -29,6 +29,7 @@ namespace Ombi.Core.Rule.Rules.Search
                 {
 
                     obj.Requested = true;
+                    obj.RequestId = movieRequests.Id;
                     obj.Approved = movieRequests.Approved;
                     obj.Available = movieRequests.Available;
 
@@ -67,6 +68,7 @@ namespace Ombi.Core.Rule.Rules.Search
                                 existingRequestChildRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == season.SeasonNumber);
                             if (existingSeason == null) continue;
 
+
                             foreach (var ep in existingSeason.Episodes)
                             {
                                 // Find the episode from what we are searching
@@ -91,7 +93,6 @@ namespace Ombi.Core.Rule.Rules.Search
                 {
                     request.PartlyAvailable = true;
                 }
-
 
                 return Task.FromResult(Success());
             }

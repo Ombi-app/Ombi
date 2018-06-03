@@ -138,10 +138,12 @@
     "Filter":"Filter",
     "Sort":"Sort",
     "SeasonNumberHeading":"Season: {seasonNumber}",
-    "SortTitle":"Title",
-    "SortRequestDate": "Request Date",
-    "SortRequestedBy":"Requested By",
-    "SortStatus":"Status"
+    "SortTitleAsc":"Title ▲",
+    "SortTitleDesc":"Title ▼",
+    "SortRequestDateAsc": "Request Date ▲",
+    "SortRequestDateDesc": "Request Date ▼",
+    "SortStatusAsc":"Status ▲",  
+    "SortStatusDesc":"Status ▼"
   },
   "Issues":{
     "Title":"Issues",

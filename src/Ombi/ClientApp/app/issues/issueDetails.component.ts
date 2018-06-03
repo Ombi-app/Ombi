@@ -117,8 +117,10 @@ export class IssueDetailsComponent implements OnInit {
 
         } else {
             this.imageService.getTvBackground(Number(issue.providerId)).subscribe(x => {
-                this.backgroundPath = this.sanitizer.bypassSecurityTrustStyle
-                    ("url(" + x + ")");
+                if(x) {
+                    this.backgroundPath = this.sanitizer.bypassSecurityTrustStyle
+                        ("url(" + x + ")");
+                }
             });
             this.imageService.getTvPoster(Number(issue.providerId)).subscribe(x => {
                 if (x.length === 0) {

@@ -65,7 +65,13 @@
 
 
                 <div class="col-sm-2 small-padding">
-
+                    <div class="row" *ngIf="result.requested">
+                        <div class="col-md-2 col-md-push-10">
+    
+                            <a *ngIf="result.showSubscribe && !result.subscribed" style="color:white" (click)="subscribe(result)" pTooltip="Subscribe for notifications"> <i class="fa fa-rss"></i></a>
+                            <a *ngIf="result.showSubscribe && result.subscribed" style="color:red" (click)="unSubscribe(result)" pTooltip="Unsubscribe notification"> <i class="fa fa-rss"></i></a>
+                        </div>
+                    </div>
                     <div *ngIf="result.available">
                         <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> {{ 'Common.Available' | translate }}</button>
                     </div>
