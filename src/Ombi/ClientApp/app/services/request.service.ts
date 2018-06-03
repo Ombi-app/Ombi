@@ -6,7 +6,7 @@ import { Observable } from "rxjs/Rx";
 
 import { TreeNode } from "primeng/primeng";
 import { IRequestEngineResult } from "../interfaces";
-import { IChildRequests, IFilter, IFilterResult, IMovieRequestModel, IMovieRequests, IMovieUpdateModel, ITvRequests,ITvUpdateModel } from "../interfaces";
+import { IChildRequests, IFilter, IMovieRequestModel, IMovieRequests, IMovieUpdateModel, IRequestsViewModel, ITvRequests,ITvUpdateModel, OrderType } from "../interfaces";
 import { ITvRequestViewModel } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
@@ -48,8 +48,8 @@ export class RequestService extends ServiceHelpers {
         return this.http.post<IRequestEngineResult>(`${this.url}Movie/unavailable`, JSON.stringify(movie),  {headers: this.headers});
     }
 
-    public getMovieRequests(count: number, position: number): Observable<IMovieRequests[]> {
-        return this.http.get<IMovieRequests[]>(`${this.url}movie/${count}/${position}`, {headers: this.headers});
+    public getMovieRequests(count: number, position: number, order: OrderType, filter: IFilter): Observable<IRequestsViewModel<IMovieRequests>> {
+        return this.http.get<IRequestsViewModel<IMovieRequests>>(`${this.url}movie/${count}/${position}/${order}/${filter.statusFilter}/${filter.availabilityFilter}`, {headers: this.headers});
     }
 
     public searchMovieRequests(search: string): Observable<IMovieRequests[]> {
@@ -114,10 +114,7 @@ export class RequestService extends ServiceHelpers {
     public deleteChild(child: IChildRequests): Observable<boolean> {
         return this.http.delete<boolean>(`${this.url}tv/child/${child.id}`, {headers: this.headers});
     }
-    public filterMovies(filter: IFilter): Observable<IFilterResult<IMovieRequests>> {
-        return this.http.post<IFilterResult<IMovieRequests>>(`${this.url}movie/filter`, JSON.stringify(filter), {headers: this.headers});
-    }
-    
+   
     public subscribeToMovie(requestId: number): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}movie/subscribe/${requestId}`, {headers: this.headers});
     }    

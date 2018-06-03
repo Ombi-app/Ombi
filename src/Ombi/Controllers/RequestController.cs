@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ombi.Store.Entities.Requests;
 using System.Diagnostics;
+using Ombi.Core.Models.UI;
 using Ombi.Models;
 using Ombi.Store.Entities;
 
@@ -32,10 +33,18 @@ namespace Ombi.Controllers
         /// </summary>
         /// <param name="count">The count of items you want to return.</param>
         /// <param name="position">The position.</param>
-        [HttpGet("movie/{count:int}/{position:int}")]
-        public async Task<IEnumerable<MovieRequests>> GetRequests(int count, int position)
+        /// <param name="orderType"> The way we want to order.</param>
+        /// <param name="statusType"></param>
+        /// <param name="availabilityType"></param>
+        [HttpGet("movie/{count:int}/{position:int}/{orderType:int}/{statusType:int}/{availabilityType:int}")]
+        public async Task<RequestsViewModel<MovieRequests>> GetRequests(int count, int position, int orderType, int statusType, int availabilityType)
         {
-            return await MovieRequestEngine.GetRequests(count, position);
+            return await MovieRequestEngine.GetRequests(count, position, new OrderFilterModel
+            {
+                OrderType = (OrderType)orderType,
+                AvailabilityFilter = (FilterType)availabilityType,
+                StatusFilter = (FilterType)statusType,
+            });
         }
 
         /// <summary>
@@ -170,11 +179,19 @@ namespace Ombi.Controllers
         /// </summary>
         /// <param name="count">The count of items you want to return.</param>
         /// <param name="position">The position.</param>
+        /// <param name="orderType"></param>
+        /// <param name="statusType"></param>
+        /// <param name="availabilityType"></param>
         /// <returns></returns>
-        [HttpGet("tv/{count:int}/{position:int}")]
-        public async Task<IEnumerable<TvRequests>> GetTvRequests(int count, int position)
+        [HttpGet("tv/{count:int}/{position:int}/{orderType:int}/{statusFilterType:int}/{availabilityFilterType:int}")]
+        public async Task<RequestsViewModel<TvRequests>> GetTvRequests(int count, int position, int orderType, int statusType, int availabilityType)
         {
-            return await TvRequestEngine.GetRequests(count, position);
+            return await TvRequestEngine.GetRequests(count, position, new OrderFilterModel
+            {
+                OrderType = (OrderType)orderType,
+                AvailabilityFilter = (FilterType) availabilityType,
+                StatusFilter = (FilterType) statusType,
+            });
         }
 
         /// <summary>
@@ -345,17 +362,6 @@ namespace Ombi.Controllers
             var tv = await TvRequestEngine.UserHasRequest(userId);
 
             return movies || tv;
-        }
-
-        /// <summary>
-        /// Returns a filtered list
-        /// </summary>
-        /// <param name="vm"></param>
-        /// <returns></returns>
-        [HttpPost("movie/filter")]
-        public async Task<FilterResult<MovieRequests>> Filter([FromBody] FilterViewModel vm)
-        {
-            return await MovieRequestEngine.Filter(vm);
         }
 
         /// <summary>
