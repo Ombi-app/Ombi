@@ -102,7 +102,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 Logger.LogDebug(LoggingEvents.Updater, "Service Version {0}", updates.UpdateVersionString);
 
-                if (!serverVersion.Equals(version, StringComparison.CurrentCultureIgnoreCase))
+                if (!serverVersion.Equals(version, StringComparison.CurrentCultureIgnoreCase) || settings.TestMode)
                 {
                     // Let's download the correct zip
                     var desc = RuntimeInformation.OSDescription;
