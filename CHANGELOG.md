@@ -4,9 +4,44 @@
 
 ### **New Features**
 
+- Added the subscribe on the sarch page. [Jamie Rees]
+
+- Added the subscribe button to the search page if we have an existing request. [Jamie Rees]
+
+### **Fixes**
+
+- Use selected episodes in submitRequest. [Calvin]
+
+- Fixed where the test button wouldn't work on the mobile notifications page. [Jamie]
+
+- Fixed the sorting and filtering on the Movie Requests page, it all functions correctly now. [Jamie]
+
+- Fixed #2288. [Jamie]
+
+- Fixed the SickRage/Medusa Issue where it was always being set as Skipped/Ignore #2084. [Jamie]
+
+- Fixed UI typo refrencing discord in mattermost notifications #2175. [Anojh]
+
+- Fix #2175. [Anojh]
+
+- Fixed #2013. [Jamie Rees]
+
+- Fixed #2147. [Jamie Rees]
+
+
+## v3.0.3346 (2018-05-26)
+
+### **New Features**
+
 - Added a default set of root folders and qualities for Anime in Sonarr. [Jamie Rees]
 
 ### **Fixes**
+
+- Made the Open on Mobile link less hidden. [Jamie Rees]
+
+- Fixed #2263. [Jamie Rees]
+
+- !changelog. [Jamie Rees]
 
 - Fixed #2243 The refresh metadata was being run everytime we launched Ombi... [Jamie]
 
