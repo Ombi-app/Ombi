@@ -173,12 +173,12 @@ Task("Package")
 
 Task("Publish")
     .IsDependentOn("PrePublish")
-    //.IsDependentOn("Publish-Windows")
+    .IsDependentOn("Publish-Windows")
     .IsDependentOn("Publish-Windows-32bit")
-    //.IsDependentOn("Publish-OSX")
-    //.IsDependentOn("Publish-Linux")
-    //.IsDependentOn("Publish-Linux-ARM")
-    //.IsDependentOn("Publish-Linux-ARM-64Bit")
+    .IsDependentOn("Publish-OSX")
+    .IsDependentOn("Publish-Linux")
+    .IsDependentOn("Publish-Linux-ARM")
+    .IsDependentOn("Publish-Linux-ARM-64Bit")
     .IsDependentOn("Package");
 
 Task("Publish-Windows")

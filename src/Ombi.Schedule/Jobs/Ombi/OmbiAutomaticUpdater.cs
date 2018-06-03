@@ -206,7 +206,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         updaterExtension = ".exe";
                     }
                     var updaterFile = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
-                        "TempUpdate", "Updater", $"Ombi.Updater{updaterExtension}");
+                        "TempUpdate", "updater", $"Ombi.Updater{updaterExtension}");
 
                     // Make sure the file is an executable
                     //ExecLinuxCommand($"chmod +x {updaterFile}");

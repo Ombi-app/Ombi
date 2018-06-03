@@ -29,7 +29,8 @@
   },
   "exclude": [
     "bin",
-    "node_modules"
+    "node_modules",
+    "TempUpdate"
   ],
   "angularCompilerOptions": {
     "preserveWhitespaces": false
