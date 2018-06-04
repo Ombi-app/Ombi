@@ -35,6 +35,7 @@ export class UpdateComponent implements OnInit {
                     scriptLocation: [x.scriptLocation],
                     windowsService: [x.windowsService],
                     windowsServiceName: [x.windowsServiceName],
+                    testMode: [x.testMode],
                 });
                 this.isWindows = x.isWindows;
                 this.enableUpdateButton = x.autoUpdateEnabled;

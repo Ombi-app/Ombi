@@ -6,7 +6,7 @@
         <legend>Update Settings</legend>
         <div class="form-group"  style="float: right">
             <div *ngIf="updateAvailable">
-                <button (click)="update()" [disabled]="!enableUpdateButton" class="btn btn-success-outline">Update</button>
+                <button (click)="update()" [disabled]="!enableUpdateButton || !form.value.testMode" class="btn btn-success-outline">Update</button>
             </div>
             <div *ngIf="!updateAvailable">
                 <button (click)="checkForUpdate()" class="btn btn-primary-outline">Check For Update</button>
@@ -19,8 +19,13 @@
                         <input type="checkbox" id="autoUpdateEnabled" formControlName="autoUpdateEnabled">
                         <label for="autoUpdateEnabled">Enable Automatic Update</label>
                     </div>
+                </div>                
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="testMode" formControlName="testMode">
+                        <label for="testMode">Test Mode</label>
+                    </div>
                 </div>
-
                 <div class="form-group" *ngIf="isWindows">
                     <div class="checkbox">
                         <input type="checkbox" id="windowsService" formControlName="windowsService">
