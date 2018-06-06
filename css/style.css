@@ -274,10 +274,31 @@ ol {
   background: #000;
 }
 
+.badges {
+  display: inline-block;
+  width: 200px;
+}
+
+.badges img {
+  max-width: 100%;
+  height: auto;
+}
+
+.apple-badge img {
+  width: 88%;
+  margin: 6%;
+}
+
 .madeby-container {
   padding: 150px 0;
   color: #000;
   background: #fff;
+}
+
+.legal {
+  font-size: 12px;
+  margin: 50px 0 30px 0;
+  color: #a0a0a0;
 }
 
 /* Fancy css loader */
