@@ -2,11 +2,24 @@
 
 ## v3.0.3368 (2018-06-03)
 
+### **Fixes**
+
+- Run the availability checker on finish of the recentlty added sync. [Jamie]
+
+- Fixed the issue with the Recently Added Sync sometimes not working as expected. [Jamie]
+
+- The UI looks at the local time to see if the JWT token has expired. Use local time to generate the token. [Jamie Rees]
+
+
+## v3.0.3368 (2018-06-03)
+
 ### **New Features**
 
 - Added the subscribe on the sarch page. [Jamie Rees]
 
 - Added the subscribe button to the search page if we have an existing request. [Jamie Rees]
+
+- Update CHANGELOG.md. [Jamie]
 
 ### **Fixes**
 
