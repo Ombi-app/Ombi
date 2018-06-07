@@ -178,6 +178,7 @@ namespace Ombi.Core.Engine
                     .Include(x => x.ChildRequests)
                     .ThenInclude(x => x.SeasonRequests)
                     .ThenInclude(x => x.Episodes)
+                    .Where(x => x.ChildRequests.Any())
                     .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
                     .Skip(position).Take(count).ToListAsync();
 
@@ -189,6 +190,7 @@ namespace Ombi.Core.Engine
                     .Include(x => x.ChildRequests)
                     .ThenInclude(x => x.SeasonRequests)
                     .ThenInclude(x => x.Episodes)
+                    .Where(x => x.ChildRequests.Any())
                     .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
                     .Skip(position).Take(count).ToListAsync();
             }
