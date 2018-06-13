@@ -149,6 +149,8 @@ namespace Ombi.Notifications
             ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
             RequestedUser = user.UserName;
+            Alias = user.UserAlias;
+            UserName = user.UserName;
         }
 
         private void LoadIssues(NotificationOptions opts)
