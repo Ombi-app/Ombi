@@ -100,7 +100,7 @@ export function JwtTokenGetter() {
         CommonModule,
         JwtModule.forRoot({
             config: {
-                tokenGetter: JwtTokenGetter
+                tokenGetter: JwtTokenGetter,
             },
         }),
         TranslateModule.forRoot({

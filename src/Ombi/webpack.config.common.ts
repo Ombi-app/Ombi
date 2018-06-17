@@ -26,9 +26,6 @@ export const WebpackCommonConfig = (env: any, type: string) => {
     const cssLoader = prod ? "css-loader?minimize" : "css-loader";
     const bundleConfig: Configuration = {
         mode: prod ? "production" : "development",
-        optimization: {
-            minimize: false
-        },
         resolve: {
             extensions: [".ts", ".js"],
             alias: {
