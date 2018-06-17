@@ -1,15 +1,12 @@
-﻿import { PlatformLocation } from "@angular/common";
+import { PlatformLocation } from "@angular/common";
 import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import "rxjs/add/operator/debounceTime";
-import "rxjs/add/operator/distinctUntilChanged";
-import "rxjs/add/operator/map";
-import { Subject } from "rxjs/Subject";
+import { Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { AuthService } from "../auth/auth.service";
-import { NotificationService, RadarrService, RequestService } from "../services";
-
 import { FilterType, IFilter, IIssueCategory, IMovieRequests, IPagenator, IRadarrProfile, IRadarrRootFolder, OrderType } from "../interfaces";
+import { NotificationService, RadarrService, RequestService } from "../services";
 
 @Component({
     selector: "movie-requests",
@@ -40,32 +37,33 @@ export class MovieRequestsComponent implements OnInit {
 
     public orderType: OrderType = OrderType.RequestedDateDesc;
     public OrderType = OrderType;
-    
+
     public totalMovies: number = 100;
     private currentlyLoaded: number;
     private amountToLoad: number;
 
-    constructor(private requestService: RequestService,
-                private auth: AuthService,
-                private notificationService: NotificationService,
-                private radarrService: RadarrService,
-                private sanitizer: DomSanitizer,
-                private readonly platformLocation: PlatformLocation) {
-        this.searchChanged
-            .debounceTime(600) // Wait Xms after the last event before emitting last event
-            .distinctUntilChanged() // only emit if value is different from previous value
-            .subscribe(x => {
-                this.searchText = x as string;
-                if (this.searchText === "") {
-                    this.resetSearch();
-                    return;
-                }
-                this.requestService.searchMovieRequests(this.searchText)
-                    .subscribe(m => {
-                        this.setOverrides(m);
-                        this.movieRequests = m;
-                    });
-            });
+    constructor(
+        private requestService: RequestService,
+        private auth: AuthService,
+        private notificationService: NotificationService,
+        private radarrService: RadarrService,
+        private sanitizer: DomSanitizer,
+        private readonly platformLocation: PlatformLocation) {
+        this.searchChanged.pipe(
+            debounceTime(600), // Wait Xms after the last event before emitting last event
+            distinctUntilChanged(), // only emit if value is different from previous value
+        ).subscribe(x => {
+            this.searchText = x as string;
+            if (this.searchText === "") {
+                this.resetSearch();
+                return;
+            }
+            this.requestService.searchMovieRequests(this.searchText)
+                .subscribe(m => {
+                    this.setOverrides(m);
+                    this.movieRequests = m;
+                });
+        });
         this.defaultPoster = "../../../images/default_movie_poster.png";
         const base = this.platformLocation.getBaseHrefFromDOM();
         if (base) {
@@ -75,7 +73,7 @@ export class MovieRequestsComponent implements OnInit {
 
     public ngOnInit() {
         this.amountToLoad = 10;
-        this.currentlyLoaded = 10;       
+        this.currentlyLoaded = 10;
         this.filter = {
             availabilityFilter: FilterType.None,
             statusFilter: FilterType.None,
@@ -85,7 +83,7 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     public paginate(event: IPagenator) {
-        const skipAmount = event.first;        
+        const skipAmount = event.first;
         this.loadRequests(this.amountToLoad, skipAmount);
     }
 
@@ -102,7 +100,7 @@ export class MovieRequestsComponent implements OnInit {
     public changeAvailability(request: IMovieRequests, available: boolean) {
         request.available = available;
 
-        if(available) {
+        if (available) {
             this.requestService.markMovieAvailable({ id: request.id }).subscribe(x => {
                 if (x.result) {
                     this.notificationService.success(
@@ -173,7 +171,7 @@ export class MovieRequestsComponent implements OnInit {
         this.filterDisplay = false;
         this.filter.availabilityFilter = FilterType.None;
         this.filter.statusFilter = FilterType.None;
-        
+
         this.resetSearch();
     }
 
@@ -199,11 +197,11 @@ export class MovieRequestsComponent implements OnInit {
         el.className = "active";
 
         this.orderType = value;
-        
+
         this.loadInit();
-      }
-    
-      public subscribe(request: IMovieRequests) {
+    }
+
+    public subscribe(request: IMovieRequests) {
         request.subscribed = true;
         this.requestService.subscribeToMovie(request.id)
             .subscribe(x => {
@@ -238,10 +236,10 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     private loadRequests(amountToLoad: number, currentlyLoaded: number) {
-            this.requestService.getMovieRequests(amountToLoad, currentlyLoaded, this.orderType, this.filter)
+        this.requestService.getMovieRequests(amountToLoad, currentlyLoaded, this.orderType, this.filter)
             .subscribe(x => {
                 this.setOverrides(x.collection);
-                if(!this.movieRequests) {
+                if (!this.movieRequests) {
                     this.movieRequests = [];
                 }
                 this.movieRequests = x.collection;
@@ -364,6 +362,6 @@ export class MovieRequestsComponent implements OnInit {
 
     private setBackground(req: IMovieRequests): void {
         req.backgroundPath = this.sanitizer.bypassSecurityTrustStyle
-        ("url(" + "https://image.tmdb.org/t/p/w1280" + req.background + ")");
+            ("url(" + "https://image.tmdb.org/t/p/w1280" + req.background + ")");
     }
 }

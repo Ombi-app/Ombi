@@ -1,5 +1,6 @@
-import * as Pace from "pace-progress";
+// Main
 
+import * as Pace from "pace-progress";
 Pace.start();
 
 import "bootstrap/dist/js/bootstrap";
@@ -10,8 +11,6 @@ import "./styles/Themes/plex.scss";
 import "./polyfills";
 
 import "hammerjs";
-
-import "./imports";
 
 import { enableProdMode } from "@angular/core";
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
@@ -29,7 +28,9 @@ if (module.hot) {
             oldRootElem.parentNode.insertBefore(newRootElem, oldRootElem);
             oldRootElem.parentNode.removeChild(oldRootElem);
         }
-        modulePromise.then(appModule => appModule.destroy());
+        if (modulePromise) {
+            modulePromise.then(appModule => appModule.destroy());
+        }
     });
 } else {
     enableProdMode();

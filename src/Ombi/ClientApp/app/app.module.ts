@@ -1,12 +1,12 @@
-import {CommonModule, PlatformLocation} from "@angular/common";
-import {HttpClient, HttpClientModule} from "@angular/common/http";
-import {NgModule} from "@angular/core";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {HttpModule} from "@angular/http";
-import {MatButtonModule, MatCardModule, MatInputModule, MatTabsModule} from "@angular/material";
-import {BrowserModule} from "@angular/platform-browser";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {RouterModule, Routes} from "@angular/router";
+import { CommonModule, PlatformLocation } from "@angular/common";
+import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { NgModule } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { HttpModule } from "@angular/http";
+import { MatButtonModule, MatCardModule, MatInputModule, MatTabsModule } from "@angular/material";
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { RouterModule, Routes } from "@angular/router";
 
 import { JwtModule } from "@auth0/angular-jwt";
 
@@ -15,7 +15,7 @@ import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { CookieService } from "ng2-cookies";
 import { GrowlModule } from "primeng/components/growl/growl";
-import { ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, DataTableModule,DialogModule, SharedModule, SidebarModule, TooltipModule } from "primeng/primeng";
+import { ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DialogModule, SharedModule, SidebarModule, TooltipModule } from "primeng/primeng";
 
 // Components
 import { AppComponent } from "./app.component";
@@ -67,6 +67,14 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
     return new TranslateHttpLoader(http, "/translations/", `.json?v=${version}`);
 }
 
+export function JwtTokenGetter() {
+    const token = localStorage.getItem("id_token");
+    if (!token) {
+        return "";
+    }
+    return token;
+}
+
 @NgModule({
     imports: [
         RouterModule.forRoot(routes),
@@ -89,18 +97,12 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
         CaptchaModule,
         TooltipModule,
         ConfirmDialogModule,
-        CommonModule, 
+        CommonModule,
         JwtModule.forRoot({
             config: {
-              tokenGetter: () => {
-                  const token = localStorage.getItem("id_token");
-                  if (!token) {
-                      return "";
-                  }
-                  return token;
-                },
+                tokenGetter: JwtTokenGetter
             },
-          }),
+        }),
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -119,7 +121,7 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
         TokenResetPasswordComponent,
         CookieComponent,
         LoginOAuthComponent,
-        ],
+    ],
     providers: [
         NotificationService,
         AuthService,

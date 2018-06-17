@@ -1,8 +1,8 @@
-﻿import { PlatformLocation } from "@angular/common";
+import { PlatformLocation } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { Observable } from "rxjs/Rx";
+import { Observable } from "rxjs";
 
 import { ServiceHelpers } from "../services";
 import { ILocalUser, IUserLogin } from "./IUserLogin";
