@@ -45,9 +45,11 @@
   <Target Name="NpmCommandsDebug" Condition="'$(Configuration)'=='Debug'" AfterTargets="Build">
     <Exec Command="npm run vendor" />
   </Target>
+  <!-- Disabled as run by CI once for many different runtime builds
   <Target Name="NpmCommandsRelease" Condition="'$(Configuration)'=='Release'" AfterTargets="Build">
     <Exec Command="npm run publish" />
   </Target>
+  -->
   <Target Name="NpmCommandsClean" AfterTargets="Clean">
     <Exec Command="npm run clean" />
   </Target>
