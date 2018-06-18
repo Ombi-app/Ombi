@@ -44,8 +44,17 @@ namespace Ombi.Notifications
             }
             Overview = req?.Overview;
             Year = req?.ReleaseDate.Year.ToString();
-            PosterImage = req?.RequestType == RequestType.Movie ?
-                string.Format("https://image.tmdb.org/t/p/w300{0}", req?.PosterPath) : req?.PosterPath;
+
+            if (req?.RequestType == RequestType.Movie)
+            {
+                PosterImage = string.Format((req?.PosterPath ?? string.Empty).StartsWith("/", StringComparison.InvariantCultureIgnoreCase) 
+                    ? "https://image.tmdb.org/t/p/w300{0}" : "https://image.tmdb.org/t/p/w300/{0}", req?.PosterPath);
+            }
+            else
+            {
+                PosterImage = req?.PosterPath;
+            }
+            
             AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
         }
 
@@ -88,8 +97,15 @@ namespace Ombi.Notifications
 
             Overview = req?.ParentRequest.Overview;
             Year = req?.ParentRequest.ReleaseDate.Year.ToString();
-            PosterImage = req?.RequestType == RequestType.Movie ?
-                $"https://image.tmdb.org/t/p/w300{req?.ParentRequest.PosterPath}" : req?.ParentRequest.PosterPath;
+            if (req?.RequestType == RequestType.Movie)
+            {
+                PosterImage = string.Format((req?.ParentRequest.PosterPath ?? string.Empty).StartsWith("/", StringComparison.InvariantCultureIgnoreCase)
+                    ? "https://image.tmdb.org/t/p/w300{0}" : "https://image.tmdb.org/t/p/w300/{0}", req?.ParentRequest.PosterPath);
+            }
+            else
+            {
+                PosterImage = req?.ParentRequest.PosterPath;
+            }
             AdditionalInformation = opts.AdditionalInformation;
             // DO Episode and Season Lists
 
@@ -133,6 +149,8 @@ namespace Ombi.Notifications
             ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
             RequestedUser = user.UserName;
+            Alias = user.UserAlias;
+            UserName = user.UserName;
         }
 
         private void LoadIssues(NotificationOptions opts)

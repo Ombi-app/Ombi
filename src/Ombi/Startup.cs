@@ -218,7 +218,7 @@ namespace Ombi
 
             app.UseMiddleware<ErrorHandlingMiddleware>();
 
-            app.ApiKeyMiddlewear(serviceProvider);
+            app.ApiKeyMiddlewear(app.ApplicationServices);
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
