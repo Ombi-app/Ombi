@@ -89,6 +89,7 @@ namespace Ombi.Store.Repository
         {
             return await Db.PlexServerContent
                 .Include(x => x.Seasons)
+                .Include(x => x.Episodes)
                 .FirstOrDefaultAsync(predicate);
         }
 

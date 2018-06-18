@@ -131,7 +131,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 if (!test)
                 {
                     // Get the users to send it to
-                    var users = await _userManager.GetUsersInRoleAsync(OmbiRoles.RecievesNewsletter);
+                    var users = await _userManager.GetUsersInRoleAsync(OmbiRoles.ReceivesNewsletter);
                     if (!users.Any())
                     {
                         return;

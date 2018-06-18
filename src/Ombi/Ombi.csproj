@@ -1,6 +1,6 @@
 ﻿<Project ToolsVersion="15.0" Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <RuntimeIdentifiers>win10-x64;win10-x86;osx-x64;ubuntu-x64;debian.8-x64;centos.7-x64;linux-x64;linux-arm;linux-arm64;</RuntimeIdentifiers>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
@@ -71,10 +71,10 @@
     <PackageReference Include="Hangfire.RecurringJobExtensions" Version="1.1.6" />
     <PackageReference Include="Hangfire.SQLite" Version="1.4.2" />
 
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.2" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.1.0" />
     <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.0.0-alpha6-79" />
     <PackageReference Include="ncrontab" Version="3.3.0" />
     <PackageReference Include="Serilog" Version="2.6.0-dev-00892" />

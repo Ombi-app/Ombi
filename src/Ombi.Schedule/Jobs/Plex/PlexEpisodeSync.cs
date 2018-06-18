@@ -129,7 +129,7 @@ namespace Ombi.Schedule.Jobs.Plex
             await _repo.SaveChangesAsync();
         }
 
-        public async Task ProcessEpsiodes(Metadata[] episodes, IQueryable<PlexEpisode> currentEpisodes)
+        public async Task<HashSet<PlexEpisode>> ProcessEpsiodes(Metadata[] episodes, IQueryable<PlexEpisode> currentEpisodes)
         {
             var ep = new HashSet<PlexEpisode>();
             try
@@ -179,6 +179,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
 
                 await _repo.AddRange(ep);
+                return ep;
             }
             catch (Exception e)
             {

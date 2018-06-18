@@ -39,8 +39,8 @@
 
             <div class="form-group" *ngFor="let u of users">
                     <div class="checkbox">
-                        <input type="checkbox" id="{{u.user.id}}" [(ngModel)]="u.selected" (click)="selectSingleUser(u)">
-                        <label for="{{u.user.id}}">{{u.user.userName}}</label>
+                        <input type="checkbox" id="user{{u.user.id}}" [(ngModel)]="u.selected" (click)="selectSingleUser(u)">
+                        <label for="user{{u.user.id}}">{{u.user.userName}}</label>
                     </div>
                 </div>
     </div>

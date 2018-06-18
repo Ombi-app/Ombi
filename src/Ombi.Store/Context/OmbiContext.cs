@@ -117,12 +117,12 @@ namespace Ombi.Store.Context
             Database.ExecuteSqlCommand("VACUUM;");
 
             // Make sure we have the roles
-            var roles = Roles.Where(x => x.Name == OmbiRoles.RecievesNewsletter);
+            var roles = Roles.Where(x => x.Name == OmbiRoles.ReceivesNewsletter);
             if (!roles.Any())
             {
-                Roles.Add(new IdentityRole(OmbiRoles.RecievesNewsletter)
+                Roles.Add(new IdentityRole(OmbiRoles.ReceivesNewsletter)
                 {
-                    NormalizedName = OmbiRoles.RecievesNewsletter.ToUpper()
+                    NormalizedName = OmbiRoles.ReceivesNewsletter.ToUpper()
                 });
                 SaveChanges();
             }

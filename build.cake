@@ -26,7 +26,7 @@ var csProj = "./src/Ombi/Ombi.csproj";          // Path to the project.csproj
 var solutionFile = "Ombi.sln";                  // Solution file if needed
 GitVersion versionInfo = null;
 
-var frameworkVer = "netcoreapp2.0";
+var frameworkVer = "netcoreapp2.1";
 
 var buildSettings = new DotNetCoreBuildSettings
 {

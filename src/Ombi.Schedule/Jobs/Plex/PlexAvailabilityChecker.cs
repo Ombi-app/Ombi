@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Ombi.Core.Notifications;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
 using Ombi.Store.Entities;
+using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
 
@@ -16,13 +18,14 @@ namespace Ombi.Schedule.Jobs.Plex
     public class PlexAvailabilityChecker : IPlexAvailabilityChecker
     {
         public PlexAvailabilityChecker(IPlexContentRepository repo, ITvRequestRepository tvRequest, IMovieRequestRepository movies,
-            INotificationService notification, IBackgroundJobClient background)
+            INotificationService notification, IBackgroundJobClient background, ILogger<PlexAvailabilityChecker> log)
         {
             _tvRepo = tvRequest;
             _repo = repo;
             _movieRepo = movies;
             _notificationService = notification;
             _backgroundJobClient = background;
+            _log = log;
         }
 
         private readonly ITvRequestRepository _tvRepo;
@@ -30,16 +33,29 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly IPlexContentRepository _repo;
         private readonly INotificationService _notificationService;
         private readonly IBackgroundJobClient _backgroundJobClient;
+        private readonly ILogger _log;
 
         public async Task Start()
         {
-            await ProcessMovies();
-            await ProcessTv();
+            try
+            {
+                await ProcessMovies();
+                await ProcessTv();
+            }
+            catch (Exception e)
+            {
+                _log.LogError(e, "Exception thrown in Plex availbility checker");
+            }
         }
 
-        private async Task ProcessTv()
+        private Task ProcessTv()
         {
             var tv = _tvRepo.GetChild().Where(x => !x.Available);
+            return ProcessTv(tv);
+        }
+
+        private async Task ProcessTv(IQueryable<ChildRequests> tv)
+        {
             var plexEpisodes = _repo.GetAllEpisodes().Include(x => x.Series);
 
             foreach (var child in tv)
@@ -81,6 +97,10 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     foreach (var episode in season.Episodes)
                     {
+                        if (episode.Available)
+                        {
+                            continue;
+                        }
                         var foundEp = await seriesEpisodes.FirstOrDefaultAsync(
                             x => x.EpisodeNumber == episode.EpisodeNumber &&
                                  x.SeasonNumber == episode.Season.SeasonNumber);
