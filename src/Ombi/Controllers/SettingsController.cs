@@ -1,21 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Hangfire;
-using Hangfire.RecurringJobExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.PlatformAbstractions;
 using NCrontab;
 using Ombi.Api.Emby;
 using Ombi.Attributes;
@@ -115,7 +109,7 @@ namespace Ombi.Controllers
                 OsArchitecture = RuntimeInformation.OSArchitecture.ToString(),
                 OsDescription = RuntimeInformation.OSDescription,
                 ProcessArchitecture = RuntimeInformation.ProcessArchitecture.ToString(),
-                ApplicationBasePath =PlatformServices.Default.Application.ApplicationBasePath
+                ApplicationBasePath =Directory.GetCurrentDirectory()
             };
             
             var version = AssemblyHelper.GetRuntimeVersion();
