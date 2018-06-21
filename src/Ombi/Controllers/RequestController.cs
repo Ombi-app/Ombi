@@ -205,6 +205,27 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Gets the tv requests without the whole object graph (Does not include seasons/episodes).
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("tvlite")]
+        public async Task<IEnumerable<TvRequests>> GetTvRequestsLite()
+        {
+            return await TvRequestEngine.GetRequestsLite();
+        }
+
+        /// <summary>
+        /// Returns the full request object for the specified requestId
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <returns></returns>
+        [HttpGet("tv/{requestId:int}")]
+        public async Task<TvRequests> GetTvRequest(int requestId)
+        {
+            return await TvRequestEngine.GetTvRequest(requestId);
+        }
+
+        /// <summary>
         /// Requests a tv show/episode/season.
         /// </summary>
         /// <param name="tv">The tv.</param>

@@ -26,7 +26,7 @@ namespace Ombi.Schedule.Tests
             _tv = new Mock<ITvRequestRepository>();
             _movie = new Mock<IMovieRequestRepository>();
             _notify = new Mock<INotificationService>();
-            Checker = new PlexAvailabilityChecker(_repo.Object, _tv.Object, _movie.Object, _notify.Object, new Mock<IBackgroundJobClient>().Object);
+            Checker = new PlexAvailabilityChecker(_repo.Object, _tv.Object, _movie.Object, _notify.Object, new Mock<IBackgroundJobClient>().Object, null);
         }
 
 

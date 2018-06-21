@@ -14,7 +14,9 @@ namespace Ombi.Store.Repository.Requests
         Task Delete(TvRequests request);
         Task DeleteChild(ChildRequests request);
         IQueryable<TvRequests> Get();
+        IQueryable<TvRequests> GetLite();
         IQueryable<TvRequests> Get(string userId);
+        IQueryable<TvRequests> GetLite(string userId);
         Task<TvRequests> GetRequestAsync(int tvDbId);
         TvRequests GetRequest(int tvDbId);
         Task Update(TvRequests request);
