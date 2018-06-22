@@ -203,7 +203,7 @@ namespace Ombi.Controllers
         /// <param name="statusType"></param>
         /// <param name="availabilityType"></param>
         /// <returns></returns>
-        [HttpGet("tv/{count:int}/{position:int}/{orderType:int}/{statusFilterType:int}/{availabilityFilterType:int}")]
+        [HttpGet("tvlite/{count:int}/{position:int}/{orderType:int}/{statusFilterType:int}/{availabilityFilterType:int}")]
         public async Task<RequestsViewModel<TvRequests>> GetTvRequestsLite(int count, int position, int orderType, int statusType, int availabilityType)
         {
             return await TvRequestEngine.GetRequestsLite(count, position, new OrderFilterModel
