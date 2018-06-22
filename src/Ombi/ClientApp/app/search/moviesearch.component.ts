@@ -70,6 +70,7 @@ export class MovieSearchComponent implements OnInit {
             result: false,
             errorMessage: "",
         };      
+        this.popularMovies();
     }
 
     public search(text: any) {
