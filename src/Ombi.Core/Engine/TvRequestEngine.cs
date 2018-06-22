@@ -168,6 +168,35 @@ namespace Ombi.Core.Engine
             };
         }
 
+        public async Task<RequestsViewModel<TvRequests>> GetRequestsLite(int count, int position, OrderFilterModel type)
+        {
+            var shouldHide = await HideFromOtherUsers();
+            List<TvRequests> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests = await TvRepository.GetLite(shouldHide.UserId)
+                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
+                    .Skip(position).Take(count).ToListAsync();
+
+                // Filter out children
+
+                FilterChildren(allRequests, shouldHide);
+            }
+            else
+            {
+                allRequests = await TvRepository.GetLite()
+                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
+                    .Skip(position).Take(count).ToListAsync();
+            }
+
+            allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
+
+            return new RequestsViewModel<TvRequests>
+            {
+                Collection = allRequests
+            };
+        }
+
         public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> GetRequestsTreeNode(int count, int position)
         {
             var shouldHide = await HideFromOtherUsers();

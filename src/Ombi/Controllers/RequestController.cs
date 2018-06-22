@@ -189,8 +189,28 @@ namespace Ombi.Controllers
             return await TvRequestEngine.GetRequests(count, position, new OrderFilterModel
             {
                 OrderType = (OrderType)orderType,
-                AvailabilityFilter = (FilterType) availabilityType,
-                StatusFilter = (FilterType) statusType,
+                AvailabilityFilter = (FilterType)availabilityType,
+                StatusFilter = (FilterType)statusType,
+            });
+        }
+
+        /// <summary>
+        /// Gets the tv requests lite.
+        /// </summary>
+        /// <param name="count">The count of items you want to return.</param>
+        /// <param name="position">The position.</param>
+        /// <param name="orderType"></param>
+        /// <param name="statusType"></param>
+        /// <param name="availabilityType"></param>
+        /// <returns></returns>
+        [HttpGet("tv/{count:int}/{position:int}/{orderType:int}/{statusFilterType:int}/{availabilityFilterType:int}")]
+        public async Task<RequestsViewModel<TvRequests>> GetTvRequestsLite(int count, int position, int orderType, int statusType, int availabilityType)
+        {
+            return await TvRequestEngine.GetRequestsLite(count, position, new OrderFilterModel
+            {
+                OrderType = (OrderType)orderType,
+                AvailabilityFilter = (FilterType)availabilityType,
+                StatusFilter = (FilterType)statusType,
             });
         }
 
