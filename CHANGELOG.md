@@ -4,6 +4,21 @@
 
 ### **New Features**
 
+- Added TVRequestsLite. [Jamie]
+
+- Added a smaller and simplier way of getting TV Request info. [Jamie Rees]
+
+### **Fixes**
+
+- Show the popular movies and tv shows by default. [Jamie]
+
+- Fixed #2348. [Jamie]
+
+
+## v3.0.3407 (2018-06-18)
+
+### **New Features**
+
 - Update appveyor.yml. [Jamie]
 
 - Update build.cake. [Jamie]

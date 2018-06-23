@@ -104,13 +104,13 @@ namespace Ombi.Schedule.Jobs.Plex
                 BackgroundJob.Enqueue(() => EpisodeSync.Start());
             }
 
-            if (processedContent.HasProcessedContent && recentlyAddedSearch)
+            if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
                 // Just check what we send it
                 BackgroundJob.Enqueue(() => Metadata.ProcessPlexServerContent(processedContent.Content));
             }
 
-            if (processedContent.HasProcessedEpisodes && recentlyAddedSearch)
+            if ((processedContent?.HasProcessedEpisodes ?? false) && recentlyAddedSearch)
             {
                 BackgroundJob.Enqueue(() => Checker.Start());
             }
@@ -165,7 +165,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     Logger.LogInformation("Found some episodes, this must be a recently added sync");
                     var count = 0;
-                    foreach (var epInfo in content.Metadata)
+                    foreach (var epInfo in content.Metadata ?? new Metadata[]{})
                     {
                         count++;
                         var grandParentKey = epInfo.grandparentRatingKey;
@@ -199,9 +199,11 @@ namespace Ombi.Schedule.Jobs.Plex
 
                     // Save just to make sure we don't leave anything hanging
                     await Repo.SaveChangesAsync();
-
-                    var episodesAdded = await EpisodeSync.ProcessEpsiodes(content.Metadata, allEps);
-                    episodesProcessed.AddRange(episodesAdded.Select(x => x.Id));
+                    if (content.Metadata != null)
+                    {
+                        var episodesAdded = await EpisodeSync.ProcessEpsiodes(content.Metadata, allEps);
+                        episodesProcessed.AddRange(episodesAdded.Select(x => x.Id));
+                    }
                 }
                 if (content.viewGroup.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -350,7 +352,7 @@ namespace Ombi.Schedule.Jobs.Plex
             }
 
             // Do we already have this item?
-            // Let's try and match
+            // Let's try and match 
             var existingContent = await Repo.GetFirstContentByCustom(x => x.Title == show.title
                                                                           && x.ReleaseYear == show.year.ToString()
                                                                           && x.Type == PlexMediaTypeEntity.Show);
@@ -370,6 +372,10 @@ namespace Ombi.Schedule.Jobs.Plex
                     // Lets delete the matching key
                     await Repo.Delete(existingKey);
                     existingKey = null;
+                }
+                else if(existingContent == null)
+                {
+                    existingContent = await Repo.GetFirstContentByCustom(x => x.Key == show.ratingKey);
                 }
             }
 
