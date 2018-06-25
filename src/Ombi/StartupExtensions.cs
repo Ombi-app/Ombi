@@ -115,46 +115,6 @@ namespace Ombi
             });
         }
 
-
-        public static void ApiKeyMiddlewear(this IApplicationBuilder app, IServiceProvider serviceProvider)
-        {
-            app.Use(async (context, next) =>
-            {
-                if (context.Request.Path.StartsWithSegments(new PathString("/api")))
-                {
-                    // Let's check if this is an API Call
-                    if (context.Request.Headers["ApiKey"].Any())
-                    {
-                        // validate the supplied API key
-                        // Validate it
-                        var headerKey = context.Request.Headers["ApiKey"].FirstOrDefault();
-                        await ValidateApiKey(serviceProvider, context, next, headerKey);
-                    }
-                    else if (context.Request.Query.ContainsKey("apikey"))
-                    {
-                        if (context.Request.Query.TryGetValue("apikey", out var queryKey))
-                        {
-                            await ValidateApiKey(serviceProvider, context, next, queryKey);
-                        }
-                    }
-                    // User access token used by the mobile app
-                    else if (context.Request.Headers["UserAccessToken"].Any())
-                    {
-                        var headerKey = context.Request.Headers["UserAccessToken"].FirstOrDefault();
-                        await ValidateUserAccessToken(serviceProvider, context, next, headerKey);
-                    }
-                    else
-                    {
-                        await next();
-                    }
-                }
-                else
-                {
-                    await next();
-                }
-            });
-        }
-
         private static async Task ValidateUserAccessToken(IServiceProvider serviceProvider, HttpContext context, Func<Task> next, string key)
         {
             if (key.IsNullOrEmpty())
