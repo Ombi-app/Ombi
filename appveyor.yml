@@ -15,19 +15,19 @@ test: off
 after_build:
 - cmd: >-
     
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.1\windows.zip"
+    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.0\windows.zip"
     
     
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.1\osx.tar.gz"  
+    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.0\osx.tar.gz"  
     
     
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.1\linux.tar.gz"
+    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.0\linux.tar.gz"
 
     
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.1\linux-arm.tar.gz"
+    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.0\linux-arm.tar.gz"
 
     
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.1\windows-32bit.zip"
+    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.0\windows-32bit.zip"
 
     
 #   appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.0\linux-arm64.tar.gz"
