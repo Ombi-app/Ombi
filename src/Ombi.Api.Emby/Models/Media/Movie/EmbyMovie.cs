@@ -28,5 +28,7 @@ namespace Ombi.Api.Emby.Models.Movie
         public string MediaType { get; set; }
         public bool HasSubtitles { get; set; }
         public int CriticRating { get; set; }
+        public string Overview { get; set; }
+        public EmbyProviderids ProviderIds { get; set; }
     }
 }

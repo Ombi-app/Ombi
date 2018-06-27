@@ -75,34 +75,15 @@ namespace Ombi.Schedule.Jobs.Emby
             var mediaToAdd = new HashSet<EmbyContent>();
             foreach (var movie in movies.Items)
             {
-                if (movie.Type.Equals("boxset", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    var movieInfo =
-                        await _api.GetCollection(movie.Id, server.ApiKey, server.AdministratorId, server.FullUri);
-                    foreach (var item in movieInfo.Items)
-                    {
-                        var info = await _api.GetMovieInformation(item.Id, server.ApiKey,
-                            server.AdministratorId, server.FullUri);
-                        await ProcessMovies(info, mediaToAdd);
-                    }
-                }
-                else
-                {
-                    // Regular movie
-                    var movieInfo = await _api.GetMovieInformation(movie.Id, server.ApiKey,
-                        server.AdministratorId, server.FullUri);
-
-                    await ProcessMovies(movieInfo, mediaToAdd);
-                }
+                // Regular movie
+                await ProcessMovies(movie, mediaToAdd);
             }
             // TV Time
             var tv = await _api.GetAllShows(server.ApiKey, server.AdministratorId, server.FullUri);
 
             foreach (var tvShow in tv.Items)
-            {
-                var tvInfo = await _api.GetSeriesInformation(tvShow.Id, server.ApiKey, server.AdministratorId,
-                    server.FullUri);
-                if (string.IsNullOrEmpty(tvInfo.ProviderIds?.Tvdb))
+            {   
+                if (string.IsNullOrEmpty(tvShow.ProviderIds?.Tvdb))
                 {
                     Log.Error("Provider Id on tv {0} is null", tvShow.Name);
                     continue;
@@ -112,10 +93,10 @@ namespace Ombi.Schedule.Jobs.Emby
                 if (existingTv == null)
                     mediaToAdd.Add(new EmbyContent
                     {
-                        TvDbId = tvInfo.ProviderIds?.Tvdb,
-                        ImdbId = tvInfo.ProviderIds?.Imdb,
-                        TheMovieDbId = tvInfo.ProviderIds?.Tmdb,
-                        Title = tvInfo.Name,
+                        TvDbId = tvShow.ProviderIds?.Tvdb,
+                        ImdbId = tvShow.ProviderIds?.Imdb,
+                        TheMovieDbId = tvShow.ProviderIds?.Tmdb,
+                        Title = tvShow.Name,
                         Type = EmbyMediaType.Series,
                         EmbyId = tvShow.Id,
                         Url = EmbyHelper.GetEmbyMediaUrl(tvShow.Id),
@@ -127,7 +108,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 await _repo.AddRange(mediaToAdd);
         }
 
-        private async Task ProcessMovies(MovieInformation movieInfo, ICollection<EmbyContent> content)
+        private async Task ProcessMovies(EmbyMovie movieInfo, ICollection<EmbyContent> content)
         {
             // Check if it exists
             var existingMovie = await _repo.GetByEmbyId(movieInfo.Id);

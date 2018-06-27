@@ -26,5 +26,7 @@ namespace Ombi.Api.Emby.Models.Media.Tv
         public string[] BackdropImageTags { get; set; }
         public string LocationType { get; set; }
         public DateTime EndDate { get; set; }
+        
+        public EmbyProviderids ProviderIds { get; set; }
     }
 }
