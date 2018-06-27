@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,8 +12,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.PlatformAbstractions;
-using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using Ombi.Config;
 using Ombi.Core.Authentication;
@@ -45,7 +44,7 @@ namespace Ombi
                     }
                 });
                 c.CustomSchemaIds(x => x.FullName);
-                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                var basePath = Directory.GetCurrentDirectory();
                 var xmlPath = Path.Combine(basePath, "Swagger.xml");
                 try
                 {
