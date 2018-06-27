@@ -28,7 +28,7 @@ namespace Ombi
             if (context.Request.Path.StartsWithSegments(new PathString("/api")))
             {
                 //Let's check if this is an API Call
-                if (context.Request.Headers.Keys.Contains("ApiKey"))
+                if (context.Request.Headers.Keys.Contains("ApiKey", StringComparer.InvariantCultureIgnoreCase))
                 {
                     // validate the supplied API key
                     // Validate it
