@@ -83,6 +83,14 @@ export interface IRadarrSettings extends IExternalSettings {
   minimumAvailability: string;
 }
 
+export interface ILidarrSettings extends IExternalSettings {
+  enabled: boolean;
+  apiKey: string;
+  defaultQualityProfile: string;
+  defaultRootPath: string;
+  fullRootPath: string;
+}
+
 export interface ILandingPageSettings extends ISettings {
   enabled: boolean;
 

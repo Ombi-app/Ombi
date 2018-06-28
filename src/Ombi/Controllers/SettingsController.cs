@@ -302,6 +302,27 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Gets the Lidarr Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("lidarr")]
+        public async Task<LidarrSettings> LidarrSettings()
+        {
+            return await Get<LidarrSettings>();
+        }
+
+        /// <summary>
+        /// Save the Lidarr settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("sonarr")]
+        public async Task<bool> LidarrSettings([FromBody]LidarrSettings settings)
+        {
+            return await Save(settings);
+        }
+
+        /// <summary>
         /// Save the Authentication settings.
         /// </summary>
         /// <param name="settings">The settings.</param>

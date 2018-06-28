@@ -34,6 +34,7 @@ import { TelegramComponent } from "./notifications/telegram.component";
 import { OmbiComponent } from "./ombi/ombi.component";
 import { PlexComponent } from "./plex/plex.component";
 import { RadarrComponent } from "./radarr/radarr.component";
+import { LidarrComponent } from "./lidarr/lidarr.component";
 import { SickRageComponent } from "./sickrage/sickrage.component";
 import { SonarrComponent } from "./sonarr/sonarr.component";
 import { UpdateComponent } from "./update/update.component";
@@ -71,6 +72,7 @@ const routes: Routes = [
     { path: "Mobile", component: MobileComponent, canActivate: [AuthGuard] },
     { path: "MassEmail", component: MassEmailComponent, canActivate: [AuthGuard] },
     { path: "Newsletter", component: NewsletterComponent, canActivate: [AuthGuard] },
+    { path: "Lidarr", component: LidarrComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -122,6 +124,7 @@ const routes: Routes = [
         MobileComponent,
         MassEmailComponent,
         NewsletterComponent,
+        LidarrComponent,
     ],
     exports: [
         RouterModule,

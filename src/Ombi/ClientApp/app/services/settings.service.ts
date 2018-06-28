@@ -91,6 +91,14 @@ export class SettingsService extends ServiceHelpers {
         return this.http.post<boolean>(`${this.url}/Radarr`, JSON.stringify(settings), {headers: this.headers});
     }
 
+    public getLidarr(): Observable<ILidarrSettings> {
+        return this.http.get<ILidarrSettings>(`${this.url}/Lidarr`, {headers: this.headers});
+    }
+
+    public saveLidarr(settings: ILidarrSettings): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}/Lidarr`, JSON.stringify(settings), {headers: this.headers});
+    }
+
     public getAuthentication(): Observable<IAuthenticationSettings> {
         return this.http.get<IAuthenticationSettings>(`${this.url}/Authentication`, {headers: this.headers});
     }
