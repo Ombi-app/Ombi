@@ -25,7 +25,7 @@ namespace Ombi.Api
         public string Endpoint { get; }
         public string BaseUrl { get; }
         public HttpMethod HttpMethod { get; }
-
+        public bool IgnoreErrors { get; set; }
         public bool Retry { get; set; }
         public List<HttpStatusCode> StatusCodeToRetry { get; set; } = new List<HttpStatusCode>();
 
