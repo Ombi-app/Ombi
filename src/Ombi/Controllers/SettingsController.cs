@@ -39,16 +39,6 @@ namespace Ombi.Controllers
     [Produces("application/json")]
     public class SettingsController : Controller
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SettingsController" /> class.
-        /// </summary>
-        /// <param name="resolver">The resolver.</param>
-        /// <param name="mapper">The mapper.</param>
-        /// <param name="templateRepo">The templateRepo.</param>
-        /// <param name="embyApi">The embyApi.</param>
-        /// <param name="radarrSync">The radarrCacher.</param>
-        /// <param name="memCache">The memory cache.</param>
-        /// <param name="githubApi">The memory cache.</param>
         public SettingsController(ISettingsResolver resolver,
             IMapper mapper,
             INotificationTemplatesRepository templateRepo,
@@ -226,6 +216,13 @@ namespace Ombi.Controllers
         public async Task<bool> CustomizationSettings([FromBody]CustomizationSettings settings)
         {
             return await Save(settings);
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpPost("customization/urlverify")]
+        public bool VerifyUrl([FromBody]UrlVerifyModel url)
+        {
+            return Uri.TryCreate(url.Url, UriKind.Absolute, out var __);
         }
 
         /// <summary>

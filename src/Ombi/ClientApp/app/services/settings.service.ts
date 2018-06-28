@@ -279,4 +279,7 @@ export class SettingsService extends ServiceHelpers {
         return this.http
             .post<boolean>(`${this.url}/notifications/newsletter`, JSON.stringify(settings), {headers: this.headers});
     }
+    public verifyUrl(url: string): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}/customization/urlverify`, JSON.stringify({url}), {headers: this.headers});
+    }
 }
