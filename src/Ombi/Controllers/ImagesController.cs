@@ -201,7 +201,10 @@ namespace Ombi.Controllers
                     result = await FanartTvApi.GetMovieImages(moviesArray[item].ToString(), key.Value);
                 }
 
-                movieUrl = result.moviebackground[0].url;
+                var otherRand = new Random();
+                var res = otherRand.Next(result.moviebackground.Length);
+                
+                movieUrl = result.moviebackground[res].url;
             }
             if (tvArray.Any())
             {
@@ -212,8 +215,10 @@ namespace Ombi.Controllers
                 {
                     result = await FanartTvApi.GetTvImages(tvArray[item], key.Value);
                 }
+                var otherRand = new Random();
+                var res = otherRand.Next(result.showbackground.Length);
 
-                tvUrl = result.showbackground[0].url;
+                tvUrl = result.showbackground[res].url;
             }
 
             if (!string.IsNullOrEmpty(movieUrl) && !string.IsNullOrEmpty(tvUrl))

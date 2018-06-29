@@ -78,21 +78,9 @@ namespace Ombi.Schedule.Jobs.Emby
 
             foreach (var ep in allEpisodes.Items)
             {
-                if (ep.LocationType.Equals("Virtual", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    // This means that we don't actully have the file, it's just Emby being nice and showing future stuff
-                    continue;
-                }
-
-                var epInfo = await _api.GetEpisodeInformation(ep.Id, server.ApiKey, server.AdministratorId, server.FullUri);
-                //if (epInfo?.ProviderIds?.Tvdb == null)
-                //{
-                //    continue;
-                //}
-
                 // Let's make sure we have the parent request, stop those pesky forign key errors,
                 // Damn me having data integrity
-                var parent = await _repo.GetByEmbyId(epInfo.SeriesId);
+                var parent = await _repo.GetByEmbyId(ep.SeriesId);
                 if (parent == null)
                 {
                     _logger.LogInformation("The episode {0} does not relate to a series, so we cannot save this", ep.Name);
@@ -109,9 +97,9 @@ namespace Ombi.Schedule.Jobs.Emby
                         EpisodeNumber = ep.IndexNumber,
                         SeasonNumber = ep.ParentIndexNumber,
                         ParentId = ep.SeriesId,
-                        TvDbId = epInfo.ProviderIds.Tvdb,
-                        TheMovieDbId = epInfo.ProviderIds.Tmdb,
-                        ImdbId = epInfo.ProviderIds.Imdb,
+                        TvDbId = ep.ProviderIds.Tvdb,
+                        TheMovieDbId = ep.ProviderIds.Tmdb,
+                        ImdbId = ep.ProviderIds.Imdb,
                         Title = ep.Name,
                         AddedAt = DateTime.UtcNow
                     });

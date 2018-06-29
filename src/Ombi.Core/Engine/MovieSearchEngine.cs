@@ -60,7 +60,6 @@ namespace Ombi.Core.Engine
 
             if (result != null)
             {
-                Logger.LogDebug("Search Result: {result}", result);
                 return await TransformMovieResultsToResponse(result.Take(10)); // Take 10 to stop us overloading the API
             }
             return null;
@@ -91,7 +90,6 @@ namespace Ombi.Core.Engine
             var result = await Cache.GetOrAdd(CacheKeys.PopularMovies, async () => await MovieApi.PopularMovies(), DateTime.Now.AddHours(12));
             if (result != null)
             {
-                Logger.LogDebug("Search Result: {result}", result);
                 return await TransformMovieResultsToResponse(result.Take(10)); // Take 10 to stop us overloading the API
             }
             return null;
@@ -106,7 +104,6 @@ namespace Ombi.Core.Engine
             var result = await Cache.GetOrAdd(CacheKeys.TopRatedMovies, async () => await MovieApi.TopRated(), DateTime.Now.AddHours(12));
             if (result != null)
             {
-                Logger.LogDebug("Search Result: {result}", result);
                 return await TransformMovieResultsToResponse(result.Take(10)); // Take 10 to stop us overloading the API
             }
             return null;
@@ -136,7 +133,6 @@ namespace Ombi.Core.Engine
             var result = await Cache.GetOrAdd(CacheKeys.NowPlayingMovies, async () => await MovieApi.NowPlaying(), DateTime.Now.AddHours(12));
             if (result != null)
             {
-                Logger.LogDebug("Search Result: {result}", result);
                 return await TransformMovieResultsToResponse(result.Take(10)); // Take 10 to stop us overloading the API
             }
             return null;

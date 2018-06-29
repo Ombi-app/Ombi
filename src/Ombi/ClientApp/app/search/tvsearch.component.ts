@@ -93,6 +93,7 @@ export class TvSearchComponent implements OnInit {
             result: false,
             errorMessage:"",
         };
+        this.popularShows();
     }
 
     public search(text: any) {

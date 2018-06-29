@@ -189,8 +189,28 @@ namespace Ombi.Controllers
             return await TvRequestEngine.GetRequests(count, position, new OrderFilterModel
             {
                 OrderType = (OrderType)orderType,
-                AvailabilityFilter = (FilterType) availabilityType,
-                StatusFilter = (FilterType) statusType,
+                AvailabilityFilter = (FilterType)availabilityType,
+                StatusFilter = (FilterType)statusType,
+            });
+        }
+
+        /// <summary>
+        /// Gets the tv requests lite.
+        /// </summary>
+        /// <param name="count">The count of items you want to return.</param>
+        /// <param name="position">The position.</param>
+        /// <param name="orderType"></param>
+        /// <param name="statusType"></param>
+        /// <param name="availabilityType"></param>
+        /// <returns></returns>
+        [HttpGet("tvlite/{count:int}/{position:int}/{orderType:int}/{statusFilterType:int}/{availabilityFilterType:int}")]
+        public async Task<RequestsViewModel<TvRequests>> GetTvRequestsLite(int count, int position, int orderType, int statusType, int availabilityType)
+        {
+            return await TvRequestEngine.GetRequestsLite(count, position, new OrderFilterModel
+            {
+                OrderType = (OrderType)orderType,
+                AvailabilityFilter = (FilterType)availabilityType,
+                StatusFilter = (FilterType)statusType,
             });
         }
 
@@ -202,6 +222,27 @@ namespace Ombi.Controllers
         public async Task<IEnumerable<TvRequests>> GetTvRequests()
         {
             return await TvRequestEngine.GetRequests();
+        }
+
+        /// <summary>
+        /// Gets the tv requests without the whole object graph (Does not include seasons/episodes).
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("tvlite")]
+        public async Task<IEnumerable<TvRequests>> GetTvRequestsLite()
+        {
+            return await TvRequestEngine.GetRequestsLite();
+        }
+
+        /// <summary>
+        /// Returns the full request object for the specified requestId
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <returns></returns>
+        [HttpGet("tv/{requestId:int}")]
+        public async Task<TvRequests> GetTvRequest(int requestId)
+        {
+            return await TvRequestEngine.GetTvRequest(requestId);
         }
 
         /// <summary>

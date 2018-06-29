@@ -39,5 +39,6 @@ namespace Ombi.Api.Emby.Models.Media.Tv
         public string LocationType { get; set; }
         public string MediaType { get; set; }
         public bool HasSubtitles { get; set; }
+        public EmbyProviderids ProviderIds { get; set; }
     }
 }

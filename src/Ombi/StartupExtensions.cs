@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.PlatformAbstractions;
-using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using Ombi.Config;
 using Ombi.Core.Authentication;
@@ -113,91 +113,6 @@ namespace Ombi
                 x.Audience = "Ombi";
                 x.TokenValidationParameters = tokenValidationParameters;
             });
-        }
-
-
-        public static void ApiKeyMiddlewear(this IApplicationBuilder app, IServiceProvider serviceProvider)
-        {
-            app.Use(async (context, next) =>
-            {
-                if (context.Request.Path.StartsWithSegments(new PathString("/api")))
-                {
-                    // Let's check if this is an API Call
-                    if (context.Request.Headers["ApiKey"].Any())
-                    {
-                        // validate the supplied API key
-                        // Validate it
-                        var headerKey = context.Request.Headers["ApiKey"].FirstOrDefault();
-                        await ValidateApiKey(serviceProvider, context, next, headerKey);
-                    }
-                    else if (context.Request.Query.ContainsKey("apikey"))
-                    {
-                        if (context.Request.Query.TryGetValue("apikey", out var queryKey))
-                        {
-                            await ValidateApiKey(serviceProvider, context, next, queryKey);
-                        }
-                    }
-                    // User access token used by the mobile app
-                    else if (context.Request.Headers["UserAccessToken"].Any())
-                    {
-                        var headerKey = context.Request.Headers["UserAccessToken"].FirstOrDefault();
-                        await ValidateUserAccessToken(serviceProvider, context, next, headerKey);
-                    }
-                    else
-                    {
-                        await next();
-                    }
-                }
-                else
-                {
-                    await next();
-                }
-            });
-        }
-
-        private static async Task ValidateUserAccessToken(IServiceProvider serviceProvider, HttpContext context, Func<Task> next, string key)
-        {
-            if (key.IsNullOrEmpty())
-            {
-                await context.Response.WriteAsync("Invalid User Access Token");
-                return;
-            }
-            
-            var um = serviceProvider.GetService<OmbiUserManager>();
-            var user = await um.Users.FirstOrDefaultAsync(x => x.UserAccessToken == key);
-            if (user == null)
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                await context.Response.WriteAsync("Invalid User Access Token");
-            }
-            else
-            {
-
-                var identity = new GenericIdentity(user.UserName);
-                var roles = await um.GetRolesAsync(user);
-                var principal = new GenericPrincipal(identity, roles.ToArray());
-                context.User = principal;
-                await next();
-            }
-        }
-
-        private static async Task ValidateApiKey(IServiceProvider serviceProvider, HttpContext context, Func<Task> next, string key)
-        {
-            var settingsProvider = serviceProvider.GetService<ISettingsService<OmbiSettings>>();
-            var ombiSettings = settingsProvider.GetSettings();
-            var valid = ombiSettings.ApiKey.Equals(key, StringComparison.CurrentCultureIgnoreCase);
-            if (!valid)
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                await context.Response.WriteAsync("Invalid API Key");
-            }
-            else
-            {
-                var identity = new GenericIdentity("API");
-                var principal = new GenericPrincipal(identity, new[] { "Admin", "ApiUser" });
-                context.User = principal;
-                await next();
-            }
         }
     }
 }
