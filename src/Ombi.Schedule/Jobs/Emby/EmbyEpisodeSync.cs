@@ -75,7 +75,7 @@ namespace Ombi.Schedule.Jobs.Emby
         {
             var allEpisodes = await _api.GetAllEpisodes(server.ApiKey, 0, 200, server.AdministratorId, server.FullUri);
             var total = allEpisodes.TotalRecordCount;
-            var processed = 0;
+            var processed = 1;
             var epToAdd = new HashSet<EmbyEpisode>();
             while (processed < total)
             {
@@ -117,7 +117,7 @@ namespace Ombi.Schedule.Jobs.Emby
 
                 await _repo.AddRange(epToAdd);
                 epToAdd.Clear();
-                allEpisodes = await _api.GetAllEpisodes(server.ApiKey, processed + 1, 200, server.AdministratorId, server.FullUri);
+                allEpisodes = await _api.GetAllEpisodes(server.ApiKey, processed, 200, server.AdministratorId, server.FullUri);
             }
 
             if (epToAdd.Any())

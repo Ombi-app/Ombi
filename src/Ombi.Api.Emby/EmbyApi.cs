@@ -104,9 +104,9 @@ namespace Ombi.Api.Emby
             return await GetAll<EmbyMovie>("Movie", apiKey, userId, baseUri, true, startIndex, count);
         }
 
-        public async Task<EmbyItemContainer<EmbyEpisodes>> GetAllEpisodes(string apiKey, string userId, string baseUri)
+        public async Task<EmbyItemContainer<EmbyEpisodes>> GetAllEpisodes(string apiKey, int startIndex, int count, string userId, string baseUri)
         {
-            return await GetAll<EmbyEpisodes>("Episode", apiKey, userId, baseUri);
+            return await GetAll<EmbyEpisodes>("Episode", apiKey, userId, baseUri, false, startIndex, count);
         }
 
         public async Task<EmbyItemContainer<EmbySeries>> GetAllShows(string apiKey, int startIndex, int count, string userId, string baseUri)

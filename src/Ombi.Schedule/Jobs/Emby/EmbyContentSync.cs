@@ -71,65 +71,83 @@ namespace Ombi.Schedule.Jobs.Emby
             //await _repo.ExecuteSql("DELETE FROM EmbyEpisode");
             //await _repo.ExecuteSql("DELETE FROM EmbyContent");
 
-            var movies = await _api.GetAllMovies(server.ApiKey,0, 200, server.AdministratorId, server.FullUri);
+            var movies = await _api.GetAllMovies(server.ApiKey, 0, 200, server.AdministratorId, server.FullUri);
             var totalCount = movies.TotalRecordCount;
-            var processed = 0;
+            var processed = 1;
 
             var mediaToAdd = new HashSet<EmbyContent>();
 
             while (processed < totalCount)
             {
-                foreach (var movie in movies.Items)
+                try
                 {
-                    processed++;
-                    // Regular movie
-                    await ProcessMovies(movie, mediaToAdd);
-                }
+                    foreach (var movie in movies.Items)
+                    {
+                        processed++;
+                        // Regular movie
+                        await ProcessMovies(movie, mediaToAdd);
+                    }
 
-                // Get the next batch
-                movies = await _api.GetAllMovies(server.ApiKey, processed + 1, 200, server.AdministratorId, server.FullUri);
-                await _repo.AddRange(mediaToAdd);
-                mediaToAdd.Clear();
+                    // Get the next batch
+                    movies = await _api.GetAllMovies(server.ApiKey, processed, 200, server.AdministratorId, server.FullUri);
+                    await _repo.AddRange(mediaToAdd);
+                    mediaToAdd.Clear();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
             }
 
             // TV Time
             var tv = await _api.GetAllShows(server.ApiKey, 0, 200, server.AdministratorId, server.FullUri);
             var totalTv = tv.TotalRecordCount;
-            processed = 0;
+            processed = 1;
             while (processed < totalTv)
             {
                 foreach (var tvShow in tv.Items)
                 {
-                    processed++;
-                    if (string.IsNullOrEmpty(tvShow.ProviderIds?.Tvdb))
+                    try
                     {
-                        _logger.LogInformation("Provider Id on tv {0} is null", tvShow.Name);
-                        continue;
-                    }
 
-                    var existingTv = await _repo.GetByEmbyId(tvShow.Id);
-                    if (existingTv == null)
-                    {
-                        _logger.LogDebug("Adding new TV Show {0}", tvShow.Name);
-                        mediaToAdd.Add(new EmbyContent
+                        processed++;
+                        if (string.IsNullOrEmpty(tvShow.ProviderIds?.Tvdb))
                         {
-                            TvDbId = tvShow.ProviderIds?.Tvdb,
-                            ImdbId = tvShow.ProviderIds?.Imdb,
-                            TheMovieDbId = tvShow.ProviderIds?.Tmdb,
-                            Title = tvShow.Name,
-                            Type = EmbyMediaType.Series,
-                            EmbyId = tvShow.Id,
-                            Url = EmbyHelper.GetEmbyMediaUrl(tvShow.Id),
-                            AddedAt = DateTime.UtcNow
-                        });
+                            _logger.LogInformation("Provider Id on tv {0} is null", tvShow.Name);
+                            continue;
+                        }
+
+                        var existingTv = await _repo.GetByEmbyId(tvShow.Id);
+                        if (existingTv == null)
+                        {
+                            _logger.LogDebug("Adding new TV Show {0}", tvShow.Name);
+                            mediaToAdd.Add(new EmbyContent
+                            {
+                                TvDbId = tvShow.ProviderIds?.Tvdb,
+                                ImdbId = tvShow.ProviderIds?.Imdb,
+                                TheMovieDbId = tvShow.ProviderIds?.Tmdb,
+                                Title = tvShow.Name,
+                                Type = EmbyMediaType.Series,
+                                EmbyId = tvShow.Id,
+                                Url = EmbyHelper.GetEmbyMediaUrl(tvShow.Id),
+                                AddedAt = DateTime.UtcNow
+                            });
+                        }
+                        else
+                        {
+                            _logger.LogDebug("We already have TV Show {0}", tvShow.Name);
+                        }
+
                     }
-                    else
+                    catch (Exception)
                     {
-                        _logger.LogDebug("We already have TV Show {0}", tvShow.Name);
+
+                        throw;
                     }
                 }
                 // Get the next batch
-                tv = await _api.GetAllShows(server.ApiKey, processed + 1, 200, server.AdministratorId, server.FullUri);
+                tv = await _api.GetAllShows(server.ApiKey, processed, 200, server.AdministratorId, server.FullUri);
                 await _repo.AddRange(mediaToAdd);
                 mediaToAdd.Clear();
             }
