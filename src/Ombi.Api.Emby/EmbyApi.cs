@@ -99,9 +99,9 @@ namespace Ombi.Api.Emby
             return await Api.Request<EmbyItemContainer<MovieInformation>>(request);
         }
 
-        public async Task<EmbyItemContainer<EmbyMovie>> GetAllMovies(string apiKey, string userId, string baseUri)
+        public async Task<EmbyItemContainer<EmbyMovie>> GetAllMovies(string apiKey, int startIndex, int count, string userId, string baseUri)
         {
-            return await GetAll<EmbyMovie>("Movie", apiKey, userId, baseUri, true);
+            return await GetAll<EmbyMovie>("Movie", apiKey, userId, baseUri, true, startIndex, count);
         }
 
         public async Task<EmbyItemContainer<EmbyEpisodes>> GetAllEpisodes(string apiKey, string userId, string baseUri)
@@ -109,9 +109,9 @@ namespace Ombi.Api.Emby
             return await GetAll<EmbyEpisodes>("Episode", apiKey, userId, baseUri);
         }
 
-        public async Task<EmbyItemContainer<EmbySeries>> GetAllShows(string apiKey, string userId, string baseUri)
+        public async Task<EmbyItemContainer<EmbySeries>> GetAllShows(string apiKey, int startIndex, int count, string userId, string baseUri)
         {
-            return await GetAll<EmbySeries>("Series", apiKey, userId, baseUri);
+            return await GetAll<EmbySeries>("Series", apiKey, userId, baseUri, false, startIndex, count);
         }
 
         public async Task<SeriesInformation> GetSeriesInformation(string mediaId, string apiKey, string userId, string baseUrl)
@@ -145,7 +145,25 @@ namespace Ombi.Api.Emby
             request.AddQueryString("IncludeItemTypes", type);
             request.AddQueryString("Fields", includeOverview ? "ProviderIds,Overview" : "ProviderIds");
 
-            request.AddQueryString("VirtualItem","False");
+            request.AddQueryString("VirtualItem", "False");
+
+            AddHeaders(request, apiKey);
+
+
+            var obj = await Api.Request<EmbyItemContainer<T>>(request);
+            return obj;
+        }
+        private async Task<EmbyItemContainer<T>> GetAll<T>(string type, string apiKey, string userId, string baseUri, bool includeOverview, int startIndex, int count)
+        {
+            var request = new Request($"emby/users/{userId}/items", baseUri, HttpMethod.Get);
+
+            request.AddQueryString("Recursive", true.ToString());
+            request.AddQueryString("IncludeItemTypes", type);
+            request.AddQueryString("Fields", includeOverview ? "ProviderIds,Overview" : "ProviderIds");
+            request.AddQueryString("startIndex", startIndex.ToString());
+            request.AddQueryString("limit", count.ToString());
+
+            request.AddQueryString("VirtualItem", "False");
 
             AddHeaders(request, apiKey);
 

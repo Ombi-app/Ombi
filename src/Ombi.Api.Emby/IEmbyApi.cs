@@ -14,9 +14,14 @@ namespace Ombi.Api.Emby
         Task<EmbyUser> LogIn(string username, string password, string apiKey, string baseUri);
         Task<EmbyConnectUser> LoginConnectUser(string username, string password);
 
-        Task<EmbyItemContainer<EmbyMovie>> GetAllMovies(string apiKey, string userId, string baseUri);
-        Task<EmbyItemContainer<EmbyEpisodes>> GetAllEpisodes(string apiKey, string userId, string baseUri);
-        Task<EmbyItemContainer<EmbySeries>> GetAllShows(string apiKey, string userId, string baseUri);
+        Task<EmbyItemContainer<EmbyMovie>> GetAllMovies(string apiKey, int startIndex, int count, string userId,
+            string baseUri);
+
+        Task<EmbyItemContainer<EmbyEpisodes>> GetAllEpisodes(string apiKey, int startIndex, int count, string userId,
+            string baseUri);
+
+        Task<EmbyItemContainer<EmbySeries>> GetAllShows(string apiKey, int startIndex, int count, string userId,
+            string baseUri);
 
         Task<EmbyItemContainer<MovieInformation>> GetCollection(string mediaId, string apiKey, string userId,
             string baseUrl);
