@@ -84,7 +84,7 @@ export class LoginComponent implements OnDestroy, OnInit {
         });
         this.timer = setInterval(() => {
             this.cycleBackground();
-        }, 10000);
+        }, 7000);
 
         const base = this.location.getBaseHrefFromDOM();
         if (base.length > 1) {
