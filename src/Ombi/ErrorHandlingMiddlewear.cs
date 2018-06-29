@@ -31,7 +31,8 @@ namespace Ombi
 
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            var logger = context.RequestServices.GetService<ILogger>();
+            var loggerFact = context.RequestServices.GetService<ILoggerFactory>();
+            var logger = loggerFact.CreateLogger<ErrorHandlingMiddleware>();
             logger.LogError(exception, "Something bad happened, ErrorMiddleware caught this");
             var code = HttpStatusCode.InternalServerError; // 500 if unexpected
 
