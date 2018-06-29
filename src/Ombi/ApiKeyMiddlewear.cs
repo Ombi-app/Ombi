@@ -5,6 +5,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models;
@@ -13,15 +14,11 @@ namespace Ombi
 {
     public class ApiKeyMiddlewear
     {
-        public ApiKeyMiddlewear(RequestDelegate next, ISettingsService<OmbiSettings> repo, OmbiUserManager um)
+        public ApiKeyMiddlewear(RequestDelegate next)
         {
             _next = next;
-            _repo = repo;
-            _userManager = um;
         }
         private readonly RequestDelegate _next;
-        private readonly ISettingsService<OmbiSettings> _repo;
-        private readonly OmbiUserManager _userManager;
 
         public async Task Invoke(HttpContext context)
         {
@@ -66,8 +63,9 @@ namespace Ombi
                 await context.Response.WriteAsync("Invalid User Access Token");
                 return;
             }
-            
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserAccessToken == key);
+
+            var um = context.RequestServices.GetService<OmbiUserManager>();
+            var user = await um.Users.FirstOrDefaultAsync(x => x.UserAccessToken == key);
             if (user == null)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
@@ -77,7 +75,7 @@ namespace Ombi
             {
 
                 var identity = new GenericIdentity(user.UserName);
-                var roles = await _userManager.GetRolesAsync(user);
+                var roles = await um.GetRolesAsync(user);
                 var principal = new GenericPrincipal(identity, roles.ToArray());
                 context.User = principal;
                 await next.Invoke(context);
@@ -86,7 +84,8 @@ namespace Ombi
 
         private async Task ValidateApiKey(HttpContext context, RequestDelegate next, string key)
         {
-            var ombiSettings = await _repo.GetSettingsAsync();
+            var repo = context.RequestServices.GetService<ISettingsService<OmbiSettings>>();
+            var ombiSettings = await repo.GetSettingsAsync();
             var valid = ombiSettings.ApiKey.Equals(key, StringComparison.CurrentCultureIgnoreCase);
             if (!valid)
             {
