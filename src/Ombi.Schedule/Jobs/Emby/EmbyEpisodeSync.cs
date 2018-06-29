@@ -76,7 +76,7 @@ namespace Ombi.Schedule.Jobs.Emby
             var allEpisodes = await _api.GetAllEpisodes(server.ApiKey, 0, 200, server.AdministratorId, server.FullUri);
             var total = allEpisodes.TotalRecordCount;
             var processed = 0;
-            var epToAdd = new List<EmbyEpisode>();
+            var epToAdd = new HashSet<EmbyEpisode>();
             while (processed < total)
             {
                 foreach (var ep in allEpisodes.Items)
@@ -93,8 +93,12 @@ namespace Ombi.Schedule.Jobs.Emby
                     }
 
                     var existingEpisode = await _repo.GetEpisodeByEmbyId(ep.Id);
-                    if (existingEpisode == null)
+                    // Make sure it's not in the hashset too
+                    var existingInList = epToAdd.Any(x => x.EmbyId == ep.Id);
+
+                    if (existingEpisode == null && !existingInList)
                     {
+                        _logger.LogDebug("Adding new episode {0} to parent {1}", ep.Name, ep.SeriesName);
                         // add it
                         epToAdd.Add(new EmbyEpisode
                         {

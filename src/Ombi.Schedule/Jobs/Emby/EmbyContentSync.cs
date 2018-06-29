@@ -68,8 +68,8 @@ namespace Ombi.Schedule.Jobs.Emby
             if (!ValidateSettings(server))
                 return;
 
-            await _repo.ExecuteSql("DELETE FROM EmbyEpisode");
-            await _repo.ExecuteSql("DELETE FROM EmbyContent");
+            //await _repo.ExecuteSql("DELETE FROM EmbyEpisode");
+            //await _repo.ExecuteSql("DELETE FROM EmbyContent");
 
             var movies = await _api.GetAllMovies(server.ApiKey,0, 200, server.AdministratorId, server.FullUri);
             var totalCount = movies.TotalRecordCount;
@@ -103,12 +103,14 @@ namespace Ombi.Schedule.Jobs.Emby
                     processed++;
                     if (string.IsNullOrEmpty(tvShow.ProviderIds?.Tvdb))
                     {
-                        Log.Error("Provider Id on tv {0} is null", tvShow.Name);
+                        _logger.LogInformation("Provider Id on tv {0} is null", tvShow.Name);
                         continue;
                     }
 
                     var existingTv = await _repo.GetByEmbyId(tvShow.Id);
                     if (existingTv == null)
+                    {
+                        _logger.LogDebug("Adding new TV Show {0}", tvShow.Name);
                         mediaToAdd.Add(new EmbyContent
                         {
                             TvDbId = tvShow.ProviderIds?.Tvdb,
@@ -120,6 +122,11 @@ namespace Ombi.Schedule.Jobs.Emby
                             Url = EmbyHelper.GetEmbyMediaUrl(tvShow.Id),
                             AddedAt = DateTime.UtcNow
                         });
+                    }
+                    else
+                    {
+                        _logger.LogDebug("We already have TV Show {0}", tvShow.Name);
+                    }
                 }
                 // Get the next batch
                 tv = await _api.GetAllShows(server.ApiKey, processed + 1, 200, server.AdministratorId, server.FullUri);
@@ -137,6 +144,8 @@ namespace Ombi.Schedule.Jobs.Emby
             var existingMovie = await _repo.GetByEmbyId(movieInfo.Id);
 
             if (existingMovie == null)
+            {
+                _logger.LogDebug("Adding new movie {0}", movieInfo.Name);
                 content.Add(new EmbyContent
                 {
                     ImdbId = movieInfo.ProviderIds.Imdb,
@@ -147,6 +156,12 @@ namespace Ombi.Schedule.Jobs.Emby
                     Url = EmbyHelper.GetEmbyMediaUrl(movieInfo.Id),
                     AddedAt = DateTime.UtcNow,
                 });
+            }
+            else
+            {
+                // we have this
+                _logger.LogDebug("We already have movie {0}", movieInfo.Name);
+            }
         }
 
         private bool ValidateSettings(EmbyServers server)
