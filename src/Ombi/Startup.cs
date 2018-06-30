@@ -1,20 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Security.Principal;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using Hangfire;
-using Hangfire.Console;
 using Hangfire.Dashboard;
 using Hangfire.SQLite;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.Webpack;
@@ -34,7 +26,6 @@ using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Serilog;
-using Serilog.Events;
 
 namespace Ombi
 {
@@ -87,7 +78,6 @@ namespace Ombi
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            TelemetryConfiguration.Active.DisableTelemetry = true;
             // Add framework services.
             services.AddDbContext<OmbiContext>();
 
@@ -221,8 +211,9 @@ namespace Ombi
             app.UseAuthentication();
 
             app.UseMiddleware<ErrorHandlingMiddleware>();
+            app.UseMiddleware<ApiKeyMiddlewear>();
 
-            app.ApiKeyMiddlewear(app.ApplicationServices);
+            //app.ApiKeyMiddlewear(app.ApplicationServices);
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

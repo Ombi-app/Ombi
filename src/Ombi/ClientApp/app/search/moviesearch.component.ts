@@ -68,7 +68,8 @@ export class MovieSearchComponent implements OnInit {
             message: "",
             result: false,
             errorMessage: "",
-        };
+        };      
+        this.popularMovies();
     }
 
     public search(text: any) {

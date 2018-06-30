@@ -1,8 +1,62 @@
 # Changelog
 
-## v3.0.3383 (2018-06-07)
+## v3.0.3421 (2018-06-23)
+
+### **New Features**
+
+- Added TVRequestsLite. [Jamie]
+
+- Added a smaller and simplier way of getting TV Request info. [Jamie Rees]
 
 ### **Fixes**
+
+- Show the popular movies and tv shows by default. [Jamie]
+
+- Fixed #2348. [Jamie]
+
+
+## v3.0.3407 (2018-06-18)
+
+### **New Features**
+
+- Update appveyor.yml. [Jamie]
+
+- Update build.cake. [Jamie]
+
+### **Fixes**
+
+- Fixed the issue where when we find an episode for the recently added sync, we don't check if we should run the availbility checker. [Jamie]
+
+- Fixed the API not working due to a bug in .Net Core 2.1. [Jamie]
+
+- Fixed #2321. [Jamie]
+
+- Maybe this will fix #2298. [Jamie]
+
+- Fixed #2312. [Jamie]
+
+- Fixed the SickRage/Medusa Issue where it was always being set as Skipped/Ignore #2084. [Jamie]
+
+- Fixed the sorting and filtering on the Movie Requests page, it all functions correctly now. [Jamie]
+
+- Fixed #2288. [Jamie]
+
+- Upgrade packages. [Jamie]
+
+- Inital Migration. [Jamie]
+
+- Fixed #2317. [Jamie]
+
+
+## v3.0.3383 (2018-06-07)
+
+### **New Features**
+
+- Update CHANGELOG.md. [Jamie]
+
+### **Fixes**
+
+- Minor improvements. [Jamie]
 
 - Run the availability checker on finish of the recentlty added sync. [Jamie]
 

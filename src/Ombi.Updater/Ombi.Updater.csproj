@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <RuntimeIdentifiers>win10-x64;win10-x86;osx-x64;ubuntu-x64;debian.8-x64;centos.7-x64;linux-x64;linux-arm;linux-arm64;</RuntimeIdentifiers>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <FileVersion>3.0.0.0</FileVersion>
     <Version></Version>
@@ -12,14 +12,14 @@
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.1.1-beta" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.0.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.2" />
     <PackageReference Include="Serilog" Version="2.6.0-dev-00892" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
     <PackageReference Include="Serilog.Sinks.File" Version="3.2.0" />

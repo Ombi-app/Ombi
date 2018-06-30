@@ -122,7 +122,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     {
                         DateTime = DateTime.Now,
                         NotificationType = NotificationType.RequestAvailable,
-                        RequestId = child.ParentRequestId,
+                        RequestId = child.Id,
                         RequestType = RequestType.TvShow,
                         Recipient = child.RequestedUser.Email
                     }));

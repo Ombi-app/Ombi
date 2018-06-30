@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Castle.Components.DictionaryAdapter;
 using Hangfire;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Ombi.Core.Notifications;
@@ -27,7 +26,7 @@ namespace Ombi.Schedule.Tests
             _tv = new Mock<ITvRequestRepository>();
             _movie = new Mock<IMovieRequestRepository>();
             _notify = new Mock<INotificationService>();
-            Checker = new PlexAvailabilityChecker(_repo.Object, _tv.Object, _movie.Object, _notify.Object, new Mock<IBackgroundJobClient>().Object, new Mock<ILogger<PlexAvailabilityChecker>>().Object);
+            Checker = new PlexAvailabilityChecker(_repo.Object, _tv.Object, _movie.Object, _notify.Object, new Mock<IBackgroundJobClient>().Object, null);
         }
 
 

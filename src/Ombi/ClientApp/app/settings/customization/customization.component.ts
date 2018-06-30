@@ -43,13 +43,24 @@ export class CustomizationComponent implements OnInit {
     }
 
     public save() {
-        this.settingsService.saveCustomization(this.settings).subscribe(x => {
-            if (x) {
-                this.notificationService.success("Successfully saved Ombi settings");
-            } else {
-                this.notificationService.success("There was an error when saving the Ombi settings");
+
+        this.settingsService.verifyUrl(this.settings.applicationUrl).subscribe(x => {
+            if(this.settings.applicationUrl) {
+                if(!x) {
+                    this.notificationService.error(`The URL "${this.settings.applicationUrl}" is not valid. Please format it correctly e.g. http://www.google.com/`);
+                    return;
+                }
             }
+
+            this.settingsService.saveCustomization(this.settings).subscribe(x => {
+                if (x) {
+                    this.notificationService.success("Successfully saved Ombi settings");
+                } else {
+                    this.notificationService.success("There was an error when saving the Ombi settings");
+                }
+            });
         });
+
     }
 
     public dropDownChange(event: any): void {

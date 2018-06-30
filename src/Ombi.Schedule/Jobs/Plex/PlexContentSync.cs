@@ -104,13 +104,13 @@ namespace Ombi.Schedule.Jobs.Plex
                 BackgroundJob.Enqueue(() => EpisodeSync.Start());
             }
 
-            if (processedContent.HasProcessedContent && recentlyAddedSearch)
+            if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
                 // Just check what we send it
                 BackgroundJob.Enqueue(() => Metadata.ProcessPlexServerContent(processedContent.Content));
             }
 
-            if (processedContent.HasProcessedEpisodes && recentlyAddedSearch)
+            if ((processedContent?.HasProcessedEpisodes ?? false) && recentlyAddedSearch)
             {
                 BackgroundJob.Enqueue(() => Checker.Start());
             }
@@ -150,9 +150,9 @@ namespace Ombi.Schedule.Jobs.Plex
             var retVal = new ProcessedContent();
             var contentProcessed = new Dictionary<int, int>();
             var episodesProcessed = new List<int>();
-            Logger.LogInformation("Getting all content from server {0}", servers.Name);
+            Logger.LogDebug("Getting all content from server {0}", servers.Name);
             var allContent = await GetAllContent(servers, recentlyAddedSearch);
-            Logger.LogInformation("We found {0} items", allContent.Count);
+            Logger.LogDebug("We found {0} items", allContent.Count);
 
             // Let's now process this.
             var contentToAdd = new HashSet<PlexServerContent>();
@@ -163,9 +163,9 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 if (content.viewGroup.Equals(PlexMediaType.Episode.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 {
-                    Logger.LogInformation("Found some episodes, this must be a recently added sync");
+                    Logger.LogDebug("Found some episodes, this must be a recently added sync");
                     var count = 0;
-                    foreach (var epInfo in content.Metadata)
+                    foreach (var epInfo in content.Metadata ?? new Metadata[]{})
                     {
                         count++;
                         var grandParentKey = epInfo.grandparentRatingKey;
@@ -199,14 +199,16 @@ namespace Ombi.Schedule.Jobs.Plex
 
                     // Save just to make sure we don't leave anything hanging
                     await Repo.SaveChangesAsync();
-
-                    var episodesAdded = await EpisodeSync.ProcessEpsiodes(content.Metadata, allEps);
-                    episodesProcessed.AddRange(episodesAdded.Select(x => x.Id));
+                    if (content.Metadata != null)
+                    {
+                        var episodesAdded = await EpisodeSync.ProcessEpsiodes(content.Metadata, allEps);
+                        episodesProcessed.AddRange(episodesAdded.Select(x => x.Id));
+                    }
                 }
                 if (content.viewGroup.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 {
                     // Process Shows
-                    Logger.LogInformation("Processing TV Shows");
+                    Logger.LogDebug("Processing TV Shows");
                     var count = 0;
                     foreach (var show in content.Metadata ?? new Metadata[] { })
                     {
@@ -235,7 +237,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
                 if (content.viewGroup.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 {
-                    Logger.LogInformation("Processing Movies");
+                    Logger.LogDebug("Processing Movies");
                     foreach (var movie in content?.Metadata ?? new Metadata[] { })
                     {
                         // Let's check if we have this movie
@@ -249,7 +251,7 @@ namespace Ombi.Schedule.Jobs.Plex
                             //var existing = await Repo.GetByKey(movie.ratingKey);
                             if (existing != null)
                             {
-                                Logger.LogInformation("We already have movie {0}", movie.title);
+                                Logger.LogDebug("We already have movie {0}", movie.title);
                                 continue;
                             }
 
@@ -259,7 +261,7 @@ namespace Ombi.Schedule.Jobs.Plex
                                 await Repo.Delete(hasSameKey);
                             }
 
-                            Logger.LogInformation("Adding movie {0}", movie.title);
+                            Logger.LogDebug("Adding movie {0}", movie.title);
                             var metaData = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
                                 movie.ratingKey);
                             var providerIds = PlexHelper.GetProviderIdFromPlexGuid(metaData.MediaContainer.Metadata
@@ -350,7 +352,7 @@ namespace Ombi.Schedule.Jobs.Plex
             }
 
             // Do we already have this item?
-            // Let's try and match
+            // Let's try and match 
             var existingContent = await Repo.GetFirstContentByCustom(x => x.Title == show.title
                                                                           && x.ReleaseYear == show.year.ToString()
                                                                           && x.Type == PlexMediaTypeEntity.Show);
@@ -370,6 +372,10 @@ namespace Ombi.Schedule.Jobs.Plex
                     // Lets delete the matching key
                     await Repo.Delete(existingKey);
                     existingKey = null;
+                }
+                else if(existingContent == null)
+                {
+                    existingContent = await Repo.GetFirstContentByCustom(x => x.Key == show.ratingKey);
                 }
             }
 
@@ -415,7 +421,7 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 try
                 {
-                    Logger.LogInformation("We already have show {0} checking for new seasons",
+                    Logger.LogDebug("We already have show {0} checking for new seasons",
                         existingContent.Title);
                     // Ok so we have it, let's check if there are any new seasons
                     var itemAdded = false;
@@ -466,7 +472,7 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 try
                 {
-                    Logger.LogInformation("New show {0}, so add it", show.title);
+                    Logger.LogDebug("New show {0}, so add it", show.title);
 
                     // Get the show metadata... This sucks since the `metadata` var contains all information about the show
                     // But it does not contain the `guid` property that we need to pull out thetvdb id...
@@ -567,7 +573,7 @@ namespace Ombi.Schedule.Jobs.Plex
                                 .Select(x => x.Key.ToString()).ToList();
                             if (!keys.Contains(dir.key))
                             {
-                                Logger.LogInformation("Lib {0} is not monitored, so skipping", dir.key);
+                                Logger.LogDebug("Lib {0} is not monitored, so skipping", dir.key);
                                 // We are not monitoring this lib
                                 continue;
                             }

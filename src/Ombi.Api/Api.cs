@@ -39,7 +39,11 @@ namespace Ombi.Api
 
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
-                    LogError(request, httpResponseMessage);
+                    if (!request.IgnoreErrors)
+                    {
+                        LogError(request, httpResponseMessage);
+                    }
+
                     if (request.Retry)
                     {
 
@@ -94,7 +98,10 @@ namespace Ombi.Api
                 var httpResponseMessage = await _client.SendAsync(httpRequestMessage);
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
-                    LogError(request, httpResponseMessage);
+                    if (!request.IgnoreErrors)
+                    {
+                        LogError(request, httpResponseMessage);
+                    }
                 }
                 // do something with the response
                 var data = httpResponseMessage.Content;
@@ -112,7 +119,10 @@ namespace Ombi.Api
                 var httpResponseMessage = await _client.SendAsync(httpRequestMessage);
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
-                    LogError(request, httpResponseMessage);
+                    if (!request.IgnoreErrors)
+                    {
+                        LogError(request, httpResponseMessage);
+                    }
                 }
             }
         }
