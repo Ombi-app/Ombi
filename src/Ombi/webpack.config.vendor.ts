@@ -51,7 +51,6 @@ module.exports = (env: any) => {
                 "@ngx-translate/core",
                 "@ngx-translate/http-loader",
                 "ngx-order-pipe",
-                "rxjs-compat", // only needed for ngu-carousel https://github.com/sheikalthaf/ngu-carousel/issues/47
             ]),
         },
         plugins: prod ? [] : [

@@ -112,9 +112,9 @@
     tree-kill "^1.0.0"
     webpack-sources "^1.1.0"
 
-"@ngu/carousel@^1.4.8":
-  version "1.4.8"
-  resolved "https://registry.yarnpkg.com/@ngu/carousel/-/carousel-1.4.8.tgz#102a2472e319fa2c048d59b5c1c347f2ef60f922"
+"@ngu/carousel@^1.4.9-beta-2":
+  version "1.4.9-beta-2"
+  resolved "https://registry.yarnpkg.com/@ngu/carousel/-/carousel-1.4.9-beta-2.tgz#69da71805ab5dc45fd5ff9625f1970f84dbf8fcb"
 
 "@ngx-translate/core@^10.0.2":
   version "10.0.2"
@@ -5049,10 +5049,6 @@ run-sequence@^2.2.1:
 rx@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/rx/-/rx-4.1.0.tgz#a5f13ff79ef3b740fe30aa803fb09f98805d4782"
-
-rxjs-compat@^6.2.1:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/rxjs-compat/-/rxjs-compat-6.2.1.tgz#f5a5e4bd700db414e82aa7cb34e5c9222c6d3756"
 
 rxjs@^6.0.0, rxjs@^6.1.0, rxjs@^6.2.1:
   version "6.2.1"
