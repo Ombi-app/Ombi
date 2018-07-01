@@ -91,12 +91,16 @@ namespace Ombi.Api.Emby
             request.AddContentHeader("Content-Type", "application/json");
         }
 
-        public async Task<EmbyItemContainer<MovieInformation>> GetCollection(string mediaId, string apiKey, string userId, string baseUrl)
+        public async Task<EmbyItemContainer<EmbyMovie>> GetCollection(string mediaId, string apiKey, string userId, string baseUrl)
         {
             var request = new Request($"emby/users/{userId}/items?parentId={mediaId}", baseUrl, HttpMethod.Get);
             AddHeaders(request, apiKey);
 
-            return await Api.Request<EmbyItemContainer<MovieInformation>>(request);
+            request.AddQueryString("Fields", "ProviderIds,Overview");
+
+            request.AddQueryString("VirtualItem", "False");
+
+            return await Api.Request<EmbyItemContainer<EmbyMovie>>(request);
         }
 
         public async Task<EmbyItemContainer<EmbyMovie>> GetAllMovies(string apiKey, int startIndex, int count, string userId, string baseUri)

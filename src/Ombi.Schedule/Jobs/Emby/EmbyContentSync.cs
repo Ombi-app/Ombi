@@ -79,26 +79,29 @@ namespace Ombi.Schedule.Jobs.Emby
 
             while (processed < totalCount)
             {
-                try
+                foreach (var movie in movies.Items)
                 {
-                    foreach (var movie in movies.Items)
+                    if (movie.Type.Equals("boxset", StringComparison.CurrentCultureIgnoreCase) && mediaToAdd.All(x => x.EmbyId != movie.Id))
                     {
-                        processed++;
-                        // Regular movie
-                        await ProcessMovies(movie, mediaToAdd);
+                        var movieInfo =
+                            await _api.GetCollection(movie.Id, server.ApiKey, server.AdministratorId, server.FullUri);
+                        foreach (var item in movieInfo.Items)
+                        {
+                            await ProcessMovies(item, mediaToAdd);
+                        }
                     }
-
-                    // Get the next batch
-                    movies = await _api.GetAllMovies(server.ApiKey, processed, 200, server.AdministratorId, server.FullUri);
-                    await _repo.AddRange(mediaToAdd);
-                    mediaToAdd.Clear();
+                    processed++;
+                    // Regular movie
+                    await ProcessMovies(movie, mediaToAdd);
                 }
-                catch (Exception)
-                {
 
-                    throw;
-                }
+                // Get the next batch
+                movies = await _api.GetAllMovies(server.ApiKey, processed, 200, server.AdministratorId, server.FullUri);
+                await _repo.AddRange(mediaToAdd);
+                mediaToAdd.Clear();
+
             }
+
 
             // TV Time
             var tv = await _api.GetAllShows(server.ApiKey, 0, 200, server.AdministratorId, server.FullUri);

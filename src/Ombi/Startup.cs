@@ -5,6 +5,7 @@ using AutoMapper.EquivalencyExpression;
 using Hangfire;
 using Hangfire.Dashboard;
 using Hangfire.SQLite;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -78,6 +79,7 @@ namespace Ombi
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            TelemetryConfiguration.Active.DisableTelemetry = true;
             // Add framework services.
             services.AddDbContext<OmbiContext>();
 
