@@ -195,7 +195,7 @@ namespace Ombi.Controllers.External
             else
             {
                 var websiteAddress =$"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
-                url = _plexOAuthManager.GetWizardOAuthUrl(pin.id, pin.code, websiteAddress);
+                url = await _plexOAuthManager.GetWizardOAuthUrl(pin.id, pin.code, websiteAddress);
             }
 
             if (url == null)
