@@ -214,7 +214,7 @@ namespace Ombi.Api.Plex
                 ? new Request($"Wizard/OAuth/{pinId}", applicationUrl, HttpMethod.Get) 
                 : new Request($"Login/OAuth/{pinId}", applicationUrl, HttpMethod.Get);
 
-            //request.AddQueryString("forwardUrl", forwardUrl.FullUri.ToString());
+            request.AddQueryString("forwardUrl", forwardUrl.FullUri.ToString());
             request.AddQueryString("pinID", pinId.ToString());
             request.AddQueryString("code", code);
             request.AddQueryString("context[device][product]", "Ombi");

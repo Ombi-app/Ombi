@@ -34,6 +34,19 @@ namespace Ombi.Core.Authentication
                 return string.Empty;
             }
 
+            if (pin.authToken.IsNullOrEmpty())
+            {
+                // Looks like we do not have a pin yet, we should retry a few times.
+                var retryCount = 0;
+                var retryMax = 5;
+                var retryWaitMs = 1000;
+                while (pin.authToken.IsNullOrEmpty() && retryCount < retryMax)
+                {
+                    retryCount++;
+                    await Task.Delay(retryWaitMs);
+                    pin = await _api.GetPin(pinId);
+                }
+            }
             return pin.authToken;
         }
 

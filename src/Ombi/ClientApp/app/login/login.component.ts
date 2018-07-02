@@ -40,7 +40,6 @@ export class LoginComponent implements OnDestroy, OnInit {
     }
 
     private timer: any;
-    private pinTimer: any;
     
     private errorBody: string;
     private errorValidation: string;
@@ -125,35 +124,18 @@ export class LoginComponent implements OnDestroy, OnInit {
 
     public oauth() {
         this.authService.login({usePlexOAuth: true, password:"",rememberMe:true,username:""}).subscribe(x => {
-                window.open(x.url, "_blank");      
-                this.pinTimer = setInterval(() => {
-                    this.getPinResult(x.pinId);
-                }, 10000);
-            });
-
-    }
-
-    public getPinResult(pinId: number) {
-        this.authService.oAuth(pinId).subscribe(x => {
-            if(x.access_token) {
-              localStorage.setItem("id_token", x.access_token);
-  
-              if (this.authService.loggedIn()) {
-                  this.router.navigate(["search"]);
-                  return;
-              } 
-          }
-  
-          }, err => {
-              this.notify.error(err.statusText);
-              
-              this.router.navigate(["login"]);
-          });
+            if (window.frameElement) {
+                // in frame
+                window.open(x.url, "_blank");
+              } else {
+                // not in frame
+                window.location.href = x.url;
+              }
+        });
     }
 
     public ngOnDestroy() {
         clearInterval(this.timer);
-        clearInterval(this.pinTimer);
     }
 
     private cycleBackground() {
