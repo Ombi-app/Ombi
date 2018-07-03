@@ -191,15 +191,6 @@ namespace Ombi.Api.Plex
             return await Api.Request<PlexMetadata>(request);
         }
 
-        public async Task<OAuthPin> CreatePin()
-        {
-            var request = new Request($"api/v2/pins", "https://plex.tv/", HttpMethod.Post);
-            request.AddQueryString("strong", "true");
-            await AddHeaders(request);
-
-            return await Api.Request<OAuthPin>(request);
-        }
-
         public async Task<OAuthPin> GetPin(int pinId)
         {
             var request = new Request($"api/v2/pins/{pinId}", "https://plex.tv/", HttpMethod.Get);
@@ -210,7 +201,7 @@ namespace Ombi.Api.Plex
 
         public async Task<Uri> GetOAuthUrl(int pinId, string code, string applicationUrl, bool wizard)
         {
-            var request = new Request("auth#!?", "https://app.plex.tv", HttpMethod.Get);
+            var request = new Request("auth#", "https://app.plex.tv", HttpMethod.Get);
             await AddHeaders(request);
             var forwardUrl = wizard
                 ? new Request($"Wizard/OAuth/{pinId}", applicationUrl, HttpMethod.Get)
@@ -219,11 +210,11 @@ namespace Ombi.Api.Plex
             request.AddQueryString("forwardUrl", forwardUrl.FullUri.ToString());
             request.AddQueryString("pinID", pinId.ToString());
             request.AddQueryString("code", code);
-            request.AddQueryString("context[device][product]", "Ombi");
+            request.AddQueryString("context[device][product]", ApplicationName);
             request.AddQueryString("context[device][environment]", "bundled");
             request.AddQueryString("context[device][layout]", "desktop");
             request.AddQueryString("context[device][platform]", "Web");
-            request.AddQueryString("context[device][devuce]", "Ombi (Web)");
+            request.AddQueryString("context[device][device]", "Ombi (Web)");
 
             var s = await GetSettings();
             await CheckInstallId(s);

@@ -127,8 +127,21 @@ namespace Ombi.Controllers
         public async Task<PlexSettings> PlexSettings()
         {
             var s = await Get<PlexSettings>();
-
             return s;
+        }
+
+        [HttpGet("clientid")]
+        [AllowAnonymous]
+        public async Task<string> GetClientId()
+        {
+            var s = await Get<PlexSettings>();
+            if (s.InstallId == Guid.Empty)
+            {
+                s.InstallId = Guid.NewGuid();
+                // Save it
+                await PlexSettings(s);
+            }
+            return s.InstallId.ToString("N");
         }
 
         /// <summary>

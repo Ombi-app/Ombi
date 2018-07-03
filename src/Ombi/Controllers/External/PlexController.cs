@@ -12,6 +12,7 @@ using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Models;
 using Ombi.Models.External;
 
 namespace Ombi.Controllers.External
@@ -177,25 +178,23 @@ namespace Ombi.Controllers.External
             return vm.DistinctBy(x => x.Id);
         }
 
-        [HttpGet("oauth/{wizard:bool}")]
+        [HttpPost("oauth")]
         [AllowAnonymous]
-        public async Task<IActionResult> OAuth(bool wizard)
+        public async Task<IActionResult> OAuth([FromBody]PlexOAuthViewModel wizard)
         {
             //https://app.plex.tv/auth#?forwardUrl=http://google.com/&clientID=Ombi-Test&context%5Bdevice%5D%5Bproduct%5D=Ombi%20SSO&pinID=798798&code=4lgfd
             // Plex OAuth
             // Redirect them to Plex
-            // We need a PIN first
-            var pin = await _plexOAuthManager.RequestPin();
 
             Uri url;
-            if (!wizard)
+            if (!wizard.Wizard)
             {
-                url = await _plexOAuthManager.GetOAuthUrl(pin.id, pin.code);
+                url = await _plexOAuthManager.GetOAuthUrl(wizard.Pin.id, wizard.Pin.code);
             }
             else
             {
                 var websiteAddress =$"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
-                url = await _plexOAuthManager.GetWizardOAuthUrl(pin.id, pin.code, websiteAddress);
+                url = await _plexOAuthManager.GetWizardOAuthUrl(wizard.Pin.id, wizard.Pin.code, websiteAddress);
             }
 
             if (url == null)

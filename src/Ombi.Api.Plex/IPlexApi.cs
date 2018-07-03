@@ -22,7 +22,6 @@ namespace Ombi.Api.Plex
         Task<PlexFriends> GetUsers(string authToken);
         Task<PlexAccount> GetAccount(string authToken);
         Task<PlexMetadata> GetRecentlyAdded(string authToken, string uri, string sectionId);
-        Task<OAuthPin> CreatePin();
         Task<OAuthPin> GetPin(int pinId);
         Task<Uri> GetOAuthUrl(int pinId, string code, string applicationUrl, bool wizard);
     }

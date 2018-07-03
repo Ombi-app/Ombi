@@ -20,12 +20,6 @@ namespace Ombi.Core.Authentication
         private readonly IPlexApi _api;
         private readonly ISettingsService<CustomizationSettings> _customizationSettingsService;
 
-        public async Task<OAuthPin> RequestPin()
-        {
-            var pin = await _api.CreatePin();
-            return pin;
-        }
-
         public async Task<string> GetAccessTokenFromPin(int pinId)
         {
             var pin = await _api.GetPin(pinId);
