@@ -10,7 +10,7 @@ namespace Ombi.Helpers
         public static string GetEmbyMediaUrl(string mediaId)
         {
             var url =
-                $"http://app.emby.media/itemdetails.html?id={mediaId}";
+                $"http://app.emby.media/#!/itemdetails.html?id={mediaId}";
             return url;
         }
     }
