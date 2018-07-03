@@ -255,7 +255,12 @@ namespace Ombi.Core.Senders
                 {
                     // We have the same amount of requests as all of the episodes in the season.
                     var existingSeason =
-                        result.seasons.First(x => x.seasonNumber == season.SeasonNumber);
+                        result.seasons.FirstOrDefault(x => x.seasonNumber == season.SeasonNumber);
+                    if (existingSeason == null)
+                    {
+                        Logger.LogError("The sonarr ep count was the same as out request count, but could not match the season number {0}", season.SeasonNumber);
+                        continue;
+                    }
                     existingSeason.monitored = true;
                     seriesChanges = true;
                 }
