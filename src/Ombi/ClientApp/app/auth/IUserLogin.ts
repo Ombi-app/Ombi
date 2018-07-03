@@ -1,8 +1,11 @@
-﻿export interface IUserLogin {
+﻿import { IPlexPin } from "../interfaces";
+
+export interface IUserLogin {
     username: string;
     password: string;
     rememberMe: boolean;
     usePlexOAuth: boolean;
+    plexTvPin: IPlexPin;
 }
 
 export interface ILocalUser {
