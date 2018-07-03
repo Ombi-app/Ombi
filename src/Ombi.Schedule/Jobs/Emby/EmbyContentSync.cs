@@ -81,7 +81,7 @@ namespace Ombi.Schedule.Jobs.Emby
             {
                 foreach (var movie in movies.Items)
                 {
-                    if (movie.Type.Equals("boxset", StringComparison.CurrentCultureIgnoreCase) && mediaToAdd.All(x => x.EmbyId != movie.Id))
+                    if (movie.Type.Equals("boxset", StringComparison.InvariantCultureIgnoreCase))
                     {
                         var movieInfo =
                             await _api.GetCollection(movie.Id, server.ApiKey, server.AdministratorId, server.FullUri);
@@ -89,10 +89,15 @@ namespace Ombi.Schedule.Jobs.Emby
                         {
                             await ProcessMovies(item, mediaToAdd);
                         }
+
+                        processed++;
                     }
-                    processed++;
-                    // Regular movie
-                    await ProcessMovies(movie, mediaToAdd);
+                    else
+                    {
+                        processed++;
+                        // Regular movie
+                        await ProcessMovies(movie, mediaToAdd);
+                    }
                 }
 
                 // Get the next batch
@@ -163,8 +168,8 @@ namespace Ombi.Schedule.Jobs.Emby
         {
             // Check if it exists
             var existingMovie = await _repo.GetByEmbyId(movieInfo.Id);
-
-            if (existingMovie == null)
+            var alreadyGoingToAdd = content.Any(x => x.EmbyId == movieInfo.Id);
+            if (existingMovie == null && !alreadyGoingToAdd)
             {
                 _logger.LogDebug("Adding new movie {0}", movieInfo.Name);
                 content.Add(new EmbyContent
