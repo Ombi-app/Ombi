@@ -94,9 +94,31 @@ namespace Ombi
             }
             else
             {
-                var identity = new GenericIdentity("API");
-                var principal = new GenericPrincipal(identity, new[] { "Admin", "ApiUser" });
-                context.User = principal;
+                // Check if we have a UserName header if so we can impersonate that user
+                if (context.Request.Headers.Keys.Contains("UserName", StringComparer.InvariantCultureIgnoreCase))
+                {
+                    var username = context.Request.Headers["UserName"].FirstOrDefault();
+                    var um = context.RequestServices.GetService<OmbiUserManager>();
+                    var user = await um.Users.FirstOrDefaultAsync(x =>
+                        x.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+                    if (user == null)
+                    {
+                        context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        await context.Response.WriteAsync("Invalid User");
+                        await next.Invoke(context);
+                    }
+                    var roles = await um.GetRolesAsync(user);
+                    var identity = new GenericIdentity(user.UserName);
+                    var principal = new GenericPrincipal(identity, roles.ToArray());
+                    context.User = principal;
+                }
+                else
+                {
+                    var identity = new GenericIdentity("API");
+                    var principal = new GenericPrincipal(identity, new[] { "Admin", "ApiUser" });
+                    context.User = principal;
+                }
+
                 await next.Invoke(context);
             }
         }
