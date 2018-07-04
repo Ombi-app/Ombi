@@ -1,5 +1,76 @@
 # Changelog
 
+## (unreleased)
+
+### **New Features**
+
+- Added the ability to impersonate a user when using the API Key. This allows people to use the API and request as a certain user. #2363. [Jamie Rees]
+
+- Added more background images and it will loop through the available ones. [Jamie Rees]
+
+- Added chunk hashing to resolve #2330. [Jamie Rees]
+
+- Added API at /api/v1/status/info to get branch and version information #2331. [Jamie Rees]
+
+- Update to .net 2.1.1. [Jamie]
+
+### **Fixes**
+
+- Another attempt to fix #2366. [Jamie Rees]
+
+- Fixed the Plex OAuth warning. [Jamie]
+
+- Revert "Fixed Plex OAuth, should no longer show Insecure warning" [Jamie Rees]
+
+- Fixed Plex OAuth, should no longer show Insecure warning. [Jamie Rees]
+
+- Fixed the View On Emby URL since the Link changed #2368. [Jamie Rees]
+
+- Fixed the issue where episodes were not being marked as available in the search #2367. [Jamie Rees]
+
+- Fixed #2371. [Jamie Rees]
+
+- Fixed collection issues in Emby #2366. [Jamie Rees]
+
+- Do not delete the Emby Information every time we run, let's keep the content now. [Jamie Rees]
+
+- Emby Improvements: Batch up the amount we get from the server. [Jamie Rees]
+
+- Log errors when they are uncaught. [Jamie Rees]
+
+- Fix unclosed table tags causing overflow #2322. [Anojh]
+
+- This should now fix #2350. [Jamie]
+
+- Improve the validation around the Application URL. [Jamie Rees]
+
+- Fixed #2341. [Jamie Rees]
+
+- Stop spamming errors when FanArt doesn't have the image. [Jamie Rees]
+
+- Fixed #2338. [Jamie Rees]
+
+- Removed some logging statements. [Jamie Rees]
+
+- Fixed the api key being case sensative #2350. [Jamie Rees]
+
+- Improved the Emby API #2230 Thanks Luke! [Jamie Rees]
+
+- Revert. [Jamie Rees]
+
+- Fixed a small error in the Mobile Notification Provider. [Jamie Rees]
+
+- Minor style tweaks. [Randall Bruder]
+
+- Downgrade to .net core 2.0. [Jamie Rees]
+
+- Downgrade Microsoft.AspNetCore.All package back to 2.0.8. [Jamie Rees]
+
+- Removed old code. [Jamie Rees]
+
+- Swap out the old way of validating the API key with a real middlewear this time. [Jamie Rees]
+
+
 ## v3.0.3421 (2018-06-23)
 
 ### **New Features**
