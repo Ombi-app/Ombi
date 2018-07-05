@@ -65,11 +65,11 @@ namespace Ombi.Core.Rule.Rules.Search
                                 {
                                     epExists = await allEpisodes.FirstOrDefaultAsync(e => e.EpisodeNumber == episode.EpisodeNumber && e.SeasonNumber == season.SeasonNumber
                                         && e.ImdbId == item.ImdbId);
-                                }  if (item.HasTvDb)
+                                }  if (item.HasTvDb && epExists == null)
                                 {
                                     epExists = await allEpisodes.FirstOrDefaultAsync(e => e.EpisodeNumber == episode.EpisodeNumber && e.SeasonNumber == season.SeasonNumber
-                                                                                         && e.TvDbId == item.TvDbId);
-                                }  if (item.HasTheMovieDb)
+                                                                                         && e.Series.TvDbId == item.TvDbId);
+                                }  if (item.HasTheMovieDb && epExists == null)
                                 {
                                     epExists = await allEpisodes.FirstOrDefaultAsync(e => e.EpisodeNumber == episode.EpisodeNumber && e.SeasonNumber == season.SeasonNumber
                                                                                          && e.TheMovieDbId == item.TheMovieDbId);
