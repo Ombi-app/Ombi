@@ -79,9 +79,14 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     seriesEpisodes = plexEpisodes.Where(x => x.Series.ImdbId == imdbId.ToString());
                 }
-                if (useTvDb)
+                if (useTvDb && (seriesEpisodes == null ||  !seriesEpisodes.Any()) )
                 {
                     seriesEpisodes = plexEpisodes.Where(x => x.Series.TvDbId == tvDbId.ToString());
+                }
+
+                if (seriesEpisodes == null)
+                {
+                    continue;
                 }
 
                 if (!seriesEpisodes.Any())
