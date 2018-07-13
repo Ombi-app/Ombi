@@ -20,12 +20,6 @@ namespace Ombi.Core.Authentication
         private readonly IPlexApi _api;
         private readonly ISettingsService<CustomizationSettings> _customizationSettingsService;
 
-        public async Task<OAuthPin> RequestPin()
-        {
-            var pin = await _api.CreatePin();
-            return pin;
-        }
-
         public async Task<string> GetAccessTokenFromPin(int pinId)
         {
             var pin = await _api.GetPin(pinId);
@@ -58,14 +52,14 @@ namespace Ombi.Core.Authentication
         public async Task<Uri> GetOAuthUrl(int pinId, string code, string websiteAddress = null)
         {
             var settings = await _customizationSettingsService.GetSettingsAsync();
-            var url = _api.GetOAuthUrl(pinId, code, settings.ApplicationUrl.IsNullOrEmpty() ? websiteAddress : settings.ApplicationUrl, false);
+            var url = await _api.GetOAuthUrl(pinId, code, settings.ApplicationUrl.IsNullOrEmpty() ? websiteAddress : settings.ApplicationUrl, false);
 
             return url;
         }
 
-        public Uri GetWizardOAuthUrl(int pinId, string code, string websiteAddress)
+        public async Task<Uri> GetWizardOAuthUrl(int pinId, string code, string websiteAddress)
         {
-            var url = _api.GetOAuthUrl(pinId, code, websiteAddress, true);
+            var url = await _api.GetOAuthUrl(pinId, code, websiteAddress, true);
             return url;
         }
     }

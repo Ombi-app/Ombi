@@ -21,6 +21,7 @@ namespace Ombi.Api.FanartTv
         {
             var request = new Request($"tv/{tvdbId}", Endpoint, HttpMethod.Get);
             request.AddHeader("api-key", token);
+            request.IgnoreErrors = true;
             try
             {
                 return await Api.Request<TvResult>(request);
@@ -36,6 +37,7 @@ namespace Ombi.Api.FanartTv
         {
             var request = new Request($"movies/{movieOrImdbId}", Endpoint, HttpMethod.Get);
             request.AddHeader("api-key", token);
+            request.IgnoreErrors = true;
 
             return await Api.Request<MovieResult>(request);
         }
