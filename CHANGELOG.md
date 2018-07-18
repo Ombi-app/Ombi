@@ -4,6 +4,8 @@
 
 ### **New Features**
 
+- Updated the Emby availability checker to bring it more in line with what we do with Plex. [TidusJar]
+
 - Added the ability to impersonate a user when using the API Key. This allows people to use the API and request as a certain user. #2363. [Jamie Rees]
 
 - Added more background images and it will loop through the available ones. [Jamie Rees]
@@ -15,6 +17,12 @@
 - Update to .net 2.1.1. [Jamie]
 
 ### **Fixes**
+
+- Fix #2322 caused by continue statement inside try catch block. [Anojh]
+
+- Fixed #2367. [TidusJar]
+
+- Fixed the issue where you could not delete a user #2365. [TidusJar]
 
 - Another attempt to fix #2366. [Jamie Rees]
 
