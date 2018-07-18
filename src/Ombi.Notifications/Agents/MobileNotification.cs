@@ -264,13 +264,13 @@ namespace Ombi.Notifications.Agents
                     ? MovieRequest?.RequestedUser?.NotificationUserIds
                     : TvRequest?.RequestedUser?.NotificationUserIds;
             }
-            if (model.UserId.HasValue() && !notificationIds.Any())
+            if (model.UserId.HasValue() && (!notificationIds?.Any() ?? true))
             {
                var user= _userManager.Users.Include(x => x.NotificationUserIds).FirstOrDefault(x => x.Id == model.UserId);
                 notificationIds = user.NotificationUserIds;
             }
 
-            if (!notificationIds.Any())
+            if (!notificationIds?.Any() ?? true)
             {
                 _logger.LogInformation(
                     $"there are no admins to send a notification for {type}, for agent {NotificationAgent.Mobile}");

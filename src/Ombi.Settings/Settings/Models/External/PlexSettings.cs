@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Ombi.Settings.Settings.Models.External;
 
 namespace Ombi.Core.Settings.Models.External
@@ -6,6 +7,10 @@ namespace Ombi.Core.Settings.Models.External
     public sealed class PlexSettings : Ombi.Settings.Settings.Models.Settings
     {
         public bool Enable { get; set; }
+        /// <summary>
+        /// This is the ClientId for OAuth
+        /// </summary>
+        public Guid InstallId { get; set; }
         public List<PlexServers> Servers { get; set; }
     }
 

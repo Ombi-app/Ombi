@@ -95,6 +95,10 @@ export class SettingsService extends ServiceHelpers {
         return this.http.get<IAuthenticationSettings>(`${this.url}/Authentication`, {headers: this.headers});
     }
 
+    public getClientId(): Observable<string> {
+        return this.http.get<string>(`${this.url}/clientid`, {headers: this.headers});
+    }
+
     public saveAuthentication(settings: IAuthenticationSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}/Authentication`, JSON.stringify(settings), {headers: this.headers});
     }
@@ -278,5 +282,8 @@ export class SettingsService extends ServiceHelpers {
     public saveNewsletterSettings(settings: INewsletterNotificationSettings): Observable<boolean> {
         return this.http
             .post<boolean>(`${this.url}/notifications/newsletter`, JSON.stringify(settings), {headers: this.headers});
+    }
+    public verifyUrl(url: string): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}/customization/urlverify`, JSON.stringify({url}), {headers: this.headers});
     }
 }

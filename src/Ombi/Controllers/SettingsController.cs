@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -9,7 +10,6 @@ using AutoMapper;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.PlatformAbstractions;
 using NCrontab;
 using Ombi.Api.Emby;
 using Ombi.Attributes;
@@ -39,16 +39,6 @@ namespace Ombi.Controllers
     [Produces("application/json")]
     public class SettingsController : Controller
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SettingsController" /> class.
-        /// </summary>
-        /// <param name="resolver">The resolver.</param>
-        /// <param name="mapper">The mapper.</param>
-        /// <param name="templateRepo">The templateRepo.</param>
-        /// <param name="embyApi">The embyApi.</param>
-        /// <param name="radarrSync">The radarrCacher.</param>
-        /// <param name="memCache">The memory cache.</param>
-        /// <param name="githubApi">The memory cache.</param>
         public SettingsController(ISettingsResolver resolver,
             IMapper mapper,
             INotificationTemplatesRepository templateRepo,
@@ -109,7 +99,7 @@ namespace Ombi.Controllers
                 OsArchitecture = RuntimeInformation.OSArchitecture.ToString(),
                 OsDescription = RuntimeInformation.OSDescription,
                 ProcessArchitecture = RuntimeInformation.ProcessArchitecture.ToString(),
-                ApplicationBasePath =PlatformServices.Default.Application.ApplicationBasePath
+                ApplicationBasePath =Directory.GetCurrentDirectory()
             };
             
             var version = AssemblyHelper.GetRuntimeVersion();
@@ -137,8 +127,21 @@ namespace Ombi.Controllers
         public async Task<PlexSettings> PlexSettings()
         {
             var s = await Get<PlexSettings>();
-
             return s;
+        }
+
+        [HttpGet("clientid")]
+        [AllowAnonymous]
+        public async Task<string> GetClientId()
+        {
+            var s = await Get<PlexSettings>();
+            if (s.InstallId == Guid.Empty)
+            {
+                s.InstallId = Guid.NewGuid();
+                // Save it
+                await PlexSettings(s);
+            }
+            return s.InstallId.ToString("N");
         }
 
         /// <summary>
@@ -149,6 +152,10 @@ namespace Ombi.Controllers
         [HttpPost("plex")]
         public async Task<bool> PlexSettings([FromBody]PlexSettings plex)
         {
+            if (plex.InstallId == null || plex.InstallId == Guid.Empty)
+            {
+                plex.InstallId = Guid.NewGuid();
+            }
             var result = await Save(plex);
             return result;
         }
@@ -226,6 +233,13 @@ namespace Ombi.Controllers
         public async Task<bool> CustomizationSettings([FromBody]CustomizationSettings settings)
         {
             return await Save(settings);
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpPost("customization/urlverify")]
+        public bool VerifyUrl([FromBody]UrlVerifyModel url)
+        {
+            return Uri.TryCreate(url.Url, UriKind.Absolute, out var __);
         }
 
         /// <summary>

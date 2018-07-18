@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Models.Search;
@@ -59,10 +61,19 @@ namespace Ombi.Core.Rule.Rules.Search
                             {
                                 EmbyEpisode epExists = null;
 
-                                epExists = await allEpisodes.FirstOrDefaultAsync(x =>
-                                    x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                                    x.Series.ProviderId == item.ProviderId.ToString());
-
+                                if (item.HasImdb)
+                                {
+                                    epExists = await allEpisodes.FirstOrDefaultAsync(e => e.EpisodeNumber == episode.EpisodeNumber && e.SeasonNumber == season.SeasonNumber
+                                        && e.ImdbId == item.ImdbId);
+                                }  if (item.HasTvDb && epExists == null)
+                                {
+                                    epExists = await allEpisodes.FirstOrDefaultAsync(e => e.EpisodeNumber == episode.EpisodeNumber && e.SeasonNumber == season.SeasonNumber
+                                                                                         && e.Series.TvDbId == item.TvDbId);
+                                }  if (item.HasTheMovieDb && epExists == null)
+                                {
+                                    epExists = await allEpisodes.FirstOrDefaultAsync(e => e.EpisodeNumber == episode.EpisodeNumber && e.SeasonNumber == season.SeasonNumber
+                                                                                         && e.TheMovieDbId == item.TheMovieDbId);
+                                }
 
                                 if (epExists != null)
                                 {

@@ -13,7 +13,6 @@ namespace Ombi.Notifications
 {
     public class NotificationMessageCurlys
     {
-
         public void Setup(NotificationOptions opts, FullBaseRequest req, CustomizationSettings s)
         {
             LoadIssues(opts);

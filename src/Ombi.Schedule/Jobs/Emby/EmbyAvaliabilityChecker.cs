@@ -121,24 +121,53 @@ namespace Ombi.Schedule.Jobs.Emby
 
             foreach (var child in tv)
             {
-                IQueryable<EmbyEpisode> seriesEpisodes;
-                if (child.ParentRequest.TvDbId > 0)
+
+                var useImdb = false;
+                var useTvDb = false;
+                if (child.ParentRequest.ImdbId.HasValue())
                 {
-                    seriesEpisodes = embyEpisodes.Where(x => x.Series.TvDbId == child.ParentRequest.TvDbId.ToString());
+                    useImdb = true;
                 }
-                else if(child.ParentRequest.ImdbId.HasValue())
+
+                if (child.ParentRequest.TvDbId.ToString().HasValue())
                 {
-                    seriesEpisodes = embyEpisodes.Where(x => x.Series.ImdbId == child.ParentRequest.ImdbId);
+                    useTvDb = true;
                 }
-                else
+
+                var tvDbId = child.ParentRequest.TvDbId;
+                var imdbId = child.ParentRequest.ImdbId;
+                IQueryable<EmbyEpisode> seriesEpisodes = null;
+                if (useImdb)
+                {
+                    seriesEpisodes = embyEpisodes.Where(x => x.Series.ImdbId == imdbId.ToString());
+                }
+
+                if (useTvDb && (seriesEpisodes == null || !seriesEpisodes.Any()))
+                {
+                    seriesEpisodes = embyEpisodes.Where(x => x.Series.TvDbId == tvDbId.ToString());
+                }
+
+                if (seriesEpisodes == null)
                 {
                     continue;
+                }
+
+                if (!seriesEpisodes.Any())
+                {
+                    // Let's try and match the series by name
+                    seriesEpisodes = embyEpisodes.Where(x =>
+                        x.Series.Title.Equals(child.Title, StringComparison.CurrentCultureIgnoreCase));
                 }
 
                 foreach (var season in child.SeasonRequests)
                 {
                     foreach (var episode in season.Episodes)
                     {
+                        if (episode.Available)
+                        {
+                            continue;
+                        }
+
                         var foundEp = await seriesEpisodes.FirstOrDefaultAsync(
                             x => x.EpisodeNumber == episode.EpisodeNumber &&
                                  x.SeasonNumber == episode.Season.SeasonNumber);
@@ -160,9 +189,9 @@ namespace Ombi.Schedule.Jobs.Emby
                     {
                         DateTime = DateTime.Now,
                         NotificationType = NotificationType.RequestAvailable,
-                        RequestId = child.ParentRequestId,
+                        RequestId = child.Id,
                         RequestType = RequestType.TvShow,
-                        Recipient = child.RequestedUser.Email,
+                        Recipient = child.RequestedUser.Email
                     }));
                 }
             }

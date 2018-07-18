@@ -36,7 +36,7 @@ import { ImageService } from "./services";
 import { LandingPageService } from "./services";
 import { NotificationService } from "./services";
 import { SettingsService } from "./services";
-import { IssuesService, JobService, StatusService } from "./services";
+import { IssuesService, JobService, PlexTvService, StatusService } from "./services";
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
@@ -133,6 +133,7 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
         CookieService,
         JobService,
         IssuesService,
+        PlexTvService,
     ],
     bootstrap: [AppComponent],
 })

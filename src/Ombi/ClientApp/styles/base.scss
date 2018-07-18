@@ -95,6 +95,7 @@ hr {
 
 .btn {
     border-radius: .25rem $i;
+    margin-bottom: 10px;
 }
 
 .btn-group-separated .btn,
@@ -139,6 +140,10 @@ a.active {
 
 p {
     font-size: 1.1rem $i;
+}
+
+.tags {
+    display: block;
 }
 
 label {
@@ -443,6 +448,7 @@ $border-radius: 10px;
     margin-right: 10px;
     position: absolute;
     left: 0;
+    top: 3px;
     bottom: 1px;
     border: 2px solid #eee;
     border-radius: 3px;
@@ -940,7 +946,7 @@ a > h4:hover {
 
 .backdrop{
      box-shadow: 3px 3px 10px #000000;
-     background-position: center;
+     background-position: 50% 33%;
      background-size: cover;
 }
 

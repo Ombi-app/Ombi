@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Security.Principal;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using Hangfire;
-using Hangfire.Console;
 using Hangfire.Dashboard;
 using Hangfire.SQLite;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.Webpack;
@@ -34,7 +27,6 @@ using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Serilog;
-using Serilog.Events;
 
 namespace Ombi
 {
@@ -137,6 +129,12 @@ namespace Ombi
                 //x.UseConsole();
             });
 
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
 
             // Build the intermediate service provider
             return services.BuildServiceProvider();
@@ -217,14 +215,18 @@ namespace Ombi
             app.UseAuthentication();
 
             app.UseMiddleware<ErrorHandlingMiddleware>();
+            app.UseMiddleware<ApiKeyMiddlewear>();
 
-            app.ApiKeyMiddlewear(app.ApplicationServices);
+            app.UseCors("MyPolicy");
+            //app.ApiKeyMiddlewear(app.ApplicationServices);
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
-            
+
+
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

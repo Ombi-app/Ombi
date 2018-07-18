@@ -6,7 +6,8 @@ import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import * as webpack from "webpack";
 
 module.exports = (env: any) => {
-    const prod = env && env.prod as boolean;
+    // const prod = env && env.prod as boolean;
+    const prod = true;
     console.log(prod ? "Production" : "Dev" + " main build");
     const analyse = env && env.analyse as boolean;
     if (analyse) { console.log("Analysing build"); }
@@ -20,6 +21,7 @@ module.exports = (env: any) => {
         devtool: prod ? "source-map" : "eval-source-map",
         output: {
             filename: "[name].js",
+            chunkFilename: "[id].[chunkhash].js",
             publicPath: "/dist/",
             path: path.join(__dirname, outputDir),
         },

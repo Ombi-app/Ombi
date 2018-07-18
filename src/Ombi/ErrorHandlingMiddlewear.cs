@@ -2,6 +2,8 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace Ombi
@@ -29,6 +31,9 @@ namespace Ombi
 
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
+            var loggerFact = context.RequestServices.GetService<ILoggerFactory>();
+            var logger = loggerFact.CreateLogger<ErrorHandlingMiddleware>();
+            logger.LogError(exception, "Something bad happened, ErrorMiddleware caught this");
             var code = HttpStatusCode.InternalServerError; // 500 if unexpected
 
             //if (exception is NotFoundException) code = HttpStatusCode.NotFound;

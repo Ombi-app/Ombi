@@ -45,6 +45,12 @@ export class UserManagementComponent implements OnInit {
             this.notificationService.error("Email Notifications are not setup, cannot send welcome email");
             return;
         }
+        if(!this.emailSettings.notificationTemplates.some(x => {
+            return x.enabled && x.notificationType === 8;
+        })) {
+            this.notificationService.error("The Welcome Email template is not enabled in the Email Setings");
+            return;
+        }
         this.identityService.sendWelcomeEmail(user).subscribe();        
         this.notificationService.success(`Sent a welcome email to ${user.emailAddress}`);
     }

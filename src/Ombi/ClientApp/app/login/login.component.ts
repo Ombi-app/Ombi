@@ -6,7 +6,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { PlatformLocation } from "@angular/common";
 import { AuthService } from "../auth/auth.service";
 import { IAuthenticationSettings, ICustomizationSettings } from "../interfaces";
-import { NotificationService } from "../services";
+import { NotificationService, PlexTvService } from "../services";
 import { SettingsService } from "../services";
 import { StatusService } from "../services";
 
@@ -40,13 +40,14 @@ export class LoginComponent implements OnDestroy, OnInit {
     }
 
     private timer: any;
+    private clientId: string;
     
     private errorBody: string;
     private errorValidation: string;
 
     constructor(private authService: AuthService, private router: Router, private notify: NotificationService, private status: StatusService,
                 private fb: FormBuilder, private settingsService: SettingsService, private images: ImageService, private sanitizer: DomSanitizer,
-                private route: ActivatedRoute, private location: PlatformLocation, private readonly translate: TranslateService) {
+                private route: ActivatedRoute, private location: PlatformLocation, private translate: TranslateService, private plexTv: PlexTvService) {
         this.route.params
             .subscribe((params: any) => {
                 this.landingFlag = params.landing;
@@ -78,13 +79,14 @@ export class LoginComponent implements OnDestroy, OnInit {
 
     public ngOnInit() {
         this.settingsService.getAuthentication().subscribe(x => this.authenticationSettings = x);
+        this.settingsService.getClientId().subscribe(x => this.clientId = x);
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
         this.images.getRandomBackground().subscribe(x => {
             this.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%),url(" + x.url + ")");
         });
         this.timer = setInterval(() => {
             this.cycleBackground();
-        }, 10000);
+        }, 7000);
 
         const base = this.location.getBaseHrefFromDOM();
         if (base.length > 1) {
@@ -101,7 +103,7 @@ export class LoginComponent implements OnDestroy, OnInit {
             return;
         }
         const value = form.value;
-        const user = { password: value.password, username: value.username, rememberMe: value.rememberMe, usePlexOAuth: false };
+        const user = { password: value.password, username: value.username, rememberMe: value.rememberMe, usePlexOAuth: false, plexTvPin: { id: 0, code: ""} };
         this.authService.requiresPassword(user).subscribe(x => {
             if(x && this.authenticationSettings.allowNoPassword) {
                 // Looks like this user requires a password
@@ -123,14 +125,17 @@ export class LoginComponent implements OnDestroy, OnInit {
     }
 
     public oauth() {
-        this.authService.login({usePlexOAuth: true, password:"",rememberMe:true,username:""}).subscribe(x => {
-            if (window.frameElement) {
-                // in frame
-                window.open(x.url, "_blank");
-              } else {
-                // not in frame
-                window.location.href = x.url;
-              }
+        this.plexTv.GetPin(this.clientId, this.appName).subscribe(pin => {
+
+            this.authService.login({usePlexOAuth: true, password:"",rememberMe:true,username:"", plexTvPin: pin}).subscribe(x => {
+                if (window.frameElement) {
+                    // in frame
+                    window.open(x.url, "_blank");
+                } else {
+                    // not in frame
+                    window.location.href = x.url;
+                }
+            });
         });
     }
 

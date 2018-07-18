@@ -492,41 +492,42 @@ namespace Ombi.Schedule.Jobs.Ombi
             var orderedTv = series.OrderByDescending(x => x.AddedAt);
             foreach (var t in orderedTv)
             {
+                if (!t.HasTvDb)
+                {
+                    // We may need to use themoviedb for the imdbid or their own id to get info
+                    if (t.HasTheMovieDb)
+                    {
+                        int.TryParse(t.TheMovieDbId, out var movieId);
+                        var externals = await _movieApi.GetTvExternals(movieId);
+                        if (externals == null || externals.tvdb_id <= 0)
+                        {
+                            continue;
+                        }
+                        t.TvDbId = externals.tvdb_id.ToString();
+                    }
+                    // WE could check the below but we need to get the moviedb and then perform the above, let the metadata job figure this out.
+                    //else if(t.HasImdb)
+                    //{
+                    //    // Check the imdbid
+                    //    var externals = await _movieApi.Find(t.ImdbId, ExternalSource.imdb_id);
+                    //    if (externals?.tv_results == null || externals.tv_results.Length <= 0)
+                    //    {
+                    //        continue;
+                    //    }
+                    //    t.TvDbId = externals.tv_results.FirstOrDefault()..ToString();
+                    //}
+
+                }
+
+                int.TryParse(t.TvDbId, out var tvdbId);
+                var info = await _tvApi.ShowLookupByTheTvDbId(tvdbId);
+                if (info == null)
+                {
+                    continue;
+                }
+
                 try
                 {
-                    if (!t.HasTvDb)
-                    {
-                        // We may need to use themoviedb for the imdbid or their own id to get info
-                        if (t.HasTheMovieDb)
-                        {
-                            int.TryParse(t.TheMovieDbId, out var movieId);
-                            var externals = await _movieApi.GetTvExternals(movieId);
-                            if (externals == null || externals.tvdb_id <= 0)
-                            {
-                                continue;
-                            }
-                            t.TvDbId = externals.tvdb_id.ToString();
-                        }
-                        // WE could check the below but we need to get the moviedb and then perform the above, let the metadata job figure this out.
-                        //else if(t.HasImdb)
-                        //{
-                        //    // Check the imdbid
-                        //    var externals = await _movieApi.Find(t.ImdbId, ExternalSource.imdb_id);
-                        //    if (externals?.tv_results == null || externals.tv_results.Length <= 0)
-                        //    {
-                        //        continue;
-                        //    }
-                        //    t.TvDbId = externals.tv_results.FirstOrDefault()..ToString();
-                        //}
-
-                    }
-
-                    int.TryParse(t.TvDbId, out var tvdbId);
-                    var info = await _tvApi.ShowLookupByTheTvDbId(tvdbId);
-                    if (info == null)
-                    {
-                        continue;
-                    }
                     var banner = info.image?.original;
                     if (!string.IsNullOrEmpty(banner))
                     {
@@ -588,7 +589,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         AddGenres(sb, $"Genres: {string.Join(", ", info.genres.Select(x => x.ToString()).ToArray())}");
                     }
-
+                    
                 }
                 catch (Exception e)
                 {
@@ -676,20 +677,20 @@ namespace Ombi.Schedule.Jobs.Ombi
             var orderedTv = series.OrderByDescending(x => x.AddedAt);
             foreach (var t in orderedTv)
             {
+                if (!t.TvDbId.HasValue())
+                {
+                    continue;
+                }
+
+                int.TryParse(t.TvDbId, out var tvdbId);
+                var info = await _tvApi.ShowLookupByTheTvDbId(tvdbId);
+                if (info == null)
+                {
+                    continue;
+                }
+
                 try
                 {
-                    if (!t.TvDbId.HasValue())
-                    {
-                        continue;
-                    }
-
-                    int.TryParse(t.TvDbId, out var tvdbId);
-                    var info = await _tvApi.ShowLookupByTheTvDbId(tvdbId);
-                    if (info == null)
-                    {
-                        continue;
-                    }
-
                     var banner = info.image?.original;
                     if (!string.IsNullOrEmpty(banner))
                     {
@@ -752,7 +753,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         AddGenres(sb, $"Genres: {string.Join(", ", info.genres.Select(x => x.ToString()).ToArray())}");
                     }
-
+                    
                 }
                 catch (Exception e)
                 {
