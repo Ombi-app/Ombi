@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>    
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,7 +9,7 @@
     <PackageReference Include="Nunit" Version="3.8.1" />
     <PackageReference Include="NUnit.ConsoleRunner" Version="3.7.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
-    <packagereference Include="Microsoft.NET.Test.Sdk" Version="15.7.2"></packagereference>
+    <packagereference Include="Microsoft.NET.Test.Sdk" Version="15.8.0"></packagereference>
   </ItemGroup>
 
   <ItemGroup>
