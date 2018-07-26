@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -10,9 +12,27 @@ using Ombi.Config;
 using Ombi.Helpers;
 using Ombi.Models.Identity;
 using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Ombi
 {
+    public class AddRequiredHeaderParameter : IOperationFilter
+    {
+
+        public void Apply(Operation operation, OperationFilterContext context)
+        {
+            if (operation.Parameters == null)
+                operation.Parameters = new List<IParameter>();
+
+            operation.Parameters.Add(new NonBodyParameter
+            {
+                Name = "ApiKey",
+                In = "header",
+                Type = "apiKey",
+
+            });
+        }
+    }
     public static class StartupExtensions
     {
         public static void AddSwagger(this IServiceCollection services)
@@ -24,16 +44,36 @@ namespace Ombi
                 {
                     Version = "v1",
                     Title = "Ombi Api",
-                    Description = "The API for Ombi, most of these calls require an auth token that you can get from calling POST:\"/api/v1/token\" with the body of: \n {\n\"username\":\"YOURUSERNAME\",\n\"password\":\"YOURPASSWORD\"\n} \n" +
-                                  "You can then use the returned token in the JWT Token field e.g. \"Bearer Token123xxff\"",
                     Contact = new Contact
                     {
-                        Email = "tidusjar@gmail.com",
                         Name = "Jamie Rees",
                         Url = "https://www.ombi.io/"
                     }
                 });
+                var security = new Dictionary<string, IEnumerable<string>>
+                {
+                    //{"Bearer", new string[] { }},
+                    {"ApiKey", new string[] { }},
+                };
+
+                //c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                //{
+                //    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                //    Name = "Authorization",
+                //    In = "header",
+                //    Type = "apiKey"
+                //});
+
+                c.AddSecurityDefinition("ApiKey", new ApiKeyScheme
+                {
+                    Description = "API Key provided by Ombi. Example: \"ApiKey: {token}\"",
+                    Name = "ApiKey",
+                    In = "header",
+                    Type = "apiKey"
+                });
+                c.AddSecurityRequirement(security);
                 c.CustomSchemaIds(x => x.FullName);
+                c.OperationFilter<AddRequiredHeaderParameter>();
                 var basePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
                 var xmlPath = Path.Combine(basePath, "Swagger.xml");
                 try
@@ -44,13 +84,7 @@ namespace Ombi
                 {
                     Console.WriteLine(e);
                 }
-                c.AddSecurityDefinition("Bearer", new JwtBearer
-                {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                    Name = "Authorization",
-                    In = "header",
-                    Type = "apiKey",
-                });
+
 
                 c.OperationFilter<SwaggerOperationFilter>();
                 c.DescribeAllParametersInCamelCase();
