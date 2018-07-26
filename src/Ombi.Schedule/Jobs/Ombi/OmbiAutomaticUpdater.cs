@@ -83,7 +83,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             var productVersion = AssemblyHelper.GetRuntimeVersion();
             Logger.LogDebug(LoggingEvents.Updater, "Product Version {0}", productVersion);
-
+            var serverVersion = string.Empty;
             try
             {
                 var productArray = GetVersion();
@@ -94,13 +94,19 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 Logger.LogDebug(LoggingEvents.Updater, "Version {0}", version);
                 Logger.LogDebug(LoggingEvents.Updater, "Branch {0}", branch);
+                if (!settings.TestMode)
+                {
 
-                Logger.LogDebug(LoggingEvents.Updater, "Looking for updates now");
-                var updates = await Processor.Process(branch);
-                Logger.LogDebug(LoggingEvents.Updater, "Updates: {0}", updates);
-                var serverVersion = updates.UpdateVersionString;
+                    Logger.LogDebug(LoggingEvents.Updater, "Looking for updates now");
+                    //TODO this fails because the branch = featureupdater when it should be feature/updater
+                    var updates = await Processor.Process(branch);
+                    Logger.LogDebug(LoggingEvents.Updater, "Updates: {0}", updates);
 
-                Logger.LogDebug(LoggingEvents.Updater, "Service Version {0}", updates.UpdateVersionString);
+
+                    serverVersion = updates.UpdateVersionString;
+                    
+                    Logger.LogDebug(LoggingEvents.Updater, "Service Version {0}", updates.UpdateVersionString);
+                }
 
                 if (!serverVersion.Equals(version, StringComparison.CurrentCultureIgnoreCase) || settings.TestMode)
                 {
