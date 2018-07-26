@@ -80,10 +80,10 @@ export class UserManagementComponent implements OnInit {
             if(anyRoles) {
                 x.claims = this.availableClaims;
             }
-            if(this.bulkEpisodeLimit && this.bulkEpisodeLimit > 0) {
+            if(this.bulkEpisodeLimit) {
                 x.episodeRequestLimit = this.bulkEpisodeLimit;
             }
-            if(this.bulkMovieLimit && this.bulkMovieLimit > 0) {
+            if(this.bulkMovieLimit) {
                 x.movieRequestLimit = this.bulkMovieLimit;
             }
             this.identityService.updateUser(x).subscribe(y => {
