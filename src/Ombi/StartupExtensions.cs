@@ -1,25 +1,14 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Reflection;
-using System.Security.Principal;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.IdentityModel.Tokens;
 using Ombi.Config;
-using Ombi.Core.Authentication;
-using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Models.Identity;
-using Ombi.Settings.Settings.Models;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Ombi
@@ -45,7 +34,7 @@ namespace Ombi
                     }
                 });
                 c.CustomSchemaIds(x => x.FullName);
-                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                var basePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
                 var xmlPath = Path.Combine(basePath, "Swagger.xml");
                 try
                 {
