@@ -6,7 +6,7 @@ import { Observable } from "rxjs/Rx";
 
 import { ServiceHelpers } from "../service.helpers";
 
-import { IPlexAuthentication, IPlexLibResponse, IPlexServer, IPlexServerViewModel, IUsersModel } from "../../interfaces";
+import { IPlexAuthentication, IPlexLibResponse, IPlexOAuthViewModel,IPlexServer, IPlexServerViewModel, IUsersModel } from "../../interfaces";
 
 @Injectable()
 export class PlexService extends ServiceHelpers {
@@ -30,7 +30,7 @@ export class PlexService extends ServiceHelpers {
         return this.http.get<IUsersModel[]>(`${this.url}Friends`,  {headers: this.headers});
     }
 
-    public oAuth(wizard: boolean): Observable<any> {
-        return this.http.get<any>(`${this.url}oauth/${wizard}`,  {headers: this.headers});
+    public oAuth(wizard: IPlexOAuthViewModel): Observable<any> {
+        return this.http.post<any>(`${this.url}oauth`, JSON.stringify(wizard), {headers: this.headers});
     }
 }

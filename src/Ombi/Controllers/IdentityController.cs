@@ -57,7 +57,9 @@ namespace Ombi.Controllers
             ISettingsService<PlexSettings> settings,
             IRepository<RequestLog> requestLog,
             IRepository<Issues> issues,
-            IRepository<IssueComments> issueComments)
+            IRepository<IssueComments> issueComments,
+            IRepository<NotificationUserId> notificationRepository,
+            IRepository<RequestSubscription> subscriptionRepository)
         {
             UserManager = user;
             Mapper = mapper;
@@ -75,6 +77,8 @@ namespace Ombi.Controllers
             _requestLogRepository = requestLog;
             _issueCommentsRepository = issueComments;
             OmbiSettings = ombiSettings;
+            _requestSubscriptionRepository = subscriptionRepository;
+            _notificationRepository = notificationRepository;
         }
 
         private OmbiUserManager UserManager { get; }
@@ -93,6 +97,8 @@ namespace Ombi.Controllers
         private readonly IRepository<Issues> _issuesRepository;
         private readonly IRepository<IssueComments> _issueCommentsRepository;
         private readonly IRepository<RequestLog> _requestLogRepository;
+        private readonly IRepository<NotificationUserId> _notificationRepository;
+        private readonly IRepository<RequestSubscription> _requestSubscriptionRepository;
 
 
         /// <summary>
@@ -567,6 +573,19 @@ namespace Ombi.Controllers
                 if (issueComments.Any())
                 {
                     await _issueCommentsRepository.DeleteRange(issueComments);
+                }
+                
+                // Delete the Subscriptions and mobile notification ids
+                 var subs = _requestSubscriptionRepository.GetAll().Where(x => x.UserId == userId);
+                var mobileIds = _notificationRepository.GetAll().Where(x => x.UserId == userId);
+                if (subs.Any())
+                {
+                    await _requestSubscriptionRepository.DeleteRange(subs);
+                }
+
+                if (mobileIds.Any())
+                {
+                    await _notificationRepository.DeleteRange(mobileIds);
                 }
 
                 var result = await UserManager.DeleteAsync(userToDelete);

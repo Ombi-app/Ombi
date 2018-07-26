@@ -127,6 +127,12 @@ namespace Ombi
                 //x.UseConsole();
             });
 
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
 
             // Build the intermediate service provider
             return services.BuildServiceProvider();
@@ -209,13 +215,16 @@ namespace Ombi
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseMiddleware<ApiKeyMiddlewear>();
 
+            app.UseCors("MyPolicy");
             //app.ApiKeyMiddlewear(app.ApplicationServices);
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
-            
+
+
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

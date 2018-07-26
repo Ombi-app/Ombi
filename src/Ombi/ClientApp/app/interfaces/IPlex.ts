@@ -2,6 +2,16 @@
     user: IPlexUser;
 }
 
+export interface IPlexPin {
+    id: number;
+    code: string;
+}
+
+export interface IPlexOAuthViewModel {
+    wizard: boolean;
+    pin: IPlexPin;
+}
+
 export interface IPlexOAuthAccessToken {
     accessToken: string;
 }
