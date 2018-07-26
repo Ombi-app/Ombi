@@ -63,7 +63,7 @@ export class UpdateComponent implements OnInit {
             this.notificationService.error("Please check your entered values");
             return;
         }
-        this.enableUpdateButton = form.value.autoUpdateEnabled;
+        this.enableUpdateButton = form.value.autoUpdateEnabled || form.value.testMode;
         this.settingsService.saveUpdateSettings(form.value)
             .subscribe(x => {
                 if (x) {

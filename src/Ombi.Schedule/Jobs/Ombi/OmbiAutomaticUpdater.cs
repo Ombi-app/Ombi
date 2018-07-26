@@ -72,7 +72,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             Logger.LogDebug(LoggingEvents.Updater, "Starting Update job");
 
             var settings = await Settings.GetSettingsAsync();
-            if (!settings.AutoUpdateEnabled)
+            if (!settings.AutoUpdateEnabled && !settings.TestMode)
             {
                 Logger.LogDebug(LoggingEvents.Updater, "Auto update is not enabled");
                 return;
