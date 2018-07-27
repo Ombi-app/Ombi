@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
-import { IdentityService, PlexOAuthService, SettingsService } from "../../services";
+import { IdentityService, PlexOAuthService } from "../../services";
 import { AuthService } from "./../../auth/auth.service";
 
 @Component({
@@ -13,7 +13,6 @@ export class PlexOAuthComponent implements OnInit {
     constructor(private route: ActivatedRoute,
                 private plexOauth: PlexOAuthService,
                 private identityService: IdentityService,
-                private settings: SettingsService,
                 private router: Router,
                 private auth: AuthService) {
 
@@ -35,28 +34,16 @@ export class PlexOAuthComponent implements OnInit {
                       password: "",
                       usePlexAdminAccount: true,
                     }).subscribe(u => {
-                      if (u) {
+                      if (u.result) {
                           this.auth.oAuth(this.pinId).subscribe(c => {
                               localStorage.setItem("id_token", c.access_token);
-                    
-                              // Mark that we have done the settings now
-                              this.settings.getOmbi().subscribe(ombi => {
-                                  ombi.wizard = true;
-  
-                                  this.settings.saveOmbi(ombi).subscribe(s => {
-                                      this.settings.getUserManagementSettings().subscribe(usr => {
-  
-                                          usr.importPlexAdmin = true;
-                                          this.settings.saveUserManagementSettings(usr).subscribe(saved => {
-                                              this.router.navigate(["login"]);
-                                          });
-                                      });
-  
-                                  });
-                              });
-                      });
+                              this.router.navigate(["login"]);
+                            });
                       } else {
-                        //this.notificationService.error("Could not get the Plex Admin Information");
+                          
+                        if(u.errors.length > 0) {
+                            console.log(u.errors[0]);
+                        }
                         return;
                       }
                     });

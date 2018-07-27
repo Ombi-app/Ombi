@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Rx";
 
-import { ICheckbox, ICreateWizardUser, IIdentityResult, IResetPasswordToken, IUpdateLocalUser, IUser } from "../interfaces";
+import { ICheckbox, ICreateWizardUser, IIdentityResult, IResetPasswordToken, IUpdateLocalUser, IUser, IWizardUserResult } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()
@@ -12,8 +12,8 @@ export class IdentityService extends ServiceHelpers {
     constructor(http: HttpClient, public platformLocation: PlatformLocation) {
         super(http, "/api/v1/Identity/", platformLocation);
     }
-    public createWizardUser(user: ICreateWizardUser): Observable<boolean> {
-        return this.http.post<boolean>(`${this.url}Wizard/`, JSON.stringify(user),  {headers: this.headers});
+    public createWizardUser(user: ICreateWizardUser): Observable<IWizardUserResult> {
+        return this.http.post<IWizardUserResult>(`${this.url}Wizard/`, JSON.stringify(user),  {headers: this.headers});
     }
 
     public getUser(): Observable<IUser> {

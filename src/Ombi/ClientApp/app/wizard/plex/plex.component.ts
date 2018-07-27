@@ -35,10 +35,13 @@ export class PlexComponent implements OnInit {
                     password: "",
                     usePlexAdminAccount: true,
                   }).subscribe(y => {
-                    if (y) {
+                    if (y.result) {
                             this.router.navigate(["login"]);
                     } else {
                       this.notificationService.error("Could not get the Plex Admin Information");
+                      if(y.errors.length > 0) {
+                            this.notificationService.error(y.errors[0]);
+                        }
                       return;
                     }
                   });
