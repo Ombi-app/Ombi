@@ -11,7 +11,7 @@ import { IEmbySettings } from "../../interfaces";
 })
 export class EmbyComponent implements OnInit {
 
-    private embySettings: IEmbySettings;
+    public embySettings: IEmbySettings;
 
     constructor(private embyService: EmbyService,
                 private router: Router,

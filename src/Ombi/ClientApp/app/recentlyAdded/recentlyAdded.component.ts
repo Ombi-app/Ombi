@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { NguCarousel } from "@ngu/carousel";
+import { NguCarouselConfig } from "@ngu/carousel";
 
 import { ImageService, RecentlyAddedService } from "../services";
 import { IRecentlyAddedMovies, IRecentlyAddedTvShows } from "./../interfaces";
@@ -43,7 +43,7 @@ export class RecentlyAddedComponent implements OnInit {
     public groupTv: boolean = false;
     
     // https://github.com/sheikalthaf/ngu-carousel
-    public carouselTile: NguCarousel;
+    public carouselTile: NguCarouselConfig;
     
     constructor(private recentlyAddedService: RecentlyAddedService,
                 private imageService: ImageService) {}

@@ -1,14 +1,13 @@
-﻿import { PlatformLocation } from "@angular/common";
+import { PlatformLocation } from "@angular/common";
 import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { Subject } from "rxjs/Subject";
+import { TreeNode } from "primeng/primeng";
+import { Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { AuthService } from "../auth/auth.service";
+import { IIssueCategory, IRequestEngineResult, ISearchTvResult, ISeasonsViewModel, ITvRequestViewModel } from "../interfaces";
 import { ImageService, NotificationService, RequestService, SearchService } from "../services";
-
-import { TreeNode } from "primeng/primeng";
-import { IRequestEngineResult } from "../interfaces";
-import { IIssueCategory, ISearchTvResult, ISeasonsViewModel, ITvRequestViewModel } from "../interfaces";
 
 @Component({
     selector: "tv-search",
@@ -32,30 +31,31 @@ export class TvSearchComponent implements OnInit {
     public issueProviderId: string;
     public issueCategorySelected: IIssueCategory;
 
-    constructor(private searchService: SearchService, private requestService: RequestService,
-                private notificationService: NotificationService, private authService: AuthService,
-                private imageService: ImageService, private sanitizer: DomSanitizer,
-                private readonly platformLocation: PlatformLocation) {
+    constructor(
+        private searchService: SearchService, private requestService: RequestService,
+        private notificationService: NotificationService, private authService: AuthService,
+        private imageService: ImageService, private sanitizer: DomSanitizer,
+        private readonly platformLocation: PlatformLocation) {
 
-        this.searchChanged
-            .debounceTime(600) // Wait Xms after the last event before emitting last event
-            .distinctUntilChanged() // only emit if value is different from previous value
-            .subscribe(x => {
-                this.searchText = x as string;
-                if (this.searchText === "") {
-                    this.clearResults();
-                    return;
-                }
-                this.searchService.searchTvTreeNode(this.searchText)
-                    .subscribe(x => {
-                        this.tvResults = x;
-                        this.searchApplied = true;
-                        this.getExtraInfo();
-                    });
-            });
+        this.searchChanged.pipe(
+            debounceTime(600), // Wait Xms after the last event before emitting last event
+            distinctUntilChanged(), // only emit if value is different from previous value
+        ).subscribe(x => {
+            this.searchText = x as string;
+            if (this.searchText === "") {
+                this.clearResults();
+                return;
+            }
+            this.searchService.searchTvTreeNode(this.searchText)
+                .subscribe(x => {
+                    this.tvResults = x;
+                    this.searchApplied = true;
+                    this.getExtraInfo();
+                });
+        });
         this.defaultPoster = "../../../images/default_tv_poster.png";
         const base = this.platformLocation.getBaseHrefFromDOM();
-        if(base) {
+        if (base) {
             this.defaultPoster = "../../.." + base + "/images/default_tv_poster.png";
         }
     }
@@ -91,7 +91,7 @@ export class TvSearchComponent implements OnInit {
         this.result = {
             message: "",
             result: false,
-            errorMessage:"",
+            errorMessage: "",
         };
         this.popularShows();
     }
@@ -139,10 +139,10 @@ export class TvSearchComponent implements OnInit {
     public getExtraInfo() {
         this.tvResults.forEach((val, index) => {
             this.imageService.getTvBanner(val.data.id).subscribe(x => {
-                if(x) {
+                if (x) {
                     val.data.background = this.sanitizer.
-                    bypassSecurityTrustStyle
-                    ("url(" + x + ")");
+                        bypassSecurityTrustStyle
+                        ("url(" + x + ")");
                 }
             });
             this.searchService.getShowInformationTreeNode(val.data.id)
@@ -165,19 +165,19 @@ export class TvSearchComponent implements OnInit {
         if (this.authService.hasRole("admin") || this.authService.hasRole("AutoApproveMovie")) {
             searchResult.approved = true;
         }
-        
-        const viewModel = <ITvRequestViewModel>{ firstSeason: searchResult.firstSeason, latestSeason: searchResult.latestSeason, requestAll: searchResult.requestAll, tvDbId: searchResult.id};
+
+        const viewModel = <ITvRequestViewModel>{ firstSeason: searchResult.firstSeason, latestSeason: searchResult.latestSeason, requestAll: searchResult.requestAll, tvDbId: searchResult.id };
         viewModel.seasons = [];
         searchResult.seasonRequests.forEach((season) => {
-            const seasonsViewModel = <ISeasonsViewModel>{seasonNumber: season.seasonNumber, episodes: []};
+            const seasonsViewModel = <ISeasonsViewModel>{ seasonNumber: season.seasonNumber, episodes: [] };
             season.episodes.forEach(ep => {
-                if(!searchResult.latestSeason || !searchResult.requestAll || !searchResult.firstSeason) {
-                    if(ep.requested) {
-                        seasonsViewModel.episodes.push({episodeNumber: ep.episodeNumber});
+                if (!searchResult.latestSeason || !searchResult.requestAll || !searchResult.firstSeason) {
+                    if (ep.requested) {
+                        seasonsViewModel.episodes.push({ episodeNumber: ep.episodeNumber });
                     }
                 }
             });
-            
+
             viewModel.seasons.push(seasonsViewModel);
         });
 

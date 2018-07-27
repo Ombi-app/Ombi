@@ -1,21 +1,14 @@
-﻿import { PlatformLocation } from "@angular/common";
+import { PlatformLocation } from "@angular/common";
 import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import "rxjs/add/operator/debounceTime";
-import "rxjs/add/operator/distinctUntilChanged";
-import "rxjs/add/operator/map";
-import { Subject } from "rxjs/Subject";
-import { ImageService } from "./../services/image.service";
-
-import "rxjs/add/operator/debounceTime";
-import "rxjs/add/operator/distinctUntilChanged";
-import "rxjs/add/operator/map";
+import { TreeNode } from "primeng/primeng";
+import { Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { AuthService } from "../auth/auth.service";
+import { IIssueCategory, IPagenator, ISonarrProfile, ISonarrRootFolder, ITvRequests } from "../interfaces";
 import { NotificationService, RequestService, SonarrService } from "../services";
-
-import { TreeNode } from "primeng/primeng";
-import { IIssueCategory, IPagenator,  ISonarrProfile, ISonarrRootFolder, ITvRequests } from "../interfaces";
+import { ImageService } from "./../services/image.service";
 
 @Component({
     selector: "tv-requests",
@@ -46,29 +39,30 @@ export class TvRequestsComponent implements OnInit {
     private currentlyLoaded: number;
     private amountToLoad: number;
 
-    constructor(private requestService: RequestService,
-                private auth: AuthService,
-                private sanitizer: DomSanitizer,
-                private imageService: ImageService,
-                private sonarrService: SonarrService,
-                private notificationService: NotificationService,
-                private readonly platformLocation: PlatformLocation) {
-        this.searchChanged
-            .debounceTime(600) // Wait Xms after the last event before emitting last event
-            .distinctUntilChanged() // only emit if value is different from previous value
-            .subscribe(x => {
-                this.searchText = x as string;
-                if (this.searchText === "") {
-                    this.resetSearch();
-                    return;
-                }
-                this.requestService.searchTvRequestsTree(this.searchText)
-                    .subscribe(m => {
-                        this.tvRequests = m;
-                        this.tvRequests.forEach((val) => this.loadBackdrop(val));
-                        this.tvRequests.forEach((val) => this.setOverride(val.data));
-                    });
-            });
+    constructor(
+        private requestService: RequestService,
+        private auth: AuthService,
+        private sanitizer: DomSanitizer,
+        private imageService: ImageService,
+        private sonarrService: SonarrService,
+        private notificationService: NotificationService,
+        private readonly platformLocation: PlatformLocation) {
+        this.searchChanged.pipe(
+            debounceTime(600), // Wait Xms after the last event before emitting last event
+            distinctUntilChanged(), // only emit if value is different from previous value
+        ).subscribe(x => {
+            this.searchText = x as string;
+            if (this.searchText === "") {
+                this.resetSearch();
+                return;
+            }
+            this.requestService.searchTvRequestsTree(this.searchText)
+                .subscribe(m => {
+                    this.tvRequests = m;
+                    this.tvRequests.forEach((val) => this.loadBackdrop(val));
+                    this.tvRequests.forEach((val) => this.setOverride(val.data));
+                });
+        });
         this.defaultPoster = "../../../images/default_tv_poster.png";
         const base = this.platformLocation.getBaseHrefFromDOM();
         if (base) {
@@ -118,7 +112,7 @@ export class TvRequestsComponent implements OnInit {
         this.currentlyLoaded = 10;
         this.tvRequests = [];
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
-        
+
         this.loadInit();
     }
 
@@ -126,10 +120,10 @@ export class TvRequestsComponent implements OnInit {
         const skipAmount = event.first;
 
         this.requestService.getTvRequestsTree(this.amountToLoad, skipAmount)
-        .subscribe(x => {
-            this.tvRequests = x;
-            this.currentlyLoaded = this.currentlyLoaded + this.amountToLoad;
-        });
+            .subscribe(x => {
+                this.tvRequests = x;
+                this.currentlyLoaded = this.currentlyLoaded + this.amountToLoad;
+            });
     }
 
     public search(text: any) {
@@ -211,13 +205,13 @@ export class TvRequestsComponent implements OnInit {
                     this.setDefaults(val);
                     this.loadBackdrop(val);
                     this.setOverride(val.data);
-            });     
-        });
+                });
+            });
 
-        if(this.isAdmin) {
+        if (this.isAdmin) {
             this.sonarrService.getQualityProfilesWithoutSettings()
                 .subscribe(x => this.sonarrProfiles = x);
-        
+
             this.sonarrService.getRootFoldersWithoutSettings()
                 .subscribe(x => this.sonarrRootFolders = x);
         }
@@ -240,9 +234,9 @@ export class TvRequestsComponent implements OnInit {
                 ("url(https://image.tmdb.org/t/p/w1280" + val.data.background + ")");
         } else {
             this.imageService.getTvBanner(val.data.tvDbId).subscribe(x => {
-                if(x) {
+                if (x) {
                     val.data.background = this.sanitizer.bypassSecurityTrustStyle
-                    ("url(" + x + ")");
+                        ("url(" + x + ")");
                 }
             });
         }

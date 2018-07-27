@@ -1,5 +1,4 @@
 ﻿import { Component, Input, OnInit} from "@angular/core";
-import "rxjs/add/operator/takeUntil";
 
 import { NotificationService } from "../services";
 import { RequestService } from "../services";
