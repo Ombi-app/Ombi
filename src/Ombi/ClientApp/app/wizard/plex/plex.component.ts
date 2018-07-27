@@ -15,9 +15,9 @@ export class PlexComponent implements OnInit {
     private clientId: string;
 
     constructor(private plexService: PlexService, private router: Router,
-                private notificationService: NotificationService,
-                private identityService: IdentityService, private plexTv: PlexTvService,
-                private settingsService: SettingsService) { }
+        private notificationService: NotificationService,
+        private identityService: IdentityService, private plexTv: PlexTvService,
+        private settingsService: SettingsService) { }
 
     public ngOnInit(): void {
         this.settingsService.getClientId().subscribe(x => this.clientId = x);
@@ -29,27 +29,27 @@ export class PlexComponent implements OnInit {
                 this.notificationService.error("Username or password was incorrect. Could not authenticate with Plex.");
                 return;
             }
-            
+
             this.identityService.createWizardUser({
-                    username: "",
-                    password: "",
-                    usePlexAdminAccount: true,
-                  }).subscribe(y => {
-                    if (y) {
-                            this.router.navigate(["login"]);
-                    } else {
-                      this.notificationService.error("Could not get the Plex Admin Information");
-                      return;
-                    }
-                  });
-              },
+                username: "",
+                password: "",
+                usePlexAdminAccount: true,
+            }).subscribe(y => {
+                if (y) {
+                    this.router.navigate(["login"]);
+                } else {
+                    this.notificationService.error("Could not get the Plex Admin Information");
+                    return;
+                }
+            });
+        }
         );
     }
 
     public oauth() {
-        this.plexTv.GetPin(this.clientId, "Ombi").subscribe(pin => {
-            this.plexService.oAuth({wizard: true, pin}).subscribe(x => {
-                if(x.url) {
+        this.plexTv.GetPin(this.clientId, "Ombi").subscribe((pin: any) => {
+            this.plexService.oAuth({ wizard: true, pin }).subscribe(x => {
+                if (x.url) {
                     window.location.href = x.url;
                 }
             });

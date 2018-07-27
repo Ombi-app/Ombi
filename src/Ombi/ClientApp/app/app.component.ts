@@ -33,17 +33,17 @@ export class AppComponent implements OnInit {
                 private readonly jobService: JobService,
                 public readonly translate: TranslateService,
                 private readonly identityService: IdentityService,
-                private readonly platformLocation: PlatformLocation) { 
+                private readonly platformLocation: PlatformLocation) {
 
-                    const base = this.platformLocation.getBaseHrefFromDOM();   
+                    const base = this.platformLocation.getBaseHrefFromDOM();
                     if (base.length > 1) {
                         __webpack_public_path__ = base + "/dist/";
                     }
-                
-                    this.translate.addLangs(["en", "de", "fr","da","es","it","nl","sv","no"]);
+
+                    this.translate.addLangs(["en", "de", "fr", "da", "es", "it", "nl", "sv", "no"]);
                     // this language will be used as a fallback when a translation isn't found in the current language
                     this.translate.setDefaultLang("en");
-                    
+
                     // See if we can match the supported langs with the current browser lang
                     const browserLang: string = translate.getBrowserLang();
                     this.translate.use(browserLang.match(/en|fr|da|de|es|it|nl|sv|no/) ? browserLang : "en");
@@ -88,8 +88,8 @@ export class AppComponent implements OnInit {
 
     public openMobileApp(event: any) {
         event.preventDefault();
-        if(!this.customizationSettings.applicationUrl) {
-            this.notificationService.warning("Mobile","Please ask your admin to setup the Application URL!");
+        if (!this.customizationSettings.applicationUrl) {
+            this.notificationService.warning("Mobile", "Please ask your admin to setup the Application URL!");
             return;
         }
 

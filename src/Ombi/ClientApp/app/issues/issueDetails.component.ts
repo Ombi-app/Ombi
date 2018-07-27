@@ -37,10 +37,10 @@ export class IssueDetailsComponent implements OnInit {
                 private notificationService: NotificationService,
                 private imageService: ImageService,
                 private sanitizer: DomSanitizer,
-                private readonly platformLocation: PlatformLocation) { 
+                private readonly platformLocation: PlatformLocation) {
             this.route.params
             .subscribe((params: any) => {
-                  this.issueId = parseInt(params.id);    
+                  this.issueId = parseInt(params.id);
                 });
 
             this.isAdmin = this.authService.hasRole("Admin") || this.authService.hasRole("PowerUser");
@@ -53,8 +53,8 @@ export class IssueDetailsComponent implements OnInit {
                 this.defaultPoster = "../../../images/";
             }
         }
-                
-    public ngOnInit() { 
+
+    public ngOnInit() {
         this.issueService.getIssue(this.issueId).subscribe(x => {
             this.issue = {
                 comments: x.comments,
@@ -63,8 +63,8 @@ export class IssueDetailsComponent implements OnInit {
                 issueCategoryId: x.issueCategoryId,
                 subject: x.subject,
                 description: x.description,
-                status:x.status,
-                resolvedDate:x.resolvedDate,
+                status: x.status,
+                resolvedDate: x.resolvedDate,
                 title: x.title,
                 requestType: x.requestType,
                 requestId: x.requestId,
@@ -117,7 +117,7 @@ export class IssueDetailsComponent implements OnInit {
 
         } else {
             this.imageService.getTvBackground(Number(issue.providerId)).subscribe(x => {
-                if(x) {
+                if (x) {
                     this.backgroundPath = this.sanitizer.bypassSecurityTrustStyle
                         ("url(" + x + ")");
                 }

@@ -155,7 +155,6 @@ export class MovieSearchGridComponent implements OnInit {
                 this.movieResultGrid.push(container);
                 container = <ISearchMovieResultContainer>{ movies: [] };
             } else {
-
                 container.movies.push(movie);
             }
         });

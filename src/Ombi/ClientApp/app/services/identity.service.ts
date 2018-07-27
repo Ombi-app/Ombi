@@ -19,7 +19,7 @@ export class IdentityService extends ServiceHelpers {
     public getUser(): Observable<IUser> {
         return this.http.get<IUser>(this.url,  {headers: this.headers});
     }
-    
+
     public getAccessToken(): Observable<string> {
         return this.http.get<string>(`${this.url}accesstoken`,  {headers: this.headers});
     }

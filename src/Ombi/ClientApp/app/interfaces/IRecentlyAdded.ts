@@ -20,7 +20,7 @@ export interface IRecentlyAddedTvShows extends IRecentlyAddedMovies {
 
 export interface IRecentlyAddedRangeModel {
     from: Date;
-    to: Date; 
+    to: Date;
 }
 
 export enum RecentlyAddedType {

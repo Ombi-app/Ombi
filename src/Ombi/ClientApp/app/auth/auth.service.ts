@@ -26,13 +26,13 @@ export class AuthService extends ServiceHelpers {
         return this.http.post<boolean>(`${this.url}/requirePassword`, JSON.stringify(login), {headers: this.headers});
     }
 
-    public loggedIn() {    
+    public loggedIn() {
         const token: string = this.jwtHelperService.tokenGetter();
-        
+
         if (!token) {
             return false;
         }
-        
+
         const tokenExpired: boolean = this.jwtHelperService.isTokenExpired(token);
         return !tokenExpired;
     }
@@ -53,9 +53,9 @@ export class AuthService extends ServiceHelpers {
             } else {
                 u.roles.push(roles);
             }
-            return <ILocalUser>u;
+            return <ILocalUser> u;
         }
-        return <ILocalUser>{};
+        return <ILocalUser> { };
     }
 
     public hasRole(role: string): boolean {
