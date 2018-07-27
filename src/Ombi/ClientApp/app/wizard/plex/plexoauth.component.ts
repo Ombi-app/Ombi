@@ -11,11 +11,11 @@ export class PlexOAuthComponent implements OnInit {
     public pinId: number;
 
     constructor(private route: ActivatedRoute,
-        private plexOauth: PlexOAuthService,
-        private identityService: IdentityService,
-        private settings: SettingsService,
-        private router: Router,
-        private auth: AuthService) {
+                private plexOauth: PlexOAuthService,
+                private identityService: IdentityService,
+                private settings: SettingsService,
+                private router: Router,
+                private auth: AuthService) {
 
         this.route.params
             .subscribe((params: any) => {

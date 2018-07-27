@@ -22,8 +22,8 @@ export class UserManagementComponent implements OnInit {
     public bulkEpisodeLimit?: number;
 
     constructor(private identityService: IdentityService,
-        private settingsService: SettingsService,
-        private notificationService: NotificationService) { }
+                private settingsService: SettingsService,
+                private notificationService: NotificationService) { }
 
     public ngOnInit() {
         this.users = [];

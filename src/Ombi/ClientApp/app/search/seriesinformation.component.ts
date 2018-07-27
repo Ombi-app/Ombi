@@ -38,25 +38,25 @@ export class SeriesInformationComponent implements OnInit {
             });
         });
 
-        if(!selected) {
+        if (!selected) {
             this.notificationService.error("You need to select some episodes!");
             return;
         }
 
         this.series.requested = true;
 
-        const viewModel = <ITvRequestViewModel>{ firstSeason: this.series.firstSeason, latestSeason: this.series.latestSeason, requestAll: this.series.requestAll, tvDbId: this.series.id};
+        const viewModel = <ITvRequestViewModel> { firstSeason: this.series.firstSeason, latestSeason: this.series.latestSeason, requestAll: this.series.requestAll, tvDbId: this.series.id};
         viewModel.seasons = [];
         this.series.seasonRequests.forEach((season) => {
-            const seasonsViewModel = <ISeasonsViewModel>{seasonNumber: season.seasonNumber, episodes: []};
+            const seasonsViewModel = <ISeasonsViewModel> {seasonNumber: season.seasonNumber, episodes: []};
             season.episodes.forEach(ep => {
-                if(!this.series.latestSeason || !this.series.requestAll || !this.series.firstSeason) {
-                    if(ep.selected) {
+                if (!this.series.latestSeason || !this.series.requestAll || !this.series.firstSeason) {
+                    if (ep.selected) {
                         seasonsViewModel.episodes.push({episodeNumber: ep.episodeNumber});
                     }
                 }
             });
-            
+
             viewModel.seasons.push(seasonsViewModel);
         });
 

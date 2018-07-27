@@ -15,9 +15,9 @@ export class PlexComponent implements OnInit {
     private clientId: string;
 
     constructor(private plexService: PlexService, private router: Router,
-        private notificationService: NotificationService,
-        private identityService: IdentityService, private plexTv: PlexTvService,
-        private settingsService: SettingsService) { }
+                private notificationService: NotificationService,
+                private identityService: IdentityService, private plexTv: PlexTvService,
+                private settingsService: SettingsService) { }
 
     public ngOnInit(): void {
         this.settingsService.getClientId().subscribe(x => this.clientId = x);
@@ -42,7 +42,7 @@ export class PlexComponent implements OnInit {
                     return;
                 }
             });
-        }
+        },
         );
     }
 

@@ -41,7 +41,7 @@ export class SlackComponent implements OnInit {
             return;
         }
 
-        const settings = <ISlackNotificationSettings>form.value;
+        const settings = <ISlackNotificationSettings> form.value;
         if (settings.iconEmoji && settings.iconUrl) {
 
             this.notificationService.error("You cannot have a Emoji icon and a URL icon");
@@ -65,7 +65,7 @@ export class SlackComponent implements OnInit {
             return;
         }
 
-        const settings = <ISlackNotificationSettings>form.value;
+        const settings = <ISlackNotificationSettings> form.value;
         if (settings.iconEmoji && settings.iconUrl) {
 
             this.notificationService.error("You cannot have a Emoji icon and a URL icon");

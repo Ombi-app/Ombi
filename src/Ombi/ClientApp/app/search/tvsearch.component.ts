@@ -166,10 +166,10 @@ export class TvSearchComponent implements OnInit {
             searchResult.approved = true;
         }
 
-        const viewModel = <ITvRequestViewModel>{ firstSeason: searchResult.firstSeason, latestSeason: searchResult.latestSeason, requestAll: searchResult.requestAll, tvDbId: searchResult.id };
+        const viewModel = <ITvRequestViewModel> { firstSeason: searchResult.firstSeason, latestSeason: searchResult.latestSeason, requestAll: searchResult.requestAll, tvDbId: searchResult.id };
         viewModel.seasons = [];
         searchResult.seasonRequests.forEach((season) => {
-            const seasonsViewModel = <ISeasonsViewModel>{ seasonNumber: season.seasonNumber, episodes: [] };
+            const seasonsViewModel = <ISeasonsViewModel> { seasonNumber: season.seasonNumber, episodes: [] };
             season.episodes.forEach(ep => {
                 if (!searchResult.latestSeason || !searchResult.requestAll || !searchResult.firstSeason) {
                     if (ep.requested) {

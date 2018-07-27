@@ -25,7 +25,7 @@ const routes: Routes = [
     { path: "show/:id", component: SeriesInformationComponent, canActivate: [AuthGuard] },
 ];
 @NgModule({
-    imports: [        
+    imports: [
         CommonModule,
         FormsModule,
         RouterModule.forChild(routes),

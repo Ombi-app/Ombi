@@ -71,7 +71,7 @@ export class PlexComponent implements OnInit, OnDestroy {
         if (this.settings.servers == null) {
             this.settings.servers = [];
         }
-        this.settings.servers.push(<IPlexServer>{ name: "New*", id: Math.floor(Math.random() * (99999 - 0 + 1) + 1) });
+        this.settings.servers.push(<IPlexServer> { name: "New*", id: Math.floor(Math.random() * (99999 - 0 + 1) + 1) });
 
     }
 

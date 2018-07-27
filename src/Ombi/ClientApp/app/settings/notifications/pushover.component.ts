@@ -37,7 +37,7 @@ export class PushoverComponent implements OnInit {
             return;
         }
 
-        const settings = <IPushoverNotificationSettings>form.value;
+        const settings = <IPushoverNotificationSettings> form.value;
         settings.notificationTemplates = this.templates;
 
         this.settingsService.savePushoverNotificationSettings(settings).subscribe(x => {

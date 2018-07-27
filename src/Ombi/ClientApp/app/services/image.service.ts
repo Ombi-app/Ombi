@@ -20,21 +20,21 @@ export class ImageService extends ServiceHelpers {
     public getTvBanner(tvdbid: number): Observable<string> {
         return this.http.get<string>(`${this.url}tv/${tvdbid}`, {headers: this.headers});
     }
-    
+
     public getMoviePoster(movieDbId: string): Observable<string> {
         return this.http.get<string>(`${this.url}poster/movie/${movieDbId}`, { headers: this.headers });
     }
-    
+
     public getTvPoster(tvdbid: number): Observable<string> {
         return this.http.get<string>(`${this.url}poster/tv/${tvdbid}`, { headers: this.headers });
     }
-    
+
     public getMovieBackground(movieDbId: string): Observable<string> {
         return this.http.get<string>(`${this.url}background/movie/${movieDbId}`, { headers: this.headers });
     }
-    
+
     public getTvBackground(tvdbid: number): Observable<string> {
         return this.http.get<string>(`${this.url}background/tv/${tvdbid}`, { headers: this.headers });
     }
-    
+
 }

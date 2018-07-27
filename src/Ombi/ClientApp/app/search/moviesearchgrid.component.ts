@@ -147,13 +147,13 @@ export class MovieSearchGridComponent implements OnInit {
     }
 
     private processGrid(movies: ISearchMovieResult[]) {
-        let container = <ISearchMovieResultContainer>{ movies: [] };
+        let container = <ISearchMovieResultContainer> { movies: [] };
         movies.forEach((movie, i) => {
             i++;
             if ((i % 4) === 0) {
                 container.movies.push(movie);
                 this.movieResultGrid.push(container);
-                container = <ISearchMovieResultContainer>{ movies: [] };
+                container = <ISearchMovieResultContainer> { movies: [] };
             } else {
                 container.movies.push(movie);
             }

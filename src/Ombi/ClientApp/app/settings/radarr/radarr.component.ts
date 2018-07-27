@@ -54,7 +54,7 @@ export class RadarrComponent implements OnInit {
 
         this.qualities = [];
         this.qualities.push({ name: "Please Select", id: -1 });
-        
+
         this.rootFolders = [];
         this.rootFolders.push({ path: "Please Select", id: -1 });
         this.minimumAvailabilityOptions = [
@@ -93,7 +93,7 @@ export class RadarrComponent implements OnInit {
             this.notificationService.error("Please check your entered values");
             return;
         }
-        const settings = <IRadarrSettings>form.value;
+        const settings = <IRadarrSettings> form.value;
         this.testerService.radarrTest(settings).subscribe(x => {
             if (x === true) {
                 this.notificationService.success("Successfully connected to Radarr!");
@@ -108,12 +108,12 @@ public onSubmit(form: FormGroup) {
             this.notificationService.error("Please check your entered values");
             return;
         }
-        if(form.controls.defaultQualityProfile.value === "-1" || form.controls.defaultRootPath.value === "Please Select") {
+        if (form.controls.defaultQualityProfile.value === "-1" || form.controls.defaultRootPath.value === "Please Select") {
             this.notificationService.error("Please check your entered values");
             return;
         }
 
-        const settings = <IRadarrSettings>form.value;
+        const settings = <IRadarrSettings> form.value;
         this.settingsService.saveRadarr(settings).subscribe(x => {
             if (x) {
                 this.notificationService.success("Successfully saved Radarr settings");
