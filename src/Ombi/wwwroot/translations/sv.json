@@ -62,9 +62,12 @@
       "Italian": "Italienska",
       "Danish": "Danska",
       "Dutch": "Holländska",
-      "Norwegian": "Norska"
+      "Norwegian": "Norska",
+      "BrazillianPortuguese": "Brazillian Portuguese",
+      "Polish": "Polish"
     },
-    "OpenMobileApp": "Öppna Mobil App"
+    "OpenMobileApp": "Öppna Mobil App",
+    "RecentlyAdded": "Recently Added"
   },
   "Search": {
     "Title": "Sök",
@@ -113,6 +116,7 @@
     "RequestStatus": "Status för efterfrågan:",
     "Denied": " Nekad:",
     "TheatricalRelease": "Theatrical Release: {{date}}",
+    "TheatricalReleaseSort": "Theatrical Release",
     "DigitalRelease": "Digital Release: {{date}}",
     "RequestDate": "Datum för efterfrågan:",
     "QualityOverride": "Kvalité överskridande:",
@@ -129,7 +133,14 @@
     "GridStatus": "Status",
     "ReportIssue": "Report Issue",
     "Filter": "Filter",
-    "SeasonNumberHeading": "Season: {seasonNumber}"
+    "Sort": "Sort",
+    "SeasonNumberHeading": "Season: {seasonNumber}",
+    "SortTitleAsc": "Title ▲",
+    "SortTitleDesc": "Title ▼",
+    "SortRequestDateAsc": "Request Date ▲",
+    "SortRequestDateDesc": "Request Date ▼",
+    "SortStatusAsc": "Status ▲",
+    "SortStatusDesc": "Status ▼"
   },
   "Issues": {
     "Title": "Problem",
@@ -154,6 +165,7 @@
     "ClearFilter": "Clear Filter",
     "FilterHeaderAvailability": "Availability",
     "FilterHeaderRequestStatus": "Status",
-    "Approved": "Approved"
+    "Approved": "Approved",
+    "PendingApproval": "Pending Approval"
   }
 }

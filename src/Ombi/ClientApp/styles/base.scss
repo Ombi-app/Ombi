@@ -455,7 +455,7 @@ $border-radius: 10px;
 }
 
 .checkbox input[type=checkbox] {
-    display: none;
+    opacity: 0;
 }
 
 .checkbox input[type=checkbox]:checked + label:before {
