@@ -3,7 +3,7 @@
     "SignInButton": "Registrar",
     "UsernamePlaceholder": "Nome de usuário",
     "PasswordPlaceholder": "Senha",
-    "RememberMe": "Lembrar de mim",
+    "RememberMe": "Lembre-se de mim",
     "ForgottenPassword": "Esqueceu sua senha?",
     "Errors": {
       "IncorrectCredentials": "Nome de usuário ou senha incorretos"
@@ -153,7 +153,7 @@
     "Details": "Detalhes",
     "Description": "Descrição",
     "NoComments": "Sem Comentários!",
-    "MarkInProgress": "Marca em andamento",
+    "MarkInProgress": "Marcar como em andamento",
     "MarkResolved": "Marcar como resolvido",
     "SendMessageButton": "Enviar",
     "Subject": "Assunto",
