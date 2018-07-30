@@ -516,6 +516,7 @@ namespace Ombi.Core.Engine
                 };
             }
             request.Available = true;
+            request.MarkedAsAvailable = DateTime.Now;
             foreach (var season in request.SeasonRequests)
             {
                 foreach (var e in season.Episodes)
