@@ -14,8 +14,8 @@ export class EmbyComponent implements OnInit {
     public embySettings: IEmbySettings;
 
     constructor(private embyService: EmbyService,
-        private router: Router,
-        private notificationService: NotificationService) {
+                private router: Router,
+                private notificationService: NotificationService) {
     }
 
     public ngOnInit() {

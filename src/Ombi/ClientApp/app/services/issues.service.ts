@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
-import { IIssueCategory, IIssueComments,IIssueCount, IIssues, IIssuesChat, INewIssueComments, IssueStatus, IUpdateStatus } from "../interfaces";
+import { IIssueCategory, IIssueComments, IIssueCount, IIssues, IIssuesChat, INewIssueComments, IssueStatus, IUpdateStatus } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()
@@ -40,10 +40,10 @@ export class IssuesService extends ServiceHelpers {
     public createIssue(issue: IIssues): Observable<number> {
         return this.http.post<number>(this.url, JSON.stringify(issue), {headers: this.headers});
     }
-    
+
     public getIssue(id: number): Observable<IIssues> {
         return this.http.get<IIssues>(`${this.url}${id}`,  {headers: this.headers});
-    }    
+    }
 
     public getComments(id: number): Observable<IIssuesChat[]> {
         return this.http.get<IIssuesChat[]>(`${this.url}${id}/comments`,  {headers: this.headers});

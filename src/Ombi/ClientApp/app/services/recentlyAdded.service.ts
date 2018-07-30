@@ -18,7 +18,8 @@ export class RecentlyAddedService extends ServiceHelpers {
 
     public getRecentlyAddedTv(): Observable<IRecentlyAddedTvShows[]> {
         return this.http.get<IRecentlyAddedTvShows[]>(`${this.  url}tv/`, {headers: this.headers});
-    }    
+    }
+
     public getRecentlyAddedTvGrouped(): Observable<IRecentlyAddedTvShows[]> {
         return this.http.get<IRecentlyAddedTvShows[]>(`${this.url}tv/grouped`, {headers: this.headers});
     }

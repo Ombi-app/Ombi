@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 
 import { ServiceHelpers } from "../service.helpers";
 
-import { IPlexAuthentication, IPlexLibResponse, IPlexOAuthViewModel,IPlexServer, IPlexServerViewModel, IUsersModel } from "../../interfaces";
+import { IPlexAuthentication, IPlexLibResponse, IPlexOAuthViewModel, IPlexServer, IPlexServerViewModel, IUsersModel } from "../../interfaces";
 
 @Injectable()
 export class PlexService extends ServiceHelpers {
