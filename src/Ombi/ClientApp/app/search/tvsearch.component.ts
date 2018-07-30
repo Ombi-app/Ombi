@@ -1,7 +1,6 @@
 import { PlatformLocation } from "@angular/common";
 import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { TreeNode } from "primeng/primeng";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
@@ -18,7 +17,7 @@ export class TvSearchComponent implements OnInit {
 
     public searchText: string;
     public searchChanged = new Subject<string>();
-    public tvResults: TreeNode[];
+    public tvResults: ISearchTvResult[];
     public result: IRequestEngineResult;
     public searchApplied = false;
     public defaultPoster: string;
@@ -46,7 +45,7 @@ export class TvSearchComponent implements OnInit {
                 this.clearResults();
                 return;
             }
-            this.searchService.searchTvTreeNode(this.searchText)
+            this.searchService.searchTv(this.searchText)
                 .subscribe(x => {
                     this.tvResults = x;
                     this.searchApplied = true;
@@ -138,14 +137,14 @@ export class TvSearchComponent implements OnInit {
 
     public getExtraInfo() {
         this.tvResults.forEach((val, index) => {
-            this.imageService.getTvBanner(val.data.id).subscribe(x => {
+            this.imageService.getTvBanner(val.id).subscribe(x => {
                 if (x) {
-                    val.data.background = this.sanitizer.
+                    val.background = this.sanitizer.
                         bypassSecurityTrustStyle
                         ("url(" + x + ")");
                 }
             });
-            this.searchService.getShowInformationTreeNode(val.data.id)
+            this.searchService.getShowInformation(val.id)
                 .subscribe(x => {
                     if (x.data) {
                         this.setDefaults(x);
@@ -223,17 +222,17 @@ export class TvSearchComponent implements OnInit {
         this.issueProviderId = req.id.toString();
     }
 
-    private updateItem(key: TreeNode, updated: TreeNode) {
+    private updateItem(key: ISearchTvResult, updated: ISearchTvResult) {
         const index = this.tvResults.indexOf(key, 0);
         if (index > -1) {
             // Update certain properties, otherwise we will loose some data
-            this.tvResults[index].data.title = updated.data.title;
-            this.tvResults[index].data.banner = updated.data.banner;
-            this.tvResults[index].data.imdbId = updated.data.imdbId;
-            this.tvResults[index].data.seasonRequests = updated.data.seasonRequests;
-            this.tvResults[index].data.seriesId = updated.data.seriesId;
-            this.tvResults[index].data.fullyAvailable = updated.data.fullyAvailable;
-            this.tvResults[index].data.backdrop = updated.data.backdrop;
+            this.tvResults[index].title = updated.title;
+            this.tvResults[index].banner = updated.banner;
+            this.tvResults[index].imdbId = updated.imdbId;
+            this.tvResults[index].seasonRequests = updated.seasonRequests;
+            this.tvResults[index].seriesId = updated.seriesId;
+            this.tvResults[index].fullyAvailable = updated.fullyAvailable;
+            this.tvResults[index].background = updated.banner;
         }
     }
 
