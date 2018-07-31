@@ -54,7 +54,7 @@ export class EmailNotificationComponent implements OnInit {
             return;
         }
 
-        const settings = <IEmailNotificationSettings>form.value;
+        const settings = <IEmailNotificationSettings> form.value;
         settings.notificationTemplates = this.templates;
 
         this.settingsService.saveEmailNotificationSettings(settings).subscribe(x => {

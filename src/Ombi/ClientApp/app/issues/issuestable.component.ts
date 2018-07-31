@@ -11,7 +11,7 @@ export class IssuesTableComponent  {
     @Input() public issues: IIssues[];
     @Input() public totalRecords: number;
 
-    @Output() public changePage = new EventEmitter<IPagenator>(); 
+    @Output() public changePage = new EventEmitter<IPagenator>();
 
     public IssueStatus = IssueStatus;
 
@@ -47,7 +47,7 @@ export class IssuesTableComponent  {
         //event.rows = Number of rows to display in new page
         //event.page = Index of the new page
         //event.pageCount = Total number of pages
-        
+
         this.changePage.emit(event);
     }
 

@@ -156,7 +156,12 @@ namespace Ombi
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 {
                     HotModuleReplacement = true,
-                    ConfigFile = "webpack.dev.js"
+                    ConfigFile = "webpack.config.ts",
+                    
+                    //EnvParam = new
+                    //{
+                    //    aot = true // can't use AOT with HMR currently https://github.com/angular/angular-cli/issues/6347
+                    //}
                 });
             }
 

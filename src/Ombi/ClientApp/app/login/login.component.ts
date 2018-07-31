@@ -30,9 +30,9 @@ export class LoginComponent implements OnDestroy, OnInit {
     public landingFlag: boolean;
     public baseUrl: string;
     public loginWithOmbi: boolean;
-   
+
     public get appName(): string {
-        if(this.customizationSettings.applicationName) {
+        if (this.customizationSettings.applicationName) {
             return this.customizationSettings.applicationName;
         } else {
             return "Ombi";
@@ -41,7 +41,7 @@ export class LoginComponent implements OnDestroy, OnInit {
 
     private timer: any;
     private clientId: string;
-    
+
     private errorBody: string;
     private errorValidation: string;
 
@@ -72,7 +72,7 @@ export class LoginComponent implements OnDestroy, OnInit {
             }
         });
 
-        if(authService.loggedIn()) {
+        if (authService.loggedIn()) {
             this.router.navigate(["search"]);
         }
     }
@@ -103,9 +103,9 @@ export class LoginComponent implements OnDestroy, OnInit {
             return;
         }
         const value = form.value;
-        const user = { password: value.password, username: value.username, rememberMe: value.rememberMe, usePlexOAuth: false, plexTvPin: { id: 0, code: ""} };
+        const user = { password: value.password, username: value.username, rememberMe: value.rememberMe, usePlexOAuth: false, plexTvPin: { id: 0, code: "" } };
         this.authService.requiresPassword(user).subscribe(x => {
-            if(x && this.authenticationSettings.allowNoPassword) {
+            if (x && this.authenticationSettings.allowNoPassword) {
                 // Looks like this user requires a password
                 this.authenticationSettings.allowNoPassword = false;
                 return;
@@ -125,9 +125,9 @@ export class LoginComponent implements OnDestroy, OnInit {
     }
 
     public oauth() {
-        this.plexTv.GetPin(this.clientId, this.appName).subscribe(pin => {
+        this.plexTv.GetPin(this.clientId, this.appName).subscribe((pin: any) => {
 
-            this.authService.login({usePlexOAuth: true, password:"",rememberMe:true,username:"", plexTvPin: pin}).subscribe(x => {
+            this.authService.login({ usePlexOAuth: true, password: "", rememberMe: true, username: "", plexTvPin: pin }).subscribe(x => {
                 if (window.frameElement) {
                     // in frame
                     window.open(x.url, "_blank");
@@ -144,12 +144,12 @@ export class LoginComponent implements OnDestroy, OnInit {
     }
 
     private cycleBackground() {
-            this.images.getRandomBackground().subscribe(x => {
-                this.background = "";
-            });
-            this.images.getRandomBackground().subscribe(x => {
-                this.background = this.sanitizer
-                    .bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%), url(" + x.url + ")");
-            });
+        this.images.getRandomBackground().subscribe(x => {
+            this.background = "";
+        });
+        this.images.getRandomBackground().subscribe(x => {
+            this.background = this.sanitizer
+                .bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%), url(" + x.url + ")");
+        });
     }
 }

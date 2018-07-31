@@ -13,7 +13,7 @@ import { NotificationService } from "../services";
 export class UserManagementEditComponent {
     public user: IUser;
     public userId: string;
-    
+
     constructor(private identityService: IdentityService,
                 private route: ActivatedRoute,
                 private notificationService: NotificationService,
@@ -45,13 +45,13 @@ export class UserManagementEditComponent {
                             this.notificationService.error(val);
                         });
                     }
-        
+
                 });
             },
             reject: () => {
                 return;
             },
-        });        
+        });
     }
 
     public resetPassword() {

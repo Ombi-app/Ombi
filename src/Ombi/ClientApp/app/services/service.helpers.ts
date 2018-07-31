@@ -1,6 +1,5 @@
 ﻿import { PlatformLocation } from "@angular/common";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import "rxjs/add/observable/throw";
 
 export class ServiceHelpers {
 

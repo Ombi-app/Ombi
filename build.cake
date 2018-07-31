@@ -1,10 +1,10 @@
 
 #tool "nuget:?package=GitVersion.CommandLine"
 #addin "Cake.Gulp"
-#addin "nuget:?package=Cake.Npm&version=0.13.0"
 #addin "SharpZipLib"
 #addin nuget:?package=Cake.Compression&version=0.1.4
 #addin "Cake.Incubator"
+#addin "Cake.Yarn"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -122,36 +122,19 @@ Task("SetVersionInfo")
 
 Task("NPM")
 	.Does(() => {
-    var settings = new NpmInstallSettings {
-		LogLevel = NpmLogLevel.Silent,
-		WorkingDirectory = webProjDir,
-		Production = true
-	};
-
-	NpmInstall(settings);
+	Yarn.FromPath(webProjDir).Install();
 });
 
 Task("Gulp Publish")
 	.IsDependentOn("NPM")
-	.Does(() => {
- 
-	var runScriptSettings = new NpmRunScriptSettings {
- 		ScriptName="publish",
- 		WorkingDirectory = webProjDir,
- 	};
- 	
- 	NpmRunScript(runScriptSettings);
+	.Does(() => { 	
+	Yarn.FromPath(webProjDir).RunScript("publish");
  });
 
 Task("TSLint")
     .Does(() =>
 {
-	var settings = new NpmRunScriptSettings {
-		WorkingDirectory = webProjDir,
-		ScriptName = "lint"
-	};
-	
-    NpmRunScript(settings);
+	Yarn.FromPath(webProjDir).RunScript("lint");
 });
 
 Task("PrePublish")

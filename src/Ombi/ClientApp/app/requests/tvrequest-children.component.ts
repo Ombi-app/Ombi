@@ -4,7 +4,7 @@ import { IChildRequests } from "../interfaces";
 import { NotificationService, RequestService } from "../services";
 
 @Component({
-    selector:"tvrequests-children",
+    selector: "tvrequests-children",
     templateUrl: "./tvrequest-children.component.html",
 })
 export class TvRequestChildrenComponent {
@@ -21,17 +21,17 @@ export class TvRequestChildrenComponent {
             .subscribe(x => {
                 this.removeRequestFromUi(request);
                 this.requestDeleted.emit(request.id);
-            });       
+            });
     }
 
     public changeAvailability(request: IChildRequests, available: boolean) {
         request.available = available;
-        request.seasonRequests.forEach((season)=> {
-            season.episodes.forEach((ep)=> {
+        request.seasonRequests.forEach((season) => {
+            season.episodes.forEach((ep) => {
                 ep.available = available;
             });
         });
-        if(available) {
+        if (available) {
             this.requestService.markTvAvailable({ id: request.id }).subscribe(x => {
                 if (x.result) {
                     this.notificationService.success(

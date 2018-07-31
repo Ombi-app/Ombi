@@ -29,7 +29,7 @@ export class PlexComponent implements OnInit {
                 this.notificationService.error("Username or password was incorrect. Could not authenticate with Plex.");
                 return;
             }
-            
+
             this.identityService.createWizardUser({
                     username: "",
                     password: "",
@@ -50,9 +50,9 @@ export class PlexComponent implements OnInit {
     }
 
     public oauth() {
-        this.plexTv.GetPin(this.clientId, "Ombi").subscribe(pin => {
-            this.plexService.oAuth({wizard: true, pin}).subscribe(x => {
-                if(x.url) {
+        this.plexTv.GetPin(this.clientId, "Ombi").subscribe((pin: any) => {
+            this.plexService.oAuth({ wizard: true, pin }).subscribe(x => {
+                if (x.url) {
                     window.location.href = x.url;
                 }
             });

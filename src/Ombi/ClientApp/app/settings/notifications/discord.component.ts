@@ -39,7 +39,7 @@ export class DiscordComponent implements OnInit {
             return;
         }
 
-        const settings = <IDiscordNotifcationSettings>form.value;
+        const settings = <IDiscordNotifcationSettings> form.value;
         settings.notificationTemplates = this.templates;
 
         this.settingsService.saveDiscordNotificationSettings(settings).subscribe(x => {

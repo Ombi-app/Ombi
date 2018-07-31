@@ -1,23 +1,10 @@
-/wwwroot/css/**
-/wwwroot/fonts/**
-/wwwroot/lib/**
-/wwwroot/maps/**
-/wwwroot/dist/**
-/wwwroot/*.js.map
-/wwwroot/*.js
-
-# dependencies
-/node_modules
-/bower_components
-
-# misc
+node_modules
+bin
+obj
+wwwroot/dist
+*.log
 /.sass-cache
 /connect.lock
 /coverage/*
-/libpeerconnection.log
-npm-debug.log
-testem.log
-#/typings
-/systemjs.config.js*
 /Logs/**
 **.db
