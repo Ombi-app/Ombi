@@ -123,6 +123,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     // We have fulfulled this request!
                     child.Available = true;
+                    child.MarkedAsAvailable = DateTime.Now;
                     _backgroundJobClient.Enqueue(() => _notificationService.Publish(new NotificationOptions
                     {
                         DateTime = DateTime.Now,
@@ -163,6 +164,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
 
                 movie.Available = true;
+                movie.MarkedAsAvailable = DateTime.Now;
                 if (movie.Available)
                 {
                     _backgroundJobClient.Enqueue(() => _notificationService.Publish(new NotificationOptions

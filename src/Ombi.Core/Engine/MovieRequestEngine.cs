@@ -452,6 +452,7 @@ namespace Ombi.Core.Engine
             }
 
             request.Available = true;
+            request.MarkedAsAvailable = DateTime.Now;
             NotificationHelper.Notify(request, NotificationType.RequestAvailable);
             await MovieRepository.Update(request);
 

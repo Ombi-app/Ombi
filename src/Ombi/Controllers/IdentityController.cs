@@ -59,7 +59,8 @@ namespace Ombi.Controllers
             IRepository<Issues> issues,
             IRepository<IssueComments> issueComments,
             IRepository<NotificationUserId> notificationRepository,
-            IRepository<RequestSubscription> subscriptionRepository)
+            IRepository<RequestSubscription> subscriptionRepository,
+            ISettingsService<UserManagementSettings> umSettings)
         {
             UserManager = user;
             Mapper = mapper;
@@ -79,6 +80,7 @@ namespace Ombi.Controllers
             OmbiSettings = ombiSettings;
             _requestSubscriptionRepository = subscriptionRepository;
             _notificationRepository = notificationRepository;
+            _userManagementSettings = umSettings;
         }
 
         private OmbiUserManager UserManager { get; }
@@ -87,6 +89,7 @@ namespace Ombi.Controllers
         private IEmailProvider EmailProvider { get; }
         private ISettingsService<EmailNotificationSettings> EmailSettings { get; }
         private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
+        private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
         private ISettingsService<OmbiSettings> OmbiSettings { get; }
         private IWelcomeEmail WelcomeEmail { get; }
         private IMovieRequestRepository MovieRepo { get; }
@@ -113,13 +116,13 @@ namespace Ombi.Controllers
         [HttpPost("Wizard")]
         [ApiExplorerSettings(IgnoreApi = true)]
         [AllowAnonymous]
-        public async Task<bool> CreateWizardUser([FromBody] CreateUserWizardModel user)
+        public async Task<SaveWizardResult> CreateWizardUser([FromBody] CreateUserWizardModel user)
         {
             var users = UserManager.Users;
-            if (users.Any(x => !x.UserName.Equals("api", StringComparison.CurrentCultureIgnoreCase)))
+            if (users.Any(x => !x.UserName.Equals("api", StringComparison.InvariantCultureIgnoreCase)))
             {
                 // No one should be calling this. Only the wizard
-                return false;
+                return new SaveWizardResult{ Result = false, Errors = new List<string> {"Looks like there is an existing user!"} };
             }
 
             if (user.UsePlexAdminAccount)
@@ -129,7 +132,7 @@ namespace Ombi.Controllers
                 if (authToken.IsNullOrEmpty())
                 {
                     _log.LogWarning("Could not find an auth token to create the plex user with");
-                    return false;
+                    return new SaveWizardResult { Result = false };
                 }
                 var plexUser = await _plexApi.GetAccount(authToken);
                 var adminUser = new OmbiUser
@@ -139,6 +142,11 @@ namespace Ombi.Controllers
                     Email = plexUser.user.email,
                     ProviderUserId = plexUser.user.id
                 };
+
+                await _userManagementSettings.SaveSettingsAsync(new UserManagementSettings
+                {
+                    ImportPlexAdmin = true
+                });
 
                 return await SaveWizardUser(user, adminUser);
             }
@@ -152,9 +160,10 @@ namespace Ombi.Controllers
             return await SaveWizardUser(user, userToCreate);
         }
 
-        private async Task<bool> SaveWizardUser(CreateUserWizardModel user, OmbiUser userToCreate)
+        private async Task<SaveWizardResult> SaveWizardUser(CreateUserWizardModel user, OmbiUser userToCreate)
         {
             IdentityResult result;
+            var retVal = new SaveWizardResult();
             // When creating the admin as the plex user, we do not pass in the password.
             if (user.Password.HasValue())
             {
@@ -182,6 +191,7 @@ namespace Ombi.Controllers
             if (!result.Succeeded)
             {
                 LogErrors(result);
+                retVal.Errors.AddRange(result.Errors.Select(x => x.Description));
             }
 
             // Update the wizard flag
@@ -189,7 +199,8 @@ namespace Ombi.Controllers
             settings.Wizard = true;
             await OmbiSettings.SaveSettingsAsync(settings);
 
-            return result.Succeeded;
+            retVal.Result = result.Succeeded;
+            return retVal;
         }
 
         private void LogErrors(IdentityResult result)
