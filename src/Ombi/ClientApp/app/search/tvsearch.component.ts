@@ -220,11 +220,11 @@ export class TvSearchComponent implements OnInit {
                 x.banner = this.defaultPoster;
             }
         
-        if (x.imdbId === null) {
-            x.imdbId = "https://www.tvmaze.com/shows/" + x.seriesId;
-        } else {
-            x.imdbId = "http://www.imdb.com/title/" + x.imdbId + "/";
-        }
+            if (x.imdbId === null) {
+                x.imdbId = "https://www.tvmaze.com/shows/" + x.seriesId;
+            } else {
+                x.imdbId = "http://www.imdb.com/title/" + x.imdbId + "/";
+            }
     }
 
     private clearResults() {
