@@ -5,7 +5,7 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 import { TreeNode } from "primeng/primeng";
-import { IRequestEngineResult } from "../interfaces";
+import { IRequestEngineResult, FilterType } from "../interfaces";
 import { IChildRequests, IFilter, IMovieRequestModel, IMovieRequests, IMovieUpdateModel, IRequestsViewModel, ITvRequests, ITvUpdateModel, OrderType } from "../interfaces";
 import { ITvRequestViewModel } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
@@ -64,8 +64,8 @@ export class RequestService extends ServiceHelpers {
         return this.http.put<IMovieRequests>(`${this.url}movie/`, JSON.stringify(request), {headers: this.headers});
     }
 
-    public getTvRequests(count: number, position: number): Observable<ITvRequests[]> {
-        return this.http.get<ITvRequests[]>(`${this.url}tv/${count}/${position}`, {headers: this.headers});
+    public getTvRequests(count: number, position: number, order: OrderType, status: FilterType, availability: FilterType): Observable<IRequestsViewModel<ITvRequests>> {
+        return this.http.get<IRequestsViewModel<ITvRequests>>(`${this.url}tv/${count}/${position}/${order}/${status}/${availability}`, {headers: this.headers});
     }
 
     public getTvRequestsTree(count: number, position: number): Observable<TreeNode[]> {
