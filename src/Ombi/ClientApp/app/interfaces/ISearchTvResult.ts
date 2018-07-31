@@ -37,6 +37,7 @@ export interface ISearchTvResult {
     fullyAvailable: boolean;
     partlyAvailable: boolean;
     background: any;
+    open: boolean; // THIS IS FOR THE UI
 }
 
 export interface ITvRequestViewModel {

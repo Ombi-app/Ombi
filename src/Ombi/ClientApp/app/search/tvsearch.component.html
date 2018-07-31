@@ -42,8 +42,8 @@
             <i class='fa fa-film no-search-results-icon'></i>
             <div class='no-search-results-text'>{{ 'Search.NoResults' | translate }}</div>
         </div>
-        <div >
-          <div *ngFor="let node of tvResults">
+        <div *ngIf="tvResults" >
+          <div  *ngFor="let node of tvResults">
                 <!--This is the section that holds the parent level search results set-->
                 <div *ngIf="node">
                     <div class="row">
@@ -52,7 +52,7 @@
                         <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
                         <div class="col-sm-2 small-padding">
 
-                            <img *ngIf="node?.banner" class="img-responsive poster" width="150" [src]="node.banner" alt="poster">
+                            <img *ngIf="node.banner" class="img-responsive poster" width="150" [src]="node.banner" alt="poster">
 
                         </div>
                         <div class="col-sm-8 small-padding">
@@ -111,7 +111,7 @@
                                         <a href="#" (click)="latestSeason(node, $event)">{{ 'Search.TvShows.LatestSeason' | translate }}</a>
                                     </li>
                                     <li>
-                                        <a href="#" (click)="openClosestTab($event)">{{ 'Search.TvShows.Select' | translate }}</a>
+                                        <a href="#" (click)="openClosestTab(node, $event)">{{ 'Search.TvShows.Select' | translate }}</a>
                                     </li>
                                 </ul>
                             </div>
@@ -154,14 +154,13 @@
                     </div>
                 </div>
                 <!--This is the section that holds the child seasons if they want to specify specific episodes-->
-                <div *ngIf="node.leaf">
+                <div *ngIf="node.open">
                     <seriesinformation [seriesId]="node.id"></seriesinformation>
                 </div>
 
                 <br/>
                 <br/>
-            </ng-template>
-        </p-treeTable>
+            </div>
     </div>
 </div>
 

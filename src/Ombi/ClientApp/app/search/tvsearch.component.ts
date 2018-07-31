@@ -58,30 +58,9 @@ export class TvSearchComponent implements OnInit {
             this.defaultPoster = "../../.." + base + "/images/default_tv_poster.png";
         }
     }
-    public openClosestTab(el: any) {
+    public openClosestTab(node: ISearchTvResult,el: any) {
         el.preventDefault();
-        const rowclass = "undefined ng-star-inserted";
-        el = el.toElement || el.relatedTarget || el.target;
-        while (el.className !== rowclass) {
-            // Increment the loop to the parent node until we find the row we need
-            el = el.parentNode;
-        }
-        // At this point, the while loop has stopped and `el` represents the element that has
-        // the class you specified
-
-        // Then we loop through the children to find the caret which we want to click
-        const caretright = "fa-caret-right";
-        const caretdown = "fa-caret-down";
-        for (const value of el.children) {
-            // the caret from the ui has 2 class selectors depending on if expanded or not
-            // we search for both since we want to still toggle the clicking
-            if (value.className.includes(caretright) || value.className.includes(caretdown)) {
-                // Then we tell JS to click the element even though we hid it from the UI
-                value.click();
-                //Break from loop since we no longer need to continue looking
-                break;
-            }
-        }
+        node.open = !node.open;
     }
 
     public ngOnInit() {
@@ -146,7 +125,7 @@ export class TvSearchComponent implements OnInit {
             });
             this.searchService.getShowInformation(val.id)
                 .subscribe(x => {
-                    if (x.data) {
+                    if (x) {
                         this.setDefaults(x);
                         this.updateItem(val, x);
                     } else {
@@ -236,15 +215,15 @@ export class TvSearchComponent implements OnInit {
         }
     }
 
-    private setDefaults(x: any) {
-        if (x.data.banner === null) {
-            x.data.banner = this.defaultPoster;
-        }
-
-        if (x.data.imdbId === null) {
-            x.data.imdbId = "https://www.tvmaze.com/shows/" + x.data.seriesId;
+    private setDefaults(x: ISearchTvResult) {
+            if (x.banner === null) {
+                x.banner = this.defaultPoster;
+            }
+        
+        if (x.imdbId === null) {
+            x.imdbId = "https://www.tvmaze.com/shows/" + x.seriesId;
         } else {
-            x.data.imdbId = "http://www.imdb.com/title/" + x.data.imdbId + "/";
+            x.imdbId = "http://www.imdb.com/title/" + x.imdbId + "/";
         }
     }
 
