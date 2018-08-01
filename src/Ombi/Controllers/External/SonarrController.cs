@@ -11,7 +11,7 @@ using Ombi.Settings.Settings.Models.External;
 
 namespace Ombi.Controllers.External
 {
-    [Admin]
+    [PowerUser]
     [ApiV1]
     [Produces("application/json")]
     public class SonarrController : Controller
