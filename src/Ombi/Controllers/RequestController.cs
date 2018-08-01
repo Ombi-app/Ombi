@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ombi.Store.Entities.Requests;
 using System.Diagnostics;
+using Ombi.Attributes;
 using Ombi.Core.Models.UI;
 using Ombi.Models;
 using Ombi.Store.Entities;
@@ -93,6 +94,7 @@ namespace Ombi.Controllers
         /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
         [HttpDelete("movie/{requestId:int}")]
+        [PowerUser]
         public async Task DeleteRequest(int requestId)
         {
             await MovieRequestEngine.RemoveMovieRequest(requestId);
@@ -104,6 +106,7 @@ namespace Ombi.Controllers
         /// <param name="model">The Movie's ID</param>
         /// <returns></returns>
         [HttpPut("movie")]
+        [PowerUser]
         public async Task<MovieRequests> UpdateRequest([FromBody] MovieRequests model)
         {
             return await MovieRequestEngine.UpdateMovieRequest(model);
@@ -115,6 +118,7 @@ namespace Ombi.Controllers
         /// <param name="model">The Movie's ID</param>
         /// <returns></returns>
         [HttpPost("movie/approve")]
+        [PowerUser]
         public async Task<RequestEngineResult> ApproveMovie([FromBody] MovieUpdateModel model)
         {
             return await MovieRequestEngine.ApproveMovieById(model.Id);
@@ -126,6 +130,7 @@ namespace Ombi.Controllers
         /// <param name="model">The Movie's ID</param>
         /// <returns></returns>
         [HttpPost("movie/available")]
+        [PowerUser]
         public async Task<RequestEngineResult> MarkMovieAvailable([FromBody] MovieUpdateModel model)
         {
             return await MovieRequestEngine.MarkAvailable(model.Id);
@@ -137,6 +142,7 @@ namespace Ombi.Controllers
         /// <param name="model">The Movie's ID</param>
         /// <returns></returns>
         [HttpPost("movie/unavailable")]
+        [PowerUser]
         public async Task<RequestEngineResult> MarkMovieUnAvailable([FromBody] MovieUpdateModel model)
         {
             return await MovieRequestEngine.MarkUnavailable(model.Id);
@@ -148,6 +154,7 @@ namespace Ombi.Controllers
         /// <param name="model">The Movie's ID</param>
         /// <returns></returns>
         [HttpPut("movie/deny")]
+        [PowerUser]
         public async Task<RequestEngineResult> DenyMovie([FromBody] MovieUpdateModel model)
         {
             return await MovieRequestEngine.DenyMovieById(model.Id);
@@ -261,6 +268,7 @@ namespace Ombi.Controllers
         /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
         [HttpDelete("tv/{requestId:int}")]
+        [PowerUser]
         public async Task DeleteTvRequest(int requestId)
         {
             await TvRequestEngine.RemoveTvRequest(requestId);
@@ -272,6 +280,7 @@ namespace Ombi.Controllers
         /// <param name="model">The model.</param>
         /// <returns></returns>
         [HttpPut("tv")]
+        [PowerUser]
         public async Task<TvRequests> UpdateRequest([FromBody] TvRequests model)
         {
             return await TvRequestEngine.UpdateTvRequest(model);
@@ -283,6 +292,7 @@ namespace Ombi.Controllers
         /// <param name="child">The model.</param>
         /// <returns></returns>
         [HttpPut("tv/child")]
+        [PowerUser]
         public async Task<ChildRequests> UpdateChild([FromBody] ChildRequests child)
         {
             return await TvRequestEngine.UpdateChildRequest(child);
@@ -294,6 +304,7 @@ namespace Ombi.Controllers
         /// <param name="model">This is the child request's ID</param>
         /// <returns></returns>
         [HttpPut("tv/deny")]
+        [PowerUser]
         public async Task<RequestEngineResult> DenyChild([FromBody] TvUpdateModel model)
         {
             return await TvRequestEngine.DenyChildRequest(model.Id);
@@ -305,6 +316,7 @@ namespace Ombi.Controllers
         /// <param name="model">The Movie's ID</param>
         /// <returns></returns>
         [HttpPost("tv/available")]
+        [PowerUser]
         public async Task<RequestEngineResult> MarkTvAvailable([FromBody] TvUpdateModel model)
         {
             return await TvRequestEngine.MarkAvailable(model.Id);
@@ -316,6 +328,7 @@ namespace Ombi.Controllers
         /// <param name="model">The Movie's ID</param>
         /// <returns></returns>
         [HttpPost("tv/unavailable")]
+        [PowerUser]
         public async Task<RequestEngineResult> MarkTvUnAvailable([FromBody] TvUpdateModel model)
         {
             return await TvRequestEngine.MarkUnavailable(model.Id);
@@ -327,6 +340,7 @@ namespace Ombi.Controllers
         /// <param name="model">This is the child request's ID</param>
         /// <returns></returns>
         [HttpPost("tv/approve")]
+        [PowerUser]
         public async Task<RequestEngineResult> ApproveChild([FromBody] TvUpdateModel model)
         {
             return await TvRequestEngine.ApproveChildRequest(model.Id);
@@ -337,6 +351,7 @@ namespace Ombi.Controllers
         /// </summary>
         /// <param name="requestId">The model.</param>
         /// <returns></returns>
+        [PowerUser]
         [HttpDelete("tv/child/{requestId:int}")]
         public async Task<bool> DeleteChildRequest(int requestId)
         {
