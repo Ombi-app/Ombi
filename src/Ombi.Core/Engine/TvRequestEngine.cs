@@ -328,7 +328,25 @@ namespace Ombi.Core.Engine
             return results;
         }
 
-      public async Task<TvRequests> UpdateTvRequest(TvRequests request)
+        public async Task UpdateRootPath(int requestId, int rootPath)
+        {
+            var allRequests = TvRepository.Get();
+            var results = await allRequests.FirstOrDefaultAsync(x => x.Id == requestId);
+            results.RootFolder = rootPath;
+
+            await TvRepository.Update(results);
+        }
+
+        public async Task UpdateQualityProfile(int requestId, int profileId)
+        {
+            var allRequests = TvRepository.Get();
+            var results = await allRequests.FirstOrDefaultAsync(x => x.Id == requestId);
+            results.QualityOverride = profileId;
+
+            await TvRepository.Update(results);
+        }
+
+        public async Task<TvRequests> UpdateTvRequest(TvRequests request)
         {
             await Audit.Record(AuditType.Updated, AuditArea.TvRequest, $"Updated Request {request.Title}", Username);
             var allRequests = TvRepository.Get();

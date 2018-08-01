@@ -46,6 +46,27 @@ export class TvRequestsComponent implements OnInit {
         private sonarrService: SonarrService,
         private notificationService: NotificationService,
         private readonly platformLocation: PlatformLocation) {
+            
+            this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+            if (this.isAdmin) {
+                this.sonarrService.getQualityProfilesWithoutSettings()
+                    .subscribe(x => this.sonarrProfiles = x);
+        
+                this.sonarrService.getRootFoldersWithoutSettings()
+                    .subscribe(x => this.sonarrRootFolders = x);
+            }
+    }
+
+    public openClosestTab(node: ITvRequests,el: any) {
+        el.preventDefault();
+        node.open = !node.open;
+    }
+
+    public ngOnInit() {
+        this.amountToLoad = 10;
+        this.currentlyLoaded = 10;
+        this.tvRequests = {collection:[], total:0};
+
         this.searchChanged.pipe(
             debounceTime(600), // Wait Xms after the last event before emitting last event
             distinctUntilChanged(), // only emit if value is different from previous value
@@ -67,18 +88,6 @@ export class TvRequestsComponent implements OnInit {
         if (base) {
             this.defaultPoster = "../../.." + base + "/images/default_tv_poster.png";
         }
-    }
-
-    public openClosestTab(node: ITvRequests,el: any) {
-        el.preventDefault();
-        node.open = !node.open;
-    }
-
-    public ngOnInit() {
-        this.amountToLoad = 10;
-        this.currentlyLoaded = 10;
-        this.tvRequests = {collection:[], total:0};
-        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
 
         this.loadInit();
     }
@@ -111,14 +120,14 @@ export class TvRequestsComponent implements OnInit {
         event.preventDefault();
         searchResult.rootFolder = rootFolderSelected.id;
         this.setOverride(searchResult);
-        this.updateRequest(searchResult);
+        this.setRootFolder(searchResult);
     }
 
     public selectQualityProfile(searchResult: ITvRequests, profileSelected: ISonarrProfile, event: any) {
         event.preventDefault();
         searchResult.qualityOverride = profileSelected.id;
         this.setOverride(searchResult);
-        this.updateRequest(searchResult);
+        this.setQualityProfile(searchResult);
     }
 
     public reportIssue(catId: IIssueCategory, req: ITvRequests) {
@@ -133,13 +142,24 @@ export class TvRequestsComponent implements OnInit {
         this.setRootFolderOverrides(req);
     }
 
-    private updateRequest(request: ITvRequests) {
-        this.requestService.updateTvRequest(request)
-            .subscribe(x => {
-                this.notificationService.success("Request Updated");
-                this.setOverride(x);
-                request = x;
-            });
+    private setQualityProfile(req: ITvRequests) {
+        this.requestService.setQualityProfile(req.id, req.qualityOverride).subscribe(x => {
+            if(x) {
+                this.notificationService.success("Quality profile updated");
+            } else {
+                this.notificationService.error("Could not update the quality profile");
+            }
+        });
+    }
+
+    private setRootFolder(req: ITvRequests) {
+        this.requestService.setRootFolder(req.id, req.rootFolder).subscribe(x => {
+            if(x) {
+                this.notificationService.success("Quality profile updated");
+            } else {
+                this.notificationService.error("Could not update the quality profile");
+            }
+        });
     }
 
     private setQualityOverrides(req: ITvRequests): void {
@@ -174,14 +194,6 @@ export class TvRequestsComponent implements OnInit {
                     this.setOverride(val);
                 });
             });
-
-        if (this.isAdmin) {
-            this.sonarrService.getQualityProfilesWithoutSettings()
-                .subscribe(x => this.sonarrProfiles = x);
-
-            this.sonarrService.getRootFoldersWithoutSettings()
-                .subscribe(x => this.sonarrRootFolders = x);
-        }
     }
 
     private resetSearch() {

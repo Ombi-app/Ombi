@@ -287,6 +287,34 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Updates the root path for this tv show
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="rootFolderId"></param>
+        /// <returns></returns>
+        [HttpPut("tv/root/{requestId:int}/{rootFolderId:int}")]
+        [PowerUser]
+        public async Task<bool> UpdateRootFolder(int requestId, int rootFolderId)
+        {
+            await TvRequestEngine.UpdateRootPath(requestId, rootFolderId);
+            return true;
+        }
+
+        /// <summary>
+        /// Updates the quality profile for this tv show
+        /// </summary>
+        /// <param name="requestId"></param>
+        /// <param name="qualityId"></param>
+        /// <returns></returns>
+        [HttpPut("tv/quality/{requestId:int}/{qualityId:int}")]
+        [PowerUser]
+        public async Task<bool> UpdateQuality(int requestId, int qualityId)
+        {
+            await TvRequestEngine.UpdateQualityProfile(requestId, qualityId);
+            return true;
+        }
+
+        /// <summary>
         /// Updates the a specific child request
         /// </summary>
         /// <param name="child">The model.</param>

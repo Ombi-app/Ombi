@@ -21,5 +21,7 @@ namespace Ombi.Core.Engine.Interfaces
         Task RemoveTvChild(int requestId);
         Task<RequestEngineResult> ApproveChildRequest(int id);
         Task<IEnumerable<TvRequests>> GetRequestsLite();
+        Task UpdateQualityProfile(int requestId, int profileId);
+        Task UpdateRootPath(int requestId, int rootPath);
     }
 }

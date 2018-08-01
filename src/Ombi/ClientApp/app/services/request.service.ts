@@ -126,4 +126,10 @@ export class RequestService extends ServiceHelpers {
     public unSubscribeToTv(requestId: number): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}tv/unsubscribe/${requestId}`, {headers: this.headers});
     }
+    public setQualityProfile(requestId: number, qualityId: number): Observable<boolean> {
+        return this.http.put<boolean>(`${this.url}tv/quality/${requestId}/${qualityId}`, {headers: this.headers});
+    }
+    public setRootFolder(requestId: number, rootFolderId: number): Observable<boolean> {
+        return this.http.put<boolean>(`${this.url}tv/root/${requestId}/${rootFolderId}`, {headers: this.headers});
+    }
 }
