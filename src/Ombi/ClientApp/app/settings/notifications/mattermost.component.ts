@@ -29,7 +29,7 @@ export class MattermostComponent implements OnInit {
                 username: [x.username],
                 webhookUrl: [x.webhookUrl, [Validators.required]],
                 channel: [x.channel],
-                iconUrl:[x.iconUrl],
+                iconUrl: [x.iconUrl],
 
             });
         });
@@ -41,7 +41,7 @@ export class MattermostComponent implements OnInit {
             return;
         }
 
-        const settings = <IMattermostNotifcationSettings>form.value;
+        const settings = <IMattermostNotifcationSettings> form.value;
         settings.notificationTemplates = this.templates;
 
         this.settingsService.saveMattermostNotificationSettings(settings).subscribe(x => {

@@ -1,8 +1,8 @@
-﻿import { PlatformLocation } from "@angular/common";
+import { PlatformLocation } from "@angular/common";
 import { Injectable } from "@angular/core";
 
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs/Rx";
+import { Observable } from "rxjs";
 
 import { ServiceHelpers } from "../service.helpers";
 
@@ -37,6 +37,7 @@ export class TesterService extends ServiceHelpers {
     public pushbulletTest(settings: IPushbulletNotificationSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}pushbullet`, JSON.stringify(settings),  {headers: this.headers});
     }
+
     public pushoverTest(settings: IPushoverNotificationSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}pushover`, JSON.stringify(settings),  {headers: this.headers});
     }
@@ -52,7 +53,7 @@ export class TesterService extends ServiceHelpers {
     public emailTest(settings: IEmailNotificationSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}email`, JSON.stringify(settings),  {headers: this.headers});
     }
-    
+
     public plexTest(settings: IPlexServer): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}plex`, JSON.stringify(settings),  {headers: this.headers});
     }
@@ -67,11 +68,11 @@ export class TesterService extends ServiceHelpers {
 
     public sonarrTest(settings: ISonarrSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}sonarr`, JSON.stringify(settings),  {headers: this.headers});
-    }   
+    }
 
     public couchPotatoTest(settings: ICouchPotatoSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}couchpotato`, JSON.stringify(settings),  {headers: this.headers});
-    } 
+    }
 
     public telegramTest(settings: ITelegramNotifcationSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}telegram`, JSON.stringify(settings),  {headers: this.headers});
@@ -79,10 +80,12 @@ export class TesterService extends ServiceHelpers {
 
     public sickrageTest(settings: ISickRageSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}sickrage`, JSON.stringify(settings),  {headers: this.headers});
-    }    
+    }
+
     public newsletterTest(settings: INewsletterNotificationSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}newsletter`, JSON.stringify(settings),  {headers: this.headers});
-    }   
+    }
+
     public mobileNotificationTest(settings: IMobileNotificationTestSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}mobile`, JSON.stringify(settings),  {headers: this.headers});
     }

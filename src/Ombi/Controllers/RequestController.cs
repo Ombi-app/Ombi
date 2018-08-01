@@ -154,18 +154,6 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
-        /// Gets the tv requests.
-        /// </summary>
-        /// <param name="count">The count of items you want to return.</param>
-        /// <param name="position">The position.</param>
-        /// <returns></returns>
-        [HttpGet("tv/{count:int}/{position:int}/tree")]
-        public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> GetTvRequestsTree(int count, int position)
-        {
-            return await TvRequestEngine.GetRequestsTreeNode(count, position);
-        }
-
-        /// <summary>
         /// Gets the total amount of TV requests.
         /// </summary>
         [HttpGet("tv/total")]
@@ -265,17 +253,6 @@ namespace Ombi.Controllers
         public async Task<IEnumerable<TvRequests>> SearchTv(string searchTerm)
         {
             return await TvRequestEngine.SearchTvRequest(searchTerm);
-        }
-
-        /// <summary>
-        /// Searches for a specific tv request
-        /// </summary>
-        /// <param name="searchTerm">The search term.</param>
-        /// <returns></returns>
-        [HttpGet("tv/search/{searchTerm}/tree")]
-        public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> SearchTvTree(string searchTerm)
-        {
-            return await TvRequestEngine.SearchTvRequestTree(searchTerm);
         }
 
         /// <summary>

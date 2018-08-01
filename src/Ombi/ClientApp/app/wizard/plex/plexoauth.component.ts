@@ -21,14 +21,14 @@ export class PlexOAuthComponent implements OnInit {
                 this.pinId = params.pin;
             });
     }
-            
+
     public ngOnInit(): void {
         this.plexOauth.oAuth(this.pinId).subscribe(x => {
-            if(!x.accessToken) {
+            if (!x.accessToken) {
                 return;
                 // RETURN
             }
-            
+
             this.identityService.createWizardUser({
                       username: "",
                       password: "",
@@ -50,5 +50,4 @@ export class PlexOAuthComponent implements OnInit {
                  
         });
     }
-    
 }

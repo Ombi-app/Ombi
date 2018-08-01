@@ -11,7 +11,7 @@ export class CookieComponent implements OnInit {
 
     public ngOnInit() {
         const cookie = this.cookieService.getAll();
-        if(cookie.Auth) {
+        if (cookie.Auth) {
             const jwtVal = cookie.Auth;
             localStorage.setItem("id_token", jwtVal);
             this.router.navigate(["search"]);

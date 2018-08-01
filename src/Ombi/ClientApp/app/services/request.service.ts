@@ -1,12 +1,11 @@
-﻿import { PlatformLocation } from "@angular/common";
+import { PlatformLocation } from "@angular/common";
 import { Injectable } from "@angular/core";
 
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs/Rx";
+import { Observable } from "rxjs";
 
 import { TreeNode } from "primeng/primeng";
-import { IRequestEngineResult } from "../interfaces";
-import { IChildRequests, IFilter, IMovieRequestModel, IMovieRequests, IMovieUpdateModel, IRequestsViewModel, ITvRequests,ITvUpdateModel, OrderType } from "../interfaces";
+import { FilterType, IChildRequests, IFilter, IMovieRequestModel, IMovieRequests, IMovieUpdateModel, IRequestEngineResult, IRequestsViewModel,  ITvRequests, ITvUpdateModel, OrderType } from "../interfaces";
 import { ITvRequestViewModel } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
@@ -22,8 +21,8 @@ export class RequestService extends ServiceHelpers {
 
     public getTotalMovies(): Observable<number> {
         return this.http.get<number>(`${this.url}Movie/total`, {headers: this.headers});
-    }    
-    
+    }
+
     public getTotalTv(): Observable<number> {
         return this.http.get<number>(`${this.url}tv/total`, {headers: this.headers});
     }
@@ -64,8 +63,8 @@ export class RequestService extends ServiceHelpers {
         return this.http.put<IMovieRequests>(`${this.url}movie/`, JSON.stringify(request), {headers: this.headers});
     }
 
-    public getTvRequests(count: number, position: number): Observable<ITvRequests[]> {
-        return this.http.get<ITvRequests[]>(`${this.url}tv/${count}/${position}`, {headers: this.headers});
+    public getTvRequests(count: number, position: number, order: OrderType, status: FilterType, availability: FilterType): Observable<IRequestsViewModel<ITvRequests>> {
+        return this.http.get<IRequestsViewModel<ITvRequests>>(`${this.url}tv/${count}/${position}/${order}/${status}/${availability}`, {headers: this.headers});
     }
 
     public getTvRequestsTree(count: number, position: number): Observable<TreeNode[]> {
@@ -87,7 +86,7 @@ export class RequestService extends ServiceHelpers {
     public removeTvRequest(request: ITvRequests) {
         this.http.delete(`${this.url}tv/${request.id}`, {headers: this.headers}).subscribe();
     }
-    
+
     public markTvAvailable(movie: ITvUpdateModel): Observable<IRequestEngineResult> {
         return this.http.post<IRequestEngineResult>(`${this.url}tv/available`, JSON.stringify(movie),  {headers: this.headers});
     }
@@ -102,11 +101,11 @@ export class RequestService extends ServiceHelpers {
 
     public updateChild(child: IChildRequests): Observable<IChildRequests> {
         return this.http.put<IChildRequests>(`${this.url}tv/child`, JSON.stringify(child), {headers: this.headers});
-    }   
+    }
 
     public denyChild(child: ITvUpdateModel): Observable<IRequestEngineResult> {
         return this.http.put<IRequestEngineResult>(`${this.url}tv/deny`, JSON.stringify(child), {headers: this.headers});
-    } 
+    }
 
     public approveChild(child: ITvUpdateModel): Observable<IRequestEngineResult> {
         return this.http.post<IRequestEngineResult>(`${this.url}tv/approve`, JSON.stringify(child), {headers: this.headers});
@@ -114,16 +113,16 @@ export class RequestService extends ServiceHelpers {
     public deleteChild(child: IChildRequests): Observable<boolean> {
         return this.http.delete<boolean>(`${this.url}tv/child/${child.id}`, {headers: this.headers});
     }
-   
+
     public subscribeToMovie(requestId: number): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}movie/subscribe/${requestId}`, {headers: this.headers});
-    }    
+    }
     public unSubscribeToMovie(requestId: number): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}movie/unsubscribe/${requestId}`, {headers: this.headers});
     }
     public subscribeToTv(requestId: number): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}tv/subscribe/${requestId}`, {headers: this.headers});
-    }    
+    }
     public unSubscribeToTv(requestId: number): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}tv/unsubscribe/${requestId}`, {headers: this.headers});
     }

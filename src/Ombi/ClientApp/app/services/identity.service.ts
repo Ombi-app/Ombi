@@ -1,8 +1,8 @@
-﻿import { PlatformLocation } from "@angular/common";
+import { PlatformLocation } from "@angular/common";
 import { Injectable } from "@angular/core";
 
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs/Rx";
+import { Observable } from "rxjs";
 
 import { ICheckbox, ICreateWizardUser, IIdentityResult, IResetPasswordToken, IUpdateLocalUser, IUser, IWizardUserResult } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
@@ -19,7 +19,7 @@ export class IdentityService extends ServiceHelpers {
     public getUser(): Observable<IUser> {
         return this.http.get<IUser>(this.url,  {headers: this.headers});
     }
-    
+
     public getAccessToken(): Observable<string> {
         return this.http.get<string>(`${this.url}accesstoken`,  {headers: this.headers});
     }

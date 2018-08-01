@@ -22,8 +22,8 @@ export class IssuesComponent implements OnInit {
 
     constructor(private issueService: IssuesService) { }
 
-    public ngOnInit() { 
-        this.getPending();      
+    public ngOnInit() {
+        this.getPending();
         this.getInProg();
         this.getResolved();
         this.issueService.getIssuesCount().subscribe(x => this.count = x);
@@ -61,5 +61,4 @@ export class IssuesComponent implements OnInit {
             this.resolvedIssues = x;
         });
     }
-    
 }

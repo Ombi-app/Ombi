@@ -202,38 +202,6 @@ namespace Ombi.Core.Engine
                 Collection = allRequests
             };
         }
-
-        public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> GetRequestsTreeNode(int count, int position)
-        {
-            var shouldHide = await HideFromOtherUsers();
-            List<TvRequests> allRequests;
-            if (shouldHide.Hide)
-            {
-                allRequests = await TvRepository.Get(shouldHide.UserId)
-                    .Include(x => x.ChildRequests)
-                    .ThenInclude(x => x.SeasonRequests)
-                    .ThenInclude(x => x.Episodes)
-                    .Where(x => x.ChildRequests.Any())
-                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
-                    .Skip(position).Take(count).ToListAsync();
-
-                FilterChildren(allRequests, shouldHide);
-            }
-            else
-            {
-                allRequests = await TvRepository.Get()
-                    .Include(x => x.ChildRequests)
-                    .ThenInclude(x => x.SeasonRequests)
-                    .ThenInclude(x => x.Episodes)
-                    .Where(x => x.ChildRequests.Any())
-                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
-                    .Skip(position).Take(count).ToListAsync();
-            }
-
-            allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
-            return ParseIntoTreeNode(allRequests);
-        }
-
         public async Task<IEnumerable<TvRequests>> GetRequests()
         {
             var shouldHide = await HideFromOtherUsers();
@@ -360,24 +328,7 @@ namespace Ombi.Core.Engine
             return results;
         }
 
-        public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> SearchTvRequestTree(string search)
-        {
-            var shouldHide = await HideFromOtherUsers();
-            IQueryable<TvRequests> allRequests;
-            if (shouldHide.Hide)
-            {
-                allRequests = TvRepository.Get(shouldHide.UserId);
-            }
-            else
-            {
-                allRequests = TvRepository.Get();
-            }
-            var results = await allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToListAsync();
-            results.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
-            return ParseIntoTreeNode(results);
-        }
-
-        public async Task<TvRequests> UpdateTvRequest(TvRequests request)
+      public async Task<TvRequests> UpdateTvRequest(TvRequests request)
         {
             await Audit.Record(AuditType.Updated, AuditArea.TvRequest, $"Updated Request {request.Title}", Username);
             var allRequests = TvRepository.Get();
@@ -596,29 +547,7 @@ namespace Ombi.Core.Engine
             return await AfterRequest(model.ChildRequests.FirstOrDefault());
         }
 
-        private static List<TreeNode<TvRequests, List<ChildRequests>>> ParseIntoTreeNode(IEnumerable<TvRequests> result)
-        {
-            var node = new List<TreeNode<TvRequests, List<ChildRequests>>>();
-
-            foreach (var value in result)
-            {
-                node.Add(new TreeNode<TvRequests, List<ChildRequests>>
-                {
-                    Data = value,
-                    Children = new List<TreeNode<List<ChildRequests>>>
-                    {
-                        new TreeNode<List<ChildRequests>>
-                        {
-                            Data = SortEpisodes(value.ChildRequests),
-                            Leaf = true
-                        }
-                    }
-                });
-            }
-            return node;
-        }
-
-        private static List<ChildRequests> SortEpisodes(List<ChildRequests> items)
+       private static List<ChildRequests> SortEpisodes(List<ChildRequests> items)
         {
             foreach (var value in items)
             {

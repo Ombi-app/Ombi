@@ -883,11 +883,6 @@ textarea {
     display: none;
 }
 
-.ui-treetable-toggler.fa.fa-fw.ui-clickable.fa-caret-right,
-.ui-treetable-toggler.fa.fa-fw.ui-clickable.fa-caret-down {
-    display: none;
-}
-
 .ui-state-highlight {
     background: $primary-colour;
 }
@@ -898,15 +893,6 @@ textarea {
 
 .ui-state-default {
     border: 1px solid $form-color-lighter;
-}
-
-.ui-treetable tfoot td, .ui-treetable th {
-    text-align: left;
-}
-
-.ui-treetable tbody td {
-    white-space: inherit;
-    overflow: visible;
 }
 
 table a:not(.btn) {
