@@ -171,24 +171,30 @@ namespace Ombi.Core.Engine
         public async Task<RequestsViewModel<TvRequests>> GetRequestsLite(int count, int position, OrderFilterModel type)
         {
             var shouldHide = await HideFromOtherUsers();
-            List<TvRequests> allRequests;
+            List<TvRequests> allRequests = null;
             if (shouldHide.Hide)
             {
-                allRequests = await TvRepository.GetLite(shouldHide.UserId)
-                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
-                    .Skip(position).Take(count).ToListAsync();
+                var tv = TvRepository.GetLite(shouldHide.UserId);
+                if (tv.Any() && tv.Select(x => x.ChildRequests).Any())
+                {
+                    allRequests = await tv.OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate)).Skip(position).Take(count).ToListAsync();
+                }
 
                 // Filter out children
-
                 FilterChildren(allRequests, shouldHide);
             }
             else
             {
-                allRequests = await TvRepository.GetLite()
-                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
-                    .Skip(position).Take(count).ToListAsync();
+                var tv = TvRepository.GetLite();
+                if (tv.Any() && tv.Select(x => x.ChildRequests).Any())
+                {
+                    allRequests = await tv.OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate)).Skip(position).Take(count).ToListAsync();
+                }
             }
-
+            if (allRequests == null)
+            {
+                return new RequestsViewModel<TvRequests>();
+            }
             allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
 
             return new RequestsViewModel<TvRequests>
@@ -288,6 +294,10 @@ namespace Ombi.Core.Engine
 
         private static void FilterChildren(IEnumerable<TvRequests> allRequests, HideResult shouldHide)
         {
+            if (allRequests == null)
+            {
+                return;
+            }
             // Filter out children
             foreach (var t in allRequests)
             {
