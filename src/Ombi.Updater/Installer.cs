@@ -106,7 +106,7 @@ namespace Ombi.Updater
             location = Path.GetDirectoryName(location);
             _log.LogDebug("We are currently in dir {0}", location);
             var updatedLocation = Directory.GetParent(location).FullName;
-            _log.LogDebug("The files are in {0}", updatedLocation);
+            _log.LogDebug("The files are in {0}", updatedLocation); // Since the updater is a folder deeper
             _log.LogDebug("Ombi is installed at {0}", options.ApplicationPath);
 
             //Now Create all of the directories
