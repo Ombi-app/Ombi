@@ -10,7 +10,7 @@ using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Core.Engine
 {
-    public class UserStatsEngine
+    public class UserStatsEngine : IUserStatsEngine
     {
         public UserStatsEngine(OmbiUserManager um, IMovieRequestRepository movieRequest, ITvRequestRepository tvRequest)
         {
@@ -25,27 +25,6 @@ namespace Ombi.Core.Engine
 
         public async Task<UserStatsSummary> GetSummary(SummaryRequest request)
         {
-            /* What do we want?
-           
-            This is Per week/month/all time (filter by date)
-
-            1. Total Requests
-            2. Total Movie Requests
-            3. Total Tv Requests
-            4. Total Issues (If enabled)
-            5. Total Requests fufilled (now available)
-
-            Then
-
-           2. Most requested user Movie
-           3. Most requested user tv
-
-            Then
-
-           1. 
-
-            */
-
             // get all movie requests
             var movies = _movieRequest.GetWithUser();
             var filteredMovies = movies.Where(x => x.RequestedDate >= request.From && x.RequestedDate <= request.To);
@@ -84,7 +63,7 @@ namespace Ombi.Core.Engine
 
     public class UserStatsSummary
     {
-        public int TotalRequests => TotalTvRequests + TotalTvRequests;
+        public int TotalRequests => TotalTvRequests + TotalMovieRequests;
         public int TotalMovieRequests { get; set; }
         public int TotalTvRequests { get; set; }
         public int TotalIssues { get; set; }
