@@ -171,24 +171,30 @@ namespace Ombi.Core.Engine
         public async Task<RequestsViewModel<TvRequests>> GetRequestsLite(int count, int position, OrderFilterModel type)
         {
             var shouldHide = await HideFromOtherUsers();
-            List<TvRequests> allRequests;
+            List<TvRequests> allRequests = null;
             if (shouldHide.Hide)
             {
-                allRequests = await TvRepository.GetLite(shouldHide.UserId)
-                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
-                    .Skip(position).Take(count).ToListAsync();
+                var tv = TvRepository.GetLite(shouldHide.UserId);
+                if (tv.Any() && tv.Select(x => x.ChildRequests).Any())
+                {
+                    allRequests = await tv.OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate)).Skip(position).Take(count).ToListAsync();
+                }
 
                 // Filter out children
-
                 FilterChildren(allRequests, shouldHide);
             }
             else
             {
-                allRequests = await TvRepository.GetLite()
-                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
-                    .Skip(position).Take(count).ToListAsync();
+                var tv = TvRepository.GetLite();
+                if (tv.Any() && tv.Select(x => x.ChildRequests).Any())
+                {
+                    allRequests = await tv.OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate)).Skip(position).Take(count).ToListAsync();
+                }
             }
-
+            if (allRequests == null)
+            {
+                return new RequestsViewModel<TvRequests>();
+            }
             allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
 
             return new RequestsViewModel<TvRequests>
@@ -196,38 +202,6 @@ namespace Ombi.Core.Engine
                 Collection = allRequests
             };
         }
-
-        public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> GetRequestsTreeNode(int count, int position)
-        {
-            var shouldHide = await HideFromOtherUsers();
-            List<TvRequests> allRequests;
-            if (shouldHide.Hide)
-            {
-                allRequests = await TvRepository.Get(shouldHide.UserId)
-                    .Include(x => x.ChildRequests)
-                    .ThenInclude(x => x.SeasonRequests)
-                    .ThenInclude(x => x.Episodes)
-                    .Where(x => x.ChildRequests.Any())
-                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
-                    .Skip(position).Take(count).ToListAsync();
-
-                FilterChildren(allRequests, shouldHide);
-            }
-            else
-            {
-                allRequests = await TvRepository.Get()
-                    .Include(x => x.ChildRequests)
-                    .ThenInclude(x => x.SeasonRequests)
-                    .ThenInclude(x => x.Episodes)
-                    .Where(x => x.ChildRequests.Any())
-                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
-                    .Skip(position).Take(count).ToListAsync();
-            }
-
-            allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
-            return ParseIntoTreeNode(allRequests);
-        }
-
         public async Task<IEnumerable<TvRequests>> GetRequests()
         {
             var shouldHide = await HideFromOtherUsers();
@@ -288,6 +262,10 @@ namespace Ombi.Core.Engine
 
         private static void FilterChildren(IEnumerable<TvRequests> allRequests, HideResult shouldHide)
         {
+            if (allRequests == null)
+            {
+                return;
+            }
             // Filter out children
             foreach (var t in allRequests)
             {
@@ -350,21 +328,22 @@ namespace Ombi.Core.Engine
             return results;
         }
 
-        public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> SearchTvRequestTree(string search)
+        public async Task UpdateRootPath(int requestId, int rootPath)
         {
-            var shouldHide = await HideFromOtherUsers();
-            IQueryable<TvRequests> allRequests;
-            if (shouldHide.Hide)
-            {
-                allRequests = TvRepository.Get(shouldHide.UserId);
-            }
-            else
-            {
-                allRequests = TvRepository.Get();
-            }
-            var results = await allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToListAsync();
-            results.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
-            return ParseIntoTreeNode(results);
+            var allRequests = TvRepository.Get();
+            var results = await allRequests.FirstOrDefaultAsync(x => x.Id == requestId);
+            results.RootFolder = rootPath;
+
+            await TvRepository.Update(results);
+        }
+
+        public async Task UpdateQualityProfile(int requestId, int profileId)
+        {
+            var allRequests = TvRepository.Get();
+            var results = await allRequests.FirstOrDefaultAsync(x => x.Id == requestId);
+            results.QualityOverride = profileId;
+
+            await TvRepository.Update(results);
         }
 
         public async Task<TvRequests> UpdateTvRequest(TvRequests request)
@@ -516,6 +495,7 @@ namespace Ombi.Core.Engine
                 };
             }
             request.Available = true;
+            request.MarkedAsAvailable = DateTime.Now;
             foreach (var season in request.SeasonRequests)
             {
                 foreach (var e in season.Episodes)
@@ -585,29 +565,7 @@ namespace Ombi.Core.Engine
             return await AfterRequest(model.ChildRequests.FirstOrDefault());
         }
 
-        private static List<TreeNode<TvRequests, List<ChildRequests>>> ParseIntoTreeNode(IEnumerable<TvRequests> result)
-        {
-            var node = new List<TreeNode<TvRequests, List<ChildRequests>>>();
-
-            foreach (var value in result)
-            {
-                node.Add(new TreeNode<TvRequests, List<ChildRequests>>
-                {
-                    Data = value,
-                    Children = new List<TreeNode<List<ChildRequests>>>
-                    {
-                        new TreeNode<List<ChildRequests>>
-                        {
-                            Data = SortEpisodes(value.ChildRequests),
-                            Leaf = true
-                        }
-                    }
-                });
-            }
-            return node;
-        }
-
-        private static List<ChildRequests> SortEpisodes(List<ChildRequests> items)
+       private static List<ChildRequests> SortEpisodes(List<ChildRequests> items)
         {
             foreach (var value in items)
             {

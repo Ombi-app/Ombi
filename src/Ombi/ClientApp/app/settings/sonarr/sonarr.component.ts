@@ -93,7 +93,7 @@ export class SonarrComponent implements OnInit {
             this.notificationService.error("Please check your entered values");
             return;
         }
-        const settings = <ISonarrSettings>form.value;
+        const settings = <ISonarrSettings> form.value;
         this.testerService.sonarrTest(settings).subscribe(x => {
             if (x) {
                 this.notificationService.success("Successfully connected to Sonarr!");
@@ -108,13 +108,13 @@ export class SonarrComponent implements OnInit {
             this.notificationService.error("Please check your entered values");
             return;
         }
-        if(form.controls.defaultQualityProfile) {
-            if(form.controls.defaultQualityProfile.value === "-1") {
+        if (form.controls.defaultQualityProfile) {
+            if (form.controls.defaultQualityProfile.value === "-1") {
                 this.notificationService.error("Please check your entered values");
             }
         }
-        if(form.controls.defaultRootPath) {
-            if(form.controls.defaultRootPath.value === "Please Select") {
+        if (form.controls.defaultRootPath) {
+            if (form.controls.defaultRootPath.value === "Please Select") {
                 this.notificationService.error("Please check your entered values");
             }
         }

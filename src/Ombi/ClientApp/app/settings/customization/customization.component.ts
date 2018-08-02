@@ -25,13 +25,13 @@ export class CustomizationComponent implements OnInit {
                     return item.fullName === this.settings.presetThemeName;
                 })[0];
 
-                if(existingTheme) {
+                if (existingTheme) {
                     const index = this.themes.indexOf(existingTheme, 0);
                     if (index > -1) {
                         this.themes.splice(index, 1);
                     }
                 }
-                if(x.hasPresetTheme) {
+                if (x.hasPresetTheme) {
                     this.themes.unshift({displayName: x.presetThemeDisplayName, fullName: x.presetThemeName, url: existingTheme.url, version: x.presetThemeVersion});
                     this.themes.unshift({displayName: "None", fullName: "None", url: "", version: ""});
                 } else {
@@ -45,8 +45,8 @@ export class CustomizationComponent implements OnInit {
     public save() {
 
         this.settingsService.verifyUrl(this.settings.applicationUrl).subscribe(x => {
-            if(this.settings.applicationUrl) {
-                if(!x) {
+            if (this.settings.applicationUrl) {
+                if (!x) {
                     this.notificationService.error(`The URL "${this.settings.applicationUrl}" is not valid. Please format it correctly e.g. http://www.google.com/`);
                     return;
                 }
@@ -64,16 +64,16 @@ export class CustomizationComponent implements OnInit {
     }
 
     public dropDownChange(event: any): void {
-        const selectedThemeFullName = <string>event.target.value;
+        const selectedThemeFullName = <string> event.target.value;
         const selectedTheme = this.themes.filter((val) => {
             return val.fullName === selectedThemeFullName;
         })[0];
 
-        if(selectedTheme.fullName === this.settings.presetThemeName) {
+        if (selectedTheme.fullName === this.settings.presetThemeName) {
             return;
         }
-        
-        if(selectedTheme.fullName === "None" || selectedTheme.fullName === "-1") {
+
+        if (selectedTheme.fullName === "None" || selectedTheme.fullName === "-1") {
             this.settings.presetThemeName = "";
             this.settings.presetThemeContent = "";
             return;

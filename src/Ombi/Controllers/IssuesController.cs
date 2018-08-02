@@ -240,6 +240,18 @@ namespace Ombi.Controllers
 
             return await _issueComments.Add(newComment);
         }
+        /// <summary>
+        /// Deletes a comment on a issue
+        /// </summary>
+        [HttpDelete("comments/{id:int}")]
+        [PowerUser]
+        public async Task<bool> DeleteComment(int commentId)
+        {
+            var comment = await _issueComments.GetAll().FirstOrDefaultAsync(x => x.Id == commentId);
+
+            await _issueComments.Delete(comment);
+            return true;
+        }
 
         [HttpPost("status")]
         public async Task<bool> UpdateStatus([FromBody] IssueStateViewModel model)

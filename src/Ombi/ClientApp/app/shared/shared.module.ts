@@ -17,8 +17,8 @@ import { SidebarModule } from "primeng/primeng";
     CommonModule,
   ],
   exports: [
-      TranslateModule, 
-      CommonModule, 
+      TranslateModule,
+      CommonModule,
       FormsModule,
       SidebarModule,
       IssuesReportComponent,

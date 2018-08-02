@@ -62,9 +62,12 @@
       "Italian": "Italiaans",
       "Danish": "Deens",
       "Dutch": "Nederlands",
-      "Norwegian": "Noors"
+      "Norwegian": "Noors",
+      "BrazillianPortuguese": "Brazillian Portuguese",
+      "Polish": "Polish"
     },
-    "OpenMobileApp": "Open Mobiele App"
+    "OpenMobileApp": "Open Mobiele App",
+    "RecentlyAdded": "Recently Added"
   },
   "Search": {
     "Title": "Zoeken",
@@ -113,6 +116,7 @@
     "RequestStatus": "Aanvraagstatus:",
     "Denied": " Geweigerd:",
     "TheatricalRelease": "Theatrical Release: {{date}}",
+    "TheatricalReleaseSort": "Theatrical Release",
     "DigitalRelease": "Digital Release: {{date}}",
     "RequestDate": "Aanvraag Datum:",
     "QualityOverride": "Kwaliteit overschrijven:",
@@ -129,7 +133,14 @@
     "GridStatus": "Status",
     "ReportIssue": "Probleem Melden",
     "Filter": "Filter",
-    "SeasonNumberHeading": "Seizoen: {seasonNumber}"
+    "Sort": "Sort",
+    "SeasonNumberHeading": "Seizoen: {seasonNumber}",
+    "SortTitleAsc": "Title ▲",
+    "SortTitleDesc": "Title ▼",
+    "SortRequestDateAsc": "Request Date ▲",
+    "SortRequestDateDesc": "Request Date ▼",
+    "SortStatusAsc": "Status ▲",
+    "SortStatusDesc": "Status ▼"
   },
   "Issues": {
     "Title": "Problemen",
@@ -154,6 +165,7 @@
     "ClearFilter": "Verwijder Filter",
     "FilterHeaderAvailability": "Beschikbaarheid",
     "FilterHeaderRequestStatus": "Status",
-    "Approved": "Goedgekeurd"
+    "Approved": "Goedgekeurd",
+    "PendingApproval": "Pending Approval"
   }
 }

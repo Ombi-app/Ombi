@@ -71,6 +71,10 @@ export interface ITvRequests {
   status: string;
   childRequests: IChildRequests[];
   qualityOverride: number;
+  background: any;
+  totalSeasons: number;
+  tvDbId: number;
+  open: boolean; // THIS IS FOR THE UI
 
   // For UI display
   qualityOverrideTitle: string;

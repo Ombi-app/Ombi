@@ -165,25 +165,15 @@ namespace Ombi.Core.Senders
                         titleSlug = model.ParentRequest.Title,
                         addOptions = new AddOptions
                         {
-                            ignoreEpisodesWithFiles = true, // There shouldn't be any episodes with files, this is a new season
-                            ignoreEpisodesWithoutFiles = true, // We want all missing
+                            ignoreEpisodesWithFiles = false, // There shouldn't be any episodes with files, this is a new season
+                            ignoreEpisodesWithoutFiles = false, // We want all missing
                             searchForMissingEpisodes = false // we want dont want to search yet. We want to make sure everything is unmonitored/monitored correctly.
                         }
                     };
 
                     // Montitor the correct seasons,
                     // If we have that season in the model then it's monitored!
-                    var seasonsToAdd = new List<Season>();
-                    for (var i = 0; i < model.ParentRequest.TotalSeasons + 1; i++)
-                    {
-                        var index = i;
-                        var season = new Season
-                        {
-                            seasonNumber = i,
-                            monitored = model.SeasonRequests.Any(x => x.SeasonNumber == index && x.SeasonNumber != 0)
-                        };
-                        seasonsToAdd.Add(season);
-                    }
+                    var seasonsToAdd = GetSeasonsToCreate(model);
                     newSeries.seasons = seasonsToAdd;
                     var result = await SonarrApi.AddSeries(newSeries, s.ApiKey, s.FullUri);
                     existingSeries = await SonarrApi.GetSeriesById(result.id, s.ApiKey, s.FullUri);
@@ -237,7 +227,7 @@ namespace Ombi.Core.Senders
                 {
                     var sonarrEp = sonarrEpList.FirstOrDefault(x =>
                         x.episodeNumber == ep.EpisodeNumber && x.seasonNumber == req.SeasonNumber);
-                    if (sonarrEp != null)
+                    if (sonarrEp != null && !sonarrEp.monitored)
                     {
                         sonarrEp.monitored = true;
                         episodesToUpdate.Add(sonarrEp);
@@ -245,27 +235,64 @@ namespace Ombi.Core.Senders
                 }
             }
             var seriesChanges = false;
+            
             foreach (var season in model.SeasonRequests)
             {
                 var sonarrSeason = sonarrEpList.Where(x => x.seasonNumber == season.SeasonNumber);
                 var sonarrEpCount = sonarrSeason.Count();
                 var ourRequestCount = season.Episodes.Count;
 
+                var existingSeason =
+                    result.seasons.FirstOrDefault(x => x.seasonNumber == season.SeasonNumber);
+                if (existingSeason == null)
+                {
+                    Logger.LogError("There was no season numer {0} in Sonarr for title {1}", season.SeasonNumber, model.ParentRequest.Title);
+                    continue;
+                }
+
+
                 if (sonarrEpCount == ourRequestCount)
                 {
                     // We have the same amount of requests as all of the episodes in the season.
-                    var existingSeason =
-                        result.seasons.FirstOrDefault(x => x.seasonNumber == season.SeasonNumber);
-                    if (existingSeason == null)
+
+                    if (!existingSeason.monitored)
                     {
-                        Logger.LogError("The sonarr ep count was the same as out request count, but could not match the season number {0}", season.SeasonNumber);
-                        continue;
+                        existingSeason.monitored = true;
+                        seriesChanges = true;
                     }
-                    existingSeason.monitored = true;
-                    seriesChanges = true;
                 }
                 else
                 {
+                    // Make sure this season is set to monitored 
+                    if (!existingSeason.monitored)
+                    {
+                        // We need to monitor it, problem being is all episodes will now be monitored
+                        // So we need to monior the series but unmonitor every episode
+                        // Except the episodes that are already monitored before we update the series (we do not want to unmonitor episodes that are monitored beforehand)
+                        existingSeason.monitored = true;
+                        var sea = result.seasons.FirstOrDefault(x => x.seasonNumber == existingSeason.seasonNumber);
+                        sea.monitored = true;
+                        //var previouslyMonitoredEpisodes = sonarrEpList.Where(x =>
+                        //    x.seasonNumber == existingSeason.seasonNumber && x.monitored).Select(x => x.episodeNumber).ToList(); // We probably don't actually care about this
+                        result = await SonarrApi.UpdateSeries(result, s.ApiKey, s.FullUri);
+                        var epToUnmonitor = new List<Episode>();
+                        var newEpList = sonarrEpList.ConvertAll(ep => new Episode(ep)); // Clone it so we don't modify the orignal member
+                        foreach (var ep in newEpList.Where(x => x.seasonNumber == existingSeason.seasonNumber).ToList())
+                        {
+                            //if (previouslyMonitoredEpisodes.Contains(ep.episodeNumber))
+                            //{
+                            //    // This was previously monitored.
+                            //    continue;
+                            //}
+                            ep.monitored = false;
+                            epToUnmonitor.Add(ep);
+                        }
+
+                        foreach (var epToUpdate in epToUnmonitor)
+                        {
+                            await SonarrApi.UpdateEpisode(epToUpdate, s.ApiKey, s.FullUri);
+                        }
+                    }
                     // Now update the episodes that need updating
                     foreach (var epToUpdate in episodesToUpdate.Where(x => x.seasonNumber == season.SeasonNumber))
                     {
@@ -283,6 +310,24 @@ namespace Ombi.Core.Senders
             {
                 await SearchForRequest(model, sonarrEpList, result, s, episodesToUpdate);
             }
+        }
+
+        private static List<Season> GetSeasonsToCreate(ChildRequests model)
+        {
+            // Let's get a list of seasons just incase we need to change it
+            var seasonsToUpdate = new List<Season>();
+            for (var i = 0; i < model.ParentRequest.TotalSeasons + 1; i++)
+            {
+                var index = i;
+                var sea = new Season
+                {
+                    seasonNumber = i,
+                    monitored = model.SeasonRequests.Any(x => x.SeasonNumber == index && x.SeasonNumber != 0)
+                };
+                seasonsToUpdate.Add(sea);
+            }
+
+            return seasonsToUpdate;
         }
 
         private async Task<bool> SendToSickRage(ChildRequests model, SickRageSettings settings, string qualityId = null)

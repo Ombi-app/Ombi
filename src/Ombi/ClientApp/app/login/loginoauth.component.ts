@@ -16,7 +16,6 @@ export class LoginOAuthComponent implements OnInit {
         this.route.params
             .subscribe((params: any) => {
                 this.pin = params.pin;
-                
             });
     }
 
@@ -26,21 +25,20 @@ export class LoginOAuthComponent implements OnInit {
 
     public auth() {
       this.authService.oAuth(this.pin).subscribe(x => {
-          if(x.access_token) {
+          if (x.access_token) {
             localStorage.setItem("id_token", x.access_token);
 
             if (this.authService.loggedIn()) {
                 this.router.navigate(["search"]);
                 return;
-            } 
+            }
         }
-          if(x.errorMessage) {
+          if (x.errorMessage) {
             this.error = x.errorMessage;
         }
 
         }, err => {
             this.notify.error(err.statusText);
-            
             this.router.navigate(["login"]);
         });
     }

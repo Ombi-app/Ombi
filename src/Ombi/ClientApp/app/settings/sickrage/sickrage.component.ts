@@ -40,7 +40,7 @@ export class SickRageComponent implements OnInit {
             this.notificationService.error("Please check your entered values");
             return;
         }
-        const settings = <ISickRageSettings>form.value;
+        const settings = <ISickRageSettings> form.value;
         this.testerService.sickrageTest(settings).subscribe(x => {
             if (x) {
                 this.notificationService.success("Successfully connected to SickRage!");

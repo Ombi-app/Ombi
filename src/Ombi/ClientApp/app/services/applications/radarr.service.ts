@@ -1,7 +1,7 @@
-﻿import { PlatformLocation } from "@angular/common";
+import { PlatformLocation } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs/Rx";
+import { Observable } from "rxjs";
 
 import { IRadarrProfile, IRadarrRootFolder } from "../../interfaces";
 import { IRadarrSettings } from "../../interfaces";
