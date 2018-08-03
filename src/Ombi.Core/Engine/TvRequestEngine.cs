@@ -143,7 +143,7 @@ namespace Ombi.Core.Engine
                     .Include(x => x.ChildRequests)
                     .ThenInclude(x => x.SeasonRequests)
                     .ThenInclude(x => x.Episodes)
-                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
+                    .OrderByDescending(x => x.ChildRequests.Select(y => y.RequestedDate).FirstOrDefault())
                     .Skip(position).Take(count).ToListAsync();
 
                 // Filter out children
@@ -156,8 +156,9 @@ namespace Ombi.Core.Engine
                     .Include(x => x.ChildRequests)
                     .ThenInclude(x => x.SeasonRequests)
                     .ThenInclude(x => x.Episodes)
-                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
+                    .OrderByDescending(x => x.ChildRequests.Select(y => y.RequestedDate).FirstOrDefault())
                     .Skip(position).Take(count).ToListAsync();
+                
             }
 
             allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
@@ -177,7 +178,7 @@ namespace Ombi.Core.Engine
                 var tv = TvRepository.GetLite(shouldHide.UserId);
                 if (tv.Any() && tv.Select(x => x.ChildRequests).Any())
                 {
-                    allRequests = await tv.OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate)).Skip(position).Take(count).ToListAsync();
+                    allRequests = await tv.OrderByDescending(x => x.ChildRequests.Select(y => y.RequestedDate).FirstOrDefault()).Skip(position).Take(count).ToListAsync();
                 }
 
                 // Filter out children
@@ -188,7 +189,7 @@ namespace Ombi.Core.Engine
                 var tv = TvRepository.GetLite();
                 if (tv.Any() && tv.Select(x => x.ChildRequests).Any())
                 {
-                    allRequests = await tv.OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate)).Skip(position).Take(count).ToListAsync();
+                    allRequests = await tv.OrderByDescending(x => x.ChildRequests.Select(y => y.RequestedDate).FirstOrDefault()).Skip(position).Take(count).ToListAsync();
                 }
             }
             if (allRequests == null)
