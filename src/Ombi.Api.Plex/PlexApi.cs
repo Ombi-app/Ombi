@@ -41,7 +41,18 @@ namespace Ombi.Api.Plex
                     }
                     else
                     {
-                        _app = settings.ApplicationName;
+                        // Check for non-ascii characters (New .Net Core HTTPLib does not allow this)
+                        var chars = settings.ApplicationName.ToCharArray();
+                        var hasNonAscii = false;
+                        foreach (var c in chars)
+                        {
+                            if (c > 128)
+                            {
+                                hasNonAscii = true;
+                            }
+                        }
+
+                        _app = hasNonAscii ? "Ombi" : settings.ApplicationName;
                     }
 
                     return _app;
