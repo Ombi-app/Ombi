@@ -1,3 +1,4 @@
+"use strict";
 import * as path from "path";
 import * as webpack from "webpack";
 import * as webpackMerge from "webpack-merge";

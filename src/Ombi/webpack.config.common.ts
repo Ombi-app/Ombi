@@ -1,3 +1,4 @@
+"use strict";
 import { AngularCompilerPlugin } from "@ngtools/webpack";
 import * as MiniCssExtractPlugin from "mini-css-extract-plugin";
 import * as path from "path";
@@ -35,7 +36,7 @@ export const WebpackCommonConfig = (env: any, type: string) => {
         output: {
             path: path.resolve(outputDir),
             filename: "[name].js",
-            chunkFilename: "[id].chunk.js",
+            chunkFilename: "[id].[hash].chunk.js",
             publicPath: "/dist/",
         },
         module: {
@@ -46,7 +47,7 @@ export const WebpackCommonConfig = (env: any, type: string) => {
                 { test: /\.scss$/, exclude: /ClientApp/, use: [MiniCssExtractPlugin.loader, cssLoader, "sass-loader"] },
                 { test: /\.scss$/, include: /ClientApp(\\|\/)app/, use: ["to-string-loader", cssLoader, "sass-loader"] },
                 { test: /\.scss$/, include: /ClientApp(\\|\/)styles/, use: ["style-loader", cssLoader, "sass-loader"] },
-                { test: /\.(png|jpg|jpeg|gif|woff|woff2|eot|ttf|svg)(\?|$)/, use: "url-loader?limit=8192" },
+                { test: /\.(png|woff|woff2|eot|ttf|svg|gif)(\?|$)/, use: "url-loader?limit=100000" },
                 { test: /[\/\\]@angular[\/\\].+\.js$/, parser: { system: true } }, // ignore System.import warnings https://github.com/angular/angular/issues/21560
             ],
         },

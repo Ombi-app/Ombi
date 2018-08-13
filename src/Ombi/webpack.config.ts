@@ -1,3 +1,4 @@
+"use strict";
 import * as path from "path";
 import { Configuration, DllReferencePlugin } from "webpack";
 import * as webpackMerge from "webpack-merge";
