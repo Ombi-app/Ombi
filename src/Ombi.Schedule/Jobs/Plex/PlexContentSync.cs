@@ -381,6 +381,19 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if (existingContent != null)
             {
+                // Let's make sure that we have some sort of ID e.g. Imdbid for this,
+                // Looks like it's possible to not have an Id for a show
+                // I suspect we cached that show just as it was added to Plex.
+
+                if (!existingContent.HasImdb && !existingContent.HasTheMovieDb && !existingContent.HasTvDb)
+                {
+                    var showMetadata = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
+                        existingContent.Key);
+                    GetProviderIds(showMetadata, existingContent);
+
+                    await Repo.Update(existingContent);
+                }
+
                 // Just check the key
                 if (existingKey != null)
                 {
@@ -478,10 +491,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     // But it does not contain the `guid` property that we need to pull out thetvdb id...
                     var showMetadata = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
                         show.ratingKey);
-                    var providerIds =
-                        PlexHelper.GetProviderIdFromPlexGuid(showMetadata.MediaContainer.Metadata.FirstOrDefault()
-                            .guid);
-
+                  
                     var item = new PlexServerContent
                     {
                         AddedAt = DateTime.Now,
@@ -492,20 +502,7 @@ namespace Ombi.Schedule.Jobs.Plex
                         Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, show.ratingKey),
                         Seasons = new List<PlexSeasonsContent>()
                     };
-                    if (providerIds.Type == ProviderType.ImdbId)
-                    {
-                        item.ImdbId = providerIds.ImdbId;
-                    }
-
-                    if (providerIds.Type == ProviderType.TheMovieDbId)
-                    {
-                        item.TheMovieDbId = providerIds.TheMovieDb;
-                    }
-
-                    if (providerIds.Type == ProviderType.TvDbId)
-                    {
-                        item.TvDbId = providerIds.TheTvDb;
-                    }
+                    GetProviderIds(showMetadata, item);
 
                     // Let's just double check to make sure we do not have it now we have some id's
                     var existingImdb = false;
@@ -544,6 +541,27 @@ namespace Ombi.Schedule.Jobs.Plex
                     Logger.LogError(LoggingEvents.PlexContentCacher, e, "Exception when adding tv show {0}",
                         show.title);
                 }
+            }
+        }
+
+        private static void GetProviderIds(PlexMetadata showMetadata, PlexServerContent existingContent)
+        {
+            var providerIds =
+                PlexHelper.GetProviderIdFromPlexGuid(showMetadata.MediaContainer.Metadata.FirstOrDefault()
+                    .guid);
+            if (providerIds.Type == ProviderType.ImdbId)
+            {
+                existingContent.ImdbId = providerIds.ImdbId;
+            }
+
+            if (providerIds.Type == ProviderType.TheMovieDbId)
+            {
+                existingContent.TheMovieDbId = providerIds.TheMovieDb;
+            }
+
+            if (providerIds.Type == ProviderType.TvDbId)
+            {
+                existingContent.TvDbId = providerIds.TheTvDb;
             }
         }
 
