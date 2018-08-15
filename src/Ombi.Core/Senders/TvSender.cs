@@ -120,6 +120,7 @@ namespace Ombi.Core.Senders
 
             int qualityToUse;
             string rootFolderPath;
+            string seriesType;
 
             if (model.SeriesType == SeriesType.Anime)
             {
@@ -128,6 +129,8 @@ namespace Ombi.Core.Senders
                 // TODO make this overrideable via the UI
                 rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder ?? int.Parse(s.RootPathAnime), s);
                 int.TryParse(s.QualityProfileAnime, out qualityToUse);
+                seriesType = "anime";
+
             }
             else
             {
@@ -136,6 +139,7 @@ namespace Ombi.Core.Senders
                 // For some reason, if we haven't got one use the first root folder in Sonarr
                 // TODO make this overrideable via the UI
                 rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder ?? int.Parse(s.RootPath), s);
+                seriesType = "standard";
             }
 
             if (model.ParentRequest.QualityOverride.HasValue)
@@ -163,6 +167,7 @@ namespace Ombi.Core.Senders
                         rootFolderPath = rootFolderPath,
                         qualityProfileId = qualityToUse,
                         titleSlug = model.ParentRequest.Title,
+                        seriesType = seriesType,
                         addOptions = new AddOptions
                         {
                             ignoreEpisodesWithFiles = true, // There shouldn't be any episodes with files, this is a new season

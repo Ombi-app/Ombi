@@ -9,7 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		..\appveyor.yml = ..\appveyor.yml
 		..\build.cake = ..\build.cake
-		..\cake.config = ..\cake.config
 		..\CHANGELOG.md = ..\CHANGELOG.md
 	EndProjectSection
 EndProject
