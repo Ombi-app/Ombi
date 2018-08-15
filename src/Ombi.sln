@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		..\appveyor.yml = ..\appveyor.yml
 		..\build.cake = ..\build.cake
+		..\cake.config = ..\cake.config
 		..\CHANGELOG.md = ..\CHANGELOG.md
 	EndProjectSection
 EndProject
@@ -92,7 +93,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Github", "Ombi.Api
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.SickRage", "Ombi.Api.SickRage\Ombi.Api.SickRage.csproj", "{94C9A366-2595-45EA-AABB-8E4A2E90EC5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Notifications", "Ombi.Api.Notifications\Ombi.Api.Notifications.csproj", "{10D1FE9D-9124-42B7-B1E1-CEB99B832618}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Notifications", "Ombi.Api.Notifications\Ombi.Api.Notifications.csproj", "{10D1FE9D-9124-42B7-B1E1-CEB99B832618}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
