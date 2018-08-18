@@ -56,4 +56,8 @@ export class IssuesService extends ServiceHelpers {
     public updateStatus(model: IUpdateStatus): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}status`, JSON.stringify(model), { headers: this.headers });
     }
+
+    public deleteComment(id: number): Observable<boolean> {
+        return this.http.delete<boolean>(`${this.url}comments/${id}`, { headers: this.headers });
+    }
 }

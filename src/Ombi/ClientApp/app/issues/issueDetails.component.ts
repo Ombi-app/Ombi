@@ -97,6 +97,13 @@ export class IssueDetailsComponent implements OnInit {
         });
     }
 
+    public deleteComment(id: number) {
+        this.issueService.deleteComment(id).subscribe(x => {
+            this.loadComments();
+            this.notificationService.success("Comment Deleted");
+        });
+    }
+
     private loadComments() {
         this.issueService.getComments(this.issueId).subscribe(x => this.comments = x);
     }
