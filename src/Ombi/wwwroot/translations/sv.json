@@ -12,7 +12,7 @@
   "Common": {
     "ContinueButton": "Fortsätt",
     "Available": "Tillgänglig",
-    "NotAvailable": "Not Available",
+    "NotAvailable": "Finns ej",
     "ProcessingRequest": "Bearbetar förfrågan",
     "PendingApproval": "Väntar på godkännande",
     "RequestDenied": "Efterfrågan nekas",
