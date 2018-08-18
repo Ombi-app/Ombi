@@ -30,6 +30,8 @@
 
 ### **Fixes**
 
+- #2408 Added the feature to delete comments on issues. [Jamie]
+
 - New translations en.json (Swedish) [Jamie]
 
 - New translations en.json (French) [Jamie]
