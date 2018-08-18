@@ -30,6 +30,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     public landingFlag: boolean;
     public baseUrl: string;
     public loginWithOmbi: boolean;
+    public pinTimer: any;
 
     public get appName(): string {
         if (this.customizationSettings.applicationName) {
@@ -40,7 +41,6 @@ export class LoginComponent implements OnDestroy, OnInit {
     }
 
     private timer: any;
-    private pinTimer: any;
     private clientId: string;
 
     private errorBody: string;
@@ -158,6 +158,7 @@ export class LoginComponent implements OnDestroy, OnInit {
 
     public ngOnDestroy() {
         clearInterval(this.timer);
+        clearInterval(this.pinTimer);
     }
 
     private cycleBackground() {
