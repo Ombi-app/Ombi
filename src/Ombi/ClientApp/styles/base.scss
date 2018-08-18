@@ -966,3 +966,18 @@ a > h4:hover {
 .subject {
     display: inline-block;
 }
+
+.custom-modal-backdrop {
+    opacity: 0.5 !important;
+    filter: alpha(opacity=0.5);
+}
+
+.window {
+    opacity: 1 !important;
+    top: 7%;
+}
+
+.modal-header {
+    background-color: #282828;
+    padding-top:75px;
+}
