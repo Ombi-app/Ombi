@@ -1,8 +1,11 @@
 ﻿<h1>User Management</h1>
 
 
-
-<button type="button" class="btn btn-success-outline" [routerLink]="['/usermanagement/add']">Add User</button>
+<div *ngIf="plexEnabled">
+<button type="button" class="btn btn-success-outline" (click)="open()">Add User To Plex</button>
+<hr>
+</div>
+<button type="button" class="btn btn-success-outline" [routerLink]="['/usermanagement/add']">Add User To Ombi</button>
 <button type="button" style="float:right;" class="btn btn-primary-outline"(click)="showBulkEdit = !showBulkEdit" [disabled]="!hasChecked()">Bulk Edit</button>
 <!-- Table -->
 <table class="table table-striped table-hover table-responsive table-condensed table-usermanagement">
@@ -128,3 +131,4 @@
     
 <button type="button" class="btn btn-success-outline" (click)="bulkUpdate()">Update Users</button>
 </p-sidebar>
+

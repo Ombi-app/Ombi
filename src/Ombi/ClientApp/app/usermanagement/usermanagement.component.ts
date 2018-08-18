@@ -1,10 +1,28 @@
 ﻿import { Component, OnInit } from "@angular/core";
 
-import { ICheckbox, ICustomizationSettings, IEmailNotificationSettings, IUser } from "../interfaces";
-import { IdentityService, NotificationService, SettingsService } from "../services";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { ICheckbox, ICustomizationSettings, IEmailNotificationSettings,  IPlexLibraries, IPlexServersAdd, IUser } from "../interfaces";
+import { IdentityService, NotificationService, PlexService, SettingsService } from "../services";
+import { AddPlexUserComponent } from "./addplexuser.component";
 
 @Component({
     templateUrl: "./usermanagement.component.html",
+    styles:[`.modal-backdrop.fade{opacity:0.5}
+    .fade {
+        opacity:1 !important;
+    }
+    .modal {
+        display: none;
+        overflow: hidden;
+        position: fixed;
+        top: 100px;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1050;
+        -webkit-overflow-scrolling: touch;
+        outline: 0;
+    }`],
 })
 export class UserManagementComponent implements OnInit {
 
@@ -20,10 +38,20 @@ export class UserManagementComponent implements OnInit {
     public availableClaims: ICheckbox[];
     public bulkMovieLimit?: number;
     public bulkEpisodeLimit?: number;
+    public plexEnabled: boolean;
+    public plexServers: IPlexServersAdd[];
+    public plexLibs: IPlexLibraries;
+
+    public plexUsername: string;
+    public libsSelected: number[];
+    public machineId: string;
 
     constructor(private identityService: IdentityService,
                 private settingsService: SettingsService,
-                private notificationService: NotificationService) { }
+                private notificationService: NotificationService,
+                private plexSettings: SettingsService,
+                private plexService: PlexService,
+                private modalService: NgbModal) { }
 
     public ngOnInit() {
         this.users = [];
@@ -31,10 +59,17 @@ export class UserManagementComponent implements OnInit {
             this.users = x;
         });
 
+        this.plexSettings.getPlex().subscribe(x => this.plexEnabled = x.enable);
+
         this.identityService.getAllAvailableClaims().subscribe(x => this.availableClaims = x);
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
         this.settingsService.getEmailNotificationSettings().subscribe(x => this.emailSettings = x);
     }
+
+    public open() {
+        const modalRef = this.modalService.open(AddPlexUserComponent, {container:"ombi"});
+        modalRef.componentInstance.name = "World";
+      }
 
     public welcomeEmail(user: IUser) {
         if (!user.emailAddress) {
@@ -117,5 +152,35 @@ export class UserManagementComponent implements OnInit {
         }
 
         this.order = value;
+    }
+
+    public getServers() {
+        if(!this.plexEnabled) {
+            return this.notificationService.error("Plex is not enabled");
+        }
+
+        this.plexService.getServersFromSettings().subscribe(x => {
+            if(x.success) {
+                this.plexServers = x.servers;
+            }
+        });
+    }
+
+    public getPlexLibs(machineId: string) {
+        this.plexService.getLibrariesFromSettings(machineId).subscribe(x => {
+            if(x.successful) {
+                this.plexLibs = x.data;
+            }
+        });
+    }
+
+    public addUser() {
+        this.plexService.addUserToServer({ username: this.plexUsername, machineIdentifier: this.machineId, libsSelected: this.libsSelected}).subscribe(x => {
+            if(x.success) {
+                this.notificationService.success("User added to Plex");
+            } else {
+                this.notificationService.error(x.error);
+            }
+        });
     }
 }

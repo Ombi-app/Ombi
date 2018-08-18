@@ -243,6 +243,34 @@ namespace Ombi.Api.Plex
             return request.FullUri;
         }
 
+        public async Task<PlexAddWrapper> AddUser(string emailAddress, string serverId, string authToken, int[] libs)
+        {
+            var request = new Request(string.Empty, $"https://plex.tv/api/servers/{serverId}/shared_servers", HttpMethod.Post, ContentType.Xml);
+            await AddHeaders(request, authToken);
+            request.AddJsonBody(new
+            {
+                server_id = serverId,
+                shared_server = new
+                {
+                    library_section_ids = libs.Length > 0 ? libs : new int[]{},
+                    invited_email = emailAddress
+                },
+                sharing_settings = new { }
+            });
+            var result = await Api.RequestContent(request);
+            try
+            {
+                var add = Api.DeserializeXml<PlexAdd>(result);
+                return new PlexAddWrapper{Add = add};
+            }
+            catch (InvalidOperationException)
+            {
+                var error = Api.DeserializeXml<AddUserError>(result);
+                return new PlexAddWrapper{Error = error};
+            }
+        }
+
+
         /// <summary>
         /// Adds the required headers and also the authorization header
         /// </summary>

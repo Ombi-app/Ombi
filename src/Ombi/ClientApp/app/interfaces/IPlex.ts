@@ -49,6 +49,28 @@ export interface IPlexServerViewModel {
     servers: IPlexServerResult;
 }
 
+export interface IPlexServerAddViewModel {
+    success: boolean;
+    servers: IPlexServersAdd[];
+}
+
+export interface IPlexServersAdd {
+    serverId: number;
+    machineId: string;
+    serverName: string;
+}
+
+export interface IPlexUserViewModel {
+    username: string;
+    machineIdentifier: string;
+    libsSelected: number[];
+}
+
+export interface IPlexUserAddResponse {
+    success: boolean;
+    error: string;
+}
+
 export interface IPlexServerResult {
     friendlyName: string;
     machineIdentifier: string;
