@@ -3,6 +3,9 @@
 </div>
 <div class="modal-body">
   <p>You can invite a user to share your Plex Library here. The invited user will be asked to confirm friendship.</p>
+  <p>Please note that this user will not appear in your Ombi Users since they have not accepted the Plex Invite, as soon as they accept
+     the Plex invite then the User Importer job will run (if enabled) and add the user into Ombi.
+  </p>
 
 
   <div *ngIf="plexServers">
@@ -39,21 +42,25 @@
 
 
           <div *ngIf="!form.value.allLibsSelected">
-            <div *ngFor="let lib of plexLibs.mediaContainer.directory">
-              <div class="form-group">
+            <div *ngFor="let lib of plexLibs">
+              <div class="col-md-4">
                   <div class="checkbox">
-                      <input type="checkbox" id="{{lib.key}}" value={{lib.key}} (change)="checkedLib($event.target.checked, $event.target.value)">
-                      <label for="{{lib.key}}">{{lib.title}}</label>
+                      <input type="checkbox" id="{{lib.id}}" value={{lib.id}} (change)="checkedLib($event.target.checked, $event.target.value)">
+                      <label for="{{lib.id}}">{{lib.title}}</label>
                   </div>
               </div>
           </div>
         </div>
-      </div>
+      
+      </div>  
+      <br>  
+      <br>  
+      <br>
     </form>
   </div>
 </div>
 
 <div class="modal-footer">
-    <button type="submit" class="btn btn-primary-outline" (click)="onSubmit(form)" [disabled]="form.invalid">Add</button>
+    <button type="button" class="btn btn-primary-outline" (click)="onSubmit(form)" [disabled]="form.invalid">Add</button>
   <button type="button" class="btn btn-danger-outline" (click)="activeModal.close('Close click')">Close</button>
 </div>

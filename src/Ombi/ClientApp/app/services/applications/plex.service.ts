@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 
 import { ServiceHelpers } from "../service.helpers";
 
-import { IPlexAuthentication, IPlexLibResponse, IPlexOAuthViewModel, IPlexServer, IPlexServerAddViewModel, IPlexServerViewModel, IPlexUserAddResponse, IPlexUserViewModel, IUsersModel } from "../../interfaces";
+import { IPlexAuthentication, IPlexLibResponse, IPlexLibSimpleResponse, IPlexOAuthViewModel, IPlexServer, IPlexServerAddViewModel, IPlexServerViewModel, IPlexUserAddResponse, IPlexUserViewModel, IUsersModel } from "../../interfaces";
 
 @Injectable()
 export class PlexService extends ServiceHelpers {
@@ -30,8 +30,8 @@ export class PlexService extends ServiceHelpers {
         return this.http.post<IPlexLibResponse>(`${this.url}Libraries`, JSON.stringify(plexSettings),  {headers: this.headers});
     }
 
-    public getLibrariesFromSettings(machineId: string): Observable<IPlexLibResponse> {
-        return this.http.get<IPlexLibResponse>(`${this.url}Libraries/${machineId}`,  {headers: this.headers});
+    public getLibrariesFromSettings(machineId: string): Observable<IPlexLibSimpleResponse> {
+        return this.http.get<IPlexLibSimpleResponse>(`${this.url}Libraries/${machineId}`,  {headers: this.headers});
     }
 
     public addUserToServer(user: IPlexUserViewModel): Observable<IPlexUserAddResponse> {

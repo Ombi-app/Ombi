@@ -4,7 +4,7 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { NotificationService, PlexService } from "../services";
 
-import { IPlexLibraries, IPlexServersAdd } from "../interfaces";
+import { IPlexSection, IPlexServersAdd } from "../interfaces";
 
 @Component({
   selector: "ngbd-modal-content",
@@ -15,7 +15,7 @@ export class AddPlexUserComponent implements OnInit {
   @Input() public name: string;
 
   public plexServers: IPlexServersAdd[];
-  public plexLibs: IPlexLibraries;
+  public plexLibs: IPlexSection[];
 
   public libsSelected: number[] = [];
 
@@ -65,12 +65,11 @@ export class AddPlexUserComponent implements OnInit {
   }
 
   public onSubmit(form: FormGroup) {
-    debugger;
     if (form.invalid) {
         this.notificationService.error("Please check your entered values");
         return;
     }
-    const libs = form.value.allLibsSelected ? this.plexLibs.mediaContainer.directory.map(x => +x.key) : this.libsSelected;
+    const libs = form.value.allLibsSelected ? [] : this.libsSelected;
 
     this.plexService.addUserToServer({ username: form.value.username, machineIdentifier: form.value.selectedServer, libsSelected: libs }).subscribe(x => {
       if (x.success) {
@@ -78,6 +77,7 @@ export class AddPlexUserComponent implements OnInit {
       } else {
         this.notificationService.error(x.error);
       }
+      this.activeModal.close();
     });
 
   }

@@ -34,6 +34,19 @@ export interface IPlexLibResponse {
     data: IPlexLibraries;
 }
 
+export interface IPlexLibSimpleResponse {
+    successful: boolean;
+    message: string;
+    data: IPlexSection[];
+}
+
+export interface IPlexSection {
+    id: string;
+    key: string;
+    type: string;
+    title: string;
+}
+
 export interface IMediaContainer {
     directory: IDirectory[];
 }

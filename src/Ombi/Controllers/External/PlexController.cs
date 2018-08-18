@@ -130,18 +130,18 @@ namespace Ombi.Controllers.External
 
         [HttpGet("Libraries/{machineId}")]
         [PowerUser]
-        public async Task<PlexLibrariesResponse> GetPlexLibraries(string machineId)
+        public async Task<PlexLibrariesLiteResponse> GetPlexLibraries(string machineId)
         {
             try
             {
                 var s = await PlexSettings.GetSettingsAsync();
                 var settings = s.Servers.FirstOrDefault(x => x.MachineIdentifier == machineId);
-                var libs = await PlexApi.GetLibrarySections(settings.PlexAuthToken, settings.FullUri);
+                var libs = await PlexApi.GetLibrariesForMachineId(settings.PlexAuthToken, machineId);
 
-                return new PlexLibrariesResponse
+                return new PlexLibrariesLiteResponse
                 {
                     Successful = true,
-                    Data = libs
+                    Data = libs.Server.Section
                 };
             }
             catch (Exception e)
@@ -149,7 +149,7 @@ namespace Ombi.Controllers.External
                 _log.LogWarning(e, "Error thrown when attempting to obtain the plex libs");
 
                 var message = e.InnerException != null ? $"{e.Message} - {e.InnerException.Message}" : e.Message;
-                return new PlexLibrariesResponse
+                return new PlexLibrariesLiteResponse
                 {
                     Successful = false,
                     Message = message

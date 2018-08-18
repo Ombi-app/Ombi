@@ -127,6 +127,13 @@ namespace Ombi.Api.Plex
             return await Api.Request<PlexContainer>(request);
         }
 
+        public async Task<PlexLibrariesForMachineId> GetLibrariesForMachineId(string authToken, string machineId)
+        {
+            var request = new Request("", $"https://plex.tv/api/servers/{machineId}", HttpMethod.Get, ContentType.Xml);
+            await AddHeaders(request, authToken);
+            return await Api.Request<PlexLibrariesForMachineId>(request);
+        }
+
         /// <summary>
         // 192.168.1.69:32400/library/metadata/3662/allLeaves
         // The metadata ratingkey should be in the Cache

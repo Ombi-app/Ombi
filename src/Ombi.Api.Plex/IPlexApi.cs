@@ -11,6 +11,7 @@ namespace Ombi.Api.Plex
     public interface IPlexApi
     {
         Task<PlexStatus> GetStatus(string authToken, string uri);
+        Task<PlexLibrariesForMachineId> GetLibrariesForMachineId(string authToken, string machineId);
         Task<PlexAuthentication> SignIn(UserRequest user);
         Task<PlexServer> GetServer(string authToken);
         Task<PlexContainer> GetLibrarySections(string authToken, string plexFullHost);
