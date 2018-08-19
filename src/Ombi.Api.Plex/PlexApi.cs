@@ -217,15 +217,11 @@ namespace Ombi.Api.Plex
             return await Api.Request<OAuthPin>(request);
         }
 
-        public async Task<Uri> GetOAuthUrl(int pinId, string code, string applicationUrl, bool wizard)
+        public async Task<Uri> GetOAuthUrl(int pinId, string code, string applicationUrl)
         {
             var request = new Request("auth#", "https://app.plex.tv", HttpMethod.Get);
             await AddHeaders(request);
-            var forwardUrl = wizard
-                ? new Request($"Wizard/OAuth/{pinId}", applicationUrl, HttpMethod.Get)
-                : new Request($"Login/OAuth/{pinId}", applicationUrl, HttpMethod.Get);
-
-            request.AddQueryString("forwardUrl", forwardUrl.FullUri.ToString());
+            
             request.AddQueryString("pinID", pinId.ToString());
             request.AddQueryString("code", code);
             request.AddQueryString("context[device][product]", ApplicationName);

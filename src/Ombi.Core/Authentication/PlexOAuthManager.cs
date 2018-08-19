@@ -28,19 +28,6 @@ namespace Ombi.Core.Authentication
                 return string.Empty;
             }
 
-            if (pin.authToken.IsNullOrEmpty())
-            {
-                // Looks like we do not have a pin yet, we should retry a few times.
-                var retryCount = 0;
-                var retryMax = 5;
-                var retryWaitMs = 1000;
-                while (pin.authToken.IsNullOrEmpty() && retryCount < retryMax)
-                {
-                    retryCount++;
-                    await Task.Delay(retryWaitMs);
-                    pin = await _api.GetPin(pinId);
-                }
-            }
             return pin.authToken;
         }
 
@@ -52,14 +39,14 @@ namespace Ombi.Core.Authentication
         public async Task<Uri> GetOAuthUrl(int pinId, string code, string websiteAddress = null)
         {
             var settings = await _customizationSettingsService.GetSettingsAsync();
-            var url = await _api.GetOAuthUrl(pinId, code, settings.ApplicationUrl.IsNullOrEmpty() ? websiteAddress : settings.ApplicationUrl, false);
+            var url = await _api.GetOAuthUrl(pinId, code, settings.ApplicationUrl.IsNullOrEmpty() ? websiteAddress : settings.ApplicationUrl);
 
             return url;
         }
 
         public async Task<Uri> GetWizardOAuthUrl(int pinId, string code, string websiteAddress)
         {
-            var url = await _api.GetOAuthUrl(pinId, code, websiteAddress, true);
+            var url = await _api.GetOAuthUrl(pinId, code, websiteAddress);
             return url;
         }
     }
