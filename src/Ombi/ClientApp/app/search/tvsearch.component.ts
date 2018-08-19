@@ -195,7 +195,7 @@ export class TvSearchComponent implements OnInit {
 
     public reportIssue(catId: IIssueCategory, req: ISearchTvResult) {
         this.issueRequestId = req.id;
-        this.issueRequestTitle = req.title;
+        this.issueRequestTitle = req.title + `(${req.firstAired})`;
         this.issueCategorySelected = catId;
         this.issuesBarVisible = true;
         this.issueProviderId = req.id.toString();
