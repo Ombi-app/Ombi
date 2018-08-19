@@ -30,7 +30,7 @@ function getEnvOptions() {
 
 function webpack(type) {
     // 'webpack' instead of direct path can cause https://github.com/angular/angular-cli/issues/6417
-    return run(`node node_modules\\webpack\\bin\\webpack.js --config webpack.config${type ? `.${type}` : ""}.ts${getEnvOptions()}`).exec();
+    return run(`node ${path.join('node_modules', 'webpack', 'bin', 'webpack.js')} --config webpack.config${type ? `.${type}` : ""}.ts${getEnvOptions()}`).exec();
 }
 
 gulp.task("vendor", () => {
