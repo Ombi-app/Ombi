@@ -91,7 +91,7 @@ namespace Ombi.Controllers
                         error = "Application URL has not been set"
                     });
                 }
-                return new JsonResult(new { url = url.ToString() });
+                return new JsonResult(new { url = url.ToString(), pinId = model.PlexTvPin.id });
             }
 
             return new UnauthorizedResult();
