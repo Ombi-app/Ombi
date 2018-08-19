@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -128,31 +127,6 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
-        /// Searches for a Tv Show.
-        /// </summary>
-        /// <param name="searchTerm">The search term.</param>
-        /// <remarks>We use TvMaze as the Provider</remarks>
-        /// <returns></returns>
-        [HttpGet("tv/{searchTerm}/tree")]
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> SearchTvTreeNode(string searchTerm)
-        {
-            return await TvEngine.SearchTreeNode(searchTerm);
-        }
-
-        /// <summary>
-        /// Gets extra show information.
-        /// </summary>
-        /// <param name="tvdbId">The TVDB identifier.</param>
-        /// <remarks>We use TvMaze as the Provider</remarks>
-        /// <returns></returns>
-        [HttpGet("tv/info/{tvdbId}/tree")]
-        public async Task<TreeNode<SearchTvShowViewModel>> GetShowInfoTreeNode(int tvdbId)
-        {
-            if (tvdbId == 0) return new TreeNode<SearchTvShowViewModel>();
-            return await TvEngine.GetShowInformationTreeNode(tvdbId);
-        }
-
-        /// <summary>
         /// Gets extra show information.
         /// </summary>
         /// <param name="tvdbId">The TVDB identifier.</param>
@@ -162,17 +136,6 @@ namespace Ombi.Controllers
         public async Task<SearchTvShowViewModel> GetShowInfo(int tvdbId)
         {
             return await TvEngine.GetShowInformation(tvdbId);
-        }
-
-        /// <summary>
-        /// Returns Popular Tv Shows
-        /// </summary>
-        /// <remarks>We use Trakt.tv as the Provider</remarks>
-        /// <returns></returns>
-        [HttpGet("tv/popular/tree")]
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> PopularTvTree()
-        {
-            return await TvEngine.PopularTree();
         }
 
         /// <summary>
@@ -191,34 +154,12 @@ namespace Ombi.Controllers
         /// </summary>
         /// <remarks>We use Trakt.tv as the Provider</remarks>
         /// <returns></returns>
-        [HttpGet("tv/anticipated/tree")]
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> AnticipatedTvTree()
-        {
-            return await TvEngine.AnticipatedTree();
-        }
-
-
-        /// <summary>
-        /// Returns most Anticiplateds tv shows.
-        /// </summary>
-        /// <remarks>We use Trakt.tv as the Provider</remarks>
-        /// <returns></returns>
         [HttpGet("tv/anticipated")]
         public async Task<IEnumerable<SearchTvShowViewModel>> AnticipatedTv()
         {
             return await TvEngine.Anticipated();
         }
 
-        /// <summary>
-        /// Returns Most watched shows.
-        /// </summary>
-        /// <remarks>We use Trakt.tv as the Provider</remarks>
-        /// <returns></returns>
-        [HttpGet("tv/mostwatched/tree")]
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> MostWatchedTree()
-        {
-            return await TvEngine.MostWatchesTree();
-        }
 
         /// <summary>
         /// Returns Most watched shows.
@@ -229,17 +170,6 @@ namespace Ombi.Controllers
         public async Task<IEnumerable<SearchTvShowViewModel>> MostWatched()
         {
             return await TvEngine.MostWatches();
-        }
-
-        /// <summary>
-        /// Returns trending shows
-        /// </summary>
-        /// <remarks>We use Trakt.tv as the Provider</remarks>
-        /// <returns></returns>
-        [HttpGet("tv/trending/tree")]
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> TrendingTree()
-        {
-            return await TvEngine.TrendingTree();
         }
 
         /// <summary>

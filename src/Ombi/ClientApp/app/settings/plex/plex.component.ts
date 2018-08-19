@@ -1,10 +1,8 @@
-﻿import { Component, OnDestroy, OnInit } from "@angular/core";
-import "rxjs/add/operator/takeUntil";
-import { Subject } from "rxjs/Subject";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
-import { IPlexServerResponse, IPlexServerViewModel } from "../../interfaces";
-import { IPlexLibrariesSettings, IPlexServer, IPlexSettings } from "../../interfaces";
-
+import { IPlexLibrariesSettings, IPlexServer, IPlexServerResponse, IPlexServerViewModel, IPlexSettings } from "../../interfaces";
 import { JobService, NotificationService, PlexService, SettingsService, TesterService } from "../../services";
 
 @Component({
@@ -21,11 +19,12 @@ export class PlexComponent implements OnInit, OnDestroy {
 
     private subscriptions = new Subject<void>();
 
-    constructor(private settingsService: SettingsService,
-                private notificationService: NotificationService,
-                private plexService: PlexService,
-                private testerService: TesterService,
-                private jobService: JobService) { }
+    constructor(
+        private settingsService: SettingsService,
+        private notificationService: NotificationService,
+        private plexService: PlexService,
+        private testerService: TesterService,
+        private jobService: JobService) { }
 
     public ngOnInit() {
         this.settingsService.getPlex().subscribe(x => {
@@ -34,17 +33,17 @@ export class PlexComponent implements OnInit, OnDestroy {
     }
 
     public requestServers(server: IPlexServer) {
-        this.plexService.getServers(this.username, this.password)
-            .takeUntil(this.subscriptions)
-            .subscribe(x => {
-                if (x.success) {
-                    this.loadedServers = x;
-                    this.serversButton = true;
-                    this.notificationService.success("Found the servers! Please select one!");
-                } else {
-                    this.notificationService.warning("Error When Requesting Plex Servers", "Please make sure your username and password are correct");
-                }
-            });
+        this.plexService.getServers(this.username, this.password).pipe(
+            takeUntil(this.subscriptions),
+        ).subscribe(x => {
+            if (x.success) {
+                this.loadedServers = x;
+                this.serversButton = true;
+                this.notificationService.success("Found the servers! Please select one!");
+            } else {
+                this.notificationService.warning("Error When Requesting Plex Servers", "Please make sure your username and password are correct");
+            }
+        });
     }
 
     public selectServer(selectedServer: IPlexServerResponse, server: IPlexServer) {
@@ -72,7 +71,7 @@ export class PlexComponent implements OnInit, OnDestroy {
         if (this.settings.servers == null) {
             this.settings.servers = [];
         }
-        this.settings.servers.push(<IPlexServer>{ name: "New*", id: Math.floor(Math.random() * (99999 - 0 + 1) + 1) });
+        this.settings.servers.push(<IPlexServer> { name: "New*", id: Math.floor(Math.random() * (99999 - 0 + 1) + 1) });
 
     }
 
@@ -91,19 +90,19 @@ export class PlexComponent implements OnInit, OnDestroy {
         this.plexService.getLibraries(server).subscribe(x => {
             server.plexSelectedLibraries = [];
             if (x.successful) {
-                    x.data.mediaContainer.directory.forEach((item) => {
-                        const lib: IPlexLibrariesSettings = {
-                            key: item.key,
-                            title: item.title,
-                            enabled: false,
-                        };
-                        server.plexSelectedLibraries.push(lib);
-                    });
-                } else {
-                    this.notificationService.error(x.message);
-                }
-            },
-        err => { this.notificationService.error(err); });
+                x.data.mediaContainer.directory.forEach((item) => {
+                    const lib: IPlexLibrariesSettings = {
+                        key: item.key,
+                        title: item.title,
+                        enabled: false,
+                    };
+                    server.plexSelectedLibraries.push(lib);
+                });
+            } else {
+                this.notificationService.error(x.message);
+            }
+        },
+            err => { this.notificationService.error(err); });
     }
 
     public save() {
@@ -120,7 +119,7 @@ export class PlexComponent implements OnInit, OnDestroy {
 
     public runCacher(): void {
         this.jobService.runPlexCacher().subscribe(x => {
-            if(x) {
+            if (x) {
                 this.notificationService.success("Triggered the Plex Full Sync");
             }
         });
@@ -128,7 +127,7 @@ export class PlexComponent implements OnInit, OnDestroy {
 
     public runRecentlyAddedCacher(): void {
         this.jobService.runPlexRecentlyAddedCacher().subscribe(x => {
-            if(x) {
+            if (x) {
                 this.notificationService.success("Triggered the Plex Recently Added Sync");
             }
         });

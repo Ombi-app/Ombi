@@ -9,6 +9,7 @@ declare var module: any;
 
 if (module.hot) {
     Error.stackTraceLimit = Infinity;
-    // tslint:disable:no-var-requires
+
+    // tslint:disable-next-line
     require("zone.js/dist/long-stack-trace-zone");
 }

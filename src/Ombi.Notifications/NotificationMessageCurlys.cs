@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Humanizer;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models;
@@ -39,7 +40,7 @@ namespace Ombi.Notifications
             RequestedDate = req?.RequestedDate.ToString("D");
             if (Type.IsNullOrEmpty())
             {
-                Type = req?.RequestType.ToString();
+                Type = req?.RequestType.Humanize();
             }
             Overview = req?.Overview;
             Year = req?.ReleaseDate.Year.ToString();
@@ -91,7 +92,7 @@ namespace Ombi.Notifications
             RequestedDate = req?.RequestedDate.ToString("D");
             if (Type.IsNullOrEmpty())
             {
-                Type = req?.RequestType.ToString();
+                Type = req?.RequestType.Humanize();
             }
 
             Overview = req?.ParentRequest.Overview;
@@ -161,7 +162,7 @@ namespace Ombi.Notifications
             IssueSubject = opts.Substitutes.TryGetValue("IssueSubject", out val) ? val : string.Empty;
             NewIssueComment = opts.Substitutes.TryGetValue("NewIssueComment", out val) ? val : string.Empty;
             UserName = opts.Substitutes.TryGetValue("IssueUser", out val) ? val : string.Empty;
-            Type = opts.Substitutes.TryGetValue("RequestType", out val) ? val : string.Empty;
+            Type = opts.Substitutes.TryGetValue("RequestType", out val) ? val.Humanize() : string.Empty;
         }
 
         // User Defined

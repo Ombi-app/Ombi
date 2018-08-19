@@ -1,8 +1,8 @@
-﻿import { PlatformLocation } from "@angular/common";
+import { PlatformLocation } from "@angular/common";
 import { Injectable } from "@angular/core";
 
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs/Rx";
+import { Observable } from "rxjs";
 
 import { TreeNode } from "primeng/primeng";
 import { ISearchMovieResult } from "../interfaces";
@@ -56,16 +56,16 @@ export class SearchService extends ServiceHelpers {
         return this.http.get<ISearchTvResult>(`${this.url}/Tv/info/${theTvDbId}`, {headers: this.headers});
     }
 
-    public popularTv(): Observable<TreeNode[]> {
-        return this.http.get<TreeNode[]>(`${this.url}/Tv/popular/tree`, {headers: this.headers});
+    public popularTv(): Observable<ISearchTvResult[]> {
+        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/popular`, {headers: this.headers});
     }
-    public mostWatchedTv(): Observable<TreeNode[]> {
-        return this.http.get<TreeNode[]>(`${this.url}/Tv/mostwatched/tree`, {headers: this.headers});
+    public mostWatchedTv(): Observable<ISearchTvResult[]> {
+        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/mostwatched`, {headers: this.headers});
     }
-    public anticipatedTv(): Observable<TreeNode[]> {
-        return this.http.get<TreeNode[]>(`${this.url}/Tv/anticipated/tree`, {headers: this.headers});
+    public anticipatedTv(): Observable<ISearchTvResult[]> {
+        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/anticipated`, {headers: this.headers});
     }
-    public trendingTv(): Observable<TreeNode[]> {
-        return this.http.get<TreeNode[]>(`${this.url}/Tv/trending/tree`, {headers: this.headers});
+    public trendingTv(): Observable<ISearchTvResult[]> {
+        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/trending`, {headers: this.headers});
     }
 }

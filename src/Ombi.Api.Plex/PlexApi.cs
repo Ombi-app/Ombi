@@ -41,7 +41,18 @@ namespace Ombi.Api.Plex
                     }
                     else
                     {
-                        _app = settings.ApplicationName;
+                        // Check for non-ascii characters (New .Net Core HTTPLib does not allow this)
+                        var chars = settings.ApplicationName.ToCharArray();
+                        var hasNonAscii = false;
+                        foreach (var c in chars)
+                        {
+                            if (c > 128)
+                            {
+                                hasNonAscii = true;
+                            }
+                        }
+
+                        _app = hasNonAscii ? "Ombi" : settings.ApplicationName;
                     }
 
                     return _app;
@@ -114,6 +125,13 @@ namespace Ombi.Api.Plex
             var request = new Request($"library/sections/{libraryId}/all", plexFullHost, HttpMethod.Get);
             await AddHeaders(request, authToken);
             return await Api.Request<PlexContainer>(request);
+        }
+
+        public async Task<PlexLibrariesForMachineId> GetLibrariesForMachineId(string authToken, string machineId)
+        {
+            var request = new Request("", $"https://plex.tv/api/servers/{machineId}", HttpMethod.Get, ContentType.Xml);
+            await AddHeaders(request, authToken);
+            return await Api.Request<PlexLibrariesForMachineId>(request);
         }
 
         /// <summary>
@@ -199,15 +217,11 @@ namespace Ombi.Api.Plex
             return await Api.Request<OAuthPin>(request);
         }
 
-        public async Task<Uri> GetOAuthUrl(int pinId, string code, string applicationUrl, bool wizard)
+        public async Task<Uri> GetOAuthUrl(int pinId, string code, string applicationUrl)
         {
             var request = new Request("auth#", "https://app.plex.tv", HttpMethod.Get);
             await AddHeaders(request);
-            var forwardUrl = wizard
-                ? new Request($"Wizard/OAuth/{pinId}", applicationUrl, HttpMethod.Get)
-                : new Request($"Login/OAuth/{pinId}", applicationUrl, HttpMethod.Get);
-
-            request.AddQueryString("forwardUrl", forwardUrl.FullUri.ToString());
+            
             request.AddQueryString("pinID", pinId.ToString());
             request.AddQueryString("code", code);
             request.AddQueryString("context[device][product]", ApplicationName);
@@ -231,6 +245,34 @@ namespace Ombi.Api.Plex
 
             return request.FullUri;
         }
+
+        public async Task<PlexAddWrapper> AddUser(string emailAddress, string serverId, string authToken, int[] libs)
+        {
+            var request = new Request(string.Empty, $"https://plex.tv/api/servers/{serverId}/shared_servers", HttpMethod.Post, ContentType.Xml);
+            await AddHeaders(request, authToken);
+            request.AddJsonBody(new
+            {
+                server_id = serverId,
+                shared_server = new
+                {
+                    library_section_ids = libs.Length > 0 ? libs : new int[]{},
+                    invited_email = emailAddress
+                },
+                sharing_settings = new { }
+            });
+            var result = await Api.RequestContent(request);
+            try
+            {
+                var add = Api.DeserializeXml<PlexAdd>(result);
+                return new PlexAddWrapper{Add = add};
+            }
+            catch (InvalidOperationException)
+            {
+                var error = Api.DeserializeXml<AddUserError>(result);
+                return new PlexAddWrapper{Error = error};
+            }
+        }
+
 
         /// <summary>
         /// Adds the required headers and also the authorization header

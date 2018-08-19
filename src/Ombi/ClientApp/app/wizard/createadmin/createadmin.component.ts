@@ -17,10 +17,12 @@ export class CreateAdminComponent {
 
     public createUser() {
         this.identityService.createWizardUser({username: this.username, password: this.password, usePlexAdminAccount: false}).subscribe(x => {
-            if (x) {
+            if (x.result) {
                 this.router.navigate(["login"]);
             } else {
-                this.notificationService.error("There was an error... You might want to put this on Github...");
+                if(x.errors.length > 0) {
+                    this.notificationService.error(x.errors[0]);
+                }
             }
         });
     }

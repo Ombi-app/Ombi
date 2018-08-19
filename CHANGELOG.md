@@ -1,5 +1,136 @@
 # Changelog
 
+## (unreleased)
+
+### **New Features**
+
+- Added the ability to invite Plex Friends from the user management screen. [Jamie]
+
+- Added rich notifications for mobile. [Jamie]
+
+- Updater fixes. [Jamie]
+
+- Added updater test mode. [Jamie Rees]
+
+- Added a new API method to delete issue comments. [TidusJar]
+
+- Updated @ngu/carousel to beta version to remove rxjs-compat dependency. [Matt Jeanes]
+
+- Update to Angular 6/Webpack 4. [Matt Jeanes]
+
+- Update CHANGELOG.md. [Jamie]
+
+- Updated the way we create the wizard user, errors show now be fed back to the user. [Jamie]
+
+- Added Brazillian Portuguese as a language and also Polish. [Jamie]
+
+- Updated swagger. [Jamie]
+
+- Updated to 2.1.1. [Jamie]
+
+### **Fixes**
+
+- #2408 Added the feature to delete comments on issues. [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- Fixed #2440. [TidusJar]
+
+- Delete cake.config. [Chris Pritchard]
+
+- Initial attempt at getting anime seriestype working. [Chris Pritchard]
+
+- Add cake.config. [Chris Pritchard]
+
+- Fixed the issue where we wouldn't correctly mark some shows as available when there was no provider id #2429. [Jamie]
+
+- Fixed the 'loop' in the cacher #2429. [Jamie]
+
+- Fixed #2427. [Jamie]
+
+- Fixed #2424. [Jamie]
+
+- Fixed #2409. [Jamie]
+
+- More updater. [Jamie]
+
+- Humanize the request type enum in notifications e.g. TvShow will now appear as "Tv Show" #2416. [TidusJar]
+
+- Made the quality override and root folder override load when we load the show (It will now appear) [Jamie]
+
+- Fixed #2415  where power users could not set the Sonarr Quality Override or Root Folder Override. [Jamie]
+
+- #2371 Fixed the issue where certain actions would not setup the series correctly in Sonarr. [Jamie]
+
+- Tightened up the security from an API perspecitve. [TidusJar]
+
+- Stop the root folder and profile calls from erroring. [TidusJar]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- Fixed all linting. [TidusJar]
+
+- Comment out envparam stuff. [Matt Jeanes]
+
+- Fixed prod build issue. [Matt Jeanes]
+
+- Missed a tiny bit. [Matt Jeanes]
+
+- Fix test. [Matt Jeanes]
+
+- Fix test build. [Matt Jeanes]
+
+- Linting + remove debug. [Matt Jeanes]
+
+- Switch to Yarn and disable auto publish in release mode. [Matt Jeanes]
+
+- Fix for #2409. [TidusJar]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- Possible fix for #2298. [D34DC3N73R]
+
+- Fixed the text for #2370. [Jamie]
+
+- Fixed where you couldn't bulk edit the limits to 0 #2318. [Jamie]
+
+- Upgraded to .net 2.1.2 (Includes security fixes) [Jamie]
+
+
 ## v3.0.3477 (2018-07-18)
 
 ### **New Features**

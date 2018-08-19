@@ -23,6 +23,11 @@ export interface ICreateWizardUser {
     usePlexAdminAccount: boolean;
 }
 
+export interface IWizardUserResult {
+    result: boolean;
+    errors: string[];
+}
+
 export enum UserType {
     LocalUser = 1,
     PlexUser = 2,

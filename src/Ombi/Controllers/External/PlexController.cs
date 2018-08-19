@@ -127,6 +127,100 @@ namespace Ombi.Controllers.External
             }
         }
 
+
+        [HttpGet("Libraries/{machineId}")]
+        [PowerUser]
+        public async Task<PlexLibrariesLiteResponse> GetPlexLibraries(string machineId)
+        {
+            try
+            {
+                var s = await PlexSettings.GetSettingsAsync();
+                var settings = s.Servers.FirstOrDefault(x => x.MachineIdentifier == machineId);
+                var libs = await PlexApi.GetLibrariesForMachineId(settings.PlexAuthToken, machineId);
+
+                return new PlexLibrariesLiteResponse
+                {
+                    Successful = true,
+                    Data = libs.Server.Section
+                };
+            }
+            catch (Exception e)
+            {
+                _log.LogWarning(e, "Error thrown when attempting to obtain the plex libs");
+
+                var message = e.InnerException != null ? $"{e.Message} - {e.InnerException.Message}" : e.Message;
+                return new PlexLibrariesLiteResponse
+                {
+                    Successful = false,
+                    Message = message
+                };
+            }
+        }
+
+        [HttpPost("user")]
+        [PowerUser]
+        public async Task<IActionResult> AddUser([FromBody] PlexUserViewModel user)
+        {
+            var s = await PlexSettings.GetSettingsAsync();
+            var server = s.Servers.FirstOrDefault(x => x.MachineIdentifier == user.MachineIdentifier);
+            var result = await PlexApi.AddUser(user.Username, user.MachineIdentifier, server.PlexAuthToken,
+                user.LibsSelected);
+            if (result.HasError)
+            {
+                return Json(new
+                {
+                    Success = false,
+                    Error = result.Error.Status
+                });
+            }
+            else
+            {
+                return Json(new
+                {
+                    Success = true
+                });
+            }
+        }
+
+        /// <summary>
+        /// Gets the plex servers.
+        /// </summary>
+        /// <param name="u">The u.</param>
+        /// <returns></returns>
+        [HttpGet("servers")]
+        [PowerUser]
+        public async Task<IActionResult> GetServers()
+        {
+            try
+            {
+                var s = await PlexSettings.GetSettingsAsync();
+                var servers =  new List<PlexServersAddUserModel>();
+                foreach (var plexServer in s.Servers)
+                {
+                    servers.Add(new PlexServersAddUserModel
+                    {
+                        ServerId = plexServer.Id,
+                        MachineId = plexServer.MachineIdentifier,
+                        ServerName = plexServer.Name
+                    });
+                }
+
+                return Json(new
+                {
+                    Success = true,
+                    Servers = servers
+                });
+            }
+            catch (Exception e)
+            {
+                _log.LogWarning(e, "Error thrown when attempting to obtain the GetServers for Add User VM");
+                return Json(new PlexServersViewModel
+                {
+                    Success = false,
+                });
+            }
+        }
+
         /// <summary>
         /// Gets the plex servers.
         /// </summary>

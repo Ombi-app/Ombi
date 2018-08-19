@@ -19,7 +19,7 @@ export class UpdateDetailsComponent implements OnInit {
         this.identityService.getUser().subscribe(x => {
             const localUser = x as IUpdateLocalUser;
             this.form = this.fb.group({
-                 id:[localUser.id],
+                 id: [localUser.id],
                 username: [localUser.userName],
                 emailAddress: [localUser.emailAddress, [Validators.email]],
                 confirmNewPassword: [localUser.confirmNewPassword],

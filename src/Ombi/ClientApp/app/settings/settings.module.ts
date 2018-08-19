@@ -1,14 +1,16 @@
-﻿import { CommonModule } from "@angular/common";
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
 import { NgbAccordionModule, NgbModule } from "@ng-bootstrap/ng-bootstrap";
-import { ClipboardModule } from "ngx-clipboard/dist";
+import { ClipboardModule } from "ngx-clipboard";
 
 import { AuthGuard } from "../auth/auth.guard";
 import { AuthService } from "../auth/auth.service";
-import { CouchPotatoService, EmbyService, IssuesService, JobService, MobileService, NotificationMessageService, PlexService, RadarrService,
-         SonarrService, TesterService, ValidationService } from "../services";
+import {
+    CouchPotatoService, EmbyService, IssuesService, JobService, MobileService, NotificationMessageService, PlexService, RadarrService,
+    SonarrService, TesterService, ValidationService,
+} from "../services";
 
 import { PipeModule } from "../pipes/pipe.module";
 import { AboutComponent } from "./about/about.component";

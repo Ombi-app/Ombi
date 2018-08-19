@@ -12,7 +12,7 @@
   "Common": {
     "ContinueButton": "Continuer",
     "Available": "Disponible",
-    "NotAvailable": "Not Available",
+    "NotAvailable": "Non disponible",
     "ProcessingRequest": "En cours de traitement",
     "PendingApproval": "En attente d'approbation",
     "RequestDenied": "Demande refusée",
@@ -21,7 +21,7 @@
     "Request": "Demander",
     "Denied": "Refusé",
     "Approve": "Approuver",
-    "PartlyAvailable": "Partly Available",
+    "PartlyAvailable": "Partiellement disponible",
     "Errors": {
       "Validation": "Veuillez vérifier les valeurs entrées"
     }
@@ -47,7 +47,7 @@
     "UserManagement": "Gestion des utilisateurs",
     "Issues": "Problèmes",
     "Donate": "Faire un don !",
-    "DonateLibraryMaintainer": "Donate to Library Maintainer",
+    "DonateLibraryMaintainer": "Faire un don au mainteneur de la bibliothèque",
     "DonateTooltip": "C’est pour convaincre ma femme de me laisser passer mon temps libre à développer Ombi ;)",
     "UpdateAvailableTooltip": "Mise à jour disponible !",
     "Settings": "Paramètres",
@@ -62,9 +62,12 @@
       "Italian": "Italien",
       "Danish": "Danois",
       "Dutch": "Néerlandais",
-      "Norwegian": "Norvégien"
+      "Norwegian": "Norvégien",
+      "BrazillianPortuguese": "Portuguais brésilien",
+      "Polish": "Polonais"
     },
-    "OpenMobileApp": "Ouvrir l'application mobile"
+    "OpenMobileApp": "Ouvrir l'application mobile",
+    "RecentlyAdded": "Ajouts récents"
   },
   "Search": {
     "Title": "Rechercher",
@@ -73,12 +76,12 @@
     "TvTab": "TV",
     "Suggestions": "Suggestions",
     "NoResults": "Désolé, nous n'avons trouvé aucun résultat !",
-    "DigitalDate": "Digital Release: {{date}}",
-    "TheatricalRelease": "Theatrical Release: {{date}}",
+    "DigitalDate": "Sortie numérique: {{date}}",
+    "TheatricalRelease": "Sortie en salle: {{date}}",
     "ViewOnPlex": "Regarder sur Plex",
     "ViewOnEmby": "Regarder sur Emby",
     "RequestAdded": "La demande pour {{title}} a été ajoutée avec succès",
-    "Similar": "Similar",
+    "Similar": "Similaires",
     "Movies": {
       "PopularMovies": "Films populaires",
       "UpcomingMovies": "Films à venir",
@@ -88,19 +91,19 @@
       "Trailer": "Bande-annonce"
     },
     "TvShows": {
-      "Popular": "Popular",
-      "Trending": "Trending",
-      "MostWatched": "Most Watched",
-      "MostAnticipated": "Most Anticipated",
-      "Results": "Results",
-      "AirDate": "Air Date:",
-      "AllSeasons": "All Seasons",
-      "FirstSeason": "First Season",
-      "LatestSeason": "Latest Season",
-      "Select": "Select ...",
-      "SubmitRequest": "Submit Request",
-      "Season": "Season: {{seasonNumber}}",
-      "SelectAllInSeason": "Select All in Season {{seasonNumber}}"
+      "Popular": "Populaire",
+      "Trending": "Tendances",
+      "MostWatched": "Les plus visionnées",
+      "MostAnticipated": "Les plus attendus",
+      "Results": "Résultats",
+      "AirDate": "Date de diffusion:",
+      "AllSeasons": "Toutes les saisons",
+      "FirstSeason": "Première saison",
+      "LatestSeason": "Dernière saison",
+      "Select": "Sélectionner...",
+      "SubmitRequest": "Envoyer la demande",
+      "Season": "Saison: {{seasonNumber}}",
+      "SelectAllInSeason": "Tout sélectionner dans la saison {{seasonNumber}}"
     }
   },
   "Requests": {
@@ -112,8 +115,9 @@
     "Status": "Statut :",
     "RequestStatus": "Statut de la demande :",
     "Denied": " Refusé :",
-    "TheatricalRelease": "Theatrical Release: {{date}}",
-    "DigitalRelease": "Digital Release: {{date}}",
+    "TheatricalRelease": "Sortie en salle: {{date}}",
+    "TheatricalReleaseSort": "Sortie en salle",
+    "DigitalRelease": "Sortie numérique: {{date}}",
     "RequestDate": "Date de la demande :",
     "QualityOverride": "Remplacement de la qualité :",
     "RootFolderOverride": "Remplacement du répertoire racine :",
@@ -127,9 +131,16 @@
     "GridTitle": "Titre",
     "AirDate": "Date de diffusion",
     "GridStatus": "Statut",
-    "ReportIssue": "Report Issue",
-    "Filter": "Filter",
-    "SeasonNumberHeading": "Season: {seasonNumber}"
+    "ReportIssue": "Signaler un problème",
+    "Filter": "Filtre",
+    "Sort": "Trier",
+    "SeasonNumberHeading": "Saison: {seasonNumber}",
+    "SortTitleAsc": "Titre ▲",
+    "SortTitleDesc": "Titre ▼",
+    "SortRequestDateAsc": "Date de la demande ▲",
+    "SortRequestDateDesc": "Date de la demande ▼",
+    "SortStatusAsc": "Statut ▲",
+    "SortStatusDesc": "Statut ▼"
   },
   "Issues": {
     "Title": "Problèmes",
@@ -151,9 +162,10 @@
     "ReportedBy": "Signalé par"
   },
   "Filter": {
-    "ClearFilter": "Clear Filter",
-    "FilterHeaderAvailability": "Availability",
-    "FilterHeaderRequestStatus": "Status",
-    "Approved": "Approved"
+    "ClearFilter": "Effacer les filtres",
+    "FilterHeaderAvailability": "Disponibilité",
+    "FilterHeaderRequestStatus": "Statut",
+    "Approved": "Validée",
+    "PendingApproval": "En attente de validation"
   }
 }
