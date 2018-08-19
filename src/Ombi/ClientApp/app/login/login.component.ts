@@ -116,6 +116,7 @@ export class LoginComponent implements OnDestroy, OnInit {
                     localStorage.setItem("id_token", x.access_token);
 
                     if (this.authService.loggedIn()) {
+                        this.ngOnDestroy();
                         this.router.navigate(["search"]);
                     } else {
                         this.notify.error(this.errorBody);
@@ -130,8 +131,17 @@ export class LoginComponent implements OnDestroy, OnInit {
 
             this.authService.login({ usePlexOAuth: true, password: "", rememberMe: true, username: "", plexTvPin: pin }).subscribe(x => {
        
-                window.open(x.url, "_blank");
+                window.open(x.url, "_blank", `toolbar=0,
+                location=0,
+                status=0,
+                menubar=0,
+                scrollbars=1,
+                resizable=1,
+                width=500,
+                height=500`);
+
                 this.pinTimer = setInterval(() => {
+                    this.notify.info("Authenticating", "Loading... Please Wait");
                     this.getPinResult(x.pinId);
                 }, 10000);
             });
@@ -144,6 +154,7 @@ export class LoginComponent implements OnDestroy, OnInit {
               localStorage.setItem("id_token", x.access_token);
   
               if (this.authService.loggedIn()) {
+                  this.ngOnDestroy();
                   this.router.navigate(["search"]);
                   return;
               } 
