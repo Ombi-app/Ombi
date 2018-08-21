@@ -19,6 +19,7 @@ using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
+using Ombi.Core.Models;
 
 namespace Ombi.Core.Engine
 {
@@ -482,6 +483,14 @@ namespace Ombi.Core.Engine
             });
 
             return new RequestEngineResult {Result = true, Message = $"{movieName} has been successfully added!"};
+        }
+
+        public async Task<RequestQuotaCountModel> GetRemainingRequests()
+        {
+            return new RequestQuotaCountModel()
+            {
+                HasLimit = false,    
+            };
         }
     }
 }

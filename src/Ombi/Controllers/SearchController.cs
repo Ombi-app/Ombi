@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Ombi.Core;
 using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Models;
 using Ombi.Core.Models.Search;
 using StackExchange.Profiling;
 
@@ -181,6 +182,18 @@ namespace Ombi.Controllers
         public async Task<IEnumerable<SearchTvShowViewModel>> Trending()
         {
             return await TvEngine.Trending();
+        }
+
+        [HttpGet("movie/requestCount")]
+        public async Task<RequestQuotaCountModel> RemainingMovieRequests()
+        {
+            return null;
+        }
+
+        [HttpGet("tv/requestCount")]
+        public async Task<RequestQuotaCountModel> RemainingTvRequests()
+        {
+            return null;
         }
     }
 }
