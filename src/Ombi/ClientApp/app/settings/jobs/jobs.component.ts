@@ -3,7 +3,7 @@
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NotificationService, SettingsService } from "../../services";
 
-import { ICronTestModel } from "./../../interfaces";
+import { ICronTestModel } from "../../interfaces";
 
 @Component({
     templateUrl: "./jobs.component.html",

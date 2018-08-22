@@ -1,4 +1,4 @@
-﻿import { ICheckbox } from "./index";
+﻿import { ICheckbox } from ".";
 
 export interface IUser {
     id: string;

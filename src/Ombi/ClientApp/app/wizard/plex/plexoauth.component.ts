@@ -2,7 +2,7 @@
 import { ActivatedRoute, Router } from "@angular/router";
 
 import { IdentityService, PlexOAuthService } from "../../services";
-import { AuthService } from "./../../auth/auth.service";
+import { AuthService } from "../../auth/auth.service";
 
 @Component({
     templateUrl: "./plexoauth.component.html",

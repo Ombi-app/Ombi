@@ -8,7 +8,7 @@ import { ClipboardModule } from "ngx-clipboard";
 import { AuthGuard } from "../auth/auth.guard";
 import { AuthService } from "../auth/auth.service";
 import {
-    CouchPotatoService, EmbyService, IssuesService, JobService, MobileService, NotificationMessageService, PlexService, RadarrService,
+    CouchPotatoService, EmbyService, IssuesService, JobService, LidarrService, MobileService, NotificationMessageService, PlexService, RadarrService,
     SonarrService, TesterService, ValidationService,
 } from "../services";
 
@@ -22,6 +22,7 @@ import { EmbyComponent } from "./emby/emby.component";
 import { IssuesComponent } from "./issues/issues.component";
 import { JobsComponent } from "./jobs/jobs.component";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
+import { LidarrComponent } from "./lidarr/lidarr.component";
 import { MassEmailComponent } from "./massemail/massemail.component";
 import { DiscordComponent } from "./notifications/discord.component";
 import { EmailNotificationComponent } from "./notifications/emailnotification.component";
@@ -36,7 +37,6 @@ import { TelegramComponent } from "./notifications/telegram.component";
 import { OmbiComponent } from "./ombi/ombi.component";
 import { PlexComponent } from "./plex/plex.component";
 import { RadarrComponent } from "./radarr/radarr.component";
-import { LidarrComponent } from "./lidarr/lidarr.component";
 import { SickRageComponent } from "./sickrage/sickrage.component";
 import { SonarrComponent } from "./sonarr/sonarr.component";
 import { UpdateComponent } from "./update/update.component";
@@ -145,6 +145,7 @@ const routes: Routes = [
         EmbyService,
         MobileService,
         NotificationMessageService,
+        LidarrService,
     ],
 
 })

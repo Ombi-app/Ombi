@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { NguCarouselConfig } from "@ngu/carousel";
 
 import { ImageService, RecentlyAddedService } from "../services";
-import { IRecentlyAddedMovies, IRecentlyAddedTvShows } from "./../interfaces";
+import { IRecentlyAddedMovies, IRecentlyAddedTvShows } from "../interfaces";
 
 @Component({
     templateUrl: "recentlyAdded.component.html",

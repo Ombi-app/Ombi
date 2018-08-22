@@ -32,6 +32,7 @@ using Ombi.Api.CouchPotato;
 using Ombi.Api.DogNzb;
 using Ombi.Api.FanartTv;
 using Ombi.Api.Github;
+using Ombi.Api.Lidarr;
 using Ombi.Api.Mattermost;
 using Ombi.Api.Notifications;
 using Ombi.Api.Pushbullet;
@@ -117,6 +118,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ISickRageApi, SickRageApi>();
             services.AddTransient<IAppVeyorApi, AppVeyorApi>();
             services.AddTransient<IOneSignalApi, OneSignalApi>();
+            services.AddTransient<ILidarrApi, LidarrApi>();
         }
 
         public static void RegisterStore(this IServiceCollection services) { 

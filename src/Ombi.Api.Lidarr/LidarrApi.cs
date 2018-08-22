@@ -7,7 +7,7 @@ using Ombi.Api.Lidarr.Models;
 
 namespace Ombi.Api.Lidarr
 {
-    public class LidarrApi
+    public class LidarrApi : ILidarrApi
     {
         public LidarrApi(ILogger<LidarrApi> logger, IApi api)
         {

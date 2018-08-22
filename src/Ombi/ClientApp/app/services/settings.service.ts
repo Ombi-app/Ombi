@@ -18,6 +18,7 @@ import {
     IJobSettings,
     IJobSettingsViewModel,
     ILandingPageSettings,
+    ILidarrSettings,
     IMattermostNotifcationSettings,
     IMobileNotifcationSettings,
     INewsletterNotificationSettings,

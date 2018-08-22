@@ -89,6 +89,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Api.Emby\Ombi.Api.Emby.csproj" />
     <ProjectReference Include="..\Ombi.Api.Github\Ombi.Api.Github.csproj" />
+    <ProjectReference Include="..\Ombi.Api.Lidarr\Ombi.Api.Lidarr.csproj" />
     <ProjectReference Include="..\Ombi.Api.SickRage\Ombi.Api.SickRage.csproj" />
     <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
     <ProjectReference Include="..\Ombi.DependencyInjection\Ombi.DependencyInjection.csproj" />

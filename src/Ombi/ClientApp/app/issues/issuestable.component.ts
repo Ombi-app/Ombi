@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 
-import { IIssues, IPagenator, IssueStatus } from "./../interfaces";
+import { IIssues, IPagenator, IssueStatus } from "../interfaces";
 
 @Component({
     selector: "issues-table",

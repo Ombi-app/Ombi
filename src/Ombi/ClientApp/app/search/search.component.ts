@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from "@angular/core";
 
-import { IIssueCategory } from "./../interfaces";
-import { IssuesService, SettingsService } from "./../services";
+import { IIssueCategory } from "../interfaces";
+import { IssuesService, SettingsService } from "../services";
 
 @Component({
     templateUrl: "./search.component.html",

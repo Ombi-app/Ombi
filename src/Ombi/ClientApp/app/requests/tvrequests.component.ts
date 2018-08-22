@@ -7,7 +7,7 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { AuthService } from "../auth/auth.service";
 import { FilterType, IIssueCategory, IPagenator, IRequestsViewModel, ISonarrProfile, ISonarrRootFolder, ITvRequests, OrderType } from "../interfaces";
 import { NotificationService, RequestService, SonarrService } from "../services";
-import { ImageService } from "./../services/image.service";
+import { ImageService } from "../services/image.service";
 
 @Component({
     selector: "tv-requests",

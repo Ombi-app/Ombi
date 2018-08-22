@@ -40,7 +40,7 @@ namespace Ombi.Controllers.External
         }
 
         /// <summary>
-        /// Gets the Radar root folders.
+        /// Gets the Radarr root folders.
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
@@ -70,7 +70,7 @@ namespace Ombi.Controllers.External
         }
 
         /// <summary>
-        /// Gets the Radar root folders using the saved settings.
+        /// Gets the Radarr root folders using the saved settings.
         /// <remarks>The data is cached for an hour</remarks>
         /// </summary>
         /// <returns></returns>
