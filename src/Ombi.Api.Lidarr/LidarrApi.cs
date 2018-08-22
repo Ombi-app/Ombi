@@ -36,13 +36,13 @@ namespace Ombi.Api.Lidarr
             return await Api.Request<List<LidarrRootFolder>>(request);
         }
 
-        public async Task<List<AlbumLookup>> ArtistLookup(string searchTerm, string apiKey, string baseUrl)
+        public async Task<List<ArtistLookup>> ArtistLookup(string searchTerm, string apiKey, string baseUrl)
         {
             var request = new Request($"{ApiVersion}/Artist/lookup", baseUrl, HttpMethod.Get);
             request.AddQueryString("term", searchTerm);
 
             AddHeaders(request, apiKey);
-            return await Api.Request<List<AlbumLookup>>(request);
+            return await Api.Request<List<ArtistLookup>>(request);
         }
 
         public async Task<List<AlbumLookup>> AlbumLookup(string searchTerm, string apiKey, string baseUrl)

@@ -1,6 +1,5 @@
 import { PlatformLocation } from "@angular/common";
 import { Component, Input, OnInit } from "@angular/core";
-import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateService } from "@ngx-translate/core";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
@@ -33,7 +32,7 @@ export class MusicSearchComponent implements OnInit {
     constructor(
         private searchService: SearchService, private requestService: RequestService,
         private notificationService: NotificationService, private authService: AuthService,
-        private readonly translate: TranslateService, private sanitizer: DomSanitizer,
+        private readonly translate: TranslateService,
         private readonly platformLocation: PlatformLocation) {
 
         this.searchChanged.pipe(
@@ -49,9 +48,6 @@ export class MusicSearchComponent implements OnInit {
                 .subscribe(x => {
                     this.movieResults = x;
                     this.searchApplied = true;
-                    // Now let's load some extra info including IMDB Id
-                    // This way the search is fast at displaying results.
-                    this.getExtraInfo();
                 });
         });
         this.defaultPoster = "../../../images/default_movie_poster.png";
@@ -120,7 +116,6 @@ export class MusicSearchComponent implements OnInit {
         this.searchService.popularMovies()
             .subscribe(x => {
                 this.movieResults = x;
-                this.getExtraInfo();
             });
     }
     public nowPlayingMovies() {
@@ -128,7 +123,6 @@ export class MusicSearchComponent implements OnInit {
         this.searchService.nowPlayingMovies()
             .subscribe(x => {
                 this.movieResults = x;
-                this.getExtraInfo();
             });
     }
     public topRatedMovies() {
@@ -136,7 +130,6 @@ export class MusicSearchComponent implements OnInit {
         this.searchService.topRatedMovies()
             .subscribe(x => {
                 this.movieResults = x;
-                this.getExtraInfo();
             });
     }
     public upcomingMovies() {
@@ -144,7 +137,6 @@ export class MusicSearchComponent implements OnInit {
         this.searchService.upcomingMovies()
             .subscribe(x => {
                 this.movieResults = x;
-                this.getExtraInfo();
             });
     }
 
@@ -181,24 +173,7 @@ export class MusicSearchComponent implements OnInit {
             });
     }
 
-    private getExtraInfo() {
-
-        this.movieResults.forEach((val, index) => {
-            if (val.posterPath === null) {
-                val.posterPath = this.defaultPoster;
-            } else {
-                val.posterPath = "https://image.tmdb.org/t/p/w300/" + val.posterPath;
-            }
-            val.background = this.sanitizer.bypassSecurityTrustStyle
-                ("url(" + "https://image.tmdb.org/t/p/w1280" + val.backdropPath + ")");
-            this.searchService.getMovieInformation(val.id)
-                .subscribe(m => {
-                    this.updateItem(val, m);
-                });
-        });
-    }
-
-    private updateItem(key: ISearchMovieResult, updated: ISearchMovieResult) {
+   private updateItem(key: ISearchMovieResult, updated: ISearchMovieResult) {
         const index = this.movieResults.indexOf(key, 0);
         if (index > -1) {
             const copy = { ...this.movieResults[index] };
