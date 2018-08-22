@@ -79,7 +79,7 @@ namespace Ombi.Api.Radarr
                 tmdbId = tmdbId,
                 qualityProfileId = qualityId,
                 rootFolderPath = rootPath,
-                titleSlug = title,
+                titleSlug = title + year,
                 monitored = true,
                 year = year,
                 minimumAvailability = minimumAvailability

@@ -1,7 +1,7 @@
-﻿import { PlatformLocation } from "@angular/common";
+import { PlatformLocation } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs/Rx";
+import { Observable } from "rxjs";
 
 import {
     IAbout,
@@ -103,6 +103,10 @@ export class SettingsService extends ServiceHelpers {
         return this.http.get<IAuthenticationSettings>(`${this.url}/Authentication`, {headers: this.headers});
     }
 
+    public getClientId(): Observable<string> {
+        return this.http.get<string>(`${this.url}/clientid`, {headers: this.headers});
+    }
+
     public saveAuthentication(settings: IAuthenticationSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}/Authentication`, JSON.stringify(settings), {headers: this.headers});
     }
@@ -189,7 +193,7 @@ export class SettingsService extends ServiceHelpers {
     public getMobileNotificationSettings(): Observable<IMobileNotifcationSettings> {
         return this.http.get<IMobileNotifcationSettings>(`${this.url}/notifications/mobile`, {headers: this.headers});
     }
-    
+
     public saveMobileNotificationSettings(settings: IMobileNotifcationSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}/notifications/mobile`, JSON.stringify(settings), {headers: this.headers});
     }
@@ -232,7 +236,7 @@ export class SettingsService extends ServiceHelpers {
 
     public getTelegramNotificationSettings(): Observable<ITelegramNotifcationSettings> {
         return this.http.get<ITelegramNotifcationSettings>(`${this.url}/notifications/telegram`, {headers: this.headers});
-    }    
+    }
 
     public saveTelegramNotificationSettings(settings: ITelegramNotifcationSettings): Observable<boolean> {
         return this.http
@@ -246,13 +250,13 @@ export class SettingsService extends ServiceHelpers {
     public saveJobSettings(settings: IJobSettings): Observable<IJobSettingsViewModel> {
         return this.http
             .post<IJobSettingsViewModel>(`${this.url}/jobs`, JSON.stringify(settings), {headers: this.headers});
-    } 
-    
+    }
+
     public testCron(body: ICronViewModelBody): Observable<ICronTestModel> {
         return this.http
             .post<ICronTestModel>(`${this.url}/testcron`, JSON.stringify(body), {headers: this.headers});
     }
-    
+
     public getSickRageSettings(): Observable<ISickRageSettings> {
         return this.http.get<ISickRageSettings>(`${this.url}/sickrage`, {headers: this.headers});
     }
@@ -277,11 +281,11 @@ export class SettingsService extends ServiceHelpers {
 
     public getNewsletterSettings(): Observable<INewsletterNotificationSettings> {
         return this.http.get<INewsletterNotificationSettings>(`${this.url}/notifications/newsletter`, {headers: this.headers});
-    }  
+    }
 
     public updateNewsletterDatabase(): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}/notifications/newsletterdatabase`, {headers: this.headers});
-    }    
+    }
 
     public saveNewsletterSettings(settings: INewsletterNotificationSettings): Observable<boolean> {
         return this.http

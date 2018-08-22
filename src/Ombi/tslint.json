@@ -8,7 +8,7 @@
     ],
     "max-line-length": [
       true,
-      200
+      250
     ],
     "arrow-parens": false,
     "radix": false,
@@ -16,21 +16,32 @@
     "indent": [
       false
     ],
-    "whitespace": [
-      false
-    ],
     "no-unused-expression": [
       true,
       "allow-new"
-    ],
-    "no-trailing-whitespace": [
-      false
     ],
     "max-classes-per-file": [
       false
     ],
     "no-shadowed-variable": false,
     "comment-format": [
+      false
+    ],
+    "no-namespace": [
+      false
+    ],
+    "no-internal-module": [
+      false
+    ],
+    "whitespace": [
+      false, 
+      "check-branch",
+      "check-decl",
+      "check-operator",
+      "check-separator",
+      "check-type"
+    ],
+    "no-trailing-whitespace":[
       false
     ]
   }

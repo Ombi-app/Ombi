@@ -182,6 +182,7 @@ namespace Ombi.Controllers
                 var roles = await _userManager.GetRolesAsync(c.User);
                 vm.Add(new IssueCommentChatViewModel
                 {
+                    Id = c.Id,
                     Comment = c.Comment,
                     Date = c.Date,
                     Username = c.User.UserAlias,
@@ -239,6 +240,18 @@ namespace Ombi.Controllers
             BackgroundJob.Enqueue(() => _notification.Publish(notificationModel));
 
             return await _issueComments.Add(newComment);
+        }
+        /// <summary>
+        /// Deletes a comment on a issue
+        /// </summary>
+        [HttpDelete("comments/{id:int}")]
+        [PowerUser]
+        public async Task<bool> DeleteComment(int id)
+        {
+            var comment = await _issueComments.GetAll().FirstOrDefaultAsync(x => x.Id == id);
+
+            await _issueComments.Delete(comment);
+            return true;
         }
 
         [HttpPost("status")]

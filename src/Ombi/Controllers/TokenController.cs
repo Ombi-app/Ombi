@@ -80,12 +80,10 @@ namespace Ombi.Controllers
             {
                 // Plex OAuth
                 // Redirect them to Plex
-                // We need a PIN first
-                var pin = await _plexOAuthManager.RequestPin();
-
+                
                 var websiteAddress = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
                 //https://app.plex.tv/auth#?forwardUrl=http://google.com/&clientID=Ombi-Test&context%5Bdevice%5D%5Bproduct%5D=Ombi%20SSO&pinID=798798&code=4lgfd
-                var url = await _plexOAuthManager.GetOAuthUrl(pin.id, pin.code, websiteAddress);
+                var url = await _plexOAuthManager.GetOAuthUrl(model.PlexTvPin.id, model.PlexTvPin.code, websiteAddress);
                 if (url == null)
                 {
                     return new JsonResult(new
@@ -93,7 +91,7 @@ namespace Ombi.Controllers
                         error = "Application URL has not been set"
                     });
                 }
-                return new JsonResult(new { url = url.ToString() });
+                return new JsonResult(new { url = url.ToString(), pinId = model.PlexTvPin.id });
             }
 
             return new UnauthorizedResult();

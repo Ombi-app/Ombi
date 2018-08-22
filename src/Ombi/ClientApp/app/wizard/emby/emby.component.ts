@@ -11,7 +11,7 @@ import { IEmbySettings } from "../../interfaces";
 })
 export class EmbyComponent implements OnInit {
 
-    private embySettings: IEmbySettings;
+    public embySettings: IEmbySettings;
 
     constructor(private embyService: EmbyService,
                 private router: Router,
@@ -21,7 +21,7 @@ export class EmbyComponent implements OnInit {
     public ngOnInit() {
         this.embySettings = {
             servers: [],
-            id:0,
+            id: 0,
             enable: true,
         };
         this.embySettings.servers.push({

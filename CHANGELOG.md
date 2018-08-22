@@ -1,5 +1,215 @@
 # Changelog
 
+## v3.0.3587 (2018-08-19)
+
+### **New Features**
+
+- Added the ability to invite Plex Friends from the user management screen. [Jamie]
+
+- Added rich notifications for mobile. [Jamie]
+
+- Updater fixes. [Jamie]
+
+- Added updater test mode. [Jamie Rees]
+
+- Added a new API method to delete issue comments. [TidusJar]
+
+- Updated @ngu/carousel to beta version to remove rxjs-compat dependency. [Matt Jeanes]
+
+- Update to Angular 6/Webpack 4. [Matt Jeanes]
+
+- Update CHANGELOG.md. [Jamie]
+
+- Updated the way we create the wizard user, errors show now be fed back to the user. [Jamie]
+
+- Added Brazillian Portuguese as a language and also Polish. [Jamie]
+
+- Updated swagger. [Jamie]
+
+- Updated to 2.1.1. [Jamie]
+
+### **Fixes**
+
+- #2408 Added the feature to delete comments on issues. [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- Fixed #2440. [TidusJar]
+
+- Delete cake.config. [Chris Pritchard]
+
+- Initial attempt at getting anime seriestype working. [Chris Pritchard]
+
+- Add cake.config. [Chris Pritchard]
+
+- Fixed the issue where we wouldn't correctly mark some shows as available when there was no provider id #2429. [Jamie]
+
+- Fixed the 'loop' in the cacher #2429. [Jamie]
+
+- Fixed #2427. [Jamie]
+
+- Fixed #2424. [Jamie]
+
+- Fixed #2409. [Jamie]
+
+- More updater. [Jamie]
+
+- Humanize the request type enum in notifications e.g. TvShow will now appear as "Tv Show" #2416. [TidusJar]
+
+- Made the quality override and root folder override load when we load the show (It will now appear) [Jamie]
+
+- Fixed #2415  where power users could not set the Sonarr Quality Override or Root Folder Override. [Jamie]
+
+- #2371 Fixed the issue where certain actions would not setup the series correctly in Sonarr. [Jamie]
+
+- Tightened up the security from an API perspecitve. [TidusJar]
+
+- Stop the root folder and profile calls from erroring. [TidusJar]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- Fixed all linting. [TidusJar]
+
+- Comment out envparam stuff. [Matt Jeanes]
+
+- Fixed prod build issue. [Matt Jeanes]
+
+- Missed a tiny bit. [Matt Jeanes]
+
+- Fix test. [Matt Jeanes]
+
+- Fix test build. [Matt Jeanes]
+
+- Linting + remove debug. [Matt Jeanes]
+
+- Switch to Yarn and disable auto publish in release mode. [Matt Jeanes]
+
+- Fix for #2409. [TidusJar]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- Possible fix for #2298. [D34DC3N73R]
+
+- Fixed the text for #2370. [Jamie]
+
+- Fixed where you couldn't bulk edit the limits to 0 #2318. [Jamie]
+
+- Upgraded to .net 2.1.2 (Includes security fixes) [Jamie]
+
+
+## v3.0.3477 (2018-07-18)
+
+### **New Features**
+
+- Updated the Emby availability checker to bring it more in line with what we do with Plex. [TidusJar]
+
+- Added the ability to impersonate a user when using the API Key. This allows people to use the API and request as a certain user. #2363. [Jamie Rees]
+
+- Added more background images and it will loop through the available ones. [Jamie Rees]
+
+- Added chunk hashing to resolve #2330. [Jamie Rees]
+
+- Added API at /api/v1/status/info to get branch and version information #2331. [Jamie Rees]
+
+- Update to .net 2.1.1. [Jamie]
+
+### **Fixes**
+
+- Fix #2322 caused by continue statement inside try catch block. [Anojh]
+
+- Fixed #2367. [TidusJar]
+
+- Fixed the issue where you could not delete a user #2365. [TidusJar]
+
+- Another attempt to fix #2366. [Jamie Rees]
+
+- Fixed the Plex OAuth warning. [Jamie]
+
+- Revert "Fixed Plex OAuth, should no longer show Insecure warning" [Jamie Rees]
+
+- Fixed Plex OAuth, should no longer show Insecure warning. [Jamie Rees]
+
+- Fixed the View On Emby URL since the Link changed #2368. [Jamie Rees]
+
+- Fixed the issue where episodes were not being marked as available in the search #2367. [Jamie Rees]
+
+- Fixed #2371. [Jamie Rees]
+
+- Fixed collection issues in Emby #2366. [Jamie Rees]
+
+- Do not delete the Emby Information every time we run, let's keep the content now. [Jamie Rees]
+
+- Emby Improvements: Batch up the amount we get from the server. [Jamie Rees]
+
+- Log errors when they are uncaught. [Jamie Rees]
+
+- Fix unclosed table tags causing overflow #2322. [Anojh]
+
+- This should now fix #2350. [Jamie]
+
+- Improve the validation around the Application URL. [Jamie Rees]
+
+- Fixed #2341. [Jamie Rees]
+
+- Stop spamming errors when FanArt doesn't have the image. [Jamie Rees]
+
+- Fixed #2338. [Jamie Rees]
+
+- Removed some logging statements. [Jamie Rees]
+
+- Fixed the api key being case sensative #2350. [Jamie Rees]
+
+- Improved the Emby API #2230 Thanks Luke! [Jamie Rees]
+
+- Revert. [Jamie Rees]
+
+- Fixed a small error in the Mobile Notification Provider. [Jamie Rees]
+
+- Minor style tweaks. [Randall Bruder]
+
+- Downgrade to .net core 2.0. [Jamie Rees]
+
+- Downgrade Microsoft.AspNetCore.All package back to 2.0.8. [Jamie Rees]
+
+- Removed old code. [Jamie Rees]
+
+- Swap out the old way of validating the API key with a real middlewear this time. [Jamie Rees]
+
+
 ## v3.0.3421 (2018-06-23)
 
 ### **New Features**

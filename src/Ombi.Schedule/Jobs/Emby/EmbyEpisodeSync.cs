@@ -73,37 +73,51 @@ namespace Ombi.Schedule.Jobs.Emby
 
         private async Task CacheEpisodes(EmbyServers server)
         {
-            var allEpisodes = await _api.GetAllEpisodes(server.ApiKey, server.AdministratorId, server.FullUri);
-            var epToAdd = new List<EmbyEpisode>();
-
-            foreach (var ep in allEpisodes.Items)
+            var allEpisodes = await _api.GetAllEpisodes(server.ApiKey, 0, 200, server.AdministratorId, server.FullUri);
+            var total = allEpisodes.TotalRecordCount;
+            var processed = 1;
+            var epToAdd = new HashSet<EmbyEpisode>();
+            while (processed < total)
             {
-                // Let's make sure we have the parent request, stop those pesky forign key errors,
-                // Damn me having data integrity
-                var parent = await _repo.GetByEmbyId(ep.SeriesId);
-                if (parent == null)
+                foreach (var ep in allEpisodes.Items)
                 {
-                    _logger.LogInformation("The episode {0} does not relate to a series, so we cannot save this", ep.Name);
-                    continue;
+                    processed++;
+                    // Let's make sure we have the parent request, stop those pesky forign key errors,
+                    // Damn me having data integrity
+                    var parent = await _repo.GetByEmbyId(ep.SeriesId);
+                    if (parent == null)
+                    {
+                        _logger.LogInformation("The episode {0} does not relate to a series, so we cannot save this",
+                            ep.Name);
+                        continue;
+                    }
+
+                    var existingEpisode = await _repo.GetEpisodeByEmbyId(ep.Id);
+                    // Make sure it's not in the hashset too
+                    var existingInList = epToAdd.Any(x => x.EmbyId == ep.Id);
+
+                    if (existingEpisode == null && !existingInList)
+                    {
+                        _logger.LogDebug("Adding new episode {0} to parent {1}", ep.Name, ep.SeriesName);
+                        // add it
+                        epToAdd.Add(new EmbyEpisode
+                        {
+                            EmbyId = ep.Id,
+                            EpisodeNumber = ep.IndexNumber,
+                            SeasonNumber = ep.ParentIndexNumber,
+                            ParentId = ep.SeriesId,
+                            TvDbId = ep.ProviderIds.Tvdb,
+                            TheMovieDbId = ep.ProviderIds.Tmdb,
+                            ImdbId = ep.ProviderIds.Imdb,
+                            Title = ep.Name,
+                            AddedAt = DateTime.UtcNow
+                        });
+                    }
                 }
 
-                var existingEpisode = await _repo.GetEpisodeByEmbyId(ep.Id);
-                if (existingEpisode == null)
-                {
-                    // add it
-                    epToAdd.Add(new EmbyEpisode
-                    {
-                        EmbyId = ep.Id,
-                        EpisodeNumber = ep.IndexNumber,
-                        SeasonNumber = ep.ParentIndexNumber,
-                        ParentId = ep.SeriesId,
-                        TvDbId = ep.ProviderIds.Tvdb,
-                        TheMovieDbId = ep.ProviderIds.Tmdb,
-                        ImdbId = ep.ProviderIds.Imdb,
-                        Title = ep.Name,
-                        AddedAt = DateTime.UtcNow
-                    });
-                }
+                await _repo.AddRange(epToAdd);
+                epToAdd.Clear();
+                allEpisodes = await _api.GetAllEpisodes(server.ApiKey, processed, 200, server.AdministratorId, server.FullUri);
             }
 
             if (epToAdd.Any())

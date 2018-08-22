@@ -46,6 +46,7 @@ export interface IIssueComments {
 }
 
 export interface IIssuesChat {
+    id: number;
     comment: string;
     date: Date;
     username: string;

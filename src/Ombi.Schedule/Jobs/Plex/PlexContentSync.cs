@@ -150,9 +150,9 @@ namespace Ombi.Schedule.Jobs.Plex
             var retVal = new ProcessedContent();
             var contentProcessed = new Dictionary<int, int>();
             var episodesProcessed = new List<int>();
-            Logger.LogInformation("Getting all content from server {0}", servers.Name);
+            Logger.LogDebug("Getting all content from server {0}", servers.Name);
             var allContent = await GetAllContent(servers, recentlyAddedSearch);
-            Logger.LogInformation("We found {0} items", allContent.Count);
+            Logger.LogDebug("We found {0} items", allContent.Count);
 
             // Let's now process this.
             var contentToAdd = new HashSet<PlexServerContent>();
@@ -163,7 +163,7 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 if (content.viewGroup.Equals(PlexMediaType.Episode.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 {
-                    Logger.LogInformation("Found some episodes, this must be a recently added sync");
+                    Logger.LogDebug("Found some episodes, this must be a recently added sync");
                     var count = 0;
                     foreach (var epInfo in content.Metadata ?? new Metadata[]{})
                     {
@@ -208,7 +208,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 if (content.viewGroup.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 {
                     // Process Shows
-                    Logger.LogInformation("Processing TV Shows");
+                    Logger.LogDebug("Processing TV Shows");
                     var count = 0;
                     foreach (var show in content.Metadata ?? new Metadata[] { })
                     {
@@ -237,7 +237,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
                 if (content.viewGroup.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 {
-                    Logger.LogInformation("Processing Movies");
+                    Logger.LogDebug("Processing Movies");
                     foreach (var movie in content?.Metadata ?? new Metadata[] { })
                     {
                         // Let's check if we have this movie
@@ -251,7 +251,7 @@ namespace Ombi.Schedule.Jobs.Plex
                             //var existing = await Repo.GetByKey(movie.ratingKey);
                             if (existing != null)
                             {
-                                Logger.LogInformation("We already have movie {0}", movie.title);
+                                Logger.LogDebug("We already have movie {0}", movie.title);
                                 continue;
                             }
 
@@ -261,7 +261,7 @@ namespace Ombi.Schedule.Jobs.Plex
                                 await Repo.Delete(hasSameKey);
                             }
 
-                            Logger.LogInformation("Adding movie {0}", movie.title);
+                            Logger.LogDebug("Adding movie {0}", movie.title);
                             var metaData = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
                                 movie.ratingKey);
                             var providerIds = PlexHelper.GetProviderIdFromPlexGuid(metaData.MediaContainer.Metadata
@@ -381,6 +381,19 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if (existingContent != null)
             {
+                // Let's make sure that we have some sort of ID e.g. Imdbid for this,
+                // Looks like it's possible to not have an Id for a show
+                // I suspect we cached that show just as it was added to Plex.
+
+                if (!existingContent.HasImdb && !existingContent.HasTheMovieDb && !existingContent.HasTvDb)
+                {
+                    var showMetadata = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
+                        existingContent.Key);
+                    GetProviderIds(showMetadata, existingContent);
+
+                    await Repo.Update(existingContent);
+                }
+
                 // Just check the key
                 if (existingKey != null)
                 {
@@ -421,7 +434,7 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 try
                 {
-                    Logger.LogInformation("We already have show {0} checking for new seasons",
+                    Logger.LogDebug("We already have show {0} checking for new seasons",
                         existingContent.Title);
                     // Ok so we have it, let's check if there are any new seasons
                     var itemAdded = false;
@@ -472,16 +485,13 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 try
                 {
-                    Logger.LogInformation("New show {0}, so add it", show.title);
+                    Logger.LogDebug("New show {0}, so add it", show.title);
 
                     // Get the show metadata... This sucks since the `metadata` var contains all information about the show
                     // But it does not contain the `guid` property that we need to pull out thetvdb id...
                     var showMetadata = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
                         show.ratingKey);
-                    var providerIds =
-                        PlexHelper.GetProviderIdFromPlexGuid(showMetadata.MediaContainer.Metadata.FirstOrDefault()
-                            .guid);
-
+                  
                     var item = new PlexServerContent
                     {
                         AddedAt = DateTime.Now,
@@ -492,20 +502,7 @@ namespace Ombi.Schedule.Jobs.Plex
                         Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, show.ratingKey),
                         Seasons = new List<PlexSeasonsContent>()
                     };
-                    if (providerIds.Type == ProviderType.ImdbId)
-                    {
-                        item.ImdbId = providerIds.ImdbId;
-                    }
-
-                    if (providerIds.Type == ProviderType.TheMovieDbId)
-                    {
-                        item.TheMovieDbId = providerIds.TheMovieDb;
-                    }
-
-                    if (providerIds.Type == ProviderType.TvDbId)
-                    {
-                        item.TvDbId = providerIds.TheTvDb;
-                    }
+                    GetProviderIds(showMetadata, item);
 
                     // Let's just double check to make sure we do not have it now we have some id's
                     var existingImdb = false;
@@ -547,6 +544,27 @@ namespace Ombi.Schedule.Jobs.Plex
             }
         }
 
+        private static void GetProviderIds(PlexMetadata showMetadata, PlexServerContent existingContent)
+        {
+            var providerIds =
+                PlexHelper.GetProviderIdFromPlexGuid(showMetadata.MediaContainer.Metadata.FirstOrDefault()
+                    .guid);
+            if (providerIds.Type == ProviderType.ImdbId)
+            {
+                existingContent.ImdbId = providerIds.ImdbId;
+            }
+
+            if (providerIds.Type == ProviderType.TheMovieDbId)
+            {
+                existingContent.TheMovieDbId = providerIds.TheMovieDb;
+            }
+
+            if (providerIds.Type == ProviderType.TvDbId)
+            {
+                existingContent.TvDbId = providerIds.TheTvDb;
+            }
+        }
+
         /// <summary>
         /// Gets all the library sections.
         /// If the user has specified only certain libraries then we will only look for those
@@ -573,7 +591,7 @@ namespace Ombi.Schedule.Jobs.Plex
                                 .Select(x => x.Key.ToString()).ToList();
                             if (!keys.Contains(dir.key))
                             {
-                                Logger.LogInformation("Lib {0} is not monitored, so skipping", dir.key);
+                                Logger.LogDebug("Lib {0} is not monitored, so skipping", dir.key);
                                 // We are not monitoring this lib
                                 continue;
                             }

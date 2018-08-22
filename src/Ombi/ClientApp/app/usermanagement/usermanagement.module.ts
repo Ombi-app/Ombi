@@ -12,11 +12,12 @@ import { UserManagementEditComponent } from "./usermanagement-edit.component";
 import { UserManagementComponent } from "./usermanagement.component";
 
 import { PipeModule } from "../pipes/pipe.module";
-import { IdentityService } from "../services";
+import { IdentityService, PlexService } from "../services";
 
 import { AuthGuard } from "../auth/auth.guard";
 
 import { OrderModule } from "ngx-order-pipe";
+import { AddPlexUserComponent } from "./addplexuser.component";
 
 const routes: Routes = [
     { path: "", component: UserManagementComponent, canActivate: [AuthGuard] },
@@ -44,6 +45,10 @@ const routes: Routes = [
         UserManagementAddComponent,
         UserManagementEditComponent,
         UpdateDetailsComponent,
+        AddPlexUserComponent,
+    ],
+    entryComponents:[
+        AddPlexUserComponent,
     ],
     exports: [
         RouterModule,
@@ -51,6 +56,7 @@ const routes: Routes = [
     providers: [
         IdentityService,
         ConfirmationService,
+        PlexService,
     ],
 
 })

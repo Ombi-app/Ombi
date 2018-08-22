@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "lib": [
-      "es6",
+      "es2017",
       "dom"
     ],
     "moduleResolution": "node",
@@ -27,11 +27,15 @@
       }
     ]
   },
-  "exclude": [
-    "bin",
-    "node_modules"
+  "include": [
+    "ClientApp/**/*",
+    "typings/**/*",
+    "webpack.config.*"
   ],
   "angularCompilerOptions": {
-    "preserveWhitespaces": false
-  }
+    "preserveWhitespaces": false,
+    "genDir": "./ClientApp/app/ngfactory",
+    "entryModule": "ClientApp/app/app.module#AppModule"
+  },
+  "compileOnSave": false
 }

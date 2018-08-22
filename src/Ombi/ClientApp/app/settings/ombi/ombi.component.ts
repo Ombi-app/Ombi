@@ -41,9 +41,9 @@ export class OmbiComponent implements OnInit {
             return;
         }
 
-        const result = <IOmbiSettings>form.value;
-        if(result.baseUrl  && result.baseUrl.length > 0) {
-            if(!result.baseUrl.startsWith("/")) {
+        const result = <IOmbiSettings> form.value;
+        if (result.baseUrl  && result.baseUrl.length > 0) {
+            if (!result.baseUrl.startsWith("/")) {
                 this.notificationService.error("Please ensure your base url starts with a '/'");
                 return;
             }
