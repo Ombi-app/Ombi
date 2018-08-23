@@ -7,6 +7,8 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { MovieSearchComponent } from "./moviesearch.component";
 import { MovieSearchGridComponent } from "./moviesearchgrid.component";
+import { AlbumSearchComponent } from "./music/albumsearch.component";
+import { ArtistSearchComponent } from "./music/artistsearch.component";
 import { MusicSearchComponent } from "./music/musicsearch.component";
 import { SearchComponent } from "./search.component";
 import { SeriesInformationComponent } from "./seriesinformation.component";
@@ -43,6 +45,8 @@ const routes: Routes = [
         SeriesInformationComponent,
         MovieSearchGridComponent,
         MusicSearchComponent,
+        ArtistSearchComponent,
+        AlbumSearchComponent,
     ],
     exports: [
         RouterModule,

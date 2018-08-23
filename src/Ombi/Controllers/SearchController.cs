@@ -202,7 +202,7 @@ namespace Ombi.Controllers
         /// <remarks>We use Lidarr as the Provider</remarks>
         /// <returns></returns>
         [HttpGet("music/album/{searchTerm}")]
-        public async Task<IEnumerable<AlbumLookup>> SearchAlbum(string searchTerm)
+        public async Task<IEnumerable<SearchAlbumViewModel>> SearchAlbum(string searchTerm)
         {
             return await MusicEngine.SearchAlbum(searchTerm);
         }

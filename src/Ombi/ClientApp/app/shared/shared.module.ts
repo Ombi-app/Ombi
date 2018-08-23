@@ -6,7 +6,7 @@ import { TruncateModule } from "@yellowspot/ng-truncate";
 
 import { IssuesReportComponent } from "./issues-report.component";
 
-import { SidebarModule } from "primeng/primeng";
+import { InputSwitchModule, SidebarModule } from "primeng/primeng";
 
 @NgModule({
   declarations: [
@@ -16,6 +16,7 @@ import { SidebarModule } from "primeng/primeng";
     SidebarModule,
     FormsModule,
     CommonModule,
+    InputSwitchModule,
     TruncateModule,
   ],
   exports: [
@@ -25,6 +26,7 @@ import { SidebarModule } from "primeng/primeng";
       SidebarModule,
       IssuesReportComponent,
       TruncateModule,
+      InputSwitchModule,
     ],
 })
 export class SharedModule {}

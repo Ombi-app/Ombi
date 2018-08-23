@@ -3,6 +3,6 @@
     public class Ratings
     {
         public int votes { get; set; }
-        public float value { get; set; }
+        public decimal value { get; set; }
     }
 }

@@ -1,0 +1,77 @@
+<div class="row" >
+                
+    <div class="myBg backdrop" [style.background-image]="result.background"></div>
+    <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
+<div class="col-sm-3 small-padding">
+    <img *ngIf="result.cover"  class="img-responsive poster" src="{{result.cover}}" alt="poster">
+
+</div>
+<div class="col-sm-7 small-padding">
+    <div>
+        <a href="" target="_blank">
+                <h4>{{result.title}}</h4>
+        </a>
+        <a href="" target="_blank">
+            <h4>{{result.artistName}}</h4>
+        </a>
+    <span class="tags">
+        <!-- <span *ngIf="result.releaseDate" class="label label-info" id="releaseDateLabel" target="_blank">{{ 'Search.TheatricalRelease' | translate: {date: result.releaseDate | date: 'mediumDate'} }}</span>
+        <span *ngIf="result.digitalReleaseDate" class="label label-info" id="releaseDateLabel" target="_blank">{{ 'Search.DigitalDate' | translate: {date: result.digitalReleaseDate | date: 'mediumDate'} }}</span>
+
+        <a *ngIf="result.homepage" href="{{result.homepage}}" id="homePageLabel" target="_blank"><span class="label label-info" [translate]="'Search.Movies.HomePage'"></span></a>
+
+        <a *ngIf="result.trailer" href="{{result.trailer}}" id="trailerLabel" target="_blank"><span class="label label-info" [translate]="'Search.Movies.Trailer'"></span></a> -->
+        
+        <ng-template [ngIf]="result.available"><span class="label label-success" id="availableLabel" [translate]="'Common.Available'"></span></ng-template>
+        <ng-template [ngIf]="result.approved && !result.available"><span class="label label-info" id="processingRequestLabel" [translate]="'Common.ProcessingRequest'"></span></ng-template>
+        <ng-template [ngIf]="result.requested && !result.approved && !result.available"><span class="label label-warning" id="pendingApprovalLabel" [translate]="'Common.PendingApproval'"></span></ng-template>
+        <ng-template [ngIf]="!result.requested && !result.available && !result.approved"><span class="label label-danger" id="notRequestedLabel" [translate]="'Common.NotRequested'"></span></ng-template>
+
+
+    </span>
+
+        <br/>
+    </div>
+    <p style="font-size: 0.9rem !important">{{result.overview | truncate: 350 }}</p>
+</div>
+
+
+<div class="col-sm-2 small-padding">
+    <div class="row" *ngIf="result.requested">
+        <div class="col-md-2 col-md-push-10">
+
+            <!-- <a *ngIf="result.showSubscribe && !result.subscribed" style="color:white" (click)="subscribe(result)" pTooltip="Subscribe for notifications"> <i class="fa fa-rss"></i></a>
+            <a *ngIf="result.showSubscribe && result.subscribed" style="color:red" (click)="unSubscribe(result)" pTooltip="Unsubscribe notification"> <i class="fa fa-rss"></i></a> -->
+        </div>
+    </div>
+    <div *ngIf="result.available">
+        <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> {{ 'Common.Available' | translate }}</button>
+    </div>
+    <div *ngIf="!result.available">
+    <div *ngIf="result.requested || result.approved; then requestedBtn else notRequestedBtn"></div>
+    <ng-template #requestedBtn>
+        <button style="text-align: right" class="btn btn-primary-outline disabled" [disabled]><i class="fa fa-check"></i> {{ 'Common.Requested' | translate }}</button>
+    </ng-template>
+    <ng-template #notRequestedBtn>
+        <button style="text-align: right" class="btn btn-primary-outline" (click)="request(result)">
+            <i *ngIf="result.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> <i *ngIf="!result.requestProcessing && !result.processed" class="fa fa-plus"></i>
+            <i *ngIf="result.processed && !result.requestProcessing" class="fa fa-check"></i> {{ 'Common.Request' | translate }}</button>
+    </ng-template>
+        </div>
+        <!-- <button style="text-align: right" class="btn btn-sm btn-info-outline" (click)="similarMovies(result.id)"> <i class="fa fa-eye"></i> {{ 'Search.Similar' | translate }}</button> -->
+    
+    <br/>
+
+    <div class="dropdown" *ngIf="result.available && issueCategories && issuesEnabled">
+        <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <i class="fa fa-plus"></i> Report Issue
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <!-- <li *ngFor="let cat of issueCategories"><a [routerLink]="" (click)="reportIssue(cat, result)">{{cat.value}}</a></li> -->
+        </ul>
+    </div>
+
+</div>
+
+</div>

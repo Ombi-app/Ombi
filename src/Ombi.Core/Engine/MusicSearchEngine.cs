@@ -47,12 +47,17 @@ namespace Ombi.Core.Engine
         /// </summary>
         /// <param name="search">The search.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<AlbumLookup>> SearchAlbum(string search)
+        public async Task<IEnumerable<SearchAlbumViewModel>> SearchAlbum(string search)
         {
             var settings = await GetSettings();
             var result = await _lidarrApi.AlbumLookup(search, settings.ApiKey, settings.FullUri);
+            var vm = new List<SearchAlbumViewModel>();
+            foreach (var r in result)
+            {
+                vm.Add(await MapIntoAlbumVm(r, settings));
+            }
 
-            return result;
+            return vm;
         }
 
         /// <summary>
@@ -71,30 +76,6 @@ namespace Ombi.Core.Engine
                 vm.Add(MapIntoArtistVm(r));
             }
 
-            return vm;
-        }
-
-        private SearchArtistViewModel MapIntoArtistVm(ArtistLookup a)
-        {
-            var vm = new SearchArtistViewModel
-            {
-                ArtistName = a.artistName,
-                ArtistType = a.artistType,
-                Banner = a.images?.FirstOrDefault(x => x.coverType.Equals("banner"))?.url,
-                Logo = a.images?.FirstOrDefault(x => x.coverType.Equals("logo"))?.url,
-                CleanName = a.cleanName,
-                Disambiguation = a.disambiguation,
-                ForignArtistId = a.foreignArtistId,
-                Links = a.links,
-                Overview = a.overview,
-            };
-
-            var poster = a.images?.FirstOrDefault(x => x.coverType.Equals("poaster"));
-            if (poster == null)
-            {
-                vm.Poster = a.remotePoster;
-            }
-            
             return vm;
         }
 
@@ -126,7 +107,62 @@ namespace Ombi.Core.Engine
             return await _lidarrApi.GetArtist(artistId, settings.ApiKey, settings.FullUri);
         }
 
+        private SearchArtistViewModel MapIntoArtistVm(ArtistLookup a)
+        {
+            var vm = new SearchArtistViewModel
+            {
+                ArtistName = a.artistName,
+                ArtistType = a.artistType,
+                Banner = a.images?.FirstOrDefault(x => x.coverType.Equals("banner"))?.url,
+                Logo = a.images?.FirstOrDefault(x => x.coverType.Equals("logo"))?.url,
+                CleanName = a.cleanName,
+                Disambiguation = a.disambiguation,
+                ForignArtistId = a.foreignArtistId,
+                Links = a.links,
+                Overview = a.overview,
+            };
 
+            var poster = a.images?.FirstOrDefault(x => x.coverType.Equals("poaster"));
+            if (poster == null)
+            {
+                vm.Poster = a.remotePoster;
+            }
+
+            return vm;
+        }
+
+        private async Task<SearchAlbumViewModel> MapIntoAlbumVm(AlbumLookup a, LidarrSettings settings)
+        {
+            var vm = new SearchAlbumViewModel
+            {
+                ForeignAlbumId = a.foreignAlbumId,
+                Monitored = a.monitored,
+                Rating = a.ratings?.value ?? 0m,
+                ReleaseDate = a.releaseDate,
+                Title = a.title
+            };
+            if (vm.Monitored)
+            {
+                // The JSON is different for some stupid reason
+                // Need to lookup the artist now and all the images -.-"
+                var artist = await _lidarrApi.GetArtist(a.artistId, settings.ApiKey, settings.FullUri);
+                vm.ArtistName = artist.artistName;
+                vm.ForeignArtistId = artist.foreignArtistId;
+            }
+            else
+            {
+                vm.ForeignArtistId = a.artist?.foreignArtistId;
+                vm.ArtistName = a.artist?.artistName;
+            }
+
+            vm.Cover = a.images?.FirstOrDefault(x => x.coverType.Equals("cover"))?.url;
+            if (vm.Cover == null)
+            {
+                vm.Cover = a.remoteCover;
+            }
+
+            return vm;
+        }
         private LidarrSettings _settings;
         private async Task<LidarrSettings> GetSettings()
         {

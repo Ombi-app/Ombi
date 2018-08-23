@@ -7,7 +7,7 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { AuthService } from "../../auth/auth.service";
 import { IIssueCategory, IRequestEngineResult, ISearchMovieResult } from "../../interfaces";
-import { ISearchArtistResult } from "../../interfaces/ISearchMusicResult";
+import { ISearchAlbumResult, ISearchArtistResult } from "../../interfaces/ISearchMusicResult";
 import { NotificationService, RequestService, SearchService } from "../../services";
 
 @Component({
@@ -19,6 +19,7 @@ export class MusicSearchComponent implements OnInit {
     public searchText: string;
     public searchChanged: Subject<string> = new Subject<string>();
     public artistResult: ISearchArtistResult[];
+    public albumResult: ISearchAlbumResult[];
     public result: IRequestEngineResult;
     public searchApplied = false;
     public searchAlbum: boolean;
@@ -35,9 +36,8 @@ export class MusicSearchComponent implements OnInit {
     constructor(
         private searchService: SearchService, private requestService: RequestService,
         private notificationService: NotificationService, private authService: AuthService,
-        private readonly translate: TranslateService,
-        private readonly platformLocation: PlatformLocation,
-        private sanitizer: DomSanitizer) {
+        private readonly translate: TranslateService, private sanitizer: DomSanitizer,
+        private readonly platformLocation: PlatformLocation) {
 
         this.searchChanged.pipe(
             debounceTime(600), // Wait Xms after the last event before emitting last event
@@ -45,22 +45,27 @@ export class MusicSearchComponent implements OnInit {
         ).subscribe(x => {
             this.searchText = x as string;
             if (this.searchText === "") {
-                this.clearResults();
+                if(this.searchAlbum) {
+                    this.clearAlbumResults();
+                } else {
+                    this.clearArtistResults();
+                }
+                
                 return;
             }
             if(this.searchAlbum) {
                 this.searchService.searchAlbum(this.searchText)
                 .subscribe(x => {
-                    this.artistResult = x;
+                    this.albumResult = x;
                     this.searchApplied = true;
-                    this.setBackground();
+                    this.setAlbumBackground();
                 });
             } else {
                 this.searchService.searchArtist(this.searchText)
                 .subscribe(x => {
                     this.artistResult = x;
                     this.searchApplied = true;
-                    this.setBackground();
+                    this.setArtistBackground();
                 });
             }
         });
@@ -83,6 +88,16 @@ export class MusicSearchComponent implements OnInit {
 
     public search(text: any) {
         this.searchChanged.next(text.target.value);
+    }
+
+    public searchMode(val: boolean) {
+        this.searchAlbum = val;
+        if(val) {
+            // Album
+            this.clearArtistResults();
+        } else {
+            this.clearAlbumResults();
+        }
     }
 
     public request(searchResult: ISearchMovieResult) {
@@ -124,18 +139,31 @@ export class MusicSearchComponent implements OnInit {
         }
     }
 
-    private clearResults() {
+    private clearArtistResults() {
         this.artistResult = [];
         this.searchApplied = false;
     }
 
-    private setBackground() {
+    private clearAlbumResults() {
+        this.albumResult = [];
+        this.searchApplied = false;
+    }
+
+    private setArtistBackground() {
         this.artistResult.forEach((val, index) => {
             if (val.poster === null) {
                 val.poster = this.defaultPoster;
-            }
+            } 
             val.background = this.sanitizer.bypassSecurityTrustStyle
                 ("url(" + val.banner + ")");
+        });
+    }
+
+    private setAlbumBackground() {
+        this.albumResult.forEach((val, index) => {
+            if (val.cover === null) {
+                val.cover = this.defaultPoster;
+            }
         });
     }
 }
