@@ -2,12 +2,6 @@
 
 namespace Ombi.Api.Lidarr.Models
 {
-    public class Cutoff
-    {
-        public int id { get; set; }
-        public string name { get; set; }
-    }
-
     public class Quality
     {
         public int id { get; set; }
@@ -23,9 +17,7 @@ namespace Ombi.Api.Lidarr.Models
     public class LidarrProfile
 {
         public string name { get; set; }
-        public Cutoff cutoff { get; set; }
         public List<Item> items { get; set; }
-        public string language { get; set; }
         public int id { get; set; }
     }
 }

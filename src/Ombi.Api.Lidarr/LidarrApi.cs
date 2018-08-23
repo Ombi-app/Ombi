@@ -22,7 +22,7 @@ namespace Ombi.Api.Lidarr
 
         public Task<List<LidarrProfile>> GetProfiles(string apiKey, string baseUrl)
         {
-            var request = new Request($"{ApiVersion}/profile", baseUrl, HttpMethod.Get);
+            var request = new Request($"{ApiVersion}/qualityprofile", baseUrl, HttpMethod.Get);
 
             AddHeaders(request, apiKey);
             return Api.Request<List<LidarrProfile>>(request);

@@ -7,6 +7,6 @@
         public int trackCount { get; set; }
         public int totalTrackCount { get; set; }
         public int sizeOnDisk { get; set; }
-        public int percentOfTracks { get; set; }
+        public decimal percentOfTracks { get; set; }
     }
 }

@@ -24,7 +24,7 @@ using Ombi.Store.Repository;
 
 namespace Ombi.Core.Engine
 {
-    public class MusicSearchEngine : BaseMediaEngine
+    public class MusicSearchEngine : BaseMediaEngine, IMusicSearchEngine
     {
         public MusicSearchEngine(IPrincipal identity, IRequestServiceMain service, ILidarrApi lidarrApi, IMapper mapper,
             ILogger<MusicSearchEngine> logger, IRuleEvaluator r, OmbiUserManager um, ICacheService mem, ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub,
@@ -60,12 +60,42 @@ namespace Ombi.Core.Engine
         /// </summary>
         /// <param name="search">The search.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<ArtistLookup>> SearchArtist(string search)
+        public async Task<IEnumerable<SearchArtistViewModel>> SearchArtist(string search)
         {
             var settings = await GetSettings();
             var result = await _lidarrApi.ArtistLookup(search, settings.ApiKey, settings.FullUri);
 
-            return result;
+            var vm = new List<SearchArtistViewModel>();
+            foreach (var r in result)
+            {
+                vm.Add(MapIntoArtistVm(r));
+            }
+
+            return vm;
+        }
+
+        private SearchArtistViewModel MapIntoArtistVm(ArtistLookup a)
+        {
+            var vm = new SearchArtistViewModel
+            {
+                ArtistName = a.artistName,
+                ArtistType = a.artistType,
+                Banner = a.images?.FirstOrDefault(x => x.coverType.Equals("banner"))?.url,
+                Logo = a.images?.FirstOrDefault(x => x.coverType.Equals("logo"))?.url,
+                CleanName = a.cleanName,
+                Disambiguation = a.disambiguation,
+                ForignArtistId = a.foreignArtistId,
+                Links = a.links,
+                Overview = a.overview,
+            };
+
+            var poster = a.images?.FirstOrDefault(x => x.coverType.Equals("poaster"));
+            if (poster == null)
+            {
+                vm.Poster = a.remotePoster;
+            }
+            
+            return vm;
         }
 
         /// <summary>
@@ -73,7 +103,7 @@ namespace Ombi.Core.Engine
         /// </summary>
         /// <param name="artistId"></param>
         /// <returns></returns>
-        public async Task GetArtistAlbums(string foreignArtistId)
+        public async Task<ArtistResult> GetArtistAlbums(string foreignArtistId)
         {
             var settings = await GetSettings();
             return await _lidarrApi.GetArtistByForignId(foreignArtistId, settings.ApiKey, settings.FullUri);
@@ -82,11 +112,12 @@ namespace Ombi.Core.Engine
         /// <summary>
         /// Returns the artist that produced the album
         /// </summary>
-        /// <param name="albumId"></param>
+        /// <param name="foreignArtistId"></param>
         /// <returns></returns>
-        public async Task GetAlbumArtist(string foreignArtistId)
+        public async Task<ArtistResult> GetAlbumArtist(string foreignArtistId)
         {
-            throw new NotImplementedException();
+            var settings = await GetSettings();
+            return await _lidarrApi.GetArtistByForignId(foreignArtistId, settings.ApiKey, settings.FullUri);
         }
 
         public async Task<ArtistResult> GetArtist(int artistId)

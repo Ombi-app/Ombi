@@ -78,6 +78,7 @@
       "Want to watch something that is not currently available? No problem, just search for it below and request it!",
     "MoviesTab": "Movies",
     "TvTab": "TV Shows",
+    "MusicTab":"Music",
     "Suggestions": "Suggestions",
     "NoResults": "Sorry, we didn't find any results!",
     "DigitalDate": "Digital Release: {{date}}",

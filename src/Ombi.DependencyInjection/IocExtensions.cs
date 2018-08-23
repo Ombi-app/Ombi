@@ -83,6 +83,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IUserStatsEngine, UserStatsEngine>();
             services.AddTransient<IMovieSender, MovieSender>();
             services.AddTransient<IRecentlyAddedEngine, RecentlyAddedEngine>();
+            services.AddTransient<IMusicSearchEngine, MusicSearchEngine>();
             services.AddTransient<ITvSender, TvSender>();
             services.AddTransient<IMassEmailSender, MassEmailSender>();
             services.AddTransient<IPlexOAuthManager, PlexOAuthManager>();

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-
+using Ombi.Api.Lidarr.Models;
 using Ombi.Core;
 using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
@@ -18,16 +18,18 @@ namespace Ombi.Controllers
     [Produces("application/json")]
     public class SearchController : Controller
     {
-        public SearchController(IMovieEngine movie, ITvSearchEngine tvEngine, ILogger<SearchController> logger)
+        public SearchController(IMovieEngine movie, ITvSearchEngine tvEngine, ILogger<SearchController> logger, IMusicSearchEngine music)
         {
             MovieEngine = movie;
             TvEngine = tvEngine;
             Logger = logger;
+            MusicEngine = music;
         }
         private ILogger<SearchController> Logger { get; }
 
         private IMovieEngine MovieEngine { get; }
         private ITvSearchEngine TvEngine { get; }
+        private IMusicSearchEngine MusicEngine { get; }
 
         /// <summary>
         /// Searches for a movie.
@@ -181,6 +183,28 @@ namespace Ombi.Controllers
         public async Task<IEnumerable<SearchTvShowViewModel>> Trending()
         {
             return await TvEngine.Trending();
+        }
+
+        /// <summary>
+        /// Returns the artist information we searched for
+        /// </summary>
+        /// <remarks>We use Lidarr as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("music/artist/{searchTerm}")]
+        public async Task<IEnumerable<SearchArtistViewModel>> SearchArtist(string searchTerm)
+        {
+            return await MusicEngine.SearchArtist(searchTerm);
+        }
+
+        /// <summary>
+        /// Returns the album information we searched for
+        /// </summary>
+        /// <remarks>We use Lidarr as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("music/album/{searchTerm}")]
+        public async Task<IEnumerable<AlbumLookup>> SearchAlbum(string searchTerm)
+        {
+            return await MusicEngine.SearchAlbum(searchTerm);
         }
     }
 }

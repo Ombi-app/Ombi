@@ -69,7 +69,10 @@ export class SearchService extends ServiceHelpers {
         return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/trending`, {headers: this.headers});
     }
     // Music
-    public searchMusic(searchTerm: string): Observable<ISearchMovieResult[]> {
-        return this.http.get<ISearchMovieResult[]>(`${this.url}/Music/` + searchTerm);
+    public searchArtist(searchTerm: string): Observable<any> {
+        return this.http.get<any>(`${this.url}/Music/Artist/` + searchTerm);
+    }
+    public searchAlbum(searchTerm: string): Observable<any> {
+        return this.http.get<any>(`${this.url}/Music/Album/` + searchTerm);
     }
 }

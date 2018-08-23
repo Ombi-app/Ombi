@@ -3,8 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 import { ILidarrSettings, IMinimumAvailability, IRadarrProfile, IRadarrRootFolder } from "../../interfaces";
 import { IRadarrSettings } from "../../interfaces";
-import { RadarrService } from "../../services";
-import { TesterService } from "../../services";
+import { LidarrService, TesterService } from "../../services";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
 
@@ -22,7 +21,7 @@ export class LidarrComponent implements OnInit {
     public form: FormGroup;
 
     constructor(private settingsService: SettingsService,
-                private radarrService: RadarrService,
+                private lidarrService: LidarrService,
                 private notificationService: NotificationService,
                 private fb: FormBuilder,
                 private testerService: TesterService) { }
@@ -59,7 +58,7 @@ export class LidarrComponent implements OnInit {
 
     public getProfiles(form: FormGroup) {
          this.profilesRunning = true;
-         this.radarrService.getQualityProfiles(form.value).subscribe(x => {
+         this.lidarrService.getQualityProfiles(form.value).subscribe(x => {
              this.qualities = x;
              this.qualities.unshift({ name: "Please Select", id: -1 });
 
@@ -70,7 +69,7 @@ export class LidarrComponent implements OnInit {
 
     public getRootFolders(form: FormGroup) {
          this.rootFoldersRunning = true;
-         this.radarrService.getRootFolders(form.value).subscribe(x => {
+         this.lidarrService.getRootFolders(form.value).subscribe(x => {
              this.rootFolders = x;
              this.rootFolders.unshift({ path: "Please Select", id: -1 });
 

@@ -333,7 +333,7 @@ namespace Ombi.Controllers
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
-        [HttpPost("sonarr")]
+        [HttpPost("lidarr")]
         public async Task<bool> LidarrSettings([FromBody]LidarrSettings settings)
         {
             return await Save(settings);

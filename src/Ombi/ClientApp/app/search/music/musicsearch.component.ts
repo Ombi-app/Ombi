@@ -4,13 +4,13 @@ import { TranslateService } from "@ngx-translate/core";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
-import { AuthService } from "../auth/auth.service";
-import { IIssueCategory, IRequestEngineResult, ISearchMovieResult } from "../interfaces";
-import { NotificationService, RequestService, SearchService } from "../services";
+import { AuthService } from "../../auth/auth.service";
+import { IIssueCategory, IRequestEngineResult, ISearchMovieResult } from "../../interfaces";
+import { NotificationService, RequestService, SearchService } from "../../services";
 
 @Component({
     selector: "music-search",
-    templateUrl: "./music.component.html",
+    templateUrl: "./musicsearch.component.html",
 })
 export class MusicSearchComponent implements OnInit {
 
@@ -19,6 +19,7 @@ export class MusicSearchComponent implements OnInit {
     public movieResults: ISearchMovieResult[];
     public result: IRequestEngineResult;
     public searchApplied = false;
+    public searchArtist: boolean;
 
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
@@ -44,11 +45,20 @@ export class MusicSearchComponent implements OnInit {
                 this.clearResults();
                 return;
             }
-            this.searchService.searchMusic(this.searchText)
+            if(this.searchArtist) {
+                this.searchService.searchArtist(this.searchText)
                 .subscribe(x => {
                     this.movieResults = x;
                     this.searchApplied = true;
                 });
+            } else {
+                this.searchService.searchAlbum(this.searchText)
+                .subscribe(x => {
+                    this.movieResults = x;
+                    this.searchApplied = true;
+                });
+            }
+
         });
         this.defaultPoster = "../../../images/default_movie_poster.png";
         const base = this.platformLocation.getBaseHrefFromDOM();
@@ -65,7 +75,6 @@ export class MusicSearchComponent implements OnInit {
             result: false,
             errorMessage: "",
         };
-        this.popularMovies();
     }
 
     public search(text: any) {
@@ -111,77 +120,6 @@ export class MusicSearchComponent implements OnInit {
         }
     }
 
-    public popularMovies() {
-        this.clearResults();
-        this.searchService.popularMovies()
-            .subscribe(x => {
-                this.movieResults = x;
-            });
-    }
-    public nowPlayingMovies() {
-        this.clearResults();
-        this.searchService.nowPlayingMovies()
-            .subscribe(x => {
-                this.movieResults = x;
-            });
-    }
-    public topRatedMovies() {
-        this.clearResults();
-        this.searchService.topRatedMovies()
-            .subscribe(x => {
-                this.movieResults = x;
-            });
-    }
-    public upcomingMovies() {
-        this.clearResults();
-        this.searchService.upcomingMovies()
-            .subscribe(x => {
-                this.movieResults = x;
-            });
-    }
-
-    public reportIssue(catId: IIssueCategory, req: ISearchMovieResult) {
-        this.issueRequestId = req.id;
-        this.issueRequestTitle = req.title + `(${req.releaseDate.getFullYear})`;
-        this.issueCategorySelected = catId;
-        this.issuesBarVisible = true;
-        this.issueProviderId = req.id.toString();
-    }
-
-    public similarMovies(theMovieDbId: number) {
-        this.clearResults();
-        this.searchService.similarMovies(theMovieDbId)
-            .subscribe(x => {
-                this.movieResults = x;
-                this.getExtraInfo();
-            });
-    }
-
-    public subscribe(r: ISearchMovieResult) {
-        r.subscribed = true;
-        this.requestService.subscribeToMovie(r.requestId)
-            .subscribe(x => {
-                this.notificationService.success("Subscribed To Movie!");
-            });
-    }
-
-    public unSubscribe(r: ISearchMovieResult) {
-        r.subscribed = false;
-        this.requestService.unSubscribeToMovie(r.requestId)
-            .subscribe(x => {
-                this.notificationService.success("Unsubscribed Movie!");
-            });
-    }
-
-   private updateItem(key: ISearchMovieResult, updated: ISearchMovieResult) {
-        const index = this.movieResults.indexOf(key, 0);
-        if (index > -1) {
-            const copy = { ...this.movieResults[index] };
-            this.movieResults[index] = updated;
-            this.movieResults[index].background = copy.background;
-            this.movieResults[index].posterPath = copy.posterPath;
-        }
-    }
     private clearResults() {
         this.movieResults = [];
         this.searchApplied = false;
