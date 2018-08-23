@@ -11,7 +11,7 @@
         <a href="" target="_blank">
                 <h4>{{result.title}}</h4>
         </a>
-        <a href="" target="_blank">
+        <a href="" (click)="selectArtist($event, result.foreignArtistId)">
             <h4>{{result.artistName}}</h4>
         </a>
     <span class="tags">
@@ -22,6 +22,9 @@
 
         <a *ngIf="result.trailer" href="{{result.trailer}}" id="trailerLabel" target="_blank"><span class="label label-info" [translate]="'Search.Movies.Trailer'"></span></a> -->
         
+        <ng-template [ngIf]="result.releaseDate"><span class="label label-info" id="availableLabel">Release Date: {{result.releaseDate | date:'yyyy-MM-dd'}}</span></ng-template>
+
+
         <ng-template [ngIf]="result.available"><span class="label label-success" id="availableLabel" [translate]="'Common.Available'"></span></ng-template>
         <ng-template [ngIf]="result.approved && !result.available"><span class="label label-info" id="processingRequestLabel" [translate]="'Common.ProcessingRequest'"></span></ng-template>
         <ng-template [ngIf]="result.requested && !result.approved && !result.available"><span class="label label-warning" id="pendingApprovalLabel" [translate]="'Common.PendingApproval'"></span></ng-template>

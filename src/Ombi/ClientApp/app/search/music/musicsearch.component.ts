@@ -100,6 +100,12 @@ export class MusicSearchComponent implements OnInit {
         }
     }
 
+    public setArtistSearch(artistId: string) {
+        this.searchAlbum = false;
+        this.clearAlbumResults();
+        this.searchChanged.next(`lidarr:${artistId}`);
+    }
+
     public request(searchResult: ISearchMovieResult) {
         searchResult.requested = true;
         searchResult.requestProcessing = true;

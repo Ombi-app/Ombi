@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 
 import { AuthService } from "../../auth/auth.service";
@@ -15,11 +15,18 @@ export class AlbumSearchComponent {
     @Input() public result: ISearchAlbumResult;
     public engineResult: IRequestEngineResult;
     @Input() public defaultPoster: string;
+    
+    @Output() public setSearch = new EventEmitter<string>();
 
     constructor(
         private requestService: RequestService,
         private notificationService: NotificationService, private authService: AuthService,
         private readonly translate: TranslateService) {       
+    }
+
+    public selectArtist(event: Event, artistId: string) {
+        event.preventDefault();
+        this.setSearch.emit(artistId);
     }
 
     public request(searchResult: ISearchMovieResult) {
