@@ -7,6 +7,7 @@ import { Observable } from "rxjs";
 import { TreeNode } from "primeng/primeng";
 import { ISearchMovieResult } from "../interfaces";
 import { ISearchTvResult } from "../interfaces";
+import { ISearchArtistResult } from "../interfaces/ISearchMusicResult";
 import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()
@@ -69,8 +70,8 @@ export class SearchService extends ServiceHelpers {
         return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/trending`, {headers: this.headers});
     }
     // Music
-    public searchArtist(searchTerm: string): Observable<any> {
-        return this.http.get<any>(`${this.url}/Music/Artist/` + searchTerm);
+    public searchArtist(searchTerm: string): Observable<ISearchArtistResult[]> {
+        return this.http.get<ISearchArtistResult[]>(`${this.url}/Music/Artist/` + searchTerm);
     }
     public searchAlbum(searchTerm: string): Observable<any> {
         return this.http.get<any>(`${this.url}/Music/Album/` + searchTerm);

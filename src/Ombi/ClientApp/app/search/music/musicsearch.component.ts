@@ -1,11 +1,13 @@
 import { PlatformLocation } from "@angular/common";
 import { Component, Input, OnInit } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateService } from "@ngx-translate/core";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { AuthService } from "../../auth/auth.service";
 import { IIssueCategory, IRequestEngineResult, ISearchMovieResult } from "../../interfaces";
+import { ISearchArtistResult } from "../../interfaces/ISearchMusicResult";
 import { NotificationService, RequestService, SearchService } from "../../services";
 
 @Component({
@@ -16,10 +18,10 @@ export class MusicSearchComponent implements OnInit {
 
     public searchText: string;
     public searchChanged: Subject<string> = new Subject<string>();
-    public movieResults: ISearchMovieResult[];
+    public artistResult: ISearchArtistResult[];
     public result: IRequestEngineResult;
     public searchApplied = false;
-    public searchArtist: boolean;
+    public searchAlbum: boolean;
 
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
@@ -34,7 +36,8 @@ export class MusicSearchComponent implements OnInit {
         private searchService: SearchService, private requestService: RequestService,
         private notificationService: NotificationService, private authService: AuthService,
         private readonly translate: TranslateService,
-        private readonly platformLocation: PlatformLocation) {
+        private readonly platformLocation: PlatformLocation,
+        private sanitizer: DomSanitizer) {
 
         this.searchChanged.pipe(
             debounceTime(600), // Wait Xms after the last event before emitting last event
@@ -45,20 +48,21 @@ export class MusicSearchComponent implements OnInit {
                 this.clearResults();
                 return;
             }
-            if(this.searchArtist) {
-                this.searchService.searchArtist(this.searchText)
-                .subscribe(x => {
-                    this.movieResults = x;
-                    this.searchApplied = true;
-                });
-            } else {
+            if(this.searchAlbum) {
                 this.searchService.searchAlbum(this.searchText)
                 .subscribe(x => {
-                    this.movieResults = x;
+                    this.artistResult = x;
                     this.searchApplied = true;
+                    this.setBackground();
+                });
+            } else {
+                this.searchService.searchArtist(this.searchText)
+                .subscribe(x => {
+                    this.artistResult = x;
+                    this.searchApplied = true;
+                    this.setBackground();
                 });
             }
-
         });
         this.defaultPoster = "../../../images/default_movie_poster.png";
         const base = this.platformLocation.getBaseHrefFromDOM();
@@ -69,7 +73,7 @@ export class MusicSearchComponent implements OnInit {
 
     public ngOnInit() {
         this.searchText = "";
-        this.movieResults = [];
+        this.artistResult = [];
         this.result = {
             message: "",
             result: false,
@@ -121,7 +125,17 @@ export class MusicSearchComponent implements OnInit {
     }
 
     private clearResults() {
-        this.movieResults = [];
+        this.artistResult = [];
         this.searchApplied = false;
+    }
+
+    private setBackground() {
+        this.artistResult.forEach((val, index) => {
+            if (val.poster === null) {
+                val.poster = this.defaultPoster;
+            }
+            val.background = this.sanitizer.bypassSecurityTrustStyle
+                ("url(" + val.banner + ")");
+        });
     }
 }
