@@ -73,9 +73,10 @@ namespace Ombi.Core.Engine
         /// </summary>
         /// <param name="artistId"></param>
         /// <returns></returns>
-        public async Task GetArtistAlbums(int artistId)
+        public async Task GetArtistAlbums(string foreignArtistId)
         {
-            throw new NotImplementedException();
+            var settings = await GetSettings();
+            return await _lidarrApi.GetArtistByForignId(foreignArtistId, settings.ApiKey, settings.FullUri);
         }
 
         /// <summary>
@@ -83,9 +84,15 @@ namespace Ombi.Core.Engine
         /// </summary>
         /// <param name="albumId"></param>
         /// <returns></returns>
-        public async Task GetAlbumArtist(int albumId)
+        public async Task GetAlbumArtist(string foreignArtistId)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<ArtistResult> GetArtist(int artistId)
+        {
+            var settings = await GetSettings();
+            return await _lidarrApi.GetArtist(artistId, settings.ApiKey, settings.FullUri);
         }
 
 
