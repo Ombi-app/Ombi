@@ -40,6 +40,8 @@ namespace Ombi.Store.Context
         EntityEntry<TEntity> Update<TEntity>(TEntity entity) where TEntity : class;
         DbSet<CouchPotatoCache> CouchPotatoCache { get; set; }
         DbSet<SickRageCache> SickRageCache { get; set; }
+        DbSet<LidarrArtistCache> LidarrArtistCache { get; set; }
+        DbSet<LidarrAlbumCache> LidarrAlbumCache { get; set; }
         DbSet<SickRageEpisodeCache> SickRageEpisodeCache { get; set; }
         DbSet<RequestLog> RequestLogs { get; set; }
         DbSet<RecentlyAddedLog> RecentlyAddedLogs { get; set; }

@@ -20,6 +20,7 @@ namespace Ombi.Helpers
         public static EventId CouchPotatoCacher => new EventId(2007);
         public static EventId PlexContentCacher => new EventId(2008);
         public static EventId SickRageCacher => new EventId(2009);
+        public static EventId LidarrArtistCache => new EventId(2010);
         
         public static EventId MovieSender => new EventId(3000);
 

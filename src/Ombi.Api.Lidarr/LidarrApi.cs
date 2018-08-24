@@ -72,7 +72,6 @@ namespace Ombi.Api.Lidarr
             return Api.Request<ArtistResult>(request);
         }
 
-
         public async Task<AlbumLookup> GetAlbumByForeignId(string foreignArtistId, string apiKey, string baseUrl)
         {
             var request = new Request($"{ApiVersion}/album/lookup", baseUrl, HttpMethod.Get);
@@ -90,6 +89,22 @@ namespace Ombi.Api.Lidarr
             request.AddQueryString("artistId", artistId.ToString());
             AddHeaders(request, apiKey);
             return Api.Request<AlbumByArtistResponse>(request);
+        }
+
+        public Task<List<ArtistResult>> GetArtists(string apiKey, string baseUrl)
+        {
+            var request = new Request($"{ApiVersion}/artist", baseUrl, HttpMethod.Get);
+
+            AddHeaders(request, apiKey);
+            return Api.Request<List<ArtistResult>>(request);
+        }
+
+        public Task<List<AlbumByArtistResponse>> GetAllAlbums(string apiKey, string baseUrl)
+        {
+            var request = new Request($"{ApiVersion}/album", baseUrl, HttpMethod.Get);
+
+            AddHeaders(request, apiKey);
+            return Api.Request<List<AlbumByArtistResponse>>(request);
         }
 
         private void AddHeaders(Request request, string key)

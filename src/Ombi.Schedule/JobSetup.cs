@@ -4,6 +4,7 @@ using Ombi.Core.Settings;
 using Ombi.Schedule.Jobs;
 using Ombi.Schedule.Jobs.Couchpotato;
 using Ombi.Schedule.Jobs.Emby;
+using Ombi.Schedule.Jobs.Lidarr;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Jobs.Radarr;
@@ -19,7 +20,7 @@ namespace Ombi.Schedule
             IOmbiAutomaticUpdater updater, IEmbyContentSync embySync, IPlexUserImporter userImporter,
             IEmbyUserImporter embyUserImporter, ISonarrSync cache, ICouchPotatoSync cpCache,
             ISettingsService<JobSettings> jobsettings, ISickRageSync srSync, IRefreshMetadata refresh,
-            INewsletterJob newsletter, IPlexRecentlyAddedSync recentlyAddedPlex)
+            INewsletterJob newsletter, IPlexRecentlyAddedSync recentlyAddedPlex, ILidarrArtistSync artist)
         {
             _plexContentSync = plexContentSync;
             _radarrSync = radarrSync;
@@ -34,6 +35,7 @@ namespace Ombi.Schedule
             _refreshMetadata = refresh;
             _newsletter = newsletter;
             _plexRecentlyAddedSync = recentlyAddedPlex;
+            _lidarrArtistSync = artist;
         }
 
         private readonly IPlexContentSync _plexContentSync;
@@ -49,6 +51,7 @@ namespace Ombi.Schedule
         private readonly ISettingsService<JobSettings> _jobSettings;
         private readonly IRefreshMetadata _refreshMetadata;
         private readonly INewsletterJob _newsletter;
+        private readonly ILidarrArtistSync _lidarrArtistSync;
 
         public void Setup()
         {
@@ -62,6 +65,7 @@ namespace Ombi.Schedule
             RecurringJob.AddOrUpdate(() => _cpCache.Start(), JobSettingsHelper.CouchPotato(s));
             RecurringJob.AddOrUpdate(() => _srSync.Start(), JobSettingsHelper.SickRageSync(s));
             RecurringJob.AddOrUpdate(() => _refreshMetadata.Start(), JobSettingsHelper.RefreshMetadata(s));
+            RecurringJob.AddOrUpdate(() => _lidarrArtistSync.CacheContent(), JobSettingsHelper.LidarrArtistSync(s));
 
             RecurringJob.AddOrUpdate(() => _updater.Update(null), JobSettingsHelper.Updater(s));
 

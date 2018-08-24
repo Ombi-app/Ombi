@@ -52,6 +52,10 @@ namespace Ombi.Settings.Settings.Models
         {
             return Get(s.RefreshMetadata, Cron.DayInterval(3));
         }
+        public static string LidarrArtistSync(JobSettings s)
+        {
+            return Get(s.LidarrArtistSync, Cron.Hourly(40));
+        }
 
         private static string Get(string settings, string defaultCron)
         {

@@ -22,12 +22,19 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="radarrSync" class="control-label">Radarr Sync</label>              
-                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('radarrSync').hasError('required')}" id="radarrSync" name="radarrSync" formControlName="radarrSync">
-                        <small *ngIf="form.get('radarrSync').hasError('required')" class="error-text">The Radarr Sync is required</small>
-                        <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('radarrSync')?.value)">Test</button>
-                </div>
+                        <label for="radarrSync" class="control-label">Radarr Sync</label>              
+                            <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('radarrSync').hasError('required')}" id="radarrSync" name="radarrSync" formControlName="radarrSync">
+                            <small *ngIf="form.get('radarrSync').hasError('required')" class="error-text">The Radarr Sync is required</small>
+                            <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('radarrSync')?.value)">Test</button>
+                    </div>
 
+                    <div class="form-group">
+                            <label for="lidarrArtistSync" class="control-label">Lidarr Sync</label>              
+                                <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('lidarrArtistSync').hasError('required')}" id="lidarrArtistSync" name="lidarrArtistSync" formControlName="lidarrArtistSync">
+                                <small *ngIf="form.get('lidarrArtistSync').hasError('required')" class="error-text">The Lidarr Sync is required</small>
+                                <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('lidarrArtistSync')?.value)">Test</button>
+                        </div>
+        
                 <div class="form-group">
                     <label for="couchPotatoSync" class="control-label">CouchPotato Sync</label>              
                         <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('radarrSync').hasError('required')}" id="couchPotatoSync" name="couchPotatoSync" formControlName="couchPotatoSync">

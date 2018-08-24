@@ -139,6 +139,7 @@ export interface IJobSettings {
   refreshMetadata: string;
   newsletter: string;
   plexRecentlyAddedSync: string;
+  lidarrArtistSync: string;
 }
 
 export interface IIssueSettings extends ISettings {

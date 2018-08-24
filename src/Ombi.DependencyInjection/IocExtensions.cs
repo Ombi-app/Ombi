@@ -54,9 +54,11 @@ using PlexContentCacher = Ombi.Schedule.Jobs.Plex;
 using Ombi.Api.Telegram;
 using Ombi.Core.Authentication;
 using Ombi.Core.Processor;
+using Ombi.Schedule.Jobs.Lidarr;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.SickRage;
 using Ombi.Schedule.Processor;
+using Ombi.Store.Entities;
 
 namespace Ombi.DependencyInjection
 {
@@ -185,6 +187,8 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IRefreshMetadata, RefreshMetadata>();
             services.AddTransient<INewsletterJob, NewsletterJob>();
             services.AddTransient<IPlexRecentlyAddedSync, PlexRecentlyAddedSync>();
+            services.AddTransient<ILidarrAlbumSync, LidarrAlbumSync>();
+            services.AddTransient<ILidarrArtistSync, LidarrArtistSync>();
         }
     }
 }

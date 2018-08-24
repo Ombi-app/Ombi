@@ -14,5 +14,7 @@ namespace Ombi.Api.Lidarr
         Task<ArtistResult> GetArtistByForeignId(string foreignArtistId, string apiKey, string baseUrl);
         Task<AlbumByArtistResponse> GetAlbumsByArtist(int artistId, string apiKey, string baseUrl);
         Task<AlbumLookup> GetAlbumByForeignId(string foreignArtistId, string apiKey, string baseUrl);
+        Task<List<ArtistResult>> GetArtists(string apiKey, string baseUrl);
+        Task<List<AlbumByArtistResponse>> GetAllAlbums(string apiKey, string baseUrl);
     }
 }

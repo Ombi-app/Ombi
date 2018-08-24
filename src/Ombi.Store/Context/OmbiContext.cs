@@ -45,6 +45,8 @@ namespace Ombi.Store.Context
         public DbSet<Audit> Audit { get; set; }
         public DbSet<Tokens> Tokens { get; set; }
         public DbSet<SonarrCache> SonarrCache { get; set; }
+        public DbSet<LidarrArtistCache> LidarrArtistCache { get; set; }
+        public DbSet<LidarrAlbumCache> LidarrAlbumCache { get; set; }
         public DbSet<SonarrEpisodeCache> SonarrEpisodeCache { get; set; }
         public DbSet<SickRageCache> SickRageCache { get; set; }
         public DbSet<SickRageEpisodeCache> SickRageEpisodeCache { get; set; }
