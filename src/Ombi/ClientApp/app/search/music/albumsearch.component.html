@@ -1,4 +1,4 @@
-<div>
+<div class="row">
     <!--Backdrop-->
     <div class="album-bg backdrop" [style.background-image]="result.background"></div>
     <div class="album-tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
@@ -12,14 +12,16 @@
     <div class="col-sm-12 small-padding">
         <div>
             <h4>
-                <a href="" (click)="selectArtist($event, result.foreignArtistId)">
-                    {{result.artistName}}
-                </a>
-                -
                 <a href="" target="_blank">
                     {{result.title}}
                 </a>
+
             </h4>
+            <h5>
+                <a href="" (click)="selectArtist($event, result.foreignArtistId)">
+                    {{result.artistName}}
+                </a>
+            </h5>
         </div>
 
         <!--Tags-->
@@ -82,7 +84,8 @@
                 <button style="text-align: right" class="btn btn-primary-outline" (click)="request(result)">
                     <i *ngIf="result.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i>
                     <i *ngIf="!result.requestProcessing && !result.processed" class="fa fa-plus"></i>
-                    <i *ngIf="result.processed && !result.requestProcessing" class="fa fa-check"></i> {{ 'Common.Request' | translate }}</button>
+                    <i *ngIf="result.processed && !result.requestProcessing" class="fa fa-check"></i> {{ 'Common.Request'
+                    | translate }}</button>
             </ng-template>
         </div>
         <!-- <button style="text-align: right" class="btn btn-sm btn-info-outline" (click)="similarMovies(result.id)"> <i class="fa fa-eye"></i> {{ 'Search.Similar' | translate }}</button> -->

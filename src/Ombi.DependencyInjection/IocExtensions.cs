@@ -84,6 +84,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMovieSender, MovieSender>();
             services.AddTransient<IRecentlyAddedEngine, RecentlyAddedEngine>();
             services.AddTransient<IMusicSearchEngine, MusicSearchEngine>();
+            services.AddTransient<IMusicRequestEngine, MusicRequestEngine>();
             services.AddTransient<ITvSender, TvSender>();
             services.AddTransient<IMassEmailSender, MassEmailSender>();
             services.AddTransient<IPlexOAuthManager, PlexOAuthManager>();
@@ -134,6 +135,7 @@ namespace Ombi.DependencyInjection
             
             services.AddTransient<ITvRequestRepository, TvRequestRepository>();
             services.AddTransient<IMovieRequestRepository, MovieRequestRepository>();
+            services.AddTransient<IMusicRequestRepository, MusicRequestRepository>();
             services.AddTransient<IAuditRepository, AuditRepository>();
             services.AddTransient<IApplicationConfigRepository, ApplicationConfigRepository>();
             services.AddTransient<ITokenRepository, TokenRepository>();

@@ -36,6 +36,7 @@ namespace Ombi.Core.Engine
         protected IRequestServiceMain RequestService { get; }
         protected IMovieRequestRepository MovieRepository => RequestService.MovieRequestService;
         protected ITvRequestRepository TvRepository => RequestService.TvRequestService;
+        protected IMusicRequestRepository MusicRepository => RequestService.MusicRequestRepository;
         protected readonly ICacheService Cache;
         protected readonly ISettingsService<OmbiSettings> OmbiSettings;
         protected readonly IRepository<RequestSubscription> _subscriptionRepository;

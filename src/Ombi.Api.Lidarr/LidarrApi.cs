@@ -62,13 +62,23 @@ namespace Ombi.Api.Lidarr
             return Api.Request<ArtistResult>(request);
         }
 
-        public Task<ArtistResult> GetArtistByForignId(string foreignArtistId, string apiKey, string baseUrl)
+        public Task<ArtistResult> GetArtistByForeignId(string foreignArtistId, string apiKey, string baseUrl)
         {
             var request = new Request($"{ApiVersion}/artist/lookup", baseUrl, HttpMethod.Get);
 
             request.AddQueryString("term", $"lidarr:{foreignArtistId}");
             AddHeaders(request, apiKey);
             return Api.Request<ArtistResult>(request);
+        }
+
+
+        public Task<AlbumLookup> GetAlbumByForeignId(string foreignArtistId, string apiKey, string baseUrl)
+        {
+            var request = new Request($"{ApiVersion}/album/lookup", baseUrl, HttpMethod.Get);
+
+            request.AddQueryString("term", $"lidarr:{foreignArtistId}");
+            AddHeaders(request, apiKey);
+            return Api.Request<AlbumLookup>(request);
         }
 
         public Task<AlbumByArtistResponse> GetAlbumsByArtist(int artistId, string apiKey, string baseUrl)

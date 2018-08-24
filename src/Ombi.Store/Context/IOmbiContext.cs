@@ -28,6 +28,7 @@ namespace Ombi.Store.Context
         void Seed();
         DbSet<Audit> Audit { get; set; }
         DbSet<MovieRequests> MovieRequests { get; set; }
+        DbSet<AlbumRequest> AlbumRequests { get; set; }
         DbSet<TvRequests> TvRequests { get; set; }
         DbSet<ChildRequests> ChildRequests { get; set; }
         DbSet<Issues> Issues { get; set; }

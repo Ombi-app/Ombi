@@ -20,11 +20,11 @@ namespace Ombi.Core.Rule.Rules.Search
         private IMovieRequestRepository Movie { get; }
         private ITvRequestRepository Tv { get; }
 
-        public Task<RuleResult> Execute(SearchViewModel obj)
+        public async Task<RuleResult> Execute(SearchViewModel obj)
         {
             if (obj.Type == RequestType.Movie)
             {
-                var movieRequests = Movie.GetRequest(obj.Id);
+                var movieRequests = await Movie.GetRequestAsync(obj.Id);
                 if (movieRequests != null) // Do we already have a request for this?
                 {
 
@@ -33,11 +33,11 @@ namespace Ombi.Core.Rule.Rules.Search
                     obj.Approved = movieRequests.Approved;
                     obj.Available = movieRequests.Available;
 
-                    return Task.FromResult(Success());
+                    return Success();
                 }
-                return Task.FromResult(Success());
+                return Success();
             }
-            else
+            else if (obj.Type == RequestType.Album)
             {
                 //var tvRequests = Tv.GetRequest(obj.Id);
                 //if (tvRequests != null) // Do we already have a request for this?
@@ -94,8 +94,9 @@ namespace Ombi.Core.Rule.Rules.Search
                     request.PartlyAvailable = true;
                 }
 
-                return Task.FromResult(Success());
+                return Success();
             }
+            return Success();
         }
     }
 }

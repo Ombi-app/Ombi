@@ -87,7 +87,7 @@ namespace Ombi.Core.Engine
         public async Task<ArtistResult> GetArtistAlbums(string foreignArtistId)
         {
             var settings = await GetSettings();
-            return await _lidarrApi.GetArtistByForignId(foreignArtistId, settings.ApiKey, settings.FullUri);
+            return await _lidarrApi.GetArtistByForeignId(foreignArtistId, settings.ApiKey, settings.FullUri);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Ombi.Core.Engine
         public async Task<ArtistResult> GetAlbumArtist(string foreignArtistId)
         {
             var settings = await GetSettings();
-            return await _lidarrApi.GetArtistByForignId(foreignArtistId, settings.ApiKey, settings.FullUri);
+            return await _lidarrApi.GetArtistByForeignId(foreignArtistId, settings.ApiKey, settings.FullUri);
         }
 
         public async Task<ArtistResult> GetArtist(int artistId)
@@ -157,7 +157,7 @@ namespace Ombi.Core.Engine
             }
 
             vm.Cover = a.images?.FirstOrDefault(x => x.coverType.Equals("cover"))?.url;
-            if (vm.Cover == null)
+            if (vm.Cover.IsNullOrEmpty())
             {
                 vm.Cover = a.remoteCover;
             }

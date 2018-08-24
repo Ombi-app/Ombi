@@ -7,5 +7,6 @@ namespace Ombi.Core.Models.Requests
     {
         IMovieRequestRepository MovieRequestService { get; }
         ITvRequestRepository TvRequestService { get; }
+        IMusicRequestRepository MusicRequestRepository { get; }
     }
 }

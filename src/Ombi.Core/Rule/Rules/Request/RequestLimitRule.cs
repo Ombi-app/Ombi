@@ -54,6 +54,7 @@ namespace Ombi.Core.Rule.Rules.Request
 
             var movieLimit = user.MovieRequestLimit;
             var episodeLimit = user.EpisodeRequestLimit;
+            var musicLimit = user.MusicRequestLimit;
 
             var requestLog = _requestLog.GetAll().Where(x => x.UserId == obj.RequestedUserId);
             if (obj.RequestType == RequestType.Movie)
@@ -71,7 +72,7 @@ namespace Ombi.Core.Rule.Rules.Request
                     return Fail("You have exceeded your Movie request quota!");
                 }
             }
-            else
+            else if (obj.RequestType == RequestType.TvShow)
             {
                 if (episodeLimit <= 0)
                     return Success();
@@ -94,8 +95,22 @@ namespace Ombi.Core.Rule.Rules.Request
                 {
                     return Fail("You have exceeded your Episode request quota!");
                 }
+            } else if (obj.RequestType == RequestType.Album)
+            {
+                if (musicLimit <= 0)
+                    return Success();
+
+                var albumLogs = requestLog.Where(x => x.RequestType == RequestType.Album);
+
+                // Count how many requests in the past 7 days
+                var count = await albumLogs.CountAsync(x => x.RequestDate >= DateTime.UtcNow.AddDays(-7));
+                count += 1; // Since we are including this request
+                if (count > musicLimit)
+                {
+                    return Fail("You have exceeded your Album request quota!");
+                }
             }
-            return Success();
+                return Success();
         }
     }
 }

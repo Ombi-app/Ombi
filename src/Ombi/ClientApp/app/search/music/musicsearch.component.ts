@@ -22,7 +22,7 @@ export class MusicSearchComponent implements OnInit {
     public albumResult: ISearchAlbumResult[];
     public result: IRequestEngineResult;
     public searchApplied = false;
-    public searchAlbum: boolean = true;
+    public searchAlbum: boolean = false;
 
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
@@ -72,10 +72,10 @@ export class MusicSearchComponent implements OnInit {
                 });
             }
         });
-        this.defaultPoster = "../../../images/default_movie_poster.png";
+        this.defaultPoster = "../../../images/default-music-placeholder.png";
         const base = this.platformLocation.getBaseHrefFromDOM();
         if (base) {
-            this.defaultPoster = "../../.." + base + "/images/default_movie_poster.png";
+            this.defaultPoster = "../../.." + base + "/images/default-music-placeholder.png";
         }
     }
 
