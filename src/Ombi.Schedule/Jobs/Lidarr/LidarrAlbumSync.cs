@@ -48,23 +48,24 @@ namespace Ombi.Schedule.Jobs.Lidarr
                             // Let's remove the old cached data
                             await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM LidarrAlbumCache");
 
-                            var artistCache = new List<LidarrAlbumCache>();
+                            var albumCache = new List<LidarrAlbumCache>();
                             foreach (var a in albums)
                             {
                                 if (a.id > 0)
                                 {
-                                    artistCache.Add(new LidarrAlbumCache
+                                    albumCache.Add(new LidarrAlbumCache
                                     {
                                         ArtistId = a.artistId,
                                         ForeignAlbumId = a.foreignAlbumId,
                                         ReleaseDate = a.releaseDate,
                                         TrackCount = a.currentRelease.trackCount,
                                         Monitored = a.monitored,
-                                        Title = a.title
+                                        Title = a.title,
+                                        PercentOfTracks = a.statistics?.percentOfEpisodes ?? 0m
                                     });
                                 }
                             }
-                            await _ctx.LidarrAlbumCache.AddRangeAsync(artistCache);
+                            await _ctx.LidarrAlbumCache.AddRangeAsync(albumCache);
 
                             await _ctx.SaveChangesAsync();
                         }

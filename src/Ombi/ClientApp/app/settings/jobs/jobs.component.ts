@@ -34,6 +34,7 @@ export class JobsComponent implements OnInit {
                 refreshMetadata:          [x.refreshMetadata, Validators.required],
                 newsletter:               [x.newsletter, Validators.required],
                 plexRecentlyAddedSync:    [x.plexRecentlyAddedSync, Validators.required],
+                lidarrArtistSync:         [x.lidarrArtistSync, Validators.required],
             });  
         });
     }

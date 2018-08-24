@@ -12,8 +12,6 @@ namespace Ombi.Store.Entities
         public DateTime ReleaseDate { get; set; }
         public bool Monitored { get; set; }
         public string Title { get; set; }
-
-        [ForeignKey(nameof(ArtistId))]
-        public LidarrArtistCache Artist { get; set; }
+        public decimal PercentOfTracks { get; set; }
     }
 }

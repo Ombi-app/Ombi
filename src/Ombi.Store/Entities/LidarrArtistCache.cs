@@ -6,12 +6,9 @@ namespace Ombi.Store.Entities
     [Table("LidarrArtistCache")]
     public class LidarrArtistCache : Entity
     {
-        [ForeignKey(nameof(ArtistId))]
         public int ArtistId { get; set; }
         public string ArtistName { get; set; }
         public string ForeignArtistId { get; set; }
         public bool Monitored { get; set; }
-        
-        public List<LidarrAlbumCache> Albums { get; set; }
     }
 }

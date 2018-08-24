@@ -33,27 +33,32 @@
         <a *ngIf="result.homepage" href="{{result.homepage}}" id="homePageLabel" target="_blank"><span class="label label-info" [translate]="'Search.Movies.HomePage'"></span></a>
 
         <a *ngIf="result.trailer" href="{{result.trailer}}" id="trailerLabel" target="_blank"><span class="label label-info" [translate]="'Search.Movies.Trailer'"></span></a> -->
-
-                <ng-template [ngIf]="result.releaseDate">
-                    <span class="label label-info" id="availableLabel">Release Date: {{result.releaseDate | date:'yyyy-MM-dd'}}</span>
+        <ng-template [ngIf]="!result.requested && !result.fullyAvailable && !result.approved">
+                <span class="label label-danger" id="notRequestedLabel" [translate]="'Common.NotRequested'"></span>
+            </ng-template>
+                <ng-template [ngIf]="result.fullyAvailable">
+                        <span class="label label-success" id="availableLabel" [translate]="'Common.Available'"></span>
+                    </ng-template>
+                    <ng-template [ngIf]="result.partiallyAvailable">
+                            <span class="label label-info" id="availableLabel" [translate]="'Common.PartiallyAvailable'"></span>
+                        </ng-template>
+                <ng-template [ngIf]="result.monitored && !result.fullyAvailable">
+                    <span class="label label-info" id="processingRequestLabel" [translate]="'Common.Monitored'"></span>
                 </ng-template>
-                <ng-template [ngIf]="result.rating">
-                    <span class="label label-info" id="availableLabel">{{result.rating}}/10</span>
-                </ng-template>
-
-
-                <ng-template [ngIf]="result.available">
-                    <span class="label label-success" id="availableLabel" [translate]="'Common.Available'"></span>
-                </ng-template>
-                <ng-template [ngIf]="result.approved && !result.available">
-                    <span class="label label-info" id="processingRequestLabel" [translate]="'Common.ProcessingRequest'"></span>
-                </ng-template>
-                <ng-template [ngIf]="result.requested && !result.approved && !result.available">
+                 <ng-template [ngIf]="result.requested && !result.approved && !result.available">
                     <span class="label label-warning" id="pendingApprovalLabel" [translate]="'Common.PendingApproval'"></span>
                 </ng-template>
-                <ng-template [ngIf]="!result.requested && !result.available && !result.approved">
-                    <span class="label label-danger" id="notRequestedLabel" [translate]="'Common.NotRequested'"></span>
-                </ng-template>
+
+                <ng-template [ngIf]="result.approved && !result.available"><span class="label label-info" id="processingRequestLabel" [translate]="'Common.ProcessingRequest'"></span></ng-template>
+  
+
+                
+                <ng-template [ngIf]="result.releaseDate">
+                        <span class="label label-info" id="availableLabel">Release Date: {{result.releaseDate | date:'yyyy-MM-dd'}}</span>
+                    </ng-template>
+                    <ng-template [ngIf]="result.rating">
+                        <span class="label label-info" id="availableLabel">{{result.rating}}/10</span>
+                    </ng-template>
 
 
             </span>

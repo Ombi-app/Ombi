@@ -73,7 +73,7 @@ namespace Ombi.Core.Engine
             var vm = new List<SearchArtistViewModel>();
             foreach (var r in result)
             {
-                vm.Add(MapIntoArtistVm(r));
+                vm.Add(await MapIntoArtistVm(r));
             }
 
             return vm;
@@ -107,7 +107,7 @@ namespace Ombi.Core.Engine
             return await _lidarrApi.GetArtist(artistId, settings.ApiKey, settings.FullUri);
         }
 
-        private SearchArtistViewModel MapIntoArtistVm(ArtistLookup a)
+        private async Task<SearchArtistViewModel> MapIntoArtistVm(ArtistLookup a)
         {
             var vm = new SearchArtistViewModel
             {
@@ -121,12 +121,15 @@ namespace Ombi.Core.Engine
                 Links = a.links,
                 Overview = a.overview,
             };
-
+            
             var poster = a.images?.FirstOrDefault(x => x.coverType.Equals("poaster"));
             if (poster == null)
             {
                 vm.Poster = a.remotePoster;
             }
+
+
+            await Rules.StartSpecificRules(vm, SpecificRules.LidarrArtist);
 
             return vm;
         }
@@ -161,6 +164,10 @@ namespace Ombi.Core.Engine
             {
                 vm.Cover = a.remoteCover;
             }
+
+            await Rules.StartSpecificRules(vm, SpecificRules.LidarrAlbum);
+
+            await RunSearchRules(vm);
 
             return vm;
         }

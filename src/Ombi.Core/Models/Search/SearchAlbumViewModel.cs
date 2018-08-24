@@ -1,8 +1,9 @@
 ﻿using System;
+using Ombi.Store.Entities;
 
 namespace Ombi.Core.Models.Search
 {
-    public class SearchAlbumViewModel
+    public class SearchAlbumViewModel : SearchViewModel
     {
         public string Title { get; set; }
         public string ForeignAlbumId { get; set; }
@@ -14,6 +15,9 @@ namespace Ombi.Core.Models.Search
         public string ForeignArtistId { get; set; }
         public string Cover { get; set; }
         public string Disk { get; set; }
-
+        public decimal PercentOfTracks { get; set; }
+        public override RequestType Type => RequestType.Album;
+        public bool PartiallyAvailable => PercentOfTracks != 100 && PercentOfTracks > 0;
+        public bool FullyAvailable => PercentOfTracks == 100;
     }
 }

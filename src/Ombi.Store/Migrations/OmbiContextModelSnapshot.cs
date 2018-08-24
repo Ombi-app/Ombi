@@ -255,6 +255,8 @@ namespace Ombi.Store.Migrations
 
                     b.Property<bool>("Monitored");
 
+                    b.Property<decimal>("PercentOfTracks");
+
                     b.Property<DateTime>("ReleaseDate");
 
                     b.Property<string>("Title");
@@ -262,8 +264,6 @@ namespace Ombi.Store.Migrations
                     b.Property<int>("TrackCount");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ArtistId");
 
                     b.ToTable("LidarrAlbumCache");
                 });
@@ -961,14 +961,6 @@ namespace Ombi.Store.Migrations
                         .WithMany("Episodes")
                         .HasForeignKey("ParentId")
                         .HasPrincipalKey("EmbyId");
-                });
-
-            modelBuilder.Entity("Ombi.Store.Entities.LidarrAlbumCache", b =>
-                {
-                    b.HasOne("Ombi.Store.Entities.LidarrArtistCache", "Artist")
-                        .WithMany("Albums")
-                        .HasForeignKey("ArtistId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.NotificationUserId", b =>

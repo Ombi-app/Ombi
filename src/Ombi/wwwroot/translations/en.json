@@ -12,6 +12,8 @@
   "Common": {
     "ContinueButton": "Continue",
     "Available": "Available",
+    "PartiallyAvailable": "Partially Available",
+    "Monitored": "Monitored",
     "NotAvailable": "Not Available",
     "ProcessingRequest": "Processing Request",
     "PendingApproval": "Pending Approval",

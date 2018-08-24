@@ -12,8 +12,6 @@ namespace Ombi.Core.Models.Search
         public string Poster { get; set; }
         public string Logo { get; set; }
         public bool Monitored { get; set; }
-        public bool Available { get; set; }
-        public bool Requested { get; set; }
         public string ArtistType { get; set; }
         public string CleanName { get; set; }
         public Link[] Links { get; set; } // Couldn't be bothered to map it

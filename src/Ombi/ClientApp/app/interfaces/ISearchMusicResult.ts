@@ -29,6 +29,8 @@ export interface ILink {
 }
 
 export interface ISearchAlbumResult {
+    id: number;
+    requestId: number;
     albumType: string;
     artistName: string;
     cover: string;
@@ -39,10 +41,11 @@ export interface ISearchAlbumResult {
     rating: number;
     releaseDate: Date;
     title: string;
-    approved: boolean;
+    fullyAvailable: boolean;
+    partiallyAvailable: boolean;
     requested: boolean;
-    requestId: number;
-    available: boolean;
+    approved: boolean;
+    subscribed: boolean;
    
     // for the UI
     showSubscribe: boolean;
