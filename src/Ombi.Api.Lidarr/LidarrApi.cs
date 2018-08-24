@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -72,13 +73,14 @@ namespace Ombi.Api.Lidarr
         }
 
 
-        public Task<AlbumLookup> GetAlbumByForeignId(string foreignArtistId, string apiKey, string baseUrl)
+        public async Task<AlbumLookup> GetAlbumByForeignId(string foreignArtistId, string apiKey, string baseUrl)
         {
             var request = new Request($"{ApiVersion}/album/lookup", baseUrl, HttpMethod.Get);
 
             request.AddQueryString("term", $"lidarr:{foreignArtistId}");
             AddHeaders(request, apiKey);
-            return Api.Request<AlbumLookup>(request);
+            var albums = await Api.Request<List<AlbumLookup>>(request);
+            return albums.FirstOrDefault();
         }
 
         public Task<AlbumByArtistResponse> GetAlbumsByArtist(int artistId, string apiKey, string baseUrl)

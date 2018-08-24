@@ -45,6 +45,7 @@ export interface ISearchAlbumResult {
     available: boolean;
    
     // for the UI
+    showSubscribe: boolean;
     requestProcessing: boolean;
     processed: boolean;
     background: any;

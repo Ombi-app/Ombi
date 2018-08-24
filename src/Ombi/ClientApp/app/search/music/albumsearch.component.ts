@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 
 import { AuthService } from "../../auth/auth.service";
-import { IRequestEngineResult, ISearchMovieResult } from "../../interfaces";
+import { IRequestEngineResult } from "../../interfaces";
 import { ISearchAlbumResult } from "../../interfaces/ISearchMusicResult";
 import { NotificationService, RequestService } from "../../services";
 
@@ -30,16 +30,16 @@ export class AlbumSearchComponent {
         this.setSearch.emit(artistId);
     }
 
-    public request(searchResult: ISearchMovieResult) {
+    public request(searchResult: ISearchAlbumResult) {
         searchResult.requested = true;
         searchResult.requestProcessing = true;
         searchResult.showSubscribe = false;
-        if (this.authService.hasRole("admin") || this.authService.hasRole("AutoApproveMovie")) {
+        if (this.authService.hasRole("admin") || this.authService.hasRole("AutoApproveMusic")) {
             searchResult.approved = true;
         }
 
         try {
-            this.requestService.requestMovie({ theMovieDbId: searchResult.id })
+            this.requestService.requestAlbum({ foreignAlbumId: searchResult.foreignAlbumId })
                 .subscribe(x => {
                     this.engineResult = x;
 

@@ -39,7 +39,7 @@ namespace Ombi.Core.Engine
             _lidarrApi = lidarr;
             _lidarrSettings = lidarrSettings;
         }
-        
+
         private INotificationHelper NotificationHelper { get; }
         //private IMovieSender Sender { get; }
         private ILogger Logger { get; }
@@ -327,12 +327,11 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            if (!request.Approved)
-            {
-                request.Approved = true;
-                request.Denied = false;
-                await MusicRepository.Update(request);
-            }
+            request.MarkedAsApproved = DateTime.Now;
+            request.Approved = true;
+            request.Denied = false;
+            await MusicRepository.Update(request);
+
 
             var canNotify = await RunSpecificRule(request, SpecificRules.CanSendNotification);
             if (canNotify.Success)
