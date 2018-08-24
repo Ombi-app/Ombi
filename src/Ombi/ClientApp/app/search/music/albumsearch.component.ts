@@ -9,6 +9,7 @@ import { NotificationService, RequestService } from "../../services";
 @Component({
     selector: "album-search",
     templateUrl: "./albumsearch.component.html",
+    styleUrls: ["./albumsearch.component.scss"],
 })
 export class AlbumSearchComponent {
 

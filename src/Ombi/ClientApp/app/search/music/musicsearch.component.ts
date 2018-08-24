@@ -22,7 +22,7 @@ export class MusicSearchComponent implements OnInit {
     public albumResult: ISearchAlbumResult[];
     public result: IRequestEngineResult;
     public searchApplied = false;
-    public searchAlbum: boolean;
+    public searchAlbum: boolean = true;
 
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
@@ -54,6 +54,9 @@ export class MusicSearchComponent implements OnInit {
                 return;
             }
             if(this.searchAlbum) {
+                if(!this.searchText) {
+                    this.searchText = "iowa"; // REMOVE
+                }
                 this.searchService.searchAlbum(this.searchText)
                 .subscribe(x => {
                     this.albumResult = x;
@@ -167,9 +170,15 @@ export class MusicSearchComponent implements OnInit {
 
     private setAlbumBackground() {
         this.albumResult.forEach((val, index) => {
-            if (val.cover === null) {
-                val.cover = this.defaultPoster;
+            if (val.disk === null) {
+                if(val.cover === null) {
+                    val.disk = this.defaultPoster;
+                } else {
+                    val.disk = val.cover;
+                }
             }
+            val.background = this.sanitizer.bypassSecurityTrustStyle
+                ("url(" + val.cover + ")");
         });
     }
 }

@@ -139,7 +139,8 @@ namespace Ombi.Core.Engine
                 Monitored = a.monitored,
                 Rating = a.ratings?.value ?? 0m,
                 ReleaseDate = a.releaseDate,
-                Title = a.title
+                Title = a.title,
+                Disk = a.images?.FirstOrDefault(x => x.coverType.Equals("disc"))?.url
             };
             if (vm.Monitored)
             {

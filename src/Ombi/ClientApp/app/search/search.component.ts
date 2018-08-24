@@ -21,9 +21,9 @@ export class SearchComponent implements OnInit  {
 
     public ngOnInit() {
         this.settingsService.getLidarr().subscribe(x => this.musicEnabled = x.enabled);
-        this.showMovie = true;
+        this.showMovie = false;
         this.showTv = false;
-        this.showMusic = false;
+        this.showMusic = true;
         this.issuesService.getCategories().subscribe(x => this.issueCategories = x);
         this.settingsService.getIssueSettings().subscribe(x => this.issuesEnabled = x.enabled);
     }
