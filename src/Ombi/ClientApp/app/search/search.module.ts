@@ -19,6 +19,7 @@ import { SearchService } from "../services";
 import { AuthGuard } from "../auth/auth.guard";
 
 import { SharedModule } from "../shared/shared.module";
+import { RemainingRequestsComponent } from "../requests/remainingrequests.component";
 
 const routes: Routes = [
     { path: "", component: SearchComponent, canActivate: [AuthGuard] },
@@ -41,6 +42,7 @@ const routes: Routes = [
         TvSearchComponent,
         SeriesInformationComponent,
         MovieSearchGridComponent,
+        RemainingRequestsComponent,
     ],
     exports: [
         RouterModule,

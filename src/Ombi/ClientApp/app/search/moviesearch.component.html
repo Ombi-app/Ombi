@@ -20,12 +20,7 @@
         </div>
     </div>
 
-    <h4 *ngIf="remaining?.hasLimit" id="remainingRequests" class="text-center">
-        {{remaining.remaining}}/{{remaining.limit}} requests remaining.
-    </h4>
-
-    <br *ngIf="!remaining?.hasLimit" />
-    <br *ngIf="!remaining?.hasLimit" />
+    <remaining-requests [movie]="true"></remaining-requests>
 
     <!-- Movie content -->
     <div id="movieList">

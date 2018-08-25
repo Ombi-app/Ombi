@@ -8,7 +8,6 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { AuthService } from "../auth/auth.service";
 import { IIssueCategory, IRequestEngineResult, ISearchMovieResult } from "../interfaces";
 import { NotificationService, RequestService, SearchService } from "../services";
-import { IRemainingRequests } from "../interfaces/IRemainingRequests";
 
 @Component({
     selector: "movie-search",
@@ -20,7 +19,7 @@ export class MovieSearchComponent implements OnInit {
     public searchChanged: Subject<string> = new Subject<string>();
     public movieResults: ISearchMovieResult[];
     public result: IRequestEngineResult;
-    public remaining: IRemainingRequests;
+
     public searchApplied = false;
 
     @Input() public issueCategories: IIssueCategory[];
@@ -70,18 +69,8 @@ export class MovieSearchComponent implements OnInit {
             result: false,
             errorMessage: "",
         };
-        this.remaining = {
-            hasLimit: false,
-            limit: 0,
-            remaining: 0,
-        };
 
         this.popularMovies();
-
-        this.requestService.getRemainingMovieRequests().subscribe(remaining => {
-            this.remaining = remaining;
-        });
-
     }
     public search(text: any) {
 

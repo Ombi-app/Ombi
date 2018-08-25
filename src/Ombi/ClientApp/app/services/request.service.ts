@@ -20,6 +20,10 @@ export class RequestService extends ServiceHelpers {
         return this.http.get<IRemainingRequests>(`${this.url}movie/remaining`, {headers: this.headers});
     }
 
+    public getRemainingTvRequests(): Observable<IRemainingRequests> {
+        return this.http.get<IRemainingRequests>(`${this.url}tv/remaining`, {headers: this.headers});
+    }
+
     public requestMovie(movie: IMovieRequestModel): Observable<IRequestEngineResult> {
         return this.http.post<IRequestEngineResult>(`${this.url}Movie/`, JSON.stringify(movie),  {headers: this.headers});
     }

@@ -1,0 +1,18 @@
+﻿<div *ngIf="remaining?.hasLimit">
+    <h4 id="remainingRequests" class="text-center">
+        {{remaining.remaining}}/{{remaining.limit}} requests remaining
+    </h4>
+    <h4 class="text-center" *ngIf="daysUntil > 1">
+        Another request will be added in {{daysUntil}} {{daysUntil == 1 ? "day" : "days"}}
+    </h4>
+    <h4 class="text-center" *ngIf="hoursUntil > 1 && daysUntil <= 1">
+        Another request will be added in {{hoursUntil}} {{hoursUntil == 1 ? "hour" : "hours"}}
+    </h4>
+    <h4 class="text-center" *ngIf="minutesUntil > 1 && hoursUntil <= 1 && daysUntil <= 1" #minutes>
+        Another request will be added in {{minutesUntil}} {{minutesUntil == 1 ? "minute" : "minutes"}}
+    </h4>
+</div>
+
+<br *ngIf="!remaining?.hasLimit" />
+<br *ngIf="!remaining?.hasLimit" />
+

@@ -489,9 +489,10 @@ namespace Ombi.Core.Engine
         {
             return new RequestQuotaCountModel()
             {
-                HasLimit = true,    
+                HasLimit = false,    
                 Limit = 5,
                 Remaining = 4,
+                NextRequest = DateTime.Parse("2018-08-27T00:00:00+01"),
             };
         }
     }
