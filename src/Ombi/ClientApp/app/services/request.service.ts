@@ -8,11 +8,16 @@ import { TreeNode } from "primeng/primeng";
 import { FilterType, IChildRequests, IFilter, IMovieRequestModel, IMovieRequests, IMovieUpdateModel, IRequestEngineResult, IRequestsViewModel,  ITvRequests, ITvUpdateModel, OrderType } from "../interfaces";
 import { ITvRequestViewModel } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
+import { IRemainingRequests } from "../interfaces/IRemainingRequests";
 
 @Injectable()
 export class RequestService extends ServiceHelpers {
     constructor(http: HttpClient, public platformLocation: PlatformLocation) {
         super(http, "/api/v1/Request/", platformLocation);
+    }
+
+    public getRemainingMovieRequests(): Observable<IRemainingRequests> {
+        return this.http.get<IRemainingRequests>(`${this.url}movie/remaining`, {headers: this.headers});
     }
 
     public requestMovie(movie: IMovieRequestModel): Observable<IRequestEngineResult> {

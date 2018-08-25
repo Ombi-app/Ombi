@@ -489,7 +489,9 @@ namespace Ombi.Core.Engine
         {
             return new RequestQuotaCountModel()
             {
-                HasLimit = false,    
+                HasLimit = true,    
+                Limit = 5,
+                Remaining = 4,
             };
         }
     }

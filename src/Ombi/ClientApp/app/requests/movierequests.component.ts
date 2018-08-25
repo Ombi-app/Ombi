@@ -7,6 +7,7 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { AuthService } from "../auth/auth.service";
 import { FilterType, IFilter, IIssueCategory, IMovieRequests, IPagenator, IRadarrProfile, IRadarrRootFolder, OrderType } from "../interfaces";
 import { NotificationService, RadarrService, RequestService } from "../services";
+import { IRemainingRequests } from "../interfaces/IRemainingRequests";
 
 @Component({
     selector: "movie-requests",
@@ -37,6 +38,8 @@ export class MovieRequestsComponent implements OnInit {
 
     public orderType: OrderType = OrderType.RequestedDateDesc;
     public OrderType = OrderType;
+
+    public remaining: IRemainingRequests;
 
     public totalMovies: number = 100;
     private currentlyLoaded: number;
@@ -80,6 +83,7 @@ export class MovieRequestsComponent implements OnInit {
         };
         this.loadInit();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+
     }
 
     public paginate(event: IPagenator) {

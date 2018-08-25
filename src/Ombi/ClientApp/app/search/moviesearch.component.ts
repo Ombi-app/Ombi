@@ -8,6 +8,7 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { AuthService } from "../auth/auth.service";
 import { IIssueCategory, IRequestEngineResult, ISearchMovieResult } from "../interfaces";
 import { NotificationService, RequestService, SearchService } from "../services";
+import { IRemainingRequests } from "../interfaces/IRemainingRequests";
 
 @Component({
     selector: "movie-search",
@@ -19,6 +20,7 @@ export class MovieSearchComponent implements OnInit {
     public searchChanged: Subject<string> = new Subject<string>();
     public movieResults: ISearchMovieResult[];
     public result: IRequestEngineResult;
+    public remaining: IRemainingRequests;
     public searchApplied = false;
 
     @Input() public issueCategories: IIssueCategory[];
@@ -35,7 +37,6 @@ export class MovieSearchComponent implements OnInit {
         private notificationService: NotificationService, private authService: AuthService,
         private readonly translate: TranslateService, private sanitizer: DomSanitizer,
         private readonly platformLocation: PlatformLocation) {
-
         this.searchChanged.pipe(
             debounceTime(600), // Wait Xms after the last event before emitting last event
             distinctUntilChanged(), // only emit if value is different from previous value
@@ -69,10 +70,21 @@ export class MovieSearchComponent implements OnInit {
             result: false,
             errorMessage: "",
         };
-        this.popularMovies();
-    }
+        this.remaining = {
+            hasLimit: false,
+            limit: 0,
+            remaining: 0,
+        };
 
+        this.popularMovies();
+
+        this.requestService.getRemainingMovieRequests().subscribe(remaining => {
+            this.remaining = remaining;
+        });
+
+    }
     public search(text: any) {
+
         this.searchChanged.next(text.target.value);
     }
 

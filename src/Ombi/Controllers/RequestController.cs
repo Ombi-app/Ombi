@@ -12,6 +12,7 @@ using Ombi.Attributes;
 using Ombi.Core.Models.UI;
 using Ombi.Models;
 using Ombi.Store.Entities;
+using Ombi.Core.Models;
 
 namespace Ombi.Controllers
 {
@@ -463,6 +464,15 @@ namespace Ombi.Controllers
         {
             await TvRequestEngine.UnSubscribeRequest(requestId, RequestType.TvShow);
             return true;
+        }
+
+        /// <summary>
+        /// Gets model containing remaining number of requests.
+        /// </summary>
+        [HttpGet("movie/remaining")]
+        public async Task<RequestQuotaCountModel> GetRemainingRequests()
+        {
+            return await MovieRequestEngine.GetRemainingRequests();
         }
     }
 }
