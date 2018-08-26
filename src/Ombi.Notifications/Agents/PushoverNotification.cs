@@ -177,7 +177,7 @@ namespace Ombi.Notifications.Agents
         {
             try
             {
-                await Api.PushAsync(settings.AccessToken, model.Message, settings.UserToken);
+                await Api.PushAsync(settings.AccessToken, model.Message, settings.UserToken, settings.Priority, settings.Sound);
             }
             catch (Exception e)
             {
