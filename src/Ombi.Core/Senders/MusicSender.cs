@@ -57,7 +57,8 @@ namespace Ombi.Core.Senders
                     {
                         monitored = true,
                         searchForMissingAlbums = false,
-                        selectedOption = 6 // None
+                        selectedOption = 6, // None
+                        AlbumsToMonitor = new[] {model.ForeignAlbumId}
                     },
                     added = DateTime.Now,
                     monitored = true,
@@ -76,7 +77,7 @@ namespace Ombi.Core.Senders
                 if (result != null && result.id > 0)
                 {
                     // Setup the albums
-                    await SetupAlbum(model, result, settings);
+                    return new SenderResult { Message = "Album has been requested!", Sent = true, Success = true };
                 }
             }
             else
@@ -91,9 +92,24 @@ namespace Ombi.Core.Senders
         {
             // Get the album id
             var albums = await _lidarrApi.GetAllAlbumsByArtistId(artist.id, settings.ApiKey, settings.FullUri);
-            // Get the album we want.
             var album = albums.FirstOrDefault(x =>
                 x.foreignAlbumId.Equals(model.ForeignAlbumId, StringComparison.InvariantCultureIgnoreCase));
+            var maxRetryCount = 10; // 5 seconds
+            var currentRetry = 0;
+            while (!albums.Any() || album == null)
+            {
+                if (currentRetry >= maxRetryCount)
+                {
+                    break;
+                }
+                currentRetry++;
+                await Task.Delay(500);
+                albums = await _lidarrApi.GetAllAlbumsByArtistId(artist.id, settings.ApiKey, settings.FullUri);
+                album = albums.FirstOrDefault(x =>
+                    x.foreignAlbumId.Equals(model.ForeignAlbumId, StringComparison.InvariantCultureIgnoreCase));
+            }
+            // Get the album we want.
+
             if (album == null)
             {
                 return new SenderResult { Message = "Could not find album in Lidarr", Sent = false, Success = false };

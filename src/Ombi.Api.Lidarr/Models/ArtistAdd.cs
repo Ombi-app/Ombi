@@ -44,5 +44,6 @@ namespace Ombi.Api.Lidarr.Models
         public int selectedOption { get; set; }
         public bool monitored { get; set; }
         public bool searchForMissingAlbums { get; set; }
+        public string[] AlbumsToMonitor { get; set; } // Uses the MusicBrainzAlbumId!
     }
 }

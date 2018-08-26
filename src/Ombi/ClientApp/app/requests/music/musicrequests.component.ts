@@ -88,9 +88,10 @@ export class MusicRequestsComponent implements OnInit {
     }
 
     public removeRequest(request: IAlbumRequest) {
-        this.requestService.removeAlbumRequest(request);
-        this.removeRequestFromUi(request);
-        this.loadRequests(this.amountToLoad, this.currentlyLoaded = 0);
+        this.requestService.removeAlbumRequest(request).subscribe(x => {
+            this.removeRequestFromUi(request);
+            this.loadRequests(this.amountToLoad, this.currentlyLoaded = 0);
+        });
     }
 
     public changeAvailability(request: IAlbumRequest, available: boolean) {

@@ -113,7 +113,7 @@ namespace Ombi.Api.Lidarr
             return Api.Request<ArtistResult>(request);
         }
 
-        public Task<AlbumResponse> MontiorAlbum(int albumId, string apiKey, string baseUrl)
+        public async Task<AlbumResponse> MontiorAlbum(int albumId, string apiKey, string baseUrl)
         {
             var request = new Request($"{ApiVersion}/album/monitor", baseUrl, HttpMethod.Put);
             request.AddJsonBody(new
@@ -122,7 +122,7 @@ namespace Ombi.Api.Lidarr
                 monitored = true
             });
             AddHeaders(request, apiKey);
-            return Api.Request<AlbumResponse>(request);
+            return (await Api.Request<List<AlbumResponse>>(request)).FirstOrDefault();
         }
 
         public Task<List<AlbumResponse>> GetAllAlbumsByArtistId(int artistId, string apiKey, string baseUrl)
