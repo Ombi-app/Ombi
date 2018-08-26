@@ -22,6 +22,10 @@ export class RemainingRequestsComponent implements OnInit  {
         var self = this;
         this.update();
 
+        this.requestService.onRequested().subscribe(m => {
+            this.update();
+        });
+
         setInterval(function(){
             self.calculateTime();
         }, 10000)

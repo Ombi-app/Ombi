@@ -1,5 +1,5 @@
 import { PlatformLocation } from "@angular/common";
-import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
@@ -7,7 +7,6 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { AuthService } from "../auth/auth.service";
 import { IIssueCategory, IRequestEngineResult, ISearchTvResult, ISeasonsViewModel, ITvRequestViewModel } from "../interfaces";
 import { ImageService, NotificationService, RequestService, SearchService } from "../services";
-import { RemainingRequestsComponent } from "../requests/remainingrequests.component";
 
 @Component({
     selector: "tv-search",
@@ -25,7 +24,6 @@ export class TvSearchComponent implements OnInit {
 
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
-    @ViewChild('remainingTvShows') public remainingRequestsComponent: RemainingRequestsComponent;
     public issuesBarVisible = false;
     public issueRequestTitle: string;
     public issueRequestId: number;
@@ -164,7 +162,6 @@ export class TvSearchComponent implements OnInit {
         this.requestService.requestTv(viewModel)
             .subscribe(x => {
                 this.result = x;
-                this.remainingRequestsComponent.update();
                 if (this.result.result) {
                     this.notificationService.success(
                         `Request for ${searchResult.title} has been added successfully`);

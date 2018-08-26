@@ -2,7 +2,7 @@ import { PlatformLocation } from "@angular/common";
 import { Injectable } from "@angular/core";
 
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Observable, ReplaySubject } from "rxjs";
 
 import { TreeNode } from "primeng/primeng";
 import { FilterType, IChildRequests, IFilter, IMovieRequestModel, IMovieRequests, IMovieUpdateModel, IRequestEngineResult, IRequestsViewModel,  ITvRequests, ITvUpdateModel, OrderType } from "../interfaces";
@@ -12,8 +12,13 @@ import { IRemainingRequests } from "../interfaces/IRemainingRequests";
 
 @Injectable()
 export class RequestService extends ServiceHelpers {
+    private requestEvents = new ReplaySubject<IRequestEngineResult>(); 
     constructor(http: HttpClient, public platformLocation: PlatformLocation) {
         super(http, "/api/v1/Request/", platformLocation);
+    }
+
+    public onRequested(): Observable<IRequestEngineResult> {
+        return this.requestEvents.asObservable();
     }
 
     public getRemainingMovieRequests(): Observable<IRemainingRequests> {
@@ -25,7 +30,14 @@ export class RequestService extends ServiceHelpers {
     }
 
     public requestMovie(movie: IMovieRequestModel): Observable<IRequestEngineResult> {
-        return this.http.post<IRequestEngineResult>(`${this.url}Movie/`, JSON.stringify(movie),  {headers: this.headers});
+        var observer = Observable.create(observer => {
+            this.http.post<IRequestEngineResult>(`${this.url}Movie/`, JSON.stringify(movie),  {headers: this.headers}).subscribe(m => {
+                observer.next(m);
+                this.requestEvents.next(m);
+            });
+        });
+
+        return observer;
     }
 
     public getTotalMovies(): Observable<number> {
@@ -37,7 +49,14 @@ export class RequestService extends ServiceHelpers {
     }
 
     public requestTv(tv: ITvRequestViewModel): Observable<IRequestEngineResult> {
-        return this.http.post<IRequestEngineResult>(`${this.url}TV/`, JSON.stringify(tv), {headers: this.headers});
+        var observer = Observable.create(observer => {
+            return this.http.post<IRequestEngineResult>(`${this.url}TV/`, JSON.stringify(tv), { headers: this.headers }).subscribe(m => {
+                observer.next(m);
+                this.requestEvents.next(m);
+            });
+        });
+
+        return observer;
     }
 
     public approveMovie(movie: IMovieUpdateModel): Observable<IRequestEngineResult> {
