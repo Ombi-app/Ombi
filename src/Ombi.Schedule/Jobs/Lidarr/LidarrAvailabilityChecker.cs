@@ -15,7 +15,7 @@ using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Schedule.Jobs.Lidarr
 {
-    public class LidarrAvailabilityChecker
+    public class LidarrAvailabilityChecker : ILidarrAvailabilityChecker
     {
         public LidarrAvailabilityChecker(IMusicRequestRepository requests, IRepository<LidarrAlbumCache> albums, ILogger<LidarrAvailabilityChecker> log,
             IBackgroundJobClient job, INotificationService notification)
