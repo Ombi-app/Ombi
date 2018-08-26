@@ -1,4 +1,4 @@
-﻿import { Component, Input, OnInit} from "@angular/core";
+﻿import { Component, Input, OnInit, ViewChild} from "@angular/core";
 
 import { NotificationService } from "../services";
 import { RequestService } from "../services";
@@ -7,6 +7,7 @@ import { SearchService } from "../services";
 import { INewSeasonRequests, IRequestEngineResult, ISeasonsViewModel, ITvRequestViewModel } from "../interfaces";
 import { IEpisodesRequests } from "../interfaces";
 import { ISearchTvResult } from "../interfaces";
+import { RemainingRequestsComponent } from "../requests/remainingrequests.component";
 
 @Component({
     selector: "seriesinformation",

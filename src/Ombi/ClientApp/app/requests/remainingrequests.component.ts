@@ -21,17 +21,20 @@ export class RemainingRequestsComponent implements OnInit  {
     ngOnInit(): void {
         var self = this;
         this.update();
+
+        setInterval(function(){
+            self.calculateTime();
+        }, 10000)
+
         setInterval(function(){
             self.update()
-        }, 10000)
+        }, 60000)
     }
 
     update(): void {
         var callback = (remaining => {
             this.remaining = remaining;
-            this.daysUntil = Math.ceil(this.daysUntilNextRequest());
-            this.hoursUntil = Math.ceil(this.hoursUntilNextRequest());
-            this.minutesUntil = Math.ceil(this.minutesUntilNextRequest())
+            this.calculateTime();
         });
 
         if (this.movie) {
@@ -39,6 +42,12 @@ export class RemainingRequestsComponent implements OnInit  {
         } else {
             this.requestService.getRemainingTvRequests().subscribe(callback);
         }
+    }
+
+    calculateTime(): void {
+        this.daysUntil = Math.ceil(this.daysUntilNextRequest());
+        this.hoursUntil = Math.ceil(this.hoursUntilNextRequest());
+        this.minutesUntil = Math.ceil(this.minutesUntilNextRequest())
     }
 
     daysUntilNextRequest(): number {

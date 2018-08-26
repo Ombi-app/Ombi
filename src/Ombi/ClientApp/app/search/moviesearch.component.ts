@@ -1,5 +1,5 @@
 import { PlatformLocation } from "@angular/common";
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateService } from "@ngx-translate/core";
 import { Subject } from "rxjs";
@@ -8,6 +8,7 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { AuthService } from "../auth/auth.service";
 import { IIssueCategory, IRequestEngineResult, ISearchMovieResult } from "../interfaces";
 import { NotificationService, RequestService, SearchService } from "../services";
+import { RemainingRequestsComponent } from "../requests/remainingrequests.component";
 
 @Component({
     selector: "movie-search",
@@ -24,6 +25,7 @@ export class MovieSearchComponent implements OnInit {
 
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
+    @ViewChild('remainingFilms') public remainingRequestsComponent: RemainingRequestsComponent;
     public issuesBarVisible = false;
     public issueRequestTitle: string;
     public issueRequestId: number;
@@ -89,7 +91,7 @@ export class MovieSearchComponent implements OnInit {
             this.requestService.requestMovie({ theMovieDbId: searchResult.id })
                 .subscribe(x => {
                     this.result = x;
-
+                    this.remainingRequestsComponent.update();
                     if (this.result.result) {
                         this.translate.get("Search.RequestAdded", { title: searchResult.title }).subscribe(x => {
                             this.notificationService.success(x);
