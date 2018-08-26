@@ -609,6 +609,7 @@ namespace Ombi.Core.Engine
                 RequestDate = DateTime.UtcNow,
                 RequestId = model.Id,
                 RequestType = RequestType.TvShow,
+                EpisodeCount = model.SeasonRequests.Select(m => m.Episodes.Count).Sum(),
             });
 
             return new RequestEngineResult { Result = true };
@@ -632,7 +633,12 @@ namespace Ombi.Core.Engine
 
             IQueryable<RequestLog> log = _requestLog.GetAll().Where(x => x.UserId == user.Id && x.RequestType == RequestType.TvShow);
 
-            int count = limit - await log.CountAsync(x => x.RequestDate >= DateTime.UtcNow.AddDays(-7));
+            // Needed, due to a bug which would cause all episode counts to be 0
+            int zeroEpisodeCount = await log.Where(x => x.EpisodeCount == 0).Select(x => x.EpisodeCount).CountAsync();
+
+            int episodeCount = await log.Where(x => x.EpisodeCount != 0).Select(x => x.EpisodeCount).SumAsync();
+
+            int count = limit - (zeroEpisodeCount + episodeCount);
 
             DateTime oldestRequestedAt = await log.Where(x => x.RequestDate >= DateTime.UtcNow.AddDays(-7))
                                             .OrderBy(x => x.RequestDate)
