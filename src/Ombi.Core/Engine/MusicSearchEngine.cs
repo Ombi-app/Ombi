@@ -82,12 +82,21 @@ namespace Ombi.Core.Engine
         /// <summary>
         /// Returns all albums by the specified artist
         /// </summary>
-        /// <param name="artistId"></param>
+        /// <param name="foreignArtistId"></param>
         /// <returns></returns>
-        public async Task<ArtistResult> GetArtistAlbums(string foreignArtistId)
+        public async Task<IEnumerable<SearchAlbumViewModel>> GetArtistAlbums(string foreignArtistId)
         {
             var settings = await GetSettings();
-            return await _lidarrApi.GetArtistByForeignId(foreignArtistId, settings.ApiKey, settings.FullUri);
+            var result = await _lidarrApi.GetAlbumsByArtist(foreignArtistId);
+            // We do not want any Singles (This will include EP's)
+            var albumsOnly =
+                result.Albums.Where(x => !x.Type.Equals("Single", StringComparison.InvariantCultureIgnoreCase));
+            var vm = new List<SearchAlbumViewModel>();
+            foreach (var album in albumsOnly)
+            {
+                vm.Add(await MapIntoAlbumVm(album, result.Id, result.ArtistName, settings));
+            }
+            return vm;
         }
 
         /// <summary>
@@ -121,7 +130,7 @@ namespace Ombi.Core.Engine
                 Links = a.links,
                 Overview = a.overview,
             };
-            
+
             var poster = a.images?.FirstOrDefault(x => x.coverType.Equals("poaster"));
             if (poster == null)
             {
@@ -147,6 +156,7 @@ namespace Ombi.Core.Engine
             };
             if (vm.Monitored)
             {
+                //TODO THEY HAVE FIXED THIS IN DEV
                 // The JSON is different for some stupid reason
                 // Need to lookup the artist now and all the images -.-"
                 var artist = await _lidarrApi.GetArtist(a.artistId, settings.ApiKey, settings.FullUri);
@@ -171,6 +181,35 @@ namespace Ombi.Core.Engine
 
             return vm;
         }
+
+        private async Task<SearchAlbumViewModel> MapIntoAlbumVm(Album a, string artistId, string artistName, LidarrSettings settings)
+        {
+            var fullAlbum = await _lidarrApi.GetAlbumByForeignId(a.Id, settings.ApiKey, settings.FullUri);
+            var vm = new SearchAlbumViewModel
+            {
+                ForeignAlbumId = a.Id,
+                Monitored = fullAlbum.monitored,
+                Rating = fullAlbum.ratings?.value ?? 0m,
+                ReleaseDate = fullAlbum.releaseDate,
+                Title = a.Title,
+                Disk = fullAlbum.images?.FirstOrDefault(x => x.coverType.Equals("disc"))?.url,
+                ForeignArtistId = artistId,
+                ArtistName = artistName,
+                Cover = fullAlbum.images?.FirstOrDefault(x => x.coverType.Equals("cover"))?.url
+            };
+
+            if (vm.Cover.IsNullOrEmpty())
+            {
+                vm.Cover = fullAlbum.remoteCover;
+            }
+
+            await Rules.StartSpecificRules(vm, SpecificRules.LidarrAlbum);
+
+            await RunSearchRules(vm);
+
+            return vm;
+        }
+
         private LidarrSettings _settings;
         private async Task<LidarrSettings> GetSettings()
         {

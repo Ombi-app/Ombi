@@ -8,10 +8,10 @@
     </div>
     <div class="form-group">
         <div class="radio">
-            <input type="radio" id="Artist" name="Mode" [checked]="!searchAlbum" (click)="searchMode(false)">
-            <label for="Artist">Artist Search</label>
             <input type="radio" id="Album" name="Mode" [checked]="searchAlbum" (click)="searchMode(true)">
             <label for="Album">Album Search</label>
+            <input type="radio" id="Artist" name="Mode" [checked]="!searchAlbum" (click)="searchMode(false)">
+            <label for="Artist">Artist Search</label>
         </div>
     </div>
 
@@ -29,7 +29,7 @@
         </div>
 
         <div *ngFor="let result of artistResult">
-            <artist-search [result]="result" [defaultPoster]="defaultPoster"></artist-search>
+            <artist-search [result]="result" [defaultPoster]="defaultPoster" (viewAlbumsResult)="viewAlbumsForArtist($event)"></artist-search>
             <br/>
             <br/>
         </div>

@@ -22,7 +22,7 @@ export class MusicSearchComponent implements OnInit {
     public albumResult: ISearchAlbumResult[];
     public result: IRequestEngineResult;
     public searchApplied = false;
-    public searchAlbum: boolean = false;
+    public searchAlbum: boolean = true;
 
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
@@ -146,6 +146,13 @@ export class MusicSearchComponent implements OnInit {
             searchResult.requestProcessing = false;
             this.notificationService.error(e);
         }
+    }
+
+    public viewAlbumsForArtist(albums: ISearchAlbumResult[]) {
+        this.clearArtistResults();
+        this.searchAlbum = true;
+        this.albumResult = albums;
+        this.setAlbumBackground();
     }
 
     private clearArtistResults() {

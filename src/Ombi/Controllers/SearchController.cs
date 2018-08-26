@@ -206,5 +206,16 @@ namespace Ombi.Controllers
         {
             return await MusicEngine.SearchAlbum(searchTerm);
         }
+
+        /// <summary>
+        /// Returns all albums for the artist using the ForeignArtistId
+        /// </summary>
+        /// <remarks>We use Lidarr as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("music/artist/album/{foreignArtistId}")]
+        public async Task<IEnumerable<SearchAlbumViewModel>> GetAlbumsByArtist(string foreignArtistId)
+        {
+            return await MusicEngine.GetArtistAlbums(foreignArtistId);
+        }
     }
 }

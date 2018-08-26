@@ -82,12 +82,10 @@ namespace Ombi.Api.Lidarr
             return albums.FirstOrDefault();
         }
 
-        public Task<AlbumByArtistResponse> GetAlbumsByArtist(int artistId, string apiKey, string baseUrl)
+        public Task<AlbumByArtistResponse> GetAlbumsByArtist(string foreignArtistId)
         {
-            var request = new Request($"{ApiVersion}/album", baseUrl, HttpMethod.Get);
-
-            request.AddQueryString("artistId", artistId.ToString());
-            AddHeaders(request, apiKey);
+            var request = new Request(string.Empty, $"https://api.lidarr.audio/api/v0.3/artist/{foreignArtistId}",
+                HttpMethod.Get) {IgnoreBaseUrlAppend = true};
             return Api.Request<AlbumByArtistResponse>(request);
         }
 
@@ -99,12 +97,12 @@ namespace Ombi.Api.Lidarr
             return Api.Request<List<ArtistResult>>(request);
         }
 
-        public Task<List<AlbumByArtistResponse>> GetAllAlbums(string apiKey, string baseUrl)
+        public Task<List<AlbumResponse>> GetAllAlbums(string apiKey, string baseUrl)
         {
             var request = new Request($"{ApiVersion}/album", baseUrl, HttpMethod.Get);
 
             AddHeaders(request, apiKey);
-            return Api.Request<List<AlbumByArtistResponse>>(request);
+            return Api.Request<List<AlbumResponse>>(request);
         }
 
         private void AddHeaders(Request request, string key)

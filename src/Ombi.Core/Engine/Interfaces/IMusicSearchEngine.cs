@@ -9,7 +9,7 @@ namespace Ombi.Core.Engine
     {
         Task<ArtistResult> GetAlbumArtist(string foreignArtistId);
         Task<ArtistResult> GetArtist(int artistId);
-        Task<ArtistResult> GetArtistAlbums(string foreignArtistId);
+        Task<IEnumerable<SearchAlbumViewModel>> GetArtistAlbums(string foreignArtistId);
         Task<IEnumerable<SearchAlbumViewModel>> SearchAlbum(string search);
         Task<IEnumerable<SearchArtistViewModel>> SearchArtist(string search);
     }

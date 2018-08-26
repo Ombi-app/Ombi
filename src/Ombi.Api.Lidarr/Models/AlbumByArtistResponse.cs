@@ -1,27 +1,34 @@
-﻿using System;
-
-namespace Ombi.Api.Lidarr.Models
+﻿namespace Ombi.Api.Lidarr.Models
 {
     public class AlbumByArtistResponse
     {
-        public string title { get; set; }
-        public string disambiguation { get; set; }
-        public int artistId { get; set; }
-        public string foreignAlbumId { get; set; }
-        public bool monitored { get; set; }
-        public int profileId { get; set; }
-        public int duration { get; set; }
-        public string albumType { get; set; }
-        public object[] secondaryTypes { get; set; }
-        public int mediumCount { get; set; }
-        public Ratings ratings { get; set; }
-        public DateTime releaseDate { get; set; }
-        public Currentrelease currentRelease { get; set; }
-        public Release[] releases { get; set; }
-        public object[] genres { get; set; }
-        public Medium[] media { get; set; }
-        public Image[] images { get; set; }
-        public Statistics statistics { get; set; }
-        public int id { get; set; }
+        public Album[] Albums { get; set; }
+        public string ArtistName { get; set; }
+        public string Disambiguation { get; set; }
+        public string Id { get; set; }
+        public Image[] Images { get; set; }
+        public Link[] Links { get; set; }
+        public string Overview { get; set; }
+        public Rating Rating { get; set; }
+        public string SortName { get; set; }
+        public string Status { get; set; }
+        public string Type { get; set; }
+    }
+
+    public class Rating
+    {
+        public int Count { get; set; }
+        public decimal Value { get; set; }
+    }
+
+    public class Album
+    {
+        public string Disambiguation { get; set; }
+        public string Id { get; set; }
+        public string ReleaseDate { get; set; }
+        public string[] ReleaseStatuses { get; set; }
+        public string[] SecondaryTypes { get; set; }
+        public string Title { get; set; }
+        public string Type { get; set; }
     }
 }
