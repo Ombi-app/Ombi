@@ -183,17 +183,5 @@ namespace Ombi.Controllers
         {
             return await TvEngine.Trending();
         }
-
-        [HttpGet("movie/requestCount")]
-        public async Task<RequestQuotaCountModel> RemainingMovieRequests()
-        {
-            return null;
-        }
-
-        [HttpGet("tv/requestCount")]
-        public async Task<RequestQuotaCountModel> RemainingTvRequests()
-        {
-            return null;
-        }
     }
 }
