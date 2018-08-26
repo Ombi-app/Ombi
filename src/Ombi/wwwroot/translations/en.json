@@ -125,6 +125,7 @@
     "RequestStatus": "Request status:",
     "Denied": " Denied:",
     "TheatricalRelease": "Theatrical Release: {{date}}",
+    "ReleaseDate": "Released: {{date}}",
     "TheatricalReleaseSort": "Theatrical Release",
     "DigitalRelease": "Digital Release: {{date}}",
     "RequestDate": "Request Date:",

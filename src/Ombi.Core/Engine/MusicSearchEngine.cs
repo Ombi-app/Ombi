@@ -154,7 +154,7 @@ namespace Ombi.Core.Engine
                 Title = a.title,
                 Disk = a.images?.FirstOrDefault(x => x.coverType.Equals("disc"))?.url
             };
-            if (vm.Monitored)
+            if (a.artistId > 0)
             {
                 //TODO THEY HAVE FIXED THIS IN DEV
                 // The JSON is different for some stupid reason

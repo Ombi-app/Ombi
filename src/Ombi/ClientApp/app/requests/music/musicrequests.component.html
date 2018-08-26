@@ -44,7 +44,7 @@
 <br />
 
 
-<div>
+<div class="col-md-12">
     <div *ngFor="let request of albumRequests"  class="col-md-4">
         <div class="row">
             <div class="album-bg backdrop" [style.background-image]="request.background"></div>
@@ -77,10 +77,6 @@
                         <span *ngIf="isAdmin && request.requestedUser.alias">{{request.requestedUser.alias}}</span>
                         <span *ngIf="isAdmin && !request.requestedUser.alias">{{request.requestedUser.userName}}</span>
                     </div>
-                    <div class="request-status">
-                        <span>{{ 'Requests.Status' | translate }} </span>
-                        <span class="label label-success" id="requestedStatusLabel">{{request.status}}</span>
-                    </div>
 
                     <div class="requested-status">
                         <span>{{ 'Requests.RequestStatus' | translate }} </span>
@@ -101,19 +97,18 @@
                     </div>
 
 
-                    <div id="releaseDate">{{ 'Requests.TheatricalRelease' | translate: {date: request.releaseDate | date: 'mediumDate'} }}</div>
-                    <div *ngIf="request.digitalReleaseDate" id="digitalReleaseDate">{{ 'Requests.DigitalRelease' | translate: {date: request.digitalReleaseDate | date: 'mediumDate'} }}</div>
-                    <div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{request.requestedDate | date}}</div>
+                    <div id="releaseDate">{{ 'Requests.ReleaseDate' | translate: {date: request.releaseDate | date: 'mediumDate'} }}</div>
+                    <div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{request.requestedDate | date: 'mediumDate'}}</div>
                     <br />
                 </div>
-                <div *ngIf="isAdmin">
+                <!-- <div *ngIf="isAdmin">
                     <div *ngIf="request.qualityOverrideTitle" class="quality-override">{{ 'Requests.QualityOverride' | translate }}
                         <span>{{request.qualityOverrideTitle}} </span>
                     </div>
                     <div *ngIf="request.rootPathOverrideTitle" class="root-override">{{ 'Requests.RootFolderOverride' | translate }}
                         <span>{{request.rootPathOverrideTitle}} </span>
                     </div>
-                </div>
+                </div> -->
 
             </div>
             <div class="col-sm-12 small-padding">
@@ -130,7 +125,7 @@
                 </div> -->
                 <div *ngIf="isAdmin">
                     <div *ngIf="!request.approved" id="approveBtn">
-                        <form>
+                        <form class="col-md-6"> 
                             <button (click)="approve(request)" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit">
                                 <i class="fa fa-plus"></i> {{ 'Common.Approve' | translate }}
                             </button>
@@ -168,13 +163,13 @@
                             </ul>
                         </div> -->
 
-                        <div *ngIf="!request.denied" id="denyBtn">
+                        <div *ngIf="!request.denied" id="denyBtn" class="col-md-6">
                             <button type="button" (click)="deny(request)" class="btn btn-sm btn-danger-outline deny">
                                 <i class="fa fa-times"></i> {{ 'Requests.Deny' | translate }}
                             </button>
                         </div>
                     </div>
-                    <form id="removeBtn">
+                    <form id="removeBtn" class="col-md-6">
                         <button (click)="removeRequest(request)" style="text-align: right" class="btn btn-sm btn-danger-outline delete">
                             <i class="fa fa-minus"></i> {{ 'Requests.Remove' | translate }}
                         </button>
