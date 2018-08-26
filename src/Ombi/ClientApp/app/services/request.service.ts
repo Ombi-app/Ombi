@@ -8,6 +8,7 @@ import { TreeNode } from "primeng/primeng";
 import { FilterType, IChildRequests, IFilter, IMovieRequestModel, IMovieRequests, IMovieUpdateModel, IRequestEngineResult, IRequestsViewModel,  ITvRequests, ITvUpdateModel, OrderType } from "../interfaces";
 import { ITvRequestViewModel } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
+
 import { IRemainingRequests } from "../interfaces/IRemainingRequests";
 
 @Injectable()
@@ -30,7 +31,7 @@ export class RequestService extends ServiceHelpers {
     }
 
     public requestMovie(movie: IMovieRequestModel): Observable<IRequestEngineResult> {
-        var observer = Observable.create(observer => {
+        const observer = Observable.create(observer => {
             this.http.post<IRequestEngineResult>(`${this.url}Movie/`, JSON.stringify(movie),  {headers: this.headers}).subscribe(m => {
                 observer.next(m);
                 this.requestEvents.next(m);
@@ -49,7 +50,7 @@ export class RequestService extends ServiceHelpers {
     }
 
     public requestTv(tv: ITvRequestViewModel): Observable<IRequestEngineResult> {
-        var observer = Observable.create(observer => {
+        const observer = Observable.create(observer => {
             return this.http.post<IRequestEngineResult>(`${this.url}TV/`, JSON.stringify(tv), { headers: this.headers }).subscribe(m => {
                 observer.next(m);
                 this.requestEvents.next(m);

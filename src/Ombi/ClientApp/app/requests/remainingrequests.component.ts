@@ -1,6 +1,7 @@
-﻿import { Component, OnInit, Input } from "@angular/core";
+﻿import { IRemainingRequests } from "../interfaces/IRemainingRequests";
 import { RequestService } from "../services";
-import { IRemainingRequests } from "../interfaces/IRemainingRequests";
+
+import { Component, Input, OnInit } from "@angular/core";
 
 @Component({
     selector: "remaining-requests",
@@ -14,29 +15,29 @@ export class RemainingRequestsComponent implements OnInit  {
     public hoursUntil: number;
     public minutesUntil: number;
 
-    constructor(private requestService: RequestService)
-    {
+    constructor(private requestService: RequestService) {
     }
 
-    ngOnInit(): void {
-        var self = this;
+    public ngOnInit() {
+        const self = this;
+
         this.update();
 
         this.requestService.onRequested().subscribe(m => {
             this.update();
         });
 
-        setInterval(function(){
+        setInterval(() => {
             self.calculateTime();
-        }, 10000)
+        }, 10000);
 
-        setInterval(function(){
-            self.update()
-        }, 60000)
+        setInterval(() => {
+            self.update();
+        }, 60000);
     }
 
-    update(): void {
-        var callback = (remaining => {
+    public update(): void {
+        const callback = (remaining => {
             this.remaining = remaining;
             this.calculateTime();
         });
@@ -48,21 +49,21 @@ export class RemainingRequestsComponent implements OnInit  {
         }
     }
 
-    calculateTime(): void {
+    private calculateTime(): void {
         this.daysUntil = Math.ceil(this.daysUntilNextRequest());
         this.hoursUntil = Math.ceil(this.hoursUntilNextRequest());
-        this.minutesUntil = Math.ceil(this.minutesUntilNextRequest())
+        this.minutesUntil = Math.ceil(this.minutesUntilNextRequest());
     }
 
-    daysUntilNextRequest(): number {
+    private daysUntilNextRequest(): number {
         return (new Date(this.remaining.nextRequest).getTime() - new Date().getTime()) / 1000 / 60 / 60 / 24;
     }
 
-    hoursUntilNextRequest(): number {
+    private hoursUntilNextRequest(): number {
         return (new Date(this.remaining.nextRequest).getTime() - new Date().getTime()) / 1000 / 60 / 60;
     }
 
-    minutesUntilNextRequest(): number {
+    private minutesUntilNextRequest(): number {
         return (new Date(this.remaining.nextRequest).getTime() - new Date().getTime()) / 1000 / 60;
     }
 }

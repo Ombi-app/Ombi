@@ -6,8 +6,8 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { AuthService } from "../auth/auth.service";
 import { FilterType, IFilter, IIssueCategory, IMovieRequests, IPagenator, IRadarrProfile, IRadarrRootFolder, OrderType } from "../interfaces";
-import { NotificationService, RadarrService, RequestService } from "../services";
 import { IRemainingRequests } from "../interfaces/IRemainingRequests";
+import { NotificationService, RadarrService, RequestService } from "../services";
 
 @Component({
     selector: "movie-requests",
