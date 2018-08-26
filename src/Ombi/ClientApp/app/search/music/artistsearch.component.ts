@@ -11,6 +11,7 @@ export class ArtistSearchComponent {
 
     @Input() public result: ISearchArtistResult;
     @Input() public defaultPoster: string;
+    public searchingAlbums: boolean;
 
     @Output() public viewAlbumsResult = new EventEmitter<ISearchAlbumResult[]>();
 
@@ -18,6 +19,7 @@ export class ArtistSearchComponent {
     }
 
     public viewAllAlbums() {
+        this.searchingAlbums = true;
         this.searchService.getAlbumsForArtist(this.result.forignArtistId).subscribe(x => {
             this.viewAlbumsResult.emit(x);
         });

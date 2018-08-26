@@ -51,7 +51,7 @@
             <a *ngIf="result.showSubscribe && result.subscribed" style="color:red" (click)="unSubscribe(result)" pTooltip="Unsubscribe notification"> <i class="fa fa-rss"></i></a> -->
             </div>
         </div>
-        <button style="text-align: right" class="btn btn-info-outline" (click)="viewAllAlbums()">
+        <button style="text-align: right" class="btn btn-info-outline" [disabled]="searchingAlbums" (click)="viewAllAlbums()">
             <i class="fa fa-eye"></i> View Albums</button>
 
     </div>
