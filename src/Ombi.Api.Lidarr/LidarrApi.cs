@@ -63,13 +63,13 @@ namespace Ombi.Api.Lidarr
             return Api.Request<ArtistResult>(request);
         }
 
-        public Task<ArtistResult> GetArtistByForeignId(string foreignArtistId, string apiKey, string baseUrl)
+        public async Task<ArtistResult> GetArtistByForeignId(string foreignArtistId, string apiKey, string baseUrl)
         {
             var request = new Request($"{ApiVersion}/artist/lookup", baseUrl, HttpMethod.Get);
 
             request.AddQueryString("term", $"lidarr:{foreignArtistId}");
             AddHeaders(request, apiKey);
-            return Api.Request<ArtistResult>(request);
+            return (await Api.Request<List<ArtistResult>>(request)).FirstOrDefault();
         }
 
         public async Task<AlbumLookup> GetAlbumByForeignId(string foreignArtistId, string apiKey, string baseUrl)
@@ -103,6 +103,48 @@ namespace Ombi.Api.Lidarr
 
             AddHeaders(request, apiKey);
             return Api.Request<List<AlbumResponse>>(request);
+        }
+
+        public Task<ArtistResult> AddArtist(ArtistAdd artist, string apiKey, string baseUrl)
+        {
+            var request = new Request($"{ApiVersion}/artist", baseUrl, HttpMethod.Post);
+            request.AddJsonBody(artist);
+            AddHeaders(request, apiKey);
+            return Api.Request<ArtistResult>(request);
+        }
+
+        public Task<AlbumResponse> MontiorAlbum(int albumId, string apiKey, string baseUrl)
+        {
+            var request = new Request($"{ApiVersion}/album/monitor", baseUrl, HttpMethod.Put);
+            request.AddJsonBody(new
+            {
+                albumIds = new[] { albumId },
+                monitored = true
+            });
+            AddHeaders(request, apiKey);
+            return Api.Request<AlbumResponse>(request);
+        }
+
+        public Task<List<AlbumResponse>> GetAllAlbumsByArtistId(int artistId, string apiKey, string baseUrl)
+        {
+            var request = new Request($"{ApiVersion}/album", baseUrl, HttpMethod.Get);
+            request.AddQueryString("artistId", artistId.ToString());
+            AddHeaders(request, apiKey);
+            return Api.Request<List<AlbumResponse>>(request);
+        }
+
+        public Task<List<LanguageProfiles>> GetLanguageProfile(string apiKey, string baseUrl)
+        {
+            var request = new Request($"{ApiVersion}/languageprofile", baseUrl, HttpMethod.Get);
+            AddHeaders(request, apiKey);
+            return Api.Request<List<LanguageProfiles>>(request);
+        }
+
+        public Task<List<MetadataProfile>> GetMetadataProfile(string apiKey, string baseUrl)
+        {
+            var request = new Request($"{ApiVersion}/metadataprofile", baseUrl, HttpMethod.Get);
+            AddHeaders(request, apiKey);
+            return Api.Request<List<MetadataProfile>>(request);
         }
 
         private void AddHeaders(Request request, string key)

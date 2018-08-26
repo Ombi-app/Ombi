@@ -16,5 +16,10 @@ namespace Ombi.Api.Lidarr
         Task<AlbumLookup> GetAlbumByForeignId(string foreignArtistId, string apiKey, string baseUrl);
         Task<List<ArtistResult>> GetArtists(string apiKey, string baseUrl);
         Task<List<AlbumResponse>> GetAllAlbums(string apiKey, string baseUrl);
+        Task<ArtistResult> AddArtist(ArtistAdd artist, string apiKey, string baseUrl);
+        Task<AlbumResponse> MontiorAlbum(int albumId, string apiKey, string baseUrl);
+        Task<List<AlbumResponse>> GetAllAlbumsByArtistId(int artistId, string apiKey, string baseUrl);
+        Task<List<MetadataProfile>> GetMetadataProfile(string apiKey, string baseUrl);
+        Task<List<LanguageProfiles>> GetLanguageProfile(string apiKey, string baseUrl);
     }
 }

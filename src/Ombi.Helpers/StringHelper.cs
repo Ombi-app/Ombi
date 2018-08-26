@@ -75,5 +75,10 @@ namespace Ombi.Helpers
 
             return -1;
         }
+
+        public static string RemoveSpaces(this string str)
+        {
+            return str.Replace(" ", "");
+        }
     }
 }

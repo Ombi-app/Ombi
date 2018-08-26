@@ -8,5 +8,8 @@ namespace Ombi.Settings.Settings.Models.External
         public string ApiKey { get; set; }
         public string DefaultQualityProfile { get; set; }
         public string DefaultRootPath { get; set; }
+        public bool AlbumFolder { get; set; }
+        public int LanguageProfileId { get; set; }
+        public int MetadataProfileId { get; set; }
     }
 }

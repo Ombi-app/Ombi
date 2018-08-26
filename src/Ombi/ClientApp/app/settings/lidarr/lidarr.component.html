@@ -50,36 +50,57 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="form-group">
-                    <div>
-                        <button (click)="getProfiles(form)" type="button" class="btn btn-primary-outline">Get Quality Profiles <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"> </span></button>
-                    </div>
-                </div>
+
                 <div class="form-group">
                     <label for="select" class="control-label">Quality Profiles</label>
                     <div id="profiles">
-                        <select formControlName="defaultQualityProfile" class="form-control form-control-custom" id="select"  [ngClass]="{'form-error': form.get('defaultQualityProfile').hasError('required')}">
+                        <select formControlName="defaultQualityProfile" class="form-control form-control-custom  col-md-5 form-half" id="select"  [ngClass]="{'form-error': form.get('defaultQualityProfile').hasError('required')}">
                             <option *ngFor="let quality of qualities" value="{{quality.id}}">{{quality.name}}</option>
                         </select>
+                        <button (click)="getProfiles(form)" type="button" class="btn btn-primary-outline col-md-4 col-md-push-1">Get Quality Profiles <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"> </span></button>
+
                     </div>
                     <small *ngIf="form.get('defaultQualityProfile').hasError('required')" class="error-text">A Default Quality Profile is required</small>
                 </div>
 
                 <div class="form-group">
-                    <div>
-                        <button (click)="getRootFolders(form)" type="button" class="btn btn-primary-outline">Get Root Folders <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
-
-                    </div>
-
-                </div>
-                <div class="form-group">
                     <label for="rootFolders" class="control-label">Default Root Folders</label>
                     <div id="rootFolders">
-                        <select formControlName="defaultRootPath" class="form-control form-control-custom"  [ngClass]="{'form-error': form.get('defaultRootPath').hasError('required')}">
+                        <select formControlName="defaultRootPath" class="form-control form-control-custom col-md-5 form-half"  [ngClass]="{'form-error': form.get('defaultRootPath').hasError('required')}">
                             <option *ngFor="let folder of rootFolders" value="{{folder.path}}" >{{folder.path}}</option>
                         </select>
+                        <button (click)="getRootFolders(form)" type="button" class="btn btn-primary-outline col-md-4 col-md-push-1">Get Root Folders <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
+
                     </div>                    
                     <small *ngIf="form.get('defaultRootPath').hasError('required')" class="error-text">A Default Root Path is required</small>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="languageProfileId" class="control-label">Language Profile</label>
+                    <div id="languageProfileId">
+                        <select formControlName="languageProfileId" class="form-control form-control-custom col-md-5 form-half"  [ngClass]="{'form-error': form.get('languageProfileId').hasError('required')}">
+                            <option *ngFor="let folder of languageProfiles" value="{{folder.id}}" >{{folder.name}}</option>
+                        </select>
+                        <button (click)="getLanguageProfiles(form)" type="button" class="btn btn-primary-outline col-md-4 col-md-push-1">Get Languages <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
+
+                    </div>                    
+                    <small *ngIf="form.get('languageProfileId').hasError('required')" class="error-text">A Language profile is required</small>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="metadataProfileId" class="control-label">Metadata Profile</label>
+                    <div id="metadataProfileId">
+                        
+                        <select formControlName="metadataProfileId" class="form-control form-control-custom col-md-5 form-half"  [ngClass]="{'form-error': form.get('metadataProfileId').hasError('required')}">
+                            <option *ngFor="let folder of metadataProfiles" value="{{folder.id}}" >{{folder.name}}</option>
+                        </select>
+                        <button (click)="getMetadataProfiles(form)" type="button" class="btn btn-primary-outline col-md-4  col-md-push-1">Get Metadata <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
+
+                    </div>                     
+                    
+                    <small *ngIf="form.get('metadataProfileId').hasError('required')" class="error-text">A Metadata profile is required</small>
                 </div>
 
                 

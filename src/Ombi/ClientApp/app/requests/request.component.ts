@@ -11,6 +11,7 @@ export class RequestComponent implements OnInit  {
 
     public showMovie = true;
     public showTv = false;
+    public showAlbums = false;
 
     public issueCategories: IIssueCategory[];
     public issuesEnabled = false;
@@ -28,10 +29,18 @@ export class RequestComponent implements OnInit  {
     public selectMovieTab() {
         this.showMovie = true;
         this.showTv = false;
+        this.showAlbums = false;
     }
 
     public selectTvTab() {
         this.showMovie = false;
         this.showTv = true;
+        this.showAlbums = false;
+    }
+
+    public selectMusicTab() {
+        this.showMovie = false;
+        this.showTv = false;
+        this.showAlbums = true;
     }
 }

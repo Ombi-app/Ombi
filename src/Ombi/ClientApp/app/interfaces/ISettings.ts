@@ -90,6 +90,9 @@ export interface ILidarrSettings extends IExternalSettings {
   defaultQualityProfile: string;
   defaultRootPath: string;
   fullRootPath: string;
+  metadataProfileId: number;
+  languageProfileId: number;
+  albumFolder: boolean;
 }
 
 export interface ILandingPageSettings extends ISettings {

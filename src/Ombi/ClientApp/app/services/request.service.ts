@@ -159,8 +159,8 @@ export class RequestService extends ServiceHelpers {
         return this.http.post<IRequestEngineResult>(`${this.url}music/unavailable`, JSON.stringify(Album),  {headers: this.headers});
     }
 
-    public getAlbumRequests(count: number, position: number, order: OrderType, filter: IFilter): Observable<IRequestsViewModel<IMovieRequests>> {
-        return this.http.get<IRequestsViewModel<IMovieRequests>>(`${this.url}music/${count}/${position}/${order}/${filter.statusFilter}/${filter.availabilityFilter}`, {headers: this.headers});
+    public getAlbumRequests(count: number, position: number, order: OrderType, filter: IFilter): Observable<IRequestsViewModel<IAlbumRequest>> {
+        return this.http.get<IRequestsViewModel<IAlbumRequest>>(`${this.url}music/${count}/${position}/${order}/${filter.statusFilter}/${filter.availabilityFilter}`, {headers: this.headers});
     }
 
     public searchAlbumRequests(search: string): Observable<IAlbumRequest[]> {

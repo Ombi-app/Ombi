@@ -119,6 +119,7 @@
       "Below you can see yours and all other requests, as well as their download and approval status.",
     "MoviesTab": "Movies",
     "TvTab": "TV Shows",
+    "MusicTab":"Music",
     "RequestedBy": "Requested By:",
     "Status": "Status:",
     "RequestStatus": "Request status:",

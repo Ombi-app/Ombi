@@ -23,13 +23,14 @@ export interface IMovieRequests extends IFullBaseRequest {
 export interface IAlbumRequest extends IBaseRequest {
   foreignAlbumId: string;
   foreignArtistId: string;
-  Disk: string;
+  disk: string;
   cover: string;
   releaseDate: Date;
   artistName: string;
 
   subscribed: boolean;
   showSubscribe: boolean;
+  background: any;
 }
 
 export interface IAlbumRequestModel {

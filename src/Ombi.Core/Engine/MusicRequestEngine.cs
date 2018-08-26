@@ -15,6 +15,7 @@ using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.UI;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Core.Senders;
 using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.External;
@@ -29,11 +30,11 @@ namespace Ombi.Core.Engine
             INotificationHelper helper, IRuleEvaluator r, ILogger<MusicRequestEngine> log,
             OmbiUserManager manager, IRepository<RequestLog> rl, ICacheService cache,
             ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub, ILidarrApi lidarr,
-            ISettingsService<LidarrSettings> lidarrSettings)
+            ISettingsService<LidarrSettings> lidarrSettings, IMusicSender sender)
             : base(user, requestService, r, manager, cache, ombiSettings, sub)
         {
             NotificationHelper = helper;
-            //Sender = sender;
+            _musicSender = sender;
             Logger = log;
             _requestLog = rl;
             _lidarrApi = lidarr;
@@ -46,6 +47,7 @@ namespace Ombi.Core.Engine
         private readonly IRepository<RequestLog> _requestLog;
         private readonly ISettingsService<LidarrSettings> _lidarrSettings;
         private readonly ILidarrApi _lidarrApi;
+        private readonly IMusicSender _musicSender;
 
         /// <summary>
         /// Requests the Album.
@@ -79,7 +81,8 @@ namespace Ombi.Core.Engine
                 RequestedUserId = userDetails.Id,
                 Title = album.title,
                 Disk = album.images?.FirstOrDefault(x => x.coverType.Equals("disc"))?.url,
-                Cover = album.images?.FirstOrDefault(x => x.coverType.Equals("cover"))?.url
+                Cover = album.images?.FirstOrDefault(x => x.coverType.Equals("cover"))?.url,
+                ForeignArtistId = album?.artist?.foreignArtistId ?? string.Empty
             };
             if (requestModel.Cover.IsNullOrEmpty())
             {
@@ -341,26 +344,25 @@ namespace Ombi.Core.Engine
 
             if (request.Approved)
             {
-                //TODO
-                //var result = await Sender.Send(request);
-                //if (result.Success && result.Sent)
-                //{
-                //    return new RequestEngineResult
-                //    {
-                //        Result = true
-                //    };
-                //}
+                var result = await _musicSender.Send(request);
+                if (result.Success && result.Sent)
+                {
+                    return new RequestEngineResult
+                    {
+                        Result = true
+                    };
+                }
 
-                //if (!result.Success)
-                //{
-                //    Logger.LogWarning("Tried auto sending movie but failed. Message: {0}", result.Message);
-                //    return new RequestEngineResult
-                //    {
-                //        Message = result.Message,
-                //        ErrorMessage = result.Message,
-                //        Result = false
-                //    };
-                //}
+                if (!result.Success)
+                {
+                    Logger.LogWarning("Tried auto sending album but failed. Message: {0}", result.Message);
+                    return new RequestEngineResult
+                    {
+                        Message = result.Message,
+                        ErrorMessage = result.Message,
+                        Result = false
+                    };
+                }
 
                 // If there are no providers then it's successful but movie has not been sent
             }

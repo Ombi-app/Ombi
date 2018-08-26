@@ -51,6 +51,27 @@ namespace Ombi.Controllers.External
         }
 
         /// <summary>
+        /// Gets the Lidarr metadata profiles.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("Metadata")]
+        public async Task<IEnumerable<MetadataProfile>> GetMetadataProfiles([FromBody] LidarrSettings settings)
+        {
+            return await _lidarrApi.GetMetadataProfile(settings.ApiKey, settings.FullUri);
+        }
+        /// <summary>
+        /// Gets the Lidarr Langauge profiles.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("Langauges")]
+        public async Task<IEnumerable<LanguageProfiles>> GetLanguageProfiles([FromBody] LidarrSettings settings)
+        {
+            return await _lidarrApi.GetLanguageProfile(settings.ApiKey, settings.FullUri);
+        }
+
+        /// <summary>
         /// Gets the Lidarr profiles using the saved settings
         /// <remarks>The data is cached for an hour</remarks>
         /// </summary>
