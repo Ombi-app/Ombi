@@ -75,7 +75,7 @@
             <a *ngIf="result.showSubscribe && result.subscribed" style="color:red" (click)="unSubscribe(result)" pTooltip="Unsubscribe notification"> <i class="fa fa-rss"></i></a> -->
             </div>
         </div>
-        <div *ngIf="result.available">
+        <div *ngIf="result.fullyAvailable">
             <button style="text-align: right" class="btn btn-success-outline disabled" disabled>
                 <i class="fa fa-check"></i> {{ 'Common.Available' | translate }}</button>
         </div>
