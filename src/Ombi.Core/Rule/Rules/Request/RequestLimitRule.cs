@@ -81,7 +81,7 @@ namespace Ombi.Core.Rule.Rules.Request
                 // Get the count of requests to be made
                 foreach (var s in child.SeasonRequests)
                 {
-                    requestCount = s.Episodes.Count;
+                    requestCount += s.Episodes.Count;
                 }
 
                 var tvLogs = requestLog.Where(x => x.RequestType == RequestType.TvShow);
