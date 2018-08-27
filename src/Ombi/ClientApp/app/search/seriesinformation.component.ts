@@ -7,6 +7,7 @@ import { SearchService } from "../services";
 import { INewSeasonRequests, IRequestEngineResult, ISeasonsViewModel, ITvRequestViewModel } from "../interfaces";
 import { IEpisodesRequests } from "../interfaces";
 import { ISearchTvResult } from "../interfaces";
+
 import { Subject } from "rxjs";
 
 @Component({
@@ -19,9 +20,8 @@ export class SeriesInformationComponent implements OnInit {
     public result: IRequestEngineResult;
     public series: ISearchTvResult;
     public requestedEpisodes: IEpisodesRequests[] = [];
-    @Input() private seriesId: number;
-
     @Input() public tvRequested: Subject<void>;
+    @Input() private seriesId: number;
 
     constructor(private searchService: SearchService, private requestService: RequestService, private notificationService: NotificationService) { }
 

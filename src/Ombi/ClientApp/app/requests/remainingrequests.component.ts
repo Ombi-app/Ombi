@@ -15,7 +15,7 @@ export class RemainingRequestsComponent implements OnInit  {
     public daysUntil: number;
     public hoursUntil: number;
     public minutesUntil: number;
-    @Input() quotaRefreshEvents: Observable<void>;
+    @Input() public quotaRefreshEvents: Observable<void>;
 
     constructor(private requestService: RequestService) {
     }
