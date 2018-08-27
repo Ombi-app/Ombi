@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    <remaining-requests [movie]="false" #remainingTvShows></remaining-requests>
+    <remaining-requests [movie]="false" [quotaRefreshEvents]="tvRequested.asObservable()" #remainingTvShows></remaining-requests>
 
     <!-- Movie content -->
     <div id="actorMovieList">
@@ -153,7 +153,7 @@
                 </div>
                 <!--This is the section that holds the child seasons if they want to specify specific episodes-->
                 <div *ngIf="node.open">
-                    <seriesinformation [seriesId]="node.id"></seriesinformation>
+                    <seriesinformation [seriesId]="node.id" [tvRequested]="tvRequested"></seriesinformation>
                 </div>
 
                 <br/>

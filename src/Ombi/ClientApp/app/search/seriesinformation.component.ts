@@ -7,6 +7,7 @@ import { SearchService } from "../services";
 import { INewSeasonRequests, IRequestEngineResult, ISeasonsViewModel, ITvRequestViewModel } from "../interfaces";
 import { IEpisodesRequests } from "../interfaces";
 import { ISearchTvResult } from "../interfaces";
+import { Subject } from "rxjs";
 
 @Component({
     selector: "seriesinformation",
@@ -18,8 +19,9 @@ export class SeriesInformationComponent implements OnInit {
     public result: IRequestEngineResult;
     public series: ISearchTvResult;
     public requestedEpisodes: IEpisodesRequests[] = [];
-
     @Input() private seriesId: number;
+
+    @Input() public tvRequested: Subject<void>;
 
     constructor(private searchService: SearchService, private requestService: RequestService, private notificationService: NotificationService) { }
 
@@ -62,7 +64,7 @@ export class SeriesInformationComponent implements OnInit {
 
         this.requestService.requestTv(viewModel)
             .subscribe(x => {
-                this.requestService.requestEvents.next();
+                this.tvRequested.next();
                 this.result = x as IRequestEngineResult;
                 if (this.result.result) {
                     this.notificationService.success(

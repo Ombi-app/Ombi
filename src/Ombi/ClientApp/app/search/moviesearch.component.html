@@ -20,7 +20,7 @@
         </div>
     </div>
 
-    <remaining-requests [movie]="true" #remainingFilms></remaining-requests>
+    <remaining-requests [movie]="true" [quotaRefreshEvents]="movieRequested.asObservable()" #remainingFilms></remaining-requests>
 
     <!-- Movie content -->
     <div id="movieList">

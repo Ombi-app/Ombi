@@ -17,6 +17,7 @@ export class MovieSearchComponent implements OnInit {
 
     public searchText: string;
     public searchChanged: Subject<string> = new Subject<string>();
+    public movieRequested: Subject<void> = new Subject<void>();
     public movieResults: ISearchMovieResult[];
     public result: IRequestEngineResult;
 
@@ -88,7 +89,7 @@ export class MovieSearchComponent implements OnInit {
         try {
             this.requestService.requestMovie({ theMovieDbId: searchResult.id })
                 .subscribe(x => {
-                    this.requestService.requestEvents.next();
+                    this.movieRequested.next();
                     this.result = x;
                     if (this.result.result) {
                         this.translate.get("Search.RequestAdded", { title: searchResult.title }).subscribe(x => {

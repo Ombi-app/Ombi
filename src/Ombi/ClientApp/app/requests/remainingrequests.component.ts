@@ -2,6 +2,7 @@
 import { RequestService } from "../services";
 
 import { Component, Input, OnInit } from "@angular/core";
+import { Observable } from "rxjs";
 
 @Component({
     selector: "remaining-requests",
@@ -14,6 +15,7 @@ export class RemainingRequestsComponent implements OnInit  {
     public daysUntil: number;
     public hoursUntil: number;
     public minutesUntil: number;
+    @Input() quotaRefreshEvents: Observable<void>;
 
     constructor(private requestService: RequestService) {
     }
@@ -23,7 +25,7 @@ export class RemainingRequestsComponent implements OnInit  {
 
         this.update();
 
-        this.requestService.requestEvents.subscribe(() => {
+        this.quotaRefreshEvents.subscribe(() => {
             this.update();
         });
 

@@ -2,7 +2,7 @@ import { PlatformLocation } from "@angular/common";
 import { Injectable } from "@angular/core";
 
 import { HttpClient } from "@angular/common/http";
-import { Observable, ReplaySubject } from "rxjs";
+import { Observable } from "rxjs";
 
 import { TreeNode } from "primeng/primeng";
 import { FilterType, IChildRequests, IFilter, IMovieRequestModel, IMovieRequests, IMovieUpdateModel, IRequestEngineResult, IRequestsViewModel,  ITvRequests, ITvUpdateModel, OrderType } from "../interfaces";
@@ -13,8 +13,6 @@ import { IRemainingRequests } from "../interfaces/IRemainingRequests";
 
 @Injectable()
 export class RequestService extends ServiceHelpers {
-    public readonly requestEvents = new ReplaySubject(); 
-
     constructor(http: HttpClient, public platformLocation: PlatformLocation) {
         super(http, "/api/v1/Request/", platformLocation);
     }
