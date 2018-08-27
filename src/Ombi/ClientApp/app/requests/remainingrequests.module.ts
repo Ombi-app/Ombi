@@ -1,5 +1,4 @@
-﻿import { CommonModule } from "@angular/common";
-import { NgModule } from "@angular/core";
+﻿import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 
@@ -10,7 +9,6 @@ import { RequestService } from "../services";
 
 @NgModule({
     imports: [
-        CommonModule,
         FormsModule,
         NgbModule.forRoot(),
         TreeTableModule,
