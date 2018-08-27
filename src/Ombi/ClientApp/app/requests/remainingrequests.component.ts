@@ -28,10 +28,6 @@ export class RemainingRequestsComponent implements OnInit  {
         });
 
         setInterval(() => {
-            self.calculateTime();
-        }, 10000);
-
-        setInterval(() => {
             self.update();
         }, 60000);
     }
