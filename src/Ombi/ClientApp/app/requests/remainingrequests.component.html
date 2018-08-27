@@ -1,15 +1,15 @@
 ﻿<div *ngIf="remaining?.hasLimit">
     <h4 id="remainingRequests" class="text-center">
-        {{remaining.remaining}}/{{remaining.limit}} requests remaining
+        {{'Requests.Remaining.Quota' | translate: {remaining: remaining.remaining, total: remaining.limit} }}
     </h4>
     <h4 class="text-center" *ngIf="daysUntil > 1">
-        Another request will be added in {{daysUntil}} {{daysUntil == 1 ? "day" : "days"}}
+        {{daysUntil == 1 ? 'Requests.Remaining.NextDay' : "Requests.Remaining.NextDays" | translate: {time: daysUntil} }}
     </h4>
     <h4 class="text-center" *ngIf="hoursUntil > 1 && daysUntil <= 1">
-        Another request will be added in {{hoursUntil}} {{hoursUntil == 1 ? "hour" : "hours"}}
+        {{hoursUntil == 1 ? 'Requests.Remaining.NextHour' : "Requests.Remaining.NextHours" | translate: {time: hoursUntil} }}
     </h4>
     <h4 class="text-center" *ngIf="minutesUntil > 1 && hoursUntil <= 1 && daysUntil <= 1" #minutes>
-        Another request will be added in {{minutesUntil}} {{minutesUntil == 1 ? "minute" : "minutes"}}
+        {{minutesUntil == 1 ? 'Requests.Remaining.NextMinute' : "Requests.Remaining.NextMinutes" | translate: {time: minutesUntil} }}
     </h4>
 </div>
 
