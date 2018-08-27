@@ -8,15 +8,12 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { SidebarModule, TooltipModule, TreeTableModule } from "primeng/primeng";
 import { RequestService } from "../services";
 
-import { SharedModule } from "../shared/shared.module";
-
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         NgbModule.forRoot(),
         TreeTableModule,
-        SharedModule,
         SidebarModule,
         TooltipModule,
     ],
