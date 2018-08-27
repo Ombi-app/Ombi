@@ -23,7 +23,7 @@ export class RemainingRequestsComponent implements OnInit  {
 
         this.update();
 
-        this.requestService.onRequested().subscribe(m => {
+        this.requestService.requestEvents.subscribe(() => {
             this.update();
         });
 

@@ -161,6 +161,7 @@ export class TvSearchComponent implements OnInit {
 
         this.requestService.requestTv(viewModel)
             .subscribe(x => {
+                this.requestService.requestEvents.next();
                 this.result = x;
                 if (this.result.result) {
                     this.notificationService.success(

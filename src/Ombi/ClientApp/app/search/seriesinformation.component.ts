@@ -62,6 +62,7 @@ export class SeriesInformationComponent implements OnInit {
 
         this.requestService.requestTv(viewModel)
             .subscribe(x => {
+                this.requestService.requestEvents.next();
                 this.result = x as IRequestEngineResult;
                 if (this.result.result) {
                     this.notificationService.success(
