@@ -631,7 +631,10 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            IQueryable<RequestLog> log = _requestLog.GetAll().Where(x => x.UserId == user.Id && x.RequestType == RequestType.TvShow);
+            IQueryable<RequestLog> log = _requestLog.GetAll()
+                                            .Where(x => x.UserId == user.Id
+                                                && x.RequestType == RequestType.TvShow
+                                                && x.RequestDate >= DateTime.UtcNow.AddDays(-7));
 
             // Needed, due to a bug which would cause all episode counts to be 0
             int zeroEpisodeCount = await log.Where(x => x.EpisodeCount == 0).Select(x => x.EpisodeCount).CountAsync();
@@ -640,8 +643,7 @@ namespace Ombi.Core.Engine
 
             int count = limit - (zeroEpisodeCount + episodeCount);
 
-            DateTime oldestRequestedAt = await log.Where(x => x.RequestDate >= DateTime.UtcNow.AddDays(-7))
-                                            .OrderBy(x => x.RequestDate)
+            DateTime oldestRequestedAt = await log.OrderBy(x => x.RequestDate)
                                             .Select(x => x.RequestDate)
                                             .FirstOrDefaultAsync();
                         
