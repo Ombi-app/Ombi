@@ -27,6 +27,8 @@ export class PushoverComponent implements OnInit {
                 enabled: [x.enabled],
                 userToken: [x.userToken],
                 accessToken: [x.accessToken, [Validators.required]],
+                priority: [x.priority],
+                sound: [x.sound],
             });
         });
     }
