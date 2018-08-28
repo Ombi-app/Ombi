@@ -13,6 +13,7 @@ namespace Ombi.Store.Entities
         public bool Monitored { get; set; }
         public string Title { get; set; }
         public decimal PercentOfTracks { get; set; }
+        public DateTime AddedAt { get; set; }
 
         [NotMapped]
         public bool PartiallyAvailable => PercentOfTracks != 100 && PercentOfTracks > 0;

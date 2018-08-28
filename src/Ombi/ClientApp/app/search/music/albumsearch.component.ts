@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 
 import { AuthService } from "../../auth/auth.service";
-import { IRequestEngineResult } from "../../interfaces";
+import { IIssueCategory, IRequestEngineResult } from "../../interfaces";
 import { ISearchAlbumResult } from "../../interfaces/ISearchMusicResult";
 import { NotificationService, RequestService } from "../../services";
 
@@ -14,7 +14,15 @@ export class AlbumSearchComponent {
 
     @Input() public result: ISearchAlbumResult;
     public engineResult: IRequestEngineResult;
-    @Input() public defaultPoster: string;
+    @Input() public defaultPoster: string;    
+
+    @Input() public issueCategories: IIssueCategory[];
+    @Input() public issuesEnabled: boolean;
+    public issuesBarVisible = false;
+    public issueRequestTitle: string;
+    public issueRequestId: number;
+    public issueProviderId: string;
+    public issueCategorySelected: IIssueCategory;
     
     @Output() public setSearch = new EventEmitter<string>();
 
@@ -27,6 +35,14 @@ export class AlbumSearchComponent {
     public selectArtist(event: Event, artistId: string) {
         event.preventDefault();
         this.setSearch.emit(artistId);
+    }
+
+    public reportIssue(catId: IIssueCategory, req: ISearchAlbumResult) {
+        this.issueRequestId = req.id;
+        this.issueRequestTitle = req.title + `(${req.releaseDate.getFullYear})`;
+        this.issueCategorySelected = catId;
+        this.issuesBarVisible = true;
+        this.issueProviderId = req.id.toString();
     }
 
     public request(searchResult: ISearchAlbumResult) {
