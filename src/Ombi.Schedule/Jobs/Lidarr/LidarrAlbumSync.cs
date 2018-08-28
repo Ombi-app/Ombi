@@ -67,7 +67,8 @@ namespace Ombi.Schedule.Jobs.Lidarr
                                         TrackCount = a.currentRelease.trackCount,
                                         Monitored = a.monitored,
                                         Title = a.title,
-                                        PercentOfTracks = a.statistics?.percentOfEpisodes ?? 0m
+                                        PercentOfTracks = a.statistics?.percentOfEpisodes ?? 0m,
+                                        AddedAt = DateTime.Now,
                                     });
                                 }
                             }
