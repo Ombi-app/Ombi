@@ -20,8 +20,8 @@ namespace Ombi.Notifications.Agents
     {
         public DiscordNotification(IDiscordApi api, ISettingsService<DiscordNotificationSettings> sn,
                                    ILogger<DiscordNotification> log, INotificationTemplatesRepository r,
-                                   IMovieRequestRepository m, ITvRequestRepository t, ISettingsService<CustomizationSettings> s, IRepository<RequestSubscription> sub)
-            : base(sn, r, m, t,s,log, sub)
+                                   IMovieRequestRepository m, ITvRequestRepository t, ISettingsService<CustomizationSettings> s, IRepository<RequestSubscription> sub, IMusicRequestRepository music)
+            : base(sn, r, m, t, s, log, sub, music)
         {
             Api = api;
             Logger = log;
@@ -130,11 +130,17 @@ namespace Ombi.Notifications.Agents
                 title = MovieRequest.Title;
                 image = MovieRequest.PosterPath;
             }
-            else
+            else if (model.RequestType == RequestType.TvShow)
             {
                 user = TvRequest.RequestedUser.UserAlias;
                 title = TvRequest.ParentRequest.Title;
                 image = TvRequest.ParentRequest.PosterPath;
+            }
+            else if (model.RequestType == RequestType.Album)
+            {
+                user = AlbumRequest.RequestedUser.UserAlias;
+                title = AlbumRequest.Title;
+                image = AlbumRequest.Cover;
             }
             var message = $"Hello! The user '{user}' has requested {title} but it could not be added. This has been added into the requests queue and will keep retrying";
             var notification = new NotificationMessage

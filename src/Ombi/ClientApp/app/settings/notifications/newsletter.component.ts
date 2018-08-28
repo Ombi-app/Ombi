@@ -2,7 +2,7 @@
 
 import { INewsletterNotificationSettings, NotificationType } from "../../interfaces";
 import { JobService, NotificationService, SettingsService } from "../../services";
-import { TesterService } from "./../../services/applications/tester.service";
+import { TesterService } from "../../services/applications/tester.service";
 
 @Component({
     templateUrl: "./newsletter.component.html",

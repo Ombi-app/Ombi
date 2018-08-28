@@ -32,6 +32,7 @@ using Ombi.Api.CouchPotato;
 using Ombi.Api.DogNzb;
 using Ombi.Api.FanartTv;
 using Ombi.Api.Github;
+using Ombi.Api.Lidarr;
 using Ombi.Api.Mattermost;
 using Ombi.Api.Notifications;
 using Ombi.Api.Pushbullet;
@@ -53,9 +54,11 @@ using PlexContentCacher = Ombi.Schedule.Jobs.Plex;
 using Ombi.Api.Telegram;
 using Ombi.Core.Authentication;
 using Ombi.Core.Processor;
+using Ombi.Schedule.Jobs.Lidarr;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.SickRage;
 using Ombi.Schedule.Processor;
+using Ombi.Store.Entities;
 
 namespace Ombi.DependencyInjection
 {
@@ -82,7 +85,10 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IUserStatsEngine, UserStatsEngine>();
             services.AddTransient<IMovieSender, MovieSender>();
             services.AddTransient<IRecentlyAddedEngine, RecentlyAddedEngine>();
+            services.AddTransient<IMusicSearchEngine, MusicSearchEngine>();
+            services.AddTransient<IMusicRequestEngine, MusicRequestEngine>();
             services.AddTransient<ITvSender, TvSender>();
+            services.AddTransient<IMusicSender, MusicSender>();
             services.AddTransient<IMassEmailSender, MassEmailSender>();
             services.AddTransient<IPlexOAuthManager, PlexOAuthManager>();
         }
@@ -117,6 +123,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ISickRageApi, SickRageApi>();
             services.AddTransient<IAppVeyorApi, AppVeyorApi>();
             services.AddTransient<IOneSignalApi, OneSignalApi>();
+            services.AddTransient<ILidarrApi, LidarrApi>();
         }
 
         public static void RegisterStore(this IServiceCollection services) { 
@@ -131,6 +138,7 @@ namespace Ombi.DependencyInjection
             
             services.AddTransient<ITvRequestRepository, TvRequestRepository>();
             services.AddTransient<IMovieRequestRepository, MovieRequestRepository>();
+            services.AddTransient<IMusicRequestRepository, MusicRequestRepository>();
             services.AddTransient<IAuditRepository, AuditRepository>();
             services.AddTransient<IApplicationConfigRepository, ApplicationConfigRepository>();
             services.AddTransient<ITokenRepository, TokenRepository>();
@@ -180,6 +188,9 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IRefreshMetadata, RefreshMetadata>();
             services.AddTransient<INewsletterJob, NewsletterJob>();
             services.AddTransient<IPlexRecentlyAddedSync, PlexRecentlyAddedSync>();
+            services.AddTransient<ILidarrAlbumSync, LidarrAlbumSync>();
+            services.AddTransient<ILidarrArtistSync, LidarrArtistSync>();
+            services.AddTransient<ILidarrAvailabilityChecker, LidarrAvailabilityChecker>();
         }
     }
 }

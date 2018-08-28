@@ -18,6 +18,7 @@ import {
     IJobSettings,
     IJobSettingsViewModel,
     ILandingPageSettings,
+    ILidarrSettings,
     IMattermostNotifcationSettings,
     IMobileNotifcationSettings,
     INewsletterNotificationSettings,
@@ -89,6 +90,14 @@ export class SettingsService extends ServiceHelpers {
 
     public saveRadarr(settings: IRadarrSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}/Radarr`, JSON.stringify(settings), {headers: this.headers});
+    }
+
+    public getLidarr(): Observable<ILidarrSettings> {
+        return this.http.get<ILidarrSettings>(`${this.url}/Lidarr`, {headers: this.headers});
+    }
+
+    public saveLidarr(settings: ILidarrSettings): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}/Lidarr`, JSON.stringify(settings), {headers: this.headers});
     }
 
     public getAuthentication(): Observable<IAuthenticationSettings> {

@@ -9,6 +9,10 @@
         <a id="tvTabButton" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectTvTab()"><i class="fa fa-television"></i> {{ 'Requests.TvTab' | translate }}</a>
 
     </li>
+    <li role="presentation">
+        <a id="albumTabButton" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectMusicTab()"><i class="fa fa-music"></i> {{ 'Requests.MusicTab' | translate }}</a>
+
+    </li>
 </ul>
 
 <!-- Tab panes -->
@@ -18,6 +22,9 @@
     </div>
     <div [hidden]="!showTv">
         <tv-requests [issueCategories]="issueCategories" [issuesEnabled]="issuesEnabled"></tv-requests>
+    </div>
+    <div [hidden]="!showAlbums">
+        <music-requests [issueCategories]="issueCategories" [issuesEnabled]="issuesEnabled"></music-requests>
     </div>
 </div>
 

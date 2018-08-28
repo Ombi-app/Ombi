@@ -47,14 +47,48 @@ namespace Ombi.Notifications
 
             if (req?.RequestType == RequestType.Movie)
             {
-                PosterImage = string.Format((req?.PosterPath ?? string.Empty).StartsWith("/", StringComparison.InvariantCultureIgnoreCase) 
+                PosterImage = string.Format((req?.PosterPath ?? string.Empty).StartsWith("/", StringComparison.InvariantCultureIgnoreCase)
                     ? "https://image.tmdb.org/t/p/w300{0}" : "https://image.tmdb.org/t/p/w300/{0}", req?.PosterPath);
             }
             else
             {
                 PosterImage = req?.PosterPath;
             }
-            
+
+            AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
+        }
+
+        public void Setup(NotificationOptions opts, AlbumRequest req, CustomizationSettings s)
+        {
+            LoadIssues(opts);
+            string title;
+            if (req == null)
+            {
+                opts.Substitutes.TryGetValue("Title", out title);
+            }
+            else
+            {
+                title = req?.Title;
+            }
+            ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
+            ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
+            RequestedUser = req?.RequestedUser?.UserName;
+            if (UserName.IsNullOrEmpty())
+            {
+                // Can be set if it's an issue
+                UserName = req?.RequestedUser?.UserName;
+            }
+
+            Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
+            Title = title;
+            RequestedDate = req?.RequestedDate.ToString("D");
+            if (Type.IsNullOrEmpty())
+            {
+                Type = req?.RequestType.Humanize();
+            }
+            Year = req?.ReleaseDate.Year.ToString();
+            PosterImage = (req?.Cover.HasValue() ?? false) ? req.Cover : req?.Disk ?? string.Empty;
+
             AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
         }
 

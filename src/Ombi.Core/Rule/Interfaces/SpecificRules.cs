@@ -3,5 +3,7 @@
     public enum SpecificRules
     {
         CanSendNotification,
+        LidarrArtist,
+        LidarrAlbum,
     }
 }
