@@ -54,7 +54,16 @@ namespace Ombi.Core.Engine
 
             if (searchResult != null)
             {
-                return await ProcessResults(searchResult);
+                var retVal = new List<SearchTvShowViewModel>();
+                foreach (var tvMazeSearch in searchResult)
+                {
+                    if (tvMazeSearch.show.externals == null || !(tvMazeSearch.show.externals?.thetvdb.HasValue ?? false))
+                    {
+                        continue;
+                    }
+                    retVal.Add(await ProcessResult(tvMazeSearch));
+                }
+                return retVal;
             }
             return null;
         }
@@ -145,10 +154,14 @@ namespace Ombi.Core.Engine
             var retVal = new List<SearchTvShowViewModel>();
             foreach (var tvMazeSearch in items)
             {
-                var viewT = Mapper.Map<SearchTvShowViewModel>(tvMazeSearch);
-                retVal.Add(await ProcessResult(viewT));
+                retVal.Add(await ProcessResult(tvMazeSearch));
             }
             return retVal;
+        }
+
+        private async Task<SearchTvShowViewModel> ProcessResult<T>(T tvMazeSearch)
+        {
+            return Mapper.Map<SearchTvShowViewModel>(tvMazeSearch);
         }
 
         private async Task<SearchTvShowViewModel> ProcessResult(SearchTvShowViewModel item)
