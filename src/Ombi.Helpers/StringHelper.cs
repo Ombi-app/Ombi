@@ -80,5 +80,9 @@ namespace Ombi.Helpers
         {
             return str.Replace(" ", "");
         }
+        public static string StripCharacters(this string str, params char[] chars)
+        {
+            return string.Concat(str.Where(c => !chars.Contains(c)));
+        }
     }
 }
