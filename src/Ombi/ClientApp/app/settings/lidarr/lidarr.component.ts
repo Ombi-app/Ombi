@@ -124,8 +124,8 @@ export class LidarrComponent implements OnInit {
             this.notificationService.error("Please check your entered values");
             return;
         }
-        const settings = <IRadarrSettings>form.value;
-        this.testerService.radarrTest(settings).subscribe(x => {
+        const settings = <ILidarrSettings>form.value;
+        this.testerService.lidarrTest(settings).subscribe(x => {
             if (x === true) {
                 this.notificationService.success("Successfully connected to Lidarr!");
             } else {

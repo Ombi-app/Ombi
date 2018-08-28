@@ -103,6 +103,13 @@
                     <small *ngIf="form.get('metadataProfileId').hasError('required')" class="error-text">A Metadata profile is required</small>
                 </div>
 
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="albumFolder" name="albumFolder" formControlName="albumFolder">
+                        <label for="albumFolder">Album Folder</label>
+                    </div>
+                </div>
+
                 
                 <div class="form-group">
                     <div>

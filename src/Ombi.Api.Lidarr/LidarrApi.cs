@@ -147,6 +147,13 @@ namespace Ombi.Api.Lidarr
             return Api.Request<List<MetadataProfile>>(request);
         }
 
+        public Task<LidarrStatus> Status(string apiKey, string baseUrl)
+        {
+            var request = new Request($"{ApiVersion}/system/status", baseUrl, HttpMethod.Get);
+            AddHeaders(request, apiKey);
+            return Api.Request<LidarrStatus>(request);
+        }
+
         private void AddHeaders(Request request, string key)
         {
             request.AddHeader("X-Api-Key", key);
