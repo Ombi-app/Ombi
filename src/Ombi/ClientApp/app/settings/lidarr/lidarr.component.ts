@@ -2,7 +2,6 @@
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 import { ILidarrSettings, IMinimumAvailability, IProfiles, IRadarrProfile, IRadarrRootFolder } from "../../interfaces";
-import { IRadarrSettings } from "../../interfaces";
 import { LidarrService, TesterService } from "../../services";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
