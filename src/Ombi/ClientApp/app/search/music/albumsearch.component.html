@@ -45,11 +45,11 @@
                 <ng-template [ngIf]="result.monitored && !result.fullyAvailable">
                     <span class="label label-info" id="processingRequestLabel" [translate]="'Common.Monitored'"></span>
                 </ng-template>
-                 <ng-template [ngIf]="result.requested && !result.approved && !result.available">
+                 <ng-template [ngIf]="result.requested && !result.approved && !result.partiallyAvailable">
                     <span class="label label-warning" id="pendingApprovalLabel" [translate]="'Common.PendingApproval'"></span>
                 </ng-template>
 
-                <ng-template [ngIf]="result.approved && !result.available"><span class="label label-info" id="processingRequestLabel" [translate]="'Common.ProcessingRequest'"></span></ng-template>
+                <ng-template [ngIf]="result.approved && !result.fullyAvailable"><span class="label label-info" id="processingRequestLabel" [translate]="'Common.ProcessingRequest'"></span></ng-template>
   
 
                 
@@ -79,7 +79,7 @@
             <button style="text-align: right" class="btn btn-success-outline disabled" disabled>
                 <i class="fa fa-check"></i> {{ 'Common.Available' | translate }}</button>
         </div>
-        <div *ngIf="!result.available">
+        <div *ngIf="!result.fullyAvailable">
             <div *ngIf="result.requested || result.approved; then requestedBtn else notRequestedBtn"></div>
             <ng-template #requestedBtn>
                 <button style="text-align: right" class="btn btn-primary-outline disabled" [disabled]>
