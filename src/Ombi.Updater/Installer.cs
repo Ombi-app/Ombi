@@ -50,6 +50,7 @@ namespace Ombi.Updater
 
         private void StartOmbi(StartupOptions options)
         {
+            var startupArgsBuilder = new StringBuilder();
             _log.LogDebug("Starting ombi");
             var fileName = "Ombi.exe";
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -73,7 +74,6 @@ namespace Ombi.Updater
             }
             else
             {
-                var startupArgsBuilder = new StringBuilder();
                 if (!string.IsNullOrEmpty(options.Host))
                 {
                     startupArgsBuilder.Append($"--host {options.Host} ");
@@ -96,7 +96,10 @@ namespace Ombi.Updater
                 }
             }
 
-            _log.LogDebug("Ombi started, now exiting");
+            _log.LogDebug($"Ombi started, now exiting");
+            _log.LogDebug($"Working dir: {options.ApplicationPath} (Application Path)");
+            _log.LogDebug($"Filename: {Path.Combine(options.ApplicationPath, fileName)}");
+            _log.LogDebug($"Startup Args: {startupArgsBuilder.ToString()}");
             Environment.Exit(0);
         }
 
