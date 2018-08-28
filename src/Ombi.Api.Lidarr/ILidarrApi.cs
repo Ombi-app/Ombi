@@ -21,5 +21,6 @@ namespace Ombi.Api.Lidarr
         Task<List<AlbumResponse>> GetAllAlbumsByArtistId(int artistId, string apiKey, string baseUrl);
         Task<List<MetadataProfile>> GetMetadataProfile(string apiKey, string baseUrl);
         Task<List<LanguageProfiles>> GetLanguageProfile(string apiKey, string baseUrl);
+        Task<LidarrStatus> Status(string apiKey, string baseUrl);
     }
 }
