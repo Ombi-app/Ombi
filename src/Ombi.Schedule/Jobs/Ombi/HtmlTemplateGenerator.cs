@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Ombi.Helpers;
 
 namespace Ombi.Schedule.Jobs.Ombi
 {
@@ -22,13 +23,20 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         protected virtual void AddMediaServerUrl(StringBuilder sb, string mediaurl, string url)
         {
-            sb.Append("<tr>");
-            sb.Append("<td style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-size: 14px; vertical-align: top; \">");
-            sb.AppendFormat("<a href=\"{0}\" target=\"_blank\">", mediaurl);
-            sb.AppendFormat("<img class=\"poster-overlay\" src=\"{0}\" width=\"150\" height=\"225\" style=\"border: none;-ms-interpolation-mode: bicubic; max-width: 100%;display: block; visibility: hidden; \">", url);
-            sb.Append("</a>");
-            sb.Append("</td>");
-            sb.Append("</tr>");
+            if (url.HasValue())
+            {
+                sb.Append("<tr>");
+                sb.Append(
+                    "<td style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-size: 14px; vertical-align: top; \">");
+                sb.AppendFormat("<a href=\"{0}\" target=\"_blank\">", mediaurl);
+                sb.AppendFormat(
+                    "<img class=\"poster-overlay\" src=\"{0}\" width=\"150\" height=\"225\" style=\"border: none;-ms-interpolation-mode: bicubic; max-width: 100%;display: block; visibility: hidden; \">",
+                    url);
+                sb.Append("</a>");
+                sb.Append("</td>");
+                sb.Append("</tr>");
+            }
+
             sb.Append("</table>");
             sb.Append("</td>");
         }
@@ -44,9 +52,9 @@ namespace Ombi.Schedule.Jobs.Ombi
         {
             sb.Append("<tr>");
             sb.Append("<td class=\"title\" style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-size: 0.9rem; vertical-align: top; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; line-height: 1.2rem; padding: 5px; \">");
-            sb.AppendFormat("<a href=\"{0}\" target=\"_blank\">", url);
+            if(url.HasValue()) sb.AppendFormat("<a href=\"{0}\" target=\"_blank\">", url);
             sb.AppendFormat("<h1 style=\"white-space: normal; line-height: 1;\" >{0}</h1>", title);
-            sb.Append("</a>");
+            if (url.HasValue()) sb.Append("</a>");
             sb.Append("</td>");
             sb.Append("</tr>");
         }

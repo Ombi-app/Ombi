@@ -45,11 +45,11 @@
                 <ng-template [ngIf]="result.monitored && !result.fullyAvailable">
                     <span class="label label-info" id="processingRequestLabel" [translate]="'Common.Monitored'"></span>
                 </ng-template>
-                 <ng-template [ngIf]="result.requested && !result.approved && !result.available">
+                 <ng-template [ngIf]="result.requested && !result.approved && !result.partiallyAvailable">
                     <span class="label label-warning" id="pendingApprovalLabel" [translate]="'Common.PendingApproval'"></span>
                 </ng-template>
 
-                <ng-template [ngIf]="result.approved && !result.available"><span class="label label-info" id="processingRequestLabel" [translate]="'Common.ProcessingRequest'"></span></ng-template>
+                <ng-template [ngIf]="result.approved && !result.fullyAvailable"><span class="label label-info" id="processingRequestLabel" [translate]="'Common.ProcessingRequest'"></span></ng-template>
   
 
                 
@@ -68,18 +68,18 @@
 
     <!--Buttons-->
     <div class="col-sm-12 small-padding">
-        <div class="row" *ngIf="result.requested">
+        <!-- <div class="row" *ngIf="result.requested">
             <div class="col-md-2 col-md-push-10">
 
-                <!-- <a *ngIf="result.showSubscribe && !result.subscribed" style="color:white" (click)="subscribe(result)" pTooltip="Subscribe for notifications"> <i class="fa fa-rss"></i></a>
-            <a *ngIf="result.showSubscribe && result.subscribed" style="color:red" (click)="unSubscribe(result)" pTooltip="Unsubscribe notification"> <i class="fa fa-rss"></i></a> -->
+                 <a *ngIf="result.showSubscribe && !result.subscribed" style="color:white" (click)="subscribe(result)" pTooltip="Subscribe for notifications"> <i class="fa fa-rss"></i></a>
+            <a *ngIf="result.showSubscribe && result.subscribed" style="color:red" (click)="unSubscribe(result)" pTooltip="Unsubscribe notification"> <i class="fa fa-rss"></i></a>
             </div>
-        </div>
+        </div> -->
         <div *ngIf="result.fullyAvailable">
             <button style="text-align: right" class="btn btn-success-outline disabled" disabled>
                 <i class="fa fa-check"></i> {{ 'Common.Available' | translate }}</button>
         </div>
-        <div *ngIf="!result.available">
+        <div *ngIf="!result.fullyAvailable">
             <div *ngIf="result.requested || result.approved; then requestedBtn else notRequestedBtn"></div>
             <ng-template #requestedBtn>
                 <button style="text-align: right" class="btn btn-primary-outline disabled" [disabled]>
@@ -93,11 +93,9 @@
                     | translate }}</button>
             </ng-template>
         </div>
-        <!-- <button style="text-align: right" class="btn btn-sm btn-info-outline" (click)="similarMovies(result.id)"> <i class="fa fa-eye"></i> {{ 'Search.Similar' | translate }}</button> -->
 
-        <br/>
 
-        <!-- <div class="dropdown" *ngIf="result.available && issueCategories && issuesEnabled">
+         <div class="dropdown" *ngIf="(result.partiallyAvailable || result.fullyAvailable) && issueCategories && issuesEnabled">
             <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="true">
                 <i class="fa fa-plus"></i> Report Issue
@@ -106,8 +104,13 @@
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                 <li *ngFor="let cat of issueCategories"><a [routerLink]="" (click)="reportIssue(cat, result)">{{cat.value}}</a></li>
             </ul>
-        </div> -->
+        </div> 
 
     </div>
 
 </div>
+
+
+
+<issue-report [movie]="true" [visible]="issuesBarVisible" (visibleChange)="issuesBarVisible = $event;" [title]="issueRequestTitle"
+[issueCategory]="issueCategorySelected" [id]="issueRequestId" [providerId]="issueProviderId"></issue-report>
