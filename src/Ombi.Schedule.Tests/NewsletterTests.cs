@@ -18,7 +18,7 @@ namespace Ombi.Schedule.Tests
             var emailSettings = new Mock<ISettingsService<EmailNotificationSettings>>();
             var customziation = new Mock<ISettingsService<CustomizationSettings>>();
             var newsletterSettings = new Mock<ISettingsService<NewsletterSettings>>();
-            var newsletter = new NewsletterJob(null, null, null, null, null, null, customziation.Object, emailSettings.Object, null, null, newsletterSettings.Object, null);
+            var newsletter = new NewsletterJob(null, null, null, null, null, null, customziation.Object, emailSettings.Object, null, null, newsletterSettings.Object, null, null, null, null);
 
             var ep = new List<int>();
             foreach (var i in episodes)

@@ -60,7 +60,8 @@ namespace Ombi.Controllers
             IRepository<IssueComments> issueComments,
             IRepository<NotificationUserId> notificationRepository,
             IRepository<RequestSubscription> subscriptionRepository,
-            ISettingsService<UserManagementSettings> umSettings)
+            ISettingsService<UserManagementSettings> umSettings,
+            IRepository<UserNotificationPreferences> notificationPreferences)
         {
             UserManager = user;
             Mapper = mapper;
@@ -81,6 +82,7 @@ namespace Ombi.Controllers
             _requestSubscriptionRepository = subscriptionRepository;
             _notificationRepository = notificationRepository;
             _userManagementSettings = umSettings;
+            _userNotificationPreferences = notificationPreferences;
         }
 
         private OmbiUserManager UserManager { get; }
@@ -102,6 +104,7 @@ namespace Ombi.Controllers
         private readonly IRepository<RequestLog> _requestLogRepository;
         private readonly IRepository<NotificationUserId> _notificationRepository;
         private readonly IRepository<RequestSubscription> _requestSubscriptionRepository;
+        private readonly IRepository<UserNotificationPreferences> _userNotificationPreferences;
 
 
         /// <summary>
@@ -785,6 +788,30 @@ namespace Ombi.Controllers
                 }
             }
             return user.UserAccessToken;
+        }
+
+        [HttpGet("notificationpreferences")]
+        public async Task<List<UserNotificationPreferences>> GetUserPreferences()
+        {
+            //TODO potentially use a view model
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+            var userPreferences = await _userNotificationPreferences.GetAll().Where(x => x.UserId == user.Id).ToListAsync();
+
+            var agents = Enum.GetValues(typeof(NotificationAgent)).Cast<NotificationAgent>();
+            foreach (var a in agents)
+            {
+                var hasAgent = userPreferences.Any(x => x.Agent == a);
+                if (!hasAgent)
+                {
+                    // Create the default
+                    userPreferences.Add(new UserNotificationPreferences
+                    {
+                        Agent = a,
+                    });
+                }
+            }
+
+            return userPreferences;
         }
 
         private async Task<List<IdentityResult>> AddRoles(IEnumerable<ClaimCheckboxes> roles, OmbiUser ombiUser)
