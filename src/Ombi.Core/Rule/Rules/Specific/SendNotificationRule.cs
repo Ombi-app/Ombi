@@ -42,6 +42,13 @@ namespace Ombi.Core.Rule.Rules.Specific
                     sendNotification = !await UserManager.IsInRoleAsync(requestedUser, OmbiRoles.AutoApproveTv);
                 }
             }
+            else if (req.RequestType == RequestType.Album)
+            {
+                if (settings.DoNotSendNotificationsForAutoApprove)
+                {
+                    sendNotification = !await UserManager.IsInRoleAsync(requestedUser, OmbiRoles.AutoApproveMusic);
+                }
+            }
 
             if (await UserManager.IsInRoleAsync(requestedUser, OmbiRoles.Admin))
             {

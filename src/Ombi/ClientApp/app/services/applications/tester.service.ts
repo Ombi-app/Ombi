@@ -11,6 +11,7 @@ import {
     IDiscordNotifcationSettings,
     IEmailNotificationSettings,
     IEmbyServer,
+    ILidarrSettings,
     IMattermostNotifcationSettings,
     IMobileNotificationTestSettings,
     INewsletterNotificationSettings,
@@ -64,6 +65,10 @@ export class TesterService extends ServiceHelpers {
 
     public radarrTest(settings: IRadarrSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}radarr`, JSON.stringify(settings),  {headers: this.headers});
+    }
+
+    public lidarrTest(settings: ILidarrSettings): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}lidarr`, JSON.stringify(settings),  {headers: this.headers});
     }
 
     public sonarrTest(settings: ISonarrSettings): Observable<boolean> {

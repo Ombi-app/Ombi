@@ -23,6 +23,7 @@ namespace Ombi.Store.Entities
 
         public int? MovieRequestLimit { get; set; }
         public int? EpisodeRequestLimit { get; set; }
+        public int? MusicRequestLimit { get; set; }
 
         public string UserAccessToken { get; set; }
 
@@ -59,5 +60,6 @@ namespace Ombi.Store.Entities
             get => base.ConcurrencyStamp;
             set => base.ConcurrencyStamp = value;
         }
+
     }
 }

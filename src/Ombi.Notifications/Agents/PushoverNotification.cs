@@ -18,7 +18,7 @@ namespace Ombi.Notifications.Agents
     public class PushoverNotification : BaseNotification<PushoverSettings>, IPushoverNotification
     {
         public PushoverNotification(IPushoverApi api, ISettingsService<PushoverSettings> sn, ILogger<PushoverNotification> log, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t,
-            ISettingsService<CustomizationSettings> s, IRepository<RequestSubscription> sub) : base(sn, r, m, t, s, log, sub)
+            ISettingsService<CustomizationSettings> s, IRepository<RequestSubscription> sub, IMusicRequestRepository music) : base(sn, r, m, t, s, log, sub, music)
         {
             Api = api;
             Logger = log;
@@ -178,7 +178,7 @@ namespace Ombi.Notifications.Agents
             try
             {
                 //&+' < >
-                await Api.PushAsync(settings.AccessToken, model.Message.StripCharacters('&','+','<','>'), settings.UserToken);
+                await Api.PushAsync(settings.AccessToken, model.Message.StripCharacters('&','+','<','>'), settings.UserToken, settings.Priority, settings.Sound);
             }
             catch (Exception e)
             {

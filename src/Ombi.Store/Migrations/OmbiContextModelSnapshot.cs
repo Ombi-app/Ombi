@@ -244,6 +244,50 @@ namespace Ombi.Store.Migrations
                     b.ToTable("GlobalSettings");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.LidarrAlbumCache", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("AddedAt");
+
+                    b.Property<int>("ArtistId");
+
+                    b.Property<string>("ForeignAlbumId");
+
+                    b.Property<bool>("Monitored");
+
+                    b.Property<decimal>("PercentOfTracks");
+
+                    b.Property<DateTime>("ReleaseDate");
+
+                    b.Property<string>("Title");
+
+                    b.Property<int>("TrackCount");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LidarrAlbumCache");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.LidarrArtistCache", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ArtistId");
+
+                    b.Property<string>("ArtistName");
+
+                    b.Property<string>("ForeignArtistId");
+
+                    b.Property<bool>("Monitored");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LidarrArtistCache");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.NotificationTemplates", b =>
                 {
                     b.Property<int>("Id")
@@ -310,6 +354,8 @@ namespace Ombi.Store.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
                     b.Property<int?>("MovieRequestLimit");
+
+                    b.Property<int?>("MusicRequestLimit");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256);
@@ -445,6 +491,8 @@ namespace Ombi.Store.Migrations
 
                     b.Property<DateTime>("AddedAt");
 
+                    b.Property<string>("AlbumId");
+
                     b.Property<int>("ContentId");
 
                     b.Property<int>("ContentType");
@@ -458,6 +506,54 @@ namespace Ombi.Store.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RecentlyAddedLog");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.Requests.AlbumRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Approved");
+
+                    b.Property<string>("ArtistName");
+
+                    b.Property<bool>("Available");
+
+                    b.Property<string>("Cover");
+
+                    b.Property<bool?>("Denied");
+
+                    b.Property<string>("DeniedReason");
+
+                    b.Property<string>("Disk");
+
+                    b.Property<string>("ForeignAlbumId");
+
+                    b.Property<string>("ForeignArtistId");
+
+                    b.Property<DateTime>("MarkedAsApproved");
+
+                    b.Property<DateTime?>("MarkedAsAvailable");
+
+                    b.Property<DateTime>("MarkedAsDenied");
+
+                    b.Property<decimal>("Rating");
+
+                    b.Property<DateTime>("ReleaseDate");
+
+                    b.Property<int>("RequestType");
+
+                    b.Property<DateTime>("RequestedDate");
+
+                    b.Property<string>("RequestedUserId");
+
+                    b.Property<string>("Title");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RequestedUserId");
+
+                    b.ToTable("AlbumRequests");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.ChildRequests", b =>
@@ -892,6 +988,13 @@ namespace Ombi.Store.Migrations
                     b.HasOne("Ombi.Store.Entities.PlexServerContent")
                         .WithMany("Seasons")
                         .HasForeignKey("PlexServerContentId");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.Requests.AlbumRequest", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "RequestedUser")
+                        .WithMany()
+                        .HasForeignKey("RequestedUserId");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.ChildRequests", b =>

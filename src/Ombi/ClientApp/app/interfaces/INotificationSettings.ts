@@ -88,6 +88,8 @@ export interface IPushoverNotificationSettings extends INotificationSettings {
     accessToken: string;
     notificationTemplates: INotificationTemplates[];
     userToken: string;
+    priority: number;
+    sound: string;
 }
 
 export interface IMattermostNotifcationSettings extends INotificationSettings {

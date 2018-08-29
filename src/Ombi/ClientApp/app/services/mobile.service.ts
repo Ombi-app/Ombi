@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
-import { IMobileUsersViewModel } from "./../interfaces";
+import { IMobileUsersViewModel } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()

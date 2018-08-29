@@ -337,6 +337,7 @@ namespace Ombi.Core.Engine
                 };
             }
 
+            request.MarkedAsApproved = DateTime.Now;
             request.Approved = true;
             request.Denied = false;
             await MovieRepository.Update(request);
