@@ -17,7 +17,7 @@ namespace Ombi.Notifications.Agents
     public class PushbulletNotification : BaseNotification<PushbulletSettings>, IPushbulletNotification
     {
         public PushbulletNotification(IPushbulletApi api, ISettingsService<PushbulletSettings> sn, ILogger<PushbulletNotification> log, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t,
-            ISettingsService<CustomizationSettings> s, IRepository<RequestSubscription> sub) : base(sn, r, m, t,s,log, sub)
+            ISettingsService<CustomizationSettings> s, IRepository<RequestSubscription> sub, IMusicRequestRepository music) : base(sn, r, m, t, s, log, sub, music)
         {
             Api = api;
             Logger = log;

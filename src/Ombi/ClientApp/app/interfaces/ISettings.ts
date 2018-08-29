@@ -84,6 +84,17 @@ export interface IRadarrSettings extends IExternalSettings {
   minimumAvailability: string;
 }
 
+export interface ILidarrSettings extends IExternalSettings {
+  enabled: boolean;
+  apiKey: string;
+  defaultQualityProfile: string;
+  defaultRootPath: string;
+  fullRootPath: string;
+  metadataProfileId: number;
+  languageProfileId: number;
+  albumFolder: boolean;
+}
+
 export interface ILandingPageSettings extends ISettings {
   enabled: boolean;
 
@@ -131,6 +142,7 @@ export interface IJobSettings {
   refreshMetadata: string;
   newsletter: string;
   plexRecentlyAddedSync: string;
+  lidarrArtistSync: string;
 }
 
 export interface IIssueSettings extends ISettings {

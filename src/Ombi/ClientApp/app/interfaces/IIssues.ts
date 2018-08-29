@@ -1,4 +1,4 @@
-import { IIssueCategory, IUser, RequestType } from "./";
+import { IIssueCategory, IUser, RequestType } from ".";
 
 export interface IIssues {
     id?: number;

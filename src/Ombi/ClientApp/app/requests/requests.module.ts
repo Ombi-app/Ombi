@@ -8,6 +8,7 @@ import { InfiniteScrollModule } from "ngx-infinite-scroll";
 
 import { ButtonModule, DialogModule, PaginatorModule } from "primeng/primeng";
 import { MovieRequestsComponent } from "./movierequests.component";
+import { MusicRequestsComponent } from "./music/musicrequests.component";
 // Request
 import { RequestComponent } from "./request.component";
 import { TvRequestChildrenComponent } from "./tvrequest-children.component";
@@ -23,7 +24,6 @@ import { SharedModule } from "../shared/shared.module";
 
 const routes: Routes = [
     { path: "", component: RequestComponent, canActivate: [AuthGuard] },
-    { path: ":id", component: TvRequestChildrenComponent, canActivate: [AuthGuard] },
 ];
 @NgModule({
     imports: [
@@ -44,6 +44,7 @@ const routes: Routes = [
         MovieRequestsComponent,
         TvRequestsComponent,
         TvRequestChildrenComponent,
+        MusicRequestsComponent,
     ],
     exports: [
         RouterModule,

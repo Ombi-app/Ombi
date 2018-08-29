@@ -8,7 +8,7 @@ import { ClipboardModule } from "ngx-clipboard";
 import { AuthGuard } from "../auth/auth.guard";
 import { AuthService } from "../auth/auth.service";
 import {
-    CouchPotatoService, EmbyService, IssuesService, JobService, MobileService, NotificationMessageService, PlexService, RadarrService,
+    CouchPotatoService, EmbyService, IssuesService, JobService, LidarrService, MobileService, NotificationMessageService, PlexService, RadarrService,
     SonarrService, TesterService, ValidationService,
 } from "../services";
 
@@ -22,6 +22,7 @@ import { EmbyComponent } from "./emby/emby.component";
 import { IssuesComponent } from "./issues/issues.component";
 import { JobsComponent } from "./jobs/jobs.component";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
+import { LidarrComponent } from "./lidarr/lidarr.component";
 import { MassEmailComponent } from "./massemail/massemail.component";
 import { DiscordComponent } from "./notifications/discord.component";
 import { EmailNotificationComponent } from "./notifications/emailnotification.component";
@@ -73,6 +74,7 @@ const routes: Routes = [
     { path: "Mobile", component: MobileComponent, canActivate: [AuthGuard] },
     { path: "MassEmail", component: MassEmailComponent, canActivate: [AuthGuard] },
     { path: "Newsletter", component: NewsletterComponent, canActivate: [AuthGuard] },
+    { path: "Lidarr", component: LidarrComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -124,6 +126,7 @@ const routes: Routes = [
         MobileComponent,
         MassEmailComponent,
         NewsletterComponent,
+        LidarrComponent,
     ],
     exports: [
         RouterModule,
@@ -142,6 +145,7 @@ const routes: Routes = [
         EmbyService,
         MobileService,
         NotificationMessageService,
+        LidarrService,
     ],
 
 })

@@ -13,5 +13,6 @@
         public string SickRageSync { get; set; }
         public string RefreshMetadata { get; set; }
         public string Newsletter { get; set; }
+        public string LidarrArtistSync { get; set; }
     }
 }
