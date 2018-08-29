@@ -5,8 +5,8 @@
     <fieldset>
         <legend>Update Settings</legend>
         <div class="form-group"  style="float: right">
-            <div *ngIf="updateAvailable || form.controls['testMode'].value">
-                <button (click)="update()" [disabled]="!enableUpdateButton || !form.controls['testMode'].value" class="btn btn-success-outline">Update</button>
+            <div *ngIf="updateAvailable">
+                <button (click)="update()" [disabled]="!enableUpdateButton" class="btn btn-success-outline">Update</button>
             </div>
             <div *ngIf="!updateAvailable">
                 <button (click)="checkForUpdate()" class="btn btn-primary-outline">Check For Update</button>
