@@ -73,8 +73,8 @@ export class MovieSearchComponent implements OnInit {
 
         this.popularMovies();
     }
-    public search(text: any) {
 
+    public search(text: any) {
         this.searchChanged.next(text.target.value);
     }
 

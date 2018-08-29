@@ -6,7 +6,6 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { AuthService } from "../auth/auth.service";
 import { FilterType, IFilter, IIssueCategory, IMovieRequests, IPagenator, IRadarrProfile, IRadarrRootFolder, OrderType } from "../interfaces";
-import { IRemainingRequests } from "../interfaces/IRemainingRequests";
 import { NotificationService, RadarrService, RequestService } from "../services";
 
 @Component({
@@ -38,8 +37,6 @@ export class MovieRequestsComponent implements OnInit {
 
     public orderType: OrderType = OrderType.RequestedDateDesc;
     public OrderType = OrderType;
-
-    public remaining: IRemainingRequests;
 
     public totalMovies: number = 100;
     private currentlyLoaded: number;
