@@ -7,7 +7,7 @@ import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
 
 @Component({
-    templateUrl: "./Lidarr.component.html",
+    templateUrl: "./lidarr.component.html",
 })
 export class LidarrComponent implements OnInit {
 
