@@ -38,7 +38,7 @@ export class RequestService extends ServiceHelpers {
     }
 
     public requestTv(tv: ITvRequestViewModel): Observable<IRequestEngineResult> {
-        return this.http.post<IRequestEngineResult>(`${this.url}TV/`, JSON.stringify(tv), { headers: this.headers });
+        return this.http.post<IRequestEngineResult>(`${this.url}TV/`, JSON.stringify(tv), {headers: this.headers});
     }
 
     public approveMovie(movie: IMovieUpdateModel): Observable<IRequestEngineResult> {
