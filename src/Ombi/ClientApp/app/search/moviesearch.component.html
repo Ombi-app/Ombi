@@ -1,5 +1,6 @@
 ﻿<!-- Movie tab -->
 <div role="tabpanel" class="tab-pane active" id="MoviesTab">
+
     <div class="input-group">
         <input id="search" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons" (keyup)="search($event)">
         <div class="input-group-addon right-radius">
@@ -18,8 +19,9 @@
             <i class="fa fa-search"></i>
         </div>
     </div>
-    <br />
-    <br />
+
+    <remaining-requests [movie]="true" [quotaRefreshEvents]="movieRequested.asObservable()" #remainingFilms></remaining-requests>
+
     <!-- Movie content -->
     <div id="movieList">
         <div *ngIf="searchApplied && movieResults?.length <= 0" class='no-search-results'>
