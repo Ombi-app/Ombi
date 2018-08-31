@@ -152,7 +152,8 @@ export class MovieSearchComponent implements OnInit {
 
     public reportIssue(catId: IIssueCategory, req: ISearchMovieResult) {
         this.issueRequestId = req.id;
-        this.issueRequestTitle = req.title + `(${req.releaseDate.getFullYear})`;
+        const releaseDate = new Date(req.releaseDate);
+        this.issueRequestTitle = req.title + ` (${releaseDate.getFullYear()})`;
         this.issueCategorySelected = catId;
         this.issuesBarVisible = true;
         this.issueProviderId = req.id.toString();
