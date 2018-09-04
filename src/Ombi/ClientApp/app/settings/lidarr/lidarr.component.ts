@@ -45,7 +45,7 @@ export class LidarrComponent implements OnInit {
                     albumFolder: [x.albumFolder],
                     languageProfileId: [x.languageProfileId, [Validators.required]],
                     metadataProfileId: [x.metadataProfileId, [Validators.required]],
-                    addOnly: [x.addOnly]
+                    addOnly: [x.addOnly],
                 });
 
                 if (x.defaultQualityProfile) {
