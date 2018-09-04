@@ -486,9 +486,13 @@ namespace Ombi.Core.Engine
             return new RequestEngineResult {Result = true, Message = $"{movieName} has been successfully added!"};
         }
 
-        public async Task<RequestQuotaCountModel> GetRemainingRequests()
+        public async Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user)
         {
-            OmbiUser user = await GetUser();
+            if (user == null)
+            {
+                user = await GetUser();
+            }
+
             int limit = user.MovieRequestLimit ?? 0;
 
             if (limit <= 0)

@@ -23,6 +23,6 @@ namespace Ombi.Core.Engine.Interfaces
         Task<int> GetTotal();
         Task UnSubscribeRequest(int requestId, RequestType type);
         Task SubscribeToRequest(int requestId, RequestType type);
-        Task<RequestQuotaCountModel> GetRemainingRequests();
+        Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user = null);
     }
 }

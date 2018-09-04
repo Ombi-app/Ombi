@@ -1,4 +1,5 @@
 ﻿import { ICheckbox } from ".";
+import { IRemainingRequests } from "./IRemainingRequests";
 
 export interface IUser {
     id: string;
@@ -13,7 +14,10 @@ export interface IUser {
     movieRequestLimit: number;
     episodeRequestLimit: number;
     userAccessToken: string;
+
     // FOR UI
+    episodeRequestQuota: IRemainingRequests | null;
+    movieRequestQuota: IRemainingRequests | null;
     checked: boolean;
 }
 

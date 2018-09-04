@@ -615,9 +615,13 @@ namespace Ombi.Core.Engine
             return new RequestEngineResult { Result = true };
         }
 
-        public async Task<RequestQuotaCountModel> GetRemainingRequests()
+        public async Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user)
         {
-            OmbiUser user = await GetUser();
+            if (user == null)
+            {
+                user = await GetUser();
+            }
+
             int limit = user.EpisodeRequestLimit ?? 0;
 
             if (limit <= 0)
