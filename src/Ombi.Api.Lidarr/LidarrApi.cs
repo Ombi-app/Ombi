@@ -154,6 +154,14 @@ namespace Ombi.Api.Lidarr
             return Api.Request<LidarrStatus>(request);
         }
 
+        public Task<CommandResult> AlbumSearch(int[] albumIds, string apiKey, string baseUrl)
+        {
+            var request = new Request($"{ApiVersion}/command/AlbumSearch", baseUrl, HttpMethod.Post);
+            request.AddJsonBody(albumIds);
+            AddHeaders(request, apiKey);
+            return Api.Request<CommandResult>(request);
+        }
+
         private void AddHeaders(Request request, string key)
         {
             request.AddHeader("X-Api-Key", key);
