@@ -93,6 +93,7 @@ export interface ILidarrSettings extends IExternalSettings {
   metadataProfileId: number;
   languageProfileId: number;
   albumFolder: boolean;
+  addOnly: boolean;
 }
 
 export interface ILandingPageSettings extends ISettings {
