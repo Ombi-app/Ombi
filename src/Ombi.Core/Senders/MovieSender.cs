@@ -123,7 +123,10 @@ namespace Ombi.Core.Senders
                 existingMovie.monitored = true;
                 await RadarrApi.UpdateMovie(existingMovie, settings.ApiKey, settings.FullUri);
                 // Search for it
-                await RadarrApi.MovieSearch(new[] { existingMovie.id }, settings.ApiKey, settings.FullUri);
+                if (!settings.AddOnly)
+                {
+                    await RadarrApi.MovieSearch(new[] {existingMovie.id}, settings.ApiKey, settings.FullUri);
+                }
 
                 return new SenderResult { Success = true, Sent = true };
             }
