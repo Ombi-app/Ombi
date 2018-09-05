@@ -588,6 +588,15 @@ namespace Ombi.Core.Engine
                 NotificationHelper.NewRequest(model);
             }
 
+            await _requestLog.Add(new RequestLog
+            {
+                UserId = (await GetUser()).Id,
+                RequestDate = DateTime.UtcNow,
+                RequestId = model.Id,
+                RequestType = RequestType.TvShow,
+                EpisodeCount = model.SeasonRequests.Select(m => m.Episodes.Count).Sum(),
+            });
+
             if (model.Approved)
             {
                 // Autosend
@@ -602,15 +611,6 @@ namespace Ombi.Core.Engine
                     ErrorMessage = result.Message
                 };
             }
-
-            await _requestLog.Add(new RequestLog
-            {
-                UserId = (await GetUser()).Id,
-                RequestDate = DateTime.UtcNow,
-                RequestId = model.Id,
-                RequestType = RequestType.TvShow,
-                EpisodeCount = model.SeasonRequests.Select(m => m.Episodes.Count).Sum(),
-            });
 
             return new RequestEngineResult { Result = true };
         }
