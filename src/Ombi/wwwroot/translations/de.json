@@ -120,7 +120,7 @@
     "RequestStatus": "Anfrage Status:",
     "Denied": " Abgelehnt:",
     "TheatricalRelease": "Theatrical Release: {{date}}",
-    "ReleaseDate": "Released: {{date}}",
+    "ReleaseDate": "Veröffentlicht: {{date}}",
     "TheatricalReleaseSort": "Theatrical Release",
     "DigitalRelease": "Digital Release: {{date}}",
     "RequestDate": "Datum der Anfrage:",
