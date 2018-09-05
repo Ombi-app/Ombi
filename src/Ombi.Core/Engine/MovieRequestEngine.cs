@@ -491,6 +491,12 @@ namespace Ombi.Core.Engine
             if (user == null)
             {
                 user = await GetUser();
+
+                // If user is still null after attempting to get the logged in user, return null.
+                if (user == null)
+                {
+                    return null;
+                }
             }
 
             int limit = user.MovieRequestLimit ?? 0;
