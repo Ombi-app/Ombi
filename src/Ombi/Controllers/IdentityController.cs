@@ -16,6 +16,7 @@ using Ombi.Api.Plex;
 using Ombi.Attributes;
 using Ombi.Config;
 using Ombi.Core.Authentication;
+using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Helpers;
 using Ombi.Core.Models.UI;
 using Ombi.Core.Settings;
@@ -60,7 +61,9 @@ namespace Ombi.Controllers
             IRepository<IssueComments> issueComments,
             IRepository<NotificationUserId> notificationRepository,
             IRepository<RequestSubscription> subscriptionRepository,
-            ISettingsService<UserManagementSettings> umSettings)
+            ISettingsService<UserManagementSettings> umSettings,
+            IMovieRequestEngine movieRequestEngine,
+            ITvRequestEngine tvRequestEngine)
         {
             UserManager = user;
             Mapper = mapper;
@@ -81,6 +84,8 @@ namespace Ombi.Controllers
             _requestSubscriptionRepository = subscriptionRepository;
             _notificationRepository = notificationRepository;
             _userManagementSettings = umSettings;
+            TvRequestEngine = tvRequestEngine;
+            MovieRequestEngine = movieRequestEngine;
         }
 
         private OmbiUserManager UserManager { get; }
@@ -94,6 +99,8 @@ namespace Ombi.Controllers
         private IWelcomeEmail WelcomeEmail { get; }
         private IMovieRequestRepository MovieRepo { get; }
         private ITvRequestRepository TvRepo { get; }
+        private IMovieRequestEngine MovieRequestEngine { get; }
+        private ITvRequestEngine TvRequestEngine { get; }
         private readonly ILogger<IdentityController> _log;
         private readonly IPlexApi _plexApi;
         private readonly ISettingsService<PlexSettings> _plexSettings;
@@ -102,7 +109,6 @@ namespace Ombi.Controllers
         private readonly IRepository<RequestLog> _requestLogRepository;
         private readonly IRepository<NotificationUserId> _notificationRepository;
         private readonly IRepository<RequestSubscription> _requestSubscriptionRepository;
-
 
         /// <summary>
         /// This is what the Wizard will call when creating the user for the very first time.
@@ -314,6 +320,16 @@ namespace Ombi.Controllers
                     Value = role,
                     Enabled = false
                 });
+            }
+
+            if (vm.EpisodeRequestLimit > 0) 
+            {
+                vm.EpisodeRequestQuota = await TvRequestEngine.GetRemainingRequests(user);
+            }
+
+            if (vm.MovieRequestLimit > 0) 
+            {
+                vm.MovieRequestQuota = await MovieRequestEngine.GetRemainingRequests(user);
             }
 
             return vm;

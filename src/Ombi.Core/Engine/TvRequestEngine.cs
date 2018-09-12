@@ -588,6 +588,15 @@ namespace Ombi.Core.Engine
                 NotificationHelper.NewRequest(model);
             }
 
+            await _requestLog.Add(new RequestLog
+            {
+                UserId = (await GetUser()).Id,
+                RequestDate = DateTime.UtcNow,
+                RequestId = model.Id,
+                RequestType = RequestType.TvShow,
+                EpisodeCount = model.SeasonRequests.Select(m => m.Episodes.Count).Sum(),
+            });
+
             if (model.Approved)
             {
                 // Autosend
@@ -603,21 +612,22 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            await _requestLog.Add(new RequestLog
-            {
-                UserId = (await GetUser()).Id,
-                RequestDate = DateTime.UtcNow,
-                RequestId = model.Id,
-                RequestType = RequestType.TvShow,
-                EpisodeCount = model.SeasonRequests.Select(m => m.Episodes.Count).Sum(),
-            });
-
             return new RequestEngineResult { Result = true };
         }
 
-        public async Task<RequestQuotaCountModel> GetRemainingRequests()
+        public async Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user)
         {
-            OmbiUser user = await GetUser();
+            if (user == null)
+            {
+                user = await GetUser();
+
+                // If user is still null after attempting to get the logged in user, return null.
+                if (user == null)
+                {
+                    return null;
+                }
+            }
+
             int limit = user.EpisodeRequestLimit ?? 0;
 
             if (limit <= 0)

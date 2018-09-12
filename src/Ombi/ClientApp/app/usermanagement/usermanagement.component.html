@@ -48,6 +48,12 @@
             <th>
                 Roles
             </th>
+            <th>
+                Requests Remaining
+            </th>
+            <th>
+                Next Request Due
+            </th>
             <th (click)="setOrder('lastLoggedIn', $event)">
                <a> Last Logged In</a>
                <span *ngIf="order === 'lastLoggedIn'">
@@ -84,6 +90,22 @@
                     <span *ngIf="claim.enabled">{{claim.value}}</span>
                 </div>
 
+            </td>
+            <td class="td-labelled" data-label="Requests Remaining">
+                <div *ngIf="u.movieRequestQuota != null && u.movieRequestQuota.hasLimit">
+                    {{'UserManagment.MovieRemaining' | translate: {remaining: u.movieRequestQuota.remaining, total: u.movieRequestLimit} }}
+                </div>
+                <div *ngIf="u.episodeRequestQuota != null && u.episodeRequestQuota.hasLimit">
+                    {{'UserManagment.TvRemaining' | translate: {remaining: u.episodeRequestQuota.remaining, total: u.episodeRequestLimit} }}
+                </div>
+            </td>
+            <td class="td-labelled" data-label="Request Due">
+                <div *ngIf="u.movieRequestQuota != null && u.movieRequestQuota.remaining != u.movieRequestLimit">
+                    {{'UserManagment.MovieDue' | translate: {date: (u.movieRequestQuota.nextRequest | date: 'short')} }}
+                </div>
+                <div *ngIf="u.episodeRequestQuota != null && u.episodeRequestQuota.remaining != u.episodeRequestLimit">
+                    {{'UserManagment.TvDue' | translate: {date: (u.episodeRequestQuota.nextRequest | date: 'short')} }}
+                </div>
             </td>
             <td class="td-labelled" data-label="Last Logged In:">
                 {{u.lastLoggedIn | date: 'short'}}

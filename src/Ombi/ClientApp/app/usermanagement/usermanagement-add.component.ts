@@ -32,6 +32,8 @@ export class UserManagementAddComponent implements OnInit {
             episodeRequestLimit: 0,
             movieRequestLimit: 0,
             userAccessToken: "",
+            episodeRequestQuota: null,
+            movieRequestQuota: null,
     };
     }
 
