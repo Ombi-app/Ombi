@@ -329,6 +329,18 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Gets the Lidarr Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("lidarrenabled")]
+        [AllowAnonymous]
+        public async Task<bool> LidarrEnabled()
+        {
+            var settings = await Get<LidarrSettings>();
+            return settings.Enabled;
+        }
+
+        /// <summary>
         /// Save the Lidarr settings.
         /// </summary>
         /// <param name="settings">The settings.</param>

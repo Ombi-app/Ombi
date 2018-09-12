@@ -20,7 +20,7 @@ export class SearchComponent implements OnInit  {
     }
 
     public ngOnInit() {
-        this.settingsService.getLidarr().subscribe(x => this.musicEnabled = x.enabled);
+        this.settingsService.lidarrEnabled().subscribe(x => this.musicEnabled = x);
         this.showMovie = true;
         this.showTv = false;
         this.showMusic = false;
