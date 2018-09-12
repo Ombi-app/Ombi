@@ -179,5 +179,11 @@
     "FilterHeaderRequestStatus": "Status",
     "Approved": "Aprovado",
     "PendingApproval": "Aprovação Pendente"
+  },
+  "UserManagment": {
+    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
+    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
+    "TvDue": "TV: {{date}}",
+    "MovieDue": "Movie: {{date}}"
   }
 }
