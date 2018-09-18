@@ -14,9 +14,10 @@ namespace Ombi.Notifications
 {
     public class NotificationMessageCurlys
     {
-        public void Setup(NotificationOptions opts, FullBaseRequest req, CustomizationSettings s)
+        public void Setup(NotificationOptions opts, FullBaseRequest req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
+            UserPreference = pref.Enabled ? pref.Value : string.Empty;
             string title;
             if (req == null)
             {
@@ -58,9 +59,10 @@ namespace Ombi.Notifications
             AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
         }
 
-        public void Setup(NotificationOptions opts, AlbumRequest req, CustomizationSettings s)
+        public void Setup(NotificationOptions opts, AlbumRequest req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
+            UserPreference = pref.Enabled ? pref.Value : string.Empty;
             string title;
             if (req == null)
             {
@@ -101,9 +103,10 @@ namespace Ombi.Notifications
             Alias = username.Alias.HasValue() ? username.Alias : username.UserName;
         }
 
-        public void Setup(NotificationOptions opts, ChildRequests req, CustomizationSettings s)
+        public void Setup(NotificationOptions opts, ChildRequests req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
+            UserPreference = pref.Enabled ? pref.Value : string.Empty;
             string title;
             if (req == null)
             {
@@ -221,6 +224,7 @@ namespace Ombi.Notifications
         public string IssueStatus { get; set; }
         public string IssueSubject { get; set; }
         public string NewIssueComment { get; set; }
+        public string UserPreference { get; set; }
 
         // System Defined
         private string LongDate => DateTime.Now.ToString("D");

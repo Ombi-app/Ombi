@@ -7,8 +7,6 @@ import { ConfirmationService, ConfirmDialogModule, MultiSelectModule, SidebarMod
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { UpdateDetailsComponent } from "./updatedetails.component";
-import { UserManagementAddComponent } from "./usermanagement-add.component";
-import { UserManagementEditComponent } from "./usermanagement-edit.component";
 import { UserManagementComponent } from "./usermanagement.component";
 import { UserManagementUserComponent } from "./usermanagement-user.component";
 
@@ -22,7 +20,6 @@ import { AddPlexUserComponent } from "./addplexuser.component";
 
 const routes: Routes = [
     { path: "", component: UserManagementComponent, canActivate: [AuthGuard] },
-    { path: "add", component: UserManagementAddComponent, canActivate: [AuthGuard] },
     { path: "user", component: UserManagementUserComponent, canActivate: [AuthGuard] },
     { path: "updatedetails", component: UpdateDetailsComponent, canActivate: [AuthGuard] },
 ];
