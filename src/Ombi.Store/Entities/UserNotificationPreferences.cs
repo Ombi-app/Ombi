@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 using Ombi.Helpers;
 
 namespace Ombi.Store.Entities
@@ -15,6 +13,7 @@ namespace Ombi.Store.Entities
         public string Value { get; set; }
 
         [ForeignKey(nameof(UserId))]
+        [JsonIgnore]
         public OmbiUser User { get; set; }
     }
 }
