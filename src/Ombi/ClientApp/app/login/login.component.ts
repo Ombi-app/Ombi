@@ -127,18 +127,18 @@ export class LoginComponent implements OnDestroy, OnInit {
     }
 
     public oauth() {
+        const oAuthWindow = window.open(window.location.toString(), "_blank", `toolbar=0,
+        location=0,
+        status=0,
+        menubar=0,
+        scrollbars=1,
+        resizable=1,
+        width=500,
+        height=500`);
         this.plexTv.GetPin(this.clientId, this.appName).subscribe((pin: any) => {
 
             this.authService.login({ usePlexOAuth: true, password: "", rememberMe: true, username: "", plexTvPin: pin }).subscribe(x => {
-       
-                window.open(x.url, "_blank", `toolbar=0,
-                location=0,
-                status=0,
-                menubar=0,
-                scrollbars=1,
-                resizable=1,
-                width=500,
-                height=500`);
+                oAuthWindow!.location.replace(x.url);
 
                 this.pinTimer = setInterval(() => {
                     this.notify.info("Authenticating", "Loading... Please Wait");
