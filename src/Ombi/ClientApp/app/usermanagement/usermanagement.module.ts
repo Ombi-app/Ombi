@@ -18,6 +18,8 @@ import { AuthGuard } from "../auth/auth.guard";
 import { OrderModule } from "ngx-order-pipe";
 import { AddPlexUserComponent } from "./addplexuser.component";
 
+import { SharedModule } from "../shared/shared.module";
+
 const routes: Routes = [
     { path: "", component: UserManagementComponent, canActivate: [AuthGuard] },
     { path: "user", component: UserManagementUserComponent, canActivate: [AuthGuard] },
@@ -38,6 +40,7 @@ const routes: Routes = [
         TooltipModule,
         OrderModule,
         SidebarModule,
+        SharedModule,
     ],
     declarations: [
         UserManagementComponent,

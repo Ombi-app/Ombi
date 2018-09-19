@@ -23,6 +23,7 @@ using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
+using Ombi.Core.Models;
 
 namespace Ombi.Core.Engine
 {
@@ -587,6 +588,15 @@ namespace Ombi.Core.Engine
                 NotificationHelper.NewRequest(model);
             }
 
+            await _requestLog.Add(new RequestLog
+            {
+                UserId = (await GetUser()).Id,
+                RequestDate = DateTime.UtcNow,
+                RequestId = model.Id,
+                RequestType = RequestType.TvShow,
+                EpisodeCount = model.SeasonRequests.Select(m => m.Episodes.Count).Sum(),
+            });
+
             if (model.Approved)
             {
                 // Autosend
@@ -602,15 +612,58 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            await _requestLog.Add(new RequestLog
-            {
-                UserId = (await GetUser()).Id,
-                RequestDate = DateTime.UtcNow,
-                RequestId = model.Id,
-                RequestType = RequestType.TvShow,
-            });
-
             return new RequestEngineResult { Result = true };
+        }
+
+        public async Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user)
+        {
+            if (user == null)
+            {
+                user = await GetUser();
+
+                // If user is still null after attempting to get the logged in user, return null.
+                if (user == null)
+                {
+                    return null;
+                }
+            }
+
+            int limit = user.EpisodeRequestLimit ?? 0;
+
+            if (limit <= 0)
+            {
+                return new RequestQuotaCountModel()
+                {
+                    HasLimit = false,
+                    Limit = 0,
+                    Remaining = 0,
+                    NextRequest = DateTime.Now,
+                };
+            }
+
+            IQueryable<RequestLog> log = _requestLog.GetAll()
+                                            .Where(x => x.UserId == user.Id
+                                                && x.RequestType == RequestType.TvShow
+                                                && x.RequestDate >= DateTime.UtcNow.AddDays(-7));
+
+            // Needed, due to a bug which would cause all episode counts to be 0
+            int zeroEpisodeCount = await log.Where(x => x.EpisodeCount == 0).Select(x => x.EpisodeCount).CountAsync();
+
+            int episodeCount = await log.Where(x => x.EpisodeCount != 0).Select(x => x.EpisodeCount).SumAsync();
+
+            int count = limit - (zeroEpisodeCount + episodeCount);
+
+            DateTime oldestRequestedAt = await log.OrderBy(x => x.RequestDate)
+                                            .Select(x => x.RequestDate)
+                                            .FirstOrDefaultAsync();
+                        
+            return new RequestQuotaCountModel()
+            {
+                HasLimit = true,    
+                Limit = limit,
+                Remaining = count,
+                NextRequest = DateTime.SpecifyKind(oldestRequestedAt.AddDays(7), DateTimeKind.Utc),
+            };
         }
     }
 }

@@ -96,6 +96,10 @@ export class SettingsService extends ServiceHelpers {
         return this.http.get<ILidarrSettings>(`${this.url}/Lidarr`, {headers: this.headers});
     }
 
+    public lidarrEnabled(): Observable<boolean> {
+        return this.http.get<boolean>(`${this.url}/lidarrenabled`, {headers: this.headers});
+    }
+
     public saveLidarr(settings: ILidarrSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}/Lidarr`, JSON.stringify(settings), {headers: this.headers});
     }

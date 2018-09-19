@@ -80,6 +80,7 @@ export class MovieRequestsComponent implements OnInit {
         };
         this.loadInit();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+
     }
 
     public paginate(event: IPagenator) {

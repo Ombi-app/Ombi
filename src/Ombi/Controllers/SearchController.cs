@@ -8,6 +8,7 @@ using Ombi.Api.Lidarr.Models;
 using Ombi.Core;
 using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Models;
 using Ombi.Core.Models.Search;
 using StackExchange.Profiling;
 

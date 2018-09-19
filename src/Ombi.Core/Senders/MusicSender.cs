@@ -116,6 +116,10 @@ namespace Ombi.Core.Senders
             }
 
             var result = await _lidarrApi.MontiorAlbum(album.id, settings.ApiKey, settings.FullUri);
+            if (!settings.AddOnly)
+            {
+                await _lidarrApi.AlbumSearch(new[] {result.id}, settings.ApiKey, settings.FullUri);
+            }
             if (result.monitored)
             {
                 return new SenderResult {Message = "Album has been requested!", Sent = true, Success = true};

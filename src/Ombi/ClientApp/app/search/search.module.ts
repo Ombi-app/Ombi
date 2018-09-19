@@ -21,6 +21,7 @@ import { SearchService } from "../services";
 
 import { AuthGuard } from "../auth/auth.guard";
 
+import { RemainingRequestsComponent } from "../requests/remainingrequests.component";
 import { SharedModule } from "../shared/shared.module";
 
 const routes: Routes = [
@@ -44,6 +45,7 @@ const routes: Routes = [
         TvSearchComponent,
         SeriesInformationComponent,
         MovieSearchGridComponent,
+        RemainingRequestsComponent,
         MusicSearchComponent,
         ArtistSearchComponent,
         AlbumSearchComponent,

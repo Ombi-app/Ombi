@@ -150,7 +150,14 @@
     "SortRequestDateAsc": "Request Date ▲",
     "SortRequestDateDesc": "Request Date ▼",
     "SortStatusAsc":"Status ▲",  
-    "SortStatusDesc":"Status ▼"
+    "SortStatusDesc":"Status ▼",
+    "Remaining": {
+      "Quota": "{{remaining}}/{{total}} requests remaining",
+      "NextDays": "Another request will be added in {{time}} days",
+      "NextHours": "Another request will be added in {{time}} hours",
+      "NextMinutes": "Another request will be added in {{time}} minutes",
+      "NextMinute": "Another request will be added in {{time}} minute"
+    }
   },
   "Issues":{
     "Title":"Issues",
@@ -177,5 +184,11 @@
     "FilterHeaderRequestStatus":"Status",
     "Approved":"Approved", 
     "PendingApproval": "Pending Approval"
+  },
+  "UserManagment": {
+    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
+    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
+    "TvDue": "TV: {{date}}",
+    "MovieDue": "Movie: {{date}}"
   }
 }

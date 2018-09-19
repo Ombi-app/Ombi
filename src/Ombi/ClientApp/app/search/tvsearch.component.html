@@ -26,15 +26,13 @@
             <i id="tvSearchButton" class="fa fa-search"></i>
         </div>
     </div>
-    <br />
-    <br />
+
+    <remaining-requests [movie]="false" [quotaRefreshEvents]="tvRequested.asObservable()" #remainingTvShows></remaining-requests>
+
     <!-- Movie content -->
     <div id="actorMovieList">
     </div>
 
-
-    <br />
-    <br />
     <!-- TV content -->
     <div id="tvList">
 
@@ -155,7 +153,7 @@
                 </div>
                 <!--This is the section that holds the child seasons if they want to specify specific episodes-->
                 <div *ngIf="node.open">
-                    <seriesinformation [seriesId]="node.id"></seriesinformation>
+                    <seriesinformation [seriesId]="node.id" [tvRequested]="tvRequested"></seriesinformation>
                 </div>
 
                 <br/>

@@ -82,15 +82,20 @@ namespace Ombi.Core.Rule.Rules.Request
                 // Get the count of requests to be made
                 foreach (var s in child.SeasonRequests)
                 {
-                    requestCount = s.Episodes.Count;
+                    requestCount += s.Episodes.Count;
                 }
 
                 var tvLogs = requestLog.Where(x => x.RequestType == RequestType.TvShow);
 
                 // Count how many requests in the past 7 days
                 var tv = tvLogs.Where(x => x.RequestDate >= DateTime.UtcNow.AddDays(-7));
-                var count = await tv.Select(x => x.EpisodeCount).CountAsync();
-                count += requestCount; // Add the amount of requests in
+
+                // Needed, due to a bug which would cause all episode counts to be 0
+                var zeroEpisodeCount = await tv.Where(x => x.EpisodeCount == 0).Select(x => x.EpisodeCount).CountAsync();
+
+                var episodeCount = await tv.Where(x => x.EpisodeCount != 0).Select(x => x.EpisodeCount).SumAsync();
+
+                var count = requestCount + episodeCount + zeroEpisodeCount; // Add the amount of requests in
                 if (count > episodeLimit)
                 {
                     return Fail("You have exceeded your Episode request quota!");
