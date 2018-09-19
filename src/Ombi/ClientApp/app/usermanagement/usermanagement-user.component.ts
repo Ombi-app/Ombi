@@ -61,6 +61,8 @@ export class UserManagementUserComponent implements OnInit {
                 movieRequestLimit: 0,
                 userAccessToken: "",
                 musicRequestLimit: 0,
+                episodeRequestQuota: null,
+                movieRequestQuota: null,
         };
     }
     }

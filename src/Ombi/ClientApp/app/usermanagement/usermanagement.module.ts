@@ -7,8 +7,8 @@ import { ConfirmationService, ConfirmDialogModule, MultiSelectModule, SidebarMod
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { UpdateDetailsComponent } from "./updatedetails.component";
-import { UserManagementComponent } from "./usermanagement.component";
 import { UserManagementUserComponent } from "./usermanagement-user.component";
+import { UserManagementComponent } from "./usermanagement.component";
 
 import { PipeModule } from "../pipes/pipe.module";
 import { IdentityService, PlexService } from "../services";
