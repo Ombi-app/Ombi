@@ -7,9 +7,8 @@ import { ConfirmationService, ConfirmDialogModule, MultiSelectModule, SidebarMod
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { UpdateDetailsComponent } from "./updatedetails.component";
-import { UserManagementAddComponent } from "./usermanagement-add.component";
-import { UserManagementEditComponent } from "./usermanagement-edit.component";
 import { UserManagementComponent } from "./usermanagement.component";
+import { UserManagementUserComponent } from "./usermanagement-user.component";
 
 import { PipeModule } from "../pipes/pipe.module";
 import { IdentityService, PlexService } from "../services";
@@ -23,8 +22,8 @@ import { SharedModule } from "../shared/shared.module";
 
 const routes: Routes = [
     { path: "", component: UserManagementComponent, canActivate: [AuthGuard] },
-    { path: "add", component: UserManagementAddComponent, canActivate: [AuthGuard] },
-    { path: "edit/:id", component: UserManagementEditComponent, canActivate: [AuthGuard] },
+    { path: "user", component: UserManagementUserComponent, canActivate: [AuthGuard] },
+    { path: "user/:id", component: UserManagementUserComponent, canActivate: [AuthGuard] },
     { path: "updatedetails", component: UpdateDetailsComponent, canActivate: [AuthGuard] },
 ];
 
@@ -45,10 +44,9 @@ const routes: Routes = [
     ],
     declarations: [
         UserManagementComponent,
-        UserManagementAddComponent,
-        UserManagementEditComponent,
         UpdateDetailsComponent,
         AddPlexUserComponent,
+        UserManagementUserComponent,
     ],
     entryComponents:[
         AddPlexUserComponent,

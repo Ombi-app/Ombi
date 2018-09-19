@@ -18,7 +18,8 @@ namespace Ombi.Notifications.Agents
     public class SlackNotification : BaseNotification<SlackNotificationSettings>, ISlackNotification
     {
         public SlackNotification(ISlackApi api, ISettingsService<SlackNotificationSettings> sn, ILogger<SlackNotification> log, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t,
-            ISettingsService<CustomizationSettings> s, IRepository<RequestSubscription> sub, IMusicRequestRepository music) : base(sn, r, m, t, s, log, sub, music)
+            ISettingsService<CustomizationSettings> s, IRepository<RequestSubscription> sub, IMusicRequestRepository music,
+            IRepository<UserNotificationPreferences> userPref) : base(sn, r, m, t, s, log, sub, music, userPref)
         {
             Api = api;
             Logger = log;

@@ -13,6 +13,7 @@ export interface IUser {
     hasLoggedIn: boolean;
     movieRequestLimit: number;
     episodeRequestLimit: number;
+    musicRequestLimit: number;
     userAccessToken: string;
 
     // FOR UI
@@ -69,4 +70,23 @@ export interface IMassEmailModel {
     subject: string;
     body: string;
     users: IUser[];
+}
+
+export interface INotificationPreferences {
+    id: number;
+    userId: string;
+    agent: INotificationAgent;
+    enabled: boolean;
+    value: string;
+}
+
+export enum INotificationAgent {
+    Email = 0,
+    Discord = 1,
+    Pushbullet = 2,
+    Pushover = 3,
+    Telegram = 4,
+    Slack = 5,
+    Mattermost = 6,
+    Mobile = 7,
 }

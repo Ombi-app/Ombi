@@ -28,6 +28,7 @@ namespace Ombi.Store.Entities
         public string UserAccessToken { get; set; }
 
         public List<NotificationUserId> NotificationUserIds { get; set; }
+        public List<UserNotificationPreferences> UserNotificationPreferences { get; set; }
 
         [NotMapped]
         public bool IsEmbyConnect => UserType == UserType.EmbyUser && EmbyConnectUserId.HasValue();
