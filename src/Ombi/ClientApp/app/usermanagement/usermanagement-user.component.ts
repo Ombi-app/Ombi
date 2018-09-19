@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
-import { ICheckbox, IUser, UserType } from "../interfaces";
+import { ICheckbox, INotificationAgent, INotificationPreferences, IUser, UserType } from "../interfaces";
 import { IdentityService, NotificationService } from "../services";
 
 import { ConfirmationService } from "primeng/primeng";
@@ -15,7 +15,9 @@ export class UserManagementUserComponent implements OnInit {
     public userId: string;
     public availableClaims: ICheckbox[];
     public confirmPass: "";
-    
+    public notificationPreferences: INotificationPreferences[];
+
+    public NotificationAgent = INotificationAgent;
     public edit: boolean;
 
     constructor(private identityService: IdentityService,
@@ -38,6 +40,11 @@ export class UserManagementUserComponent implements OnInit {
 
     public ngOnInit() {
         this.identityService.getAllAvailableClaims().subscribe(x => this.availableClaims = x);
+        if(this.edit) {
+            this.identityService.getNotificationPreferencesForUser(this.userId).subscribe(x => this.notificationPreferences = x);
+        } else {
+            this.identityService.getNotificationPreferences().subscribe(x => this.notificationPreferences = x);
+        }
         if(!this.edit) {
             this.user = {
                 alias: "",
@@ -142,6 +149,7 @@ export class UserManagementUserComponent implements OnInit {
 
         this.identityService.updateUser(this.user).subscribe(x => {
             if (x.successful) {
+                this.identityService.updateNotificationPreferences(this.notificationPreferences).subscribe();
                 this.notificationService.success(`The user ${this.user.userName} has been updated successfully`);
                 this.router.navigate(["usermanagement"]);
             } else {

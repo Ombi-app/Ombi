@@ -21,6 +21,7 @@ import { AddPlexUserComponent } from "./addplexuser.component";
 const routes: Routes = [
     { path: "", component: UserManagementComponent, canActivate: [AuthGuard] },
     { path: "user", component: UserManagementUserComponent, canActivate: [AuthGuard] },
+    { path: "user/:id", component: UserManagementUserComponent, canActivate: [AuthGuard] },
     { path: "updatedetails", component: UpdateDetailsComponent, canActivate: [AuthGuard] },
 ];
 
@@ -40,8 +41,6 @@ const routes: Routes = [
     ],
     declarations: [
         UserManagementComponent,
-        UserManagementAddComponent,
-        UserManagementEditComponent,
         UpdateDetailsComponent,
         AddPlexUserComponent,
         UserManagementUserComponent,

@@ -125,7 +125,7 @@ namespace Ombi.Controllers
             if (users.Any(x => !x.UserName.Equals("api", StringComparison.InvariantCultureIgnoreCase)))
             {
                 // No one should be calling this. Only the wizard
-                return new SaveWizardResult{ Result = false, Errors = new List<string> {"Looks like there is an existing user!"} };
+                return new SaveWizardResult { Result = false, Errors = new List<string> { "Looks like there is an existing user!" } };
             }
 
             if (user.UsePlexAdminAccount)
@@ -562,7 +562,7 @@ namespace Ombi.Controllers
                 // We need to delete all the requests first
                 var moviesUserRequested = MovieRepo.GetAll().Where(x => x.RequestedUserId == userId);
                 var tvUserRequested = TvRepo.GetChild().Where(x => x.RequestedUserId == userId);
-                
+
                 if (moviesUserRequested.Any())
                 {
                     await MovieRepo.DeleteRange(moviesUserRequested);
@@ -588,9 +588,9 @@ namespace Ombi.Controllers
                 {
                     await _issueCommentsRepository.DeleteRange(issueComments);
                 }
-                
+
                 // Delete the Subscriptions and mobile notification ids
-                 var subs = _requestSubscriptionRepository.GetAll().Where(x => x.UserId == userId);
+                var subs = _requestSubscriptionRepository.GetAll().Where(x => x.UserId == userId);
                 var mobileIds = _notificationRepository.GetAll().Where(x => x.UserId == userId);
                 if (subs.Any())
                 {
@@ -794,9 +794,26 @@ namespace Ombi.Controllers
         public async Task<List<UserNotificationPreferences>> GetUserPreferences()
         {
             var user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+            return await GetPreferences(user);
+        }
+
+        [HttpGet("notificationpreferences/{userId}")]
+        public async Task<List<UserNotificationPreferences>> GetUserPreferences(string userId)
+        {
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            return await GetPreferences(user);
+        }
+
+        private readonly List<NotificationAgent> _excludedAgents = new List<NotificationAgent>
+        {
+            NotificationAgent.Email,
+            NotificationAgent.Mobile
+        };
+        private async Task<List<UserNotificationPreferences>> GetPreferences(OmbiUser user)
+        {
             var userPreferences = await _userNotificationPreferences.GetAll().Where(x => x.UserId == user.Id).ToListAsync();
 
-            var agents = Enum.GetValues(typeof(NotificationAgent)).Cast<NotificationAgent>();
+            var agents = Enum.GetValues(typeof(NotificationAgent)).Cast<NotificationAgent>().Where(x => !_excludedAgents.Contains(x));
             foreach (var a in agents)
             {
                 var agent = userPreferences.FirstOrDefault(x => x.Agent == a);
@@ -806,11 +823,8 @@ namespace Ombi.Controllers
                     userPreferences.Add(new UserNotificationPreferences
                     {
                         Agent = a,
+                        UserId = user.Id,
                     });
-                }
-                else
-                {
-                    userPreferences.Add(agent);
                 }
             }
 
@@ -818,43 +832,47 @@ namespace Ombi.Controllers
         }
 
         [HttpPost("NotificationPreferences")]
-        public async Task<IActionResult> AddUserNotificationPreference([FromBody] AddNotificationPreference pref)
+        public async Task<IActionResult> AddUserNotificationPreference([FromBody] List<AddNotificationPreference> preferences)
         {
-            // Make sure the user exists
-            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == pref.UserId);
-            if (user == null)
+            foreach (var pref in preferences)
             {
-                return NotFound();
-            }
-            // Check if we are editing a different user than ourself, if we are then we need to power user role
-            var me = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
-            if (!me.Id.Equals(user.Id, StringComparison.InvariantCultureIgnoreCase))
-            {
-                var isPowerUser = await UserManager.IsInRoleAsync(me, OmbiRoles.PowerUser);
-                var isAdmin = await UserManager.IsInRoleAsync(me, OmbiRoles.Admin);
-                if (!isPowerUser && !isAdmin)
+
+                // Make sure the user exists
+                var user = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == pref.UserId);
+                if (user == null)
                 {
-                    return Unauthorized();
+                    return NotFound();
                 }
-            }
+                // Check if we are editing a different user than ourself, if we are then we need to power user role
+                var me = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+                if (!me.Id.Equals(user.Id, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var isPowerUser = await UserManager.IsInRoleAsync(me, OmbiRoles.PowerUser);
+                    var isAdmin = await UserManager.IsInRoleAsync(me, OmbiRoles.Admin);
+                    if (!isPowerUser && !isAdmin)
+                    {
+                        return Unauthorized();
+                    }
+                }
 
-            // Make sure we don't already have a preference for this agent
-            var existingPreference = await _userNotificationPreferences.GetAll()
-                .FirstOrDefaultAsync(x => x.UserId == user.Id && x.Agent == pref.Agent);
-            if (existingPreference != null)
-            {
-                // Update it
-                existingPreference.Value = pref.Value;
-                existingPreference.Enabled = pref.Enabled;
-            }
-            await _userNotificationPreferences.Add(new UserNotificationPreferences
-            {
-                Agent = pref.Agent,
-                Enabled = pref.Enabled,
-                UserId = pref.UserId,
-                Value = pref.Value
-            });
+                // Make sure we don't already have a preference for this agent
+                var existingPreference = await _userNotificationPreferences.GetAll()
+                    .FirstOrDefaultAsync(x => x.UserId == user.Id && x.Agent == pref.Agent);
+                if (existingPreference != null)
+                {
+                    // Update it
+                    existingPreference.Value = pref.Value;
+                    existingPreference.Enabled = pref.Enabled;
+                }
+                await _userNotificationPreferences.Add(new UserNotificationPreferences
+                {
+                    Agent = pref.Agent,
+                    Enabled = pref.Enabled,
+                    UserId = pref.UserId,
+                    Value = pref.Value
+                });
 
+            }
             return Json(true);
         }
 
