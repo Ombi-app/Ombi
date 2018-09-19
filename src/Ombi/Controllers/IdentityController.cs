@@ -61,7 +61,8 @@ namespace Ombi.Controllers
             IRepository<NotificationUserId> notificationRepository,
             IRepository<RequestSubscription> subscriptionRepository,
             ISettingsService<UserManagementSettings> umSettings,
-            IRepository<UserNotificationPreferences> notificationPreferences)
+            IRepository<UserNotificationPreferences> notificationPreferences,
+            IMusicRequestRepository musicRepo)
         {
             UserManager = user;
             Mapper = mapper;
@@ -71,6 +72,7 @@ namespace Ombi.Controllers
             CustomizationSettings = c;
             WelcomeEmail = welcome;
             MovieRepo = m;
+            MusicRepo = musicRepo;
             TvRepo = t;
             _log = l;
             _plexApi = plexApi;
@@ -96,6 +98,7 @@ namespace Ombi.Controllers
         private IWelcomeEmail WelcomeEmail { get; }
         private IMovieRequestRepository MovieRepo { get; }
         private ITvRequestRepository TvRepo { get; }
+        private IMusicRequestRepository MusicRepo { get; }
         private readonly ILogger<IdentityController> _log;
         private readonly IPlexApi _plexApi;
         private readonly ISettingsService<PlexSettings> _plexSettings;
@@ -295,7 +298,8 @@ namespace Ombi.Controllers
                 LastLoggedIn = user.LastLoggedIn,
                 HasLoggedIn = user.LastLoggedIn.HasValue,
                 EpisodeRequestLimit = user.EpisodeRequestLimit ?? 0,
-                MovieRequestLimit = user.MovieRequestLimit ?? 0
+                MovieRequestLimit = user.MovieRequestLimit ?? 0,
+                MusicRequestLimit = user.MusicRequestLimit ?? 0,
             };
 
             foreach (var role in userRoles)
@@ -347,6 +351,7 @@ namespace Ombi.Controllers
                 UserType = UserType.LocalUser,
                 MovieRequestLimit = user.MovieRequestLimit,
                 EpisodeRequestLimit = user.EpisodeRequestLimit,
+                MusicRequestLimit = user.MusicRequestLimit,
                 UserAccessToken = Guid.NewGuid().ToString("N"),
             };
             var userResult = await UserManager.CreateAsync(ombiUser, user.Password);
@@ -490,6 +495,7 @@ namespace Ombi.Controllers
             user.Email = ui.EmailAddress;
             user.MovieRequestLimit = ui.MovieRequestLimit;
             user.EpisodeRequestLimit = ui.EpisodeRequestLimit;
+            user.MusicRequestLimit = ui.MusicRequestLimit;
             var updateResult = await UserManager.UpdateAsync(user);
             if (!updateResult.Succeeded)
             {
@@ -562,6 +568,7 @@ namespace Ombi.Controllers
                 // We need to delete all the requests first
                 var moviesUserRequested = MovieRepo.GetAll().Where(x => x.RequestedUserId == userId);
                 var tvUserRequested = TvRepo.GetChild().Where(x => x.RequestedUserId == userId);
+                var musicRequested = MusicRepo.GetAll().Where(x => x.RequestedUserId == userId);
 
                 if (moviesUserRequested.Any())
                 {
@@ -570,6 +577,11 @@ namespace Ombi.Controllers
                 if (tvUserRequested.Any())
                 {
                     await TvRepo.DeleteChildRange(tvUserRequested);
+                }
+
+                if (musicRequested.Any())
+                {
+                    await MusicRepo.DeleteRange(musicRequested);
                 }
 
                 // Delete any issues and request logs

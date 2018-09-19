@@ -16,6 +16,7 @@ namespace Ombi.Core.Models.UI
         public UserType UserType { get; set; }
         public int MovieRequestLimit { get; set; }
         public int EpisodeRequestLimit { get; set; }
+        public int MusicRequestLimit { get; set; }
     }
 
     public class ClaimCheckboxes

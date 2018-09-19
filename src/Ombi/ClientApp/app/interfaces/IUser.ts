@@ -12,6 +12,7 @@ export interface IUser {
     hasLoggedIn: boolean;
     movieRequestLimit: number;
     episodeRequestLimit: number;
+    musicRequestLimit: number;
     userAccessToken: string;
     // FOR UI
     checked: boolean;
