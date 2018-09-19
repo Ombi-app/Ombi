@@ -63,7 +63,7 @@ namespace Ombi.Controllers
             IRepository<RequestSubscription> subscriptionRepository,
             ISettingsService<UserManagementSettings> umSettings,
             IRepository<UserNotificationPreferences> notificationPreferences,
-            IMusicRequestRepository musicRepo),
+            IMusicRequestRepository musicRepo,
             IMovieRequestEngine movieRequestEngine,
             ITvRequestEngine tvRequestEngine)
         {
