@@ -60,6 +60,7 @@ export class UserManagementUserComponent implements OnInit {
                 episodeRequestLimit: 0,
                 movieRequestLimit: 0,
                 userAccessToken: "",
+                musicRequestLimit: 0,
         };
     }
     }
