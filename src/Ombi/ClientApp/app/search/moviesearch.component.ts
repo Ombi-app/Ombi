@@ -89,9 +89,9 @@ export class MovieSearchComponent implements OnInit {
         try {
             this.requestService.requestMovie({ theMovieDbId: searchResult.id })
                 .subscribe(x => {
-                    this.movieRequested.next();
                     this.result = x;
                     if (this.result.result) {
+                        this.movieRequested.next();
                         this.translate.get("Search.RequestAdded", { title: searchResult.title }).subscribe(x => {
                             this.notificationService.success(x);
                             searchResult.processed = true;

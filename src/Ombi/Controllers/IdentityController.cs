@@ -16,6 +16,7 @@ using Ombi.Api.Plex;
 using Ombi.Attributes;
 using Ombi.Config;
 using Ombi.Core.Authentication;
+using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Helpers;
 using Ombi.Core.Models.UI;
@@ -66,7 +67,8 @@ namespace Ombi.Controllers
             IRepository<UserQualityProfiles> userProfiles,
             IMusicRequestRepository musicRepo,
             IMovieRequestEngine movieRequestEngine,
-            ITvRequestEngine tvRequestEngine)
+            ITvRequestEngine tvRequestEngine,
+            IMusicRequestEngine musicEngine)
         {
             UserManager = user;
             Mapper = mapper;
@@ -92,6 +94,7 @@ namespace Ombi.Controllers
             MovieRequestEngine = movieRequestEngine;
             _userNotificationPreferences = notificationPreferences;
             _userQualityProfiles = userProfiles;
+            MusicRequestEngine = musicEngine;
         }
 
         private OmbiUserManager UserManager { get; }
@@ -106,6 +109,7 @@ namespace Ombi.Controllers
         private IMovieRequestRepository MovieRepo { get; }
         private ITvRequestRepository TvRepo { get; }
         private IMovieRequestEngine MovieRequestEngine { get; }
+        private IMusicRequestEngine MusicRequestEngine { get; }
         private ITvRequestEngine TvRequestEngine { get; }
         private IMusicRequestRepository MusicRepo { get; }
         private readonly ILogger<IdentityController> _log;
@@ -340,6 +344,11 @@ namespace Ombi.Controllers
             if (vm.MovieRequestLimit > 0)
             {
                 vm.MovieRequestQuota = await MovieRequestEngine.GetRemainingRequests(user);
+            }
+
+            if (vm.MusicRequestLimit > 0)
+            {
+                vm.MusicRequestQuota = await MusicRequestEngine.GetRemainingRequests(user);
             }
 
             // Get the quality profiles

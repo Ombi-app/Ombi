@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ombi.Store.Entities.Requests;
 using Ombi.Attributes;
+using Ombi.Core.Models;
 using Ombi.Core.Models.UI;
 
 namespace Ombi.Controllers
@@ -139,6 +140,15 @@ namespace Ombi.Controllers
         public async Task<RequestEngineResult> Deny([FromBody] AlbumUpdateModel model)
         {
             return await _engine.DenyAlbumById(model.Id);
+        }
+
+        /// <summary>
+        /// Gets model containing remaining number of music requests.
+        /// </summary>
+        [HttpGet("remaining")]
+        public async Task<RequestQuotaCountModel> GetRemainingMusicRequests()
+        {
+            return await _engine.GetRemainingRequests();
         }
     }
 }

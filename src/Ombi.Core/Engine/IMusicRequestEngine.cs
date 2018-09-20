@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Ombi.Core.Models;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.UI;
+using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core.Engine
@@ -20,5 +22,6 @@ namespace Ombi.Core.Engine
         Task<RequestEngineResult> RequestAlbum(MusicAlbumRequestViewModel model);
         Task<IEnumerable<AlbumRequest>> SearchAlbumRequest(string search);
         Task<bool> UserHasRequest(string userId);
+        Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user = null);
     }
 }

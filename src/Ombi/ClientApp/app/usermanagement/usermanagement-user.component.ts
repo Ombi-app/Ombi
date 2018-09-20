@@ -82,6 +82,7 @@ export class UserManagementUserComponent implements OnInit {
                     sonarrRootPath: 0,
                     sonarrRootPathAnime: 0,
                 },
+                musicRequestQuota: null,
         };
     }
     }

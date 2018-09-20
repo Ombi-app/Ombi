@@ -19,6 +19,7 @@ namespace Ombi.Core.Models.UI
         public int EpisodeRequestLimit { get; set; }
         public RequestQuotaCountModel EpisodeRequestQuota { get; set; }
         public RequestQuotaCountModel MovieRequestQuota { get; set; }
+        public RequestQuotaCountModel MusicRequestQuota { get; set; }
         public int MusicRequestLimit { get; set; }
         public UserQualityProfiles UserQualityProfiles { get; set; }
     }

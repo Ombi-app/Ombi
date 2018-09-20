@@ -24,6 +24,7 @@ export class MusicSearchComponent implements OnInit {
     public searchApplied = false;
     public searchAlbum: boolean = true;
 
+    public musicRequested: Subject<void> = new Subject<void>();
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
     public issuesBarVisible = false;

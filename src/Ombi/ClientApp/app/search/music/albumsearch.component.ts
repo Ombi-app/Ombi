@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 
+import { Subject } from "rxjs";
 import { AuthService } from "../../auth/auth.service";
 import { IIssueCategory, IRequestEngineResult } from "../../interfaces";
 import { ISearchAlbumResult } from "../../interfaces/ISearchMusicResult";
@@ -18,6 +19,8 @@ export class AlbumSearchComponent {
 
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
+    
+    @Input() public musicRequested: Subject<void>;
     public issuesBarVisible = false;
     public issueRequestTitle: string;
     public issueRequestId: number;
@@ -56,10 +59,12 @@ export class AlbumSearchComponent {
         try {
             this.requestService.requestAlbum({ foreignAlbumId: searchResult.foreignAlbumId })
                 .subscribe(x => {
+                    
                     this.engineResult = x;
 
                     if (this.engineResult.result) {
-                        this.translate.get("Search.RequestAdded", { title: searchResult.title }).subscribe(x => {
+                            this.musicRequested.next();
+                            this.translate.get("Search.RequestAdded", { title: searchResult.title }).subscribe(x => {
                             this.notificationService.success(x);
                             searchResult.processed = true;
                         });

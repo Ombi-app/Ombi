@@ -12,6 +12,8 @@ import { Observable } from "rxjs";
 export class RemainingRequestsComponent implements OnInit  {
     public remaining: IRemainingRequests;
     @Input() public movie: boolean;
+    @Input() public tv: boolean;
+    @Input() public music: boolean;
     public daysUntil: number;
     public hoursUntil: number;
     public minutesUntil: number;
@@ -42,8 +44,12 @@ export class RemainingRequestsComponent implements OnInit  {
 
         if (this.movie) {
             this.requestService.getRemainingMovieRequests().subscribe(callback);
-        } else {
+        } 
+        if(this.tv) {
             this.requestService.getRemainingTvRequests().subscribe(callback);
+        }
+        if(this.music) {
+            this.requestService.getRemainingMusicRequests().subscribe(callback);
         }
     }
 

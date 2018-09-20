@@ -28,6 +28,9 @@
             <div class='no-search-results-text' [translate]="'Search.NoResults'"></div>
         </div>
 
+        
+        <remaining-requests [music]="true" [quotaRefreshEvents]="musicRequested.asObservable()" #remainingAlbums></remaining-requests>
+
         <div *ngFor="let result of artistResult">
             <artist-search [result]="result" [defaultPoster]="defaultPoster" (viewAlbumsResult)="viewAlbumsForArtist($event)"></artist-search>
             <br/>
@@ -35,7 +38,7 @@
         </div>
         <div class="col-md-12">
             <div *ngFor="let result of albumResult" class="col-md-4">
-                <album-search [result]="result" [defaultPoster]="defaultPoster" (setSearch)="setArtistSearch($event)"></album-search>
+                <album-search [musicRequested]="musicRequested" [result]="result" [defaultPoster]="defaultPoster" (setSearch)="setArtistSearch($event)"></album-search>
                 <br/>
                 <br/>
             </div>

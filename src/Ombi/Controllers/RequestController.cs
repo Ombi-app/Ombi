@@ -467,7 +467,7 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
-        /// Gets model containing remaining number of requests.
+        /// Gets model containing remaining number of movie requests.
         /// </summary>
         [HttpGet("movie/remaining")]
         public async Task<RequestQuotaCountModel> GetRemainingMovieRequests()
@@ -476,7 +476,7 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
-        /// Gets model containing remaining number of requests.
+        /// Gets model containing remaining number of tv requests.
         /// </summary>
         [HttpGet("tv/remaining")]
         public async Task<RequestQuotaCountModel> GetRemainingTvRequests()

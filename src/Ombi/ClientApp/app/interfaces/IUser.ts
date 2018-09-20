@@ -20,6 +20,7 @@ export interface IUser {
     // FOR UI
     episodeRequestQuota: IRemainingRequests | null;
     movieRequestQuota: IRemainingRequests | null;
+    musicRequestQuota: IRemainingRequests | null;
     checked: boolean;
 }
 

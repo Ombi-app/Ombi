@@ -98,6 +98,9 @@
                 <div *ngIf="u.episodeRequestQuota != null && u.episodeRequestQuota.hasLimit">
                     {{'UserManagment.TvRemaining' | translate: {remaining: u.episodeRequestQuota.remaining, total: u.episodeRequestLimit} }}
                 </div>
+                <div *ngIf="u.musicRequestQuota != null && u.musicRequestQuota.hasLimit">
+                    {{'UserManagment.MusicRemaining' | translate: {remaining: u.musicRequestQuota.remaining, total: u.musicRequestLimit} }}
+                </div>
             </td>
             <td class="td-labelled" data-label="Request Due">
                 <div *ngIf="u.movieRequestQuota != null && u.movieRequestQuota.remaining != u.movieRequestLimit">
@@ -105,6 +108,9 @@
                 </div>
                 <div *ngIf="u.episodeRequestQuota != null && u.episodeRequestQuota.remaining != u.episodeRequestLimit">
                     {{'UserManagment.TvDue' | translate: {date: (u.episodeRequestQuota.nextRequest | date: 'short')} }}
+                </div>
+                <div *ngIf="u.musicRequestQuota != null && u.musicRequestQuota.remaining != u.musicRequestLimit">
+                    {{'UserManagment.MusicDue' | translate: {date: (u.musicRequestQuota.nextRequest | date: 'short')} }}
                 </div>
             </td>
             <td class="td-labelled" data-label="Last Logged In:">
