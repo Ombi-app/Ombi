@@ -24,12 +24,12 @@ export interface IUser {
 }
 
 export interface IUserQualityProfiles {
-    sonarrQualityProfileAnime: string;
-    sonarrRootPathAnime: string;
-    sonarrRootPath: string;
-    sonarrQualityProfile: string;
-    radarrRootPath: string;
-    radarrQualityProfile: string;   
+    sonarrQualityProfileAnime: number;
+    sonarrRootPathAnime: number;
+    sonarrRootPath: number;
+    sonarrQualityProfile: number;
+    radarrRootPath: number;
+    radarrQualityProfile: number;   
 }
 
 export interface ICreateWizardUser {
