@@ -585,6 +585,15 @@ namespace Ombi.Controllers
             {
                 var currentQualityProfiles = await  
                     _userQualityProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == user.Id);
+                var add = false;
+                if (currentQualityProfiles == null)
+                {
+                    currentQualityProfiles = new UserQualityProfiles
+                    {
+                        UserId = user.Id
+                    };
+                    add = true;
+                }
 
                 currentQualityProfiles.RadarrQualityProfile = ui.UserQualityProfiles.RadarrQualityProfile;
                 currentQualityProfiles.RadarrRootPath = ui.UserQualityProfiles.RadarrRootPath;
@@ -592,7 +601,10 @@ namespace Ombi.Controllers
                 currentQualityProfiles.SonarrQualityProfileAnime = ui.UserQualityProfiles.SonarrQualityProfileAnime;
                 currentQualityProfiles.SonarrRootPath = ui.UserQualityProfiles.SonarrRootPath;
                 currentQualityProfiles.SonarrRootPathAnime = ui.UserQualityProfiles.SonarrRootPathAnime;
-
+                if (add)
+                {
+                    await _userQualityProfiles.Add(currentQualityProfiles);
+                }
                 await _userQualityProfiles.SaveChangesAsync();
             }
 

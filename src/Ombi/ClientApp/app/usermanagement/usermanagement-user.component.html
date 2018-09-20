@@ -139,57 +139,60 @@
 
                         </ng-template>
                     </ngb-panel>
-                    <ngb-panel title="Quality & Root Path Preferences" *ngIf="user.userQualityProfiles && false">
+                    <ngb-panel title="Quality & Root Path Preferences" *ngIf="user.userQualityProfiles">
                         <ng-template ngbPanelContent>
                             <div class="panel panel-default a">
                                 <div class="panel-body">
 
-                                    <div class="form-group">
-                                        <label for="sonarrQualityProfile" class="control-label">Sonarr Quality Profile</label>
-                                        <div>
-                                            <input type="text" [(ngModel)]="user.userQualityProfiles.sonarrQualityProfile"
-                                                class="form-control form-control-custom" name="sonarrQualityProfile"
-                                                value="{{user.userQualityProfiles.sonarrQualityProfile}}">
+                                    <div class="form-group"  *ngIf="user.userQualityProfiles.sonarrQualityProfile">
+                                        <label for="sonarrQualities" class="control-label">Sonarr Quality Profile</label>
+                                        <div id="sonarrQualities">
+                                            <select class="form-control form-control-custom" [(ngModel)]="user.userQualityProfiles.sonarrQualityProfile">
+                                                <option *ngFor="let folder of sonarrQualities" value="{{folder.id}}">{{folder.name}}</option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+
+                                    <div class="form-group"  *ngIf="user.userQualityProfiles.sonarrQualityProfileAnime">
                                         <label for="sonarrQualityProfileAnime" class="control-label">Sonarr Quality Profile (Anime)</label>
-                                        <div>
-                                            <input type="text" [(ngModel)]="user.userQualityProfiles.sonarrQualityProfileAnime"
-                                                class="form-control form-control-custom" name="sonarrQualityProfileAnime"
-                                                value="{{user.userQualityProfiles.sonarrQualityProfileAnime}}">
+                                        <div id="sonarrQualityProfileAnime">
+                                            <select class="form-control form-control-custom" [(ngModel)]="user.userQualityProfiles.sonarrQualityProfileAnime">
+                                                <option *ngFor="let folder of sonarrQualities" value="{{folder.id}}">{{folder.name}}</option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                             
+                                    <div class="form-group"  *ngIf="user.userQualityProfiles.sonarrRootPath">
                                         <label for="sonarrRootPath" class="control-label">Sonarr Root Folder</label>
-                                        <div>
-                                            <input type="text" [(ngModel)]="user.userQualityProfiles.sonarrRootPath"
-                                                class="form-control form-control-custom" name="sonarrRootPath"
-                                                value="{{user.userQualityProfiles.sonarrRootPath}}">
+                                        <div id="sonarrRootPath">
+                                            <select class="form-control form-control-custom" [(ngModel)]="user.userQualityProfiles.sonarrRootPath">
+                                                <option *ngFor="let folder of sonarrRootFolders" value="{{folder.id}}">{{folder.path}}</option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+
+                                    <div class="form-group" *ngIf="user.userQualityProfiles.sonarrRootPathAnime">
                                         <label for="sonarrRootPathAnime" class="control-label">Sonarr Root Folder (Anime)</label>
-                                        <div>
-                                            <input type="text" [(ngModel)]="user.userQualityProfiles.sonarrRootPathAnime"
-                                                class="form-control form-control-custom" name="sonarrRootPathAnime"
-                                                value="{{user.userQualityProfiles.sonarrRootPathAnime}}">
+                                        <div id="sonarrRootPathAnime">
+                                            <select class="form-control form-control-custom" [(ngModel)]="user.userQualityProfiles.sonarrRootPathAnime">
+                                                <option *ngFor="let folder of sonarrRootFolders" value="{{folder.id}}">{{folder.path}}</option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="radarrQualityProfile" class="control-label">Radarr Quality Profile</label>
-                                        <div>
-                                            <input type="text" [(ngModel)]="user.userQualityProfiles.radarrQualityProfile"
-                                                class="form-control form-control-custom" name="radarrQualityProfile"
-                                                value="{{user.userQualityProfiles.radarrQualityProfile}}">
+                                    <div class="form-group" *ngIf="user.userQualityProfiles.radarrQualityProfile">
+                                        <label for="radarrQualityProfile" class="control-label">Radarr Quality Profiles</label>
+                                        <div id="radarrQualityProfile">
+                                            <select class="form-control form-control-custom" [(ngModel)]="user.userQualityProfiles.radarrQualityProfile">
+                                                <option *ngFor="let folder of radarrQualities" value="{{folder.id}}">{{folder.name}}</option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group" *ngIf="user.userQualityProfiles.radarrRootPath">
                                         <label for="radarrRootPath" class="control-label">Radarr Root Folder</label>
-                                        <div>
-                                            <input type="text" [(ngModel)]="user.userQualityProfiles.radarrRootPath"
-                                                class="form-control form-control-custom" name="radarrRootPath"
-                                                value="{{user.userQualityProfiles.radarrRootPath}}">
+                                        <div id="radarrRootPath">
+                                            <select class="form-control form-control-custom" [(ngModel)]="user.userQualityProfiles.radarrRootPath">
+                                                <option *ngFor="let folder of radarrRootFolders" value="{{folder.id}}">{{folder.path}}</option>
+                                            </select>
                                         </div>
                                     </div>
 

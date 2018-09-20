@@ -11,7 +11,7 @@ import { UserManagementUserComponent } from "./usermanagement-user.component";
 import { UserManagementComponent } from "./usermanagement.component";
 
 import { PipeModule } from "../pipes/pipe.module";
-import { IdentityService, PlexService } from "../services";
+import { IdentityService, PlexService, RadarrService, SonarrService } from "../services";
 
 import { AuthGuard } from "../auth/auth.guard";
 
@@ -58,6 +58,8 @@ const routes: Routes = [
         IdentityService,
         ConfirmationService,
         PlexService,
+        RadarrService,
+        SonarrService,
     ],
 
 })

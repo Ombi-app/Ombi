@@ -169,6 +169,7 @@ namespace Ombi.Core.Senders
                 seriesType = "standard";
             }
 
+            // Overrides on the request take priority
             if (model.ParentRequest.QualityOverride.HasValue)
             {
                 qualityToUse = model.ParentRequest.QualityOverride.Value;

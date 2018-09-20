@@ -63,8 +63,8 @@
                         </select>
                         <button (click)="getProfiles(form)" type="button" class="btn btn-primary-outline col-md-4 col-md-push-1">Get Quality Profiles <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"> </span></button>
 
+                        <small *ngIf="form.get('defaultQualityProfile').hasError('required')" class="error-text">A Default Quality Profile is required</small>
                     </div>
-                    <small *ngIf="form.get('defaultQualityProfile').hasError('required')" class="error-text">A Default Quality Profile is required</small>
                 </div>
 
                 <div class="form-group">
@@ -102,9 +102,9 @@
                         </select>
                         <button (click)="getMetadataProfiles(form)" type="button" class="btn btn-primary-outline col-md-4  col-md-push-1">Get Metadata <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
 
+                        <small *ngIf="form.get('metadataProfileId').hasError('required')" class="error-text">A Metadata profile is required</small>
                     </div>                     
                     
-                    <small *ngIf="form.get('metadataProfileId').hasError('required')" class="error-text">A Metadata profile is required</small>
                 </div>
 
                 <div class="form-group">
