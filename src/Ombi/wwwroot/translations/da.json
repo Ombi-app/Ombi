@@ -184,7 +184,9 @@
   "UserManagment": {
     "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
     "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
+    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
     "TvDue": "TV: {{date}}",
-    "MovieDue": "Movie: {{date}}"
+    "MovieDue": "Movie: {{date}}",
+    "MusicDue": "Music: {{date}}"
   }
 }
