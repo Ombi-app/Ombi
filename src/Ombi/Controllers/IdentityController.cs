@@ -579,11 +579,11 @@ namespace Ombi.Controllers
                 {
                     Errors = messages
                 };
-            }           
+            }
             // Add the quality profiles
             if (ui.UserQualityProfiles != null)
             {
-                var currentQualityProfiles = await  
+                var currentQualityProfiles = await
                     _userQualityProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == user.Id);
                 var add = false;
                 if (currentQualityProfiles == null)
@@ -955,19 +955,23 @@ namespace Ombi.Controllers
                     // Update it
                     existingPreference.Value = pref.Value;
                     existingPreference.Enabled = pref.Enabled;
+                    await _userNotificationPreferences.SaveChangesAsync();
                 }
-                await _userNotificationPreferences.Add(new UserNotificationPreferences
+                else
                 {
-                    Agent = pref.Agent,
-                    Enabled = pref.Enabled,
-                    UserId = pref.UserId,
-                    Value = pref.Value
-                });
+                    await _userNotificationPreferences.Add(new UserNotificationPreferences
+                    {
+                        Agent = pref.Agent,
+                        Enabled = pref.Enabled,
+                        UserId = pref.UserId,
+                        Value = pref.Value
+                    });
+                }
 
             }
             return Json(true);
         }
-        
+
         private async Task<List<IdentityResult>> AddRoles(IEnumerable<ClaimCheckboxes> roles, OmbiUser ombiUser)
         {
             var roleResult = new List<IdentityResult>();
