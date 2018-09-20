@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Ombi.Api.Radarr;
@@ -12,7 +13,7 @@ using Ombi.Settings.Settings.Models.External;
 
 namespace Ombi.Controllers.External
 {
-   [PowerUser]
+   [Authorize]
    [ApiV1]
    [Produces("application/json")]
     public class RadarrController : Controller
@@ -34,6 +35,7 @@ namespace Ombi.Controllers.External
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("Profiles")]
+        [PowerUser]
         public async Task<IEnumerable<RadarrProfile>> GetProfiles([FromBody] RadarrSettings settings)
         {
             return await RadarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
@@ -45,6 +47,7 @@ namespace Ombi.Controllers.External
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("RootFolders")]
+        [PowerUser]
         public async Task<IEnumerable<RadarrRootFolder>> GetRootFolders([FromBody] RadarrSettings settings)
         {
             return await RadarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);

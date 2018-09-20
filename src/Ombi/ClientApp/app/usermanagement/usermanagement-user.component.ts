@@ -1,8 +1,8 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
-import { ICheckbox, INotificationAgent, INotificationPreferences, IUser, UserType } from "../interfaces";
-import { IdentityService, NotificationService } from "../services";
+import { ICheckbox, INotificationAgent, INotificationPreferences, IRadarrProfile, IRadarrRootFolder, ISonarrProfile, ISonarrRootFolder, IUser, UserType } from "../interfaces";
+import { IdentityService, NotificationService, RadarrService, SonarrService } from "../services";
 
 import { ConfirmationService } from "primeng/primeng";
 
@@ -16,6 +16,11 @@ export class UserManagementUserComponent implements OnInit {
     public availableClaims: ICheckbox[];
     public confirmPass: "";
     public notificationPreferences: INotificationPreferences[];
+    
+    public sonarrQualities: ISonarrProfile[];
+    public sonarrRootFolders: ISonarrRootFolder[];
+    public radarrQualities: IRadarrProfile[];
+    public radarrRootFolders: IRadarrRootFolder[];
 
     public NotificationAgent = INotificationAgent;
     public edit: boolean;
@@ -24,18 +29,19 @@ export class UserManagementUserComponent implements OnInit {
                 private notificationService: NotificationService,
                 private router: Router,
                 private route: ActivatedRoute,
-                private confirmationService: ConfirmationService) {
-                    this.route.params
-            .subscribe((params: any) => {
-                if(params.id) {
-                    this.userId = params.id;
-                    this.edit = true;
-                    this.identityService.getUserById(this.userId).subscribe(x => {
-                        this.user = x;
+                private confirmationService: ConfirmationService,
+                private sonarrService: SonarrService,
+                private radarrService: RadarrService) {
+
+                    this.route.params.subscribe((params: any) => {
+                        if(params.id) {
+                            this.userId = params.id;
+                            this.edit = true;
+                            this.identityService.getUserById(this.userId).subscribe(x => {
+                                this.user = x;
+                               });
+                        }   
                     });
-            }
-            });
-                    
                  }
 
     public ngOnInit() {
@@ -45,6 +51,11 @@ export class UserManagementUserComponent implements OnInit {
         } else {
             this.identityService.getNotificationPreferences().subscribe(x => this.notificationPreferences = x);
         }
+        this.sonarrService.getQualityProfilesWithoutSettings().subscribe(x => this.sonarrQualities = x);
+        this.sonarrService.getRootFoldersWithoutSettings().subscribe(x => this.sonarrRootFolders = x);
+        this.radarrService.getQualityProfilesFromSettings().subscribe(x => this.radarrQualities = x);
+        this.radarrService.getRootFoldersFromSettings().subscribe(x => this.radarrRootFolders = x);
+
         if(!this.edit) {
             this.user = {
                 alias: "",
@@ -64,12 +75,12 @@ export class UserManagementUserComponent implements OnInit {
                 episodeRequestQuota: null,
                 movieRequestQuota: null,
                 userQualityProfiles: {
-                    radarrQualityProfile: "",
-                    radarrRootPath: "",
-                    sonarrQualityProfile: "",
-                    sonarrQualityProfileAnime: "",
-                    sonarrRootPath: "",
-                    sonarrRootPathAnime: "",
+                    radarrQualityProfile: 0,
+                    radarrRootPath: 0,
+                    sonarrQualityProfile: 0,
+                    sonarrQualityProfileAnime: 0,
+                    sonarrRootPath: 0,
+                    sonarrRootPathAnime: 0,
                 },
         };
     }
