@@ -15,11 +15,21 @@ export interface IUser {
     episodeRequestLimit: number;
     musicRequestLimit: number;
     userAccessToken: string;
+    userQualityProfiles: IUserQualityProfiles;
 
     // FOR UI
     episodeRequestQuota: IRemainingRequests | null;
     movieRequestQuota: IRemainingRequests | null;
     checked: boolean;
+}
+
+export interface IUserQualityProfiles {
+    sonarrQualityProfileAnime: string;
+    sonarrRootPathAnime: string;
+    sonarrRootPath: string;
+    sonarrQualityProfile: string;
+    radarrRootPath: string;
+    radarrQualityProfile: string;   
 }
 
 export interface ICreateWizardUser {

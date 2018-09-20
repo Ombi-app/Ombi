@@ -51,7 +51,8 @@ namespace Ombi.Store.Context
         public DbSet<SickRageCache> SickRageCache { get; set; }
         public DbSet<SickRageEpisodeCache> SickRageEpisodeCache { get; set; }
         public DbSet<RequestSubscription> RequestSubscription { get; set; }
-
+        public DbSet<UserNotificationPreferences> UserNotificationPreferences { get; set; }
+        public DbSet<UserQualityProfiles> UserQualityProfileses { get; set; }
         public DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

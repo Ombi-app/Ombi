@@ -89,55 +89,115 @@
                         </ng-template>
                     </ngb-panel>
                     <ngb-panel title="Request Limits">
-                            <ng-template ngbPanelContent>
-                                <div class="panel panel-default a">
-                                    <div class="panel-body">
-    
-                                        <div class="form-group">
-                                            <label for="movieRequestLimit" class="control-label">Movie Request Limit</label>
-                                            <div>
-                                                <input type="text" [(ngModel)]="user.movieRequestLimit" class="form-control form-small form-control-custom "
-                                                    id="movieRequestLimit" name="movieRequestLimit" value="{{user?.movieRequestLimit}}">
-                                            </div>
+                        <ng-template ngbPanelContent>
+                            <div class="panel panel-default a">
+                                <div class="panel-body">
+
+                                    <div class="form-group">
+                                        <label for="movieRequestLimit" class="control-label">Movie Request Limit</label>
+                                        <div>
+                                            <input type="text" [(ngModel)]="user.movieRequestLimit" class="form-control form-small form-control-custom "
+                                                id="movieRequestLimit" name="movieRequestLimit" value="{{user?.movieRequestLimit}}">
                                         </div>
-    
-                                        <div class="form-group">
-                                                <label for="episodeRequestLimit" class="control-label">Episode Request Limit</label>
-                                                <div>
-                                                    <input type="text" [(ngModel)]="user.episodeRequestLimit" class="form-control form-small form-control-custom "
-                                                        id="episodeRequestLimit" name="episodeRequestLimit" value="{{user?.episodeRequestLimit}}">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                    <label for="musicRequestLimit" class="control-label">Music Request Limit</label>
-                                                    <div>
-                                                        <input type="text" [(ngModel)]="user.musicRequestLimit" class="form-control form-small form-control-custom "
-                                                            id="musicRequestLimit" name="musicRequestLimit" value="{{user?.musicRequestLimit}}">
-                                                    </div>
-                                                </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="episodeRequestLimit" class="control-label">Episode Request Limit</label>
+                                        <div>
+                                            <input type="text" [(ngModel)]="user.episodeRequestLimit" class="form-control form-small form-control-custom "
+                                                id="episodeRequestLimit" name="episodeRequestLimit" value="{{user?.episodeRequestLimit}}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="musicRequestLimit" class="control-label">Music Request Limit</label>
+                                        <div>
+                                            <input type="text" [(ngModel)]="user.musicRequestLimit" class="form-control form-small form-control-custom "
+                                                id="musicRequestLimit" name="musicRequestLimit" value="{{user?.musicRequestLimit}}">
+                                        </div>
                                     </div>
                                 </div>
-    
-                            </ng-template>
-                        </ngb-panel>
-                        <ngb-panel title="Notification Preferences" *ngIf="notificationPreferences">
-                                <ng-template ngbPanelContent>
-                                    <div class="panel panel-default a">
-                                        <div class="panel-body">
-                                                <div *ngFor="let pref of notificationPreferences">
-                                                <div class="form-group">
-                                                        <label for="{{pref.agent}}" class="control-label">{{NotificationAgent[pref.agent] | humanize}}</label>
-                                                        <div>
-                                                            <input type="text" [(ngModel)]="pref.value" class="form-control form-control-custom"
-                                                                name="{{pref.agent}}" value="{{pref?.value}}">
-                                                        </div>
-                                                    </div>
-                                                </div>
+                            </div>
+
+                        </ng-template>
+                    </ngb-panel>
+                    <ngb-panel title="Notification Preferences" *ngIf="notificationPreferences">
+                        <ng-template ngbPanelContent>
+                            <div class="panel panel-default a">
+                                <div class="panel-body">
+                                    <div *ngFor="let pref of notificationPreferences">
+                                        <div class="form-group">
+                                            <label for="{{pref.agent}}" class="control-label">{{NotificationAgent[pref.agent]
+                                                | humanize}}</label>
+                                            <div>
+                                                <input type="text" [(ngModel)]="pref.value" class="form-control form-control-custom"
+                                                    name="{{pref.agent}}" value="{{pref?.value}}">
+                                            </div>
                                         </div>
                                     </div>
-        
-                                </ng-template>
-                            </ngb-panel>
+                                </div>
+                            </div>
+
+                        </ng-template>
+                    </ngb-panel>
+                    <ngb-panel title="Quality & Root Path Preferences" *ngIf="user.userQualityProfiles && false">
+                        <ng-template ngbPanelContent>
+                            <div class="panel panel-default a">
+                                <div class="panel-body">
+
+                                    <div class="form-group">
+                                        <label for="sonarrQualityProfile" class="control-label">Sonarr Quality Profile</label>
+                                        <div>
+                                            <input type="text" [(ngModel)]="user.userQualityProfiles.sonarrQualityProfile"
+                                                class="form-control form-control-custom" name="sonarrQualityProfile"
+                                                value="{{user.userQualityProfiles.sonarrQualityProfile}}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sonarrQualityProfileAnime" class="control-label">Sonarr Quality Profile (Anime)</label>
+                                        <div>
+                                            <input type="text" [(ngModel)]="user.userQualityProfiles.sonarrQualityProfileAnime"
+                                                class="form-control form-control-custom" name="sonarrQualityProfileAnime"
+                                                value="{{user.userQualityProfiles.sonarrQualityProfileAnime}}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sonarrRootPath" class="control-label">Sonarr Root Folder</label>
+                                        <div>
+                                            <input type="text" [(ngModel)]="user.userQualityProfiles.sonarrRootPath"
+                                                class="form-control form-control-custom" name="sonarrRootPath"
+                                                value="{{user.userQualityProfiles.sonarrRootPath}}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sonarrRootPathAnime" class="control-label">Sonarr Root Folder (Anime)</label>
+                                        <div>
+                                            <input type="text" [(ngModel)]="user.userQualityProfiles.sonarrRootPathAnime"
+                                                class="form-control form-control-custom" name="sonarrRootPathAnime"
+                                                value="{{user.userQualityProfiles.sonarrRootPathAnime}}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="radarrQualityProfile" class="control-label">Radarr Quality Profile</label>
+                                        <div>
+                                            <input type="text" [(ngModel)]="user.userQualityProfiles.radarrQualityProfile"
+                                                class="form-control form-control-custom" name="radarrQualityProfile"
+                                                value="{{user.userQualityProfiles.radarrQualityProfile}}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="radarrRootPath" class="control-label">Radarr Root Folder</label>
+                                        <div>
+                                            <input type="text" [(ngModel)]="user.userQualityProfiles.radarrRootPath"
+                                                class="form-control form-control-custom" name="radarrRootPath"
+                                                value="{{user.userQualityProfiles.radarrRootPath}}">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </ng-template>
+                    </ngb-panel>
                 </ngb-accordion>
             </div>
 

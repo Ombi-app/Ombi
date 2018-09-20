@@ -63,6 +63,7 @@ namespace Ombi.Controllers
             IRepository<RequestSubscription> subscriptionRepository,
             ISettingsService<UserManagementSettings> umSettings,
             IRepository<UserNotificationPreferences> notificationPreferences,
+            IRepository<UserQualityProfiles> userProfiles,
             IMusicRequestRepository musicRepo,
             IMovieRequestEngine movieRequestEngine,
             ITvRequestEngine tvRequestEngine)
@@ -90,6 +91,7 @@ namespace Ombi.Controllers
             TvRequestEngine = tvRequestEngine;
             MovieRequestEngine = movieRequestEngine;
             _userNotificationPreferences = notificationPreferences;
+            _userQualityProfiles = userProfiles;
         }
 
         private OmbiUserManager UserManager { get; }
@@ -115,6 +117,7 @@ namespace Ombi.Controllers
         private readonly IRepository<NotificationUserId> _notificationRepository;
         private readonly IRepository<RequestSubscription> _requestSubscriptionRepository;
         private readonly IRepository<UserNotificationPreferences> _userNotificationPreferences;
+        private readonly IRepository<UserQualityProfiles> _userQualityProfiles;
 
         /// <summary>
         /// This is what the Wizard will call when creating the user for the very first time.
@@ -329,14 +332,24 @@ namespace Ombi.Controllers
                 });
             }
 
-            if (vm.EpisodeRequestLimit > 0) 
+            if (vm.EpisodeRequestLimit > 0)
             {
                 vm.EpisodeRequestQuota = await TvRequestEngine.GetRemainingRequests(user);
             }
 
-            if (vm.MovieRequestLimit > 0) 
+            if (vm.MovieRequestLimit > 0)
             {
                 vm.MovieRequestQuota = await MovieRequestEngine.GetRemainingRequests(user);
+            }
+
+            // Get the quality profiles
+            vm.UserQualityProfiles = await _userQualityProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == user.Id);
+            if (vm.UserQualityProfiles == null)
+            {
+                vm.UserQualityProfiles = new UserQualityProfiles
+                {
+                    UserId = user.Id
+                };
             }
 
             return vm;
@@ -394,6 +407,20 @@ namespace Ombi.Controllers
                 return new OmbiIdentityResult
                 {
                     Errors = messages
+                };
+            }
+
+            // Add the quality profiles
+            if (user.UserQualityProfiles != null)
+            {
+                user.UserQualityProfiles.UserId = ombiUser.Id;
+                await _userQualityProfiles.Add(user.UserQualityProfiles);
+            }
+            else
+            {
+                user.UserQualityProfiles = new UserQualityProfiles
+                {
+                    UserId = ombiUser.Id
                 };
             }
 
@@ -552,7 +579,23 @@ namespace Ombi.Controllers
                 {
                     Errors = messages
                 };
+            }           
+            // Add the quality profiles
+            if (ui.UserQualityProfiles != null)
+            {
+                var currentQualityProfiles = await  
+                    _userQualityProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == user.Id);
+
+                currentQualityProfiles.RadarrQualityProfile = ui.UserQualityProfiles.RadarrQualityProfile;
+                currentQualityProfiles.RadarrRootPath = ui.UserQualityProfiles.RadarrRootPath;
+                currentQualityProfiles.SonarrQualityProfile = ui.UserQualityProfiles.SonarrQualityProfile;
+                currentQualityProfiles.SonarrQualityProfileAnime = ui.UserQualityProfiles.SonarrQualityProfileAnime;
+                currentQualityProfiles.SonarrRootPath = ui.UserQualityProfiles.SonarrRootPath;
+                currentQualityProfiles.SonarrRootPathAnime = ui.UserQualityProfiles.SonarrRootPathAnime;
+
+                await _userQualityProfiles.SaveChangesAsync();
             }
+
 
             return new OmbiIdentityResult
             {
@@ -585,6 +628,8 @@ namespace Ombi.Controllers
                 var moviesUserRequested = MovieRepo.GetAll().Where(x => x.RequestedUserId == userId);
                 var tvUserRequested = TvRepo.GetChild().Where(x => x.RequestedUserId == userId);
                 var musicRequested = MusicRepo.GetAll().Where(x => x.RequestedUserId == userId);
+                var notificationPreferences = _userNotificationPreferences.GetAll().Where(x => x.UserId == userId);
+                var userQuality = await _userQualityProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == userId);
 
                 if (moviesUserRequested.Any())
                 {
@@ -594,10 +639,17 @@ namespace Ombi.Controllers
                 {
                     await TvRepo.DeleteChildRange(tvUserRequested);
                 }
-
                 if (musicRequested.Any())
                 {
                     await MusicRepo.DeleteRange(musicRequested);
+                }
+                if (notificationPreferences.Any())
+                {
+                    await _userNotificationPreferences.DeleteRange(notificationPreferences);
+                }
+                if (userQuality != null)
+                {
+                    await _userQualityProfiles.Delete(userQuality);
                 }
 
                 // Delete any issues and request logs
@@ -903,7 +955,7 @@ namespace Ombi.Controllers
             }
             return Json(true);
         }
-
+        
         private async Task<List<IdentityResult>> AddRoles(IEnumerable<ClaimCheckboxes> roles, OmbiUser ombiUser)
         {
             var roleResult = new List<IdentityResult>();

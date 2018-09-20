@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.DogNzb;
 using Ombi.Api.DogNzb.Models;
@@ -12,7 +13,9 @@ using Ombi.Api.Sonarr.Models;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
+using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
+using Ombi.Store.Repository;
 
 namespace Ombi.Core.Senders
 {
@@ -20,7 +23,7 @@ namespace Ombi.Core.Senders
     {
         public TvSender(ISonarrApi sonarrApi, ILogger<TvSender> log, ISettingsService<SonarrSettings> sonarrSettings,
             ISettingsService<DogNzbSettings> dog, IDogNzbApi dogApi, ISettingsService<SickRageSettings> srSettings,
-            ISickRageApi srApi)
+            ISickRageApi srApi, IRepository<UserQualityProfiles> userProfiles)
         {
             SonarrApi = sonarrApi;
             Logger = log;
@@ -29,6 +32,7 @@ namespace Ombi.Core.Senders
             DogNzbApi = dogApi;
             SickRageSettings = srSettings;
             SickRageApi = srApi;
+            UserQualityProfiles = userProfiles;
         }
 
         private ISonarrApi SonarrApi { get; }
@@ -38,6 +42,7 @@ namespace Ombi.Core.Senders
         private ISettingsService<SonarrSettings> SonarrSettings { get; }
         private ISettingsService<DogNzbSettings> DogNzbSettings { get; }
         private ISettingsService<SickRageSettings> SickRageSettings { get; }
+        private IRepository<UserQualityProfiles> UserQualityProfiles { get; }
 
         public async Task<SenderResult> Send(ChildRequests model)
         {
@@ -122,13 +127,25 @@ namespace Ombi.Core.Senders
             string rootFolderPath;
             string seriesType;
 
+            var profiles = await UserQualityProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == model.RequestedUserId);
+
             if (model.SeriesType == SeriesType.Anime)
             {
                 // Get the root path from the rootfolder selected.
                 // For some reason, if we haven't got one use the first root folder in Sonarr
-                // TODO make this overrideable via the UI
                 rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder ?? int.Parse(s.RootPathAnime), s);
                 int.TryParse(s.QualityProfileAnime, out qualityToUse);
+                if (profiles != null)
+                {
+                    if (profiles.SonarrRootPathAnime > 0)
+                    {
+                        rootFolderPath = await GetSonarrRootPath(profiles.SonarrRootPathAnime, s);
+                    }
+                    if (profiles.SonarrQualityProfileAnime > 0)
+                    {
+                       qualityToUse = profiles.SonarrQualityProfileAnime;
+                    }
+                }
                 seriesType = "anime";
 
             }
@@ -137,8 +154,18 @@ namespace Ombi.Core.Senders
                 int.TryParse(s.QualityProfile, out qualityToUse);
                 // Get the root path from the rootfolder selected.
                 // For some reason, if we haven't got one use the first root folder in Sonarr
-                // TODO make this overrideable via the UI
                 rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder ?? int.Parse(s.RootPath), s);
+                if (profiles != null)
+                {
+                    if (profiles.SonarrRootPath > 0)
+                    {
+                        rootFolderPath = await GetSonarrRootPath(profiles.SonarrRootPath, s);
+                    }
+                    if (profiles.SonarrQualityProfile > 0)
+                    {
+                       qualityToUse = profiles.SonarrQualityProfile;
+                    }
+                }
                 seriesType = "standard";
             }
 

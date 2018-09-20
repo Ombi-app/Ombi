@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ombi.Store.Entities;
 
 namespace Ombi.Core.Models.UI
 {
@@ -19,6 +20,7 @@ namespace Ombi.Core.Models.UI
         public RequestQuotaCountModel EpisodeRequestQuota { get; set; }
         public RequestQuotaCountModel MovieRequestQuota { get; set; }
         public int MusicRequestLimit { get; set; }
+        public UserQualityProfiles UserQualityProfiles { get; set; }
     }
 
     public class ClaimCheckboxes

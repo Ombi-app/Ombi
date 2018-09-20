@@ -63,6 +63,14 @@ export class UserManagementUserComponent implements OnInit {
                 musicRequestLimit: 0,
                 episodeRequestQuota: null,
                 movieRequestQuota: null,
+                userQualityProfiles: {
+                    radarrQualityProfile: "",
+                    radarrRootPath: "",
+                    sonarrQualityProfile: "",
+                    sonarrQualityProfileAnime: "",
+                    sonarrRootPath: "",
+                    sonarrRootPathAnime: "",
+                },
         };
     }
     }
