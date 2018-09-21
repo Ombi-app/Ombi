@@ -18,6 +18,7 @@ export class TvSearchComponent implements OnInit {
     public searchText: string;
     public searchChanged = new Subject<string>();
     public tvResults: ISearchTvResult[];
+    public tvRequested: Subject<void> = new Subject<void>();
     public result: IRequestEngineResult;
     public searchApplied = false;
     public defaultPoster: string;
@@ -161,6 +162,7 @@ export class TvSearchComponent implements OnInit {
 
         this.requestService.requestTv(viewModel)
             .subscribe(x => {
+                this.tvRequested.next();
                 this.result = x;
                 if (this.result.result) {
                     this.notificationService.success(
@@ -195,7 +197,8 @@ export class TvSearchComponent implements OnInit {
 
     public reportIssue(catId: IIssueCategory, req: ISearchTvResult) {
         this.issueRequestId = req.id;
-        this.issueRequestTitle = req.title + `(${req.firstAired})`;
+        const firstAiredDate = new Date(req.firstAired);
+        this.issueRequestTitle = req.title + ` (${firstAiredDate.getFullYear()})`;
         this.issueCategorySelected = catId;
         this.issuesBarVisible = true;
         this.issueProviderId = req.id.toString();

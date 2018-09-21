@@ -319,6 +319,39 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Gets the Lidarr Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("lidarr")]
+        public async Task<LidarrSettings> LidarrSettings()
+        {
+            return await Get<LidarrSettings>();
+        }
+
+        /// <summary>
+        /// Gets the Lidarr Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("lidarrenabled")]
+        [AllowAnonymous]
+        public async Task<bool> LidarrEnabled()
+        {
+            var settings = await Get<LidarrSettings>();
+            return settings.Enabled;
+        }
+
+        /// <summary>
+        /// Save the Lidarr settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("lidarr")]
+        public async Task<bool> LidarrSettings([FromBody]LidarrSettings settings)
+        {
+            return await Save(settings);
+        }
+
+        /// <summary>
         /// Save the Authentication settings.
         /// </summary>
         /// <param name="settings">The settings.</param>
@@ -485,6 +518,7 @@ namespace Ombi.Controllers
             j.RefreshMetadata = j.RefreshMetadata.HasValue() ? j.RefreshMetadata : JobSettingsHelper.RefreshMetadata(j);
             j.PlexRecentlyAddedSync = j.PlexRecentlyAddedSync.HasValue() ? j.PlexRecentlyAddedSync : JobSettingsHelper.PlexRecentlyAdded(j);
             j.Newsletter = j.Newsletter.HasValue() ? j.Newsletter : JobSettingsHelper.Newsletter(j);
+            j.LidarrArtistSync = j.LidarrArtistSync.HasValue() ? j.LidarrArtistSync : JobSettingsHelper.LidarrArtistSync(j);
  
             return j;
         }

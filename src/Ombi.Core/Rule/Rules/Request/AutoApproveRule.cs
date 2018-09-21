@@ -29,6 +29,8 @@ namespace Ombi.Core.Rule.Rules.Request
                 obj.Approved = true;
             if (obj.RequestType == RequestType.TvShow && User.IsInRole(OmbiRoles.AutoApproveTv))
                 obj.Approved = true;
+            if (obj.RequestType == RequestType.Album && User.IsInRole(OmbiRoles.AutoApproveMusic))
+                obj.Approved = true;
             return Task.FromResult(Success()); // We don't really care, we just don't set the obj to approve
         }
     }

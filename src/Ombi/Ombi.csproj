@@ -8,7 +8,7 @@
     <FileVersion>$(SemVer)</FileVersion>
     <Version>$(FullVer)</Version>
     <PackageVersion></PackageVersion>
-    <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ServerGarbageCollection>false</ServerGarbageCollection>
@@ -71,7 +71,7 @@
     <PackageReference Include="Hangfire.RecurringJobExtensions" Version="1.1.6" />
     <PackageReference Include="Hangfire.SQLite" Version="1.4.2" />
 
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.4" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.1.1" />
@@ -89,6 +89,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Api.Emby\Ombi.Api.Emby.csproj" />
     <ProjectReference Include="..\Ombi.Api.Github\Ombi.Api.Github.csproj" />
+    <ProjectReference Include="..\Ombi.Api.Lidarr\Ombi.Api.Lidarr.csproj" />
     <ProjectReference Include="..\Ombi.Api.SickRage\Ombi.Api.SickRage.csproj" />
     <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
     <ProjectReference Include="..\Ombi.DependencyInjection\Ombi.DependencyInjection.csproj" />

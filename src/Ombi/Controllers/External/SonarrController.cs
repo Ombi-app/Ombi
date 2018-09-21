@@ -11,7 +11,7 @@ using Ombi.Settings.Settings.Models.External;
 
 namespace Ombi.Controllers.External
 {
-    [PowerUser]
+    [Authorize]
     [ApiV1]
     [Produces("application/json")]
     public class SonarrController : Controller
@@ -31,6 +31,7 @@ namespace Ombi.Controllers.External
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("Profiles")]
+        [PowerUser]
         public async Task<IEnumerable<SonarrProfile>> GetProfiles([FromBody] SonarrSettings settings)
         {
             return await SonarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
@@ -42,6 +43,7 @@ namespace Ombi.Controllers.External
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("RootFolders")]
+        [PowerUser]
         public async Task<IEnumerable<SonarrRootFolder>> GetRootFolders([FromBody] SonarrSettings settings)
         {
             return await SonarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);

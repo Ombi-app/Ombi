@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
-import { ICheckbox, ICreateWizardUser, IIdentityResult, IResetPasswordToken, IUpdateLocalUser, IUser, IWizardUserResult } from "../interfaces";
+import { ICheckbox, ICreateWizardUser, IIdentityResult, INotificationPreferences, IResetPasswordToken, IUpdateLocalUser, IUser, IWizardUserResult } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()
@@ -43,6 +43,11 @@ export class IdentityService extends ServiceHelpers {
     public updateUser(user: IUser): Observable<IIdentityResult> {
         return this.http.put<IIdentityResult>(this.url, JSON.stringify(user), {headers: this.headers});
     }
+
+    public updateNotificationPreferences(pref: INotificationPreferences[]): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}NotificationPreferences`, JSON.stringify(pref), {headers: this.headers});
+    }
+
     public updateLocalUser(user: IUpdateLocalUser): Observable<IIdentityResult> {
         return this.http.put<IIdentityResult>(this.url + "local", JSON.stringify(user), {headers: this.headers});
     }
@@ -65,6 +70,13 @@ export class IdentityService extends ServiceHelpers {
 
     public sendWelcomeEmail(user: IUser): Observable<null> {
         return this.http.post<any>(`${this.url}welcomeEmail`, JSON.stringify(user), {headers: this.headers});
+    }
+
+    public getNotificationPreferences(): Observable<INotificationPreferences[]> {
+        return this.http.get<INotificationPreferences[]>(`${this.url}notificationpreferences`, {headers: this.headers});
+    }
+    public getNotificationPreferencesForUser(userId: string): Observable<INotificationPreferences[]> {
+        return this.http.get<INotificationPreferences[]>(`${this.url}notificationpreferences/${userId}`, {headers: this.headers});
     }
 
     public hasRole(role: string): boolean {

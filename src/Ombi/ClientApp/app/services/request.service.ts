@@ -5,14 +5,29 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 import { TreeNode } from "primeng/primeng";
-import { FilterType, IChildRequests, IFilter, IMovieRequestModel, IMovieRequests, IMovieUpdateModel, IRequestEngineResult, IRequestsViewModel,  ITvRequests, ITvUpdateModel, OrderType } from "../interfaces";
+import { FilterType, IAlbumRequest, IAlbumRequestModel, IAlbumUpdateModel, IChildRequests, IFilter, IMovieRequestModel, IMovieRequests,
+      IMovieUpdateModel, IRequestEngineResult, IRequestsViewModel, ITvRequests, ITvUpdateModel, OrderType } from "../interfaces";
 import { ITvRequestViewModel } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
+
+import { IRemainingRequests } from "../interfaces/IRemainingRequests";
 
 @Injectable()
 export class RequestService extends ServiceHelpers {
     constructor(http: HttpClient, public platformLocation: PlatformLocation) {
         super(http, "/api/v1/Request/", platformLocation);
+    }
+
+    public getRemainingMovieRequests(): Observable<IRemainingRequests> {
+        return this.http.get<IRemainingRequests>(`${this.url}movie/remaining`, {headers: this.headers});
+    }
+
+    public getRemainingTvRequests(): Observable<IRemainingRequests> {
+        return this.http.get<IRemainingRequests>(`${this.url}tv/remaining`, {headers: this.headers});
+    }
+
+    public getRemainingMusicRequests(): Observable<IRemainingRequests> {
+        return this.http.get<IRemainingRequests>(`${this.url}music/remaining`, {headers: this.headers});
     }
 
     public requestMovie(movie: IMovieRequestModel): Observable<IRequestEngineResult> {
@@ -132,4 +147,42 @@ export class RequestService extends ServiceHelpers {
     public setRootFolder(requestId: number, rootFolderId: number): Observable<boolean> {
         return this.http.put<boolean>(`${this.url}tv/root/${requestId}/${rootFolderId}`, {headers: this.headers});
     }
+
+    // Music
+    public requestAlbum(Album: IAlbumRequestModel): Observable<IRequestEngineResult> {
+        return this.http.post<IRequestEngineResult>(`${this.url}music/`, JSON.stringify(Album),  {headers: this.headers});
+    }
+
+    public getTotalAlbums(): Observable<number> {
+        return this.http.get<number>(`${this.url}music/total`, {headers: this.headers});
+    }
+
+    public approveAlbum(Album: IAlbumUpdateModel): Observable<IRequestEngineResult> {
+        return this.http.post<IRequestEngineResult>(`${this.url}music/Approve`, JSON.stringify(Album),  {headers: this.headers});
+    }
+
+    public denyAlbum(Album: IAlbumUpdateModel): Observable<IRequestEngineResult> {
+        return this.http.put<IRequestEngineResult>(`${this.url}music/Deny`, JSON.stringify(Album),  {headers: this.headers});
+    }
+
+    public markAlbumAvailable(Album: IAlbumUpdateModel): Observable<IRequestEngineResult> {
+        return this.http.post<IRequestEngineResult>(`${this.url}music/available`, JSON.stringify(Album),  {headers: this.headers});
+    }
+
+    public markAlbumUnavailable(Album: IAlbumUpdateModel): Observable<IRequestEngineResult> {
+        return this.http.post<IRequestEngineResult>(`${this.url}music/unavailable`, JSON.stringify(Album),  {headers: this.headers});
+    }
+
+    public getAlbumRequests(count: number, position: number, order: OrderType, filter: IFilter): Observable<IRequestsViewModel<IAlbumRequest>> {
+        return this.http.get<IRequestsViewModel<IAlbumRequest>>(`${this.url}music/${count}/${position}/${order}/${filter.statusFilter}/${filter.availabilityFilter}`, {headers: this.headers});
+    }
+
+    public searchAlbumRequests(search: string): Observable<IAlbumRequest[]> {
+        return this.http.get<IAlbumRequest[]>(`${this.url}music/search/${search}`, {headers: this.headers});
+    }
+
+    public removeAlbumRequest(request: IAlbumRequest): any {
+        this.http.delete(`${this.url}music/${request.id}`, {headers: this.headers}).subscribe();
+    }
+
 }

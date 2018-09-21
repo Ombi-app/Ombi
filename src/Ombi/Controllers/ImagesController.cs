@@ -182,8 +182,8 @@ namespace Ombi.Controllers
         [HttpGet("background")]
         public async Task<object> GetBackgroundImage()
         {
-            var moviesArray = Options.Movies;
-            var tvArray = Options.TvShows;
+            var moviesArray = Options.Movies ?? new int[0];
+            var tvArray = Options.TvShows ?? new int[0];
 
             var rand = new Random();
             var movieUrl = string.Empty;
@@ -191,7 +191,7 @@ namespace Ombi.Controllers
 
             var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
 
-            if (moviesArray.Any())
+            if (moviesArray.Length > 0)
             {
                 var item = rand.Next(moviesArray.Length);
                 var result = await FanartTvApi.GetMovieImages(moviesArray[item].ToString(), key.Value);
@@ -206,7 +206,7 @@ namespace Ombi.Controllers
                 
                 movieUrl = result.moviebackground[res].url;
             }
-            if (tvArray.Any())
+            if (tvArray.Length > 0)
             {
                 var item = rand.Next(tvArray.Length);
                 var result = await FanartTvApi.GetTvImages(tvArray[item], key.Value);

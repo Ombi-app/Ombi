@@ -2,7 +2,7 @@
 
 
 
-<button type="button" class="btn btn-success-outline" [routerLink]="['/usermanagement/add']">Add User To Ombi</button>
+<button type="button" class="btn btn-success-outline" [routerLink]="['/usermanagement/user']">Add User To Ombi</button>
 
 <button type="button" style="float:right;" class="btn btn-primary-outline"(click)="showBulkEdit = !showBulkEdit" [disabled]="!hasChecked()">Bulk Edit</button>
 <div *ngIf="plexEnabled">
@@ -48,6 +48,12 @@
             <th>
                 Roles
             </th>
+            <th>
+                Requests Remaining
+            </th>
+            <th>
+                Next Request Due
+            </th>
             <th (click)="setOrder('lastLoggedIn', $event)">
                <a> Last Logged In</a>
                <span *ngIf="order === 'lastLoggedIn'">
@@ -85,6 +91,28 @@
                 </div>
 
             </td>
+            <td class="td-labelled" data-label="Requests Remaining">
+                <div *ngIf="u.movieRequestQuota != null && u.movieRequestQuota.hasLimit">
+                    {{'UserManagment.MovieRemaining' | translate: {remaining: u.movieRequestQuota.remaining, total: u.movieRequestLimit} }}
+                </div>
+                <div *ngIf="u.episodeRequestQuota != null && u.episodeRequestQuota.hasLimit">
+                    {{'UserManagment.TvRemaining' | translate: {remaining: u.episodeRequestQuota.remaining, total: u.episodeRequestLimit} }}
+                </div>
+                <div *ngIf="u.musicRequestQuota != null && u.musicRequestQuota.hasLimit">
+                    {{'UserManagment.MusicRemaining' | translate: {remaining: u.musicRequestQuota.remaining, total: u.musicRequestLimit} }}
+                </div>
+            </td>
+            <td class="td-labelled" data-label="Request Due">
+                <div *ngIf="u.movieRequestQuota != null && u.movieRequestQuota.remaining != u.movieRequestLimit">
+                    {{'UserManagment.MovieDue' | translate: {date: (u.movieRequestQuota.nextRequest | date: 'short')} }}
+                </div>
+                <div *ngIf="u.episodeRequestQuota != null && u.episodeRequestQuota.remaining != u.episodeRequestLimit">
+                    {{'UserManagment.TvDue' | translate: {date: (u.episodeRequestQuota.nextRequest | date: 'short')} }}
+                </div>
+                <div *ngIf="u.musicRequestQuota != null && u.musicRequestQuota.remaining != u.musicRequestLimit">
+                    {{'UserManagment.MusicDue' | translate: {date: (u.musicRequestQuota.nextRequest | date: 'short')} }}
+                </div>
+            </td>
             <td class="td-labelled" data-label="Last Logged In:">
                 {{u.lastLoggedIn | date: 'short'}}
             </td>
@@ -94,7 +122,7 @@
                 <span *ngIf="u.userType === 3">Emby User</span>
             </td>
             <td>
-                <a [routerLink]="['/usermanagement/edit/' + u.id]" class="btn btn-sm btn-info-outline">Details/Edit</a>
+                <a [routerLink]="['/usermanagement/user/' + u.id]" class="btn btn-sm btn-info-outline">Details/Edit</a>
             </td>
             <td *ngIf="customizationSettings">
                 <button *ngIf="!u.hasLoggedIn" (click)="welcomeEmail(u)" [disabled]="!customizationSettings.applicationUrl" class="btn btn-sm btn-info-outline">Send Welcome Email</button>

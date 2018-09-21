@@ -243,3 +243,6 @@ _Pvt_Extensions
 # CAKE - C# Make
 /Tools/*
 *.db-journal
+
+# Ignore local vscode config
+*.vscode

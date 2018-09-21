@@ -31,6 +31,7 @@ namespace Ombi.Store.Context
         public DbSet<EmbyEpisode> EmbyEpisode { get; set; }
 
         public DbSet<MovieRequests> MovieRequests { get; set; }
+        public DbSet<AlbumRequest> AlbumRequests { get; set; }
         public DbSet<TvRequests> TvRequests { get; set; }
         public DbSet<ChildRequests> ChildRequests { get; set; }
 
@@ -44,11 +45,14 @@ namespace Ombi.Store.Context
         public DbSet<Audit> Audit { get; set; }
         public DbSet<Tokens> Tokens { get; set; }
         public DbSet<SonarrCache> SonarrCache { get; set; }
+        public DbSet<LidarrArtistCache> LidarrArtistCache { get; set; }
+        public DbSet<LidarrAlbumCache> LidarrAlbumCache { get; set; }
         public DbSet<SonarrEpisodeCache> SonarrEpisodeCache { get; set; }
         public DbSet<SickRageCache> SickRageCache { get; set; }
         public DbSet<SickRageEpisodeCache> SickRageEpisodeCache { get; set; }
         public DbSet<RequestSubscription> RequestSubscription { get; set; }
-
+        public DbSet<UserNotificationPreferences> UserNotificationPreferences { get; set; }
+        public DbSet<UserQualityProfiles> UserQualityProfileses { get; set; }
         public DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -117,12 +121,25 @@ namespace Ombi.Store.Context
             Database.ExecuteSqlCommand("VACUUM;");
 
             // Make sure we have the roles
-            var roles = Roles.Where(x => x.Name == OmbiRoles.ReceivesNewsletter);
-            if (!roles.Any())
+            var newsletterRole = Roles.Where(x => x.Name == OmbiRoles.ReceivesNewsletter);
+            if (!newsletterRole.Any())
             {
                 Roles.Add(new IdentityRole(OmbiRoles.ReceivesNewsletter)
                 {
                     NormalizedName = OmbiRoles.ReceivesNewsletter.ToUpper()
+                });
+                SaveChanges();
+            }
+            var requestMusicRole = Roles.Where(x => x.Name == OmbiRoles.RequestMusic);
+            if (!requestMusicRole.Any())
+            {
+                Roles.Add(new IdentityRole(OmbiRoles.RequestMusic)
+                {
+                    NormalizedName = OmbiRoles.RequestMusic.ToUpper()
+                });
+                Roles.Add(new IdentityRole(OmbiRoles.AutoApproveMusic)
+                {
+                    NormalizedName = OmbiRoles.AutoApproveMusic.ToUpper()
                 });
                 SaveChanges();
             }

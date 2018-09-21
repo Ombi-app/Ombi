@@ -320,6 +320,10 @@
     text-table "^0.2.0"
     webpack-log "^1.1.2"
 
+"@yellowspot/ng-truncate@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@yellowspot/ng-truncate/-/ng-truncate-1.4.0.tgz#dcb40f5571ef71a9cf09f6a24e83e1f43b2d2a6c"
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"

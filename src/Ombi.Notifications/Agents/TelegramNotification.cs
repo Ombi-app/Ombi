@@ -19,7 +19,8 @@ namespace Ombi.Notifications.Agents
         public TelegramNotification(ITelegramApi api, ISettingsService<TelegramSettings> sn, ILogger<TelegramNotification> log, 
                                     INotificationTemplatesRepository r, IMovieRequestRepository m, 
                                     ITvRequestRepository t, ISettingsService<CustomizationSettings> s
-            , IRepository<RequestSubscription> sub) : base(sn, r, m, t,s,log, sub)
+            , IRepository<RequestSubscription> sub, IMusicRequestRepository music,
+            IRepository<UserNotificationPreferences> userPref) : base(sn, r, m, t,s,log, sub, music, userPref)
         {
             Api = api;
             Logger = log;

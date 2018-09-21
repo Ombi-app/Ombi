@@ -21,7 +21,8 @@ namespace Ombi.Notifications.Agents
     public class MattermostNotification : BaseNotification<MattermostNotificationSettings>, IMattermostNotification
     {
         public MattermostNotification(IMattermostApi api, ISettingsService<MattermostNotificationSettings> sn, ILogger<MattermostNotification> log, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t,
-            ISettingsService<CustomizationSettings> s, IRepository<RequestSubscription> sub) : base(sn, r, m, t,s,log, sub)
+            ISettingsService<CustomizationSettings> s, IRepository<RequestSubscription> sub, IMusicRequestRepository music,
+            IRepository<UserNotificationPreferences> userPref) : base(sn, r, m, t, s, log, sub, music, userPref)
         {
             Api = api;
             Logger = log;

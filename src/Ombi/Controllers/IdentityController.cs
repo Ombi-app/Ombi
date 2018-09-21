@@ -16,6 +16,8 @@ using Ombi.Api.Plex;
 using Ombi.Attributes;
 using Ombi.Config;
 using Ombi.Core.Authentication;
+using Ombi.Core.Engine;
+using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Helpers;
 using Ombi.Core.Models.UI;
 using Ombi.Core.Settings;
@@ -60,7 +62,13 @@ namespace Ombi.Controllers
             IRepository<IssueComments> issueComments,
             IRepository<NotificationUserId> notificationRepository,
             IRepository<RequestSubscription> subscriptionRepository,
-            ISettingsService<UserManagementSettings> umSettings)
+            ISettingsService<UserManagementSettings> umSettings,
+            IRepository<UserNotificationPreferences> notificationPreferences,
+            IRepository<UserQualityProfiles> userProfiles,
+            IMusicRequestRepository musicRepo,
+            IMovieRequestEngine movieRequestEngine,
+            ITvRequestEngine tvRequestEngine,
+            IMusicRequestEngine musicEngine)
         {
             UserManager = user;
             Mapper = mapper;
@@ -70,6 +78,7 @@ namespace Ombi.Controllers
             CustomizationSettings = c;
             WelcomeEmail = welcome;
             MovieRepo = m;
+            MusicRepo = musicRepo;
             TvRepo = t;
             _log = l;
             _plexApi = plexApi;
@@ -81,6 +90,11 @@ namespace Ombi.Controllers
             _requestSubscriptionRepository = subscriptionRepository;
             _notificationRepository = notificationRepository;
             _userManagementSettings = umSettings;
+            TvRequestEngine = tvRequestEngine;
+            MovieRequestEngine = movieRequestEngine;
+            _userNotificationPreferences = notificationPreferences;
+            _userQualityProfiles = userProfiles;
+            MusicRequestEngine = musicEngine;
         }
 
         private OmbiUserManager UserManager { get; }
@@ -94,6 +108,10 @@ namespace Ombi.Controllers
         private IWelcomeEmail WelcomeEmail { get; }
         private IMovieRequestRepository MovieRepo { get; }
         private ITvRequestRepository TvRepo { get; }
+        private IMovieRequestEngine MovieRequestEngine { get; }
+        private IMusicRequestEngine MusicRequestEngine { get; }
+        private ITvRequestEngine TvRequestEngine { get; }
+        private IMusicRequestRepository MusicRepo { get; }
         private readonly ILogger<IdentityController> _log;
         private readonly IPlexApi _plexApi;
         private readonly ISettingsService<PlexSettings> _plexSettings;
@@ -102,7 +120,8 @@ namespace Ombi.Controllers
         private readonly IRepository<RequestLog> _requestLogRepository;
         private readonly IRepository<NotificationUserId> _notificationRepository;
         private readonly IRepository<RequestSubscription> _requestSubscriptionRepository;
-
+        private readonly IRepository<UserNotificationPreferences> _userNotificationPreferences;
+        private readonly IRepository<UserQualityProfiles> _userQualityProfiles;
 
         /// <summary>
         /// This is what the Wizard will call when creating the user for the very first time.
@@ -122,7 +141,7 @@ namespace Ombi.Controllers
             if (users.Any(x => !x.UserName.Equals("api", StringComparison.InvariantCultureIgnoreCase)))
             {
                 // No one should be calling this. Only the wizard
-                return new SaveWizardResult{ Result = false, Errors = new List<string> {"Looks like there is an existing user!"} };
+                return new SaveWizardResult { Result = false, Errors = new List<string> { "Looks like there is an existing user!" } };
             }
 
             if (user.UsePlexAdminAccount)
@@ -292,7 +311,8 @@ namespace Ombi.Controllers
                 LastLoggedIn = user.LastLoggedIn,
                 HasLoggedIn = user.LastLoggedIn.HasValue,
                 EpisodeRequestLimit = user.EpisodeRequestLimit ?? 0,
-                MovieRequestLimit = user.MovieRequestLimit ?? 0
+                MovieRequestLimit = user.MovieRequestLimit ?? 0,
+                MusicRequestLimit = user.MusicRequestLimit ?? 0,
             };
 
             foreach (var role in userRoles)
@@ -314,6 +334,31 @@ namespace Ombi.Controllers
                     Value = role,
                     Enabled = false
                 });
+            }
+
+            if (vm.EpisodeRequestLimit > 0)
+            {
+                vm.EpisodeRequestQuota = await TvRequestEngine.GetRemainingRequests(user);
+            }
+
+            if (vm.MovieRequestLimit > 0)
+            {
+                vm.MovieRequestQuota = await MovieRequestEngine.GetRemainingRequests(user);
+            }
+
+            if (vm.MusicRequestLimit > 0)
+            {
+                vm.MusicRequestQuota = await MusicRequestEngine.GetRemainingRequests(user);
+            }
+
+            // Get the quality profiles
+            vm.UserQualityProfiles = await _userQualityProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == user.Id);
+            if (vm.UserQualityProfiles == null)
+            {
+                vm.UserQualityProfiles = new UserQualityProfiles
+                {
+                    UserId = user.Id
+                };
             }
 
             return vm;
@@ -344,6 +389,7 @@ namespace Ombi.Controllers
                 UserType = UserType.LocalUser,
                 MovieRequestLimit = user.MovieRequestLimit,
                 EpisodeRequestLimit = user.EpisodeRequestLimit,
+                MusicRequestLimit = user.MusicRequestLimit,
                 UserAccessToken = Guid.NewGuid().ToString("N"),
             };
             var userResult = await UserManager.CreateAsync(ombiUser, user.Password);
@@ -370,6 +416,20 @@ namespace Ombi.Controllers
                 return new OmbiIdentityResult
                 {
                     Errors = messages
+                };
+            }
+
+            // Add the quality profiles
+            if (user.UserQualityProfiles != null)
+            {
+                user.UserQualityProfiles.UserId = ombiUser.Id;
+                await _userQualityProfiles.Add(user.UserQualityProfiles);
+            }
+            else
+            {
+                user.UserQualityProfiles = new UserQualityProfiles
+                {
+                    UserId = ombiUser.Id
                 };
             }
 
@@ -487,6 +547,7 @@ namespace Ombi.Controllers
             user.Email = ui.EmailAddress;
             user.MovieRequestLimit = ui.MovieRequestLimit;
             user.EpisodeRequestLimit = ui.EpisodeRequestLimit;
+            user.MusicRequestLimit = ui.MusicRequestLimit;
             var updateResult = await UserManager.UpdateAsync(user);
             if (!updateResult.Succeeded)
             {
@@ -528,6 +589,34 @@ namespace Ombi.Controllers
                     Errors = messages
                 };
             }
+            // Add the quality profiles
+            if (ui.UserQualityProfiles != null)
+            {
+                var currentQualityProfiles = await
+                    _userQualityProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == user.Id);
+                var add = false;
+                if (currentQualityProfiles == null)
+                {
+                    currentQualityProfiles = new UserQualityProfiles
+                    {
+                        UserId = user.Id
+                    };
+                    add = true;
+                }
+
+                currentQualityProfiles.RadarrQualityProfile = ui.UserQualityProfiles.RadarrQualityProfile;
+                currentQualityProfiles.RadarrRootPath = ui.UserQualityProfiles.RadarrRootPath;
+                currentQualityProfiles.SonarrQualityProfile = ui.UserQualityProfiles.SonarrQualityProfile;
+                currentQualityProfiles.SonarrQualityProfileAnime = ui.UserQualityProfiles.SonarrQualityProfileAnime;
+                currentQualityProfiles.SonarrRootPath = ui.UserQualityProfiles.SonarrRootPath;
+                currentQualityProfiles.SonarrRootPathAnime = ui.UserQualityProfiles.SonarrRootPathAnime;
+                if (add)
+                {
+                    await _userQualityProfiles.Add(currentQualityProfiles);
+                }
+                await _userQualityProfiles.SaveChangesAsync();
+            }
+
 
             return new OmbiIdentityResult
             {
@@ -559,7 +648,10 @@ namespace Ombi.Controllers
                 // We need to delete all the requests first
                 var moviesUserRequested = MovieRepo.GetAll().Where(x => x.RequestedUserId == userId);
                 var tvUserRequested = TvRepo.GetChild().Where(x => x.RequestedUserId == userId);
-                
+                var musicRequested = MusicRepo.GetAll().Where(x => x.RequestedUserId == userId);
+                var notificationPreferences = _userNotificationPreferences.GetAll().Where(x => x.UserId == userId);
+                var userQuality = await _userQualityProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == userId);
+
                 if (moviesUserRequested.Any())
                 {
                     await MovieRepo.DeleteRange(moviesUserRequested);
@@ -567,6 +659,18 @@ namespace Ombi.Controllers
                 if (tvUserRequested.Any())
                 {
                     await TvRepo.DeleteChildRange(tvUserRequested);
+                }
+                if (musicRequested.Any())
+                {
+                    await MusicRepo.DeleteRange(musicRequested);
+                }
+                if (notificationPreferences.Any())
+                {
+                    await _userNotificationPreferences.DeleteRange(notificationPreferences);
+                }
+                if (userQuality != null)
+                {
+                    await _userQualityProfiles.Delete(userQuality);
                 }
 
                 // Delete any issues and request logs
@@ -585,9 +689,9 @@ namespace Ombi.Controllers
                 {
                     await _issueCommentsRepository.DeleteRange(issueComments);
                 }
-                
+
                 // Delete the Subscriptions and mobile notification ids
-                 var subs = _requestSubscriptionRepository.GetAll().Where(x => x.UserId == userId);
+                var subs = _requestSubscriptionRepository.GetAll().Where(x => x.UserId == userId);
                 var mobileIds = _notificationRepository.GetAll().Where(x => x.UserId == userId);
                 if (subs.Any())
                 {
@@ -785,6 +889,96 @@ namespace Ombi.Controllers
                 }
             }
             return user.UserAccessToken;
+        }
+
+        [HttpGet("notificationpreferences")]
+        public async Task<List<UserNotificationPreferences>> GetUserPreferences()
+        {
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+            return await GetPreferences(user);
+        }
+
+        [HttpGet("notificationpreferences/{userId}")]
+        public async Task<List<UserNotificationPreferences>> GetUserPreferences(string userId)
+        {
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            return await GetPreferences(user);
+        }
+
+        private readonly List<NotificationAgent> _excludedAgents = new List<NotificationAgent>
+        {
+            NotificationAgent.Email,
+            NotificationAgent.Mobile
+        };
+        private async Task<List<UserNotificationPreferences>> GetPreferences(OmbiUser user)
+        {
+            var userPreferences = await _userNotificationPreferences.GetAll().Where(x => x.UserId == user.Id).ToListAsync();
+
+            var agents = Enum.GetValues(typeof(NotificationAgent)).Cast<NotificationAgent>().Where(x => !_excludedAgents.Contains(x));
+            foreach (var a in agents)
+            {
+                var agent = userPreferences.FirstOrDefault(x => x.Agent == a);
+                if (agent == null)
+                {
+                    // Create the default
+                    userPreferences.Add(new UserNotificationPreferences
+                    {
+                        Agent = a,
+                        UserId = user.Id,
+                    });
+                }
+            }
+
+            return userPreferences;
+        }
+
+        [HttpPost("NotificationPreferences")]
+        public async Task<IActionResult> AddUserNotificationPreference([FromBody] List<AddNotificationPreference> preferences)
+        {
+            foreach (var pref in preferences)
+            {
+
+                // Make sure the user exists
+                var user = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == pref.UserId);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                // Check if we are editing a different user than ourself, if we are then we need to power user role
+                var me = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+                if (!me.Id.Equals(user.Id, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var isPowerUser = await UserManager.IsInRoleAsync(me, OmbiRoles.PowerUser);
+                    var isAdmin = await UserManager.IsInRoleAsync(me, OmbiRoles.Admin);
+                    if (!isPowerUser && !isAdmin)
+                    {
+                        return Unauthorized();
+                    }
+                }
+
+                // Make sure we don't already have a preference for this agent
+                var existingPreference = await _userNotificationPreferences.GetAll()
+                    .FirstOrDefaultAsync(x => x.UserId == user.Id && x.Agent == pref.Agent);
+                if (existingPreference != null)
+                {
+                    // Update it
+                    existingPreference.Value = pref.Value;
+                    existingPreference.Enabled = pref.Enabled;
+                    await _userNotificationPreferences.SaveChangesAsync();
+                }
+                else
+                {
+                    await _userNotificationPreferences.Add(new UserNotificationPreferences
+                    {
+                        Agent = pref.Agent,
+                        Enabled = pref.Enabled,
+                        UserId = pref.UserId,
+                        Value = pref.Value
+                    });
+                }
+
+            }
+            return Json(true);
         }
 
         private async Task<List<IdentityResult>> AddRoles(IEnumerable<ClaimCheckboxes> roles, OmbiUser ombiUser)

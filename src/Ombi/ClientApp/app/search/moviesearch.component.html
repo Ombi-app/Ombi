@@ -1,5 +1,6 @@
 ﻿<!-- Movie tab -->
 <div role="tabpanel" class="tab-pane active" id="MoviesTab">
+
     <div class="input-group">
         <input id="search" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons" (keyup)="search($event)">
         <div class="input-group-addon right-radius">
@@ -18,8 +19,9 @@
             <i class="fa fa-search"></i>
         </div>
     </div>
-    <br />
-    <br />
+
+    <remaining-requests [movie]="true" [quotaRefreshEvents]="movieRequested.asObservable()" #remainingFilms></remaining-requests>
+
     <!-- Movie content -->
     <div id="movieList">
         <div *ngIf="searchApplied && movieResults?.length <= 0" class='no-search-results'>
@@ -83,7 +85,7 @@
                     <ng-template #notRequestedBtn>
                         <button id="{{result.id}}" style="text-align: right" class="btn btn-primary-outline" (click)="request(result)">
                             <i *ngIf="result.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> <i *ngIf="!result.requestProcessing && !result.processed" class="fa fa-plus"></i>
-                            <i *ngIf="result.processed && !result.requestProcessing" class="fa fa-check"></i>{{ 'Common.Request' | translate }}</button>
+                            <i *ngIf="result.processed && !result.requestProcessing" class="fa fa-check"></i> {{ 'Common.Request' | translate }}</button>
                     </ng-template>
                         </div>
                         <button style="text-align: right" class="btn btn-sm btn-info-outline" (click)="similarMovies(result.id)"> <i class="fa fa-eye"></i> {{ 'Search.Similar' | translate }}</button>

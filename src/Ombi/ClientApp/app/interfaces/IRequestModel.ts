@@ -20,12 +20,33 @@ export interface IMovieRequests extends IFullBaseRequest {
   qualityOverrideTitle: string;
 }
 
+export interface IAlbumRequest extends IBaseRequest {
+  foreignAlbumId: string;
+  foreignArtistId: string;
+  disk: string;
+  cover: string;
+  releaseDate: Date;
+  artistName: string;
+
+  subscribed: boolean;
+  showSubscribe: boolean;
+  background: any;
+}
+
+export interface IAlbumRequestModel {
+  foreignAlbumId: string;
+}
+
 export interface IRequestsViewModel<T> {
   total: number;
   collection: T[];
 }
 
 export interface IMovieUpdateModel {
+  id: number;
+}
+
+export interface IAlbumUpdateModel {
   id: number;
 }
 

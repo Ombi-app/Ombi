@@ -17,8 +17,10 @@ export class MovieSearchComponent implements OnInit {
 
     public searchText: string;
     public searchChanged: Subject<string> = new Subject<string>();
+    public movieRequested: Subject<void> = new Subject<void>();
     public movieResults: ISearchMovieResult[];
     public result: IRequestEngineResult;
+
     public searchApplied = false;
 
     @Input() public issueCategories: IIssueCategory[];
@@ -35,7 +37,6 @@ export class MovieSearchComponent implements OnInit {
         private notificationService: NotificationService, private authService: AuthService,
         private readonly translate: TranslateService, private sanitizer: DomSanitizer,
         private readonly platformLocation: PlatformLocation) {
-
         this.searchChanged.pipe(
             debounceTime(600), // Wait Xms after the last event before emitting last event
             distinctUntilChanged(), // only emit if value is different from previous value
@@ -69,6 +70,7 @@ export class MovieSearchComponent implements OnInit {
             result: false,
             errorMessage: "",
         };
+
         this.popularMovies();
     }
 
@@ -88,8 +90,8 @@ export class MovieSearchComponent implements OnInit {
             this.requestService.requestMovie({ theMovieDbId: searchResult.id })
                 .subscribe(x => {
                     this.result = x;
-
                     if (this.result.result) {
+                        this.movieRequested.next();
                         this.translate.get("Search.RequestAdded", { title: searchResult.title }).subscribe(x => {
                             this.notificationService.success(x);
                             searchResult.processed = true;
@@ -150,7 +152,8 @@ export class MovieSearchComponent implements OnInit {
 
     public reportIssue(catId: IIssueCategory, req: ISearchMovieResult) {
         this.issueRequestId = req.id;
-        this.issueRequestTitle = req.title + `(${req.releaseDate.getFullYear})`;
+        const releaseDate = new Date(req.releaseDate);
+        this.issueRequestTitle = req.title + ` (${releaseDate.getFullYear()})`;
         this.issueCategorySelected = catId;
         this.issuesBarVisible = true;
         this.issueProviderId = req.id.toString();

@@ -23,10 +23,12 @@ namespace Ombi.Store.Entities
 
         public int? MovieRequestLimit { get; set; }
         public int? EpisodeRequestLimit { get; set; }
+        public int? MusicRequestLimit { get; set; }
 
         public string UserAccessToken { get; set; }
 
         public List<NotificationUserId> NotificationUserIds { get; set; }
+        public List<UserNotificationPreferences> UserNotificationPreferences { get; set; }
 
         [NotMapped]
         public bool IsEmbyConnect => UserType == UserType.EmbyUser && EmbyConnectUserId.HasValue();
@@ -59,5 +61,6 @@ namespace Ombi.Store.Entities
             get => base.ConcurrencyStamp;
             set => base.ConcurrencyStamp = value;
         }
+
     }
 }

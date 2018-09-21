@@ -1,5 +1,152 @@
 # Changelog
 
+## (unreleased)
+
+### **New Features**
+
+- Added the request limits in the ui for music. [Jamie]
+
+- Added the root folders and qualities per user! [Jamie]
+
+- Updated all the MS packages. [TidusJar]
+
+- Update the .net core packages to fix "CVE-2018-8409: ASP.NET Core Denial Of Service Vulnerability" [TidusJar]
+
+- Change way remainingrequests component is notified. [Kenton Royal]
+
+- Added the music request limits. [TidusJar]
+
+- Added the Notification Preferences to the user. [TidusJar]
+
+- Added the API to add user notification preferences. [TidusJar]
+
+- Added more logging into the updater. [Jamie]
+
+- Update CHANGELOG.md. [Jamie]
+
+### **Fixes**
+
+- Fixed #2518. [TidusJar]
+
+- Fixed #2522. [TidusJar]
+
+- Fixed #2485. [TidusJar]
+
+- Fixed #2516. [TidusJar]
+
+- Fix bug in which requested TV wasn't logging for some users. [Kenton Royal]
+
+- Add to translations. [Kenton Royal]
+
+- Add html for displaying remaining requests on users page. [Kenton Royal]
+
+- Add quota fields to user view model. [Kenton Royal]
+
+- Users can now see the music search tab #2493. [TidusJar]
+
+- Add href to a tags so that a pointer cursor shows on requests page. [Stephen Panzer]
+
+- Allow Lidarr to specify if we should search for the album. [TidusJar]
+
+- Fixed the issue if in Radarr we only want to add and monitor, if the movie already exists we search for it. [TidusJar]
+
+- Fix bug causing wrong time to be displayed for next request. [Kenton Royal]
+
+- Bodge fix test to prevent compile error. [Kenton Royal]
+
+- Fix displaying year in issue dialog. [Stephen Panzer]
+
+- Add clearfix class. Closes #2486. [Stephen Panzer]
+
+- Correct path of lidarr component import for unix systems. [Kenton Royal]
+
+- Refactor code. [Kenton Royal]
+
+- Fix formatting error. [Kenton Royal]
+
+- Revert "Revert request.service.ts to version on upstream/develop" [Kenton Royal]
+
+- Revert request.service.ts to version on upstream/develop. [Kenton Royal]
+
+- Fix lint errors. [Kenton Royal]
+
+- Move logic for notifying when reuqest is complete. [Kenton Royal]
+
+- Remove import. [Kenton Royal]
+
+- Remove unused module. [Kenton Royal]
+
+- Refactor code. [Kenton Royal]
+
+- Add text to translation file. [Kenton Royal]
+
+- Fix query for fetching requested tv shows. [Kenton Royal]
+
+- Add vscode to gitignore. [Kenton Royal]
+
+- Fix lint errors. [Kenton Royal]
+
+- Remove unused methods from SearchController. [Kenton Royal]
+
+- Remove local vscode files. [Kenton Royal]
+
+- Fix bug when submitting requests for multiple episodes accross multiple seasons. [Kenton Royal]
+
+- Fix bug with TV requests in which requesting a seasion would treat request as single episode. [Kenton Royal]
+
+- Fix issues with remaining count updating. [Kenton Royal]
+
+- Trigger update of request limit on new request. [Kenton Royal]
+
+- Add logic for movie request count. [Kenton Royal]
+
+- Add logic for retriving request information. [Kenton Royal]
+
+- Move to seperate component and display for both TV and movies. [Kenton Royal]
+
+- Add dummy for request counter. [Kenton Royal]
+
+- Fix scss import for unix systems. [Kenton Royal]
+
+- Add methods to interface and add model class. [Kenton Royal]
+
+- !fixed lint. [TidusJar]
+
+- Fixed #2481. [TidusJar]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- Fixed #2475. [Jamie]
+
+- Stript out certain characters when sending a pushover message #2385. [TidusJar]
+
+- Add default values for Priority and Sound. [David Pooley]
+
+- Allow for the ability to set Pushover notification sound and priority from within Ombi. [David Pooley]
+
+- It works now when we request an album when we do not have the artist in Lidarr. Waiting on https://github.com/lidarr/Lidarr/issues/459 to do when we have the artist. [Jamie]
+
+- Fix non-Windows builds. Fixes #2453. [Joe Groocock]
+
+
 ## v3.0.3587 (2018-08-19)
 
 ### **New Features**
@@ -29,6 +176,12 @@
 - Updated to 2.1.1. [Jamie]
 
 ### **Fixes**
+
+- Now include the release year in the issue title #2381. [TidusJar]
+
+- Made the OAuth a Popout to work with Org. [Jamie]
+
+- Fixed #2418. [TidusJar]
 
 - #2408 Added the feature to delete comments on issues. [Jamie]
 

@@ -9,6 +9,8 @@ using MailKit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Ombi.Api.Lidarr;
+using Ombi.Api.Lidarr.Models;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Api.TvMaze;
@@ -18,6 +20,7 @@ using Ombi.Notifications;
 using Ombi.Notifications.Models;
 using Ombi.Notifications.Templates;
 using Ombi.Settings.Settings.Models;
+using Ombi.Settings.Settings.Models.External;
 using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -29,7 +32,8 @@ namespace Ombi.Schedule.Jobs.Ombi
         public NewsletterJob(IPlexContentRepository plex, IEmbyContentRepository emby, IRepository<RecentlyAddedLog> addedLog,
             IMovieDbApi movieApi, ITvMazeApi tvApi, IEmailProvider email, ISettingsService<CustomizationSettings> custom,
             ISettingsService<EmailNotificationSettings> emailSettings, INotificationTemplatesRepository templateRepo,
-            UserManager<OmbiUser> um, ISettingsService<NewsletterSettings> newsletter, ILogger<NewsletterJob> log)
+            UserManager<OmbiUser> um, ISettingsService<NewsletterSettings> newsletter, ILogger<NewsletterJob> log,
+            ILidarrApi lidarrApi, IRepository<LidarrAlbumCache> albumCache, ISettingsService<LidarrSettings> lidarrSettings)
         {
             _plex = plex;
             _emby = emby;
@@ -46,6 +50,10 @@ namespace Ombi.Schedule.Jobs.Ombi
             _customizationSettings.ClearCache();
             _newsletterSettings.ClearCache();
             _log = log;
+            _lidarrApi = lidarrApi;
+            _lidarrAlbumRepository = albumCache;
+            _lidarrSettings = lidarrSettings;
+            _lidarrSettings.ClearCache();
         }
 
         private readonly IPlexContentRepository _plex;
@@ -60,6 +68,9 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly ISettingsService<NewsletterSettings> _newsletterSettings;
         private readonly UserManager<OmbiUser> _userManager;
         private readonly ILogger _log;
+        private readonly ILidarrApi _lidarrApi;
+        private readonly IRepository<LidarrAlbumCache> _lidarrAlbumRepository;
+        private readonly ISettingsService<LidarrSettings> _lidarrSettings;
 
         public async Task Start(NewsletterSettings settings, bool test)
         {
@@ -87,21 +98,26 @@ namespace Ombi.Schedule.Jobs.Ombi
                 // Get the Content
                 var plexContent = _plex.GetAll().Include(x => x.Episodes).AsNoTracking();
                 var embyContent = _emby.GetAll().Include(x => x.Episodes).AsNoTracking();
+                var lidarrContent = _lidarrAlbumRepository.GetAll().AsNoTracking();
 
                 var addedLog = _recentlyAddedLog.GetAll();
                 var addedPlexMovieLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Parent).Select(x => x.ContentId);
                 var addedEmbyMoviesLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Emby && x.ContentType == ContentType.Parent).Select(x => x.ContentId);
+                var addedAlbumLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Lidarr && x.ContentType == ContentType.Album).Select(x => x.AlbumId);
 
                 var addedPlexEpisodesLogIds =
                 addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Episode);
                 var addedEmbyEpisodesLogIds =
                     addedLog.Where(x => x.Type == RecentlyAddedType.Emby && x.ContentType == ContentType.Episode);
 
+
                 // Filter out the ones that we haven't sent yet
                 var plexContentMoviesToSend = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && x.HasTheMovieDb && !addedPlexMovieLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId)));
                 var embyContentMoviesToSend = embyContent.Where(x => x.Type == EmbyMediaType.Movie && x.HasTheMovieDb && !addedEmbyMoviesLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId)));
+                var lidarrContentAlbumsToSend = lidarrContent.Where(x => !addedAlbumLogIds.Contains(x.ForeignAlbumId)).ToHashSet();
                 _log.LogInformation("Plex Movies to send: {0}", plexContentMoviesToSend.Count());
                 _log.LogInformation("Emby Movies to send: {0}", embyContentMoviesToSend.Count());
+                _log.LogInformation("Albums to send: {0}", lidarrContentAlbumsToSend.Count());
 
                 var plexEpisodesToSend =
                     FilterPlexEpisodes(_plex.GetAllEpisodes().Include(x => x.Series).Where(x => x.Series.HasTvDb).AsNoTracking(), addedPlexEpisodesLogIds);
@@ -117,11 +133,12 @@ namespace Ombi.Schedule.Jobs.Ombi
                     var embym = embyContent.Where(x => x.Type == EmbyMediaType.Movie ).OrderByDescending(x => x.AddedAt).Take(10);
                     var plext = _plex.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.Series.AddedAt).Take(10).ToHashSet();
                     var embyt = _emby.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.AddedAt).Take(10).ToHashSet();
-                    body = await BuildHtml(plexm, embym, plext, embyt, settings);
+                    var lidarr = lidarrContent.OrderByDescending(x => x.AddedAt).Take(10).ToHashSet();
+                    body = await BuildHtml(plexm, embym, plext, embyt, lidarr, settings);
                 }
                 else
                 {
-                    body = await BuildHtml(plexContentMoviesToSend, embyContentMoviesToSend, plexEpisodesToSend, embyEpisodesToSend, settings);
+                    body = await BuildHtml(plexContentMoviesToSend, embyContentMoviesToSend, plexEpisodesToSend, embyEpisodesToSend, lidarrContentAlbumsToSend, settings);
                     if (body.IsNullOrEmpty())
                     {
                         return;
@@ -298,7 +315,8 @@ namespace Ombi.Schedule.Jobs.Ombi
             return resolver.ParseMessage(template, curlys);
         }
 
-        private async Task<string> BuildHtml(IQueryable<PlexServerContent> plexContentToSend, IQueryable<EmbyContent> embyContentToSend, HashSet<PlexEpisode> plexEpisodes, HashSet<EmbyEpisode> embyEp, NewsletterSettings settings)
+        private async Task<string> BuildHtml(IQueryable<PlexServerContent> plexContentToSend, IQueryable<EmbyContent> embyContentToSend, 
+            HashSet<PlexEpisode> plexEpisodes, HashSet<EmbyEpisode> embyEp, HashSet<LidarrAlbumCache> albums, NewsletterSettings settings)
         {
             var sb = new StringBuilder();
 
@@ -340,6 +358,24 @@ namespace Ombi.Schedule.Jobs.Ombi
                 sb.Append("</table>");
             }
 
+
+            if (albums.Any() && !settings.DisableMusic)
+            {
+                sb.Append("<h1 style=\"text-align: center; max-width: 1042px;\">New Albums</h1><br /><br />");
+                sb.Append(
+                    "<table class=\"movies-table\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; \">");
+                sb.Append("<tr>");
+                sb.Append("<td style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-size: 14px; vertical-align: top; \">");
+                sb.Append("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; \">");
+                sb.Append("<tr>");
+                await ProcessAlbums(albums, sb);
+                sb.Append("</tr>");
+                sb.Append("</table>");
+                sb.Append("</td>");
+                sb.Append("</tr>");
+                sb.Append("</table>");
+            }
+
             return sb.ToString();
         }
 
@@ -368,6 +404,40 @@ namespace Ombi.Schedule.Jobs.Ombi
                 catch (Exception e)
                 {
                     _log.LogError(e, "Error when Processing Plex Movies {0}", info.Title);
+                }
+                finally
+                {
+                    EndLoopHtml(sb);
+                }
+
+                if (count == 2)
+                {
+                    count = 0;
+                    sb.Append("</tr>");
+                    sb.Append("<tr>");
+                }
+            }
+        }
+        private async Task ProcessAlbums(HashSet<LidarrAlbumCache> albumsToSend, StringBuilder sb)
+        {
+            var settings = await _lidarrSettings.GetSettingsAsync();
+            int count = 0;
+            var ordered = albumsToSend.OrderByDescending(x => x.AddedAt);
+            foreach (var content in ordered)
+            {
+                var info = await _lidarrApi.GetAlbumByForeignId(content.ForeignAlbumId, settings.ApiKey, settings.FullUri);
+                if (info == null)
+                {
+                    continue;
+                }
+                try
+                {
+                    CreateAlbumHtmlContent(sb, info);
+                    count += 1;
+                }
+                catch (Exception e)
+                {
+                    _log.LogError(e, "Error when Processing Lidarr Album {0}", info.title);
                 }
                 finally
                 {
@@ -465,6 +535,41 @@ namespace Ombi.Schedule.Jobs.Ombi
                 AddGenres(sb,
                     $"Genres: {string.Join(", ", info.Genres.Select(x => x.Name.ToString()).ToArray())}");
             }
+        }
+
+        private void CreateAlbumHtmlContent(StringBuilder sb, AlbumLookup info)
+        {
+            var cover = info.images
+                .FirstOrDefault(x => x.coverType.Equals("cover", StringComparison.InvariantCultureIgnoreCase))?.url;
+            if (cover.IsNullOrEmpty())
+            {
+                cover = info.remoteCover;
+            }
+            AddBackgroundInsideTable(sb, cover);
+            var disk = info.images
+                .FirstOrDefault(x => x.coverType.Equals("disc", StringComparison.InvariantCultureIgnoreCase))?.url;
+            if (disk.IsNullOrEmpty())
+            {
+                disk = info.remoteCover;
+            }
+            AddPosterInsideTable(sb, disk);
+
+            AddMediaServerUrl(sb, string.Empty, string.Empty);
+            AddInfoTable(sb);
+
+            var releaseDate = $"({info.releaseDate.Year})";
+
+            AddTitle(sb, string.Empty, $"{info.title} {releaseDate}");
+
+            var summary = info.artist?.artistName ?? string.Empty;
+            if (summary.Length > 280)
+            {
+                summary = summary.Remove(280);
+                summary = summary + "...</p>";
+            }
+            AddParagraph(sb, summary);
+
+            AddGenres(sb, $"Type: {info.albumType}");
         }
 
         private async Task ProcessPlexTv(HashSet<PlexEpisode> plexContent, StringBuilder sb)

@@ -22,7 +22,8 @@ namespace Ombi.Notifications.Agents
     public class EmailNotification : BaseNotification<EmailNotificationSettings>, IEmailNotification
     {
         public EmailNotification(ISettingsService<EmailNotificationSettings> settings, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t, IEmailProvider prov, ISettingsService<CustomizationSettings> c,
-            ILogger<EmailNotification> log, UserManager<OmbiUser> um, IRepository<RequestSubscription> sub) : base(settings, r, m, t, c, log, sub)
+            ILogger<EmailNotification> log, UserManager<OmbiUser> um, IRepository<RequestSubscription> sub, IMusicRequestRepository music,
+            IRepository<UserNotificationPreferences> userPref) : base(settings, r, m, t, c, log, sub, music, userPref)
         {
             EmailProvider = prov;
             Logger = log;

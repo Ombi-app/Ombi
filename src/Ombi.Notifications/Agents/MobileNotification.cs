@@ -22,7 +22,8 @@ namespace Ombi.Notifications.Agents
     {
         public MobileNotification(IOneSignalApi api, ISettingsService<MobileNotificationSettings> sn, ILogger<MobileNotification> log, INotificationTemplatesRepository r,
             IMovieRequestRepository m, ITvRequestRepository t, ISettingsService<CustomizationSettings> s, IRepository<NotificationUserId> notification,
-            UserManager<OmbiUser> um, IRepository<RequestSubscription> sub) : base(sn, r, m, t, s,log, sub)
+            UserManager<OmbiUser> um, IRepository<RequestSubscription> sub, IMusicRequestRepository music,
+            IRepository<UserNotificationPreferences> userPref) : base(sn, r, m, t, s, log, sub, music, userPref)
         {
             _api = api;
             _logger = log;
