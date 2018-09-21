@@ -4,6 +4,10 @@
 
 ### **New Features**
 
+- Added the request limits in the ui for music. [Jamie]
+
+- Added the root folders and qualities per user! [Jamie]
+
 - Updated all the MS packages. [TidusJar]
 
 - Update the .net core packages to fix "CVE-2018-8409: ASP.NET Core Denial Of Service Vulnerability" [TidusJar]
@@ -21,6 +25,10 @@
 - Update CHANGELOG.md. [Jamie]
 
 ### **Fixes**
+
+- Fixed #2518. [TidusJar]
+
+- Fixed #2522. [TidusJar]
 
 - Fixed #2485. [TidusJar]
 
