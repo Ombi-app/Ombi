@@ -156,8 +156,8 @@ namespace Ombi.Api.Lidarr
 
         public Task<CommandResult> AlbumSearch(int[] albumIds, string apiKey, string baseUrl)
         {
-            var request = new Request($"{ApiVersion}/command/AlbumSearch", baseUrl, HttpMethod.Post);
-            request.AddJsonBody(albumIds);
+            var request = new Request($"{ApiVersion}/command/", baseUrl, HttpMethod.Post);
+            request.AddJsonBody(new { name = "AlbumSearch", albumIds });
             AddHeaders(request, apiKey);
             return Api.Request<CommandResult>(request);
         }

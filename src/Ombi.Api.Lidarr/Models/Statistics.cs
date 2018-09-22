@@ -6,7 +6,7 @@
         public int trackFileCount { get; set; }
         public int trackCount { get; set; }
         public int totalTrackCount { get; set; }
-        public int sizeOnDisk { get; set; }
+        public long sizeOnDisk { get; set; }
         public decimal percentOfEpisodes { get; set; }
     }
 }
