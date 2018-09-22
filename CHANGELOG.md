@@ -2,7 +2,18 @@
 
 ## (unreleased)
 
+### **Fixes**
+
+- Fix #2529 - Change data type to long. [Anojh]
+
+- Fix #2527 - Music request not triggering search and failing. [Anojh]
+
+
+## v3.0.3776 (2018-09-21)
+
 ### **New Features**
+
+- Update settingsmenu.component.html. [Jamie]
 
 - Added the request limits in the ui for music. [Jamie]
 
