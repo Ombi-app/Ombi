@@ -82,7 +82,8 @@ namespace Ombi.Core.Senders
             }
             else
             {
-                await SetupAlbum(model, artist, settings);
+                SenderResult result = await SetupAlbum(model, artist, settings);
+                return result;
             }
 
             return new SenderResult { Success = false, Sent = false, Message = "Album is already monitored" };
@@ -122,7 +123,7 @@ namespace Ombi.Core.Senders
             }
             if (result.monitored)
             {
-                return new SenderResult {Message = "Album has been requested!", Sent = true, Success = true};
+                return new SenderResult { Message = "Album has been requested!", Sent = true, Success = true};
             }
             return new SenderResult { Message = "Could not set album to monitored", Sent = false, Success = false };
         }
