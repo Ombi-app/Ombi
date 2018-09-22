@@ -66,7 +66,8 @@
       "Dutch": "Holenderski",
       "Norwegian": "Norweski",
       "BrazillianPortuguese": "Brazylijski portugalski",
-      "Polish": "Polski"
+      "Polish": "Polski",
+      "Swedish": "Swedish"
     },
     "OpenMobileApp": "Otwórz aplikację mobilną",
     "RecentlyAdded": "Ostatnio dodane"
@@ -145,7 +146,14 @@
     "SortRequestDateAsc": "Data zgłoszenia ▲",
     "SortRequestDateDesc": "Data zgłoszenia ▼",
     "SortStatusAsc": "Stan ▲",
-    "SortStatusDesc": "Stan ▼"
+    "SortStatusDesc": "Stan ▼",
+    "Remaining": {
+      "Quota": "{{remaining}}/{{total}} requests remaining",
+      "NextDays": "Another request will be added in {{time}} days",
+      "NextHours": "Another request will be added in {{time}} hours",
+      "NextMinutes": "Another request will be added in {{time}} minutes",
+      "NextMinute": "Another request will be added in {{time}} minute"
+    }
   },
   "Issues": {
     "Title": "Problemy",
@@ -172,5 +180,13 @@
     "FilterHeaderRequestStatus": "Stan",
     "Approved": "Zatwierdzone",
     "PendingApproval": "Oczekujące na zatwierdzenie"
+  },
+  "UserManagment": {
+    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
+    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
+    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
+    "TvDue": "TV: {{date}}",
+    "MovieDue": "Movie: {{date}}",
+    "MusicDue": "Music: {{date}}"
   }
 }

@@ -12,8 +12,8 @@
   "Common": {
     "ContinueButton": "Continuar",
     "Available": "Disponível",
-    "PartiallyAvailable": "Partially Available",
-    "Monitored": "Monitored",
+    "PartiallyAvailable": "Parcialmente Disponível",
+    "Monitored": "Monitorado",
     "NotAvailable": "Inisponível",
     "ProcessingRequest": "Processando Solicitação",
     "PendingApproval": "Aprovação Pendente",
@@ -66,7 +66,8 @@
       "Dutch": "Holandês",
       "Norwegian": "Norueguês",
       "BrazillianPortuguese": "Português (Brasil)",
-      "Polish": "Polonês"
+      "Polish": "Polonês",
+      "Swedish": "Swedish"
     },
     "OpenMobileApp": "Abrir aplicativo do celular",
     "RecentlyAdded": "Recentemente adicionado"
@@ -76,7 +77,7 @@
     "Paragraph": "Quer assistir a algo que não está disponível? Não há problema, basta procurar abaixo e solicitar!",
     "MoviesTab": "Filmes",
     "TvTab": "Séries",
-    "MusicTab": "Music",
+    "MusicTab": "Músicas",
     "Suggestions": "Sugestões",
     "NoResults": "Desculpe, não encontramos nenhum resultado!",
     "DigitalDate": "Lançamento digital: {{date}}",
@@ -114,13 +115,13 @@
     "Paragraph": "Abaixo, você pode ver o seu e todos os outros pedidos, bem como o seu download e status de aprovação.",
     "MoviesTab": "Filmes",
     "TvTab": "Séries",
-    "MusicTab": "Music",
+    "MusicTab": "Músicas",
     "RequestedBy": "Solicitado por:",
     "Status": "Status:",
     "RequestStatus": "Status da solicitação:",
     "Denied": " Negados:",
     "TheatricalRelease": "Lançamento nos Cinemas: {{date}}",
-    "ReleaseDate": "Released: {{date}}",
+    "ReleaseDate": "Lançado: {{date}}",
     "TheatricalReleaseSort": "Lançamento nos Cinemas",
     "DigitalRelease": "Lançamento digital: {{date}}",
     "RequestDate": "Data da Solicitação:",
@@ -145,7 +146,14 @@
     "SortRequestDateAsc": "Data da Solicitação",
     "SortRequestDateDesc": "Data da Solicitação",
     "SortStatusAsc": "Status ▲",
-    "SortStatusDesc": "Status ▼"
+    "SortStatusDesc": "Status ▼",
+    "Remaining": {
+      "Quota": "{{remaining}}/{{total}} requests remaining",
+      "NextDays": "Another request will be added in {{time}} days",
+      "NextHours": "Another request will be added in {{time}} hours",
+      "NextMinutes": "Another request will be added in {{time}} minutes",
+      "NextMinute": "Another request will be added in {{time}} minute"
+    }
   },
   "Issues": {
     "Title": "Problemas",
@@ -172,5 +180,13 @@
     "FilterHeaderRequestStatus": "Status",
     "Approved": "Aprovado",
     "PendingApproval": "Aprovação Pendente"
+  },
+  "UserManagment": {
+    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
+    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
+    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
+    "TvDue": "TV: {{date}}",
+    "MovieDue": "Movie: {{date}}",
+    "MusicDue": "Music: {{date}}"
   }
 }
