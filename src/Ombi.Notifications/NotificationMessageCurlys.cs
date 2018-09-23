@@ -17,7 +17,11 @@ namespace Ombi.Notifications
         public void Setup(NotificationOptions opts, FullBaseRequest req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
-            UserPreference = pref.Enabled ? pref.Value : string.Empty;
+            if (pref != null)
+            {
+                UserPreference = pref.Enabled ? pref.Value : string.Empty;
+            }
+
             string title;
             if (req == null)
             {
@@ -62,7 +66,10 @@ namespace Ombi.Notifications
         public void Setup(NotificationOptions opts, AlbumRequest req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
-            UserPreference = pref.Enabled ? pref.Value : string.Empty;
+            if (pref != null)
+            {
+                UserPreference = pref.Enabled ? pref.Value : string.Empty;
+            }
             string title;
             if (req == null)
             {
@@ -106,7 +113,10 @@ namespace Ombi.Notifications
         public void Setup(NotificationOptions opts, ChildRequests req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
-            UserPreference = pref.Enabled ? pref.Value : string.Empty;
+            if (pref != null)
+            {
+                UserPreference = pref.Enabled ? pref.Value : string.Empty;
+            }
             string title;
             if (req == null)
             {
