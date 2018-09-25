@@ -43,7 +43,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
                 var cachedAlbum = await _cachedAlbums.FirstOrDefaultAsync(x => x.ForeignAlbumId.Equals(request.ForeignAlbumId));
                 if (cachedAlbum != null)
                 {
-                    if (cachedAlbum.Monitored && cachedAlbum.FullyAvailable)
+                    if (cachedAlbum.FullyAvailable)
                     {
                         request.Available = true;
                         request.MarkedAsAvailable = DateTime.Now;
