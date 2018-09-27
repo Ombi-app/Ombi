@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.CouchPotato;
 using Ombi.Api.DogNzb.Models;
@@ -9,6 +10,8 @@ using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities.Requests;
 using Ombi.Api.DogNzb;
+using Ombi.Store.Entities;
+using Ombi.Store.Repository;
 
 namespace Ombi.Core.Senders
 {
@@ -16,7 +19,7 @@ namespace Ombi.Core.Senders
     {
         public MovieSender(ISettingsService<RadarrSettings> radarrSettings, IRadarrApi api, ILogger<MovieSender> log,
             ISettingsService<DogNzbSettings> dogSettings, IDogNzbApi dogApi, ISettingsService<CouchPotatoSettings> cpSettings,
-            ICouchPotatoApi cpApi)
+            ICouchPotatoApi cpApi, IRepository<UserQualityProfiles> userProfiles)
         {
             RadarrSettings = radarrSettings;
             RadarrApi = api;
@@ -25,6 +28,7 @@ namespace Ombi.Core.Senders
             DogNzbApi = dogApi;
             CouchPotatoSettings = cpSettings;
             CouchPotatoApi = cpApi;
+            _userProfiles = userProfiles;
         }
 
         private ISettingsService<RadarrSettings> RadarrSettings { get; }
@@ -34,6 +38,7 @@ namespace Ombi.Core.Senders
         private ISettingsService<DogNzbSettings> DogNzbSettings { get; }
         private ISettingsService<CouchPotatoSettings> CouchPotatoSettings { get; }
         private ICouchPotatoApi CouchPotatoApi { get; }
+        private readonly IRepository<UserQualityProfiles> _userProfiles;
 
         public async Task<SenderResult> Send(MovieRequests model)
         {
@@ -88,13 +93,33 @@ namespace Ombi.Core.Senders
 
         private async Task<SenderResult> SendToRadarr(MovieRequests model, RadarrSettings settings)
         {
+ 
             var qualityToUse = int.Parse(settings.DefaultQualityProfile);
+       
+            var rootFolderPath = settings.DefaultRootPath;
+
+            var profiles = await _userProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == model.RequestedUserId);
+            if (profiles != null)
+            {
+                if (profiles.SonarrRootPathAnime > 0)
+                {
+                    rootFolderPath = await RadarrRootPath(profiles.SonarrRootPathAnime, settings);
+                }
+                if (profiles.SonarrQualityProfileAnime > 0)
+                {
+                    qualityToUse = profiles.SonarrQualityProfileAnime;
+                }
+            }
+
+            // Overrides on the request take priority
             if (model.QualityOverride > 0)
             {
                 qualityToUse = model.QualityOverride;
             }
-
-            var rootFolderPath = model.RootPathOverride <= 0 ? settings.DefaultRootPath : await RadarrRootPath(model.RootPathOverride, settings);
+            if (model.RootPathOverride > 0)
+            {
+                rootFolderPath = await RadarrRootPath(model.RootPathOverride, settings);
+            }
 
             // Check if the movie already exists? Since it could be unmonitored
             var movies = await RadarrApi.GetMovies(settings.ApiKey, settings.FullUri);
@@ -123,7 +148,10 @@ namespace Ombi.Core.Senders
                 existingMovie.monitored = true;
                 await RadarrApi.UpdateMovie(existingMovie, settings.ApiKey, settings.FullUri);
                 // Search for it
-                await RadarrApi.MovieSearch(new[] { existingMovie.id }, settings.ApiKey, settings.FullUri);
+                if (!settings.AddOnly)
+                {
+                    await RadarrApi.MovieSearch(new[] {existingMovie.id}, settings.ApiKey, settings.FullUri);
+                }
 
                 return new SenderResult { Success = true, Sent = true };
             }

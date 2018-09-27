@@ -63,13 +63,17 @@ namespace Ombi.Core.Engine
             var recentlyAddedLog = new HashSet<RecentlyAddedLog>();
             foreach (var p in plexContent)
             {
+                if (!p.HasTheMovieDb)
+                {
+                    continue;
+                }
                 if (p.Type == PlexMediaTypeEntity.Movie)
                 {
                     recentlyAddedLog.Add(new RecentlyAddedLog
                     {
                         AddedAt = DateTime.Now,
                         Type = RecentlyAddedType.Plex,
-                        ContentId = p.Id,
+                        ContentId = int.Parse(p.TheMovieDbId),
                         ContentType = ContentType.Parent
                     });
                 }
@@ -78,12 +82,18 @@ namespace Ombi.Core.Engine
                     // Add the episodes
                     foreach (var ep in p.Episodes)
                     {
+                        if (!ep.Series.HasTvDb)
+                        {
+                            continue;
+                        }
                         recentlyAddedLog.Add(new RecentlyAddedLog
                         {
                             AddedAt = DateTime.Now,
                             Type = RecentlyAddedType.Plex,
-                            ContentId = ep.Id,
-                            ContentType = ContentType.Episode
+                            ContentId = int.Parse(ep.Series.TvDbId),
+                            ContentType = ContentType.Episode,
+                            EpisodeNumber = ep.EpisodeNumber,
+                            SeasonNumber = ep.SeasonNumber
                         });
                     }
                 }
@@ -91,13 +101,17 @@ namespace Ombi.Core.Engine
 
             foreach (var e in embyContent)
             {
+                if (e.TheMovieDbId.IsNullOrEmpty())
+                {
+                    continue;
+                }
                 if (e.Type == EmbyMediaType.Movie)
                 {
                     recentlyAddedLog.Add(new RecentlyAddedLog
                     {
                         AddedAt = DateTime.Now,
                         Type = RecentlyAddedType.Emby,
-                        ContentId = e.Id,
+                        ContentId = int.Parse(e.TheMovieDbId),
                         ContentType = ContentType.Parent
                     });
                 }
@@ -106,12 +120,18 @@ namespace Ombi.Core.Engine
                     // Add the episodes
                     foreach (var ep in e.Episodes)
                     {
+                        if (ep.Series.TvDbId.IsNullOrEmpty())
+                        {
+                            continue;
+                        }
                         recentlyAddedLog.Add(new RecentlyAddedLog
                         {
                             AddedAt = DateTime.Now,
                             Type = RecentlyAddedType.Emby,
-                            ContentId = ep.Id,
-                            ContentType = ContentType.Episode
+                            ContentId = int.Parse(ep.Series.TvDbId),
+                            ContentType = ContentType.Episode,
+                            EpisodeNumber = ep.EpisodeNumber,
+                            SeasonNumber = ep.SeasonNumber
                         });
                     }
                 }
@@ -152,7 +172,9 @@ namespace Ombi.Core.Engine
                 model.Add(new RecentlyAddedMovieModel
                 {
                     Id = emby.Id,
-                    ImdbId = emby.ProviderId,
+                    ImdbId = emby.ImdbId,
+                    TheMovieDbId = emby.TheMovieDbId,
+                    TvDbId = emby.TvDbId,
                     AddedAt = emby.AddedAt,
                     Title = emby.Title,
                 });
@@ -211,7 +233,9 @@ namespace Ombi.Core.Engine
                     model.Add(new RecentlyAddedTvModel
                     {
                         Id = emby.Id,
-                        ImdbId = emby.ProviderId,
+                        ImdbId = emby.ImdbId,
+                        TvDbId = emby.TvDbId,
+                        TheMovieDbId = emby.TheMovieDbId,
                         AddedAt = emby.AddedAt,
                         Title = emby.Title,
                         EpisodeNumber = episode.EpisodeNumber,

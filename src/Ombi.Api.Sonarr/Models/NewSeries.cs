@@ -23,6 +23,7 @@ namespace Ombi.Api.Sonarr.Models
         public string cleanTitle { get; set; }
         public string imdbId { get; set; }
         public string titleSlug { get; set; }
+        public string seriesType { get; set; }
         public int id { get; set; }
         public List<SonarrImage> images { get; set; }
 

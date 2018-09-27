@@ -2,10 +2,11 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
+import { TruncateModule } from "@yellowspot/ng-truncate";
 
 import { IssuesReportComponent } from "./issues-report.component";
 
-import { SidebarModule } from "primeng/primeng";
+import { InputSwitchModule, SidebarModule } from "primeng/primeng";
 
 @NgModule({
   declarations: [
@@ -15,13 +16,17 @@ import { SidebarModule } from "primeng/primeng";
     SidebarModule,
     FormsModule,
     CommonModule,
+    InputSwitchModule,
+    TruncateModule,
   ],
   exports: [
-      TranslateModule, 
-      CommonModule, 
+      TranslateModule,
+      CommonModule,
       FormsModule,
       SidebarModule,
       IssuesReportComponent,
+      TruncateModule,
+      InputSwitchModule,
     ],
 })
 export class SharedModule {}

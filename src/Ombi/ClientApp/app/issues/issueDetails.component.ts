@@ -1,9 +1,11 @@
+import { PlatformLocation } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
 import { AuthService } from "../auth/auth.service";
-import { IssuesService, NotificationService, SettingsService } from "../services";
+import { ImageService, IssuesService, NotificationService, SettingsService } from "../services";
 
+import { DomSanitizer } from "@angular/platform-browser";
 import { IIssues, IIssuesChat, IIssueSettings, INewIssueComments, IssueStatus } from "../interfaces";
 
 @Component({
@@ -22,24 +24,37 @@ export class IssueDetailsComponent implements OnInit {
     public IssueStatus = IssueStatus;
     public isAdmin: boolean;
     public settings: IIssueSettings;
-    
+    public backgroundPath: any;
+    public posterPath: any;
+    public defaultPoster: string;
+
     private issueId: number;
 
     constructor(private issueService: IssuesService,
                 private route: ActivatedRoute,
                 private authService: AuthService,
                 private settingsService: SettingsService,
-                private notificationService: NotificationService) { 
+                private notificationService: NotificationService,
+                private imageService: ImageService,
+                private sanitizer: DomSanitizer,
+                private readonly platformLocation: PlatformLocation) {
             this.route.params
             .subscribe((params: any) => {
-                  this.issueId = parseInt(params.id);    
+                  this.issueId = parseInt(params.id);
                 });
 
             this.isAdmin = this.authService.hasRole("Admin") || this.authService.hasRole("PowerUser");
             this.settingsService.getIssueSettings().subscribe(x => this.settings = x);
+
+            const base = this.platformLocation.getBaseHrefFromDOM();
+            if (base) {
+                this.defaultPoster = "../../.." + base + "/images/";
+            } else {
+                this.defaultPoster = "../../../images/";
+            }
         }
-                
-    public ngOnInit() { 
+
+    public ngOnInit() {
         this.issueService.getIssue(this.issueId).subscribe(x => {
             this.issue = {
                 comments: x.comments,
@@ -48,16 +63,16 @@ export class IssueDetailsComponent implements OnInit {
                 issueCategoryId: x.issueCategoryId,
                 subject: x.subject,
                 description: x.description,
-                status:x.status,
-                resolvedDate:x.resolvedDate,
+                status: x.status,
+                resolvedDate: x.resolvedDate,
                 title: x.title,
                 requestType: x.requestType,
                 requestId: x.requestId,
                 providerId: x.providerId,
                 userReported: x.userReported,
             };
+            this.setBackground(x);
         });
-        
         this.loadComments();
     }
 
@@ -82,7 +97,46 @@ export class IssueDetailsComponent implements OnInit {
         });
     }
 
+    public deleteComment(id: number) {
+        this.issueService.deleteComment(id).subscribe(x => {
+            this.loadComments();
+            this.notificationService.success("Comment Deleted");
+        });
+    }
+
     private loadComments() {
         this.issueService.getComments(this.issueId).subscribe(x => this.comments = x);
+    }
+
+    private setBackground(issue: any) {
+        if (issue.requestType === 1) {
+            this.imageService.getMovieBackground(issue.providerId).subscribe(x => {
+                this.backgroundPath = this.sanitizer.bypassSecurityTrustStyle
+                    ("url(" + x + ")");
+            });
+            this.imageService.getMoviePoster(issue.providerId).subscribe(x => {
+                if (x.length === 0) {
+                    this.posterPath = this.defaultPoster + "default_movie_poster.png";
+                } else {
+                    this.posterPath = x.toString();
+                }
+            });
+
+        } else {
+            this.imageService.getTvBackground(Number(issue.providerId)).subscribe(x => {
+                if (x) {
+                    this.backgroundPath = this.sanitizer.bypassSecurityTrustStyle
+                        ("url(" + x + ")");
+                }
+            });
+            this.imageService.getTvPoster(Number(issue.providerId)).subscribe(x => {
+                if (x.length === 0) {
+                    this.posterPath = this.defaultPoster + "default_tv_poster.png";
+                } else {
+                    this.posterPath = x.toString();
+                }
+            });
+        }
+
     }
 }

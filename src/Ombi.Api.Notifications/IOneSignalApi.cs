@@ -6,6 +6,6 @@ namespace Ombi.Api.Notifications
 {
     public interface IOneSignalApi
     {
-        Task<OneSignalNotificationResponse> PushNotification(List<string> playerIds, string message);
+        Task<OneSignalNotificationResponse> PushNotification(List<string> playerIds, string message, bool isAdminNotification, int requestId, int requestType);
     }
 }

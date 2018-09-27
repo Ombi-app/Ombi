@@ -9,6 +9,7 @@ using Ombi.Api.Emby.Models.Movie;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Serilog;
@@ -19,13 +20,14 @@ namespace Ombi.Schedule.Jobs.Emby
     public class EmbyContentSync : IEmbyContentSync
     {
         public EmbyContentSync(ISettingsService<EmbySettings> settings, IEmbyApi api, ILogger<EmbyContentSync> logger,
-            IEmbyContentRepository repo, IEmbyEpisodeSync epSync)
+            IEmbyContentRepository repo, IEmbyEpisodeSync epSync, IRefreshMetadata metadata)
         {
             _logger = logger;
             _settings = settings;
             _api = api;
             _repo = repo;
             _episodeSync = epSync;
+            _metadata = metadata;
             _settings.ClearCache();
         }
 
@@ -34,19 +36,30 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly IEmbyApi _api;
         private readonly IEmbyContentRepository _repo;
         private readonly IEmbyEpisodeSync _episodeSync;
+        private readonly IRefreshMetadata _metadata;
 
 
         public async Task Start()
         {
-           var embySettings = await _settings.GetSettingsAsync();
+            var embySettings = await _settings.GetSettingsAsync();
             if (!embySettings.Enable)
                 return;
 
             foreach (var server in embySettings.Servers)
-                await StartServerCache(server);
+            {
+                try
+                {
+                    await StartServerCache(server);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Exception when caching Emby for server {0}", server.Name);
+                }
+            }
 
             // Episodes
             BackgroundJob.Enqueue(() => _episodeSync.Start());
+            BackgroundJob.Enqueue(() => _metadata.Start());
         }
 
 
@@ -55,78 +68,126 @@ namespace Ombi.Schedule.Jobs.Emby
             if (!ValidateSettings(server))
                 return;
 
-            var movies = await _api.GetAllMovies(server.ApiKey, server.AdministratorId, server.FullUri);
-            var mediaToAdd = new List<EmbyContent>();
-            foreach (var movie in movies.Items)
+            //await _repo.ExecuteSql("DELETE FROM EmbyEpisode");
+            //await _repo.ExecuteSql("DELETE FROM EmbyContent");
+
+            var movies = await _api.GetAllMovies(server.ApiKey, 0, 200, server.AdministratorId, server.FullUri);
+            var totalCount = movies.TotalRecordCount;
+            var processed = 1;
+
+            var mediaToAdd = new HashSet<EmbyContent>();
+
+            while (processed < totalCount)
             {
-                if (movie.Type.Equals("boxset", StringComparison.CurrentCultureIgnoreCase))
+                foreach (var movie in movies.Items)
                 {
-                    var movieInfo =
-                        await _api.GetCollection(movie.Id, server.ApiKey, server.AdministratorId, server.FullUri);
-                    foreach (var item in movieInfo.Items)
+                    if (movie.Type.Equals("boxset", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        var info = await _api.GetMovieInformation(item.Id, server.ApiKey,
-                            server.AdministratorId, server.FullUri);
-                        await ProcessMovies(info, mediaToAdd);
+                        var movieInfo =
+                            await _api.GetCollection(movie.Id, server.ApiKey, server.AdministratorId, server.FullUri);
+                        foreach (var item in movieInfo.Items)
+                        {
+                            await ProcessMovies(item, mediaToAdd);
+                        }
+
+                        processed++;
+                    }
+                    else
+                    {
+                        processed++;
+                        // Regular movie
+                        await ProcessMovies(movie, mediaToAdd);
                     }
                 }
-                else
-                {
-                    // Regular movie
-                    var movieInfo = await _api.GetMovieInformation(movie.Id, server.ApiKey,
-                        server.AdministratorId, server.FullUri);
 
-                    await ProcessMovies(movieInfo, mediaToAdd);
-                }
+                // Get the next batch
+                movies = await _api.GetAllMovies(server.ApiKey, processed, 200, server.AdministratorId, server.FullUri);
+                await _repo.AddRange(mediaToAdd);
+                mediaToAdd.Clear();
+
             }
+
+
             // TV Time
-            var tv = await _api.GetAllShows(server.ApiKey, server.AdministratorId, server.FullUri);
-
-            foreach (var tvShow in tv.Items)
+            var tv = await _api.GetAllShows(server.ApiKey, 0, 200, server.AdministratorId, server.FullUri);
+            var totalTv = tv.TotalRecordCount;
+            processed = 1;
+            while (processed < totalTv)
             {
-                var tvInfo = await _api.GetSeriesInformation(tvShow.Id, server.ApiKey, server.AdministratorId,
-                    server.FullUri);
-                if (string.IsNullOrEmpty(tvInfo.ProviderIds?.Tvdb))
+                foreach (var tvShow in tv.Items)
                 {
-                    Log.Error("Provider Id on tv {0} is null", tvShow.Name);
-                    continue;
-                }
-
-                var existingTv = await _repo.GetByEmbyId(tvShow.Id);
-                if (existingTv == null)
-                    mediaToAdd.Add(new EmbyContent
+                    try
                     {
-                        ProviderId = tvInfo.ProviderIds.Tvdb,
-                        Title = tvInfo.Name,
-                        Type = EmbyMediaType.Series,
-                        EmbyId = tvShow.Id,
-                        AddedAt = DateTime.UtcNow
-                    });
+
+                        processed++;
+                        if (string.IsNullOrEmpty(tvShow.ProviderIds?.Tvdb))
+                        {
+                            _logger.LogInformation("Provider Id on tv {0} is null", tvShow.Name);
+                            continue;
+                        }
+
+                        var existingTv = await _repo.GetByEmbyId(tvShow.Id);
+                        if (existingTv == null)
+                        {
+                            _logger.LogDebug("Adding new TV Show {0}", tvShow.Name);
+                            mediaToAdd.Add(new EmbyContent
+                            {
+                                TvDbId = tvShow.ProviderIds?.Tvdb,
+                                ImdbId = tvShow.ProviderIds?.Imdb,
+                                TheMovieDbId = tvShow.ProviderIds?.Tmdb,
+                                Title = tvShow.Name,
+                                Type = EmbyMediaType.Series,
+                                EmbyId = tvShow.Id,
+                                Url = EmbyHelper.GetEmbyMediaUrl(tvShow.Id),
+                                AddedAt = DateTime.UtcNow
+                            });
+                        }
+                        else
+                        {
+                            _logger.LogDebug("We already have TV Show {0}", tvShow.Name);
+                        }
+
+                    }
+                    catch (Exception)
+                    {
+
+                        throw;
+                    }
+                }
+                // Get the next batch
+                tv = await _api.GetAllShows(server.ApiKey, processed, 200, server.AdministratorId, server.FullUri);
+                await _repo.AddRange(mediaToAdd);
+                mediaToAdd.Clear();
             }
 
             if (mediaToAdd.Any())
                 await _repo.AddRange(mediaToAdd);
         }
 
-        private async Task ProcessMovies(MovieInformation movieInfo, ICollection<EmbyContent> content)
+        private async Task ProcessMovies(EmbyMovie movieInfo, ICollection<EmbyContent> content)
         {
-            if (string.IsNullOrEmpty(movieInfo.ProviderIds.Imdb))
-            {
-                Log.Error("Provider Id on movie {0} is null", movieInfo.Name);
-                return;
-            }
             // Check if it exists
             var existingMovie = await _repo.GetByEmbyId(movieInfo.Id);
-
-            if (existingMovie == null)
+            var alreadyGoingToAdd = content.Any(x => x.EmbyId == movieInfo.Id);
+            if (existingMovie == null && !alreadyGoingToAdd)
+            {
+                _logger.LogDebug("Adding new movie {0}", movieInfo.Name);
                 content.Add(new EmbyContent
                 {
-                    ProviderId = movieInfo.ProviderIds.Imdb,
+                    ImdbId = movieInfo.ProviderIds.Imdb,
+                    TheMovieDbId = movieInfo.ProviderIds?.Tmdb,
                     Title = movieInfo.Name,
                     Type = EmbyMediaType.Movie,
                     EmbyId = movieInfo.Id,
+                    Url = EmbyHelper.GetEmbyMediaUrl(movieInfo.Id),
                     AddedAt = DateTime.UtcNow,
                 });
+            }
+            else
+            {
+                // we have this
+                _logger.LogDebug("We already have movie {0}", movieInfo.Name);
+            }
         }
 
         private bool ValidateSettings(EmbyServers server)

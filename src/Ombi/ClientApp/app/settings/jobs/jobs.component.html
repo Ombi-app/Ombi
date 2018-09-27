@@ -22,12 +22,19 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="radarrSync" class="control-label">Radarr Sync</label>              
-                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('radarrSync').hasError('required')}" id="radarrSync" name="radarrSync" formControlName="radarrSync">
-                        <small *ngIf="form.get('radarrSync').hasError('required')" class="error-text">The Radarr Sync is required</small>
-                        <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('radarrSync')?.value)">Test</button>
-                </div>
+                        <label for="radarrSync" class="control-label">Radarr Sync</label>              
+                            <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('radarrSync').hasError('required')}" id="radarrSync" name="radarrSync" formControlName="radarrSync">
+                            <small *ngIf="form.get('radarrSync').hasError('required')" class="error-text">The Radarr Sync is required</small>
+                            <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('radarrSync')?.value)">Test</button>
+                    </div>
 
+                    <div class="form-group">
+                            <label for="lidarrArtistSync" class="control-label">Lidarr Sync</label>              
+                                <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('lidarrArtistSync').hasError('required')}" id="lidarrArtistSync" name="lidarrArtistSync" formControlName="lidarrArtistSync">
+                                <small *ngIf="form.get('lidarrArtistSync').hasError('required')" class="error-text">The Lidarr Sync is required</small>
+                                <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('lidarrArtistSync')?.value)">Test</button>
+                        </div>
+        
                 <div class="form-group">
                     <label for="couchPotatoSync" class="control-label">CouchPotato Sync</label>              
                         <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('radarrSync').hasError('required')}" id="couchPotatoSync" name="couchPotatoSync" formControlName="couchPotatoSync">
@@ -41,14 +48,6 @@
                         <small *ngIf="form.get('automaticUpdater').hasError('required')" class="error-text">The Automatic Update is required</small>
                         <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('automaticUpdater')?.value)">Test</button>
                 </div>
-
-
-
-                <div class="form-group">
-                    <div>
-                        <button type="submit" [disabled]="form.invalid" class="btn btn-primary-outline">Submit</button>
-                    </div>
-                </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
@@ -56,6 +55,12 @@
                         <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('plexContentSync').hasError('required')}" id="plexContentSync" name="plexContentSync" formControlName="plexContentSync">
                         <small *ngIf="form.get('plexContentSync').hasError('required')" class="error-text">The Plex Sync is required</small>
                         <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('plexContentSync')?.value)">Test</button>
+                </div>
+                <div class="form-group">
+                    <label for="plexRecentlyAddedSync" class="control-label">Plex Recently Added Sync</label>              
+                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('plexRecentlyAddedSync').hasError('required')}" id="plexRecentlyAddedSync" name="plexRecentlyAddedSync" formControlName="plexRecentlyAddedSync">
+                        <small *ngIf="form.get('plexRecentlyAddedSync').hasError('required')" class="error-text">The Plex Sync is required</small>
+                        <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('plexRecentlyAddedSync')?.value)">Test</button>
                 </div>
 
                 <div class="form-group">
@@ -86,8 +91,12 @@
                             <small *ngIf="form.get('newsletter').hasError('required')" class="error-text">The Newsletter is required</small>
                             <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('newsletter')?.value)">Test</button>
                     </div>
-
             </div>
+            <div class="form-group">
+                    <div>
+                        <button type="submit" [disabled]="form.invalid" class="btn btn-primary-outline">Submit</button>
+                    </div>
+                </div>
         </form>
     </fieldset>
 </div>

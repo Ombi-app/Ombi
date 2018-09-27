@@ -10,5 +10,6 @@
         public string ScriptLocation { get; set; }
         public string WindowsServiceName { get; set; }
         public bool WindowsService { get; set; }
+        public bool TestMode { get; set; }
     }
 }

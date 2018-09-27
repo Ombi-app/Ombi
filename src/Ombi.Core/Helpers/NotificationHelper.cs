@@ -40,6 +40,18 @@ namespace Ombi.Core
             BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel));
         }
 
+        public void NewRequest(AlbumRequest model)
+        {
+            var notificationModel = new NotificationOptions
+            {
+                RequestId = model.Id,
+                DateTime = DateTime.Now,
+                NotificationType = NotificationType.NewRequest,
+                RequestType = model.RequestType
+            };
+            BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel));
+        }
+
 
         public void Notify(MovieRequests model, NotificationType type)
         {
@@ -64,6 +76,20 @@ namespace Ombi.Core
                 RequestType = model.RequestType,
                 Recipient = model.RequestedUser?.Email ?? string.Empty
             };
+            BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel));
+        }
+
+        public void Notify(AlbumRequest model, NotificationType type)
+        {
+            var notificationModel = new NotificationOptions
+            {
+                RequestId = model.Id,
+                DateTime = DateTime.Now,
+                NotificationType = type,
+                RequestType = model.RequestType,
+                Recipient = model.RequestedUser?.Email ?? string.Empty
+            };
+
             BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel));
         }
     }

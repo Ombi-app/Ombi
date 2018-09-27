@@ -12,5 +12,6 @@ namespace Ombi.Settings.Settings.Models
         public bool RequireLowercase { get; set; }
         public bool RequireNonAlphanumeric { get; set; }
         public bool RequireUppercase { get; set; }
+        public bool EnableOAuth { get; set; } // Plex OAuth
     }
 }

@@ -1,29 +1,38 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Security.Principal;
+using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.PlatformAbstractions;
-using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using Ombi.Config;
-using Ombi.Core.Authentication;
-using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Models.Identity;
-using Ombi.Settings.Settings.Models;
 using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Ombi
 {
+    public class AddRequiredHeaderParameter : IOperationFilter
+    {
+
+        public void Apply(Operation operation, OperationFilterContext context)
+        {
+            if (operation.Parameters == null)
+                operation.Parameters = new List<IParameter>();
+
+            operation.Parameters.Add(new NonBodyParameter
+            {
+                Name = "ApiKey",
+                In = "header",
+                Type = "apiKey",
+
+            });
+        }
+    }
     public static class StartupExtensions
     {
         public static void AddSwagger(this IServiceCollection services)
@@ -35,17 +44,37 @@ namespace Ombi
                 {
                     Version = "v1",
                     Title = "Ombi Api",
-                    Description = "The API for Ombi, most of these calls require an auth token that you can get from calling POST:\"/api/v1/token\" with the body of: \n {\n\"username\":\"YOURUSERNAME\",\n\"password\":\"YOURPASSWORD\"\n} \n" +
-                                  "You can then use the returned token in the JWT Token field e.g. \"Bearer Token123xxff\"",
                     Contact = new Contact
                     {
-                        Email = "tidusjar@gmail.com",
                         Name = "Jamie Rees",
                         Url = "https://www.ombi.io/"
                     }
                 });
+                var security = new Dictionary<string, IEnumerable<string>>
+                {
+                    //{"Bearer", new string[] { }},
+                    {"ApiKey", new string[] { }},
+                };
+
+                //c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                //{
+                //    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                //    Name = "Authorization",
+                //    In = "header",
+                //    Type = "apiKey"
+                //});
+
+                c.AddSecurityDefinition("ApiKey", new ApiKeyScheme
+                {
+                    Description = "API Key provided by Ombi. Example: \"ApiKey: {token}\"",
+                    Name = "ApiKey",
+                    In = "header",
+                    Type = "apiKey"
+                });
+                c.AddSecurityRequirement(security);
                 c.CustomSchemaIds(x => x.FullName);
-                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                c.OperationFilter<AddRequiredHeaderParameter>();
+                var basePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
                 var xmlPath = Path.Combine(basePath, "Swagger.xml");
                 try
                 {
@@ -55,13 +84,7 @@ namespace Ombi
                 {
                     Console.WriteLine(e);
                 }
-                c.AddSecurityDefinition("Bearer", new JwtBearer
-                {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                    Name = "Authorization",
-                    In = "header",
-                    Type = "apiKey",
-                });
+
 
                 c.OperationFilter<SwaggerOperationFilter>();
                 c.DescribeAllParametersInCamelCase();
@@ -113,91 +136,6 @@ namespace Ombi
                 x.Audience = "Ombi";
                 x.TokenValidationParameters = tokenValidationParameters;
             });
-        }
-
-
-        public static void ApiKeyMiddlewear(this IApplicationBuilder app, IServiceProvider serviceProvider)
-        {
-            app.Use(async (context, next) =>
-            {
-                if (context.Request.Path.StartsWithSegments(new PathString("/api")))
-                {
-                    // Let's check if this is an API Call
-                    if (context.Request.Headers["ApiKey"].Any())
-                    {
-                        // validate the supplied API key
-                        // Validate it
-                        var headerKey = context.Request.Headers["ApiKey"].FirstOrDefault();
-                        await ValidateApiKey(serviceProvider, context, next, headerKey);
-                    }
-                    else if (context.Request.Query.ContainsKey("apikey"))
-                    {
-                        if (context.Request.Query.TryGetValue("apikey", out var queryKey))
-                        {
-                            await ValidateApiKey(serviceProvider, context, next, queryKey);
-                        }
-                    }
-                    // User access token used by the mobile app
-                    else if (context.Request.Headers["UserAccessToken"].Any())
-                    {
-                        var headerKey = context.Request.Headers["UserAccessToken"].FirstOrDefault();
-                        await ValidateUserAccessToken(serviceProvider, context, next, headerKey);
-                    }
-                    else
-                    {
-                        await next();
-                    }
-                }
-                else
-                {
-                    await next();
-                }
-            });
-        }
-
-        private static async Task ValidateUserAccessToken(IServiceProvider serviceProvider, HttpContext context, Func<Task> next, string key)
-        {
-            if (key.IsNullOrEmpty())
-            {
-                await context.Response.WriteAsync("Invalid User Access Token");
-                return;
-            }
-            
-            var um = serviceProvider.GetService<OmbiUserManager>();
-            var user = await um.Users.FirstOrDefaultAsync(x => x.UserAccessToken == key);
-            if (user == null)
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                await context.Response.WriteAsync("Invalid User Access Token");
-            }
-            else
-            {
-
-                var identity = new GenericIdentity(user.UserName);
-                var roles = await um.GetRolesAsync(user);
-                var principal = new GenericPrincipal(identity, roles.ToArray());
-                context.User = principal;
-                await next();
-            }
-        }
-
-        private static async Task ValidateApiKey(IServiceProvider serviceProvider, HttpContext context, Func<Task> next, string key)
-        {
-            var settingsProvider = serviceProvider.GetService<ISettingsService<OmbiSettings>>();
-            var ombiSettings = settingsProvider.GetSettings();
-            var valid = ombiSettings.ApiKey.Equals(key, StringComparison.CurrentCultureIgnoreCase);
-            if (!valid)
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                await context.Response.WriteAsync("Invalid API Key");
-            }
-            else
-            {
-                var identity = new GenericIdentity("API");
-                var principal = new GenericPrincipal(identity, new[] { "Admin", "ApiUser" });
-                context.User = principal;
-                await next();
-            }
         }
     }
 }

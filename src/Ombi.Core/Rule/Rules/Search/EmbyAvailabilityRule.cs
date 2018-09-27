@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Models.Search;
@@ -23,20 +25,20 @@ namespace Ombi.Core.Rule.Rules.Search
             EmbyContent item = null;
             if (obj.ImdbId.HasValue())
             {
-                item = await EmbyContentRepository.Get(obj.ImdbId);
+                item = await EmbyContentRepository.GetByImdbId(obj.ImdbId);
             }
             if (item == null)
             {
                 if (obj.TheMovieDbId.HasValue())
                 {
-                    item = await EmbyContentRepository.Get(obj.TheMovieDbId);
+                    item = await EmbyContentRepository.GetByTheMovieDbId(obj.TheMovieDbId);
                 }
 
                 if (item == null)
                 {
                     if (obj.TheTvDbId.HasValue())
                     {
-                        item = await EmbyContentRepository.Get(obj.TheTvDbId);
+                        item = await EmbyContentRepository.GetByTvDbId(obj.TheTvDbId);
                     }
                 }
             }
@@ -44,6 +46,7 @@ namespace Ombi.Core.Rule.Rules.Search
             if (item != null)
             {
                 obj.Available = true;
+                obj.EmbyUrl = item.Url;
 
                 if (obj.Type == RequestType.TvShow)
                 {
@@ -58,10 +61,19 @@ namespace Ombi.Core.Rule.Rules.Search
                             {
                                 EmbyEpisode epExists = null;
 
-                                epExists = await allEpisodes.FirstOrDefaultAsync(x =>
-                                    x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                                    x.Series.ProviderId == item.ProviderId.ToString());
-
+                                if (item.HasImdb)
+                                {
+                                    epExists = await allEpisodes.FirstOrDefaultAsync(e => e.EpisodeNumber == episode.EpisodeNumber && e.SeasonNumber == season.SeasonNumber
+                                        && e.ImdbId == item.ImdbId);
+                                }  if (item.HasTvDb && epExists == null)
+                                {
+                                    epExists = await allEpisodes.FirstOrDefaultAsync(e => e.EpisodeNumber == episode.EpisodeNumber && e.SeasonNumber == season.SeasonNumber
+                                                                                         && e.Series.TvDbId == item.TvDbId);
+                                }  if (item.HasTheMovieDb && epExists == null)
+                                {
+                                    epExists = await allEpisodes.FirstOrDefaultAsync(e => e.EpisodeNumber == episode.EpisodeNumber && e.SeasonNumber == season.SeasonNumber
+                                                                                         && e.TheMovieDbId == item.TheMovieDbId);
+                                }
 
                                 if (epExists != null)
                                 {

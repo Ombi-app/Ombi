@@ -57,6 +57,9 @@ export interface IDiscordNotifcationSettings extends INotificationSettings {
 
 export interface INewsletterNotificationSettings extends INotificationSettings {
     notificationTemplate: INotificationTemplates;
+    disableMovies: boolean;
+    disableTv: boolean;
+    externalEmails: string[];
 }
 
 export interface ITelegramNotifcationSettings extends INotificationSettings {
@@ -85,6 +88,8 @@ export interface IPushoverNotificationSettings extends INotificationSettings {
     accessToken: string;
     notificationTemplates: INotificationTemplates[];
     userToken: string;
+    priority: number;
+    sound: string;
 }
 
 export interface IMattermostNotifcationSettings extends INotificationSettings {
@@ -97,4 +102,9 @@ export interface IMattermostNotifcationSettings extends INotificationSettings {
 
 export interface IMobileNotifcationSettings extends INotificationSettings {
     notificationTemplates: INotificationTemplates[];
+}
+
+export interface IMobileNotificationTestSettings {
+    settings: IMobileNotifcationSettings;
+    userId: string;
 }

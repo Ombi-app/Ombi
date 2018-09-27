@@ -13,11 +13,13 @@ using Microsoft.Extensions.Logging;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Models.UI;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
+using Ombi.Core.Models;
 
 namespace Ombi.Core.Engine
 {
@@ -25,7 +27,9 @@ namespace Ombi.Core.Engine
     {
         public MovieRequestEngine(IMovieDbApi movieApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log,
-            OmbiUserManager manager, IRepository<RequestLog> rl, ICacheService cache, ISettingsService<OmbiSettings> ombiSettings) : base(user, requestService, r, manager, cache, ombiSettings)
+            OmbiUserManager manager, IRepository<RequestLog> rl, ICacheService cache,
+            ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub)
+            : base(user, requestService, r, manager, cache, ombiSettings, sub)
         {
             MovieApi = movieApi;
             NotificationHelper = helper;
@@ -57,6 +61,7 @@ namespace Ombi.Core.Engine
                     ErrorMessage = $"Please try again later"
                 };
             }
+
             var fullMovieName =
                 $"{movieInfo.Title}{(!string.IsNullOrEmpty(movieInfo.ReleaseDate) ? $" ({DateTime.Parse(movieInfo.ReleaseDate).Year})" : string.Empty)}";
 
@@ -81,7 +86,8 @@ namespace Ombi.Core.Engine
             };
 
             var usDates = movieInfo.ReleaseDates?.Results?.FirstOrDefault(x => x.IsoCode == "US");
-            requestModel.DigitalReleaseDate = usDates?.ReleaseDate?.FirstOrDefault(x => x.Type == ReleaseDateType.Digital)?.ReleaseDate;
+            requestModel.DigitalReleaseDate = usDates?.ReleaseDate
+                ?.FirstOrDefault(x => x.Type == ReleaseDateType.Digital)?.ReleaseDate;
 
             var ruleResults = (await RunRequestRules(requestModel)).ToList();
             if (ruleResults.Any(x => !x.Success))
@@ -124,24 +130,106 @@ namespace Ombi.Core.Engine
         /// </summary>
         /// <param name="count">The count.</param>
         /// <param name="position">The position.</param>
+        /// <param name="orderFilter">The order/filter type.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<MovieRequests>> GetRequests(int count, int position)
+        public async Task<RequestsViewModel<MovieRequests>> GetRequests(int count, int position,
+            OrderFilterModel orderFilter)
         {
             var shouldHide = await HideFromOtherUsers();
-            List<MovieRequests> allRequests;
+            IQueryable<MovieRequests> allRequests;
             if (shouldHide.Hide)
             {
-                allRequests = await MovieRepository.GetWithUser(shouldHide.UserId).Skip(position).Take(count).ToListAsync();
+                allRequests =
+                    MovieRepository.GetWithUser(shouldHide
+                        .UserId); //.Skip(position).Take(count).OrderByDescending(x => x.ReleaseDate).ToListAsync();
             }
             else
             {
-                allRequests = await MovieRepository.GetWithUser().Skip(position).Take(count).ToListAsync();
+                allRequests =
+                    MovieRepository
+                        .GetWithUser(); //.Skip(position).Take(count).OrderByDescending(x => x.ReleaseDate).ToListAsync();
             }
-            allRequests.ForEach(x =>
+
+            switch (orderFilter.AvailabilityFilter)
+            {
+                case FilterType.None:
+                    break;
+                case FilterType.Available:
+                    allRequests = allRequests.Where(x => x.Available);
+                    break;
+                case FilterType.NotAvailable:
+                    allRequests = allRequests.Where(x => !x.Available);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            switch (orderFilter.StatusFilter)
+            {
+                case FilterType.None:
+                    break;
+                case FilterType.Approved:
+                    allRequests = allRequests.Where(x => x.Approved);
+                    break;
+                case FilterType.Processing:
+                    allRequests = allRequests.Where(x => x.Approved && !x.Available);
+                    break;
+                case FilterType.PendingApproval:
+                    allRequests = allRequests.Where(x => !x.Approved && !x.Available && !(x.Denied ?? false));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            var total = allRequests.Count();
+
+            var requests = await (OrderMovies(allRequests, orderFilter.OrderType)).Skip(position).Take(count)
+                .ToListAsync();
+
+            requests.ForEach(async x =>
             {
                 x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
+                await CheckForSubscription(shouldHide, x);
             });
-            return allRequests;
+            return new RequestsViewModel<MovieRequests>
+            {
+                Collection = requests,
+                Total = total
+            };
+        }
+
+        private IQueryable<MovieRequests> OrderMovies(IQueryable<MovieRequests> allRequests, OrderType type)
+        {
+            switch (type)
+            {
+                case OrderType.RequestedDateAsc:
+                    return allRequests.OrderBy(x => x.RequestedDate);
+                case OrderType.RequestedDateDesc:
+                    return allRequests.OrderByDescending(x => x.RequestedDate);
+                case OrderType.TitleAsc:
+                    return allRequests.OrderBy(x => x.Title);
+                case OrderType.TitleDesc:
+                    return allRequests.OrderByDescending(x => x.Title);
+                case OrderType.StatusAsc:
+                    return allRequests.OrderBy(x => x.Status);
+                case OrderType.StatusDesc:
+                    return allRequests.OrderByDescending(x => x.Status);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
+        public async Task<int> GetTotal()
+        {
+            var shouldHide = await HideFromOtherUsers();
+            if (shouldHide.Hide)
+            {
+                return await MovieRepository.GetWithUser(shouldHide.UserId).CountAsync();
+            }
+            else
+            {
+                return await MovieRepository.GetWithUser().CountAsync();
+            }
         }
 
         /// <summary>
@@ -160,7 +248,28 @@ namespace Ombi.Core.Engine
             {
                 allRequests = await MovieRepository.GetWithUser().ToListAsync();
             }
+
+            allRequests.ForEach(async x =>
+            {
+                x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
+                await CheckForSubscription(shouldHide, x);
+            });
             return allRequests;
+        }
+
+        private async Task CheckForSubscription(HideResult shouldHide, MovieRequests x)
+        {
+            if (shouldHide.UserId == x.RequestedUserId)
+            {
+                x.ShowSubscribe = false;
+            }
+            else
+            {
+                x.ShowSubscribe = true;
+                var sub = await _subscriptionRepository.GetAll().FirstOrDefaultAsync(s =>
+                    s.UserId == shouldHide.UserId && s.RequestId == x.Id && s.RequestType == RequestType.Movie);
+                x.Subscribed = sub != null;
+            }
         }
 
         /// <summary>
@@ -180,10 +289,12 @@ namespace Ombi.Core.Engine
             {
                 allRequests = await MovieRepository.GetWithUser().ToListAsync();
             }
+
             var results = allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToList();
-            results.ForEach(x =>
+            results.ForEach(async x =>
             {
                 x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
+                await CheckForSubscription(shouldHide, x);
             });
             return results;
         }
@@ -204,6 +315,7 @@ namespace Ombi.Core.Engine
                     ErrorMessage = "Request does not exist"
                 };
             }
+
             request.Denied = true;
             // We are denying a request
             NotificationHelper.Notify(request, NotificationType.RequestDeclined);
@@ -224,6 +336,8 @@ namespace Ombi.Core.Engine
                     ErrorMessage = "Request does not exist"
                 };
             }
+
+            request.MarkedAsApproved = DateTime.Now;
             request.Approved = true;
             request.Denied = false;
             await MovieRepository.Update(request);
@@ -244,6 +358,7 @@ namespace Ombi.Core.Engine
                         Result = true
                     };
                 }
+
                 if (!result.Success)
                 {
                     Logger.LogWarning("Tried auto sending movie but failed. Message: {0}", result.Message);
@@ -254,6 +369,7 @@ namespace Ombi.Core.Engine
                         Result = false
                     };
                 }
+
                 // If there are no providers then it's successful but movie has not been sent
             }
 
@@ -315,6 +431,7 @@ namespace Ombi.Core.Engine
                     ErrorMessage = "Request does not exist"
                 };
             }
+
             request.Available = false;
             await MovieRepository.Update(request);
 
@@ -335,7 +452,9 @@ namespace Ombi.Core.Engine
                     ErrorMessage = "Request does not exist"
                 };
             }
+
             request.Available = true;
+            request.MarkedAsAvailable = DateTime.Now;
             NotificationHelper.Notify(request, NotificationType.RequestAvailable);
             await MovieRepository.Update(request);
 
@@ -364,45 +483,51 @@ namespace Ombi.Core.Engine
                 RequestType = RequestType.Movie,
             });
 
-            return new RequestEngineResult { Result = true, Message = $"{movieName} has been successfully added!" };
+            return new RequestEngineResult {Result = true, Message = $"{movieName} has been successfully added!"};
         }
 
-        public async Task<IEnumerable<MovieRequests>> Filter(FilterViewModel vm)
+        public async Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user)
         {
-            var shouldHide = await HideFromOtherUsers();
-            var requests = shouldHide.Hide ? MovieRepository.GetWithUser(shouldHide.UserId) : MovieRepository.GetWithUser();
-            switch (vm.AvailabilityFilter)
+            if (user == null)
             {
-                case FilterType.None:
-                    break;
-                case FilterType.Available:
-                    requests = requests.Where(x => x.Available);
-                    break;
-                case FilterType.NotAvailable:
-                    requests = requests.Where(x => !x.Available);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                user = await GetUser();
+
+                // If user is still null after attempting to get the logged in user, return null.
+                if (user == null)
+                {
+                    return null;
+                }
             }
 
-            switch (vm.StatusFilter)
+            int limit = user.MovieRequestLimit ?? 0;
+
+            if (limit <= 0)
             {
-                case FilterType.None:
-                    break;
-                case FilterType.Approved:
-                    requests = requests.Where(x => x.Approved);
-                    break;
-                case FilterType.Processing:
-                    requests = requests.Where(x => x.Approved && !x.Available);
-                    break;
-                case FilterType.PendingApproval:
-                    requests = requests.Where(x => !x.Approved && !x.Available && !(x.Denied ?? false));
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                return new RequestQuotaCountModel()
+                {
+                    HasLimit = false,
+                    Limit = 0,
+                    Remaining = 0,
+                    NextRequest = DateTime.Now,
+                };
             }
 
-            return requests;
+            IQueryable<RequestLog> log = _requestLog.GetAll().Where(x => x.UserId == user.Id && x.RequestType == RequestType.Movie);
+
+            int count = limit - await log.CountAsync(x => x.RequestDate >= DateTime.UtcNow.AddDays(-7));
+
+            DateTime oldestRequestedAt = await log.Where(x => x.RequestDate >= DateTime.UtcNow.AddDays(-7))
+                                            .OrderBy(x => x.RequestDate)
+                                            .Select(x => x.RequestDate)
+                                            .FirstOrDefaultAsync();
+
+            return new RequestQuotaCountModel()
+            {
+                HasLimit = true,    
+                Limit = limit,
+                Remaining = count,
+                NextRequest = DateTime.SpecifyKind(oldestRequestedAt.AddDays(7), DateTimeKind.Utc),
+            };
         }
     }
 }

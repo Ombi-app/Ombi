@@ -1,13 +1,12 @@
-﻿import { Component, Input, OnInit } from "@angular/core";
+import { PlatformLocation } from "@angular/common";
+import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { Subject } from "rxjs/Subject";
+import { Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { AuthService } from "../auth/auth.service";
-import { ImageService, NotificationService, RequestService, SearchService} from "../services";
-
-import { TreeNode } from "primeng/primeng";
-import { IRequestEngineResult } from "../interfaces";
-import { IIssueCategory, ISearchTvResult } from "../interfaces";
+import { IIssueCategory, IRequestEngineResult, ISearchTvResult, ISeasonsViewModel, ITvRequestViewModel } from "../interfaces";
+import { ImageService, NotificationService, RequestService, SearchService } from "../services";
 
 @Component({
     selector: "tv-search",
@@ -18,9 +17,11 @@ export class TvSearchComponent implements OnInit {
 
     public searchText: string;
     public searchChanged = new Subject<string>();
-    public tvResults: TreeNode[];
+    public tvResults: ISearchTvResult[];
+    public tvRequested: Subject<void> = new Subject<void>();
     public result: IRequestEngineResult;
     public searchApplied = false;
+    public defaultPoster: string;
 
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
@@ -30,51 +31,37 @@ export class TvSearchComponent implements OnInit {
     public issueProviderId: string;
     public issueCategorySelected: IIssueCategory;
 
-    constructor(private searchService: SearchService, private requestService: RequestService,
-                private notificationService: NotificationService, private authService: AuthService,
-                private imageService: ImageService, private sanitizer: DomSanitizer) {
+    constructor(
+        private searchService: SearchService, private requestService: RequestService,
+        private notificationService: NotificationService, private authService: AuthService,
+        private imageService: ImageService, private sanitizer: DomSanitizer,
+        private readonly platformLocation: PlatformLocation) {
 
-        this.searchChanged
-            .debounceTime(600) // Wait Xms after the last event before emitting last event
-            .distinctUntilChanged() // only emit if value is different from previous value
-            .subscribe(x => {
-                this.searchText = x as string;
-                if (this.searchText === "") {
-                    this.clearResults();
-                    return;
-                }
-                this.searchService.searchTvTreeNode(this.searchText)
-                    .subscribe(x => {
-                        this.tvResults = x;
-                        this.searchApplied = true;
-                        this.getExtraInfo();
-                    });
-            });
-    }
-    public openClosestTab(el: any) {
-        el.preventDefault();
-        const rowclass = "undefined ng-star-inserted";
-        el = el.toElement || el.relatedTarget || el.target;
-        while (el.className !== rowclass) {
-            // Increment the loop to the parent node until we find the row we need
-            el = el.parentNode;
-        }
-        // At this point, the while loop has stopped and `el` represents the element that has
-        // the class you specified
-
-        // Then we loop through the children to find the caret which we want to click
-        const caretright = "fa-caret-right";
-        const caretdown = "fa-caret-down";
-        for (const value of el.children) {
-            // the caret from the ui has 2 class selectors depending on if expanded or not
-            // we search for both since we want to still toggle the clicking
-            if (value.className.includes(caretright) || value.className.includes(caretdown)) {
-                // Then we tell JS to click the element even though we hid it from the UI
-                value.click();
-                //Break from loop since we no longer need to continue looking
-                break;
+        this.searchChanged.pipe(
+            debounceTime(600), // Wait Xms after the last event before emitting last event
+            distinctUntilChanged(), // only emit if value is different from previous value
+        ).subscribe(x => {
+            this.searchText = x as string;
+            if (this.searchText === "") {
+                this.clearResults();
+                return;
             }
+            this.searchService.searchTv(this.searchText)
+                .subscribe(x => {
+                    this.tvResults = x;
+                    this.searchApplied = true;
+                    this.getExtraInfo();
+                });
+        });
+        this.defaultPoster = "../../../images/default_tv_poster.png";
+        const base = this.platformLocation.getBaseHrefFromDOM();
+        if (base) {
+            this.defaultPoster = "../../.." + base + "/images/default_tv_poster.png";
         }
+    }
+    public openClosestTab(node: ISearchTvResult,el: any) {
+        el.preventDefault();
+        node.open = !node.open;
     }
 
     public ngOnInit() {
@@ -83,8 +70,9 @@ export class TvSearchComponent implements OnInit {
         this.result = {
             message: "",
             result: false,
-            errorMessage:"",
+            errorMessage: "",
         };
+        this.popularShows();
     }
 
     public search(text: any) {
@@ -129,15 +117,17 @@ export class TvSearchComponent implements OnInit {
 
     public getExtraInfo() {
         this.tvResults.forEach((val, index) => {
-            this.imageService.getTvBanner(val.data.id).subscribe(x => {
-                
-                val.data.background = this.sanitizer.
-                bypassSecurityTrustStyle
-                ("url(" + x + ")");
+            this.imageService.getTvBanner(val.id).subscribe(x => {
+                if (x) {
+                    val.background = this.sanitizer.
+                        bypassSecurityTrustStyle
+                        ("url(" + x + ")");
+                }
             });
-            this.searchService.getShowInformationTreeNode(val.data.id)
+            this.searchService.getShowInformation(val.id)
                 .subscribe(x => {
-                    if (x.data) {
+                    if (x) {
+                        this.setDefaults(x);
                         this.updateItem(val, x);
                     } else {
                         const index = this.tvResults.indexOf(val, 0);
@@ -154,8 +144,25 @@ export class TvSearchComponent implements OnInit {
         if (this.authService.hasRole("admin") || this.authService.hasRole("AutoApproveMovie")) {
             searchResult.approved = true;
         }
-        this.requestService.requestTv(searchResult)
+
+        const viewModel = <ITvRequestViewModel> { firstSeason: searchResult.firstSeason, latestSeason: searchResult.latestSeason, requestAll: searchResult.requestAll, tvDbId: searchResult.id };
+        viewModel.seasons = [];
+        searchResult.seasonRequests.forEach((season) => {
+            const seasonsViewModel = <ISeasonsViewModel> { seasonNumber: season.seasonNumber, episodes: [] };
+            season.episodes.forEach(ep => {
+                if (!searchResult.latestSeason || !searchResult.requestAll || !searchResult.firstSeason) {
+                    if (ep.requested) {
+                        seasonsViewModel.episodes.push({ episodeNumber: ep.episodeNumber });
+                    }
+                }
+            });
+
+            viewModel.seasons.push(seasonsViewModel);
+        });
+
+        this.requestService.requestTv(viewModel)
             .subscribe(x => {
+                this.tvRequested.next();
                 this.result = x;
                 if (this.result.result) {
                     this.notificationService.success(
@@ -190,23 +197,37 @@ export class TvSearchComponent implements OnInit {
 
     public reportIssue(catId: IIssueCategory, req: ISearchTvResult) {
         this.issueRequestId = req.id;
-        this.issueRequestTitle = req.title;
+        const firstAiredDate = new Date(req.firstAired);
+        this.issueRequestTitle = req.title + ` (${firstAiredDate.getFullYear()})`;
         this.issueCategorySelected = catId;
         this.issuesBarVisible = true;
         this.issueProviderId = req.id.toString();
     }
 
-    private updateItem(key: TreeNode, updated: TreeNode) {
+    private updateItem(key: ISearchTvResult, updated: ISearchTvResult) {
         const index = this.tvResults.indexOf(key, 0);
         if (index > -1) {
             // Update certain properties, otherwise we will loose some data
-            this.tvResults[index].data.banner = updated.data.banner;
-            this.tvResults[index].data.imdbId = updated.data.imdbId;
-            this.tvResults[index].data.seasonRequests = updated.data.seasonRequests;
-            this.tvResults[index].data.seriesId = updated.data.seriesId;
-            this.tvResults[index].data.fullyAvailable = updated.data.fullyAvailable;
-            this.tvResults[index].data.backdrop = updated.data.backdrop;
+            this.tvResults[index].title = updated.title;
+            this.tvResults[index].banner = updated.banner;
+            this.tvResults[index].imdbId = updated.imdbId;
+            this.tvResults[index].seasonRequests = updated.seasonRequests;
+            this.tvResults[index].seriesId = updated.seriesId;
+            this.tvResults[index].fullyAvailable = updated.fullyAvailable;
+            this.tvResults[index].background = updated.banner;
         }
+    }
+
+    private setDefaults(x: ISearchTvResult) {
+            if (x.banner === null) {
+                x.banner = this.defaultPoster;
+            }
+        
+            if (x.imdbId === null) {
+                x.imdbId = "https://www.tvmaze.com/shows/" + x.seriesId;
+            } else {
+                x.imdbId = "http://www.imdb.com/title/" + x.imdbId + "/";
+            }
     }
 
     private clearResults() {

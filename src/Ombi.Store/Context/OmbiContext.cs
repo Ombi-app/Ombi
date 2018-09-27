@@ -31,6 +31,7 @@ namespace Ombi.Store.Context
         public DbSet<EmbyEpisode> EmbyEpisode { get; set; }
 
         public DbSet<MovieRequests> MovieRequests { get; set; }
+        public DbSet<AlbumRequest> AlbumRequests { get; set; }
         public DbSet<TvRequests> TvRequests { get; set; }
         public DbSet<ChildRequests> ChildRequests { get; set; }
 
@@ -44,10 +45,14 @@ namespace Ombi.Store.Context
         public DbSet<Audit> Audit { get; set; }
         public DbSet<Tokens> Tokens { get; set; }
         public DbSet<SonarrCache> SonarrCache { get; set; }
+        public DbSet<LidarrArtistCache> LidarrArtistCache { get; set; }
+        public DbSet<LidarrAlbumCache> LidarrAlbumCache { get; set; }
         public DbSet<SonarrEpisodeCache> SonarrEpisodeCache { get; set; }
         public DbSet<SickRageCache> SickRageCache { get; set; }
         public DbSet<SickRageEpisodeCache> SickRageEpisodeCache { get; set; }
-
+        public DbSet<RequestSubscription> RequestSubscription { get; set; }
+        public DbSet<UserNotificationPreferences> UserNotificationPreferences { get; set; }
+        public DbSet<UserQualityProfiles> UserQualityProfileses { get; set; }
         public DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -116,14 +121,43 @@ namespace Ombi.Store.Context
             Database.ExecuteSqlCommand("VACUUM;");
 
             // Make sure we have the roles
-            var roles = Roles.Where(x => x.Name == OmbiRoles.RecievesNewsletter);
-            if (!roles.Any())
+            var newsletterRole = Roles.Where(x => x.Name == OmbiRoles.ReceivesNewsletter);
+            if (!newsletterRole.Any())
             {
-                Roles.Add(new IdentityRole(OmbiRoles.RecievesNewsletter)
+                Roles.Add(new IdentityRole(OmbiRoles.ReceivesNewsletter)
                 {
-                    NormalizedName = OmbiRoles.RecievesNewsletter.ToUpper()
+                    NormalizedName = OmbiRoles.ReceivesNewsletter.ToUpper()
                 });
+                SaveChanges();
             }
+            var requestMusicRole = Roles.Where(x => x.Name == OmbiRoles.RequestMusic);
+            if (!requestMusicRole.Any())
+            {
+                Roles.Add(new IdentityRole(OmbiRoles.RequestMusic)
+                {
+                    NormalizedName = OmbiRoles.RequestMusic.ToUpper()
+                });
+                Roles.Add(new IdentityRole(OmbiRoles.AutoApproveMusic)
+                {
+                    NormalizedName = OmbiRoles.AutoApproveMusic.ToUpper()
+                });
+                SaveChanges();
+            }
+
+            // Make sure we have the API User
+            var apiUserExists = Users.Any(x => x.UserName.Equals("Api", StringComparison.CurrentCultureIgnoreCase));
+            if (!apiUserExists)
+            {
+                Users.Add(new OmbiUser
+                {
+                    UserName = "Api",
+                    UserType = UserType.SystemUser,
+                    NormalizedUserName = "API",
+
+                });
+                SaveChanges();
+            }
+
             //Check if templates exist
             var templates = NotificationTemplates.ToList();
 
@@ -166,7 +200,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello! You   {Title} on {ApplicationName}! This is now available! :)",
+                                Message = "Hello! Your request for {Title} on {ApplicationName}! This is now available! :)",
                                 Subject = "{ApplicationName}: {Title} is now available!",
                                 Agent = agent,
                                 Enabled = true,

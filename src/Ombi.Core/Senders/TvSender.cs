@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.DogNzb;
 using Ombi.Api.DogNzb.Models;
@@ -12,7 +13,9 @@ using Ombi.Api.Sonarr.Models;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
+using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
+using Ombi.Store.Repository;
 
 namespace Ombi.Core.Senders
 {
@@ -20,7 +23,7 @@ namespace Ombi.Core.Senders
     {
         public TvSender(ISonarrApi sonarrApi, ILogger<TvSender> log, ISettingsService<SonarrSettings> sonarrSettings,
             ISettingsService<DogNzbSettings> dog, IDogNzbApi dogApi, ISettingsService<SickRageSettings> srSettings,
-            ISickRageApi srApi)
+            ISickRageApi srApi, IRepository<UserQualityProfiles> userProfiles)
         {
             SonarrApi = sonarrApi;
             Logger = log;
@@ -29,6 +32,7 @@ namespace Ombi.Core.Senders
             DogNzbApi = dogApi;
             SickRageSettings = srSettings;
             SickRageApi = srApi;
+            UserQualityProfiles = userProfiles;
         }
 
         private ISonarrApi SonarrApi { get; }
@@ -38,6 +42,7 @@ namespace Ombi.Core.Senders
         private ISettingsService<SonarrSettings> SonarrSettings { get; }
         private ISettingsService<DogNzbSettings> DogNzbSettings { get; }
         private ISettingsService<SickRageSettings> SickRageSettings { get; }
+        private IRepository<UserQualityProfiles> UserQualityProfiles { get; }
 
         public async Task<SenderResult> Send(ChildRequests model)
         {
@@ -118,17 +123,58 @@ namespace Ombi.Core.Senders
                 return null;
             }
 
-            int.TryParse(s.QualityProfile, out var qualityToUse);
+            int qualityToUse;
+            string rootFolderPath;
+            string seriesType;
 
+            var profiles = await UserQualityProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == model.RequestedUserId);
+
+            if (model.SeriesType == SeriesType.Anime)
+            {
+                // Get the root path from the rootfolder selected.
+                // For some reason, if we haven't got one use the first root folder in Sonarr
+                rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder ?? int.Parse(s.RootPathAnime), s);
+                int.TryParse(s.QualityProfileAnime, out qualityToUse);
+                if (profiles != null)
+                {
+                    if (profiles.SonarrRootPathAnime > 0)
+                    {
+                        rootFolderPath = await GetSonarrRootPath(profiles.SonarrRootPathAnime, s);
+                    }
+                    if (profiles.SonarrQualityProfileAnime > 0)
+                    {
+                       qualityToUse = profiles.SonarrQualityProfileAnime;
+                    }
+                }
+                seriesType = "anime";
+
+            }
+            else
+            {
+                int.TryParse(s.QualityProfile, out qualityToUse);
+                // Get the root path from the rootfolder selected.
+                // For some reason, if we haven't got one use the first root folder in Sonarr
+                rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder ?? int.Parse(s.RootPath), s);
+                if (profiles != null)
+                {
+                    if (profiles.SonarrRootPath > 0)
+                    {
+                        rootFolderPath = await GetSonarrRootPath(profiles.SonarrRootPath, s);
+                    }
+                    if (profiles.SonarrQualityProfile > 0)
+                    {
+                       qualityToUse = profiles.SonarrQualityProfile;
+                    }
+                }
+                seriesType = "standard";
+            }
+
+            // Overrides on the request take priority
             if (model.ParentRequest.QualityOverride.HasValue)
             {
                 qualityToUse = model.ParentRequest.QualityOverride.Value;
             }
-
-            // Get the root path from the rootfolder selected.
-            // For some reason, if we haven't got one use the first root folder in Sonarr
-            // TODO make this overrideable via the UI
-            var rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder ?? int.Parse(s.RootPath), s);
+            
             try
             {
                 // Does the series actually exist?
@@ -149,27 +195,18 @@ namespace Ombi.Core.Senders
                         rootFolderPath = rootFolderPath,
                         qualityProfileId = qualityToUse,
                         titleSlug = model.ParentRequest.Title,
+                        seriesType = seriesType,
                         addOptions = new AddOptions
                         {
-                            ignoreEpisodesWithFiles = true, // There shouldn't be any episodes with files, this is a new season
-                            ignoreEpisodesWithoutFiles = true, // We want all missing
+                            ignoreEpisodesWithFiles = false, // There shouldn't be any episodes with files, this is a new season
+                            ignoreEpisodesWithoutFiles = false, // We want all missing
                             searchForMissingEpisodes = false // we want dont want to search yet. We want to make sure everything is unmonitored/monitored correctly.
                         }
                     };
 
                     // Montitor the correct seasons,
                     // If we have that season in the model then it's monitored!
-                    var seasonsToAdd = new List<Season>();
-                    for (var i = 1; i < model.ParentRequest.TotalSeasons + 1; i++)
-                    {
-                        var index = i;
-                        var season = new Season
-                        {
-                            seasonNumber = i,
-                            monitored = model.SeasonRequests.Any(x => x.SeasonNumber == index)
-                        };
-                        seasonsToAdd.Add(season);
-                    }
+                    var seasonsToAdd = GetSeasonsToCreate(model);
                     newSeries.seasons = seasonsToAdd;
                     var result = await SonarrApi.AddSeries(newSeries, s.ApiKey, s.FullUri);
                     existingSeries = await SonarrApi.GetSeriesById(result.id, s.ApiKey, s.FullUri);
@@ -223,7 +260,7 @@ namespace Ombi.Core.Senders
                 {
                     var sonarrEp = sonarrEpList.FirstOrDefault(x =>
                         x.episodeNumber == ep.EpisodeNumber && x.seasonNumber == req.SeasonNumber);
-                    if (sonarrEp != null)
+                    if (sonarrEp != null && !sonarrEp.monitored)
                     {
                         sonarrEp.monitored = true;
                         episodesToUpdate.Add(sonarrEp);
@@ -231,22 +268,64 @@ namespace Ombi.Core.Senders
                 }
             }
             var seriesChanges = false;
+            
             foreach (var season in model.SeasonRequests)
             {
                 var sonarrSeason = sonarrEpList.Where(x => x.seasonNumber == season.SeasonNumber);
                 var sonarrEpCount = sonarrSeason.Count();
                 var ourRequestCount = season.Episodes.Count;
 
+                var existingSeason =
+                    result.seasons.FirstOrDefault(x => x.seasonNumber == season.SeasonNumber);
+                if (existingSeason == null)
+                {
+                    Logger.LogError("There was no season numer {0} in Sonarr for title {1}", season.SeasonNumber, model.ParentRequest.Title);
+                    continue;
+                }
+
+
                 if (sonarrEpCount == ourRequestCount)
                 {
                     // We have the same amount of requests as all of the episodes in the season.
-                    var existingSeason =
-                        result.seasons.First(x => x.seasonNumber == season.SeasonNumber);
-                    existingSeason.monitored = true;
-                    seriesChanges = true;
+
+                    if (!existingSeason.monitored)
+                    {
+                        existingSeason.monitored = true;
+                        seriesChanges = true;
+                    }
                 }
                 else
                 {
+                    // Make sure this season is set to monitored 
+                    if (!existingSeason.monitored)
+                    {
+                        // We need to monitor it, problem being is all episodes will now be monitored
+                        // So we need to monior the series but unmonitor every episode
+                        // Except the episodes that are already monitored before we update the series (we do not want to unmonitor episodes that are monitored beforehand)
+                        existingSeason.monitored = true;
+                        var sea = result.seasons.FirstOrDefault(x => x.seasonNumber == existingSeason.seasonNumber);
+                        sea.monitored = true;
+                        //var previouslyMonitoredEpisodes = sonarrEpList.Where(x =>
+                        //    x.seasonNumber == existingSeason.seasonNumber && x.monitored).Select(x => x.episodeNumber).ToList(); // We probably don't actually care about this
+                        result = await SonarrApi.UpdateSeries(result, s.ApiKey, s.FullUri);
+                        var epToUnmonitor = new List<Episode>();
+                        var newEpList = sonarrEpList.ConvertAll(ep => new Episode(ep)); // Clone it so we don't modify the orignal member
+                        foreach (var ep in newEpList.Where(x => x.seasonNumber == existingSeason.seasonNumber).ToList())
+                        {
+                            //if (previouslyMonitoredEpisodes.Contains(ep.episodeNumber))
+                            //{
+                            //    // This was previously monitored.
+                            //    continue;
+                            //}
+                            ep.monitored = false;
+                            epToUnmonitor.Add(ep);
+                        }
+
+                        foreach (var epToUpdate in epToUnmonitor)
+                        {
+                            await SonarrApi.UpdateEpisode(epToUpdate, s.ApiKey, s.FullUri);
+                        }
+                    }
                     // Now update the episodes that need updating
                     foreach (var epToUpdate in episodesToUpdate.Where(x => x.seasonNumber == season.SeasonNumber))
                     {
@@ -264,6 +343,24 @@ namespace Ombi.Core.Senders
             {
                 await SearchForRequest(model, sonarrEpList, result, s, episodesToUpdate);
             }
+        }
+
+        private static List<Season> GetSeasonsToCreate(ChildRequests model)
+        {
+            // Let's get a list of seasons just incase we need to change it
+            var seasonsToUpdate = new List<Season>();
+            for (var i = 0; i < model.ParentRequest.TotalSeasons + 1; i++)
+            {
+                var index = i;
+                var sea = new Season
+                {
+                    seasonNumber = i,
+                    monitored = model.SeasonRequests.Any(x => x.SeasonNumber == index && x.SeasonNumber != 0)
+                };
+                seasonsToUpdate.Add(sea);
+            }
+
+            return seasonsToUpdate;
         }
 
         private async Task<bool> SendToSickRage(ChildRequests model, SickRageSettings settings, string qualityId = null)
@@ -300,9 +397,17 @@ namespace Ombi.Core.Senders
             foreach (var seasonRequests in model.SeasonRequests)
             {
                 var srEpisodes = await SickRageApi.GetEpisodesForSeason(tvdbid, seasonRequests.SeasonNumber, settings.ApiKey, settings.FullUri);
-                while (srEpisodes.message.Equals("Show not found", StringComparison.CurrentCultureIgnoreCase) && srEpisodes.data.Count <= 0)
+                int retryTimes = 10;
+                var currentRetry = 0;
+                while (srEpisodes.message.Equals("Show not found", StringComparison.CurrentCultureIgnoreCase) || srEpisodes.message.Equals("Season not found", StringComparison.CurrentCultureIgnoreCase) && srEpisodes.data.Count <= 0)
                 {
+                    if (currentRetry > retryTimes)
+                    {
+                        Logger.LogWarning("Couldnt find the SR Season or Show, message: {0}", srEpisodes.message);
+                        break;
+                    }
                     await Task.Delay(TimeSpan.FromSeconds(1));
+                    currentRetry++;
                     srEpisodes = await SickRageApi.GetEpisodesForSeason(tvdbid, seasonRequests.SeasonNumber, settings.ApiKey, settings.FullUri);
                 }
 

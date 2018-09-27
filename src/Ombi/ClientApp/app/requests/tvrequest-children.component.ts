@@ -1,10 +1,10 @@
 ﻿import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { IChildRequests, IIssueCategory } from "../interfaces";
+import { IChildRequests } from "../interfaces";
 
 import { NotificationService, RequestService } from "../services";
 
 @Component({
-    selector:"tvrequests-children",
+    selector: "tvrequests-children",
     templateUrl: "./tvrequest-children.component.html",
 })
 export class TvRequestChildrenComponent {
@@ -12,13 +12,6 @@ export class TvRequestChildrenComponent {
     @Input() public isAdmin: boolean;
 
     @Output() public requestDeleted = new EventEmitter<number>();
-
-    @Input() public issueCategories: IIssueCategory[];
-    @Input() public issuesEnabled: boolean;
-    @Input() public issueProviderId: string;
-    public issuesBarVisible = false;
-    public issueRequest: IChildRequests;
-    public issueCategorySelected: IIssueCategory;
 
     constructor(private requestService: RequestService,
                 private notificationService: NotificationService) { }
@@ -28,17 +21,17 @@ export class TvRequestChildrenComponent {
             .subscribe(x => {
                 this.removeRequestFromUi(request);
                 this.requestDeleted.emit(request.id);
-            });       
+            });
     }
 
     public changeAvailability(request: IChildRequests, available: boolean) {
         request.available = available;
-        request.seasonRequests.forEach((season)=> {
-            season.episodes.forEach((ep)=> {
+        request.seasonRequests.forEach((season) => {
+            season.episodes.forEach((ep) => {
                 ep.available = available;
             });
         });
-        if(available) {
+        if (available) {
             this.requestService.markTvAvailable({ id: request.id }).subscribe(x => {
                 if (x.result) {
                     this.notificationService.success(
@@ -101,10 +94,20 @@ export class TvRequestChildrenComponent {
             });
     }
 
-    public reportIssue(catId: IIssueCategory, req: IChildRequests) {
-        this.issueRequest = req;
-        this.issueCategorySelected = catId;
-        this.issuesBarVisible = true;
+    public subscribe(request: IChildRequests) {
+        request.subscribed = true;
+        this.requestService.subscribeToTv(request.id)
+            .subscribe(x => {
+                this.notificationService.success("Subscribed To TV Show!");
+            });
+    }
+
+    public unSubscribe(request: IChildRequests) {
+        request.subscribed = false;
+        this.requestService.unSubscribeToTv(request.id)
+            .subscribe(x => {
+                this.notificationService.success("Unsubscribed TV Show!");
+            });
     }
 
     private removeRequestFromUi(key: IChildRequests) {

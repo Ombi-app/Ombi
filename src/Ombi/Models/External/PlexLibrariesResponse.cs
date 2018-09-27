@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 
+using System.Collections.Generic;
 using Ombi.Api.Plex.Models;
 
 namespace Ombi.Models.External
@@ -32,6 +33,13 @@ namespace Ombi.Models.External
     public class PlexLibrariesResponse
     {
         public PlexContainer Data { get; set; }
+        public bool Successful { get; set; }
+        public string Message { get; set; }
+    }
+
+    public class PlexLibrariesLiteResponse
+    {
+        public List<SectionLite> Data { get; set; }
         public bool Successful { get; set; }
         public string Message { get; set; }
     }

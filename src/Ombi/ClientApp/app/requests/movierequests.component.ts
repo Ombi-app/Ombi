@@ -1,14 +1,12 @@
-﻿import { Component, Input, OnInit } from "@angular/core";
+import { PlatformLocation } from "@angular/common";
+import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import "rxjs/add/operator/debounceTime";
-import "rxjs/add/operator/distinctUntilChanged";
-import "rxjs/add/operator/map";
-import { Subject } from "rxjs/Subject";
+import { Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { AuthService } from "../auth/auth.service";
+import { FilterType, IFilter, IIssueCategory, IMovieRequests, IPagenator, IRadarrProfile, IRadarrRootFolder, OrderType } from "../interfaces";
 import { NotificationService, RadarrService, RequestService } from "../services";
-
-import { FilterType, IFilter, IIssueCategory, IMovieRequests, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
 
 @Component({
     selector: "movie-requests",
@@ -16,6 +14,7 @@ import { FilterType, IFilter, IIssueCategory, IMovieRequests, IRadarrProfile, IR
 })
 export class MovieRequestsComponent implements OnInit {
     public movieRequests: IMovieRequests[];
+    public defaultPoster: string;
 
     public searchChanged: Subject<string> = new Subject<string>();
     public searchText: string;
@@ -36,46 +35,57 @@ export class MovieRequestsComponent implements OnInit {
     public filter: IFilter;
     public filterType = FilterType;
 
-    public order: string = "requestedDate";
-    public reverse = false;
+    public orderType: OrderType = OrderType.RequestedDateDesc;
+    public OrderType = OrderType;
 
+    public totalMovies: number = 100;
     private currentlyLoaded: number;
     private amountToLoad: number;
 
-    constructor(private requestService: RequestService,
-                private auth: AuthService,
-                private notificationService: NotificationService,
-                private radarrService: RadarrService,
-                private sanitizer: DomSanitizer) {
-        this.searchChanged
-            .debounceTime(600) // Wait Xms after the last event before emitting last event
-            .distinctUntilChanged() // only emit if value is different from previous value
-            .subscribe(x => {
-                this.searchText = x as string;
-                if (this.searchText === "") {
-                    this.resetSearch();
-                    return;
-                }
-                this.requestService.searchMovieRequests(this.searchText)
-                    .subscribe(m => {
-                        this.setOverrides(m);
-                        this.movieRequests = m;
-                    });
-            });
+    constructor(
+        private requestService: RequestService,
+        private auth: AuthService,
+        private notificationService: NotificationService,
+        private radarrService: RadarrService,
+        private sanitizer: DomSanitizer,
+        private readonly platformLocation: PlatformLocation) {
+        this.searchChanged.pipe(
+            debounceTime(600), // Wait Xms after the last event before emitting last event
+            distinctUntilChanged(), // only emit if value is different from previous value
+        ).subscribe(x => {
+            this.searchText = x as string;
+            if (this.searchText === "") {
+                this.resetSearch();
+                return;
+            }
+            this.requestService.searchMovieRequests(this.searchText)
+                .subscribe(m => {
+                    this.setOverrides(m);
+                    this.movieRequests = m;
+                });
+        });
+        this.defaultPoster = "../../../images/default_movie_poster.png";
+        const base = this.platformLocation.getBaseHrefFromDOM();
+        if (base) {
+            this.defaultPoster = "../../.." + base + "/images/default_movie_poster.png";
+        }
     }
 
     public ngOnInit() {
-        this.amountToLoad = 100;
-        this.currentlyLoaded = 100;
-        this.loadInit();
-        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+        this.amountToLoad = 10;
+        this.currentlyLoaded = 10;
         this.filter = {
             availabilityFilter: FilterType.None,
-            statusFilter: FilterType.None};
+            statusFilter: FilterType.None,
+        };
+        this.loadInit();
+        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+
     }
 
-    public loadMore() {
-        this.loadRequests(this.amountToLoad, this.currentlyLoaded);
+    public paginate(event: IPagenator) {
+        const skipAmount = event.first;
+        this.loadRequests(this.amountToLoad, skipAmount);
     }
 
     public search(text: any) {
@@ -85,13 +95,13 @@ export class MovieRequestsComponent implements OnInit {
     public removeRequest(request: IMovieRequests) {
         this.requestService.removeMovieRequest(request);
         this.removeRequestFromUi(request);
-        this.loadRequests(1, this.currentlyLoaded);
+        this.loadRequests(this.amountToLoad, this.currentlyLoaded = 0);
     }
 
     public changeAvailability(request: IMovieRequests, available: boolean) {
         request.available = available;
 
-        if(available) {
+        if (available) {
             this.requestService.markMovieAvailable({ id: request.id }).subscribe(x => {
                 if (x.result) {
                     this.notificationService.success(
@@ -149,48 +159,92 @@ export class MovieRequestsComponent implements OnInit {
         event.preventDefault();
     }
 
-    public clearFilter() {
+    public clearFilter(el: any) {
+        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
+
+        el = el.parentElement;
+        el = el.querySelectorAll("INPUT");
+        for (el of el) {
+            el.checked = false;
+            el.parentElement.classList.remove("active");
+        }
+
         this.filterDisplay = false;
         this.filter.availabilityFilter = FilterType.None;
         this.filter.statusFilter = FilterType.None;
-        
+
         this.resetSearch();
     }
 
-    public filterAvailability(filter: FilterType) {
+    public filterAvailability(filter: FilterType, el: any) {
+        this.filterActiveStyle(el);
         this.filter.availabilityFilter = filter;
-        this.requestService.filterMovies(this.filter)
-        .subscribe(x => {
-            this.setOverrides(x);
-            this.movieRequests = x;
-        });
+        this.loadInit();
     }
 
-    public filterStatus(filter: FilterType) {
+    public filterStatus(filter: FilterType, el: any) {
+        this.filterActiveStyle(el);
         this.filter.statusFilter = filter;
-        this.requestService.filterMovies(this.filter)
-        .subscribe(x => {
-            this.setOverrides(x);
-            this.movieRequests = x;
-        });
+        this.loadInit();
     }
 
-    public setOrder(value: string) {
-        if (this.order === value) {
-          this.reverse = !this.reverse;
+    public setOrder(value: OrderType, el: any) {
+        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
+
+        const parent = el.parentElement;
+        const previousFilter = parent.querySelector(".active");
+
+        previousFilter.className = "";
+        el.className = "active";
+
+        this.orderType = value;
+
+        this.loadInit();
+    }
+
+    public subscribe(request: IMovieRequests) {
+        request.subscribed = true;
+        this.requestService.subscribeToMovie(request.id)
+            .subscribe(x => {
+                this.notificationService.success("Subscribed To Movie!");
+            });
+    }
+
+    public unSubscribe(request: IMovieRequests) {
+        request.subscribed = false;
+        this.requestService.unSubscribeToMovie(request.id)
+            .subscribe(x => {
+                this.notificationService.success("Unsubscribed Movie!");
+            });
+    }
+
+    private filterActiveStyle(el: any) {
+        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
+
+        el = el.parentElement; //gets radio div
+        el = el.parentElement; //gets form group div
+        el = el.parentElement; //gets status filter div
+        el = el.querySelectorAll("INPUT");
+        for (el of el) {
+            if (el.checked) {
+                if (!el.parentElement.classList.contains("active")) {
+                    el.parentElement.className += " active";
+                }
+            } else {
+                el.parentElement.classList.remove("active");
+            }
         }
-    
-        this.order = value;
-      }
+    }
 
     private loadRequests(amountToLoad: number, currentlyLoaded: number) {
-        this.requestService.getMovieRequests(amountToLoad, currentlyLoaded + 1)
+        this.requestService.getMovieRequests(amountToLoad, currentlyLoaded, this.orderType, this.filter)
             .subscribe(x => {
-                this.setOverrides(x);
-                if(!this.movieRequests) {
+                this.setOverrides(x.collection);
+                if (!this.movieRequests) {
                     this.movieRequests = [];
                 }
-                this.movieRequests.push.apply(this.movieRequests, x);
+                this.movieRequests = x.collection;
+                this.totalMovies = x.total;
                 this.currentlyLoaded = currentlyLoaded + amountToLoad;
             });
     }
@@ -231,21 +285,25 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     private loadInit() {
-        this.requestService.getMovieRequests(this.amountToLoad, 0)
+        this.requestService.getMovieRequests(this.amountToLoad, 0, this.orderType, this.filter)
             .subscribe(x => {
-                this.movieRequests = x;
+                this.movieRequests = x.collection;
+                this.totalMovies = x.total;
 
                 this.movieRequests.forEach((req) => {
-                    this.movieRequests.forEach((req) => this.setBackground(req));
+                    this.setBackground(req);
+                    this.setPoster(req);
                 });
-                this.radarrService.getQualityProfilesFromSettings().subscribe(c => {
-                    this.radarrProfiles = c;
-                    this.movieRequests.forEach((req) => this.setQualityOverrides(req));
-                });
-                this.radarrService.getRootFoldersFromSettings().subscribe(c => {
-                    this.radarrRootFolders = c;
-                    this.movieRequests.forEach((req) => this.setRootFolderOverrides(req));
-                });
+                if (this.isAdmin) {
+                    this.radarrService.getQualityProfilesFromSettings().subscribe(c => {
+                        this.radarrProfiles = c;
+                        this.movieRequests.forEach((req) => this.setQualityOverrides(req));
+                    });
+                    this.radarrService.getRootFoldersFromSettings().subscribe(c => {
+                        this.radarrRootFolders = c;
+                        this.movieRequests.forEach((req) => this.setRootFolderOverrides(req));
+                    });
+                }
             });
     }
 
@@ -289,13 +347,22 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     private setOverride(req: IMovieRequests): void {
+        this.setPoster(req);
         this.setBackground(req);
         this.setQualityOverrides(req);
         this.setRootFolderOverrides(req);
     }
 
+    private setPoster(req: IMovieRequests): void {
+        if (req.posterPath === null) {
+            req.posterPath = this.defaultPoster;
+        } else {
+            req.posterPath = "https://image.tmdb.org/t/p/w300/" + req.posterPath;
+        }
+    }
+
     private setBackground(req: IMovieRequests): void {
         req.backgroundPath = this.sanitizer.bypassSecurityTrustStyle
-        ("url(" + "https://image.tmdb.org/t/p/w1280" + req.background + ")");
+            ("url(" + "https://image.tmdb.org/t/p/w1280" + req.background + ")");
     }
 }

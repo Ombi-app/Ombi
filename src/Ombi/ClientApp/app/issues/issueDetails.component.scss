@@ -64,6 +64,16 @@ body{
     overflow: hidden;
     display: flex;
 }
+.myBg {
+    z-index: -1;
+}
+.tint {
+    z-index: -1;
+}
+.img-responsive.poster {
+    margin-bottom: 21px;
+    width: 50%;
+}
 img {
     display: block;
     width: 100%;
@@ -134,4 +144,8 @@ img {
     border-top: 1px solid transparent;
     border-bottom-right-radius: -1;
     border-bottom-left-radius: -1;
+}
+
+.bottom-btn{
+    margin-bottom: 10px;
 }

@@ -1,14 +1,16 @@
-﻿import { CommonModule } from "@angular/common";
+import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
 import { NgbAccordionModule, NgbModule } from "@ng-bootstrap/ng-bootstrap";
-import { ClipboardModule } from "ngx-clipboard/dist";
+import { ClipboardModule } from "ngx-clipboard";
 
 import { AuthGuard } from "../auth/auth.guard";
 import { AuthService } from "../auth/auth.service";
-import { CouchPotatoService, EmbyService, IssuesService, JobService, MobileService, NotificationMessageService, PlexService, RadarrService,
-         SonarrService, TesterService, ValidationService } from "../services";
+import {
+    CouchPotatoService, EmbyService, IssuesService, JobService, LidarrService, MobileService, NotificationMessageService, PlexService, RadarrService,
+    SonarrService, TesterService, ValidationService,
+} from "../services";
 
 import { PipeModule } from "../pipes/pipe.module";
 import { AboutComponent } from "./about/about.component";
@@ -20,6 +22,7 @@ import { EmbyComponent } from "./emby/emby.component";
 import { IssuesComponent } from "./issues/issues.component";
 import { JobsComponent } from "./jobs/jobs.component";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
+import { LidarrComponent } from "./lidarr/lidarr.component";
 import { MassEmailComponent } from "./massemail/massemail.component";
 import { DiscordComponent } from "./notifications/discord.component";
 import { EmailNotificationComponent } from "./notifications/emailnotification.component";
@@ -71,6 +74,7 @@ const routes: Routes = [
     { path: "Mobile", component: MobileComponent, canActivate: [AuthGuard] },
     { path: "MassEmail", component: MassEmailComponent, canActivate: [AuthGuard] },
     { path: "Newsletter", component: NewsletterComponent, canActivate: [AuthGuard] },
+    { path: "Lidarr", component: LidarrComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -122,6 +126,7 @@ const routes: Routes = [
         MobileComponent,
         MassEmailComponent,
         NewsletterComponent,
+        LidarrComponent,
     ],
     exports: [
         RouterModule,
@@ -140,6 +145,7 @@ const routes: Routes = [
         EmbyService,
         MobileService,
         NotificationMessageService,
+        LidarrService,
     ],
 
 })

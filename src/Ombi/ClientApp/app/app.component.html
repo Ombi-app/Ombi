@@ -1,4 +1,4 @@
-﻿<div class="{{ user.name && (hasRole('Admin') || hasRole('PowerUser')) ? 'adminUser' : 'user'}}">
+﻿<div [ngClass]="user.name && roleClass()">
     <p-growl [value]="notificationService.messages" [life]="3000"></p-growl>
     <nav *ngIf="showNav" class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
@@ -55,13 +55,13 @@
                     </li>
                 </ul>
                 
-                <ul *ngIf="hasRole('Admin') || hasRole('PowerUser')" class="nav navbar-nav">
+                <ul *ngIf="hasRole('Admin') || hasRole('PowerUser')" class="nav navbar-nav donation">
                     <li>
                         <a href="https://www.paypal.me/PlexRequestsNet" target="_blank" pTooltip="{{ 'NavigationBar.DonateTooltip' | translate }}">
                             <i class="fa fa-heart" style="color:red"></i> {{ 'NavigationBar.Donate' | translate }}</a>
                     </li>
                 </ul>
-                <div *ngIf="customizationSettings">
+                <div *ngIf="customizationSettings" class="custom-donation">
                     <ul *ngIf="customizationSettings.enableCustomDonations" class="nav navbar-nav">
                         <li>
                             <a href="{{customizationSettings.customDonationUrl}}" target="_blank">
@@ -72,7 +72,11 @@
 
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li *ngIf="hasRole('Admin') " [routerLinkActive]="['active']">
+                        <li [routerLinkActive]="['active']">
+                                <a href="#" (click)="openMobileApp($event)">
+                                    <i class="fa fa-mobile"></i>{{ 'NavigationBar.OpenMobileApp' | translate }}</a>
+                        </li>
+                    <li *ngIf="hasRole('Admin') " id="settings" [routerLinkActive]="['active']">
                         <a [routerLink]="['/Settings/About']">
 
                             <i *ngIf="!updateAvailable" class="fa fa-cog"></i>
@@ -92,10 +96,6 @@
                             <li [routerLinkActive]="['active']">
                                 <a [routerLink]="['/usermanagement/updatedetails']">
                                     <i class="fa fa-key"></i>{{ 'NavigationBar.UpdateDetails' | translate }}</a>
-                            </li>
-                            <li *ngIf="customizationSettings?.mobile" [routerLinkActive]="['active']">
-                                    <a href="#" (click)="openMobileApp($event)">
-                                        <i class="fa fa-mobile"></i>{{ 'NavigationBar.OpenMobileApp' | translate }}</a>
                             </li>
                             <li [routerLinkActive]="['active']">
                                 <a (click)="logOut()">
@@ -133,6 +133,15 @@
                             </li>
                             <li [ngClass]="{'active': 'no' === translate.currentLang}">
                                 <a (click)="translate.use('no')" [translate]="'NavigationBar.Language.Norwegian'"></a>
+                            </li>
+                            <li [ngClass]="{'active': 'pt' === translate.currentLang}">
+                                <a (click)="translate.use('pt')" [translate]="'NavigationBar.Language.BrazillianPortuguese'"></a>
+                            </li>
+                            <li [ngClass]="{'active': 'pl' === translate.currentLang}">
+                                <a (click)="translate.use('pl')" [translate]="'NavigationBar.Language.Polish'"></a>
+                            </li>
+                            <li [ngClass]="{'active': 'sv' === translate.currentLang}">
+                                <a (click)="translate.use('sv')" [translate]="'NavigationBar.Language.Swedish'"></a>
                             </li>
                         </ul>
                     </li>

@@ -171,19 +171,26 @@
                 </ngb-tab>
             </div>
         </ngb-tabset>
-        <div class="col-md-1">
+        <div class="col-md-2">
                 <div class="form-group">
                     <div>
                         <button (click)="save()" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
                     </div>
                 </div>
             </div>
-            <div class="col-md-1">
-                    <div class="form-group">
-                        <div>
-                            <button (click)="runCacher()" type="button" id="save" class="btn btn-primary-outline">Manually Run Cacher</button>
-                        </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <div>
+                        <button (click)="runCacher()" type="button" id="save" class="btn btn-primary-outline">Manually Run Full Sync</button>
                     </div>
                 </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <div>
+                        <button (click)="runRecentlyAddedCacher()" type="button" id="save" class="btn btn-primary-outline">Manually Run Recently Added Sync</button>
+                    </div>
+                </div>
+            </div>
     </fieldset>
 </div>

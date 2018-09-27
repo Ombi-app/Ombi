@@ -65,5 +65,24 @@ namespace Ombi.Helpers
             securePassword.MakeReadOnly();
             return securePassword;
         }
+
+        public static int IntParseLinq(string stringIn)
+        {
+            if (int.TryParse(stringIn, out var result))
+            {
+                return result;
+            }
+
+            return -1;
+        }
+
+        public static string RemoveSpaces(this string str)
+        {
+            return str.Replace(" ", "");
+        }
+        public static string StripCharacters(this string str, params char[] chars)
+        {
+            return string.Concat(str.Where(c => !chars.Contains(c)));
+        }
     }
 }

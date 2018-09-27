@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 
-import { IIssueCategory, IIssues, IssueStatus, RequestType } from "./../interfaces";
-import { IssuesService, NotificationService } from "./../services";
+import { IIssueCategory, IIssues, IssueStatus, RequestType } from "../interfaces";
+import { IssuesService, NotificationService } from "../services";
 
 @Component({
     selector: "issue-report",
@@ -15,6 +15,8 @@ export class IssuesReportComponent {
     @Input() public issueCategory: IIssueCategory;
     @Input() public movie: boolean;
     @Input() public providerId: string;
+    @Input() public background: string;
+    @Input() public posterPath: string;
 
     @Output() public visibleChange = new EventEmitter<boolean>();
 

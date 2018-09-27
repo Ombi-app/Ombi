@@ -12,7 +12,9 @@
   "Common": {
     "ContinueButton": "Fortsätt",
     "Available": "Tillgänglig",
-    "NotAvailable": "Not Available",
+    "PartiallyAvailable": "Delvis tillgänliga",
+    "Monitored": "Övervakad",
+    "NotAvailable": "Finns ej",
     "ProcessingRequest": "Bearbetar förfrågan",
     "PendingApproval": "Väntar på godkännande",
     "RequestDenied": "Efterfrågan nekas",
@@ -21,7 +23,7 @@
     "Request": "Begär",
     "Denied": "Nekad",
     "Approve": "Godkän",
-    "PartlyAvailable": "Partly Available",
+    "PartlyAvailable": "Delvis tillgänglig",
     "Errors": {
       "Validation": "Vänligen kontrollera din angivna värden"
     }
@@ -62,22 +64,28 @@
       "Italian": "Italienska",
       "Danish": "Danska",
       "Dutch": "Holländska",
-      "Norwegian": "Norska"
+      "Norwegian": "Norska",
+      "BrazillianPortuguese": "Brazillian portugisiska",
+      "Polish": "Polska",
+      "Swedish": "Swedish"
     },
-    "OpenMobileApp": "Öppna Mobil App"
+    "OpenMobileApp": "Öppna Mobil App",
+    "RecentlyAdded": "Nyligen tillagda"
   },
   "Search": {
     "Title": "Sök",
     "Paragraph": "Vill du titta på något som inte är tillgängligt? Inga problem, Sök efter det nedan och önska det!",
     "MoviesTab": "Filmer",
     "TvTab": "TV-serier",
+    "MusicTab": "Musik",
     "Suggestions": "Förslag",
     "NoResults": "Tyvärr, hittade vi inte några resultat!",
-    "DigitalDate": "Digital Release: {{date}}",
-    "TheatricalRelease": "Theatrical Release: {{date}}",
+    "DigitalDate": "Digitalt släpp: {{date}}",
+    "TheatricalRelease": "Biopremiär: {{date}}",
     "ViewOnPlex": "Visa på Plex",
+    "ViewOnEmby": "Visa på Emby",
     "RequestAdded": "Efterfrågan om {{title}} har lagts till",
-    "Similar": "Similar",
+    "Similar": "Liknande",
     "Movies": {
       "PopularMovies": "Populära filmer",
       "UpcomingMovies": "Kommande filmer",
@@ -87,19 +95,19 @@
       "Trailer": "Trailer"
     },
     "TvShows": {
-      "Popular": "Popular",
-      "Trending": "Trending",
-      "MostWatched": "Most Watched",
-      "MostAnticipated": "Most Anticipated",
-      "Results": "Results",
-      "AirDate": "Air Date:",
-      "AllSeasons": "All Seasons",
-      "FirstSeason": "First Season",
-      "LatestSeason": "Latest Season",
-      "Select": "Select ...",
-      "SubmitRequest": "Submit Request",
-      "Season": "Season: {{seasonNumber}}",
-      "SelectAllInSeason": "Select All in Season {{seasonNumber}}"
+      "Popular": "Populära",
+      "Trending": "Trendar",
+      "MostWatched": "Mest sedda",
+      "MostAnticipated": "Mest efterlängtade",
+      "Results": "Resultat",
+      "AirDate": "Sändningsdatum:",
+      "AllSeasons": "Alla Säsonger",
+      "FirstSeason": "Första säsongen",
+      "LatestSeason": "Senaste säsongen",
+      "Select": "Välj...",
+      "SubmitRequest": "Skicka förfrågan",
+      "Season": "Säsong: {{seasonNumber}}",
+      "SelectAllInSeason": "Välj alla i denna säsong {{seasonNumber}}"
     }
   },
   "Requests": {
@@ -107,12 +115,15 @@
     "Paragraph": "Nedan kan du se din och andras efterfrågningar, samt nedladdnings och godkännande status.",
     "MoviesTab": "Filmer",
     "TvTab": "TV-serier",
+    "MusicTab": "Musik",
     "RequestedBy": "Efterfrågats av:",
     "Status": "Status:",
     "RequestStatus": "Status för efterfrågan:",
     "Denied": " Nekad:",
-    "TheatricalRelease": "Theatrical Release: {{date}}",
-    "DigitalRelease": "Digital Release: {{date}}",
+    "TheatricalRelease": "Biopremiär: {{date}}",
+    "ReleaseDate": "Släppt: {{date}}",
+    "TheatricalReleaseSort": "Biopremiär",
+    "DigitalRelease": "Digitalt Releasedatum: {{date}}",
     "RequestDate": "Datum för efterfrågan:",
     "QualityOverride": "Kvalité överskridande:",
     "RootFolderOverride": "Root mapp överskridande:",
@@ -126,9 +137,23 @@
     "GridTitle": "Titel",
     "AirDate": "Sändningsdatum",
     "GridStatus": "Status",
-    "ReportIssue": "Report Issue",
-    "Filter": "Filter",
-    "SeasonNumberHeading": "Season: {seasonNumber}"
+    "ReportIssue": "Rapportera Problem",
+    "Filter": "Filtrera",
+    "Sort": "Sortera",
+    "SeasonNumberHeading": "Säsong: {seasonNumber}",
+    "SortTitleAsc": "Titel ▲",
+    "SortTitleDesc": "Titel ▼",
+    "SortRequestDateAsc": "Efterfrågades ▲",
+    "SortRequestDateDesc": "Efterfrågades ▼",
+    "SortStatusAsc": "Status ▲",
+    "SortStatusDesc": "Status ▼",
+    "Remaining": {
+      "Quota": "{{remaining}}/{{total}} återstående förfrågningar",
+      "NextDays": "En annan begäran kommer att läggas till om {{time}} Dagar",
+      "NextHours": "En annan begäran kommer att läggas till om {{time}} Timmar",
+      "NextMinutes": "En annan begäran kommer att läggas till om {{time}} Minuter",
+      "NextMinute": "En annan begäran kommer att läggas till om {{time}} Minut"
+    }
   },
   "Issues": {
     "Title": "Problem",
@@ -150,9 +175,18 @@
     "ReportedBy": "Rapporterad av"
   },
   "Filter": {
-    "ClearFilter": "Clear Filter",
-    "FilterHeaderAvailability": "Availability",
+    "ClearFilter": "Rensa filter",
+    "FilterHeaderAvailability": "Tillgänglighet",
     "FilterHeaderRequestStatus": "Status",
-    "Approved": "Approved"
+    "Approved": "Godkänd",
+    "PendingApproval": "Väntar på godkännande"
+  },
+  "UserManagment": {
+    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
+    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
+    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
+    "TvDue": "TV: {{date}}",
+    "MovieDue": "Movie: {{date}}",
+    "MusicDue": "Music: {{date}}"
   }
 }

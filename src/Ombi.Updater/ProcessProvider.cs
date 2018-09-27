@@ -73,33 +73,32 @@ namespace Ombi.Updater
             process.PriorityClass = priority;
         }
 
-        public void Kill(StartupOptions opts)
+        public bool Kill(StartupOptions opts)
         {
-            if (opts.IsWindowsService)
-            {
-                Console.WriteLine("Stopping Service {0}", opts.WindowsServiceName);
-                var process = new Process();
-                var startInfo =
-                    new ProcessStartInfo
-                    {
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        FileName = "cmd.exe",
-                        Arguments = $"/C net stop \"{opts.WindowsServiceName}\""
-                    };
-                process.StartInfo = startInfo;
-                process.Start();
-            }
-            else
-            {
+            //if (opts.IsWindowsService)
+            //{
+            //    Console.WriteLine("Stopping Service {0}", opts.WindowsServiceName);
+            //    var process = new Process();
+            //    var startInfo =
+            //        new ProcessStartInfo
+            //        {
+            //            WindowStyle = ProcessWindowStyle.Hidden,
+            //            FileName = "cmd.exe",
+            //            Arguments = $"/C net stop \"{opts.WindowsServiceName}\""
+            //        };
+            //    process.StartInfo = startInfo;
+            //    process.Start();
+            //}
+            //else
+            //{
                 var process = Process.GetProcesses().FirstOrDefault(p => p.ProcessName == opts.ProcessName);
 
                 if (process == null)
                 {
                     Console.WriteLine("Cannot find process with name: {0}", opts.ProcessName);
-                    return;
+                    return false;
                 }
-
-                process.Refresh();
+                
 
                 if (process.Id > 0)
                 {
@@ -108,8 +107,12 @@ namespace Ombi.Updater
                     Console.WriteLine("[{0}]: Waiting for exit", process.Id);
                     process.WaitForExit();
                     Console.WriteLine("[{0}]: Process terminated successfully", process.Id);
+
+                return true;
                 }
-            }
+
+            return false;
+            //}
         }
 
         public void KillAll(string processName)

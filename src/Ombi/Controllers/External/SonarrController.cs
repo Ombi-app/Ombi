@@ -11,9 +11,9 @@ using Ombi.Settings.Settings.Models.External;
 
 namespace Ombi.Controllers.External
 {
-   [Admin]
-   [ApiV1]
-   [Produces("application/json")]
+    [Authorize]
+    [ApiV1]
+    [Produces("application/json")]
     public class SonarrController : Controller
     {
         public SonarrController(ISonarrApi sonarr, ISettingsService<SonarrSettings> settings)
@@ -31,6 +31,7 @@ namespace Ombi.Controllers.External
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("Profiles")]
+        [PowerUser]
         public async Task<IEnumerable<SonarrProfile>> GetProfiles([FromBody] SonarrSettings settings)
         {
             return await SonarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
@@ -42,6 +43,7 @@ namespace Ombi.Controllers.External
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("RootFolders")]
+        [PowerUser]
         public async Task<IEnumerable<SonarrRootFolder>> GetRootFolders([FromBody] SonarrSettings settings)
         {
             return await SonarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
@@ -55,7 +57,11 @@ namespace Ombi.Controllers.External
         public async Task<IEnumerable<SonarrProfile>> GetProfiles()
         {
             var settings = await SonarrSettings.GetSettingsAsync();
-            return await SonarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
+            if (settings.Enabled)
+            {
+                return await SonarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
+            }
+            return null;
         }
 
         /// <summary>
@@ -66,7 +72,12 @@ namespace Ombi.Controllers.External
         public async Task<IEnumerable<SonarrRootFolder>> GetRootFolders()
         {
             var settings = await SonarrSettings.GetSettingsAsync();
-            return await SonarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+            if (settings.Enabled)
+            {
+                return await SonarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+            }
+
+            return null;
         }
     }
 }

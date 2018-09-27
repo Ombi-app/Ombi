@@ -48,12 +48,22 @@
         </ul>
     </li>
 
+    <li class="dropdown" [routerLinkActive]="['active']">
+        <a href="ignore($event)" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-music" aria-hidden="true"></i> Music <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Lidarr']">Lidarr (beta)</a></li>
+        </ul>
+    </li>
+
 
     <li class="dropdown" [routerLinkActive]="['active']">
         <a href="ignore($event)" class="dropdown-toggle" data-toggle="dropdown">
             <i class="fa fa-bell-o" aria-hidden="true"></i> Notifications <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Mobile']">Mobile</a></li>
             <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Email']">Email</a></li>
             <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/MassEmail']">Mass Email</a></li>
             <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Newsletter']">Newsletter</a></li>

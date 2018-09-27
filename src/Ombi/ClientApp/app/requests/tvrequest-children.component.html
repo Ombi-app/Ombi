@@ -1,6 +1,6 @@
 ﻿<div *ngIf="childRequests">
     <hr />
-    <div *ngFor="let child of childRequests">
+    <div *ngFor="let child of childRequests" class="clearfix">
         <div class="col-md-12">
 
             <div class="col-md-2">
@@ -11,8 +11,11 @@
                 <span *ngIf="isAdmin && !child.requestedUser.alias">{{child.requestedUser.userName}}</span>
             </div>
 
-
             <div class="col-md-1 col-md-push-9">
+                    <button id="subscribeBtn" *ngIf="child.showSubscribe && !child.subscribed" (click)="subscribe(child)" class="btn btn-sm btn-primary-outline"  pTooltip="Subscribe for notifications" type="submit"><i class="fa fa-rss"></i> Subscribe</button>
+                    <button id="subscribeBtn" *ngIf="child.showSubscribe && child.subscribed" (click)="unSubscribe(child)" class="btn btn-sm btn-danger-outline"  pTooltip="UnSubscribe for notifications" type="submit"><i class="fa fa-rss"></i> UnSubscribe</button>
+                  
+    
               <div *ngIf="isAdmin"> 
                     <button id="approveBtn" *ngIf="child.canApprove && !child.approved" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> {{ 'Common.Approve' | translate }}</button>
                     <button id="unavailableBtn" *ngIf="child.available" (click)="changeAvailability(child, false)" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change"><i class="fa fa-minus"></i> {{ 'Requests.MarkUnavailable' | translate }}</button>
@@ -22,15 +25,7 @@
            
                     <button id="removeBtn" type="button" (click)="removeRequest(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> {{ 'Requests.Remove' | translate }}</button>
                 </div>
-                <div class="dropdown" *ngIf="issueCategories && issuesEnabled" id="issueBtn">
-                        <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            <i class="fa fa-plus"></i> {{ 'Requests.ReportIssue' | translate }}
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            <li *ngFor="let cat of issueCategories"><a [routerLink]="" (click)="reportIssue(cat, child)">{{cat.value}}</a></li>
-                        </ul>
-                    </div>
+                
                 
             </div>
         </div>
@@ -101,8 +96,3 @@
     </div>
 
 </div>
-
-
-
-<issue-report [movie]="false" [visible]="issuesBarVisible" [title]="issueRequest?.title"
-[issueCategory]="issueCategorySelected" [id]="issueRequest?.id" (visibleChange)="issuesBarVisible = $event;"></issue-report>

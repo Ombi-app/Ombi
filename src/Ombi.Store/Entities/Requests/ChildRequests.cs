@@ -13,6 +13,15 @@ namespace Ombi.Store.Entities.Requests
         public int? IssueId { get; set; }
         public SeriesType SeriesType { get; set; }
 
+        /// <summary>
+        /// This is to see if the user is subscribed in the UI
+        /// </summary>
+        [NotMapped]
+        public bool Subscribed { get; set; }
+
+        [NotMapped]
+        public bool ShowSubscribe { get; set; }
+
 
         [ForeignKey(nameof(IssueId))]
         public List<Issues> Issues { get; set; }

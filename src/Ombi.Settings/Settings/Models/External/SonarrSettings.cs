@@ -13,6 +13,10 @@
         /// The root path.
         /// </value>
         public string RootPath { get; set; }
+
+
+        public string QualityProfileAnime { get; set; }
+        public string RootPathAnime { get; set; }
         public bool AddOnly { get; set; }
     }
 }

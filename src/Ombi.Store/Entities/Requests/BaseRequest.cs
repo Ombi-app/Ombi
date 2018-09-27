@@ -8,10 +8,13 @@ namespace Ombi.Store.Entities.Requests
     {
         public string Title { get; set; }
         public bool Approved { get; set; }
+        public DateTime MarkedAsApproved { get; set; }
         public DateTime RequestedDate { get; set; }
         public bool Available { get; set; }
+        public DateTime? MarkedAsAvailable { get; set; }
         public string RequestedUserId { get; set; }
         public bool? Denied { get; set; }
+        public DateTime MarkedAsDenied { get; set; }
         public string DeniedReason { get; set; }
         public RequestType RequestType { get; set; }
 

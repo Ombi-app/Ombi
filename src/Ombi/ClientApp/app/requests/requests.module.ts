@@ -6,14 +6,15 @@ import { OrderModule } from "ngx-order-pipe";
 
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 
-import { ButtonModule, DialogModule } from "primeng/primeng";
+import { ButtonModule, DialogModule, PaginatorModule } from "primeng/primeng";
 import { MovieRequestsComponent } from "./movierequests.component";
+import { MusicRequestsComponent } from "./music/musicrequests.component";
 // Request
 import { RequestComponent } from "./request.component";
 import { TvRequestChildrenComponent } from "./tvrequest-children.component";
 import { TvRequestsComponent } from "./tvrequests.component";
 
-import { SidebarModule, TreeTableModule } from "primeng/primeng";
+import { SidebarModule, TooltipModule, TreeTableModule } from "primeng/primeng";
 
 import { IdentityService, RadarrService, RequestService, SonarrService } from "../services";
 
@@ -23,7 +24,6 @@ import { SharedModule } from "../shared/shared.module";
 
 const routes: Routes = [
     { path: "", component: RequestComponent, canActivate: [AuthGuard] },
-    { path: ":id", component: TvRequestChildrenComponent, canActivate: [AuthGuard] },
 ];
 @NgModule({
     imports: [
@@ -36,12 +36,15 @@ const routes: Routes = [
         SharedModule,
         SidebarModule,
         OrderModule,
+        PaginatorModule,
+        TooltipModule,
     ],
     declarations: [
         RequestComponent,
         MovieRequestsComponent,
         TvRequestsComponent,
         TvRequestChildrenComponent,
+        MusicRequestsComponent,
     ],
     exports: [
         RouterModule,

@@ -1,10 +1,9 @@
-﻿import { Component, Input, OnInit } from "@angular/core";
+import { PlatformLocation } from "@angular/common";
+import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateService } from "@ngx-translate/core";
-import "rxjs/add/operator/debounceTime";
-import "rxjs/add/operator/distinctUntilChanged";
-import "rxjs/add/operator/map";
-import { Subject } from "rxjs/Subject";
+import { Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { AuthService } from "../auth/auth.service";
 import { IIssueCategory, IRequestEngineResult, ISearchMovieResult } from "../interfaces";
@@ -18,10 +17,12 @@ export class MovieSearchComponent implements OnInit {
 
     public searchText: string;
     public searchChanged: Subject<string> = new Subject<string>();
+    public movieRequested: Subject<void> = new Subject<void>();
     public movieResults: ISearchMovieResult[];
     public result: IRequestEngineResult;
+
     public searchApplied = false;
-    
+
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
     public issuesBarVisible = false;
@@ -29,29 +30,36 @@ export class MovieSearchComponent implements OnInit {
     public issueRequestId: number;
     public issueProviderId: string;
     public issueCategorySelected: IIssueCategory;
-        
-    constructor(private searchService: SearchService, private requestService: RequestService,
-                private notificationService: NotificationService, private authService: AuthService,
-                private readonly translate: TranslateService, private sanitizer: DomSanitizer) {
+    public defaultPoster: string;
 
-        this.searchChanged
-            .debounceTime(600) // Wait Xms after the last event before emitting last event
-            .distinctUntilChanged() // only emit if value is different from previous value
-            .subscribe(x => {
-                this.searchText = x as string;
-                if (this.searchText === "") {
-                    this.clearResults();
-                    return;
-                }
-                this.searchService.searchMovie(this.searchText)
-                    .subscribe(x => {
-                        this.movieResults = x;
-                        this.searchApplied = true;
-                        // Now let's load some extra info including IMDB Id
-                        // This way the search is fast at displaying results.
-                        this.getExtraInfo();
-                    });
-            });
+    constructor(
+        private searchService: SearchService, private requestService: RequestService,
+        private notificationService: NotificationService, private authService: AuthService,
+        private readonly translate: TranslateService, private sanitizer: DomSanitizer,
+        private readonly platformLocation: PlatformLocation) {
+        this.searchChanged.pipe(
+            debounceTime(600), // Wait Xms after the last event before emitting last event
+            distinctUntilChanged(), // only emit if value is different from previous value
+        ).subscribe(x => {
+            this.searchText = x as string;
+            if (this.searchText === "") {
+                this.clearResults();
+                return;
+            }
+            this.searchService.searchMovie(this.searchText)
+                .subscribe(x => {
+                    this.movieResults = x;
+                    this.searchApplied = true;
+                    // Now let's load some extra info including IMDB Id
+                    // This way the search is fast at displaying results.
+                    this.getExtraInfo();
+                });
+        });
+        this.defaultPoster = "../../../images/default_movie_poster.png";
+        const base = this.platformLocation.getBaseHrefFromDOM();
+        if (base) {
+            this.defaultPoster = "../../.." + base + "/images/default_movie_poster.png";
+        }
     }
 
     public ngOnInit() {
@@ -61,7 +69,9 @@ export class MovieSearchComponent implements OnInit {
             message: "",
             result: false,
             errorMessage: "",
-        };      
+        };
+
+        this.popularMovies();
     }
 
     public search(text: any) {
@@ -71,6 +81,7 @@ export class MovieSearchComponent implements OnInit {
     public request(searchResult: ISearchMovieResult) {
         searchResult.requested = true;
         searchResult.requestProcessing = true;
+        searchResult.showSubscribe = false;
         if (this.authService.hasRole("admin") || this.authService.hasRole("AutoApproveMovie")) {
             searchResult.approved = true;
         }
@@ -79,8 +90,8 @@ export class MovieSearchComponent implements OnInit {
             this.requestService.requestMovie({ theMovieDbId: searchResult.id })
                 .subscribe(x => {
                     this.result = x;
-
                     if (this.result.result) {
+                        this.movieRequested.next();
                         this.translate.get("Search.RequestAdded", { title: searchResult.title }).subscribe(x => {
                             this.notificationService.success(x);
                             searchResult.processed = true;
@@ -95,6 +106,7 @@ export class MovieSearchComponent implements OnInit {
                         searchResult.approved = false;
                         searchResult.processed = false;
                         searchResult.requestProcessing = false;
+
                     }
                 });
         } catch (e) {
@@ -140,7 +152,8 @@ export class MovieSearchComponent implements OnInit {
 
     public reportIssue(catId: IIssueCategory, req: ISearchMovieResult) {
         this.issueRequestId = req.id;
-        this.issueRequestTitle = req.title;
+        const releaseDate = new Date(req.releaseDate);
+        this.issueRequestTitle = req.title + ` (${releaseDate.getFullYear()})`;
         this.issueCategorySelected = catId;
         this.issuesBarVisible = true;
         this.issueProviderId = req.id.toString();
@@ -149,19 +162,38 @@ export class MovieSearchComponent implements OnInit {
     public similarMovies(theMovieDbId: number) {
         this.clearResults();
         this.searchService.similarMovies(theMovieDbId)
-        .subscribe(x => {
-            this.movieResults = x;
-            this.getExtraInfo();
-        });
+            .subscribe(x => {
+                this.movieResults = x;
+                this.getExtraInfo();
+            });
     }
 
-   private getExtraInfo() {
+    public subscribe(r: ISearchMovieResult) {
+        r.subscribed = true;
+        this.requestService.subscribeToMovie(r.requestId)
+            .subscribe(x => {
+                this.notificationService.success("Subscribed To Movie!");
+            });
+    }
+
+    public unSubscribe(r: ISearchMovieResult) {
+        r.subscribed = false;
+        this.requestService.unSubscribeToMovie(r.requestId)
+            .subscribe(x => {
+                this.notificationService.success("Unsubscribed Movie!");
+            });
+    }
+
+    private getExtraInfo() {
 
         this.movieResults.forEach((val, index) => {
-           
-            val.background = this.sanitizer.
-            bypassSecurityTrustStyle
-            ("url(" + "https://image.tmdb.org/t/p/w1280" + val.backdropPath + ")");
+            if (val.posterPath === null) {
+                val.posterPath = this.defaultPoster;
+            } else {
+                val.posterPath = "https://image.tmdb.org/t/p/w300/" + val.posterPath;
+            }
+            val.background = this.sanitizer.bypassSecurityTrustStyle
+                ("url(" + "https://image.tmdb.org/t/p/w1280" + val.backdropPath + ")");
             this.searchService.getMovieInformation(val.id)
                 .subscribe(m => {
                     this.updateItem(val, m);
@@ -173,8 +205,9 @@ export class MovieSearchComponent implements OnInit {
         const index = this.movieResults.indexOf(key, 0);
         if (index > -1) {
             const copy = { ...this.movieResults[index] };
-            this.movieResults[index] = updated;  
-            this.movieResults[index].background = copy.background;     
+            this.movieResults[index] = updated;
+            this.movieResults[index].background = copy.background;
+            this.movieResults[index].posterPath = copy.posterPath;
         }
     }
     private clearResults() {

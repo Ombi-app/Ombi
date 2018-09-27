@@ -12,6 +12,8 @@
   "Common": {
     "ContinueButton": "Doorgaan",
     "Available": "Beschikbaar",
+    "PartiallyAvailable": "Partially Available",
+    "Monitored": "Monitored",
     "NotAvailable": "Niet Beschikbaar",
     "ProcessingRequest": "Verzoek wordt verwerkt",
     "PendingApproval": "Wacht op goedkeuring",
@@ -62,20 +64,26 @@
       "Italian": "Italiaans",
       "Danish": "Deens",
       "Dutch": "Nederlands",
-      "Norwegian": "Noors"
+      "Norwegian": "Noors",
+      "BrazillianPortuguese": "Brazillian Portuguese",
+      "Polish": "Polish",
+      "Swedish": "Swedish"
     },
-    "OpenMobileApp": "Open Mobiele App"
+    "OpenMobileApp": "Open Mobiele App",
+    "RecentlyAdded": "Recently Added"
   },
   "Search": {
     "Title": "Zoeken",
     "Paragraph": "Wil je iets kijken dat momenteel niet beschikbaar is? Geen probleem, zoek het hieronder op en vraag het aan!",
     "MoviesTab": "Films",
     "TvTab": "TV Series",
+    "MusicTab": "Music",
     "Suggestions": "Suggesties",
     "NoResults": "Sorry, we hebben geen resultaten gevonden!",
     "DigitalDate": "Digital Release: {{date}}",
     "TheatricalRelease": "Theatrical Release: {{date}}",
     "ViewOnPlex": "Bekijk op Plex",
+    "ViewOnEmby": "Bekijk op Emby",
     "RequestAdded": "Aanvraag voor {{title}} is succesvol toegevoegd",
     "Similar": "Similar",
     "Movies": {
@@ -107,11 +115,14 @@
     "Paragraph": "Hieronder zie je jouw en alle andere verzoeken, evenals hun download en goedkeuring status.",
     "MoviesTab": "Films",
     "TvTab": "TV Series",
+    "MusicTab": "Music",
     "RequestedBy": "Verzocht Door:",
     "Status": "Status:",
     "RequestStatus": "Aanvraagstatus:",
     "Denied": " Geweigerd:",
     "TheatricalRelease": "Theatrical Release: {{date}}",
+    "ReleaseDate": "Released: {{date}}",
+    "TheatricalReleaseSort": "Theatrical Release",
     "DigitalRelease": "Digital Release: {{date}}",
     "RequestDate": "Aanvraag Datum:",
     "QualityOverride": "Kwaliteit overschrijven:",
@@ -128,7 +139,21 @@
     "GridStatus": "Status",
     "ReportIssue": "Probleem Melden",
     "Filter": "Filter",
-    "SeasonNumberHeading": "Seizoen: {seasonNumber}"
+    "Sort": "Sort",
+    "SeasonNumberHeading": "Seizoen: {seasonNumber}",
+    "SortTitleAsc": "Title ▲",
+    "SortTitleDesc": "Title ▼",
+    "SortRequestDateAsc": "Request Date ▲",
+    "SortRequestDateDesc": "Request Date ▼",
+    "SortStatusAsc": "Status ▲",
+    "SortStatusDesc": "Status ▼",
+    "Remaining": {
+      "Quota": "{{remaining}}/{{total}} requests remaining",
+      "NextDays": "Another request will be added in {{time}} days",
+      "NextHours": "Another request will be added in {{time}} hours",
+      "NextMinutes": "Another request will be added in {{time}} minutes",
+      "NextMinute": "Another request will be added in {{time}} minute"
+    }
   },
   "Issues": {
     "Title": "Problemen",
@@ -153,6 +178,15 @@
     "ClearFilter": "Verwijder Filter",
     "FilterHeaderAvailability": "Beschikbaarheid",
     "FilterHeaderRequestStatus": "Status",
-    "Approved": "Goedgekeurd"
+    "Approved": "Goedgekeurd",
+    "PendingApproval": "Pending Approval"
+  },
+  "UserManagment": {
+    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
+    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
+    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
+    "TvDue": "TV: {{date}}",
+    "MovieDue": "Movie: {{date}}",
+    "MusicDue": "Music: {{date}}"
   }
 }

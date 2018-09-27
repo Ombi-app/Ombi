@@ -50,12 +50,13 @@ namespace Ombi.Schedule.Jobs.Plex
                     await Cache(server);
                 }
 
-                BackgroundJob.Enqueue(() => _availabilityChecker.Start());
             }
             catch (Exception e)
             {
                 _log.LogError(LoggingEvents.Cacher, e, "Caching Episodes Failed");
             }
+
+            BackgroundJob.Enqueue(() => _availabilityChecker.Start());
         }
 
         private async Task Cache(PlexServers settings)
@@ -110,7 +111,7 @@ namespace Ombi.Schedule.Jobs.Plex
             // 12.03.2017 - I think we should be able to match them now
             //await _repo.ExecuteSql("DELETE FROM PlexEpisode");
 
-            await ProcessEpsiodes(episodes, currentEpisodes);
+            await ProcessEpsiodes(episodes?.MediaContainer?.Metadata ?? new Metadata[] { }, currentEpisodes);
             currentPosition += resultCount;
 
             while (currentPosition < episodes.MediaContainer.totalSize)
@@ -118,7 +119,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 var ep = await _api.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, section.key, currentPosition,
                     resultCount);
 
-                await ProcessEpsiodes(ep, currentEpisodes);
+                await ProcessEpsiodes(ep?.MediaContainer?.Metadata ?? new Metadata[] { }, currentEpisodes);
                 _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Processed {resultCount} more episodes. Total Remaining {episodes.MediaContainer.totalSize - currentPosition}");
                 currentPosition += resultCount;
             }
@@ -128,12 +129,12 @@ namespace Ombi.Schedule.Jobs.Plex
             await _repo.SaveChangesAsync();
         }
 
-        private async Task ProcessEpsiodes(PlexContainer episodes, IQueryable<PlexEpisode> currentEpisodes)
+        public async Task<HashSet<PlexEpisode>> ProcessEpsiodes(Metadata[] episodes, IQueryable<PlexEpisode> currentEpisodes)
         {
             var ep = new HashSet<PlexEpisode>();
             try
             {
-                foreach (var episode in episodes?.MediaContainer?.Metadata ?? new Metadata[] { })
+                foreach (var episode in episodes)
                 {
                     // I don't think we need to get the metadata, we only need to get the metadata if we need the provider id (TheTvDbid). Why do we need it for episodes?
                     // We have the parent and grandparent rating keys to link up to the season and series
@@ -178,6 +179,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
 
                 await _repo.AddRange(ep);
+                return ep;
             }
             catch (Exception e)
             {

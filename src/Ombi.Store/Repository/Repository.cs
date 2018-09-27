@@ -35,10 +35,13 @@ namespace Ombi.Store.Repository
             return await _db.FirstOrDefaultAsync(predicate);
         }
 
-        public async Task AddRange(IEnumerable<T> content)
+        public async Task AddRange(IEnumerable<T> content, bool save = true)
         {
             _db.AddRange(content);
-            await _ctx.SaveChangesAsync();
+            if (save)
+            {
+                await _ctx.SaveChangesAsync();
+            }
         }
 
         public async Task<T> Add(T content)

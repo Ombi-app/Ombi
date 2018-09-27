@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Humanizer;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models;
@@ -13,10 +14,14 @@ namespace Ombi.Notifications
 {
     public class NotificationMessageCurlys
     {
-
-        public void Setup(NotificationOptions opts, FullBaseRequest req, CustomizationSettings s)
+        public void Setup(NotificationOptions opts, FullBaseRequest req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
+            if (pref != null)
+            {
+                UserPreference = pref.Enabled ? pref.Value : string.Empty;
+            }
+
             string title;
             if (req == null)
             {
@@ -29,15 +34,70 @@ namespace Ombi.Notifications
             ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
             RequestedUser = req?.RequestedUser?.UserName;
-            UserName = req?.RequestedUser?.UserName;
+            if (UserName.IsNullOrEmpty())
+            {
+                // Can be set if it's an issue
+                UserName = req?.RequestedUser?.UserName;
+            }
+
             Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
             Title = title;
             RequestedDate = req?.RequestedDate.ToString("D");
-            Type = req?.RequestType.ToString();
+            if (Type.IsNullOrEmpty())
+            {
+                Type = req?.RequestType.Humanize();
+            }
             Overview = req?.Overview;
             Year = req?.ReleaseDate.Year.ToString();
-            PosterImage = req?.RequestType == RequestType.Movie ?
-                string.Format("https://image.tmdb.org/t/p/w300{0}", req?.PosterPath) : req?.PosterPath;
+
+            if (req?.RequestType == RequestType.Movie)
+            {
+                PosterImage = string.Format((req?.PosterPath ?? string.Empty).StartsWith("/", StringComparison.InvariantCultureIgnoreCase)
+                    ? "https://image.tmdb.org/t/p/w300{0}" : "https://image.tmdb.org/t/p/w300/{0}", req?.PosterPath);
+            }
+            else
+            {
+                PosterImage = req?.PosterPath;
+            }
+
+            AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
+        }
+
+        public void Setup(NotificationOptions opts, AlbumRequest req, CustomizationSettings s, UserNotificationPreferences pref)
+        {
+            LoadIssues(opts);
+            if (pref != null)
+            {
+                UserPreference = pref.Enabled ? pref.Value : string.Empty;
+            }
+            string title;
+            if (req == null)
+            {
+                opts.Substitutes.TryGetValue("Title", out title);
+            }
+            else
+            {
+                title = req?.Title;
+            }
+            ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
+            ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
+            RequestedUser = req?.RequestedUser?.UserName;
+            if (UserName.IsNullOrEmpty())
+            {
+                // Can be set if it's an issue
+                UserName = req?.RequestedUser?.UserName;
+            }
+
+            Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
+            Title = title;
+            RequestedDate = req?.RequestedDate.ToString("D");
+            if (Type.IsNullOrEmpty())
+            {
+                Type = req?.RequestType.Humanize();
+            }
+            Year = req?.ReleaseDate.Year.ToString();
+            PosterImage = (req?.Cover.HasValue() ?? false) ? req.Cover : req?.Disk ?? string.Empty;
+
             AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
         }
 
@@ -50,9 +110,13 @@ namespace Ombi.Notifications
             Alias = username.Alias.HasValue() ? username.Alias : username.UserName;
         }
 
-        public void Setup(NotificationOptions opts, ChildRequests req, CustomizationSettings s)
+        public void Setup(NotificationOptions opts, ChildRequests req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
+            if (pref != null)
+            {
+                UserPreference = pref.Enabled ? pref.Value : string.Empty;
+            }
             string title;
             if (req == null)
             {
@@ -65,15 +129,30 @@ namespace Ombi.Notifications
             ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
             RequestedUser = req?.RequestedUser?.UserName;
-            UserName = req?.RequestedUser?.UserName;
+            if (UserName.IsNullOrEmpty())
+            {
+                // Can be set if it's an issue
+                UserName = req?.RequestedUser?.UserName;
+            }
             Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
             Title = title;
             RequestedDate = req?.RequestedDate.ToString("D");
-            Type = req?.RequestType.ToString();
+            if (Type.IsNullOrEmpty())
+            {
+                Type = req?.RequestType.Humanize();
+            }
+
             Overview = req?.ParentRequest.Overview;
             Year = req?.ParentRequest.ReleaseDate.Year.ToString();
-            PosterImage = req?.RequestType == RequestType.Movie ?
-                $"https://image.tmdb.org/t/p/w300{req?.ParentRequest.PosterPath}" : req?.ParentRequest.PosterPath;
+            if (req?.RequestType == RequestType.Movie)
+            {
+                PosterImage = string.Format((req?.ParentRequest.PosterPath ?? string.Empty).StartsWith("/", StringComparison.InvariantCultureIgnoreCase)
+                    ? "https://image.tmdb.org/t/p/w300{0}" : "https://image.tmdb.org/t/p/w300/{0}", req?.ParentRequest.PosterPath);
+            }
+            else
+            {
+                PosterImage = req?.ParentRequest.PosterPath;
+            }
             AdditionalInformation = opts.AdditionalInformation;
             // DO Episode and Season Lists
 
@@ -117,6 +196,8 @@ namespace Ombi.Notifications
             ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
             RequestedUser = user.UserName;
+            Alias = user.UserAlias;
+            UserName = user.UserName;
         }
 
         private void LoadIssues(NotificationOptions opts)
@@ -128,6 +209,7 @@ namespace Ombi.Notifications
             IssueSubject = opts.Substitutes.TryGetValue("IssueSubject", out val) ? val : string.Empty;
             NewIssueComment = opts.Substitutes.TryGetValue("NewIssueComment", out val) ? val : string.Empty;
             UserName = opts.Substitutes.TryGetValue("IssueUser", out val) ? val : string.Empty;
+            Type = opts.Substitutes.TryGetValue("RequestType", out val) ? val.Humanize() : string.Empty;
         }
 
         // User Defined
@@ -152,6 +234,7 @@ namespace Ombi.Notifications
         public string IssueStatus { get; set; }
         public string IssueSubject { get; set; }
         public string NewIssueComment { get; set; }
+        public string UserPreference { get; set; }
 
         // System Defined
         private string LongDate => DateTime.Now.ToString("D");

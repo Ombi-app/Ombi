@@ -12,6 +12,8 @@
   "Common": {
     "ContinueButton": "Continuar",
     "Available": "Disponible",
+    "PartiallyAvailable": "Partially Available",
+    "Monitored": "Monitored",
     "NotAvailable": "Not Available",
     "ProcessingRequest": "Procesando solicitud",
     "PendingApproval": "Pendiente de aprobación",
@@ -62,20 +64,26 @@
       "Italian": "Italiano",
       "Danish": "Danés",
       "Dutch": "Holandés",
-      "Norwegian": "Norwegian"
+      "Norwegian": "Norwegian",
+      "BrazillianPortuguese": "Brazillian Portuguese",
+      "Polish": "Polish",
+      "Swedish": "Swedish"
     },
-    "OpenMobileApp": "Open Mobile App"
+    "OpenMobileApp": "Open Mobile App",
+    "RecentlyAdded": "Recently Added"
   },
   "Search": {
     "Title": "Buscar",
     "Paragraph": "¿Quieres ver algo que no está disponible? No hay problema, búscalo y solicítalo!",
     "MoviesTab": "Películas",
     "TvTab": "Series",
+    "MusicTab": "Music",
     "Suggestions": "Sugerencias",
     "NoResults": "¡Lo sentimos, no encontramos ningún resultado!",
     "DigitalDate": "Digital Release: {{date}}",
     "TheatricalRelease": "Theatrical Release: {{date}}",
     "ViewOnPlex": "Ver en Plex",
+    "ViewOnEmby": "Ver en Emby",
     "RequestAdded": "La solicitud de {{title}} se ha agregado con éxito",
     "Similar": "Similar",
     "Movies": {
@@ -107,11 +115,14 @@
     "Paragraph": "A continuación puedes ver tanto las tuyas como las demás solicitudes, así como su estado de descarga y aprobación.",
     "MoviesTab": "Películas",
     "TvTab": "Series",
+    "MusicTab": "Music",
     "RequestedBy": "Solicitado por:",
     "Status": "Estado:",
     "RequestStatus": "Estado de la solicitud:",
     "Denied": " Denegado:",
     "TheatricalRelease": "Theatrical Release: {{date}}",
+    "ReleaseDate": "Released: {{date}}",
+    "TheatricalReleaseSort": "Theatrical Release",
     "DigitalRelease": "Digital Release: {{date}}",
     "RequestDate": "Fecha de solicitud:",
     "QualityOverride": "Sobreescribir calidad:",
@@ -128,7 +139,21 @@
     "GridStatus": "Estado",
     "ReportIssue": "Report Issue",
     "Filter": "Filter",
-    "SeasonNumberHeading": "Season: {seasonNumber}"
+    "Sort": "Sort",
+    "SeasonNumberHeading": "Season: {seasonNumber}",
+    "SortTitleAsc": "Title ▲",
+    "SortTitleDesc": "Title ▼",
+    "SortRequestDateAsc": "Request Date ▲",
+    "SortRequestDateDesc": "Request Date ▼",
+    "SortStatusAsc": "Status ▲",
+    "SortStatusDesc": "Status ▼",
+    "Remaining": {
+      "Quota": "{{remaining}}/{{total}} requests remaining",
+      "NextDays": "Another request will be added in {{time}} days",
+      "NextHours": "Another request will be added in {{time}} hours",
+      "NextMinutes": "Another request will be added in {{time}} minutes",
+      "NextMinute": "Another request will be added in {{time}} minute"
+    }
   },
   "Issues": {
     "Title": "Incidencias",
@@ -153,6 +178,15 @@
     "ClearFilter": "Clear Filter",
     "FilterHeaderAvailability": "Availability",
     "FilterHeaderRequestStatus": "Status",
-    "Approved": "Approved"
+    "Approved": "Approved",
+    "PendingApproval": "Pending Approval"
+  },
+  "UserManagment": {
+    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
+    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
+    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
+    "TvDue": "TV: {{date}}",
+    "MovieDue": "Movie: {{date}}",
+    "MusicDue": "Music: {{date}}"
   }
 }

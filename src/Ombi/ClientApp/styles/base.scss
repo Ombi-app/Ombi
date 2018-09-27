@@ -10,6 +10,8 @@ $danger-colour: #d9534f;
 $success-colour: #5cb85c;
 $i: !important;
 
+
+
 @media (min-width: 768px ) {
     .bottom-align-text {
         position: absolute;
@@ -93,6 +95,7 @@ hr {
 
 .btn {
     border-radius: .25rem $i;
+    margin-bottom: 10px;
 }
 
 .btn-group-separated .btn,
@@ -131,8 +134,16 @@ h1 {
     font-size: 1.9rem $i;
 }
 
+a.active {
+    background-color: $primary-colour;
+}
+
 p {
     font-size: 1.1rem $i;
+}
+
+.tags {
+    display: block;
 }
 
 label {
@@ -437,13 +448,14 @@ $border-radius: 10px;
     margin-right: 10px;
     position: absolute;
     left: 0;
+    top: 3px;
     bottom: 1px;
     border: 2px solid #eee;
     border-radius: 3px;
 }
 
 .checkbox input[type=checkbox] {
-    display: none;
+    opacity: 0;
 }
 
 .checkbox input[type=checkbox]:checked + label:before {
@@ -533,6 +545,10 @@ $border-radius: 10px;
     margin-bottom: 0;
     font-weight: normal;
     cursor: pointer;
+}
+
+.table-usermanagement {
+    margin-top: 20px;
 }
 
 .input-group-sm {
@@ -867,11 +883,6 @@ textarea {
     display: none;
 }
 
-.ui-treetable-toggler.fa.fa-fw.ui-clickable.fa-caret-right,
-.ui-treetable-toggler.fa.fa-fw.ui-clickable.fa-caret-down {
-    display: none;
-}
-
 .ui-state-highlight {
     background: $primary-colour;
 }
@@ -882,15 +893,6 @@ textarea {
 
 .ui-state-default {
     border: 1px solid $form-color-lighter;
-}
-
-.ui-treetable tfoot td, .ui-treetable th {
-    text-align: left;
-}
-
-.ui-treetable tbody td {
-    white-space: inherit;
-    overflow: visible;
 }
 
 table a:not(.btn) {
@@ -930,7 +932,7 @@ a > h4:hover {
 
 .backdrop{
      box-shadow: 3px 3px 10px #000000;
-     background-position: center;
+     background-position: 50% 33%;
      background-size: cover;
 }
 
@@ -948,3 +950,62 @@ a > h4:hover {
 .searchWidth {
     width: 94%;
 }
+
+.ui-state-active {
+    background-color: $primary-colour-outline $i;
+    color: black $i;
+}
+
+#themeContent {
+    font-family: monospace;
+}
+
+.reported-by,
+.reported-user,
+.subject-category,
+.subject {
+    display: inline-block;
+}
+
+.custom-modal-backdrop {
+    opacity: 0.5 !important;
+    filter: alpha(opacity=0.5);
+}
+
+.window {
+    opacity: 1 !important;
+    top: 7%;
+}
+
+.modal.fade .modal-dialog {
+    -webkit-transform: translate(0, 0%);
+    -ms-transform: translate(0, 0%);
+    -o-transform: translate(0, 0%);
+    transform: translate(0, 0%);
+    -webkit-transition: -webkit-transform .3s ease-out;
+    -o-transition: -o-transform .3s ease-out;
+    transition: transform .3s ease-out;
+}
+
+.modal-footer .btn+.btn {
+    margin-left: 5px;
+     margin-bottom: 10px;
+}
+
+.label {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: bold;
+    line-height: 1;
+    color: #ffffff;
+    text-align: center;
+    white-space: normal; 
+    vertical-align: baseline;
+    border-radius: .25em;
+}
+
+.album-cover {
+    width:300px;
+}
+

@@ -23,11 +23,13 @@ namespace Ombi
 
             var host = string.Empty;
             var storagePath = string.Empty;
+            var baseUrl = string.Empty;
             var result = Parser.Default.ParseArguments<Options>(args)
                 .WithParsed(o =>
                 {
                     host = o.Host;
                     storagePath = o.StoragePath;
+                    baseUrl = o.BaseUrl;
                 }).WithNotParsed(err =>
                 {
                     foreach (var e in err)
@@ -47,6 +49,7 @@ namespace Ombi
             {
                 var config = ctx.ApplicationConfigurations.ToList();
                 var url = config.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
+                var dbBaseUrl = config.FirstOrDefault(x => x.Type == ConfigurationTypes.BaseUrl);
                 if (url == null)
                 {
                     url = new ApplicationConfiguration
@@ -65,11 +68,46 @@ namespace Ombi
                     ctx.SaveChanges();
                     urlValue = url.Value;
                 }
+
+                if (dbBaseUrl == null)
+                {
+                    if (baseUrl.HasValue() && baseUrl.StartsWith("/"))
+                    {
+                        dbBaseUrl = new ApplicationConfiguration
+                        {
+                            Type = ConfigurationTypes.BaseUrl,
+                            Value = baseUrl
+                        };
+                        ctx.ApplicationConfigurations.Add(dbBaseUrl);
+                        ctx.SaveChanges();
+                    }
+                }
+                else if(baseUrl.HasValue() && !baseUrl.Equals(dbBaseUrl.Value))
+                {
+                    dbBaseUrl.Value = baseUrl;
+                    ctx.SaveChanges();
+                }
             }
+
+            DeleteSchedulesDb();
 
             Console.WriteLine($"We are running on {urlValue}");
 
             BuildWebHost(args).Run();
+        }
+
+        private static void DeleteSchedulesDb()
+        {
+            try
+            {
+                if (File.Exists("Schedules.db"))
+                {
+                    File.Delete("Schedules.db");
+                }
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
@@ -98,9 +136,12 @@ namespace Ombi
             " Use \"*\" to indicate that the server should listen for requests on any IP address or hostname using the specified port and protocol (for example, http://*:5000). " +
             "The protocol (http:// or https://) must be included with each URL. Supported formats vary between servers.", Default = "http://*:5000")]
         public string Host { get; set; }
-   
+
         [Option("storage", Required = false, HelpText = "Storage path, where we save the logs and database")]
         public string StoragePath { get; set; }
-       
+
+        [Option("baseurl", Required = false, HelpText = "The base URL for reverse proxy scenarios")]
+        public string BaseUrl { get; set; }
+
     }
 }

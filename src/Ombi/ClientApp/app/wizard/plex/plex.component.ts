@@ -1,26 +1,27 @@
-﻿import { Component } from "@angular/core";
+﻿import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { ConfirmationService } from "primeng/primeng";
-
-import { PlexService } from "../../services";
-import { IdentityService, NotificationService, SettingsService } from "../../services";
-import { AuthService } from "./../../auth/auth.service";
+import { PlexService, PlexTvService, SettingsService } from "../../services";
+import { IdentityService, NotificationService } from "../../services";
 
 @Component({
     templateUrl: "./plex.component.html",
 })
-export class PlexComponent {
+export class PlexComponent implements OnInit {
 
     public login: string;
     public password: string;
 
+    private clientId: string;
+
     constructor(private plexService: PlexService, private router: Router,
                 private notificationService: NotificationService,
-                private confirmationService: ConfirmationService,
-                private identityService: IdentityService,
-                private settings: SettingsService,
-                private auth: AuthService) { }
+                private identityService: IdentityService, private plexTv: PlexTvService,
+                private settingsService: SettingsService) { }
+
+    public ngOnInit(): void {
+        this.settingsService.getClientId().subscribe(x => this.clientId = x);
+    }
 
     public requestAuthToken() {
         this.plexService.logIn(this.login, this.password).subscribe(x => {
@@ -28,46 +29,33 @@ export class PlexComponent {
                 this.notificationService.error("Username or password was incorrect. Could not authenticate with Plex.");
                 return;
             }
-            this.confirmationService.confirm({
-              message: "Do you want your Plex user to be the main admin account on Ombi?",
-              header: "Use Plex Account",
-              icon: "fa fa-check",
-              accept: () => {
-                  this.identityService.createWizardUser({
+
+            this.identityService.createWizardUser({
                     username: "",
                     password: "",
                     usePlexAdminAccount: true,
-                  }).subscribe(x => {
-                    if (x) {
-                        this.auth.login({ username: this.login, password: this.password, rememberMe:false }).subscribe(c => {
-                            localStorage.setItem("id_token", c.access_token);
-                  
-                            // Mark that we have done the settings now
-                            this.settings.getOmbi().subscribe(ombi => {
-                                ombi.wizard = true;
-
-                                this.settings.saveOmbi(ombi).subscribe(x => {
-                                    this.settings.getUserManagementSettings().subscribe(usr => {
-
-                                        usr.importPlexAdmin = true;
-                                        this.settings.saveUserManagementSettings(usr).subscribe(saved => {
-                                            this.router.navigate(["login"]);
-                                        });
-                                    });
-
-                                });
-                            });
-                    });
+                  }).subscribe(y => {
+                    if (y.result) {
+                            this.router.navigate(["login"]);
                     } else {
                       this.notificationService.error("Could not get the Plex Admin Information");
+                      if(y.errors.length > 0) {
+                            this.notificationService.error(y.errors[0]);
+                        }
                       return;
                     }
                   });
               },
-              reject: () => {
-                this.router.navigate(["Wizard/CreateAdmin"]);
-              },
-            });  
+        );
+    }
+
+    public oauth() {
+        this.plexTv.GetPin(this.clientId, "Ombi").subscribe((pin: any) => {
+            this.plexService.oAuth({ wizard: true, pin }).subscribe(x => {
+                if (x.url) {
+                    window.location.href = x.url;
+                }
+            });
         });
     }
 }

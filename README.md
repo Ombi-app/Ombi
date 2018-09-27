@@ -1,18 +1,28 @@
 ![](http://i.imgur.com/qQsN78U.png)   
 ____ 
-[![Discord](https://img.shields.io/discord/102860784329052160.svg)](https://discord.gg/KxYZ64w)
+[![Discord](https://img.shields.io/discord/270828201473736705.svg)](https://discord.gg/Sa7wNWb)
 [![Docker Pulls](https://img.shields.io/docker/pulls/linuxserver/ombi.svg)](https://hub.docker.com/r/linuxserver/ombi/)
 [![Github All Releases](https://img.shields.io/github/downloads/tidusjar/Ombi/total.svg)](https://github.com/tidusjar/Ombi)
-[![firsttimersonly](http://img.shields.io/badge/first--timers--only-friendly-blue.svg?style=flat-square)](http://www.firsttimersonly.com/)
+[![firsttimersonly](http://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/ombi/localized.svg)](https://crowdin.com/project/ombi)
 
-[![Patreon](https://www.ombi.io/img/patreondonate.svg)](https://patreon.com/tidusjar/Ombi)
-[![Paypal](https://www.ombi.io/img/paypaldonate.svg)](https://paypal.me/PlexRequestsNet)
+[![Patreon](https://img.shields.io/badge/patreon-donate-yellow.svg)](https://patreon.com/tidusjar/Ombi)
+[![Paypal](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://paypal.me/PlexRequestsNet)
+
+___
+<a href='https://play.google.com/store/apps/details?id=com.tidusjar.Ombi&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img width="150"   alt='Get it on Google Play' src='https://play.google.com/intl/en_gb/badges/images/generic/en_badge_web_generic.png'/></a>
+
+<a href='https://itunes.apple.com/us/app/ombi/id1335260043?ls=1&mt=8'><img width="150"   alt='Get it on App Store' src='https://i.imgur.com/cJFa0M4.png'/></a>
+
 
 ___
 
+We also now have merch up on Teespring!
 
-[![Report a bug](http://i.imgur.com/xSpw482.png)](https://forums.ombi.io/viewforum.php?f=10) [![Feature request](http://i.imgur.com/mFO0OuX.png)](https://forums.ombi.io/posting.php?mode=post&f=20)
+[EU Store](https://teespring.com/stores/ombi-eu)   
+[US Store](https://teespring.com/stores/ombi-us)
+
+___
 
 
 | Service  | Stable         | Develop          |
@@ -56,7 +66,7 @@ Supported notifications:
 
 ### The difference between Version 3 and 2
 
-Over the last 8 months, we focused on the main functions on Ombi, a complete rewrite while making it better, faster and more stable.
+Over the last year, we focused on the main functions on Ombi, a complete rewrite while making it better, faster and more stable.
 We have already done most of the work, but some features are still be missing in this first version.
 We are planning to bring back these features in V3 but for now you can find a list below with a quick comparison of features between v2 and v3.
 
@@ -70,13 +80,13 @@ We are planning to bring back these features in V3 but for now you can find a li
 | Landing page | Yes (brand new) | Yes |
 | Login page | Yes (brand new) | Yes |
 | Custom Notification Messages | Yes | No |
-| Sending newsletters | Planned | Yes |
+| Sending newsletters | Yes | Yes |
 | Send a Mass Email | Yes | Yes |
 | SickRage | Yes | Yes |
 | CouchPotato | Yes | Yes |
 | DogNzb | Yes | No |
 | Issues | Yes | Yes |
-| Headphones | No (support dropped) | Yes |
+| Headphones | No | Yes |
 
 # Feature Requests
 Feature requests are handled on FeatHub.

@@ -12,6 +12,11 @@ namespace Ombi.Store.Entities.Requests
         [ForeignKey(nameof(IssueId))]
         public List<Issues> Issues { get; set; }
 
+        [NotMapped]
+        public bool Subscribed { get; set; }
+        [NotMapped]
+        public bool ShowSubscribe { get; set; }
+
         public int RootPathOverride { get; set; }
         public int QualityOverride { get; set; }
     }
