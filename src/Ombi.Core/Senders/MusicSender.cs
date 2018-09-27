@@ -76,7 +76,11 @@ namespace Ombi.Core.Senders
                 var result = await _lidarrApi.AddArtist(newArtist, settings.ApiKey, settings.FullUri);
                 if (result != null && result.id > 0)
                 {
-                    // Setup the albums
+                    // Search for it
+                    if (!settings.AddOnly)
+                    {
+                        await _lidarrApi.AlbumSearch(new[] { result.id }, settings.ApiKey, settings.FullUri);
+                    }
                     return new SenderResult { Message = "Album has been requested!", Sent = true, Success = true };
                 }
             }
