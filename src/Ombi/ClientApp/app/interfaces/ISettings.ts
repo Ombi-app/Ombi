@@ -144,14 +144,11 @@ export interface IJobSettings {
   newsletter: string;
   plexRecentlyAddedSync: string;
   lidarrArtistSync: string;
-  issuesPurge: string;
 }
 
 export interface IIssueSettings extends ISettings {
   enabled: boolean;
   enableInProgress: boolean;
-  deleteIssues: boolean;
-  daysAfterResolvedToDelete: number;
 }
 
 export interface IAuthenticationSettings extends ISettings {

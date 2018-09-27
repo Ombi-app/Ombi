@@ -519,8 +519,7 @@ namespace Ombi.Controllers
             j.PlexRecentlyAddedSync = j.PlexRecentlyAddedSync.HasValue() ? j.PlexRecentlyAddedSync : JobSettingsHelper.PlexRecentlyAdded(j);
             j.Newsletter = j.Newsletter.HasValue() ? j.Newsletter : JobSettingsHelper.Newsletter(j);
             j.LidarrArtistSync = j.LidarrArtistSync.HasValue() ? j.LidarrArtistSync : JobSettingsHelper.LidarrArtistSync(j);
-            j.IssuesPurge = j.IssuesPurge.HasValue() ? j.IssuesPurge : JobSettingsHelper.IssuePurge(j);
-
+ 
             return j;
         }
 

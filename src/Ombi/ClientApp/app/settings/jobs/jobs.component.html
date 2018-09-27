@@ -85,18 +85,11 @@
                     </div>
 
                     
-                    <div class="form-group">
+                <div class="form-group">
                         <label for="userImporter" class="control-label">Newsletter</label>              
                             <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('newsletter').hasError('required')}" id="newsletter" name="newsletter" formControlName="newsletter">
                             <small *ngIf="form.get('newsletter').hasError('required')" class="error-text">The Newsletter is required</small>
                             <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('newsletter')?.value)">Test</button>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="userImporter" class="control-label">Issue Purge/Delete</label>              
-                            <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('issuesPurge').hasError('required')}" id="issuesPurge" name="issuesPurge" formControlName="issuesPurge">
-                            <small *ngIf="form.get('issuesPurge').hasError('required')" class="error-text">The Issues Purge is required</small>
-                            <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('issuesPurge')?.value)">Test</button>
                     </div>
             </div>
             <div class="form-group">
