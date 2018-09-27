@@ -19,6 +19,20 @@
             </div>
 
             <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" id="deleteIssues" formControlName="deleteIssues" ng-checked="form.deleteIssues">
+                    <label for="deleteIssues">Delete issues after they have been resolved</label>
+                </div>
+            </div>
+
+            <div class="form-group" *ngIf="form.controls.deleteIssues.value">
+                <div class="checkbox">
+                    <input type="checkbox" id="daysAfterResolvedToDelete" formControlName="daysAfterResolvedToDelete" ng-checked="form.daysAfterResolvedToDelete">
+                    <label for="daysAfterResolvedToDelete">Leave the resolved issue for X amount of days before deletion</label>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <div>
                     <button type="submit" [disabled]="form.invalid" class="btn btn-primary-outline ">Submit</button>
                 </div>
