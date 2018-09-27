@@ -29,5 +29,6 @@ namespace Ombi.Store.Entities.Requests
         Pending = 0,
         InProgress = 1,
         Resolved = 2,
+        Deleted = 3,
     }
 }

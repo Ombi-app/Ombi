@@ -21,8 +21,10 @@ export class IssuesComponent implements OnInit {
     public ngOnInit() {
         this.settingsService.getIssueSettings().subscribe(x => {
             this.form = this.fb.group({
-                enabled:            [x.enabled],
-                enableInProgress:   [x.enableInProgress],
+                enabled:                    [x.enabled],
+                enableInProgress:           [x.enableInProgress],
+                deleteIssues:               [x.deleteIssues],
+                daysAfterResolvedToDelete:  [x.daysAfterResolvedToDelete],
             });
         });
         this.getCategories();
