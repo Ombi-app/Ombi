@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models;
+using Ombi.Core.Models.UI;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models;
@@ -32,14 +34,30 @@ namespace Ombi.Core.Engine
         private readonly ITvRequestEngine _tvRequestEngine;
         private readonly IMovieRequestEngine _movieRequestEngine;
 
-        public async Task GetMovieViewModel()
+        public async Task<List<VoteViewModel>> GetMovieViewModel()
         {
-            var requests = await _movieRequestEngine.GetRequests();
-            foreach (var r in requests)
+            var vm = new List<VoteViewModel>();
+            var movieRequests = await _movieRequestEngine.GetRequests();
+            foreach (var r in movieRequests)
             {
                 // Make model
                 var votes = GetVotes(r.Id, RequestType.Movie);
+                var upVotes = await votes.Where(x => x.VoteType == VoteType.Upvote).CountAsync();
+                var downVotes = await votes.Where(x => x.VoteType == VoteType.Downvote).CountAsync();
+                vm.Add(new VoteViewModel
+                {
+                    Upvotes = upVotes,
+                    Downvotes = downVotes,
+                    RequestId = r.Id,
+                    RequestType = RequestType.Movie,
+                    Title = r.Title,
+                    Image                    = r.PosterPath,
+                    Background = r.Background,
+                    Description = r.Overview
+                });
             }
+
+            return vm;
         }
 
         public IQueryable<Votes> GetVotes(int requestId, RequestType requestType)
