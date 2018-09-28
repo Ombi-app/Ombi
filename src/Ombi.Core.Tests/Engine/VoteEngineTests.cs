@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using AutoFixture;
 using Moq;
 using NUnit.Framework;
 using Ombi.Core.Authentication;
@@ -21,6 +22,7 @@ namespace Ombi.Core.Tests.Engine
         [SetUp]
         public void Setup()
         {
+            F = new Fixture();
             VoteRepository = new Mock<IRepository<Votes>>();
             VoteSettings = new Mock<ISettingsService<VoteSettings>>();
             MusicRequestEngine = new Mock<IMusicRequestEngine>();
@@ -29,11 +31,14 @@ namespace Ombi.Core.Tests.Engine
             MovieRequestEngine = new Mock<IMovieRequestEngine>();
             User = new Mock<IPrincipal>();
             UserManager = new Mock<OmbiUserManager>();
+            UserManager.Setup(x => x.Users)
+                .Returns(new EnumerableQuery<OmbiUser>(new List<OmbiUser> {new OmbiUser {Id = "abc"}}));
             Rule = new Mock<IRuleEvaluator>();
             Engine = new VoteEngine(VoteRepository.Object, User.Object, UserManager.Object, Rule.Object, VoteSettings.Object, MusicRequestEngine.Object,
                 TvRequestEngine.Object, MovieRequestEngine.Object);
         }
 
+        public Fixture F { get; set; }
         public VoteEngine Engine { get; set; }
         public Mock<IPrincipal> User { get; set; }
         public Mock<OmbiUserManager> UserManager { get; set; }
@@ -45,13 +50,24 @@ namespace Ombi.Core.Tests.Engine
         public Mock<IMovieRequestEngine> MovieRequestEngine { get; set; }
 
         [Test]
+        [Ignore("Need to mock the user manager")]
         public async Task New_Upvote()
         {
-            var votes = new List<Votes>();
-            AutoFi
-            VoteRepository.Setup(x => x.GetAll()).Returns(new EnumerableQuery<Votes>())
+            VoteSettings.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new VoteSettings());
+            var votes = F.CreateMany<Votes>().ToList();
+            votes.Add(new Votes
+            {
+                RequestId = 1,
+                RequestType = RequestType.Movie,
+                UserId = "abc"
+            });
+            VoteRepository.Setup(x => x.GetAll()).Returns(new EnumerableQuery<Votes>(votes));
             var result = await Engine.UpVote(1, RequestType.Movie);
 
+            Assert.That(result.Result, Is.True);
+            VoteRepository.Verify(x => x.Add(It.Is<Votes>(c => c.UserId == "abc" && c.VoteType == VoteType.Upvote)), Times.Once);
+            VoteRepository.Verify(x => x.Delete(It.IsAny<Votes>()), Times.Once);
+            MovieRequestEngine.Verify(x => x.ApproveMovieById(1), Times.Never);
         }
     }
 }

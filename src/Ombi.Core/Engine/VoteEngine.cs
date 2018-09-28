@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -15,7 +14,7 @@ using Ombi.Store.Repository;
 
 namespace Ombi.Core.Engine
 {
-    public class VoteEngine : BaseEngine
+    public class VoteEngine : BaseEngine, IVoteEngine
     {
         public VoteEngine(IRepository<Votes> votes, IPrincipal user, OmbiUserManager um, IRuleEvaluator r, ISettingsService<VoteSettings> voteSettings,
             IMusicRequestEngine musicRequestEngine, ITvRequestEngine tvRequestEngine, IMovieRequestEngine movieRequestEngine) : base(user, um, r)
@@ -32,6 +31,16 @@ namespace Ombi.Core.Engine
         private readonly IMusicRequestEngine _musicRequestEngine;
         private readonly ITvRequestEngine _tvRequestEngine;
         private readonly IMovieRequestEngine _movieRequestEngine;
+
+        public async Task GetMovieViewModel()
+        {
+            var requests = await _movieRequestEngine.GetRequests();
+            foreach (var r in requests)
+            {
+                // Make model
+                var votes = GetVotes(r.Id, RequestType.Movie);
+            }
+        }
 
         public IQueryable<Votes> GetVotes(int requestId, RequestType requestType)
         {
