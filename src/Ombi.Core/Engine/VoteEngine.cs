@@ -40,7 +40,7 @@ namespace Ombi.Core.Engine
         {
             var vm = new List<VoteViewModel>();
             var movieRequests = await _movieRequestEngine.GetRequests();
-            var tvRequestsTask = _tvRequestEngine.GetRequestsLite();
+            var tvRequestsTask = _tvRequestEngine.GetRequests();
             var musicRequestsTask = _musicRequestEngine.GetRequests();
             foreach (var r in movieRequests)
             {
@@ -55,8 +55,8 @@ namespace Ombi.Core.Engine
                     RequestId = r.Id,
                     RequestType = RequestType.Movie,
                     Title = r.Title,
-                    Image                    = r.PosterPath,
-                    Background = r.Background,
+                    Image = $"https://image.tmdb.org/t/p/w500/{r.PosterPath}",
+                    Background = $"https://image.tmdb.org/t/p/w1280{r.Background}",
                     Description = r.Overview
                 });
             }
@@ -64,7 +64,7 @@ namespace Ombi.Core.Engine
             foreach (var r in await musicRequestsTask)
             {
                 // Make model
-                var votes = GetVotes(r.Id, RequestType.Movie);
+                var votes = GetVotes(r.Id, RequestType.Album);
                 var upVotes = await votes.Where(x => x.VoteType == VoteType.Upvote).CountAsync();
                 var downVotes = await votes.Where(x => x.VoteType == VoteType.Downvote).CountAsync();
                 vm.Add(new VoteViewModel
@@ -72,9 +72,9 @@ namespace Ombi.Core.Engine
                     Upvotes = upVotes,
                     Downvotes = downVotes,
                     RequestId = r.Id,
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.Album,
                     Title = r.Title,
-                    Image = r.Disk,
+                    Image = r.Cover,
                     Background = r.Cover,
                     Description = r.ArtistName
                 });
@@ -83,7 +83,7 @@ namespace Ombi.Core.Engine
             foreach (var r in await tvRequestsTask)
             {
                 // Make model
-                var votes = GetVotes(r.Id, RequestType.Movie);
+                var votes = GetVotes(r.Id, RequestType.TvShow);
                 var upVotes = await votes.Where(x => x.VoteType == VoteType.Upvote).CountAsync();
                 var downVotes = await votes.Where(x => x.VoteType == VoteType.Downvote).CountAsync();
 
@@ -103,7 +103,7 @@ namespace Ombi.Core.Engine
                     Upvotes = upVotes,
                     Downvotes = downVotes,
                     RequestId = r.Id,
-                    RequestType = RequestType.Movie,
+                    RequestType = RequestType.TvShow,
                     Title = r.Title,
                     Image = r.PosterPath,
                     Background = r.Background,

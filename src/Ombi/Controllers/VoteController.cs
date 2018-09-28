@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Engine;
+using Ombi.Core.Models;
 using Ombi.Core.Models.UI;
 using Ombi.Store.Entities;
 
@@ -21,10 +22,67 @@ namespace Ombi.Controllers
 
         private readonly IVoteEngine _engine;
 
+        /// <summary>
+        /// Returns the viewmodel to render on the UI
+        /// </summary>
         [HttpGet]
         public Task<List<VoteViewModel>> GetView()
         {
             return _engine.GetMovieViewModel();
+        }
+
+        /// <summary>
+        /// Upvotes a movie
+        /// </summary>
+        [HttpPost("up/movie/{requestId:int}")]
+        public Task<VoteEngineResult> UpvoteMovie(int requestId)
+        {
+            return _engine.UpVote(requestId, RequestType.Movie);
+        }
+
+        /// <summary>
+        /// Upvotes a tv show
+        /// </summary>
+        [HttpPost("up/tv/{requestId:int}")]
+        public Task<VoteEngineResult> UpvoteTv(int requestId)
+        {
+            return _engine.UpVote(requestId, RequestType.TvShow);
+        }
+
+        /// <summary>
+        /// Upvotes a album
+        /// </summary>
+        [HttpPost("up/album/{requestId:int}")]
+        public Task<VoteEngineResult> UpvoteAlbum(int requestId)
+        {
+            return _engine.UpVote(requestId, RequestType.Album);
+        }
+
+        /// <summary>
+        /// Downvotes a movie
+        /// </summary>
+        [HttpPost("down/movie/{requestId:int}")]
+        public Task<VoteEngineResult> DownvoteMovie(int requestId)
+        {
+            return _engine.DownVote(requestId, RequestType.Movie);
+        }
+
+        /// <summary>
+        /// Downvotes a tv show
+        /// </summary>
+        [HttpPost("down/tv/{requestId:int}")]
+        public Task<VoteEngineResult> DownvoteTv(int requestId)
+        {
+            return _engine.DownVote(requestId, RequestType.TvShow);
+        }
+
+        /// <summary>
+        /// Downvotes a album
+        /// </summary>
+        [HttpPost("down/album/{requestId:int}")]
+        public Task<VoteEngineResult> DownvoteAlbum(int requestId)
+        {
+            return _engine.DownVote(requestId, RequestType.Album);
         }
 
         /// <summary>
