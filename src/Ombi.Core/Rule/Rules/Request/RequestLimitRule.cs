@@ -54,6 +54,7 @@ namespace Ombi.Core.Rule.Rules.Request
 
             var movieLimit = user.MovieRequestLimit;
             var episodeLimit = user.EpisodeRequestLimit;
+            var musicLimit = user.MusicRequestLimit;
 
             var requestLog = _requestLog.GetAll().Where(x => x.UserId == obj.RequestedUserId);
             if (obj.RequestType == RequestType.Movie)
@@ -71,7 +72,7 @@ namespace Ombi.Core.Rule.Rules.Request
                     return Fail("You have exceeded your Movie request quota!");
                 }
             }
-            else
+            else if (obj.RequestType == RequestType.TvShow)
             {
                 if (episodeLimit <= 0)
                     return Success();
@@ -81,21 +82,40 @@ namespace Ombi.Core.Rule.Rules.Request
                 // Get the count of requests to be made
                 foreach (var s in child.SeasonRequests)
                 {
-                    requestCount = s.Episodes.Count;
+                    requestCount += s.Episodes.Count;
                 }
 
                 var tvLogs = requestLog.Where(x => x.RequestType == RequestType.TvShow);
 
                 // Count how many requests in the past 7 days
                 var tv = tvLogs.Where(x => x.RequestDate >= DateTime.UtcNow.AddDays(-7));
-                var count = await tv.Select(x => x.EpisodeCount).CountAsync();
-                count += requestCount; // Add the amount of requests in
+
+                // Needed, due to a bug which would cause all episode counts to be 0
+                var zeroEpisodeCount = await tv.Where(x => x.EpisodeCount == 0).Select(x => x.EpisodeCount).CountAsync();
+
+                var episodeCount = await tv.Where(x => x.EpisodeCount != 0).Select(x => x.EpisodeCount).SumAsync();
+
+                var count = requestCount + episodeCount + zeroEpisodeCount; // Add the amount of requests in
                 if (count > episodeLimit)
                 {
                     return Fail("You have exceeded your Episode request quota!");
                 }
+            } else if (obj.RequestType == RequestType.Album)
+            {
+                if (musicLimit <= 0)
+                    return Success();
+
+                var albumLogs = requestLog.Where(x => x.RequestType == RequestType.Album);
+
+                // Count how many requests in the past 7 days
+                var count = await albumLogs.CountAsync(x => x.RequestDate >= DateTime.UtcNow.AddDays(-7));
+                count += 1; // Since we are including this request
+                if (count > musicLimit)
+                {
+                    return Fail("You have exceeded your Album request quota!");
+                }
             }
-            return Success();
+                return Success();
         }
     }
 }

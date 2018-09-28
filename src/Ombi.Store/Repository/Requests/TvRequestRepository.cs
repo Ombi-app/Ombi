@@ -60,6 +60,24 @@ namespace Ombi.Store.Repository.Requests
                 .Where(x => x.ChildRequests.Any(a => a.RequestedUserId == userId))
                 .AsQueryable();
         }
+
+        public IQueryable<TvRequests> GetLite(string userId)
+        {
+            return Db.TvRequests
+                .Include(x => x.ChildRequests)
+                .ThenInclude(x => x.RequestedUser)
+                .Where(x => x.ChildRequests.Any(a => a.RequestedUserId == userId))
+                .AsQueryable();
+        }
+
+        public IQueryable<TvRequests> GetLite()
+        {
+            return Db.TvRequests
+                .Include(x => x.ChildRequests)
+                .ThenInclude(x => x.RequestedUser)
+                .AsQueryable();
+        }
+
         public IQueryable<ChildRequests> GetChild()
         {
             return Db.ChildRequests

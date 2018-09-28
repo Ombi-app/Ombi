@@ -1,73 +1,57 @@
-
 <div class="form-group">
     <div class="input-group">
         <input type="text" id="search" class="form-control form-control-custom searchwidth" placeholder="Search" (keyup)="search($event)">
-        <span class="input-group-btn">       
-            <button id="filterBtn" class="btn btn-sm btn-info-outline" (click)="filterDisplay = !filterDisplay" >
+        <span class="input-group-btn">
+            <button id="filterBtn" class="btn btn-sm btn-info-outline" (click)="filterDisplay = !filterDisplay">
                 <i class="fa fa-filter"></i> {{ 'Requests.Filter' | translate }}
             </button>
 
 
-                <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        <i class="fa fa-sort"></i> {{ 'Requests.Sort' | translate }}
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                        <li>
-                                <a class="active" (click)="setOrder('requestedDate', $event)">{{ 'Requests.SortRequestDate' | translate }}
-                                        <span *ngIf="order === 'requestedDate'">
-                                        <span [hidden]="reverse"><small><i class="fa fa-arrow-down" aria-hidden="true"></i></small></span>
-                                        <span [hidden]="!reverse"><small><i class="fa fa-arrow-up" aria-hidden="true"></i></small></span>
-                                        </span>
-                                    </a>
-                            <a (click)="setOrder('title', $event)">{{ 'Requests.SortTitle' | translate}}
-                                    <span *ngIf="order === 'title'">
-                                            <span [hidden]="reverse"><small><i class="fa fa-arrow-down" aria-hidden="true"></i></small></span>
-                                            <span [hidden]="!reverse"><small><i class="fa fa-arrow-up" aria-hidden="true"></i></small></span>
-                                            </span>
-                            </a>                       
-                            <a (click)="setOrder('releaseDate', $event)">{{ 'Requests.TheatricalReleaseSort' | translate }}
-                                    <span *ngIf="order === 'releaseDate'">
-                                            <span [hidden]="reverse"><small><i class="fa fa-arrow-down" aria-hidden="true"></i></small></span>
-                                            <span [hidden]="!reverse"><small><i class="fa fa-arrow-up" aria-hidden="true"></i></small></span>
-                                            </span>
-                            </a>                      
-                            <a (click)="setOrder('requestedUser.userAlias', $event)">{{ 'Requests.SortRequestedBy' | translate }}
-                                    <span *ngIf="order === 'requestedUser.userAlias'">
-                                            <span [hidden]="reverse"><small><i class="fa fa-arrow-down" aria-hidden="true"></i></small></span>
-                                            <span [hidden]="!reverse"><small><i class="fa fa-arrow-up" aria-hidden="true"></i></small></span>
-                                            </span>
-                                        </a>
-
-                            <a (click)="setOrder('status', $event)">{{ 'Requests.SortStatus' | translate }}
-                                    <span *ngIf="order === 'status'">
-                                            <span [hidden]="reverse"><small><i class="fa fa-arrow-down" aria-hidden="true"></i></small></span>
-                                            <span [hidden]="!reverse"><small><i class="fa fa-arrow-up" aria-hidden="true"></i></small></span>
-                                            </span>
-                            </a>
-                        </li>
-                    </ul>
-       </span>
-
-        </div>
-     
+            <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="true">
+                <i class="fa fa-sort"></i> {{ 'Requests.Sort' | translate }}
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                <li>
+                    <a  (click)="setOrder(OrderType.RequestedDateAsc, $event)">{{ 'Requests.SortRequestDateAsc' | translate }}
            
+                    </a>
+                    <a class="active" (click)="setOrder(OrderType.RequestedDateDesc, $event)">{{ 'Requests.SortRequestDateDesc' | translate }}
+
+                    </a>
+                    <a (click)="setOrder(OrderType.TitleAsc, $event)">{{ 'Requests.SortTitleAsc' | translate}}
+                       
+                    </a>
+                    <a (click)="setOrder(OrderType.TitleDesc, $event)">{{ 'Requests.SortTitleDesc' | translate}}
+                     
+                    </a>
+                    <a (click)="setOrder(OrderType.StatusAsc, $event)">{{ 'Requests.SortStatusAsc' | translate}}
+                
+                    </a>
+                    <a (click)="setOrder(OrderType.StatusDesc, $event)">{{ 'Requests.SortStatusDesc' | translate}}
+              
+                    </a>
+
+                </li>
+            </ul>
+        </span>
+
+    </div>
+
+
 </div>
 <br />
 
 
-<div infinite-scroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="100" (scrolled)="loadMore()">
-
-
-    <div *ngFor="let request of movieRequests | orderBy: order : reverse : 'case-insensitive'">
-
-
+<div>
+    <div *ngFor="let request of movieRequests">
         <div class="row">
             <div class="myBg backdrop" [style.background-image]="request.backgroundPath"></div>
             <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
             <div class="col-sm-2 small-padding">
 
-                <img class="img-responsive poster" src="https://image.tmdb.org/t/p/w300/{{request.posterPath}}" alt="poster">
+                <img class="img-responsive poster" src="{{request.posterPath}}" alt="poster">
 
             </div>
 
@@ -99,7 +83,7 @@
                             <i class="fa fa-info-circle"></i>
                         </span>
                         <span *ngIf="!request.approved && !request.availble && !request.denied" id="pendingApprovalLabel" class="label label-warning"
-                              [translate]="'Common.PendingApproval'"></span>
+                            [translate]="'Common.PendingApproval'"></span>
 
                     </div>
                     <div *ngIf="request.denied" id="requestDenied">
@@ -115,16 +99,27 @@
                     <br />
                 </div>
                 <div *ngIf="isAdmin">
-                    <div *ngIf="request.qualityOverrideTitle">{{ 'Requests.QualityOverride' | translate }}
+                    <div *ngIf="request.qualityOverrideTitle" class="quality-override">{{ 'Requests.QualityOverride' | translate }}
                         <span>{{request.qualityOverrideTitle}} </span>
                     </div>
-                    <div *ngIf="request.rootPathOverrideTitle">{{ 'Requests.RootFolderOverride' | translate }}
+                    <div *ngIf="request.rootPathOverrideTitle" class="root-override">{{ 'Requests.RootFolderOverride' | translate }}
                         <span>{{request.rootPathOverrideTitle}} </span>
                     </div>
                 </div>
 
             </div>
             <div class="col-sm-3 col-sm-push-3  small-padding">
+                <div class="row">
+                    <div class="col-md-2 col-md-push-6">
+
+                        <a *ngIf="request.showSubscribe && !request.subscribed" style="color:white" (click)="subscribe(request)" pTooltip="Subscribe for notifications">
+                            <i class="fa fa-rss"></i>
+                        </a>
+                        <a *ngIf="request.showSubscribe && request.subscribed" style="color:red" (click)="unSubscribe(request)" pTooltip="Unsubscribe notification">
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </div>
+                </div>
                 <div *ngIf="isAdmin">
                     <div *ngIf="!request.approved" id="approveBtn">
                         <form>
@@ -178,10 +173,12 @@
                     </form>
 
                     <form id="markBtnGroup">
-                        <button id="unavailableBtn" *ngIf="request.available" (click)="changeAvailability(request, false)" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change">
+                        <button id="unavailableBtn" *ngIf="request.available" (click)="changeAvailability(request, false)" style="text-align: right"
+                            value="false" class="btn btn-sm btn-info-outline change">
                             <i class="fa fa-minus"></i> {{ 'Requests.MarkUnavailable' | translate }}
                         </button>
-                        <button id="availableBtn" *ngIf="!request.available" (click)="changeAvailability(request, true)" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change">
+                        <button id="availableBtn" *ngIf="!request.available" (click)="changeAvailability(request, true)" style="text-align: right"
+                            value="true" class="btn btn-sm btn-success-outline change">
                             <i class="fa fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
                         </button>
                     </form>
@@ -189,10 +186,9 @@
 
 
                 </div>
-
                 <div class="dropdown" *ngIf="issueCategories && issuesEnabled" id="issuesBtn">
                     <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="true">
+                        aria-expanded="true">
                         <i class="fa fa-plus"></i> {{ 'Requests.ReportIssue' | translate }}
                         <span class="caret"></span>
                     </button>
@@ -212,6 +208,8 @@
 
 
     </div>
+
+    <p-paginator [rows]="10" [totalRecords]="totalMovies" (onPageChange)="paginate($event)"></p-paginator>
 </div>
 
 
@@ -222,42 +220,43 @@
 <p-sidebar [(visible)]="filterDisplay" styleClass="ui-sidebar-md side-back side-small">
     <h3>{{ 'Requests.Filter' | translate }}</h3>
     <hr>
+    <div>
+        <h4>{{ 'Filter.FilterHeaderAvailability' | translate }}</h4>
+        <div class="form-group">
+            <div class="radio">
+                <input type="radio" id="Available" name="Availability" (click)="filterAvailability(filterType.Available, $event)">
+                <label for="Available">{{ 'Common.Available' | translate }}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="radio">
+                <input type="radio" id="notAvailable" name="Availability" (click)="filterAvailability(filterType.NotAvailable, $event)">
+                <label for="notAvailable">{{ 'Common.NotAvailable' | translate }}</label>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h4>{{ 'Filter.FilterHeaderRequestStatus' | translate }}</h4>
+        <div class="form-group">
+            <div class="radio">
+                <input type="radio" id="approved" name="Status" (click)="filterStatus(filterType.Approved, $event)">
+                <label for="approved">{{ 'Filter.Approved' | translate }}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="radio">
+                <input type="radio" id="Processing" name="Status" (click)="filterStatus(filterType.Processing, $event)">
+                <label for="Processing">{{ 'Common.ProcessingRequest' | translate }}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="radio">
+                <input type="radio" id="pendingApproval" name="Status" (click)="filterStatus(filterType.PendingApproval, $event)">
+                <label for="pendingApproval">{{ 'Filter.PendingApproval' | translate }}</label>
+            </div>
+        </div>
+    </div>
 
-    <h4>{{ 'Filter.FilterHeaderAvailability' | translate }}</h4>
-    <div class="form-group">
-        <div class="radio">
-            <input type="radio" id="Available" name="Availability" (click)="filterAvailability(filterType.Available)">
-            <label for="Available">{{ 'Common.Available' | translate }}</label>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="radio">
-            <input type="radio" id="notAvailable" name="Availability" (click)="filterAvailability(filterType.NotAvailable)">
-            <label for="notAvailable">{{ 'Common.NotAvailable' | translate }}</label>
-        </div>
-    </div>
-
-    <h4>{{ 'Filter.FilterHeaderRequestStatus' | translate }}</h4>
-    <div class="form-group">
-        <div class="radio">
-            <input type="radio" id="approved" name="Status" (click)="filterStatus(filterType.Approved)">
-            <label for="approved">{{ 'Filter.Approved' | translate }}</label>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="radio">
-            <input type="radio" id="Processing" name="Status" (click)="filterStatus(filterType.Processing)">
-            <label for="Processing">{{ 'Common.ProcessingRequest' | translate }}</label>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="radio">
-            <input type="radio" id="pendingApproval" name="Status" (click)="filterStatus(filterType.PendingApproval, $event)">
-            <label for="pendingApproval">{{ 'Filter.PendingApproval' | translate }}</label>
-        </div>
-    </div>
-
-
-    <button class="btn btn-sm btn-primary-outline" (click)="clearFilter()">
+    <button class="btn btn-sm btn-primary-outline" (click)="clearFilter($event)">
         <i class="fa fa-filter"></i> {{ 'Filter.ClearFilter' | translate }}</button>
 </p-sidebar>

@@ -11,20 +11,20 @@ namespace Ombi.Api.Plex.Models
         public string summary { get; set; }
         public int index { get; set; }
         public float rating { get; set; }
-        public int viewCount { get; set; }
-        public int lastViewedAt { get; set; }
+        //public int viewCount { get; set; }
+        //public int lastViewedAt { get; set; }
         public int year { get; set; }
         public string thumb { get; set; }
         public string art { get; set; }
         public string banner { get; set; }
         public string theme { get; set; }
-        public string duration { get; set; }
-        public string originallyAvailableAt { get; set; }
+        //public string duration { get; set; }
+        //public string originallyAvailableAt { get; set; }
         public int leafCount { get; set; }
         public int viewedLeafCount { get; set; }
         public int childCount { get; set; }
-        public long addedAt { get; set; }
-        public int updatedAt { get; set; }
+        //public long addedAt { get; set; }
+        //public int updatedAt { get; set; }
         public Genre[] Genre { get; set; }
         //public Role[] Role { get; set; }
         public string primaryExtraKey { get; set; }

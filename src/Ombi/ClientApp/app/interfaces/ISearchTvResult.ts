@@ -27,8 +27,17 @@ export interface ISearchTvResult {
     requested: boolean;
     available: boolean;
     plexUrl: string;
+    embyUrl: string;
+    quality: string;
     firstSeason: boolean;
     latestSeason: boolean;
+    theTvDbId: string;
+    subscribed: boolean;
+    showSubscribe: boolean;
+    fullyAvailable: boolean;
+    partlyAvailable: boolean;
+    background: any;
+    open: boolean; // THIS IS FOR THE UI
 }
 
 export interface ITvRequestViewModel {

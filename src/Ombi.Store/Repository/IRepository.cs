@@ -14,7 +14,7 @@ namespace Ombi.Store.Repository
         Task<T> Find(object key);
         IQueryable<T> GetAll();
         Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
-        Task AddRange(IEnumerable<T> content);
+        Task AddRange(IEnumerable<T> content, bool save = true);
         Task<T> Add(T content);
         Task DeleteRange(IEnumerable<T> req);
         Task Delete(T request);

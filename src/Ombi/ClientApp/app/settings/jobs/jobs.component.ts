@@ -3,7 +3,7 @@
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NotificationService, SettingsService } from "../../services";
 
-import { ICronTestModel } from "./../../interfaces";
+import { ICronTestModel } from "../../interfaces";
 
 @Component({
     templateUrl: "./jobs.component.html",
@@ -33,6 +33,9 @@ export class JobsComponent implements OnInit {
                 sickRageSync:             [x.sickRageSync, Validators.required],  
                 refreshMetadata:          [x.refreshMetadata, Validators.required],
                 newsletter:               [x.newsletter, Validators.required],
+                plexRecentlyAddedSync:    [x.plexRecentlyAddedSync, Validators.required],
+                lidarrArtistSync:         [x.lidarrArtistSync, Validators.required],
+                issuesPurge:              [x.issuesPurge, Validators.required],
             });  
         });
     }

@@ -1,13 +1,19 @@
 ![](http://i.imgur.com/qQsN78U.png)   
 ____ 
-[![Discord](https://img.shields.io/discord/102860784329052160.svg)](https://discord.gg/KxYZ64w)
+[![Discord](https://img.shields.io/discord/270828201473736705.svg)](https://discord.gg/Sa7wNWb)
 [![Docker Pulls](https://img.shields.io/docker/pulls/linuxserver/ombi.svg)](https://hub.docker.com/r/linuxserver/ombi/)
 [![Github All Releases](https://img.shields.io/github/downloads/tidusjar/Ombi/total.svg)](https://github.com/tidusjar/Ombi)
-[![firsttimersonly](http://img.shields.io/badge/first--timers--only-friendly-blue.svg?style=flat-square)](http://www.firsttimersonly.com/)
+[![firsttimersonly](http://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/ombi/localized.svg)](https://crowdin.com/project/ombi)
 
-[![Patreon](https://www.ombi.io/img/patreondonate.svg)](https://patreon.com/tidusjar/Ombi)
-[![Paypal](https://www.ombi.io/img/paypaldonate.svg)](https://paypal.me/PlexRequestsNet)
+[![Patreon](https://img.shields.io/badge/patreon-donate-yellow.svg)](https://patreon.com/tidusjar/Ombi)
+[![Paypal](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://paypal.me/PlexRequestsNet)
+
+___
+<a href='https://play.google.com/store/apps/details?id=com.tidusjar.Ombi&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img width="150"   alt='Get it on Google Play' src='https://play.google.com/intl/en_gb/badges/images/generic/en_badge_web_generic.png'/></a>
+
+<a href='https://itunes.apple.com/us/app/ombi/id1335260043?ls=1&mt=8'><img width="150"   alt='Get it on App Store' src='https://i.imgur.com/cJFa0M4.png'/></a>
+
 
 ___
 

@@ -29,7 +29,7 @@ export class MattermostComponent implements OnInit {
                 username: [x.username],
                 webhookUrl: [x.webhookUrl, [Validators.required]],
                 channel: [x.channel],
-                iconUrl:[x.iconUrl],
+                iconUrl: [x.iconUrl],
 
             });
         });
@@ -41,7 +41,7 @@ export class MattermostComponent implements OnInit {
             return;
         }
 
-        const settings = <IMattermostNotifcationSettings>form.value;
+        const settings = <IMattermostNotifcationSettings> form.value;
         settings.notificationTemplates = this.templates;
 
         this.settingsService.saveMattermostNotificationSettings(settings).subscribe(x => {
@@ -62,7 +62,7 @@ export class MattermostComponent implements OnInit {
 
         this.testerService.mattermostTest(form.value).subscribe(x => {
             if (x) {
-                this.notificationService.success( "Successfully sent a Mattermost message, please check the discord channel");
+                this.notificationService.success( "Successfully sent a Mattermost message, please check the appropriate channel");
             } else {
                 this.notificationService.error("There was an error when sending the Mattermost message. Please check your settings");
             }

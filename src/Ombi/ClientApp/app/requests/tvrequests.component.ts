@@ -1,20 +1,13 @@
-﻿import { Component, Input, OnInit } from "@angular/core";
+import { PlatformLocation } from "@angular/common";
+import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import "rxjs/add/operator/debounceTime";
-import "rxjs/add/operator/distinctUntilChanged";
-import "rxjs/add/operator/map";
-import { Subject } from "rxjs/Subject";
-import { ImageService } from "./../services/image.service";
-
-import "rxjs/add/operator/debounceTime";
-import "rxjs/add/operator/distinctUntilChanged";
-import "rxjs/add/operator/map";
+import { Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { AuthService } from "../auth/auth.service";
+import { FilterType, IIssueCategory, IPagenator, IRequestsViewModel, ISonarrProfile, ISonarrRootFolder, ITvRequests, OrderType } from "../interfaces";
 import { NotificationService, RequestService, SonarrService } from "../services";
-
-import { TreeNode } from "primeng/primeng";
-import { IIssueCategory, ISonarrProfile,  ISonarrRootFolder, ITvRequests } from "../interfaces";
+import { ImageService } from "../services/image.service";
 
 @Component({
     selector: "tv-requests",
@@ -23,100 +16,86 @@ import { IIssueCategory, ISonarrProfile,  ISonarrRootFolder, ITvRequests } from 
 })
 export class TvRequestsComponent implements OnInit {
 
-    public tvRequests: TreeNode[];
+    public tvRequests: IRequestsViewModel<ITvRequests>;
     public searchChanged = new Subject<string>();
     public searchText: string;
     public isAdmin: boolean;
     public showChildDialogue = false; // This is for the child modal popup
     public selectedSeason: ITvRequests;
+    public defaultPoster: string;
 
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
     public issueProviderId: string;
+    public issuesBarVisible = false;
+    public issueRequest: ITvRequests;
+    public issueCategorySelected: IIssueCategory;
 
     public sonarrProfiles: ISonarrProfile[] = [];
     public sonarrRootFolders: ISonarrRootFolder[] = [];
 
+    public totalTv: number = 100;
     private currentlyLoaded: number;
     private amountToLoad: number;
 
-    constructor(private requestService: RequestService,
-                private auth: AuthService,
-                private sanitizer: DomSanitizer,
-                private imageService: ImageService,
-                private sonarrService: SonarrService,
-                private notificationService: NotificationService) {
-        this.searchChanged
-            .debounceTime(600) // Wait Xms after the last event before emitting last event
-            .distinctUntilChanged() // only emit if value is different from previous value
-            .subscribe(x => {
-                this.searchText = x as string;
-                if (this.searchText === "") {
-                    this.resetSearch();
-                    return;
-                }
-                this.requestService.searchTvRequestsTree(this.searchText)
-                    .subscribe(m => {
-                        this.tvRequests = m;
-                        this.tvRequests.forEach((val) => this.loadBackdrop(val));
-                        this.tvRequests.forEach((val) => this.setOverride(val.data));
-                    });
-            });
+    constructor(
+        private requestService: RequestService,
+        private auth: AuthService,
+        private sanitizer: DomSanitizer,
+        private imageService: ImageService,
+        private sonarrService: SonarrService,
+        private notificationService: NotificationService,
+        private readonly platformLocation: PlatformLocation) {
+            
+            this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+            if (this.isAdmin) {
+                this.sonarrService.getQualityProfilesWithoutSettings()
+                    .subscribe(x => this.sonarrProfiles = x);
+        
+                this.sonarrService.getRootFoldersWithoutSettings()
+                    .subscribe(x => this.sonarrRootFolders = x);
+            }
     }
 
-    public openClosestTab(el: any) {
-        const rowclass = "undefined ng-star-inserted";
-        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
-
-        if (el.nodeName === "BUTTON") {
-
-            const isButtonAlreadyActive = el.parentElement.querySelector(".active");
-            // if a Button already has Class: .active
-            if (isButtonAlreadyActive) {
-                isButtonAlreadyActive.classList.remove("active");
-            } else {
-                el.className += " active";
-            }
-        }
-
-        while (el.className !== rowclass) {
-            // Increment the loop to the parent node until we find the row we need
-            el = el.parentNode;
-        }
-        // At this point, the while loop has stopped and `el` represents the element that has
-        // the class you specified
-
-        // Then we loop through the children to find the caret which we want to click
-        const caretright = "fa-caret-right";
-        const caretdown = "fa-caret-down";
-        for (const value of el.children) {
-            // the caret from the ui has 2 class selectors depending on if expanded or not
-            // we search for both since we want to still toggle the clicking
-            if (value.className.includes(caretright) || value.className.includes(caretdown)) {
-                // Then we tell JS to click the element even though we hid it from the UI
-                value.click();
-                //Break from loop since we no longer need to continue looking
-                break;
-            }
-        }
+    public openClosestTab(node: ITvRequests,el: any) {
+        el.preventDefault();
+        node.open = !node.open;
     }
 
     public ngOnInit() {
-        this.amountToLoad = 1000;
-        this.currentlyLoaded = 1000;
-        this.tvRequests = [];
-        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
-        
+        this.amountToLoad = 10;
+        this.currentlyLoaded = 10;
+        this.tvRequests = {collection:[], total:0};
+
+        this.searchChanged.pipe(
+            debounceTime(600), // Wait Xms after the last event before emitting last event
+            distinctUntilChanged(), // only emit if value is different from previous value
+        ).subscribe(x => {
+            this.searchText = x as string;
+            if (this.searchText === "") {
+                this.resetSearch();
+                return;
+            }
+            this.requestService.searchTvRequests(this.searchText)
+                .subscribe(m => {
+                    this.tvRequests.collection = m;
+                    this.tvRequests.collection.forEach((val) => this.loadBackdrop(val));
+                    this.tvRequests.collection.forEach((val) => this.setOverride(val));
+                });
+        });
+        this.defaultPoster = "../../../images/default_tv_poster.png";
+        const base = this.platformLocation.getBaseHrefFromDOM();
+        if (base) {
+            this.defaultPoster = "../../.." + base + "/images/default_tv_poster.png";
+        }
+
         this.loadInit();
     }
 
-    public loadMore() {
-        //TODO: I believe this +1 is causing off by one error skipping loading of tv shows
-        //When removed and scrolling very slowly everything works as expected, however
-        //if you scroll really quickly then you start getting duplicates of movies
-        //since it's async and some subsequent results return first and then incrementer
-        //is increased so you see movies which had already been gotten show up...
-        this.requestService.getTvRequestsTree(this.amountToLoad, this.currentlyLoaded + 1)
+    public paginate(event: IPagenator) {
+        const skipAmount = event.first;
+
+        this.requestService.getTvRequests(this.amountToLoad, skipAmount, OrderType.RequestedDateDesc, FilterType.None, FilterType.None)
             .subscribe(x => {
                 this.tvRequests = x;
                 this.currentlyLoaded = this.currentlyLoaded + this.amountToLoad;
@@ -141,14 +120,21 @@ export class TvRequestsComponent implements OnInit {
         event.preventDefault();
         searchResult.rootFolder = rootFolderSelected.id;
         this.setOverride(searchResult);
-        this.updateRequest(searchResult);
+        this.setRootFolder(searchResult);
     }
 
     public selectQualityProfile(searchResult: ITvRequests, profileSelected: ISonarrProfile, event: any) {
         event.preventDefault();
         searchResult.qualityOverride = profileSelected.id;
         this.setOverride(searchResult);
-        this.updateRequest(searchResult);
+        this.setQualityProfile(searchResult);
+    }
+
+    public reportIssue(catId: IIssueCategory, req: ITvRequests) {
+        this.issueRequest = req;
+        this.issueCategorySelected = catId;
+        this.issuesBarVisible = true;
+        this.issueProviderId = req.id.toString();
     }
 
     private setOverride(req: ITvRequests): void {
@@ -156,13 +142,24 @@ export class TvRequestsComponent implements OnInit {
         this.setRootFolderOverrides(req);
     }
 
-    private updateRequest(request: ITvRequests) {
-        this.requestService.updateTvRequest(request)
-            .subscribe(x => {
-                this.notificationService.success("Request Updated");
-                this.setOverride(x);
-                request = x;
-            });
+    private setQualityProfile(req: ITvRequests) {
+        this.requestService.setQualityProfile(req.id, req.qualityOverride).subscribe(x => {
+            if(x) {
+                this.notificationService.success("Quality profile updated");
+            } else {
+                this.notificationService.error("Could not update the quality profile");
+            }
+        });
+    }
+
+    private setRootFolder(req: ITvRequests) {
+        this.requestService.setRootFolder(req.id, req.rootFolder).subscribe(x => {
+            if(x) {
+                this.notificationService.success("Quality profile updated");
+            } else {
+                this.notificationService.error("Could not update the quality profile");
+            }
+        });
     }
 
     private setQualityOverrides(req: ITvRequests): void {
@@ -187,32 +184,40 @@ export class TvRequestsComponent implements OnInit {
     }
 
     private loadInit() {
-        this.requestService.getTvRequestsTree(this.amountToLoad, 0)
+        this.requestService.getTotalTv().subscribe(x => this.totalTv = x);
+        this.requestService.getTvRequests(this.amountToLoad, 0, OrderType.RequestedDateDesc, FilterType.None, FilterType.None)
             .subscribe(x => {
                 this.tvRequests = x;
-                this.tvRequests.forEach((val, index) => {
+                this.tvRequests.collection.forEach((val, index) => {
+                    this.setDefaults(val);
                     this.loadBackdrop(val);
-                    this.setOverride(val.data);
-            });     
-        });
-
-        if(this.isAdmin) {
-            this.sonarrService.getQualityProfilesWithoutSettings()
-                .subscribe(x => this.sonarrProfiles = x);
-        
-            this.sonarrService.getRootFoldersWithoutSettings()
-                .subscribe(x => this.sonarrRootFolders = x);
-        }
+                    this.setOverride(val);
+                });
+            });
     }
 
     private resetSearch() {
         this.currentlyLoaded = 5;
         this.loadInit();
     }
-    private loadBackdrop(val: TreeNode): void {
-        this.imageService.getTvBanner(val.data.tvDbId).subscribe(x => {
-            val.data.background = this.sanitizer.bypassSecurityTrustStyle
-                ("url(" + x + ")");
+
+    private setDefaults(val: ITvRequests) {
+        if (val.posterPath === null) {
+            val.posterPath = this.defaultPoster;
+        }
+    }
+
+    private loadBackdrop(val: ITvRequests): void {
+        if (val.background != null) {
+            val.background = this.sanitizer.bypassSecurityTrustStyle
+                ("url(https://image.tmdb.org/t/p/w1280" + val.background + ")");
+        } else {
+            this.imageService.getTvBanner(val.tvDbId).subscribe(x => {
+                if (x) {
+                    val.background = this.sanitizer.bypassSecurityTrustStyle
+                        ("url(" + x + ")");
+                }
             });
+        }
     }
 }

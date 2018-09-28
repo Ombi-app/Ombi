@@ -133,7 +133,11 @@ namespace Ombi.Controllers
             i.IssueCategory = null;
             i.UserReportedId = (await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name)).Id;
             await _issues.Add(i);
-
+            var category = await _categories.GetAll().FirstOrDefaultAsync(x => i.IssueCategoryId == x.Id);
+            if (category != null)
+            {
+                i.IssueCategory = category;
+            }
             var notificationModel = new NotificationOptions
             {
                 RequestId = i.RequestId ?? 0,
@@ -142,7 +146,7 @@ namespace Ombi.Controllers
                 RequestType = i.RequestType,
                 Recipient = string.Empty,
                 AdditionalInformation = $"{i.Subject} | {i.Description}",
-                UserId =  i.UserReportedId
+                UserId =  i.UserReportedId,
             };
 
             AddIssueNotificationSubstitutes(notificationModel, i, User.Identity.Name);
@@ -178,6 +182,7 @@ namespace Ombi.Controllers
                 var roles = await _userManager.GetRolesAsync(c.User);
                 vm.Add(new IssueCommentChatViewModel
                 {
+                    Id = c.Id,
                     Comment = c.Comment,
                     Date = c.Date,
                     Username = c.User.UserAlias,
@@ -195,7 +200,7 @@ namespace Ombi.Controllers
         {
             var user = await _userManager.Users.Where(x => User.Identity.Name == x.UserName)
                 .FirstOrDefaultAsync();
-            var issue = await _issues.GetAll().Include(x => x.UserReported).FirstOrDefaultAsync(x => x.Id == comment.IssueId);
+            var issue = await _issues.GetAll().Include(x => x.UserReported).Include(x => x.IssueCategory).FirstOrDefaultAsync(x => x.Id == comment.IssueId);
             if (issue == null)
             {
                 return null;
@@ -236,13 +241,25 @@ namespace Ombi.Controllers
 
             return await _issueComments.Add(newComment);
         }
+        /// <summary>
+        /// Deletes a comment on a issue
+        /// </summary>
+        [HttpDelete("comments/{id:int}")]
+        [PowerUser]
+        public async Task<bool> DeleteComment(int id)
+        {
+            var comment = await _issueComments.GetAll().FirstOrDefaultAsync(x => x.Id == id);
+
+            await _issueComments.Delete(comment);
+            return true;
+        }
 
         [HttpPost("status")]
         public async Task<bool> UpdateStatus([FromBody] IssueStateViewModel model)
         {
             var user = await _userManager.Users.Where(x => User.Identity.Name == x.UserName)
                 .FirstOrDefaultAsync();
-            var issue = await _issues.GetAll().Include(x => x.UserReported).FirstOrDefaultAsync(x => x.Id == model.IssueId);
+            var issue = await _issues.GetAll().Include(x => x.UserReported).Include(x => x.IssueCategory).FirstOrDefaultAsync(x => x.Id == model.IssueId);
             if (issue == null)
             {
                 return false;

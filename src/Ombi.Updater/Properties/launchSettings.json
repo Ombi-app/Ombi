@@ -2,7 +2,7 @@
   "profiles": {
     "Ombi.Updater": {
       "commandName": "Project",
-      "commandLineArgs": "--applicationPath \\\"C:\\\\Users\\\\Jamie\\\\Source\\\\Repos\\\\Ombi\\\\src\\\\Ombi\\\\bin\\\\Debug\\\\netcoreapp2.0\\\" --processname \\\"Ombi\\\" --startupArgs http://*:5000"
+      "commandLineArgs": "--applicationPath \"C:\\_git\\ombi\\src\\Ombi.Updater\\bin\\Debug\\netcoreapp2.0\" --processname \"Ombi\""
     }
   }
 }

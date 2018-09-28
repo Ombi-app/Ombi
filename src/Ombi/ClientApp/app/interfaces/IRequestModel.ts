@@ -12,13 +12,41 @@ export interface IMovieRequests extends IFullBaseRequest {
   rootPathOverride: number;
   qualityOverride: number;
   digitalReleaseDate: Date;
+  subscribed: boolean;
+  showSubscribe: boolean;
 
   // For the UI
   rootPathOverrideTitle: string;
   qualityOverrideTitle: string;
 }
 
+export interface IAlbumRequest extends IBaseRequest {
+  foreignAlbumId: string;
+  foreignArtistId: string;
+  disk: string;
+  cover: string;
+  releaseDate: Date;
+  artistName: string;
+
+  subscribed: boolean;
+  showSubscribe: boolean;
+  background: any;
+}
+
+export interface IAlbumRequestModel {
+  foreignAlbumId: string;
+}
+
+export interface IRequestsViewModel<T> {
+  total: number;
+  collection: T[];
+}
+
 export interface IMovieUpdateModel {
+  id: number;
+}
+
+export interface IAlbumUpdateModel {
   id: number;
 }
 
@@ -64,6 +92,10 @@ export interface ITvRequests {
   status: string;
   childRequests: IChildRequests[];
   qualityOverride: number;
+  background: any;
+  totalSeasons: number;
+  tvDbId: number;
+  open: boolean; // THIS IS FOR THE UI
 
   // For UI display
   qualityOverrideTitle: string;
@@ -72,10 +104,21 @@ export interface ITvRequests {
 
 export interface IChildRequests extends IBaseRequest {
   seasonRequests: INewSeasonRequests[];
+  subscribed: boolean;
+  showSubscribe: boolean;
 }
 
 export interface ITvUpdateModel {
   id: number;
+}
+
+export enum OrderType {
+  RequestedDateAsc = 1,
+  RequestedDateDesc = 2,
+  TitleAsc = 3,
+  TitleDesc = 4,
+  StatusAsc = 5,
+  StatusDesc = 6,
 }
 
 export interface INewSeasonRequests {

@@ -12,6 +12,8 @@
   "Common": {
     "ContinueButton": "Fortsæt",
     "Available": "Tilgængelig",
+    "PartiallyAvailable": "Partially Available",
+    "Monitored": "Monitored",
     "NotAvailable": "Ikke tilgængelig",
     "ProcessingRequest": "Behandler anmodning",
     "PendingApproval": "Afventer godkendelse",
@@ -62,20 +64,26 @@
       "Italian": "Italiensk",
       "Danish": "Dansk",
       "Dutch": "Hollandsk",
-      "Norwegian": "Norsk"
+      "Norwegian": "Norsk",
+      "BrazillianPortuguese": "Brazillian Portuguese",
+      "Polish": "Polish",
+      "Swedish": "Swedish"
     },
-    "OpenMobileApp": "Åbn mobilapp"
+    "OpenMobileApp": "Åbn mobilapp",
+    "RecentlyAdded": "Recently Added"
   },
   "Search": {
     "Title": "Søg",
     "Paragraph": "Ønsker du at se noget, som er utilgængeligt? intet problem, bare søg efter det nedenfor og anmod om det!",
     "MoviesTab": "Film",
     "TvTab": "Tv-serier",
+    "MusicTab": "Music",
     "Suggestions": "Forslag",
     "NoResults": "Beklager, vi fandt ingen resultater!",
     "DigitalDate": "Digital Release: {{date}}",
     "TheatricalRelease": "Theatrical Release: {{date}}",
     "ViewOnPlex": "Se på Plex",
+    "ViewOnEmby": "Se på Emby",
     "RequestAdded": "{{title}} er anmodet med succes",
     "Similar": "Similar",
     "Movies": {
@@ -107,11 +115,14 @@
     "Paragraph": "Herunder kan du se dine og alle andre anmodninger, samt status for download og godkendelse.",
     "MoviesTab": "Film",
     "TvTab": "Tv-serier",
+    "MusicTab": "Music",
     "RequestedBy": "Anmodet af:",
     "Status": "Status:",
     "RequestStatus": "Status for anmodning:",
     "Denied": " Afvist:",
     "TheatricalRelease": "Theatrical Release: {{date}}",
+    "ReleaseDate": "Released: {{date}}",
+    "TheatricalReleaseSort": "Theatrical Release",
     "DigitalRelease": "Digital Release: {{date}}",
     "RequestDate": "Dato for anmodning:",
     "QualityOverride": "Tilsidesæt kvalitet:",
@@ -128,7 +139,21 @@
     "GridStatus": "Status",
     "ReportIssue": "Rapportér problem",
     "Filter": "Filter",
-    "SeasonNumberHeading": "Sæson: {seasonNumber}"
+    "Sort": "Sort",
+    "SeasonNumberHeading": "Sæson: {seasonNumber}",
+    "SortTitleAsc": "Title ▲",
+    "SortTitleDesc": "Title ▼",
+    "SortRequestDateAsc": "Request Date ▲",
+    "SortRequestDateDesc": "Request Date ▼",
+    "SortStatusAsc": "Status ▲",
+    "SortStatusDesc": "Status ▼",
+    "Remaining": {
+      "Quota": "{{remaining}}/{{total}} requests remaining",
+      "NextDays": "Another request will be added in {{time}} days",
+      "NextHours": "Another request will be added in {{time}} hours",
+      "NextMinutes": "Another request will be added in {{time}} minutes",
+      "NextMinute": "Another request will be added in {{time}} minute"
+    }
   },
   "Issues": {
     "Title": "Problemer",
@@ -153,6 +178,15 @@
     "ClearFilter": "Nulstil filter",
     "FilterHeaderAvailability": "Tilgængelighed",
     "FilterHeaderRequestStatus": "Status",
-    "Approved": "Godkendt"
+    "Approved": "Godkendt",
+    "PendingApproval": "Pending Approval"
+  },
+  "UserManagment": {
+    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
+    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
+    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
+    "TvDue": "TV: {{date}}",
+    "MovieDue": "Movie: {{date}}",
+    "MusicDue": "Music: {{date}}"
   }
 }

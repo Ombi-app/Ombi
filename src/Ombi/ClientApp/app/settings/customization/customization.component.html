@@ -3,12 +3,12 @@
 
 <fieldset *ngIf="settings">
     <legend>Customization</legend>
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-md-2 col-md-push-10">
             <span style="vertical-align: top;">Advanced</span>
             <p-inputSwitch id="customInputSwitch" [(ngModel)]="advanced"></p-inputSwitch>
         </div>
-    </div>
+    </div> -->
     <div class="col-md-5">
         <div class="form-group">
             <label for="applicationName" class="control-label">Application Name</label>
@@ -23,13 +23,6 @@
             <div>
                 <input type="text" [(ngModel)]="settings.applicationUrl" class="form-control form-control-custom " id="applicationurl" name="applicationurl"
                     placeholder="http://ombi.io/" value="{{settings.applicationUrl}}">
-            </div>
-        </div>
-
-        <div class="form-group" *ngIf="advanced">
-            <div class="checkbox">
-                <input type="checkbox" id="enable" [(ngModel)]="settings.mobile" [checked]="settings.mobile">
-                <label for="enable">Enable Mobile</label>
             </div>
         </div>
 

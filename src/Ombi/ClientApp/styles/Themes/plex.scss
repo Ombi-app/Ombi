@@ -345,11 +345,21 @@ button.list-group-item:focus {
     height: 100%;
     position: absolute;
  }
+ .album-bg {
+    width: 92%;
+    height: 100%;
+    position: absolute;
+ }
  .tint {
     width: 100%;
     height: 100%;
     position: absolute;
  }
+ .album-tint {
+    width: 92%;
+    height: 100%;
+    position: absolute;
+ }
  table.table > thead > tr > th.active {
-    background-color: transparent;
+    background-color: $primary-colour;
 }

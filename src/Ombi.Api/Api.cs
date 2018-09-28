@@ -39,7 +39,11 @@ namespace Ombi.Api
 
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
-                    LogError(request, httpResponseMessage);
+                    if (!request.IgnoreErrors)
+                    {
+                        LogError(request, httpResponseMessage);
+                    }
+
                     if (request.Retry)
                     {
 
@@ -76,13 +80,18 @@ namespace Ombi.Api
                 else
                 {
                     // XML
-                    XmlSerializer serializer = new XmlSerializer(typeof(T));
-                    StringReader reader = new StringReader(receivedString);
-                    var value = (T)serializer.Deserialize(reader);
-                    return value;
+                    return DeserializeXml<T>(receivedString);
                 }
             }
 
+        }
+
+        public T DeserializeXml<T>(string receivedString)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(T));
+            StringReader reader = new StringReader(receivedString);
+            var value = (T) serializer.Deserialize(reader);
+            return value;
         }
 
         public async Task<string> RequestContent(Request request)
@@ -94,7 +103,10 @@ namespace Ombi.Api
                 var httpResponseMessage = await _client.SendAsync(httpRequestMessage);
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
-                    LogError(request, httpResponseMessage);
+                    if (!request.IgnoreErrors)
+                    {
+                        LogError(request, httpResponseMessage);
+                    }
                 }
                 // do something with the response
                 var data = httpResponseMessage.Content;
@@ -112,7 +124,10 @@ namespace Ombi.Api
                 var httpResponseMessage = await _client.SendAsync(httpRequestMessage);
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
-                    LogError(request, httpResponseMessage);
+                    if (!request.IgnoreErrors)
+                    {
+                        LogError(request, httpResponseMessage);
+                    }
                 }
             }
         }

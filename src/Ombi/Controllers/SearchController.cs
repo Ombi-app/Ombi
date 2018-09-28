@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-
+using Ombi.Api.Lidarr.Models;
 using Ombi.Core;
 using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Models;
 using Ombi.Core.Models.Search;
 using StackExchange.Profiling;
 
@@ -19,16 +19,18 @@ namespace Ombi.Controllers
     [Produces("application/json")]
     public class SearchController : Controller
     {
-        public SearchController(IMovieEngine movie, ITvSearchEngine tvEngine, ILogger<SearchController> logger)
+        public SearchController(IMovieEngine movie, ITvSearchEngine tvEngine, ILogger<SearchController> logger, IMusicSearchEngine music)
         {
             MovieEngine = movie;
             TvEngine = tvEngine;
             Logger = logger;
+            MusicEngine = music;
         }
         private ILogger<SearchController> Logger { get; }
 
         private IMovieEngine MovieEngine { get; }
         private ITvSearchEngine TvEngine { get; }
+        private IMusicSearchEngine MusicEngine { get; }
 
         /// <summary>
         /// Searches for a movie.
@@ -128,31 +130,6 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
-        /// Searches for a Tv Show.
-        /// </summary>
-        /// <param name="searchTerm">The search term.</param>
-        /// <remarks>We use TvMaze as the Provider</remarks>
-        /// <returns></returns>
-        [HttpGet("tv/{searchTerm}/tree")]
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> SearchTvTreeNode(string searchTerm)
-        {
-            return await TvEngine.SearchTreeNode(searchTerm);
-        }
-
-        /// <summary>
-        /// Gets extra show information.
-        /// </summary>
-        /// <param name="tvdbId">The TVDB identifier.</param>
-        /// <remarks>We use TvMaze as the Provider</remarks>
-        /// <returns></returns>
-        [HttpGet("tv/info/{tvdbId}/tree")]
-        public async Task<TreeNode<SearchTvShowViewModel>> GetShowInfoTreeNode(int tvdbId)
-        {
-            if (tvdbId == 0) return new TreeNode<SearchTvShowViewModel>();
-            return await TvEngine.GetShowInformationTreeNode(tvdbId);
-        }
-
-        /// <summary>
         /// Gets extra show information.
         /// </summary>
         /// <param name="tvdbId">The TVDB identifier.</param>
@@ -162,17 +139,6 @@ namespace Ombi.Controllers
         public async Task<SearchTvShowViewModel> GetShowInfo(int tvdbId)
         {
             return await TvEngine.GetShowInformation(tvdbId);
-        }
-
-        /// <summary>
-        /// Returns Popular Tv Shows
-        /// </summary>
-        /// <remarks>We use Trakt.tv as the Provider</remarks>
-        /// <returns></returns>
-        [HttpGet("tv/popular/tree")]
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> PopularTvTree()
-        {
-            return await TvEngine.PopularTree();
         }
 
         /// <summary>
@@ -191,34 +157,12 @@ namespace Ombi.Controllers
         /// </summary>
         /// <remarks>We use Trakt.tv as the Provider</remarks>
         /// <returns></returns>
-        [HttpGet("tv/anticipated/tree")]
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> AnticipatedTvTree()
-        {
-            return await TvEngine.AnticipatedTree();
-        }
-
-
-        /// <summary>
-        /// Returns most Anticiplateds tv shows.
-        /// </summary>
-        /// <remarks>We use Trakt.tv as the Provider</remarks>
-        /// <returns></returns>
         [HttpGet("tv/anticipated")]
         public async Task<IEnumerable<SearchTvShowViewModel>> AnticipatedTv()
         {
             return await TvEngine.Anticipated();
         }
 
-        /// <summary>
-        /// Returns Most watched shows.
-        /// </summary>
-        /// <remarks>We use Trakt.tv as the Provider</remarks>
-        /// <returns></returns>
-        [HttpGet("tv/mostwatched/tree")]
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> MostWatchedTree()
-        {
-            return await TvEngine.MostWatchesTree();
-        }
 
         /// <summary>
         /// Returns Most watched shows.
@@ -236,21 +180,43 @@ namespace Ombi.Controllers
         /// </summary>
         /// <remarks>We use Trakt.tv as the Provider</remarks>
         /// <returns></returns>
-        [HttpGet("tv/trending/tree")]
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> TrendingTree()
-        {
-            return await TvEngine.TrendingTree();
-        }
-
-        /// <summary>
-        /// Returns trending shows
-        /// </summary>
-        /// <remarks>We use Trakt.tv as the Provider</remarks>
-        /// <returns></returns>
         [HttpGet("tv/trending")]
         public async Task<IEnumerable<SearchTvShowViewModel>> Trending()
         {
             return await TvEngine.Trending();
+        }
+
+        /// <summary>
+        /// Returns the artist information we searched for
+        /// </summary>
+        /// <remarks>We use Lidarr as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("music/artist/{searchTerm}")]
+        public async Task<IEnumerable<SearchArtistViewModel>> SearchArtist(string searchTerm)
+        {
+            return await MusicEngine.SearchArtist(searchTerm);
+        }
+
+        /// <summary>
+        /// Returns the album information we searched for
+        /// </summary>
+        /// <remarks>We use Lidarr as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("music/album/{searchTerm}")]
+        public async Task<IEnumerable<SearchAlbumViewModel>> SearchAlbum(string searchTerm)
+        {
+            return await MusicEngine.SearchAlbum(searchTerm);
+        }
+
+        /// <summary>
+        /// Returns all albums for the artist using the ForeignArtistId
+        /// </summary>
+        /// <remarks>We use Lidarr as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("music/artist/album/{foreignArtistId}")]
+        public async Task<IEnumerable<SearchAlbumViewModel>> GetAlbumsByArtist(string foreignArtistId)
+        {
+            return await MusicEngine.GetArtistAlbums(foreignArtistId);
         }
     }
 }

@@ -4,6 +4,8 @@
     {
         public FilterType AvailabilityFilter { get; set; }
         public FilterType StatusFilter { get; set; }
+        public int Position { get; set; }
+        public int Count { get; set; }
     }
 
     public enum FilterType

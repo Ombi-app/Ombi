@@ -7,21 +7,23 @@ import { ConfirmationService, ConfirmDialogModule, MultiSelectModule, SidebarMod
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { UpdateDetailsComponent } from "./updatedetails.component";
-import { UserManagementAddComponent } from "./usermanagement-add.component";
-import { UserManagementEditComponent } from "./usermanagement-edit.component";
+import { UserManagementUserComponent } from "./usermanagement-user.component";
 import { UserManagementComponent } from "./usermanagement.component";
 
 import { PipeModule } from "../pipes/pipe.module";
-import { IdentityService } from "../services";
+import { IdentityService, PlexService, RadarrService, SonarrService } from "../services";
 
 import { AuthGuard } from "../auth/auth.guard";
 
 import { OrderModule } from "ngx-order-pipe";
+import { AddPlexUserComponent } from "./addplexuser.component";
+
+import { SharedModule } from "../shared/shared.module";
 
 const routes: Routes = [
     { path: "", component: UserManagementComponent, canActivate: [AuthGuard] },
-    { path: "add", component: UserManagementAddComponent, canActivate: [AuthGuard] },
-    { path: "edit/:id", component: UserManagementEditComponent, canActivate: [AuthGuard] },
+    { path: "user", component: UserManagementUserComponent, canActivate: [AuthGuard] },
+    { path: "user/:id", component: UserManagementUserComponent, canActivate: [AuthGuard] },
     { path: "updatedetails", component: UpdateDetailsComponent, canActivate: [AuthGuard] },
 ];
 
@@ -38,12 +40,16 @@ const routes: Routes = [
         TooltipModule,
         OrderModule,
         SidebarModule,
+        SharedModule,
     ],
     declarations: [
         UserManagementComponent,
-        UserManagementAddComponent,
-        UserManagementEditComponent,
         UpdateDetailsComponent,
+        AddPlexUserComponent,
+        UserManagementUserComponent,
+    ],
+    entryComponents:[
+        AddPlexUserComponent,
     ],
     exports: [
         RouterModule,
@@ -51,6 +57,9 @@ const routes: Routes = [
     providers: [
         IdentityService,
         ConfirmationService,
+        PlexService,
+        RadarrService,
+        SonarrService,
     ],
 
 })

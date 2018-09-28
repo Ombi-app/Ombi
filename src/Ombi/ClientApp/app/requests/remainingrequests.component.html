@@ -1,0 +1,18 @@
+﻿<div *ngIf="remaining?.hasLimit">
+    <h4 id="remainingRequests" class="text-center">
+        {{'Requests.Remaining.Quota' | translate: {remaining: remaining.remaining, total: remaining.limit} }}
+    </h4>
+    <h4 class="text-center" *ngIf="daysUntil > 1">
+        {{'Requests.Remaining.NextDays' | translate: {time: daysUntil} }}
+    </h4>
+    <h4 class="text-center" *ngIf="hoursUntil > 1 && daysUntil <= 1">
+        {{'Requests.Remaining.NextHours' | translate: {time: hoursUntil} }}
+    </h4>
+    <h4 class="text-center" *ngIf="minutesUntil >= 1 && hoursUntil <= 1 && daysUntil <= 1" #minutes>
+        {{(minutesUntil == 1 ? 'Requests.Remaining.NextMinute' : 'Requests.Remaining.NextMinutes') | translate: {time: minutesUntil} }}
+    </h4>
+</div>
+
+<br *ngIf="!remaining?.hasLimit" />
+<br *ngIf="!remaining?.hasLimit" />
+

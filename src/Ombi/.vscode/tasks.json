@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "taskName": "restore",
+            "label": "restore",
             "command": "npm",
             "type": "shell",
             "args": [
@@ -14,7 +14,16 @@
             "problemMatcher": []
         },
         {
-            "taskName": "build",
+            "label": "clean",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "clean"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build",
             "command": "dotnet",
             "type": "shell",
             "args": [
@@ -27,7 +36,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "taskName": "lint",
+            "label": "lint",
             "type": "shell",
             "command": "npm",
             "args": [

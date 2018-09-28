@@ -19,12 +19,14 @@ namespace Ombi.Core.Tests.Rule.Search
 
             MovieMock = new Mock<IMovieRequestRepository>();
             TvMock = new Mock<ITvRequestRepository>();
-            Rule = new ExistingRule(MovieMock.Object, TvMock.Object);
+            MusicMock = new Mock<IMusicRequestRepository>();
+            Rule = new ExistingRule(MovieMock.Object, TvMock.Object, MusicMock.Object);
         }
 
         private ExistingRule Rule { get; set; }
         private Mock<IMovieRequestRepository> MovieMock { get; set; }
         private Mock<ITvRequestRepository> TvMock { get; set; }
+        private Mock<IMusicRequestRepository> MusicMock { get; set; }
 
 
         [Test]

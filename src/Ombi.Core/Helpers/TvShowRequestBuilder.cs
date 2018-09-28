@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Ombi.Api.TvMaze;
+using Ombi.Api.TheMovieDb;
 using Ombi.Api.TvMaze.Models;
+using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Helpers;
@@ -16,23 +18,37 @@ namespace Ombi.Core.Helpers
     public class TvShowRequestBuilder
     {
 
-        public TvShowRequestBuilder(ITvMazeApi tvApi)
+        public TvShowRequestBuilder(ITvMazeApi tvApi, IMovieDbApi movApi)
         {
             TvApi = tvApi;
+            MovieDbApi = movApi;
         }
         
         private ITvMazeApi TvApi { get; }
+        private IMovieDbApi MovieDbApi { get; }
 
         public ChildRequests ChildRequest { get; set; }
         public List<SeasonsViewModel> TvRequests { get; protected set; }
         public string PosterPath { get; protected set; }
+        public string BackdropPath { get; protected set; }
         public DateTime FirstAir { get; protected set; }
         public TvRequests NewRequest { get; protected set; }
         protected TvMazeShow ShowInfo { get; set; }
+        protected List<TvSearchResult> Results { get; set; }
 
         public async Task<TvShowRequestBuilder> GetShowInfo(int id)
         {
             ShowInfo = await TvApi.ShowLookupByTheTvDbId(id);
+            Results = await MovieDbApi.SearchTv(ShowInfo.name);
+            foreach (TvSearchResult result in Results) {
+                if (result.Name == ShowInfo.name)
+                {                  
+                    var showIds = await MovieDbApi.GetTvExternals(result.Id);
+                    ShowInfo.externals.imdb = showIds.imdb_id;
+                    BackdropPath = result.BackdropPath;
+                    break;
+                }
+            }
 
             DateTime.TryParse(ShowInfo.premiered, out var dt);
 
@@ -55,7 +71,7 @@ namespace Ombi.Core.Helpers
                 RequestedUserId = userId,
                 SeasonRequests = new List<SeasonRequests>(),
                 Title = ShowInfo.name,
-                SeriesType = ShowInfo.type.Equals("Animation", StringComparison.CurrentCultureIgnoreCase) ? SeriesType.Anime : SeriesType.Standard
+                SeriesType = ShowInfo.genres.Any( s => s.Equals("Anime", StringComparison.OrdinalIgnoreCase)) ? SeriesType.Anime : SeriesType.Standard
             };
 
             return this;
@@ -226,7 +242,8 @@ namespace Ombi.Core.Helpers
                 ImdbId = ShowInfo.externals?.imdb ?? string.Empty,
                 TvDbId = tv.TvDbId,
                 ChildRequests = new List<ChildRequests>(),
-                TotalSeasons = tv.Seasons.Count()
+                TotalSeasons = tv.Seasons.Count(),
+                Background = BackdropPath
             };
             NewRequest.ChildRequests.Add(ChildRequest);
 

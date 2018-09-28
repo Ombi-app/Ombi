@@ -1,16 +1,29 @@
 <div *ngIf="issue">
-    <div class="row">
+    <div class="row issue-details">
         <div class="myBg backdrop" [style.background-image]="backgroundPath"></div>
         <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
         <h1>{{issue.title}} </h1>
         <div class="col-md-6">
             <img class="img-responsive poster" src="{{posterPath}}" alt="poster">
-            <span class="label label-info">{{IssueStatus[issue.status]}}</span>
-            <span class="label label-success">{{issue.issueCategory.value}}</span>
 
-            <h3 *ngIf="issue.userReported?.alias">{{'Issues.ReportedBy' | translate}}: {{issue.userReported.alias}}</h3>
-            <h3 *ngIf="!issue.userReported?.alias">{{'Issues.ReportedBy' | translate}}: {{issue.userReported.userName}}</h3>
-            <h3 *ngIf="issue.subject">{{'Issues.Subject' | translate}}: {{issue.subject}}</h3>
+            <div class="issue-status">
+                <span *ngIf="issue.status === IssueStatus.Pending" id="pendingLabel" class="label label-warning">{{IssueStatus[issue.status]}}</span>
+                <span *ngIf="issue.status === IssueStatus.InProgress" id="inprogressLabel" class="label label-info">{{IssueStatus[issue.status]}}</span>
+                <span *ngIf="issue.status === IssueStatus.Resolved" id="resolvedLabel" class="label label-success">{{IssueStatus[issue.status]}}</span>
+            </div>
+            <span class="label label-success">{{issue.issueCategory.value}}</span>
+            <br>
+            <span class="reported-by">
+                <h3 *ngIf="issue.userReported?.alias">{{'Issues.ReportedBy' | translate}}:</h3>
+                <h3 *ngIf="!issue.userReported?.alias">{{'Issues.ReportedBy' | translate}}:</h3>
+            </span>
+            <span class="reported-user">
+                <h3 *ngIf="issue.userReported?.alias">{{issue.userReported.alias}}</h3>
+                <h3 *ngIf="!issue.userReported?.alias">{{issue.userReported.userName}}</h3>
+            </span>
+            <br>
+            <span class="subject-category"><h3 *ngIf="issue.subject">{{'Issues.Subject' | translate}}:</h3></span>
+            <span class="subject"><h3 *ngIf="issue.subject">{{issue.subject}}</h3></span>
             <br>
             <div class="form-group">
                 <label for="description" class="control-label" [translate]="'Issues.Description'"></label>
@@ -38,15 +51,17 @@
                     <div *ngIf="comments" class="panel-body msg_container_base">
                         <div *ngIf="comments.length <= 0" class="row msg_container base_receive">
                             <div class="col-md-10 col-xs-10">
-                                <div class="messages msg_sent">
-                                    <p [translate]="'Issues.NoComments'"></p>
+                               
+                                <div class="messages msg_sent"> 
+                                       <p [translate]="'Issues.NoComments'"></p>
                                 </div>
                             </div>
                         </div>
 
                         <div *ngFor="let comment of comments" class="row msg_container" [ngClass]="{'base_sent': comment.adminComment, 'base_receive': !comment.adminComment}">
                             <div class="col-md-10 col-xs-10">
-                                <div class="messages msg_sent">
+                                
+                                <div class="messages msg_sent"> <i *ngIf="isAdmin" style="float:right;" class="fa fa-times" aria-hidden="true" (click)="deleteComment(comment.id)"></i>
                                     <p>{{comment.comment}}</p>
                                     <time>{{comment.username}} • {{comment.date | date:'short'}}</time>
                                 </div>

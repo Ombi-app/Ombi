@@ -1,10 +1,10 @@
 
 #tool "nuget:?package=GitVersion.CommandLine"
 #addin "Cake.Gulp"
-#addin "Cake.Npm"
 #addin "SharpZipLib"
 #addin nuget:?package=Cake.Compression&version=0.1.4
 #addin "Cake.Incubator"
+#addin "Cake.Yarn"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -26,7 +26,7 @@ var csProj = "./src/Ombi/Ombi.csproj";          // Path to the project.csproj
 var solutionFile = "Ombi.sln";                  // Solution file if needed
 GitVersion versionInfo = null;
 
-var frameworkVer = "netcoreapp2.0";
+var frameworkVer = "netcoreapp2.1";
 
 var buildSettings = new DotNetCoreBuildSettings
 {
@@ -122,36 +122,19 @@ Task("SetVersionInfo")
 
 Task("NPM")
 	.Does(() => {
-    var settings = new NpmInstallSettings {
-		LogLevel = NpmLogLevel.Silent,
-		WorkingDirectory = webProjDir,
-		Production = true
-	};
-
-	NpmInstall(settings);
+	Yarn.FromPath(webProjDir).Install();
 });
 
 Task("Gulp Publish")
 	.IsDependentOn("NPM")
-	.Does(() => {
- 
-	var runScriptSettings = new NpmRunScriptSettings {
- 		ScriptName="publish",
- 		WorkingDirectory = webProjDir,
- 	};
- 	
- 	NpmRunScript(runScriptSettings);
+	.Does(() => { 	
+	Yarn.FromPath(webProjDir).RunScript("publish");
  });
 
 Task("TSLint")
     .Does(() =>
 {
-	var settings = new NpmRunScriptSettings {
-		WorkingDirectory = webProjDir,
-		ScriptName = "lint"
-	};
-	
-    NpmRunScript(settings);
+	Yarn.FromPath(webProjDir).RunScript("lint");
 });
 
 Task("PrePublish")
@@ -178,7 +161,7 @@ Task("Publish")
     .IsDependentOn("Publish-OSX")
     .IsDependentOn("Publish-Linux")
     .IsDependentOn("Publish-Linux-ARM")
-    //.IsDependentOn("Publish-Linux-ARM-64Bit")
+    .IsDependentOn("Publish-Linux-ARM-64Bit")
     .IsDependentOn("Package");
 
 Task("Publish-Windows")
@@ -189,6 +172,8 @@ Task("Publish-Windows")
 
     DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
     CopyFile(buildDir + "/"+frameworkVer+"/win10-x64/Swagger.xml", buildDir + "/"+frameworkVer+"/win10-x64/published/Swagger.xml");
+	
+    publishSettings.OutputDirectory = Directory(buildDir) + Directory(frameworkVer +"/win10-x64/published/updater");
     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 
@@ -200,6 +185,9 @@ Task("Publish-Windows-32bit")
 
     DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
     CopyFile(buildDir + "/"+frameworkVer+"/win10-x86/Swagger.xml", buildDir + "/"+frameworkVer+"/win10-x86/published/Swagger.xml");
+
+	
+    publishSettings.OutputDirectory = Directory(buildDir) + Directory(frameworkVer +"/win10-x86/published/updater");
     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 
@@ -211,6 +199,8 @@ Task("Publish-OSX")
 
     DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
     CopyFile(buildDir + "/"+frameworkVer+"/osx-x64/Swagger.xml", buildDir + "/"+frameworkVer+"/osx-x64/published/Swagger.xml");
+
+    publishSettings.OutputDirectory = Directory(buildDir) + Directory(frameworkVer +"/osx-x64/published/updater");
     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 
@@ -222,6 +212,8 @@ Task("Publish-Linux")
 
     DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
     CopyFile(buildDir + "/"+frameworkVer+"/linux-x64/Swagger.xml", buildDir + "/"+frameworkVer+"/linux-x64/published/Swagger.xml");
+	
+    publishSettings.OutputDirectory = Directory(buildDir) + Directory(frameworkVer +"/linux-x64/published/updater");
     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 
@@ -235,6 +227,8 @@ Task("Publish-Linux-ARM")
     CopyFile(
       buildDir + "/"+frameworkVer+"/linux-arm/Swagger.xml",
       buildDir + "/"+frameworkVer+"/linux-arm/published/Swagger.xml");
+	  
+    publishSettings.OutputDirectory = Directory(buildDir) + Directory(frameworkVer +"/linux-arm/published/updater");
     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 
@@ -248,6 +242,8 @@ Task("Publish-Linux-ARM-64Bit")
     CopyFile(
       buildDir + "/"+frameworkVer+"/linux-arm64/Swagger.xml",
       buildDir + "/"+frameworkVer+"/linux-arm64/published/Swagger.xml");
+	  
+    publishSettings.OutputDirectory = Directory(buildDir) + Directory(frameworkVer +"/linux-arm64/published/updater");
     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 

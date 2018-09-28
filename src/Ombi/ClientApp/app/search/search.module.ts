@@ -7,17 +7,21 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { MovieSearchComponent } from "./moviesearch.component";
 import { MovieSearchGridComponent } from "./moviesearchgrid.component";
+import { AlbumSearchComponent } from "./music/albumsearch.component";
+import { ArtistSearchComponent } from "./music/artistsearch.component";
+import { MusicSearchComponent } from "./music/musicsearch.component";
 import { SearchComponent } from "./search.component";
 import { SeriesInformationComponent } from "./seriesinformation.component";
 import { TvSearchComponent } from "./tvsearch.component";
 
-import { SidebarModule, TreeTableModule } from "primeng/primeng";
+import { SidebarModule, TooltipModule, TreeTableModule } from "primeng/primeng";
 
 import { RequestService } from "../services";
 import { SearchService } from "../services";
 
 import { AuthGuard } from "../auth/auth.guard";
 
+import { RemainingRequestsComponent } from "../requests/remainingrequests.component";
 import { SharedModule } from "../shared/shared.module";
 
 const routes: Routes = [
@@ -25,7 +29,7 @@ const routes: Routes = [
     { path: "show/:id", component: SeriesInformationComponent, canActivate: [AuthGuard] },
 ];
 @NgModule({
-    imports: [        
+    imports: [
         CommonModule,
         FormsModule,
         RouterModule.forChild(routes),
@@ -33,6 +37,7 @@ const routes: Routes = [
         TreeTableModule,
         SharedModule,
         SidebarModule,
+        TooltipModule,
     ],
     declarations: [
         SearchComponent,
@@ -40,6 +45,10 @@ const routes: Routes = [
         TvSearchComponent,
         SeriesInformationComponent,
         MovieSearchGridComponent,
+        RemainingRequestsComponent,
+        MusicSearchComponent,
+        ArtistSearchComponent,
+        AlbumSearchComponent,
     ],
     exports: [
         RouterModule,

@@ -27,6 +27,7 @@ export interface IUpdateSettings extends ISettings {
   windowsService: boolean;
   windowsServiceName: string;
   isWindows: boolean;
+  testMode: boolean;
 }
 
 export interface IEmbySettings extends ISettings {
@@ -65,8 +66,10 @@ export interface ISonarrSettings extends IExternalSettings {
   apiKey: string;
   enabled: boolean;
   qualityProfile: string;
+  qualityProfileAnime: string;
   seasonFolders: boolean;
   rootPath: string;
+  rootPathAnime: string;
   fullRootPath: string;
   addOnly: boolean;
 }
@@ -79,6 +82,18 @@ export interface IRadarrSettings extends IExternalSettings {
   fullRootPath: string;
   addOnly: boolean;
   minimumAvailability: string;
+}
+
+export interface ILidarrSettings extends IExternalSettings {
+  enabled: boolean;
+  apiKey: string;
+  defaultQualityProfile: string;
+  defaultRootPath: string;
+  fullRootPath: string;
+  metadataProfileId: number;
+  languageProfileId: number;
+  albumFolder: boolean;
+  addOnly: boolean;
 }
 
 export interface ILandingPageSettings extends ISettings {
@@ -97,7 +112,6 @@ export interface ICustomizationSettings extends ISettings {
   applicationName: string;
   applicationUrl: string;
   logo: string;
-  mobile: boolean;
   customCssLink: string;
   enableCustomDonations: boolean;
   customDonationUrl: string;
@@ -128,11 +142,16 @@ export interface IJobSettings {
   sickRageSync: string;
   refreshMetadata: string;
   newsletter: string;
+  plexRecentlyAddedSync: string;
+  lidarrArtistSync: string;
+  issuesPurge: string;
 }
 
 export interface IIssueSettings extends ISettings {
   enabled: boolean;
   enableInProgress: boolean;
+  deleteIssues: boolean;
+  daysAfterResolvedToDelete: number;
 }
 
 export interface IAuthenticationSettings extends ISettings {
@@ -144,6 +163,7 @@ export interface IAuthenticationSettings extends ISettings {
   requiredLowercase: boolean;
   requireNonAlphanumeric: boolean;
   requireUppercase: boolean;
+  enableOAuth: boolean;
 }
 
 export interface IUserManagementSettings extends ISettings {

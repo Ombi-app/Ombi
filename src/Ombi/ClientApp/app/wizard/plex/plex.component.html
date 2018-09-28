@@ -17,9 +17,16 @@
 <small>Please note we do not store this information, we only store your Plex Authorization Token that will allow Ombi to view your media and friends</small>
 <div class="form-group">
     <div style="text-align: center; margin-top: 20px">
-        <button (click)="requestAuthToken()" class="btn btn-primary-outline">Request Token <i class="fa fa-key"></i></button>
+        <button (click)="requestAuthToken()" class="btn btn-success-outline">Request Token <i class="fa fa-key"></i></button>
     </div>
 </div>
+<p class="text-center">OR</p>
+<div class="form-group">
+    <div style="text-align: center; margin-top: 20px">
+        <button (click)="oauth()" class="btn btn-primary" type="button">Continue With Plex</button>
+    </div>
+</div>
+
 </div>
 </div>
 </div>

@@ -20,6 +20,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Ombi.Core.Authentication;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
+using Ombi.Store.Entities;
 
 namespace Ombi.Core.Engine
 {
@@ -27,8 +28,8 @@ namespace Ombi.Core.Engine
     {
         public TvSearchEngine(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper, ISettingsService<PlexSettings> plexSettings,
             ISettingsService<EmbySettings> embySettings, IPlexContentRepository repo, IEmbyContentRepository embyRepo, ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um,
-            ICacheService memCache, ISettingsService<OmbiSettings> s)
-            : base(identity, service, r, um, memCache, s)
+            ICacheService memCache, ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub)
+            : base(identity, service, r, um, memCache, s, sub)
         {
             TvMazeApi = tvMaze;
             Mapper = mapper;
@@ -53,16 +54,20 @@ namespace Ombi.Core.Engine
 
             if (searchResult != null)
             {
-                return await ProcessResults(searchResult);
+                var retVal = new List<SearchTvShowViewModel>();
+                foreach (var tvMazeSearch in searchResult)
+                {
+                    if (tvMazeSearch.show.externals == null || !(tvMazeSearch.show.externals?.thetvdb.HasValue ?? false))
+                    {
+                        continue;
+                    }
+                    retVal.Add(await ProcessResult(tvMazeSearch));
+                }
+                return retVal;
             }
             return null;
         }
 
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> SearchTreeNode(string searchTerm)
-        {
-            var result = await Search(searchTerm);
-            return result.Select(ParseIntoTreeNode).ToList();
-        }
         public async Task<SearchTvShowViewModel> GetShowInformation(int tvdbid)
         {
             var show = await TvMazeApi.ShowLookupByTheTvDbId(tvdbid);
@@ -115,19 +120,6 @@ namespace Ombi.Core.Engine
             return await ProcessResult(mapped);
         }
 
-        public async Task<TreeNode<SearchTvShowViewModel>> GetShowInformationTreeNode(int tvdbid)
-        {
-            var result = await GetShowInformation(tvdbid);
-            return ParseIntoTreeNode(result);
-        }
-
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> PopularTree()
-        {
-            var result = await Cache.GetOrAdd(CacheKeys.PopularTv, async () => await TraktApi.GetPopularShows(), DateTime.Now.AddHours(12));
-            var processed = await ProcessResults(result);
-            return processed.Select(ParseIntoTreeNode).ToList();
-        }
-
         public async Task<IEnumerable<SearchTvShowViewModel>> Popular()
         {
             var result = await Cache.GetOrAdd(CacheKeys.PopularTv, async () => await TraktApi.GetPopularShows(), DateTime.Now.AddHours(12));
@@ -135,12 +127,6 @@ namespace Ombi.Core.Engine
             return processed;
         }
 
-                public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> AnticipatedTree()
-        {
-            var result = await Cache.GetOrAdd(CacheKeys.AnticipatedTv, async () => await TraktApi.GetAnticipatedShows(), DateTime.Now.AddHours(12));
-            var processed = await ProcessResults(result);
-            return processed.Select(ParseIntoTreeNode).ToList();
-        }
         public async Task<IEnumerable<SearchTvShowViewModel>> Anticipated()
         {
 
@@ -149,24 +135,11 @@ namespace Ombi.Core.Engine
             return processed;
         }
 
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> MostWatchesTree()
-        {
-            var result = await Cache.GetOrAdd(CacheKeys.MostWatchesTv, async () => await TraktApi.GetMostWatchesShows(), DateTime.Now.AddHours(12));
-            var processed = await ProcessResults(result);
-            return processed.Select(ParseIntoTreeNode).ToList();
-        }
         public async Task<IEnumerable<SearchTvShowViewModel>> MostWatches()
         {
             var result = await Cache.GetOrAdd(CacheKeys.MostWatchesTv, async () => await TraktApi.GetMostWatchesShows(), DateTime.Now.AddHours(12));
             var processed = await ProcessResults(result);
             return processed;
-        }
-
-        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> TrendingTree()
-        {
-            var result = await Cache.GetOrAdd(CacheKeys.TrendingTv, async () => await TraktApi.GetTrendingShows(), DateTime.Now.AddHours(12));
-            var processed = await ProcessResults(result);
-            return processed.Select(ParseIntoTreeNode).ToList();
         }
 
         public async Task<IEnumerable<SearchTvShowViewModel>> Trending()
@@ -176,31 +149,19 @@ namespace Ombi.Core.Engine
             return processed;
         }
 
-        private static TreeNode<SearchTvShowViewModel> ParseIntoTreeNode(SearchTvShowViewModel result)
-        {
-            return new TreeNode<SearchTvShowViewModel>
-            {
-                Data = result,
-                Children = new List<TreeNode<SearchTvShowViewModel>>
-                {
-                    new TreeNode<SearchTvShowViewModel>
-                    {
-                        Data = result, Leaf = true
-                    }
-                },
-                Leaf = false
-            };
-        }
-
         private async Task<IEnumerable<SearchTvShowViewModel>> ProcessResults<T>(IEnumerable<T> items)
         {
             var retVal = new List<SearchTvShowViewModel>();
             foreach (var tvMazeSearch in items)
             {
-                var viewT = Mapper.Map<SearchTvShowViewModel>(tvMazeSearch);
-                retVal.Add(await ProcessResult(viewT));
+                retVal.Add(await ProcessResult(tvMazeSearch));
             }
             return retVal;
+        }
+
+        private async Task<SearchTvShowViewModel> ProcessResult<T>(T tvMazeSearch)
+        {
+            return Mapper.Map<SearchTvShowViewModel>(tvMazeSearch);
         }
 
         private async Task<SearchTvShowViewModel> ProcessResult(SearchTvShowViewModel item)

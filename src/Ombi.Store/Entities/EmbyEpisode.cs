@@ -39,8 +39,14 @@ namespace Ombi.Store.Entities
         public int EpisodeNumber { get; set; }
         public int SeasonNumber { get; set; }
         public string ParentId { get; set; }
+        /// <summary>
+        /// NOT USED
+        /// </summary>
         public string ProviderId { get; set; }
         public DateTime AddedAt { get; set; }
+        public string TvDbId { get; set; }
+        public string ImdbId { get; set; }
+        public string TheMovieDbId { get; set; }
 
         public EmbyContent Series { get; set; }
     }

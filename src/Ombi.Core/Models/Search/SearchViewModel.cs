@@ -8,11 +8,12 @@ namespace Ombi.Core.Models.Search
         public int Id { get; set; }
         public bool Approved { get; set; }
         public bool Requested { get; set; }
+        public int RequestId { get; set; }
         public bool Available { get; set; }
         public string PlexUrl { get; set; }
+        public string EmbyUrl { get; set; }
         public string Quality { get; set; }
         public abstract RequestType Type { get; }
-
 
         /// <summary>
         /// This is used for the PlexAvailabilityCheck/EmbyAvailabilityRule rule
@@ -26,5 +27,11 @@ namespace Ombi.Core.Models.Search
         public string TheTvDbId { get; set; }
         [NotMapped]
         public string TheMovieDbId { get; set; }
+
+
+        [NotMapped]
+        public bool Subscribed { get; set; }
+        [NotMapped]
+        public bool ShowSubscribe { get; set; }
     }
 }

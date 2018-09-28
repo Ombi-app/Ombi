@@ -70,7 +70,16 @@ namespace Ombi.Schedule.Jobs.Emby
 
             foreach (var movie in movies)
             {
-                var embyContent = await _repo.Get(movie.ImdbId);
+                EmbyContent embyContent = null;
+                if (movie.TheMovieDbId > 0)
+                {
+                    embyContent = await _repo.GetByTheMovieDbId(movie.TheMovieDbId.ToString());
+                }
+                else if(movie.ImdbId.HasValue())
+                {
+                    embyContent = await _repo.GetByImdbId(movie.ImdbId);
+                }
+                
                 if (embyContent == null)
                 {
                     // We don't have this yet
@@ -80,6 +89,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 _log.LogInformation("We have found the request {0} on Emby, sending the notification", movie?.Title ?? string.Empty);
 
                 movie.Available = true;
+                movie.MarkedAsAvailable = DateTime.Now;
                 if (movie.Available)
                 {
                     var recipient = movie.RequestedUser.Email.HasValue() ? movie.RequestedUser.Email : string.Empty;
@@ -112,12 +122,53 @@ namespace Ombi.Schedule.Jobs.Emby
 
             foreach (var child in tv)
             {
+
+                var useImdb = false;
+                var useTvDb = false;
+                if (child.ParentRequest.ImdbId.HasValue())
+                {
+                    useImdb = true;
+                }
+
+                if (child.ParentRequest.TvDbId.ToString().HasValue())
+                {
+                    useTvDb = true;
+                }
+
                 var tvDbId = child.ParentRequest.TvDbId;
-                var seriesEpisodes = embyEpisodes.Where(x => x.Series.ProviderId == tvDbId.ToString());
+                var imdbId = child.ParentRequest.ImdbId;
+                IQueryable<EmbyEpisode> seriesEpisodes = null;
+                if (useImdb)
+                {
+                    seriesEpisodes = embyEpisodes.Where(x => x.Series.ImdbId == imdbId.ToString());
+                }
+
+                if (useTvDb && (seriesEpisodes == null || !seriesEpisodes.Any()))
+                {
+                    seriesEpisodes = embyEpisodes.Where(x => x.Series.TvDbId == tvDbId.ToString());
+                }
+
+                if (seriesEpisodes == null)
+                {
+                    continue;
+                }
+
+                if (!seriesEpisodes.Any())
+                {
+                    // Let's try and match the series by name
+                    seriesEpisodes = embyEpisodes.Where(x =>
+                        x.Series.Title.Equals(child.Title, StringComparison.CurrentCultureIgnoreCase));
+                }
+
                 foreach (var season in child.SeasonRequests)
                 {
                     foreach (var episode in season.Episodes)
                     {
+                        if (episode.Available)
+                        {
+                            continue;
+                        }
+
                         var foundEp = await seriesEpisodes.FirstOrDefaultAsync(
                             x => x.EpisodeNumber == episode.EpisodeNumber &&
                                  x.SeasonNumber == episode.Season.SeasonNumber);
@@ -135,13 +186,14 @@ namespace Ombi.Schedule.Jobs.Emby
                 {
                     // We have fulfulled this request!
                     child.Available = true;
+                    child.MarkedAsAvailable = DateTime.Now;
                     BackgroundJob.Enqueue(() => _notificationService.Publish(new NotificationOptions
                     {
                         DateTime = DateTime.Now,
                         NotificationType = NotificationType.RequestAvailable,
-                        RequestId = child.ParentRequestId,
+                        RequestId = child.Id,
                         RequestType = RequestType.TvShow,
-                        Recipient = child.RequestedUser.Email,
+                        Recipient = child.RequestedUser.Email
                     }));
                 }
             }
