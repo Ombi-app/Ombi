@@ -217,12 +217,11 @@ namespace Ombi.Api.Plex
             return await Api.Request<OAuthPin>(request);
         }
 
-        public async Task<Uri> GetOAuthUrl(int pinId, string code, string applicationUrl)
+        public async Task<Uri> GetOAuthUrl(string code, string applicationUrl)
         {
             var request = new Request("auth#", "https://app.plex.tv", HttpMethod.Get);
             await AddHeaders(request);
             
-            request.AddQueryString("pinID", pinId.ToString());
             request.AddQueryString("code", code);
             request.AddQueryString("context[device][product]", ApplicationName);
             request.AddQueryString("context[device][environment]", "bundled");
