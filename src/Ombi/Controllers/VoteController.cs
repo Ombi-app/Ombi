@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Engine;
+using Ombi.Core.Models.UI;
 using Ombi.Store.Entities;
 
 namespace Ombi.Controllers
@@ -19,6 +20,12 @@ namespace Ombi.Controllers
         }
 
         private readonly IVoteEngine _engine;
+
+        [HttpGet]
+        public Task<List<VoteViewModel>> GetView()
+        {
+            return _engine.GetMovieViewModel();
+        }
 
         /// <summary>
         /// Get's all the votes for the request id
