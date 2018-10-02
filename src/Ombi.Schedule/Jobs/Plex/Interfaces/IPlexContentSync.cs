@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs
 {
-    public interface IPlexContentSync : IBaseJob
+    public interface IPlexContentSync : IJob
     {
-        Task CacheContent(bool recentlyAddedSearch = false);
     }
 }

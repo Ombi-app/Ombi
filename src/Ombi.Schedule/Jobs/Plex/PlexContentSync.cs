@@ -42,6 +42,7 @@ using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.Plex.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
@@ -68,8 +69,11 @@ namespace Ombi.Schedule.Jobs.Plex
         private IRefreshMetadata Metadata { get; }
         private IPlexAvailabilityChecker Checker { get; }
 
-        public async Task CacheContent(bool recentlyAddedSearch = false)
+        public async Task Execute(IJobExecutionContext context)
         {
+            JobDataMap dataMap = context.JobDetail.JobDataMap;
+            var recentlyAddedSearch = dataMap.GetBooleanValueFromString("recentlyAddedSearch");
+
             var plexSettings = await Plex.GetSettingsAsync();
             if (!plexSettings.Enable)
             {

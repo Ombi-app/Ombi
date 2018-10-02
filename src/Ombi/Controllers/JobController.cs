@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
@@ -6,10 +7,12 @@ using Microsoft.Extensions.Caching.Memory;
 using Ombi.Api.Service;
 using Ombi.Attributes;
 using Ombi.Helpers;
+using Ombi.Schedule;
 using Ombi.Schedule.Jobs;
 using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
+using Quartz;
 
 namespace Ombi.Controllers
 {
@@ -117,7 +120,7 @@ namespace Ombi.Controllers
         [HttpPost("plexcontentcacher")]
         public bool StartPlexContentCacher()
         {
-            BackgroundJob.Enqueue(() => _plexContentSync.CacheContent(false));
+            OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(PlexContentSync)), new JobDataMap(new Dictionary<string, string> { { "recentlyAddedSearch", "false" } }));
             return true;
         }
 
@@ -128,7 +131,7 @@ namespace Ombi.Controllers
         [HttpPost("plexrecentlyadded")]
         public bool StartRecentlyAdded()
         {
-            BackgroundJob.Enqueue(() => _plexContentSync.CacheContent(true));
+            OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(PlexContentSync)), new JobDataMap(new Dictionary<string, string> { { "recentlyAddedSearch", "true" } }));
             return true;
         }
 

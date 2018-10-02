@@ -147,6 +147,8 @@ namespace Ombi
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
 
+            app.UseQuartz();
+
             var ctx = serviceProvider.GetService<IOmbiContext>();
             loggerFactory.AddSerilog();
 

@@ -63,8 +63,8 @@ namespace Ombi.Schedule
             RecurringJob.AddOrUpdate(() => _embyContentSync.Start(), JobSettingsHelper.EmbyContent(s));
             RecurringJob.AddOrUpdate(() => _sonarrSync.Start(), JobSettingsHelper.Sonarr(s));
             RecurringJob.AddOrUpdate(() => _radarrSync.CacheContent(), JobSettingsHelper.Radarr(s));
-            RecurringJob.AddOrUpdate(() => _plexContentSync.CacheContent(false), JobSettingsHelper.PlexContent(s));
-            RecurringJob.AddOrUpdate(() => _plexRecentlyAddedSync.Start(), JobSettingsHelper.PlexRecentlyAdded(s));
+            //RecurringJob.AddOrUpdate(() => _plexContentSync.Execute(null), JobSettingsHelper.PlexContent(s));
+            //RecurringJob.AddOrUpdate(() => _plexRecentlyAddedSync.Start(), JobSettingsHelper.PlexRecentlyAdded(s));
             RecurringJob.AddOrUpdate(() => _cpCache.Start(), JobSettingsHelper.CouchPotato(s));
             RecurringJob.AddOrUpdate(() => _srSync.Start(), JobSettingsHelper.SickRageSync(s));
             RecurringJob.AddOrUpdate(() => _refreshMetadata.Start(), JobSettingsHelper.RefreshMetadata(s));
@@ -87,7 +87,6 @@ namespace Ombi.Schedule
 
             if (disposing)
             {
-                _plexContentSync?.Dispose();
                 _radarrSync?.Dispose();
                 _updater?.Dispose();
                 _plexUserImporter?.Dispose();
