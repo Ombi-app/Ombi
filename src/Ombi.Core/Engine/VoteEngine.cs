@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Authentication;
@@ -10,6 +11,7 @@ using Ombi.Core.Models;
 using Ombi.Core.Models.UI;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Settings;
+using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -38,6 +40,8 @@ namespace Ombi.Core.Engine
         {
             var vm = new List<VoteViewModel>();
             var movieRequests = await _movieRequestEngine.GetRequests();
+            var tvRequestsTask = _tvRequestEngine.GetRequests();
+            var musicRequestsTask = _musicRequestEngine.GetRequests();
             foreach (var r in movieRequests)
             {
                 // Make model
@@ -51,9 +55,59 @@ namespace Ombi.Core.Engine
                     RequestId = r.Id,
                     RequestType = RequestType.Movie,
                     Title = r.Title,
-                    Image                    = r.PosterPath,
-                    Background = r.Background,
+                    Image = $"https://image.tmdb.org/t/p/w500/{r.PosterPath}",
+                    Background = $"https://image.tmdb.org/t/p/w1280{r.Background}",
                     Description = r.Overview
+                });
+            }
+
+            foreach (var r in await musicRequestsTask)
+            {
+                // Make model
+                var votes = GetVotes(r.Id, RequestType.Album);
+                var upVotes = await votes.Where(x => x.VoteType == VoteType.Upvote).CountAsync();
+                var downVotes = await votes.Where(x => x.VoteType == VoteType.Downvote).CountAsync();
+                vm.Add(new VoteViewModel
+                {
+                    Upvotes = upVotes,
+                    Downvotes = downVotes,
+                    RequestId = r.Id,
+                    RequestType = RequestType.Album,
+                    Title = r.Title,
+                    Image = r.Cover,
+                    Background = r.Cover,
+                    Description = r.ArtistName
+                });
+            }
+
+            foreach (var r in await tvRequestsTask)
+            {
+                // Make model
+                var votes = GetVotes(r.Id, RequestType.TvShow);
+                var upVotes = await votes.Where(x => x.VoteType == VoteType.Upvote).CountAsync();
+                var downVotes = await votes.Where(x => x.VoteType == VoteType.Downvote).CountAsync();
+
+                var finalsb = new StringBuilder();
+                foreach (var childRequests in r.ChildRequests)
+                {
+                    foreach (var epInformation in childRequests.SeasonRequests.OrderBy(x => x.SeasonNumber))
+                    {
+                        var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
+                        var episodeString = NewsletterJob.BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
+                        finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString}");
+                        finalsb.Append("<br />");
+                    }
+                }
+                vm.Add(new VoteViewModel
+                {
+                    Upvotes = upVotes,
+                    Downvotes = downVotes,
+                    RequestId = r.Id,
+                    RequestType = RequestType.TvShow,
+                    Title = r.Title,
+                    Image = r.PosterPath,
+                    Background = r.Background,
+                    Description = finalsb.ToString()
                 });
             }
 
