@@ -172,8 +172,6 @@ namespace Ombi
             {
                 // Generate a API Key
                 settings.ApiKey = Guid.NewGuid().ToString("N");
-                var userManager = app.ApplicationServices.GetService<OmbiUserManager>();
-                userManager.CreateAsync(new OmbiUser {UserName = "API User", UserType = UserType.LocalUser}).Wait();
                 ombiService.SaveSettings(settings);
             }
 

@@ -50,6 +50,7 @@
     "Requests": "Requests",
     "UserManagement": "User Management",
     "Issues":"Issues",
+    "Vote":"Vote",
     "Donate": "Donate!",
     "DonateLibraryMaintainer": "Donate to Library Maintainer",
     "DonateTooltip":
