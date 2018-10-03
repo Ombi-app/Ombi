@@ -44,6 +44,10 @@ namespace Ombi.Core.Engine
             var musicRequestsTask = _musicRequestEngine.GetRequests();
             foreach (var r in movieRequests)
             {
+                if (r.Available || r.Approved || (r.Denied ?? false))
+                {
+                    continue;
+                }
                 // Make model
                 var votes = GetVotes(r.Id, RequestType.Movie);
                 var upVotes = await votes.Where(x => x.VoteType == VoteType.Upvote).CountAsync();
@@ -63,6 +67,10 @@ namespace Ombi.Core.Engine
 
             foreach (var r in await musicRequestsTask)
             {
+                if (r.Available || r.Approved || (r.Denied ?? false))
+                {
+                    continue;
+                }
                 // Make model
                 var votes = GetVotes(r.Id, RequestType.Album);
                 var upVotes = await votes.Where(x => x.VoteType == VoteType.Upvote).CountAsync();
@@ -90,6 +98,10 @@ namespace Ombi.Core.Engine
                 var finalsb = new StringBuilder();
                 foreach (var childRequests in r.ChildRequests)
                 {
+                    if (childRequests.Available || childRequests.Approved || (childRequests.Denied ?? false))
+                    {
+                        continue;
+                    }
                     foreach (var epInformation in childRequests.SeasonRequests.OrderBy(x => x.SeasonNumber))
                     {
                         var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
@@ -97,18 +109,18 @@ namespace Ombi.Core.Engine
                         finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString}");
                         finalsb.Append("<br />");
                     }
+                    vm.Add(new VoteViewModel
+                    {
+                        Upvotes = upVotes,
+                        Downvotes = downVotes,
+                        RequestId = childRequests.Id,
+                        RequestType = RequestType.TvShow,
+                        Title = r.Title,
+                        Image = r.PosterPath,
+                        Background = r.Background,
+                        Description = finalsb.ToString()
+                    });
                 }
-                vm.Add(new VoteViewModel
-                {
-                    Upvotes = upVotes,
-                    Downvotes = downVotes,
-                    RequestId = r.Id,
-                    RequestType = RequestType.TvShow,
-                    Title = r.Title,
-                    Image = r.PosterPath,
-                    Background = r.Background,
-                    Description = finalsb.ToString()
-                });
             }
 
             return vm;
