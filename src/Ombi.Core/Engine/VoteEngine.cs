@@ -85,6 +85,7 @@ namespace Ombi.Core.Engine
                 return new VoteEngineResult { ErrorMessage = "You have already voted!" };
             }
             await RemoveCurrentVote(currentVote);
+            await _movieRequestEngine.SubscribeToRequest(requestId, requestType);
 
             await _voteRepository.Add(new Votes
             {
@@ -147,6 +148,8 @@ namespace Ombi.Core.Engine
                 return new VoteEngineResult { ErrorMessage = "You have already voted!" };
             }
             await RemoveCurrentVote(currentVote);
+
+            await _movieRequestEngine.UnSubscribeRequest(requestId, requestType);
 
             await _voteRepository.Add(new Votes
             {
