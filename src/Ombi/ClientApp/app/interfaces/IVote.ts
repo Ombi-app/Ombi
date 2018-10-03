@@ -7,6 +7,8 @@
     downvotes: number;
     title: string;
     description: string;
+    alreadyVoted: boolean;
+    myVote: VoteType;
 }
 
 export interface IVoteEngineResult {
@@ -20,4 +22,9 @@ export enum RequestTypes {
     TvShow = 0,
     Movie = 1,
     Album = 2,
+}
+
+export enum VoteType {
+    Upvote = 0,
+    Downvote = 1,
 }

@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { OverlayPanel } from "primeng/primeng";
 import { NotificationService, VoteService } from "../services";
 
-import { IVoteEngineResult, IVoteViewModel, RequestTypes } from "../interfaces";
+import { IVoteEngineResult, IVoteViewModel, RequestTypes, VoteType } from "../interfaces";
 
 @Component({
     templateUrl: "vote.component.html",
@@ -11,7 +11,12 @@ import { IVoteEngineResult, IVoteViewModel, RequestTypes } from "../interfaces";
 })
 export class VoteComponent implements OnInit {
 
+    public showCurrent: boolean = true;
+    public showCompleted: boolean;
     public viewModel: IVoteViewModel[];
+    public currentVotes: IVoteViewModel[];
+    public completedVotes: IVoteViewModel[];
+    public VoteType = VoteType;
     public panelImage: string;
     @ViewChild("op") public overlayPanel: OverlayPanel;
 
@@ -19,7 +24,18 @@ export class VoteComponent implements OnInit {
 
     public async ngOnInit() {
         this.viewModel = await this.voteService.getModel();
+        this.filterLists();
      }
+
+     public selectCurrentTab() {
+        this.showCurrent = true;
+        this.showCompleted = false;
+    }
+    
+    public selectCompletedVotesTab() {
+        this.showCurrent = false;
+        this.showCompleted = true;
+    }
 
      public toggle(event: any, image: string) {
         this.panelImage = image;
@@ -44,6 +60,9 @@ export class VoteComponent implements OnInit {
             this.notificationSerivce.error(result.errorMessage);
         } else {
             this.notificationSerivce.success("Voted!");
+            vm.alreadyVoted = true;
+            vm.myVote = VoteType.Upvote;
+            this.filterLists();
         }
     }
 
@@ -64,7 +83,19 @@ export class VoteComponent implements OnInit {
         if(result.isError) {
             this.notificationSerivce.error(result.errorMessage);
         } else {
-            this.notificationSerivce.success("Voted!");
+            this.notificationSerivce.success("Voted!"); 
+            vm.alreadyVoted = true;
+            vm.myVote = VoteType.Downvote;
+            this.filterLists();
         }
+    }
+
+    private filterLists() {
+        this.completedVotes = this.viewModel.filter(vm => {
+            return vm.alreadyVoted;
+        });
+        this.currentVotes = this.viewModel.filter(vm => {
+            return !vm.alreadyVoted;
+        });
     }
 }

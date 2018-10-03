@@ -12,5 +12,7 @@ namespace Ombi.Core.Models.UI
         public int Downvotes { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public bool AlreadyVoted { get; set; }
+        public VoteType MyVote { get; set; }
     }
 }

@@ -42,6 +42,7 @@ namespace Ombi.Core.Engine
             var movieRequests = await _movieRequestEngine.GetRequests();
             var tvRequestsTask = _tvRequestEngine.GetRequests();
             var musicRequestsTask = _musicRequestEngine.GetRequests();
+            var user = await GetUser();
             foreach (var r in movieRequests)
             {
                 if (r.Available || r.Approved || (r.Denied ?? false))
@@ -52,6 +53,8 @@ namespace Ombi.Core.Engine
                 var votes = GetVotes(r.Id, RequestType.Movie);
                 var upVotes = await votes.Where(x => x.VoteType == VoteType.Upvote).CountAsync();
                 var downVotes = await votes.Where(x => x.VoteType == VoteType.Downvote).CountAsync();
+                var myVote = await votes.FirstOrDefaultAsync(x => x.UserId == user.Id && !x.Deleted);
+
                 vm.Add(new VoteViewModel
                 {
                     Upvotes = upVotes,
@@ -61,7 +64,9 @@ namespace Ombi.Core.Engine
                     Title = r.Title,
                     Image = $"https://image.tmdb.org/t/p/w500/{r.PosterPath}",
                     Background = $"https://image.tmdb.org/t/p/w1280{r.Background}",
-                    Description = r.Overview
+                    Description = r.Overview,
+                    AlreadyVoted = myVote != null,
+                    MyVote = myVote?.VoteType ?? VoteType.Downvote
                 });
             }
 
@@ -75,6 +80,7 @@ namespace Ombi.Core.Engine
                 var votes = GetVotes(r.Id, RequestType.Album);
                 var upVotes = await votes.Where(x => x.VoteType == VoteType.Upvote).CountAsync();
                 var downVotes = await votes.Where(x => x.VoteType == VoteType.Downvote).CountAsync();
+                var myVote = await votes.FirstOrDefaultAsync(x => x.UserId == user.Id && !x.Deleted);
                 vm.Add(new VoteViewModel
                 {
                     Upvotes = upVotes,
@@ -84,24 +90,27 @@ namespace Ombi.Core.Engine
                     Title = r.Title,
                     Image = r.Cover,
                     Background = r.Cover,
-                    Description = r.ArtistName
+                    Description = r.ArtistName,
+                    AlreadyVoted = myVote != null,
+                    MyVote = myVote?.VoteType ?? VoteType.Downvote
                 });
             }
 
             foreach (var r in await tvRequestsTask)
             {
-                // Make model
-                var votes = GetVotes(r.Id, RequestType.TvShow);
-                var upVotes = await votes.Where(x => x.VoteType == VoteType.Upvote).CountAsync();
-                var downVotes = await votes.Where(x => x.VoteType == VoteType.Downvote).CountAsync();
 
-                var finalsb = new StringBuilder();
                 foreach (var childRequests in r.ChildRequests)
                 {
+                    var finalsb = new StringBuilder();
                     if (childRequests.Available || childRequests.Approved || (childRequests.Denied ?? false))
                     {
                         continue;
                     }
+                    var votes = GetVotes(childRequests.Id, RequestType.TvShow);
+                    // Make model
+                    var upVotes = await votes.Where(x => x.VoteType == VoteType.Upvote).CountAsync();
+                    var downVotes = await votes.Where(x => x.VoteType == VoteType.Downvote).CountAsync();
+                    var myVote = await votes.FirstOrDefaultAsync(x => x.UserId == user.Id && !x.Deleted);
                     foreach (var epInformation in childRequests.SeasonRequests.OrderBy(x => x.SeasonNumber))
                     {
                         var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
@@ -118,7 +127,9 @@ namespace Ombi.Core.Engine
                         Title = r.Title,
                         Image = r.PosterPath,
                         Background = r.Background,
-                        Description = finalsb.ToString()
+                        Description = finalsb.ToString(),
+                        AlreadyVoted = myVote != null,
+                        MyVote = myVote?.VoteType ?? VoteType.Downvote
                     });
                 }
             }
@@ -209,7 +220,7 @@ namespace Ombi.Core.Engine
         {
             var user = await GetUser();
             var currentVote = await GetVoteForUser(requestId, user.Id);
-            if (currentVote != null && currentVote.VoteType == VoteType.Upvote)
+            if (currentVote != null && currentVote.VoteType == VoteType.Downvote)
             {
                 return new VoteEngineResult { ErrorMessage = "You have already voted!" };
             }
