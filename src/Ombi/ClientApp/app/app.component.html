@@ -54,6 +54,12 @@
                             <i class="fa fa-user"></i> {{ 'NavigationBar.UserManagement' | translate }}</a>
                     </li>
                 </ul>
+                <ul *ngIf="voteEnabled" class="nav navbar-nav">
+                    <li id="Vote" [routerLinkActive]="['active']">
+                        <a [routerLink]="['/vote']">
+                            <i class="fa fa-thumbs-o-up"></i> {{ 'NavigationBar.Vote' | translate }}</a>
+                    </li>
+                </ul>
                 
                 <ul *ngIf="hasRole('Admin') || hasRole('PowerUser')" class="nav navbar-nav donation">
                     <li>

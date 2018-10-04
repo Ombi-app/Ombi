@@ -654,7 +654,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     AddInfoTable(sb);
 
                     var title = "";
-                    if (!String.IsNullOrEmpty(info.premiered) && info.premiered.Length > 4)
+                    if (!string.IsNullOrEmpty(info.premiered) && info.premiered.Length > 4)
                     {
                         title = $"{t.Title} ({info.premiered.Remove(4)})";
                     } else
@@ -715,7 +715,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        public string BuildEpisodeList(IEnumerable<int> orderedEpisodes)
+        public static string BuildEpisodeList(IEnumerable<int> orderedEpisodes)
         {
             var epSb = new StringBuilder();
             var previousEpisodes = new List<int>();

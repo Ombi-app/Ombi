@@ -231,3 +231,10 @@ export interface IJobSettingsViewModel {
   result: boolean;
   message: string;
 }
+
+export interface IVoteSettings extends ISettings {
+  enabled: boolean;
+  movieVoteMax: number;
+  musicVoteMax: number;
+  tvShowVoteMax: number;
+}

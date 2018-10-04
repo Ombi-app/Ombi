@@ -50,6 +50,7 @@
     "Requests": "Requests",
     "UserManagement": "User Management",
     "Issues":"Issues",
+    "Vote":"Vote",
     "Donate": "Donate!",
     "DonateLibraryMaintainer": "Donate to Library Maintainer",
     "DonateTooltip":
@@ -193,5 +194,9 @@
     "TvDue": "TV: {{date}}",
     "MovieDue": "Movie: {{date}}",
     "MusicDue": "Music: {{date}}"
+  },
+  "Votes": {
+    "CompletedVotesTab": "Voted",
+    "VotesTab": "Votes Needed"
   }
 }

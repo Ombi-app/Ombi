@@ -16,3 +16,4 @@ export * from "./IIssues";
 export * from "./IRecentlyAdded";
 export * from "./ILidarr";
 export * from "./ISearchMusicResult";
+export * from "./IVote";
