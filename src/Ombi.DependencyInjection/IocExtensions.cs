@@ -128,8 +128,10 @@ namespace Ombi.DependencyInjection
 
         public static void RegisterStore(this IServiceCollection services) { 
             services.AddEntityFrameworkSqlite().AddDbContext<OmbiContext>();
+            services.AddEntityFrameworkSqlite().AddDbContext<SettingsContext>();
             
             services.AddScoped<IOmbiContext, OmbiContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
+            services.AddScoped<ISettingsContext, SettingsContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
             services.AddTransient<ISettingsRepository, SettingsJsonRepository>();
             services.AddTransient<ISettingsResolver, SettingsResolver>();
             services.AddTransient<IPlexContentRepository, PlexServerContentRepository>();

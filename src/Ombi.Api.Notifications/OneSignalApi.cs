@@ -26,7 +26,7 @@ namespace Ombi.Api.Notifications
             {
                 return null;
             }
-            var id = await _appConfig.Get(ConfigurationTypes.Notification);
+            var id = await _appConfig.GetAsync(ConfigurationTypes.Notification);
             var request = new Request(string.Empty, ApiUrl, HttpMethod.Post);
 
             var body = new OneSignalNotificationBody

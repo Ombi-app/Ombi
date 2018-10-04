@@ -22,9 +22,10 @@ namespace Ombi.Store.Context
         }
 
         public DbSet<NotificationTemplates> NotificationTemplates { get; set; }
-        public DbSet<GlobalSettings> Settings { get; set; }
+        public DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
         public DbSet<PlexServerContent> PlexServerContent { get; set; }
         public DbSet<PlexEpisode> PlexEpisode { get; set; }
+        public DbSet<GlobalSettings> Settings { get; set; }
         public DbSet<RadarrCache> RadarrCache { get; set; }
         public DbSet<CouchPotatoCache> CouchPotatoCache { get; set; }
         public DbSet<EmbyContent> EmbyContent { get; set; }
@@ -53,7 +54,6 @@ namespace Ombi.Store.Context
         public DbSet<RequestSubscription> RequestSubscription { get; set; }
         public DbSet<UserNotificationPreferences> UserNotificationPreferences { get; set; }
         public DbSet<UserQualityProfiles> UserQualityProfileses { get; set; }
-        public DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -84,39 +84,6 @@ namespace Ombi.Store.Context
 
         public void Seed()
         {
-
-            // Add the tokens
-            var fanArt = ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.FanartTv);
-            if (fanArt == null)
-            {
-                ApplicationConfigurations.Add(new ApplicationConfiguration
-                {
-                    Type = ConfigurationTypes.FanartTv,
-                    Value = "4b6d983efa54d8f45c68432521335f15"
-                });
-                SaveChanges();
-            }
-            var movieDb = ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.FanartTv);
-            if (movieDb == null)
-            {
-                ApplicationConfigurations.Add(new ApplicationConfiguration
-                {
-                    Type = ConfigurationTypes.TheMovieDb,
-                    Value = "b8eabaf5608b88d0298aa189dd90bf00"
-                });
-                SaveChanges();
-            }
-            var notification = ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.Notification);
-            if (notification == null)
-            {
-                ApplicationConfigurations.Add(new ApplicationConfiguration
-                {
-                    Type = ConfigurationTypes.Notification,
-                    Value = "4f0260c4-9c3d-41ab-8d68-27cb5a593f0e"
-                });
-                SaveChanges();
-            }
-
             // VACUUM;
             Database.ExecuteSqlCommand("VACUUM;");
 

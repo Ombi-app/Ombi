@@ -45,7 +45,9 @@ namespace Ombi
             var urlValue = string.Empty;
             var instance = StoragePathSingleton.Instance;
             instance.StoragePath = storagePath ?? string.Empty;
-            using (var ctx = new OmbiContext())
+            // Check if we need to migrate the settings
+            CheckAndMigrate();
+            using (var ctx = new SettingsContext())
             {
                 var config = ctx.ApplicationConfigurations.ToList();
                 var url = config.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
@@ -82,7 +84,7 @@ namespace Ombi
                         ctx.SaveChanges();
                     }
                 }
-                else if(baseUrl.HasValue() && !baseUrl.Equals(dbBaseUrl.Value))
+                else if (baseUrl.HasValue() && !baseUrl.Equals(dbBaseUrl.Value))
                 {
                     dbBaseUrl.Value = baseUrl;
                     ctx.SaveChanges();
@@ -94,6 +96,51 @@ namespace Ombi
             Console.WriteLine($"We are running on {urlValue}");
 
             BuildWebHost(args).Run();
+        }
+
+        private static void CheckAndMigrate()
+        {
+            var doneGlobal = false;
+            var doneConfig = false;
+            using (var ombi = new OmbiContext())
+            using (var settings = new SettingsContext())
+            {
+                try
+                {
+                    if (ombi.Settings.Any())
+                    {
+                        // OK migrate it!
+                        var allSettings = ombi.Settings.ToList();
+                        settings.Settings.AddRange(allSettings);
+                        doneGlobal = true;
+                    }
+
+                    // Check for any application settings
+
+                    if (ombi.ApplicationConfigurations.Any())
+                    {
+                        // OK migrate it!
+                        var allSettings = ombi.ApplicationConfigurations.ToList();
+                        settings.ApplicationConfigurations.AddRange(allSettings);
+                        doneConfig = true;
+                    }
+
+                    settings.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+
+                // Now delete the old stuff
+                if(doneGlobal)
+                    ombi.Database.ExecuteSqlCommand("TRUNCATE TABLE GlobalSettings");
+                if(doneConfig)
+                    ombi.Database.ExecuteSqlCommand("TRUNCATE TABLE ApplicationConfiguration");
+
+            }
+
         }
 
         private static void DeleteSchedulesDb()
