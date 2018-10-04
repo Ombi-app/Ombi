@@ -42,11 +42,6 @@ namespace Ombi.Store.Entities
         public PlexMediaTypeEntity Type { get; set; }
 
         public string Url { get; set; }
-
-        /// <summary>
-        /// Only used for TV Shows
-        /// </summary>
-        public virtual ICollection<PlexSeasonsContent> Seasons { get; set; }
         
         public ICollection<PlexEpisode> Episodes { get; set; }
 
@@ -65,15 +60,6 @@ namespace Ombi.Store.Entities
 
         [NotMapped]
         public bool HasTheMovieDb => !string.IsNullOrEmpty(TheMovieDbId);
-    }
-
-    [Table("PlexSeasonsContent")]
-    public class PlexSeasonsContent : Entity
-    {
-        public int PlexContentId { get; set; }
-        public int SeasonNumber { get; set; }
-        public int SeasonKey { get; set; }
-        public int ParentKey { get; set; }
     }
 
     public enum PlexMediaTypeEntity

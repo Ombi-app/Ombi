@@ -35,15 +35,15 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public class EmbyContentRepository : Repository<EmbyContent>, IEmbyContentRepository
+    public class EmbyContentRepository : ExternalRepository<EmbyContent>, IEmbyContentRepository
     {
 
-        public EmbyContentRepository(IOmbiContext db):base(db)
+        public EmbyContentRepository(IExternalContext db):base(db)
         {
             Db = db;
         }
 
-        private IOmbiContext Db { get; }
+        private IExternalContext Db { get; }
 
         
         public async Task<EmbyContent> GetByImdbId(string imdbid)

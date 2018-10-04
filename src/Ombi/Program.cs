@@ -143,11 +143,85 @@ namespace Ombi
                 }
 
                 // Now delete the old stuff
-                if(doneGlobal)
+                if (doneGlobal)
                     ombi.Database.ExecuteSqlCommand("TRUNCATE TABLE GlobalSettings");
-                if(doneConfig)
+                if (doneConfig)
                     ombi.Database.ExecuteSqlCommand("TRUNCATE TABLE ApplicationConfiguration");
 
+            }
+
+            // Now migrate all the external stuff
+            using (var ombi = new OmbiContext())
+            using (var external = new ExternalContext())
+            {
+                try
+                {
+
+                    if (ombi.PlexEpisode.Any())
+                    {
+                        external.PlexEpisode.AddRange(ombi.PlexEpisode.ToList());
+                        ombi.Database.ExecuteSqlCommand("TRUNCATE TABLE PlexEpisode");
+                    }
+
+                    if (ombi.PlexServerContent.Any())
+                    {
+                        external.PlexServerContent.AddRange(ombi.PlexServerContent.ToList());
+                        ombi.Database.ExecuteSqlCommand("TRUNCATE TABLE PlexServerContent");
+                    }
+                    if (ombi.EmbyEpisode.Any())
+                    {
+                        external.EmbyEpisode.AddRange(ombi.EmbyEpisode.ToList());
+                        ombi.Database.ExecuteSqlCommand("TRUNCATE TABLE EmbyEpisode");
+                    }
+
+                    if (ombi.EmbyContent.Any())
+                    {
+                        external.EmbyContent.AddRange(ombi.EmbyContent.ToList());
+                        ombi.Database.ExecuteSqlCommand("TRUNCATE TABLE EmbyContent");
+                    }
+                    if (ombi.RadarrCache.Any())
+                    {
+                        external.RadarrCache.AddRange(ombi.RadarrCache.ToList());
+                        ombi.Database.ExecuteSqlCommand("TRUNCATE TABLE RadarrCache");
+                    }
+                    if (ombi.SonarrCache.Any())
+                    {
+                        external.SonarrCache.AddRange(ombi.SonarrCache.ToList());
+                        ombi.Database.ExecuteSqlCommand("TRUNCATE TABLE SonarrCache");
+                    }
+                    if (ombi.LidarrAlbumCache.Any())
+                    {
+                        external.LidarrAlbumCache.AddRange(ombi.LidarrAlbumCache.ToList());
+                        ombi.Database.ExecuteSqlCommand("TRUNCATE TABLE LidarrAlbumCache");
+                    }
+                    if (ombi.LidarrArtistCache.Any())
+                    {
+                        external.LidarrArtistCache.AddRange(ombi.LidarrArtistCache.ToList());
+                        ombi.Database.ExecuteSqlCommand("TRUNCATE TABLE LidarrArtistCache");
+                    }
+                    if (ombi.SickRageEpisodeCache.Any())
+                    {
+                        external.SickRageEpisodeCache.AddRange(ombi.SickRageEpisodeCache.ToList());
+                        ombi.Database.ExecuteSqlCommand("TRUNCATE TABLE SickRageEpisodeCache");
+                    }
+                    if (ombi.SickRageCache.Any())
+                    {
+                        external.SickRageCache.AddRange(ombi.SickRageCache.ToList());
+                        ombi.Database.ExecuteSqlCommand("TRUNCATE TABLE SickRageCache");
+                    }
+                    if (ombi.CouchPotatoCache.Any())
+                    {
+                        external.CouchPotatoCache.AddRange(ombi.CouchPotatoCache.ToList());
+                        ombi.Database.ExecuteSqlCommand("TRUNCATE TABLE CouchPotatoCache");
+                    }
+
+                    external.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
             }
 
         }
