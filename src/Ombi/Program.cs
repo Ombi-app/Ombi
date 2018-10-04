@@ -98,6 +98,15 @@ namespace Ombi
             BuildWebHost(args).Run();
         }
 
+        /// <summary>
+        /// This is to remove the Settings from the Ombi.db to the "new" 
+        /// OmbiSettings.db
+        /// 
+        /// Ombi is hitting a limitation with SQLite where there is a lot of database activity
+        /// and SQLite does not handle concurrency at all, causing db locks.
+        /// 
+        /// Splitting it all out into it's own DB helps with this.
+        /// </summary>
         private static void CheckAndMigrate()
         {
             var doneGlobal = false;
