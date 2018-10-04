@@ -48,6 +48,7 @@
     "Requests": "Anfragen",
     "UserManagement": "Benutzerverwaltung",
     "Issues": "Probleme",
+    "Vote": "Bewerten",
     "Donate": "Spenden!",
     "DonateLibraryMaintainer": "Spende sie an den Bibliotheks Betreuer",
     "DonateTooltip": "So überzeuge ich meine Frau, meine Freizeit mit der Entwicklung von Ombi zu verbringen ;)",
@@ -65,27 +66,27 @@
       "Danish": "Dänisch",
       "Dutch": "Niederländisch",
       "Norwegian": "Norwegisch",
-      "BrazillianPortuguese": "Brazillian Portuguese",
-      "Polish": "Polish",
-      "Swedish": "Swedish"
+      "BrazillianPortuguese": "Portugiesisch (Brasilien)",
+      "Polish": "Polnisch",
+      "Swedish": "Schwedisch"
     },
     "OpenMobileApp": "Mobile App",
-    "RecentlyAdded": "Recently Added"
+    "RecentlyAdded": "Kürzlich hinzugefügt"
   },
   "Search": {
     "Title": "Suche",
     "Paragraph": "Möchtest du etwas sehen, das nicht verfügbar ist? Kein Problem, benutze einfach die Suchbox und fordere es an!",
     "MoviesTab": "Filme",
     "TvTab": "Serien",
-    "MusicTab": "Music",
+    "MusicTab": "Musik",
     "Suggestions": "Vorschläge",
     "NoResults": "Es tut uns leid, wir haben keine Ergebnisse gefunden!",
     "DigitalDate": "Digital Release: {{date}}",
-    "TheatricalRelease": "Theatrical Release: {{date}}",
+    "TheatricalRelease": "Kinostart: {{date}}",
     "ViewOnPlex": "In Plex anschauen",
     "ViewOnEmby": "In Emby anschauen",
     "RequestAdded": "Anfrage für {{title}} wurde erfolgreich hinzugefügt",
-    "Similar": "Similar",
+    "Similar": "Ähnliche",
     "Movies": {
       "PopularMovies": "Beliebte Filme",
       "UpcomingMovies": "Kommende Filme",
@@ -115,14 +116,14 @@
     "Paragraph": "Unten sehen Sie Ihre und alle anderen Anfragen, sowie deren Download und Genehmigungsstatus.",
     "MoviesTab": "Filme",
     "TvTab": "Serien",
-    "MusicTab": "Music",
+    "MusicTab": "Musik",
     "RequestedBy": "Angefordert von:",
     "Status": "Status:",
     "RequestStatus": "Anfrage Status:",
     "Denied": " Abgelehnt:",
-    "TheatricalRelease": "Theatrical Release: {{date}}",
+    "TheatricalRelease": "Kinostart: {{date}}",
     "ReleaseDate": "Veröffentlicht: {{date}}",
-    "TheatricalReleaseSort": "Theatrical Release",
+    "TheatricalReleaseSort": "Kinostart",
     "DigitalRelease": "Digital Release: {{date}}",
     "RequestDate": "Datum der Anfrage:",
     "QualityOverride": "Qualitäts Überschreiben:",
@@ -139,10 +140,10 @@
     "GridStatus": "Status",
     "ReportIssue": "Problem melden",
     "Filter": "Filter",
-    "Sort": "Sort",
+    "Sort": "Sortieren",
     "SeasonNumberHeading": "Staffel: {seasonNumber}",
-    "SortTitleAsc": "Title ▲",
-    "SortTitleDesc": "Title ▼",
+    "SortTitleAsc": "Titel ▲",
+    "SortTitleDesc": "Titel ▼",
     "SortRequestDateAsc": "Request Date ▲",
     "SortRequestDateDesc": "Request Date ▼",
     "SortStatusAsc": "Status ▲",
@@ -179,14 +180,18 @@
     "FilterHeaderAvailability": "Verfügbarkeit",
     "FilterHeaderRequestStatus": "Status",
     "Approved": "Bestätigt",
-    "PendingApproval": "Pending Approval"
+    "PendingApproval": "Genehmigung ausstehend"
   },
   "UserManagment": {
     "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
     "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
     "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
     "TvDue": "TV: {{date}}",
-    "MovieDue": "Movie: {{date}}",
-    "MusicDue": "Music: {{date}}"
+    "MovieDue": "Film: {{date}}",
+    "MusicDue": "Musik: {{date}}"
+  },
+  "Votes": {
+    "CompletedVotesTab": "Bewertet",
+    "VotesTab": "Erforderliche Bewertungen"
   }
 }
