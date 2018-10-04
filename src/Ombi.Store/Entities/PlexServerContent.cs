@@ -44,6 +44,7 @@ namespace Ombi.Store.Entities
         public string Url { get; set; }
         
         public ICollection<PlexEpisode> Episodes { get; set; }
+        public ICollection<PlexSeasonsContent> Seasons { get; set; }
 
         /// <summary>
         /// Plex's internal ID for this item
@@ -60,6 +61,15 @@ namespace Ombi.Store.Entities
 
         [NotMapped]
         public bool HasTheMovieDb => !string.IsNullOrEmpty(TheMovieDbId);
+    }
+
+    [Table("PlexSeasonsContent")]
+    public class PlexSeasonsContent : Entity
+    {
+        public int PlexContentId { get; set; }
+        public int SeasonNumber { get; set; }
+        public int SeasonKey { get; set; }
+        public int ParentKey { get; set; }
     }
 
     public enum PlexMediaTypeEntity
