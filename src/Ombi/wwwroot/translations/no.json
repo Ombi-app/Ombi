@@ -48,6 +48,7 @@
     "Requests": "Forespørsler",
     "UserManagement": "Brukeradministrasjon",
     "Issues": "Mangler",
+    "Vote": "Vote",
     "Donate": "Doner!",
     "DonateLibraryMaintainer": "Doner til vedlikeholderen av biblioteket",
     "DonateTooltip": "Dette er hvordan jeg overbevise min kone til å la meg bruke min fritid til å utvikle Ombi ;)",
@@ -188,5 +189,9 @@
     "TvDue": "TV: {{date}}",
     "MovieDue": "Movie: {{date}}",
     "MusicDue": "Music: {{date}}"
+  },
+  "Votes": {
+    "CompletedVotesTab": "Voted",
+    "VotesTab": "Votes Needed"
   }
 }
