@@ -97,8 +97,8 @@
                     </div>
 
 
-                    <div id="releaseDate">{{ 'Requests.ReleaseDate' | translate: {date: request.releaseDate | date: 'mediumDate'} }}</div>
-                    <div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{request.requestedDate | date: 'mediumDate'}}</div>
+                    <div id="releaseDate">{{ 'Requests.ReleaseDate' | translate: {date: request.releaseDate | amLocal | amDateFormat: 'LL'} }}</div>
+                    <div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{request.requestedDate | amLocal | amDateFormat: 'LL'}}</div>
                     <br />
                 </div>
                 <!-- <div *ngIf="isAdmin">

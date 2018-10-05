@@ -58,7 +58,7 @@
             <div class="col-sm-5 small-padding">
                 <div>
                     <a href="http://www.imdb.com/title/{{request.imdbId}}/" target="_blank">
-                        <h4 class="request-title">{{request.title}} ({{request.releaseDate | date: 'yyyy'}})</h4>
+                        <h4 class="request-title">{{request.title}} ({{request.releaseDate  | amLocal | amDateFormat: 'YYYY'}})</h4>
                     </a>
                 </div>
                 <br />
@@ -93,9 +93,9 @@
                     </div>
 
 
-                    <div id="releaseDate">{{ 'Requests.TheatricalRelease' | translate: {date: request.releaseDate | date: 'mediumDate'} }}</div>
-                    <div *ngIf="request.digitalReleaseDate" id="digitalReleaseDate">{{ 'Requests.DigitalRelease' | translate: {date: request.digitalReleaseDate | date: 'mediumDate'} }}</div>
-                    <div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{request.requestedDate | date}}</div>
+                    <div id="releaseDate">{{ 'Requests.TheatricalRelease' | translate: {date: request.releaseDate  | amLocal | amDateFormat: 'LL'} }}</div>
+                    <div *ngIf="request.digitalReleaseDate" id="digitalReleaseDate">{{ 'Requests.DigitalRelease' | translate: {date: request.digitalReleaseDate | amLocal | amDateFormat: 'LL'} }}</div>
+                    <div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{request.requestedDate | amLocal | amDateFormat: 'LL'}}</div>
                     <br />
                 </div>
                 <div *ngIf="isAdmin">

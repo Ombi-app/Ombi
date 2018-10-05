@@ -104,17 +104,24 @@
             </td>
             <td class="td-labelled" data-label="Request Due">
                 <div *ngIf="u.movieRequestQuota != null && u.movieRequestQuota.remaining != u.movieRequestLimit">
-                    {{'UserManagment.MovieDue' | translate: {date: (u.movieRequestQuota.nextRequest | date: 'short')} }}
+                    {{'UserManagment.MovieDue' | translate: {date: (u.movieRequestQuota.nextRequest | amLocal | amDateFormat: 'l LT')} }}
                 </div>
                 <div *ngIf="u.episodeRequestQuota != null && u.episodeRequestQuota.remaining != u.episodeRequestLimit">
-                    {{'UserManagment.TvDue' | translate: {date: (u.episodeRequestQuota.nextRequest | date: 'short')} }}
+                    {{'UserManagment.TvDue' | translate: {date: (u.episodeRequestQuota.nextRequest  | amLocal | amDateFormat: 'l LT')} }}
                 </div>
                 <div *ngIf="u.musicRequestQuota != null && u.musicRequestQuota.remaining != u.musicRequestLimit">
-                    {{'UserManagment.MusicDue' | translate: {date: (u.musicRequestQuota.nextRequest | date: 'short')} }}
+                    {{'UserManagment.MusicDue' | translate: {date: (u.musicRequestQuota.nextRequest  | amLocal | amDateFormat: 'l LT')} }}
                 </div>
             </td>
             <td class="td-labelled" data-label="Last Logged In:">
-                {{u.lastLoggedIn | date: 'short'}}
+                <!-- {{u.lastLoggedIn | date: 'short'}} -->
+                <span *ngIf="u.lastLoggedIn">
+                    {{u.lastLoggedIn  | amLocal | amDateFormat: 'l LT'}}
+                </span>                
+                <span *ngIf="!u.lastLoggedIn">
+                    Not logged in yet!
+                </span>
+
             </td>
             <td class="td-labelled" data-label="User Type:">
                 <span *ngIf="u.userType === 1">Local User</span>
