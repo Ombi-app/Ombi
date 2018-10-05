@@ -34,6 +34,7 @@ import {
     IThemes,
     IUpdateSettings,
     IUserManagementSettings,
+    IVoteSettings,
 } from "../interfaces";
 
 import { ServiceHelpers } from "./service.helpers";
@@ -282,6 +283,18 @@ export class SettingsService extends ServiceHelpers {
     public saveIssueSettings(settings: IIssueSettings): Observable<boolean> {
         return this.http
             .post<boolean>(`${this.url}/issues`, JSON.stringify(settings), {headers: this.headers});
+    }
+
+    public getVoteSettings(): Observable<IVoteSettings> {
+        return this.http.get<IVoteSettings>(`${this.url}/vote`, {headers: this.headers});
+    }
+
+    public voteEnabled(): Observable<boolean> {
+        return this.http.get<boolean>(`${this.url}/voteenabled`, {headers: this.headers});
+    }
+
+    public saveVoteSettings(settings: IVoteSettings): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}/vote`, JSON.stringify(settings), {headers: this.headers});
     }
 
     public getNewsletterSettings(): Observable<INewsletterNotificationSettings> {

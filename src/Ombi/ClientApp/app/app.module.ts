@@ -15,7 +15,7 @@ import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { CookieService } from "ng2-cookies";
 import { GrowlModule } from "primeng/components/growl/growl";
-import { ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DialogModule, SharedModule, SidebarModule, TooltipModule } from "primeng/primeng";
+import { ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DialogModule, OverlayPanelModule, SharedModule, SidebarModule, TooltipModule } from "primeng/primeng";
 
 // Components
 import { AppComponent } from "./app.component";
@@ -55,6 +55,7 @@ const routes: Routes = [
     { loadChildren: "./requests/requests.module#RequestsModule", path: "requests" },
     { loadChildren: "./search/search.module#SearchModule", path: "search" },
     { loadChildren: "./recentlyAdded/recentlyAdded.module#RecentlyAddedModule", path: "recentlyadded" },
+    { loadChildren: "./vote/vote.module#VoteModule", path: "vote" },
 ];
 
 // AoT requires an exported function for factories
@@ -97,6 +98,7 @@ export function JwtTokenGetter() {
         CaptchaModule,
         TooltipModule,
         ConfirmDialogModule,
+        OverlayPanelModule,
         CommonModule,
         JwtModule.forRoot({
             config: {

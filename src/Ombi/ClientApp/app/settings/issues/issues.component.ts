@@ -55,6 +55,11 @@ export class IssuesComponent implements OnInit {
 
         const settings = form.value;
 
+        if(settings.deleteIssues && settings.daysAfterResolvedToDelete <= 0) {
+            this.notificationService.error("You need to enter days greater than 0");
+            return;
+        }
+
         this.settingsService.saveIssueSettings(settings).subscribe(x => {
             if (x) {
                 this.notificationService.success("Successfully saved the Issue settings");

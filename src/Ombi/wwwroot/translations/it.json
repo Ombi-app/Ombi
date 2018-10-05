@@ -48,6 +48,7 @@
     "Requests": "Richieste",
     "UserManagement": "Gestione degli utenti",
     "Issues": "Problemi",
+    "Vote": "Vote",
     "Donate": "Fai una donazione!",
     "DonateLibraryMaintainer": "Dona al manutentore della libreria",
     "DonateTooltip": "Questo è come convinco mia moglie a farmi spendere il mio tempo libero nello sviluppo di Ombi ;)",
@@ -188,5 +189,9 @@
     "TvDue": "TV: {{date}}",
     "MovieDue": "Movie: {{date}}",
     "MusicDue": "Music: {{date}}"
+  },
+  "Votes": {
+    "CompletedVotesTab": "Voted",
+    "VotesTab": "Votes Needed"
   }
 }
