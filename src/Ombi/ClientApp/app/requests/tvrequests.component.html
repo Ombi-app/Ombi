@@ -50,7 +50,7 @@
                             <i class="fa fa-plus"></i> View</button>
                         <div *ngIf="isAdmin">
                             <!--Sonarr Root Folder-->
-                            <div *ngIf="sonarrRootFolders" class="btn-group btn-split" id="rootFolderBtn">
+                            <div *ngIf="sonarrRootFolders?.length > 1" class="btn-group btn-split" id="rootFolderBtn">
                                 <button type="button" class="btn btn-sm btn-warning-outline">
                                     <i class="fa fa-plus"></i> {{ 'Requests.ChangeRootFolder' | translate }}
                                 </button>
@@ -66,7 +66,7 @@
                             </div>
 
                             <!--Sonarr Quality Profiles -->
-                            <div *ngIf="sonarrProfiles" class="btn-group btn-split" id="changeQualityBtn">
+                            <div *ngIf="sonarrProfiles?.length > 1" class="btn-group btn-split" id="changeQualityBtn">
                                 <button type="button" class="btn btn-sm btn-warning-outline">
                                     <i class="fa fa-plus"></i> {{ 'Requests.ChangeQualityProfile' | translate }}
                                 </button>
