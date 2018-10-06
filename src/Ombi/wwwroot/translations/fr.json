@@ -12,8 +12,8 @@
   "Common": {
     "ContinueButton": "Continuer",
     "Available": "Disponible",
-    "PartiallyAvailable": "Partially Available",
-    "Monitored": "Monitored",
+    "PartiallyAvailable": "Partiellement disponible",
+    "Monitored": "Suivi",
     "NotAvailable": "Non disponible",
     "ProcessingRequest": "En cours de traitement",
     "PendingApproval": "En attente d'approbation",
@@ -77,12 +77,12 @@
     "Title": "Rechercher",
     "Paragraph": "Vous voulez regarder quelque chose qui n'est pas disponible actuellement ? Pas de problème, recherchez-le ci-dessous et demandez-le !",
     "MoviesTab": "Films",
-    "TvTab": "TV",
-    "MusicTab": "Music",
+    "TvTab": "Séries",
+    "MusicTab": "Musiques",
     "Suggestions": "Suggestions",
     "NoResults": "Désolé, nous n'avons trouvé aucun résultat !",
-    "DigitalDate": "Sortie numérique: {{date}}",
-    "TheatricalRelease": "Sortie en salle: {{date}}",
+    "DigitalDate": "Sortie numérique : {{date}}",
+    "TheatricalRelease": "Sortie en salle : {{date}}",
     "ViewOnPlex": "Regarder sur Plex",
     "ViewOnEmby": "Regarder sur Emby",
     "RequestAdded": "La demande pour {{title}} a été ajoutée avec succès",
@@ -107,7 +107,7 @@
       "LatestSeason": "Dernière saison",
       "Select": "Sélectionner...",
       "SubmitRequest": "Envoyer la demande",
-      "Season": "Saison: {{seasonNumber}}",
+      "Season": "Saison : {{seasonNumber}}",
       "SelectAllInSeason": "Tout sélectionner dans la saison {{seasonNumber}}"
     }
   },
@@ -115,16 +115,16 @@
     "Title": "Demandes",
     "Paragraph": "Vous pouvez voir ci-dessous vos demandes et celles des autres, ainsi que leur statut de téléchargement et d'approbation.",
     "MoviesTab": "Films",
-    "TvTab": "Émissions",
-    "MusicTab": "Music",
+    "TvTab": "Séries",
+    "MusicTab": "Musiques",
     "RequestedBy": "Demandé par :",
     "Status": "Statut :",
     "RequestStatus": "Statut de la demande :",
     "Denied": " Refusé :",
-    "TheatricalRelease": "Sortie en salle: {{date}}",
-    "ReleaseDate": "Released: {{date}}",
+    "TheatricalRelease": "Sortie en salle : {{date}}",
+    "ReleaseDate": "Date de sortie : {{date}}",
     "TheatricalReleaseSort": "Sortie en salle",
-    "DigitalRelease": "Sortie numérique: {{date}}",
+    "DigitalRelease": "Sortie numérique : {{date}}",
     "RequestDate": "Date de la demande :",
     "QualityOverride": "Remplacement de la qualité :",
     "RootFolderOverride": "Remplacement du répertoire racine :",
@@ -141,7 +141,7 @@
     "ReportIssue": "Signaler un problème",
     "Filter": "Filtre",
     "Sort": "Trier",
-    "SeasonNumberHeading": "Saison: {seasonNumber}",
+    "SeasonNumberHeading": "Saison : {seasonNumber}",
     "SortTitleAsc": "Titre ▲",
     "SortTitleDesc": "Titre ▼",
     "SortRequestDateAsc": "Date de la demande ▲",
@@ -149,16 +149,16 @@
     "SortStatusAsc": "Statut ▲",
     "SortStatusDesc": "Statut ▼",
     "Remaining": {
-      "Quota": "{{remaining}}/{{total}} requests remaining",
-      "NextDays": "Another request will be added in {{time}} days",
-      "NextHours": "Another request will be added in {{time}} hours",
-      "NextMinutes": "Another request will be added in {{time}} minutes",
-      "NextMinute": "Another request will be added in {{time}} minute"
+      "Quota": "{{remaining}}/{{total}} demandes restantes",
+      "NextDays": "Une autre demande sera ajoutée dans {{time}} jours",
+      "NextHours": "Une autre demande sera ajoutée dans {{time}} heures",
+      "NextMinutes": "Une autre demande sera ajoutée dans {{time}} minutes",
+      "NextMinute": "Une autre demande sera ajoutée dans {{time}} minute"
     }
   },
   "Issues": {
     "Title": "Problèmes",
-    "PendingTitle": "Problèmes en attente",
+    "PendingTitle": "Problèmes en attentes",
     "InProgressTitle": "Problèmes en cours",
     "ResolvedTitle": "Problèmes résolus",
     "ColumnTitle": "Titre",
@@ -183,15 +183,15 @@
     "PendingApproval": "En attente de validation"
   },
   "UserManagment": {
-    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
-    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
-    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
+    "TvRemaining": "TV: {{remaining}}/{{total}} restant(s)",
+    "MovieRemaining": "Films : {{remaining}}/{{total}} restant(s)",
+    "MusicRemaining": "Musiques : {{remaining}}/{{total}} restant(s)",
     "TvDue": "TV: {{date}}",
-    "MovieDue": "Movie: {{date}}",
-    "MusicDue": "Music: {{date}}"
+    "MovieDue": "Film : {{date}}",
+    "MusicDue": "Musique : {{date}}"
   },
   "Votes": {
-    "CompletedVotesTab": "Voted",
-    "VotesTab": "Votes Needed"
+    "CompletedVotesTab": "Voté",
+    "VotesTab": "Votes nécessaires"
   }
 }
