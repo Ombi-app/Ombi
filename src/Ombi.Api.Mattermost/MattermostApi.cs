@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Ombi.Api.Mattermost.Models;
+using Matterhook.NET.MatterhookClient;
 
 namespace Ombi.Api.Mattermost
 {
@@ -17,7 +17,7 @@ namespace Ombi.Api.Mattermost
         public async Task PushAsync(string webhook, MattermostMessage message)
         {
             var client = new MatterhookClient(webhook);
-            await client.PostAsync(_api, message);
+            await client.PostAsync(message);
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Ombi.Api.Mattermost.Models;
+using Matterhook.NET.MatterhookClient;
 
 namespace Ombi.Api.Mattermost
 {

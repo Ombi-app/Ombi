@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Ensure.That" Version="7.0.0-pre32" />
     <PackageReference Include="MailKit" Version="2.0.5" />
+    <PackageReference Include="Matterhook.NET.MatterhookClient" Version="1.3.0" />
   </ItemGroup>
 
   <ItemGroup>
