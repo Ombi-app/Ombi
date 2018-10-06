@@ -129,7 +129,7 @@
                         </form>
 
                         <!--Radarr Root Folder-->
-                        <div *ngIf="radarrRootFolders" class="btn-group btn-split" id="rootFolderBtn">
+                        <div *ngIf="radarrRootFolders?.length > 1" class="btn-group btn-split" id="rootFolderBtn">
                             <button type="button" class="btn btn-sm btn-warning-outline">
                                 <i class="fa fa-plus"></i> {{ 'Requests.ChangeRootFolder' | translate }}
                             </button>
@@ -145,7 +145,7 @@
                         </div>
 
                         <!--Radarr Quality Profiles -->
-                        <div *ngIf="radarrProfiles" class="btn-group btn-split" id="changeQualityBtn">
+                        <div *ngIf="radarrProfiles?.length > 1" class="btn-group btn-split" id="changeQualityBtn">
                             <button type="button" class="btn btn-sm btn-warning-outline">
                                 <i class="fa fa-plus"></i> {{ 'Requests.ChangeQualityProfile' | translate }}
                             </button>
