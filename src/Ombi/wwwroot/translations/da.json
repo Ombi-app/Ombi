@@ -57,19 +57,6 @@
     "Welcome": "Velkommen til {{username}}",
     "UpdateDetails": "Opdater loginoplysninger",
     "Logout": "Log af",
-    "Language": {
-      "English": "Engelsk",
-      "French": "Fransk",
-      "Spanish": "Spansk",
-      "German": "Tysk",
-      "Italian": "Italiensk",
-      "Danish": "Dansk",
-      "Dutch": "Hollandsk",
-      "Norwegian": "Norsk",
-      "BrazillianPortuguese": "Brazillian Portuguese",
-      "Polish": "Polish",
-      "Swedish": "Swedish"
-    },
     "OpenMobileApp": "Åbn mobilapp",
     "RecentlyAdded": "Recently Added"
   },
