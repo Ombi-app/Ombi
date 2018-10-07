@@ -59,6 +59,7 @@ namespace Ombi.Controllers.External
         /// </summary>
         /// <returns></returns>
         [HttpGet("Profiles")]
+        [PowerUser]
         public async Task<IEnumerable<RadarrProfile>> GetProfiles()
         {
             var settings = await RadarrSettings.GetSettingsAsync();
@@ -75,6 +76,7 @@ namespace Ombi.Controllers.External
         /// </summary>
         /// <returns></returns>
         [HttpGet("RootFolders")]
+        [PowerUser]
         public async Task<IEnumerable<RadarrRootFolder>> GetRootFolders()
         {
             var settings = await RadarrSettings.GetSettingsAsync();
