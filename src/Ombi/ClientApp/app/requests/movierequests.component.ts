@@ -365,4 +365,11 @@ export class MovieRequestsComponent implements OnInit {
         req.backgroundPath = this.sanitizer.bypassSecurityTrustStyle
             ("url(" + "https://image.tmdb.org/t/p/w1280" + req.background + ")");
     }
+
+    public isRequestUser(request: IMovieRequests) {
+        if (request.requestedUser.userName === this.auth.claims().name) {
+            return true;
+        }
+        return false;
+    }
 }

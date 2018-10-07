@@ -23,8 +23,10 @@
 
                     <button id="denyBtn" *ngIf="!child.denied" type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> {{ 'Requests.Deny' | translate }}</button>
            
-                    <button id="removeBtn" type="button" (click)="removeRequest(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> {{ 'Requests.Remove' | translate }}</button>
                 </div>
+              <div *ngIf="isAdmin || isRequestUser(child)">
+                  <button id="removeBtn" type="button" (click)="removeRequest(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> {{ 'Requests.Remove' | translate }}</button>
+              </div>
                 
                 
             </div>

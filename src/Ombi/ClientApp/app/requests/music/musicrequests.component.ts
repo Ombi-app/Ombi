@@ -348,4 +348,11 @@ export class MusicRequestsComponent implements OnInit {
         req.background = this.sanitizer.bypassSecurityTrustStyle
             ("url(" + req.cover + ")");
     }
+
+    public isRequestUser(request: IAlbumRequest) {
+        if (request.requestedUser.userName === this.auth.claims().name) {
+            return true;
+        }
+        return false;
+    }
 }
