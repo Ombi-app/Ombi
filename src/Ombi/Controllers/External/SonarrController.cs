@@ -20,6 +20,7 @@ namespace Ombi.Controllers.External
         {
             SonarrApi = sonarr;
             SonarrSettings = settings;
+            SonarrSettings.ClearCache();
         }
 
         private ISonarrApi SonarrApi { get; }
