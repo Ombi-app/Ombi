@@ -57,19 +57,6 @@
     "Welcome": "Witaj {{username}}",
     "UpdateDetails": "Podaj szczegóły",
     "Logout": "Wyloguj",
-    "Language": {
-      "English": "Angielski",
-      "French": "Francuski",
-      "Spanish": "Hiszpański",
-      "German": "Niemiecki",
-      "Italian": "Włoski",
-      "Danish": "Duński",
-      "Dutch": "Holenderski",
-      "Norwegian": "Norweski",
-      "BrazillianPortuguese": "Brazylijski portugalski",
-      "Polish": "Polski",
-      "Swedish": "Swedish"
-    },
     "OpenMobileApp": "Otwórz aplikację mobilną",
     "RecentlyAdded": "Ostatnio dodane"
   },

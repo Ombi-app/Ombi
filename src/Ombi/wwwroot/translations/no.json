@@ -57,19 +57,6 @@
     "Welcome": "Velkommen {{username}}",
     "UpdateDetails": "Oppdater detaljer",
     "Logout": "Logg av",
-    "Language": {
-      "English": "Engelsk",
-      "French": "Fransk",
-      "Spanish": "Spansk",
-      "German": "Tysk",
-      "Italian": "Italiensk",
-      "Danish": "Dansk",
-      "Dutch": "Nederlandsk",
-      "Norwegian": "Norsk",
-      "BrazillianPortuguese": "Brazillian Portuguese",
-      "Polish": "Polish",
-      "Swedish": "Swedish"
-    },
     "OpenMobileApp": "Åpne mobilapp",
     "RecentlyAdded": "Recently Added"
   },
