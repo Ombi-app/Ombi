@@ -98,7 +98,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 // Get the Content
                 var plexContent = _plex.GetAll().Include(x => x.Episodes).AsNoTracking();
                 var embyContent = _emby.GetAll().Include(x => x.Episodes).AsNoTracking();
-                var lidarrContent = _lidarrAlbumRepository.GetAll().AsNoTracking();
+                var lidarrContent = _lidarrAlbumRepository.GetAll().Where(x => x.FullyAvailable).AsNoTracking();
 
                 var addedLog = _recentlyAddedLog.GetAll();
                 var addedPlexMovieLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Parent).Select(x => x.ContentId);
