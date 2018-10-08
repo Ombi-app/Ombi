@@ -214,7 +214,7 @@
             <button *ngIf="!edit" type="button" data-test="createuserbtn" class="btn btn-danger-outline" (click)="create()">Create</button>
             <div *ngIf="edit">
                 <button type="button" class="btn btn-primary-outline" (click)="update()">Update</button>
-                <button type="button" class="btn btn-danger-outline" (click)="delete()">Delete</button>
+                <button type="button" data-test="deletebtn" class="btn btn-danger-outline" (click)="delete()">Delete</button>
                 <button type="button" style="float:right;" class="btn btn-info-outline" (click)="resetPassword()"
                     pTooltip="You need your SMTP settings setup">Send Reset Password Link</button>
 

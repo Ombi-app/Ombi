@@ -9,8 +9,7 @@ describe('Login Page', function () {
     cy.get('#inputPassword').type('incorrectpw');
 
     cy.get('[data-test=signinbtn]').click();
-    cy.get('.ui-growl-title').should('be.visible');
-    cy.get('.ui-growl-title').next().contains('Incorrect username')
+    cy.verifyNotification('Incorrect username');
   });
 
   it('Invalid Username', function () {
@@ -21,8 +20,7 @@ describe('Login Page', function () {
     cy.get('#inputPassword').type('incorrectpw');
 
     cy.get('[data-test=signinbtn]').click();
-    cy.get('.ui-growl-title').should('be.visible');
-    cy.get('.ui-growl-title').next().contains('Incorrect username')
+    cy.verifyNotification('Incorrect username');
   });
 
   it('Correct Login', function () {

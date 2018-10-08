@@ -129,7 +129,7 @@
                 <span *ngIf="u.userType === 3">Emby User</span>
             </td>
             <td>
-                <a [routerLink]="['/usermanagement/user/' + u.id]" class="btn btn-sm btn-info-outline">Details/Edit</a>
+                <a id="edit{{u.userName}}" [routerLink]="['/usermanagement/user/' + u.id]" class="btn btn-sm btn-info-outline">Details/Edit</a>
             </td>
             <td *ngIf="customizationSettings">
                 <button *ngIf="!u.hasLoggedIn" (click)="welcomeEmail(u)" [disabled]="!customizationSettings.applicationUrl" class="btn btn-sm btn-info-outline">Send Welcome Email</button>

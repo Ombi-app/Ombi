@@ -23,3 +23,37 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('login', (username, password) => {
+    cy.request({
+        method: 'POST',
+        url: '/api/v1/token',
+        body: {
+            username: username,
+            password: password,
+        }
+    })
+        .then((resp) => {
+            window.localStorage.setItem('id_token', resp.body.access_token)
+        });
+});
+
+Cypress.Commands.add('createUser', (username, password, claims) => {
+    cy.request({
+        method: 'POST',
+        url: '/api/v1/identity',
+        body: {
+            UserName: username,
+            Password: password,
+            Claims: claims,
+        },
+        headers: {
+            'Authorization': 'Bearer ' + window.localStorage.getItem('id_token'),
+        }
+    })
+})
+
+Cypress.Commands.add('verifyNotification', (text) => {
+    cy.get('.ui-growl-title').should('be.visible');
+    cy.get('.ui-growl-title').next().contains(text)
+})
