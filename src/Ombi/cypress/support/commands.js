@@ -56,4 +56,4 @@ Cypress.Commands.add('createUser', (username, password, claims) => {
 Cypress.Commands.add('verifyNotification', (text) => {
     cy.get('.ui-growl-title').should('be.visible');
     cy.get('.ui-growl-title').next().contains(text)
-})
+});
