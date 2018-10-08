@@ -136,11 +136,11 @@
     "SortStatusAsc": "Statut ▲",
     "SortStatusDesc": "Statut ▼",
     "Remaining": {
-      "Quota": "{{remaining}}/{{total}} requests remaining",
-      "NextDays": "Another request will be added in {{time}} days",
-      "NextHours": "Another request will be added in {{time}} hours",
-      "NextMinutes": "Another request will be added in {{time}} minutes",
-      "NextMinute": "Another request will be added in {{time}} minute"
+      "Quota": "{{remaining}}/{{total}} demande(s) restante(s)",
+      "NextDays": "Une autre demande sera ajoutée dans {{time}} jours",
+      "NextHours": "Une autre demande sera ajoutée dans {{time}} heures",
+      "NextMinutes": "Une autre demande sera ajoutée dans {{time}} minutes",
+      "NextMinute": "Une autre demande sera ajoutée dans {{time}} minute"
     }
   },
   "Issues": {
