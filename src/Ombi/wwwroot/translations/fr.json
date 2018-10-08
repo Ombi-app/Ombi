@@ -1,6 +1,6 @@
 {
   "Login": {
-    "SignInButton": "Connexion",
+    "SignInButton": "Se connecter",
     "UsernamePlaceholder": "Nom d’utilisateur",
     "PasswordPlaceholder": "Mot de passe",
     "RememberMe": "Se souvenir de moi",
@@ -109,7 +109,7 @@
     "RequestStatus": "Statut de la demande :",
     "Denied": " Refusé :",
     "TheatricalRelease": "Sortie en salle: {{date}}",
-    "ReleaseDate": "Released: {{date}}",
+    "ReleaseDate": "Sortie : {{date}}",
     "TheatricalReleaseSort": "Sortie en salle",
     "DigitalRelease": "Sortie numérique: {{date}}",
     "RequestDate": "Date de la demande :",
@@ -170,15 +170,15 @@
     "PendingApproval": "En attente de validation"
   },
   "UserManagment": {
-    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
-    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
-    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
-    "TvDue": "TV: {{date}}",
-    "MovieDue": "Movie: {{date}}",
-    "MusicDue": "Music: {{date}}"
+    "TvRemaining": "TV : {{remaining}}/{{total}} restant(s)",
+    "MovieRemaining": "Films : {{remaining}}/{{total}} restant(s)",
+    "MusicRemaining": "Musique : {{remaining}}/{{total}} restant(s)",
+    "TvDue": "TV : {{date}}",
+    "MovieDue": "Film : {{date}}",
+    "MusicDue": "Musique : {{date}}"
   },
   "Votes": {
-    "CompletedVotesTab": "Voted",
-    "VotesTab": "Votes Needed"
+    "CompletedVotesTab": "Voté",
+    "VotesTab": "Votes nécessaires"
   }
 }
