@@ -57,19 +57,6 @@
     "Welcome": "Welkom {{username}}",
     "UpdateDetails": "Update gegevens",
     "Logout": "Logout",
-    "Language": {
-      "English": "Engels",
-      "French": "Frans",
-      "Spanish": "Spaans",
-      "German": "Duits",
-      "Italian": "Italiaans",
-      "Danish": "Deens",
-      "Dutch": "Nederlands",
-      "Norwegian": "Noors",
-      "BrazillianPortuguese": "Brazillian Portuguese",
-      "Polish": "Polish",
-      "Swedish": "Swedish"
-    },
     "OpenMobileApp": "Open Mobiele App",
     "RecentlyAdded": "Recently Added"
   },

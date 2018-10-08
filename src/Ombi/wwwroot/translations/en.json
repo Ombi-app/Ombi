@@ -60,19 +60,6 @@
     "Welcome": "Welcome {{username}}",
     "UpdateDetails": "Update Details",
     "Logout": "Logout",
-    "Language": {
-      "English": "English",
-      "French": "French",
-      "Spanish": "Spanish",
-      "German": "German",
-      "Italian": "Italian",
-      "Danish": "Danish",
-      "Dutch": "Dutch",
-      "Norwegian":"Norwegian",
-      "BrazillianPortuguese": "Brazillian Portuguese",
-      "Polish":"Polish",
-      "Swedish":"Swedish"
-    },
     "OpenMobileApp":"Open Mobile App",
     "RecentlyAdded":"Recently Added"
   },
