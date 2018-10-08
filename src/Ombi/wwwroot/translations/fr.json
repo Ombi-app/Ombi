@@ -37,10 +37,10 @@
     "OnlineParagraph": "Le serveur média est actuellement en ligne",
     "PartiallyOnlineHeading": "Partiellement en ligne",
     "PartiallyOnlineParagraph": "Le serveur média est partiellement en ligne.",
-    "MultipleServersUnavailable": "Il y a {{serversUnavailable}} serveurs hors ligne sur {{totalServers}}.",
-    "SingleServerUnavailable": "Il y a {{serversUnavailable}} serveur hors ligne sur {{totalServers}}.",
-    "OfflineHeading": "Actuellement hors ligne",
-    "OfflineParagraph": "Le serveur média est actuellement hors ligne.",
+    "MultipleServersUnavailable": "Il y a {{serversUnavailable}} serveurs hors-ligne sur {{totalServers}}.",
+    "SingleServerUnavailable": "Il y a {{serversUnavailable}} serveur hors-ligne sur {{totalServers}}.",
+    "OfflineHeading": "Actuellement hors-ligne",
+    "OfflineParagraph": "Le serveur média est actuellement hors-ligne.",
     "CheckPageForUpdates": "Consultez cette page pour voir les mises à jour du site."
   },
   "NavigationBar": {
