@@ -2,7 +2,7 @@
 
 
 
-<button type="button" class="btn btn-success-outline" [routerLink]="['/usermanagement/user']">Add User To Ombi</button>
+<button type="button" class="btn btn-success-outline" data-test="adduserbtn" [routerLink]="['/usermanagement/user']">Add User To Ombi</button>
 
 <button type="button" style="float:right;" class="btn btn-primary-outline"(click)="showBulkEdit = !showBulkEdit" [disabled]="!hasChecked()">Bulk Edit</button>
 <div *ngIf="plexEnabled">

@@ -1,5 +1,8 @@
 ﻿<h3 *ngIf="!edit">Create User</h3>
 <h3 *ngIf="edit && user"> User: {{user.userName}}</h3>
+
+<p-confirmDialog></p-confirmDialog>
+
 <button type="button" class="btn btn-primary-outline" style="float:right;" [routerLink]="['/usermanagement/']">Back</button>
 <div *ngIf="!edit || edit && user">
 
@@ -65,7 +68,7 @@
                                                 <div class="checkbox">
                                                     <input type="checkbox" [(ngModel)]="c.enabled" [value]="c.value" id="create{{c.value}}"
                                                         [attr.name]="'create' + c.value" ng-checked="c.enabled">
-                                                    <label for="create{{c.value}}">{{c.value | humanize}}</label>
+                                                    <label id="label{{c.value}}" for="create{{c.value}}">{{c.value | humanize}}</label>
 
                                                 </div>
                                             </div>
@@ -208,7 +211,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <button *ngIf="!edit" type="button" class="btn btn-danger-outline" (click)="create()">Create</button>
+            <button *ngIf="!edit" type="button" data-test="createuserbtn" class="btn btn-danger-outline" (click)="create()">Create</button>
             <div *ngIf="edit">
                 <button type="button" class="btn btn-primary-outline" (click)="update()">Update</button>
                 <button type="button" class="btn btn-danger-outline" (click)="delete()">Delete</button>
