@@ -57,11 +57,6 @@ namespace Ombi.Settings.Settings.Models
             return Get(s.LidarrArtistSync, Cron.Hourly(40));
         }
 
-        public static string IssuePurge(JobSettings s)
-        {
-            return Get(s.IssuesPurge, Cron.Daily());
-        }
-
         private static string Get(string settings, string defaultCron)
         {
             return settings.HasValue() ? settings : defaultCron;

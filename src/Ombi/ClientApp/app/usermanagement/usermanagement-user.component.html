@@ -147,7 +147,7 @@
                             <div class="panel panel-default a">
                                 <div class="panel-body">
 
-                                    <div class="form-group" *ngIf="sonarrQualities">
+                                    <div class="form-group"  *ngIf="user.userQualityProfiles.sonarrQualityProfile">
                                         <label for="sonarrQualities" class="control-label">Sonarr Quality Profile</label>
                                         <div id="sonarrQualities">
                                             <select class="form-control form-control-custom" [(ngModel)]="user.userQualityProfiles.sonarrQualityProfile">
@@ -156,7 +156,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group" *ngIf="sonarrQualities">
+                                    <div class="form-group"  *ngIf="user.userQualityProfiles.sonarrQualityProfileAnime">
                                         <label for="sonarrQualityProfileAnime" class="control-label">Sonarr Quality Profile (Anime)</label>
                                         <div id="sonarrQualityProfileAnime">
                                             <select class="form-control form-control-custom" [(ngModel)]="user.userQualityProfiles.sonarrQualityProfileAnime">
@@ -165,7 +165,7 @@
                                         </div>
                                     </div>
                              
-                                    <div class="form-group" *ngIf="sonarrRootFolders">
+                                    <div class="form-group"  *ngIf="user.userQualityProfiles.sonarrRootPath">
                                         <label for="sonarrRootPath" class="control-label">Sonarr Root Folder</label>
                                         <div id="sonarrRootPath">
                                             <select class="form-control form-control-custom" [(ngModel)]="user.userQualityProfiles.sonarrRootPath">
@@ -174,7 +174,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group" *ngIf="sonarrRootFolders">
+                                    <div class="form-group" *ngIf="user.userQualityProfiles.sonarrRootPathAnime">
                                         <label for="sonarrRootPathAnime" class="control-label">Sonarr Root Folder (Anime)</label>
                                         <div id="sonarrRootPathAnime">
                                             <select class="form-control form-control-custom" [(ngModel)]="user.userQualityProfiles.sonarrRootPathAnime">
@@ -182,7 +182,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group" *ngIf="radarrQualities">
+                                    <div class="form-group" *ngIf="user.userQualityProfiles.radarrQualityProfile">
                                         <label for="radarrQualityProfile" class="control-label">Radarr Quality Profiles</label>
                                         <div id="radarrQualityProfile">
                                             <select class="form-control form-control-custom" [(ngModel)]="user.userQualityProfiles.radarrQualityProfile">
@@ -190,7 +190,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group" *ngIf="radarrRootFolders">
+                                    <div class="form-group" *ngIf="user.userQualityProfiles.radarrRootPath">
                                         <label for="radarrRootPath" class="control-label">Radarr Root Folder</label>
                                         <div id="radarrRootPath">
                                             <select class="form-control form-control-custom" [(ngModel)]="user.userQualityProfiles.radarrRootPath">

@@ -1,6 +1,6 @@
 # Changelog
 
-## (unreleased)
+## v3.0.3795 (2018-09-23)
 
 ### **Fixes**
 
