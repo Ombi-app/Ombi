@@ -2,7 +2,7 @@
 
 
 
-<button type="button" class="btn btn-success-outline" [routerLink]="['/usermanagement/user']">Add User To Ombi</button>
+<button type="button" class="btn btn-success-outline" data-test="adduserbtn" [routerLink]="['/usermanagement/user']">Add User To Ombi</button>
 
 <button type="button" style="float:right;" class="btn btn-primary-outline"(click)="showBulkEdit = !showBulkEdit" [disabled]="!hasChecked()">Bulk Edit</button>
 <div *ngIf="plexEnabled">
@@ -129,7 +129,7 @@
                 <span *ngIf="u.userType === 3">Emby User</span>
             </td>
             <td>
-                <a [routerLink]="['/usermanagement/user/' + u.id]" class="btn btn-sm btn-info-outline">Details/Edit</a>
+                <a id="edit{{u.userName}}" [routerLink]="['/usermanagement/user/' + u.id]" class="btn btn-sm btn-info-outline">Details/Edit</a>
             </td>
             <td *ngIf="customizationSettings">
                 <button *ngIf="!u.hasLoggedIn" (click)="welcomeEmail(u)" [disabled]="!customizationSettings.applicationUrl" class="btn btn-sm btn-info-outline">Send Welcome Email</button>
