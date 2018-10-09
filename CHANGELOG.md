@@ -2,6 +2,79 @@
 
 ## (unreleased)
 
+### **New Features**
+
+- Changes language selector to always show native language name. [Victor Usoltsev]
+
+- Updated test dependancies. [TidusJar]
+
+- Added the ability to purge/remove issues. [TidusJar]
+
+### **Fixes**
+
+- Users can now remove their own requests. [Anojh]
+
+- New translations en.json (Danish) [Jamie]
+
+- Fixed lidarr newsletter bug. [Jamie]
+
+- Potentially fix the user profiles issue. [Jamie]
+
+- Hides Radarr options on movie requests page if only 1 option available. [Victor Usoltsev]
+
+- Hides Sonarr options on tv requests page if only 1 option available. [Victor Usoltsev]
+
+- Fixed the issue where we could not delete users #2558. [TidusJar]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- Subscribe the user to the request when they vote on it. [TidusJar]
+
+- Fixed #2555. [Jamie]
+
+- Fixed #2549. [Jamie]
+
+- Removed the pinID from the OAuth url #2548. [Jamie]
+
+- Put the issue purge limit on the issues page. [Jamie]
+
+- Date and times are now in the local users date time. [TidusJar]
+
+- Search for the Lidarr Album when it's a new artist. [TidusJar]
+
+- The album in Lidarr does not need to be marked as monitored for us to pick up it's available. Fixes #2536. [Jamie]
+
+- Truncate the request title. [Jamie]
+
+- Fixed #2535. [Jamie]
+
+
+## v3.0.3795 (2018-09-23)
+
+### **New Features**
+
+- Update CHANGELOG.md. [Jamie]
+
 ### **Fixes**
 
 - Fixed the issue with notifications not sending. [Jamie]
