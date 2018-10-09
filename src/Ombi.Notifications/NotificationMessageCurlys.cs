@@ -19,7 +19,7 @@ namespace Ombi.Notifications
             LoadIssues(opts);
             if (pref != null)
             {
-                UserPreference = pref.Enabled ? pref.Value : string.Empty;
+                UserPreference = pref.Value;
             }
 
             string title;
@@ -268,6 +268,7 @@ namespace Ombi.Notifications
             {nameof(IssueUser),IssueUser},
             {nameof(UserName),UserName},
             {nameof(Alias),Alias},
+            {nameof(UserPreference),UserPreference},
         };
     }
 }

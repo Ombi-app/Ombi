@@ -58,7 +58,7 @@
             <div class="col-sm-5 small-padding">
                 <div>
                     <a href="http://www.imdb.com/title/{{request.imdbId}}/" target="_blank">
-                        <h4 class="request-title">{{request.title}} ({{request.releaseDate | date: 'yyyy'}})</h4>
+                        <h4 class="request-title">{{request.title}} ({{request.releaseDate  | amLocal | amDateFormat: 'YYYY'}})</h4>
                     </a>
                 </div>
                 <br />
@@ -93,9 +93,9 @@
                     </div>
 
 
-                    <div id="releaseDate">{{ 'Requests.TheatricalRelease' | translate: {date: request.releaseDate | date: 'mediumDate'} }}</div>
-                    <div *ngIf="request.digitalReleaseDate" id="digitalReleaseDate">{{ 'Requests.DigitalRelease' | translate: {date: request.digitalReleaseDate | date: 'mediumDate'} }}</div>
-                    <div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{request.requestedDate | date}}</div>
+                    <div id="releaseDate">{{ 'Requests.TheatricalRelease' | translate: {date: request.releaseDate  | amLocal | amDateFormat: 'LL'} }}</div>
+                    <div *ngIf="request.digitalReleaseDate" id="digitalReleaseDate">{{ 'Requests.DigitalRelease' | translate: {date: request.digitalReleaseDate | amLocal | amDateFormat: 'LL'} }}</div>
+                    <div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{request.requestedDate | amLocal | amDateFormat: 'LL'}}</div>
                     <br />
                 </div>
                 <div *ngIf="isAdmin">
@@ -129,7 +129,7 @@
                         </form>
 
                         <!--Radarr Root Folder-->
-                        <div *ngIf="radarrRootFolders" class="btn-group btn-split" id="rootFolderBtn">
+                        <div *ngIf="radarrRootFolders?.length > 1" class="btn-group btn-split" id="rootFolderBtn">
                             <button type="button" class="btn btn-sm btn-warning-outline">
                                 <i class="fa fa-plus"></i> {{ 'Requests.ChangeRootFolder' | translate }}
                             </button>
@@ -145,7 +145,7 @@
                         </div>
 
                         <!--Radarr Quality Profiles -->
-                        <div *ngIf="radarrProfiles" class="btn-group btn-split" id="changeQualityBtn">
+                        <div *ngIf="radarrProfiles?.length > 1" class="btn-group btn-split" id="changeQualityBtn">
                             <button type="button" class="btn btn-sm btn-warning-outline">
                                 <i class="fa fa-plus"></i> {{ 'Requests.ChangeQualityProfile' | translate }}
                             </button>
@@ -166,11 +166,7 @@
                             </button>
                         </div>
                     </div>
-                    <form id="removeBtn">
-                        <button (click)="removeRequest(request)" style="text-align: right" class="btn btn-sm btn-danger-outline delete">
-                            <i class="fa fa-minus"></i> {{ 'Requests.Remove' | translate }}
-                        </button>
-                    </form>
+                    
 
                     <form id="markBtnGroup">
                         <button id="unavailableBtn" *ngIf="request.available" (click)="changeAvailability(request, false)" style="text-align: right"
@@ -185,6 +181,13 @@
 
 
 
+                </div>
+                <div *ngIf="isAdmin || isRequestUser(request)">
+                    <form id="removeBtn">
+                        <button (click)="removeRequest(request)" style="text-align: right" class="btn btn-sm btn-danger-outline delete">
+                            <i class="fa fa-minus"></i> {{ 'Requests.Remove' | translate }}
+                        </button>
+                    </form>
                 </div>
                 <div class="dropdown" *ngIf="issueCategories && issuesEnabled" id="issuesBtn">
                     <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"

@@ -598,12 +598,11 @@ namespace Ombi.Controllers
 
 
         /// <summary>
-        /// Save the Issues settings.
+        /// Save the Vote settings.
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("Issues")]
-        [AllowAnonymous]
         public async Task<bool> IssueSettings([FromBody]IssueSettings settings)
         {
             return await Save(settings);
@@ -626,6 +625,35 @@ namespace Ombi.Controllers
         {
             var issues = await Get<IssueSettings>();
             return issues.Enabled;
+        }
+
+        /// <summary>
+        /// Save the Vote settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("vote")]
+        public async Task<bool> VoteSettings([FromBody]VoteSettings settings)
+        {
+            return await Save(settings);
+        }
+
+        /// <summary>
+        /// Gets the Vote Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("vote")]
+        public async Task<VoteSettings> VoteSettings()
+        {
+            return await Get<VoteSettings>();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("voteenabled")]
+        public async Task<bool> VoteEnabled()
+        {
+            var vote = await Get<VoteSettings>();
+            return vote.Enabled;
         }
 
         /// <summary>

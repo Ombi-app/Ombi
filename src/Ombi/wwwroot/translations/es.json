@@ -48,6 +48,7 @@
     "Requests": "Solicitudes",
     "UserManagement": "Gestión de usuarios",
     "Issues": "Incidencias",
+    "Vote": "Vote",
     "Donate": "¡Donar!",
     "DonateLibraryMaintainer": "Donate to Library Maintainer",
     "DonateTooltip": "Para que mi esposa me deje desarrollar Ombi ;)",
@@ -56,19 +57,6 @@
     "Welcome": "Bienvenido {{username}}",
     "UpdateDetails": "Detalles de la actualización",
     "Logout": "Cerrar sesión",
-    "Language": {
-      "English": "Inglés",
-      "French": "Francés",
-      "Spanish": "Español",
-      "German": "Alemán",
-      "Italian": "Italiano",
-      "Danish": "Danés",
-      "Dutch": "Holandés",
-      "Norwegian": "Norwegian",
-      "BrazillianPortuguese": "Brazillian Portuguese",
-      "Polish": "Polish",
-      "Swedish": "Swedish"
-    },
     "OpenMobileApp": "Open Mobile App",
     "RecentlyAdded": "Recently Added"
   },
@@ -188,5 +176,9 @@
     "TvDue": "TV: {{date}}",
     "MovieDue": "Movie: {{date}}",
     "MusicDue": "Music: {{date}}"
+  },
+  "Votes": {
+    "CompletedVotesTab": "Voted",
+    "VotesTab": "Votes Needed"
   }
 }

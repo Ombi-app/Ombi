@@ -41,6 +41,7 @@ import { SickRageComponent } from "./sickrage/sickrage.component";
 import { SonarrComponent } from "./sonarr/sonarr.component";
 import { UpdateComponent } from "./update/update.component";
 import { UserManagementComponent } from "./usermanagement/usermanagement.component";
+import { VoteComponent } from "./vote/vote.component";
 import { WikiComponent } from "./wiki.component";
 
 import { SettingsMenuComponent } from "./settingsmenu.component";
@@ -75,6 +76,7 @@ const routes: Routes = [
     { path: "MassEmail", component: MassEmailComponent, canActivate: [AuthGuard] },
     { path: "Newsletter", component: NewsletterComponent, canActivate: [AuthGuard] },
     { path: "Lidarr", component: LidarrComponent, canActivate: [AuthGuard] },
+    { path: "Vote", component: VoteComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -127,6 +129,7 @@ const routes: Routes = [
         MassEmailComponent,
         NewsletterComponent,
         LidarrComponent,
+        VoteComponent,
     ],
     exports: [
         RouterModule,

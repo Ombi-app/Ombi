@@ -1,0 +1,12 @@
+.vcenter {
+    vertical-align: middle;
+    float: none;
+}
+
+.hideBackground {
+    border: 0px solid transparent !important;
+    background: transparent !important;
+    -webkit-box-shadow: 0 0px 0px 0 transparent !important;
+    -moz-box-shadow: 0 0px 0px 0 transparent !important;
+    box-shadow: 0 0px 0px 0 transparent !important;
+}

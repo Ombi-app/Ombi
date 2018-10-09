@@ -76,7 +76,35 @@ namespace Ombi.Core.Senders
                 var result = await _lidarrApi.AddArtist(newArtist, settings.ApiKey, settings.FullUri);
                 if (result != null && result.id > 0)
                 {
-                    // Setup the albums
+                    // Search for it
+                    if (!settings.AddOnly)
+                    {
+                        // get the album
+                        var album = await _lidarrApi.GetAllAlbumsByArtistId(result.id, settings.ApiKey, settings.FullUri);
+
+                        var albumToSearch = album.FirstOrDefault(x =>
+                            x.foreignAlbumId.Equals(model.ForeignAlbumId, StringComparison.InvariantCultureIgnoreCase));
+                        var maxRetryCount = 10; // 5 seconds
+                        var currentRetry = 0;
+                        while (albumToSearch != null)
+                        {
+                            if (currentRetry >= maxRetryCount)
+                            {
+                                break;
+                            }
+                            currentRetry++;
+                            await Task.Delay(500);
+                            album = await _lidarrApi.GetAllAlbumsByArtistId(result.id, settings.ApiKey, settings.FullUri);
+                            albumToSearch = album.FirstOrDefault(x =>
+                                x.foreignAlbumId.Equals(model.ForeignAlbumId, StringComparison.InvariantCultureIgnoreCase));
+                        }
+
+
+                        if (albumToSearch != null)
+                        {
+                            await _lidarrApi.AlbumSearch(new[] {albumToSearch.id}, settings.ApiKey, settings.FullUri);
+                        }
+                    }
                     return new SenderResult { Message = "Album has been requested!", Sent = true, Success = true };
                 }
             }

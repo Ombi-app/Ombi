@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
     public updateAvailable: boolean;
     public currentUrl: string;
     public userAccessToken: string;
+    public voteEnabled = false;
 
     private checkedForUpdate: boolean;
 
@@ -54,6 +55,7 @@ export class AppComponent implements OnInit {
 
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
         this.settingsService.issueEnabled().subscribe(x => this.issuesEnabled = x);
+        this.settingsService.voteEnabled().subscribe(x => this.voteEnabled =x);
 
         this.router.events.subscribe((event: NavigationStart) => {
             this.currentUrl = event.url;
