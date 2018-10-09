@@ -145,6 +145,16 @@ namespace Ombi.Store.Context
                 SaveChanges();
             }
 
+            var manageOwnRequestsRole = Roles.Where(x => x.Name == OmbiRoles.ManageOwnRequests);
+            if (!manageOwnRequestsRole.Any())
+            {
+                Roles.Add(new IdentityRole(OmbiRoles.ManageOwnRequests)
+                {
+                    NormalizedName = OmbiRoles.ManageOwnRequests.ToUpper()
+                });
+                SaveChanges();
+            }
+
             // Make sure we have the API User
             var apiUserExists = Users.Any(x => x.UserName.Equals("Api", StringComparison.CurrentCultureIgnoreCase));
             if (!apiUserExists)

@@ -88,7 +88,7 @@ namespace Ombi.Controllers
         /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
         [HttpDelete("{requestId:int}")]
-        [PowerUser]
+        [Authorize(Roles = "Admin,PowerUser,ManageOwnRequests")]
         public async Task DeleteRequest(int requestId)
         {
             await _engine.RemoveAlbumRequest(requestId);
