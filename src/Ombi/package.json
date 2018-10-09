@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "vendor": "gulp vendor",
+    "main": "gulp main",
     "lint": "tslint -p .",
     "publish": "gulp publish",
     "restore": "dotnet restore && yarn install",

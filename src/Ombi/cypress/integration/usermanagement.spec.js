@@ -109,7 +109,7 @@ describe('User Management Page', function () {
     // submit user
     cy.get('[data-test=createuserbtn]').click();
 
-    cy.verifyNotification('has been updated successfully');
+    cy.verifyNotification('has been created successfully');
 
     // Verify that the limits are set
     cy.get('#edituser2').click();
