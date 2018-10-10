@@ -14,5 +14,6 @@
         public string RefreshMetadata { get; set; }
         public string Newsletter { get; set; }
         public string LidarrArtistSync { get; set; }
+        public string IssuesPurge { get; set; }
     }
 }
