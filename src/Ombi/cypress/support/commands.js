@@ -34,8 +34,11 @@ Cypress.Commands.add('login', (username, password) => {
         }
     })
         .then((resp) => {
-            window.localStorage.setItem('id_token', resp.body.access_token)
+            window.localStorage.setItem('id_token', resp.body.access_token);
         });
+});
+Cypress.Commands.add('removeLogin', () => {
+    window.localStorage.removeItem('id_token');
 });
 
 Cypress.Commands.add('createUser', (username, password, claims) => {
@@ -57,3 +60,4 @@ Cypress.Commands.add('verifyNotification', (text) => {
     cy.get('.ui-growl-title').should('be.visible');
     cy.get('.ui-growl-title').next().contains(text)
 });
+
