@@ -4,10 +4,13 @@ using Ombi.Core.Engine;
 using Ombi.Core.Models.Requests;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Ombi.Store.Entities.Requests;
 using Ombi.Attributes;
 using Ombi.Core.Models;
 using Ombi.Core.Models.UI;
+using Ombi.Store.Entities;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Ombi.Controllers
 {
@@ -16,12 +19,16 @@ namespace Ombi.Controllers
     [Produces("application/json")]
     public class MusicRequestController : Controller
     {
-        public MusicRequestController(IMusicRequestEngine engine)
+        public MusicRequestController(IMusicRequestEngine engine, IVoteEngine voteEngine, ILogger<MusicRequestController> log)
         {
             _engine = engine;
+            _voteEngine = voteEngine;
+            _log = log;
         }
 
         private readonly IMusicRequestEngine _engine;
+        private readonly IVoteEngine _voteEngine;
+        private readonly ILogger _log;
 
         /// <summary>
         /// Gets album requests.
@@ -66,9 +73,19 @@ namespace Ombi.Controllers
         /// <param name="album">The album.</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<RequestEngineResult> Request([FromBody] MusicAlbumRequestViewModel album)
+        public async Task<RequestEngineResult> RequestAlbum([FromBody] MusicAlbumRequestViewModel album)
         {
-            return await _engine.RequestAlbum(album);
+            var result = await _engine.RequestAlbum(album);
+            if (result.Result)
+            {
+                var voteResult = await _voteEngine.UpVote(result.RequestId, RequestType.Album);
+                if (voteResult.IsError)
+                {
+                    _log.LogError("Couldn't automatically add the vote for the album {0} because {1}", album.ForeignAlbumId, voteResult.ErrorMessage);
+                }
+            }
+
+            return result;
         }
 
         /// <summary>

@@ -149,13 +149,17 @@ namespace Ombi.Core.Engine
 
         public async Task<VoteEngineResult> UpVote(int requestId, RequestType requestType)
         {
+            var voteSettings = await _voteSettings.GetSettingsAsync();
+            if (!voteSettings.Enabled)
+            {
+                return new VoteEngineResult {Result = true};
+            }
             // How many votes does this have?!
             var currentVotes = GetVotes(requestId, requestType);
-            var voteSettings = await _voteSettings.GetSettingsAsync();
 
-            // Does this user have a downvote? If so we should revert it and make it an upvote
             var user = await GetUser();
 
+            // Does this user have a downvote? If so we should revert it and make it an upvote
             var currentVote = await GetVoteForUser(requestId, user.Id);
             if (currentVote != null && currentVote.VoteType == VoteType.Upvote)
             {
@@ -206,7 +210,7 @@ namespace Ombi.Core.Engine
             {
                 return new VoteEngineResult
                 {
-                    ErrorMessage = "Voted succesfully but could not approve movie!"
+                    ErrorMessage = "Voted succesfully but could not approve!"
                 };
             }
 
@@ -218,6 +222,11 @@ namespace Ombi.Core.Engine
 
         public async Task<VoteEngineResult> DownVote(int requestId, RequestType requestType)
         {
+            var voteSettings = await _voteSettings.GetSettingsAsync();
+            if (!voteSettings.Enabled)
+            {
+                return new VoteEngineResult { Result = true };
+            }
             var user = await GetUser();
             var currentVote = await GetVoteForUser(requestId, user.Id);
             if (currentVote != null && currentVote.VoteType == VoteType.Downvote)

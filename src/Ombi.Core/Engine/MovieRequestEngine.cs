@@ -483,7 +483,7 @@ namespace Ombi.Core.Engine
                 RequestType = RequestType.Movie,
             });
 
-            return new RequestEngineResult {Result = true, Message = $"{movieName} has been successfully added!"};
+            return new RequestEngineResult {Result = true, Message = $"{movieName} has been successfully added!", RequestId = model.Id};
         }
 
         public async Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user)

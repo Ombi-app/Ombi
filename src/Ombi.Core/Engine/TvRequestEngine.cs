@@ -604,15 +604,16 @@ namespace Ombi.Core.Engine
                 var result = await TvSender.Send(model);
                 if (result.Success)
                 {
-                    return new RequestEngineResult { Result = true };
+                    return new RequestEngineResult { Result = true, RequestId = model.Id};
                 }
                 return new RequestEngineResult
                 {
-                    ErrorMessage = result.Message
+                    ErrorMessage = result.Message,
+                    RequestId = model.Id
                 };
             }
 
-            return new RequestEngineResult { Result = true };
+            return new RequestEngineResult { Result = true, RequestId = model.Id };
         }
 
         public async Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user)
