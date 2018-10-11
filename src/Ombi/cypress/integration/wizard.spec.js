@@ -1,7 +1,9 @@
+/// <reference types="Cypress" />
+
 describe('Wizard Setup Tests', function() {
     it('Setup Wizard User', function() {
-      cy.visit('http://localhost:3577/');
-      cy.url().should('include', '/Wizard')
+      cy.visit('/');
+      cy.url().should('include', 'Wizard')
 
       cy.get('[data-test=nextbtn]').click();
         

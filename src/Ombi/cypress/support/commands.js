@@ -25,6 +25,7 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('login', (username, password) => {
+    cy.clearLocalStorage();
     cy.request({
         method: 'POST',
         url: '/api/v1/token',
@@ -60,4 +61,3 @@ Cypress.Commands.add('verifyNotification', (text) => {
     cy.get('.ui-growl-title').should('be.visible');
     cy.get('.ui-growl-title').next().contains(text)
 });
-

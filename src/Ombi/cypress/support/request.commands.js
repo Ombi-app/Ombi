@@ -36,5 +36,15 @@ Cypress.Commands.add('requestAllTv', (tvId) => {
         headers: {
             'Authorization': 'Bearer ' + window.localStorage.getItem('id_token'),
         }
-    })
+    });
+})
+
+Cypress.Commands.add('removeAllMovieRequests', () => {
+    cy.request({
+        method: 'DELETE',
+        url: '/api/v1/request/movie/all',
+        headers: {
+            'Authorization': 'Bearer ' + window.localStorage.getItem('id_token'),
+        }
+    });
 })

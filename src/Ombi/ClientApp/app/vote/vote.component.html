@@ -32,16 +32,16 @@
                         <tbody>
                             <tr *ngFor="let vm of currentVotes">
                                 <td class="vcenter">
-                                    <button class="btn btn-info-outline col-md-6" (click)="upvote(vm)"><i class="fa fa-thumbs-o-up"
+                                    <button id="{{vm.requestId}}upvote" class="btn btn-info-outline col-md-6" (click)="upvote(vm)"><i class="fa fa-thumbs-o-up"
                                             aria-hidden="true"></i></button>
-                                    <button class="btn btn-info-outline col-md-6" (click)="downvote(vm)" ><i class="fa fa-thumbs-o-down"
+                                    <button id="{{vm.requestId}}downvote" class="btn btn-info-outline col-md-6" (click)="downvote(vm)" ><i class="fa fa-thumbs-o-down"
                                             aria-hidden="true"></i></button>
                                 </td>
                                 <td style="width: 10%"> <img *ngIf="vm.image" class="img-responsive poster" style="max-width: 100%;
                                     height: auto;
                                     width: 100%;"
                                         (click)="toggle($event, vm.image)" src="{{vm.image}}" alt="poster"></td>
-                                <td class="vcenter">{{vm.title}}</td>
+                                <td class="vcenter" [attr.data-test]='vm.requestId'>{{vm.title}}</td>
                                 <td class="vcenter" [innerHTML]="vm.description"></td>
                             </tr>
                         </tbody>

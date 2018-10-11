@@ -416,6 +416,12 @@ namespace Ombi.Core.Engine
             await MovieRepository.Delete(request);
         }
 
+        public async Task RemoveAllMovieRequests()
+        {
+            var request = MovieRepository.GetAll();
+            await MovieRepository.DeleteRange(request);
+        }
+
         public async Task<bool> UserHasRequest(string userId)
         {
             return await MovieRepository.GetAll().AnyAsync(x => x.RequestedUserId == userId);

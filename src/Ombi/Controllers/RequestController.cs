@@ -118,6 +118,18 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Deletes the specified movie request.
+        /// </summary>
+        /// <param name="requestId">The request identifier.</param>
+        /// <returns></returns>
+        [HttpDelete("movie/all")]
+        [PowerUser]
+        public async Task DeleteAllRequests()
+        {
+            await MovieRequestEngine.RemoveAllMovieRequests();
+        }
+
+        /// <summary>
         /// Updates the specified movie request.
         /// </summary>
         /// <param name="model">The Movie's ID</param>
