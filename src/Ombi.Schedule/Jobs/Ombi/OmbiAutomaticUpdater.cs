@@ -33,7 +33,7 @@ namespace Ombi.Schedule.Jobs.Ombi
     public class OmbiAutomaticUpdater : IOmbiAutomaticUpdater
     {
         public OmbiAutomaticUpdater(ILogger<OmbiAutomaticUpdater> log, IChangeLogProcessor service,
-            ISettingsService<UpdateSettings> s, IProcessProvider proc, IRepository<ApplicationConfiguration> appConfig)
+            ISettingsService<UpdateSettings> s, IProcessProvider proc, IApplicationConfigRepository appConfig)
         {
             Logger = log;
             Processor = service;
@@ -48,7 +48,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private ISettingsService<UpdateSettings> Settings { get; }
         private readonly IProcessProvider _processProvider;
         private static PerformContext Ctx { get; set; }
-        private readonly IRepository<ApplicationConfiguration> _appConfig;
+        private readonly IApplicationConfigRepository _appConfig;
 
         public string[] GetVersion()
         {
@@ -252,9 +252,8 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         private string GetArgs(UpdateSettings settings)
         {
-            var config = _appConfig.GetAll();
-            var url = config.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
-            var storage = config.FirstOrDefault(x => x.Type == ConfigurationTypes.StoragePath);
+            var url = _appConfig.Get(ConfigurationTypes.Url);
+            var storage = _appConfig.Get(ConfigurationTypes.StoragePath);
 
             var currentLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             var processName = (settings.ProcessName.HasValue() ? settings.ProcessName : "Ombi");
@@ -345,7 +344,6 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (disposing)
             {
-                _appConfig?.Dispose();
                 Settings?.Dispose();
             }
             _disposed = true;

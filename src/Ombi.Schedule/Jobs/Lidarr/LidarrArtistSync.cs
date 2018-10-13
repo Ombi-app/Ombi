@@ -20,7 +20,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
 {
     public class LidarrArtistSync : ILidarrArtistSync
     {
-        public LidarrArtistSync(ISettingsService<LidarrSettings> lidarr, ILidarrApi lidarrApi, ILogger<LidarrArtistSync> log, IOmbiContext ctx,
+        public LidarrArtistSync(ISettingsService<LidarrSettings> lidarr, ILidarrApi lidarrApi, ILogger<LidarrArtistSync> log, IExternalContext ctx,
             IBackgroundJobClient background, ILidarrAlbumSync album)
         {
             _lidarrSettings = lidarr;
@@ -35,7 +35,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
         private readonly ISettingsService<LidarrSettings> _lidarrSettings;
         private readonly ILidarrApi _lidarrApi;
         private readonly ILogger _logger;
-        private readonly IOmbiContext _ctx;
+        private readonly IExternalContext _ctx;
         private readonly IBackgroundJobClient _job;
         private readonly ILidarrAlbumSync _albumSync;
         

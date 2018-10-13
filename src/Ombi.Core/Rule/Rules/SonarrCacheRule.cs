@@ -10,12 +10,12 @@ namespace Ombi.Core.Rule.Rules
 {
     public class SonarrCacheRule
     {
-        public SonarrCacheRule(IOmbiContext ctx)
+        public SonarrCacheRule(IExternalContext ctx)
         {
             _ctx = ctx;
         }
 
-        private readonly IOmbiContext _ctx;
+        private readonly IExternalContext _ctx;
 
         public async Task<RuleResult> Execute(BaseRequest obj)
         {

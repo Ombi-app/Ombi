@@ -177,7 +177,7 @@ namespace Ombi
 
             // Check if it's in the startup args
             var appConfig = serviceProvider.GetService<IApplicationConfigRepository>();
-            var baseUrl = appConfig.Get(ConfigurationTypes.BaseUrl).Result;
+            var baseUrl = appConfig.Get(ConfigurationTypes.BaseUrl);
             if (baseUrl != null)
             {
                 if (baseUrl.Value.HasValue())

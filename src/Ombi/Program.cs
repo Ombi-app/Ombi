@@ -45,7 +45,9 @@ namespace Ombi
             var urlValue = string.Empty;
             var instance = StoragePathSingleton.Instance;
             instance.StoragePath = storagePath ?? string.Empty;
-            using (var ctx = new OmbiContext())
+            // Check if we need to migrate the settings
+            CheckAndMigrate();
+            using (var ctx = new SettingsContext())
             {
                 var config = ctx.ApplicationConfigurations.ToList();
                 var url = config.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
@@ -82,7 +84,7 @@ namespace Ombi
                         ctx.SaveChanges();
                     }
                 }
-                else if(baseUrl.HasValue() && !baseUrl.Equals(dbBaseUrl.Value))
+                else if (baseUrl.HasValue() && !baseUrl.Equals(dbBaseUrl.Value))
                 {
                     dbBaseUrl.Value = baseUrl;
                     ctx.SaveChanges();
@@ -94,6 +96,139 @@ namespace Ombi
             Console.WriteLine($"We are running on {urlValue}");
 
             BuildWebHost(args).Run();
+        }
+
+        /// <summary>
+        /// This is to remove the Settings from the Ombi.db to the "new" 
+        /// OmbiSettings.db
+        /// 
+        /// Ombi is hitting a limitation with SQLite where there is a lot of database activity
+        /// and SQLite does not handle concurrency at all, causing db locks.
+        /// 
+        /// Splitting it all out into it's own DB helps with this.
+        /// </summary>
+        private static void CheckAndMigrate()
+        {
+            var doneGlobal = false;
+            var doneConfig = false;
+            using (var ombi = new OmbiContext())
+            using (var settings = new SettingsContext())
+            {
+                try
+                {
+                    if (ombi.Settings.Any())
+                    {
+                        // OK migrate it!
+                        var allSettings = ombi.Settings.ToList();
+                        settings.Settings.AddRange(allSettings);
+                        doneGlobal = true;
+                    }
+
+                    // Check for any application settings
+
+                    if (ombi.ApplicationConfigurations.Any())
+                    {
+                        // OK migrate it!
+                        var allSettings = ombi.ApplicationConfigurations.ToList();
+                        settings.ApplicationConfigurations.AddRange(allSettings);
+                        doneConfig = true;
+                    }
+
+                    settings.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+
+                // Now delete the old stuff
+                if (doneGlobal)
+                    ombi.Database.ExecuteSqlCommand("DELETE FROM GlobalSettings");
+                if (doneConfig)
+                    ombi.Database.ExecuteSqlCommand("DELETE FROM ApplicationConfiguration");
+
+            }
+
+            // Now migrate all the external stuff
+            using (var ombi = new OmbiContext())
+            using (var external = new ExternalContext())
+            {
+                try
+                {
+
+                    if (ombi.PlexEpisode.Any())
+                    {
+                        external.PlexEpisode.AddRange(ombi.PlexEpisode.ToList());
+                        ombi.Database.ExecuteSqlCommand("DELETE FROM PlexEpisode");
+                    }
+
+                    if (ombi.PlexSeasonsContent.Any())
+                    {
+                        external.PlexSeasonsContent.AddRange(ombi.PlexSeasonsContent.ToList());
+                        ombi.Database.ExecuteSqlCommand("DELETE FROM PlexSeasonsContent");
+                    }
+                    if (ombi.PlexServerContent.Any())
+                    {
+                        external.PlexServerContent.AddRange(ombi.PlexServerContent.ToList());
+                        ombi.Database.ExecuteSqlCommand("DELETE FROM PlexServerContent");
+                    }
+                    if (ombi.EmbyEpisode.Any())
+                    {
+                        external.EmbyEpisode.AddRange(ombi.EmbyEpisode.ToList());
+                        ombi.Database.ExecuteSqlCommand("DELETE FROM EmbyEpisode");
+                    }
+
+                    if (ombi.EmbyContent.Any())
+                    {
+                        external.EmbyContent.AddRange(ombi.EmbyContent.ToList());
+                        ombi.Database.ExecuteSqlCommand("DELETE FROM EmbyContent");
+                    }
+                    if (ombi.RadarrCache.Any())
+                    {
+                        external.RadarrCache.AddRange(ombi.RadarrCache.ToList());
+                        ombi.Database.ExecuteSqlCommand("DELETE FROM RadarrCache");
+                    }
+                    if (ombi.SonarrCache.Any())
+                    {
+                        external.SonarrCache.AddRange(ombi.SonarrCache.ToList());
+                        ombi.Database.ExecuteSqlCommand("DELETE FROM SonarrCache");
+                    }
+                    if (ombi.LidarrAlbumCache.Any())
+                    {
+                        external.LidarrAlbumCache.AddRange(ombi.LidarrAlbumCache.ToList());
+                        ombi.Database.ExecuteSqlCommand("DELETE FROM LidarrAlbumCache");
+                    }
+                    if (ombi.LidarrArtistCache.Any())
+                    {
+                        external.LidarrArtistCache.AddRange(ombi.LidarrArtistCache.ToList());
+                        ombi.Database.ExecuteSqlCommand("DELETE FROM LidarrArtistCache");
+                    }
+                    if (ombi.SickRageEpisodeCache.Any())
+                    {
+                        external.SickRageEpisodeCache.AddRange(ombi.SickRageEpisodeCache.ToList());
+                        ombi.Database.ExecuteSqlCommand("DELETE FROM SickRageEpisodeCache");
+                    }
+                    if (ombi.SickRageCache.Any())
+                    {
+                        external.SickRageCache.AddRange(ombi.SickRageCache.ToList());
+                        ombi.Database.ExecuteSqlCommand("DELETE FROM SickRageCache");
+                    }
+                    if (ombi.CouchPotatoCache.Any())
+                    {
+                        external.CouchPotatoCache.AddRange(ombi.CouchPotatoCache.ToList());
+                        ombi.Database.ExecuteSqlCommand("DELETE FROM CouchPotatoCache");
+                    }
+
+                    external.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+            }
+
         }
 
         private static void DeleteSchedulesDb()
