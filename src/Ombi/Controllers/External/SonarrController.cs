@@ -20,6 +20,7 @@ namespace Ombi.Controllers.External
         {
             SonarrApi = sonarr;
             SonarrSettings = settings;
+            SonarrSettings.ClearCache();
         }
 
         private ISonarrApi SonarrApi { get; }
@@ -54,6 +55,7 @@ namespace Ombi.Controllers.External
         /// </summary>
         /// <returns></returns>
         [HttpGet("Profiles")]
+        [PowerUser]
         public async Task<IEnumerable<SonarrProfile>> GetProfiles()
         {
             var settings = await SonarrSettings.GetSettingsAsync();
@@ -69,6 +71,7 @@ namespace Ombi.Controllers.External
         /// </summary>
         /// <returns></returns>
         [HttpGet("RootFolders")]
+        [PowerUser]
         public async Task<IEnumerable<SonarrRootFolder>> GetRootFolders()
         {
             var settings = await SonarrSettings.GetSettingsAsync();

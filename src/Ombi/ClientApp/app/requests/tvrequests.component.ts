@@ -20,6 +20,7 @@ export class TvRequestsComponent implements OnInit {
     public searchChanged = new Subject<string>();
     public searchText: string;
     public isAdmin: boolean;
+    public currentUser: string;
     public showChildDialogue = false; // This is for the child modal popup
     public selectedSeason: ITvRequests;
     public defaultPoster: string;
@@ -48,6 +49,7 @@ export class TvRequestsComponent implements OnInit {
         private readonly platformLocation: PlatformLocation) {
             
             this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+            this.currentUser = this.auth.claims().name;
             if (this.isAdmin) {
                 this.sonarrService.getQualityProfilesWithoutSettings()
                     .subscribe(x => this.sonarrProfiles = x);

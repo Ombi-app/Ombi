@@ -218,6 +218,13 @@ export class MovieRequestsComponent implements OnInit {
             });
     }
 
+    public isRequestUser(request: IMovieRequests) {
+        if (request.requestedUser.userName === this.auth.claims().name) {
+            return true;
+        }
+        return false;
+    }
+
     private filterActiveStyle(el: any) {
         el = el.toElement || el.relatedTarget || el.target || el.srcElement;
 
@@ -365,4 +372,5 @@ export class MovieRequestsComponent implements OnInit {
         req.backgroundPath = this.sanitizer.bypassSecurityTrustStyle
             ("url(" + "https://image.tmdb.org/t/p/w1280" + req.background + ")");
     }
+
 }

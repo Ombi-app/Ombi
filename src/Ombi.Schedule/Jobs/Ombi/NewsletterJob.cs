@@ -98,7 +98,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 // Get the Content
                 var plexContent = _plex.GetAll().Include(x => x.Episodes).AsNoTracking();
                 var embyContent = _emby.GetAll().Include(x => x.Episodes).AsNoTracking();
-                var lidarrContent = _lidarrAlbumRepository.GetAll().AsNoTracking();
+                var lidarrContent = _lidarrAlbumRepository.GetAll().Where(x => x.FullyAvailable).AsNoTracking();
 
                 var addedLog = _recentlyAddedLog.GetAll();
                 var addedPlexMovieLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Parent).Select(x => x.ContentId);
@@ -654,7 +654,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     AddInfoTable(sb);
 
                     var title = "";
-                    if (!String.IsNullOrEmpty(info.premiered) && info.premiered.Length > 4)
+                    if (!string.IsNullOrEmpty(info.premiered) && info.premiered.Length > 4)
                     {
                         title = $"{t.Title} ({info.premiered.Remove(4)})";
                     } else
@@ -715,7 +715,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        public string BuildEpisodeList(IEnumerable<int> orderedEpisodes)
+        public static string BuildEpisodeList(IEnumerable<int> orderedEpisodes)
         {
             var epSb = new StringBuilder();
             var previousEpisodes = new List<int>();

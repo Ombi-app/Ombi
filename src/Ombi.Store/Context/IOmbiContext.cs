@@ -20,6 +20,8 @@ namespace Ombi.Store.Context
         //DbSet<EmbyEpisode> EmbyEpisode { get; set; }
         DbSet<NotificationTemplates> NotificationTemplates { get; set; }
         DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
+        DbSet<Votes> Votes { get; set; }
+        void Seed();
         DbSet<Audit> Audit { get; set; }
         DbSet<MovieRequests> MovieRequests { get; set; }
         DbSet<AlbumRequest> AlbumRequests { get; set; }

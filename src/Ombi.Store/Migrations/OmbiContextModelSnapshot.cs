@@ -916,6 +916,30 @@ namespace Ombi.Store.Migrations
                     b.ToTable("UserQualityProfiles");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.Votes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<bool>("Deleted");
+
+                    b.Property<int>("RequestId");
+
+                    b.Property<int>("RequestType");
+
+                    b.Property<string>("UserId");
+
+                    b.Property<int>("VoteType");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Votes");
+                });
+
             modelBuilder.Entity("Ombi.Store.Repository.Requests.EpisodeRequests", b =>
                 {
                     b.Property<int>("Id")
@@ -1122,6 +1146,13 @@ namespace Ombi.Store.Migrations
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.UserQualityProfiles", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.Votes", b =>
                 {
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany()

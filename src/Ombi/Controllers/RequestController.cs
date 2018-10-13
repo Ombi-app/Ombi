@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ombi.Store.Entities.Requests;
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Ombi.Attributes;
 using Ombi.Core.Models.UI;
 using Ombi.Models;
@@ -21,14 +22,19 @@ namespace Ombi.Controllers
     [Produces("application/json")]
     public class RequestController : Controller
     {
-        public RequestController(IMovieRequestEngine engine, ITvRequestEngine tvRequestEngine)
+        public RequestController(IMovieRequestEngine engine, ITvRequestEngine tvRequestEngine, IVoteEngine vote,
+            ILogger<RequestController> log)
         {
             MovieRequestEngine = engine;
             TvRequestEngine = tvRequestEngine;
+            VoteEngine = vote;
+            Log = log;
         }
 
         private IMovieRequestEngine MovieRequestEngine { get; }
         private ITvRequestEngine TvRequestEngine { get; }
+        private IVoteEngine VoteEngine { get; }
+        private ILogger Log { get; }
 
         /// <summary>
         /// Gets movie requests.
@@ -75,7 +81,17 @@ namespace Ombi.Controllers
         [HttpPost("movie")]
         public async Task<RequestEngineResult> RequestMovie([FromBody] MovieRequestViewModel movie)
         {
-            return await MovieRequestEngine.RequestMovie(movie);
+            var result = await MovieRequestEngine.RequestMovie(movie);
+            if (result.Result)
+            {
+                var voteResult = await VoteEngine.UpVote(result.RequestId, RequestType.Movie);
+                if (voteResult.IsError)
+                {
+                    Log.LogError("Couldn't automatically add the vote for the movie {0} because {1}", movie.TheMovieDbId, voteResult.ErrorMessage);
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -95,10 +111,22 @@ namespace Ombi.Controllers
         /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
         [HttpDelete("movie/{requestId:int}")]
-        [PowerUser]
+        [Authorize(Roles = "Admin,PowerUser,ManageOwnRequests")]
         public async Task DeleteRequest(int requestId)
         {
             await MovieRequestEngine.RemoveMovieRequest(requestId);
+        }
+
+        /// <summary>
+        /// Deletes the specified movie request.
+        /// </summary>
+        /// <param name="requestId">The request identifier.</param>
+        /// <returns></returns>
+        [HttpDelete("movie/all")]
+        [PowerUser]
+        public async Task DeleteAllRequests()
+        {
+            await MovieRequestEngine.RemoveAllMovieRequests();
         }
 
         /// <summary>
@@ -249,7 +277,17 @@ namespace Ombi.Controllers
         [HttpPost("tv")]
         public async Task<RequestEngineResult> RequestTv([FromBody] TvRequestViewModel tv)
         {
-            return await TvRequestEngine.RequestTvShow(tv);
+            var result = await TvRequestEngine.RequestTvShow(tv);
+            if (result.Result)
+            {
+                var voteResult = await VoteEngine.UpVote(result.RequestId, RequestType.TvShow);
+                if (voteResult.IsError)
+                {
+                    Log.LogError("Couldn't automatically add the vote for the tv {0} because {1}", tv.TvDbId, voteResult.ErrorMessage);
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -269,7 +307,7 @@ namespace Ombi.Controllers
         /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
         [HttpDelete("tv/{requestId:int}")]
-        [PowerUser]
+        [Authorize(Roles = "Admin,PowerUser,ManageOwnRequests")]
         public async Task DeleteTvRequest(int requestId)
         {
             await TvRequestEngine.RemoveTvRequest(requestId);
@@ -380,7 +418,7 @@ namespace Ombi.Controllers
         /// </summary>
         /// <param name="requestId">The model.</param>
         /// <returns></returns>
-        [PowerUser]
+        [Authorize(Roles = "Admin,PowerUser,ManageOwnRequests")]
         [HttpDelete("tv/child/{requestId:int}")]
         public async Task<bool> DeleteChildRequest(int requestId)
         {

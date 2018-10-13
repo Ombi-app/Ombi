@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "vendor": "gulp vendor",
+    "main": "gulp main",
     "lint": "tslint -p .",
     "publish": "gulp publish",
     "restore": "dotnet restore && yarn install",
-    "clean": "gulp clean"
+    "clean": "gulp clean",
+    "cypress": "cypress open"
   },
   "dependencies": {
     "@angular/animations": "^6.0.7",
@@ -89,6 +91,10 @@
     "zone.js": "^0.8.26"
   },
   "resolutions": {
-    "@types/tapable": "1.0.0"
+    "@types/tapable": "1.0.0",
+    "cypress/**/@types/sinon": "4.3.3"
+  },
+  "devDependencies": {
+    "cypress": "^3.1.0"
   }
 }

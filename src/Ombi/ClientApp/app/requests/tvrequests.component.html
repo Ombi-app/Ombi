@@ -22,7 +22,7 @@
                     <div class="col-sm-5 small-padding">
                         <div>
                             <a href="http://www.imdb.com/title/{{node.imdbId}}/" target="_blank">
-                                <h4 class="request-title">{{node.title}} ({{node.releaseDate | date: 'yyyy'}})</h4>
+                                <h4 class="request-title">{{node.title}} ({{node.releaseDate | amLocal | amDateFormat: 'YYYY'}})</h4>
                             </a>
                         </div>
                         <br />
@@ -32,7 +32,7 @@
                         </div>
 
 
-                        <div>Release Date: {{node.releaseDate | date}}</div>
+                        <div>Release Date: {{node.releaseDate | amLocal | amDateFormat: 'LL'}}</div>
                         <div *ngIf="isAdmin">
                             <div *ngIf="node.qualityOverrideTitle" class="quality-override">{{ 'Requests.QualityOverride' | translate }}
                                 <span>{{node.qualityOverrideTitle}} </span>
@@ -50,7 +50,7 @@
                             <i class="fa fa-plus"></i> View</button>
                         <div *ngIf="isAdmin">
                             <!--Sonarr Root Folder-->
-                            <div *ngIf="sonarrRootFolders" class="btn-group btn-split" id="rootFolderBtn">
+                            <div *ngIf="sonarrRootFolders?.length > 1" class="btn-group btn-split" id="rootFolderBtn">
                                 <button type="button" class="btn btn-sm btn-warning-outline">
                                     <i class="fa fa-plus"></i> {{ 'Requests.ChangeRootFolder' | translate }}
                                 </button>
@@ -66,7 +66,7 @@
                             </div>
 
                             <!--Sonarr Quality Profiles -->
-                            <div *ngIf="sonarrProfiles" class="btn-group btn-split" id="changeQualityBtn">
+                            <div *ngIf="sonarrProfiles?.length > 1" class="btn-group btn-split" id="changeQualityBtn">
                                 <button type="button" class="btn btn-sm btn-warning-outline">
                                     <i class="fa fa-plus"></i> {{ 'Requests.ChangeQualityProfile' | translate }}
                                 </button>
@@ -99,7 +99,7 @@
             </div>
             <!--This is the section that holds the child seasons if they want to specify specific episodes-->
             <div *ngIf="node.open">
-                <tvrequests-children [childRequests]="node.childRequests" [isAdmin]="isAdmin" (requestDeleted)="childRequestDeleted($event)"></tvrequests-children>
+                <tvrequests-children [childRequests]="node.childRequests" [isAdmin]="isAdmin" [currentUser]="currentUser" (requestDeleted)="childRequestDeleted($event)"></tvrequests-children>
             </div>
             
         <br/>

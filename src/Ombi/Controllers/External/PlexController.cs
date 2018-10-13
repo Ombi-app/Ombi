@@ -283,12 +283,12 @@ namespace Ombi.Controllers.External
             Uri url;
             if (!wizard.Wizard)
             {
-                url = await _plexOAuthManager.GetOAuthUrl(wizard.Pin.id, wizard.Pin.code);
+                url = await _plexOAuthManager.GetOAuthUrl(wizard.Pin.code);
             }
             else
             {
                 var websiteAddress =$"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
-                url = await _plexOAuthManager.GetWizardOAuthUrl(wizard.Pin.id, wizard.Pin.code, websiteAddress);
+                url = await _plexOAuthManager.GetWizardOAuthUrl(wizard.Pin.code, websiteAddress);
             }
 
             if (url == null)

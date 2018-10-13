@@ -42,6 +42,7 @@ namespace Ombi.Store.Context
         public DbSet<IssueComments> IssueComments { get; set; }
         public DbSet<RequestLog> RequestLogs { get; set; }
         public DbSet<RecentlyAddedLog> RecentlyAddedLogs { get; set; }
+        public DbSet<Votes> Votes { get; set; }
 
 
         public DbSet<Audit> Audit { get; set; }
@@ -108,6 +109,16 @@ namespace Ombi.Store.Context
                 Roles.Add(new IdentityRole(OmbiRoles.AutoApproveMusic)
                 {
                     NormalizedName = OmbiRoles.AutoApproveMusic.ToUpper()
+                });
+                SaveChanges();
+            }
+
+            var manageOwnRequestsRole = Roles.Where(x => x.Name == OmbiRoles.ManageOwnRequests);
+            if (!manageOwnRequestsRole.Any())
+            {
+                Roles.Add(new IdentityRole(OmbiRoles.ManageOwnRequests)
+                {
+                    NormalizedName = OmbiRoles.ManageOwnRequests.ToUpper()
                 });
                 SaveChanges();
             }
