@@ -495,7 +495,7 @@ namespace Ombi.Core.Engine
                 RequestType = RequestType.Album,
             });
 
-            return new RequestEngineResult { Result = true, Message = $"{model.Title} has been successfully added!" };
+            return new RequestEngineResult { Result = true, Message = $"{model.Title} has been successfully added!", RequestId = model.Id };
         }
 
         

@@ -10,6 +10,7 @@ import { NotificationService, RequestService } from "../services";
 export class TvRequestChildrenComponent {
     @Input() public childRequests: IChildRequests[];
     @Input() public isAdmin: boolean;
+    @Input() public currentUser: string;
 
     @Output() public requestDeleted = new EventEmitter<number>();
 
@@ -110,10 +111,18 @@ export class TvRequestChildrenComponent {
             });
     }
 
+    public isRequestUser(request: IChildRequests) {
+        if (request.requestedUser.userName === this.currentUser) {
+            return true;
+        }
+        return false;
+    }
+
     private removeRequestFromUi(key: IChildRequests) {
         const index = this.childRequests.indexOf(key, 0);
         if (index > -1) {
             this.childRequests.splice(index, 1);
         }
     }
+
 }

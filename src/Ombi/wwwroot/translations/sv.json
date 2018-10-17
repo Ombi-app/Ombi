@@ -48,6 +48,7 @@
     "Requests": "Förfrågningar",
     "UserManagement": "Användarhantering",
     "Issues": "Problem",
+    "Vote": "Vote",
     "Donate": "Donera!",
     "DonateLibraryMaintainer": "Donera till bibliotekets utvecklare",
     "DonateTooltip": "Det är så här jag övertygar min fru att jag vill spendera min fritid att utveckla Ombi ;)",
@@ -56,19 +57,6 @@
     "Welcome": "Välkommen {{username}}",
     "UpdateDetails": "Uppdatera information",
     "Logout": "Logga ut",
-    "Language": {
-      "English": "Engelska",
-      "French": "Franska",
-      "Spanish": "Spanska",
-      "German": "Tyska",
-      "Italian": "Italienska",
-      "Danish": "Danska",
-      "Dutch": "Holländska",
-      "Norwegian": "Norska",
-      "BrazillianPortuguese": "Brazillian portugisiska",
-      "Polish": "Polska",
-      "Swedish": "Swedish"
-    },
     "OpenMobileApp": "Öppna Mobil App",
     "RecentlyAdded": "Nyligen tillagda"
   },
@@ -188,5 +176,9 @@
     "TvDue": "TV: {{date}}",
     "MovieDue": "Movie: {{date}}",
     "MusicDue": "Music: {{date}}"
+  },
+  "Votes": {
+    "CompletedVotesTab": "Voted",
+    "VotesTab": "Votes Needed"
   }
 }

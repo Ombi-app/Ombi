@@ -36,17 +36,17 @@ namespace Ombi.Core.Authentication
             return await _api.GetAccount(accessToken);
         }
 
-        public async Task<Uri> GetOAuthUrl(int pinId, string code, string websiteAddress = null)
+        public async Task<Uri> GetOAuthUrl(string code, string websiteAddress = null)
         {
             var settings = await _customizationSettingsService.GetSettingsAsync();
-            var url = await _api.GetOAuthUrl(pinId, code, settings.ApplicationUrl.IsNullOrEmpty() ? websiteAddress : settings.ApplicationUrl);
+            var url = await _api.GetOAuthUrl(code, settings.ApplicationUrl.IsNullOrEmpty() ? websiteAddress : settings.ApplicationUrl);
 
             return url;
         }
 
-        public async Task<Uri> GetWizardOAuthUrl(int pinId, string code, string websiteAddress)
+        public async Task<Uri> GetWizardOAuthUrl(string code, string websiteAddress)
         {
-            var url = await _api.GetOAuthUrl(pinId, code, websiteAddress);
+            var url = await _api.GetOAuthUrl(code, websiteAddress);
             return url;
         }
     }

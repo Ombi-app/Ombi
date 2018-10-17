@@ -198,6 +198,13 @@ export class MusicRequestsComponent implements OnInit {
         this.loadInit();
     }
 
+    public isRequestUser(request: IAlbumRequest) {
+        if (request.requestedUser.userName === this.auth.claims().name) {
+            return true;
+        }
+        return false;
+    }
+
     // public subscribe(request: IAlbumRequest) {
     //     request.subscribed = true;
     //     this.requestService.subscribeToMovie(request.id)
@@ -348,4 +355,5 @@ export class MusicRequestsComponent implements OnInit {
         req.background = this.sanitizer.bypassSecurityTrustStyle
             ("url(" + req.cover + ")");
     }
+
 }

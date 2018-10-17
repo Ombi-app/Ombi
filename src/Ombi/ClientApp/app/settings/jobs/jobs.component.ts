@@ -35,6 +35,7 @@ export class JobsComponent implements OnInit {
                 newsletter:               [x.newsletter, Validators.required],
                 plexRecentlyAddedSync:    [x.plexRecentlyAddedSync, Validators.required],
                 lidarrArtistSync:         [x.lidarrArtistSync, Validators.required],
+                issuesPurge:              [x.issuesPurge, Validators.required],
             });  
         });
     }

@@ -170,6 +170,24 @@ namespace Ombi.Notifications.Interfaces
             {
                 return new NotificationMessageContent { Disabled = true };
             }
+
+            if (model.UserId.IsNullOrEmpty())
+            {
+                if (model.RequestType == RequestType.Movie)
+                {
+                    model.UserId = MovieRequest.RequestedUserId;
+                }
+
+                if (model.RequestType == RequestType.Album)
+                {
+                    model.UserId = AlbumRequest.RequestedUserId;
+                }
+
+                if (model.RequestType == RequestType.TvShow)
+                {
+                    model.UserId = TvRequest.RequestedUserId;
+                }
+            }
             var parsed = Parse(model, template, agent);
 
             return parsed;
@@ -184,7 +202,7 @@ namespace Ombi.Notifications.Interfaces
         protected UserNotificationPreferences GetUserPreference(string userId, NotificationAgent agent)
         {
             return UserNotificationPreferences.GetAll()
-                .FirstOrDefault(x => x.Enabled && x.Agent == agent && x.UserId == userId);
+                .FirstOrDefault(x => x.Agent == agent && x.UserId == userId);
         }
 
         private NotificationMessageContent Parse(NotificationOptions model, NotificationTemplates template, NotificationAgent agent)

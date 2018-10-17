@@ -1,5 +1,8 @@
 ﻿<h3 *ngIf="!edit">Create User</h3>
 <h3 *ngIf="edit && user"> User: {{user.userName}}</h3>
+
+<p-confirmDialog></p-confirmDialog>
+
 <button type="button" class="btn btn-primary-outline" style="float:right;" [routerLink]="['/usermanagement/']">Back</button>
 <div *ngIf="!edit || edit && user">
 
@@ -65,7 +68,7 @@
                                                 <div class="checkbox">
                                                     <input type="checkbox" [(ngModel)]="c.enabled" [value]="c.value" id="create{{c.value}}"
                                                         [attr.name]="'create' + c.value" ng-checked="c.enabled">
-                                                    <label for="create{{c.value}}">{{c.value | humanize}}</label>
+                                                    <label id="label{{c.value}}" for="create{{c.value}}">{{c.value | humanize}}</label>
 
                                                 </div>
                                             </div>
@@ -77,7 +80,7 @@
                                                 <div class="checkbox">
                                                     <input type="checkbox" [(ngModel)]="c.enabled" [value]="c.value" id="create{{c.value}}"
                                                         [attr.name]="'create' + c.value" ng-checked="c.enabled">
-                                                    <label for="create{{c.value}}">{{c.value | humanize}}</label>
+                                                    <label id="label{{c.value}}" for="create{{c.value}}">{{c.value | humanize}}</label>
 
                                                 </div>
                                             </div>
@@ -129,7 +132,7 @@
                                             <label for="{{pref.agent}}" class="control-label">{{NotificationAgent[pref.agent]
                                                 | humanize}}</label>
                                             <div>
-                                                <input type="text" [(ngModel)]="pref.value" class="form-control form-control-custom"
+                                                <input type="text" [attr.data-test]="NotificationAgent[pref.agent]" [(ngModel)]="pref.value" class="form-control form-control-custom"
                                                     name="{{pref.agent}}" value="{{pref?.value}}">
                                             </div>
                                         </div>
@@ -144,7 +147,7 @@
                             <div class="panel panel-default a">
                                 <div class="panel-body">
 
-                                    <div class="form-group"  *ngIf="user.userQualityProfiles.sonarrQualityProfile">
+                                    <div class="form-group" *ngIf="sonarrQualities">
                                         <label for="sonarrQualities" class="control-label">Sonarr Quality Profile</label>
                                         <div id="sonarrQualities">
                                             <select class="form-control form-control-custom" [(ngModel)]="user.userQualityProfiles.sonarrQualityProfile">
@@ -153,7 +156,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group"  *ngIf="user.userQualityProfiles.sonarrQualityProfileAnime">
+                                    <div class="form-group" *ngIf="sonarrQualities">
                                         <label for="sonarrQualityProfileAnime" class="control-label">Sonarr Quality Profile (Anime)</label>
                                         <div id="sonarrQualityProfileAnime">
                                             <select class="form-control form-control-custom" [(ngModel)]="user.userQualityProfiles.sonarrQualityProfileAnime">
@@ -162,7 +165,7 @@
                                         </div>
                                     </div>
                              
-                                    <div class="form-group"  *ngIf="user.userQualityProfiles.sonarrRootPath">
+                                    <div class="form-group" *ngIf="sonarrRootFolders">
                                         <label for="sonarrRootPath" class="control-label">Sonarr Root Folder</label>
                                         <div id="sonarrRootPath">
                                             <select class="form-control form-control-custom" [(ngModel)]="user.userQualityProfiles.sonarrRootPath">
@@ -171,7 +174,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group" *ngIf="user.userQualityProfiles.sonarrRootPathAnime">
+                                    <div class="form-group" *ngIf="sonarrRootFolders">
                                         <label for="sonarrRootPathAnime" class="control-label">Sonarr Root Folder (Anime)</label>
                                         <div id="sonarrRootPathAnime">
                                             <select class="form-control form-control-custom" [(ngModel)]="user.userQualityProfiles.sonarrRootPathAnime">
@@ -179,7 +182,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group" *ngIf="user.userQualityProfiles.radarrQualityProfile">
+                                    <div class="form-group" *ngIf="radarrQualities">
                                         <label for="radarrQualityProfile" class="control-label">Radarr Quality Profiles</label>
                                         <div id="radarrQualityProfile">
                                             <select class="form-control form-control-custom" [(ngModel)]="user.userQualityProfiles.radarrQualityProfile">
@@ -187,7 +190,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group" *ngIf="user.userQualityProfiles.radarrRootPath">
+                                    <div class="form-group" *ngIf="radarrRootFolders">
                                         <label for="radarrRootPath" class="control-label">Radarr Root Folder</label>
                                         <div id="radarrRootPath">
                                             <select class="form-control form-control-custom" [(ngModel)]="user.userQualityProfiles.radarrRootPath">
@@ -208,10 +211,10 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <button *ngIf="!edit" type="button" class="btn btn-danger-outline" (click)="create()">Create</button>
+            <button *ngIf="!edit" type="button" data-test="createuserbtn" class="btn btn-danger-outline" (click)="create()">Create</button>
             <div *ngIf="edit">
-                <button type="button" class="btn btn-primary-outline" (click)="update()">Update</button>
-                <button type="button" class="btn btn-danger-outline" (click)="delete()">Delete</button>
+                <button type="button" data-test="updatebtn" class="btn btn-primary-outline" (click)="update()">Update</button>
+                <button type="button" data-test="deletebtn" class="btn btn-danger-outline" (click)="delete()">Delete</button>
                 <button type="button" style="float:right;" class="btn btn-info-outline" (click)="resetPassword()"
                     pTooltip="You need your SMTP settings setup">Send Reset Password Link</button>
 

@@ -38,10 +38,6 @@ export class MassEmailComponent implements OnInit {
         this.users.forEach(u => u.selected = !u.selected);
     }
 
-    public selectSingleUser(user: IMassEmailUserModel) {
-        user.selected = !user.selected;
-    }
-
     public send() {
         if(!this.subject) {
             this.missingSubject = true;

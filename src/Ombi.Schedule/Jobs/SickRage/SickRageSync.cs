@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -17,7 +16,7 @@ namespace Ombi.Schedule.Jobs.SickRage
 {
     public class SickRageSync : ISickRageSync
     {
-        public SickRageSync(ISettingsService<SickRageSettings> s, ISickRageApi api, ILogger<SickRageSync> l, IOmbiContext ctx)
+        public SickRageSync(ISettingsService<SickRageSettings> s, ISickRageApi api, ILogger<SickRageSync> l, IExternalContext ctx)
         {
             _settings = s;
             _api = api;
@@ -29,7 +28,7 @@ namespace Ombi.Schedule.Jobs.SickRage
         private readonly ISettingsService<SickRageSettings> _settings;
         private readonly ISickRageApi _api;
         private readonly ILogger<SickRageSync> _log;
-        private readonly IOmbiContext _ctx;
+        private readonly IExternalContext _ctx;
         
         public async Task Start()
         {

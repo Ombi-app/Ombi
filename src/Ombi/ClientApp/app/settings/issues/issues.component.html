@@ -19,6 +19,21 @@
             </div>
 
             <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" id="deleteIssues" formControlName="deleteIssues" ng-checked="form.deleteIssues">
+                    <label for="deleteIssues">Delete issues after they have been resolved</label>
+                </div>
+            </div>
+
+            <div class="form-group" *ngIf="form.controls.deleteIssues.value">
+                <label for="daysAfterResolvedToDelete" class="control-label">Leave the resolved issue for X amount of
+                    days before deletion</label>
+                <input type="number" class="form-control form-control-custom form-small" min="1" max="365" id="daysAfterResolvedToDelete"
+                    formControlName="daysAfterResolvedToDelete" ng-checked="form.daysAfterResolvedToDelete">
+            </div>
+
+
+            <div class="form-group">
                 <div>
                     <button type="submit" [disabled]="form.invalid" class="btn btn-primary-outline ">Submit</button>
                 </div>
@@ -38,8 +53,8 @@
                     <label for="categoryToAdd" class="control-label">Add Category</label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" [(ngModel)]="categoryToAdd.value" class="form-control form-control-custom " id="categoryToAdd" name="categoryToAdd"
-                        value="{{categoryToAdd.value}}">
+                    <input type="text" [(ngModel)]="categoryToAdd.value" class="form-control form-control-custom " id="categoryToAdd"
+                        name="categoryToAdd" value="{{categoryToAdd.value}}">
                 </div>
                 <div class="col-md-3">
                     <button class="btn btn-primary-outline" (click)="addCategory()">Add</button>

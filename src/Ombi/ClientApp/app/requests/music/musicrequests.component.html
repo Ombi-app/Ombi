@@ -59,7 +59,7 @@
                 <div>
                     <h4>
                         <a href="" target="_blank">
-                            {{request.title}}
+                            {{request.title  | truncate: 36}}
                         </a>
         
                     </h4>
@@ -97,8 +97,8 @@
                     </div>
 
 
-                    <div id="releaseDate">{{ 'Requests.ReleaseDate' | translate: {date: request.releaseDate | date: 'mediumDate'} }}</div>
-                    <div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{request.requestedDate | date: 'mediumDate'}}</div>
+                    <div id="releaseDate">{{ 'Requests.ReleaseDate' | translate: {date: request.releaseDate | amLocal | amDateFormat: 'LL'} }}</div>
+                    <div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{request.requestedDate | amLocal | amDateFormat: 'LL'}}</div>
                     <br />
                 </div>
                 <!-- <div *ngIf="isAdmin">
@@ -169,11 +169,7 @@
                             </button>
                         </div>
                     </div>
-                    <form id="removeBtn" class="col-md-6">
-                        <button (click)="removeRequest(request)" style="text-align: right" class="btn btn-sm btn-danger-outline delete">
-                            <i class="fa fa-minus"></i> {{ 'Requests.Remove' | translate }}
-                        </button>
-                    </form>
+                    
 
                     <form id="markBtnGroup">
                         <button id="unavailableBtn" *ngIf="request.available" (click)="changeAvailability(request, false)" style="text-align: right"
@@ -188,6 +184,13 @@
 
 
 
+                </div>
+                <div *ngIf="isAdmin || isRequestUser(request)">
+                    <form id="removeBtn">
+                        <button (click)="removeRequest(request)" style="text-align: right" class="btn btn-sm btn-danger-outline delete">
+                            <i class="fa fa-minus"></i> {{ 'Requests.Remove' | translate }}
+                        </button>
+                    </form>
                 </div>
                 <div class="dropdown" *ngIf="issueCategories && issuesEnabled" id="issuesBtn">
                     <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"

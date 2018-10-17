@@ -42,13 +42,9 @@ namespace Ombi.Store.Entities
         public PlexMediaTypeEntity Type { get; set; }
 
         public string Url { get; set; }
-
-        /// <summary>
-        /// Only used for TV Shows
-        /// </summary>
-        public virtual ICollection<PlexSeasonsContent> Seasons { get; set; }
         
         public ICollection<PlexEpisode> Episodes { get; set; }
+        public ICollection<PlexSeasonsContent> Seasons { get; set; }
 
         /// <summary>
         /// Plex's internal ID for this item
