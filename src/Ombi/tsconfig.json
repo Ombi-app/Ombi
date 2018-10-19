@@ -28,9 +28,6 @@
       }
     ]
   },
-  "types": [
-    "cypress"
-  ],
   "include": [
     "ClientApp/**/*",
     "typings/**/*",

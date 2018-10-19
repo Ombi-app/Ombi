@@ -416,6 +416,12 @@ namespace Ombi.Core.Engine
             await MovieRepository.Delete(request);
         }
 
+        public async Task RemoveAllMovieRequests()
+        {
+            var request = MovieRepository.GetAll();
+            await MovieRepository.DeleteRange(request);
+        }
+
         public async Task<bool> UserHasRequest(string userId)
         {
             return await MovieRepository.GetAll().AnyAsync(x => x.RequestedUserId == userId);
@@ -483,7 +489,7 @@ namespace Ombi.Core.Engine
                 RequestType = RequestType.Movie,
             });
 
-            return new RequestEngineResult {Result = true, Message = $"{movieName} has been successfully added!"};
+            return new RequestEngineResult {Result = true, Message = $"{movieName} has been successfully added!", RequestId = model.Id};
         }
 
         public async Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user)

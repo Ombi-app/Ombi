@@ -34,12 +34,12 @@ namespace Ombi.Core.Rule.Rules.Search
 {
     public class SonarrCacheSearchRule : BaseSearchRule, IRules<SearchViewModel>
     {
-        public SonarrCacheSearchRule(IOmbiContext ctx)
+        public SonarrCacheSearchRule(IExternalContext ctx)
         {
             _ctx = ctx;
         }
 
-        private readonly IOmbiContext _ctx;
+        private readonly IExternalContext _ctx;
 
         public Task<RuleResult> Execute(SearchViewModel obj)
         {

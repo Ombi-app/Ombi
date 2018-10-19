@@ -129,8 +129,12 @@ namespace Ombi.DependencyInjection
 
         public static void RegisterStore(this IServiceCollection services) { 
             services.AddEntityFrameworkSqlite().AddDbContext<OmbiContext>();
+            services.AddEntityFrameworkSqlite().AddDbContext<SettingsContext>();
+            services.AddEntityFrameworkSqlite().AddDbContext<ExternalContext>();
             
             services.AddScoped<IOmbiContext, OmbiContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
+            services.AddScoped<ISettingsContext, SettingsContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
+            services.AddScoped<IExternalContext, ExternalContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
             services.AddTransient<ISettingsRepository, SettingsJsonRepository>();
             services.AddTransient<ISettingsResolver, SettingsResolver>();
             services.AddTransient<IPlexContentRepository, PlexServerContentRepository>();
@@ -145,6 +149,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ITokenRepository, TokenRepository>();
             services.AddTransient(typeof(ISettingsService<>), typeof(SettingsService<>));
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient(typeof(IExternalRepository<>), typeof(ExternalRepository<>));
         }
         public static void RegisterServices(this IServiceCollection services)
         {

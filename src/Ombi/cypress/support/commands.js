@@ -25,6 +25,7 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('login', (username, password) => {
+    cy.clearLocalStorage();
     cy.request({
         method: 'POST',
         url: '/api/v1/token',
@@ -34,8 +35,11 @@ Cypress.Commands.add('login', (username, password) => {
         }
     })
         .then((resp) => {
-            window.localStorage.setItem('id_token', resp.body.access_token)
+            window.localStorage.setItem('id_token', resp.body.access_token);
         });
+});
+Cypress.Commands.add('removeLogin', () => {
+    window.localStorage.removeItem('id_token');
 });
 
 Cypress.Commands.add('createUser', (username, password, claims) => {

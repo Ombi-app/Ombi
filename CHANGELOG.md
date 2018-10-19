@@ -4,13 +4,65 @@
 
 ### **New Features**
 
+- Added automation tests for the voting feature. [TidusJar]
+
+- Update LidarrAvailabilityChecker.cs. [Jamie]
+
+- Update CHANGELOG.md. [Jamie]
+
 - Changes language selector to always show native language name. [Victor Usoltsev]
 
 - Updated test dependancies. [TidusJar]
 
+- Added in the external repo so we can rip out external stuff. [TidusJar]
+
 - Added the ability to purge/remove issues. [TidusJar]
 
 ### **Fixes**
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- When a users requests content and the voting is enabled, the user who requested is an automatic +1 vote. [TidusJar]
+
+- Revert, no idea how this happened. [TidusJar]
+
+- Fixed the build. Thanks Matt! [TidusJar]
+
+- Fixes untickable mass email checkboxes in Safari. [Victor Usoltsev]
+
+- [ImgBot] optimizes images. [ImgBotApp]
+
+- Revert "Feature/purge issues" [Jamie]
+
+- Fixed the issue where user preferences was not being inported into some notifications. [TidusJar]
+
+- New role to enable users to remove their own requests. [Anojh]
 
 - Users can now remove their own requests. [Anojh]
 
@@ -59,6 +111,12 @@
 - Put the issue purge limit on the issues page. [Jamie]
 
 - Date and times are now in the local users date time. [TidusJar]
+
+- Fixed the migration. [TidusJar]
+
+- ExternalContext migrations. [TidusJar]
+
+- The settings have now been split out of the main db. [TidusJar]
 
 - Search for the Lidarr Album when it's a new artist. [TidusJar]
 

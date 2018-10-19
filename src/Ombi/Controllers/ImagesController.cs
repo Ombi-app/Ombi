@@ -39,7 +39,7 @@ namespace Ombi.Controllers
             {
                 return string.Empty;
             }
-            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.GetAsync(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
 
             var images = await FanartTvApi.GetTvImages(tvdbid, key.Value);
             if (images == null)
@@ -64,7 +64,7 @@ namespace Ombi.Controllers
         [HttpGet("poster/movie/{movieDbId}")]
         public async Task<string> GetMoviePoster(string movieDbId)
         {
-            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.GetAsync(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
 
             var images = await FanartTvApi.GetMovieImages(movieDbId, key.Value);
 
@@ -98,7 +98,7 @@ namespace Ombi.Controllers
             {
                 return string.Empty;
             }
-            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.GetAsync(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
 
             var images = await FanartTvApi.GetTvImages(tvdbid, key.Value);
 
@@ -128,7 +128,7 @@ namespace Ombi.Controllers
         [HttpGet("background/movie/{movieDbId}")]
         public async Task<string> GetMovieBackground(string movieDbId)
         {
-            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.GetAsync(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
 
             var images = await FanartTvApi.GetMovieImages(movieDbId, key.Value);
 
@@ -157,7 +157,7 @@ namespace Ombi.Controllers
             {
                 return string.Empty;
             }
-            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.GetAsync(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
 
             var images = await FanartTvApi.GetTvImages(tvdbid, key.Value);
 
@@ -189,7 +189,7 @@ namespace Ombi.Controllers
             var movieUrl = string.Empty;
             var tvUrl = string.Empty;
 
-            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.Get(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.GetAsync(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
 
             if (moviesArray.Length > 0)
             {
