@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.0.3923 (2018-10-20)
+
+- Fixed #2601 [TidusJar]
+
 ## v3.0.3919 (2018-10-18)
 
 ### **New Features**
