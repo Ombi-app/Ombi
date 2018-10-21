@@ -2,11 +2,11 @@ import { PlatformLocation } from "@angular/common";
 import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Subject } from "rxjs";
-import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { AuthService } from "../../auth/auth.service";
-import { FilterType, IAlbumRequest, IFilter, IIssueCategory, IPagenator, OrderType } from "../../interfaces";
+import { FilterType, IAlbumRequest, IIssueCategory, IPagenator, OrderType } from "../../interfaces";
 import { NotificationService, RequestService } from "../../services";
+import { IRequestSearchModel } from "../search-bar/requests-search-bar.component";
 
 @Component({
     selector: "music-requests",
@@ -28,12 +28,14 @@ export class MusicRequestsComponent implements OnInit {
     public issueProviderId: string;
     public issueCategorySelected: IIssueCategory;
 
-    public filterDisplay: boolean;
-    public filter: IFilter;
-    public filterType = FilterType;
-
-    public orderType: OrderType = OrderType.RequestedDateDesc;
-    public OrderType = OrderType;
+    public searchOptions: IRequestSearchModel = {
+        searchText: "",
+        filter: {
+            availabilityFilter: FilterType.None,
+            statusFilter: FilterType.None
+        },
+        orderType: OrderType.RequestedDateDesc
+    };
 
     public totalAlbums: number = 100;
     private currentlyLoaded: number;
@@ -45,21 +47,6 @@ export class MusicRequestsComponent implements OnInit {
         private notificationService: NotificationService,
         private sanitizer: DomSanitizer,
         private readonly platformLocation: PlatformLocation) {
-        this.searchChanged.pipe(
-            debounceTime(600), // Wait Xms after the last event before emitting last event
-            distinctUntilChanged(), // only emit if value is different from previous value
-        ).subscribe(x => {
-            this.searchText = x as string;
-            if (this.searchText === "") {
-                this.resetSearch();
-                return;
-            }
-            this.requestService.searchAlbumRequests(this.searchText)
-                .subscribe(m => {
-                    this.setOverrides(m);
-                    this.albumRequests = m;
-                });
-        });
         this.defaultPoster = "../../../images/default-music-placeholder.png";
         const base = this.platformLocation.getBaseHrefFromDOM();
         if (base) {
@@ -70,10 +57,6 @@ export class MusicRequestsComponent implements OnInit {
     public ngOnInit() {
         this.amountToLoad = 10;
         this.currentlyLoaded = 10;
-        this.filter = {
-            availabilityFilter: FilterType.None,
-            statusFilter: FilterType.None,
-        };
         this.loadInit();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
     }
@@ -83,8 +66,16 @@ export class MusicRequestsComponent implements OnInit {
         this.loadRequests(this.amountToLoad, skipAmount);
     }
 
-    public search(text: any) {
-        this.searchChanged.next(text.target.value);
+    public onSearchEvent() {
+        if (this.searchOptions.searchText === "") {
+            this.resetSearch();
+            return;
+        }
+        this.requestService.searchAlbumRequests(this.searchOptions.searchText)
+            .subscribe(m => {
+                this.setOverrides(m);
+                this.albumRequests = m;
+            });
     }
 
     public removeRequest(request: IAlbumRequest) {
@@ -155,56 +146,6 @@ export class MusicRequestsComponent implements OnInit {
         event.preventDefault();
     }
 
-    public clearFilter(el: any) {
-        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
-
-        el = el.parentElement;
-        el = el.querySelectorAll("INPUT");
-        for (el of el) {
-            el.checked = false;
-            el.parentElement.classList.remove("active");
-        }
-
-        this.filterDisplay = false;
-        this.filter.availabilityFilter = FilterType.None;
-        this.filter.statusFilter = FilterType.None;
-
-        this.resetSearch();
-    }
-
-    public filterAvailability(filter: FilterType, el: any) {
-        this.filterActiveStyle(el);
-        this.filter.availabilityFilter = filter;
-        this.loadInit();
-    }
-
-    public filterStatus(filter: FilterType, el: any) {
-        this.filterActiveStyle(el);
-        this.filter.statusFilter = filter;
-        this.loadInit();
-    }
-
-    public setOrder(value: OrderType, el: any) {
-        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
-
-        const parent = el.parentElement;
-        const previousFilter = parent.querySelector(".active");
-
-        previousFilter.className = "";
-        el.className = "active";
-
-        this.orderType = value;
-
-        this.loadInit();
-    }
-
-    public isRequestUser(request: IAlbumRequest) {
-        if (request.requestedUser.userName === this.auth.claims().name) {
-            return true;
-        }
-        return false;
-    }
-
     // public subscribe(request: IAlbumRequest) {
     //     request.subscribed = true;
     //     this.requestService.subscribeToMovie(request.id)
@@ -221,26 +162,15 @@ export class MusicRequestsComponent implements OnInit {
     //         });
     // }
 
-    private filterActiveStyle(el: any) {
-        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
-
-        el = el.parentElement; //gets radio div
-        el = el.parentElement; //gets form group div
-        el = el.parentElement; //gets status filter div
-        el = el.querySelectorAll("INPUT");
-        for (el of el) {
-            if (el.checked) {
-                if (!el.parentElement.classList.contains("active")) {
-                    el.parentElement.className += " active";
-                }
-            } else {
-                el.parentElement.classList.remove("active");
-            }
+    public isRequestUser(request: IAlbumRequest) {
+        if (request.requestedUser.userName === this.auth.claims().name) {
+            return true;
         }
+        return false;
     }
 
     private loadRequests(amountToLoad: number, currentlyLoaded: number) {
-        this.requestService.getAlbumRequests(amountToLoad, currentlyLoaded, this.orderType, this.filter)
+        this.requestService.getAlbumRequests(amountToLoad, currentlyLoaded, this.searchOptions.orderType, this.searchOptions.filter)
             .subscribe(x => {
                 this.setOverrides(x.collection);
                 if (!this.albumRequests) {
@@ -280,7 +210,7 @@ export class MusicRequestsComponent implements OnInit {
     }
 
     private loadInit() {
-        this.requestService.getAlbumRequests(this.amountToLoad, 0, this.orderType, this.filter)
+        this.requestService.getAlbumRequests(this.amountToLoad, 0, this.searchOptions.orderType, this.searchOptions.filter)
             .subscribe(x => {
                 this.albumRequests = x.collection;
                 this.totalAlbums = x.total;

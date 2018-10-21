@@ -13,6 +13,7 @@ import { MusicRequestsComponent } from "./music/musicrequests.component";
 import { RequestComponent } from "./request.component";
 import { TvRequestChildrenComponent } from "./tvrequest-children.component";
 import { TvRequestsComponent } from "./tvrequests.component";
+import { RequestsSearchBar } from "./search-bar/requests-search-bar.component";
 
 import { SidebarModule, TooltipModule, TreeTableModule } from "primeng/primeng";
 
@@ -45,6 +46,7 @@ const routes: Routes = [
         TvRequestsComponent,
         TvRequestChildrenComponent,
         MusicRequestsComponent,
+        RequestsSearchBar
     ],
     exports: [
         RouterModule,

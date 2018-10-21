@@ -1,0 +1,62 @@
+﻿<div class="form-group">
+    <div [ngClass]="{'input-group':showFilter && showSort}" >
+        <input type="text" id="search" class="form-control form-control-custom searchwidth" placeholder="Search" (keyup)="searchOnKeyUp($event)">
+        <span *ngIf="showFilter && showSort" class="input-group-btn">
+
+            <button *ngIf="showFilter" id="filterBtn" class="btn btn-sm btn-info-outline" (click)="isFilterDisplayed = !isFilterDisplayed">
+                <i class="fa fa-filter"></i> {{ 'Requests.Filter' | translate }}
+            </button>
+
+            <button *ngIf="showSort" class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <i class="fa fa-sort"></i> {{ 'Requests.Sort' | translate }}
+                <span class="caret"></span>
+            </button>
+
+            <ul *ngIf="showSort" class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                <li>
+                    <a *ngFor="let sortOption of sortOptions" [ngClass]="{'active':sortOption.isActive}" (click)="setOrderClick(sortOption.orderType)">
+                        {{ sortOption.name | translate }}
+                    </a>
+                </li>
+            </ul>
+        </span>
+    </div>
+</div>
+
+<p-sidebar *ngIf="showFilter" [(visible)]="isFilterDisplayed" styleClass="ui-sidebar-md side-back side-small">
+    <h3>{{ 'Requests.Filter' | translate }}</h3>
+    <hr>
+    <div>
+        <h4>{{ 'Filter.FilterHeaderAvailability' | translate }}</h4>
+        <div class="form-group" *ngFor="let availabilityOption of availabilityFilterOptions">
+            <div class="radio">
+                <input type="radio" 
+                       id={{availabilityOption.id}}
+                       name={{availabilityOption.groupName}}
+                       value={{availabilityOption.filterType}}
+                       [(ngModel)]="searchOptions.filter.availabilityFilter"
+                       (change)="filterOptionsChange()">
+                <label for="{{availabilityOption.id}}">{{ availabilityOption.text | translate }}</label>
+            </div>
+        </div>
+
+    </div>
+    <div>
+        <h4>{{ 'Filter.FilterHeaderRequestStatus' | translate }}</h4>
+        <div class="form-group" *ngFor="let requestStatusOption of requestStatusFilterOptions">
+            <div class="radio">
+                <input type="radio" 
+                       id={{requestStatusOption.id}}
+                       name={{requestStatusOption.groupName}}
+                       value={{requestStatusOption.filterType}}
+                       [(ngModel)]="searchOptions.filter.statusFilter"
+                       (change)="filterOptionsChange()">
+                <label for="{{requestStatusOption.id}}">{{ requestStatusOption.text | translate }}</label>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-sm btn-primary-outline" (click)="clearFilterClick()">
+        <i class="fa fa-filter"></i> {{ 'Filter.ClearFilter' | translate }}
+    </button>
+</p-sidebar>

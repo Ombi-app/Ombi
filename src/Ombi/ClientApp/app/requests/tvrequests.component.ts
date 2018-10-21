@@ -2,12 +2,12 @@ import { PlatformLocation } from "@angular/common";
 import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Subject } from "rxjs";
-import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { AuthService } from "../auth/auth.service";
 import { FilterType, IIssueCategory, IPagenator, IRequestsViewModel, ISonarrProfile, ISonarrRootFolder, ITvRequests, OrderType } from "../interfaces";
 import { NotificationService, RequestService, SonarrService } from "../services";
 import { ImageService } from "../services/image.service";
+import { IRequestSearchModel } from "./search-bar/requests-search-bar.component";
 
 @Component({
     selector: "tv-requests",
@@ -18,7 +18,6 @@ export class TvRequestsComponent implements OnInit {
 
     public tvRequests: IRequestsViewModel<ITvRequests>;
     public searchChanged = new Subject<string>();
-    public searchText: string;
     public isAdmin: boolean;
     public currentUser: string;
     public showChildDialogue = false; // This is for the child modal popup
@@ -35,6 +34,15 @@ export class TvRequestsComponent implements OnInit {
     public sonarrProfiles: ISonarrProfile[] = [];
     public sonarrRootFolders: ISonarrRootFolder[] = [];
 
+    public searchOptions: IRequestSearchModel = {
+        searchText: "",
+        filter: {
+            availabilityFilter: FilterType.None,
+            statusFilter: FilterType.None
+        },
+        orderType: OrderType.RequestedDateDesc
+    };
+
     public totalTv: number = 100;
     private currentlyLoaded: number;
     private amountToLoad: number;
@@ -47,7 +55,6 @@ export class TvRequestsComponent implements OnInit {
         private sonarrService: SonarrService,
         private notificationService: NotificationService,
         private readonly platformLocation: PlatformLocation) {
-            
             this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
             this.currentUser = this.auth.claims().name;
             if (this.isAdmin) {
@@ -59,7 +66,7 @@ export class TvRequestsComponent implements OnInit {
             }
     }
 
-    public openClosestTab(node: ITvRequests,el: any) {
+    public openClosestTab(node: ITvRequests, el: any) {
         el.preventDefault();
         node.open = !node.open;
     }
@@ -68,44 +75,35 @@ export class TvRequestsComponent implements OnInit {
         this.amountToLoad = 10;
         this.currentlyLoaded = 10;
         this.tvRequests = {collection:[], total:0};
-
-        this.searchChanged.pipe(
-            debounceTime(600), // Wait Xms after the last event before emitting last event
-            distinctUntilChanged(), // only emit if value is different from previous value
-        ).subscribe(x => {
-            this.searchText = x as string;
-            if (this.searchText === "") {
-                this.resetSearch();
-                return;
-            }
-            this.requestService.searchTvRequests(this.searchText)
-                .subscribe(m => {
-                    this.tvRequests.collection = m;
-                    this.tvRequests.collection.forEach((val) => this.loadBackdrop(val));
-                    this.tvRequests.collection.forEach((val) => this.setOverride(val));
-                });
-        });
         this.defaultPoster = "../../../images/default_tv_poster.png";
         const base = this.platformLocation.getBaseHrefFromDOM();
         if (base) {
             this.defaultPoster = "../../.." + base + "/images/default_tv_poster.png";
         }
-
         this.loadInit();
     }
 
     public paginate(event: IPagenator) {
         const skipAmount = event.first;
 
-        this.requestService.getTvRequests(this.amountToLoad, skipAmount, OrderType.RequestedDateDesc, FilterType.None, FilterType.None)
+        this.requestService.getTvRequests(this.amountToLoad, skipAmount, this.searchOptions.orderType, this.searchOptions.filter.statusFilter, this.searchOptions.filter.availabilityFilter)
             .subscribe(x => {
                 this.tvRequests = x;
                 this.currentlyLoaded = this.currentlyLoaded + this.amountToLoad;
             });
     }
 
-    public search(text: any) {
-        this.searchChanged.next(text.target.value);
+    public onSearchEvent() {
+        if (this.searchOptions.searchText === "") {
+            this.resetSearch();
+            return;
+        }
+        this.requestService.searchTvRequests(this.searchOptions.searchText)
+            .subscribe(m => {
+                this.tvRequests.collection = m;
+                this.tvRequests.collection.forEach((val) => this.loadBackdrop(val));
+                this.tvRequests.collection.forEach((val) => this.setOverride(val));
+            });
     }
 
     public showChildren(request: ITvRequests) {
@@ -187,7 +185,7 @@ export class TvRequestsComponent implements OnInit {
 
     private loadInit() {
         this.requestService.getTotalTv().subscribe(x => this.totalTv = x);
-        this.requestService.getTvRequests(this.amountToLoad, 0, OrderType.RequestedDateDesc, FilterType.None, FilterType.None)
+        this.requestService.getTvRequests(this.amountToLoad, 0, this.searchOptions.orderType, this.searchOptions.filter.statusFilter, this.searchOptions.filter.availabilityFilter)
             .subscribe(x => {
                 this.tvRequests = x;
                 this.tvRequests.collection.forEach((val, index) => {

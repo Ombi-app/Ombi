@@ -1,12 +1,11 @@
 import { PlatformLocation } from "@angular/common";
 import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { Subject } from "rxjs";
-import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { AuthService } from "../auth/auth.service";
-import { FilterType, IFilter, IIssueCategory, IMovieRequests, IPagenator, IRadarrProfile, IRadarrRootFolder, OrderType } from "../interfaces";
+import { IIssueCategory, IMovieRequests, IPagenator, IRadarrProfile, IRadarrRootFolder, FilterType, OrderType } from "../interfaces";
 import { NotificationService, RadarrService, RequestService } from "../services";
+import { IRequestSearchModel } from "./search-bar/requests-search-bar.component";
 
 @Component({
     selector: "movie-requests",
@@ -15,9 +14,6 @@ import { NotificationService, RadarrService, RequestService } from "../services"
 export class MovieRequestsComponent implements OnInit {
     public movieRequests: IMovieRequests[];
     public defaultPoster: string;
-
-    public searchChanged: Subject<string> = new Subject<string>();
-    public searchText: string;
 
     public isAdmin: boolean; // Also PowerUser
 
@@ -31,12 +27,14 @@ export class MovieRequestsComponent implements OnInit {
     public issueProviderId: string;
     public issueCategorySelected: IIssueCategory;
 
-    public filterDisplay: boolean;
-    public filter: IFilter;
-    public filterType = FilterType;
-
-    public orderType: OrderType = OrderType.RequestedDateDesc;
-    public OrderType = OrderType;
+    public searchOptions: IRequestSearchModel = {
+        searchText: "",
+        filter: {
+            availabilityFilter: FilterType.None,
+            statusFilter: FilterType.None
+        },
+        orderType: OrderType.RequestedDateDesc
+    };
 
     public totalMovies: number = 100;
     private currentlyLoaded: number;
@@ -49,21 +47,6 @@ export class MovieRequestsComponent implements OnInit {
         private radarrService: RadarrService,
         private sanitizer: DomSanitizer,
         private readonly platformLocation: PlatformLocation) {
-        this.searchChanged.pipe(
-            debounceTime(600), // Wait Xms after the last event before emitting last event
-            distinctUntilChanged(), // only emit if value is different from previous value
-        ).subscribe(x => {
-            this.searchText = x as string;
-            if (this.searchText === "") {
-                this.resetSearch();
-                return;
-            }
-            this.requestService.searchMovieRequests(this.searchText)
-                .subscribe(m => {
-                    this.setOverrides(m);
-                    this.movieRequests = m;
-                });
-        });
         this.defaultPoster = "../../../images/default_movie_poster.png";
         const base = this.platformLocation.getBaseHrefFromDOM();
         if (base) {
@@ -74,13 +57,8 @@ export class MovieRequestsComponent implements OnInit {
     public ngOnInit() {
         this.amountToLoad = 10;
         this.currentlyLoaded = 10;
-        this.filter = {
-            availabilityFilter: FilterType.None,
-            statusFilter: FilterType.None,
-        };
         this.loadInit();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
-
     }
 
     public paginate(event: IPagenator) {
@@ -88,8 +66,16 @@ export class MovieRequestsComponent implements OnInit {
         this.loadRequests(this.amountToLoad, skipAmount);
     }
 
-    public search(text: any) {
-        this.searchChanged.next(text.target.value);
+    public onSearchEvent() {
+        if (this.searchOptions.searchText === "") {
+            this.resetSearch();
+            return;
+        }
+        this.requestService.searchMovieRequests(this.searchOptions.searchText)
+            .subscribe(m => {
+                this.setOverrides(m);
+                this.movieRequests = m;
+            });
     }
 
     public removeRequest(request: IMovieRequests) {
@@ -159,49 +145,6 @@ export class MovieRequestsComponent implements OnInit {
         event.preventDefault();
     }
 
-    public clearFilter(el: any) {
-        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
-
-        el = el.parentElement;
-        el = el.querySelectorAll("INPUT");
-        for (el of el) {
-            el.checked = false;
-            el.parentElement.classList.remove("active");
-        }
-
-        this.filterDisplay = false;
-        this.filter.availabilityFilter = FilterType.None;
-        this.filter.statusFilter = FilterType.None;
-
-        this.resetSearch();
-    }
-
-    public filterAvailability(filter: FilterType, el: any) {
-        this.filterActiveStyle(el);
-        this.filter.availabilityFilter = filter;
-        this.loadInit();
-    }
-
-    public filterStatus(filter: FilterType, el: any) {
-        this.filterActiveStyle(el);
-        this.filter.statusFilter = filter;
-        this.loadInit();
-    }
-
-    public setOrder(value: OrderType, el: any) {
-        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
-
-        const parent = el.parentElement;
-        const previousFilter = parent.querySelector(".active");
-
-        previousFilter.className = "";
-        el.className = "active";
-
-        this.orderType = value;
-
-        this.loadInit();
-    }
-
     public subscribe(request: IMovieRequests) {
         request.subscribed = true;
         this.requestService.subscribeToMovie(request.id)
@@ -225,26 +168,8 @@ export class MovieRequestsComponent implements OnInit {
         return false;
     }
 
-    private filterActiveStyle(el: any) {
-        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
-
-        el = el.parentElement; //gets radio div
-        el = el.parentElement; //gets form group div
-        el = el.parentElement; //gets status filter div
-        el = el.querySelectorAll("INPUT");
-        for (el of el) {
-            if (el.checked) {
-                if (!el.parentElement.classList.contains("active")) {
-                    el.parentElement.className += " active";
-                }
-            } else {
-                el.parentElement.classList.remove("active");
-            }
-        }
-    }
-
     private loadRequests(amountToLoad: number, currentlyLoaded: number) {
-        this.requestService.getMovieRequests(amountToLoad, currentlyLoaded, this.orderType, this.filter)
+        this.requestService.getMovieRequests(amountToLoad, currentlyLoaded, this.searchOptions.orderType, this.searchOptions.filter)
             .subscribe(x => {
                 this.setOverrides(x.collection);
                 if (!this.movieRequests) {
@@ -292,7 +217,7 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     private loadInit() {
-        this.requestService.getMovieRequests(this.amountToLoad, 0, this.orderType, this.filter)
+        this.requestService.getMovieRequests(this.amountToLoad, 0, this.searchOptions.orderType, this.searchOptions.filter)
             .subscribe(x => {
                 this.movieRequests = x.collection;
                 this.totalMovies = x.total;
