@@ -38,9 +38,9 @@ export class TvRequestsComponent implements OnInit {
         searchText: "",
         filter: {
             availabilityFilter: FilterType.None,
-            statusFilter: FilterType.None
+            statusFilter: FilterType.None,
         },
-        orderType: OrderType.RequestedDateDesc
+        orderType: OrderType.RequestedDateDesc,
     };
 
     public totalTv: number = 100;

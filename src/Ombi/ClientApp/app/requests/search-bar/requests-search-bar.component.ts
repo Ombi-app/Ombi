@@ -1,30 +1,31 @@
-﻿import { Component, Input, Output, EventEmitter } from "@angular/core";
-import { FilterType, IFilter, OrderType } from "../../interfaces";
+﻿import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
+import { FilterType, IFilter, OrderType } from "../../interfaces";
+
 export interface IRequestSearchModel {
-    searchText: string,
-    filter: IFilter,
-    orderType: OrderType,
+    searchText: string;
+    filter: IFilter;
+    orderType: OrderType;
 }
 
-var uniqueRadioButtonId: number = 0;
+let uniqueRadioButtonId: number = 0;
 
 @Component({
     selector: "requests-search-bar",
-    templateUrl: "./requests-search-bar.component.html"
+    templateUrl: "./requests-search-bar.component.html",
 })
 export class RequestsSearchBar {
-    @Input() searchOptions: IRequestSearchModel;
-    @Input() showFilter?: boolean;
-    @Input() showSort?: boolean;
-    @Output() searchEvent = new EventEmitter<IRequestSearchModel>();
+    @Input() public searchOptions: IRequestSearchModel;
+    @Input() public showFilter?: boolean;
+    @Input() public showSort?: boolean;
+    @Output() public searchEvent = new EventEmitter<IRequestSearchModel>();
 
-    isFilterDisplayed: boolean;
-    sortOptions: Array<{ orderType: OrderType, name: string, isActive: boolean }>;
-    availabilityFilterOptions: Array<{ groupName: string, id: string, filterType: FilterType, text: string }>;
-    requestStatusFilterOptions: Array<{ groupName: string, id: string, filterType: FilterType, text: string }>;
+    public isFilterDisplayed: boolean;
+    public sortOptions: Array<{ orderType: OrderType, name: string, isActive: boolean }>;
+    public availabilityFilterOptions: Array<{ groupName: string, id: string, filterType: FilterType, text: string }>;
+    public requestStatusFilterOptions: Array<{ groupName: string, id: string, filterType: FilterType, text: string }>;
 
     private searchChanged = new Subject<string>();
 
@@ -85,17 +86,17 @@ export class RequestsSearchBar {
         const groupName = `Availability_${uniqueRadioButtonId}`;
         return [
             {
-                groupName: groupName,
+                groupName,
                 id: `Available_${uniqueRadioButtonId}`,
                 filterType: FilterType.Available,
-                text: "Common.Available"
+                text: "Common.Available",
             },
             {
-                groupName: groupName,
+                groupName,
                 id: `NotAvailable_${uniqueRadioButtonId}`,
                 filterType: FilterType.NotAvailable,
-                text: "Common.NotAvailable"
-            }
+                text: "Common.NotAvailable",
+            },
         ];
     }
 
@@ -103,23 +104,23 @@ export class RequestsSearchBar {
         const groupName = `Status_${uniqueRadioButtonId}`;
         return [
             {
-                groupName: groupName,
+                groupName,
                 id: `Approved_${uniqueRadioButtonId}`,
                 filterType: FilterType.Approved,
-                text: "Filter.Approved"
+                text: "Filter.Approved",
             },
             {
-                groupName: groupName,
+                groupName,
                 id: `Processing_${uniqueRadioButtonId}`,
                 filterType: FilterType.Processing,
-                text: "Common.ProcessingRequest"
+                text: "Common.ProcessingRequest",
             },
             {
-                groupName: groupName,
+                groupName,
                 id: `PendingApproval_${uniqueRadioButtonId}`,
                 filterType: FilterType.PendingApproval,
-                text: "Filter.PendingApproval"
-            }
+                text: "Filter.PendingApproval",
+            },
         ];
     }
 
@@ -128,33 +129,33 @@ export class RequestsSearchBar {
             {
                 isActive: false,
                 name: "Requests.SortRequestDateAsc",
-                orderType: OrderType.RequestedDateAsc
+                orderType: OrderType.RequestedDateAsc,
             },
             {
                 isActive: false,
                 name: "Requests.SortRequestDateDesc",
-                orderType: OrderType.RequestedDateDesc
+                orderType: OrderType.RequestedDateDesc,
             },
             {
                 isActive: false,
                 name: "Requests.SortTitleAsc",
-                orderType: OrderType.TitleAsc
+                orderType: OrderType.TitleAsc,
             },
             {
                 isActive: false,
                 name: "Requests.SortTitleDesc",
-                orderType: OrderType.TitleDesc
+                orderType: OrderType.TitleDesc,
             },
             {
                 isActive: false,
                 name: "Requests.SortStatusAsc",
-                orderType: OrderType.StatusAsc
+                orderType: OrderType.StatusAsc,
             },
             {
                 isActive: false,
                 name: "Requests.SortStatusDesc",
-                orderType: OrderType.StatusDesc
-            }
+                orderType: OrderType.StatusDesc,
+            },
         ];
     }
 }

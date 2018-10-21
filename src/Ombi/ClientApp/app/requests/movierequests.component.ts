@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 
 import { AuthService } from "../auth/auth.service";
-import { IIssueCategory, IMovieRequests, IPagenator, IRadarrProfile, IRadarrRootFolder, FilterType, OrderType } from "../interfaces";
+import { FilterType, IIssueCategory, IMovieRequests, IPagenator, IRadarrProfile, IRadarrRootFolder, OrderType } from "../interfaces";
 import { NotificationService, RadarrService, RequestService } from "../services";
 import { IRequestSearchModel } from "./search-bar/requests-search-bar.component";
 
@@ -31,9 +31,9 @@ export class MovieRequestsComponent implements OnInit {
         searchText: "",
         filter: {
             availabilityFilter: FilterType.None,
-            statusFilter: FilterType.None
+            statusFilter: FilterType.None,
         },
-        orderType: OrderType.RequestedDateDesc
+        orderType: OrderType.RequestedDateDesc,
     };
 
     public totalMovies: number = 100;

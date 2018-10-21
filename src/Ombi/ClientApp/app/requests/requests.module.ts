@@ -11,9 +11,9 @@ import { MovieRequestsComponent } from "./movierequests.component";
 import { MusicRequestsComponent } from "./music/musicrequests.component";
 // Request
 import { RequestComponent } from "./request.component";
+import { RequestsSearchBar } from "./search-bar/requests-search-bar.component";
 import { TvRequestChildrenComponent } from "./tvrequest-children.component";
 import { TvRequestsComponent } from "./tvrequests.component";
-import { RequestsSearchBar } from "./search-bar/requests-search-bar.component";
 
 import { SidebarModule, TooltipModule, TreeTableModule } from "primeng/primeng";
 
@@ -46,7 +46,7 @@ const routes: Routes = [
         TvRequestsComponent,
         TvRequestChildrenComponent,
         MusicRequestsComponent,
-        RequestsSearchBar
+        RequestsSearchBar,
     ],
     exports: [
         RouterModule,

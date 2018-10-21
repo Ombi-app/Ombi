@@ -32,9 +32,9 @@ export class MusicRequestsComponent implements OnInit {
         searchText: "",
         filter: {
             availabilityFilter: FilterType.None,
-            statusFilter: FilterType.None
+            statusFilter: FilterType.None,
         },
-        orderType: OrderType.RequestedDateDesc
+        orderType: OrderType.RequestedDateDesc,
     };
 
     public totalAlbums: number = 100;
