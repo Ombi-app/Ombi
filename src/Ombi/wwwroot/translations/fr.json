@@ -17,7 +17,7 @@
     "NotAvailable": "Non disponible",
     "ProcessingRequest": "En cours de traitement",
     "PendingApproval": "En attente d'approbation",
-    "RequestDenied": "Requête refusée",
+    "RequestDenied": "Demande refusée",
     "NotRequested": "Non demandé",
     "Requested": "Demandé",
     "Request": "Demander",
@@ -45,7 +45,7 @@
   },
   "NavigationBar": {
     "Search": "Rechercher",
-    "Requests": "Requêtes",
+    "Requests": "Demandes",
     "UserManagement": "Gestion des utilisateurs",
     "Issues": "Problèmes",
     "Vote": "Vote",
@@ -72,7 +72,7 @@
     "TheatricalRelease": "Sortie en salle: {{date}}",
     "ViewOnPlex": "Regarder sur Plex",
     "ViewOnEmby": "Regarder sur Emby",
-    "RequestAdded": "La requête pour {{title}} a été ajoutée avec succès",
+    "RequestAdded": "La demande pour {{title}} a été ajoutée avec succès",
     "Similar": "Similaires",
     "Movies": {
       "PopularMovies": "Films populaires",
@@ -93,13 +93,13 @@
       "FirstSeason": "Première saison",
       "LatestSeason": "Dernière saison",
       "Select": "Sélectionner...",
-      "SubmitRequest": "Envoyer la requête",
+      "SubmitRequest": "Envoyer la demande",
       "Season": "Saison: {{seasonNumber}}",
       "SelectAllInSeason": "Tout sélectionner dans la saison {{seasonNumber}}"
     }
   },
   "Requests": {
-    "Title": "Requêtes",
+    "Title": "Demandes",
     "Paragraph": "Vous pouvez voir ci-dessous vos demandes et celles des autres, ainsi que leur statut de téléchargement et d'approbation.",
     "MoviesTab": "Films",
     "TvTab": "Émissions",
