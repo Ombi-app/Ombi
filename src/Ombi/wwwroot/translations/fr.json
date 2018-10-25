@@ -45,7 +45,7 @@
   },
   "NavigationBar": {
     "Search": "Rechercher",
-    "Requests": "Demandes",
+    "Requests": "Requêtes",
     "UserManagement": "Gestion des utilisateurs",
     "Issues": "Problèmes",
     "Vote": "Vote",
@@ -79,7 +79,7 @@
       "UpcomingMovies": "Films à venir",
       "TopRatedMovies": "Films les mieux notés",
       "NowPlayingMovies": "Films à l'affiche",
-      "HomePage": "Site du film",
+      "HomePage": "Accueil",
       "Trailer": "Bande-annonce"
     },
     "TvShows": {
@@ -93,7 +93,7 @@
       "FirstSeason": "Première saison",
       "LatestSeason": "Dernière saison",
       "Select": "Sélectionner...",
-      "SubmitRequest": "Envoyer la demande",
+      "SubmitRequest": "Envoyer la requête",
       "Season": "Saison: {{seasonNumber}}",
       "SelectAllInSeason": "Tout sélectionner dans la saison {{seasonNumber}}"
     }
