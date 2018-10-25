@@ -207,7 +207,11 @@ namespace Ombi
             var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
             jobSetup.Setup();
             ctx.Seed();
-            
+            var settingsctx = serviceProvider.GetService<ISettingsContext>();
+            var externalctx = serviceProvider.GetService<IExternalContext>();
+            settingsctx.Seed();
+            externalctx.Seed();
+
             var provider = new FileExtensionContentTypeProvider { Mappings = { [".map"] = "application/octet-stream" } };
 
             app.UseStaticFiles(new StaticFileOptions()

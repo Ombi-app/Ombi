@@ -6,6 +6,34 @@
 
 ## v3.0.3919 (2018-10-18)
 
+### **Fixes**
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- Fixed the issue with mobile notifications. [Jamie]
+
+- Fixed #2514. [Jamie]
+
+
+## v3.0.3923 (2018-10-19)
+
+### **New Features**
+
+- Update CHANGELOG.md. [Jamie]
+
+### **Fixes**
+
+- Fixed #2601. [Jamie]
+
+
+## v3.0.3919 (2018-10-17)
+
 ### **New Features**
 
 - Added automation tests for the voting feature. [TidusJar]
