@@ -29,7 +29,7 @@
     }
   },
   "PasswordReset": {
-    "EmailAddressPlaceholder": "Adresse e-mail",
+    "EmailAddressPlaceholder": "Courriel",
     "ResetPasswordButton": "Réinitialiser le mot de passe"
   },
   "LandingPage": {
@@ -79,7 +79,7 @@
       "UpcomingMovies": "Films à venir",
       "TopRatedMovies": "Films les mieux notés",
       "NowPlayingMovies": "Films à l'affiche",
-      "HomePage": "Site du film",
+      "HomePage": "Accueil",
       "Trailer": "Bande-annonce"
     },
     "TvShows": {
