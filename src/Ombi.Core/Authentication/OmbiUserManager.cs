@@ -110,7 +110,7 @@ namespace Ombi.Core.Authentication
             if (plexAccount?.user != null)
             {
                 var potentialOmbiUser = await Users.FirstOrDefaultAsync(x =>
-                    x.ProviderUserId.Equals(plexAccount.user.id, StringComparison.InvariantCultureIgnoreCase));
+                    x.ProviderUserId == plexAccount.user.id);
                 return potentialOmbiUser;
             }
 
