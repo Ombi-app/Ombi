@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Models.Search;
@@ -103,6 +104,21 @@ namespace Ombi.Core.Rule.Rules.Search
                         if (search.SeasonRequests.All(x => x.Episodes.All(e => e.Available)))
                         {
                             search.FullyAvailable = true;
+                        }
+                        else
+                        {
+                            var airedButNotAvailable = search.SeasonRequests.Any(x =>
+                                x.Episodes.Any(c => !c.Available && c.AirDate <= DateTime.Now.Date));
+                            if (!airedButNotAvailable)
+                            {
+                                var unairedEpisodes = search.SeasonRequests.Any(x =>
+                                    x.Episodes.Any(c => !c.Available && c.AirDate > DateTime.Now.Date));
+                                if (unairedEpisodes)
+                                {
+                                    search.FullyAvailable = true;
+                                }
+                            }
+                            
                         }
                     }
                 }

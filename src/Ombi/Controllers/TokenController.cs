@@ -96,6 +96,9 @@ namespace Ombi.Controllers
             return new UnauthorizedResult();
         }
 
+        /// <summary>
+        /// Returns the Token for the Ombi User if we can match the Plex user with a valid Ombi User
+        /// </summary>
         [HttpPost("plextoken")]
         public async Task<IActionResult> GetTokenWithPlexToken([FromBody] PlexTokenAuthentication model)
         {
