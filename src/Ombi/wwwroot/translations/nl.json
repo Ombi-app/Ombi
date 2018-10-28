@@ -12,8 +12,8 @@
   "Common": {
     "ContinueButton": "Doorgaan",
     "Available": "Beschikbaar",
-    "PartiallyAvailable": "Partially Available",
-    "Monitored": "Monitored",
+    "PartiallyAvailable": "Deels Beschikbaar",
+    "Monitored": "Gecontroleerd",
     "NotAvailable": "Niet Beschikbaar",
     "ProcessingRequest": "Verzoek wordt verwerkt",
     "PendingApproval": "Wacht op goedkeuring",
@@ -48,7 +48,7 @@
     "Requests": "Verzoeklijst",
     "UserManagement": "Gebruikersbeheer",
     "Issues": "Problemen",
-    "Vote": "Vote",
+    "Vote": "Stem",
     "Donate": "Doneer!",
     "DonateLibraryMaintainer": "Doneren aan bibliotheek beheerder",
     "DonateTooltip": "Zo heb ik mijn vrouw overtuigd dat ik Ombi mag ontwikkelen ;)",
@@ -56,9 +56,9 @@
     "Settings": "Instellingen",
     "Welcome": "Welkom {{username}}",
     "UpdateDetails": "Update gegevens",
-    "Logout": "Logout",
+    "Logout": "Afmelden",
     "OpenMobileApp": "Open Mobiele App",
-    "RecentlyAdded": "Recently Added"
+    "RecentlyAdded": "Onlangs Toegevoegd"
   },
   "Search": {
     "Title": "Zoeken",
@@ -68,7 +68,7 @@
     "MusicTab": "Muziek",
     "Suggestions": "Suggesties",
     "NoResults": "Sorry, we hebben geen resultaten gevonden!",
-    "DigitalDate": "Digital Release: {{date}}",
+    "DigitalDate": "Digitale Uitgave: {{date}}",
     "TheatricalRelease": "Theatrical Release: {{date}}",
     "ViewOnPlex": "Bekijk op Plex",
     "ViewOnEmby": "Bekijk op Emby",
