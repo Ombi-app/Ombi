@@ -25,7 +25,7 @@
     "Approve": "Accepteer",
     "PartlyAvailable": "Deels Beschikbaar",
     "Errors": {
-      "Validation": "Fout: Controleer de ingevulde waardes"
+      "Validation": "Controleer de ingevulde waardes"
     }
   },
   "PasswordReset": {
@@ -69,11 +69,11 @@
     "Suggestions": "Suggesties",
     "NoResults": "Sorry, we hebben geen resultaten gevonden!",
     "DigitalDate": "Digitale Uitgave: {{date}}",
-    "TheatricalRelease": "Theatrical Release: {{date}}",
+    "TheatricalRelease": "Bioscoop Uitgave: {{date}}",
     "ViewOnPlex": "Bekijk op Plex",
     "ViewOnEmby": "Bekijk op Emby",
     "RequestAdded": "Aanvraag voor {{title}} is succesvol toegevoegd",
-    "Similar": "Similar",
+    "Similar": "Vergelijkbaar",
     "Movies": {
       "PopularMovies": "Populaire films",
       "UpcomingMovies": "Aankomende Films",
@@ -108,10 +108,10 @@
     "Status": "Status:",
     "RequestStatus": "Aanvraagstatus:",
     "Denied": " Geweigerd:",
-    "TheatricalRelease": "Theatrical Release: {{date}}",
-    "ReleaseDate": "Released: {{date}}",
-    "TheatricalReleaseSort": "Theatrical Release",
-    "DigitalRelease": "Digital Release: {{date}}",
+    "TheatricalRelease": "Cinema Uitgave: {{date}}",
+    "ReleaseDate": "Uitgekomen: {{date}}",
+    "TheatricalReleaseSort": "Bioscoop Uitgave",
+    "DigitalRelease": "Digitale Uitgave: {{date}}",
     "RequestDate": "Aanvraag Datum:",
     "QualityOverride": "Kwaliteit overschrijven:",
     "RootFolderOverride": "Hoofdmap overschrijven:",
@@ -127,20 +127,20 @@
     "GridStatus": "Status",
     "ReportIssue": "Probleem Melden",
     "Filter": "Filter",
-    "Sort": "Sort",
+    "Sort": "Sorteer",
     "SeasonNumberHeading": "Seizoen: {seasonNumber}",
     "SortTitleAsc": "Titel ▲",
     "SortTitleDesc": "Titel ▼",
-    "SortRequestDateAsc": "Request Date ▲",
-    "SortRequestDateDesc": "Request Date ▼",
+    "SortRequestDateAsc": "Aanvraag Datum ▲",
+    "SortRequestDateDesc": "Aanvraag Datum ▼",
     "SortStatusAsc": "Status ▲",
     "SortStatusDesc": "Status ▼",
     "Remaining": {
-      "Quota": "{{remaining}}/{{total}} requests remaining",
-      "NextDays": "Another request will be added in {{time}} days",
-      "NextHours": "Another request will be added in {{time}} hours",
-      "NextMinutes": "Another request will be added in {{time}} minutes",
-      "NextMinute": "Another request will be added in {{time}} minute"
+      "Quota": "{{remaining}}/{{total}} resterende aanvragen",
+      "NextDays": "Een ander verzoek zal worden toegevoegd in {{time}} Dagen",
+      "NextHours": "Een ander verzoek zal worden toegevoegd in {{time}} Dagen",
+      "NextMinutes": "Een ander verzoek zal worden toegevoegd in {{time}} Minuten",
+      "NextMinute": "Een ander verzoek zal worden toegevoegd in {{time}} Minuten"
     }
   },
   "Issues": {
@@ -167,18 +167,18 @@
     "FilterHeaderAvailability": "Beschikbaarheid",
     "FilterHeaderRequestStatus": "Status",
     "Approved": "Goedgekeurd",
-    "PendingApproval": "Pending Approval"
+    "PendingApproval": "In afwachting van goedkeuring"
   },
   "UserManagment": {
-    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
-    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
-    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
-    "TvDue": "TV: {{date}}",
+    "TvRemaining": "Tv: {{remaining}}/{{total}} Resterend",
+    "MovieRemaining": "Tv: {{remaining}}/{{total}} Resterend",
+    "MusicRemaining": "Muziek: {{remaining}}/{{total}} Resterend",
+    "TvDue": "Tv: {{date}}",
     "MovieDue": "Film: {{date}}",
     "MusicDue": "Muziek: {{date}}"
   },
   "Votes": {
-    "CompletedVotesTab": "Voted",
-    "VotesTab": "Votes Needed"
+    "CompletedVotesTab": "Gestemd",
+    "VotesTab": "Stemmen nodig"
   }
 }
