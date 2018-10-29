@@ -138,9 +138,9 @@
     "Remaining": {
       "Quota": "{{remaining}}/{{total}} resterende aanvragen",
       "NextDays": "Een ander verzoek zal worden toegevoegd in {{time}} Dagen",
-      "NextHours": "Een ander verzoek zal worden toegevoegd in {{time}} Dagen",
+      "NextHours": "Een ander verzoek zal worden toegevoegd in {{time}} Uren",
       "NextMinutes": "Een ander verzoek zal worden toegevoegd in {{time}} Minuten",
-      "NextMinute": "Een ander verzoek zal worden toegevoegd in {{time}} Minuten"
+      "NextMinute": "Een ander verzoek zal worden toegevoegd in {{time}} Minuut"
     }
   },
   "Issues": {
