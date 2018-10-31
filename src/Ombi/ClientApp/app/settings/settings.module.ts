@@ -19,6 +19,7 @@ import { CouchPotatoComponent } from "./couchpotato/couchpotato.component";
 import { CustomizationComponent } from "./customization/customization.component";
 import { DogNzbComponent } from "./dognzb/dognzb.component";
 import { EmbyComponent } from "./emby/emby.component";
+import { IssueEditorComponent } from "./issues/issue-editor.component";
 import { IssuesComponent } from "./issues/issues.component";
 import { JobsComponent } from "./jobs/jobs.component";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
@@ -130,6 +131,10 @@ const routes: Routes = [
         NewsletterComponent,
         LidarrComponent,
         VoteComponent,
+        IssueEditorComponent,
+    ],
+    entryComponents:[
+        IssueEditorComponent,
     ],
     exports: [
         RouterModule,

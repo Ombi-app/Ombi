@@ -11,7 +11,7 @@
                 <span *ngIf="issue.status === IssueStatus.InProgress" id="inprogressLabel" class="label label-info">{{IssueStatus[issue.status]}}</span>
                 <span *ngIf="issue.status === IssueStatus.Resolved" id="resolvedLabel" class="label label-success">{{IssueStatus[issue.status]}}</span>
             </div>
-            <span class="label label-success">{{issue.issueCategory.value}}</span>
+            <span class="label label-success">{{issue.issueCategory.name}}</span>
             <br>
             <span class="reported-by">
                 <h3 *ngIf="issue.userReported?.alias">{{'Issues.ReportedBy' | translate}}:</h3>

@@ -17,8 +17,12 @@ export class IssuesService extends ServiceHelpers {
         return this.http.get<IIssueCategory[]>(`${this.url}categories/`,  {headers: this.headers});
     }
 
-    public createCategory(cat: IIssueCategory): Observable<boolean> {
-        return this.http.post<boolean>(`${this.url}categories/`, JSON.stringify(cat), {headers: this.headers});
+    public createCategory(cat: IIssueCategory): Observable<IIssueCategory> {
+        return this.http.post<IIssueCategory>(`${this.url}categories/`, JSON.stringify(cat), {headers: this.headers});
+    }
+
+    public updateCategory(cat: IIssueCategory): Observable<IIssueCategory> {
+        return this.http.patch<IIssueCategory>(`${this.url}categories/${cat.id}`, JSON.stringify(cat), {headers: this.headers});
     }
 
     public deleteCategory(cat: number): Observable<boolean> {

@@ -10,13 +10,11 @@ using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Attributes;
-using Ombi.Core;
 using Ombi.Core.Notifications;
 using Ombi.Helpers;
 using Ombi.Models;
 using Ombi.Notifications.Models;
 using Ombi.Store.Entities;
-using StackExchange.Profiling.Helpers;
 
 namespace Ombi.Controllers
 {
@@ -58,14 +56,38 @@ namespace Ombi.Controllers
         /// <returns></returns>
         [PowerUser]
         [HttpPost("categories")]
-        public async Task<bool> CreateCategory([FromBody]IssueCategory cat)
+        public async Task<IActionResult> CreateCategory([FromBody]IssueCategory cat)
         {
             var result = await _categories.Add(cat);
             if (result.Id > 0)
             {
-                return true;
+                return Ok(result);
             }
-            return false;
+            return BadRequest();
+        }
+
+        /// <summary>
+        /// Updates existing category
+        /// </summary>
+        /// <param name="catId"></param>
+        /// <param name="cat"></param>
+        /// <returns></returns>
+        [PowerUser]
+        [HttpPatch("categories/{catId}")]
+        public async Task<IActionResult> UpdateCategory([FromRoute]int catId, [FromBody]IssueCategory cat)
+        {
+            var existingCategory = await _categories.GetAll().FirstOrDefaultAsync(x => x.Id == catId);
+            if (existingCategory == null)
+            {
+                return BadRequest();
+            }
+
+            existingCategory.Name = cat.Name;
+            existingCategory.SubjectPlaceholder = cat.SubjectPlaceholder;
+            existingCategory.DescriptionPlaceholder = cat.DescriptionPlaceholder;
+            await _categories.SaveChangesAsync();
+
+            return Ok(existingCategory);
         }
 
         /// <summary>
@@ -296,7 +318,7 @@ namespace Ombi.Controllers
         {
             notificationModel.Substitutes.Add("Title", issue.Title);
             notificationModel.Substitutes.Add("IssueDescription", issue.Description);
-            notificationModel.Substitutes.Add("IssueCategory", issue.IssueCategory?.Value);
+            notificationModel.Substitutes.Add("IssueCategory", issue.IssueCategory?.Name);
             notificationModel.Substitutes.Add("IssueStatus", issue.Status.ToString());
             notificationModel.Substitutes.Add("IssueSubject", issue.Subject);
             notificationModel.Substitutes.Add("IssueUser", issueReportedUsername);

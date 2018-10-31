@@ -102,7 +102,7 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <li *ngFor="let cat of issueCategories"><a [routerLink]="" (click)="reportIssue(cat, result)">{{cat.value}}</a></li>
+                <li *ngFor="let cat of issueCategories"><a [routerLink]="" (click)="reportIssue(cat, result)">{{cat.name}}</a></li>
             </ul>
         </div> 
 

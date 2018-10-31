@@ -1,8 +1,10 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { IIssueCategory } from "../../interfaces";
 import { IssuesService, NotificationService, SettingsService } from "../../services";
+import { IssueEditorComponent } from "./issue-editor.component";
 
 @Component({
     templateUrl: "./issues.component.html",
@@ -10,13 +12,13 @@ import { IssuesService, NotificationService, SettingsService } from "../../servi
 export class IssuesComponent implements OnInit {
 
     public categories: IIssueCategory[];
-    public categoryToAdd: IIssueCategory = {id: 0, value: ""};
     public form: FormGroup;
 
     constructor(private issuesService: IssuesService,
                 private settingsService: SettingsService,
                 private readonly fb: FormBuilder,
-                private notificationService: NotificationService) {  }
+                private notificationService: NotificationService,
+                private modalService: NgbModal) {  }
 
     public ngOnInit() {
         this.settingsService.getIssueSettings().subscribe(x => {
@@ -31,18 +33,40 @@ export class IssuesComponent implements OnInit {
     }    
 
     public addCategory(): void {
-        this.issuesService.createCategory(this.categoryToAdd).subscribe(x => {
-            if(x) {
-                this.getCategories();
-                this.categoryToAdd.value = "";
-            }
-        });
+        const modalRef = this.modalService.open(IssueEditorComponent, 
+            { container:"ombi", backdropClass:"custom-modal-backdrop", windowClass:"window" });
+        const modalComponent = <IssueEditorComponent> modalRef.componentInstance;
+        modalComponent.issueCategory = {
+            id: 0,
+            name: "",
+            subjectPlaceholder: "",
+            descriptionPlaceholder: "",
+        };
+        modalComponent.onSuccessfulEdit.subscribe(
+            (newCategory: IIssueCategory) => { this.categories.push(newCategory); });
+    }
+
+    public editCategory(categoryToEdit: IIssueCategory): void {
+        console.log(categoryToEdit);
+        const modalRef = this.modalService.open(IssueEditorComponent, 
+            { container: "ombi", backdropClass: "custom-modal-backdrop", windowClass: "window" });
+        const modalComponent = <IssueEditorComponent> modalRef.componentInstance;
+        modalComponent.issueCategory = categoryToEdit;
+
+        modalComponent.onSuccessfulEdit.subscribe(
+            (updatedCategory: IIssueCategory) => {
+                this.categories = this.categories.map(c => {
+                    return c.id === updatedCategory.id ? updatedCategory : c;
+                });
+            });
     }
 
     public deleteCategory(id: number) {
         this.issuesService.deleteCategory(id).subscribe(x => {
-            if(x) {
-                this.getCategories();
+            if (x) {
+                this.categories = this.categories.filter(c => {
+                    return c.id === id;
+                });
             }
         });
     }

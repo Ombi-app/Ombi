@@ -5,6 +5,8 @@ namespace Ombi.Store.Entities.Requests
     [Table("IssueCategory")]
     public class IssueCategory : Entity
     {
-        public string Value { get; set; }
+        public string Name { get; set; }
+        public string SubjectPlaceholder { get; set; }
+        public string DescriptionPlaceholder { get; set; }
     }
 }

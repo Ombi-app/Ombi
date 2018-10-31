@@ -90,7 +90,7 @@
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                                 <li *ngFor="let cat of issueCategories">
-                                    <a [routerLink]="" (click)="reportIssue(cat, node)">{{cat.value}}</a>
+                                    <a [routerLink]="" (click)="reportIssue(cat, node)">{{cat.name}}</a>
                                 </li>
                             </ul>
                         </div>

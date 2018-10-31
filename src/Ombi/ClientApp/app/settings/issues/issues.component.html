@@ -3,71 +3,70 @@
 
 <fieldset>
     <legend>Issues</legend>
-    <form *ngIf="form" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:5%;">
-        <div class="col-md-6">
-            <div class="form-group">
-                <div class="checkbox">
-                    <input type="checkbox" id="enable" formControlName="enabled" ng-checked="form.enabled">
-                    <label for="enable">Enable</label>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <input type="checkbox" id="enableInProgress" formControlName="enableInProgress" ng-checked="form.enableInProgress">
-                    <label for="enableInProgress">Enable In Progress State</label>
-                </div>
-            </div>
 
-            <div class="form-group">
-                <div class="checkbox">
-                    <input type="checkbox" id="deleteIssues" formControlName="deleteIssues" ng-checked="form.deleteIssues">
-                    <label for="deleteIssues">Delete issues after they have been resolved</label>
+    <div class="row">
+        <div class=" col-sm-6" style="padding-top: 5%; padding-bottom: 5%;">
+            <form *ngIf="form" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="enable" formControlName="enabled" ng-checked="form.enabled">
+                        <label for="enable">Enable</label>
+                    </div>
                 </div>
-            </div>
-
-            <div class="form-group" *ngIf="form.controls.deleteIssues.value">
-                <label for="daysAfterResolvedToDelete" class="control-label">Leave the resolved issue for X amount of
-                    days before deletion</label>
-                <input type="number" class="form-control form-control-custom form-small" min="1" max="365" id="daysAfterResolvedToDelete"
-                    formControlName="daysAfterResolvedToDelete" ng-checked="form.daysAfterResolvedToDelete">
-            </div>
-
-
-            <div class="form-group">
-                <div>
-                    <button type="submit" [disabled]="form.invalid" class="btn btn-primary-outline ">Submit</button>
+               
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="enableInProgress" formControlName="enableInProgress" ng-checked="form.enableInProgress">
+                        <label for="enableInProgress">Enable In Progress State</label>
+                    </div>
                 </div>
-            </div>
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="deleteIssues" formControlName="deleteIssues" ng-checked="form.deleteIssues">
+                        <label for="deleteIssues">Delete issues after they have been resolved</label>
+                    </div>
+                </div>
+
+                <div class="form-group" *ngIf="form.controls.deleteIssues.value">
+                    <label for="daysAfterResolvedToDelete" class="control-label">
+                        Leave the resolved issue for X amount of
+                        days before deletion
+                    </label>
+                    <input type="number" class="form-control form-control-custom form-small" min="1" max="365" id="daysAfterResolvedToDelete"
+                           formControlName="daysAfterResolvedToDelete" ng-checked="form.daysAfterResolvedToDelete">
+                </div>
+
+                <div class="form-group">
+                    <div>
+                        <button type="submit" [disabled]="form.invalid" class="btn btn-primary-outline ">Submit</button>
+                    </div>
+                </div>
+            </form>
         </div>
 
-    </form>
-
-
-
-
-
-    <div class="col-md-6">
-        <div *ngIf="categories">
-            <div class="form-group row">
-                <div class="col-md-12">
-                    <label for="categoryToAdd" class="control-label">Add Category</label>
-                </div>
-                <div class="col-md-9">
-                    <input type="text" [(ngModel)]="categoryToAdd.value" class="form-control form-control-custom " id="categoryToAdd"
-                        name="categoryToAdd" value="{{categoryToAdd.value}}">
-                </div>
-                <div class="col-md-3">
-                    <button class="btn btn-primary-outline" (click)="addCategory()">Add</button>
-                </div>
-            </div>
-
-            <div class="row">
-                <div *ngFor="let cat of categories">
-                    <div class="col-md-9">
-                        {{cat.value}}
+        <div class="col-sm-6" style="padding-top: 5%; padding-bottom: 5%;">
+            <div *ngIf="categories">
+                <div class="form-group row">
+                    <div class="col-xs-8">
+                        <h4>Categories</h4>
                     </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-sm btn-danger-outline" (click)="deleteCategory(cat.id)">Delete</button>
+
+                    <div class="col-xs-4">
+                        <button class="btn btn-primary-outline" (click)="addCategory()">New</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div *ngFor="let cat of categories">
+                        <div class="col-md-8" style="overflow-wrap: break-word">
+                            {{cat.name}}
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-sm btn-primary-outline" (click)="editCategory(cat)">Edit</button>
+                            <button class="btn btn-sm btn-danger-outline" (click)="deleteCategory(cat.id)">Delete</button>
+                        </div>
+          
                     </div>
                 </div>
             </div>

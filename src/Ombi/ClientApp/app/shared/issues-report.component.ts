@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
 
 import { IIssueCategory, IIssues, IssueStatus, RequestType } from "../interfaces";
 import { IssuesService, NotificationService } from "../services";
@@ -8,7 +8,7 @@ import { IssuesService, NotificationService } from "../services";
     templateUrl: "issues-report.component.html",
 
 })
-export class IssuesReportComponent {
+export class IssuesReportComponent implements OnChanges {
     @Input() public visible: boolean;
     @Input() public id: number; // RequestId
     @Input() public title: string;
@@ -21,56 +21,44 @@ export class IssuesReportComponent {
     @Output() public visibleChange = new EventEmitter<boolean>();
 
     public submitted: boolean = false;
-
-    get getTitle(): string {
-        return this.title;
-    }
-
     public issue: IIssues;
 
     constructor(private issueService: IssuesService,
                 private notification: NotificationService) {
-        this.issue = {
-            subject: "",
-            description: "",
-            issueCategory: { value: "", id: 0 },
-            status: IssueStatus.Pending,
-            resolvedDate: undefined,
-            id: undefined,
-            issueCategoryId: 0,
-            comments: [],
-            requestId: undefined,
-            requestType: RequestType.movie,
-            title: "",
-            providerId: "",
-            userReported: undefined,
-        };
+    }
+
+    public ngOnChanges() {
+        if (this.visible && this.title) {
+            this.issue = {
+                subject: "",
+                description: "",
+                issueCategory: this.issueCategory,
+                issueCategoryId: this.issueCategory.id,
+                status: IssueStatus.Pending,
+                resolvedDate: undefined,
+                id: undefined,
+                comments: [],
+                requestId: this.id,
+                requestType: this.movie ? RequestType.movie : RequestType.tvShow,
+                title: this.title,
+                providerId: this.providerId,
+                userReported: undefined,
+            };
+        }
     }
 
     public submit() {
         this.submitted = true;
-        const issue = this.issue;
-        issue.requestId = this.id;
-        issue.issueCategory = this.issueCategory;
-        issue.issueCategoryId = this.issueCategory.id;
-        issue.title = this.title;
-        issue.providerId = this.providerId;
-        if (this.movie) {
-            issue.requestType = RequestType.movie;
-        } else {
-            issue.requestType = RequestType.tvShow;
-        }
-        this.issueService.createIssue(issue).subscribe(x => {
+        this.issueService.createIssue(this.issue).subscribe(x => {
             if (x) {
                 this.notification.success("Issue Created");
+                this.hide();
             }
         });
-
     }
 
     public hide(): void {
         this.submitted = false;
-        this.visible = !this.visible;
-        this.visibleChange.emit(this.visible);
+        this.visibleChange.emit(false);
     }
 }

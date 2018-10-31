@@ -7,9 +7,9 @@
                         <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
                     </span>
                 </th>
-                <th (click)="setOrder('issueCategory.value', $event)">
+                <th (click)="setOrder('issueCategory.name', $event)">
                     <a [translate]="'Issues.Category'"></a>
-                    <span *ngIf="order === 'issueCategory.value'">
+                    <span *ngIf="order === 'issueCategory.name'">
                             <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
                     </span>
                 </th>
@@ -35,7 +35,7 @@
                     {{issue.title}}
                 </td>
                 <td>
-                    {{issue.issueCategory.value}}
+                    {{issue.issueCategory.name}}
                 </td>
                 <td>
                     {{IssueStatus[issue.status] | humanize}}

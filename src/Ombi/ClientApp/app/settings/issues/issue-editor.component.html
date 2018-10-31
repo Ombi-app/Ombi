@@ -1,0 +1,30 @@
+<div class="modal-header">
+    <h3>{{title}}</h3>
+</div>
+
+<div class="modal-body">
+    <div>
+        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+            <div class="form-group">
+                <label for="name" class="control-label">Name</label>
+                <input type="text" class="form-control form-control-custom " id="issueName" name="issueName" p formControlName="name" [ngClass]="{'form-error': form.get('name').hasError('required')}">
+                <small *ngIf="form.get('name').hasError('required')" class="error-text">The Name is required</small>
+            </div>
+
+            <div class="form-group">
+                <label for="subjectPlaceholder" class="control-label">Subject Placeholder</label>
+                <input type="text" class="form-control form-control-custom " formControlName="subjectPlaceholder">
+            </div>
+
+            <div class="form-group">
+                <label for="descriptionPlaceholder" class="control-label">Description Placeholder</label>
+                <textarea type="text" class="form-control form-control-custom" formControlName="descriptionPlaceholder" rows="5"></textarea>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary-outline" (click)="onSubmit(form)" [disabled]="form.invalid">{{submitFormButtonText}}</button>
+    <button type="button" class="btn btn-danger-outline" (click)="activeModal.close('Close click')">Close</button>
+</div>
