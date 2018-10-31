@@ -3,7 +3,7 @@
 </div>
 
 <div class="modal-body">
-    <div>
+    <div *ngIf="form">
         <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
             <div class="form-group">
                 <label for="name" class="control-label">Name</label>
