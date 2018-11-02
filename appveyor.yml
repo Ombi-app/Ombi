@@ -6,7 +6,7 @@ environment:
   typescript_version: "3.0.1"  
   github_auth_token:
     secure: H/7uCrjmWHGJxgN3l9fbhhdVjvvWI8VVF4ZzQqeXuJwAf+PgSNBdxv4SS+rMQ+RH
-  sonarrcloud_token:
+  sonarrcloudtoken:
     secure: WGkIog4wuMSx1q5vmSOgIBXMtI/leMpLbZhi9MJnJdBBuDfcv12zwXg3LQwY0WbE
 
 install:
@@ -17,10 +17,10 @@ install:
   - cmd: tsc -v
 build_script:
   - dotnet tool install --global dotnet-sonarscanner
-  - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { dotnet sonarscanner begin /k:"tidusjar_Ombi"  /d:sonar.organization="tidusjar-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$env.sonarrcloud_token" /d:sonar.analysis.mode="preview" /d:sonar.github.pullRequest="$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:sonar.github.repository="https://github.com/tidusjar/ombi" /d:sonar.github.oauth="$env.github_auth_token" }
-  - ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { dotnet sonarscanner begin /k:"tidusjar_Ombi"  /d:sonar.organization="tidusjar-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$env.sonarrcloud_token" }
+ #- ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { dotnet sonarscanner begin /k:"tidusjar_Ombi"  /d:sonar.organization="tidusjar-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$env.sonarrcloud_token" /d:sonar.analysis.mode="preview" /d:sonar.github.pullRequest="$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:sonar.github.repository="https://github.com/tidusjar/ombi" /d:sonar.github.oauth="$env.github_auth_token" }
+  - ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { dotnet sonarscanner begin /k:"tidusjar_Ombi"  /d:sonar.organization="tidusjar-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$env.SONARRCLOUDTOKEN" }
   - ps: ./build.ps1 --settings_skipverification=true
-  - dotnet sonarscanner end /d:"sonar.login=%sonarrcloud_token%"
+  - dotnet sonarscanner end /d:sonar.login="%sonarrcloudtoken%"
 
 test: off
 
