@@ -20,7 +20,7 @@ build_script:
   - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { dotnet sonarscanner begin /k:"tidusjar_Ombi" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.login=%sonarrcloud_token%" /d:"sonar.analysis.mode=preview" /d:"sonar.github.pullRequest=$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.github.repository=https://github.com/tidusjar/ombi" /d:"sonar.github.oauth=%github_auth_token%" }
   - ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { dotnet sonarscanner begin /k:"tidusjar_Ombi" /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.login=%sonarrcloud_token%" }
   - ps: ./build.ps1 --settings_skipverification=true
-  - dotnet sonarscanner end /d:"sonar.login=YourSonarQubeToken"
+  - dotnet sonarscanner end /d:"sonar.login=%sonarrcloud_token%"
 
 test: off
   
