@@ -1,5 +1,6 @@
-﻿<!doctype html>
+<!doctype html>
 <html>
+
 <head>
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -27,6 +28,8 @@
             mso-table-lspace: 0pt;
             mso-table-rspace: 0pt;
             width: 100%;
+            background-color: #1f1f1f;
+            color: #fff;
         }
 
         table td {
@@ -35,16 +38,23 @@
             vertical-align: top;
         }
 
-        .body {
-            width: 100%;
-        }
-
         .container {
             display: block;
             margin: 0 auto !important;
-            max-width: 1042px;
             padding: 10px;
-            width: 1042px;
+        }
+
+        .preheader {
+            color: transparent;
+            display: none;
+            height: 0;
+            max-height: 0;
+            max-width: 0;
+            opacity: 0;
+            overflow: hidden;
+            mso-hide: all;
+            visibility: hidden;
+            width: 0;
         }
 
         .content {
@@ -62,8 +72,9 @@
 
         .wrapper {
             box-sizing: border-box;
-            padding: 5px;
+            padding: 20px;
             overflow: auto;
+
         }
 
         .content-block {
@@ -77,6 +88,16 @@
             text-align: center;
             width: 100%;
             font-size: 12px;
+        }
+
+        .introtxt {
+            color: #fff;
+            font-family: sans-serif;
+            font-size: 20px;
+            font-weight: normal;
+            margin: 0;
+            Margin-bottom: 15px;
+            text-align: center;
         }
 
         .footer td,
@@ -120,16 +141,13 @@
                 margin-bottom: 10px !important;
                 margin-left: auto !important;
             }
-
             table[class=body] h1 {
                 font-size: 28px !important;
             }
-
             table[class=body] .container {
                 padding: 0 !important;
                 width: 100% !important;
             }
-
             table[class=body] .main {
                 border-left-width: 0 !important;
                 border-radius: 0 !important;
@@ -147,37 +165,33 @@
                 text-decoration: none !important;
             }
         }
+
     </style>
 </head>
-<body class="" style="font-family: 'Open Sans', Helvetica, Arial, sans-serif;-webkit-font-smoothing: antialiased;font-size: 14px;line-height: 1.4;margin: 0;padding: 0;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
-    <table border="0" cellpadding="0" cellspacing="0" class="body" style="border-collapse: separate;mso-table-lspace: 0pt;mso-table-rspace: 0pt;width: 100%; background-color: #1f1f1f; color: #fff;">
+
+<body>
+    <table border="0" cellpadding="0" cellspacing="0" class="body">
         <tr>
-            <td class="container" style="font-family: 'Open Sans', Helvetica, Arial, sans-serif;font-size: 14px;vertical-align: top;display: block;max-width: 1042px;padding: 10px;width: 1042px;margin: 0 auto !important;">
-                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 1037px; padding: 10px;">
-
+            <td class="container">
+                <div class="content">
                     <!-- START CENTERED WHITE CONTAINER -->
-                    <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Ombi Recently Added</span>
-                    <table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 3px;">
-
+                    <span class="preheader">Ombi Recently Added</span>
+                    <table class="main">
                         <!-- START MAIN CONTENT AREA -->
                         <tr>
-                            <td class="wrapper" style="font-family: sans-serif; font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;" valign="top">
-                                <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; max-width: 1042px; width: 100%;">
+                            <td class="wrapper" valign="top">
+                                <table border="0" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td align="center">
-                                            <img src="{@LOGO}" width="400px" text-align="center"/>
+                                            <img src="{@LOGO}" width="100%" text-align="center" />
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">
-                                            <br />
-                                            <br />
-                                            <p style="color: #fff; font-family: sans-serif; font-size: 20px; font-weight: normal; margin: 0; Margin-bottom: 15px; text-align: center;">{@INTRO}</p>
-
+                                        <td valign="top">
+                                            <p class="introtxt">{@INTRO}</p>
                                         </td>
                                     </tr>
                                 </table>
-
                             </td>
                         </tr>
                         <tr>
