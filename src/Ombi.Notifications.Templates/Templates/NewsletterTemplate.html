@@ -6,21 +6,22 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Ombi</title>
     <style type="text/css">
-        img {
-            border: none;
-            -ms-interpolation-mode: bicubic;
-            max-width: 100%;
-        }
-
         body {
             font-family: 'Open Sans', Helvetica, Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
             font-size: 14px;
             line-height: 1.4;
-            margin: 0;
+            margin: 0 auto;
             padding: 0;
             -ms-text-size-adjust: 100%;
             -webkit-text-size-adjust: 100%;
+            display: flex;
+        }
+
+        img {
+            border: none;
+            -ms-interpolation-mode: bicubic;
+            max-width: 100%;
         }
 
         table {
@@ -33,20 +34,20 @@
         }
 
         table td {
-            font-family: 'Open Sans', Helvetica, Arial, sans-serif;
             font-size: 14px;
             vertical-align: top;
         }
 
         .container {
-            display: block;
+            display: flex;
             margin: 0 auto !important;
             padding: 10px;
+            overflow: auto;
         }
 
         .preheader {
             color: transparent;
-            display: none;
+            display: none !important;
             height: 0;
             max-height: 0;
             max-width: 0;
@@ -59,7 +60,6 @@
 
         .content {
             box-sizing: border-box;
-            display: block;
             margin: 0 auto;
             max-width: 1037px;
             padding: 10px;
@@ -68,6 +68,7 @@
         .main {
             border-radius: 3px;
             width: 100%;
+            display: flex;
         }
 
         .wrapper {
@@ -111,14 +112,12 @@
 
         h1 {
             color: #ffffff;
-            font-family: 'Open Sans', Helvetica, Arial, sans-serif;
             font-weight: 400;
             margin: 0;
             color: #ff761b;
         }
 
         p {
-            font-family: 'Open Sans', Helvetica, Arial, sans-serif;
             font-weight: 400;
             margin: 0;
         }
@@ -135,20 +134,20 @@
 
         @media only screen and (max-width: 1040px) {
             .media-card {
-                display: block !important;
+                display: flex !important;
                 margin-top: 0 !important;
                 margin-right: auto !important;
                 margin-bottom: 10px !important;
                 margin-left: auto !important;
             }
-            table[class=body] h1 {
+            table[class=start] h1 {
                 font-size: 28px !important;
             }
-            table[class=body] .container {
+            table[class=start] .container {
                 padding: 0 !important;
                 width: 100% !important;
             }
-            table[class=body] .main {
+            table[class=start] .main {
                 border-left-width: 0 !important;
                 border-radius: 0 !important;
                 border-right-width: 0 !important;
@@ -170,7 +169,7 @@
 </head>
 
 <body>
-    <table border="0" cellpadding="0" cellspacing="0" class="body">
+    <table border="0" cellpadding="0" cellspacing="0" class="start">
         <tr>
             <td class="container">
                 <div class="content">
