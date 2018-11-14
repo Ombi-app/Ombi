@@ -355,7 +355,7 @@ namespace Ombi.Core.Senders
                 var sea = new Season
                 {
                     seasonNumber = i,
-                    monitored = model.SeasonRequests.Any(x => x.SeasonNumber == index && x.SeasonNumber != 0)
+                    monitored = false
                 };
                 seasonsToUpdate.Add(sea);
             }
