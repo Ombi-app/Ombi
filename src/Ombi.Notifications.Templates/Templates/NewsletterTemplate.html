@@ -4,21 +4,50 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta charset="utf-8"> 
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="x-apple-disable-message-reformatting">  <!-- Disable auto-scale in iOS 10 Mail entirely -->
+    <meta name="x-apple-disable-message-reformatting"> <!-- Disable auto-scale in iOS 10 Mail entirely -->
     <title>Ombi</title>
     <style type="text/css">
+        html,
         body {
+            margin: 0 auto !important;
+            padding: 0 !important;
+            height: 100% !important;
+            width: 100% !important;
             font-family: 'Open Sans', Helvetica, Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
             font-size: 14px;
             line-height: 1.4;
-            margin: 0 auto;
-            padding: 0;
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+            background-color: #1f1f1f;
+        }
+
+        * {
             -ms-text-size-adjust: 100%;
             -webkit-text-size-adjust: 100%;
         }
+
+        div[style*="margin: 16px 0"] {
+            margin: 0 !important;
+        }
+
+        table,
+        td {
+            mso-table-lspace: 0pt !important;
+            mso-table-rspace: 0pt !important;
+        }
+
+        /* yes this is correct! */
+        table table table {
+            table-layout: auto;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
 
         img {
             border: none;
@@ -31,11 +60,10 @@
         }
 
         table {
-            border-collapse: separate;
-            mso-table-lspace: 0pt;
-            mso-table-rspace: 0pt;
+            border-spacing: 0 !important;
+            border-collapse: collapse !important;
+            margin: 0 auto !important;
             width: 100%;
-            background-color: #1f1f1f;
             color: #fff;
         }
 
@@ -71,15 +99,12 @@
 
         .main {
             border-radius: 3px;
-            width: 100%;
-            display: flex;
         }
 
         .wrapper {
             box-sizing: border-box;
             padding: 20px;
             overflow: auto;
-
         }
 
         .content-block {
@@ -188,31 +213,43 @@
 
     </style>
 </head>
-<body>
-    <table border="0" cellpadding="0" cellspacing="0" class="start">
+
+<body width="100%" style="margin: 0; padding: 0 !important; mso-line-height-rule: exactly; background-color: #1f1f1f;">
+    <table class="start">
         <tr>
             <td class="container">
-                <div class="content">
-                    <!-- START CENTERED WHITE CONTAINER -->
-                    <span class="preheader">Ombi Recently Added</span>
-                    <table class="main">
-                        <!-- START MAIN CONTENT AREA -->
-                        <tr>
-                            <td class="wrapper" valign="top">
-                                <table border="0" cellpadding="0" cellspacing="0">
-                                    <tr>
-                                        <td align="center">
-                                            <img src="{@LOGO}" width="100%" text-align="center" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td valign="top">
-                                            <p class="introtxt">{@INTRO}</p>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
+
+                <!-- Visually Hidden Preheader Text : BEGIN -->
+                <div style="display: none; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
+                    Ombi recently added
+                </div>
+                <!-- Visually Hidden Preheader Text : END -->
+
+                <!-- Create white space after the desired preview text so email clients don’t pull other distracting text into the inbox preview. Extend as necessary. -->
+                <!-- Preview Text Spacing Hack : BEGIN -->
+                <div style="display: none; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
+                    &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+                </div>
+                <!-- Preview Text Spacing Hack : END -->
+
+                <table class="main">
+                    <!-- START MAIN CONTENT AREA -->
+                    <tr>
+                        <td class="wrapper" valign="top">
+                            <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="margin: 0 auto;">
+                                <tr>
+                                    <td align="center">
+                                        <img src="{@LOGO}" width="100%" text-align="center" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        <p class="introtxt">{@INTRO}</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
                         <tr>
                             <td>
                                 {@RECENTLYADDED}
