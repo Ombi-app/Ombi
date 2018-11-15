@@ -1,9 +1,10 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#" xmlns="http://www.w3.org/1999/xhtml">
+
 
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>Ombi</title>
     <style type="text/css">
         body {
@@ -15,13 +16,16 @@
             padding: 0;
             -ms-text-size-adjust: 100%;
             -webkit-text-size-adjust: 100%;
-            display: flex;
         }
 
         img {
             border: none;
             -ms-interpolation-mode: bicubic;
-            max-width: 100%;
+            width: 100%;
+        }
+
+        .start {
+            width: 100% !important;
         }
 
         table {
@@ -39,9 +43,8 @@
         }
 
         .container {
-            display: flex;
             margin: 0 auto !important;
-            overflow: auto;
+            overflow: hidden;
         }
 
         .preheader {
@@ -83,7 +86,6 @@
         }
 
         .footer {
-            clear: both;
             margin-top: 10px;
             text-align: center;
             width: 100%;
@@ -132,24 +134,46 @@
         }
 
         @media only screen and (max-width: 1040px) {
+            body {
+                max-width: 1040px !important;
+            }
+
             .media-card {
                 display: flex !important;
                 margin-top: 0 !important;
                 margin-right: auto !important;
                 margin-bottom: 10px !important;
                 margin-left: auto !important;
+                height: 100% !important;
+                width: 100% !important;
             }
+
+            .start {
+                display: table-cell;
+            }
+            
             table[class=start] h1 {
                 font-size: 28px !important;
             }
+
             table[class=start] .container {
                 padding: 0 !important;
                 width: 100% !important;
             }
+
             table[class=start] .main {
                 border-left-width: 0 !important;
                 border-radius: 0 !important;
                 border-right-width: 0 !important;
+            }
+
+            .description div {
+                margin: 0px !important;
+                padding-bottom: 20px !important;
+            }
+
+            .tv-table {
+                width: 100% !important;
             }
         }
 
@@ -166,7 +190,6 @@
 
     </style>
 </head>
-
 <body>
     <table border="0" cellpadding="0" cellspacing="0" class="start">
         <tr>
@@ -202,11 +225,11 @@
                     </table>
 
                     <!-- START FOOTER -->
-                    <div class="footer" style="clear: both; padding-top: 10px; text-align: center; width: 100%;">
-                        <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
+                    <div class="footer">
+                        <table border="0" cellpadding="0" cellspacing="0">
                             <tr>
-                                <td class="content-block powered-by" style="font-family: sans-serif; vertical-align: top; padding-top: 10px; padding-bottom: 10px; font-size: 12px; color: #999999; text-align: center;" valign="top" align="center">
-                                    Powered by <a href="https://github.com/tidusjar/Ombi" style="color: #999999;  font-size: 12px; text-align: center; text-decoration: underline;">Ombi</a>
+                                <td class="content-block powered-by">
+                                    Powered by <a href="https://github.com/tidusjar/Ombi" style="color: #999999;  font-size: 12px; text-decoration: underline;">Ombi</a>
                                 </td>
                             </tr>
                         </table>
@@ -216,8 +239,8 @@
                     <!-- END CENTERED WHITE CONTAINER -->
                 </div>
             </td>
-            <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">&nbsp;</td>
         </tr>
     </table>
 </body>
+
 </html>
