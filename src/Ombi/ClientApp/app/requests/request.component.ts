@@ -15,6 +15,7 @@ export class RequestComponent implements OnInit  {
 
     public issueCategories: IIssueCategory[];
     public issuesEnabled = false;
+    public musicEnabled: boolean;
 
     constructor(private issuesService: IssuesService,
                 private settingsService: SettingsService) {
@@ -23,6 +24,7 @@ export class RequestComponent implements OnInit  {
 
     public ngOnInit(): void {
         this.issuesService.getCategories().subscribe(x => this.issueCategories = x);
+        this.settingsService.lidarrEnabled().subscribe(x => this.musicEnabled = x);
         this.settingsService.getIssueSettings().subscribe(x => this.issuesEnabled = x.enabled);
     }
 
