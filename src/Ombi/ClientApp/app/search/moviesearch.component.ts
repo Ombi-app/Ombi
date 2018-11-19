@@ -172,7 +172,7 @@ export class MovieSearchComponent implements OnInit {
         r.subscribed = true;
         this.requestService.subscribeToMovie(r.requestId)
             .subscribe(x => {
-                this.notificationService.success("Subscribed To Movie!");
+                this.notificationService.success(`Subscribed To Movie ${r.title}!`);
             });
     }
 
