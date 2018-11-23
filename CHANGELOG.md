@@ -6,6 +6,43 @@
 
 ## v3.0.3919 (2018-10-18)
 
+### **New Features**
+
+- Updated the emby api since we no longer need the extra parameters to send to emby to log in a local user #2546. [Jamie]
+
+- Added the ability to get the ombi user via a Plex Token #2591. [Jamie]
+
+### **Fixes**
+
+- Made the subscribe/unsubscribe button more obvious on the UI #2309. [Jamie]
+
+- Fixed #2603. [Jamie]
+
+- Fixed the issue with the user overrides #2646. [Jamie]
+
+- Fixed the issue where we could sometimes allow the request of a whole series when the user shouldn't be able to. [Jamie]
+
+- Fixed the issue where we were marking episodes as available with the Emby connection when they have not yet aired #2417 #2623. [TidusJar]
+
+- Fixed the issue where we were marking the whole season as wanted in Sonarr rather than the individual episode #2629. [TidusJar]
+
+- Fixed #2623. [Jamie]
+
+- Fixed #2633. [TidusJar]
+
+- Fixed #2639. [Jamie]
+
+- Show the TV show as available when we have all the episodes but future episodes have not aired. #2585. [Jamie]
+
+
+## v3.0.3945 (2018-10-25)
+
+### **New Features**
+
+- Update Readme for Lidarr. [Qstick]
+
+- Update CHANGELOG.md. [Jamie]
+
 ### **Fixes**
 
 - New translations en.json (French) [Jamie]

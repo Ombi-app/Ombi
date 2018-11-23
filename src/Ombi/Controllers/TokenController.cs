@@ -10,14 +10,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Ombi.Api;
 using Ombi.Core.Authentication;
 using Ombi.Helpers;
 using Ombi.Models;
+using Ombi.Models.External;
 using Ombi.Models.Identity;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
-using StackExchange.Profiling.Helpers;
 
 namespace Ombi.Controllers
 {
@@ -80,7 +79,7 @@ namespace Ombi.Controllers
             {
                 // Plex OAuth
                 // Redirect them to Plex
-                
+
                 var websiteAddress = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
                 //https://app.plex.tv/auth#?forwardUrl=http://google.com/&clientID=Ombi-Test&context%5Bdevice%5D%5Bproduct%5D=Ombi%20SSO&pinID=798798&code=4lgfd
                 var url = await _plexOAuthManager.GetOAuthUrl(model.PlexTvPin.code, websiteAddress);
@@ -96,6 +95,25 @@ namespace Ombi.Controllers
 
             return new UnauthorizedResult();
         }
+
+        /// <summary>
+        /// Returns the Token for the Ombi User if we can match the Plex user with a valid Ombi User
+        /// </summary>
+        [HttpPost("plextoken")]
+        public async Task<IActionResult> GetTokenWithPlexToken([FromBody] PlexTokenAuthentication model)
+        {
+            if (!model.PlexToken.HasValue())
+            {
+                return BadRequest("Token was not provided");
+            }
+            var user = await _userManager.GetOmbiUserFromPlexToken(model.PlexToken);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+            return await CreateToken(true, user);
+        }
+
 
         private async Task<IActionResult> CreateToken(bool rememberMe, OmbiUser user)
         {

@@ -29,6 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Ombi.Api.Emby;
@@ -100,6 +101,22 @@ namespace Ombi.Core.Authentication
             }
             return true;
         }
+
+        public async Task<OmbiUser> GetOmbiUserFromPlexToken(string plexToken)
+        {
+            var plexAccount = await _plexApi.GetAccount(plexToken);
+
+            // Check for a ombi user
+            if (plexAccount?.user != null)
+            {
+                var potentialOmbiUser = await Users.FirstOrDefaultAsync(x =>
+                    x.ProviderUserId == plexAccount.user.id);
+                return potentialOmbiUser;
+            }
+
+            return null;
+        }
+        
 
         /// <summary>
         /// Sign the user into plex and make sure we can get the authentication token.
