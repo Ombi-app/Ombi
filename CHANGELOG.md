@@ -1,10 +1,8 @@
 # Changelog
 
-## V3.0.3945 (2018-10-25)
+## v3.0.3988 (2018-11-23)
 
-- Fixed #2601 [TidusJar]
 
-## v3.0.3919 (2018-10-18)
 
 ### **New Features**
 
@@ -13,6 +11,8 @@
 - Added the ability to get the ombi user via a Plex Token #2591. [Jamie]
 
 ### **Fixes**
+
+- Fixed #2601 [TidusJar]
 
 - Made the subscribe/unsubscribe button more obvious on the UI #2309. [Jamie]
 
