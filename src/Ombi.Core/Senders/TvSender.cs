@@ -23,7 +23,7 @@ namespace Ombi.Core.Senders
     {
         public TvSender(ISonarrApi sonarrApi, ILogger<TvSender> log, ISettingsService<SonarrSettings> sonarrSettings,
             ISettingsService<DogNzbSettings> dog, IDogNzbApi dogApi, ISettingsService<SickRageSettings> srSettings,
-            ISickRageApi srApi, IRepository<UserQualityProfiles> userProfiles)
+            ISickRageApi srApi, IRepository<UserQualityProfiles> userProfiles, IRepository<RequestQueue> requestQueue, INotificationHelper notify)
         {
             SonarrApi = sonarrApi;
             Logger = log;
@@ -33,6 +33,8 @@ namespace Ombi.Core.Senders
             SickRageSettings = srSettings;
             SickRageApi = srApi;
             UserQualityProfiles = userProfiles;
+            _requestQueueRepository = requestQueue;
+            _notificationHelper = notify;
         }
 
         private ISonarrApi SonarrApi { get; }
@@ -43,9 +45,15 @@ namespace Ombi.Core.Senders
         private ISettingsService<DogNzbSettings> DogNzbSettings { get; }
         private ISettingsService<SickRageSettings> SickRageSettings { get; }
         private IRepository<UserQualityProfiles> UserQualityProfiles { get; }
+        private readonly IRepository<RequestQueue> _requestQueueRepository;
+        private readonly INotificationHelper _notificationHelper;
 
         public async Task<SenderResult> Send(ChildRequests model)
         {
+            try
+            {
+
+
             var sonarr = await SonarrSettings.GetSettingsAsync();
             if (sonarr.Enabled)
             {
@@ -96,6 +104,26 @@ namespace Ombi.Core.Senders
             return new SenderResult
             {
                 Success = true
+            };
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "Exception thrown when sending a movie to DVR app, added to the request queue");
+                await _requestQueueRepository.Add(new RequestQueue
+                {
+                    Dts = DateTime.UtcNow,
+                    Error = e.Message,
+                    RequestId = model.Id,
+                    Type = RequestType.TvShow,
+                    RetryCount = 0
+                });
+                _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
+            }
+
+            return new SenderResult
+            {
+                Success = false,
+                Message = "Something wen't wrong!"
             };
         }
 
