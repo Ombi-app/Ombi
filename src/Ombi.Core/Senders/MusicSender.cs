@@ -4,14 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Lidarr;
 using Ombi.Api.Lidarr.Models;
-using Ombi.Api.Radarr;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
-using Serilog;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Ombi.Core.Senders
