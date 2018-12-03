@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -101,13 +102,17 @@ namespace Ombi.Core.Senders
             var profiles = await _userProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == model.RequestedUserId);
             if (profiles != null)
             {
-                if (profiles.SonarrRootPathAnime > 0)
-                {
-                    rootFolderPath = await RadarrRootPath(profiles.SonarrRootPathAnime, settings);
+                if (profiles.RadarrRootPath > 0)
+                { 
+                    var tempPath = await RadarrRootPath(profiles.RadarrRootPath, settings);
+                    if (tempPath.HasValue())
+                    {
+                        rootFolderPath = tempPath;
+                    }
                 }
-                if (profiles.SonarrQualityProfileAnime > 0)
+                if (profiles.RadarrQualityProfile > 0)
                 {
-                    qualityToUse = profiles.SonarrQualityProfileAnime;
+                    qualityToUse = profiles.RadarrQualityProfile;
                 }
             }
 
@@ -163,7 +168,7 @@ namespace Ombi.Core.Senders
         {
             var paths = await RadarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
             var selectedPath = paths.FirstOrDefault(x => x.id == overrideId);
-            return selectedPath.path;
+            return selectedPath?.path ?? String.Empty;
         }
     }
 }
