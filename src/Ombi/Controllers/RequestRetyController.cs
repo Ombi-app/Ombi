@@ -6,12 +6,13 @@ using Ombi.Store.Repository;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Ombi.Attributes;
 using Ombi.Store.Entities;
 
 namespace Ombi.Controllers
 {
     [ApiV1]
-    [Authorize]
+    [Admin]
     [Produces("application/json")]
     public class RequestRetyController : Controller
     {

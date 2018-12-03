@@ -51,7 +51,7 @@
 
                 <div class="form-group">
                     <label for="retryRequests" class="control-label">Retry Failed Requests</label>              
-                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('retryRequests').hasError('required')}" id="retryRequests" name="retryRequests" formControlName="retryRequests">
+                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('retryRequests').hasError('required')}" id="retryRequests" name="retryRequests" formControlName="retryRequestsS">
                         <small *ngIf="form.get('retryRequests').hasError('required')" class="error-text">The Retry Requests is required</small>
                         <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('retryRequests')?.value)">Test</button>
                 </div>
