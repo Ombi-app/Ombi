@@ -677,7 +677,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     foreach (var epInformation in results.OrderBy(x => x.SeasonNumber))
                     {
                         var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
-                        var episodeString = BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
+                        var episodeString = StringHelper.BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
                         finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString}");
                         finalsb.Append("<br />");
                     }
@@ -715,48 +715,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        public static string BuildEpisodeList(IEnumerable<int> orderedEpisodes)
-        {
-            var epSb = new StringBuilder();
-            var previousEpisodes = new List<int>();
-            var previousEpisode = -1;
-            foreach (var ep in orderedEpisodes)
-            {
-                if (ep - 1 == previousEpisode)
-                {
-                    // This is the next one
-                    previousEpisodes.Add(ep);
-                }
-                else
-                {
-                    if (previousEpisodes.Count > 1)
-                    {
-                        // End it
-                        epSb.Append($"{previousEpisodes.First()}-{previousEpisodes.Last()}, ");
-                    }
-                    else if (previousEpisodes.Count == 1)
-                    {
-                        epSb.Append($"{previousEpisodes.FirstOrDefault()}, ");
-                    }
-                    // New one
-                    previousEpisodes.Clear();
-                    previousEpisodes.Add(ep);
-                }
-                previousEpisode = ep;
-            }
-
-            if (previousEpisodes.Count > 1)
-            {
-                // Got some left over
-                epSb.Append($"{previousEpisodes.First()}-{previousEpisodes.Last()}");
-            }
-            else if(previousEpisodes.Count == 1)
-            {
-                epSb.Append(previousEpisodes.FirstOrDefault());
-            }
-
-            return epSb.ToString();
-        }
+        
 
         private async Task ProcessEmbyTv(HashSet<EmbyEpisode> embyContent, StringBuilder sb)
         {
@@ -841,7 +800,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     foreach (var epInformation in results.OrderBy(x => x.SeasonNumber))
                     {
                         var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
-                        var episodeString = BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
+                        var episodeString = StringHelper.BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
                         finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString}");
                         finalsb.Append("<br />");
                     }

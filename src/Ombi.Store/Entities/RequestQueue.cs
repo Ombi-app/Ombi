@@ -10,7 +10,7 @@ namespace Ombi.Store.Entities
         public RequestType Type { get; set; }
         public DateTime Dts { get; set; }
         public string Error { get; set; }
-        public DateTime Completed { get; set; }
+        public DateTime? Completed { get; set; }
         public int RetryCount { get; set; }
     }
 }

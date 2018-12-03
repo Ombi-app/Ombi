@@ -52,72 +52,81 @@ namespace Ombi.Core.Senders
         {
             try
             {
-
-
-            var sonarr = await SonarrSettings.GetSettingsAsync();
-            if (sonarr.Enabled)
-            {
-                var result = await SendToSonarr(model);
-                if (result != null)
+                var sonarr = await SonarrSettings.GetSettingsAsync();
+                if (sonarr.Enabled)
                 {
+                    var result = await SendToSonarr(model);
+                    if (result != null)
+                    {
+                        return new SenderResult
+                        {
+                            Sent = true,
+                            Success = true
+                        };
+                    }
+                }
+                var dog = await DogNzbSettings.GetSettingsAsync();
+                if (dog.Enabled)
+                {
+                    var result = await SendToDogNzb(model, dog);
+                    if (!result.Failure)
+                    {
+                        return new SenderResult
+                        {
+                            Sent = true,
+                            Success = true
+                        };
+                    }
                     return new SenderResult
                     {
-                        Sent = true,
-                        Success = true
+                        Message = result.ErrorMessage
                     };
                 }
-            }
-            var dog = await DogNzbSettings.GetSettingsAsync();
-            if (dog.Enabled)
-            {
-                var result = await SendToDogNzb(model, dog);
-                if (!result.Failure)
+                var sr = await SickRageSettings.GetSettingsAsync();
+                if (sr.Enabled)
                 {
+                    var result = await SendToSickRage(model, sr);
+                    if (result)
+                    {
+                        return new SenderResult
+                        {
+                            Sent = true,
+                            Success = true
+                        };
+                    }
                     return new SenderResult
                     {
-                        Sent = true,
-                        Success = true
+                        Message = "Could not send to SickRage!"
                     };
                 }
                 return new SenderResult
                 {
-                    Message = result.ErrorMessage
+                    Success = true
                 };
-            }
-            var sr = await SickRageSettings.GetSettingsAsync();
-            if (sr.Enabled)
-            {
-                var result = await SendToSickRage(model, sr);
-                if (result)
-                {
-                    return new SenderResult
-                    {
-                        Sent = true,
-                        Success = true
-                    };
-                }
-                return new SenderResult
-                {
-                    Message = "Could not send to SickRage!"
-                };
-            }
-            return new SenderResult
-            {
-                Success = true
-            };
             }
             catch (Exception e)
             {
                 Logger.LogError(e, "Exception thrown when sending a movie to DVR app, added to the request queue");
-                await _requestQueueRepository.Add(new RequestQueue
+                // Check if already in request quee
+                var existingQueue = await _requestQueueRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id);
+                if (existingQueue != null)
                 {
-                    Dts = DateTime.UtcNow,
-                    Error = e.Message,
-                    RequestId = model.Id,
-                    Type = RequestType.TvShow,
-                    RetryCount = 0
-                });
-                _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
+                    existingQueue.RetryCount++;
+                    existingQueue.Error = e.Message;
+                    await _requestQueueRepository.SaveChangesAsync();
+                }
+                else
+                {
+                    await _requestQueueRepository.Add(new RequestQueue
+                    {
+                        Dts = DateTime.UtcNow,
+                        Error = e.Message,
+                        RequestId = model.Id,
+                        Type = RequestType.TvShow,
+                        RetryCount = 0
+                    });
+                    _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
+                }
             }
 
             return new SenderResult
@@ -171,7 +180,7 @@ namespace Ombi.Core.Senders
                     }
                     if (profiles.SonarrQualityProfileAnime > 0)
                     {
-                       qualityToUse = profiles.SonarrQualityProfileAnime;
+                        qualityToUse = profiles.SonarrQualityProfileAnime;
                     }
                 }
                 seriesType = "anime";
@@ -191,7 +200,7 @@ namespace Ombi.Core.Senders
                     }
                     if (profiles.SonarrQualityProfile > 0)
                     {
-                       qualityToUse = profiles.SonarrQualityProfile;
+                        qualityToUse = profiles.SonarrQualityProfile;
                     }
                 }
                 seriesType = "standard";
@@ -202,7 +211,7 @@ namespace Ombi.Core.Senders
             {
                 qualityToUse = model.ParentRequest.QualityOverride.Value;
             }
-            
+
             try
             {
                 // Does the series actually exist?
@@ -296,7 +305,7 @@ namespace Ombi.Core.Senders
                 }
             }
             var seriesChanges = false;
-            
+
             foreach (var season in model.SeasonRequests)
             {
                 var sonarrSeason = sonarrEpList.Where(x => x.seasonNumber == season.SeasonNumber);

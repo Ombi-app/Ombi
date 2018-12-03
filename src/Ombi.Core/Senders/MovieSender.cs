@@ -76,16 +76,28 @@ namespace Ombi.Core.Senders
             }
             catch (Exception e)
             {
-                Log.LogError(e, "Error when seing movie to DVR app, added to the request queue"S);
-                await _requestQueuRepository.Add(new RequestQueue
+                Log.LogError(e, "Error when seing movie to DVR app, added to the request queue");
+
+                // Check if already in request quee
+                var existingQueue = await _requestQueuRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id);
+                if (existingQueue != null)
                 {
-                    Dts = DateTime.UtcNow,
-                    Error = e.Message,
-                    RequestId = model.Id,
-                    Type = RequestType.Movie,
-                    RetryCount = 0
-                });
-                _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
+                    existingQueue.RetryCount++;
+                    existingQueue.Error = e.Message;
+                    await _requestQueuRepository.SaveChangesAsync();
+                }
+                else
+                {
+                    await _requestQueuRepository.Add(new RequestQueue
+                    {
+                        Dts = DateTime.UtcNow,
+                        Error = e.Message,
+                        RequestId = model.Id,
+                        Type = RequestType.Movie,
+                        RetryCount = 0
+                    });
+                    _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
+                }
             }
 
             return new SenderResult

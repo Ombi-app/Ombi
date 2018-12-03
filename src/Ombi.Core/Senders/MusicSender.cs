@@ -49,15 +49,25 @@ namespace Ombi.Core.Senders
             catch (Exception e)
             {
                 _log.LogError(e, "Exception thrown when sending a music to DVR app, added to the request queue");
-                await _requestQueueRepository.Add(new RequestQueue
+                var existingQueue = await _requestQueueRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id);
+                if (existingQueue != null)
                 {
-                    Dts = DateTime.UtcNow,
-                    Error = e.Message,
-                    RequestId = model.Id,
-                    Type = RequestType.Album,
-                    RetryCount = 0
-                });
-                _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
+                    existingQueue.RetryCount++;
+                    existingQueue.Error = e.Message;
+                    await _requestQueueRepository.SaveChangesAsync();
+                }
+                else
+                {
+                    await _requestQueueRepository.Add(new RequestQueue
+                    {
+                        Dts = DateTime.UtcNow,
+                        Error = e.Message,
+                        RequestId = model.Id,
+                        Type = RequestType.Album,
+                        RetryCount = 0
+                    });
+                    _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
+                }
             }
 
 

@@ -145,6 +145,7 @@ export interface IJobSettings {
   plexRecentlyAddedSync: string;
   lidarrArtistSync: string;
   issuesPurge: string;
+  retryRequests: string;
 }
 
 export interface IIssueSettings extends ISettings {

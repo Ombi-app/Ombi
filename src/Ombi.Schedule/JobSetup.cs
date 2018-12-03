@@ -21,7 +21,7 @@ namespace Ombi.Schedule
             IEmbyUserImporter embyUserImporter, ISonarrSync cache, ICouchPotatoSync cpCache,
             ISettingsService<JobSettings> jobsettings, ISickRageSync srSync, IRefreshMetadata refresh,
             INewsletterJob newsletter, IPlexRecentlyAddedSync recentlyAddedPlex, ILidarrArtistSync artist,
-            IIssuesPurge purge)
+            IIssuesPurge purge, IResendFailedRequests resender)
         {
             _plexContentSync = plexContentSync;
             _radarrSync = radarrSync;
@@ -38,6 +38,7 @@ namespace Ombi.Schedule
             _plexRecentlyAddedSync = recentlyAddedPlex;
             _lidarrArtistSync = artist;
             _issuesPurge = purge;
+            _resender = resender;
         }
 
         private readonly IPlexContentSync _plexContentSync;
@@ -55,6 +56,7 @@ namespace Ombi.Schedule
         private readonly INewsletterJob _newsletter;
         private readonly ILidarrArtistSync _lidarrArtistSync;
         private readonly IIssuesPurge _issuesPurge;
+        private readonly IResendFailedRequests _resender;
 
         public void Setup()
         {
@@ -76,6 +78,8 @@ namespace Ombi.Schedule
             RecurringJob.AddOrUpdate(() => _embyUserImporter.Start(), JobSettingsHelper.UserImporter(s));
             RecurringJob.AddOrUpdate(() => _plexUserImporter.Start(), JobSettingsHelper.UserImporter(s));
             RecurringJob.AddOrUpdate(() => _newsletter.Start(), JobSettingsHelper.Newsletter(s));
+            RecurringJob.AddOrUpdate(() => _newsletter.Start(), JobSettingsHelper.Newsletter(s));
+            RecurringJob.AddOrUpdate(() => _resender.Start(), JobSettingsHelper.ResendFailedRequests(s));
         }
 
 
