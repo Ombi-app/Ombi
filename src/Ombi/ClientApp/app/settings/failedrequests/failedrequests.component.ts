@@ -15,4 +15,8 @@ export class FailedRequestsComponent implements OnInit {
     public ngOnInit() {
         this.retry.getFailedRequests().subscribe(x => this.vm = x);
     }
+
+    public remove(failedId: number) {
+        this.retry.deleteFailedRequest(failedId).subscribe();
+    }
 }

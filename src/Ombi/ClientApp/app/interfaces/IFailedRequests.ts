@@ -4,7 +4,7 @@ export interface IFailedRequestsViewModel {
     title: string;
     releaseYear: Date;
     requestId: number;
-    requestType: RequestType;
+    type: RequestType;
     dts: Date;
     error: string;
     retryCount: number;

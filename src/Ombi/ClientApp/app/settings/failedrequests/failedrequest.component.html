@@ -9,7 +9,6 @@
             <td>Type</td>
             <td>Retry Count</td>
             <td>Error Description</td>
-            <td>Retry</td>
             <td>Delete</td>
         </tr>
     </thead>
@@ -21,8 +20,7 @@
             <td>{{RequestType[v.type] | humanize}}</td>
             <td class="vcenter">{{v.retryCount}}</td>
             <td class="vcenter"> <i [pTooltip]="v.error" class="fa fa-info-circle"></i></td>
-            <td class="vcenter"><button></button></td>
-            <td class="vcenter"><button></button></td>
+            <td class="vcenter"><button class="btn btn-primary" (click)="remove(v.failedId)">Remove</button></td>
         </tr>
     </tbody>
 </table>
