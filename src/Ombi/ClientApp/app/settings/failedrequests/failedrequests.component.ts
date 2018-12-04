@@ -1,25 +1,18 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { IAbout } from "../../interfaces/ISettings";
-import { JobService, SettingsService } from "../../services";
+import { IFailedRequestsViewModel, RequestType } from "../../interfaces";
+import { RequestRetryService } from "../../services";
 
 @Component({
-    templateUrl: "./about.component.html",
+    templateUrl: "./failedrequest.component.html",
 })
-export class AboutComponent implements OnInit {
+export class FailedRequestsComponent implements OnInit {
 
-    public about: IAbout;
-    public newUpdate: boolean;
+    public vm: IFailedRequestsViewModel[];
+    public RequestType = RequestType;
 
-    constructor(private readonly settingsService: SettingsService,
-                private readonly jobService: JobService) { }
+    constructor(private retry: RequestRetryService) { }
 
     public ngOnInit() {
-        this.settingsService.about().subscribe(x => this.about = x);
-        this.jobService.getCachedUpdate().subscribe(x => {
-            if (x === true) {
-                this.newUpdate = true;
-            }
-        });
-
+        this.retry.getFailedRequests().subscribe(x => this.vm = x);
     }
 }

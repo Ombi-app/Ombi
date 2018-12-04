@@ -9,7 +9,7 @@ using Ombi.Store.Context;
 namespace Ombi.Store.Migrations
 {
     [DbContext(typeof(OmbiContext))]
-    [Migration("20181203213532_RequestQueue")]
+    [Migration("20181204084915_RequestQueue")]
     partial class RequestQueue
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -508,6 +508,28 @@ namespace Ombi.Store.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RecentlyAddedLog");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.RequestQueue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime?>("Completed");
+
+                    b.Property<DateTime>("Dts");
+
+                    b.Property<string>("Error");
+
+                    b.Property<int>("RequestId");
+
+                    b.Property<int>("RetryCount");
+
+                    b.Property<int>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequestQueue");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.AlbumRequest", b =>

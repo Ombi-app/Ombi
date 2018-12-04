@@ -9,7 +9,7 @@ import { AuthGuard } from "../auth/auth.guard";
 import { AuthService } from "../auth/auth.service";
 import {
     CouchPotatoService, EmbyService, IssuesService, JobService, LidarrService, MobileService, NotificationMessageService, PlexService, RadarrService,
-    SonarrService, TesterService, ValidationService,
+    RequestRetryService, SonarrService, TesterService, ValidationService,
 } from "../services";
 
 import { PipeModule } from "../pipes/pipe.module";
@@ -152,6 +152,7 @@ const routes: Routes = [
         MobileService,
         NotificationMessageService,
         LidarrService,
+        RequestRetryService,
     ],
 
 })

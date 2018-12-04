@@ -508,6 +508,28 @@ namespace Ombi.Store.Migrations
                     b.ToTable("RecentlyAddedLog");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.RequestQueue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime?>("Completed");
+
+                    b.Property<DateTime>("Dts");
+
+                    b.Property<string>("Error");
+
+                    b.Property<int>("RequestId");
+
+                    b.Property<int>("RetryCount");
+
+                    b.Property<int>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequestQueue");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.Requests.AlbumRequest", b =>
                 {
                     b.Property<int>("Id")
