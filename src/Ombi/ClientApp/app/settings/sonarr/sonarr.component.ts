@@ -47,6 +47,7 @@ export class SonarrComponent implements OnInit {
                     port: [x.port, [Validators.required]],
                     addOnly: [x.addOnly],
                     seasonFolders: [x.seasonFolders],
+                    v3: [x.v3],
                 });
 
                 if (x.qualityProfile) {

@@ -107,6 +107,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IPlexApi, PlexApi>();
             services.AddTransient<IEmbyApi, EmbyApi>();
             services.AddTransient<ISonarrApi, SonarrApi>();
+            services.AddTransient<ISonarrV3Api, SonarrV3Api>();
             services.AddTransient<ISlackApi, SlackApi>();
             services.AddTransient<ITvMazeApi, TvMazeApi>();
             services.AddTransient<ITraktApi, TraktApi>();
