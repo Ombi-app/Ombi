@@ -51,7 +51,7 @@ export class SonarrComponent implements OnInit {
                     addOnly: [x.addOnly],
                     seasonFolders: [x.seasonFolders],
                     v3: [x.v3],
-                    langaugeProfile: [x.languageProfile],
+                    languageProfile: [x.languageProfile],
                 });
 
                 if (x.qualityProfile) {
@@ -62,6 +62,9 @@ export class SonarrComponent implements OnInit {
                 }
                 if(x.languageProfile) {
                     this.getLanguageProfiles(this.form);
+                }
+                if(x.v3) {
+                    this.form.controls.languageProfile.setValidators([Validators.required]);
                 }
             });
         this.rootFolders = [];
