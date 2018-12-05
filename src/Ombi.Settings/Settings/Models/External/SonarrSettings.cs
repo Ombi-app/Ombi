@@ -19,5 +19,6 @@
         public string RootPathAnime { get; set; }
         public bool AddOnly { get; set; }
         public bool V3 { get; set; }
+        public int LanguageProfile { get; set; }
     }
 }

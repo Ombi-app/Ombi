@@ -15,13 +15,13 @@ namespace Ombi.Core.Tests.Rule.Search
         [SetUp]
         public void Setup()
         {
-            ContextMock = new Mock<IRepository<RadarrCache>>();
+            ContextMock = new Mock<IExternalRepository<RadarrCache>>();
             Rule = new RadarrCacheRule(ContextMock.Object);
 
         }
 
         private RadarrCacheRule Rule { get; set; }
-        private Mock<IRepository<RadarrCache>> ContextMock { get; set; }
+        private Mock<IExternalRepository<RadarrCache>> ContextMock { get; set; }
 
         [Test]
         public async Task Should_ReturnApproved_WhenMovieIsInRadarr()

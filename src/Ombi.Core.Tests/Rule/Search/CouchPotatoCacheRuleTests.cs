@@ -18,13 +18,13 @@ namespace Ombi.Core.Tests.Rule.Search
         [SetUp]
         public void Setup()
         {
-            ContextMock = new Mock<IRepository<CouchPotatoCache>>();
+            ContextMock = new Mock<IExternalRepository<CouchPotatoCache>>();
             Rule = new CouchPotatoCacheRule(ContextMock.Object);
 
         }
 
         private CouchPotatoCacheRule Rule { get; set; }
-        private Mock<IRepository<CouchPotatoCache>> ContextMock { get; set; }
+        private Mock<IExternalRepository<CouchPotatoCache>> ContextMock { get; set; }
 
         [Test]
         public async Task Should_ReturnApproved_WhenMovieIsInCouchPotato()

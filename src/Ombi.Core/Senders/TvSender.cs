@@ -21,11 +21,12 @@ namespace Ombi.Core.Senders
 {
     public class TvSender : ITvSender
     {
-        public TvSender(ISonarrApi sonarrApi, ILogger<TvSender> log, ISettingsService<SonarrSettings> sonarrSettings,
+        public TvSender(ISonarrApi sonarrApi, ISonarrV3Api sonarrV3Api, ILogger<TvSender> log, ISettingsService<SonarrSettings> sonarrSettings,
             ISettingsService<DogNzbSettings> dog, IDogNzbApi dogApi, ISettingsService<SickRageSettings> srSettings,
             ISickRageApi srApi, IRepository<UserQualityProfiles> userProfiles)
         {
             SonarrApi = sonarrApi;
+            SonarrV3Api = sonarrV3Api;
             Logger = log;
             SonarrSettings = sonarrSettings;
             DogNzbSettings = dog;
@@ -36,6 +37,7 @@ namespace Ombi.Core.Senders
         }
 
         private ISonarrApi SonarrApi { get; }
+        private ISonarrV3Api SonarrV3Api { get; }
         private IDogNzbApi DogNzbApi { get; }
         private ISickRageApi SickRageApi { get; }
         private ILogger<TvSender> Logger { get; }
@@ -175,6 +177,16 @@ namespace Ombi.Core.Senders
                 qualityToUse = model.ParentRequest.QualityOverride.Value;
             }
             
+            
+            // Are we using v3 sonarr?
+            var sonarrV3 = s.V3;
+            var languageProfileId = 0;
+            if (sonarrV3)
+            {
+                languageProfileId = s.LanguageProfile;
+            }
+
+
             try
             {
                 // Does the series actually exist?

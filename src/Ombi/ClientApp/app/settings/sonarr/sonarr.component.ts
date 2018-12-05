@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
-import { ISonarrProfile, ISonarrRootFolder } from "../../interfaces";
+import { ILanguageProfiles, ISonarrProfile, ISonarrRootFolder } from "../../interfaces";
 
 import { ISonarrSettings } from "../../interfaces";
 import { SonarrService } from "../../services";
@@ -18,10 +18,13 @@ export class SonarrComponent implements OnInit {
     public qualitiesAnime: ISonarrProfile[];
     public rootFolders: ISonarrRootFolder[];
     public rootFoldersAnime: ISonarrRootFolder[];
+    public languageProfiles: ILanguageProfiles[];
     public selectedRootFolder: ISonarrRootFolder;
     public selectedQuality: ISonarrProfile;
+    public selectedLanguageProfiles: ILanguageProfiles;
     public profilesRunning: boolean;
     public rootFoldersRunning: boolean;
+    public langRunning: boolean;
     public form: FormGroup;
     public advanced = false;
 
@@ -48,6 +51,7 @@ export class SonarrComponent implements OnInit {
                     addOnly: [x.addOnly],
                     seasonFolders: [x.seasonFolders],
                     v3: [x.v3],
+                    langaugeProfile: [x.languageProfile],
                 });
 
                 if (x.qualityProfile) {
@@ -56,11 +60,16 @@ export class SonarrComponent implements OnInit {
                 if (x.rootPath) {
                     this.getRootFolders(this.form);
                 }
+                if(x.languageProfile) {
+                    this.getLanguageProfiles(this.form);
+                }
             });
         this.rootFolders = [];
         this.qualities = [];
+        this.languageProfiles = [];
         this.rootFolders.push({ path: "Please Select", id: -1 });
         this.qualities.push({ name: "Please Select", id: -1 });
+        this.languageProfiles.push({ name: "Please Select", id: -1 });
     }
 
     public getProfiles(form: FormGroup) {
@@ -86,6 +95,18 @@ export class SonarrComponent implements OnInit {
 
                 this.rootFoldersRunning = false;
                 this.notificationService.success("Successfully retrieved the Root Folders");
+            });
+    }
+
+    public getLanguageProfiles(form: FormGroup) {
+        this.langRunning = true;
+        this.sonarrService.getV3LanguageProfiles(form.value)
+            .subscribe(x => {
+                this.languageProfiles = x;
+                this.languageProfiles.unshift({ name: "Please Select", id: -1 });
+
+                this.langRunning = false;
+                this.notificationService.success("Successfully retrieved the Languge Profiles");
             });
     }
 
