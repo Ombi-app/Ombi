@@ -180,12 +180,7 @@ namespace Ombi.Core.Senders
             
             // Are we using v3 sonarr?
             var sonarrV3 = s.V3;
-            var languageProfileId = 0;
-            if (sonarrV3)
-            {
-                languageProfileId = s.LanguageProfile;
-            }
-
+            var languageProfileId = s.LanguageProfile;
 
             try
             {
@@ -215,6 +210,11 @@ namespace Ombi.Core.Senders
                             searchForMissingEpisodes = false // we want dont want to search yet. We want to make sure everything is unmonitored/monitored correctly.
                         }
                     };
+
+                    if (sonarrV3)
+                    {
+                        newSeries.languageProfileId = languageProfileId;
+                    }
 
                     // Montitor the correct seasons,
                     // If we have that season in the model then it's monitored!
