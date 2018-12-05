@@ -15,7 +15,7 @@ export class RequestRetryService extends ServiceHelpers {
     public getFailedRequests(): Observable<IFailedRequestsViewModel[]> {
         return this.http.get<IFailedRequestsViewModel[]>(this.url, {headers: this.headers});
     }
-    public deleteFailedRequest(failedId: number): Observable<IFailedRequestsViewModel[]> {
-        return this.http.delete<IFailedRequestsViewModel[]>(`${this.url}/${failedId}`, {headers: this.headers});
+    public deleteFailedRequest(failedId: number): Observable<boolean> {
+        return this.http.delete<boolean>(`${this.url}/${failedId}`, {headers: this.headers});
     }
 }

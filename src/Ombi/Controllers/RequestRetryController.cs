@@ -85,7 +85,7 @@ namespace Ombi.Controllers
         {
             var queueItem = await _requestQueueRepository.GetAll().FirstOrDefaultAsync(x => x.Id == queueId);
             await _requestQueueRepository.Delete(queueItem);
-            return Ok();
+            return Json(true);
         }
 
     }

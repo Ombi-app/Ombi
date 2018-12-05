@@ -16,7 +16,12 @@ export class FailedRequestsComponent implements OnInit {
         this.retry.getFailedRequests().subscribe(x => this.vm = x);
     }
 
-    public remove(failedId: number) {
-        this.retry.deleteFailedRequest(failedId).subscribe();
+    public remove(failed: IFailedRequestsViewModel) {
+        this.retry.deleteFailedRequest(failed.failedId).subscribe(x => {
+            if(x) {
+                const index = this.vm.indexOf(failed);
+                this.vm.splice(index,1);
+            }
+        });
     }
 }
