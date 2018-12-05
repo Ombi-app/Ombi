@@ -1,37 +1,75 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Ombi.Api.Lidarr;
 using Ombi.Api.Lidarr.Models;
-using Ombi.Api.Radarr;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
+using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
-using Serilog;
+using Ombi.Store.Repository;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Ombi.Core.Senders
 {
     public class MusicSender : IMusicSender
     {
-        public MusicSender(ISettingsService<LidarrSettings> lidarr, ILidarrApi lidarrApi)
+        public MusicSender(ISettingsService<LidarrSettings> lidarr, ILidarrApi lidarrApi, ILogger<MusicSender> log,
+            IRepository<RequestQueue> requestQueue, INotificationHelper notify)
         {
             _lidarrSettings = lidarr;
             _lidarrApi = lidarrApi;
+            _log = log;
+            _requestQueueRepository = requestQueue;
+            _notificationHelper = notify;
         }
 
         private readonly ISettingsService<LidarrSettings> _lidarrSettings;
         private readonly ILidarrApi _lidarrApi;
+        private readonly ILogger _log;
+        private readonly IRepository<RequestQueue> _requestQueueRepository;
+        private readonly INotificationHelper _notificationHelper;
 
         public async Task<SenderResult> Send(AlbumRequest model)
         {
-            var settings = await _lidarrSettings.GetSettingsAsync();
-            if (settings.Enabled)
+            try
             {
-                return await SendToLidarr(model, settings);
+                var settings = await _lidarrSettings.GetSettingsAsync();
+                if (settings.Enabled)
+                {
+                    return await SendToLidarr(model, settings);
+                }
+
+                return new SenderResult { Success = false, Sent = false, Message = "Lidarr is not enabled" };
+            }
+            catch (Exception e)
+            {
+                _log.LogError(e, "Exception thrown when sending a music to DVR app, added to the request queue");
+                var existingQueue = await _requestQueueRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id);
+                if (existingQueue != null)
+                {
+                    existingQueue.RetryCount++;
+                    existingQueue.Error = e.Message;
+                    await _requestQueueRepository.SaveChangesAsync();
+                }
+                else
+                {
+                    await _requestQueueRepository.Add(new RequestQueue
+                    {
+                        Dts = DateTime.UtcNow,
+                        Error = e.Message,
+                        RequestId = model.Id,
+                        Type = RequestType.Album,
+                        RetryCount = 0
+                    });
+                    _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
+                }
             }
 
-            return new SenderResult { Success = false, Sent = false, Message = "Lidarr is not enabled" };
+
+            return new SenderResult { Success = false, Sent = false, Message = "Something went wrong!" };
         }
 
         private async Task<SenderResult> SendToLidarr(AlbumRequest model, LidarrSettings settings)

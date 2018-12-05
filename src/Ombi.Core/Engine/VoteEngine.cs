@@ -11,7 +11,7 @@ using Ombi.Core.Models;
 using Ombi.Core.Models.UI;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Settings;
-using Ombi.Schedule.Jobs.Ombi;
+using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -114,7 +114,7 @@ namespace Ombi.Core.Engine
                     foreach (var epInformation in childRequests.SeasonRequests.OrderBy(x => x.SeasonNumber))
                     {
                         var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
-                        var episodeString = NewsletterJob.BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
+                        var episodeString = StringHelper.BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
                         finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString}");
                         finalsb.Append("<br />");
                     }

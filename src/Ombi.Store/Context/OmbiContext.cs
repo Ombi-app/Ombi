@@ -56,6 +56,7 @@ namespace Ombi.Store.Context
         public DbSet<RequestSubscription> RequestSubscription { get; set; }
         public DbSet<UserNotificationPreferences> UserNotificationPreferences { get; set; }
         public DbSet<UserQualityProfiles> UserQualityProfileses { get; set; }
+        public DbSet<RequestQueue> RequestQueue { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -5,7 +5,6 @@ using Ombi.Api.Slack;
 using Ombi.Api.Slack.Models;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
-using Ombi.Notifications.Interfaces;
 using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.Notifications;

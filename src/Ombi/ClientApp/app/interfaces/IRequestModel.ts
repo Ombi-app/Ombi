@@ -1,9 +1,9 @@
 ﻿import { IUser } from "./IUser";
 
 export enum RequestType {
+  tvShow = 0,
   movie = 1,
-  tvShow = 2,
-  
+  album = 2,
 }
 
 // NEW WORLD

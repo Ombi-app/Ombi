@@ -23,7 +23,7 @@ namespace Ombi.Core.Senders
     {
         public TvSender(ISonarrApi sonarrApi, ISonarrV3Api sonarrV3Api, ILogger<TvSender> log, ISettingsService<SonarrSettings> sonarrSettings,
             ISettingsService<DogNzbSettings> dog, IDogNzbApi dogApi, ISettingsService<SickRageSettings> srSettings,
-            ISickRageApi srApi, IRepository<UserQualityProfiles> userProfiles)
+            ISickRageApi srApi, IRepository<UserQualityProfiles> userProfiles, IRepository<RequestQueue> requestQueue, INotificationHelper notify)
         {
             SonarrApi = sonarrApi;
             SonarrV3Api = sonarrV3Api;
@@ -34,6 +34,8 @@ namespace Ombi.Core.Senders
             SickRageSettings = srSettings;
             SickRageApi = srApi;
             UserQualityProfiles = userProfiles;
+            _requestQueueRepository = requestQueue;
+            _notificationHelper = notify;
         }
 
         private ISonarrApi SonarrApi { get; }
@@ -45,59 +47,94 @@ namespace Ombi.Core.Senders
         private ISettingsService<DogNzbSettings> DogNzbSettings { get; }
         private ISettingsService<SickRageSettings> SickRageSettings { get; }
         private IRepository<UserQualityProfiles> UserQualityProfiles { get; }
+        private readonly IRepository<RequestQueue> _requestQueueRepository;
+        private readonly INotificationHelper _notificationHelper;
 
         public async Task<SenderResult> Send(ChildRequests model)
         {
-            var sonarr = await SonarrSettings.GetSettingsAsync();
-            if (sonarr.Enabled)
+            try
             {
-                var result = await SendToSonarr(model);
-                if (result != null)
+                var sonarr = await SonarrSettings.GetSettingsAsync();
+                if (sonarr.Enabled)
                 {
+                    var result = await SendToSonarr(model);
+                    if (result != null)
+                    {
+                        return new SenderResult
+                        {
+                            Sent = true,
+                            Success = true
+                        };
+                    }
+                }
+                var dog = await DogNzbSettings.GetSettingsAsync();
+                if (dog.Enabled)
+                {
+                    var result = await SendToDogNzb(model, dog);
+                    if (!result.Failure)
+                    {
+                        return new SenderResult
+                        {
+                            Sent = true,
+                            Success = true
+                        };
+                    }
                     return new SenderResult
                     {
-                        Sent = true,
-                        Success = true
+                        Message = result.ErrorMessage
                     };
                 }
-            }
-            var dog = await DogNzbSettings.GetSettingsAsync();
-            if (dog.Enabled)
-            {
-                var result = await SendToDogNzb(model, dog);
-                if (!result.Failure)
+                var sr = await SickRageSettings.GetSettingsAsync();
+                if (sr.Enabled)
                 {
+                    var result = await SendToSickRage(model, sr);
+                    if (result)
+                    {
+                        return new SenderResult
+                        {
+                            Sent = true,
+                            Success = true
+                        };
+                    }
                     return new SenderResult
                     {
-                        Sent = true,
-                        Success = true
+                        Message = "Could not send to SickRage!"
                     };
                 }
                 return new SenderResult
                 {
-                    Message = result.ErrorMessage
+                    Success = true
                 };
             }
-            var sr = await SickRageSettings.GetSettingsAsync();
-            if (sr.Enabled)
+            catch (Exception e)
             {
-                var result = await SendToSickRage(model, sr);
-                if (result)
+                Logger.LogError(e, "Exception thrown when sending a movie to DVR app, added to the request queue");
+                // Check if already in request quee
+                var existingQueue = await _requestQueueRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id);
+                if (existingQueue != null)
                 {
-                    return new SenderResult
-                    {
-                        Sent = true,
-                        Success = true
-                    };
+                    existingQueue.RetryCount++;
+                    existingQueue.Error = e.Message;
+                    await _requestQueueRepository.SaveChangesAsync();
                 }
-                return new SenderResult
+                else
                 {
-                    Message = "Could not send to SickRage!"
-                };
+                    await _requestQueueRepository.Add(new RequestQueue
+                    {
+                        Dts = DateTime.UtcNow,
+                        Error = e.Message,
+                        RequestId = model.Id,
+                        Type = RequestType.TvShow,
+                        RetryCount = 0
+                    });
+                    _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
+                }
             }
+
             return new SenderResult
             {
-                Success = true
+                Success = false,
+                Message = "Something wen't wrong!"
             };
         }
 
@@ -145,7 +182,7 @@ namespace Ombi.Core.Senders
                     }
                     if (profiles.SonarrQualityProfileAnime > 0)
                     {
-                       qualityToUse = profiles.SonarrQualityProfileAnime;
+                        qualityToUse = profiles.SonarrQualityProfileAnime;
                     }
                 }
                 seriesType = "anime";
@@ -165,7 +202,7 @@ namespace Ombi.Core.Senders
                     }
                     if (profiles.SonarrQualityProfile > 0)
                     {
-                       qualityToUse = profiles.SonarrQualityProfile;
+                        qualityToUse = profiles.SonarrQualityProfile;
                     }
                 }
                 seriesType = "standard";
@@ -176,8 +213,7 @@ namespace Ombi.Core.Senders
             {
                 qualityToUse = model.ParentRequest.QualityOverride.Value;
             }
-            
-            
+      
             // Are we using v3 sonarr?
             var sonarrV3 = s.V3;
             var languageProfileId = s.LanguageProfile;
@@ -280,7 +316,7 @@ namespace Ombi.Core.Senders
                 }
             }
             var seriesChanges = false;
-            
+
             foreach (var season in model.SeasonRequests)
             {
                 var sonarrSeason = sonarrEpList.Where(x => x.seasonNumber == season.SeasonNumber);
