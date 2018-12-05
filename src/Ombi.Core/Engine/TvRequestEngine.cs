@@ -116,6 +116,7 @@ namespace Ombi.Core.Engine
                     }
 
                 // Remove the ID since this is a new child
+                // This was a TVDBID for the request rules to run
                 tvBuilder.ChildRequest.Id = 0;
                 if (!tvBuilder.ChildRequest.SeasonRequests.Any())
                 {

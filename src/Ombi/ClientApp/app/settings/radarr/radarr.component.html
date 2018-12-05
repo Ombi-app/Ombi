@@ -1,5 +1,4 @@
-﻿
-<settings-menu></settings-menu>
+﻿<settings-menu></settings-menu>
 <div *ngIf="form">
     <fieldset>
         <legend>Radarr Settings</legend>
@@ -19,25 +18,34 @@
 
 
                 <div class="form-group">
-                    <label for="Ip" class="control-label">Hostname or IP</label>
+                    <label for="Ip" class="control-label">Hostname or IP
+                            <i *ngIf="form.get('ip').hasError('required')" class="fa fa-exclamation-circle error-text"
+                            pTooltip="IP/Hostname is required"></i>
+                    </label>
 
-                        <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="localhost" formControlName="ip"  [ngClass]="{'form-error': form.get('ip').hasError('required')}">
-                        <small *ngIf="form.get('ip').hasError('required')" class="error-text">The IP/Hostname is required</small>
+                    <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="localhost"
+                        formControlName="ip" [ngClass]="{'form-error': form.get('ip').hasError('required')}">
                 </div>
 
                 <div class="form-group">
-                    <label for="portNumber" class="control-label">Port</label>
+                    <label for="portNumber" class="control-label">Port 
+                            <i *ngIf="form.get('port').hasError('required')" class="fa fa-exclamation-circle error-text"
+                            pTooltip="Port is required"></i>
+                    </label>
 
-                        <input type="text" class="form-control form-control-custom " formControlName="port" id="portNumber" name="Port" placeholder="Port Number"  [ngClass]="{'form-error': form.get('port').hasError('required')}">
-                        <small *ngIf="form.get('port').hasError('required')" class="error-text">The Port is required</small>
+                    <input type="text" class="form-control form-control-custom " formControlName="port" id="portNumber"
+                        name="Port" placeholder="Port Number" [ngClass]="{'form-error': form.get('port').hasError('required')}">
                 </div>
 
 
                 <div class="form-group">
-                    <label for="ApiKey" class="control-label">API Key</label>
-                    
-                        <input type="text" class="form-control form-control-custom "  [ngClass]="{'form-error': form.get('apiKey').hasError('required')}" id="ApiKey" name="ApiKey" formControlName="apiKey">
-                        <small *ngIf="form.get('apiKey').hasError('required')" class="error-text">The API Key is required</small>
+                    <label for="ApiKey" class="control-label">API Key 
+                            <i *ngIf="form.get('apiKey').hasError('required')" class="fa fa-exclamation-circle error-text"
+                            pTooltip="Api Key is required"></i>
+                    </label>
+
+                    <input type="text" class="form-control form-control-custom " [ngClass]="{'form-error': form.get('apiKey').hasError('required')}"
+                        id="ApiKey" name="ApiKey" formControlName="apiKey">
                 </div>
                 <div class="form-group">
                     <div class="checkbox">
@@ -49,63 +57,73 @@
                 <div class="form-group">
                     <label for="SubDir" class="control-label">Base Url</label>
                     <div>
-                        <input type="text" class="form-control form-control-custom" formControlName="subDir" id="SubDir" name="SubDir">
+                        <input type="text" class="form-control form-control-custom" formControlName="subDir" id="SubDir"
+                            name="SubDir">
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
+
                 <div class="form-group">
-                    <div>
-                        <button (click)="getProfiles(form)" type="button" class="btn btn-primary-outline">Get Quality Profiles <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"> </span></button>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="select" class="control-label">Quality Profiles</label>
+                    <label for="select" class="control-label">Quality Profiles
+                        <i *ngIf="form.get('defaultQualityProfile').hasError('required')" class="fa fa-exclamation-circle error-text"
+                            pTooltip="Quality Profile is required"></i>
+                    </label>
                     <div id="profiles">
-                        <select formControlName="defaultQualityProfile" class="form-control form-control-custom" id="select"  [ngClass]="{'form-error': form.get('defaultQualityProfile').hasError('required')}">
+                        <select formControlName="defaultQualityProfile" class="form-control form-control-custom  col-md-5 form-half"
+                            id="select" [ngClass]="{'form-error': form.get('defaultQualityProfile').hasError('required')}">
                             <option *ngFor="let quality of qualities" value="{{quality.id}}">{{quality.name}}</option>
                         </select>
+                        <button (click)="getProfiles(form)" type="button" class="btn btn-primary-outline col-md-4 col-md-push-1">Get
+                            Quality Profiles <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"> </span></button>
                     </div>
-                    <small *ngIf="form.get('defaultQualityProfile').hasError('required')" class="error-text">A Default Quality Profile is required</small>
                 </div>
 
-                <div class="form-group">
-                    <div>
-                        <button (click)="getRootFolders(form)" type="button" class="btn btn-primary-outline">Get Root Folders <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
 
-                    </div>
-
-                </div>
                 <div class="form-group">
-                    <label for="rootFolders" class="control-label">Default Root Folders</label>
+                    <label for="rootFolders" class="control-label">Default Root Folders
+
+                        <i *ngIf="form.get('defaultRootPath').hasError('required')" class="fa fa-exclamation-circle error-text"
+                            pTooltip="Root Path is required"></i>
+                    </label>
                     <div id="rootFolders">
-                        <select formControlName="defaultRootPath" class="form-control form-control-custom"  [ngClass]="{'form-error': form.get('defaultRootPath').hasError('required')}">
-                            <option *ngFor="let folder of rootFolders" value="{{folder.path}}" >{{folder.path}}</option>
+                        <select formControlName="defaultRootPath" class="form-control form-control-custom col-md-5 form-half"
+                            [ngClass]="{'form-error': form.get('defaultRootPath').hasError('required')}">
+                            <option *ngFor="let folder of rootFolders" value="{{folder.path}}">{{folder.path}}</option>
                         </select>
-                    </div>                    
-                    <small *ngIf="form.get('defaultRootPath').hasError('required')" class="error-text">A Default Root Path is required</small>
+                        <button (click)="getRootFolders(form)" type="button" class="btn btn-primary-outline col-md-4 col-md-push-1">Get
+                            Root Folders <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
+
+                    </div>
                 </div>
 
+
+
                 <div class="form-group">
-                    <label for="rootFolders" class="control-label">Default Minimum Availability</label>
+                    <label for="rootFolders" class="control-label">Default Minimum Availability
+                        <i *ngIf="form.get('minimumAvailability').hasError('required')" class="fa fa-exclamation-circle error-text"
+                            pTooltip="Minimum Availability is required"></i>
+                    </label>
                     <div id="rootFolders">
-                        <select formControlName="minimumAvailability" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('minimumAvailability').hasError('required')}">
+                        <select formControlName="minimumAvailability" class="form-control form-control-custom col-md-5 form-half"
+                            [ngClass]="{'form-error': form.get('minimumAvailability').hasError('required')}">
                             <option *ngFor="let min of minimumAvailabilityOptions" value="{{min.value}}">{{min.name}}</option>
                         </select>
                     </div>
-                    
-                    <small *ngIf="form.get('minimumAvailability').hasError('required')" type="button" class="error-text">A Default Minimum Availability is required</small>
                 </div>
-
+            </div>
+<div class="col-md-6">
                 <div class="form-group" *ngIf="advanced" style="color:#ff761b">
                     <div class="checkbox">
                         <input type="checkbox" id="addOnly" formControlName="addOnly">
                         <label for="addOnly">Do not search</label>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <div>
-                        <button type="button" [disabled]="form.invalid" (click)="test(form)" class="btn btn-primary-outline">Test Connectivity <span id="spinner"></span></button>
+                        <button type="button" [disabled]="form.invalid" (click)="test(form)" class="btn btn-primary-outline">Test
+                            Connectivity <span id="spinner"></span></button>
                     </div>
                 </div>
 

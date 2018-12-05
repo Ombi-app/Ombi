@@ -53,8 +53,6 @@ namespace Ombi.Api.Emby
             {
                 username,
                 pw = password,
-                password = password.GetSha1Hash().ToLower(),
-                passwordMd5 = password.CalcuateMd5Hash()
             };
 
             request.AddJsonBody(body);

@@ -72,6 +72,8 @@ export interface ISonarrSettings extends IExternalSettings {
   rootPathAnime: string;
   fullRootPath: string;
   addOnly: boolean;
+  v3: boolean;
+  languageProfile: number;
 }
 
 export interface IRadarrSettings extends IExternalSettings {

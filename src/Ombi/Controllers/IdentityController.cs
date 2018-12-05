@@ -863,6 +863,7 @@ namespace Ombi.Controllers
         {
             var ombiUser = new OmbiUser
             {
+                Alias = user.Alias,
                 Email = user.EmailAddress,
                 UserName = user.UserName
             };
