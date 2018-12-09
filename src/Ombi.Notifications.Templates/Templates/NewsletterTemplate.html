@@ -6,309 +6,140 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Ombi</title>
     <style>
-        /* -------------------------------------
-          GLOBAL RESETS
-      ------------------------------------- */
+@media only screen and (max-width: 620px) {
+  table[class=body] h1 {
+    color: #ff761b;
+    font-family: sans-serif;
+    font-weight: 400;
+    line-height: 1.4;
+    margin: 0;
+    margin-bottom: 30px;
+    text-transform: capitalize;
+  }
 
-        /*All the styling goes here*/
+  table[class=body] p,
+table[class=body] ul,
+table[class=body] ol,
+table[class=body] td,
+table[class=body] span,
+table[class=body] a {
+    font-size: 16px !important;
+  }
 
-        img {
-            border: none;
-            -ms-interpolation-mode: bicubic;
-            max-width: 100%;
-        }
+  table[class=body] .wrapper,
+table[class=body] .article {
+    padding: 10px !important;
+  }
 
-        body {
-            background-color: #1f1f1f;
-            font-family: sans-serif;
-            -webkit-font-smoothing: antialiased;
-            font-size: 14px;
-            line-height: 1.4;
-            margin: 0;
-            padding: 0;
-            -ms-text-size-adjust: 100%;
-            -webkit-text-size-adjust: 100%;
-            color: #FFF;
-            text-align: center;
-        }
+  table[class=body] .content {
+    padding: 0 !important;
+  }
 
-        table {
-            border-collapse: separate;
-            mso-table-lspace: 0pt;
-            mso-table-rspace: 0pt;
-            width: 100%;
-        }
+  table[class=body] .container {
+    padding: 0 !important;
+    width: 100% !important;
+  }
 
-        table td {
-            font-family: sans-serif;
-            font-size: 14px;
-            vertical-align: top;
-        }
+  table[class=body] .main {
+    border-left-width: 0 !important;
+    border-radius: 0 !important;
+    border-right-width: 0 !important;
+  }
 
-        /* -------------------------------------
-          BODY & CONTAINER
-      ------------------------------------- */
+  table[class=body] .btn table {
+    width: 100% !important;
+  }
 
-        .body {
-            color: #FFF;
-            background-color: #1f1f1f;
-            width: 100%;
-            text-align: center;
-        }
+  table[class=body] .btn a {
+    width: 100% !important;
+  }
 
-        /* Set a max-width, and make it display as block so it will automatically stretch to that width, but will also shrink down on a phone or something */
+  table[class=body] .img-responsive {
+    height: auto !important;
+    max-width: 100% !important;
+    width: auto !important;
+  }
+}
+@media only screen and (max-width: 1040px) {
+  body {
+    max-width: 1040px !important;
+  }
 
-        .container {
-            display: block;
-            Margin: 0 auto !important;
-            /* makes it centered */
-            max-width: 580px;
-            padding: 10px;
-            width: 580px;
-        }
+  .media-card {
+    display: flex !important;
+    margin-top: 0 !important;
+    margin-right: auto !important;
+    margin-bottom: 10px !important;
+    margin-left: auto !important;
+    height: 100% !important;
+    width: 100% !important;
+  }
 
-        /* This should also be a block element, so that it will fill 100% of the .container */
+  table[class=start] h1 {
+    font-size: 28px !important;
+  }
 
-        .content {
-            box-sizing: border-box;
-            display: block;
-            Margin: 0 auto;
-            max-width: 580px;
-            padding: 10px;
-        }
+  table[class=start] .container {
+    padding: 0 !important;
+    width: 100% !important;
+  }
 
-        /* -------------------------------------
-          HEADER, FOOTER, MAIN
-      ------------------------------------- */
+  table[class=start] .main {
+    border-left-width: 0 !important;
+    border-radius: 0 !important;
+    border-right-width: 0 !important;
+  }
 
-        .main {
-            color: #FFF;
-            background: #1f1f1f;
-            border-radius: 3px;
-            width: 100%;
-            text-align: center;
-        }
+  .description div {
+    margin: 0px !important;
+    padding-bottom: 20px !important;
+  }
 
-        .wrapper {
-            box-sizing: border-box;
-            padding: 20px;
-        }
+  .tv-table {
+    width: 100% !important;
+  }
+}
+@media all {
+  .ExternalClass {
+    width: 100%;
+  }
 
-        .content-block {
-            padding-bottom: 10px;
-            padding-top: 10px;
-        }
+  .ExternalClass,
+.ExternalClass p,
+.ExternalClass span,
+.ExternalClass font,
+.ExternalClass td,
+.ExternalClass div {
+    line-height: 100%;
+  }
 
-        .footer {
-            clear: both;
-            Margin-top: 10px;
-            text-align: center;
-            width: 100%;
-        }
+  .apple-link a {
+    color: inherit !important;
+    font-family: inherit !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+    text-decoration: none !important;
+  }
 
-        .footer td,
-        .footer p,
-        .footer span,
-        .footer a {
-            color: #999999;
-            font-size: 12px;
-            text-align: center;
-        }
+  .btn-primary table td:hover {
+    background-color: #34495e !important;
+  }
 
-        /* -------------------------------------
-          TYPOGRAPHY
-      ------------------------------------- */
-
-        h1,
-        h2,
-        h3,
-        h4 {
-            color: #ff761b;
-            font-family: sans-serif;
-            font-weight: 400;
-            line-height: 1.4;
-            margin: 0;
-            margin-bottom: 30px;
-        }
-
-        h1 {
-            font-size: 35px;
-            font-weight: 300;
-            text-align: center;
-            text-transform: capitalize;
-            color: #ff761b;
-        }
-
-        p,
-        ul,
-        ol {
-            font-family: sans-serif;
-            font-size: 14px;
-            font-weight: normal;
-            margin: 0;
-            margin-bottom: 15px;
-        }
-
-        p li,
-        ul li,
-        ol li {
-            list-style-position: inside;
-            margin-left: 5px;
-        }
-
-        a {
-            color: #ff761b !important;
-            text-decoration: none;
-            font-weight: 400;
-        }
-
-        /* -------------------------------------
-          OTHER STYLES THAT MIGHT BE USEFUL
-      ------------------------------------- */
-
-        .last {
-            margin-bottom: 0;
-        }
-
-        .first {
-            margin-top: 0;
-        }
-
-        .align-center {
-            text-align: center;
-        }
-
-        .align-right {
-            text-align: right;
-        }
-
-        .align-left {
-            text-align: left;
-        }
-
-        .clear {
-            clear: both;
-        }
-
-        .mt0 {
-            margin-top: 0;
-        }
-
-        .mb0 {
-            margin-bottom: 0;
-        }
-
-        .preheader {
-            color: transparent;
-            display: none;
-            height: 0;
-            max-height: 0;
-            max-width: 0;
-            opacity: 0;
-            overflow: hidden;
-            mso-hide: all;
-            visibility: hidden;
-            width: 0;
-        }
-
-        .powered-by a {
-            text-decoration: none;
-        }
-
-        hr {
-            border: 0;
-            border-bottom: 1px solid #f6f6f6;
-            Margin: 20px 0;
-        }
-
-        /* -------------------------------------
-          RESPONSIVE AND MOBILE FRIENDLY STYLES
-      ------------------------------------- */
-
-        @media only screen and (max-width: 620px) {
-            table[class=body] h1 {
-                font-size: 28px !important;
-                margin-bottom: 10px !important;
-            }
-            table[class=body] p,
-            table[class=body] ul,
-            table[class=body] ol,
-            table[class=body] td,
-            table[class=body] span,
-            table[class=body] a {
-                font-size: 16px !important;
-            }
-            table[class=body] .wrapper,
-            table[class=body] .article {
-                padding: 10px !important;
-            }
-            table[class=body] .content {
-                padding: 0 !important;
-            }
-            table[class=body] .container {
-                padding: 0 !important;
-                width: 100% !important;
-            }
-            table[class=body] .main {
-                border-left-width: 0 !important;
-                border-radius: 0 !important;
-                border-right-width: 0 !important;
-            }
-            table[class=body] .btn table {
-                width: 100% !important;
-            }
-            table[class=body] .btn a {
-                width: 100% !important;
-            }
-            table[class=body] .img-responsive {
-                height: auto !important;
-                max-width: 100% !important;
-                width: auto !important;
-            }
-        }
-
-        /* -------------------------------------
-          PRESERVE THESE STYLES IN THE HEAD
-      ------------------------------------- */
-
-        @media all {
-            .ExternalClass {
-                width: 100%;
-            }
-            .ExternalClass,
-            .ExternalClass p,
-            .ExternalClass span,
-            .ExternalClass font,
-            .ExternalClass td,
-            .ExternalClass div {
-                line-height: 100%;
-            }
-            .apple-link a {
-                color: inherit !important;
-                font-family: inherit !important;
-                font-size: inherit !important;
-                font-weight: inherit !important;
-                line-height: inherit !important;
-                text-decoration: none !important;
-            }
-            .btn-primary table td:hover {
-                background-color: #34495e !important;
-            }
-            .btn-primary a:hover {
-                background-color: #34495e !important;
-                border-color: #34495e !important;
-            }
-        }
-
-    </style>
+  .btn-primary a:hover {
+    background-color: #34495e !important;
+    border-color: #34495e !important;
+  }
+}
+</style>
 </head>
 
 <body class="" style="background-color: #1f1f1f; font-family: sans-serif; -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.4; margin: 0; padding: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #FFF; text-align: center;">
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #FFF; background-color: #1f1f1f; width: 100%; text-align: center;" width="100%" bgcolor="#1f1f1f" align="center">
         <tr>
             <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">&nbsp;</td>
-            <td class="container" style="font-family: sans-serif; font-size: 14px; vertical-align: top; display: block; max-width: 580px; padding: 10px; width: 580px; Margin: 0 auto;" width="580" valign="top">
-                <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
+            <td class="container" style="font-family: sans-serif; font-size: 14px; vertical-align: top; max-width: 580px; width: 580px;" width="580" valign="top">
+                <div class="content" style="box-sizing: border-box; max-width: 580px;">
                     <!-- START CENTERED WHITE CONTAINER -->
                     <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Ombi recently added</span>
                     <table role="presentation" class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #FFF; background: #1f1f1f; border-radius: 3px; width: 100%; text-align: center;" width="100%" align="center">
