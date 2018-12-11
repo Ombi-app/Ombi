@@ -2,8 +2,8 @@
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Ombi</title>
     <style>
         /* -------------------------------------
@@ -20,7 +20,7 @@
 
         body {
             background-color: #1f1f1f;
-            font-family: sans-serif;
+            font-family: 'Open Sans', Helvetica, Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
             font-size: 14px;
             line-height: 1.4;
@@ -97,6 +97,102 @@
             padding-top: 10px;
         }
 
+        .media-card {
+            font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+            vertical-align: top;
+            padding: 3px;
+            width: 500px;
+            min-width: 500px;
+            max-width: 500px;
+            height: 252px;
+            max-height: 252px;
+        }
+
+        .card-bg {
+            background-image: url({0});
+            border-collapse: separate;
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+            width: 500px;
+            background-color: #1f1f1f;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-clip: padding-box;
+            border: 2px solid rgba(255, 118, 27, .4);
+            height: 252px;
+            max-height: 252px;
+        }
+
+        .bg-tint {
+            background-color: rgba(0, 0, 0, .6);
+        }
+
+        .poster-container {
+            vertical-align: top;
+            width: 150px;
+            min-width: 150px;
+            height: 225px;
+            max-height: 225px;
+            min-height: 225px;
+        }
+
+        .poster-img {}
+
+        .poster-overlay {}
+
+        .movie-info {
+            font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            vertical-align: top;
+            padding-left: 4px;
+            text-align: left;
+            height: 227px;
+        }
+
+        .title {
+            font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+            vertical-align: top;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            padding: 5px;
+            max-height: 130px;
+            max-width: 320px;
+            overflow: hidden;
+            display: block;
+        }
+
+        .description {
+            font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+            vertical-align: top;
+            padding: 5px;
+            height: 100%;
+            max-height: 130px;
+            max-width: 320px;
+            overflow: hidden;
+            display: block;
+            margin: 0px;
+            font-size: 0.8rem !important;
+        }
+
+        .meta {
+            font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+            max-width: 300px;
+            min-width: 300px;
+            padding: 3px 7px;
+            margin-top: 10px;
+            font-size: 0.9rem !important;
+            line-height: 1;
+            text-align: left;
+            white-space: nowrap;
+            vertical-align: middle;
+            background-color: rgba(255, 118, 27, 0.5);
+            color: #fff;
+            border-radius: 2px;
+            overflow: hidden;
+            display: block;
+        }
+
         .footer {
             clear: both;
             Margin-top: 10px;
@@ -122,9 +218,10 @@
         h3,
         h4 {
             color: #ff761b;
-            font-family: sans-serif;
+            font-family: 'Open Sans', Helvetica, Arial, sans-serif;
             font-weight: 400;
-            line-height: 1.4;
+            line-height: 1.4rem;
+            font-size: 1.5rem;
             margin: 0;
             text-transform: capitalize;
         }
@@ -132,8 +229,7 @@
         p,
         ul,
         ol {
-            font-family: sans-serif;
-            font-size: 14px;
+            font-family: 'Open Sans', Helvetica, Arial, sans-serif;
             font-weight: normal;
             margin: 0;
             margin-bottom: 15px;
@@ -224,41 +320,50 @@
                 margin: 0 auto;
                 text-transform: capitalize;
             }
+
             table[class=body] p,
             table[class=body] ul,
             table[class=body] ol,
             table[class=body] td,
             table[class=body] span,
             table[class=body] a {
-                font-size: 16px !important;
+                font-size: 12px !important;
             }
+
             table[class=body] .wrapper,
             table[class=body] .article {
                 padding: 10px !important;
             }
+
             table[class=body] .content {
                 padding: 0 !important;
             }
+
             table[class=body] .container {
                 padding: 0 !important;
                 width: 100% !important;
             }
+
             table[class=body] .main {
                 border-left-width: 0 !important;
                 border-radius: 0 !important;
                 border-right-width: 0 !important;
             }
+
             table[class=body] .btn table {
                 width: 100% !important;
             }
+
             table[class=body] .btn a {
                 width: 100% !important;
             }
+
             table[class=body] .img-responsive {
                 height: auto !important;
                 max-width: 100% !important;
                 width: auto !important;
             }
+
             .media-card {
                 display: flex !important;
                 margin-top: 0 !important;
@@ -280,6 +385,7 @@
             .ExternalClass {
                 width: 100%;
             }
+
             .ExternalClass,
             .ExternalClass p,
             .ExternalClass span,
@@ -288,6 +394,7 @@
             .ExternalClass div {
                 line-height: 100%;
             }
+
             .apple-link a {
                 color: inherit !important;
                 font-family: inherit !important;
@@ -296,9 +403,11 @@
                 line-height: inherit !important;
                 text-decoration: none !important;
             }
+
             .btn-primary table td:hover {
                 background-color: #34495e !important;
             }
+
             .btn-primary a:hover {
                 background-color: #34495e !important;
                 border-color: #34495e !important;
@@ -307,7 +416,6 @@
 
     </style>
 </head>
-
 <body class="" style="background-color: #1f1f1f; font-family: sans-serif; -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.4; margin: 0; padding: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #FFF; text-align: center;">
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #FFF; background-color: #1f1f1f; width: 100%; text-align: center;" width="100%" bgcolor="#1f1f1f" align="center">
         <tr>
