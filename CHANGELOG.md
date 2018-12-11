@@ -1,6 +1,8 @@
 # Changelog
 
-## (unreleased)
+## v3.0.3988 (2018-11-23)
+
+
 
 ### **New Features**
 
@@ -35,7 +37,8 @@
 
 ### **Fixes**
 
-- !changelog. [Jamie]
+
+- Fixed #2601 [TidusJar]
 
 - Made the subscribe/unsubscribe button more obvious on the UI #2309. [Jamie]
 
