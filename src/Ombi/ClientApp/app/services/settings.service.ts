@@ -31,7 +31,6 @@ import {
     ISlackNotificationSettings,
     ISonarrSettings,
     ITelegramNotifcationSettings,
-    IThemes,
     IUpdateSettings,
     IUserManagementSettings,
     IVoteSettings,
@@ -133,14 +132,6 @@ export class SettingsService extends ServiceHelpers {
 
     public saveCustomization(settings: ICustomizationSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}/customization`, JSON.stringify(settings), {headers: this.headers});
-    }
-
-    public getThemes(): Observable<IThemes[]> {
-        return this.http.get<IThemes[]>(`${this.url}/themes`, {headers: this.headers});
-    }
-
-    public getThemeContent(themeUrl: string): Observable<string> {
-        return this.http.get(`${this.url}/themecontent?url=${themeUrl}`, {responseType: "text", headers: this.headers});
     }
 
     public getEmailNotificationSettings(): Observable<IEmailNotificationSettings> {

@@ -1,4 +1,5 @@
 ﻿@using Ombi.Core.Settings
+@using Ombi.Helpers
 @using Ombi.Settings.Settings.Models
 @inject ISettingsService<OmbiSettings> Settings
 @inject ISettingsService<CustomizationSettings> CustomizationSettings
@@ -105,28 +106,11 @@
 </head>
 <body>
     @{
-        if (customization.HasPresetTheme)
+        if (customization.CustomCss.HasValue())
         {
-            if (!string.IsNullOrEmpty(baseUrl))
-            {
-                if (!customization.PresetThemeContent.Contains("/" + baseUrl))
-                {
-                    var index = customization.PresetThemeContent.IndexOf("/api/");
-                    if (index > 0)
-                    {
-                        customization.PresetThemeContent = customization.PresetThemeContent.Insert(index, "/" + baseUrl);
-                    }
-                }
-            }
-
-            <style>
-                @Html.Raw(customization.PresetThemeContent)
+           <style>
+                @Html.Raw(customization.CustomCss)
             </style>
-        }
-
-        if (!string.IsNullOrEmpty(customization.CustomCssLink))
-        {
-            <link rel="stylesheet" href="@customization.CustomCssLink" asp-append-version="true" />
         }
     }
 

@@ -114,23 +114,11 @@ export interface ICustomizationSettings extends ISettings {
   applicationName: string;
   applicationUrl: string;
   logo: string;
-  customCssLink: string;
+  customCss: string;
   enableCustomDonations: boolean;
   customDonationUrl: string;
   customDonationMessage: string;
-  hasPresetTheme: boolean;
-  presetThemeName: string;
-  presetThemeContent: string;
-  presetThemeDisplayName: string;
-  presetThemeVersion: string;
   recentlyAddedPage: boolean;
-}
-
-export interface IThemes {
-  fullName: string;
-  displayName: string;
-  version: string;
-  url: string;
 }
 
 export interface IJobSettings {
