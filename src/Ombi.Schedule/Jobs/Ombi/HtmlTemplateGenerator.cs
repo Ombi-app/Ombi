@@ -73,7 +73,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             sb.Append("<tr class=\"description\" style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; vertical-align: top; padding: 5px; height: 100%; max-height: 130px; max-width: 320px; overflow: hidden; display: block; margin: 0px; font-size: 0.8rem;\" valign=\"top\">");
             sb.Append("<td style=\"font-family: sans-serif; font-size: 14px; vertical-align: top; \">");
             sb.AppendFormat("<p style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-weight: normal; margin: 0; margin-bottom: 15px; \">{0}</p>", episodes);
-            sb.AppendFormat("<div">{0}"</div>", summary);
+            sb.AppendFormat("<div>"{0}"</div>", summary);
             sb.Append("</td>");
             sb.Append("</tr>");
         }
@@ -82,7 +82,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         {
             sb.Append("<tr class=\"meta\" style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; max-width: 300px; min-width: 300px; padding: 3px 7px; margin-top: 10px; line-height: 1; text-align: left; white-space: nowrap; vertical-align: middle; background-color: rgba(255, 118, 27, 0.5); color: #fff; border-radius: 2px; overflow: hidden; display: block; font-size: 0.9rem;\" align=\"left\" valign=\"middle\" bgcolor=\"rgba(255, 118, 27, 0.5)\">");
             sb.Append("<td style=\"font-family: sans-serif; font-size: 14px; vertical-align: top; \">");
-            sb.AppendFormat("<span">{0}"</span>", text);
+            sb.AppendFormat("<span>"{0}"</span>", text);
             sb.Append("</td>");
             sb.Append("</tr>");
         }
