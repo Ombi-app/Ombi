@@ -50,10 +50,10 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         protected virtual void AddTitle(StringBuilder sb, string url, string title)
         {
-            sb.Append("<tr class=\"title\" valign=\"top\" style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; vertical-align: top; text-overflow: ellipsis; overflow: hidden; padding: 5px; max-height: 130px; max-width: 320px; overflow: hidden; display: block; \">");
+            sb.Append("<tr class=\"title\" valign=\"top\" style=\"color: #ff761b; font-weight: 400; line-height: 1.4rem; text-transform: capitalize; font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-size: 1.5rem; vertical-align: top; text-overflow: ellipsis; padding-left: 5px; max-height: 50px; max-width: 320px; overflow: hidden; display: block; margin: 0; \">");
             sb.Append("<td>");
             if(url.HasValue()) sb.AppendFormat("<a href=\"{0}\" target=\"_blank\" style=\"text-decoration: none; font-weight: 400; color: #ff761b;\">", url);
-            sb.AppendFormat("<h1 style=\"color: #ff761b; font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-weight: 400; line-height: 1.4rem; font-size: 1.5rem; margin: 0; text-transform: capitalize;\" >{0}</h1>", title);
+            sb.AppendFormat("<h1 style=\"color: #ff761b; font-weight: 400; line-height: 1.4rem; text-transform: capitalize; font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-size: 1.5rem; vertical-align: top; text-overflow: ellipsis; padding-left: 5px; max-height: 50px; max-width: 320px; overflow: hidden; display: block; margin: 0;\" >{0}</h1>", title);
             if (url.HasValue()) sb.Append("</a>");
             sb.Append("</td>");
             sb.Append("</tr>");
