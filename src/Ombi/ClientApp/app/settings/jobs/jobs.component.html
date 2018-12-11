@@ -48,6 +48,13 @@
                         <small *ngIf="form.get('automaticUpdater').hasError('required')" class="error-text">The Automatic Update is required</small>
                         <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('automaticUpdater')?.value)">Test</button>
                 </div>
+
+                <div class="form-group">
+                    <label for="retryRequests" class="control-label">Retry Failed Requests</label>              
+                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('retryRequests').hasError('required')}" id="retryRequests" name="retryRequests" formControlName="retryRequests">
+                        <small *ngIf="form.get('retryRequests').hasError('required')" class="error-text">The Retry Requests is required</small>
+                        <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('retryRequests')?.value)">Test</button>
+                </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">

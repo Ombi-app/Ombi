@@ -15,3 +15,4 @@ export * from "./mobile.service";
 export * from "./notificationMessage.service";
 export * from "./recentlyAdded.service";
 export * from "./vote.service";
+export * from "./requestretry.service";

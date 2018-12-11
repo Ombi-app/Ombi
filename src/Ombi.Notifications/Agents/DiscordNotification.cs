@@ -6,7 +6,6 @@ using Ombi.Api.Discord;
 using Ombi.Api.Discord.Models;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
-using Ombi.Notifications.Interfaces;
 using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.Notifications;

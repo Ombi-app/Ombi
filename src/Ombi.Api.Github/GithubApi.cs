@@ -24,16 +24,5 @@ namespace Ombi.Api.Github
             request.AddHeader("User-Agent", "Ombi");
             return await _api.Request<List<CakeThemes>>(request);
         }
-
-        public async Task<string> GetThemesRawContent(string url)
-        {
-            var sections = url.Split('/');
-            var lastPart = sections.Last();
-            url = url.Replace(lastPart, string.Empty);
-            var request = new Request(lastPart, url, HttpMethod.Get);
-            request.AddHeader("Accept", "application/vnd.github.v3+json");
-            request.AddHeader("User-Agent", "Ombi");
-            return await _api.RequestContent(request);
-        }
     }
 }

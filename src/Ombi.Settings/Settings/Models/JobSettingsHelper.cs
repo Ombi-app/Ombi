@@ -61,6 +61,10 @@ namespace Ombi.Settings.Settings.Models
         {
             return Get(s.IssuesPurge, Cron.Daily());
         }
+        public static string ResendFailedRequests(JobSettings s)
+        {
+            return Get(s.RetryRequests, Cron.Daily(6));
+        }
 
         private static string Get(string settings, string defaultCron)
         {

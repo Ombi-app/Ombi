@@ -72,6 +72,8 @@ export interface ISonarrSettings extends IExternalSettings {
   rootPathAnime: string;
   fullRootPath: string;
   addOnly: boolean;
+  v3: boolean;
+  languageProfile: number;
 }
 
 export interface IRadarrSettings extends IExternalSettings {
@@ -112,23 +114,11 @@ export interface ICustomizationSettings extends ISettings {
   applicationName: string;
   applicationUrl: string;
   logo: string;
-  customCssLink: string;
+  customCss: string;
   enableCustomDonations: boolean;
   customDonationUrl: string;
   customDonationMessage: string;
-  hasPresetTheme: boolean;
-  presetThemeName: string;
-  presetThemeContent: string;
-  presetThemeDisplayName: string;
-  presetThemeVersion: string;
   recentlyAddedPage: boolean;
-}
-
-export interface IThemes {
-  fullName: string;
-  displayName: string;
-  version: string;
-  url: string;
 }
 
 export interface IJobSettings {
@@ -145,6 +135,7 @@ export interface IJobSettings {
   plexRecentlyAddedSync: string;
   lidarrArtistSync: string;
   issuesPurge: string;
+  retryRequests: string;
 }
 
 export interface IIssueSettings extends ISettings {

@@ -275,19 +275,6 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
-        /// Gets the content of the theme available
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        [HttpGet("themecontent")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetThemeContent([FromQuery]string url)
-        {
-            var css = await _githubApi.GetThemesRawContent(url);
-            return Content(css, "text/css");
-        }
-
-        /// <summary>
         /// Gets the Sonarr Settings.
         /// </summary>
         /// <returns></returns>
@@ -520,6 +507,7 @@ namespace Ombi.Controllers
             j.Newsletter = j.Newsletter.HasValue() ? j.Newsletter : JobSettingsHelper.Newsletter(j);
             j.LidarrArtistSync = j.LidarrArtistSync.HasValue() ? j.LidarrArtistSync : JobSettingsHelper.LidarrArtistSync(j);
             j.IssuesPurge = j.IssuesPurge.HasValue() ? j.IssuesPurge : JobSettingsHelper.IssuePurge(j);
+            j.RetryRequests = j.RetryRequests.HasValue() ? j.RetryRequests : JobSettingsHelper.ResendFailedRequests(j);
 
             return j;
         }

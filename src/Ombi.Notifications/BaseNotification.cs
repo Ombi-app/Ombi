@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +13,7 @@ using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
 
-namespace Ombi.Notifications.Interfaces
+namespace Ombi.Notifications
 {
     public abstract class BaseNotification<T> : INotification where T : Settings.Settings.Models.Settings, new()
     {
