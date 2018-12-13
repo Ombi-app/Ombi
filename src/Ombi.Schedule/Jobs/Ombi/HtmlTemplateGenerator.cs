@@ -50,10 +50,10 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         protected virtual void AddTitle(StringBuilder sb, string url, string title)
         {
-            sb.Append("<tr class=\"title\" valign=\"top\" style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif;font-size: 1.3rem;line-height: 1.4rem;vertical-align: top;max-width: 320px;white-space: normal;display: block;margin: 0;height: 100%;min-height: 20px;max-height: 45px; \">");
+            sb.Append("<tr class=\"title\" valign=\"top\" style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif;font-size: 22px;line-height: 24px;vertical-align: top;max-width: 320px;display: block;height: 100%;min-height: 20px;max-height: 45px; \">");
             sb.Append("<td>");
             if(url.HasValue()) sb.AppendFormat("<a href=\"{0}\" target=\"_blank\" style=\"text-decoration: none; font-weight: 400; color: #ff761b;\">", url);
-            sb.AppendFormat("<h1 style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif;font-size: 1.3rem;line-height: 1.4rem;vertical-align: top;max-width: 320px;white-space: normal;display: block;margin: 0;height: 100%;min-height: 20px;max-height: 45px;\" >{0}</h1>", title);
+            sb.AppendFormat("<h1 style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif;font-size: 22px;line-height: 24px;vertical-align: top;max-width: 320px;display: block;height: 100%;min-height: 20px;max-height: 45px;\" >{0}</h1>", title);
             if (url.HasValue()) sb.Append("</a>");
             sb.Append("</td>");
             sb.Append("</tr>");
@@ -61,7 +61,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         protected virtual void AddParagraph(StringBuilder sb, string text)
         {
-            sb.Append("<tr class=\"description\" style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; vertical-align: top;height: 130px;max-height: 130px;max-width: 320px;overflow: hidden;text-overflow: ellipsis;margin: 0px;display: block;font-size: 0.8rem !important;text-align: justify;\" valign=\"top\">");
+            sb.Append("<tr class=\"description\" style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif;height: 130px;max-height: 130px;max-width: 320px;overflow: hidden;text-overflow: ellipsis;display: block;font-size: 14px !important;text-align: justify;\" valign=\"top\">");
             sb.Append("<td style=\"font-family: sans-serif; font-size: 14px; vertical-align: top; \">");
             sb.AppendFormat("<p style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-weight: normal; margin: 0; margin-bottom: 15px; \">{0}</p>", text);
             sb.Append("</td>");
@@ -70,7 +70,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         protected virtual void AddTvParagraph(StringBuilder sb, string episodes, string summary)
         {
-            sb.Append("<tr class=\"description\" style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; vertical-align: top; padding: 5px; height: 100%; max-height: 130px; max-width: 320px; overflow: hidden; display: block; margin: 0px; font-size: 0.8rem;\" valign=\"top\">");
+            sb.Append("<tr class=\"description\" style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif;height: 130px;max-height: 130px;max-width: 320px;overflow: hidden;text-overflow: ellipsis;display: block;font-size: 14px !important;text-align: justify;\" valign=\"top\">");
             sb.Append("<td style=\"font-family: sans-serif; font-size: 14px; vertical-align: top; \">");
             sb.AppendFormat("<p style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-weight: normal; margin: 0; margin-bottom: 15px; \">{0}</p>", episodes);
             sb.AppendFormat("<div>{0}</div>", summary);
