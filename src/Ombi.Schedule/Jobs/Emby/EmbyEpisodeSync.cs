@@ -83,7 +83,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 {
                     processed++;
 
-                    if (ep.LocationType.Equals("Virtual", StringComparison.InvariantCultureIgnoreCase))
+                    if (ep.LocationType?.Equals("Virtual", StringComparison.InvariantCultureIgnoreCase) ?? false)
                     {
                         // For some reason Emby is not respecting the `IsVirtualItem` field.
                         continue;
