@@ -55,6 +55,10 @@ export interface IAlbumUpdateModel {
   id: number;
 }
 
+export interface IDenyAlbumModel extends IAlbumUpdateModel {
+  reason: string;
+}
+
 export interface IFullBaseRequest extends IBaseRequest {
   imdbId: string;
   overview: string;
@@ -115,6 +119,10 @@ export interface IChildRequests extends IBaseRequest {
 
 export interface ITvUpdateModel {
   id: number;
+}
+
+export interface ITvDenyModel extends ITvUpdateModel {
+  reason: string;
 }
 
 export enum OrderType {

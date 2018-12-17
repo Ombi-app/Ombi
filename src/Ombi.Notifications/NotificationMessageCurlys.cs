@@ -49,7 +49,7 @@ namespace Ombi.Notifications
             }
             Overview = req?.Overview;
             Year = req?.ReleaseDate.Year.ToString();
-
+            DenyReason = req?.DeniedReason;
             if (req?.RequestType == RequestType.Movie)
             {
                 PosterImage = string.Format((req?.PosterPath ?? string.Empty).StartsWith("/", StringComparison.InvariantCultureIgnoreCase)
@@ -88,6 +88,7 @@ namespace Ombi.Notifications
                 UserName = req?.RequestedUser?.UserName;
             }
 
+            DenyReason = req?.DeniedReason;
             Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
             Title = title;
             RequestedDate = req?.RequestedDate.ToString("D");
@@ -126,6 +127,7 @@ namespace Ombi.Notifications
             {
                 title = req?.ParentRequest.Title;
             }
+            DenyReason = req?.DeniedReason;
             ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
             RequestedUser = req?.RequestedUser?.UserName;
@@ -217,7 +219,6 @@ namespace Ombi.Notifications
         public string UserName { get; set; }
         public string IssueUser => UserName;
         public string Alias { get; set; }
-
         public string Title { get; set; }
         public string RequestedDate { get; set; }
         public string Type { get; set; }
@@ -235,6 +236,7 @@ namespace Ombi.Notifications
         public string IssueSubject { get; set; }
         public string NewIssueComment { get; set; }
         public string UserPreference { get; set; }
+        public string DenyReason { get; set; }
 
         // System Defined
         private string LongDate => DateTime.Now.ToString("D");
@@ -269,6 +271,7 @@ namespace Ombi.Notifications
             {nameof(UserName),UserName},
             {nameof(Alias),Alias},
             {nameof(UserPreference),UserPreference},
+            {nameof(DenyReason),DenyReason},
         };
     }
 }
