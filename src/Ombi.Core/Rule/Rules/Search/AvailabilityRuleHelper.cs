@@ -63,7 +63,7 @@ namespace Ombi.Core.Rule.Rules.Search
                 episode.Available = true;
             }
         }
-        public async Task SingleEpisodeCheck(bool useImdb, IQueryable<EmbyEpisode> allEpisodes, EpisodeRequests episode,
+        public static async Task SingleEpisodeCheck(bool useImdb, IQueryable<EmbyEpisode> allEpisodes, EpisodeRequests episode,
             SeasonRequests season, EmbyContent item, bool useTheMovieDb, bool useTvDb)
         {
             EmbyEpisode epExists = null;

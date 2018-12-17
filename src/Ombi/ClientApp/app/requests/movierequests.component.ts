@@ -1,9 +1,10 @@
 import { PlatformLocation } from "@angular/common";
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
+import { ConfirmationService, ConfirmDialog } from "primeng/primeng";
 import { AuthService } from "../auth/auth.service";
 import { FilterType, IFilter, IIssueCategory, IMovieRequests, IPagenator, IRadarrProfile, IRadarrRootFolder, OrderType } from "../interfaces";
 import { NotificationService, RadarrService, RequestService } from "../services";
@@ -37,9 +38,10 @@ export class MovieRequestsComponent implements OnInit {
 
     public orderType: OrderType = OrderType.RequestedDateDesc;
     public OrderType = OrderType;
+    @ViewChild("") public confirmDialogComponent: ConfirmDialog;
 
     public totalMovies: number = 100;
-    private currentlyLoaded: number;
+    public currentlyLoaded: number;
     private amountToLoad: number;
 
     constructor(
@@ -48,7 +50,8 @@ export class MovieRequestsComponent implements OnInit {
         private notificationService: NotificationService,
         private radarrService: RadarrService,
         private sanitizer: DomSanitizer,
-        private readonly platformLocation: PlatformLocation) {
+        private readonly platformLocation: PlatformLocation,
+        private confirmationService: ConfirmationService) {
         this.searchChanged.pipe(
             debounceTime(600), // Wait Xms after the last event before emitting last event
             distinctUntilChanged(), // only emit if value is different from previous value
@@ -130,9 +133,15 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     public deny(request: IMovieRequests) {
-        request.denied = true;
-        this.denyRequest(request);
-    }
+ 
+        this.confirmationService.confirm({
+            message: "Are you sure",
+            accept: () => {
+                request.denied = true;
+                this.denyRequest(request);
+            },
+          });
+         }  
 
     public selectRootFolder(searchResult: IMovieRequests, rootFolderSelected: IRadarrRootFolder, event: any) {
         event.preventDefault();
