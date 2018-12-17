@@ -7,10 +7,11 @@ using Ombi.Core.Rule.Interfaces;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Core.Rule.Rules.Search
 {
-    public class PlexAvailabilityRule : BaseSearchRule, IRules<SearchViewModel>
+    public class PlexAvailabilityRule : AvailabilityRuleBase, IRules<SearchViewModel>
     {
         public PlexAvailabilityRule(IPlexContentRepository repo)
         {
@@ -74,56 +75,17 @@ namespace Ombi.Core.Rule.Rules.Search
                         {
                             foreach (var episode in season.Episodes)
                             {
-                                PlexEpisode epExists = null;
-                                if (useImdb)
-                                {
-                                    epExists = await allEpisodes.FirstOrDefaultAsync(x =>
-                                        x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                                        x.Series.ImdbId == item.ImdbId.ToString());
-                                }
-                                if (useTheMovieDb)
-                                {
-                                    epExists = await allEpisodes.FirstOrDefaultAsync(x =>
-                                        x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                                        x.Series.TheMovieDbId == item.TheMovieDbId.ToString());
-                                }
-                                if (useTvDb)
-                                {
-                                    epExists = await allEpisodes.FirstOrDefaultAsync(x =>
-                                        x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                                        x.Series.TvDbId == item.TvDbId.ToString());
-                                }
-                                
-                                if (epExists != null)
-                                {
-                                    episode.Available = true;
-                                }
+                                await SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb);
                             }
                         }
 
-                        if (search.SeasonRequests.All(x => x.Episodes.All(e => e.Available)))
-                        {
-                            search.FullyAvailable = true;
-                        }
-                        else
-                        {
-                            var airedButNotAvailable = search.SeasonRequests.Any(x =>
-                                x.Episodes.Any(c => !c.Available && c.AirDate <= DateTime.Now.Date));
-                            if (!airedButNotAvailable)
-                            {
-                                var unairedEpisodes = search.SeasonRequests.Any(x =>
-                                    x.Episodes.Any(c => !c.Available && c.AirDate > DateTime.Now.Date));
-                                if (unairedEpisodes)
-                                {
-                                    search.FullyAvailable = true;
-                                }
-                            }
-                            
-                        }
+                        CheckForUnairedEpisodes(search);
                     }
                 }
             }
             return Success();
         }
+
+        
     }
 }

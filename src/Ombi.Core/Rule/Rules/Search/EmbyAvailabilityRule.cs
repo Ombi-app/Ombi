@@ -3,15 +3,17 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Core.Rule.Rules.Search
 {
-    public class EmbyAvailabilityRule : BaseSearchRule, IRules<SearchViewModel>
+    public class EmbyAvailabilityRule : AvailabilityRuleBase, IRules<SearchViewModel>
     {
         public EmbyAvailabilityRule(IEmbyContentRepository repo)
         {
@@ -23,15 +25,27 @@ namespace Ombi.Core.Rule.Rules.Search
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {
             EmbyContent item = null;
+            var useImdb = false;
+            var useTheMovieDb = false;
+            var useTvDb = false;
+
             if (obj.ImdbId.HasValue())
             {
                 item = await EmbyContentRepository.GetByImdbId(obj.ImdbId);
+                if (item != null)
+                {
+                    useImdb = true;
+                }
             }
             if (item == null)
             {
                 if (obj.TheMovieDbId.HasValue())
                 {
                     item = await EmbyContentRepository.GetByTheMovieDbId(obj.TheMovieDbId);
+                    if (item != null)
+                    {
+                        useTheMovieDb = true;
+                    }
                 }
 
                 if (item == null)
@@ -39,10 +53,14 @@ namespace Ombi.Core.Rule.Rules.Search
                     if (obj.TheTvDbId.HasValue())
                     {
                         item = await EmbyContentRepository.GetByTvDbId(obj.TheTvDbId);
+                        if (item != null)
+                        {
+                            useTvDb = true;
+                        }
                     }
                 }
             }
-
+            
             if (item != null)
             {
                 obj.Available = true;
@@ -59,29 +77,12 @@ namespace Ombi.Core.Rule.Rules.Search
                         {
                             foreach (var episode in season.Episodes)
                             {
-                                EmbyEpisode epExists = null;
-
-                                if (item.HasImdb)
-                                {
-                                    epExists = await allEpisodes.FirstOrDefaultAsync(e => e.EpisodeNumber == episode.EpisodeNumber && e.SeasonNumber == season.SeasonNumber
-                                        && e.ImdbId == item.ImdbId);
-                                }  if (item.HasTvDb && epExists == null)
-                                {
-                                    epExists = await allEpisodes.FirstOrDefaultAsync(e => e.EpisodeNumber == episode.EpisodeNumber && e.SeasonNumber == season.SeasonNumber
-                                                                                         && e.Series.TvDbId == item.TvDbId);
-                                }  if (item.HasTheMovieDb && epExists == null)
-                                {
-                                    epExists = await allEpisodes.FirstOrDefaultAsync(e => e.EpisodeNumber == episode.EpisodeNumber && e.SeasonNumber == season.SeasonNumber
-                                                                                         && e.TheMovieDbId == item.TheMovieDbId);
-                                }
-
-                                if (epExists != null)
-                                {
-                                    episode.Available = true;
-                                }
+                                await SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb);
                             }
                         }
                     }
+
+                    CheckForUnairedEpisodes(search);
                 }
             }
             return Success();
