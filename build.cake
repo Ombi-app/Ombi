@@ -26,7 +26,7 @@ var csProj = "./src/Ombi/Ombi.csproj";          // Path to the project.csproj
 var solutionFile = "Ombi.sln";                  // Solution file if needed
 GitVersion versionInfo = null;
 
-var frameworkVer = "netcoreapp2.1";
+var frameworkVer = "netcoreapp2.2";
 
 var buildSettings = new DotNetCoreBuildSettings
 {
@@ -47,7 +47,6 @@ var windowsArtifactsFolder = artifactsFolder + "win10-x64/published";
 var windows32BitArtifactsFolder = artifactsFolder + "win10-x86/published";
 var osxArtifactsFolder = artifactsFolder + "osx-x64/published";
 var linuxArtifactsFolder = artifactsFolder + "linux-x64/published";
-var linuxArmArtifactsFolder = artifactsFolder + "linux-arm/published";
 var linuxArm64BitArtifactsFolder = artifactsFolder + "linux-arm64/published";
 
 
@@ -150,8 +149,7 @@ Task("Package")
     Zip(windows32BitArtifactsFolder +"/",artifactsFolder + "windows-32bit.zip");
 	GZipCompress(osxArtifactsFolder, artifactsFolder + "osx.tar.gz");
 	GZipCompress(linuxArtifactsFolder, artifactsFolder + "linux.tar.gz");
-	GZipCompress(linuxArmArtifactsFolder, artifactsFolder + "linux-arm.tar.gz");
-	//GZipCompress(linuxArm64BitArtifactsFolder, artifactsFolder + "linux-arm64.tar.gz");
+	GZipCompress(linuxArm64BitArtifactsFolder, artifactsFolder + "linux-arm64.tar.gz");
 });
 
 Task("Publish")
@@ -160,7 +158,6 @@ Task("Publish")
     .IsDependentOn("Publish-Windows-32bit")
     .IsDependentOn("Publish-OSX")
     .IsDependentOn("Publish-Linux")
-    .IsDependentOn("Publish-Linux-ARM")
     .IsDependentOn("Publish-Linux-ARM-64Bit")
     .IsDependentOn("Package");
 
@@ -217,20 +214,6 @@ Task("Publish-Linux")
     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 
-Task("Publish-Linux-ARM")
-    .Does(() =>
-{
-    publishSettings.Runtime = "linux-arm";
-    publishSettings.OutputDirectory = Directory(buildDir) + Directory(frameworkVer+"/linux-arm/published");
-
-    DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
-    CopyFile(
-      buildDir + "/"+frameworkVer+"/linux-arm/Swagger.xml",
-      buildDir + "/"+frameworkVer+"/linux-arm/published/Swagger.xml");
-	  
-    publishSettings.OutputDirectory = Directory(buildDir) + Directory(frameworkVer +"/linux-arm/published/updater");
-    DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
-});
 
 Task("Publish-Linux-ARM-64Bit")
     .Does(() =>
