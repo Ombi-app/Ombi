@@ -1,6 +1,31 @@
 # Changelog
 
-## (unreleased)
+## v3.0.3988 (2018-11-23)
+
+
+
+### **New Features**
+
+- Added Sonarr v3  #2359. [TidusJar]
+
+### **Fixes**
+
+- Fixed a potential security vulnerability. [Jamie]
+
+- Sorted out some of the settings pages, trying to make it consistent. [Jamie]
+
+- #2669 Fixed missing translations. [TidusJar]
+
+- Maps alias email variable for welcome emails. [Victor Usoltsev]
+
+- Increased the logo size on the landing page to match the container below it. [Jamie]
+
+- Think the request queue is done! [Jamie]
+
+- Finished off the job. [TidusJar]
+
+
+## v3.0.3988 (2018-11-23)
 
 ### **New Features**
 
@@ -8,7 +33,12 @@
 
 - Added the ability to get the ombi user via a Plex Token #2591. [Jamie]
 
+- Update CHANGELOG.md. [Jamie]
+
 ### **Fixes**
+
+
+- Fixed #2601 [TidusJar]
 
 - Made the subscribe/unsubscribe button more obvious on the UI #2309. [Jamie]
 

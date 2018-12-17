@@ -22,34 +22,40 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <input type="checkbox" id="v3" formControlName="v3">
-                            <label for="v3">Sonarr V3</label>
+                            <label for="v3">V3</label>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="Ip" class="control-label">Sonarr Hostname or IP</label>
+                    <label for="Ip" class="control-label">Sonarr Hostname or IP 
+                        
+                        <i *ngIf="form.get('ip').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="The IP/Hostname is required"></i>
+                    </label>
 
                     <input type="text" class="form-control form-control-custom " formControlName="ip" id="Ip" name="Ip"
                         placeholder="localhost" [ngClass]="{'form-error': form.get('ip').hasError('required')}">
-                    <small *ngIf="form.get('ip').hasError('required')" class="error-text">The IP/Hostname is required</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="portNumber" class="control-label">Port</label>
+                    <label for="portNumber" class="control-label">Port
+                        
+                        <i *ngIf="form.get('port').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="The Port is required"></i>
+                    </label>
 
                     <input type="text" class="form-control form-control-custom " [ngClass]="{'form-error': form.get('port').hasError('required')}"
                         formControlName="port" id="portNumber" name="Port" placeholder="Port Number">
-                    <small *ngIf="form.get('port').hasError('required')" class="error-text">The Port is required</small>
                 </div>
 
 
                 <div class="form-group">
-                    <label for="ApiKey" class="control-label">Sonarr API Key</label>
+                    <label for="ApiKey" class="control-label">Sonarr API Key
+                        
+                        <i *ngIf="form.get('apiKey').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="The API Key is required"></i>
+                    </label>
 
                     <input type="text" class="form-control form-control-custom " [ngClass]="{'form-error': form.get('apiKey').hasError('required')}"
                         formControlName="apiKey" id="ApiKey" name="ApiKey">
-                    <small *ngIf="form.get('apiKey').hasError('required')" class="error-text">The API Key is required</small>
                 </div>
                 <div class="form-group">
                     <div class="checkbox">
@@ -68,9 +74,10 @@
             </div>
             <div class="col-md-6">
                 
-
                 <div class="form-group col-md-12">
-                        <label for="profiles" class="control-label">Quality Profiles</label>
+                        <label for="profiles" class="control-label">Quality Profiles
+                            <i *ngIf="form.get('qualityProfile').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="A Default Quality Profile is required"></i>
+                        </label>
                         <div id="profiles">
                                 <select class="form-control form-control-custom  col-md-5 form-half" [ngClass]="{'form-error': form.get('qualityProfile').hasError('required')}"
                                 id="select" formControlName="qualityProfile">
@@ -78,10 +85,11 @@
                             </select>
                             <button type="button" (click)="getProfiles(form)"  class="btn btn-primary-outline col-md-4 col-md-push-1">
                                 Load Qualities <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"></span></button>
-                                <small *ngIf="form.get('qualityProfile').hasError('required')" class="error-text">A Default Quality
-                                        Profile is required</small>
+                                
                         </div>
+                       
                     </div>
+                   
 
                 <div class="form-group col-md-12">
                     <label for="select" class="control-label">Quality Profiles (Anime)</label>
@@ -94,7 +102,10 @@
 
 
                 <div class="form-group col-md-12">
-                    <label for="rootFolders" class="control-label">Default Root Folders</label>
+                    <label for="rootFolders" class="control-label">Default Root Folders
+                         
+                        <i *ngIf="form.get('rootPath').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="A Default Root Path is required"></i>
+                    </label>
                     <div id="rootFolders">
                         <select class="form-control form-control-custom  col-md-5 form-half" formControlName="rootPath"
                             [ngClass]="{'form-error': form.get('rootPath').hasError('required')}">
@@ -102,9 +113,6 @@
                         </select>
                         <button type="button" (click)="getRootFolders(form)" class="btn btn-primary-outline col-md-4 col-md-push-1">
                             Load Folders <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
-                        <small *ngIf="form.get('rootPath').hasError('required')" class="error-text">A Default Root Path
-                            is
-                            required</small>
                     </div>
                 </div>
 
@@ -119,17 +127,17 @@
                 </div>
 
                 <div class="form-group  col-md-12" *ngIf="form.controls.v3.value">
-                    <label for="select" class="control-label">Language Profiles</label>
+                    <label for="select" class="control-label">Language Profiles 
+                        <i *ngIf="form.get('languageProfile').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="A Language Profile is required"></i>
+                    </label>
                     <div id="langaugeProfile">
-                        <select formControlName="langaugeProfile" class="form-control form-control-custom  col-md-5 form-half"
-                            id="select" [ngClass]="{'form-error': form.get('langaugeProfile').hasError('required')}">
-                            <option *ngFor="let lang of languageProfiles" value="{{lang.id}}">{{lang.name}}</option>
+                        <select formControlName="languageProfile" class="form-control form-control-custom  col-md-5 form-half"
+                            id="select" [ngClass]="{'form-error': form.get('languageProfile').hasError('required')}">
+                            <option *ngFor="let lang of languageProfiles" [ngValue]="lang.id">{{lang.name}}</option>
                         </select>
                         <button (click)="getLanguageProfiles(form)" type="button" class="btn btn-primary-outline col-md-4 col-md-push-1">Load
                             Languages <span *ngIf="langRunning" class="fa fa-spinner fa-spin"> </span></button>
 
-                        <small *ngIf="form.get('langaugeProfile').hasError('required')" class="error-text">A Default
-                            Langauage Profile is required</small>
                     </div>
                 </div>
 

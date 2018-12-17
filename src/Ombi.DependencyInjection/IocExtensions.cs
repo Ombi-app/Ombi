@@ -199,6 +199,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ILidarrArtistSync, LidarrArtistSync>();
             services.AddTransient<ILidarrAvailabilityChecker, LidarrAvailabilityChecker>();
             services.AddTransient<IIssuesPurge, IssuesPurge>();
+            services.AddTransient<IResendFailedRequests, ResendFailedRequests>();
         }
     }
 }
