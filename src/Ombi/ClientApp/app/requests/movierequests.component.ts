@@ -4,6 +4,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
+import { ConfirmationService } from "primeng/primeng";
 import { AuthService } from "../auth/auth.service";
 import { FilterType, IFilter, IIssueCategory, IMovieRequests, IPagenator, IRadarrProfile, IRadarrRootFolder, OrderType } from "../interfaces";
 import { NotificationService, RadarrService, RequestService } from "../services";
