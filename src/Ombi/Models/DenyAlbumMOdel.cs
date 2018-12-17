@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2018 Jamie Rees
-//    File: NotificationsController.cs
+//    Copyright (c) 2017 Jamie Rees
+//    File: MovieUpdateModel.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,33 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Ombi.Attributes;
-using Ombi.Core.Models;
-using Ombi.Core.Senders;
-
-namespace Ombi.Controllers
+namespace Ombi.Core.Models.Requests
 {
-    [Admin]
-    [ApiV1]
-    [Produces("application/json")]
-    [ApiController]
-    public class NotificationsController : ControllerBase
+    public class DenyAlbumModel: AlbumUpdateModel
     {
-        public NotificationsController(IMassEmailSender sender)
-        {
-            _sender = sender;
-        }
-
-        private readonly IMassEmailSender _sender;
-
-        [HttpPost("massemail")]
-        public async Task<bool> SendMassEmail([FromBody]MassEmailModel model)
-        {
-            return await _sender.SendMassEmail(model);
-        }
-
+        public string Reason { get; set; }
     }
 }

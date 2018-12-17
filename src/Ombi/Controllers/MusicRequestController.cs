@@ -17,7 +17,8 @@ namespace Ombi.Controllers
     [Authorize]
     [Route("api/v1/request/music")]
     [Produces("application/json")]
-    public class MusicRequestController : Controller
+    [ApiController]
+    public class MusicRequestController : ControllerBase
     {
         public MusicRequestController(IMusicRequestEngine engine, IVoteEngine voteEngine, ILogger<MusicRequestController> log)
         {
@@ -154,9 +155,9 @@ namespace Ombi.Controllers
         /// <returns></returns>
         [HttpPut("deny")]
         [PowerUser]
-        public async Task<RequestEngineResult> Deny([FromBody] AlbumUpdateModel model)
+        public async Task<RequestEngineResult> Deny([FromBody] DenyAlbumModel model)
         {
-            return await _engine.DenyAlbumById(model.Id);
+            return await _engine.DenyAlbumById(model.Id, model.Reason);
         }
 
         /// <summary>

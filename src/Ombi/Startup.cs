@@ -96,6 +96,8 @@ namespace Ombi
                 options.User.AllowedUserNameCharacters = string.Empty;
             });
 
+
+            services.AddHealthChecks();
             services.AddMemoryCache();
 
             services.AddJwtAuthentication(Configuration);
@@ -150,6 +152,7 @@ namespace Ombi
             var ctx = serviceProvider.GetService<IOmbiContext>();
             loggerFactory.AddSerilog();
 
+            app.UseHealthChecks("/health");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

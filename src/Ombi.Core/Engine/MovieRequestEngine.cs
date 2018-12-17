@@ -305,7 +305,7 @@ namespace Ombi.Core.Engine
             return await ApproveMovie(request);
         }
 
-        public async Task<RequestEngineResult> DenyMovieById(int modelId)
+        public async Task<RequestEngineResult> DenyMovieById(int modelId, string denyReason)
         {
             var request = await MovieRepository.Find(modelId);
             if (request == null)
@@ -317,6 +317,7 @@ namespace Ombi.Core.Engine
             }
 
             request.Denied = true;
+            request.DeniedReason = denyReason;
             // We are denying a request
             NotificationHelper.Notify(request, NotificationType.RequestDeclined);
             await MovieRepository.Update(request);

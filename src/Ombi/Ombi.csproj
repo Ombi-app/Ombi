@@ -72,6 +72,8 @@
     <PackageReference Include="Hangfire.SQLite" Version="1.4.2" />
 
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
+
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Api.Analyzers" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />

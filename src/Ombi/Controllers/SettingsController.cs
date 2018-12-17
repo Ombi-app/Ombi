@@ -37,7 +37,8 @@ namespace Ombi.Controllers
     [Admin]
     [ApiV1]
     [Produces("application/json")]
-    public class SettingsController : Controller
+    [ApiController]
+    public class SettingsController : ControllerBase
     {
         public SettingsController(ISettingsResolver resolver,
             IMapper mapper,

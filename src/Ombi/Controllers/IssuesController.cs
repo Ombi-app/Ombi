@@ -23,7 +23,8 @@ namespace Ombi.Controllers
     [ApiV1]
     [Authorize]
     [Produces("application/json")]
-    public class IssuesController : Controller
+    [ApiController]
+    public class IssuesController : ControllerBase
     {
         public IssuesController(IRepository<IssueCategory> categories, IRepository<Issues> issues, IRepository<IssueComments> comments,
             UserManager<OmbiUser> userManager, INotificationService notify)

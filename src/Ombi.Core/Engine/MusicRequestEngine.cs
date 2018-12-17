@@ -299,7 +299,7 @@ namespace Ombi.Core.Engine
             return await ApproveAlbum(request);
         }
 
-        public async Task<RequestEngineResult> DenyAlbumById(int modelId)
+        public async Task<RequestEngineResult> DenyAlbumById(int modelId, string reason)
         {
             var request = await MusicRepository.Find(modelId);
             if (request == null)
@@ -311,6 +311,7 @@ namespace Ombi.Core.Engine
             }
 
             request.Denied = true;
+            request.DeniedReason = reason;
             // We are denying a request
             NotificationHelper.Notify(request, NotificationType.RequestDeclined);
             await MusicRepository.Update(request);

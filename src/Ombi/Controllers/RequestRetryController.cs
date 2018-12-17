@@ -16,6 +16,7 @@ namespace Ombi.Controllers
     [ApiV1]
     [Admin]
     [Produces("application/json")]
+    [ApiController]
     public class RequestRetryController : Controller
     {
         public RequestRetryController(IRepository<RequestQueue> requestQueue, IMovieRequestRepository movieRepo,

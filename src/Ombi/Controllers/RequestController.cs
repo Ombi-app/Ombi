@@ -20,7 +20,8 @@ namespace Ombi.Controllers
     [Authorize]
     [ApiV1]
     [Produces("application/json")]
-    public class RequestController : Controller
+    [ApiController]
+    public class RequestController : ControllerBase
     {
         public RequestController(IMovieRequestEngine engine, ITvRequestEngine tvRequestEngine, IVoteEngine vote,
             ILogger<RequestController> log)
@@ -118,9 +119,8 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
-        /// Deletes the specified movie request.
+        /// Deletes the all movie request.
         /// </summary>
-        /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
         [HttpDelete("movie/all")]
         [PowerUser]
@@ -184,9 +184,9 @@ namespace Ombi.Controllers
         /// <returns></returns>
         [HttpPut("movie/deny")]
         [PowerUser]
-        public async Task<RequestEngineResult> DenyMovie([FromBody] MovieUpdateModel model)
+        public async Task<RequestEngineResult> DenyMovie([FromBody] DenyMovieModel model)
         {
-            return await MovieRequestEngine.DenyMovieById(model.Id);
+            return await MovieRequestEngine.DenyMovieById(model.Id, model.Reason);
         }
 
         /// <summary>
@@ -372,9 +372,9 @@ namespace Ombi.Controllers
         /// <returns></returns>
         [HttpPut("tv/deny")]
         [PowerUser]
-        public async Task<RequestEngineResult> DenyChild([FromBody] TvUpdateModel model)
+        public async Task<RequestEngineResult> DenyChild([FromBody] DenyTvModel model)
         {
-            return await TvRequestEngine.DenyChildRequest(model.Id);
+            return await TvRequestEngine.DenyChildRequest(model.Id, model.Reason);
         }
 
         /// <summary>
