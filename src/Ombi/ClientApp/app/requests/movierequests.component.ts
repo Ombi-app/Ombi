@@ -1,10 +1,9 @@
 import { PlatformLocation } from "@angular/common";
-import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
-import { ConfirmationService, ConfirmDialog } from "primeng/primeng";
 import { AuthService } from "../auth/auth.service";
 import { FilterType, IFilter, IIssueCategory, IMovieRequests, IPagenator, IRadarrProfile, IRadarrRootFolder, OrderType } from "../interfaces";
 import { NotificationService, RadarrService, RequestService } from "../services";
@@ -38,7 +37,9 @@ export class MovieRequestsComponent implements OnInit {
 
     public orderType: OrderType = OrderType.RequestedDateDesc;
     public OrderType = OrderType;
-    @ViewChild("") public confirmDialogComponent: ConfirmDialog;
+    public denyDisplay: boolean;
+    public requestToDeny: IMovieRequests;
+    public rejectionReason: string;
 
     public totalMovies: number = 100;
     public currentlyLoaded: number;
@@ -50,8 +51,7 @@ export class MovieRequestsComponent implements OnInit {
         private notificationService: NotificationService,
         private radarrService: RadarrService,
         private sanitizer: DomSanitizer,
-        private readonly platformLocation: PlatformLocation,
-        private confirmationService: ConfirmationService) {
+        private readonly platformLocation: PlatformLocation) {
         this.searchChanged.pipe(
             debounceTime(600), // Wait Xms after the last event before emitting last event
             distinctUntilChanged(), // only emit if value is different from previous value
@@ -133,15 +133,23 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     public deny(request: IMovieRequests) {
- 
-        this.confirmationService.confirm({
-            message: "Are you sure",
-            accept: () => {
-                request.denied = true;
-                this.denyRequest(request);
-            },
-          });
-         }  
+        this.requestToDeny = request;
+        this.denyDisplay = true;
+    }  
+
+    public denyRequest() {
+        this.requestService.denyMovie({ id: this.requestToDeny.id, reason: this.rejectionReason })
+            .subscribe(x => {
+                this.denyDisplay = false;
+                if (x.result) {
+                    this.notificationService.success(
+                        `Request for ${this.requestToDeny.title} has been denied successfully`);
+                } else {
+                    this.notificationService.warning("Request Denied", x.message ? x.message : x.errorMessage);
+                    this.requestToDeny.denied = false;
+                }
+            });
+    }
 
     public selectRootFolder(searchResult: IMovieRequests, rootFolderSelected: IRadarrRootFolder, event: any) {
         event.preventDefault();
@@ -283,19 +291,6 @@ export class MovieRequestsComponent implements OnInit {
                 } else {
                     this.notificationService.warning("Request Approved", x.message ? x.message : x.errorMessage);
                     request.approved = false;
-                }
-            });
-    }
-
-    private denyRequest(request: IMovieRequests) {
-        this.requestService.denyMovie({ id: request.id })
-            .subscribe(x => {
-                if (x.result) {
-                    this.notificationService.success(
-                        `Request for ${request.title} has been denied successfully`);
-                } else {
-                    this.notificationService.warning("Request Denied", x.message ? x.message : x.errorMessage);
-                    request.denied = false;
                 }
             });
     }

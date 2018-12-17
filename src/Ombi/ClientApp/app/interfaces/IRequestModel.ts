@@ -47,6 +47,10 @@ export interface IMovieUpdateModel {
   id: number;
 }
 
+export interface IDenyMovieModel extends IMovieUpdateModel {
+  reason: string;
+}
+
 export interface IAlbumUpdateModel {
   id: number;
 }

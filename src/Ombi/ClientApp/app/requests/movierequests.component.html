@@ -88,7 +88,7 @@
                     </div>
                     <div *ngIf="request.denied" id="requestDenied">
                         {{ 'Requests.Denied' | translate }}
-                        <i style="color:red;" class="fa fa-check"></i>
+                        <i style="color:red;" class="fa fa-check" pTooltip="{{request.deniedReason}}"></i>
 
                     </div>
 
@@ -215,17 +215,14 @@
     <p-paginator [rows]="10" [totalRecords]="totalMovies" (onPageChange)="paginate($event)"></p-paginator>
 </div>
 
-<p-confirmDialog #cd header="Confirmation" icon="pi pi-exclamation-triangle">
-        <ng-template pTemplate="body">
-                <ul>
-                  <li>test</li>
-                </ul>
-              </ng-template>
+<p-dialog *ngIf="requestToDeny" header="Deny Request '{{requestToDeny.title}}''" [(visible)]="denyDisplay" [draggable]="false">
+<span>Please enter a rejection reason, the user will be notified of this:</span>
+<textarea [(ngModel)]="rejectionReason" class="form-control-custom form-control"></textarea>
     <p-footer>
-        <button type="button" pButton icon="pi pi-times" label="No" (click)="cd.reject()"></button>
-        <button type="button" pButton icon="pi pi-check" label="Yes" (click)="cd.accept()"></button>
+        <button type="button" (click)="denyRequest();" label="Reject" class="btn btn-success">Deny</button>
+        <button type="button"(click)="denyDisplay=false" label="Close" class="btn btn-danger">Close</button>
     </p-footer>
-</p-confirmDialog>
+</p-dialog>
 
 <issue-report [movie]="true" [visible]="issuesBarVisible" (visibleChange)="issuesBarVisible = $event;" [title]="issueRequest?.title"
     [issueCategory]="issueCategorySelected" [id]="issueRequest?.id" [providerId]="issueProviderId"></issue-report>
