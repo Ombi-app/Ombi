@@ -6,7 +6,7 @@ import { OrderModule } from "ngx-order-pipe";
 
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 
-import { ButtonModule, DialogModule, PaginatorModule } from "primeng/primeng";
+import { ButtonModule, ConfirmDialogModule, DialogModule, PaginatorModule } from "primeng/primeng";
 import { MovieRequestsComponent } from "./movierequests.component";
 import { MusicRequestsComponent } from "./music/musicrequests.component";
 // Request
@@ -38,6 +38,7 @@ const routes: Routes = [
         OrderModule,
         PaginatorModule,
         TooltipModule,
+        ConfirmDialogModule,
     ],
     declarations: [
         RequestComponent,
