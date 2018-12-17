@@ -9,7 +9,7 @@ using Ombi.Store.Repository;
 
 namespace Ombi.Core.Rule.Rules.Search
 {
-    public class EmbyAvailabilityRule : AvailabilityRuleBase, IRules<SearchViewModel>
+    public class EmbyAvailabilityRule : BaseSearchRule, IRules<SearchViewModel>
     {
         public EmbyAvailabilityRule(IEmbyContentRepository repo)
         {
@@ -73,12 +73,12 @@ namespace Ombi.Core.Rule.Rules.Search
                         {
                             foreach (var episode in season.Episodes)
                             {
-                                await SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb);
+                                await AvailabilityRuleHelper.SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb);
                             }
                         }
                     }
 
-                    CheckForUnairedEpisodes(search);
+                    AvailabilityRuleHelper.CheckForUnairedEpisodes(search);
                 }
             }
             return Success();

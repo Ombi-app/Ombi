@@ -9,9 +9,9 @@ using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Core.Rule.Rules.Search
 {
-    public abstract class AvailabilityRuleBase : BaseSearchRule
+    public static class AvailabilityRuleHelper
     {
-        public void CheckForUnairedEpisodes(SearchTvShowViewModel search)
+        public static void CheckForUnairedEpisodes(SearchTvShowViewModel search)
         {
             if (search.SeasonRequests.All(x => x.Episodes.All(e => e.Available)))
             {
@@ -33,7 +33,7 @@ namespace Ombi.Core.Rule.Rules.Search
             }
         }
 
-        public async Task SingleEpisodeCheck(bool useImdb, IQueryable<PlexEpisode> allEpisodes, EpisodeRequests episode,
+        public static async Task SingleEpisodeCheck(bool useImdb, IQueryable<PlexEpisode> allEpisodes, EpisodeRequests episode,
             SeasonRequests season, PlexServerContent item, bool useTheMovieDb, bool useTvDb)
         {
             PlexEpisode epExists = null;

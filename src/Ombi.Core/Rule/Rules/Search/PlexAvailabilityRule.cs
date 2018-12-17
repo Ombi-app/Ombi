@@ -8,7 +8,7 @@ using Ombi.Store.Repository;
 
 namespace Ombi.Core.Rule.Rules.Search
 {
-    public class PlexAvailabilityRule : AvailabilityRuleBase, IRules<SearchViewModel>
+    public class PlexAvailabilityRule : BaseSearchRule, IRules<SearchViewModel>
     {
         public PlexAvailabilityRule(IPlexContentRepository repo)
         {
@@ -72,11 +72,11 @@ namespace Ombi.Core.Rule.Rules.Search
                         {
                             foreach (var episode in season.Episodes)
                             {
-                                await SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb);
+                                await AvailabilityRuleHelper.SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb);
                             }
                         }
 
-                        CheckForUnairedEpisodes(search);
+                        AvailabilityRuleHelper.CheckForUnairedEpisodes(search);
                     }
                 }
             }
