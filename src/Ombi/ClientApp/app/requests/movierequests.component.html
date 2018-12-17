@@ -216,7 +216,11 @@
 </div>
 
 <p-confirmDialog #cd header="Confirmation" icon="pi pi-exclamation-triangle">
-    <input></input>
+        <ng-template pTemplate="body">
+                <ul>
+                  <li>test</li>
+                </ul>
+              </ng-template>
     <p-footer>
         <button type="button" pButton icon="pi pi-times" label="No" (click)="cd.reject()"></button>
         <button type="button" pButton icon="pi pi-check" label="Yes" (click)="cd.accept()"></button>
