@@ -19,11 +19,11 @@ export class PlexComponent implements OnInit, OnDestroy {
     private clientId: string;
 
     constructor(private plexService: PlexService, private router: Router,
-        private notificationService: NotificationService,
-        private identityService: IdentityService, private plexTv: PlexTvService,
-        private settingsService: SettingsService,
-        private location: PlatformLocation, private authService: AuthService,
-        private plexOauth: PlexOAuthService) { }
+                private notificationService: NotificationService,
+                private identityService: IdentityService, private plexTv: PlexTvService,
+                private settingsService: SettingsService,
+                private location: PlatformLocation, private authService: AuthService,
+                private plexOauth: PlexOAuthService) { }
 
     public ngOnInit(): void {
         const base = this.location.getBaseHrefFromDOM();
