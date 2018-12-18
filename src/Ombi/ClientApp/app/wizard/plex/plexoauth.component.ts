@@ -1,6 +1,7 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
+import { PlatformLocation } from "@angular/common";
 import { AuthService } from "../../auth/auth.service";
 import { IdentityService, PlexOAuthService } from "../../services";
 
@@ -9,12 +10,14 @@ import { IdentityService, PlexOAuthService } from "../../services";
 })
 export class PlexOAuthComponent implements OnInit {
     public pinId: number;
+    public baseUrl: string;
 
     constructor(private route: ActivatedRoute,
                 private plexOauth: PlexOAuthService,
                 private identityService: IdentityService,
                 private router: Router,
-                private auth: AuthService) {
+                private auth: AuthService,
+                private location: PlatformLocation) {
 
         this.route.params
             .subscribe((params: any) => {
@@ -23,6 +26,10 @@ export class PlexOAuthComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        const base = this.location.getBaseHrefFromDOM();
+        if (base.length > 1) {
+            this.baseUrl = base;
+        }
         this.plexOauth.oAuth(this.pinId).subscribe(x => {
             if (!x.accessToken) {
                 return;

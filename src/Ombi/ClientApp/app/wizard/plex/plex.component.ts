@@ -1,6 +1,7 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
+import { PlatformLocation } from "@angular/common";
 import { PlexService, PlexTvService, SettingsService } from "../../services";
 import { IdentityService, NotificationService } from "../../services";
 
@@ -11,15 +12,21 @@ export class PlexComponent implements OnInit {
 
     public login: string;
     public password: string;
+    public baseUrl: string;
 
     private clientId: string;
 
     constructor(private plexService: PlexService, private router: Router,
                 private notificationService: NotificationService,
                 private identityService: IdentityService, private plexTv: PlexTvService,
-                private settingsService: SettingsService) { }
+                private settingsService: SettingsService,
+                private location: PlatformLocation) { }
 
     public ngOnInit(): void {
+        const base = this.location.getBaseHrefFromDOM();
+        if (base.length > 1) {
+            this.baseUrl = base;
+        }
         this.settingsService.getClientId().subscribe(x => this.clientId = x);
     }
 
