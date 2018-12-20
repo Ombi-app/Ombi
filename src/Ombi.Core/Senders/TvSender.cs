@@ -348,16 +348,16 @@ namespace Ombi.Core.Senders
                     if (!existingSeason.monitored)
                     {
                         // We need to monitor it, problem being is all episodes will now be monitored
-                        // So we need to monior the series but unmonitor every episode
-                        // Except the episodes that are already monitored before we update the series (we do not want to unmonitor episodes that are monitored beforehand)
+                        // So we need to monitor the series but unmonitor every episode
+                        // Except the episodes that are already monitored before we update the series (we do not want to unmonitored episodes that are monitored beforehand)
                         existingSeason.monitored = true;
                         var sea = result.seasons.FirstOrDefault(x => x.seasonNumber == existingSeason.seasonNumber);
                         sea.monitored = true;
                         //var previouslyMonitoredEpisodes = sonarrEpList.Where(x =>
                         //    x.seasonNumber == existingSeason.seasonNumber && x.monitored).Select(x => x.episodeNumber).ToList(); // We probably don't actually care about this
                         result = await SonarrApi.UpdateSeries(result, s.ApiKey, s.FullUri);
-                        var epToUnmonitor = new List<Episode>();
-                        var newEpList = sonarrEpList.ConvertAll(ep => new Episode(ep)); // Clone it so we don't modify the orignal member
+                        var epToUnmonitored = new List<Episode>();
+                        var newEpList = sonarrEpList.ConvertAll(ep => new Episode(ep)); // Clone it so we don't modify the original member
                         foreach (var ep in newEpList.Where(x => x.seasonNumber == existingSeason.seasonNumber).ToList())
                         {
                             //if (previouslyMonitoredEpisodes.Contains(ep.episodeNumber))
@@ -366,10 +366,10 @@ namespace Ombi.Core.Senders
                             //    continue;
                             //}
                             ep.monitored = false;
-                            epToUnmonitor.Add(ep);
+                            epToUnmonitored.Add(ep);
                         }
 
-                        foreach (var epToUpdate in epToUnmonitor)
+                        foreach (var epToUpdate in epToUnmonitored)
                         {
                             await SonarrApi.UpdateEpisode(epToUpdate, s.ApiKey, s.FullUri);
                         }
