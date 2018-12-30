@@ -50,6 +50,7 @@ namespace Ombi.Notifications
             Overview = req?.Overview;
             Year = req?.ReleaseDate.Year.ToString();
             DenyReason = req?.DeniedReason;
+            AvailableDate = req?.MarkedAsAvailable?.ToString("D") ?? string.Empty;
             if (req?.RequestType == RequestType.Movie)
             {
                 PosterImage = string.Format((req?.PosterPath ?? string.Empty).StartsWith("/", StringComparison.InvariantCultureIgnoreCase)
@@ -85,6 +86,7 @@ namespace Ombi.Notifications
                 UserName = req?.RequestedUser?.UserName;
             }
 
+            AvailableDate = req?.MarkedAsAvailable?.ToString("D") ?? string.Empty;
             DenyReason = req?.DeniedReason;
             Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
             if (pref != null)
@@ -133,6 +135,7 @@ namespace Ombi.Notifications
                 // Can be set if it's an issue
                 UserName = req?.RequestedUser?.UserName;
             }
+            AvailableDate = req?.MarkedAsAvailable?.ToString("D") ?? string.Empty;
             Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
             if (pref != null)
             {
@@ -238,6 +241,7 @@ namespace Ombi.Notifications
         public string NewIssueComment { get; set; }
         public string UserPreference { get; set; }
         public string DenyReason { get; set; }
+        public string AvailableDate { get; set; }
 
         // System Defined
         private string LongDate => DateTime.Now.ToString("D");
@@ -273,6 +277,7 @@ namespace Ombi.Notifications
             {nameof(Alias),Alias},
             {nameof(UserPreference),UserPreference},
             {nameof(DenyReason),DenyReason},
+            {nameof(AvailableDate),AvailableDate},
         };
     }
 }

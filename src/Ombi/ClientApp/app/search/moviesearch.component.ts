@@ -6,7 +6,7 @@ import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { AuthService } from "../auth/auth.service";
-import { IIssueCategory, IRequestEngineResult, ISearchMovieResult, ILanguageRefine } from "../interfaces";
+import { IIssueCategory, ILanguageRefine, IRequestEngineResult, ISearchMovieResult } from "../interfaces";
 import { NotificationService, RequestService, SearchService } from "../services";
 
 import * as languageData from "../../other/iso-lang.json";

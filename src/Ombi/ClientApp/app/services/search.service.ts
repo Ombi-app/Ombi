@@ -22,7 +22,7 @@ export class SearchService extends ServiceHelpers {
     }
 
     public searchMovieWithRefined(searchTerm: string, year: number | undefined, langCode: string): Observable<ISearchMovieResult[]> {
-        return this.http.post<ISearchMovieResult[]>(`${this.url}/Movie/`, { searchTerm: searchTerm, year: year, languageCode: langCode });
+        return this.http.post<ISearchMovieResult[]>(`${this.url}/Movie/`, { searchTerm, year, languageCode: langCode });
     }
 
     public similarMovies(theMovieDbId: number): Observable<ISearchMovieResult[]> {
