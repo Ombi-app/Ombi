@@ -56,9 +56,9 @@ namespace Ombi.Core.Engine
         /// </summary>
         /// <param name="search">The search.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<SearchMovieViewModel>> Search(string search, int? year)
+        public async Task<IEnumerable<SearchMovieViewModel>> Search(string search, int? year, string langaugeCode)
         {
-            var result = await MovieApi.SearchMovie(search, year);
+            var result = await MovieApi.SearchMovie(search, year, langaugeCode);
 
             if (result != null)
             {

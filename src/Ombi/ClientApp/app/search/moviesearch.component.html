@@ -1,7 +1,7 @@
 ﻿<!-- Movie tab -->
 <div role="tabpanel" class="tab-pane active" id="MoviesTab">
 
-    <div class="input-group">
+    <div class="input-group search-bar-background">
         <input id="search" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons"
             (keyup)="search($event)">
         <div class="input-group-addon right-radius">
@@ -26,11 +26,29 @@
         </div>
     </div>
     <!-- Refine search options -->
-    <div class="row top-spacing" *ngIf="refineSearchEnabled">
-        <div class="col-md-2">
-            <input [(ngModel)]="searchYear" class="form-control form-control-custom" placeholder="Year">
-        </div>
-        <div class="col-md-10">
+    <div class="row top-spacing form-group vcenter" *ngIf="refineSearchEnabled">
+            <div class="col-md-1">
+                    <div class="form-group">
+                            <label class="control-label">Year</label>
+                        
+                <input [(ngModel)]="searchYear" class="form-control form-control-custom refine-option">
+                        </div>
+            </div>
+
+            <!-- <label for="name" class="col-xs-2 col-md-1">Language:</label> -->
+            <div class="col-md-2">
+                    <div class="form-group">
+                            <label for="select" class="control-label">Language</label>
+                            <div id="profiles">
+                                <select [(ngModel)]="selectedLanguage" class="form-control form-control-custom refine-option"
+                                    id="select">
+                                    <option *ngFor="let lang of langauges" value="{{lang.code}}">{{lang.nativeName}}</option>
+                                </select>
+                            </div>
+                        </div>
+        
+            </div>
+        <div class="col-md-9">
             <button class="btn pull-right btn-success-outline" (click)="applyRefinedSearch()">Apply</button>
         </div>
     </div>

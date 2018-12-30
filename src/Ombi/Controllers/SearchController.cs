@@ -10,7 +10,9 @@ using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models;
 using Ombi.Core.Models.Search;
+using Ombi.Models;
 using StackExchange.Profiling;
+using Microsoft.AspNetCore.Http;
 
 namespace Ombi.Controllers
 {
@@ -18,7 +20,7 @@ namespace Ombi.Controllers
     [ApiV1]
     [Produces("application/json")]
     [ApiController]
-    public class SearchController : ControllerBase
+    public class SearchController : Controller
     {
         public SearchController(IMovieEngine movie, ITvSearchEngine tvEngine, ILogger<SearchController> logger, IMusicSearchEngine music)
         {
@@ -46,7 +48,7 @@ namespace Ombi.Controllers
             {
                 Logger.LogDebug("Searching : {searchTerm}", searchTerm);
 
-                return await MovieEngine.Search(searchTerm, null);
+                return await MovieEngine.Search(searchTerm, null, "en");
             }
         }
 
@@ -54,17 +56,24 @@ namespace Ombi.Controllers
         /// Searches for a movie.
         /// </summary>
         /// <remarks>We use TheMovieDb as the Movie Provider</remarks>
-        /// <param name="searchTerm">The search term.</param>
-        /// <param name="year">optional year parameter</param>
+        /// <param name="model">The refinement model, language code and year are both optional</param>
         /// <returns></returns>
-        [HttpGet("movie/{searchTerm}/{year}")]
-        public async Task<IEnumerable<SearchMovieViewModel>> SearchMovie(string searchTerm, int? year)
+        [HttpPost("movie")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> SearchMovie([FromBody] SearchMovieRefineModel model)
         {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+
             using (MiniProfiler.Current.Step("SearchingMovie"))
             {
-                Logger.LogDebug("Searching : {searchTerm}, Year: {year}", searchTerm, year);
+                Logger.LogDebug("Searching : {0}, Year: {1}, Lang: {2}", model.SearchTerm, model.Year, model.LanguageCode);
 
-                return await MovieEngine.Search(searchTerm, year);
+                return Json(await MovieEngine.Search(model.SearchTerm, model.Year, model.LanguageCode));
             }
         }
 

@@ -17,13 +17,14 @@ export class SearchService extends ServiceHelpers {
     }
 
     // Movies
-    public searchMovie(searchTerm: string, year?: number): Observable<ISearchMovieResult[]> {
-        if(year && year > 0) {
-            return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/${searchTerm}/${year}`);
-        } else {
-            return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/${searchTerm}`);
-        }
+    public searchMovie(searchTerm: string): Observable<ISearchMovieResult[]> {
+        return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/${searchTerm}`);
     }
+
+    public searchMovieWithRefined(searchTerm: string, year: number | undefined, langCode: string): Observable<ISearchMovieResult[]> {
+        return this.http.post<ISearchMovieResult[]>(`${this.url}/Movie/`, { searchTerm: searchTerm, year: year, languageCode: langCode });
+    }
+
     public similarMovies(theMovieDbId: number): Observable<ISearchMovieResult[]> {
         return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/${theMovieDbId}/similar`);
     }
@@ -46,32 +47,32 @@ export class SearchService extends ServiceHelpers {
 
     // TV
     public searchTv(searchTerm: string): Observable<ISearchTvResult[]> {
-        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/${searchTerm}`, {headers: this.headers});
+        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/${searchTerm}`, { headers: this.headers });
     }
 
     public searchTvTreeNode(searchTerm: string): Observable<TreeNode[]> {
-        return this.http.get<TreeNode[]>(`${this.url}/Tv/${searchTerm}/tree`, {headers: this.headers});
+        return this.http.get<TreeNode[]>(`${this.url}/Tv/${searchTerm}/tree`, { headers: this.headers });
     }
 
     public getShowInformationTreeNode(theTvDbId: number): Observable<TreeNode> {
-        return this.http.get<TreeNode>(`${this.url}/Tv/info/${theTvDbId}/Tree`, {headers: this.headers});
+        return this.http.get<TreeNode>(`${this.url}/Tv/info/${theTvDbId}/Tree`, { headers: this.headers });
     }
 
     public getShowInformation(theTvDbId: number): Observable<ISearchTvResult> {
-        return this.http.get<ISearchTvResult>(`${this.url}/Tv/info/${theTvDbId}`, {headers: this.headers});
+        return this.http.get<ISearchTvResult>(`${this.url}/Tv/info/${theTvDbId}`, { headers: this.headers });
     }
 
     public popularTv(): Observable<ISearchTvResult[]> {
-        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/popular`, {headers: this.headers});
+        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/popular`, { headers: this.headers });
     }
     public mostWatchedTv(): Observable<ISearchTvResult[]> {
-        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/mostwatched`, {headers: this.headers});
+        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/mostwatched`, { headers: this.headers });
     }
     public anticipatedTv(): Observable<ISearchTvResult[]> {
-        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/anticipated`, {headers: this.headers});
+        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/anticipated`, { headers: this.headers });
     }
     public trendingTv(): Observable<ISearchTvResult[]> {
-        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/trending`, {headers: this.headers});
+        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/trending`, { headers: this.headers });
     }
     // Music
     public searchArtist(searchTerm: string): Observable<ISearchArtistResult[]> {
