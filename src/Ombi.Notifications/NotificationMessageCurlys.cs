@@ -17,10 +17,6 @@ namespace Ombi.Notifications
         public void Setup(NotificationOptions opts, FullBaseRequest req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
-            if (pref != null)
-            {
-                UserPreference = pref.Value;
-            }
 
             string title;
             if (req == null)
@@ -41,6 +37,10 @@ namespace Ombi.Notifications
             }
 
             Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
+            if (pref != null)
+            {
+                UserPreference = pref.Enabled ? pref.Value : Alias;
+            }
             Title = title;
             RequestedDate = req?.RequestedDate.ToString("D");
             if (Type.IsNullOrEmpty())
@@ -66,10 +66,7 @@ namespace Ombi.Notifications
         public void Setup(NotificationOptions opts, AlbumRequest req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
-            if (pref != null)
-            {
-                UserPreference = pref.Enabled ? pref.Value : string.Empty;
-            }
+
             string title;
             if (req == null)
             {
@@ -90,6 +87,10 @@ namespace Ombi.Notifications
 
             DenyReason = req?.DeniedReason;
             Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
+            if (pref != null)
+            {
+                UserPreference = pref.Enabled ? pref.Value : Alias;
+            }
             Title = title;
             RequestedDate = req?.RequestedDate.ToString("D");
             if (Type.IsNullOrEmpty())
@@ -114,10 +115,6 @@ namespace Ombi.Notifications
         public void Setup(NotificationOptions opts, ChildRequests req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
-            if (pref != null)
-            {
-                UserPreference = pref.Enabled ? pref.Value : string.Empty;
-            }
             string title;
             if (req == null)
             {
@@ -137,6 +134,10 @@ namespace Ombi.Notifications
                 UserName = req?.RequestedUser?.UserName;
             }
             Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
+            if (pref != null)
+            {
+                UserPreference = pref.Enabled ? pref.Value : Alias;
+            }
             Title = title;
             RequestedDate = req?.RequestedDate.ToString("D");
             if (Type.IsNullOrEmpty())
