@@ -10,7 +10,7 @@ namespace Ombi.Core
 
         Task<IEnumerable<SearchMovieViewModel>> PopularMovies();
 
-        Task<IEnumerable<SearchMovieViewModel>> Search(string search);
+        Task<IEnumerable<SearchMovieViewModel>> Search(string search, int? year);
 
         Task<IEnumerable<SearchMovieViewModel>> TopRatedMovies();
 

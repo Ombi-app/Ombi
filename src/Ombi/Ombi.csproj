@@ -8,7 +8,7 @@
     <FileVersion>$(SemVer)</FileVersion>
     <Version>$(FullVer)</Version>
     <PackageVersion></PackageVersion>
-    <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ServerGarbageCollection>false</ServerGarbageCollection>

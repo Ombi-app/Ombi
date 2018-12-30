@@ -46,7 +46,25 @@ namespace Ombi.Controllers
             {
                 Logger.LogDebug("Searching : {searchTerm}", searchTerm);
 
-                return await MovieEngine.Search(searchTerm);
+                return await MovieEngine.Search(searchTerm, null);
+            }
+        }
+
+        /// <summary>
+        /// Searches for a movie.
+        /// </summary>
+        /// <remarks>We use TheMovieDb as the Movie Provider</remarks>
+        /// <param name="searchTerm">The search term.</param>
+        /// <param name="year">optional year parameter</param>
+        /// <returns></returns>
+        [HttpGet("movie/{searchTerm}/{year}")]
+        public async Task<IEnumerable<SearchMovieViewModel>> SearchMovie(string searchTerm, int? year)
+        {
+            using (MiniProfiler.Current.Step("SearchingMovie"))
+            {
+                Logger.LogDebug("Searching : {searchTerm}, Year: {year}", searchTerm, year);
+
+                return await MovieEngine.Search(searchTerm, year);
             }
         }
 

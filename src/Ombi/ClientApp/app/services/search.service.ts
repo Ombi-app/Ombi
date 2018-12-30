@@ -17,8 +17,12 @@ export class SearchService extends ServiceHelpers {
     }
 
     // Movies
-    public searchMovie(searchTerm: string): Observable<ISearchMovieResult[]> {
-        return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/` + searchTerm);
+    public searchMovie(searchTerm: string, year?: number): Observable<ISearchMovieResult[]> {
+        if(year && year > 0) {
+            return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/${searchTerm}/${year}`);
+        } else {
+            return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/${searchTerm}`);
+        }
     }
     public similarMovies(theMovieDbId: number): Observable<ISearchMovieResult[]> {
         return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/${theMovieDbId}/similar`);

@@ -83,11 +83,15 @@ namespace Ombi.Api.TheMovieDb
             return Mapper.Map<MovieResponseDto>(result);
         }
 
-        public async Task<List<MovieSearchResult>> SearchMovie(string searchTerm)
+        public async Task<List<MovieSearchResult>> SearchMovie(string searchTerm, int? year)
         {
             var request = new Request($"search/movie", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
             request.FullUri = request.FullUri.AddQueryParameter("query", searchTerm);
+            if(year.HasValue && year.Value > 0)
+            {
+                request.FullUri = request.FullUri.AddQueryParameter("year", year.Value.ToString());
+            }
             AddRetry(request);
 
             var result =  await Api.Request<TheMovieDbContainer<SearchResult>>(request);

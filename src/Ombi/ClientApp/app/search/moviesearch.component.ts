@@ -12,6 +12,7 @@ import { NotificationService, RequestService, SearchService } from "../services"
 @Component({
     selector: "movie-search",
     templateUrl: "./moviesearch.component.html",
+    styleUrls: ["./search.component.scss"],
 })
 export class MovieSearchComponent implements OnInit {
 
@@ -22,6 +23,8 @@ export class MovieSearchComponent implements OnInit {
     public result: IRequestEngineResult;
 
     public searchApplied = false;
+    public refineSearchEnabled = false;
+    public searchYear?: number;
 
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
@@ -46,14 +49,7 @@ export class MovieSearchComponent implements OnInit {
                 this.clearResults();
                 return;
             }
-            this.searchService.searchMovie(this.searchText)
-                .subscribe(x => {
-                    this.movieResults = x;
-                    this.searchApplied = true;
-                    // Now let's load some extra info including IMDB Id
-                    // This way the search is fast at displaying results.
-                    this.getExtraInfo();
-                });
+            this.runSearch();
         });
         this.defaultPoster = "../../../images/default_movie_poster.png";
         const base = this.platformLocation.getBaseHrefFromDOM();
@@ -184,6 +180,17 @@ export class MovieSearchComponent implements OnInit {
             });
     }
 
+    public refineOpen() {
+        this.refineSearchEnabled = !this.refineSearchEnabled;
+        if(!this.refineSearchEnabled) {
+            this.searchYear = undefined;
+        }
+    }
+
+    public applyRefinedSearch() {
+        this.runSearch();
+    }
+
     private getExtraInfo() {
 
         this.movieResults.forEach((val, index) => {
@@ -213,5 +220,16 @@ export class MovieSearchComponent implements OnInit {
     private clearResults() {
         this.movieResults = [];
         this.searchApplied = false;
+    }
+
+    private runSearch() {
+        this.searchService.searchMovie(this.searchText, this.searchYear)
+            .subscribe(x => {
+                this.movieResults = x;
+                this.searchApplied = true;
+                // Now let's load some extra info including IMDB Id
+                // This way the search is fast at displaying results.
+                this.getExtraInfo();
+            });
     }
 }
