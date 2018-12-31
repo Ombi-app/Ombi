@@ -13,7 +13,7 @@ namespace Ombi.Store.Migrations.Settings
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.3-rtm-32065");
+                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
 
             modelBuilder.Entity("Ombi.Store.Entities.ApplicationConfiguration", b =>
                 {
