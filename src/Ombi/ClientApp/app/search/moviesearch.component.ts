@@ -25,7 +25,7 @@ export class MovieSearchComponent implements OnInit {
     public result: IRequestEngineResult;
 
     public searchApplied = false;
-    public refineSearchEnabled = true;
+    public refineSearchEnabled = false;
     public searchYear?: number;
     public selectedLanguage: string;
     public langauges: ILanguageRefine[];
@@ -203,10 +203,18 @@ export class MovieSearchComponent implements OnInit {
             }
             val.background = this.sanitizer.bypassSecurityTrustStyle
                 ("url(" + "https://image.tmdb.org/t/p/w1280" + val.backdropPath + ")");
-            this.searchService.getMovieInformation(val.id)
+
+            if (this.applyRefinedSearch) {
+                this.searchService.getMovieInformationWithRefined(val.id, this.selectedLanguage)
+                    .subscribe(m => {
+                        this.updateItem(val, m);
+                    });
+            } else {
+                this.searchService.getMovieInformation(val.id)
                 .subscribe(m => {
                     this.updateItem(val, m);
                 });
+            }
         });
     }
 

@@ -8,7 +8,7 @@ namespace Ombi.Api.TheMovieDb
     public interface IMovieDbApi
     {
         Task<MovieResponseDto> GetMovieInformation(int movieId);
-        Task<MovieResponseDto> GetMovieInformationWithExtraInfo(int movieId);
+        Task<MovieResponseDto> GetMovieInformationWithExtraInfo(int movieId, string langCode = "en");
         Task<List<MovieSearchResult>> NowPlaying();
         Task<List<MovieSearchResult>> PopularMovies();
         Task<List<MovieSearchResult>> SearchMovie(string searchTerm, int? year, string languageCode);

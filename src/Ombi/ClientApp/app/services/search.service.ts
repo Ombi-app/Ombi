@@ -45,6 +45,10 @@ export class SearchService extends ServiceHelpers {
         return this.http.get<ISearchMovieResult>(`${this.url}/Movie/info/${theMovieDbId}`);
     }
 
+    public getMovieInformationWithRefined(theMovieDbId: number, langCode: string): Observable<ISearchMovieResult> {
+        return this.http.post<ISearchMovieResult>(`${this.url}/Movie/info`, { theMovieDbId, languageCode: langCode });
+    }
+
     // TV
     public searchTv(searchTerm: string): Observable<ISearchTvResult[]> {
         return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/${searchTerm}`, { headers: this.headers });

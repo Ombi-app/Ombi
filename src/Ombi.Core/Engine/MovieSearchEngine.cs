@@ -43,9 +43,9 @@ namespace Ombi.Core.Engine
         /// </summary>
         /// <param name="theMovieDbId">The movie database identifier.</param>
         /// <returns></returns>
-        public async Task<SearchMovieViewModel> LookupImdbInformation(int theMovieDbId)
+        public async Task<SearchMovieViewModel> LookupImdbInformation(int theMovieDbId, string langCode = "en")
         {
-            var movieInfo = await MovieApi.GetMovieInformationWithExtraInfo(theMovieDbId);
+            var movieInfo = await MovieApi.GetMovieInformationWithExtraInfo(theMovieDbId, langCode);
             var viewMovie = Mapper.Map<SearchMovieViewModel>(movieInfo);
 
             return await ProcessSingleMovie(viewMovie, true);
