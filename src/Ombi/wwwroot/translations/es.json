@@ -171,15 +171,15 @@
     "PendingApproval": "Aprobación Pendiente"
   },
   "UserManagment": {
-    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
-    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
-    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
+    "TvRemaining": "Música: {{remaining}}/{{total}} Restante",
+    "MovieRemaining": "Música: {{remaining}}/{{total}} Restante",
+    "MusicRemaining": "Música: {{remaining}}/{{total}} Restante",
     "TvDue": "TV: {{date}}",
-    "MovieDue": "Movie: {{date}}",
-    "MusicDue": "Music: {{date}}"
+    "MovieDue": "Película: {{date}}",
+    "MusicDue": "Música: {{date}}"
   },
   "Votes": {
-    "CompletedVotesTab": "Voted",
-    "VotesTab": "Votes Needed"
+    "CompletedVotesTab": "¡Votado!",
+    "VotesTab": "Votos necesarios"
   }
 }
