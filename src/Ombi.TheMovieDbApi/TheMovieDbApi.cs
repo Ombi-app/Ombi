@@ -73,21 +73,27 @@ namespace Ombi.Api.TheMovieDb
             return Mapper.Map<List<MovieSearchResult>>(result.results);
         }
 
-        public async Task<MovieResponseDto> GetMovieInformationWithExtraInfo(int movieId)
+        public async Task<MovieResponseDto> GetMovieInformationWithExtraInfo(int movieId, string langCode = "en")
         {
             var request = new Request($"movie/{movieId}", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
             request.FullUri = request.FullUri.AddQueryParameter("append_to_response", "videos,release_dates");
+            request.FullUri = request.FullUri.AddQueryParameter("language", langCode);
             AddRetry(request);
             var result = await Api.Request<MovieResponse>(request);
             return Mapper.Map<MovieResponseDto>(result);
         }
 
-        public async Task<List<MovieSearchResult>> SearchMovie(string searchTerm)
+        public async Task<List<MovieSearchResult>> SearchMovie(string searchTerm, int? year, string langageCode)
         {
             var request = new Request($"search/movie", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
             request.FullUri = request.FullUri.AddQueryParameter("query", searchTerm);
+            request.FullUri = request.FullUri.AddQueryParameter("language", langageCode);
+            if (year.HasValue && year.Value > 0)
+            {
+                request.FullUri = request.FullUri.AddQueryParameter("year", year.Value.ToString());
+            }
             AddRetry(request);
 
             var result =  await Api.Request<TheMovieDbContainer<SearchResult>>(request);

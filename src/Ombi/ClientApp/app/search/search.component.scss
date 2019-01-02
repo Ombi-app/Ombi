@@ -1,0 +1,30 @@
+﻿@media (max-width: 978px) {
+    .top-spacing {
+        padding-top: 5%
+    }    
+    .form-control-search {
+        width: 77%;
+    }
+
+}
+@media (min-width: 979px) {
+    .top-spacing {
+        padding-top: 2%
+    }
+    .form-control-search {
+        width: 90%;
+    }
+}
+
+.search-bar-background {
+    background-color: #333333;
+}
+
+.vcenter {
+    display: flex;
+    align-items: center;
+}
+
+.refine-option {
+    box-shadow: inset 0 1px 5px rgba(0,0,0,1.0);
+}

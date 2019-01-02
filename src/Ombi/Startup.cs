@@ -175,6 +175,15 @@ namespace Ombi
             {
                 // Generate a API Key
                 settings.ApiKey = Guid.NewGuid().ToString("N");
+                settings.CollectAnalyticData = true; // Since this is a first setup, enable analytical data collection
+                settings.Set = true;
+                ombiService.SaveSettings(settings);
+            }
+
+            if (!settings.Set)
+            {
+                settings.Set = true;
+                settings.CollectAnalyticData = true;
                 ombiService.SaveSettings(settings);
             }
 

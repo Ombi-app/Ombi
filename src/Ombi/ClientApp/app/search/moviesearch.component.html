@@ -1,11 +1,11 @@
 ﻿<!-- Movie tab -->
 <div role="tabpanel" class="tab-pane active" id="MoviesTab">
 
-    <div class="input-group">
+    <div class="input-group search-bar-background">
         <input id="search" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons"
             (keyup)="search($event)">
         <div class="input-group-addon right-radius">
-            <div class="btn-group">
+            <div class="btn-group" role="group">
                 <a href="#" class="btn btn-sm btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     {{ 'Search.Suggestions' | translate }}
                     <i class="fa fa-chevron-down"></i>
@@ -16,10 +16,43 @@
                     <li><a (click)="topRatedMovies()" [translate]="'Search.Movies.TopRatedMovies'"></a></li>
                     <li><a (click)="nowPlayingMovies()" [translate]="'Search.Movies.NowPlayingMovies'"></a></li>
                 </ul>
+                <button class="btn btn-sm btn-primary-outline" (click)="refineOpen()">
+                    {{ 'Search.Refine' | translate }}
+                    <i class="fa" [ngClass]="{'fa-chevron-down': !refineSearchEnabled, 'fa-chevron-up': refineSearchEnabled}"></i>
+                </button>
             </div>
+
             <i class="fa fa-search"></i>
         </div>
     </div>
+    <!-- Refine search options -->
+    <div class="row top-spacing form-group vcenter" *ngIf="refineSearchEnabled">
+            <div class="col-md-1">
+                    <div class="form-group">
+                            <label class="control-label">Year</label>
+                        
+                <input [(ngModel)]="searchYear" class="form-control form-control-custom refine-option">
+                        </div>
+            </div>
+
+            <!-- <label for="name" class="col-xs-2 col-md-1">Language:</label> -->
+            <div class="col-md-2">
+                    <div class="form-group">
+                            <label for="select" class="control-label">Language</label>
+                            <div id="profiles">
+                                <select [(ngModel)]="selectedLanguage" class="form-control form-control-custom refine-option"
+                                    id="select">
+                                    <option *ngFor="let lang of langauges" value="{{lang.code}}">{{lang.nativeName}}</option>
+                                </select>
+                            </div>
+                        </div>
+        
+            </div>
+        <div class="col-md-9">
+            <button class="btn pull-right btn-success-outline" (click)="applyRefinedSearch()">Apply</button>
+        </div>
+    </div>
+
 
     <remaining-requests [movie]="true" [quotaRefreshEvents]="movieRequested.asObservable()" #remainingFilms></remaining-requests>
 
@@ -111,11 +144,15 @@
 
                     <br />
                     <div *ngIf="result.available">
-                        <a *ngIf="result.plexUrl" style="text-align: right" class="btn btn-sm btn-success-outline" href="{{result.plexUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnPlex' | translate}}</a>
-                        <a *ngIf="result.embyUrl" style="text-align: right" id="embybtn" class="btn btn-sm btn-success-outline" href="{{result.embyUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' | translate}}</a>
+                        <a *ngIf="result.plexUrl" style="text-align: right" class="btn btn-sm btn-success-outline" href="{{result.plexUrl}}"
+                            target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnPlex' | translate}}</a>
+                        <a *ngIf="result.embyUrl" style="text-align: right" id="embybtn" class="btn btn-sm btn-success-outline"
+                            href="{{result.embyUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
+                            translate}}</a>
                     </div>
                     <div class="dropdown" *ngIf="result.available && issueCategories && issuesEnabled">
-                        <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="true">
                             <i class="fa fa-plus"></i> {{'Requests.ReportIssue' | translate}}
                             <span class="caret"></span>
                         </button>

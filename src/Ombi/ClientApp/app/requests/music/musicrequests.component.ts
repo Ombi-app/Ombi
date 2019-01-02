@@ -39,7 +39,7 @@ export class MusicRequestsComponent implements OnInit {
     public rejectionReason: string;
 
     public totalAlbums: number = 100;
-    private currentlyLoaded: number;
+    public currentlyLoaded: number;
     private amountToLoad: number;
 
     constructor(

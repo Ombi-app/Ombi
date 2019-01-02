@@ -1,14 +1,14 @@
 ﻿<Project ToolsVersion="15.0" Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RuntimeIdentifiers>win10-x64;win10-x86;osx-x64;linux-x64;linux-arm64;</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win10-x64;win10-x86;osx-x64;linux-x64;linux-arm;linux-arm64;</RuntimeIdentifiers>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <AssemblyVersion>$(SemVer)</AssemblyVersion>
     <FileVersion>$(SemVer)</FileVersion>
     <Version>$(FullVer)</Version>
     <PackageVersion></PackageVersion>
-    <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ServerGarbageCollection>false</ServerGarbageCollection>
