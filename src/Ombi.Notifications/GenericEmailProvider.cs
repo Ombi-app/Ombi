@@ -83,15 +83,15 @@ namespace Ombi.Notifications
                     {
                         client.Authenticate(settings.Username, settings.Password);
                     }
-                    //Log.Info("sending message to {0} \r\n from: {1}\r\n Are we authenticated: {2}", message.To, message.From, client.IsAuthenticated);
+                    _log.LogDebug("sending message to {0} \r\n from: {1}\r\n Are we authenticated: {2}", message.To, message.From, client.IsAuthenticated);
                     await client.SendAsync(message);
                     await client.DisconnectAsync(true);
                 }
             }
             catch (Exception e)
             {
-                //Log.Error(e);
-                throw new InvalidOperationException(e.Message);
+                _log.LogError(e, "Exception when attempting to send an email");
+                throw;
             }
         }
 
