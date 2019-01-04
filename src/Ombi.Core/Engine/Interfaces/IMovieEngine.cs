@@ -16,8 +16,8 @@ namespace Ombi.Core
 
         Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies();
         
-        Task<SearchMovieViewModel> LookupImdbInformation(int theMovieDbId, string langCode = "en");
+        Task<SearchMovieViewModel> LookupImdbInformation(int theMovieDbId, string langCode = null);
 
-        Task<IEnumerable<SearchMovieViewModel>> SimilarMovies(int theMovieDbId);
+        Task<IEnumerable<SearchMovieViewModel>> SimilarMovies(int theMovieDbId, string langCode);
     }
 }

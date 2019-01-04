@@ -225,6 +225,19 @@ namespace Ombi.Controllers
             return await Get<CustomizationSettings>();
         }
 
+
+        /// <summary>
+        /// Gets the default language set in Ombi
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("defaultlanguage")]
+        [AllowAnonymous]
+        public async Task<string> GetDefaultLanguage()
+        {
+           var s = await Get<OmbiSettings>();
+           return s.DefaultLanguageCode;
+        }
+
         /// <summary>
         /// Save the Customization settings.
         /// </summary>

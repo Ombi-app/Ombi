@@ -52,6 +52,10 @@ export class SettingsService extends ServiceHelpers {
         return this.http.get<IOmbiSettings>(`${this.url}/Ombi/`, {headers: this.headers});
     }
 
+    public getDefaultLanguage(): Observable<string> {
+        return this.http.get<string>(`${this.url}/defaultlanguage/`, {headers: this.headers});
+    }
+
     public saveOmbi(settings: IOmbiSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}/Ombi/`, JSON.stringify(settings), {headers: this.headers});
     }

@@ -157,6 +157,24 @@ namespace Ombi.Core.Engine
             }
         }
 
+        private string defaultLangCode;
+        protected async Task<string> DefaultLanguageCode(string currentCode)
+        {
+            if (currentCode.HasValue())
+            {
+                return currentCode;
+            }
+
+            var s = await GetOmbiSettings();
+            return s.DefaultLanguageCode;
+        }
+
+        private OmbiSettings ombiSettings;
+        protected async Task<OmbiSettings> GetOmbiSettings()
+        {
+            return ombiSettings ?? (ombiSettings = await OmbiSettings.GetSettingsAsync());
+        }
+
         public class HideResult
         {
             public bool Hide { get; set; }

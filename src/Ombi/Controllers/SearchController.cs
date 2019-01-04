@@ -47,7 +47,7 @@ namespace Ombi.Controllers
             {
                 Logger.LogDebug("Searching : {searchTerm}", searchTerm);
 
-                return await MovieEngine.Search(searchTerm, null, "en");
+                return await MovieEngine.Search(searchTerm, null, null);
             }
         }
 
@@ -121,12 +121,27 @@ namespace Ombi.Controllers
         /// <remarks>
         /// We use TheMovieDb as the Movie Provider
         /// </remarks>
+        [HttpPost("movie/similar")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<IEnumerable<SearchMovieViewModel>> SimilarMovies([FromBody] SimilarMoviesRefineModel model)
+        {
+            return await MovieEngine.SimilarMovies(model.TheMovieDbId, model.LanguageCode);
+        }
+
+        /// <summary>
+        /// Returns similar movies to the movie id passed in
+        /// </summary>
+        /// <param name="theMovieDbId">ID of the movie</param>
+        /// <remarks>
+        /// We use TheMovieDb as the Movie Provider
+        /// </remarks>
         [HttpGet("movie/{theMovieDbId}/similar")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchMovieViewModel>> SimilarMovies(int theMovieDbId)
         {
-            return await MovieEngine.SimilarMovies(theMovieDbId);
+            return await MovieEngine.SimilarMovies(theMovieDbId, null);
         }
 
         /// <summary>
