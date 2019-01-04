@@ -154,6 +154,7 @@ export interface IEpisodesRequests {
 
 export interface IMovieRequestModel {
   theMovieDbId: number;
+  languageCode: string;
 }
 
 export interface IFilter {

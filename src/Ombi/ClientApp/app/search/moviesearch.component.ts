@@ -84,7 +84,8 @@ export class MovieSearchComponent implements OnInit {
         }
 
         try {
-            this.requestService.requestMovie({ theMovieDbId: searchResult.id })
+            const language = this.selectedLanguage && this.selectedLanguage.length > 0 ? this.selectedLanguage : "en";
+            this.requestService.requestMovie({ theMovieDbId: searchResult.id, languageCode: language })
                 .subscribe(x => {
                     this.result = x;
                     if (this.result.result) {
@@ -189,7 +190,6 @@ export class MovieSearchComponent implements OnInit {
     }
 
     public applyRefinedSearch() {
-        console.log(this.selectedLanguage);
         this.runSearch();
     }
 

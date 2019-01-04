@@ -51,7 +51,7 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<RequestEngineResult> RequestMovie(MovieRequestViewModel model)
         {
-            var movieInfo = await MovieApi.GetMovieInformationWithExtraInfo(model.TheMovieDbId);
+            var movieInfo = await MovieApi.GetMovieInformationWithExtraInfo(model.TheMovieDbId, model.LanguageCode);
             if (movieInfo == null || movieInfo.Id == 0)
             {
                 return new RequestEngineResult
@@ -82,7 +82,8 @@ namespace Ombi.Core.Engine
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
                 RequestedUserId = userDetails.Id,
-                Background = movieInfo.BackdropPath
+                Background = movieInfo.BackdropPath,
+                LangCode = model.LanguageCode
             };
 
             var usDates = movieInfo.ReleaseDates?.Results?.FirstOrDefault(x => x.IsoCode == "US");

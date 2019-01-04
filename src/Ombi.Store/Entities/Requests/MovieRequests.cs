@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Ombi.Helpers;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,5 +19,13 @@ namespace Ombi.Store.Entities.Requests
 
         public int RootPathOverride { get; set; }
         public int QualityOverride { get; set; }
+
+        /// <summary>
+        /// Only Use for setting the Language Code, Use the LanguageCode property for reading
+        /// </summary>
+        public string LangCode { get; set; }
+
+        [NotMapped]
+        public string LanguageCode => LangCode.IsNullOrEmpty() ? "en" : LangCode;
     }
 }

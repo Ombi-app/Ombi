@@ -10,6 +10,6 @@
         public bool IgnoreCertificateErrors { get; set; }
         public bool DoNotSendNotificationsForAutoApprove { get; set; }
         public bool HideRequestsUsers { get; set; }
-
+        public string DefaultLanguageCode { get; set; } = "en";
     }
 }
