@@ -9,6 +9,7 @@ using MailKit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MimeKit;
 using Ombi.Api.Lidarr;
 using Ombi.Api.Lidarr.Models;
 using Ombi.Api.TheMovieDb;
@@ -24,6 +25,7 @@ using Ombi.Settings.Settings.Models.External;
 using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using ContentType = Ombi.Store.Entities.ContentType;
 
 namespace Ombi.Schedule.Jobs.Ombi
 {
@@ -162,7 +164,23 @@ namespace Ombi.Schedule.Jobs.Ombi
                             Email = emails
                         });
                     }
-                    var emailTasks = new List<Task>();
+
+                    var messageContent = ParseTemplate(template, customization);
+                    var email = new NewsletterTemplate();
+
+                    var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo);
+
+                    var bodyBuilder = new BodyBuilder
+                    {
+                        HtmlBody = html,
+                    };
+
+                    var message = new MimeMessage
+                    {
+                        Body = bodyBuilder.ToMessageBody(),
+                        Subject = messageContent.Subject
+                    };
+                    
                     foreach (var user in users)
                     {
                         // Get the users to send it to
@@ -170,16 +188,12 @@ namespace Ombi.Schedule.Jobs.Ombi
                         {
                             continue;
                         }
-
-                        var messageContent = ParseTemplate(template, customization, user);
-                        var email = new NewsletterTemplate();
-
-                        var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo);
-
-                        emailTasks.Add(_email.Send(
-                            new NotificationMessage { Message = html, Subject = messageContent.Subject, To = user.Email },
-                            emailSettings));
+                        // BCC the messages
+                        message.Bcc.Add(new MailboxAddress(user.Email, user.Email));
                     }
+
+                    // Send the email
+                    await _email.Send(message, emailSettings);
 
                     // Now add all of this to the Recently Added log
                     var recentlyAddedLog = new HashSet<RecentlyAddedLog>();
@@ -234,7 +248,6 @@ namespace Ombi.Schedule.Jobs.Ombi
                         });
                     }
                     await _recentlyAddedLog.AddRange(recentlyAddedLog);
-                    await Task.WhenAll(emailTasks.ToArray());
                 }
                 else
                 {
@@ -245,7 +258,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         {
                             continue;
                         }
-                        var messageContent = ParseTemplate(template, customization, a);
+                        var messageContent = ParseTemplate(template, customization);
 
                         var email = new NewsletterTemplate();
 
@@ -305,12 +318,12 @@ namespace Ombi.Schedule.Jobs.Ombi
             return itemsToReturn;
         }
 
-        private NotificationMessageContent ParseTemplate(NotificationTemplates template, CustomizationSettings settings, OmbiUser username)
+        private NotificationMessageContent ParseTemplate(NotificationTemplates template, CustomizationSettings settings)
         {
             var resolver = new NotificationMessageResolver();
             var curlys = new NotificationMessageCurlys();
 
-            curlys.SetupNewsletter(settings, username);
+            curlys.SetupNewsletter(settings);
 
             return resolver.ParseMessage(template, curlys);
         }

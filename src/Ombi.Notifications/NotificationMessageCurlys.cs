@@ -105,13 +105,10 @@ namespace Ombi.Notifications
             AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
         }
 
-        public void SetupNewsletter(CustomizationSettings s, OmbiUser username)
+        public void SetupNewsletter(CustomizationSettings s)
         {
             ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
-            RequestedUser = username.UserName;
-            UserName = username.UserName;
-            Alias = username.Alias.HasValue() ? username.Alias : username.UserName;
         }
 
         public void Setup(NotificationOptions opts, ChildRequests req, CustomizationSettings s, UserNotificationPreferences pref)

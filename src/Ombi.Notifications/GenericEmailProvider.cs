@@ -97,8 +97,6 @@ namespace Ombi.Notifications
 
         public async Task Send(NotificationMessage model, EmailNotificationSettings settings)
         {
-            try
-            {
                 EnsureArg.IsNotNullOrEmpty(settings.SenderAddress);
                 EnsureArg.IsNotNullOrEmpty(model.To);
                 EnsureArg.IsNotNullOrEmpty(model.Message);
@@ -120,8 +118,17 @@ namespace Ombi.Notifications
                     Subject = model.Subject
                 };
 
-                message.From.Add(new MailboxAddress(string.IsNullOrEmpty(settings.SenderName) ? settings.SenderAddress : settings.SenderName, settings.SenderAddress));
                 message.To.Add(new MailboxAddress(model.To, model.To));
+
+                await Send(message, settings);
+
+        }
+
+        public async Task Send(MimeMessage message, EmailNotificationSettings settings)
+        {
+            try
+            {
+                message.From.Add(new MailboxAddress(string.IsNullOrEmpty(settings.SenderName) ? settings.SenderAddress : settings.SenderName, settings.SenderAddress));
 
                 using (var client = new SmtpClient())
                 {
