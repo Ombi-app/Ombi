@@ -25,18 +25,16 @@ namespace Ombi.Controllers
     [ApiController]
     public class TokenController : ControllerBase
     {
-        public TokenController(OmbiUserManager um, IOptions<TokenAuthentication> ta, IAuditRepository audit, ITokenRepository token,
+        public TokenController(OmbiUserManager um, IOptions<TokenAuthentication> ta, ITokenRepository token,
             IPlexOAuthManager oAuthManager)
         {
             _userManager = um;
             _tokenAuthenticationOptions = ta.Value;
-            _audit = audit;
             _token = token;
             _plexOAuthManager = oAuthManager;
         }
 
         private readonly TokenAuthentication _tokenAuthenticationOptions;
-        private readonly IAuditRepository _audit;
         private readonly ITokenRepository _token;
         private readonly OmbiUserManager _userManager;
         private readonly IPlexOAuthManager _plexOAuthManager;
@@ -52,9 +50,6 @@ namespace Ombi.Controllers
         {
             if (!model.UsePlexOAuth)
             {
-                await _audit.Record(AuditType.None, AuditArea.Authentication,
-                $"UserName {model.Username} attempting to authenticate");
-
                 var user = await _userManager.FindByNameAsync(model.Username);
 
                 if (user == null)

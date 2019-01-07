@@ -25,8 +25,8 @@ export class SearchService extends ServiceHelpers {
         return this.http.post<ISearchMovieResult[]>(`${this.url}/Movie/`, { searchTerm, year, languageCode: langCode });
     }
 
-    public similarMovies(theMovieDbId: number): Observable<ISearchMovieResult[]> {
-        return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/${theMovieDbId}/similar`);
+    public similarMovies(theMovieDbId: number, langCode: string): Observable<ISearchMovieResult[]> {
+        return this.http.post<ISearchMovieResult[]>(`${this.url}/Movie/similar`, {theMovieDbId, languageCode: langCode});
     }
 
     public popularMovies(): Observable<ISearchMovieResult[]> {

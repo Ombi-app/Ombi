@@ -7,7 +7,7 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { AuthService } from "../auth/auth.service";
 import { IIssueCategory, ILanguageRefine, IRequestEngineResult, ISearchMovieResult } from "../interfaces";
-import { NotificationService, RequestService, SearchService } from "../services";
+import { NotificationService, RequestService, SearchService, SettingsService } from "../services";
 
 import * as languageData from "../../other/iso-lang.json";
 
@@ -43,7 +43,7 @@ export class MovieSearchComponent implements OnInit {
         private searchService: SearchService, private requestService: RequestService,
         private notificationService: NotificationService, private authService: AuthService,
         private readonly translate: TranslateService, private sanitizer: DomSanitizer,
-        private readonly platformLocation: PlatformLocation) {
+        private readonly platformLocation: PlatformLocation, private settingsService: SettingsService) {
         this.langauges = <ILanguageRefine[]><any>languageData;
         this.searchChanged.pipe(
             debounceTime(600), // Wait Xms after the last event before emitting last event
@@ -67,7 +67,7 @@ export class MovieSearchComponent implements OnInit {
             result: false,
             errorMessage: "",
         };
-
+        this.settingsService.getDefaultLanguage().subscribe(x => this.selectedLanguage = x);
         this.popularMovies();
     }
 
@@ -84,7 +84,8 @@ export class MovieSearchComponent implements OnInit {
         }
 
         try {
-            this.requestService.requestMovie({ theMovieDbId: searchResult.id })
+            const language = this.selectedLanguage && this.selectedLanguage.length > 0 ? this.selectedLanguage : "en";
+            this.requestService.requestMovie({ theMovieDbId: searchResult.id, languageCode: language })
                 .subscribe(x => {
                     this.result = x;
                     if (this.result.result) {
@@ -158,7 +159,8 @@ export class MovieSearchComponent implements OnInit {
 
     public similarMovies(theMovieDbId: number) {
         this.clearResults();
-        this.searchService.similarMovies(theMovieDbId)
+        const lang = this.selectedLanguage && this.selectedLanguage.length > 0 ? this.selectedLanguage : "";
+        this.searchService.similarMovies(theMovieDbId, lang)
             .subscribe(x => {
                 this.movieResults = x;
                 this.getExtraInfo();
@@ -189,7 +191,6 @@ export class MovieSearchComponent implements OnInit {
     }
 
     public applyRefinedSearch() {
-        console.log(this.selectedLanguage);
         this.runSearch();
     }
 
