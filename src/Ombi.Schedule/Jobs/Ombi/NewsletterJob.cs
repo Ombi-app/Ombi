@@ -35,7 +35,8 @@ namespace Ombi.Schedule.Jobs.Ombi
             IMovieDbApi movieApi, ITvMazeApi tvApi, IEmailProvider email, ISettingsService<CustomizationSettings> custom,
             ISettingsService<EmailNotificationSettings> emailSettings, INotificationTemplatesRepository templateRepo,
             UserManager<OmbiUser> um, ISettingsService<NewsletterSettings> newsletter, ILogger<NewsletterJob> log,
-            ILidarrApi lidarrApi, IRepository<LidarrAlbumCache> albumCache, ISettingsService<LidarrSettings> lidarrSettings)
+            ILidarrApi lidarrApi, IRepository<LidarrAlbumCache> albumCache, ISettingsService<LidarrSettings> lidarrSettings,
+            ISettingsService<OmbiSettings> ombiSettings)
         {
             _plex = plex;
             _emby = emby;
@@ -55,6 +56,8 @@ namespace Ombi.Schedule.Jobs.Ombi
             _lidarrApi = lidarrApi;
             _lidarrAlbumRepository = albumCache;
             _lidarrSettings = lidarrSettings;
+            _ombiSettings = ombiSettings;
+            _ombiSettings.ClearCache();
             _lidarrSettings.ClearCache();
         }
 
@@ -68,6 +71,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly INotificationTemplatesRepository _templateRepo;
         private readonly ISettingsService<EmailNotificationSettings> _emailSettings;
         private readonly ISettingsService<NewsletterSettings> _newsletterSettings;
+        private readonly ISettingsService<OmbiSettings> _ombiSettings;
         private readonly UserManager<OmbiUser> _userManager;
         private readonly ILogger _log;
         private readonly ILidarrApi _lidarrApi;
@@ -331,6 +335,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private async Task<string> BuildHtml(IQueryable<PlexServerContent> plexContentToSend, IQueryable<EmbyContent> embyContentToSend, 
             HashSet<PlexEpisode> plexEpisodes, HashSet<EmbyEpisode> embyEp, HashSet<LidarrAlbumCache> albums, NewsletterSettings settings)
         {
+            var ombiSettings = await _ombiSettings.GetSettingsAsync();
             var sb = new StringBuilder();
 
             var plexMovies = plexContentToSend.Where(x => x.Type == PlexMediaTypeEntity.Movie);
@@ -344,8 +349,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                 sb.Append("<td style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-size: 14px; vertical-align: top; \">");
                 sb.Append("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; \">");
                 sb.Append("<tr>");
-                await ProcessPlexMovies(plexMovies, sb);
-                await ProcessEmbyMovies(embyMovies, sb);
+                await ProcessPlexMovies(plexMovies, sb, ombiSettings.DefaultLanguageCode);
+                await ProcessEmbyMovies(embyMovies, sb, ombiSettings.DefaultLanguageCode);
                 sb.Append("</tr>");
                 sb.Append("</table>");
                 sb.Append("</td>");
@@ -392,7 +397,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             return sb.ToString();
         }
 
-        private async Task ProcessPlexMovies(IQueryable<PlexServerContent> plexContentToSend, StringBuilder sb)
+        private async Task ProcessPlexMovies(IQueryable<PlexServerContent> plexContentToSend, StringBuilder sb, string defaultLanguageCode)
         {
             int count = 0;
             var ordered = plexContentToSend.OrderByDescending(x => x.AddedAt);
@@ -403,7 +408,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 {
                     continue;
                 }
-                var info = await _movieApi.GetMovieInformationWithExtraInfo(movieDbId);
+                var info = await _movieApi.GetMovieInformationWithExtraInfo(movieDbId, defaultLanguageCode);
                 var mediaurl = content.Url;
                 if (info == null)
                 {
@@ -466,7 +471,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        private async Task ProcessEmbyMovies(IQueryable<EmbyContent> embyContent, StringBuilder sb)
+        private async Task ProcessEmbyMovies(IQueryable<EmbyContent> embyContent, StringBuilder sb, string defaultLangaugeCode)
         {
             int count = 0;
             var ordered = embyContent.OrderByDescending(x => x.AddedAt);
@@ -487,7 +492,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
 
                 var mediaurl = content.Url;
-                var info = await _movieApi.GetMovieInformationWithExtraInfo(StringHelper.IntParseLinq(theMovieDbId));
+                var info = await _movieApi.GetMovieInformationWithExtraInfo(StringHelper.IntParseLinq(theMovieDbId), defaultLangaugeCode);
                 if (info == null)
                 {
                     continue;
