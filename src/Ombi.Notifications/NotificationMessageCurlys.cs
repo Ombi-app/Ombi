@@ -39,7 +39,7 @@ namespace Ombi.Notifications
             Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
             if (pref != null)
             {
-                UserPreference = pref.Enabled ? pref.Value : Alias;
+                UserPreference = pref.Value.HasValue() ? pref.Value : Alias;
             }
             Title = title;
             RequestedDate = req?.RequestedDate.ToString("D");
@@ -91,7 +91,7 @@ namespace Ombi.Notifications
             Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
             if (pref != null)
             {
-                UserPreference = pref.Enabled ? pref.Value : Alias;
+                UserPreference = pref.Value.HasValue() ? pref.Value : Alias;
             }
             Title = title;
             RequestedDate = req?.RequestedDate.ToString("D");
@@ -136,7 +136,7 @@ namespace Ombi.Notifications
             Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
             if (pref != null)
             {
-                UserPreference = pref.Enabled ? pref.Value : Alias;
+                UserPreference = pref.Value.HasValue() ? pref.Value : Alias;
             }
             Title = title;
             RequestedDate = req?.RequestedDate.ToString("D");

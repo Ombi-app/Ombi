@@ -965,7 +965,6 @@ namespace Ombi.Controllers
                 {
                     // Update it
                     existingPreference.Value = pref.Value;
-                    existingPreference.Enabled = pref.Enabled;
                     await _userNotificationPreferences.SaveChangesAsync();
                 }
                 else
@@ -973,7 +972,6 @@ namespace Ombi.Controllers
                     await _userNotificationPreferences.Add(new UserNotificationPreferences
                     {
                         Agent = pref.Agent,
-                        Enabled = pref.Enabled,
                         UserId = pref.UserId,
                         Value = pref.Value
                     });
