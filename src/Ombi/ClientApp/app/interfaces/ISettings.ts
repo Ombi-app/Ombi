@@ -120,6 +120,7 @@ export interface ICustomizationSettings extends ISettings {
   customDonationUrl: string;
   customDonationMessage: string;
   recentlyAddedPage: boolean;
+  useCustomPage: boolean;
 }
 
 export interface IJobSettings {
@@ -156,6 +157,12 @@ export interface IAuthenticationSettings extends ISettings {
   requireNonAlphanumeric: boolean;
   requireUppercase: boolean;
   enableOAuth: boolean;
+}
+
+export interface ICustomPage extends ISettings {
+  enabled: boolean;
+  title: string;
+  html: string;
 }
 
 export interface IUserManagementSettings extends ISettings {

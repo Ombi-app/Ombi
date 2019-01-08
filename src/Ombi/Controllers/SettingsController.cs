@@ -721,7 +721,7 @@ namespace Ombi.Controllers
         /// Saves the Custom Page Settings.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("CustomPage")]
+        [HttpPost("CustomPage")]
         public async Task<bool> CustomPageSettings([FromBody] CustomPageSettings page)
         {
             return await Save(page);

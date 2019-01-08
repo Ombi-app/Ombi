@@ -69,6 +69,13 @@
                     tooltipPosition="top" pTooltip="Set a custom message to be displayed in the navigation bar.">
             </div>
         </div>
+        <div class="form-group" *ngIf="settings.useCustomPage">
+                <label for="customPage" class="control-label">Use Custom Page</label>
+                <div>
+                    <input [disabled]="!settings.useCustomPage" type="text" [(ngModel)]="settings.useCustomPage" class="form-control form-control-custom " name="customPage" value="{{settings.useCustomPage}}"
+                        tooltipPosition="top" pTooltip="Enabled a custom page for you to fully edit and customize.">
+                </div>
+            </div>
 
 
 
