@@ -1,0 +1,7 @@
+﻿<button class="btn btn-info-outline" (click)="isEditing = !isEditing">Edit</button>
+<div *ngIf="isEditing" >
+<app-ngx-editor [placeholder]="'Enter text here...'" [minHeight]="100"  [(ngModel)]="html"></app-ngx-editor>
+<button class="btn btn-primary-outline" (click)="isEditing = !isEditing">Save</button>
+<hr />
+</div>
+<div [innerHTML]="html"></div>

@@ -4182,11 +4182,21 @@ ng2-cookies@^1.0.12:
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/ng2-cookies/-/ng2-cookies-1.0.12.tgz#3f3e613e0137b0649b705c678074b4bd08149ccc"
 
+ngx-bootstrap@^3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-3.1.4.tgz#5105c0227da3b51a1972d04efa1504a79474fd57"
+
 ngx-clipboard@^11.1.1:
   version "11.1.9"
   resolved "https://registry.yarnpkg.com/ngx-clipboard/-/ngx-clipboard-11.1.9.tgz#a391853dc49e436de407260863a2c814d73a9332"
   dependencies:
     ngx-window-token "^1.0.2"
+    tslib "^1.9.0"
+
+ngx-editor@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/ngx-editor/-/ngx-editor-4.1.0.tgz#3ec5820627f25a2239094747cccf88a7ca02f79f"
+  dependencies:
     tslib "^1.9.0"
 
 ngx-infinite-scroll@^6.0.1:
