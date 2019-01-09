@@ -161,8 +161,9 @@ export interface IAuthenticationSettings extends ISettings {
 
 export interface ICustomPage extends ISettings {
   enabled: boolean;
+  fontAwesomeIcon: string;
   title: string;
-  html: string;
+  html: any;
 }
 
 export interface IUserManagementSettings extends ISettings {

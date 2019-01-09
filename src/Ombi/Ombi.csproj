@@ -14,12 +14,12 @@
     <ServerGarbageCollection>false</ServerGarbageCollection>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp2.0\Swagger.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netcoreapp2.2\Swagger.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591;</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netcoreapp2.0\Swagger.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\netcoreapp2.2\Swagger.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591;</NoWarn>
     <DefineConstants>TRACE;RELEASE;NETCOREAPP2_0</DefineConstants>
   </PropertyGroup>
@@ -71,7 +71,7 @@
     <PackageReference Include="Hangfire.RecurringJobExtensions" Version="1.1.6" />
     <PackageReference Include="Hangfire.SQLite" Version="1.4.2" />
 
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
 
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Api.Analyzers" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.2.0" />
