@@ -195,6 +195,10 @@ namespace Ombi.Core.Engine
         {
             // Check if this user requested it
             var user = await GetUser();
+            if (user == null)
+            {
+                return;
+            }
             var request = await RequestService.MovieRequestService.GetAll()
                 .AnyAsync(x => x.RequestedUserId.Equals(user.Id) && x.TheMovieDbId == viewModel.Id);
             if (request)
