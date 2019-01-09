@@ -11,6 +11,10 @@ export class TvRequestChildrenComponent {
     @Input() public childRequests: IChildRequests[];
     @Input() public isAdmin: boolean;
     @Input() public currentUser: string;
+    
+    public denyDisplay: boolean;
+    public requestToDeny: IChildRequests;
+    public rejectionReason: string;
 
     @Output() public requestDeleted = new EventEmitter<number>();
 
@@ -57,20 +61,26 @@ export class TvRequestChildrenComponent {
 
     public deny(request: IChildRequests) {
         request.denied = true;
+        this.requestToDeny = request;
+        this.denyDisplay = true;
 
         request.seasonRequests.forEach((season) => {
             season.episodes.forEach((ep) => {
                 ep.approved = false;
             });
         });
-        this.requestService.denyChild({ id: request.id })
+    }
+
+    public denyRequest() {
+        this.requestService.denyChild({ id: this.requestToDeny.id, reason: this.rejectionReason })
             .subscribe(x => {
+                this.denyDisplay = false;
                 if (x.result) {
                     this.notificationService.success(
                         `Request has been denied successfully`);
                 } else {
                     this.notificationService.warning("Request Denied", x.message ? x.message : x.errorMessage);
-                    request.approved = false;
+                    this.requestToDeny.approved = false;
                 }
             });
     }

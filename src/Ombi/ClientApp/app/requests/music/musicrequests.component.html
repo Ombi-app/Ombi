@@ -92,7 +92,7 @@
                     </div>
                     <div *ngIf="request.denied" id="requestDenied">
                         {{ 'Requests.Denied' | translate }}
-                        <i style="color:red;" class="fa fa-check"></i>
+                        <i style="color:red;" class="fa fa-check" pTooltip="{{request.deniedReason}}"></i>
 
                     </div>
 
@@ -266,3 +266,14 @@
     <button class="btn btn-sm btn-primary-outline" (click)="clearFilter($event)">
         <i class="fa fa-filter"></i> {{ 'Filter.ClearFilter' | translate }}</button>
 </p-sidebar>
+
+
+
+<p-dialog *ngIf="requestToDeny" header="Deny Request '{{requestToDeny.title}}''" [(visible)]="denyDisplay" [draggable]="false">
+    <span>Please enter a rejection reason, the user will be notified of this:</span>
+    <textarea [(ngModel)]="rejectionReason" class="form-control-custom form-control"></textarea>
+        <p-footer>
+            <button type="button" (click)="denyRequest();" label="Reject" class="btn btn-success">Deny</button>
+            <button type="button"(click)="denyDisplay=false" label="Close" class="btn btn-danger">Close</button>
+        </p-footer>
+    </p-dialog>

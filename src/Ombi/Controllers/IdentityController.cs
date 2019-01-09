@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 using AutoMapper;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
@@ -11,10 +10,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Ombi.Api.Plex;
 using Ombi.Attributes;
-using Ombi.Config;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
@@ -45,6 +42,7 @@ namespace Ombi.Controllers
     /// </summary>
     [ApiV1]
     [Produces("application/json")]
+    [ApiController]
     public class IdentityController : Controller
     {
         public IdentityController(OmbiUserManager user, IMapper mapper, RoleManager<IdentityRole> rm, IEmailProvider prov,
@@ -935,6 +933,8 @@ namespace Ombi.Controllers
         }
 
         [HttpPost("NotificationPreferences")]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> AddUserNotificationPreference([FromBody] List<AddNotificationPreference> preferences)
         {
             foreach (var pref in preferences)
@@ -965,7 +965,6 @@ namespace Ombi.Controllers
                 {
                     // Update it
                     existingPreference.Value = pref.Value;
-                    existingPreference.Enabled = pref.Enabled;
                     await _userNotificationPreferences.SaveChangesAsync();
                 }
                 else
@@ -973,7 +972,6 @@ namespace Ombi.Controllers
                     await _userNotificationPreferences.Add(new UserNotificationPreferences
                     {
                         Agent = pref.Agent,
-                        Enabled = pref.Enabled,
                         UserId = pref.UserId,
                         Value = pref.Value
                     });

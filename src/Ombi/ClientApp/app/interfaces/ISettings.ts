@@ -15,6 +15,7 @@ export interface IOmbiSettings extends ISettings {
   ignoreCertificateErrors: boolean;
   doNotSendNotificationsForAutoApprove: boolean;
   hideRequestsUsers: boolean;
+  defaultLanguageCode: string;
 }
 
 export interface IUpdateSettings extends ISettings {
@@ -119,6 +120,7 @@ export interface ICustomizationSettings extends ISettings {
   customDonationUrl: string;
   customDonationMessage: string;
   recentlyAddedPage: boolean;
+  useCustomPage: boolean;
 }
 
 export interface IJobSettings {
@@ -136,6 +138,7 @@ export interface IJobSettings {
   lidarrArtistSync: string;
   issuesPurge: string;
   retryRequests: string;
+  mediaDatabaseRefresh: string;
 }
 
 export interface IIssueSettings extends ISettings {
@@ -155,6 +158,13 @@ export interface IAuthenticationSettings extends ISettings {
   requireNonAlphanumeric: boolean;
   requireUppercase: boolean;
   enableOAuth: boolean;
+}
+
+export interface ICustomPage extends ISettings {
+  enabled: boolean;
+  fontAwesomeIcon: string;
+  title: string;
+  html: any;
 }
 
 export interface IUserManagementSettings extends ISettings {

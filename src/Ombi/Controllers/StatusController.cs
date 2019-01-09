@@ -37,7 +37,8 @@ namespace Ombi.Controllers
 {
     [ApiV1]
     [Produces("application/json")]
-    public class StatusController : Controller
+    [ApiController]
+    public class StatusController : ControllerBase
     {
         public StatusController(ISettingsService<OmbiSettings> ombi)
         {

@@ -1,0 +1,44 @@
+﻿$primary-colour: #df691a;
+$primary-colour-outline: #ff761b;
+$bg-colour: #333333;
+$bg-colour-disabled: #252424;
+
+:host app-ngx-editor /deep/ .ngx-toolbar {
+    background-color: $bg-colour;
+    border: 1px solid $primary-colour-outline;
+}
+
+:host app-ngx-editor /deep/ .ngx-toolbar-set {
+    background-color: transparent !important;
+    border: 1px solid $primary-colour-outline !important;
+}
+
+:host app-ngx-editor /deep/ .ngx-editor-button {
+    -o-transition: all 0.218s;
+    -moz-transition: all 0.218s;
+    -webkit-transition: all 0.218s;
+    transition: all 0.218s;
+    color: $primary-colour-outline;
+    background-color: transparent;
+    background-image: none;
+    border-color: $primary-colour-outline !important;
+}
+
+:host app-ngx-editor /deep/ .ngx-editor-button:hover {
+    color: black;
+    background-color: $primary-colour !important;
+    border-color: $primary-colour-outline !important;
+}
+
+:host app-ngx-editor /deep/ .ngx-editor-grippie {
+    background-color: $bg-colour;
+    border: 1px solid $primary-colour-outline;
+}
+
+:host app-ngx-editor /deep/ .ngx-editor-textarea {
+    border: 1px solid $primary-colour-outline !important;
+}
+
+:host app-ngx-editor /deep/ .ngx-editor-message {
+    display:none !important;
+}

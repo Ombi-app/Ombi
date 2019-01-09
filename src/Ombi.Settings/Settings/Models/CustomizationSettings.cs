@@ -10,6 +10,7 @@
         public string CustomDonationMessage { get; set; }
         public string Logo { get; set; }
         public bool RecentlyAddedPage { get; set; }
+        public bool UseCustomPage { get; set; }
 
         public void AddToUrl(string part)
         {

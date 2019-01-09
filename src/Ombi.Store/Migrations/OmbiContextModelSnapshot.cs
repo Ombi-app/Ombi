@@ -14,7 +14,7 @@ namespace Ombi.Store.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024");
+                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -530,6 +530,24 @@ namespace Ombi.Store.Migrations
                     b.ToTable("RequestQueue");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("RequestId");
+
+                    b.Property<int>("RequestType");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RequestSubscription");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.Requests.AlbumRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -713,6 +731,8 @@ namespace Ombi.Store.Migrations
 
                     b.Property<int?>("IssueId");
 
+                    b.Property<string>("LangCode");
+
                     b.Property<DateTime>("MarkedAsApproved");
 
                     b.Property<DateTime?>("MarkedAsAvailable");
@@ -798,24 +818,6 @@ namespace Ombi.Store.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TvRequests");
-                });
-
-            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("RequestId");
-
-                    b.Property<int>("RequestType");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("RequestSubscription");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.SickRageCache", b =>
@@ -1082,6 +1084,13 @@ namespace Ombi.Store.Migrations
                         .HasForeignKey("PlexServerContentId");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.Requests.AlbumRequest", b =>
                 {
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "RequestedUser")
@@ -1140,13 +1149,6 @@ namespace Ombi.Store.Migrations
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.RequestLog", b =>
-                {
-                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
                 {
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany()

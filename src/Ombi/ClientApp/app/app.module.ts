@@ -14,13 +14,16 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { CookieService } from "ng2-cookies";
+import { NgxEditorModule } from "ngx-editor";
 import { GrowlModule } from "primeng/components/growl/growl";
-import { ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DialogModule, OverlayPanelModule, SharedModule, SidebarModule, TooltipModule } from "primeng/primeng";
+import { ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DialogModule, OverlayPanelModule, SharedModule, SidebarModule,
+    TooltipModule } from "primeng/primeng";
 
 // Components
 import { AppComponent } from "./app.component";
 
 import { CookieComponent } from "./auth/cookie.component";
+import { CustomPageComponent } from "./custompage/custompage.component";
 import { PageNotFoundComponent } from "./errors/not-found.component";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
 import { LoginComponent } from "./login/login.component";
@@ -43,6 +46,7 @@ const routes: Routes = [
     { path: "", redirectTo: "/search", pathMatch: "full" },
     { path: "login", component: LoginComponent },
     { path: "Login/OAuth/:pin", component: LoginOAuthComponent },
+    { path: "Custom", component: CustomPageComponent },
     { path: "login/:landing", component: LoginComponent },
     { path: "reset", component: ResetPasswordComponent },
     { path: "token", component: TokenResetPasswordComponent },
@@ -88,6 +92,7 @@ export function JwtTokenGetter() {
         FormsModule,
         DataTableModule,
         SharedModule,
+        NgxEditorModule,
         DialogModule,
         MatButtonModule,
         NgbModule.forRoot(),
@@ -121,6 +126,7 @@ export function JwtTokenGetter() {
         LandingPageComponent,
         ResetPasswordComponent,
         TokenResetPasswordComponent,
+        CustomPageComponent,
         CookieComponent,
         LoginOAuthComponent,
     ],

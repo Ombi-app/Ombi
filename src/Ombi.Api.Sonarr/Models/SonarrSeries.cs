@@ -44,6 +44,7 @@ namespace Ombi.Api.Sonarr.Models
         public DateTime added { get; set; }
         public Ratings ratings { get; set; }
         public int qualityProfileId { get; set; }
+        public int languageProfileId { get; set; }
         public int id { get; set; }
         public DateTime nextAiring { get; set; }
     }

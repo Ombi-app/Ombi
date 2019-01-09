@@ -13,7 +13,8 @@ namespace Ombi.Controllers
     [ApiV1]
     [Authorize]
     [Produces("application/json")]
-    public class VoteController : Controller
+    [ApiController]
+    public class VoteController : ControllerBase
     {
         public VoteController(IVoteEngine engine)
         {

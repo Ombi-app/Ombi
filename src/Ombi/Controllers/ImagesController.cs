@@ -16,7 +16,8 @@ namespace Ombi.Controllers
 {
     [ApiV1]
     [Produces("application/json")]
-    public class ImagesController : Controller
+    [ApiController]
+    public class ImagesController : ControllerBase
     {
         public ImagesController(IFanartTvApi fanartTvApi, IApplicationConfigRepository config,
             IOptions<LandingPageBackground> options, ICacheService c)

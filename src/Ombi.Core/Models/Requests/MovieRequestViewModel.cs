@@ -29,5 +29,6 @@ namespace Ombi.Core.Models.Requests
     public class MovieRequestViewModel
     {
         public int TheMovieDbId { get; set; }
+        public string LanguageCode { get; set; } = "en";
     }
 }
