@@ -65,7 +65,10 @@ namespace Ombi.Settings.Settings.Models
         {
             return Get(s.RetryRequests, Cron.Daily(6));
         }
-
+        public static string MediaDatabaseRefresh(JobSettings s)
+        {
+            return Get(s.MediaDatabaseRefresh, Cron.DayInterval(5));
+        }
         private static string Get(string settings, string defaultCron)
         {
             return settings.HasValue() ? settings : defaultCron;

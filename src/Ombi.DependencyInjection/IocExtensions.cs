@@ -200,6 +200,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ILidarrAvailabilityChecker, LidarrAvailabilityChecker>();
             services.AddTransient<IIssuesPurge, IssuesPurge>();
             services.AddTransient<IResendFailedRequests, ResendFailedRequests>();
+            services.AddTransient<IMediaDatabaseRefresh, MediaDatabaseRefresh>();
         }
     }
 }
