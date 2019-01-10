@@ -12,9 +12,9 @@
   "Common": {
     "ContinueButton": "Fortsätt",
     "Available": "Tillgänglig",
-    "PartiallyAvailable": "Delvis tillgänliga",
+    "PartiallyAvailable": "Delvis tillgänglig",
     "Monitored": "Övervakad",
-    "NotAvailable": "Finns ej",
+    "NotAvailable": "Inte tillgänglig",
     "ProcessingRequest": "Bearbetar förfrågan",
     "PendingApproval": "Väntar på godkännande",
     "RequestDenied": "Efterfrågan nekas",
@@ -180,6 +180,6 @@
   },
   "Votes": {
     "CompletedVotesTab": "Röstat",
-    "VotesTab": "Votes Needed"
+    "VotesTab": "Röster krävs"
   }
 }
