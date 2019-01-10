@@ -48,7 +48,7 @@
     "Requests": "Förfrågningar",
     "UserManagement": "Användarhantering",
     "Issues": "Problem",
-    "Vote": "Vote",
+    "Vote": "Rösta",
     "Donate": "Donera!",
     "DonateLibraryMaintainer": "Donera till bibliotekets utvecklare",
     "DonateTooltip": "Det är så här jag övertygar min fru att jag vill spendera min fritid att utveckla Ombi ;)",
@@ -74,7 +74,7 @@
     "ViewOnEmby": "Visa på Emby",
     "RequestAdded": "Efterfrågan om {{title}} har lagts till",
     "Similar": "Liknande",
-    "Refine": "Refine",
+    "Refine": "Förfina",
     "Movies": {
       "PopularMovies": "Populära filmer",
       "UpcomingMovies": "Kommande filmer",
