@@ -34,11 +34,11 @@
   },
   "LandingPage": {
     "OnlineHeading": "Online just nu",
-    "OnlineParagraph": "Medieservern är online för tillfället",
+    "OnlineParagraph": "Medieservern är för närvarande online",
     "PartiallyOnlineHeading": "Delvis online",
     "PartiallyOnlineParagraph": "Medieservern är delvis online.",
-    "MultipleServersUnavailable": "Det är {{serversUnavailable}} servrar offline just nu utav {{totalServers}} servrar totalt.",
-    "SingleServerUnavailable": "Det finns {{serversUnavailable}} servrar offline utav {{totalServers}}.",
+    "MultipleServersUnavailable": "Servrar offline: {{serversUnavailable}}, av totalt {{totalServers}}.",
+    "SingleServerUnavailable": "Servrar offline: {{serversUnavailable}}, av totalt {{totalServers}}.",
     "OfflineHeading": "För närvarande Offline",
     "OfflineParagraph": "Medieservern är för närvarande offline.",
     "CheckPageForUpdates": "Kontrollera sidan för kontinuerlig platsuppdateringar."
