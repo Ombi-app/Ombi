@@ -18,11 +18,11 @@
     "ProcessingRequest": "Bearbetar förfrågan",
     "PendingApproval": "Väntar på godkännande",
     "RequestDenied": "Efterfrågan nekas",
-    "NotRequested": "Inte önskad",
-    "Requested": "Begärd önskan",
+    "NotRequested": "Inte begärd",
+    "Requested": "Begärd",
     "Request": "Begär",
     "Denied": "Nekad",
-    "Approve": "Godkän",
+    "Approve": "Godkänn",
     "PartlyAvailable": "Delvis tillgänglig",
     "Errors": {
       "Validation": "Vänligen kontrollera din angivna värden"
