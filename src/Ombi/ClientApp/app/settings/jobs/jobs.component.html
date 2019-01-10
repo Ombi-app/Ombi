@@ -105,6 +105,13 @@
                             <small *ngIf="form.get('issuesPurge').hasError('required')" class="error-text">The Issues Purge is required</small>
                             <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('issuesPurge')?.value)">Test</button>
                     </div>
+
+                    <div class="form-group">
+                        <label for="userImporter" class="control-label">Media Data Refresh</label>              
+                            <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('mediaDatabaseRefresh').hasError('required')}" id="mediaDatabaseRefresh" name="mediaDatabaseRefresh" formControlName="mediaDatabaseRefresh">
+                            <small *ngIf="form.get('mediaDatabaseRefresh').hasError('required')" class="error-text">The Media Database Refresh is required</small>
+                            <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('mediaDatabaseRefresh')?.value)">Test</button>
+                    </div>
             </div>
             <div class="form-group">
                     <div>

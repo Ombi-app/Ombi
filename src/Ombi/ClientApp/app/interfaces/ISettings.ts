@@ -138,6 +138,7 @@ export interface IJobSettings {
   lidarrArtistSync: string;
   issuesPurge: string;
   retryRequests: string;
+  mediaDatabaseRefresh: string;
 }
 
 export interface IIssueSettings extends ISettings {

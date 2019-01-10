@@ -1,5 +1,6 @@
 # Changelog
 
+
 ## (unreleased)
 
 ### **New Features**
@@ -39,6 +40,9 @@
 - Updated boostrap #2694. [Jamie]
 
 - Added the ability to deny a request with a reason. [TidusJar]
+
+## v3.0.4036 (2018-12-11)
+
 
 - Update EmbyEpisodeSync.cs. [Jamie]
 
