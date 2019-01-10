@@ -41,7 +41,7 @@
     "SingleServerUnavailable": "Servrar offline: {{serversUnavailable}}, av totalt {{totalServers}}.",
     "OfflineHeading": "För närvarande Offline",
     "OfflineParagraph": "Medieservern är för närvarande offline.",
-    "CheckPageForUpdates": "Kontrollera sidan för kontinuerlig platsuppdateringar."
+    "CheckPageForUpdates": "Håll utkik här för uppdateringar på denna sida."
   },
   "NavigationBar": {
     "Search": "Sök",
