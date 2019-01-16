@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Core.Engine;
 using Ombi.Core.Models.Requests;
@@ -11,6 +12,7 @@ using Ombi.Core.Models;
 using Ombi.Core.Models.UI;
 using Ombi.Store.Entities;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
+using System.Linq;
 
 namespace Ombi.Controllers
 {
@@ -171,11 +173,14 @@ namespace Ombi.Controllers
         }
         private string GetApiAlias()
         {
-            if (HttpContext.Request.Headers.TryGetValue("ApiAlias", out var apiAlias))
+            // Make sure this only applies when using the API KEY
+            if (HttpContext.Request.Headers.Keys.Contains("ApiKey", StringComparer.InvariantCultureIgnoreCase))
             {
-                return apiAlias;
+                if (HttpContext.Request.Headers.TryGetValue("ApiAlias", out var apiAlias))
+                {
+                    return apiAlias;
+                }
             }
-
             return null;
         }
     }
