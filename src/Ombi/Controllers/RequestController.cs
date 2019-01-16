@@ -8,12 +8,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ombi.Store.Entities.Requests;
 using System.Diagnostics;
+using System.Linq;
 using Microsoft.Extensions.Logging;
 using Ombi.Attributes;
 using Ombi.Core.Models.UI;
 using Ombi.Models;
 using Ombi.Store.Entities;
 using Ombi.Core.Models;
+using Ombi.Helpers;
 
 namespace Ombi.Controllers
 {
@@ -82,6 +84,7 @@ namespace Ombi.Controllers
         [HttpPost("movie")]
         public async Task<RequestEngineResult> RequestMovie([FromBody] MovieRequestViewModel movie)
         {
+            movie.RequestedByAlias = GetApiAlias();
             var result = await MovieRequestEngine.RequestMovie(movie);
             if (result.Result)
             {
@@ -277,6 +280,7 @@ namespace Ombi.Controllers
         [HttpPost("tv")]
         public async Task<RequestEngineResult> RequestTv([FromBody] TvRequestViewModel tv)
         {
+            tv.RequestedByAlias = GetApiAlias();
             var result = await TvRequestEngine.RequestTvShow(tv);
             if (result.Result)
             {
@@ -520,6 +524,16 @@ namespace Ombi.Controllers
         public async Task<RequestQuotaCountModel> GetRemainingTvRequests()
         {
             return await TvRequestEngine.GetRemainingRequests();
+        }
+
+        private string GetApiAlias()
+        {
+            if (HttpContext.Request.Headers.TryGetValue("ApiAlias", out var apiAlias))
+            {
+                return apiAlias;
+            }
+
+            return null;
         }
     }
 }

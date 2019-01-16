@@ -76,6 +76,7 @@ namespace Ombi.Controllers
         [HttpPost]
         public async Task<RequestEngineResult> RequestAlbum([FromBody] MusicAlbumRequestViewModel album)
         {
+            album.RequestedByAlias = GetApiAlias();
             var result = await _engine.RequestAlbum(album);
             if (result.Result)
             {
@@ -167,6 +168,15 @@ namespace Ombi.Controllers
         public async Task<RequestQuotaCountModel> GetRemainingMusicRequests()
         {
             return await _engine.GetRemainingRequests();
+        }
+        private string GetApiAlias()
+        {
+            if (HttpContext.Request.Headers.TryGetValue("ApiAlias", out var apiAlias))
+            {
+                return apiAlias;
+            }
+
+            return null;
         }
     }
 }
