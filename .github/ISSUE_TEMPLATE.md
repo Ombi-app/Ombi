@@ -45,4 +45,4 @@ Plex/Emby
 
 #### Reproduction Steps:
 
-Please include any steps to reproduce the issue, this is the request that is causing the problem etc.
+Please include any steps to reproduce the issue, the request that is causing the problem, etc.
