@@ -87,9 +87,6 @@
                         <span *ngIf="request.approved && !request.available" id="processingRequestLabel" class="label label-info"
                             [translate]="'Common.ProcessingRequest'"></span>
                         <span *ngIf="request.denied" class="label label-danger" id="requestDeclinedLabel" [translate]="'Common.RequestDenied'"></span>
-                        <span *ngIf="request.deniedReason" title="{{request.deniedReason}}">
-                            <i class="fa fa-info-circle"></i>
-                        </span>
                         <span *ngIf="!request.approved && !request.availble && !request.denied" id="pendingApprovalLabel"
                             class="label label-warning" [translate]="'Common.PendingApproval'"></span>
 

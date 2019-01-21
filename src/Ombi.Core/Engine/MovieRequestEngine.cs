@@ -326,6 +326,7 @@ namespace Ombi.Core.Engine
 
             return new RequestEngineResult
             {
+                Result = true,
                 Message = "Request successfully deleted",
             };
         }

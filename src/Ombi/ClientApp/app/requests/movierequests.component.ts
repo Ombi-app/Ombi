@@ -135,15 +135,20 @@ export class MovieRequestsComponent implements OnInit {
     public deny(request: IMovieRequests) {
         this.requestToDeny = request;
         this.denyDisplay = true;
-    }  
+    }
 
     public denyRequest() {
         this.requestService.denyMovie({ id: this.requestToDeny.id, reason: this.rejectionReason })
             .subscribe(x => {
+                debugger;
                 this.denyDisplay = false;
                 if (x.result) {
                     this.notificationService.success(
                         `Request for ${this.requestToDeny.title} has been denied successfully`);
+                    const index = this.movieRequests.indexOf(this.requestToDeny, 0);
+                    if (index > -1) {
+                        this.movieRequests[index].denied = true;
+                    }
                 } else {
                     this.notificationService.warning("Request Denied", x.message ? x.message : x.errorMessage);
                     this.requestToDeny.denied = false;
