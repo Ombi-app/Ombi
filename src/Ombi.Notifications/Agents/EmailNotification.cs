@@ -89,7 +89,6 @@ namespace Ombi.Notifications.Agents
             }
             else
             {
-
                 // Send to admin
                 message.To = settings.AdminEmail;
             }
@@ -183,37 +182,21 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task AddedToRequestQueue(NotificationOptions model, EmailNotificationSettings settings)
         {
-            var email = new EmailBasicTemplate();
-            var user = string.Empty;
-            var title = string.Empty;
-            var img = string.Empty;
-            if (model.RequestType == RequestType.Movie)
+            if (!model.Recipient.HasValue())
             {
-                user = MovieRequest.RequestedUser.UserAlias;
-                title = MovieRequest.Title;
-                img = $"https://image.tmdb.org/t/p/w300/{MovieRequest.PosterPath}";
+                return;
             }
-            else
+            var message = await LoadTemplate(NotificationType.ItemAddedToFaultQueue, model, settings);
+            if (message == null)
             {
-                user = TvRequest.RequestedUser.UserAlias;
-                title = TvRequest.ParentRequest.Title;
-                img = TvRequest.ParentRequest.PosterPath;
+                return;
             }
 
-            var html = email.LoadTemplate(
-                $"{Customization.ApplicationName}: A request could not be added.",
-                $"Hello! The user '{user}' has requested {title} but it could not be added. This has been added into the requests queue and will keep retrying", img, Customization.Logo);
-
-            var message = new NotificationMessage
-            {
-                Message = html,
-                Subject = $"{Customization.ApplicationName}: A request could not be added",
-                To = settings.AdminEmail,
-            };
-
-            var plaintext = $"Hello! The user '{user}' has requested {title} but it could not be added. This has been added into the requests queue and will keep retrying";
+            var plaintext = await LoadPlainTextMessage(NotificationType.ItemAddedToFaultQueue, model, settings);
             message.Other.Add("PlainTextBody", plaintext);
 
+            // Issues resolved should be sent to the user
+            message.To = settings.AdminEmail;
             await Send(message, settings);
         }
 

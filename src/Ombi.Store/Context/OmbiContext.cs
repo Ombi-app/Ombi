@@ -209,7 +209,15 @@ namespace Ombi.Store.Context
                             };
                             break;
                         case NotificationType.ItemAddedToFaultQueue:
-                            continue;
+                            notificationToAdd = new NotificationTemplates
+                            {
+                                NotificationType = notificationType,
+                                Message = "Hello! The user '{UserName}' has requested {Title} but it could not be added. This has been added into the requests queue and will keep retrying",
+                                Subject = "Item Added To Retry Queue",
+                                Agent = agent,
+                                Enabled = true,
+                            };
+                            break;
                         case NotificationType.WelcomeEmail:
                             notificationToAdd = new NotificationTemplates
                             {
