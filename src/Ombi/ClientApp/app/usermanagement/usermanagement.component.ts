@@ -1,9 +1,7 @@
 ﻿import { Component, OnInit } from "@angular/core";
 
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ICheckbox, ICustomizationSettings, IEmailNotificationSettings, IUser } from "../interfaces";
 import { IdentityService, NotificationService, SettingsService } from "../services";
-import { AddPlexUserComponent } from "./addplexuser.component";
 
 @Component({
     templateUrl: "./usermanagement.component.html",
@@ -27,8 +25,7 @@ export class UserManagementComponent implements OnInit {
     constructor(private identityService: IdentityService,
                 private settingsService: SettingsService,
                 private notificationService: NotificationService,
-                private plexSettings: SettingsService,
-                private modalService: NgbModal) { }
+                private plexSettings: SettingsService) { }
 
     public ngOnInit() {
         this.users = [];
@@ -42,11 +39,6 @@ export class UserManagementComponent implements OnInit {
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
         this.settingsService.getEmailNotificationSettings().subscribe(x => this.emailSettings = x);
     }
-
-    public open() {
-        const modalRef = this.modalService.open(AddPlexUserComponent, {container:"ombi", backdropClass:"custom-modal-backdrop", windowClass:"window"});
-        modalRef.componentInstance.name = "World";
-      }
 
     public welcomeEmail(user: IUser) {
         if (!user.emailAddress) {

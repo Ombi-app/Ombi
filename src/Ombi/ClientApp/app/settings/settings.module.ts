@@ -9,7 +9,7 @@ import { AuthGuard } from "../auth/auth.guard";
 import { AuthService } from "../auth/auth.service";
 import {
     CouchPotatoService, EmbyService, IssuesService, JobService, LidarrService, MobileService, NotificationMessageService, PlexService, RadarrService,
-    SonarrService, TesterService, ValidationService,
+    RequestRetryService, SonarrService, TesterService, ValidationService,
 } from "../services";
 
 import { PipeModule } from "../pipes/pipe.module";
@@ -19,6 +19,7 @@ import { CouchPotatoComponent } from "./couchpotato/couchpotato.component";
 import { CustomizationComponent } from "./customization/customization.component";
 import { DogNzbComponent } from "./dognzb/dognzb.component";
 import { EmbyComponent } from "./emby/emby.component";
+import { FailedRequestsComponent } from "./failedrequests/failedrequests.component";
 import { IssueEditorComponent } from "./issues/issue-editor.component";
 import { IssuesComponent } from "./issues/issues.component";
 import { JobsComponent } from "./jobs/jobs.component";
@@ -78,6 +79,7 @@ const routes: Routes = [
     { path: "Newsletter", component: NewsletterComponent, canActivate: [AuthGuard] },
     { path: "Lidarr", component: LidarrComponent, canActivate: [AuthGuard] },
     { path: "Vote", component: VoteComponent, canActivate: [AuthGuard] },
+    { path: "FailedRequests", component: FailedRequestsComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -135,6 +137,7 @@ const routes: Routes = [
     ],
     entryComponents:[
         IssueEditorComponent,
+        FailedRequestsComponent,
     ],
     exports: [
         RouterModule,
@@ -154,6 +157,7 @@ const routes: Routes = [
         MobileService,
         NotificationMessageService,
         LidarrService,
+        RequestRetryService,
     ],
 
 })

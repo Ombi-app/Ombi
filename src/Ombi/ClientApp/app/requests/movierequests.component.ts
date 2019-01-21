@@ -37,9 +37,12 @@ export class MovieRequestsComponent implements OnInit {
 
     public orderType: OrderType = OrderType.RequestedDateDesc;
     public OrderType = OrderType;
+    public denyDisplay: boolean;
+    public requestToDeny: IMovieRequests;
+    public rejectionReason: string;
 
     public totalMovies: number = 100;
-    private currentlyLoaded: number;
+    public currentlyLoaded: number;
     private amountToLoad: number;
 
     constructor(
@@ -130,8 +133,22 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     public deny(request: IMovieRequests) {
-        request.denied = true;
-        this.denyRequest(request);
+        this.requestToDeny = request;
+        this.denyDisplay = true;
+    }  
+
+    public denyRequest() {
+        this.requestService.denyMovie({ id: this.requestToDeny.id, reason: this.rejectionReason })
+            .subscribe(x => {
+                this.denyDisplay = false;
+                if (x.result) {
+                    this.notificationService.success(
+                        `Request for ${this.requestToDeny.title} has been denied successfully`);
+                } else {
+                    this.notificationService.warning("Request Denied", x.message ? x.message : x.errorMessage);
+                    this.requestToDeny.denied = false;
+                }
+            });
     }
 
     public selectRootFolder(searchResult: IMovieRequests, rootFolderSelected: IRadarrRootFolder, event: any) {
@@ -274,19 +291,6 @@ export class MovieRequestsComponent implements OnInit {
                 } else {
                     this.notificationService.warning("Request Approved", x.message ? x.message : x.errorMessage);
                     request.approved = false;
-                }
-            });
-    }
-
-    private denyRequest(request: IMovieRequests) {
-        this.requestService.denyMovie({ id: request.id })
-            .subscribe(x => {
-                if (x.result) {
-                    this.notificationService.success(
-                        `Request for ${request.title} has been denied successfully`);
-                } else {
-                    this.notificationService.warning("Request Denied", x.message ? x.message : x.errorMessage);
-                    request.denied = false;
                 }
             });
     }

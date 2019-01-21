@@ -53,8 +53,6 @@ namespace Ombi.Api.Emby
             {
                 username,
                 pw = password,
-                password = password.GetSha1Hash().ToLower(),
-                passwordMd5 = password.CalcuateMd5Hash()
             };
 
             request.AddJsonBody(body);
@@ -98,7 +96,7 @@ namespace Ombi.Api.Emby
 
             request.AddQueryString("Fields", "ProviderIds,Overview");
 
-            request.AddQueryString("VirtualItem", "False");
+            request.AddQueryString("IsVirtualItem", "False");
 
             return await Api.Request<EmbyItemContainer<EmbyMovie>>(request);
         }
@@ -149,7 +147,7 @@ namespace Ombi.Api.Emby
             request.AddQueryString("IncludeItemTypes", type);
             request.AddQueryString("Fields", includeOverview ? "ProviderIds,Overview" : "ProviderIds");
 
-            request.AddQueryString("VirtualItem", "False");
+            request.AddQueryString("IsVirtualItem", "False");
 
             AddHeaders(request, apiKey);
 
@@ -167,7 +165,7 @@ namespace Ombi.Api.Emby
             request.AddQueryString("startIndex", startIndex.ToString());
             request.AddQueryString("limit", count.ToString());
 
-            request.AddQueryString("VirtualItem", "False");
+            request.AddQueryString("IsVirtualItem", "False");
 
             AddHeaders(request, apiKey);
 

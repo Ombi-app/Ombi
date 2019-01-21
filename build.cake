@@ -26,7 +26,7 @@ var csProj = "./src/Ombi/Ombi.csproj";          // Path to the project.csproj
 var solutionFile = "Ombi.sln";                  // Solution file if needed
 GitVersion versionInfo = null;
 
-var frameworkVer = "netcoreapp2.1";
+var frameworkVer = "netcoreapp2.2";
 
 var buildSettings = new DotNetCoreBuildSettings
 {
@@ -151,7 +151,7 @@ Task("Package")
 	GZipCompress(osxArtifactsFolder, artifactsFolder + "osx.tar.gz");
 	GZipCompress(linuxArtifactsFolder, artifactsFolder + "linux.tar.gz");
 	GZipCompress(linuxArmArtifactsFolder, artifactsFolder + "linux-arm.tar.gz");
-	//GZipCompress(linuxArm64BitArtifactsFolder, artifactsFolder + "linux-arm64.tar.gz");
+	GZipCompress(linuxArm64BitArtifactsFolder, artifactsFolder + "linux-arm64.tar.gz");
 });
 
 Task("Publish")
@@ -227,7 +227,7 @@ Task("Publish-Linux-ARM")
     CopyFile(
       buildDir + "/"+frameworkVer+"/linux-arm/Swagger.xml",
       buildDir + "/"+frameworkVer+"/linux-arm/published/Swagger.xml");
-	  
+
     publishSettings.OutputDirectory = Directory(buildDir) + Directory(frameworkVer +"/linux-arm/published/updater");
     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });

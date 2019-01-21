@@ -843,6 +843,7 @@ body {
     padding: 10px 15px;
     border-bottom: 1px solid transparent;
     background: $form-color;
+    height: 40px;
 }
 
 .card-header > a {
@@ -1007,4 +1008,13 @@ a > h4:hover {
 
 .album-cover {
     width:300px;
+}
+
+
+::ng-deep ngb-accordion > div.card >  div.card-header {
+    padding:0px;
+}
+::ng-deep ngb-accordion > div.card {
+    color:white;
+    padding-top: 0px;
 }

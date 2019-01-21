@@ -51,7 +51,7 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<RequestEngineResult> RequestMovie(MovieRequestViewModel model)
         {
-            var movieInfo = await MovieApi.GetMovieInformationWithExtraInfo(model.TheMovieDbId);
+            var movieInfo = await MovieApi.GetMovieInformationWithExtraInfo(model.TheMovieDbId, model.LanguageCode);
             if (movieInfo == null || movieInfo.Id == 0)
             {
                 return new RequestEngineResult
@@ -82,7 +82,9 @@ namespace Ombi.Core.Engine
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
                 RequestedUserId = userDetails.Id,
-                Background = movieInfo.BackdropPath
+                Background = movieInfo.BackdropPath,
+                LangCode = model.LanguageCode,
+                RequestedByAlias = model.RequestedByAlias
             };
 
             var usDates = movieInfo.ReleaseDates?.Results?.FirstOrDefault(x => x.IsoCode == "US");
@@ -305,7 +307,7 @@ namespace Ombi.Core.Engine
             return await ApproveMovie(request);
         }
 
-        public async Task<RequestEngineResult> DenyMovieById(int modelId)
+        public async Task<RequestEngineResult> DenyMovieById(int modelId, string denyReason)
         {
             var request = await MovieRepository.Find(modelId);
             if (request == null)
@@ -317,6 +319,7 @@ namespace Ombi.Core.Engine
             }
 
             request.Denied = true;
+            request.DeniedReason = denyReason;
             // We are denying a request
             NotificationHelper.Notify(request, NotificationType.RequestDeclined);
             await MovieRepository.Update(request);

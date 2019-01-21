@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Core.Engine;
 using Ombi.Core.Models.Requests;
@@ -11,13 +12,15 @@ using Ombi.Core.Models;
 using Ombi.Core.Models.UI;
 using Ombi.Store.Entities;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
+using System.Linq;
 
 namespace Ombi.Controllers
 {
     [Authorize]
     [Route("api/v1/request/music")]
     [Produces("application/json")]
-    public class MusicRequestController : Controller
+    [ApiController]
+    public class MusicRequestController : ControllerBase
     {
         public MusicRequestController(IMusicRequestEngine engine, IVoteEngine voteEngine, ILogger<MusicRequestController> log)
         {
@@ -75,6 +78,7 @@ namespace Ombi.Controllers
         [HttpPost]
         public async Task<RequestEngineResult> RequestAlbum([FromBody] MusicAlbumRequestViewModel album)
         {
+            album.RequestedByAlias = GetApiAlias();
             var result = await _engine.RequestAlbum(album);
             if (result.Result)
             {
@@ -154,9 +158,9 @@ namespace Ombi.Controllers
         /// <returns></returns>
         [HttpPut("deny")]
         [PowerUser]
-        public async Task<RequestEngineResult> Deny([FromBody] AlbumUpdateModel model)
+        public async Task<RequestEngineResult> Deny([FromBody] DenyAlbumModel model)
         {
-            return await _engine.DenyAlbumById(model.Id);
+            return await _engine.DenyAlbumById(model.Id, model.Reason);
         }
 
         /// <summary>
@@ -166,6 +170,18 @@ namespace Ombi.Controllers
         public async Task<RequestQuotaCountModel> GetRemainingMusicRequests()
         {
             return await _engine.GetRemainingRequests();
+        }
+        private string GetApiAlias()
+        {
+            // Make sure this only applies when using the API KEY
+            if (HttpContext.Request.Headers.Keys.Contains("ApiKey", StringComparer.InvariantCultureIgnoreCase))
+            {
+                if (HttpContext.Request.Headers.TryGetValue("ApiAlias", out var apiAlias))
+                {
+                    return apiAlias;
+                }
+            }
+            return null;
         }
     }
 }

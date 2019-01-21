@@ -7,6 +7,7 @@ using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Lidarr;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
+using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.Radarr;
 using Ombi.Schedule.Jobs.SickRage;
 using Ombi.Schedule.Jobs.Sonarr;
@@ -21,7 +22,7 @@ namespace Ombi.Schedule
             IEmbyUserImporter embyUserImporter, ISonarrSync cache, ICouchPotatoSync cpCache,
             ISettingsService<JobSettings> jobsettings, ISickRageSync srSync, IRefreshMetadata refresh,
             INewsletterJob newsletter, IPlexRecentlyAddedSync recentlyAddedPlex, ILidarrArtistSync artist,
-            IIssuesPurge purge)
+            IIssuesPurge purge, IResendFailedRequests resender, IMediaDatabaseRefresh dbRefresh)
         {
             _plexContentSync = plexContentSync;
             _radarrSync = radarrSync;
@@ -38,6 +39,8 @@ namespace Ombi.Schedule
             _plexRecentlyAddedSync = recentlyAddedPlex;
             _lidarrArtistSync = artist;
             _issuesPurge = purge;
+            _resender = resender;
+            _mediaDatabaseRefresh = dbRefresh;
         }
 
         private readonly IPlexContentSync _plexContentSync;
@@ -55,6 +58,8 @@ namespace Ombi.Schedule
         private readonly INewsletterJob _newsletter;
         private readonly ILidarrArtistSync _lidarrArtistSync;
         private readonly IIssuesPurge _issuesPurge;
+        private readonly IResendFailedRequests _resender;
+        private readonly IMediaDatabaseRefresh _mediaDatabaseRefresh;
 
         public void Setup()
         {
@@ -76,8 +81,10 @@ namespace Ombi.Schedule
             RecurringJob.AddOrUpdate(() => _embyUserImporter.Start(), JobSettingsHelper.UserImporter(s));
             RecurringJob.AddOrUpdate(() => _plexUserImporter.Start(), JobSettingsHelper.UserImporter(s));
             RecurringJob.AddOrUpdate(() => _newsletter.Start(), JobSettingsHelper.Newsletter(s));
+            RecurringJob.AddOrUpdate(() => _newsletter.Start(), JobSettingsHelper.Newsletter(s));
+            RecurringJob.AddOrUpdate(() => _resender.Start(), JobSettingsHelper.ResendFailedRequests(s));
+            RecurringJob.AddOrUpdate(() => _mediaDatabaseRefresh.Start(), JobSettingsHelper.MediaDatabaseRefresh(s));
         }
-
 
         private bool _disposed;
         protected virtual void Dispose(bool disposing)

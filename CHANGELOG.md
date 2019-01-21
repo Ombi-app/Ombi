@@ -1,6 +1,205 @@
 # Changelog
 
+
 ## (unreleased)
+
+### **New Features**
+
+- Added a global language flag that now applies to the search by default. [tidusjar]
+
+- Updated the frontend packages (Using Angular 7 now) [TidusJar]
+
+- Added capture of anonymous analytical data. [tidusjar]
+
+- Added {AvailableDate} as a Notification Variable, this is the date the request was marked as available. See here: https://github.com/tidusjar/Ombi/wiki/Notification-Template-Variables. [tidusjar]
+
+- Added the ability to search movies via the movie db with a different language! [tidusjar]
+
+- Added the ability to specify a year when searching for movies. [tidusjar]
+
+- Update NewsletterTemplate.html. [d1slact0r]
+
+- Update NewsletterTemplate.html. [d1slact0r]
+
+- Update NewsletterTemplate.html. [d1slact0r]
+
+- Update HtmlTemplateGenerator.cs. [d1slact0r]
+
+- Update NewsletterTemplate.html. [d1slact0r]
+
+- Update HtmlTemplateGenerator.cs. [d1slact0r]
+
+- Update NewsletterTemplate.html. [d1slact0r]
+
+- Update NewsletterTemplate.html. [d1slact0r]
+
+- Update NewsletterTemplate.html. [d1slact0r]
+
+- Update HtmlTemplateGenerator.cs. [d1slact0r]
+
+- Updated boostrap #2694. [Jamie]
+
+- Added the ability to deny a request with a reason. [TidusJar]
+
+## v3.0.4036 (2018-12-11)
+
+
+- Update EmbyEpisodeSync.cs. [Jamie]
+
+- Updated to .net core 2.2 and included a linux-arm64 build. [TidusJar]
+
+### **Fixes**
+
+- Made the newsletter use the default lanuage code set in the Ombi settings for movie information. [TidusJar]
+
+- Save the language code against the request so we can use it later e.g. Sending to the DVR apps. [tidusjar]
+
+- Fixed #2716. [tidusjar]
+
+- Make the newsletter BCC the users rather than creating a million newsletters (Hopefully will stop SMTP providers from marking as spam). This does mean that the custom user customization in the newsletter will no longer work. [TidusJar]
+
+- If we don't know the Plex agent, then see if it's a ImdbId, if it's not check the string for any episode and season hints #2695. [tidusjar]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- Made the search results the language specified in the search refinement. [tidusjar]
+
+- Fixed #2704. [tidusjar]
+
+- Now it is fixed :) [d1slact0r]
+
+- Android please be nice now. [d1slact0r]
+
+- Fixed title bit better. [d1slact0r]
+
+- Fixed titles. [d1slact0r]
+
+- This should fix the build for sure (stupid quotes) [d1slact0r]
+
+- Fixes build. [d1slact0r]
+
+- Rewritten the whole newsletter template. [d1slact0r]
+
+- Fixed #2697. [tidusjar]
+
+- Add linux-arm runtime identifier. [aptalca]
+
+- Add back arm packages. [aptalca]
+
+- Add arm32 package. [aptalca]
+
+- Fixed #2691. [tidusjar]
+
+- Fixed linting. [TidusJar]
+
+- Fixed the Plex OAuth when going through the wizard. [TidusJar]
+
+- Fixed #2678. [TidusJar]
+
+- Deny reason for movie requests. [TidusJar]
+
+- Set the landing and login pages background refresh to 15 seconds rather than 10 and 7. [TidusJar]
+
+- Fixed a bug with us thinking future dated emby episodes are not available, Consoldated the emby and plex search rules (since they have the same logic) [TidusJar]
+
+- Fixed build. [TidusJar]
+
+
+## v3.0.4036 (2018-12-11)
+
+### **New Features**
+
+- Changelog. [Jamie]
+
+- Added Sonarr v3  #2359. [TidusJar]
+
+### **Fixes**
+
+- !changelog. [Jamie]
+
+- Fixed a missing translation. [Jamie]
+
+- Fixed a potential security vulnerability. [Jamie]
+
+- Sorted out some of the settings pages, trying to make it consistent. [Jamie]
+
+- #2669 Fixed missing translations. [TidusJar]
+
+- Maps alias email variable for welcome emails. [Victor Usoltsev]
+
+- Increased the logo size on the landing page to match the container below it. [Jamie]
+
+- Think the request queue is done! [Jamie]
+
+- Finished off the job. [TidusJar]
+
+
+## v3.0.3988 (2018-11-23)
+
+### **New Features**
+
+- Updated the emby api since we no longer need the extra parameters to send to emby to log in a local user #2546. [Jamie]
+
+- Added the ability to get the ombi user via a Plex Token #2591. [Jamie]
+
+- Update CHANGELOG.md. [Jamie]
+
+### **Fixes**
+
+- !changelog. [Jamie]
+
+- Made the subscribe/unsubscribe button more obvious on the UI #2309. [Jamie]
+
+- Fixed #2603. [Jamie]
+
+- Fixed the issue with the user overrides #2646. [Jamie]
+
+- Fixed the issue where we could sometimes allow the request of a whole series when the user shouldn't be able to. [Jamie]
+
+- Fixed the issue where we were marking episodes as available with the Emby connection when they have not yet aired #2417 #2623. [TidusJar]
+
+- Fixed the issue where we were marking the whole season as wanted in Sonarr rather than the individual episode #2629. [TidusJar]
+
+- Fixed #2623. [Jamie]
+
+- Fixed #2633. [TidusJar]
+
+- Fixed #2639. [Jamie]
+
+- Show the TV show as available when we have all the episodes but future episodes have not aired. #2585. [Jamie]
+
+
+## v3.0.3945 (2018-10-25)
+
+### **New Features**
+
+- Update Readme for Lidarr. [Qstick]
+
+- Update CHANGELOG.md. [Jamie]
 
 ### **Fixes**
 

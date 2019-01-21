@@ -1,36 +1,39 @@
 <div class="form-group">
     <div class="input-group">
-        <input type="text" id="search" class="form-control form-control-custom searchwidth" placeholder="Search" (keyup)="search($event)">
+        <input type="text" id="search" class="form-control form-control-custom searchwidth" placeholder="Search"
+            (keyup)="search($event)">
         <span class="input-group-btn">
             <button id="filterBtn" class="btn btn-sm btn-info-outline" (click)="filterDisplay = !filterDisplay">
                 <i class="fa fa-filter"></i> {{ 'Requests.Filter' | translate }}
             </button>
 
 
-            <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="true">
+            <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="true">
                 <i class="fa fa-sort"></i> {{ 'Requests.Sort' | translate }}
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                 <li>
-                    <a  (click)="setOrder(OrderType.RequestedDateAsc, $event)">{{ 'Requests.SortRequestDateAsc' | translate }}
-           
+                    <a (click)="setOrder(OrderType.RequestedDateAsc, $event)">{{ 'Requests.SortRequestDateAsc' |
+                        translate }}
+
                     </a>
-                    <a class="active" (click)="setOrder(OrderType.RequestedDateDesc, $event)">{{ 'Requests.SortRequestDateDesc' | translate }}
+                    <a class="active" (click)="setOrder(OrderType.RequestedDateDesc, $event)">{{
+                        'Requests.SortRequestDateDesc' | translate }}
 
                     </a>
                     <a (click)="setOrder(OrderType.TitleAsc, $event)">{{ 'Requests.SortTitleAsc' | translate}}
-                       
+
                     </a>
                     <a (click)="setOrder(OrderType.TitleDesc, $event)">{{ 'Requests.SortTitleDesc' | translate}}
-                     
+
                     </a>
                     <a (click)="setOrder(OrderType.StatusAsc, $event)">{{ 'Requests.SortStatusAsc' | translate}}
-                
+
                     </a>
                     <a (click)="setOrder(OrderType.StatusDesc, $event)">{{ 'Requests.SortStatusDesc' | translate}}
-              
+
                     </a>
 
                 </li>
@@ -45,7 +48,7 @@
 
 
 <div class="col-md-12">
-    <div *ngFor="let request of albumRequests"  class="col-md-4">
+    <div *ngFor="let request of albumRequests" class="col-md-4">
         <div class="row">
             <div class="album-bg backdrop" [style.background-image]="request.background"></div>
             <div class="album-tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
@@ -53,15 +56,15 @@
             <div class="col-sm-12 small-padding">
                 <img *ngIf="request.disk" class="img-responsive poster album-cover" src="{{request.disk}}" alt="poster">
             </div>
-        
+
 
             <div class="col-sm-12 small-padding">
                 <div>
                     <h4>
                         <a href="" target="_blank">
-                            {{request.title  | truncate: 36}}
+                            {{request.title | truncate: 36}}
                         </a>
-        
+
                     </h4>
                     <h5>
                         <a href="">
@@ -69,36 +72,42 @@
                         </a>
                     </h5>
                 </div>
-                
+
                 <div class="request-info">
                     <div class="request-by">
                         <span>{{ 'Requests.RequestedBy' | translate }} </span>
-                        <span *ngIf="!isAdmin">{{request.requestedUser.userName}}</span>
-                        <span *ngIf="isAdmin && request.requestedUser.alias">{{request.requestedUser.alias}}</span>
-                        <span *ngIf="isAdmin && !request.requestedUser.alias">{{request.requestedUser.userName}}</span>
+                        <span *ngIf="request.requestedByAlias">{{request.requestedByAlias}}</span>
+                        <span *ngIf="!request.requestedByAlias">
+                            <span *ngIf="!isAdmin">{{request.requestedUser.userName}}</span>
+                            <span *ngIf="isAdmin && request.requestedUser.alias">{{request.requestedUser.alias}}</span>
+                            <span *ngIf="isAdmin && !request.requestedUser.alias">{{request.requestedUser.userName}}</span>
+                        </span>
                     </div>
 
                     <div class="requested-status">
                         <span>{{ 'Requests.RequestStatus' | translate }} </span>
                         <span *ngIf="request.available" class="label label-success" id="availableLabel" [translate]="'Common.Available'"></span>
-                        <span *ngIf="request.approved && !request.available" id="processingRequestLabel" class="label label-info" [translate]="'Common.ProcessingRequest'"></span>
+                        <span *ngIf="request.approved && !request.available" id="processingRequestLabel" class="label label-info"
+                            [translate]="'Common.ProcessingRequest'"></span>
                         <span *ngIf="request.denied" class="label label-danger" id="requestDeclinedLabel" [translate]="'Common.RequestDenied'"></span>
                         <span *ngIf="request.deniedReason" title="{{request.deniedReason}}">
                             <i class="fa fa-info-circle"></i>
                         </span>
-                        <span *ngIf="!request.approved && !request.availble && !request.denied" id="pendingApprovalLabel" class="label label-warning"
-                            [translate]="'Common.PendingApproval'"></span>
+                        <span *ngIf="!request.approved && !request.availble && !request.denied" id="pendingApprovalLabel"
+                            class="label label-warning" [translate]="'Common.PendingApproval'"></span>
 
                     </div>
                     <div *ngIf="request.denied" id="requestDenied">
                         {{ 'Requests.Denied' | translate }}
-                        <i style="color:red;" class="fa fa-check"></i>
+                        <i style="color:red;" class="fa fa-check" pTooltip="{{request.deniedReason}}"></i>
 
                     </div>
 
 
-                    <div id="releaseDate">{{ 'Requests.ReleaseDate' | translate: {date: request.releaseDate | amLocal | amDateFormat: 'LL'} }}</div>
-                    <div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{request.requestedDate | amLocal | amDateFormat: 'LL'}}</div>
+                    <div id="releaseDate">{{ 'Requests.ReleaseDate' | translate: {date: request.releaseDate | amLocal |
+                        amDateFormat: 'LL'} }}</div>
+                    <div id="requestedDate">{{ 'Requests.RequestDate' | translate }} {{request.requestedDate | amLocal
+                        | amDateFormat: 'LL'}}</div>
                     <br />
                 </div>
                 <!-- <div *ngIf="isAdmin">
@@ -125,8 +134,9 @@
                 </div> -->
                 <div *ngIf="isAdmin">
                     <div *ngIf="!request.approved" id="approveBtn">
-                        <form class="col-md-6"> 
-                            <button (click)="approve(request)" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit">
+                        <form class="col-md-6">
+                            <button (click)="approve(request)" style="text-align: right" class="btn btn-sm btn-success-outline approve"
+                                type="submit">
                                 <i class="fa fa-plus"></i> {{ 'Common.Approve' | translate }}
                             </button>
                         </form>
@@ -169,15 +179,15 @@
                             </button>
                         </div>
                     </div>
-                    
+
 
                     <form id="markBtnGroup">
-                        <button id="unavailableBtn" *ngIf="request.available" (click)="changeAvailability(request, false)" style="text-align: right"
-                            value="false" class="btn btn-sm btn-info-outline change">
+                        <button id="unavailableBtn" *ngIf="request.available" (click)="changeAvailability(request, false)"
+                            style="text-align: right" value="false" class="btn btn-sm btn-info-outline change">
                             <i class="fa fa-minus"></i> {{ 'Requests.MarkUnavailable' | translate }}
                         </button>
-                        <button id="availableBtn" *ngIf="!request.available" (click)="changeAvailability(request, true)" style="text-align: right"
-                            value="true" class="btn btn-sm btn-success-outline change">
+                        <button id="availableBtn" *ngIf="!request.available" (click)="changeAvailability(request, true)"
+                            style="text-align: right" value="true" class="btn btn-sm btn-success-outline change">
                             <i class="fa fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
                         </button>
                     </form>
@@ -193,8 +203,8 @@
                     </form>
                 </div>
                 <div class="dropdown" *ngIf="issueCategories && issuesEnabled" id="issuesBtn">
-                    <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="true">
+                    <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="true">
                         <i class="fa fa-plus"></i> {{ 'Requests.ReportIssue' | translate }}
                         <span class="caret"></span>
                     </button>
@@ -207,8 +217,8 @@
 
             </div>
         </div>
-        <br/>
-        <br/>
+        <br />
+        <br />
 
 
 
@@ -266,3 +276,14 @@
     <button class="btn btn-sm btn-primary-outline" (click)="clearFilter($event)">
         <i class="fa fa-filter"></i> {{ 'Filter.ClearFilter' | translate }}</button>
 </p-sidebar>
+
+
+
+<p-dialog *ngIf="requestToDeny" header="Deny Request '{{requestToDeny.title}}''" [(visible)]="denyDisplay" [draggable]="false">
+    <span>Please enter a rejection reason, the user will be notified of this:</span>
+    <textarea [(ngModel)]="rejectionReason" class="form-control-custom form-control"></textarea>
+    <p-footer>
+        <button type="button" (click)="denyRequest();" label="Reject" class="btn btn-success">Deny</button>
+        <button type="button" (click)="denyDisplay=false" label="Close" class="btn btn-danger">Close</button>
+    </p-footer>
+</p-dialog>

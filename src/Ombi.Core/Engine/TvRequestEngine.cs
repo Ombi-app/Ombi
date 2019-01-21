@@ -116,6 +116,7 @@ namespace Ombi.Core.Engine
                     }
 
                 // Remove the ID since this is a new child
+                // This was a TVDBID for the request rules to run
                 tvBuilder.ChildRequest.Id = 0;
                 if (!tvBuilder.ChildRequest.SeasonRequests.Any())
                 {
@@ -402,7 +403,7 @@ namespace Ombi.Core.Engine
             };
         }
 
-        public async Task<RequestEngineResult> DenyChildRequest(int requestId)
+        public async Task<RequestEngineResult> DenyChildRequest(int requestId, string reason)
         {
             var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId);
             if (request == null)
@@ -413,6 +414,7 @@ namespace Ombi.Core.Engine
                 };
             }
             request.Denied = true;
+            request.DeniedReason = reason;
             await TvRepository.UpdateChild(request);
             NotificationHelper.Notify(request, NotificationType.RequestDeclined);
             return new RequestEngineResult

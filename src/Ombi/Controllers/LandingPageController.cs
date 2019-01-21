@@ -14,7 +14,8 @@ namespace Ombi.Controllers
     [ApiV1]
     [AllowAnonymous]
     [Produces("application/json")]
-    public class LandingPageController
+    [ApiController]
+    public class LandingPageController : ControllerBase
     {
         public LandingPageController(ISettingsService<PlexSettings> plex, ISettingsService<EmbySettings> emby,
             IPlexApi plexApi, IEmbyApi embyApi)

@@ -174,7 +174,7 @@ namespace Ombi.Schedule.Processor
             var client = new GitHubClient(Octokit.ProductHeaderValue.Parse("OmbiV3"));
 
             var releases = await client.Repository.Release.GetAll("tidusjar", "ombi");
-            var latest = releases.FirstOrDefault(x => x.TagName == releaseTag);
+            var latest = releases.FirstOrDefault(x => x.TagName.Equals(releaseTag, StringComparison.InvariantCultureIgnoreCase));
             if (latest.Name.Contains("V2", CompareOptions.IgnoreCase))
             {
                 latest = null;

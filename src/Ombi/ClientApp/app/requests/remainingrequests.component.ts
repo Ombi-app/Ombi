@@ -39,7 +39,9 @@ export class RemainingRequestsComponent implements OnInit  {
     public update(): void {
         const callback = (remaining => {
             this.remaining = remaining;
-            this.calculateTime();
+            if(this.remaining) {
+                this.calculateTime();
+            }
         });
 
         if (this.movie) {

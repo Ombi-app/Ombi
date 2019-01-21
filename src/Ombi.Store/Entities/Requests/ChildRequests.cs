@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Ombi.Store.Repository.Requests;
 
@@ -22,6 +23,8 @@ namespace Ombi.Store.Entities.Requests
         [NotMapped]
         public bool ShowSubscribe { get; set; }
 
+        [NotMapped]
+        public DateTime ReleaseYear { get; set; } // Used in the ExistingPlexRequestRule.cs
 
         [ForeignKey(nameof(IssueId))]
         public List<Issues> Issues { get; set; }

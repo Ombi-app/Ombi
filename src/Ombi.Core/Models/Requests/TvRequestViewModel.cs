@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Ombi.Core.Models.Requests
 {
@@ -9,6 +10,8 @@ namespace Ombi.Core.Models.Requests
         public bool FirstSeason { get; set; }
         public int TvDbId { get; set; }
         public List<SeasonsViewModel> Seasons { get; set; } = new List<SeasonsViewModel>();
+        [JsonIgnore]
+        public string RequestedByAlias { get; set; }
     }
 
     public class SeasonsViewModel

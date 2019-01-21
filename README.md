@@ -32,7 +32,7 @@ ___
 # Features
 Here are some of the features Ombi V3 has:
 * Now working without crashes on Linux.
-* Lets users request Movies and TV Shows (whether it being the entire series, an entire season, or even single episodes.)
+* Lets users request Movies, Music, and TV Shows (whether it being the entire series, an entire season, or even single episodes.)
 * Easily manage your requests
 * User management system (supports plex.tv, Emby and local accounts)
 * A landing page that will give you the availability of your Plex/Emby server and also add custom notification text to inform your users of downtime.
@@ -50,6 +50,7 @@ We integrate with the following applications:
 * Emby
 * Sonarr
 * Radarr
+* Lidarr
 * DogNzb
 * Couch Potato
 
@@ -87,6 +88,7 @@ We are planning to bring back these features in V3 but for now you can find a li
 | DogNzb | Yes | No |
 | Issues | Yes | Yes |
 | Headphones | No | Yes |
+| Lidarr | Yes | No |
 
 # Feature Requests
 Feature requests are handled on FeatHub.

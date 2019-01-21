@@ -53,6 +53,8 @@ module.exports = (env: any) => {
                 "@ngx-translate/http-loader",
                 "ngx-order-pipe",
                 "@yellowspot/ng-truncate",
+                "ngx-editor",
+                "ngx-bootstrap",
             ]),
         },
         plugins: prod ? [] : [

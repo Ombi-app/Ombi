@@ -83,7 +83,8 @@ namespace Ombi.Core.Engine
                 Title = album.title,
                 Disk = album.images?.FirstOrDefault(x => x.coverType.Equals("disc"))?.url,
                 Cover = album.images?.FirstOrDefault(x => x.coverType.Equals("cover"))?.url,
-                ForeignArtistId = album?.artist?.foreignArtistId ?? string.Empty
+                ForeignArtistId = album?.artist?.foreignArtistId ?? string.Empty,
+                RequestedByAlias = model.RequestedByAlias
             };
             if (requestModel.Cover.IsNullOrEmpty())
             {
@@ -299,7 +300,7 @@ namespace Ombi.Core.Engine
             return await ApproveAlbum(request);
         }
 
-        public async Task<RequestEngineResult> DenyAlbumById(int modelId)
+        public async Task<RequestEngineResult> DenyAlbumById(int modelId, string reason)
         {
             var request = await MusicRepository.Find(modelId);
             if (request == null)
@@ -311,6 +312,7 @@ namespace Ombi.Core.Engine
             }
 
             request.Denied = true;
+            request.DeniedReason = reason;
             // We are denying a request
             NotificationHelper.Notify(request, NotificationType.RequestDeclined);
             await MusicRepository.Update(request);

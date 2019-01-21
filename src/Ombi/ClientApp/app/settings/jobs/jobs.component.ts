@@ -36,6 +36,8 @@ export class JobsComponent implements OnInit {
                 plexRecentlyAddedSync:    [x.plexRecentlyAddedSync, Validators.required],
                 lidarrArtistSync:         [x.lidarrArtistSync, Validators.required],
                 issuesPurge:              [x.issuesPurge, Validators.required],
+                retryRequests:            [x.retryRequests, Validators.required],
+                mediaDatabaseRefresh:     [x.mediaDatabaseRefresh, Validators.required],
             });  
         });
     }

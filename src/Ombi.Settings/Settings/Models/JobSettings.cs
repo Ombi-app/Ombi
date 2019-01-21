@@ -15,5 +15,7 @@
         public string Newsletter { get; set; }
         public string LidarrArtistSync { get; set; }
         public string IssuesPurge { get; set; }
+        public string RetryRequests { get; set; }
+        public string MediaDatabaseRefresh { get; set; }
     }
 }

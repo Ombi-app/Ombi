@@ -17,7 +17,8 @@ namespace Ombi.Controllers
     [ApiV1]
     [Authorize]
     [Produces("application/json")]
-    public class MobileController : Controller
+    [ApiController]
+    public class MobileController : ControllerBase
     {
         public MobileController(IRepository<NotificationUserId> notification, OmbiUserManager user)
         {
@@ -30,6 +31,8 @@ namespace Ombi.Controllers
 
         [HttpPost("Notification")]
         [ApiExplorerSettings(IgnoreApi = true)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> AddNotitficationId([FromBody] NotificationIdBody body)
         {
             if (body?.PlayerId.HasValue() ?? false)

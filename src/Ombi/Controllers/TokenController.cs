@@ -22,20 +22,19 @@ namespace Ombi.Controllers
 {
     [ApiV1]
     [Produces("application/json")]
-    public class TokenController : Controller
+    [ApiController]
+    public class TokenController : ControllerBase
     {
-        public TokenController(OmbiUserManager um, IOptions<TokenAuthentication> ta, IAuditRepository audit, ITokenRepository token,
+        public TokenController(OmbiUserManager um, IOptions<TokenAuthentication> ta, ITokenRepository token,
             IPlexOAuthManager oAuthManager)
         {
             _userManager = um;
             _tokenAuthenticationOptions = ta.Value;
-            _audit = audit;
             _token = token;
             _plexOAuthManager = oAuthManager;
         }
 
         private readonly TokenAuthentication _tokenAuthenticationOptions;
-        private readonly IAuditRepository _audit;
         private readonly ITokenRepository _token;
         private readonly OmbiUserManager _userManager;
         private readonly IPlexOAuthManager _plexOAuthManager;
@@ -46,13 +45,11 @@ namespace Ombi.Controllers
         /// <param name="model">The model.</param>
         /// <returns></returns>
         [HttpPost]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> GetToken([FromBody] UserAuthModel model)
         {
             if (!model.UsePlexOAuth)
             {
-                await _audit.Record(AuditType.None, AuditArea.Authentication,
-                $"UserName {model.Username} attempting to authenticate");
-
                 var user = await _userManager.FindByNameAsync(model.Username);
 
                 if (user == null)
@@ -100,6 +97,8 @@ namespace Ombi.Controllers
         /// Returns the Token for the Ombi User if we can match the Plex user with a valid Ombi User
         /// </summary>
         [HttpPost("plextoken")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> GetTokenWithPlexToken([FromBody] PlexTokenAuthentication model)
         {
             if (!model.PlexToken.HasValue())
@@ -161,6 +160,7 @@ namespace Ombi.Controllers
         }
 
         [HttpGet("{pinId:int}")]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> OAuth(int pinId)
         {
             var accessToken = await _plexOAuthManager.GetAccessTokenFromPin(pinId);
@@ -201,6 +201,7 @@ namespace Ombi.Controllers
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         [HttpPost("refresh")]
+        [ProducesResponseType(401)]
         public IActionResult RefreshToken([FromBody] TokenRefresh token)
         {
 

@@ -41,7 +41,7 @@ namespace Ombi.Core.Helpers
             ShowInfo = await TvApi.ShowLookupByTheTvDbId(id);
             Results = await MovieDbApi.SearchTv(ShowInfo.name);
             foreach (TvSearchResult result in Results) {
-                if (result.Name == ShowInfo.name)
+                if (result.Name.Equals(ShowInfo.name, StringComparison.InvariantCultureIgnoreCase))
                 {                  
                     var showIds = await MovieDbApi.GetTvExternals(result.Id);
                     ShowInfo.externals.imdb = showIds.imdb_id;
@@ -64,14 +64,16 @@ namespace Ombi.Core.Helpers
         {
             ChildRequest = new ChildRequests
             {
-                Id = model.TvDbId,
+                Id = model.TvDbId, // This is set to 0 after the request rules have run, the request rules needs it to identify the request
                 RequestType = RequestType.TvShow,
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
                 RequestedUserId = userId,
                 SeasonRequests = new List<SeasonRequests>(),
                 Title = ShowInfo.name,
-                SeriesType = ShowInfo.genres.Any( s => s.Equals("Anime", StringComparison.OrdinalIgnoreCase)) ? SeriesType.Anime : SeriesType.Standard
+                ReleaseYear = FirstAir,
+                RequestedByAlias = model.RequestedByAlias,
+                SeriesType = ShowInfo.genres.Any( s => s.Equals("Anime", StringComparison.InvariantCultureIgnoreCase)) ? SeriesType.Anime : SeriesType.Standard
             };
 
             return this;

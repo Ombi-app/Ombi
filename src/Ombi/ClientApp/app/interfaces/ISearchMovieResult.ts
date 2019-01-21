@@ -34,6 +34,12 @@
     background: any;
 }
 
+export interface ILanguageRefine {
+    code: string;
+    name: string;
+    nativeName: string;
+}
+
 export interface ISearchMovieResultContainer {
     movies: ISearchMovieResult[];
 }

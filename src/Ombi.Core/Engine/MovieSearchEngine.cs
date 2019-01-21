@@ -1,23 +1,22 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
+using Ombi.Core.Authentication;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Rule.Interfaces;
-using Microsoft.Extensions.Caching.Memory;
-using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Principal;
+using System.Threading.Tasks;
 
 namespace Ombi.Core.Engine
 {
@@ -36,14 +35,17 @@ namespace Ombi.Core.Engine
         private IMapper Mapper { get; }
         private ILogger<MovieSearchEngine> Logger { get; }
 
+        private const int MovieLimit = 10;
+
         /// <summary>
         /// Lookups the imdb information.
         /// </summary>
         /// <param name="theMovieDbId">The movie database identifier.</param>
         /// <returns></returns>
-        public async Task<SearchMovieViewModel> LookupImdbInformation(int theMovieDbId)
+        public async Task<SearchMovieViewModel> LookupImdbInformation(int theMovieDbId, string langCode = null)
         {
-            var movieInfo = await MovieApi.GetMovieInformationWithExtraInfo(theMovieDbId);
+            langCode = await DefaultLanguageCode(langCode);
+            var movieInfo = await MovieApi.GetMovieInformationWithExtraInfo(theMovieDbId, langCode);
             var viewMovie = Mapper.Map<SearchMovieViewModel>(movieInfo);
 
             return await ProcessSingleMovie(viewMovie, true);
@@ -54,13 +56,14 @@ namespace Ombi.Core.Engine
         /// </summary>
         /// <param name="search">The search.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<SearchMovieViewModel>> Search(string search)
+        public async Task<IEnumerable<SearchMovieViewModel>> Search(string search, int? year, string langaugeCode)
         {
-            var result = await MovieApi.SearchMovie(search);
+            langaugeCode = await DefaultLanguageCode(langaugeCode);
+            var result = await MovieApi.SearchMovie(search, year, langaugeCode);
 
             if (result != null)
             {
-                return await TransformMovieResultsToResponse(result.Take(10)); // Take 10 to stop us overloading the API
+                return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
             }
             return null;
         }
@@ -70,13 +73,14 @@ namespace Ombi.Core.Engine
         /// </summary>
         /// <param name="theMovieDbId"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<SearchMovieViewModel>> SimilarMovies(int theMovieDbId)
+        public async Task<IEnumerable<SearchMovieViewModel>> SimilarMovies(int theMovieDbId, string langCode)
         {
-            var result = await MovieApi.SimilarMovies(theMovieDbId);
+            langCode = await DefaultLanguageCode(langCode);
+            var result = await MovieApi.SimilarMovies(theMovieDbId, langCode);
             if (result != null)
             {
                 Logger.LogDebug("Search Result: {result}", result);
-                return await TransformMovieResultsToResponse(result.Take(10)); // Take 10 to stop us overloading the API
+                return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
             }
             return null;
         }
@@ -87,10 +91,15 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<SearchMovieViewModel>> PopularMovies()
         {
-            var result = await Cache.GetOrAdd(CacheKeys.PopularMovies, async () => await MovieApi.PopularMovies(), DateTime.Now.AddHours(12));
+           
+            var result = await Cache.GetOrAdd(CacheKeys.PopularMovies, async () =>
+            {
+                var langCode = await DefaultLanguageCode(null);
+                return await MovieApi.PopularMovies(langCode);
+            }, DateTime.Now.AddHours(12));
             if (result != null)
             {
-                return await TransformMovieResultsToResponse(result.Take(10)); // Take 10 to stop us overloading the API
+                return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
             }
             return null;
         }
@@ -101,10 +110,14 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<SearchMovieViewModel>> TopRatedMovies()
         {
-            var result = await Cache.GetOrAdd(CacheKeys.TopRatedMovies, async () => await MovieApi.TopRated(), DateTime.Now.AddHours(12));
+            var result = await Cache.GetOrAdd(CacheKeys.TopRatedMovies, async () =>
+            {
+                var langCode = await DefaultLanguageCode(null);
+                return await MovieApi.TopRated(langCode);
+            }, DateTime.Now.AddHours(12));
             if (result != null)
             {
-                return await TransformMovieResultsToResponse(result.Take(10)); // Take 10 to stop us overloading the API
+                return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
             }
             return null;
         }
@@ -115,11 +128,15 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies()
         {
-            var result = await Cache.GetOrAdd(CacheKeys.UpcomingMovies, async () => await MovieApi.Upcoming(), DateTime.Now.AddHours(12));
+            var result = await Cache.GetOrAdd(CacheKeys.UpcomingMovies, async () =>
+            {
+                var langCode = await DefaultLanguageCode(null);
+                return await MovieApi.Upcoming(langCode);
+            }, DateTime.Now.AddHours(12));
             if (result != null)
             {
                 Logger.LogDebug("Search Result: {result}", result);
-                return await TransformMovieResultsToResponse(result.Take(10)); // Take 10 to stop us overloading the API
+                return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
             }
             return null;
         }
@@ -130,10 +147,14 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies()
         {
-            var result = await Cache.GetOrAdd(CacheKeys.NowPlayingMovies, async () => await MovieApi.NowPlaying(), DateTime.Now.AddHours(12));
+            var result = await Cache.GetOrAdd(CacheKeys.NowPlayingMovies, async () =>
+            {
+                var langCode = await DefaultLanguageCode(null);
+                return await MovieApi.NowPlaying(langCode);
+            }, DateTime.Now.AddHours(12));
             if (result != null)
             {
-                return await TransformMovieResultsToResponse(result.Take(10)); // Take 10 to stop us overloading the API
+                return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
             }
             return null;
         }
@@ -174,6 +195,10 @@ namespace Ombi.Core.Engine
         {
             // Check if this user requested it
             var user = await GetUser();
+            if (user == null)
+            {
+                return;
+            }
             var request = await RequestService.MovieRequestService.GetAll()
                 .AnyAsync(x => x.RequestedUserId.Equals(user.Id) && x.TheMovieDbId == viewModel.Id);
             if (request)

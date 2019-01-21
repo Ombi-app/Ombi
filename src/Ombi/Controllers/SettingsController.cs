@@ -37,7 +37,8 @@ namespace Ombi.Controllers
     [Admin]
     [ApiV1]
     [Produces("application/json")]
-    public class SettingsController : Controller
+    [ApiController]
+    public class SettingsController : ControllerBase
     {
         public SettingsController(ISettingsResolver resolver,
             IMapper mapper,
@@ -224,6 +225,19 @@ namespace Ombi.Controllers
             return await Get<CustomizationSettings>();
         }
 
+
+        /// <summary>
+        /// Gets the default language set in Ombi
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("defaultlanguage")]
+        [AllowAnonymous]
+        public async Task<string> GetDefaultLanguage()
+        {
+           var s = await Get<OmbiSettings>();
+           return s.DefaultLanguageCode;
+        }
+
         /// <summary>
         /// Save the Customization settings.
         /// </summary>
@@ -272,19 +286,6 @@ namespace Ombi.Controllers
             // In dropdown display as "theBlur 1.1"
 
             return model;
-        }
-
-        /// <summary>
-        /// Gets the content of the theme available
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        [HttpGet("themecontent")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetThemeContent([FromQuery]string url)
-        {
-            var css = await _githubApi.GetThemesRawContent(url);
-            return Content(css, "text/css");
         }
 
         /// <summary>
@@ -520,6 +521,8 @@ namespace Ombi.Controllers
             j.Newsletter = j.Newsletter.HasValue() ? j.Newsletter : JobSettingsHelper.Newsletter(j);
             j.LidarrArtistSync = j.LidarrArtistSync.HasValue() ? j.LidarrArtistSync : JobSettingsHelper.LidarrArtistSync(j);
             j.IssuesPurge = j.IssuesPurge.HasValue() ? j.IssuesPurge : JobSettingsHelper.IssuePurge(j);
+            j.RetryRequests = j.RetryRequests.HasValue() ? j.RetryRequests : JobSettingsHelper.ResendFailedRequests(j);
+            j.MediaDatabaseRefresh = j.MediaDatabaseRefresh.HasValue() ? j.MediaDatabaseRefresh : JobSettingsHelper.MediaDatabaseRefresh(j);
 
             return j;
         }
@@ -702,6 +705,27 @@ namespace Ombi.Controllers
         {
             var emailSettings = await Get<EmailNotificationSettings>();
             return emailSettings.Enabled;
+        }
+
+        /// <summary>
+        /// Gets the Custom Page Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("CustomPage")]
+        [AllowAnonymous]
+        public async Task<CustomPageSettings> CustomPageSettings()
+        {
+            return await Get<CustomPageSettings>();
+        }
+
+        /// <summary>
+        /// Saves the Custom Page Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("CustomPage")]
+        public async Task<bool> CustomPageSettings([FromBody] CustomPageSettings page)
+        {
+            return await Save(page);
         }
 
         /// <summary>

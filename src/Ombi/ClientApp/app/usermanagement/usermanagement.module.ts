@@ -16,7 +16,6 @@ import { IdentityService, PlexService, RadarrService, SonarrService } from "../s
 import { AuthGuard } from "../auth/auth.guard";
 
 import { OrderModule } from "ngx-order-pipe";
-import { AddPlexUserComponent } from "./addplexuser.component";
 
 import { SharedModule } from "../shared/shared.module";
 
@@ -45,11 +44,7 @@ const routes: Routes = [
     declarations: [
         UserManagementComponent,
         UpdateDetailsComponent,
-        AddPlexUserComponent,
         UserManagementUserComponent,
-    ],
-    entryComponents:[
-        AddPlexUserComponent,
     ],
     exports: [
         RouterModule,

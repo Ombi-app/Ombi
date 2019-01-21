@@ -95,7 +95,7 @@ namespace Ombi
 
             Console.WriteLine($"We are running on {urlValue}");
 
-            BuildWebHost(args).Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
         /// <summary>
@@ -245,12 +245,11 @@ namespace Ombi
             }
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .UseUrls(UrlArgs)
-                .PreferHostingUrls(true)
-                .Build();
+                .PreferHostingUrls(true);
 
         private static string HelpOutput(ParserResult<Options> args)
         {

@@ -10,6 +10,7 @@ import {
     ICronTestModel,
     ICronViewModelBody,
     ICustomizationSettings,
+    ICustomPage,
     IDiscordNotifcationSettings,
     IDogNzbSettings,
     IEmailNotificationSettings,
@@ -31,7 +32,6 @@ import {
     ISlackNotificationSettings,
     ISonarrSettings,
     ITelegramNotifcationSettings,
-    IThemes,
     IUpdateSettings,
     IUserManagementSettings,
     IVoteSettings,
@@ -51,6 +51,10 @@ export class SettingsService extends ServiceHelpers {
 
     public getOmbi(): Observable<IOmbiSettings> {
         return this.http.get<IOmbiSettings>(`${this.url}/Ombi/`, {headers: this.headers});
+    }
+
+    public getDefaultLanguage(): Observable<string> {
+        return this.http.get<string>(`${this.url}/defaultlanguage/`, {headers: this.headers});
     }
 
     public saveOmbi(settings: IOmbiSettings): Observable<boolean> {
@@ -109,6 +113,14 @@ export class SettingsService extends ServiceHelpers {
         return this.http.get<IAuthenticationSettings>(`${this.url}/Authentication`, {headers: this.headers});
     }
 
+    public getCustomPage(): Observable<ICustomPage> {
+        return this.http.get<ICustomPage>(`${this.url}/CustomPage`, {headers: this.headers});
+    }
+
+    public saveCustomPage(model: ICustomPage): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}/CustomPage`, model, {headers: this.headers});
+    }
+
     public getClientId(): Observable<string> {
         return this.http.get<string>(`${this.url}/clientid`, {headers: this.headers});
     }
@@ -133,14 +145,6 @@ export class SettingsService extends ServiceHelpers {
 
     public saveCustomization(settings: ICustomizationSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}/customization`, JSON.stringify(settings), {headers: this.headers});
-    }
-
-    public getThemes(): Observable<IThemes[]> {
-        return this.http.get<IThemes[]>(`${this.url}/themes`, {headers: this.headers});
-    }
-
-    public getThemeContent(themeUrl: string): Observable<string> {
-        return this.http.get(`${this.url}/themecontent?url=${themeUrl}`, {responseType: "text", headers: this.headers});
     }
 
     public getEmailNotificationSettings(): Observable<IEmailNotificationSettings> {
