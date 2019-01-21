@@ -87,6 +87,7 @@ export interface IBaseRequest {
   requestedUser: IUser;
   canApprove: boolean;
   title: string;
+  requestedByAlias: string;
 }
 
 export interface ITvRequests {

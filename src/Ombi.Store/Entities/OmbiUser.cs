@@ -34,7 +34,7 @@ namespace Ombi.Store.Entities
         public bool IsEmbyConnect => UserType == UserType.EmbyUser && EmbyConnectUserId.HasValue();
 
         [NotMapped]
-        public string UserAlias => string.IsNullOrEmpty(Alias) ? UserName : Alias;
+        public virtual string UserAlias => string.IsNullOrEmpty(Alias) ? UserName : Alias;
 
         [NotMapped]
         public bool EmailLogin { get; set; }
