@@ -54,8 +54,6 @@ namespace Ombi.Core.Engine
         /// <summary>
         /// Searches the specified movie.
         /// </summary>
-        /// <param name="search">The search.</param>
-        /// <returns></returns>
         public async Task<IEnumerable<SearchMovieViewModel>> Search(string search, int? year, string langaugeCode)
         {
             langaugeCode = await DefaultLanguageCode(langaugeCode);
@@ -66,6 +64,33 @@ namespace Ombi.Core.Engine
                 return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
             }
             return null;
+        }
+
+        public async Task<IEnumerable<SearchMovieViewModel>> SearchActor(string search, string langaugeCode)
+        {
+            langaugeCode = await DefaultLanguageCode(langaugeCode);
+            var people = await MovieApi.SearchByActor(search, langaugeCode);
+            var person = people?.results?.Count > 0 ? people.results.FirstOrDefault() : null;
+
+            var resultSet = new List<SearchMovieViewModel>();
+            if (person == null)
+            {
+                return resultSet;
+            }
+            
+            // Get this person movie credits
+            var credits = await MovieApi.GetActorMovieCredits(person.id, langaugeCode);
+            // Grab results from both cast and crew, prefer items in cast.  we can handle directors like this.
+            var movieResults = (from role in credits.cast select new  { Id = role.id, Title = role.title, ReleaseDate = role.release_date }).ToList();
+            movieResults.AddRange((from job in credits.crew select new { Id = job.id, Title = job.title, ReleaseDate = job.release_date }).ToList());
+
+            movieResults = movieResults.Take(10).ToList();
+            foreach (var movieResult in movieResults)
+            {
+                resultSet.Add(await LookupImdbInformation(movieResult.Id, langaugeCode));
+            }
+
+            return resultSet;
         }
 
         /// <summary>
