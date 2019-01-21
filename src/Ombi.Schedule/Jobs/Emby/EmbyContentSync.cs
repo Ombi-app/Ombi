@@ -87,7 +87,7 @@ namespace Ombi.Schedule.Jobs.Emby
                             await _api.GetCollection(movie.Id, server.ApiKey, server.AdministratorId, server.FullUri);
                         foreach (var item in movieInfo.Items)
                         {
-                            await ProcessMovies(item, mediaToAdd);
+                            await ProcessMovies(item, mediaToAdd, server);
                         }
 
                         processed++;
@@ -96,7 +96,7 @@ namespace Ombi.Schedule.Jobs.Emby
                     {
                         processed++;
                         // Regular movie
-                        await ProcessMovies(movie, mediaToAdd);
+                        await ProcessMovies(movie, mediaToAdd, server);
                     }
                 }
 
@@ -138,7 +138,7 @@ namespace Ombi.Schedule.Jobs.Emby
                                 Title = tvShow.Name,
                                 Type = EmbyMediaType.Series,
                                 EmbyId = tvShow.Id,
-                                Url = EmbyHelper.GetEmbyMediaUrl(tvShow.Id),
+                                Url = EmbyHelper.GetEmbyMediaUrl(tvShow.Id, server.ServerHostname),
                                 AddedAt = DateTime.UtcNow
                             });
                         }
@@ -164,7 +164,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 await _repo.AddRange(mediaToAdd);
         }
 
-        private async Task ProcessMovies(EmbyMovie movieInfo, ICollection<EmbyContent> content)
+        private async Task ProcessMovies(EmbyMovie movieInfo, ICollection<EmbyContent> content, EmbyServers server)
         {
             // Check if it exists
             var existingMovie = await _repo.GetByEmbyId(movieInfo.Id);
@@ -179,7 +179,7 @@ namespace Ombi.Schedule.Jobs.Emby
                     Title = movieInfo.Name,
                     Type = EmbyMediaType.Movie,
                     EmbyId = movieInfo.Id,
-                    Url = EmbyHelper.GetEmbyMediaUrl(movieInfo.Id),
+                    Url = EmbyHelper.GetEmbyMediaUrl(movieInfo.Id, server.ServerHostname),
                     AddedAt = DateTime.UtcNow,
                 });
             }
