@@ -2,10 +2,10 @@
 
 !! Please use the Support / bug report template, otherwise we will close the Github issue !!
 
-Version 2.X is not supported anymore. Please don't open a issue for the 2.x version.
+Version 2.X is not supported anymore. Please don't open an issue for the 2.x version.
 See https://github.com/tidusjar/Ombi/issues/1455 for more information.
 
-(Pleas submit a feature request over here: http://feathub.com/tidusjar/Ombi) 
+(Please submit a feature request over here: http://feathub.com/tidusjar/Ombi) 
 
 
 --->
@@ -18,7 +18,7 @@ V 3.0.XX
 
 Open Beta
 
-#### Media Sever:
+#### Media Server:
 
 Plex/Emby
 
@@ -45,4 +45,4 @@ Plex/Emby
 
 #### Reproduction Steps:
 
-Please include any steps to reproduce the issue, this the request that is causing the problem etc.
+Please include any steps to reproduce the issue, the request that is causing the problem, etc.
