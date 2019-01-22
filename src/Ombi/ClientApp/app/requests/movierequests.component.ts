@@ -140,7 +140,6 @@ export class MovieRequestsComponent implements OnInit {
     public denyRequest() {
         this.requestService.denyMovie({ id: this.requestToDeny.id, reason: this.rejectionReason })
             .subscribe(x => {
-                debugger;
                 this.denyDisplay = false;
                 if (x.result) {
                     this.notificationService.success(
