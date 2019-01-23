@@ -54,13 +54,13 @@ namespace Ombi.Controllers
         /// <summary>
         /// Searches for movies by a certain actor.
         /// </summary>
-        /// <param name="model">The refinement model, language code and year are both optional. Language code uses ISO 639-1</param>
+        /// <param name="model">language code is optional, by default it will be en. Language code uses ISO 639-1</param>
         /// <returns></returns>
         [HttpPost("movie/actor")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> SearchActor([FromBody] SearchMovieRefineModel model)
+        public async Task<IActionResult> SearchActor([FromBody] SearchActorModel model)
         {
             if (model == null)
             {
