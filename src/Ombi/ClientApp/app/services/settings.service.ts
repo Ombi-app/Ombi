@@ -113,14 +113,6 @@ export class SettingsService extends ServiceHelpers {
         return this.http.get<IAuthenticationSettings>(`${this.url}/Authentication`, {headers: this.headers});
     }
 
-    public getCustomPage(): Observable<ICustomPage> {
-        return this.http.get<ICustomPage>(`${this.url}/CustomPage`, {headers: this.headers});
-    }
-
-    public saveCustomPage(model: ICustomPage): Observable<boolean> {
-        return this.http.post<boolean>(`${this.url}/CustomPage`, model, {headers: this.headers});
-    }
-
     public getClientId(): Observable<string> {
         return this.http.get<string>(`${this.url}/clientid`, {headers: this.headers});
     }
