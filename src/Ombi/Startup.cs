@@ -209,7 +209,7 @@ namespace Ombi
                 app.UseHangfireDashboard(settings.BaseUrl.HasValue() ? $"{settings.BaseUrl}/hangfire" : "/hangfire",
                     new DashboardOptions
                     {
-                        Authorization = new[] {new HangfireAuthorizationFilter()}
+                        Authorization = new[] { new HangfireAuthorizationFilter() }
                     });
             }
 
@@ -237,14 +237,11 @@ namespace Ombi
             app.UseMiddleware<ApiKeyMiddlewear>();
 
             app.UseCors("MyPolicy");
-            //app.ApiKeyMiddlewear(app.ApplicationServices);
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
-
-
 
             app.UseMvc(routes =>
             {
@@ -256,8 +253,6 @@ namespace Ombi
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
             });
-
-            ombiService.Dispose();
         }
     }
 
