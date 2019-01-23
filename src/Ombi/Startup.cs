@@ -26,6 +26,7 @@ using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Serilog;
+using ILogger = Serilog.ILogger;
 
 namespace Ombi
 {
@@ -42,35 +43,12 @@ namespace Ombi
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
 
-            //if (env.IsDevelopment())
-            //{
-            Serilog.ILogger config;
-            if (string.IsNullOrEmpty(StoragePath.StoragePath))
-            {
-                config = new LoggerConfiguration()
-                    .MinimumLevel.Debug()
-                    .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "Logs", "log-{Date}.txt"))
-                    .CreateLogger();
-            }
-            else
-            {
-                config = new LoggerConfiguration()
-                    .MinimumLevel.Debug()
-                    .WriteTo.RollingFile(Path.Combine(StoragePath.StoragePath, "Logs", "log-{Date}.txt"))
-                    .CreateLogger();
-            }
+            ILogger config = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.RollingFile(Path.Combine(StoragePath.StoragePath.IsNullOrEmpty() ? env.ContentRootPath : StoragePath.StoragePath, "Logs", "log-{Date}.txt"))
+                .CreateLogger();
+
             Log.Logger = config;
-
-
-            //}
-            //if (env.IsProduction())
-            //{
-            //    Log.Logger = new LoggerConfiguration()
-            //        .MinimumLevel.Debug()
-            //        .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "Logs", "log-{Date}.txt"))
-            //        .WriteTo.SQLite("Ombi.db", "Logs", LogEventLevel.Debug)
-            //        .CreateLogger();
-            //}
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -126,7 +104,6 @@ namespace Ombi
             {
                 x.UseSQLiteStorage(sqliteStorage);
                 x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
-                //x.UseConsole();
             });
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
