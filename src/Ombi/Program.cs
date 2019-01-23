@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using CommandLine;
@@ -24,12 +23,14 @@ namespace Ombi
             var host = string.Empty;
             var storagePath = string.Empty;
             var baseUrl = string.Empty;
+            var demo = false;
             var result = Parser.Default.ParseArguments<Options>(args)
                 .WithParsed(o =>
                 {
                     host = o.Host;
                     storagePath = o.StoragePath;
                     baseUrl = o.BaseUrl;
+                    demo = o.Demo;
                 }).WithNotParsed(err =>
                 {
                     foreach (var e in err)
@@ -44,6 +45,8 @@ namespace Ombi
 
             var urlValue = string.Empty;
             var instance = StoragePathSingleton.Instance;
+            var demoInstance = DemoSingleton.Instance;
+            demoInstance.Demo = demo;
             instance.StoragePath = storagePath ?? string.Empty;
             // Check if we need to migrate the settings
             CheckAndMigrate();
@@ -268,6 +271,9 @@ namespace Ombi
 
         [Option("baseurl", Required = false, HelpText = "The base URL for reverse proxy scenarios")]
         public string BaseUrl { get; set; }
+
+        [Option("demo", Required = false, HelpText = "Demo mode, you will never need to use this, fuck that fruit company...")]
+        public bool Demo { get; set; }
 
     }
 }

@@ -109,6 +109,7 @@ namespace Ombi
             services.Configure<UserSettings>(configuration.GetSection("UserSettings"));
             services.Configure<TokenAuthentication>(configuration.GetSection("TokenAuthentication"));
             services.Configure<LandingPageBackground>(configuration.GetSection("LandingPageBackground"));
+            services.Configure<DemoLists>(configuration.GetSection("Demo"));
         }
 
         public static void AddJwtAuthentication(this IServiceCollection services, IConfigurationRoot configuration)

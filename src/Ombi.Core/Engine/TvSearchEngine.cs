@@ -40,8 +40,8 @@ namespace Ombi.Core.Engine
             EmbyContentRepo = embyRepo;
         }
 
-        private ITvMazeApi TvMazeApi { get; }
-        private IMapper Mapper { get; }
+        protected ITvMazeApi TvMazeApi { get; }
+        protected IMapper Mapper { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private ISettingsService<EmbySettings> EmbySettings { get; }
         private IPlexContentRepository PlexContentRepo { get; }
@@ -149,7 +149,7 @@ namespace Ombi.Core.Engine
             return processed;
         }
 
-        private IEnumerable<SearchTvShowViewModel> ProcessResults<T>(IEnumerable<T> items)
+        protected IEnumerable<SearchTvShowViewModel> ProcessResults<T>(IEnumerable<T> items)
         {
             var retVal = new List<SearchTvShowViewModel>();
             foreach (var tvMazeSearch in items)
@@ -159,7 +159,7 @@ namespace Ombi.Core.Engine
             return retVal;
         }
 
-        private SearchTvShowViewModel ProcessResult<T>(T tvMazeSearch)
+        protected SearchTvShowViewModel ProcessResult<T>(T tvMazeSearch)
         {
             return Mapper.Map<SearchTvShowViewModel>(tvMazeSearch);
         }
