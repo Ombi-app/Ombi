@@ -35,7 +35,7 @@ namespace Ombi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(OmbiRoles.EditCustomPage)]
+        [Authorize(Roles = OmbiRoles.EditCustomPage)]
         public async Task<bool> CustomPageSettings([FromBody] CustomPageSettings page)
         {
             return await Save(page);
