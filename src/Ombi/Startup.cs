@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Caching.Memory;
@@ -135,6 +136,12 @@ namespace Ombi
                     .AllowAnyMethod()
                     .AllowAnyHeader();
             }));
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/dist";
+            });
 
             // Build the intermediate service provider
             return services.BuildServiceProvider();
@@ -153,20 +160,9 @@ namespace Ombi
             loggerFactory.AddSerilog();
 
             app.UseHealthChecks("/health");
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
-                {
-                    HotModuleReplacement = true,
-                    ConfigFile = "webpack.config.ts",
-                    
-                    //EnvParam = new
-                    //{
-                    //    aot = true // can't use AOT with HMR currently https://github.com/angular/angular-cli/issues/6347
-                    //}
-                });
-            }
+
+            app.UseSpaStaticFiles();
+
 
             var ombiService =
                 app.ApplicationServices.GetService<ISettingsService<OmbiSettings>>();
@@ -248,10 +244,15 @@ namespace Ombi
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
 
-                routes.MapSpaFallbackRoute(
-                    name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp";
+                if (env.IsDevelopment())
+                {
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3578");
+                }
             });
         }
     }

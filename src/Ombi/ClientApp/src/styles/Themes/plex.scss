@@ -26,10 +26,8 @@ $i:!important;
     background-color: $primary-colour;
 }
 
-body {
-    font-family: Open Sans Regular,Helvetica Neue,Helvetica,Arial,sans-serif;
-    color: #eee;
-    background-color: #1f1f1f;
+* {
+    display:none !important;
 }
 
 .table-striped > tbody > tr:nth-of-type(odd) {

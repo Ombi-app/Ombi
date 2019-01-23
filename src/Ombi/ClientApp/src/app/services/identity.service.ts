@@ -80,7 +80,7 @@ export class IdentityService extends ServiceHelpers {
     }
 
     public hasRole(role: string): boolean {
-        const roles = localStorage.getItem("roles") as string[] | null;
+        const roles = localStorage.getItem("roles") as any as string[] | null;
         if (roles) {
             if (roles.indexOf(role) > -1) {
                 return true;
