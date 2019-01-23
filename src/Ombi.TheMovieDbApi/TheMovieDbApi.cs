@@ -56,9 +56,8 @@ namespace Ombi.Api.TheMovieDb
 
         public async Task<ActorCredits> GetActorMovieCredits(int actorId, string langCode)
         {
-            var request = new Request($"search/person", BaseUri, HttpMethod.Get);
+            var request = new Request($"person/{actorId}/movie_credits", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
-            request.FullUri = request.FullUri.AddQueryParameter("person_id", actorId.ToString());
             request.FullUri = request.FullUri.AddQueryParameter("language", langCode);
 
             var result = await Api.Request<ActorCredits>(request);

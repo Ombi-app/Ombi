@@ -66,5 +66,10 @@ namespace Ombi.Store.Context
 
             SaveChanges();
         }
+
+        ~SettingsContext()
+        {
+
+        }
     }
 }

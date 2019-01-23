@@ -52,6 +52,25 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Searches for movies by a certain actor.
+        /// </summary>
+        /// <param name="model">The refinement model, language code and year are both optional. Language code uses ISO 639-1</param>
+        /// <returns></returns>
+        [HttpPost("movie/actor")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> SearchActor([FromBody] SearchMovieRefineModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+
+            return Json(await MovieEngine.SearchActor(model.SearchTerm, model.LanguageCode));
+        }
+
+        /// <summary>
         /// Searches for a movie.
         /// </summary>
         /// <remarks>We use TheMovieDb as the Movie Provider</remarks>
