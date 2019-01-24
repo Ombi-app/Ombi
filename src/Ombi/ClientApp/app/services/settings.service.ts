@@ -10,7 +10,6 @@ import {
     ICronTestModel,
     ICronViewModelBody,
     ICustomizationSettings,
-    ICustomPage,
     IDiscordNotifcationSettings,
     IDogNzbSettings,
     IEmailNotificationSettings,
