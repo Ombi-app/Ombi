@@ -6,12 +6,11 @@ import { SearchService } from "../services";
 import { AuthGuard } from "../auth/auth.guard";
 
 import { SharedModule } from "../shared/shared.module";
-import { HomeComponent } from "./home.component";
-import { PopularMoviesComponent } from "./movies/popular-movies.component";
-import { PopularTvComponent } from "./tv/popular-tv.component";
+import { DiscoverComponent } from "./discover.component";
+import { DiscoverCardComponent } from "./card/discover-card.component";
 
 const routes: Routes = [
-    { path: "", component: HomeComponent, canActivate: [AuthGuard] },
+    { path: "", component: DiscoverComponent, canActivate: [AuthGuard] },
 ];
 @NgModule({
     imports: [
@@ -19,9 +18,8 @@ const routes: Routes = [
         SharedModule,
     ],
     declarations: [
-        HomeComponent,
-        PopularMoviesComponent,
-        PopularTvComponent,
+        DiscoverComponent,
+        DiscoverCardComponent
     ],
     exports: [
         RouterModule,
@@ -31,4 +29,4 @@ const routes: Routes = [
         ],
 
 })
-export class HomeModule { }
+export class DiscoverModule { }

@@ -1,0 +1,19 @@
+<mat-card>
+
+    <a *ngIf="result.url" href="{{result.url}}" target="_blank">
+        <img mat-card-image src="{{result.posterPath}}" class="card-poster" alt="{{result.title}}">
+    </a>
+    <img *ngIf="!result.url" mat-card-image src="{{result.posterPath}}" class="card-poster" alt="{{result.title}}">
+
+    <mat-card-content>
+
+        <h5 *ngIf="result.title.length <= 10">{{result.title}}</h5>
+        <h6 *ngIf="result.title.length > 10 && result.title.length <= 13">{{result.title}}</h6>
+        <h6 *ngIf="result.title.length > 13" matTooltip="{{result.title}}">{{result.title | truncate:13}}</h6>
+    </mat-card-content>
+    <mat-card-actions>
+        <button *ngIf="!result.requested && !result.available" mat-raised-button color="primary">Request</button>
+        <button *ngIf="result.requested && !result.available" mat-raised-button color="warn">Requested</button>
+        <button *ngIf="!result.requested && result.available" mat-raised-button color="accent">Available</button>
+    </mat-card-actions>
+</mat-card>

@@ -57,7 +57,7 @@ const routes: Routes = [
     { path: "token", component: TokenResetPasswordComponent },
     { path: "landingpage", component: LandingPageComponent },
     { path: "auth/cookie", component: CookieComponent },
-    { loadChildren: "./home/home.module#HomeModule", path: "home" },
+    { loadChildren: "./discover/discover.module#DiscoverModule", path: "home" },
     { loadChildren: "./issues/issues.module#IssuesModule", path: "issues" },
     { loadChildren: "./settings/settings.module#SettingsModule", path: "Settings" },
     { loadChildren: "./wizard/wizard.module#WizardModule", path: "Wizard" },

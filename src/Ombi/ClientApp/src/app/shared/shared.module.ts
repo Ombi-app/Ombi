@@ -10,7 +10,7 @@ import { IssuesReportComponent } from "./issues-report.component";
 import { InputSwitchModule, SidebarModule } from "primeng/primeng";
 
 import {
-  MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule} from '@angular/material';
+  MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatTooltipModule} from '@angular/material';
   import {  MatCardModule, MatInputModule, MatTabsModule } from "@angular/material";
 
 @NgModule({
@@ -51,6 +51,7 @@ import {
       MatSidenavModule, 
       MatListModule, 
       MatToolbarModule,
+      MatTooltipModule,
     ],
 })
 export class SharedModule {}
