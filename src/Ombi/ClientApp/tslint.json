@@ -23,6 +23,7 @@
     "no-internal-module": false,
     "quotemark": [ true, "double", "avoid-template" ],
     "no-console": false,
-    "no-non-null-assertion": false
+    "no-non-null-assertion": false,
+    "experimentalDecorators":true,
   }
 }

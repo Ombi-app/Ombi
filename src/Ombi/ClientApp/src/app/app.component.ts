@@ -10,7 +10,7 @@ import { JobService, SettingsService } from "./services";
 import { ICustomizationSettings, ICustomPage } from "./interfaces";
 
 @Component({
-    selector: "ombi",
+    selector: "app-ombi",
     templateUrl: "./app.component.html",
     styleUrls: ["./app.component.scss"],
 })

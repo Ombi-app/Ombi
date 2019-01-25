@@ -3,7 +3,6 @@ import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
-import { MatButtonModule, MatCardModule, MatInputModule, MatTabsModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule, Routes } from "@angular/router";
@@ -18,6 +17,12 @@ import { NgxEditorModule } from "ngx-editor";
 import { GrowlModule } from "primeng/components/growl/growl";
 import { ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DialogModule, OverlayPanelModule, SharedModule, SidebarModule,
     TooltipModule } from "primeng/primeng";
+
+    import {
+        MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule} from '@angular/material';
+        import {  MatCardModule, MatInputModule, MatTabsModule } from "@angular/material";
+
+import { MDBBootstrapModule, CardsFreeModule, NavbarModule } from "angular-bootstrap-md";
 
 // Components
 import { AppComponent } from "./app.component";
@@ -34,16 +39,16 @@ import { TokenResetPasswordComponent } from "./login/tokenresetpassword.componen
 // Services
 import { AuthGuard } from "./auth/auth.guard";
 import { AuthService } from "./auth/auth.service";
-import { IdentityService } from "./services";
 import { ImageService } from "./services";
 import { LandingPageService } from "./services";
 import { NotificationService } from "./services";
 import { SettingsService } from "./services";
-import { IssuesService, JobService, PlexTvService, StatusService } from "./services";
+import { IssuesService, JobService, PlexTvService, StatusService, SearchService, IdentityService } from "./services";
+import { NavComponent } from "./nav/nav.component";
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
-    { path: "", redirectTo: "/search", pathMatch: "full" },
+    { path: "", redirectTo: "/home", pathMatch: "full" },
     { path: "login", component: LoginComponent },
     { path: "Login/OAuth/:pin", component: LoginOAuthComponent },
     { path: "Custom", component: CustomPageComponent },
@@ -52,6 +57,7 @@ const routes: Routes = [
     { path: "token", component: TokenResetPasswordComponent },
     { path: "landingpage", component: LandingPageComponent },
     { path: "auth/cookie", component: CookieComponent },
+    { loadChildren: "./home/home.module#HomeModule", path: "home" },
     { loadChildren: "./issues/issues.module#IssuesModule", path: "issues" },
     { loadChildren: "./settings/settings.module#SettingsModule", path: "Settings" },
     { loadChildren: "./wizard/wizard.module#WizardModule", path: "Wizard" },
@@ -95,6 +101,7 @@ export function JwtTokenGetter() {
         NgxEditorModule,
         DialogModule,
         MatButtonModule,
+        NavbarModule,
         NgbModule.forRoot(),
         MatCardModule,
         MatInputModule,
@@ -105,6 +112,8 @@ export function JwtTokenGetter() {
         ConfirmDialogModule,
         OverlayPanelModule,
         CommonModule,
+        CardsFreeModule,
+        MDBBootstrapModule.forRoot(),
         JwtModule.forRoot({
             config: {
                 tokenGetter: JwtTokenGetter,
@@ -118,6 +127,7 @@ export function JwtTokenGetter() {
             },
         }),
         SidebarModule,
+        MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule,
     ],
     declarations: [
         AppComponent,
@@ -129,6 +139,7 @@ export function JwtTokenGetter() {
         CustomPageComponent,
         CookieComponent,
         LoginOAuthComponent,
+        NavComponent,
     ],
     providers: [
         NotificationService,
@@ -144,6 +155,7 @@ export function JwtTokenGetter() {
         JobService,
         IssuesService,
         PlexTvService,
+        SearchService,
     ],
     bootstrap: [AppComponent],
 })

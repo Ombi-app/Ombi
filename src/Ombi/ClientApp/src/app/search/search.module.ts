@@ -14,6 +14,8 @@ import { SearchComponent } from "./search.component";
 import { SeriesInformationComponent } from "./seriesinformation.component";
 import { TvSearchComponent } from "./tvsearch.component";
 
+import { CardsFreeModule } from "angular-bootstrap-md";
+
 import { SidebarModule, TooltipModule, TreeTableModule } from "primeng/primeng";
 
 import { RequestService } from "../services";
@@ -38,6 +40,7 @@ const routes: Routes = [
         SharedModule,
         SidebarModule,
         TooltipModule,
+        CardsFreeModule,
     ],
     declarations: [
         SearchComponent,

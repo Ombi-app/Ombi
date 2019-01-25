@@ -1,4 +1,24 @@
-﻿<!-- Movie tab -->
+﻿<mdb-card>
+    <!--Card image-->
+    <mdb-card-img src="https://mdbootstrap.com/img/Photos/Lightbox/Thumbnail/img%20(97).jpg" alt="Card image cap"></mdb-card-img>
+    <!--Card content-->
+    <mdb-card-body>
+  
+      <!--Title-->
+      <mdb-card-title>
+        <h4>Card Title</h4>
+      </mdb-card-title>
+  
+      <!--Text-->
+      <mdb-card-text> Some quick example text to build on the card title and make up the bulk of the card's
+        content.
+      </mdb-card-text>
+  
+      <a href="#" mdbBtn color="primary" mdbWavesEffect>Button</a>
+    </mdb-card-body>
+  </mdb-card>
+
+<!-- Movie tab
 <div role="tabpanel" class="tab-pane active" id="MoviesTab">
 
     <div class="input-group search-bar-background">
@@ -25,7 +45,7 @@
             <i class="fa fa-search"></i>
         </div>
     </div>
-    <!-- Refine search options -->
+
     <div class="row top-spacing form-group vcenter" *ngIf="refineSearchEnabled">
         <div class="col-md-1">
             <div class="form-group">
@@ -35,7 +55,6 @@
             </div>
         </div>
 
-        <!-- <label for="name" class="col-xs-2 col-md-1">Language:</label> -->
         <div class="col-md-2">
             <div class="form-group">
                 <label for="select" class="control-label">Language</label>
@@ -63,7 +82,6 @@
 
     <remaining-requests [movie]="true" [quotaRefreshEvents]="movieRequested.asObservable()" #remainingFilms></remaining-requests>
 
-    <!-- Movie content -->
     <div id="movieList">
         <div *ngIf="searchApplied && movieResults?.length <= 0" class='no-search-results'>
             <i class='fa fa-film no-search-results-icon'></i>
@@ -181,4 +199,4 @@
 
 
 <issue-report [movie]="true" [visible]="issuesBarVisible" (visibleChange)="issuesBarVisible = $event;" [title]="issueRequestTitle"
-    [issueCategory]="issueCategorySelected" [id]="issueRequestId" [providerId]="issueProviderId"></issue-report>
+    [issueCategory]="issueCategorySelected" [id]="issueRequestId" [providerId]="issueProviderId"></issue-report> -->

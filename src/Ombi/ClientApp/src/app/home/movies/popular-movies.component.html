@@ -1,0 +1,16 @@
+
+<div *ngIf="movies" class="row">
+        <div class="col-lg-2 col-md-4 col-6" *ngFor="let movie of movies">
+            <mat-card>
+    
+                <img mat-card-image src="https://image.tmdb.org/t/p/w300/{{movie.posterPath}}" alt="{{movie.title}}">
+                <mat-card-content>
+    
+                    <h5>{{movie.title}}</h5>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-raised-button color="primary">Request</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>

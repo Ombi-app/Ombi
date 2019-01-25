@@ -1,5 +1,5 @@
 ﻿<div [ngClass]="user.name && roleClass()">
-    <p-growl [value]="notificationService.messages" [life]="3000"></p-growl>
+    <!-- <p-growl [value]="notificationService.messages" [life]="3000"></p-growl>
     <nav *ngIf="showNav" class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -162,8 +162,10 @@
                 </ul>
             </div>
         </div>
-    </nav>
+    </nav> -->
+    
 
+<app-nav></app-nav>
 
     <div [ngClass]="{'container top-spacing': showNav}" id="{{currentUrl}}">
         <router-outlet></router-outlet>
