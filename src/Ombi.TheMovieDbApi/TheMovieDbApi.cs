@@ -167,6 +167,7 @@ namespace Ombi.Api.TheMovieDb
         {
             var request = new Request($"/tv/{themoviedbid}", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+            request.FullUri = request.FullUri.AddQueryParameter("append_to_response", "external_ids");
             AddRetry(request);
 
             return await Api.Request<TvInfo>(request);

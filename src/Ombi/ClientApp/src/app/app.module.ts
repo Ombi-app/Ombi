@@ -47,6 +47,7 @@ import { IssuesService, JobService, PlexTvService, StatusService, SearchService,
 import { MyNavComponent } from './my-nav/my-nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { SearchV2Service } from "./services/searchV2.service";
+import { NavSearchComponent } from "./my-nav/nav-search.component";
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
@@ -143,7 +144,7 @@ export function JwtTokenGetter() {
         CookieComponent,
         LoginOAuthComponent,
         MyNavComponent,
-        
+        NavSearchComponent,
     ],
     providers: [
         NotificationService,

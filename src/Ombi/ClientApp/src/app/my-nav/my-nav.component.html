@@ -16,24 +16,19 @@
       </button>
 
       <span class="spacer"></span>
-      <mat-form-field class="quater-width">
-        <input [(ngModel)]="searchText" (keyup)="search($event)" matInput  [matAutocomplete]="auto">
-        <mat-autocomplete  #auto="matAutocomplete">
-          <mat-option *ngFor="let option of searchResult" [value]="option">
-            <img src="https://image.tmdb.org/t/p/w300/{{option.poster_path}}" class="autocomplete-img" aria-hidden/>
-            <span *ngIf="option.media_type == 'tv'">
-              {{option.name}}
-            </span>
-            <span *ngIf="option.media_type == 'movie'">
-              {{option.title}}
-            </span>
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
+
+      <!-- Search Bar -->
+
+      <app-nav-search></app-nav-search>
+      
+
     </mat-toolbar>
-    <!-- Add Content Here -->
+
+    <!-- Page -->
     <div [ngClass]="{'container top-spacing': showNav}">
       <router-outlet></router-outlet>
     </div>
+
+    
   </mat-sidenav-content>
 </mat-sidenav-container>

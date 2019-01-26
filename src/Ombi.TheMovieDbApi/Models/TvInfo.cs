@@ -1,4 +1,6 @@
-﻿namespace Ombi.Api.TheMovieDb.Models
+﻿using Newtonsoft.Json;
+
+namespace Ombi.Api.TheMovieDb.Models
 {
     public class TvInfo
     {
@@ -28,6 +30,7 @@
         public string type { get; set; }
         public float vote_average { get; set; }
         public int vote_count { get; set; }
+        [JsonProperty("external_ids")] public TvExternalIds TvExternalIds { get; set; }
     }
 
     public class Created_By
@@ -71,4 +74,13 @@
         public int season_number { get; set; }
     }
 
+    public class TvExternalIds
+    {
+        [JsonProperty("imdb_id")] public string ImdbId { get; set; }
+        [JsonProperty("tvdb_id")] public string TvDbId { get; set; }
+        [JsonProperty("tvrage_id")] public string TvRageId { get; set; }
+        [JsonProperty("facebook_id")] public string FacebookId { get; set; }
+        [JsonProperty("instagram_id")] public string InstagramId { get; set; }
+        [JsonProperty("twitter_id")] public string TwitterHandle { get; set; }
+    }
 }

@@ -3,8 +3,6 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable, Subject } from 'rxjs';
 import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { SearchV2Service } from '../services/searchV2.service';
-import { IMultiSearchResult } from '../interfaces';
 
 @Component({
   selector: 'app-my-nav',
@@ -19,24 +17,7 @@ export class MyNavComponent {
     );
 
   @Input() public showNav: boolean;
-  public searchChanged: Subject<string> = new Subject<string>();
-  public searchText: string;
-  public searchResult: IMultiSearchResult[];
-  public option: IMultiSearchResult;
 
-  constructor(private breakpointObserver: BreakpointObserver,
-    private searchService: SearchV2Service) {
-    this.searchChanged.pipe(
-      debounceTime(600), // Wait Xms after the last event before emitting last event
-      distinctUntilChanged(), // only emit if value is different from previous value
-    ).subscribe(x => {
-      this.searchText = x as string;
-      this.searchService.multiSearch(this.searchText).subscribe(x => this.searchResult = x)
-    });
+  constructor(private breakpointObserver: BreakpointObserver) {
   }
-
-  public search(text: any) {
-    this.searchChanged.next(text.target.value);
-  }
-
 }
