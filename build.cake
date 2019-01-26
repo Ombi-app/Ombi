@@ -18,10 +18,11 @@ var configuration = Argument("configuration", "Release");
 //////////////////////////////////////////////////////////////////////
 
 var buildDir = "./src/Ombi/bin/" + configuration;
-var nodeModulesDir ="./src/Ombi/node_modules/";
+var nodeModulesDir ="./src/Ombi/ClientApp/node_modules/";
 var wwwRootDistDir = "./src/Ombi/wwwroot/dist/";
 var projDir = "./src/";                         //  Project Directory
 var webProjDir = "./src/Ombi";
+var uiProjectDir = "./src/Ombi/ClientApp";
 var csProj = "./src/Ombi/Ombi.csproj";          // Path to the project.csproj
 var solutionFile = "Ombi.sln";                  // Solution file if needed
 GitVersion versionInfo = null;
@@ -122,19 +123,19 @@ Task("SetVersionInfo")
 
 Task("NPM")
 	.Does(() => {
-	Yarn.FromPath(webProjDir).Install();
+	Yarn.FromPath(uiProjectDir).Install();
 });
 
 Task("Gulp Publish")
 	.IsDependentOn("NPM")
 	.Does(() => { 	
-	Yarn.FromPath(webProjDir).RunScript("publish");
+	Yarn.FromPath(uiProjectDir).RunScript("build");
  });
 
 Task("TSLint")
     .Does(() =>
 {
-	Yarn.FromPath(webProjDir).RunScript("lint");
+	// Yarn.FromPath(uiProjectDir).RunScript("lint");
 });
 
 Task("PrePublish")
