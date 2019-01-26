@@ -1,21 +1,25 @@
-<mat-sidenav-container *ngIf="isLoggedIn()" class="sidenav-container">
+<mat-sidenav-container *ngIf="showNav" class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
     <mat-toolbar>Ombi</mat-toolbar>
     <mat-nav-list>
       <a mat-list-item routerLink="/discover">
-        <mat-icon aria-label="Side nav toggle icon">find_replace</mat-icon> 
-        Discover</a>
-      <a mat-list-item  routerLink="/search">
-        <mat-icon aria-label="Side nav toggle icon">search</mat-icon> Search</a>
-      <a mat-list-item  routerLink="/requests">
-        <mat-icon aria-label="Side nav toggle icon">list</mat-icon> Requests</a>
-      <a mat-list-item  routerLink="/Settings/About">
-        <mat-icon aria-label="Side nav toggle icon">settings</mat-icon> Settings</a>
+        <mat-icon aria-label="Side nav toggle icon">find_replace</mat-icon>
+        Discover
+      </a>
+      <a mat-list-item routerLink="/search">
+        <mat-icon aria-label="Side nav toggle icon">search</mat-icon> Search
+      </a>
+      <a mat-list-item routerLink="/requests">
+        <mat-icon aria-label="Side nav toggle icon">list</mat-icon> Requests
+      </a>
+      <a mat-list-item routerLink="/Settings/About">
+        <mat-icon aria-label="Side nav toggle icon">settings</mat-icon> Settings
+      </a>
 
-      <a mat-list-item aria-label="Toggle sidenav" (click)="logOut();" *ngIf="loggedIn">
-          <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
-          {{ 'NavigationBar.Logout' | translate }}
+      <a mat-list-item aria-label="Toggle sidenav" (click)="logOut();">
+        <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
+        {{ 'NavigationBar.Logout' | translate }}
       </a>
 
     </mat-nav-list>
@@ -31,18 +35,23 @@
       <!-- Search Bar -->
 
       <app-nav-search></app-nav-search>
-     
+
 
     </mat-toolbar>
 
     <!-- Page -->
     <div class="container top-spacing">
-      <router-outlet></router-outlet>
-    </div> 
-    
+      <ng-container *ngTemplateOutlet="template"></ng-container>
+    </div>
+
   </mat-sidenav-content>
 </mat-sidenav-container>
 
-<div *ngIf="!isLoggedIn();">  
-  <router-outlet></router-outlet>
+<div *ngIf="!showNav">
+  <ng-container *ngTemplateOutlet="template"></ng-container>
 </div>
+
+<ng-template #template>
+  <router-outlet>
+  </router-outlet>
+</ng-template>

@@ -17,7 +17,6 @@ export class MyNavComponent {
     );
 
     @Input() public showNav: boolean;
-    @Input() public loggedIn: boolean;
     @Input() public username: string;
     @Output() public logoutClick = new EventEmitter();
 
@@ -26,9 +25,5 @@ export class MyNavComponent {
 
   public logOut() {
     this.logoutClick.emit();
-  }
-
-  public isLoggedIn(): boolean {
-    return this.loggedIn;
   }
 }
