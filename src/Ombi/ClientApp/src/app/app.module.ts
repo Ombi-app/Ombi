@@ -69,6 +69,7 @@ const routes: Routes = [
     { loadChildren: "./search/search.module#SearchModule", path: "search" },
     { loadChildren: "./recentlyAdded/recentlyAdded.module#RecentlyAddedModule", path: "recentlyadded" },
     { loadChildren: "./vote/vote.module#VoteModule", path: "vote" },
+    { loadChildren: "./media-details/media-details.module#MediaDetailsModule", path: "details" },
 ];
 
 // AoT requires an exported function for factories

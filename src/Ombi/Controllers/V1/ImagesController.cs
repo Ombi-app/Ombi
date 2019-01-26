@@ -147,6 +147,31 @@ namespace Ombi.Controllers.V1
             return string.Empty;
         }
 
+        [HttpGet("banner/movie/{movieDbId}")]
+        public async Task<string> GetMovieBanner(string movieDbId)
+        {
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.GetAsync(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
+
+            var images = await FanartTvApi.GetMovieImages(movieDbId, key.Value);
+
+            if (images == null)
+            {
+                return string.Empty;
+            }
+
+            if (images.moviebanner?.Any() ?? false)
+            {
+                var enImage = images.moviebanner.Where(x => x.lang == "en").OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                if (enImage == null)
+                {
+                    return images.moviebanner.OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                }
+                return enImage;
+            }
+
+            return string.Empty;
+        }
+
         [HttpGet("background/tv/{tvdbid}")]
         public async Task<string> GetTvBackground(int tvdbid)
         {

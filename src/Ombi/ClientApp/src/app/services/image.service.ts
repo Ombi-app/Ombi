@@ -31,6 +31,9 @@ export class ImageService extends ServiceHelpers {
 
     public getMovieBackground(movieDbId: string): Observable<string> {
         return this.http.get<string>(`${this.url}background/movie/${movieDbId}`, { headers: this.headers });
+    }  
+      public getMovieBanner(movieDbId: string): Observable<string> {
+        return this.http.get<string>(`${this.url}banner/movie/${movieDbId}`, { headers: this.headers });
     }
 
     public getTvBackground(tvdbid: number): Observable<string> {
