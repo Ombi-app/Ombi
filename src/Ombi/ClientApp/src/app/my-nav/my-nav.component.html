@@ -1,0 +1,39 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
+    <mat-toolbar>Ombi</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item [routerLinkActive]="['active']" routerLink="/discover">Discover</a>
+      <a mat-list-item [routerLinkActive]="['active']" routerLink="/search">Search</a>
+      <a mat-list-item [routerLinkActive]="['active']" routerLink="/requests">Requests</a>
+      <a mat-list-item [routerLinkActive]="['active']" routerLink="/settings">Settings</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" class="sticky-header">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+
+      <span class="spacer"></span>
+      <mat-form-field class="quater-width">
+        <input [(ngModel)]="searchText" (keyup)="search($event)" matInput  [matAutocomplete]="auto">
+        <mat-autocomplete  #auto="matAutocomplete">
+          <mat-option *ngFor="let option of searchResult" [value]="option">
+            <img src="https://image.tmdb.org/t/p/w300/{{option.poster_path}}" class="autocomplete-img" aria-hidden/>
+            <span *ngIf="option.media_type == 'tv'">
+              {{option.name}}
+            </span>
+            <span *ngIf="option.media_type == 'movie'">
+              {{option.title}}
+            </span>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </mat-toolbar>
+    <!-- Add Content Here -->
+    <div [ngClass]="{'container top-spacing': showNav}">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

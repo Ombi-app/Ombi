@@ -171,6 +171,17 @@ namespace Ombi.Api.TheMovieDb
 
             return await Api.Request<TvInfo>(request);
         }
+
+        public async Task<TheMovieDbContainer<MultiSearch>> MultiSearch(string searchTerm, string languageCode)
+        {
+            var request = new Request("search/multi", BaseUri, HttpMethod.Get);
+            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+            request.FullUri = request.FullUri.AddQueryParameter("language", languageCode);
+            request.FullUri = request.FullUri.AddQueryParameter("query", searchTerm);
+            var result = await Api.Request<TheMovieDbContainer<MultiSearch>>(request);
+            return result;
+        }
+
         private static void AddRetry(Request request)
         {
             request.Retry = true;

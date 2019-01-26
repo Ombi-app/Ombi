@@ -19,7 +19,7 @@ import { ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, 
     TooltipModule } from "primeng/primeng";
 
     import {
-        MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule} from '@angular/material';
+        MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatAutocompleteModule} from '@angular/material';
         import {  MatCardModule, MatInputModule, MatTabsModule } from "@angular/material";
 
 import { MDBBootstrapModule, CardsFreeModule, NavbarModule } from "angular-bootstrap-md";
@@ -44,11 +44,13 @@ import { LandingPageService } from "./services";
 import { NotificationService } from "./services";
 import { SettingsService } from "./services";
 import { IssuesService, JobService, PlexTvService, StatusService, SearchService, IdentityService } from "./services";
-import { NavComponent } from "./nav/nav.component";
+import { MyNavComponent } from './my-nav/my-nav.component';
+import { LayoutModule } from '@angular/cdk/layout';
+import { SearchV2Service } from "./services/searchV2.service";
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
-    { path: "", redirectTo: "/home", pathMatch: "full" },
+    { path: "", redirectTo: "/discover", pathMatch: "full" },
     { path: "login", component: LoginComponent },
     { path: "Login/OAuth/:pin", component: LoginOAuthComponent },
     { path: "Custom", component: CustomPageComponent },
@@ -57,7 +59,7 @@ const routes: Routes = [
     { path: "token", component: TokenResetPasswordComponent },
     { path: "landingpage", component: LandingPageComponent },
     { path: "auth/cookie", component: CookieComponent },
-    { loadChildren: "./discover/discover.module#DiscoverModule", path: "home" },
+    { loadChildren: "./discover/discover.module#DiscoverModule", path: "discover" },
     { loadChildren: "./issues/issues.module#IssuesModule", path: "issues" },
     { loadChildren: "./settings/settings.module#SettingsModule", path: "Settings" },
     { loadChildren: "./wizard/wizard.module#WizardModule", path: "Wizard" },
@@ -107,6 +109,7 @@ export function JwtTokenGetter() {
         MatInputModule,
         MatTabsModule,
         ReactiveFormsModule,
+        MatAutocompleteModule,
         CaptchaModule,
         TooltipModule,
         ConfirmDialogModule,
@@ -127,7 +130,7 @@ export function JwtTokenGetter() {
             },
         }),
         SidebarModule,
-        MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule,
+        MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, LayoutModule,
     ],
     declarations: [
         AppComponent,
@@ -139,7 +142,8 @@ export function JwtTokenGetter() {
         CustomPageComponent,
         CookieComponent,
         LoginOAuthComponent,
-        NavComponent,
+        MyNavComponent,
+        
     ],
     providers: [
         NotificationService,
@@ -156,6 +160,7 @@ export function JwtTokenGetter() {
         IssuesService,
         PlexTvService,
         SearchService,
+        SearchV2Service,
     ],
     bootstrap: [AppComponent],
 })

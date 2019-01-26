@@ -34,6 +34,28 @@
     background: any;
 }
 
+export interface IMultiSearchResult {
+    original_name: string;
+    id: number;
+    media_type: string;
+    name: string;
+    vote_count: number;
+    vote_average: number;
+    poster_path: string;
+    first_air_date: string;
+    popularity: number;
+    genre_ids: number[];
+    original_language: string;
+    backdrop_path: string;
+    overview: string;
+    origin_country: string[];
+    video: true;
+    title: string;
+    original_title: string;
+    adult: true;
+    release_date: string;
+}
+
 export interface ILanguageRefine {
     code: string;
     name: string;

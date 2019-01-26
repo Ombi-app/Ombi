@@ -1,0 +1,52 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 200px;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.spacer {
+  flex: 1 1 auto;
+}
+
+@media (max-width: 978px) {
+  .top-spacing {
+      padding-top: 10%
+  }
+}
+@media (min-width: 979px) {
+  .top-spacing {
+      padding-top: 4%
+  }
+}
+
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.quater-width {
+  width: 25%;
+}
+
+.autocomplete-img {
+  vertical-align: middle;
+  height: 63px;
+}
+
+.mat-option {
+  height: 50px;
+  line-height: 50px;
+  padding: 0px 5px;
+}

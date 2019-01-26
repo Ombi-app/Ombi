@@ -165,9 +165,7 @@
     </nav> -->
     
 
-<app-nav></app-nav>
+   <app-my-nav [showNav]="showNav"></app-my-nav>
 
-    <div [ngClass]="{'container top-spacing': showNav}" id="{{currentUrl}}">
-        <router-outlet></router-outlet>
-    </div>
+
 </div>

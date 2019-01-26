@@ -22,7 +22,6 @@ export class DiscoverComponent implements OnInit {
         this.tvShows = await this.searchService.popularTv().toPromise();
 
         this.movies.forEach(m => {
-            debugger;
             this.discoverResults.push({
                 available: m.available,
                 posterPath: `https://image.tmdb.org/t/p/w300/${m.posterPath}`,
