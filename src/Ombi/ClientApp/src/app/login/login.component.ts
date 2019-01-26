@@ -74,7 +74,7 @@ export class LoginComponent implements OnDestroy, OnInit {
         });
 
         if (authService.loggedIn()) {
-            this.router.navigate(["search"]);
+            this.router.navigate(["/"]);
         }
     }
 
@@ -117,7 +117,7 @@ export class LoginComponent implements OnDestroy, OnInit {
 
                     if (this.authService.loggedIn()) {
                         this.ngOnDestroy();
-                        this.router.navigate(["search"]);
+                        this.router.navigate(["/"]);
                     } else {
                         this.notify.error(this.errorBody);
                     }

@@ -1,12 +1,23 @@
-<mat-sidenav-container class="sidenav-container">
+<mat-sidenav-container *ngIf="isLoggedIn()" class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
     <mat-toolbar>Ombi</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item [routerLinkActive]="['active']" routerLink="/discover">Discover</a>
-      <a mat-list-item [routerLinkActive]="['active']" routerLink="/search">Search</a>
-      <a mat-list-item [routerLinkActive]="['active']" routerLink="/requests">Requests</a>
-      <a mat-list-item [routerLinkActive]="['active']" routerLink="/settings">Settings</a>
+      <a mat-list-item routerLink="/discover">
+        <mat-icon aria-label="Side nav toggle icon">find_replace</mat-icon> 
+        Discover</a>
+      <a mat-list-item  routerLink="/search">
+        <mat-icon aria-label="Side nav toggle icon">search</mat-icon> Search</a>
+      <a mat-list-item  routerLink="/requests">
+        <mat-icon aria-label="Side nav toggle icon">list</mat-icon> Requests</a>
+      <a mat-list-item  routerLink="/Settings/About">
+        <mat-icon aria-label="Side nav toggle icon">settings</mat-icon> Settings</a>
+
+      <a mat-list-item aria-label="Toggle sidenav" (click)="logOut();" *ngIf="loggedIn">
+          <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
+          {{ 'NavigationBar.Logout' | translate }}
+      </a>
+
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -20,15 +31,18 @@
       <!-- Search Bar -->
 
       <app-nav-search></app-nav-search>
-      
+     
 
     </mat-toolbar>
 
     <!-- Page -->
-    <div [ngClass]="{'container top-spacing': showNav}">
+    <div class="container top-spacing">
       <router-outlet></router-outlet>
-    </div>
-
+    </div> 
     
   </mat-sidenav-content>
 </mat-sidenav-container>
+
+<div *ngIf="!isLoggedIn();">  
+  <router-outlet></router-outlet>
+</div>

@@ -19,7 +19,7 @@ import { ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, 
     TooltipModule } from "primeng/primeng";
 
     import {
-        MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatAutocompleteModule} from '@angular/material';
+        MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatAutocompleteModule, MatCheckboxModule} from '@angular/material';
         import {  MatCardModule, MatInputModule, MatTabsModule } from "@angular/material";
 
 import { MDBBootstrapModule, CardsFreeModule, NavbarModule } from "angular-bootstrap-md";
@@ -118,6 +118,7 @@ export function JwtTokenGetter() {
         OverlayPanelModule,
         CommonModule,
         CardsFreeModule,
+        MatCheckboxModule,
         MDBBootstrapModule.forRoot(),
         JwtModule.forRoot({
             config: {

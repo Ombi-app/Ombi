@@ -1,10 +1,8 @@
 <mat-card>
 
-    <a *ngIf="result.url" href="{{result.url}}" target="_blank">
+    <a [routerLink]="result.type === RequestType.movie ? '/details/movie/' + result.id : '/details/tv/' + result.id">
         <img mat-card-image src="{{result.posterPath}}" class="card-poster" alt="{{result.title}}">
     </a>
-    <img *ngIf="!result.url" mat-card-image src="{{result.posterPath}}" class="card-poster" alt="{{result.title}}">
-
     <mat-card-content>
 
         <h5 *ngIf="result.title.length <= 10">{{result.title}}</h5>

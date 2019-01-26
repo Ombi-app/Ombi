@@ -11,6 +11,7 @@ import { SearchService } from "../../services";
 export class DiscoverCardComponent implements OnInit {
 
     @Input() public result: IDiscoverCardResult;
+    public RequestType = RequestType;
 
     constructor(private searchService: SearchService) { }
 

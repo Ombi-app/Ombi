@@ -35,7 +35,7 @@ div.bg {
 .card-container.card {
     max-width: 500px;
     padding: 45px 45px;
-    background-color: rgba(0,0,0, 0.0);
+    background-color: rgba(0, 0, 0, 0.7);
     border-radius: 5%;
     position: absolute;
     top: 50%;
@@ -43,9 +43,16 @@ div.bg {
     transform: translate(-50%,-50%);
     width: 100%;
 }
-
-
-
+ 
+::ng-deep  input.mat-input-element {
+    color: white;   // choose the color you want
+  }
+::ng-deep label.mat-input-placeholder {
+    color: #fff;   // choose the color you want
+  }
+.white-checkbox {
+    color:white;
+}
 
 .btn {
     font-weight: 700;
@@ -199,4 +206,9 @@ div.bg {
 
 ::-ms-input-placeholder { /* Microsoft Edge */
     color: $placeholder-colour;
+}
+
+
+.full-width {
+    width: 100%;
 }

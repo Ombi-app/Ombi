@@ -165,7 +165,7 @@
     </nav> -->
     
 
-   <app-my-nav [showNav]="showNav"></app-my-nav>
+   <app-my-nav [showNav]="showNav" [loggedIn]="user != undefined" [username]="user.name" (logoutClick)="logOut();"></app-my-nav>
 
 
 </div>
