@@ -2,9 +2,18 @@ import { Component, OnInit } from "@angular/core";
 import { SearchService } from "../services";
 import { ISearchMovieResult, ISearchTvResult, RequestType } from "../interfaces";
 import { IDiscoverCardResult } from "./interfaces";
+import { trigger, transition, style, animate } from "@angular/animations";
 
 @Component({
     templateUrl: "./discover.component.html",
+    animations: [
+        trigger('slideIn', [
+            transition(':enter', [
+              style({transform: 'translateX(100%)'}),
+              animate('200ms ease-in', style({transform: 'translateY(0%)'}))
+            ])
+          ])
+    ],
 })
 export class DiscoverComponent implements OnInit {
 

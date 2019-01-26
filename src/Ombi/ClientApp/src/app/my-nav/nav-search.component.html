@@ -1,5 +1,5 @@
 <mat-form-field class="quater-width">
-    <input [(ngModel)]="searchText" (keyup)="search($event)" matInput  [matAutocomplete]="auto">
+    <input [(ngModel)]="searchText" placeholder="Search" (keyup)="search($event)" matInput  [matAutocomplete]="auto">
     <mat-autocomplete  #auto="matAutocomplete" (optionSelected)="selected($event)">
       <mat-option *ngFor="let result of searchResult" [value]="result">
         <img src="https://image.tmdb.org/t/p/w92/{{result.poster_path}}" class="autocomplete-img" aria-hidden/>
