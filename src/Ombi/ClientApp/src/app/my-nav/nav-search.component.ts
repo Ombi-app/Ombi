@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable, Subject } from 'rxjs';
-import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { SearchV2Service } from '../services/searchV2.service';
 import { IMultiSearchResult } from '../interfaces';
+import { MatAutocompleteSelectedEvent } from '@angular/material';
 
 @Component({
   selector: 'app-nav-search',
@@ -16,7 +16,6 @@ export class NavSearchComponent {
   public searchChanged: Subject<string> = new Subject<string>();
   public searchText: string;
   public searchResult: IMultiSearchResult[];
-  public option: IMultiSearchResult;
 
   constructor(private searchService: SearchV2Service) {
     this.searchChanged.pipe(
@@ -30,5 +29,10 @@ export class NavSearchComponent {
 
   public search(text: any) {
     this.searchChanged.next(text.target.value);
+  }
+
+  public selected(option: MatAutocompleteSelectedEvent) {
+      var selected = option.option.value as IMultiSearchResult;
+      
   }
 }

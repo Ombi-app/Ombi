@@ -1,15 +1,14 @@
 <mat-form-field class="quater-width">
     <input [(ngModel)]="searchText" (keyup)="search($event)" matInput  [matAutocomplete]="auto">
-    <mat-autocomplete  #auto="matAutocomplete">
-      <mat-option *ngFor="let option of searchResult" [value]="option">
-        <img src="https://image.tmdb.org/t/p/w92/{{option.poster_path}}" class="autocomplete-img" aria-hidden/>
-        <span *ngIf="option.media_type == 'tv'">
-          {{option.name}}
+    <mat-autocomplete  #auto="matAutocomplete" (optionSelected)="selected($event)">
+      <mat-option *ngFor="let result of searchResult" [value]="result">
+        <img src="https://image.tmdb.org/t/p/w92/{{result.poster_path}}" class="autocomplete-img" aria-hidden/>
+        <span *ngIf="result.media_type == 'tv'">
+          {{result.name}}
         </span>
-        <span *ngIf="option.media_type == 'movie'">
-          {{option.title}}
+        <span *ngIf="result.media_type == 'movie'">
+          {{result.title}}
         </span>
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
-</mat-toolbar>
