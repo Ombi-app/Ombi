@@ -159,12 +159,12 @@ namespace Ombi.Controllers.V1
                 return string.Empty;
             }
 
-            if (images.moviebanner?.Any() ?? false)
+            if (images.moviebackground?.Any() ?? false)
             {
-                var enImage = images.moviebanner.Where(x => x.lang == "en").OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                var enImage = images.moviebackground.Where(x => x.lang == "en").OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
                 if (enImage == null)
                 {
-                    return images.moviebanner.OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                    return images.moviebackground.OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
                 }
                 return enImage;
             }

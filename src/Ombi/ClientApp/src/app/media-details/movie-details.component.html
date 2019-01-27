@@ -1,12 +1,102 @@
 <div *ngIf="movie">
-    <div>
-        <img src="{{movie.background}}" class="banner" />
-    </div>
 
-    
-    <div class="row">
-        <div>
-            {{movie.title}}
+
+    <section id="summary-wrapper">
+        <div class="full-screenshot enabled" [style.background-image]="movie.background"></div>
+        <div class="shadow-base"></div>
+
+        <div class="container summary">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10 offset-lg-2 col-md-8 offset-md-4 col-sm-7 offset-sm-5 col-6 offset-6">
+                        <h1>{{movie.title}} <span *ngIf="movie.releaseDate" class="year align-middle">({{movie.releaseDate
+                                | date:'yyyy'}})</span>
+                        </h1>
+                    </div>
+                </div>
+            </div>
         </div>
+    </section>
+
+    <section id="info-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2 col-sm-3 hidden-xs">
+                    <div class="sidebar affixable affix-top" style="width: 173px;">
+                        <div class="poster">
+                            <img class="real" src="https://image.tmdb.org/t/p/w300/{{movie.posterPath}}" alt="Poster"
+                                style="display: block;">
+                        </div>
+                        <!--Underneith poster-->
+                        <br />
+                    </div>
+                </div>
+
+                <!--Next to poster-->
+
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-3 ">
+
+                    <mat-card class="card-full mat-elevation-z8">
+                        <mat-card-content>
+                            <div>
+                                <small><strong>Theatrical Release:</strong> {{movie.releaseDate | date: 'mediumDate'}}</small></div>
+                            <div>
+                                <small *ngIf="movie.digitalReleaseDate"><strong>Digital Release:</strong>
+                                    {{movie.digitalReleaseDate | date:
+                                    'mediumDate'}}</small>
+                            </div>
+                            <div>
+                                <small *ngIf="movie.voteAverage"><strong>User Score:</strong> {{movie.voteAverage |
+                                    number:'1.0-1'}}/10</small>
+                            </div>
+                            <div>
+                                <small *ngIf="movie.voteCount"><strong>Votes:</strong> {{movie.voteCount |
+                                    thousandShort: 1}}</small>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
+
+
+                </div>
+                <div class="col-md-7">
+                    <mat-card class="card-full mat-elevation-z8">
+                        <mat-card-content>
+                            {{movie.overview}}
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div class="col-md-2 card-full">
+                    <div><button mat-raised-button class="btn-spacing" color="accent">Request</button></div>
+                    <div><button mat-raised-button class="btn-green btn-spacing">Available</button></div>
+                    <div><button mat-raised-button class="btn-spacing" color="warn">Deny</button></div>
+                </div>
+
+            </div>
+            <div class="row card-spacer">
+                <div class="col-md-2">
+                    <div>
+                            <a *ngIf="movie.homepage" class="btn-spacing" href="{{movie.homepage}}" target="_blank" mat-raised-button color="accent">Home Page</a>
+                            <a *ngIf="movie.theMovieDbId" href="https://www.themoviedb.org/movie/{{movie.theMovieDbId}}" target="_blank" mat-raised-button class="btn-blue btn-spacing">The Movie DB</a>
+                            <a *ngIf="movie.imdbId" href="https://www.imdb.com/title/tt1727824/{{movie.imdbId}}" target="_blank" mat-raised-button class="imdb-color btn-spacing">IMDb</a>
+                    </div>
+
+                </div>
+            </div>
         </div>
+    </section>
+
+
+
+
+
+
+
+
+
+
 </div>

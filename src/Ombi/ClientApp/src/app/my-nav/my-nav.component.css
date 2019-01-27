@@ -19,17 +19,6 @@
   flex: 1 1 auto;
 }
 
-@media (max-width: 978px) {
-  .top-spacing {
-      padding-top: 10%
-  }
-}
-@media (min-width: 979px) {
-  .top-spacing {
-      padding-top: 4%
-  }
-}
-
 .example-form {
   min-width: 150px;
   max-width: 500px;

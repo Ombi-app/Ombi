@@ -45,6 +45,7 @@ export class DiscoverCardComponent implements OnInit {
         this.result.available = updated.available;
         this.result.requested = updated.requested;
         this.result.requested = updated.requestProcessing;
+        this.result.rating = updated.voteAverage;
     }
 
 

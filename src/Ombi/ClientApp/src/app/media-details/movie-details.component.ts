@@ -24,7 +24,10 @@ export class MovieDetailsComponent {
        this.searchService.getMovieInformation(this.theMovidDbId).subscribe(x => {
            this.movie = x;
            
-            this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => this.movie.background = x);
+            this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
+                this.movie.background = this.sanitizer.bypassSecurityTrustStyle
+                ("url(" + x + ")");
+            });
         });
 
     }

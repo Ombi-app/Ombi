@@ -6,6 +6,7 @@ import { trigger, transition, style, animate } from "@angular/animations";
 
 @Component({
     templateUrl: "./discover.component.html",
+    styleUrls: ["./discover.component.scss"],
     animations: [
         trigger('slideIn', [
             transition(':enter', [
@@ -38,7 +39,8 @@ export class DiscoverComponent implements OnInit {
                 title: m.title,
                 type: RequestType.movie,
                 id: m.id,
-                url: `http://www.imdb.com/title/${m.imdbId}/`
+                url: `http://www.imdb.com/title/${m.imdbId}/`,
+                rating: m.voteAverage
             });
         });
         this.tvShows.forEach(m => {
@@ -49,7 +51,8 @@ export class DiscoverComponent implements OnInit {
                 title: m.title,
                 type: RequestType.tvShow,
                 id: m.id,
-                url: undefined
+                url: undefined,
+                rating: +m.rating,
             });
         });
 

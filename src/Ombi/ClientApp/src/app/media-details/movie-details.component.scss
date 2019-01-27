@@ -1,7 +1,150 @@
-.banner {
-position: absolute;
-top: 0px;
-left: 0px;
-right: 0px;
-width: 100%;
+//MINE
+@media (max-width: 570px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+}
+
+// Change
+
+
+#summary-wrapper .full-screenshot,
+.summary-wrapper .full-screenshot,
+#watching-wrapper .full-screenshot,
+.hero-wrapper .full-screenshot,
+#statics-top-wrapper .full-screenshot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-position: 50% 10%;
+    opacity: 0;
+    transition: all 1s;
+}
+
+#summary-wrapper,
+.summary-wrapper {
+    background-color: #000;
+    background-size: cover;
+    background-position: 50% 10%;
+    transition: all .5s;
+    height: 550px;
+    color: #fff;
+    position: relative;
+}
+
+
+#summary-wrapper .full-screenshot.enabled,
+.summary-wrapper .full-screenshot.enabled,
+#watching-wrapper .full-screenshot.enabled,
+.hero-wrapper .full-screenshot.enabled,
+#statics-top-wrapper .full-screenshot.enabled {
+    opacity: 1;
+}
+
+#summary-wrapper .shadow-base,
+.summary-wrapper .shadow-base {
+    height: 120px;
+    bottom: 0;
+    background-image: -webkit-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+    background-image: -o-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+    background-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+    background-repeat: repeat-x;
+}
+
+.shadow-base {
+    height: 75px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-image: -webkit-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+    background-image: -o-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+    background-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#4D000000', GradientType=0);
+}
+
+#summary-wrapper .summary .container,
+.summary-wrapper .summary .container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+#summary-wrapper,
+.summary-wrapper {
+    background-color: #000;
+    background-size: cover;
+    background-position: 50% 10%;
+    transition: all .5s;
+    height: 550px;
+    color: #fff;
+    position: relative;
+}
+
+#summary-wrapper .summary .container h1 .year,
+.summary-wrapper .summary .container h1 .year {
+    color: #999;
+}
+
+#summary-wrapper .summary .container h1,
+.summary-wrapper .summary .container h1 {
+    margin: 0;
+    text-shadow: 0 0 20px #000;
+    line-height: 1.2;
+}
+
+#info-wrapper {
+    min-height: 600px;
+}
+
+section {
+    background-color: #fff;
+}
+
+#info-wrapper .sidebar.affixable.affix-top {
+    position: relative !important;
+}
+
+#info-wrapper .sidebar {
+    margin-top: -180px;
+}
+
+#info-wrapper .sidebar .poster {
+    border: solid 3px #fff !important;
+    position: relative;
+    -webkit-box-shadow: 0 0 20px 0 #666;
+    box-shadow: 0 0 20px 0 #666;
+}
+
+#info-wrapper .sidebar .poster img {
+    width: 100%;
+}
+
+#info-wrapper .sidebar .poster .real {
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.card-spacer {
+    padding-top:1%;
+}
+
+.card-full {
+    height: 100%;
+}
+
+.imdb-color {
+    color:black;
+    background-color: #f5de50;
+}
+
+.btn-spacing {
+    margin-top:10px;
 }

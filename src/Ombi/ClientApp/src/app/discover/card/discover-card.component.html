@@ -1,17 +1,20 @@
-<mat-card>
+<div class="card-spacing" *ngIf="result">
+    <mat-card class="mat-elevation-z8">
 
-    <a [routerLink]="result.type === RequestType.movie ? '/details/movie/' + result.id : '/details/tv/' + result.id">
-        <img mat-card-image src="{{result.posterPath}}" class="card-poster" alt="{{result.title}}">
-    </a>
-    <mat-card-content>
+            <div class="rating">{{result.rating | number:'1.0-1'}}</div>
+        <a [routerLink]="result.type === RequestType.movie ? '/details/movie/' + result.id : '/details/tv/' + result.id">
+            <img mat-card-image src="{{result.posterPath}}" class="card-poster" alt="{{result.title}}">
+        </a>
+        <mat-card-content>
 
-        <h5 *ngIf="result.title.length <= 10">{{result.title}}</h5>
-        <h6 *ngIf="result.title.length > 10 && result.title.length <= 13">{{result.title}}</h6>
-        <h6 *ngIf="result.title.length > 13" matTooltip="{{result.title}}">{{result.title | truncate:13}}</h6>
-    </mat-card-content>
-    <mat-card-actions>
-        <button *ngIf="!result.requested && !result.available" mat-raised-button color="primary">Request</button>
-        <button *ngIf="result.requested && !result.available" mat-raised-button color="warn">Requested</button>
-        <button *ngIf="!result.requested && result.available" mat-raised-button color="accent">Available</button>
-    </mat-card-actions>
-</mat-card>
+            <h5 *ngIf="result.title.length <= 10">{{result.title}}</h5>
+            <h6 *ngIf="result.title.length > 10 && result.title.length <= 13">{{result.title}}</h6>
+            <h6 *ngIf="result.title.length > 13" matTooltip="{{result.title}}">{{result.title | truncate:13}}</h6>
+        </mat-card-content>
+        <mat-card-actions>
+            <button *ngIf="!result.requested && !result.available" mat-raised-button color="primary">Request</button>
+            <button *ngIf="result.requested && !result.available" mat-raised-button color="warn">Requested</button>
+            <button *ngIf="!result.requested && result.available" mat-raised-button class="btn-green">Available</button>
+        </mat-card-actions>
+    </mat-card>
+</div>

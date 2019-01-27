@@ -5,6 +5,7 @@ import { SearchService } from "../services";
 
 import { SharedModule } from "../shared/shared.module";
 import { MovieDetailsComponent } from "./movie-details.component";
+import { PipeModule } from "../pipes/pipe.module";
 
 const routes: Routes = [
     { path: "movie/:movieDbId", component: MovieDetailsComponent },
@@ -13,6 +14,7 @@ const routes: Routes = [
     imports: [
         RouterModule.forChild(routes),
         SharedModule,
+        PipeModule,
     ],
     declarations: [
         MovieDetailsComponent,
