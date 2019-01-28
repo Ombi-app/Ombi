@@ -1,6 +1,6 @@
 $ombi-primary:#3f3f3f;
 #cardImage {
-    max-height: 153px;
+    max-height: 163px;
     border-radius: 5px 5px 0px 0px;
 }
 
@@ -8,11 +8,13 @@ $ombi-primary:#3f3f3f;
     background-color: $ombi-primary;
     border-radius: 8px;
     color: white;
+    height: 360px;
 }
 
 .card-spacing {
     margin-top: 10%;
 }
+
 
 .rating {
     position: absolute;
@@ -38,4 +40,10 @@ $border-width: 2px;
 
 .grow:hover {
     transform: scale(1.1);
+}
+
+::ng-deep mat-dialog-container.mat-dialog-container {
+    background-color: $ombi-primary;
+    color: white;
+    border-radius: 2%
 }

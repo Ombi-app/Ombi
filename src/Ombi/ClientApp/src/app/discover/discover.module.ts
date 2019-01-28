@@ -8,6 +8,8 @@ import { DiscoverComponent } from "./discover.component";
 import { DiscoverCardComponent } from "./card/discover-card.component";
 import { AuthGuard } from "../auth/auth.guard";
 import { PipeModule } from "../pipes/pipe.module";
+import { DiscoverCardDetailsComponent } from "./card/discover-card-details.component";
+import { MatDialog } from "@angular/material";
 
 const routes: Routes = [
     { path: "", component: DiscoverComponent, canActivate: [AuthGuard] },
@@ -20,13 +22,18 @@ const routes: Routes = [
     ],
     declarations: [
         DiscoverComponent,
-        DiscoverCardComponent
+        DiscoverCardComponent,
+        DiscoverCardDetailsComponent,
+    ],
+    entryComponents: [
+        DiscoverCardDetailsComponent
     ],
     exports: [
         RouterModule,
     ],
     providers: [
-        SearchService
+        SearchService,
+        MatDialog,
         ],
 
 })

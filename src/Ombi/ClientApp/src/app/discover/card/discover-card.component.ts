@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from "@angular/core";
 import { IDiscoverCardResult } from "../interfaces";
 import { RequestType, ISearchTvResult, ISearchMovieResult } from "../../interfaces";
 import { SearchService } from "../../services";
+import { MatDialog } from "@angular/material";
+import { DiscoverCardDetailsComponent } from "./discover-card-details.component";
 
 @Component({
     selector: "discover-card",
@@ -13,7 +15,7 @@ export class DiscoverCardComponent implements OnInit {
     @Input() public result: IDiscoverCardResult;
     public RequestType = RequestType;
 
-    constructor(private searchService: SearchService) { }
+    constructor(private searchService: SearchService, private dialog: MatDialog) { }
 
     public ngOnInit() {
         if (this.result.type == RequestType.tvShow) {
@@ -22,6 +24,14 @@ export class DiscoverCardComponent implements OnInit {
         if (this.result.type == RequestType.movie) {
             this.getExtraMovieInfo();
         }
+    }
+    
+    public openDetails(details: IDiscoverCardResult) {
+        const ref = this.dialog.open(DiscoverCardDetailsComponent, { width:"700px", data: details })
+
+        ref.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+          });
     }
 
     public getExtraTvInfo() {

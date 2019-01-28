@@ -1,0 +1,31 @@
+$ombi-primary:#3f3f3f;
+$ombi-primary-700:#313131;
+$ombi-accent-700:#166d50;
+.poster {
+    max-width: 100%;
+    border-radius: 2%;
+}
+
+.details {
+    background: $ombi-primary-700;
+    padding: 2%;
+    border-radius: 10px;
+}
+
+.details strong {
+    font-weight: bold;
+}
+
+h3 strong {
+    font-weight: bold;
+}
+
+.request-btn {
+    background-color: $ombi-accent-700;
+    color: white;
+}
+
+.action-buttons-right {
+    width: 100%;
+    text-align: right;
+}

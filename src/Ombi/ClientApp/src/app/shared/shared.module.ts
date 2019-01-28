@@ -11,7 +11,7 @@ import { InputSwitchModule, SidebarModule } from "primeng/primeng";
 
 import {
   MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatTooltipModule} from '@angular/material';
-  import {  MatCardModule, MatInputModule, MatTabsModule, MatAutocompleteModule, MatCheckboxModule, MatExpansionModule } from "@angular/material";
+  import {  MatCardModule, MatInputModule, MatTabsModule, MatAutocompleteModule, MatCheckboxModule, MatExpansionModule, MatDialogModule } from "@angular/material";
 
 @NgModule({
   declarations: [
@@ -36,6 +36,7 @@ import {
     MatToolbarModule,
     MatCheckboxModule,
     MatExpansionModule,
+    MatDialogModule,
   ],
   exports: [
       TranslateModule,
@@ -58,6 +59,7 @@ import {
       MatAutocompleteModule,
       MatCheckboxModule,
       MatExpansionModule,
+      MatDialogModule,
     ],
 })
 export class SharedModule {}

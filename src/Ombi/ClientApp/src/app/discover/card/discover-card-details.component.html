@@ -1,0 +1,56 @@
+<div mat-dialog-content class="background">
+    <div class="row">
+        <div class="col-4">
+            <img id="cardImage" src="{{data.posterPath}}" class="poster" alt="{{data.title}}">
+        </div>
+        <div class="col-8">
+
+            <div class="row">
+                <div class="col-12">
+                    <h3><strong>{{data.title}}</strong></h3>
+                </div>
+
+            </div>
+            <div class="row top-spacing details">
+                <div class="col-6">
+                    <strong>Availability:</strong> Unavailable
+                </div>
+                <div class="col-6">
+                    <strong>Studio: </strong> Studio1
+                </div>
+                <div class="col-6">
+                    <strong>Request Status: </strong> Studio1
+                </div>
+                <div class="col-6">
+                    <strong>Director: </strong> Studio1
+                </div>
+                <div class="col-6">
+                    <strong>In Cinemas: </strong> Studio1
+                </div>
+                <div class="col-6">
+                    <strong>Writer: </strong> Studio1
+                </div>
+            </div>
+
+            <div class="row top-spacing">
+                <div class="col-12">
+                    {{data.overview}}
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+<div mat-dialog-actions>
+    <div class="action-buttons-right">
+            <div class="col-md-12">
+        <button mat-raised-button (click)="onNoClick()" class="request-btn">
+            <mat-icon>add</mat-icon>
+            Request
+        </button>
+    </div>
+</div>
+
+</div>
