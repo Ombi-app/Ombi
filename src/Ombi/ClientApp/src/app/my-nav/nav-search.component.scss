@@ -1,3 +1,6 @@
+$ombi-primary:#3f3f3f;
+$ombi-accent: #258a6d;
+
 .quater-width {
   width: 25em;
 }
@@ -11,4 +14,20 @@
   height: 50px;
   line-height: 50px;
   padding: 0px 5px;
+}
+
+::ng-deep ngb-typeahead-window.dropdown-menu {
+  background-color: $ombi-primary;
+  width: 24%;
+  overflow: auto;
+  height: 500px;
+}
+
+::ng-deep ngb-typeahead-window button.dropdown-item {
+  color:white;
+}
+
+::ng-deep ngb-typeahead-window .dropdown-item.active, .dropdown-item:active {
+  text-decoration: none;
+  background-color: $ombi-accent;
 }

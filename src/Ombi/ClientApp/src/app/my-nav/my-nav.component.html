@@ -25,22 +25,21 @@
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar color="primary" class="sticky-header">
+    <mat-toolbar color="primary">
       <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
 
-      <span class="spacer"></span>
-
-      <!-- Search Bar -->
-
-      <app-nav-search></app-nav-search>
-
-
+        <div class="col-12">
+          <span class="middle justify-content-center align-items-center">
+            <!-- Search Bar -->
+            <app-nav-search></app-nav-search>
+          </span>
+        </div>
     </mat-toolbar>
 
     <!-- Page -->
-      <ng-container *ngTemplateOutlet="template"></ng-container>
+    <ng-container *ngTemplateOutlet="template"></ng-container>
 
 
   </mat-sidenav-content>

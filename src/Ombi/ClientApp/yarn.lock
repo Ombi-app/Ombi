@@ -227,7 +227,6 @@
 "@ng-bootstrap/ng-bootstrap@^4.0.1":
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/@ng-bootstrap/ng-bootstrap/-/ng-bootstrap-4.0.1.tgz#75a6b881b24d869624caa5b5f8a4070650ad5bc4"
-  integrity sha512-COQ6MgZ+HD27pGz2sVPB2ttCZozrjHPs0sayuZkleMvzTllYX/eQEPAOiS+yRsXNkDApi5/XGlIFVWBjxTtwoA==
   dependencies:
     tslib "^1.9.0"
 
@@ -551,7 +550,6 @@ amdefine@>=0.0.4:
 angular-bootstrap-md@^7.3.0:
   version "7.3.0"
   resolved "https://registry.yarnpkg.com/angular-bootstrap-md/-/angular-bootstrap-md-7.3.0.tgz#cc0db9035553ffe0168049bfac9de92cfe5ee268"
-  integrity sha512-FACXdj+fGe7aA1yNBoFFV6I8Gs9+ithMdGAl4ZJ7DxqD5JudtWqlAwapNpqXzf7r17b9+vIGAAMmVTfcc+i2Dw==
 
 angular-router-loader@^0.8.5:
   version "0.8.5"
@@ -978,7 +976,6 @@ bonjour@^3.5.0:
 bootstrap@^4.2.1:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.2.1.tgz#8f8bdca024dbf0e8644da32e918c8a03a90a5757"
-  integrity sha512-tt/7vIv3Gm2mnd/WeDx36nfGGHleil0Wg8IeB7eMrVkY0fZ5iTaBisSh8oNANc2IBsCc6vCgCNTIM/IEN0+50Q==
 
 brace-expansion@^1.1.7:
   version "1.1.11"
@@ -1232,7 +1229,6 @@ chardet@^0.7.0:
 chart.js@2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-2.5.0.tgz#fe6e751a893769f56e72bee5ad91207e1c592957"
-  integrity sha1-/m51Gok3afVucr7lrZEgfhxZKVc=
   dependencies:
     chartjs-color "^2.0.0"
     moment "^2.10.6"
@@ -1240,14 +1236,12 @@ chart.js@2.5.0:
 chartjs-color-string@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/chartjs-color-string/-/chartjs-color-string-0.5.0.tgz#8d3752d8581d86687c35bfe2cb80ac5213ceb8c1"
-  integrity sha512-amWNvCOXlOUYxZVDSa0YOab5K/lmEhbFNKI55PWc4mlv28BDzA7zaoQTGxSBgJMHIW+hGX8YUrvw/FH4LyhwSQ==
   dependencies:
     color-name "^1.0.0"
 
 chartjs-color@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/chartjs-color/-/chartjs-color-2.2.0.tgz#84a2fb755787ed85c39dd6dd8c7b1d88429baeae"
-  integrity sha1-hKL7dVeH7YXDndbdjHsdiEKbrq4=
   dependencies:
     chartjs-color-string "^0.5.0"
     color-convert "^0.5.3"
@@ -1390,7 +1384,6 @@ collection-visit@^1.0.0:
 color-convert@^0.5.3:
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-0.5.3.tgz#bdb6c69ce660fadffe0b0007cc447e1b9f7282bd"
-  integrity sha1-vbbGnOZg+t/+CwAHzER+G59ygr0=
 
 color-convert@^1.9.0:
   version "1.9.3"
@@ -1405,7 +1398,6 @@ color-name@1.1.3:
 color-name@^1.0.0:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
-  integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
 
 combined-stream@^1.0.6, combined-stream@~1.0.6:
   version "1.0.7"
@@ -2397,7 +2389,6 @@ follow-redirects@^1.0.0:
 font-awesome@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.7.0.tgz#8fa8cf0411a1a31afd07b06d2902bb9fc815a133"
-  integrity sha1-j6jPBBGhoxr9B7BtKQK7n8gVoTM=
 
 for-in@^0.1.3:
   version "0.1.8"
@@ -2645,7 +2636,6 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2:
 hammerjs@^2.0.8:
   version "2.0.8"
   resolved "https://registry.yarnpkg.com/hammerjs/-/hammerjs-2.0.8.tgz#04ef77862cff2bb79d30f7692095930222bf60f1"
-  integrity sha1-BO93hiz/K7edMPdpIJWTAiK/YPE=
 
 handle-thing@^1.2.5:
   version "1.2.5"
@@ -3964,6 +3954,16 @@ neo-async@^2.5.0:
 next-tick@1:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
+
+ng-auto-complete@^4.1.4:
+  version "4.1.4"
+  resolved "https://registry.yarnpkg.com/ng-auto-complete/-/ng-auto-complete-4.1.4.tgz#f7b73d1f426d4de1c236b771f984f3d2da51b5fa"
+  dependencies:
+    tslib "^1.9.0"
+
+ng2-completer@^2.0.8:
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/ng2-completer/-/ng2-completer-2.0.8.tgz#36101eb5a796f966897e7894fc437effd88ebdfb"
 
 ng2-cookies@^1.0.12:
   version "1.0.12"
