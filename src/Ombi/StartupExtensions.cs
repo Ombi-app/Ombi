@@ -86,7 +86,7 @@ namespace Ombi
                 }
 
 
-                c.OperationFilter<SwaggerOperationFilter>();^
+                c.OperationFilter<SwaggerOperationFilter>();
                 c.DescribeAllParametersInCamelCase();
             });
         }
