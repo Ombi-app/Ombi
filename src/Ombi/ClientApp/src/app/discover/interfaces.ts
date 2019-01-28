@@ -9,4 +9,5 @@ export interface IDiscoverCardResult {
     available: boolean;
     requested: boolean;
     rating: number;
+    overview: string;
 }

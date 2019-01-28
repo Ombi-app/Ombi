@@ -1,6 +1,6 @@
-<div class="container">
+<div class="small-middle-container">
     <div *ngIf="discoverResults" class="row top-spacing full-height">
-            <div class="col-lg-2 col-md-4 col-6" *ngFor="let result of discoverResults" [@slideIn]>
+            <div class="col-lg-1 col-md-4 col-6" *ngFor="let result of discoverResults" [@slideIn]>
                 <discover-card [result]="result"></discover-card>
             </div>
     </div>

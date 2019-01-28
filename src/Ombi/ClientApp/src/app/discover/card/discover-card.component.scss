@@ -1,12 +1,41 @@
-.card-poster {
-    max-height: 225px;
+$ombi-primary:#3f3f3f;
+#cardImage {
+    max-height: 153px;
+    border-radius: 5px 5px 0px 0px;
+}
+
+.dark-card {
+    background-color: $ombi-primary;
+    border-radius: 8px;
+    color: white;
 }
 
 .card-spacing {
-    margin-top:10%;
+    margin-top: 10%;
 }
 
 .rating {
     position: absolute;
     font-weight: bold;
+}
+
+$border-width: 2px;
+.movie-image {
+    border-bottom: $border-width orange solid;
+}
+
+.tv-image {
+    border-bottom: $border-width teal solid;
+}
+
+.expand {
+    text-align: center;
+}
+
+.grow {
+    transition: all .2s ease-in-out;
+}
+
+.grow:hover {
+    transform: scale(1.1);
 }

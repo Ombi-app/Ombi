@@ -40,7 +40,8 @@ export class DiscoverComponent implements OnInit {
                 type: RequestType.movie,
                 id: m.id,
                 url: `http://www.imdb.com/title/${m.imdbId}/`,
-                rating: m.voteAverage
+                rating: m.voteAverage,
+                overview: m.overview
             });
         });
         this.tvShows.forEach(m => {
@@ -53,6 +54,7 @@ export class DiscoverComponent implements OnInit {
                 id: m.id,
                 url: undefined,
                 rating: +m.rating,
+                overview: m.overview
             });
         });
 
