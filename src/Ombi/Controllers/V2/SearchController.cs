@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Ombi.Core;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Search;
+using Ombi.Core.Models.Search.V2;
 using Ombi.Models;
 
 namespace Ombi.Controllers.V2
@@ -18,17 +19,19 @@ namespace Ombi.Controllers.V2
     public class SearchController : ControllerBase
     {
         public SearchController(IMultiSearchEngine multiSearchEngine, IMovieEngine movieEngine,
-            ITvSearchEngine tvSearchEngine)
+            ITvSearchEngine tvSearchEngine, IMovieEngineV2 v2Movie)
         {
             _multiSearchEngine = multiSearchEngine;
             _movieEngine = movieEngine;
             _movieEngine.ResultLimit = 12;
             _tvSearchEngine = tvSearchEngine;
             _tvSearchEngine.ResultLimit = 12;
+            _movieEngineV2 = v2Movie;
         }
 
         private readonly IMultiSearchEngine _multiSearchEngine;
         private readonly IMovieEngine _movieEngine;
+        private readonly IMovieEngineV2 _movieEngineV2;
         private readonly ITvSearchEngine _tvSearchEngine;
 
         /// <summary>
@@ -39,6 +42,16 @@ namespace Ombi.Controllers.V2
         public async Task<List<MultiSearch>> MultiSearch(string searchTerm)
         {
             return await _multiSearchEngine.MultiSearch(searchTerm);
+        }
+
+        // <summary>
+        /// Returns details for a single movie
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("movie/{movieDbId}")]
+        public async Task<MovieFullInfoViewModel> GetMovieInfo(int movieDbId)
+        {
+            return await _movieEngineV2.GetFullMovieInformation(movieDbId);
         }
 
         /// <summary>

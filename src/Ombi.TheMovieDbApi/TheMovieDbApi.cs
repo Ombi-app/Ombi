@@ -32,6 +32,18 @@ namespace Ombi.Api.TheMovieDb
             return Mapper.Map<MovieResponseDto>(result);
         }
 
+
+        public async Task<FullMovieInfo> GetFullMovieInfo(int movieId, string langCode)
+        {
+            var request = new Request($"movie/{movieId}", BaseUri, HttpMethod.Get);
+            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+            request.FullUri = request.FullUri.AddQueryParameter("language", langCode);
+            request.FullUri = request.FullUri.AddQueryParameter("append_to_response", "videos,credits,similar,recommendations,release_dates");
+            AddRetry(request);
+
+            return await Api.Request<FullMovieInfo>(request);
+        }
+
         public async Task<FindResult> Find(string externalId, ExternalSource source)
         {
             var request = new Request($"find/{externalId}", BaseUri, HttpMethod.Get);

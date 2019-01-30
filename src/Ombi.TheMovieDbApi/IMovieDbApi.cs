@@ -22,5 +22,6 @@ namespace Ombi.Api.TheMovieDb
         Task<TheMovieDbContainer<ActorResult>> SearchByActor(string searchTerm, string langCode);
         Task<ActorCredits> GetActorMovieCredits(int actorId, string langCode);
         Task<TheMovieDbContainer<MultiSearch>> MultiSearch(string searchTerm, string languageCode);
+        Task<FullMovieInfo> GetFullMovieInfo(int movieId, string langCode);
     }
 }

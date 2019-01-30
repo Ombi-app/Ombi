@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Models.Search;
+using Ombi.Core.Models.Search.V2;
 using Ombi.TheMovieDbApi.Models;
 
 namespace Ombi.Mapping.Profiles
@@ -72,6 +73,13 @@ namespace Ombi.Mapping.Profiles
 
             CreateMap<MovieSearchResult, SearchMovieViewModel>().ReverseMap();
             CreateMap<MovieResponseDto, SearchMovieViewModel>().ReverseMap();
+
+            CreateMap<FullMovieInfo, SearchMovieViewModel>().ReverseMap();
+            CreateMap<ProductionCompanies, Production_Companies>().ReverseMap();
+            CreateMap<VideoResults, Videos>().ReverseMap();
+            CreateMap<CreditsViewModel, Credits>().ReverseMap();
+            CreateMap<MovieFullInfoViewModel, FullMovieInfo>()
+                .ForMember(x => x.)
         }
     }
 }
