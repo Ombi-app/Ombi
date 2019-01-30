@@ -32,7 +32,12 @@ namespace Ombi.Core.Engine
             OmbiSettings = ombiSettings;
             _subscriptionRepository = sub;
         }
-
+        private int _resultLimit;
+        public int ResultLimit
+        {
+            get => _resultLimit > 0 ? _resultLimit : 10;
+            set => _resultLimit = value;
+        }
         protected IRequestServiceMain RequestService { get; }
         protected IMovieRequestRepository MovieRepository => RequestService.MovieRequestService;
         protected ITvRequestRepository TvRepository => RequestService.TvRequestService;

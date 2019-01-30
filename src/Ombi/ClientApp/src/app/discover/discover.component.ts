@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { SearchService } from "../services";
+import { SearchV2Service } from "../services";
 import { ISearchMovieResult, ISearchTvResult, RequestType } from "../interfaces";
 import { IDiscoverCardResult } from "./interfaces";
 import { trigger, transition, style, animate } from "@angular/animations";
@@ -24,7 +24,7 @@ export class DiscoverComponent implements OnInit {
 
     public defaultTvPoster: string;
 
-    constructor(private searchService: SearchService) {
+    constructor(private searchService: SearchV2Service) {
 
     }
     public async ngOnInit() {

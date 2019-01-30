@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
-import { IMultiSearchResult } from "../interfaces";
+import { IMultiSearchResult, ISearchMovieResult, ISearchTvResult } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()
@@ -15,5 +15,40 @@ export class SearchV2Service extends ServiceHelpers {
 
     public multiSearch(searchTerm: string): Observable<IMultiSearchResult[]> {
         return this.http.get<IMultiSearchResult[]>(`${this.url}/multi/${searchTerm}`);
+    }
+
+    
+    public similarMovies(theMovieDbId: number, langCode: string): Observable<ISearchMovieResult[]> {
+        return this.http.post<ISearchMovieResult[]>(`${this.url}/Movie/similar`, {theMovieDbId, languageCode: langCode});
+    }
+
+    public popularMovies(): Observable<ISearchMovieResult[]> {
+        return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/Popular`);
+    }
+
+    public upcomingMovies(): Observable<ISearchMovieResult[]> {
+        return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/upcoming`);
+    }
+
+    public nowPlayingMovies(): Observable<ISearchMovieResult[]> {
+        return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/nowplaying`);
+    }
+    
+    public topRatedMovies(): Observable<ISearchMovieResult[]> {
+        return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/toprated`);
+    }
+
+    
+    public popularTv(): Observable<ISearchTvResult[]> {
+        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/popular`, { headers: this.headers });
+    }
+    public mostWatchedTv(): Observable<ISearchTvResult[]> {
+        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/mostwatched`, { headers: this.headers });
+    }
+    public anticipatedTv(): Observable<ISearchTvResult[]> {
+        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/anticipated`, { headers: this.headers });
+    }
+    public trendingTv(): Observable<ISearchTvResult[]> {
+        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/trending`, { headers: this.headers });
     }
 }

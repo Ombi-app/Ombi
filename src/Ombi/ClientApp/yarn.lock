@@ -3955,16 +3955,6 @@ next-tick@1:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
 
-ng-auto-complete@^4.1.4:
-  version "4.1.4"
-  resolved "https://registry.yarnpkg.com/ng-auto-complete/-/ng-auto-complete-4.1.4.tgz#f7b73d1f426d4de1c236b771f984f3d2da51b5fa"
-  dependencies:
-    tslib "^1.9.0"
-
-ng2-completer@^2.0.8:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/ng2-completer/-/ng2-completer-2.0.8.tgz#36101eb5a796f966897e7894fc437effd88ebdfb"
-
 ng2-cookies@^1.0.12:
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/ng2-cookies/-/ng2-cookies-1.0.12.tgz#3f3e613e0137b0649b705c678074b4bd08149ccc"

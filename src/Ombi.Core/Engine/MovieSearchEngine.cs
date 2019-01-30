@@ -35,7 +35,6 @@ namespace Ombi.Core.Engine
         private IMapper Mapper { get; }
         private ILogger<MovieSearchEngine> Logger { get; }
 
-        private const int MovieLimit = 10;
 
         /// <summary>
         /// Lookups the imdb information.
@@ -61,7 +60,7 @@ namespace Ombi.Core.Engine
 
             if (result != null)
             {
-                return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
+                return await TransformMovieResultsToResponse(result.Take(ResultLimit)); // Take x to stop us overloading the API
             }
             return null;
         }
@@ -105,7 +104,7 @@ namespace Ombi.Core.Engine
             if (result != null)
             {
                 Logger.LogDebug("Search Result: {result}", result);
-                return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
+                return await TransformMovieResultsToResponse(result.Take(ResultLimit)); // Take x to stop us overloading the API
             }
             return null;
         }
@@ -124,7 +123,7 @@ namespace Ombi.Core.Engine
             }, DateTime.Now.AddHours(12));
             if (result != null)
             {
-                return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
+                return await TransformMovieResultsToResponse(result.Take(ResultLimit)); // Take x to stop us overloading the API
             }
             return null;
         }
@@ -142,7 +141,7 @@ namespace Ombi.Core.Engine
             }, DateTime.Now.AddHours(12));
             if (result != null)
             {
-                return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
+                return await TransformMovieResultsToResponse(result.Take(ResultLimit)); // Take x to stop us overloading the API
             }
             return null;
         }
@@ -161,7 +160,7 @@ namespace Ombi.Core.Engine
             if (result != null)
             {
                 Logger.LogDebug("Search Result: {result}", result);
-                return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
+                return await TransformMovieResultsToResponse(result.Take(ResultLimit)); // Take x to stop us overloading the API
             }
             return null;
         }
@@ -179,7 +178,7 @@ namespace Ombi.Core.Engine
             }, DateTime.Now.AddHours(12));
             if (result != null)
             {
-                return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
+                return await TransformMovieResultsToResponse(result.Take(ResultLimit)); // Take x to stop us overloading the API
             }
             return null;
         }

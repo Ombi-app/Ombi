@@ -12,5 +12,6 @@ namespace Ombi.Core.Engine.Interfaces
         Task<IEnumerable<SearchTvShowViewModel>> Anticipated();
         Task<IEnumerable<SearchTvShowViewModel>> MostWatches();
         Task<IEnumerable<SearchTvShowViewModel>> Trending();
+        int ResultLimit { get; set; }
     }
 }

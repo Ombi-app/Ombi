@@ -43,13 +43,14 @@ namespace Ombi
                 c.SwaggerDoc("v1", new Info
                 {
                     Version = "v1",
-                    Title = "Ombi Api",
+                    Title = "Ombi Api V1",
                     Contact = new Contact
                     {
                         Name = "Jamie Rees",
                         Url = "https://www.ombi.io/"
                     }
                 });
+
                 var security = new Dictionary<string, IEnumerable<string>>
                 {
                     //{"Bearer", new string[] { }},
