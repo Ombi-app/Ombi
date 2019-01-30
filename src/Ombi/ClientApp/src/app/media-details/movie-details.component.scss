@@ -87,9 +87,9 @@
     position: relative;
 }
 
-#summary-wrapper .summary .container h1 .year,
-.summary-wrapper .summary .container h1 .year {
-    color: #999;
+
+.grey-text {
+    color:#999;
 }
 
 #summary-wrapper .summary .container h1,
@@ -111,7 +111,7 @@ section {
     position: relative !important;
 }
 
-#info-wrapper .sidebar {
+#info-wrapper .sidebar-poster {
     margin-top: -180px;
 }
 
@@ -147,4 +147,20 @@ section {
 
 .btn-spacing {
     margin-top:10px;
+}
+
+.tagline {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.preview-poster {
+    width: 173px;
+}
+
+.grow {
+    transition: all .2s ease-in-out;
+}
+.grow:hover {
+    transform: scale(1.1);
 }

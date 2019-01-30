@@ -1,11 +1,12 @@
 ﻿import { ModuleWithProviders, NgModule } from "@angular/core";
 import { HumanizePipe } from "./HumanizePipe";
 import { ThousandShortPipe } from "./ThousandShortPipe";
+import { SafePipe } from "./SafePipe";
 
 @NgModule({
     imports:        [],
-    declarations:   [HumanizePipe, ThousandShortPipe],
-    exports:        [HumanizePipe, ThousandShortPipe],
+    declarations:   [HumanizePipe, ThousandShortPipe, SafePipe],
+    exports:        [HumanizePipe, ThousandShortPipe, SafePipe],
 })
 export class PipeModule {
 
