@@ -47,17 +47,6 @@ namespace Ombi.Core.Engine
 
         private async Task<MovieFullInfoViewModel> ProcessSingleMovie(FullMovieInfo movie)
         {
-            var retVal = new MovieFullInfoViewModel();
-
-            retVal.Id = movie.Id; // TheMovieDbId
-            retVal.ImdbId = movie.ImdbId;
-            retVal.ReleaseDates = new ReleaseDatesDto
-            {
-                Results = new List<ReleaseResultsDto>()
-            };
-
-            retVal.TheMovieDbId = movie.Id.ToString();
-
             var viewMovie = Mapper.Map<SearchMovieViewModel>(movie);
             await RunSearchRules(viewMovie);
 
@@ -76,7 +65,7 @@ namespace Ombi.Core.Engine
             return mapped;
         }
 
-        private async Task CheckForSubscription(SearchMovieViewModel viewModel)
+        private async Task CheckForSubscription(SearchViewModel viewModel)
         {
             // Check if this user requested it
             var user = await GetUser();

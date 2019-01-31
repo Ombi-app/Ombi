@@ -78,8 +78,7 @@ namespace Ombi.Mapping.Profiles
             CreateMap<ProductionCompanies, Production_Companies>().ReverseMap();
             CreateMap<VideoResults, Videos>().ReverseMap();
             CreateMap<CreditsViewModel, Credits>().ReverseMap();
-            CreateMap<MovieFullInfoViewModel, FullMovieInfo>()
-                .ForMember(x => x.)
+            CreateMap<MovieFullInfoViewModel, FullMovieInfo>();
         }
     }
 }
