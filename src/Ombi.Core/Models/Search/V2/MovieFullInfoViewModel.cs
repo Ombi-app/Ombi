@@ -30,7 +30,7 @@ namespace Ombi.Core.Models.Search.V2
         public string Homepage { get; set; }
         public int RootPathOverride { get; set; }
         public string Status { get; set; }
-        public List<VideoResults> Videos { get; set; }
+        public Videos Videos { get; set; }
         public CreditsViewModel Credits { get; set; }
         public int QualityOverride { get; set; }
         public override RequestType Type => RequestType.Movie;
@@ -54,7 +54,12 @@ namespace Ombi.Core.Models.Search.V2
         public string origin_country { get; set; }
     }
 
-    public class VideoResults
+    public class Videos
+    {
+        public VideoResultsDetails[] results { get; set; }
+    }
+
+    public class VideoResultsDetails
     {
         public string id { get; set; }
         public string iso_639_1 { get; set; }

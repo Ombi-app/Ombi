@@ -27,7 +27,7 @@
     requestId: number;
     available: boolean;
     status: string;
-    videos: IVideoResult[];
+    videos: IVideos;
     credits: ICreditsViewModel;
     releaseDates: IReleaseDatesDto;
     similar: IOtherMovies;
@@ -43,6 +43,10 @@
     requestProcessing: boolean;
     processed: boolean;
     background: any;
+}
+
+export interface IVideos {
+    results: IVideoResult[];
 }
 
 export interface IGenresViewModel {

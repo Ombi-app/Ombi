@@ -99,7 +99,9 @@ namespace Ombi.DependencyInjection
         public static void RegisterEnginesV2(this IServiceCollection services)
         {
             services.AddTransient<IMultiSearchEngine, MultiSearchEngine>();
+            services.AddTransient<IMovieEngineV2, MovieSearchEngineV2>();
         }
+
         public static void RegisterHttp(this IServiceCollection services)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

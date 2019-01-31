@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 
 import { IMultiSearchResult, ISearchMovieResult, ISearchTvResult } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
-+
+
 import { ISearchMovieResultV2 } from "../interfaces/ISearchMovieResultV2";
 
 @Injectable()
