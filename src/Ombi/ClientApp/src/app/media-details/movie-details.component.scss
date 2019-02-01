@@ -69,6 +69,10 @@ $ombi-primary:#3f3f3f;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#4D000000', GradientType=0);
 }
 
+.available-bottom-border {
+    border-bottom: solid 8px #1DE9B6;
+}
+
 #summary-wrapper .summary .container,
 .summary-wrapper .summary .container {
     position: absolute;
