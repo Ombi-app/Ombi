@@ -21,7 +21,7 @@ export class NavSearchComponent {
     public searchFailed = false;
     
     
-    public formatter = (result: IMultiSearchResult) => result.media_type == "movie" ? result.title : result.name;
+    public formatter = (result: IMultiSearchResult) => result.media_type == "movie" ? result.title + ` (${result.release_date.slice(0,4)})` : result.name + ` (${result.release_date.slice(0,4)})`;
     
     public searchModel = (text$: Observable<string>) =>
     text$.pipe(

@@ -38,8 +38,16 @@ namespace Ombi.Core.Models.Search.V2
         public DateTime? DigitalReleaseDate { get; set; }
         public Similar Similar { get; set; }
         public Recommendations Recommendations { get; set; }
+        public ExternalIds ExternalIds { get; set; }
     }
 
+    public class ExternalIds
+    {
+        public string ImdbId { get; set; }
+        public string FacebookId { get; set; }
+        public string InstagramId { get; set; }
+        public string TwitterId { get; set; }
+    }
     public class GenreViewModel
     {
         public int id { get; set; }

@@ -64,6 +64,8 @@ namespace Ombi.Api.TheMovieDb.Models
         public Recommendations Recommendations { get; set; }
         [JsonProperty("release_dates")]
         public ReleaseDates ReleaseDates { get; set; }
+        [JsonProperty("external_ids")]
+        public ExternalIds ExternalIds { get; set; }
     }
 
     public class Videos
@@ -81,6 +83,18 @@ namespace Ombi.Api.TheMovieDb.Models
         public string site { get; set; }
         public int size { get; set; }
         public string type { get; set; }
+    }
+
+    public class ExternalIds
+    {
+        [JsonProperty("imdb_id")]
+        public string ImdbId { get; set; }
+        [JsonProperty("facebook_id")]
+        public string FacebookId { get; set; }
+        [JsonProperty("instagram_id")]
+        public string InstagramId { get; set; }
+        [JsonProperty("twitter_id")]
+        public string TwitterId { get; set; }
     }
 
     public class Credits

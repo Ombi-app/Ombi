@@ -1,20 +1,3 @@
 <input class="form-control quater-width" type="text" [(ngModel)]="selectedItem" placeholder="Search" aria-label="Search" [ngbTypeahead]="searchModel" [resultFormatter]="formatter"
 [inputFormatter]="formatter" (selectItem)="selected($event)">
 
-
-
-<!-- <mat-form-field class="quater-width"> -->
-   
-    <!-- <input [(ngModel)]="searchText" placeholder="Search" (keyup)="search($event)" matInput  [matAutocomplete]="auto"> -->
-    <!-- <mat-autocomplete  #auto="matAutocomplete" (optionSelected)="selected($event)">
-      <mat-option *ngFor="let result of searchResult" [value]="result">
-        <img src="https://image.tmdb.org/t/p/w92/{{result.poster_path}}" class="autocomplete-img" aria-hidden/>
-        <span *ngIf="result.media_type == 'tv'">
-          {{result.name}}
-        </span>
-        <span *ngIf="result.media_type == 'movie'">
-          {{result.title}}
-        </span>
-      </mat-option>
-    </mat-autocomplete> -->
-  <!-- </mat-form-field> -->

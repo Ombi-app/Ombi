@@ -1,3 +1,4 @@
+$ombi-primary:#3f3f3f;
 //MINE
 @media (max-width: 570px) {
     h1 {
@@ -163,4 +164,13 @@ section {
 }
 .grow:hover {
     transform: scale(1.1);
+}
+
+.media-icons {
+    color:$ombi-primary;
+    padding: 1%;
+}
+
+.media-row {
+    padding-top: 2%;
 }

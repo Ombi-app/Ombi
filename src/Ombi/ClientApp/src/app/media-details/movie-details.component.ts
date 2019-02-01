@@ -34,6 +34,10 @@ export class MovieDetailsComponent {
 
     }
 
+    public request() {
+        //
+    }
+
     public openDialog() {
         this.dialog.open(MovieDetailsTrailerComponent, {
           width: '560px',

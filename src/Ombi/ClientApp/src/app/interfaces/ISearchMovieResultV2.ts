@@ -38,6 +38,7 @@
     digitalReleaseDate: Date;
     subscribed: boolean;
     showSubscribe: boolean;
+    externalIds: IExternalIds;
 
     // for the UI
     requestProcessing: boolean;
@@ -47,6 +48,13 @@
 
 export interface IVideos {
     results: IVideoResult[];
+}
+
+export interface IExternalIds {
+    facebookId: string;
+    imdbId: string;
+    instagramId: string;
+    twitterId: string;
 }
 
 export interface IGenresViewModel {
@@ -125,16 +133,16 @@ export interface IOtherMovies {
     results: IOtherMoviesViewModel[];
 }
 
-export interface IOtherMoviesViewModel { 
+export interface IOtherMoviesViewModel {
     adult: boolean;
     backdrop_path: string;
     id: number;
     original_language: string;
     original_title: string;
-    overview : string;
+    overview: string;
     poster_path: string;
-    release_date : string;
-    title : string;
+    release_date: string;
+    title: string;
     video: boolean;
     vote_average: number;
     vote_count: number;
