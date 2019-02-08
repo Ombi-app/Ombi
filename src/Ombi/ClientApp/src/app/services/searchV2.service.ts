@@ -8,6 +8,7 @@ import { IMultiSearchResult, ISearchMovieResult, ISearchTvResult } from "../inte
 import { ServiceHelpers } from "./service.helpers";
 
 import { ISearchMovieResultV2 } from "../interfaces/ISearchMovieResultV2";
+import { promise } from "selenium-webdriver";
 
 @Injectable()
 export class SearchV2Service extends ServiceHelpers {
@@ -20,6 +21,9 @@ export class SearchV2Service extends ServiceHelpers {
     }
     public getFullMovieDetails(theMovieDbId: number): Observable<ISearchMovieResultV2> {
         return this.http.get<ISearchMovieResultV2>(`${this.url}/Movie/${theMovieDbId}`);
+    }
+    public getFullMovieDetailsPromise(theMovieDbId: number): Promise<ISearchMovieResultV2> {
+        return this.http.get<ISearchMovieResultV2>(`${this.url}/Movie/${theMovieDbId}`).toPromise();
     }
     
     public similarMovies(theMovieDbId: number, langCode: string): Observable<ISearchMovieResult[]> {

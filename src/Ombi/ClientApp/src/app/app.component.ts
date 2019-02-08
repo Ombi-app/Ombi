@@ -37,8 +37,7 @@ export class AppComponent implements OnInit {
         private readonly identityService: IdentityService,
         private readonly platformLocation: PlatformLocation) {
 
-        const base = this.platformLocation.getBaseHrefFromDOM();
-        debugger;
+        // const base = this.platformLocation.getBaseHrefFromDOM();
         // if (base.length > 1) {
         //     __webpack_public_path__ = base + "/dist/";
         // }

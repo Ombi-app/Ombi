@@ -1,4 +1,4 @@
-<div mat-dialog-content class="background">
+<div *ngIf="result" mat-dialog-content class="background">
     <div class="row">
         <div class="col-4">
             <img id="cardImage" src="{{data.posterPath}}" class="poster" alt="{{data.title}}">
@@ -13,22 +13,32 @@
             </div>
             <div class="row top-spacing details">
                 <div class="col-6">
-                    <strong>Availability:</strong> Unavailable
+                    <strong>Availability: </strong>      <small>                 <ng-template [ngIf]="data.available"><span class="label label-success" id="availableLabel"
+                        [translate]="'Common.Available'"></span></ng-template>
+                        <ng-template [ngIf]="!data.available"><span class="label label-success" id="availableLabel"
+                            [translate]="'Common.NotAvailable'"></span></ng-template></small>
                 </div>
                 <div class="col-6">
-                    <strong>Studio: </strong> Studio1
+                    <strong>Studio: </strong> <small>{{result.productionCompanies[0].name}}</small>
                 </div>
                 <div class="col-6">
-                    <strong>Request Status: </strong> Studio1
+                    <strong>Request Status: </strong> <small>
+                    <ng-template [ngIf]="data.approved && !data.available"><span class="label label-info"
+                            id="processingRequestLabel" [translate]="'Common.ProcessingRequest'"></span></ng-template>
+                    <ng-template [ngIf]="data.requested && !data.approved && !data.available"><span class="label label-warning"
+                            id="pendingApprovalLabel" [translate]="'Common.PendingApproval'"></span></ng-template>
+                    <ng-template [ngIf]="!data.requested && !data.available && !data.approved"><span
+                            class="label label-danger" id="notRequestedLabel" [translate]="'Common.NotRequested'"></span></ng-template>
+                        </small>
                 </div>
                 <div class="col-6">
-                    <strong>Director: </strong> Studio1
+                    <strong>Director: </strong> <small>{{result.credits.crew[0].name}}</small>
                 </div>
                 <div class="col-6">
-                    <strong>In Cinemas: </strong> Studio1
+                    <strong>In Cinemas: </strong> <small>{{result.releaseDate}}</small>
                 </div>
                 <div class="col-6">
-                    <strong>Writer: </strong> Studio1
+                    <strong>Writer: </strong> <small>{{result.credits.crew[1].name}}</small>
                 </div>
             </div>
 
