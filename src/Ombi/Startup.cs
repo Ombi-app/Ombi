@@ -1,22 +1,22 @@
-﻿using System;
-using System.IO;
-using AutoMapper;
+﻿using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using Hangfire;
 using Hangfire.Dashboard;
 using Hangfire.SQLite;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
-using Microsoft.AspNetCore.SpaServices.Webpack;
+using Microsoft.AspNetCore.SpaServices;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.DependencyInjection;
@@ -28,12 +28,22 @@ using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Serilog;
+using System;
+using System.IO;
 
 namespace Ombi
 {
     public class Startup
     {
         public static StoragePathSingleton StoragePath => StoragePathSingleton.Instance;
+
+        private static readonly Action<ISpaBuilder> ConfigureSpaDefaults =
+            spa =>
+            {
+                spa.Options.SourcePath = "ClientApp";
+                spa.UseProxyToSpaDevelopmentServer("http://localhost:3578");
+            };
+
         public Startup(IHostingEnvironment env)
         {
             Console.WriteLine(env.ContentRootPath);
@@ -61,6 +71,7 @@ namespace Ombi
                     .WriteTo.RollingFile(Path.Combine(StoragePath.StoragePath, "Logs", "log-{Date}.txt"))
                     .CreateLogger();
             }
+
             Log.Logger = config;
 
 
@@ -105,13 +116,11 @@ namespace Ombi
             services.AddJwtAuthentication(Configuration);
 
             services.AddMvc()
-                .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+                .AddJsonOptions(x =>
+                    x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddOmbiMappingProfile();
-            services.AddAutoMapper(expression =>
-            {
-                expression.AddCollectionMappers();
-            });
+            services.AddAutoMapper(expression => { expression.AddCollectionMappers(); });
 
             services.RegisterApplicationDependencies(); // Ioc and EF
             services.AddSwagger();
@@ -122,6 +131,7 @@ namespace Ombi
             {
                 i.StoragePath = string.Empty;
             }
+
             var sqliteStorage = $"Data Source={Path.Combine(i.StoragePath, "Schedules.db")};";
 
             services.AddHangfire(x =>
@@ -139,10 +149,7 @@ namespace Ombi
             }));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/dist";
-            });
+            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
 
             // Build the intermediate service provider
             return services.BuildServiceProvider();
@@ -195,23 +202,25 @@ namespace Ombi
                     ombiService.SaveSettings(settings);
                 }
             }
+
             if (settings.BaseUrl.HasValue())
             {
                 app.UsePathBase(settings.BaseUrl);
             }
 
-            app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1, ServerTimeout = TimeSpan.FromDays(1), ShutdownTimeout = TimeSpan.FromDays(1)});
+            app.UseHangfireServer(new BackgroundJobServerOptions
+                {WorkerCount = 1, ServerTimeout = TimeSpan.FromDays(1), ShutdownTimeout = TimeSpan.FromDays(1)});
             if (env.IsDevelopment())
             {
                 app.UseHangfireDashboard(settings.BaseUrl.HasValue() ? $"{settings.BaseUrl}/hangfire" : "/hangfire",
                     new DashboardOptions
                     {
-                        Authorization = new[] { new HangfireAuthorizationFilter() }
+                        Authorization = new[] {new HangfireAuthorizationFilter()}
                     });
             }
 
-            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 3 });
-            
+            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute {Attempts = 3});
+
             // Setup the scheduler
             var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
             jobSetup.Setup();
@@ -221,7 +230,7 @@ namespace Ombi
             settingsctx.Seed();
             externalctx.Seed();
 
-            var provider = new FileExtensionContentTypeProvider { Mappings = { [".map"] = "application/octet-stream" } };
+            var provider = new FileExtensionContentTypeProvider {Mappings = {[".map"] = "application/octet-stream"}};
 
             app.UseStaticFiles(new StaticFileOptions()
             {
@@ -241,30 +250,62 @@ namespace Ombi
                 c.SwaggerEndpoint("/swagger/v2/swagger.json", "API V2");
             });
 
-            app.UseMvc(routes =>
+            app.UseMvcWithDefaultRoute();
+            if (env.IsDevelopment())
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
-
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "ClientApp";
-                if (env.IsDevelopment())
-                {
-                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3578");
-                    //spa.UseAngularCliServer("start");
-                }
-            });
+                app.MapWhen(IsSpaRoute, spaApp => { UseSpaWithoutIndexHtml(spaApp, ConfigureSpaDefaults); });
+            }
         }
-    }
 
-    public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
-    {
-        public bool Authorize(DashboardContext context)
+        private static bool IsSpaRoute(HttpContext context)
         {
-            return true;
+            var path = context.Request.Path;
+            // This should probably be a compiled regex
+            return path.StartsWithSegments("/static")
+                   || path.StartsWithSegments("/sockjs-node")
+                   || path.StartsWithSegments("/socket.io")
+                   || path.ToString().Contains(".hot-update.");
         }
+
+        private static void UseSpaWithoutIndexHtml(IApplicationBuilder app, Action<ISpaBuilder> configuration)
+        {
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+
+            // Use the options configured in DI (or blank if none was configured). We have to clone it
+            // otherwise if you have multiple UseSpa calls, their configurations would interfere with one another.
+            var optionsProvider = app.ApplicationServices.GetService<IOptions<SpaOptions>>();
+            var options = new SpaOptions();
+
+            var spaBuilder = new DefaultSpaBuilder(app, options);
+            configuration.Invoke(spaBuilder);
+        }
+
+        private class DefaultSpaBuilder : ISpaBuilder
+        {
+            public IApplicationBuilder ApplicationBuilder { get; }
+
+            public SpaOptions Options { get; }
+
+            public DefaultSpaBuilder(IApplicationBuilder applicationBuilder, SpaOptions options)
+            {
+                ApplicationBuilder = applicationBuilder
+                                     ?? throw new ArgumentNullException(nameof(applicationBuilder));
+
+                Options = options
+                          ?? throw new ArgumentNullException(nameof(options));
+            }
+        }
+
+        public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
+        {
+            public bool Authorize(DashboardContext context)
+            {
+                return true;
+            }
+        }
+
     }
 }

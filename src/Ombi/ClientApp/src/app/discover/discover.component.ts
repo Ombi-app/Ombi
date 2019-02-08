@@ -31,6 +31,33 @@ export class DiscoverComponent implements OnInit {
         this.movies = await this.searchService.popularMovies().toPromise();
         this.tvShows = await this.searchService.popularTv().toPromise();
 
+        this.createModel();
+
+    }
+
+    public async popular() {
+        this.movies = await this.searchService.popularMovies().toPromise();
+        this.tvShows = await this.searchService.popularTv().toPromise();
+
+        this.createModel();
+    }
+    
+    public async trending() {
+        this.movies = await this.searchService.nowPlayingMovies().toPromise();
+        this.tvShows = await this.searchService.trendingTv().toPromise();
+
+        this.createModel();
+    }  
+
+    public async upcoming() {
+        this.movies = await this.searchService.upcomingMovies().toPromise();
+        this.tvShows = await this.searchService.anticipatedTv().toPromise();
+
+        this.createModel();
+    }
+
+    private createModel() {
+        this.discoverResults = [];
         this.movies.forEach(m => {
             this.discoverResults.push({
                 available: m.available,
@@ -57,7 +84,7 @@ export class DiscoverComponent implements OnInit {
                 overview: m.overview
             });
         });
-
+        
         this.shuffle(this.discoverResults);
     }
 
