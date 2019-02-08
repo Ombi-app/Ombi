@@ -79,6 +79,27 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
+        /// Gets the base url.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("baseurl")]
+        [AllowAnonymous]
+        public async Task<string> GetBaseUrl()
+        {
+            var s = await Get<OmbiSettings>();
+            var baseUrl = s?.BaseUrl ?? string.Empty;
+            if (!baseUrl.EndsWith("/"))
+            {
+                baseUrl = baseUrl.TrimEnd('/');
+            }
+            if (baseUrl.StartsWith("/"))
+            {
+                baseUrl = baseUrl.TrimStart('/');
+            }
+            return baseUrl;
+        }
+
+        /// <summary>
         /// Save the Ombi settings.
         /// </summary>
         /// <param name="ombi">The ombi.</param>

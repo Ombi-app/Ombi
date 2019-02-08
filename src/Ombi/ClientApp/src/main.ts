@@ -1,7 +1,7 @@
 // Main
 
-import * as Pace from "pace";
-Pace.start();
+// import * as Pace from "pace";
+// Pace.start();
 
 import "jquery";
 

@@ -37,13 +37,6 @@ namespace Ombi
     {
         public static StoragePathSingleton StoragePath => StoragePathSingleton.Instance;
 
-        private static readonly Action<ISpaBuilder> ConfigureSpaDefaults =
-            spa =>
-            {
-                spa.Options.SourcePath = "ClientApp";
-                spa.UseProxyToSpaDevelopmentServer("http://localhost:3578");
-            };
-
         public Startup(IHostingEnvironment env)
         {
             Console.WriteLine(env.ContentRootPath);
@@ -251,10 +244,16 @@ namespace Ombi
             });
 
             app.UseMvcWithDefaultRoute();
-            if (env.IsDevelopment())
+
+            app.UseSpa(spa =>
             {
-                app.MapWhen(IsSpaRoute, spaApp => { UseSpaWithoutIndexHtml(spaApp, ConfigureSpaDefaults); });
-            }
+                if (env.IsDevelopment())
+                {
+                    spa.Options.SourcePath = "ClientApp";
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3578");
+                }
+            });
+            
         }
 
         private static bool IsSpaRoute(HttpContext context)
@@ -265,38 +264,6 @@ namespace Ombi
                    || path.StartsWithSegments("/sockjs-node")
                    || path.StartsWithSegments("/socket.io")
                    || path.ToString().Contains(".hot-update.");
-        }
-
-        private static void UseSpaWithoutIndexHtml(IApplicationBuilder app, Action<ISpaBuilder> configuration)
-        {
-            if (configuration == null)
-            {
-                throw new ArgumentNullException(nameof(configuration));
-            }
-
-            // Use the options configured in DI (or blank if none was configured). We have to clone it
-            // otherwise if you have multiple UseSpa calls, their configurations would interfere with one another.
-            var optionsProvider = app.ApplicationServices.GetService<IOptions<SpaOptions>>();
-            var options = new SpaOptions();
-
-            var spaBuilder = new DefaultSpaBuilder(app, options);
-            configuration.Invoke(spaBuilder);
-        }
-
-        private class DefaultSpaBuilder : ISpaBuilder
-        {
-            public IApplicationBuilder ApplicationBuilder { get; }
-
-            public SpaOptions Options { get; }
-
-            public DefaultSpaBuilder(IApplicationBuilder applicationBuilder, SpaOptions options)
-            {
-                ApplicationBuilder = applicationBuilder
-                                     ?? throw new ArgumentNullException(nameof(applicationBuilder));
-
-                Options = options
-                          ?? throw new ArgumentNullException(nameof(options));
-            }
         }
 
         public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter

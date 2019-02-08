@@ -1,4 +1,4 @@
-import { CommonModule, PlatformLocation } from "@angular/common";
+import { CommonModule, PlatformLocation, APP_BASE_HREF } from "@angular/common";
 import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -15,12 +15,15 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { CookieService } from "ng2-cookies";
 import { NgxEditorModule } from "ngx-editor";
 import { GrowlModule } from "primeng/components/growl/growl";
-import { ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DialogModule, OverlayPanelModule, SharedModule, SidebarModule,
-    TooltipModule } from "primeng/primeng";
+import {
+    ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DialogModule, OverlayPanelModule, SharedModule, SidebarModule,
+    TooltipModule
+} from "primeng/primeng";
 
-    import {
-        MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatAutocompleteModule, MatCheckboxModule} from '@angular/material';
-        import {  MatCardModule, MatInputModule, MatTabsModule } from "@angular/material";
+import {
+    MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatAutocompleteModule, MatCheckboxModule
+} from '@angular/material';
+import { MatCardModule, MatInputModule, MatTabsModule } from "@angular/material";
 
 import { MDBBootstrapModule, CardsFreeModule, NavbarModule } from "angular-bootstrap-md";
 
@@ -39,10 +42,9 @@ import { TokenResetPasswordComponent } from "./login/tokenresetpassword.componen
 // Services
 import { AuthGuard } from "./auth/auth.guard";
 import { AuthService } from "./auth/auth.service";
-import { ImageService } from "./services";
+import { ImageService, SettingsService } from "./services";
 import { LandingPageService } from "./services";
 import { NotificationService } from "./services";
-import { SettingsService } from "./services";
 import { IssuesService, JobService, PlexTvService, StatusService, SearchService, IdentityService } from "./services";
 import { MyNavComponent } from './my-nav/my-nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -82,6 +84,12 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
     return new TranslateHttpLoader(http, "/translations/", `.json?v=${version}`);
 }
 
+export function baseurlFact() {
+   
+    console.log(window['_app_base']);
+    return "/" + window['_app_base'];
+}
+
 export function JwtTokenGetter() {
     const token = localStorage.getItem("id_token");
     if (!token) {
@@ -89,6 +97,7 @@ export function JwtTokenGetter() {
     }
     return token;
 }
+
 
 @NgModule({
     imports: [
@@ -163,7 +172,11 @@ export function JwtTokenGetter() {
         IssuesService,
         PlexTvService,
         SearchService,
-        SearchV2Service,
+        SearchV2Service, 
+        {
+            provide: APP_BASE_HREF, 
+            useFactory: baseurlFact           
+        }
     ],
     bootstrap: [AppComponent],
 })

@@ -1,4 +1,4 @@
-﻿<div [ngClass]="user.name && roleClass()">
+﻿
     <!-- <p-growl [value]="notificationService.messages" [life]="3000"></p-growl>
     <nav *ngIf="showNav" class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
@@ -165,6 +165,9 @@
     </nav> -->
 
 
+
+    
+<div [ngClass]="user.name && roleClass()">
     <app-my-nav [showNav]="showNav" [username]="user.name" (logoutClick)="logOut();"></app-my-nav>
 
 

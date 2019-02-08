@@ -38,9 +38,10 @@ export class AppComponent implements OnInit {
         private readonly platformLocation: PlatformLocation) {
 
         const base = this.platformLocation.getBaseHrefFromDOM();
-        if (base.length > 1) {
-            __webpack_public_path__ = base + "/dist/";
-        }
+        debugger;
+        // if (base.length > 1) {
+        //     __webpack_public_path__ = base + "/dist/";
+        // }
 
         this.translate.addLangs(["en", "de", "fr", "da", "es", "it", "nl", "sv", "no", "pl", "pt"]);
         // this language will be used as a fallback when a translation isn't found in the current language
