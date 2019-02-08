@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 
@@ -27,9 +28,10 @@ namespace Ombi.Store.Repository.Requests
         public bool Approved { get; set; }
         public bool Requested { get; set; }
 
-
         public int SeasonId { get; set; }
         [ForeignKey(nameof(SeasonId))]
         public SeasonRequests Season { get; set; }
+
+        [NotMapped] public string AirDateDisplay => AirDate == DateTime.MinValue ? "Unknown" : AirDate.ToString(CultureInfo.InvariantCulture);
     }
 }

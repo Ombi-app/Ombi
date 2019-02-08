@@ -29,6 +29,7 @@ export class SeriesInformationComponent implements OnInit {
         this.searchService.getShowInformation(this.seriesId)
             .subscribe(x => {
                 this.series = x;
+                debugger;
             });
     }
 

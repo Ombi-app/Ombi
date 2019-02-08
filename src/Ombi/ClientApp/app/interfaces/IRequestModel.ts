@@ -146,6 +146,7 @@ export interface IEpisodesRequests {
   episodeNumber: number;
   title: string;
   airDate: Date;
+  airDateDisplay: string;
   url: string;
   available: boolean;
   requested: boolean;
