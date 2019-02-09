@@ -239,6 +239,7 @@ namespace Ombi.Controllers.V1
             await CreateRole(OmbiRoles.Disabled);
             await CreateRole(OmbiRoles.ReceivesNewsletter);
             await CreateRole(OmbiRoles.ManageOwnRequests);
+            await CreateRole(OmbiRoles.EditCustomPage);
         }
 
         private async Task CreateRole(string role)

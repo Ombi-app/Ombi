@@ -31,10 +31,11 @@ namespace Ombi.Core.Engine
             Logger = logger;
         }
 
-        private IMovieDbApi MovieApi { get; }
-        private IMapper Mapper { get; }
+        protected IMovieDbApi MovieApi { get; }
+        protected IMapper Mapper { get; }
         private ILogger<MovieSearchEngine> Logger { get; }
 
+        protected const int MovieLimit = 10;
 
         /// <summary>
         /// Lookups the imdb information.
@@ -185,7 +186,7 @@ namespace Ombi.Core.Engine
             return null;
         }
 
-        private async Task<List<SearchMovieViewModel>> TransformMovieResultsToResponse(
+        protected async Task<List<SearchMovieViewModel>> TransformMovieResultsToResponse(
             IEnumerable<MovieSearchResult> movies)
         {
             var viewMovies = new List<SearchMovieViewModel>();
@@ -196,7 +197,7 @@ namespace Ombi.Core.Engine
             return viewMovies;
         }
 
-        private async Task<SearchMovieViewModel> ProcessSingleMovie(SearchMovieViewModel viewMovie, bool lookupExtraInfo = false)
+        protected async Task<SearchMovieViewModel> ProcessSingleMovie(SearchMovieViewModel viewMovie, bool lookupExtraInfo = false)
         {
             if (lookupExtraInfo && viewMovie.ImdbId.IsNullOrEmpty())
             {
@@ -214,7 +215,7 @@ namespace Ombi.Core.Engine
 
             // This requires the rules to be run first to populate the RequestId property
             await CheckForSubscription(viewMovie);
-
+            
             return viewMovie;
         }
 

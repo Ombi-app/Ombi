@@ -124,6 +124,16 @@ namespace Ombi.Store.Context
                 SaveChanges();
             }
 
+            var editCustomPage = Roles.Where(x => x.Name == OmbiRoles.EditCustomPage);
+            if (!editCustomPage.Any())
+            {
+                Roles.Add(new IdentityRole(OmbiRoles.EditCustomPage)
+                {
+                    NormalizedName = OmbiRoles.EditCustomPage.ToUpper()
+                });
+                SaveChanges();
+            }
+
             // Make sure we have the API User
             var apiUserExists = Users.Any(x => x.UserName.Equals("Api", StringComparison.CurrentCultureIgnoreCase));
             if (!apiUserExists)

@@ -729,27 +729,6 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
-        /// Gets the Custom Page Settings.
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("CustomPage")]
-        [AllowAnonymous]
-        public async Task<CustomPageSettings> CustomPageSettings()
-        {
-            return await Get<CustomPageSettings>();
-        }
-
-        /// <summary>
-        /// Saves the Custom Page Settings.
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost("CustomPage")]
-        public async Task<bool> CustomPageSettings([FromBody] CustomPageSettings page)
-        {
-            return await Save(page);
-        }
-
-        /// <summary>
         /// Saves the discord notification settings.
         /// </summary>
         /// <param name="model">The model.</param>

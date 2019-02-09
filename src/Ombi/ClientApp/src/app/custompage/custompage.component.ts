@@ -2,7 +2,7 @@
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
 import { AuthService } from "../auth/auth.service";
-import { NotificationService, SettingsService } from "../services";
+import { CustomPageService, NotificationService } from "../services";
 
 @Component({
     templateUrl: "./custompage.component.html",
@@ -14,7 +14,7 @@ export class CustomPageComponent implements OnInit {
     public isEditing: boolean;
     public isAdmin: boolean;
 
-    constructor(private auth: AuthService, private settings: SettingsService, private fb: FormBuilder,
+    constructor(private auth: AuthService, private settings: CustomPageService, private fb: FormBuilder,
                 private notificationService: NotificationService, 
                 private sanitizer: DomSanitizer) {
     }
@@ -29,7 +29,7 @@ export class CustomPageComponent implements OnInit {
                 fontAwesomeIcon: [x.fontAwesomeIcon, [Validators.required]],
             });
         });
-        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+        this.isAdmin = this.auth.hasRole("EditCustomPage");
     }
 
     public onSubmit() {

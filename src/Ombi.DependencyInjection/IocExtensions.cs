@@ -52,6 +52,7 @@ using Ombi.Store.Repository.Requests;
 using Ombi.Updater;
 using Ombi.Api.Telegram;
 using Ombi.Core.Authentication;
+using Ombi.Core.Engine.Demo;
 using Ombi.Core.Engine.V2;
 using Ombi.Core.Processor;
 using Ombi.Schedule.Jobs.Lidarr;
@@ -92,6 +93,8 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMassEmailSender, MassEmailSender>();
             services.AddTransient<IPlexOAuthManager, PlexOAuthManager>();
             services.AddTransient<IVoteEngine, VoteEngine>();
+            services.AddTransient<IDemoMovieSearchEngine, DemoMovieSearchEngine>();
+            services.AddTransient<IDemoTvSearchEngine, DemoTvSearchEngine>();
         }
 
         public static void RegisterEnginesV2(this IServiceCollection services)
