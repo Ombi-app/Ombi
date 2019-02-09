@@ -24,6 +24,10 @@ export class DiscoverComponent implements OnInit {
 
     public defaultTvPoster: string;
 
+    public popularActive: boolean = true;
+    public trendingActive: boolean;
+    public upcomingActive: boolean;
+
     constructor(private searchService: SearchV2Service) {
 
     }
@@ -36,6 +40,9 @@ export class DiscoverComponent implements OnInit {
     }
 
     public async popular() {
+        this.popularActive = true;
+        this.trendingActive = false;
+        this.upcomingActive = false;
         this.movies = await this.searchService.popularMovies().toPromise();
         this.tvShows = await this.searchService.popularTv().toPromise();
 
@@ -43,6 +50,9 @@ export class DiscoverComponent implements OnInit {
     }
     
     public async trending() {
+        this.popularActive = false;
+        this.trendingActive = true;
+        this.upcomingActive = false;
         this.movies = await this.searchService.nowPlayingMovies().toPromise();
         this.tvShows = await this.searchService.trendingTv().toPromise();
 
@@ -50,6 +60,9 @@ export class DiscoverComponent implements OnInit {
     }  
 
     public async upcoming() {
+        this.popularActive = false;
+        this.trendingActive = false;
+        this.upcomingActive = true;
         this.movies = await this.searchService.upcomingMovies().toPromise();
         this.tvShows = await this.searchService.anticipatedTv().toPromise();
 

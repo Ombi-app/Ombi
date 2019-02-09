@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.TvMaze.Models;
+using Ombi.Api.TvMaze.Models.V2;
 using Ombi.Helpers;
 
 namespace Ombi.Api.TvMaze
@@ -15,7 +15,6 @@ namespace Ombi.Api.TvMaze
         {
             Api = api;
             Logger = logger;
-            //Mapper = mapper;
         }
         private string Uri = "http://api.tvmaze.com";
         private IApi Api { get; }
@@ -75,5 +74,17 @@ namespace Ombi.Api.TvMaze
             return await Api.Request<List<TvMazeSeasons>>(request);
         }
 
+        public async Task<FullSearch> GetTvFullInformation(int id)
+        {
+            var request = new Request($"shows/{id}", Uri, HttpMethod.Get);
+
+            request.AddQueryString("embed[]", "cast");
+            request.AddQueryString("embed[]", "crew");
+            request.AddQueryString("embed[]", "episodes");
+
+            request.AddContentHeader("Content-Type", "application/json");
+
+            return await Api.Request<FullSearch>(request);
+        }
     }
 }

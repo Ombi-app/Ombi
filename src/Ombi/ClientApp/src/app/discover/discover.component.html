@@ -2,9 +2,9 @@
 
     <div class="row justify-content-md-center top-spacing">
         <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" (click)="popular()" mat-raised-button class="btn" color="primary">Popular</button>
-            <button type="button" (click)="trending()" mat-raised-button class="btn" color="primary">Trending</button>
-            <button type="button" (click)="upcoming()" mat-raised-button class="btn" color="primary">Upcoming</button>
+            <button type="button" (click)="popular()" [ngClass]="popularActive ? 'active-button' : ''" mat-raised-button class="btn" color="primary">Popular</button>
+            <button type="button" (click)="trending()" [ngClass]="trendingActive ? 'active-button' : ''" mat-raised-button class="btn" color="primary">Trending</button>
+            <button type="button" (click)="upcoming()" [ngClass]="upcomingActive ? 'active-button' : ''" mat-raised-button class="btn" color="primary">Upcoming</button>
         </div>
     </div>
 
@@ -15,21 +15,3 @@
     </div>
 </div>
 
-<!-- <div class="small-middle-container">
-        <div class="row">
-                <div class="col-lg-5">
-                    <div class="row">
-                        <div class="col-lg-4  small-padding" *ngFor="let result of discoverResults" [@slideIn]>
-                                <discover-card [result]="result"></discover-card>
-                        </div>
-                    </div>    
-                </div>
-                <div class="col-lg-5">
-                        <div class="row">
-                                <div class="col-lg-4  small-padding" *ngFor="let result of discoverResults" [@slideIn]>
-                                        <discover-card [result]="result"></discover-card>
-                                </div>
-                            </div>    
-                </div>
-            </div>
-    </div> -->

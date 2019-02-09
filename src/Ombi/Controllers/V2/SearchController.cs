@@ -19,7 +19,7 @@ namespace Ombi.Controllers.V2
     public class SearchController : ControllerBase
     {
         public SearchController(IMultiSearchEngine multiSearchEngine, IMovieEngine movieEngine,
-            ITvSearchEngine tvSearchEngine, IMovieEngineV2 v2Movie)
+            ITvSearchEngine tvSearchEngine, IMovieEngineV2 v2Movie, ITVSearchEngineV2 v2Tv)
         {
             _multiSearchEngine = multiSearchEngine;
             _movieEngine = movieEngine;
@@ -27,11 +27,13 @@ namespace Ombi.Controllers.V2
             _tvSearchEngine = tvSearchEngine;
             _tvSearchEngine.ResultLimit = 12;
             _movieEngineV2 = v2Movie;
+            _tvEngineV2 = v2Tv;
         }
 
         private readonly IMultiSearchEngine _multiSearchEngine;
         private readonly IMovieEngine _movieEngine;
         private readonly IMovieEngineV2 _movieEngineV2;
+        private readonly ITVSearchEngineV2 _tvEngineV2;
         private readonly ITvSearchEngine _tvSearchEngine;
 
         /// <summary>
@@ -52,6 +54,17 @@ namespace Ombi.Controllers.V2
         public async Task<MovieFullInfoViewModel> GetMovieInfo(int movieDbId)
         {
             return await _movieEngineV2.GetFullMovieInformation(movieDbId);
+        }
+
+
+        /// <summary>
+        /// Returns details for a single show
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("tv/{tvdbId}")]
+        public async Task<SearchFullInfoTvShowViewModel> GetTvInfo(int tvdbid)
+        {
+            return await _tvEngineV2.GetShowInformation(tvdbid);
         }
 
         /// <summary>

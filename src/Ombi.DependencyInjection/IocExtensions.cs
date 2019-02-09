@@ -50,7 +50,6 @@ using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Jobs.Sonarr;
 using Ombi.Store.Repository.Requests;
 using Ombi.Updater;
-using PlexContentCacher = Ombi.Schedule.Jobs.Plex;
 using Ombi.Api.Telegram;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine.V2;
@@ -59,7 +58,6 @@ using Ombi.Schedule.Jobs.Lidarr;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.SickRage;
 using Ombi.Schedule.Processor;
-using Ombi.Store.Entities;
 
 namespace Ombi.DependencyInjection
 {
@@ -100,6 +98,7 @@ namespace Ombi.DependencyInjection
         {
             services.AddTransient<IMultiSearchEngine, MultiSearchEngine>();
             services.AddTransient<IMovieEngineV2, MovieSearchEngineV2>();
+            services.AddTransient<ITVSearchEngineV2, TvSearchEngineV2>();
         }
 
         public static void RegisterHttp(this IServiceCollection services)

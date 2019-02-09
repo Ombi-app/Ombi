@@ -85,8 +85,6 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
 }
 
 export function baseurlFact() {
-   
-    console.log(window['_app_base']);
     return "/" + window['_app_base'];
 }
 

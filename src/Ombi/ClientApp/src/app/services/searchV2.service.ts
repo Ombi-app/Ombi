@@ -9,6 +9,7 @@ import { ServiceHelpers } from "./service.helpers";
 
 import { ISearchMovieResultV2 } from "../interfaces/ISearchMovieResultV2";
 import { promise } from "selenium-webdriver";
+import { ISearchTvResultV2 } from "../interfaces/ISearchTvResultV2";
 
 @Injectable()
 export class SearchV2Service extends ServiceHelpers {
@@ -55,7 +56,12 @@ export class SearchV2Service extends ServiceHelpers {
     public anticipatedTv(): Observable<ISearchTvResult[]> {
         return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/anticipated`, { headers: this.headers });
     }
+    
     public trendingTv(): Observable<ISearchTvResult[]> {
         return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/trending`, { headers: this.headers });
+    }
+    
+    public getTvInfo(tvdbid: number): Promise<ISearchTvResultV2> {
+        return this.http.get<ISearchTvResultV2>(`${this.url}/Tv/${tvdbid}`, { headers: this.headers }).toPromise();
     }
 }

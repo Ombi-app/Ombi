@@ -12,14 +12,11 @@ using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Ombi.Core.Models.Search.V2;
 
-namespace Ombi.Core.Engine
+namespace Ombi.Core.Engine.V2
 {
     public class MovieSearchEngineV2 : BaseMediaEngine, IMovieEngineV2
     {

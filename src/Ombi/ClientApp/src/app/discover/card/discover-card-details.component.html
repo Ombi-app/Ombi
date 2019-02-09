@@ -1,4 +1,7 @@
-<div *ngIf="result" mat-dialog-content class="background">
+<div class="spinner-container">
+<mat-spinner *ngIf="loading" [color]="'accent'"></mat-spinner>
+</div>
+<div *ngIf="!loading" mat-dialog-content class="background">
     <div class="row">
         <div class="col-4">
             <img id="cardImage" src="{{data.posterPath}}" class="poster" alt="{{data.title}}">
@@ -19,9 +22,12 @@
                             [translate]="'Common.NotAvailable'"></span></ng-template></small>
                 </div>
                 <div class="col-6">
-                    <strong>Studio: </strong> <small>{{result.productionCompanies[0].name}}</small>
+                    <strong *ngIf="movie">Studio: </strong> 
+                    <small *ngIf="movie">{{movie.productionCompanies[0].name}}</small>
+                    <strong *ngIf="tv">Network: </strong> 
+                    <small *ngIf="tv">{{tv.network.name}}</small>
                 </div>
-                <div class="col-6">
+                <div class="col-6" *ngIf="!data.available">
                     <strong>Request Status: </strong> <small>
                     <ng-template [ngIf]="data.approved && !data.available"><span class="label label-info"
                             id="processingRequestLabel" [translate]="'Common.ProcessingRequest'"></span></ng-template>
@@ -32,13 +38,22 @@
                         </small>
                 </div>
                 <div class="col-6">
-                    <strong>Director: </strong> <small>{{result.credits.crew[0].name}}</small>
+                    <strong *ngIf="movie">Director: </strong> 
+                    <small *ngIf="movie">{{movie.credits.crew[0].name}}</small>
+                    <strong *ngIf="tvCreator">Director: </strong> 
+                    <small *ngIf="tvCreator">{{tvCreator}}</small>
                 </div>
                 <div class="col-6">
-                    <strong>In Cinemas: </strong> <small>{{result.releaseDate}}</small>
+                    <strong *ngIf="movie">In Cinemas: </strong> 
+                    <small *ngIf="movie">{{movie.releaseDate | amLocal | amDateFormat: 'LL'}}</small>
+                    <strong *ngIf="tv">First Aired: </strong> 
+                    <small *ngIf="tv">{{tv.firstAired | amLocal | amDateFormat: 'LL'}}</small>
                 </div>
                 <div class="col-6">
-                    <strong>Writer: </strong> <small>{{result.credits.crew[1].name}}</small>
+                    <strong *ngIf="movie">Writer: </strong> 
+                    <small *ngIf="movie">{{movie.credits.crew[1].name}}</small>
+                    <strong *ngIf="tv">Exec Producer: </strong> 
+                    <small *ngIf="tv">{{tvProducer}}</small>
                 </div>
             </div>
 

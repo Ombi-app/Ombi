@@ -11,7 +11,7 @@ import { InputSwitchModule, SidebarModule } from "primeng/primeng";
 
 import {
   MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatTooltipModule} from '@angular/material';
-  import {  MatCardModule, MatInputModule, MatTabsModule, MatAutocompleteModule, MatCheckboxModule, MatExpansionModule, MatDialogModule } from "@angular/material";
+  import {  MatCardModule, MatInputModule, MatTabsModule, MatAutocompleteModule, MatCheckboxModule, MatExpansionModule, MatDialogModule, MatProgressSpinnerModule } from "@angular/material";
 
 @NgModule({
   declarations: [
@@ -25,6 +25,7 @@ import {
     TruncateModule,
     MomentModule,
     MatCardModule,
+    MatProgressSpinnerModule,
     MatAutocompleteModule,
     MatInputModule,
     MatTabsModule,
@@ -43,6 +44,7 @@ import {
       CommonModule,
       FormsModule,
       SidebarModule,
+      MatProgressSpinnerModule,
       IssuesReportComponent,
       TruncateModule,
       InputSwitchModule,
