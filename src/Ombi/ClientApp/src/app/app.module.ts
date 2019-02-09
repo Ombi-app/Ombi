@@ -42,7 +42,7 @@ import { TokenResetPasswordComponent } from "./login/tokenresetpassword.componen
 // Services
 import { AuthGuard } from "./auth/auth.guard";
 import { AuthService } from "./auth/auth.service";
-import { ImageService, SettingsService } from "./services";
+import { ImageService, SettingsService, CustomPageService } from "./services";
 import { LandingPageService } from "./services";
 import { NotificationService } from "./services";
 import { IssuesService, JobService, PlexTvService, StatusService, SearchService, IdentityService } from "./services";
@@ -165,6 +165,7 @@ export function JwtTokenGetter() {
         LandingPageService,
         ConfirmationService,
         ImageService,
+        CustomPageService,
         CookieService,
         JobService,
         IssuesService,
