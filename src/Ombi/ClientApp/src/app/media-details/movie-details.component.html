@@ -21,7 +21,7 @@
     </section>
 
     <section id="info-wrapper">
-        <div class="container">
+        <div class="small-middle-container">
             <div class="row">
                 <div class="col-md-2 col-sm-3 hidden-xs">
                     <div class="sidebar sidebar-poster affixable affix-top" style="width: 173px;">
@@ -35,31 +35,33 @@
                 </div>
 
                 <!--Next to poster-->
-                <div class="col-6 media-row">
+                <div class="col-lg-12 col-xl-6 media-row">
 
                     <a *ngIf="movie.homepage" class="media-icons" h href="{{movie.homepage}}" target="_blank">
                         <i matTooltip="Homepage" class="fa fa-home fa-2x grow"></i>
                     </a>
 
-                    <a *ngIf="movie.id" href="https://www.themoviedb.org/movie/{{movie.id}}" class="media-icons" target="_blank">
+                    <a *ngIf="movie.id" href="https://www.themoviedb.org/movie/{{movie.id}}" class="media-icons"
+                        target="_blank">
                         <i matTooltip="The Movie DB" class="fa fa-film fa-2x grow"></i>
                     </a>
 
-                    <a *ngIf="movie.videos.results.length > 0" class="media-icons" (click)="openDialog()"><i matTooltip="Trailer"
-                            class="fa fa-youtube-play fa-2x grow"></i></a>
+                    <a *ngIf="movie.videos.results.length > 0" class="media-icons" (click)="openDialog()"><i
+                            matTooltip="Trailer" class="fa fa-youtube-play fa-2x grow"></i></a>
 
-                    <a *ngIf="movie.imdbId" class="media-icons" href="https://imdb.com/title/{{movie.imdbId}}" target="_blank">
+                    <a *ngIf="movie.imdbId" class="media-icons" href="https://imdb.com/title/{{movie.imdbId}}"
+                        target="_blank">
                         <i matTooltip="Imdb" class="fa fa-imdb fa-2x grow"></i>
                     </a>
-                    <a *ngIf="movie.externalIds.twitterId" class="media-icons" href="https://twitter.com/{{movie.externalIds.twitterId}}"
-                        target="_blank">
+                    <a *ngIf="movie.externalIds.twitterId" class="media-icons"
+                        href="https://twitter.com/{{movie.externalIds.twitterId}}" target="_blank">
                         <i matTooltip="Twitter" class="fa fa-twitter fa-2x grow"></i>
                     </a>
-                    <a *ngIf="movie.externalIds.facebookId" class="media-icons" href="https://facebook.com/{{movie.externalIds.facebookId}}"
-                        target="_blank">
+                    <a *ngIf="movie.externalIds.facebookId" class="media-icons"
+                        href="https://facebook.com/{{movie.externalIds.facebookId}}" target="_blank">
                         <i matTooltip="Facebook" class="fa fa-facebook fa-2x grow"></i>
-                    </a> <a *ngIf="movie.externalIds.instagramId" class="media-icons" href="https://instagram.com/{{movie.externalIds.instagramId}}"
-                        target="_blank">
+                    </a> <a *ngIf="movie.externalIds.instagramId" class="media-icons"
+                        href="https://instagram.com/{{movie.externalIds.instagramId}}" target="_blank">
                         <i matTooltip="Instagram" class="fa fa-instagram fa-2x grow"></i>
                     </a>
 
@@ -68,12 +70,13 @@
             </div>
 
             <div class="row">
-                <div class="col-md-3 ">
+                <div class="col-12 col-md-3 ">
 
                     <mat-card class="card-full mat-elevation-z8">
                         <mat-card-content>
                             <div>
-                                <small><strong>Theatrical Release:</strong> {{movie.releaseDate | date: 'mediumDate'}}</small></div>
+                                <small><strong>Theatrical Release:</strong>
+                                    {{movie.releaseDate | date: 'mediumDate'}}</small></div>
                             <div>
                                 <small *ngIf="movie.digitalReleaseDate"><strong>Digital Release:</strong>
                                     {{movie.digitalReleaseDate | date:
@@ -98,7 +101,8 @@
                                     'USD'}}</small>
                             </div>
                             <div>
-                                <small *ngIf="movie.budget"><strong>Budget:</strong> {{movie.budget | currency: 'USD'}}</small>
+                                <small *ngIf="movie.budget"><strong>Budget:</strong>
+                                    {{movie.budget | currency: 'USD'}}</small>
                             </div>
                         </mat-card-content>
                     </mat-card>
@@ -106,21 +110,22 @@
 
 
                 </div>
-                <div class="col-md-7">
+                <div class="col-12 col-md-7">
                     <mat-card class="card-full mat-elevation-z8">
                         <mat-card-content>
                             {{movie.overview}}
                         </mat-card-content>
                     </mat-card>
                 </div>
-                <div class="col-md-2 card-full">
+                <div class="col-12 col-md-2 card-full">
 
                     <div><button mat-raised-button class="btn-green btn-spacing" *ngIf="movie.available"> {{
                             'Common.Available' | translate }}</button></div>
                     <div *ngIf="!movie.available">
                         <div *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></div>
                         <ng-template #requestedBtn>
-                            <button mat-raised-button class="btn-spacing btn-orange" [disabled]><i class="fa fa-check"></i>
+                            <button mat-raised-button class="btn-spacing btn-orange" [disabled]><i
+                                    class="fa fa-check"></i>
                                 {{ 'Common.Requested' | translate }}</button>
                         </ng-template>
                         <ng-template #notRequestedBtn>
@@ -133,25 +138,26 @@
                     </div>
                     <div><button mat-raised-button class="btn-spacing" color="warn">Deny</button></div>
                     <div *ngIf="movie.available">
-                        <a *ngIf="movie.plexUrl" mat-raised-button style="text-align: right" class="btn-spacing btn-greem"
-                            href="{{movie.plexUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnPlex' |
+                        <a *ngIf="movie.plexUrl" mat-raised-button style="text-align: right"
+                            class="btn-spacing btn-greem" href="{{movie.plexUrl}}" target="_blank"><i
+                                class="fa fa-eye"></i> {{'Search.ViewOnPlex' |
                             translate}}</a>
-                        <a *ngIf="movie.embyUrl" mat-raised-button class="btn-green btn-spacing" href="{{movie.embyUrl}}"
-                            target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
+                        <a *ngIf="movie.embyUrl" mat-raised-button class="btn-green btn-spacing"
+                            href="{{movie.embyUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
                             translate}}</a>
                     </div>
                 </div>
 
             </div>
             <div class="row card-spacer">
-                <div class="col-md-2">
+                <div class="col-12 col-md-2">
 
 
                 </div>
             </div>
 
             <div class="row card-spacer">
-                <div class="col-12">
+                <div class="col-12 col-md-10">
                     <mat-accordion>
                         <mat-expansion-panel>
                             <mat-expansion-panel-header>
@@ -166,8 +172,9 @@
                                     <div class="sidebar affixable affix-top preview-poster">
                                         <div class="poster">
                                             <a [routerLink]="'/details/movie/'+r.id">
-                                                <img class="real grow" matTooltip="{{r.title}}" src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}"
-                                                    alt="Poster" style="display: block;">
+                                                <img class="real grow" matTooltip="{{r.title}}"
+                                                    src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}" alt="Poster"
+                                                    style="display: block;">
                                             </a>
                                         </div>
                                     </div>
@@ -188,8 +195,9 @@
                                     <div class="sidebar affixable affix-top preview-poster">
                                         <div class="poster ">
                                             <a [routerLink]="'/details/movie/'+r.id">
-                                                <img class="real grow" matTooltip="{{r.title}}" src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}"
-                                                    alt="Poster" style="display: block;">
+                                                <img class="real grow" matTooltip="{{r.title}}"
+                                                    src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}" alt="Poster"
+                                                    style="display: block;">
                                             </a>
                                         </div>
                                     </div>
@@ -207,13 +215,35 @@
                             <div class="row card-spacer" *ngIf="movie.videos.results.length > 0">
 
                                 <div class="col-md-6" *ngFor="let video of movie.videos.results">
-                                    <iframe width="100%" height="315px" [src]="'https://www.youtube.com/embed/' + video.key | safe"
-                                        frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                    <iframe width="100%" height="315px"
+                                        [src]="'https://www.youtube.com/embed/' + video.key | safe" frameborder="0"
+                                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                                         allowfullscreen></iframe>
                                 </div>
                             </div>
                         </mat-expansion-panel>
                     </mat-accordion>
+                </div>
+
+
+                <div class="col-12 col-md-2">
+                    <div *ngFor="let castIndex of [0,1,2,3,4]" class="row align-items-center cast-row ">
+                        <div class="col-4">
+                            <img src="https://image.tmdb.org/t/p/w300/{{movie.credits.cast[castIndex].profile_path}}"
+                                class="cast-profile-img mat-elevation-z8" />
+                        </div>
+                        <div class="col-8">
+                                <div class="row cast-names">
+                                        <div class="col-12">
+                                            <div><small>{{movie.credits.cast[castIndex].character}}</small></div>
+                                        </div>
+                                        <div class="col-12 cast-name">
+                                            <div><small>{{movie.credits.cast[castIndex].name}}</small></div>
+                                        </div>
+                                    </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
 
@@ -222,13 +252,6 @@
 
         </div>
     </section>
-
-    <!--  THIS IS THE YOUTUBE VIDEOS
-    <div *ngFor="let video of movie.videos.results">
-        <iframe width="560" height="315" [src]="'https://www.youtube.com/embed/' + video.key | safe" frameborder="0"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </div> -->
-
 
 
 
