@@ -87,6 +87,7 @@ export interface IBaseRequest {
   requestedUser: IUser;
   canApprove: boolean;
   title: string;
+  requestedByAlias: string;
 }
 
 export interface ITvRequests {
@@ -145,6 +146,7 @@ export interface IEpisodesRequests {
   episodeNumber: number;
   title: string;
   airDate: Date;
+  airDateDisplay: string;
   url: string;
   available: boolean;
   requested: boolean;

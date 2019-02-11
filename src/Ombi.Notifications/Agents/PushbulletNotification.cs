@@ -44,131 +44,43 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task NewRequest(NotificationOptions model, PushbulletSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.NewRequest, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.NewRequest} is disabled for {NotificationAgent.Pushbullet}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-            
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.NewRequest);
         }
+
 
         protected override async Task NewIssue(NotificationOptions model, PushbulletSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.Issue, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.Issue} is disabled for {NotificationAgent.Pushbullet}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.Issue);
         }
 
         protected override async Task IssueComment(NotificationOptions model, PushbulletSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.IssueComment, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.IssueComment} is disabled for {NotificationAgent.Pushbullet}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.IssueComment);
         }
 
         protected override async Task IssueResolved(NotificationOptions model, PushbulletSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.IssueResolved, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.IssueResolved} is disabled for {NotificationAgent.Pushbullet}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.IssueResolved);
         }
 
         protected override async Task AddedToRequestQueue(NotificationOptions model, PushbulletSettings settings)
         {
-            string user;
-            string title;
-            if (model.RequestType == RequestType.Movie)
-            {
-                user = MovieRequest.RequestedUser.UserAlias;
-                title = MovieRequest.Title;
-            }
-            else
-            {
-                user = TvRequest.RequestedUser.UserAlias;
-                title = TvRequest.ParentRequest.Title;
-            }
-            var message = $"Hello! The user '{user}' has requested {title} but it could not be added. This has been added into the requests queue and will keep retrying";
-            var notification = new NotificationMessage
-            {
-                Message = message
-            };
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.ItemAddedToFaultQueue);
         }
 
         protected override async Task RequestDeclined(NotificationOptions model, PushbulletSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.RequestDeclined, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.RequestDeclined} is disabled for {NotificationAgent.Pushbullet}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.RequestDeclined);
         }
 
         protected override async Task RequestApproved(NotificationOptions model, PushbulletSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.RequestApproved, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.RequestApproved} is disabled for {NotificationAgent.Pushbullet}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-            
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.RequestApproved);
         }
 
         protected override async Task AvailableRequest(NotificationOptions model, PushbulletSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.RequestAvailable, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.RequestAvailable} is disabled for {NotificationAgent.Pushbullet}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.RequestAvailable);
         }
 
         protected override async Task Send(NotificationMessage model, PushbulletSettings settings)
@@ -190,6 +102,23 @@ namespace Ombi.Notifications.Agents
             {
                 Message = message,
             };
+            await Send(notification, settings);
+        }
+
+        private async Task Run(NotificationOptions model, PushbulletSettings settings, NotificationType type)
+        {
+            var parsed = await LoadTemplate(NotificationAgent.Pushbullet, type, model);
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {type} is disabled for {NotificationAgent.Pushbullet}");
+                return;
+            }
+
+            var notification = new NotificationMessage
+            {
+                Message = parsed.Message,
+            };
+
             await Send(notification, settings);
         }
     }

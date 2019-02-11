@@ -53,6 +53,7 @@ using Ombi.Updater;
 using PlexContentCacher = Ombi.Schedule.Jobs.Plex;
 using Ombi.Api.Telegram;
 using Ombi.Core.Authentication;
+using Ombi.Core.Engine.Demo;
 using Ombi.Core.Processor;
 using Ombi.Schedule.Jobs.Lidarr;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
@@ -92,6 +93,8 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMassEmailSender, MassEmailSender>();
             services.AddTransient<IPlexOAuthManager, PlexOAuthManager>();
             services.AddTransient<IVoteEngine, VoteEngine>();
+            services.AddTransient<IDemoMovieSearchEngine, DemoMovieSearchEngine>();
+            services.AddTransient<IDemoTvSearchEngine, DemoTvSearchEngine>();
         }
         public static void RegisterHttp(this IServiceCollection services)
         {

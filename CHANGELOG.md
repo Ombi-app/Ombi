@@ -3,9 +3,22 @@
 
 ## v3.0.4119 (2019-1-09)
 
+
 ### **New Features**
 
-- Added a new Custom Page, this will allow you to completely change the page via a WYSIWYG editor! [TidusJar] 
+- Update CHANGELOG.md. [Jamie]
+
+- Added a page where the admin can write/style/basically do whatever they want with e.g. FAQ for the users #2715 This needs to be enabled in the Customization Settings and then it's all configured on the page. [TidusJar]
+
+- Updated the AspnetCore.App package to remove the CVE-2019-0564 vulnerability. [TidusJar]
+
+- Added a global language flag that now applies to the search by default. [tidusjar]
+
+- Updated the frontend packages (Using Angular 7 now) [TidusJar]
+
+- Added capture of anonymous analytical data. [tidusjar]
+
+- Added {AvailableDate} as a Notification Variable, this is the date the request was marked as available. See here: https://github.com/tidusjar/Ombi/wiki/Notification-Template-Variables. [tidusjar]
 
 - Added the ability to search movies via the movie db with a different language! [tidusjar]
 
@@ -26,14 +39,30 @@
 - Updated boostrap #2694. [TidusJar]
 
 - Added the ability to deny a request with a reason. [TidusJar]
-
 - Updated to .net core 2.2 and included a linux-arm64 build. [aptalca]
 
 - Make the newsletter BCC the users rather than creating a million newsletters (Hopefully will stop SMTP providers from marking as spam). This does mean that the custom user customization in the newsletter will no longer work. [TidusJar]
 
+
 - New translations [TidusJar]
 
 ### **Fixes**
+
+- There is now a new Job in ombi that will clear out the Plex/Emby data and recache. This will prevent the issues going forward that we have when Ombi and the Media server fall out of sync with deletions/updates #2641 #2362 #1566. [TidusJar]
+
+- Potentially fix #2726. [TidusJar]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- Fixed #2725 and #2721. [TidusJar]
+
+- Made the newsletter use the default lanuage code set in the Ombi settings for movie information. [TidusJar]
+
+- Save the language code against the request so we can use it later e.g. Sending to the DVR apps. [tidusjar]
 
 - Fixed #2716. [tidusjar]
 

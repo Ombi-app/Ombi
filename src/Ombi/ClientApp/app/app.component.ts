@@ -4,7 +4,7 @@ import { NavigationStart, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { AuthService } from "./auth/auth.service";
 import { ILocalUser } from "./auth/IUserLogin";
-import { IdentityService, NotificationService } from "./services";
+import { CustomPageService, IdentityService, NotificationService } from "./services";
 import { JobService, SettingsService } from "./services";
 
 import { ICustomizationSettings, ICustomPage } from "./interfaces";
@@ -35,7 +35,8 @@ export class AppComponent implements OnInit {
                 private readonly jobService: JobService,
                 public readonly translate: TranslateService,
                 private readonly identityService: IdentityService,
-                private readonly platformLocation: PlatformLocation) {
+                private readonly platformLocation: PlatformLocation,
+                private readonly customPageService: CustomPageService) {
 
                     const base = this.platformLocation.getBaseHrefFromDOM();
                     if (base.length > 1) {
@@ -57,7 +58,7 @@ export class AppComponent implements OnInit {
         this.settingsService.getCustomization().subscribe(x => {
             this.customizationSettings = x;
             if(this.customizationSettings.useCustomPage) {
-                this.settingsService.getCustomPage().subscribe(c => {
+                this.customPageService.getCustomPage().subscribe(c => {
                     this.customPageSettings = c;
                     if(!this.customPageSettings.title) {
                         this.customPageSettings.title = "Custom Page";

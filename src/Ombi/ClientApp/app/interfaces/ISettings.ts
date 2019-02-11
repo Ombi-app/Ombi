@@ -41,6 +41,7 @@ export interface IEmbyServer extends IExternalSettings {
   apiKey: string;
   administratorId: string;
   enableEpisodeSearching: boolean;
+  serverHostname: string;
 }
 
 export interface IPlexSettings extends ISettings {

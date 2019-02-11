@@ -83,7 +83,8 @@ namespace Ombi.Core.Engine
                 Title = album.title,
                 Disk = album.images?.FirstOrDefault(x => x.coverType.Equals("disc"))?.url,
                 Cover = album.images?.FirstOrDefault(x => x.coverType.Equals("cover"))?.url,
-                ForeignArtistId = album?.artist?.foreignArtistId ?? string.Empty
+                ForeignArtistId = album?.artist?.foreignArtistId ?? string.Empty,
+                RequestedByAlias = model.RequestedByAlias
             };
             if (requestModel.Cover.IsNullOrEmpty())
             {

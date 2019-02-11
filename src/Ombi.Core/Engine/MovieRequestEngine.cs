@@ -83,7 +83,8 @@ namespace Ombi.Core.Engine
                 Approved = false,
                 RequestedUserId = userDetails.Id,
                 Background = movieInfo.BackdropPath,
-                LangCode = model.LanguageCode
+                LangCode = model.LanguageCode,
+                RequestedByAlias = model.RequestedByAlias
             };
 
             var usDates = movieInfo.ReleaseDates?.Results?.FirstOrDefault(x => x.IsoCode == "US");
@@ -325,6 +326,7 @@ namespace Ombi.Core.Engine
 
             return new RequestEngineResult
             {
+                Result = true,
                 Message = "Request successfully deleted",
             };
         }

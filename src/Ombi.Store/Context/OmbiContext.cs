@@ -124,6 +124,16 @@ namespace Ombi.Store.Context
                 SaveChanges();
             }
 
+            var editCustomPage = Roles.Where(x => x.Name == OmbiRoles.EditCustomPage);
+            if (!editCustomPage.Any())
+            {
+                Roles.Add(new IdentityRole(OmbiRoles.EditCustomPage)
+                {
+                    NormalizedName = OmbiRoles.EditCustomPage.ToUpper()
+                });
+                SaveChanges();
+            }
+
             // Make sure we have the API User
             var apiUserExists = Users.Any(x => x.UserName.Equals("Api", StringComparison.CurrentCultureIgnoreCase));
             if (!apiUserExists)
@@ -209,7 +219,15 @@ namespace Ombi.Store.Context
                             };
                             break;
                         case NotificationType.ItemAddedToFaultQueue:
-                            continue;
+                            notificationToAdd = new NotificationTemplates
+                            {
+                                NotificationType = notificationType,
+                                Message = "Hello! The user '{UserName}' has requested {Title} but it could not be added. This has been added into the requests queue and will keep retrying",
+                                Subject = "Item Added To Retry Queue",
+                                Agent = agent,
+                                Enabled = true,
+                            };
+                            break;
                         case NotificationType.WelcomeEmail:
                             notificationToAdd = new NotificationTemplates
                             {

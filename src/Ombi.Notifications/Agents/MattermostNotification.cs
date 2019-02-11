@@ -46,20 +46,7 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task NewRequest(NotificationOptions model, MattermostNotificationSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Mattermost, NotificationType.NewRequest, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.NewRequest} is disabled for {NotificationAgent.Mattermost}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-
-            AddOtherInformation(model, notification, parsed);
-            //notification.Other.Add("overview", model.RequestType == RequestType.Movie ? base.MovieRequest.Overview : TvRequest.);
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.NewRequest);
         }
 
         private void AddOtherInformation(NotificationOptions model, NotificationMessage notification,
@@ -71,125 +58,37 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task NewIssue(NotificationOptions model, MattermostNotificationSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Mattermost, NotificationType.Issue, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.Issue} is disabled for {NotificationAgent.Mattermost}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-            AddOtherInformation(model, notification, parsed);
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.Issue);
         }
 
         protected override async Task IssueComment(NotificationOptions model, MattermostNotificationSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Mattermost, NotificationType.IssueComment, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.IssueComment} is disabled for {NotificationAgent.Mattermost}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-            AddOtherInformation(model, notification, parsed);
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.IssueComment);
         }
 
         protected override async Task IssueResolved(NotificationOptions model, MattermostNotificationSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Mattermost, NotificationType.IssueResolved, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.IssueResolved} is disabled for {NotificationAgent.Mattermost}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-            AddOtherInformation(model, notification, parsed);
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.IssueResolved);
         }
 
         protected override async Task AddedToRequestQueue(NotificationOptions model, MattermostNotificationSettings settings)
         {
-            var user = string.Empty;
-            var title = string.Empty;
-            var image = string.Empty;
-            if (model.RequestType == RequestType.Movie)
-            {
-                user = MovieRequest.RequestedUser.UserAlias;
-                title = MovieRequest.Title;
-                image = MovieRequest.PosterPath;
-            }
-            else
-            {
-                user = TvRequest.RequestedUser.UserAlias;
-                title = TvRequest.ParentRequest.Title;
-                image = TvRequest.ParentRequest.PosterPath;
-            }
-            var message = $"Hello! The user '{user}' has requested {title} but it could not be added. This has been added into the requests queue and will keep retrying";
-            var notification = new NotificationMessage
-            {
-                Message = message
-            };
-            notification.Other.Add("image", image);
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.ItemAddedToFaultQueue);
         }
 
         protected override async Task RequestDeclined(NotificationOptions model, MattermostNotificationSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Mattermost, NotificationType.RequestDeclined, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.RequestDeclined} is disabled for {NotificationAgent.Mattermost}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-            AddOtherInformation(model, notification, parsed);
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.RequestDeclined);
         }
 
         protected override async Task RequestApproved(NotificationOptions model, MattermostNotificationSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Mattermost, NotificationType.RequestApproved, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.RequestApproved} is disabled for {NotificationAgent.Mattermost}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-
-            AddOtherInformation(model, notification, parsed);
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.RequestApproved);
         }
 
         protected override async Task AvailableRequest(NotificationOptions model, MattermostNotificationSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Mattermost, NotificationType.RequestAvailable, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.RequestAvailable} is disabled for {NotificationAgent.Mattermost}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-            AddOtherInformation(model, notification, parsed);
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.RequestAvailable);
         }
 
         protected override async Task Send(NotificationMessage model, MattermostNotificationSettings settings)
@@ -226,6 +125,22 @@ namespace Ombi.Notifications.Agents
             {
                 Message = message,
             };
+            await Send(notification, settings);
+        }
+
+        private async Task Run(NotificationOptions model, MattermostNotificationSettings settings, NotificationType type)
+        {
+            var parsed = await LoadTemplate(NotificationAgent.Mattermost, type, model);
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {type} is disabled for {NotificationAgent.Mattermost}");
+                return;
+            }
+            var notification = new NotificationMessage
+            {
+                Message = parsed.Message,
+            };
+            AddOtherInformation(model, notification, parsed);
             await Send(notification, settings);
         }
     }

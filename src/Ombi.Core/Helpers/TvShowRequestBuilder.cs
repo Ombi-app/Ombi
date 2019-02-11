@@ -72,6 +72,7 @@ namespace Ombi.Core.Helpers
                 SeasonRequests = new List<SeasonRequests>(),
                 Title = ShowInfo.name,
                 ReleaseYear = FirstAir,
+                RequestedByAlias = model.RequestedByAlias,
                 SeriesType = ShowInfo.genres.Any( s => s.Equals("Anime", StringComparison.InvariantCultureIgnoreCase)) ? SeriesType.Anime : SeriesType.Standard
             };
 

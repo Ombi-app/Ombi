@@ -27,28 +27,35 @@
     </div>
     <!-- Refine search options -->
     <div class="row top-spacing form-group vcenter" *ngIf="refineSearchEnabled">
-            <div class="col-md-1">
-                    <div class="form-group">
-                            <label class="control-label">Year</label>
-                        
-                <input [(ngModel)]="searchYear" class="form-control form-control-custom refine-option">
-                        </div>
-            </div>
+        <div class="col-md-1">
+            <div class="form-group">
+                <label class="control-label">Year</label>
 
-            <!-- <label for="name" class="col-xs-2 col-md-1">Language:</label> -->
-            <div class="col-md-2">
-                    <div class="form-group">
-                            <label for="select" class="control-label">Language</label>
-                            <div id="profiles">
-                                <select [(ngModel)]="selectedLanguage" class="form-control form-control-custom refine-option"
-                                    id="select">
-                                    <option *ngFor="let lang of langauges" value="{{lang.code}}">{{lang.nativeName}}</option>
-                                </select>
-                            </div>
-                        </div>
-        
+                <input [(ngModel)]="searchYear" class="form-control form-control-custom refine-option">
             </div>
-        <div class="col-md-9">
+        </div>
+
+        <!-- <label for="name" class="col-xs-2 col-md-1">Language:</label> -->
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="select" class="control-label">Language</label>
+                <div id="profiles">
+                    <select [(ngModel)]="selectedLanguage" class="form-control form-control-custom refine-option" id="select">
+                        <option *ngFor="let lang of langauges" value="{{lang.code}}">{{lang.nativeName}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" id="actorSearch" name="actorSearch" [(ngModel)]="actorSearch">
+                    <label for="actorSearch" tooltipPosition="top" pTooltip="Search for movies by actor">Actor Search</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
             <button class="btn pull-right btn-success-outline" (click)="applyRefinedSearch()">Apply</button>
         </div>
     </div>
@@ -70,7 +77,8 @@
                 <div class="myBg backdrop" [style.background-image]="result.background"></div>
                 <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
                 <div class="col-sm-2 small-padding">
-                    <img *ngIf="result.posterPath" class="img-responsive poster" src="{{result.posterPath}}" alt="poster">
+                    <img *ngIf="result.posterPath" class="img-responsive poster movie-poster" src="{{result.posterPath}}"
+                        alt="poster">
 
                 </div>
                 <div class="col-sm-8 small-padding">
