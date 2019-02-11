@@ -1,13 +1,8 @@
 # Changelog
 
-## (unreleased)
 
-### **New Features**
+## v3.0.4119 (2019-1-09)
 
-- Added new classes to the posters #2732. [TidusJar]
-
-
-## v3.0.4119 (2019-01-09)
 
 ### **New Features**
 
@@ -29,33 +24,27 @@
 
 - Added the ability to specify a year when searching for movies. [tidusjar]
 
-- Update NewsletterTemplate.html. [d1slact0r]
+- Made the newsletter use the default lanuage code set in the Ombi settings for movie information. [TidusJar]
 
-- Update NewsletterTemplate.html. [d1slact0r]
+- Added a global language flag that now applies to the search by default. [tidusjar]
 
-- Update NewsletterTemplate.html. [d1slact0r]
+- Updated the frontend packages (Using Angular 7 now) [TidusJar]
 
-- Update HtmlTemplateGenerator.cs. [d1slact0r]
+- Added capture of anonymous analytical data. [tidusjar]
 
-- Update NewsletterTemplate.html. [d1slact0r]
+- Added {AvailableDate} as a Notification Variable, this is the date the request was marked as available. See here: https://github.com/tidusjar/Ombi/wiki/Notification-Template-Variables. [tidusjar]
 
-- Update HtmlTemplateGenerator.cs. [d1slact0r]
+- Updated the Newsletter template! Better mail client support [d1slact0r]
 
-- Update NewsletterTemplate.html. [d1slact0r]
-
-- Update NewsletterTemplate.html. [d1slact0r]
-
-- Update NewsletterTemplate.html. [d1slact0r]
-
-- Update HtmlTemplateGenerator.cs. [d1slact0r]
-
-- Updated boostrap #2694. [Jamie]
+- Updated boostrap #2694. [TidusJar]
 
 - Added the ability to deny a request with a reason. [TidusJar]
+- Updated to .net core 2.2 and included a linux-arm64 build. [aptalca]
 
-- Update EmbyEpisodeSync.cs. [Jamie]
+- Make the newsletter BCC the users rather than creating a million newsletters (Hopefully will stop SMTP providers from marking as spam). This does mean that the custom user customization in the newsletter will no longer work. [TidusJar]
 
-- Updated to .net core 2.2 and included a linux-arm64 build. [TidusJar]
+
+- New translations [TidusJar]
 
 ### **Fixes**
 
@@ -77,61 +66,11 @@
 
 - Fixed #2716. [tidusjar]
 
-- Make the newsletter BCC the users rather than creating a million newsletters (Hopefully will stop SMTP providers from marking as spam). This does mean that the custom user customization in the newsletter will no longer work. [TidusJar]
-
 - If we don't know the Plex agent, then see if it's a ImdbId, if it's not check the string for any episode and season hints #2695. [tidusjar]
-
-- New translations en.json (Swedish) [Jamie]
-
-- New translations en.json (Spanish) [Jamie]
-
-- New translations en.json (Portuguese, Brazilian) [Jamie]
-
-- New translations en.json (Polish) [Jamie]
-
-- New translations en.json (Norwegian) [Jamie]
-
-- New translations en.json (Italian) [Jamie]
-
-- New translations en.json (German) [Jamie]
-
-- New translations en.json (French) [Jamie]
-
-- New translations en.json (Dutch) [Jamie]
-
-- New translations en.json (Danish) [Jamie]
-
-- New translations en.json (Dutch) [Jamie]
-
-- New translations en.json (Dutch) [Jamie]
-
-- New translations en.json (Dutch) [Jamie]
-
-- Made the search results the language specified in the search refinement. [tidusjar]
 
 - Fixed #2704. [tidusjar]
 
-- Now it is fixed :) [d1slact0r]
-
-- Android please be nice now. [d1slact0r]
-
-- Fixed title bit better. [d1slact0r]
-
-- Fixed titles. [d1slact0r]
-
-- This should fix the build for sure (stupid quotes) [d1slact0r]
-
-- Fixes build. [d1slact0r]
-
-- Rewritten the whole newsletter template. [d1slact0r]
-
 - Fixed #2697. [tidusjar]
-
-- Add linux-arm runtime identifier. [aptalca]
-
-- Add back arm packages. [aptalca]
-
-- Add arm32 package. [aptalca]
 
 - Fixed #2691. [tidusjar]
 
@@ -141,13 +80,10 @@
 
 - Fixed #2678. [TidusJar]
 
-- Deny reason for movie requests. [TidusJar]
-
 - Set the landing and login pages background refresh to 15 seconds rather than 10 and 7. [TidusJar]
 
 - Fixed a bug with us thinking future dated emby episodes are not available, Consoldated the emby and plex search rules (since they have the same logic) [TidusJar]
 
-- Fixed build. [TidusJar]
 
 
 ## v3.0.4036 (2018-12-11)
