@@ -11,10 +11,10 @@
   },
   "Common": {
     "ContinueButton": "Dalej",
-    "Available": "Dostępny",
+    "Available": "Dostępne",
     "PartiallyAvailable": "Częściowo dostępne",
     "Monitored": "Monitorowane",
-    "NotAvailable": "Niedostępny",
+    "NotAvailable": "Niedostępne",
     "ProcessingRequest": "Przetwarzanie zgłoszenia",
     "PendingApproval": "Oczekujące na zatwierdzenie",
     "RequestDenied": "Zgłoszenie odrzucone",
@@ -139,9 +139,9 @@
     "Remaining": {
       "Quota": "{{remaining}}/{{total}} pozostałych żądań",
       "NextDays": "Kolejne żądanie zostanie dodane za {{time}} dni",
-      "NextHours": "Another request will be added in {{time}} hours",
-      "NextMinutes": "Another request will be added in {{time}} minutes",
-      "NextMinute": "Another request will be added in {{time}} minute"
+      "NextHours": "Kolejne żądanie zostanie dodane za {{time}} godzin(y)",
+      "NextMinutes": "Kolejne żądanie zostanie dodane za {{time}} minut(y)",
+      "NextMinute": "Kolejne żądanie zostanie dodane za {{time}} minut(y)"
     }
   },
   "Issues": {
@@ -171,15 +171,15 @@
     "PendingApproval": "Oczekujące na zatwierdzenie"
   },
   "UserManagment": {
-    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
-    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
-    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
+    "TvRemaining": "TV: pozostało {{remaining}}/{{total}}",
+    "MovieRemaining": "Filmy: pozostało {{remaining}}/{{total}}",
+    "MusicRemaining": "Muzyka: pozostało {{remaining}}/{{total}}",
     "TvDue": "TV: {{date}}",
-    "MovieDue": "Movie: {{date}}",
-    "MusicDue": "Music: {{date}}"
+    "MovieDue": "Film: {{date}}",
+    "MusicDue": "Muzyka: {{date}}"
   },
   "Votes": {
-    "CompletedVotesTab": "Voted",
-    "VotesTab": "Votes Needed"
+    "CompletedVotesTab": "Zagłosowano",
+    "VotesTab": "Potrzebne głosy"
   }
 }
