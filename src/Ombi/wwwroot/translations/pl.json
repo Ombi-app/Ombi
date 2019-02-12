@@ -103,11 +103,11 @@
     "Title": "Zgłoszenia",
     "Paragraph": "Poniżej są twoje i wszystkie inne zgłoszenia, a także ich status akceptacji i pobierania.",
     "MoviesTab": "Filmy",
-    "TvTab": "Seriale",
+    "TvTab": "Programy TV",
     "MusicTab": "Muzyka",
     "RequestedBy": "Zgłoszone przez:",
-    "Status": "Stan:",
-    "RequestStatus": "Stan zgłoszenia:",
+    "Status": "Status:",
+    "RequestStatus": "Status zgłoszenia:",
     "Denied": "Odrzucono:",
     "TheatricalRelease": "Premiera kinowa: {{date}}",
     "ReleaseDate": "Wydany: {{date}}",
@@ -125,7 +125,7 @@
     "Season": "Sezon:",
     "GridTitle": "Tytuł",
     "AirDate": "Data emisji",
-    "GridStatus": "Stan",
+    "GridStatus": "Status",
     "ReportIssue": "Zgłoś problem",
     "Filter": "Filtr",
     "Sort": "Sortowanie",
@@ -134,14 +134,14 @@
     "SortTitleDesc": "Tytuł ▼",
     "SortRequestDateAsc": "Data zgłoszenia ▲",
     "SortRequestDateDesc": "Data zgłoszenia ▼",
-    "SortStatusAsc": "Stan ▲",
-    "SortStatusDesc": "Stan ▼",
+    "SortStatusAsc": "Status ▲",
+    "SortStatusDesc": "Status ▼",
     "Remaining": {
       "Quota": "{{remaining}}/{{total}} pozostałych zgłoszeń",
-      "NextDays": "Kolejne żądanie zostanie dodane za {{time}} dni",
-      "NextHours": "Kolejne żądanie zostanie dodane za {{time}} godzin(y)",
-      "NextMinutes": "Kolejne żądanie zostanie dodane za {{time}} minut(y)",
-      "NextMinute": "Kolejne żądanie zostanie dodane za {{time}} minut(y)"
+      "NextDays": "Kolejne zgłoszenie zostanie dodane za {{time}} dni",
+      "NextHours": "Kolejne zgłoszenie zostanie dodane za {{time}} godzin(y)",
+      "NextMinutes": "Kolejne zgłoszenie zostanie dodane za {{time}} minut(y)",
+      "NextMinute": "Kolejne zgłoszenie zostanie dodane za {{time}} minut(y)"
     }
   },
   "Issues": {
@@ -166,7 +166,7 @@
   "Filter": {
     "ClearFilter": "Wyczyść fltr",
     "FilterHeaderAvailability": "Dostępność",
-    "FilterHeaderRequestStatus": "Stan",
+    "FilterHeaderRequestStatus": "Status",
     "Approved": "Zatwierdzone",
     "PendingApproval": "Oczekujące na zatwierdzenie"
   },
