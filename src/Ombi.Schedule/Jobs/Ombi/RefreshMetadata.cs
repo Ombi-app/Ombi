@@ -58,7 +58,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 {
                     await StartPlex();
                 }
-
+                
                 var embySettings = await _embySettings.GetSettingsAsync();
                 if (embySettings.Enable)
                 {
@@ -162,7 +162,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     _plexRepo.UpdateWithoutSave(show);
                 }
                 tvCount++;
-                if (tvCount >= 20)
+                if (tvCount >= 75)
                 {
                     await _plexRepo.SaveChangesAsync();
                     tvCount = 0;
@@ -202,7 +202,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     _embyRepo.UpdateWithoutSave(show);
                 }
                 tvCount++;
-                if (tvCount >= 20)
+                if (tvCount >= 75)
                 {
                     await _embyRepo.SaveChangesAsync();
                     tvCount = 0;
@@ -233,7 +233,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     _plexRepo.UpdateWithoutSave(movie);
                 }
                 movieCount++;
-                if (movieCount >= 20)
+                if (movieCount >= 75)
                 {
                     await _plexRepo.SaveChangesAsync();
                     movieCount = 0;
@@ -292,7 +292,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     _embyRepo.UpdateWithoutSave(movie);
                 }
                 movieCount++;
-                if (movieCount >= 20)
+                if (movieCount >= 75)
                 {
                     await _embyRepo.SaveChangesAsync();
                     movieCount = 0;

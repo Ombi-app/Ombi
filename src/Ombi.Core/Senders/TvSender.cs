@@ -57,7 +57,7 @@ namespace Ombi.Core.Senders
                 var sonarr = await SonarrSettings.GetSettingsAsync();
                 if (sonarr.Enabled)
                 {
-                    var result = await SendToSonarr(model);
+                    var result = await SendToSonarr(model, sonarr);
                     if (result != null)
                     {
                         return new SenderResult
@@ -109,7 +109,7 @@ namespace Ombi.Core.Senders
             catch (Exception e)
             {
                 Logger.LogError(e, "Exception thrown when sending a movie to DVR app, added to the request queue");
-                // Check if already in request quee
+                // Check if already in request queue
                 var existingQueue = await _requestQueueRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id);
                 if (existingQueue != null)
                 {
@@ -134,7 +134,7 @@ namespace Ombi.Core.Senders
             return new SenderResult
             {
                 Success = false,
-                Message = "Something wen't wrong!"
+                Message = "Something went wrong!"
             };
         }
 
@@ -150,13 +150,8 @@ namespace Ombi.Core.Senders
         /// <param name="s"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<NewSeries> SendToSonarr(ChildRequests model)
+        public async Task<NewSeries> SendToSonarr(ChildRequests model, SonarrSettings s)
         {
-            var s = await SonarrSettings.GetSettingsAsync();
-            if (!s.Enabled)
-            {
-                return null;
-            }
             if (string.IsNullOrEmpty(s.ApiKey))
             {
                 return null;

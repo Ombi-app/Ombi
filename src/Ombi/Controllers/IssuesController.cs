@@ -267,6 +267,11 @@ namespace Ombi.Controllers
             }
 
             issue.Status = model.Status;
+
+            if (model.Status == IssueStatus.Resolved)
+            {
+                issue.ResovledDate = DateTime.UtcNow;
+            }
             await _issues.SaveChangesAsync();
 
             if (issue.Status == IssueStatus.Resolved)
