@@ -3,34 +3,41 @@
 
 <head>
 
+    <script>
+        const existingBaseUrl = window.localStorage.getItem("baseUrl");
+        if (existingBaseUrl) {
+          document.write('<base href="/' + existingBaseUrl + '" />');
+        } else {
+          // Work out the base URL
+          // Need to find the baseUrl.txt file
+          const url = window.location.href;
+          let hasFile = false;
+          fetch(url + "/baseUrl.json")
+            .then(response => {
+              return response.json();
+            }).then(data => {
+              this.hasFile = true;
+              document.write('<base href="/' + data.baseUrl + '" />');
+              window.localStorage.setItem("baseUrl", data.baseUrl);
+            }).catch(err => {
+              console.error(err);
+            });
+        }
+      </script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet"> 
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Ombi</title>
+
+
+
   <link rel="stylesheet" href="/loading.css" />
   <script src="//maps.google.com/maps/api/js?libraries=visualization&key=AIzaSyBDar8LXU5vbURGTMcNLI0f9AsoSnpiV3I" async
     defer></script>
 
-
 </head>
-<script async defer>
-  var xmlhttp = new XMLHttpRequest();
-  // xmlhttp.onreadystatechange = function () {
-  //   if (this.readyState == 4 && this.status == 200) {
-  //     var myObj = JSON.parse(this.responseText);
-  //     window['_app_base'] = myObj;
-
-  //     document.write('<base href="/' + window['_app_base'] + '" />');
-  //   }
-  // };
-  xmlhttp.open("GET", "api/v1/Settings/baseurl", false);
-  xmlhttp.send();
-  var myObj = JSON.parse(xmlhttp.responseText);
-  window['_app_base'] = myObj;
-
-  document.write('<base href="/' + window['_app_base'] + '" />');
-</script>
 
 <body>
 
