@@ -1,8 +1,4 @@
 // Main
-
-import * as Pace from "pace";
-Pace.start();
-
 import "jquery";
 
 import "bootstrap/dist/js/bootstrap";

@@ -2,6 +2,7 @@
 using System.Security.Principal;
 using Hangfire;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 
 using Ombi.Api.Discord;

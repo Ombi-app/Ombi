@@ -8,7 +8,6 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule, Routes } from "@angular/router";
 
 import { JwtModule } from "@auth0/angular-jwt";
-
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
@@ -19,7 +18,7 @@ import { ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, 
     TooltipModule } from "primeng/primeng";
 
     import {
-        MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatAutocompleteModule, MatCheckboxModule} from '@angular/material';
+        MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatAutocompleteModule, MatCheckboxModule, MatSnackBarModule} from '@angular/material';
         import {  MatCardModule, MatInputModule, MatTabsModule } from "@angular/material";
 
 import { MDBBootstrapModule, CardsFreeModule, NavbarModule } from "angular-bootstrap-md";
@@ -103,6 +102,7 @@ export function JwtTokenGetter() {
         DataTableModule,
         SharedModule,
         NgxEditorModule,
+        MatSnackBarModule,
         DialogModule,
         MatButtonModule,
         NavbarModule,

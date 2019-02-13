@@ -21,6 +21,7 @@ using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.DependencyInjection;
 using Ombi.Helpers;
+using Ombi.Hubs;
 using Ombi.Mapping;
 using Ombi.Schedule;
 using Ombi.Settings.Settings.Models;
@@ -62,7 +63,6 @@ namespace Ombi
                     .CreateLogger();
             }
             Log.Logger = config;
-
 
             //}
             //if (env.IsProduction())
@@ -135,10 +135,11 @@ namespace Ombi
             {
                 builder.AllowAnyOrigin()
                     .AllowAnyMethod()
-                    .AllowAnyHeader();
+                    .AllowAnyHeader().AllowCredentials();
             }));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddSignalR();
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
@@ -240,6 +241,8 @@ namespace Ombi
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
                 c.SwaggerEndpoint("/swagger/v2/swagger.json", "API V2");
             });
+
+            app.UseSignalR(routes => { routes.MapHub<ScheduledJobsHub>("/hubs/schedules"); });
 
             app.UseMvc(routes =>
             {

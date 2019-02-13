@@ -6,8 +6,13 @@ import { AuthService } from "./auth/auth.service";
 import { ILocalUser } from "./auth/IUserLogin";
 import { IdentityService, NotificationService } from "./services";
 import { JobService, SettingsService } from "./services";
+import { MatSnackBar } from '@angular/material';
 
 import { ICustomizationSettings, ICustomPage } from "./interfaces";
+
+import { HubConnection } from '@aspnet/signalr';
+import * as signalR from '@aspnet/signalr';
+ 
 
 @Component({
     selector: "app-ombi",
@@ -28,6 +33,8 @@ export class AppComponent implements OnInit {
 
     private checkedForUpdate: boolean;
 
+    private scheduleHubConnection: HubConnection | undefined;
+
     constructor(public notificationService: NotificationService,
         public authService: AuthService,
         private readonly router: Router,
@@ -35,7 +42,8 @@ export class AppComponent implements OnInit {
         private readonly jobService: JobService,
         public readonly translate: TranslateService,
         private readonly identityService: IdentityService,
-        private readonly platformLocation: PlatformLocation) {
+        private readonly platformLocation: PlatformLocation,
+        private readonly snackBar: MatSnackBar) {
 
         const base = this.platformLocation.getBaseHrefFromDOM();
         if (base.length > 1) {
@@ -85,6 +93,24 @@ export class AppComponent implements OnInit {
                 }
             }
         });
+
+        this.scheduleHubConnection = new signalR.HubConnectionBuilder().withUrl("/hubs/schedules", {
+            accessTokenFactory: () => {
+                return this.authService.getToken();
+            }
+        })
+        .configureLogging(signalR.LogLevel.Information).build();
+        
+        this.scheduleHubConnection
+        .start()
+        .then(() => console.info('Connection started!'))
+        .catch(err => console.error(err));
+        this.scheduleHubConnection.on("Send", (data: any) => {
+           this.snackBar.open(data,"OK", {
+            duration: 3000
+           });
+        });
+
     }
 
     public roleClass() {
