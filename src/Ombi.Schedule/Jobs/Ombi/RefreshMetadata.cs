@@ -62,7 +62,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 var embySettings = await _embySettings.GetSettingsAsync();
                 if (embySettings.Enable)
                 {
-                    await StartEmby();
+                    await StartEmby(embySettings);
                 }
             }
             catch (Exception e)
@@ -127,9 +127,9 @@ namespace Ombi.Schedule.Jobs.Ombi
             await StartPlexTv(allTv);
         }
 
-        private async Task StartEmby()
+        private async Task StartEmby(EmbySettings s)
         {
-            await StartEmbyMovies();
+            await StartEmbyMovies(s);
             await StartEmbyTv();
         }
 
