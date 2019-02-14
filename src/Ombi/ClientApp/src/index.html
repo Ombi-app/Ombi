@@ -5,17 +5,18 @@
 
   <script>
 
-    // TODO change to fetch and reload page
-    const existingBaseUrl = window.localStorage.getItem("baseUrl");
+const existingBaseUrl = window.localStorage.getItem("baseUrl");
     if (existingBaseUrl) {
       document.write('<base href="/' + existingBaseUrl + '" />');
+      document.write("  <link rel=\"stylesheet\" href='" + existingBaseUrl + "/loading.css'/>")
     } else {
       // Work out the base URL
       // Need to find the baseUrl.txt file
       let url = window.location.href;
+      let hasFile = false;
 
       var xmlhttp = new XMLHttpRequest();
-      debugger;
+
       xmlhttp.open("GET", url + "api/v1/Settings/baseurl", false);
       xmlhttp.send();
       while (xmlhttp.status === 404) {
@@ -24,14 +25,14 @@
         tryGetBaseUrl(xmlhttp, url);
       }
       const data = JSON.parse(xmlhttp.responseText);
+      hasFile = true;
       debugger;
       document.write('<base href="/' + data + '" />');
+      document.write("  <link rel=\"stylesheet\" href=" + data + "/loading.css\"/>")
       window.localStorage.setItem("baseUrl", data);
 
-
-      function tryGetBaseUrl(xmlhttp, url) {      
-        debugger;
-        xmlhttp.open("GET", url + "/api/v1/Settings/baseurl", false);
+      function tryGetBaseUrl(xmlhttp, url) {
+        xmlhttp.open("GET", url + "api/v1/Settings/baseurl", false);
         xmlhttp.send();
       }
     }
@@ -45,7 +46,6 @@
 
 
 
-  <link rel="stylesheet" href="/loading.css" />
   <script src="//maps.google.com/maps/api/js?libraries=visualization&key=AIzaSyBDar8LXU5vbURGTMcNLI0f9AsoSnpiV3I" async
     defer></script>
 
