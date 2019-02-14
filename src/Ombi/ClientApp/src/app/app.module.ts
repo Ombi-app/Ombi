@@ -83,9 +83,8 @@ export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLo
     }
     return new TranslateHttpLoader(http, "/translations/", `.json?v=${version}`);
 }
-
 export function baseurlFact() {
-    return "/" + window['_app_base'];
+    return "/" + localStorage.getItem("baseUrl");
 }
 
 export function JwtTokenGetter() {
@@ -171,12 +170,11 @@ export function JwtTokenGetter() {
         IssuesService,
         PlexTvService,
         SearchService,
-        SearchV2Service, 
+        SearchV2Service,
         {
             provide: APP_BASE_HREF, 
             useFactory: baseurlFact           
-        }
-    ],
+        }    ],
     bootstrap: [AppComponent],
 })
 export class AppModule { }

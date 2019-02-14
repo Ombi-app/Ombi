@@ -3,29 +3,41 @@
 
 <head>
 
-    <script>
-        const existingBaseUrl = window.localStorage.getItem("baseUrl");
-        if (existingBaseUrl) {
-          document.write('<base href="/' + existingBaseUrl + '" />');
-        } else {
-          // Work out the base URL
-          // Need to find the baseUrl.txt file
-          const url = window.location.href;
-          let hasFile = false;
-          fetch(url + "/baseUrl.json")
-            .then(response => {
-              return response.json();
-            }).then(data => {
-              this.hasFile = true;
-              document.write('<base href="/' + data.baseUrl + '" />');
-              window.localStorage.setItem("baseUrl", data.baseUrl);
-            }).catch(err => {
-              console.error(err);
-            });
-        }
-      </script>
+  <script>
+
+    // TODO change to fetch and reload page
+    const existingBaseUrl = window.localStorage.getItem("baseUrl");
+    if (existingBaseUrl) {
+      document.write('<base href="/' + existingBaseUrl + '" />');
+    } else {
+      // Work out the base URL
+      // Need to find the baseUrl.txt file
+      let url = window.location.href;
+
+      var xmlhttp = new XMLHttpRequest();
+      debugger;
+      xmlhttp.open("GET", url + "api/v1/Settings/baseurl", false);
+      xmlhttp.send();
+      while (xmlhttp.status === 404) {
+        // try again
+        url = url.slice(0, url.lastIndexOf("/"));
+        tryGetBaseUrl(xmlhttp, url);
+      }
+      const data = JSON.parse(xmlhttp.responseText);
+      debugger;
+      document.write('<base href="/' + data + '" />');
+      window.localStorage.setItem("baseUrl", data);
+
+
+      function tryGetBaseUrl(xmlhttp, url) {      
+        debugger;
+        xmlhttp.open("GET", url + "/api/v1/Settings/baseurl", false);
+        xmlhttp.send();
+      }
+    }
+  </script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
