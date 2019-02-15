@@ -37,7 +37,7 @@
     "OnlineParagraph": "El servidor de medios esta en línea",
     "PartiallyOnlineHeading": "Parcialmente en línea",
     "PartiallyOnlineParagraph": "El servidor de medios está parcialmente en línea.",
-    "MultipleServersUnavailable": "{{serversUnavailable}} de {{totalServers}} servidores están fuera de línea.",
+    "MultipleServersUnavailable": "Hay {{serversUnavailable}} de {{totalServers}} servidores fuera de línea.",
     "SingleServerUnavailable": "Hay {{serversUnavailable}} de {{totalServers}} servidores fuera de línea.",
     "OfflineHeading": "Fuera de línea",
     "OfflineParagraph": "El servidor de medios está fuera de línea.",
@@ -55,7 +55,7 @@
     "UpdateAvailableTooltip": "¡Actualización disponible!",
     "Settings": "Ajustes",
     "Welcome": "Bienvenido {{username}}",
-    "UpdateDetails": "Detalles de la actualización",
+    "UpdateDetails": "Editar cuenta usuario",
     "Logout": "Cerrar sesión",
     "OpenMobileApp": "Abrir aplicación móvil",
     "RecentlyAdded": "Agregado recientemente"
