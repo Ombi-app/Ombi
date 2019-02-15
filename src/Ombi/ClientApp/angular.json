@@ -28,7 +28,8 @@
               "node_modules/bootstrap/scss/bootstrap.scss",
               "node_modules/angular-bootstrap-md/scss/mdb-free.scss",
               "node_modules/pace/themes/orange/pace-theme-flat-top.css",
-              "node_modules/font-awesome/scss/font-awesome.scss"
+              "node_modules/font-awesome/scss/font-awesome.scss",
+              "node_modules/primeng/resources/primeng.min.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",

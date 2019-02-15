@@ -103,7 +103,8 @@
 
             <div class="row">
                 <div class="col-12 col-md-3">
-                    <button *ngIf="movie.belongsToCollection" mat-raised-button class="btn-spacing-below full-width mat-elevation-z8">{{movie.belongsToCollection.name}}</button>
+                    <button *ngIf="movie.belongsToCollection" mat-raised-button
+                        class="btn-spacing-below full-width mat-elevation-z8">{{movie.belongsToCollection.name}}</button>
 
                     <mat-card class="card-full mat-elevation-z8">
                         <mat-card-content>
@@ -163,8 +164,49 @@
             </div>
 
 
-            <div class="row card-spacer">
-                <div class="col-12 col-md-9 offset-md-3">
+            <div class="row card-spacer media-row">
+                <div class="col-12 col-md-3">
+                    <mat-card class="mat-elevation-z8 keywords-panel">
+                        <mat-card-content>
+                            <div>
+                                <span>
+                                    <strong>Keywords/Tags:</strong>
+                                    <mat-chip-list>
+                                        <mat-chip *ngFor="let keyword of movie.keywords.keywordsValue">
+                                            {{keyword.name}}
+                                        </mat-chip>
+                                    </mat-chip-list>
+                                </span>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
+                <div class="col-12 col-md-9">
+                    <mat-card class="card-full mat-elevation-z8">
+                            <mat-card-header>Cast</mat-card-header>
+                        <mat-card-content>
+                            <p-carousel [value]="movie.credits.cast" [numVisible]="5" easing="easeOutStrong">
+                                <ng-template let-item pTemplate="item">
+                                    <div class="row justify-content-md-center">
+                                        <div class="col-12">
+                                            <img width="150px" *ngIf="item.profile_path"
+                                                src="https://image.tmdb.org/t/p/w300/{{item.profile_path}}">
+                                            <!-- TODO get profile image default -->
+                                        </div>
+                                        <div class="col-12">
+                                            <span><strong>Character:</strong> {{item.character}}</span>
+                                        </div>
+                                        <div class="col-12">
+                                            <span><strong>Actor:</strong> {{item.name}}</span>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </p-carousel>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <!-- <div class="col-12 col-md-9">
                     <mat-accordion>
                         <mat-expansion-panel>
                             <mat-expansion-panel-header>
@@ -230,34 +272,11 @@
                             </div>
                         </mat-expansion-panel>
                     </mat-accordion>
-                </div>
-
-
-                <!-- <div class="col-12 col-md-2">
-                    <div *ngFor="let castIndex of [0,1,2,3,4]" class="row align-items-center cast-row ">
-                        <div class="col-4">
-                            <img src="https://image.tmdb.org/t/p/w300/{{movie.credits.cast[castIndex].profile_path}}"
-                                class="cast-profile-img mat-elevation-z8" />
-                        </div>
-                        <div class="col-8">
-                            <div class="row cast-names">
-                                <div class="col-12">
-                                    <div><small>{{movie.credits.cast[castIndex].character}}</small></div>
-                                </div>
-                                <div class="col-12 cast-name">
-                                    <div><small>{{movie.credits.cast[castIndex].name}}</small></div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
                 </div> -->
+
+
+                < </div> </div> <div class="bottom-page-gap">
             </div>
-
-
-
-
-        </div>
     </section>
 
 

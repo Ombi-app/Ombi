@@ -3,6 +3,8 @@ import { RouterModule, Routes } from "@angular/router";
 
 import { SearchService, RequestService } from "../services";
 
+import {CarouselModule} from 'primeng/carousel';
+
 import { SharedModule } from "../shared/shared.module";
 import { MovieDetailsComponent } from "./movie-details.component";
 import { PipeModule } from "../pipes/pipe.module";
@@ -16,6 +18,7 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         SharedModule,
         PipeModule,
+        CarouselModule,
     ],
     declarations: [
         MovieDetailsComponent,

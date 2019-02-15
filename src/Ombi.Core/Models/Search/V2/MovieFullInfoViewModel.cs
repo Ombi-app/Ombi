@@ -40,6 +40,17 @@ namespace Ombi.Core.Models.Search.V2
         public Similar Similar { get; set; }
         public Recommendations Recommendations { get; set; }
         public ExternalIds ExternalIds { get; set; }
+        public Keywords Keywords { get; set; }
+    }
+    public class Keywords
+    {
+        public List<KeywordsValue> KeywordsValue { get; set; }
+    }
+
+    public class KeywordsValue
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 
     public class CollectionsViewModel

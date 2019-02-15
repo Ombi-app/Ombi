@@ -40,13 +40,14 @@
     showSubscribe: boolean;
     externalIds: IExternalIds;
     keywords: IKeywords;
-    collections: ICollectionsModel;
+    belongsToCollection: ICollectionsModel;
 
     // for the UI
     requestProcessing: boolean;
     processed: boolean;
     background: any;
 }
+
 
 export interface ICollectionsModel {
     id: number;

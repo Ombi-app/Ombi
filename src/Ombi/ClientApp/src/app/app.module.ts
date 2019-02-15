@@ -21,7 +21,7 @@ import {
 } from "primeng/primeng";
 
 import {
-    MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatAutocompleteModule, MatCheckboxModule
+    MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatAutocompleteModule, MatCheckboxModule, MatSnackBarModule
 } from '@angular/material';
 import { MatCardModule, MatInputModule, MatTabsModule } from "@angular/material";
 
@@ -45,7 +45,7 @@ import { AuthService } from "./auth/auth.service";
 import { ImageService, SettingsService, CustomPageService } from "./services";
 import { LandingPageService } from "./services";
 import { NotificationService } from "./services";
-import { IssuesService, JobService, PlexTvService, StatusService, SearchService, IdentityService } from "./services";
+import { IssuesService, JobService, PlexTvService, StatusService, SearchService, IdentityService, MessageService } from "./services";
 import { MyNavComponent } from './my-nav/my-nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { SearchV2Service } from "./services/searchV2.service";
@@ -104,6 +104,7 @@ export function JwtTokenGetter() {
         ButtonModule,
         FormsModule,
         DataTableModule,
+        MatSnackBarModule,
         SharedModule,
         NgxEditorModule,
         DialogModule,
@@ -168,6 +169,7 @@ export function JwtTokenGetter() {
         PlexTvService,
         SearchService,
         SearchV2Service,
+        MessageService,
        ],
     bootstrap: [AppComponent],
 })

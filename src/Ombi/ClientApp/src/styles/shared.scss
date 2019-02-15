@@ -1,37 +1,20 @@
-﻿
-@media (max-width: 978px) {
+﻿@media (max-width: 978px) {
     .top-spacing {
         padding-top: 10%;
     }
-  }
-  @media (min-width: 979px) {
+}
+
+@media (min-width: 979px) {
     .top-spacing {
         padding-top: 4%;
     }
-  }
-  
-
-  .btn-blue {
-      background-color: #1976D2;
-  }
-
-  .btn-pink {
-    background-color: #C2185B;
-  }
-  .btn-green {
-    background-color: #1DE9B6;
-  }
-
-  .btn-orange {
-      background-color: #F57C00;
-  }
-
-.spinner-container {
-  position: relative;
-  margin-left: 50%;
 }
 
-.active-button {
-  background-color: #5dffbd !important;
-  color:white;
+.spinner-container {
+    position: relative;
+    margin-left: 50%;
+}
+
+.bottom-page-gap {
+    height: 50px;
 }
