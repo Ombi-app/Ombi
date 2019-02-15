@@ -36,7 +36,7 @@
                 </div>
 
                 <!--Next to poster-->
-                <div class="col-lg-12 col-xl-6 media-row">
+                <div class="col-10 col-lg-5 col-xl-5 media-row">
 
                     <a *ngIf="movie.homepage" class="media-icons" h href="{{movie.homepage}}" target="_blank">
                         <i matTooltip="Homepage" class="fa fa-home fa-2x grow"></i>
@@ -67,6 +67,37 @@
                     </a>
 
 
+                </div>
+
+                <div class="col-12 col-lg-3 col-xl-3 media-row">
+
+                    <button mat-raised-button class="btn-green btn-spacing" *ngIf="movie.available"> {{
+                            'Common.Available' | translate }}</button>
+                    <span *ngIf="!movie.available">
+                        <span *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></span>
+                        <ng-template #requestedBtn>
+                            <button mat-raised-button class="btn-spacing btn-orange" [disabled]><i
+                                    class="fa fa-check"></i>
+                                {{ 'Common.Requested' | translate }}</button>
+                        </ng-template>
+                        <ng-template #notRequestedBtn>
+                            <button mat-raised-button class="btn-spacing" (click)="request()">
+                                <i *ngIf="movie.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> <i
+                                    *ngIf="!movie.requestProcessing && !movie.processed" class="fa fa-plus"></i>
+                                <i *ngIf="movie.processed && !movie.requestProcessing" class="fa fa-check"></i> {{
+                                'Common.Request' | translate }}</button>
+                        </ng-template>
+                    </span>
+                    <span><button mat-raised-button class="btn-spacing" color="warn">Deny</button></span>
+                    <span *ngIf="movie.available">
+                        <a *ngIf="movie.plexUrl" mat-raised-button style="text-align: right"
+                            class="btn-spacing btn-greem" href="{{movie.plexUrl}}" target="_blank"><i
+                                class="fa fa-eye"></i> {{'Search.ViewOnPlex' |
+                            translate}}</a>
+                        <a *ngIf="movie.embyUrl" mat-raised-button class="btn-green btn-spacing"
+                            href="{{movie.embyUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
+                            translate}}</a>
+                    </span>
                 </div>
             </div>
 
@@ -108,9 +139,9 @@
 
                             <div>
                                 <span *ngIf="movie.genres"><strong>Genres:</strong>
-                                <span *ngFor="let genre of movie.genres">
-                                    {{genre.name}} | 
-                                </span>    
+                                    <span *ngFor="let genre of movie.genres">
+                                        {{genre.name}} |
+                                    </span>
                                 </span>
                             </div>
                         </mat-card-content>
@@ -126,36 +157,7 @@
                         </mat-card-content>
                     </mat-card>
                 </div>
-                <!-- <div class="col-12 col-md-2 card-full">
 
-                    <div><button mat-raised-button class="btn-green btn-spacing" *ngIf="movie.available"> {{
-                            'Common.Available' | translate }}</button></div>
-                    <div *ngIf="!movie.available">
-                        <div *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></div>
-                        <ng-template #requestedBtn>
-                            <button mat-raised-button class="btn-spacing btn-orange" [disabled]><i
-                                    class="fa fa-check"></i>
-                                {{ 'Common.Requested' | translate }}</button>
-                        </ng-template>
-                        <ng-template #notRequestedBtn>
-                            <button mat-raised-button class="btn-spacing" (click)="request()">
-                                <i *ngIf="movie.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> <i
-                                    *ngIf="!movie.requestProcessing && !movie.processed" class="fa fa-plus"></i>
-                                <i *ngIf="movie.processed && !movie.requestProcessing" class="fa fa-check"></i> {{
-                                'Common.Request' | translate }}</button>
-                        </ng-template>
-                    </div>
-                    <div><button mat-raised-button class="btn-spacing" color="warn">Deny</button></div>
-                    <div *ngIf="movie.available">
-                        <a *ngIf="movie.plexUrl" mat-raised-button style="text-align: right"
-                            class="btn-spacing btn-greem" href="{{movie.plexUrl}}" target="_blank"><i
-                                class="fa fa-eye"></i> {{'Search.ViewOnPlex' |
-                            translate}}</a>
-                        <a *ngIf="movie.embyUrl" mat-raised-button class="btn-green btn-spacing"
-                            href="{{movie.embyUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
-                            translate}}</a>
-                    </div>
-                </div> -->
 
             </div>
 

@@ -1,4 +1,4 @@
-﻿namespace Ombi.Api.TheMovieDb.Models
+﻿namespace Ombi.Api.TheMovieDb.Models { 
 
     public class DiscoverMovies
     {
