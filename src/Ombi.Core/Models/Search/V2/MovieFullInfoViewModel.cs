@@ -8,6 +8,7 @@ namespace Ombi.Core.Models.Search.V2
     public class MovieFullInfoViewModel : SearchViewModel
     {
         public bool Adult { get; set; }
+        public CollectionsViewModel BelongsToCollection { get; set; }
         public string BackdropPath { get; set; }
         public string OriginalLanguage { get; set; }
         public int Budget { get; set; }
@@ -41,6 +42,13 @@ namespace Ombi.Core.Models.Search.V2
         public ExternalIds ExternalIds { get; set; }
     }
 
+    public class CollectionsViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string PosterPath { get; set; }
+        public string BackdropPath { get; set; }
+    }
     public class ExternalIds
     {
         public string ImdbId { get; set; }

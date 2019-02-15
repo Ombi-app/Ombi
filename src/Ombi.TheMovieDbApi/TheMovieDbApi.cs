@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
 using Ombi.Api.TheMovieDb.Models;
-using Ombi.Helpers;
 using Ombi.TheMovieDbApi.Models;
 
 namespace Ombi.Api.TheMovieDb
@@ -38,10 +37,33 @@ namespace Ombi.Api.TheMovieDb
             var request = new Request($"movie/{movieId}", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
             request.FullUri = request.FullUri.AddQueryParameter("language", langCode);
-            request.FullUri = request.FullUri.AddQueryParameter("append_to_response", "videos,credits,similar,recommendations,release_dates,external_ids");
+            request.FullUri = request.FullUri.AddQueryParameter("append_to_response", "videos,credits,similar,recommendations,release_dates,external_ids,keywords");
             AddRetry(request);
 
             return await Api.Request<FullMovieInfo>(request);
+        }
+
+        public async Task<TheMovieDbContainer<DiscoverMovies>> DiscoverMovies(string langCode, int keywordId)
+        {
+            // https://developers.themoviedb.org/3/discover/movie-discover
+            var request = new Request("discover/movie", BaseUri, HttpMethod.Get);
+            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+            request.FullUri = request.FullUri.AddQueryParameter("language", langCode);
+            request.FullUri = request.FullUri.AddQueryParameter("with_keyword", keywordId.ToString());
+            request.FullUri = request.FullUri.AddQueryParameter("sort_by", "popularity.desc");
+
+            return await Api.Request<TheMovieDbContainer<DiscoverMovies>>(request);
+        }
+
+        public async Task<Collections> GetCollection(string langCode, int collectionId)
+        {
+            // https://developers.themoviedb.org/3/discover/movie-discover
+            var request = new Request("discover/movie", BaseUri, HttpMethod.Get);
+            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+            request.FullUri = request.FullUri.AddQueryParameter("language", langCode);
+            request.FullUri = request.FullUri.AddQueryParameter("collection_id", collectionId.ToString());
+
+            return await Api.Request<Collections> (request);
         }
 
         public async Task<FindResult> Find(string externalId, ExternalSource source)

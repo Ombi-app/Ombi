@@ -8,7 +8,8 @@
         <div class="container summary">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-10 offset-lg-2 col-md-8 offset-md-4 col-sm-7 offset-sm-5 col-6 offset-6">
+                    <div
+                        class="col-xl-12 col-lg-11 offset-lg-1 col-md-8 offset-md-4 col-sm-7 offset-sm-5 col-6 offset-6">
                         <h1>{{movie.title}} <span *ngIf="movie.releaseDate" class="grey-text align-middle">({{movie.releaseDate
                                 | date:'yyyy'}})</span>
                         </h1>
@@ -75,34 +76,42 @@
                     <mat-card class="card-full mat-elevation-z8">
                         <mat-card-content>
                             <div>
-                                <small><strong>Theatrical Release:</strong>
-                                    {{movie.releaseDate | date: 'mediumDate'}}</small></div>
+                                <span><strong>Theatrical Release:</strong>
+                                    {{movie.releaseDate | date: 'mediumDate'}}</span></div>
                             <div>
-                                <small *ngIf="movie.digitalReleaseDate"><strong>Digital Release:</strong>
+                                <span *ngIf="movie.digitalReleaseDate"><strong>Digital Release:</strong>
                                     {{movie.digitalReleaseDate | date:
-                                    'mediumDate'}}</small>
+                                    'mediumDate'}}</span>
                             </div>
                             <div>
-                                <small *ngIf="movie.voteAverage"><strong>User Score:</strong> {{movie.voteAverage |
-                                    number:'1.0-1'}}/10</small>
+                                <span *ngIf="movie.voteAverage"><strong>User Score:</strong> {{movie.voteAverage |
+                                    number:'1.0-1'}}/10</span>
                             </div>
                             <div>
-                                <small *ngIf="movie.voteCount"><strong>Votes:</strong> {{movie.voteCount |
-                                    thousandShort: 1}}</small>
+                                <span *ngIf="movie.voteCount"><strong>Votes:</strong> {{movie.voteCount |
+                                    thousandShort: 1}}</span>
                             </div>
                             <div>
-                                <small><strong>Status:</strong> {{movie.status}}</small>
+                                <span><strong>Status:</strong> {{movie.status}}</span>
                             </div>
                             <div>
-                                <small><strong>Runtime:</strong> {{movie.runtime}} Minutes</small>
+                                <span><strong>Runtime:</strong> {{movie.runtime}} Minutes</span>
                             </div>
                             <div>
-                                <small *ngIf="movie.revenue"><strong>Revenue:</strong> {{movie.revenue | currency:
-                                    'USD'}}</small>
+                                <span *ngIf="movie.revenue"><strong>Revenue:</strong> {{movie.revenue | currency:
+                                    'USD'}}</span>
                             </div>
                             <div>
-                                <small *ngIf="movie.budget"><strong>Budget:</strong>
-                                    {{movie.budget | currency: 'USD'}}</small>
+                                <span *ngIf="movie.budget"><strong>Budget:</strong>
+                                    {{movie.budget | currency: 'USD'}}</span>
+                            </div>
+
+                            <div>
+                                <span *ngIf="movie.genres"><strong>Genres:</strong>
+                                <span *ngFor="let genre of movie.genres">
+                                    {{genre.name}} | 
+                                </span>    
+                                </span>
                             </div>
                         </mat-card-content>
                     </mat-card>
@@ -110,14 +119,14 @@
 
 
                 </div>
-                <div class="col-12 col-md-7">
+                <div class="col-12 col-md-9">
                     <mat-card class="card-full mat-elevation-z8">
                         <mat-card-content>
                             {{movie.overview}}
                         </mat-card-content>
                     </mat-card>
                 </div>
-                <div class="col-12 col-md-2 card-full">
+                <!-- <div class="col-12 col-md-2 card-full">
 
                     <div><button mat-raised-button class="btn-green btn-spacing" *ngIf="movie.available"> {{
                             'Common.Available' | translate }}</button></div>
@@ -146,18 +155,13 @@
                             href="{{movie.embyUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
                             translate}}</a>
                     </div>
-                </div>
+                </div> -->
 
             </div>
-            <div class="row card-spacer">
-                <div class="col-12 col-md-2">
 
-
-                </div>
-            </div>
 
             <div class="row card-spacer">
-                <div class="col-12 col-md-10">
+                <div class="col-12 col-md-9 offset-md-3">
                     <mat-accordion>
                         <mat-expansion-panel>
                             <mat-expansion-panel-header>
@@ -226,25 +230,25 @@
                 </div>
 
 
-                <div class="col-12 col-md-2">
+                <!-- <div class="col-12 col-md-2">
                     <div *ngFor="let castIndex of [0,1,2,3,4]" class="row align-items-center cast-row ">
                         <div class="col-4">
                             <img src="https://image.tmdb.org/t/p/w300/{{movie.credits.cast[castIndex].profile_path}}"
                                 class="cast-profile-img mat-elevation-z8" />
                         </div>
                         <div class="col-8">
-                                <div class="row cast-names">
-                                        <div class="col-12">
-                                            <div><small>{{movie.credits.cast[castIndex].character}}</small></div>
-                                        </div>
-                                        <div class="col-12 cast-name">
-                                            <div><small>{{movie.credits.cast[castIndex].name}}</small></div>
-                                        </div>
-                                    </div>
+                            <div class="row cast-names">
+                                <div class="col-12">
+                                    <div><small>{{movie.credits.cast[castIndex].character}}</small></div>
+                                </div>
+                                <div class="col-12 cast-name">
+                                    <div><small>{{movie.credits.cast[castIndex].name}}</small></div>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
-                </div>
+                </div> -->
             </div>
 
 

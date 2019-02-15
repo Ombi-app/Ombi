@@ -86,6 +86,7 @@ namespace Ombi.Mapping.Profiles
             CreateMap<Ombi.Api.TheMovieDb.Models.FullMovieCast, Ombi.Core.Models.Search.V2.FullMovieCastViewModel>().ReverseMap();
             CreateMap<Ombi.Api.TheMovieDb.Models.FullMovieCrew, Ombi.Core.Models.Search.V2.FullMovieCrewViewModel>().ReverseMap();
             CreateMap<Ombi.Api.TheMovieDb.Models.ExternalIds, Ombi.Core.Models.Search.V2.ExternalIds>().ReverseMap();
+            CreateMap<BelongsToCollection, Ombi.Core.Models.Search.V2.CollectionsViewModel>().ReverseMap();
         }
     }
 }

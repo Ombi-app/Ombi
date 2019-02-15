@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using Ombi.TheMovieDbApi.Models;
 
@@ -10,6 +10,8 @@ namespace Ombi.Api.TheMovieDb.Models
         public bool Adult { get; set; }
         [JsonProperty("backdrop_path")]
         public string BackdropPath { get; set; }
+        [JsonProperty("belongs_to_collection")]
+        public BelongsToCollection Collecion { get; set; }
         [JsonProperty("budget")]
         public int Budget { get; set; }
         [JsonProperty("genres")]
@@ -66,6 +68,20 @@ namespace Ombi.Api.TheMovieDb.Models
         public ReleaseDates ReleaseDates { get; set; }
         [JsonProperty("external_ids")]
         public ExternalIds ExternalIds { get; set; }
+        [JsonProperty("keywords")]
+        public Keywords Keywords { get; set; }
+    }
+
+    public class Keywords
+    {
+        [JsonProperty("keywords")]
+        public List<KeywordsValue> KeywordsValue { get; set; }
+    }
+
+    public class KeywordsValue
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 
     public class Videos
