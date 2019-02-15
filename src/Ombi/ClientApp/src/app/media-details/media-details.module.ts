@@ -1,7 +1,7 @@
 ﻿import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
-import { SearchService } from "../services";
+import { SearchService, RequestService } from "../services";
 
 import { SharedModule } from "../shared/shared.module";
 import { MovieDetailsComponent } from "./movie-details.component";
@@ -28,7 +28,8 @@ const routes: Routes = [
         MovieDetailsTrailerComponent
     ],
     providers: [
-        SearchService
+        SearchService,
+        RequestService,
         ],
 
 })

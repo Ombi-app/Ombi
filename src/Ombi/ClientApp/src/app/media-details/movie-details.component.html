@@ -36,7 +36,7 @@
                 </div>
 
                 <!--Next to poster-->
-                <div class="col-10 col-lg-5 col-xl-5 media-row">
+                <div class="col-10 col-lg-3 col-xl-3 media-row">
 
                     <a *ngIf="movie.homepage" class="media-icons" h href="{{movie.homepage}}" target="_blank">
                         <i matTooltip="Homepage" class="fa fa-home fa-2x grow"></i>
@@ -69,7 +69,7 @@
 
                 </div>
 
-                <div class="col-12 col-lg-3 col-xl-3 media-row">
+                <div class="col-12 col-lg-7 col-xl-7 media-row">
 
                     <button mat-raised-button class="btn-green btn-spacing" *ngIf="movie.available"> {{
                             'Common.Available' | translate }}</button>
@@ -102,8 +102,9 @@
             </div>
 
             <div class="row">
-                <div class="col-12 col-md-3 ">
-                    <button mat-raised-button class="btn-spacing-below full-width">{{movie.belongsToCollection.name}}</button>
+                <div class="col-12 col-md-3">
+                    <button *ngIf="movie.belongsToCollection" mat-raised-button class="btn-spacing-below full-width mat-elevation-z8">{{movie.belongsToCollection.name}}</button>
+
                     <mat-card class="card-full mat-elevation-z8">
                         <mat-card-content>
                             <div>
