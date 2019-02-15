@@ -11,7 +11,7 @@ namespace Ombi.Api.TheMovieDb.Models
         [JsonProperty("backdrop_path")]
         public string BackdropPath { get; set; }
         [JsonProperty("belongs_to_collection")]
-        public BelongsToCollection Collecion { get; set; }
+        public BelongsToCollection BelongsToCollection { get; set; }
         [JsonProperty("budget")]
         public int Budget { get; set; }
         [JsonProperty("genres")]
