@@ -16,6 +16,7 @@ using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
+using Remotion.Linq.Parsing.Structure.IntermediateModel;
 
 namespace Ombi.Core.Senders
 {
@@ -314,9 +315,18 @@ namespace Ombi.Core.Senders
 
             foreach (var season in model.SeasonRequests)
             {
-                var sonarrSeason = sonarrEpList.Where(x => x.seasonNumber == season.SeasonNumber);
-                var sonarrEpCount = sonarrSeason.Count();
+                var sonarrEpisodeList = sonarrEpList.Where(x => x.seasonNumber == season.SeasonNumber).ToList();
+                var sonarrEpCount = sonarrEpisodeList.Count; 
                 var ourRequestCount = season.Episodes.Count;
+
+                var ourEpisodes = season.Episodes.Select(x => x.EpisodeNumber).ToList();
+                var unairedEpisodes = sonarrEpisodeList.Where(x => x.airDateUtc > DateTime.UtcNow).Select(x => x.episodeNumber).ToList();
+
+                //// Check if we have requested all the latest episodes, if we have then monitor 
+                //// NOTE, not sure if needed since ombi ui displays future episodes anyway...
+                //ourEpisodes.AddRange(unairedEpisodes);
+                //var distinctEpisodes = ourEpisodes.Distinct().ToList();
+                //var missingEpisodes = Enumerable.Range(distinctEpisodes.Min(), distinctEpisodes.Count).Except(distinctEpisodes);
 
                 var existingSeason =
                     result.seasons.FirstOrDefault(x => x.seasonNumber == season.SeasonNumber);
@@ -327,7 +337,7 @@ namespace Ombi.Core.Senders
                 }
 
 
-                if (sonarrEpCount == ourRequestCount)
+                if (sonarrEpCount == ourRequestCount /*|| !missingEpisodes.Any()*/)
                 {
                     // We have the same amount of requests as all of the episodes in the season.
 
