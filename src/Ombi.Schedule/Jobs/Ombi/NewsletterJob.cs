@@ -50,9 +50,6 @@ namespace Ombi.Schedule.Jobs.Ombi
             _emailSettings = emailSettings;
             _newsletterSettings = newsletter;
             _userManager = um;
-            _emailSettings.ClearCache();
-            _customizationSettings.ClearCache();
-            _newsletterSettings.ClearCache();
             _log = log;
             _lidarrApi = lidarrApi;
             _lidarrAlbumRepository = albumCache;
@@ -60,8 +57,6 @@ namespace Ombi.Schedule.Jobs.Ombi
             _ombiSettings = ombiSettings;
             _plexSettings = plexSettings;
             _embySettings = embySettings;
-            _ombiSettings.ClearCache();
-            _lidarrSettings.ClearCache();
         }
 
         private readonly IPlexContentRepository _plex;

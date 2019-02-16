@@ -10,28 +10,23 @@ using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Store.Repository;
 
-namespace Ombi.Schedule.Jobs.Plex
+namespace Ombi.Schedule.Jobs.Ombi
 {
     public class MediaDatabaseRefresh : IMediaDatabaseRefresh
     {
-        public MediaDatabaseRefresh(ISettingsService<PlexSettings> s, ILogger<MediaDatabaseRefresh> log, IPlexApi plexApi,
-            IPlexContentRepository plexRepo, IPlexContentSync c, IEmbyContentRepository embyRepo, IEmbyContentSync embySync)
+        public MediaDatabaseRefresh(ISettingsService<PlexSettings> s, ILogger<MediaDatabaseRefresh> log,
+            IPlexContentRepository plexRepo, IEmbyContentRepository embyRepo, IEmbyContentSync embySync)
         {
             _settings = s;
             _log = log;
-            _api = plexApi;
             _plexRepo = plexRepo;
-            _plexContentSync = c;
             _embyRepo = embyRepo;
             _embyContentSync = embySync;
-            _settings.ClearCache();
         }
 
         private readonly ISettingsService<PlexSettings> _settings;
         private readonly ILogger _log;
-        private readonly IPlexApi _api;
         private readonly IPlexContentRepository _plexRepo;
-        private readonly IPlexContentSync _plexContentSync;
         private readonly IEmbyContentRepository _embyRepo;
         private readonly IEmbyContentSync _embyContentSync;
 

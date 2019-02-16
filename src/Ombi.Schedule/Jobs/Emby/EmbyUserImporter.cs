@@ -50,8 +50,6 @@ namespace Ombi.Schedule.Jobs.Emby
             _log = log;
             _embySettings = embySettings;
             _userManagementSettings = ums;
-            _userManagementSettings.ClearCache();
-            _embySettings.ClearCache();
         }
 
         private readonly IEmbyApi _api;

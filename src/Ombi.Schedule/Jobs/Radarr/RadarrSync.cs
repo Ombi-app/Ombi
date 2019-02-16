@@ -22,7 +22,6 @@ namespace Ombi.Schedule.Jobs.Radarr
             RadarrApi = radarrApi;
             Logger = log;
             _ctx = ctx;
-            RadarrSettings.ClearCache();
         }
 
         private ISettingsService<RadarrSettings> RadarrSettings { get; }
