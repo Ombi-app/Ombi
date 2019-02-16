@@ -16,6 +16,7 @@ using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Api.TvMaze;
 using Ombi.Core.Settings;
+using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Notifications;
 using Ombi.Notifications.Models;
@@ -36,7 +37,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             ISettingsService<EmailNotificationSettings> emailSettings, INotificationTemplatesRepository templateRepo,
             UserManager<OmbiUser> um, ISettingsService<NewsletterSettings> newsletter, ILogger<NewsletterJob> log,
             ILidarrApi lidarrApi, IRepository<LidarrAlbumCache> albumCache, ISettingsService<LidarrSettings> lidarrSettings,
-            ISettingsService<OmbiSettings> ombiSettings)
+            ISettingsService<OmbiSettings> ombiSettings, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmbySettings> embySettings)
         {
             _plex = plex;
             _emby = emby;
@@ -57,6 +58,8 @@ namespace Ombi.Schedule.Jobs.Ombi
             _lidarrAlbumRepository = albumCache;
             _lidarrSettings = lidarrSettings;
             _ombiSettings = ombiSettings;
+            _plexSettings = plexSettings;
+            _embySettings = embySettings;
             _ombiSettings.ClearCache();
             _lidarrSettings.ClearCache();
         }
@@ -77,6 +80,8 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly ILidarrApi _lidarrApi;
         private readonly IRepository<LidarrAlbumCache> _lidarrAlbumRepository;
         private readonly ISettingsService<LidarrSettings> _lidarrSettings;
+        private readonly ISettingsService<PlexSettings> _plexSettings;
+        private readonly ISettingsService<EmbySettings> _embySettings;
 
         public async Task Start(NewsletterSettings settings, bool test)
         {
@@ -132,6 +137,8 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 _log.LogInformation("Plex Episodes to send: {0}", plexEpisodesToSend.Count());
                 _log.LogInformation("Emby Episodes to send: {0}", embyEpisodesToSend.Count());
+                var plexSettings = await _plexSettings.GetSettingsAsync();
+                var embySettings = await _embySettings.GetSettingsAsync();
                 var body = string.Empty;
                 if (test)
                 {
@@ -140,11 +147,11 @@ namespace Ombi.Schedule.Jobs.Ombi
                     var plext = _plex.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.Series.AddedAt).Take(10).ToHashSet();
                     var embyt = _emby.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.AddedAt).Take(10).ToHashSet();
                     var lidarr = lidarrContent.OrderByDescending(x => x.AddedAt).Take(10).ToHashSet();
-                    body = await BuildHtml(plexm, embym, plext, embyt, lidarr, settings);
+                    body = await BuildHtml(plexm, embym, plext, embyt, lidarr, settings, embySettings, plexSettings);
                 }
                 else
                 {
-                    body = await BuildHtml(plexContentMoviesToSend, embyContentMoviesToSend, plexEpisodesToSend, embyEpisodesToSend, lidarrContentAlbumsToSend, settings);
+                    body = await BuildHtml(plexContentMoviesToSend, embyContentMoviesToSend, plexEpisodesToSend, embyEpisodesToSend, lidarrContentAlbumsToSend, settings, embySettings, plexSettings);
                     if (body.IsNullOrEmpty())
                     {
                         return;
@@ -333,7 +340,8 @@ namespace Ombi.Schedule.Jobs.Ombi
         }
 
         private async Task<string> BuildHtml(IQueryable<PlexServerContent> plexContentToSend, IQueryable<EmbyContent> embyContentToSend, 
-            HashSet<PlexEpisode> plexEpisodes, HashSet<EmbyEpisode> embyEp, HashSet<LidarrAlbumCache> albums, NewsletterSettings settings)
+            HashSet<PlexEpisode> plexEpisodes, HashSet<EmbyEpisode> embyEp, HashSet<LidarrAlbumCache> albums, NewsletterSettings settings, EmbySettings embySettings,
+            PlexSettings plexSettings)
         {
             var ombiSettings = await _ombiSettings.GetSettingsAsync();
             var sb = new StringBuilder();
@@ -349,8 +357,16 @@ namespace Ombi.Schedule.Jobs.Ombi
                 sb.Append("<td style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-size: 14px; vertical-align: top; \">");
                 sb.Append("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; \">");
                 sb.Append("<tr>");
-                await ProcessPlexMovies(plexMovies, sb, ombiSettings.DefaultLanguageCode);
-                await ProcessEmbyMovies(embyMovies, sb, ombiSettings.DefaultLanguageCode);
+                if (plexSettings.Enable)
+                {
+                    await ProcessPlexMovies(plexMovies, sb, ombiSettings.DefaultLanguageCode);
+                }
+
+                if (embySettings.Enable)
+                {
+                    await ProcessEmbyMovies(embyMovies, sb, ombiSettings.DefaultLanguageCode);
+                }
+
                 sb.Append("</tr>");
                 sb.Append("</table>");
                 sb.Append("</td>");
@@ -367,8 +383,16 @@ namespace Ombi.Schedule.Jobs.Ombi
                 sb.Append("<td style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-size: 14px; vertical-align: top; \">");
                 sb.Append("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; \">");
                 sb.Append("<tr>");
-                await ProcessPlexTv(plexEpisodes, sb);
-                await ProcessEmbyTv(embyEp, sb);
+                if (plexSettings.Enable)
+                {
+                    await ProcessPlexTv(plexEpisodes, sb);
+                }
+
+                if (embySettings.Enable)
+                {
+                    await ProcessEmbyTv(embyEp, sb);
+                }
+
                 sb.Append("</tr>");
                 sb.Append("</table>");
                 sb.Append("</td>");
