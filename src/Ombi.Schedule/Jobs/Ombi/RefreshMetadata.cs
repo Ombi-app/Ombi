@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 using Microsoft.Extensions.Logging;
+using Ombi.Api.Emby;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Api.TvMaze;
@@ -21,7 +22,8 @@ namespace Ombi.Schedule.Jobs.Ombi
     {
         public RefreshMetadata(IPlexContentRepository plexRepo, IEmbyContentRepository embyRepo,
             ILogger<RefreshMetadata> log, ITvMazeApi tvApi, ISettingsService<PlexSettings> plexSettings,
-            IMovieDbApi movieApi, ISettingsService<EmbySettings> embySettings, IPlexAvailabilityChecker plexAvailability, IEmbyAvaliabilityChecker embyAvaliability)
+            IMovieDbApi movieApi, ISettingsService<EmbySettings> embySettings, IPlexAvailabilityChecker plexAvailability, IEmbyAvaliabilityChecker embyAvaliability,
+            IEmbyApi embyApi)
         {
             _plexRepo = plexRepo;
             _embyRepo = embyRepo;
@@ -32,6 +34,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             _embySettings = embySettings;
             _plexAvailabilityChecker = plexAvailability;
             _embyAvaliabilityChecker = embyAvaliability;
+            _embyApi = embyApi;
         }
 
         private readonly IPlexContentRepository _plexRepo;
@@ -43,6 +46,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly ITvMazeApi _tvApi;
         private readonly ISettingsService<PlexSettings> _plexSettings;
         private readonly ISettingsService<EmbySettings> _embySettings;
+        private readonly IEmbyApi _embyApi;
 
         public async Task Start()
         {
@@ -54,11 +58,11 @@ namespace Ombi.Schedule.Jobs.Ombi
                 {
                     await StartPlex();
                 }
-
+                
                 var embySettings = await _embySettings.GetSettingsAsync();
                 if (embySettings.Enable)
                 {
-                    await StartEmby();
+                    await StartEmby(embySettings);
                 }
             }
             catch (Exception e)
@@ -123,9 +127,9 @@ namespace Ombi.Schedule.Jobs.Ombi
             await StartPlexTv(allTv);
         }
 
-        private async Task StartEmby()
+        private async Task StartEmby(EmbySettings s)
         {
-            await StartEmbyMovies();
+            await StartEmbyMovies(s);
             await StartEmbyTv();
         }
 
@@ -158,7 +162,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     _plexRepo.UpdateWithoutSave(show);
                 }
                 tvCount++;
-                if (tvCount >= 20)
+                if (tvCount >= 75)
                 {
                     await _plexRepo.SaveChangesAsync();
                     tvCount = 0;
@@ -198,7 +202,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     _embyRepo.UpdateWithoutSave(show);
                 }
                 tvCount++;
-                if (tvCount >= 20)
+                if (tvCount >= 75)
                 {
                     await _embyRepo.SaveChangesAsync();
                     tvCount = 0;
@@ -229,7 +233,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     _plexRepo.UpdateWithoutSave(movie);
                 }
                 movieCount++;
-                if (movieCount >= 20)
+                if (movieCount >= 75)
                 {
                     await _plexRepo.SaveChangesAsync();
                     movieCount = 0;
@@ -239,31 +243,56 @@ namespace Ombi.Schedule.Jobs.Ombi
             await _plexRepo.SaveChangesAsync();
         }
 
-        private async Task StartEmbyMovies()
+        private async Task StartEmbyMovies(EmbySettings settings)
         {
             var allMovies = _embyRepo.GetAll().Where(x =>
                 x.Type == EmbyMediaType.Movie && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue()));
             int movieCount = 0;
             foreach (var movie in allMovies)
             {
-                var hasImdb = movie.ImdbId.HasValue();
-                var hasTheMovieDb = movie.TheMovieDbId.HasValue();
+                movie.ImdbId.HasValue();
+                 movie.TheMovieDbId.HasValue();
                 // Movies don't really use TheTvDb
 
-                if (!hasImdb)
+                // Check if it even has 1 ID
+                if (!movie.HasImdb && !movie.HasTheMovieDb)
                 {
-                    var imdbId = await GetImdbId(hasTheMovieDb, false, movie.Title, movie.TheMovieDbId, string.Empty);
+                    // Ok this sucks,
+                    // The only think I can think that has happened is that we scanned Emby before Emby has got the metadata
+                    // So let's recheck emby to see if they have got the metadata now
+                    _log.LogInformation($"Movie {movie.Title} does not have a ImdbId or TheMovieDbId, so rechecking emby");
+                    foreach (var server in settings.Servers)
+                    {
+                        _log.LogInformation($"Checking server {server.Name} for upto date metadata");
+                        var movieInfo = await _embyApi.GetMovieInformation(movie.EmbyId, server.ApiKey, server.AdministratorId,
+                            server.FullUri);
+
+                        if (movieInfo.ProviderIds?.Imdb.HasValue() ?? false)
+                        {
+                            movie.ImdbId = movieInfo.ProviderIds.Imdb;
+                        }
+
+                        if (movieInfo.ProviderIds?.Tmdb.HasValue() ?? false)
+                        {
+                            movie.TheMovieDbId = movieInfo.ProviderIds.Tmdb;
+                        }
+                    }
+                }
+
+                if (!movie.HasImdb)
+                {
+                    var imdbId = await GetImdbId(movie.HasTheMovieDb, false, movie.Title, movie.TheMovieDbId, string.Empty);
                     movie.ImdbId = imdbId;
                     _embyRepo.UpdateWithoutSave(movie);
                 }
-                if (!hasTheMovieDb)
+                if (!movie.HasTheMovieDb)
                 {
-                    var id = await GetTheMovieDbId(false, hasImdb, string.Empty, movie.ImdbId, movie.Title, true);
+                    var id = await GetTheMovieDbId(false, movie.HasImdb, string.Empty, movie.ImdbId, movie.Title, true);
                     movie.TheMovieDbId = id;
                     _embyRepo.UpdateWithoutSave(movie);
                 }
                 movieCount++;
-                if (movieCount >= 20)
+                if (movieCount >= 75)
                 {
                     await _embyRepo.SaveChangesAsync();
                     movieCount = 0;

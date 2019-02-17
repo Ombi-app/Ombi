@@ -5,18 +5,13 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Hangfire;
-using Hangfire.Console;
 using Hangfire.Server;
 using Microsoft.Extensions.Logging;
-
-using Ombi.Api.Service;
-using Ombi.Api.Service.Models;
 using Ombi.Core.Processor;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
@@ -40,7 +35,6 @@ namespace Ombi.Schedule.Jobs.Ombi
             Settings = s;
             _processProvider = proc;
             _appConfig = appConfig;
-            Settings.ClearCache();
         }
 
         private ILogger<OmbiAutomaticUpdater> Logger { get; }

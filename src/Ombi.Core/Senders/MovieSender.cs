@@ -49,7 +49,6 @@ namespace Ombi.Core.Senders
         {
             try
             {
-
                 var cpSettings = await CouchPotatoSettings.GetSettingsAsync();
                 //var watcherSettings = await WatcherSettings.GetSettingsAsync();
                 var radarrSettings = await RadarrSettings.GetSettingsAsync();
@@ -76,7 +75,7 @@ namespace Ombi.Core.Senders
             }
             catch (Exception e)
             {
-                Log.LogError(e, "Error when seing movie to DVR app, added to the request queue");
+                Log.LogError(e, "Error when sending movie to DVR app, added to the request queue");
 
                 // Check if already in request quee
                 var existingQueue = await _requestQueuRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id);

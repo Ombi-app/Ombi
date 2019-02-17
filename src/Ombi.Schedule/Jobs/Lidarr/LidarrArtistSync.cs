@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Lidarr;
-using Ombi.Api.Radarr;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
-using Serilog;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Ombi.Schedule.Jobs.Lidarr
@@ -29,7 +26,6 @@ namespace Ombi.Schedule.Jobs.Lidarr
             _ctx = ctx;
             _job = background;
             _albumSync = album;
-            _lidarrSettings.ClearCache();
         }
 
         private readonly ISettingsService<LidarrSettings> _lidarrSettings;

@@ -99,7 +99,7 @@ namespace Ombi.Core.Engine
                     {
                         Url = e.url,
                         Title = e.name,
-                        AirDate = DateTime.Parse(e.airstamp ?? DateTime.MinValue.ToString()),
+                        AirDate = e.airstamp.HasValue() ? DateTime.Parse(e.airstamp) : DateTime.MinValue,
                         EpisodeNumber = e.number,
 
                     });
@@ -112,7 +112,7 @@ namespace Ombi.Core.Engine
                     {
                         Url = e.url,
                         Title = e.name,
-                        AirDate = DateTime.Parse(e.airstamp ?? DateTime.MinValue.ToString()),
+                        AirDate = e.airstamp.HasValue() ? DateTime.Parse(e.airstamp) : DateTime.MinValue,
                         EpisodeNumber = e.number,
                     });
                 }
