@@ -8,11 +8,10 @@
     const existingBaseUrl = window.localStorage.getItem("baseUrl");
     if (existingBaseUrl === null || existingBaseUrl || existingBaseUrl.length === 0) {
       document.write('<base href="/' + existingBaseUrl + '" />');
-      if(existingBaseUrl.length === 0)
-      {
-      document.write("  <link rel=\"stylesheet\" href='/loading.css'/>")
+      if (existingBaseUrl.length === 0) {
+        document.write("<link rel=\"stylesheet\" href='/loading.css'/>")
       } else {
-              document.write("  <link rel=\"stylesheet\" href='" + existingBaseUrl + "/loading.css'/>")
+        document.write("<link rel=\"stylesheet\" href='" + existingBaseUrl + "/loading.css'/>")
       }
     } else {
       // Work out the base URL
@@ -33,7 +32,7 @@
       hasFile = true;
       debugger;
       document.write('<base href="/' + data + '" />');
-      document.write("  <link rel=\"stylesheet\" href=" + data + "/loading.css\"/>")
+      document.write("<link rel=\"stylesheet\" href=" + data + "/loading.css\"/>")
       window.localStorage.setItem("baseUrl", data);
 
       function tryGetBaseUrl(xmlhttp, url) {
@@ -47,8 +46,8 @@
       }
 
       function endsWith(str, suffix) {
-    return str.indexOf(suffix, str.length - suffix.length) !== -1;
-}
+        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+      }
     }
   </script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
