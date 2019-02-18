@@ -1,8 +1,107 @@
 # Changelog
 
+## (unreleased)
 
-## v3.0.4119 (2019-1-09)
+### **New Features**
 
+- Update discord link to follow the scheme of other links. [Tom McClellan]
+
+- Update issue templates. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update CHANGELOG.md. [Jamie]
+
+- Added the functionality to remove a user from getting notifications to their mobile device #2780. [tidusjar]
+
+- Added a demo mode, this will only show movies and shows that are in the public domain. Dam that stupid fruit company. [tidusjar]
+
+- Added Actor Searching for Movies! [TidusJar]
+
+- Added the ability to change where the View on Emby link goes to #2730. [TidusJar]
+
+- Added the request queue to the notifications UI so you can turn it off per notification agent #2747. [TidusJar]
+
+- Added new classes to the posters #2732. [TidusJar]
+
+### **Fixes**
+
+- Fix: src/Ombi/package.json to reduce vulnerabilities. [snyk-bot]
+
+- Fixed #2801 this is when a season is not correctly monitored in sonarr when approved by an admin. [tidusjar]
+
+- Small improvements to try and mitigate #2750. [tidusjar]
+
+- Removed some areas where we clear out the cache. This should help with DB locking #2750. [tidusjar]
+
+- Fixed #2810. [tidusjar]
+
+- Cannot create an issue comment with the API #2811. [tidusjar]
+
+- Set the local domain if the Application URL is set for the HELO or EHLO commands. #2636. [tidusjar]
+
+- New translations en.json (Spanish) [Jamie]
+
+- Delete ISSUE_TEMPLATE.md. [Jamie]
+
+- More minor grammatical edits. [Andrew Metzger]
+
+- Minor grammatical edits. [Andrew Metzger]
+
+- Fixed #2802 the issue where "Issues" were not being deleted correctly. [tidusjar]
+
+- Fixed #2797. [tidusjar]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- Fixed #2786. [tidusjar]
+
+- Fixed #2756. [tidusjar]
+
+- Ignore the UserName header as part of the Api is the value is an empty string. [tidusjar]
+
+- Fixed #2759. [tidusjar]
+
+- Did #2756. [TidusJar]
+
+- Fixed the exception that sometimes makes ombi fallover. [TidusJar]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- Log the error to the ui to figure out what's going on with #2755. [tidusjar]
+
+- Small fix when denying a request with a reason, we wasn't updating the ui. [TidusJar]
+
+- Make sure we can only set the ApiAlias when using the API Key. [tidusjar]
+
+- #2363 Added the ability to pass any username into the API using the ApiAlias header. [tidusjar]
+
+- Removed the Add user to Plex from Ombi. [tidusjar]
+
+
+## v3.0.4119 (2019-01-09)
 
 ### **New Features**
 
@@ -24,27 +123,33 @@
 
 - Added the ability to specify a year when searching for movies. [tidusjar]
 
-- Made the newsletter use the default lanuage code set in the Ombi settings for movie information. [TidusJar]
+- Update NewsletterTemplate.html. [d1slact0r]
 
-- Added a global language flag that now applies to the search by default. [tidusjar]
+- Update NewsletterTemplate.html. [d1slact0r]
 
-- Updated the frontend packages (Using Angular 7 now) [TidusJar]
+- Update NewsletterTemplate.html. [d1slact0r]
 
-- Added capture of anonymous analytical data. [tidusjar]
+- Update HtmlTemplateGenerator.cs. [d1slact0r]
 
-- Added {AvailableDate} as a Notification Variable, this is the date the request was marked as available. See here: https://github.com/tidusjar/Ombi/wiki/Notification-Template-Variables. [tidusjar]
+- Update NewsletterTemplate.html. [d1slact0r]
 
-- Updated the Newsletter template! Better mail client support [d1slact0r]
+- Update HtmlTemplateGenerator.cs. [d1slact0r]
 
-- Updated boostrap #2694. [TidusJar]
+- Update NewsletterTemplate.html. [d1slact0r]
+
+- Update NewsletterTemplate.html. [d1slact0r]
+
+- Update NewsletterTemplate.html. [d1slact0r]
+
+- Update HtmlTemplateGenerator.cs. [d1slact0r]
+
+- Updated boostrap #2694. [Jamie]
 
 - Added the ability to deny a request with a reason. [TidusJar]
-- Updated to .net core 2.2 and included a linux-arm64 build. [aptalca]
 
-- Make the newsletter BCC the users rather than creating a million newsletters (Hopefully will stop SMTP providers from marking as spam). This does mean that the custom user customization in the newsletter will no longer work. [TidusJar]
+- Update EmbyEpisodeSync.cs. [Jamie]
 
-
-- New translations [TidusJar]
+- Updated to .net core 2.2 and included a linux-arm64 build. [TidusJar]
 
 ### **Fixes**
 
@@ -66,11 +171,61 @@
 
 - Fixed #2716. [tidusjar]
 
+- Make the newsletter BCC the users rather than creating a million newsletters (Hopefully will stop SMTP providers from marking as spam). This does mean that the custom user customization in the newsletter will no longer work. [TidusJar]
+
 - If we don't know the Plex agent, then see if it's a ImdbId, if it's not check the string for any episode and season hints #2695. [tidusjar]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- Made the search results the language specified in the search refinement. [tidusjar]
 
 - Fixed #2704. [tidusjar]
 
+- Now it is fixed :) [d1slact0r]
+
+- Android please be nice now. [d1slact0r]
+
+- Fixed title bit better. [d1slact0r]
+
+- Fixed titles. [d1slact0r]
+
+- This should fix the build for sure (stupid quotes) [d1slact0r]
+
+- Fixes build. [d1slact0r]
+
+- Rewritten the whole newsletter template. [d1slact0r]
+
 - Fixed #2697. [tidusjar]
+
+- Add linux-arm runtime identifier. [aptalca]
+
+- Add back arm packages. [aptalca]
+
+- Add arm32 package. [aptalca]
 
 - Fixed #2691. [tidusjar]
 
@@ -80,10 +235,13 @@
 
 - Fixed #2678. [TidusJar]
 
+- Deny reason for movie requests. [TidusJar]
+
 - Set the landing and login pages background refresh to 15 seconds rather than 10 and 7. [TidusJar]
 
 - Fixed a bug with us thinking future dated emby episodes are not available, Consoldated the emby and plex search rules (since they have the same logic) [TidusJar]
 
+- Fixed build. [TidusJar]
 
 
 ## v3.0.4036 (2018-12-11)
