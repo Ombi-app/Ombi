@@ -19,5 +19,7 @@ namespace Ombi.Api.TheMovieDb
         Task<FindResult> Find(string externalId, ExternalSource source);
         Task<TvExternals> GetTvExternals(int theMovieDbId);
         Task<TvInfo> GetTVInfo(string themoviedbid);
+        Task<TheMovieDbContainer<ActorResult>> SearchByActor(string searchTerm, string langCode);
+        Task<ActorCredits> GetActorMovieCredits(int actorId, string langCode);
     }
 }

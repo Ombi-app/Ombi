@@ -25,7 +25,6 @@ namespace Ombi.Schedule.Jobs.Sonarr
             _api = api;
             _log = l;
             _ctx = ctx;
-            _settings.ClearCache();
         }
 
         private readonly ISettingsService<SonarrSettings> _settings;

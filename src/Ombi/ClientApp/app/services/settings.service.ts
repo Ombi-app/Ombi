@@ -10,7 +10,6 @@ import {
     ICronTestModel,
     ICronViewModelBody,
     ICustomizationSettings,
-    ICustomPage,
     IDiscordNotifcationSettings,
     IDogNzbSettings,
     IEmailNotificationSettings,
@@ -111,14 +110,6 @@ export class SettingsService extends ServiceHelpers {
 
     public getAuthentication(): Observable<IAuthenticationSettings> {
         return this.http.get<IAuthenticationSettings>(`${this.url}/Authentication`, {headers: this.headers});
-    }
-
-    public getCustomPage(): Observable<ICustomPage> {
-        return this.http.get<ICustomPage>(`${this.url}/CustomPage`, {headers: this.headers});
-    }
-
-    public saveCustomPage(model: ICustomPage): Observable<boolean> {
-        return this.http.post<boolean>(`${this.url}/CustomPage`, model, {headers: this.headers});
     }
 
     public getClientId(): Observable<string> {

@@ -31,11 +31,11 @@ namespace Ombi.Core.Engine
             Logger = logger;
         }
 
-        private IMovieDbApi MovieApi { get; }
-        private IMapper Mapper { get; }
+        protected IMovieDbApi MovieApi { get; }
+        protected IMapper Mapper { get; }
         private ILogger<MovieSearchEngine> Logger { get; }
 
-        private const int MovieLimit = 10;
+        protected const int MovieLimit = 10;
 
         /// <summary>
         /// Lookups the imdb information.
@@ -54,8 +54,6 @@ namespace Ombi.Core.Engine
         /// <summary>
         /// Searches the specified movie.
         /// </summary>
-        /// <param name="search">The search.</param>
-        /// <returns></returns>
         public async Task<IEnumerable<SearchMovieViewModel>> Search(string search, int? year, string langaugeCode)
         {
             langaugeCode = await DefaultLanguageCode(langaugeCode);
@@ -66,6 +64,33 @@ namespace Ombi.Core.Engine
                 return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
             }
             return null;
+        }
+
+        public async Task<IEnumerable<SearchMovieViewModel>> SearchActor(string search, string langaugeCode)
+        {
+            langaugeCode = await DefaultLanguageCode(langaugeCode);
+            var people = await MovieApi.SearchByActor(search, langaugeCode);
+            var person = people?.results?.Count > 0 ? people.results.FirstOrDefault() : null;
+
+            var resultSet = new List<SearchMovieViewModel>();
+            if (person == null)
+            {
+                return resultSet;
+            }
+            
+            // Get this person movie credits
+            var credits = await MovieApi.GetActorMovieCredits(person.id, langaugeCode);
+            // Grab results from both cast and crew, prefer items in cast.  we can handle directors like this.
+            var movieResults = (from role in credits.cast select new  { Id = role.id, Title = role.title, ReleaseDate = role.release_date }).ToList();
+            movieResults.AddRange((from job in credits.crew select new { Id = job.id, Title = job.title, ReleaseDate = job.release_date }).ToList());
+
+            movieResults = movieResults.Take(10).ToList();
+            foreach (var movieResult in movieResults)
+            {
+                resultSet.Add(await LookupImdbInformation(movieResult.Id, langaugeCode));
+            }
+
+            return resultSet;
         }
 
         /// <summary>
@@ -159,7 +184,7 @@ namespace Ombi.Core.Engine
             return null;
         }
 
-        private async Task<List<SearchMovieViewModel>> TransformMovieResultsToResponse(
+        protected async Task<List<SearchMovieViewModel>> TransformMovieResultsToResponse(
             IEnumerable<MovieSearchResult> movies)
         {
             var viewMovies = new List<SearchMovieViewModel>();
@@ -170,16 +195,17 @@ namespace Ombi.Core.Engine
             return viewMovies;
         }
 
-        private async Task<SearchMovieViewModel> ProcessSingleMovie(SearchMovieViewModel viewMovie, bool lookupExtraInfo = false)
+        protected async Task<SearchMovieViewModel> ProcessSingleMovie(SearchMovieViewModel viewMovie, bool lookupExtraInfo = false)
         {
-            if (lookupExtraInfo)
+            if (lookupExtraInfo && viewMovie.ImdbId.IsNullOrEmpty())
             {
                 var showInfo = await MovieApi.GetMovieInformation(viewMovie.Id);
                 viewMovie.Id = showInfo.Id; // TheMovieDbId
                 viewMovie.ImdbId = showInfo.ImdbId;
-                var usDates = viewMovie.ReleaseDates?.Results?.FirstOrDefault(x => x.IsoCode == "US");
-                viewMovie.DigitalReleaseDate = usDates?.ReleaseDate?.FirstOrDefault(x => x.Type == ReleaseDateType.Digital)?.ReleaseDate;
             }
+
+            var usDates = viewMovie.ReleaseDates?.Results?.FirstOrDefault(x => x.IsoCode == "US");
+            viewMovie.DigitalReleaseDate = usDates?.ReleaseDate?.FirstOrDefault(x => x.Type == ReleaseDateType.Digital)?.ReleaseDate;
 
             viewMovie.TheMovieDbId = viewMovie.Id.ToString();
 
@@ -187,7 +213,7 @@ namespace Ombi.Core.Engine
 
             // This requires the rules to be run first to populate the RequestId property
             await CheckForSubscription(viewMovie);
-
+            
             return viewMovie;
         }
 

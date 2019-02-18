@@ -5,9 +5,7 @@
 <button type="button" class="btn btn-success-outline" data-test="adduserbtn" [routerLink]="['/usermanagement/user']">Add User To Ombi</button>
 
 <button type="button" style="float:right;" class="btn btn-primary-outline"(click)="showBulkEdit = !showBulkEdit" [disabled]="!hasChecked()">Bulk Edit</button>
-<div *ngIf="plexEnabled">
-    <button type="button"  style="float:right;"  class="btn btn-success-outline" (click)="open()">Add Plex Friend</button>
-    </div>
+
 <!-- Table -->
 <table class="table table-striped table-hover table-responsive table-condensed table-usermanagement">
     <thead>

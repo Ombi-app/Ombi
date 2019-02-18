@@ -79,4 +79,24 @@ export class MobileComponent implements OnInit {
         });
 
     }
+
+    public remove() {
+        if (!this.testUserId) {
+            this.notificationService.warning("Warning", "Please select a user to remove");
+            return;
+        }
+
+        this.mobileService.deleteUser(this.testUserId).subscribe(x => {
+            if (x) {
+                this.notificationService.success("Removed users notification");
+                const userToRemove = this.userList.filter(u => {
+                    return u.userId === this.testUserId;
+                })[1];
+                this.userList.splice(this.userList.indexOf(userToRemove),1);
+            } else {
+                this.notificationService.error("There was an error when removing the notification. Please check your logs");
+            }
+        });
+
+    }
 }

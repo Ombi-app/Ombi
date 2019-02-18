@@ -130,23 +130,18 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task AddedToRequestQueue(NotificationOptions model, MobileNotificationSettings settings)
         {
-            string user;
-            string title;
-            if (model.RequestType == RequestType.Movie)
+
+            var parsed = await LoadTemplate(NotificationAgent.Mobile, NotificationType.ItemAddedToFaultQueue, model);
+            if (parsed.Disabled)
             {
-                user = MovieRequest.RequestedUser.UserAlias;
-                title = MovieRequest.Title;
+                _logger.LogInformation($"Template {NotificationType.ItemAddedToFaultQueue} is disabled for {NotificationAgent.Mobile}");
+                return;
             }
-            else
-            {
-                user = TvRequest.RequestedUser.UserAlias;
-                title = TvRequest.ParentRequest.Title;
-            }
-            var message = $"Hello! The user '{user}' has requested {title} but it could not be added. This has been added into the requests queue and will keep retrying";
             var notification = new NotificationMessage
             {
-                Message = message
+                Message = parsed.Message,
             };
+
             // Get admin devices
             var playerIds = await GetAdmins(NotificationType.Test);
             await Send(playerIds, notification, settings, model);
@@ -294,6 +289,5 @@ namespace Ombi.Notifications.Agents
                 }
             }
         }
-
     }
 }

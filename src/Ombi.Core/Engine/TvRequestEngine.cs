@@ -385,6 +385,7 @@ namespace Ombi.Core.Engine
                 foreach (var ep in s.Episodes)
                 {
                     ep.Approved = true;
+                    ep.Requested = true;
                 }
             }
 

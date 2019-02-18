@@ -23,7 +23,6 @@ namespace Ombi.Controllers.External
             RadarrApi = radarr;
             RadarrSettings = settings;
             Cache = mem;
-            RadarrSettings.ClearCache();
         }
 
         private IRadarrApi RadarrApi { get; }

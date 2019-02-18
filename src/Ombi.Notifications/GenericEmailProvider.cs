@@ -5,6 +5,7 @@ using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 using Ombi.Core.Settings;
+using Ombi.Helpers;
 using Ombi.Notifications.Models;
 using Ombi.Notifications.Templates;
 using Ombi.Settings.Settings.Models;
@@ -56,6 +57,11 @@ namespace Ombi.Notifications
                 
                 using (var client = new SmtpClient())
                 {
+                    if (customization.ApplicationUrl.HasValue())
+                    {
+                        client.LocalDomain = customization.ApplicationUrl;
+                    }
+
                     if (settings.DisableCertificateChecking)
                     {
                         // Disable validation of the certificate associated with the SMTP service
