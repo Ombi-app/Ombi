@@ -42,7 +42,7 @@
     "angular2-template-loader": "^0.6.2",
     "aspnet-webpack": "^3.0.0",
     "awesome-typescript-loader": "^5.2.0",
-    "bootstrap": "3.4.0",
+    "bootstrap": "3.4.1",
     "bootswatch": "3.4.0",
     "copy-webpack-plugin": "^4.5.2",
     "core-js": "^2.5.7",
