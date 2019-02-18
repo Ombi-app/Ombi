@@ -1,6 +1,6 @@
 {
   "Login": {
-    "SignInButton": "Einloggen",
+    "SignInButton": "Anmelden",
     "UsernamePlaceholder": "Benutzername",
     "PasswordPlaceholder": "Passwort",
     "RememberMe": "Eingeloggt bleiben",
@@ -137,7 +137,7 @@
     "SortStatusAsc": "Status ▲",
     "SortStatusDesc": "Status ▼",
     "Remaining": {
-      "Quota": "{{remaining}}/{{total}} requests remaining",
+      "Quota": "{{remaining}}/{{total}} Anfragen verbleiben",
       "NextDays": "Another request will be added in {{time}} days",
       "NextHours": "Another request will be added in {{time}} hours",
       "NextMinutes": "Another request will be added in {{time}} minutes",
@@ -171,9 +171,9 @@
     "PendingApproval": "Genehmigung ausstehend"
   },
   "UserManagment": {
-    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
-    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
-    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
+    "TvRemaining": "TV: {{remaining}}/{{total}} verbleibend",
+    "MovieRemaining": "Filme: {{remaining}}/{{total}} verbleibend",
+    "MusicRemaining": "Musik: {{remaining}}/{{total}} verbleibend",
     "TvDue": "TV: {{date}}",
     "MovieDue": "Film: {{date}}",
     "MusicDue": "Musik: {{date}}"

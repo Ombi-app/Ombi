@@ -11,10 +11,10 @@
   },
   "Common": {
     "ContinueButton": "Dalej",
-    "Available": "Dostępny",
-    "PartiallyAvailable": "Partially Available",
-    "Monitored": "Monitored",
-    "NotAvailable": "Niedostępny",
+    "Available": "Dostępne",
+    "PartiallyAvailable": "Częściowo dostępne",
+    "Monitored": "Monitorowane",
+    "NotAvailable": "Niedostępne",
     "ProcessingRequest": "Przetwarzanie zgłoszenia",
     "PendingApproval": "Oczekujące na zatwierdzenie",
     "RequestDenied": "Zgłoszenie odrzucone",
@@ -23,7 +23,7 @@
     "Request": "Zgłoszenie",
     "Denied": "Odrzucone",
     "Approve": "Zatwierdź",
-    "PartlyAvailable": "Dostępne częściowo",
+    "PartlyAvailable": "Częściowo dostępne",
     "Errors": {
       "Validation": "Sprawdź wprowadzone dane"
     }
@@ -34,13 +34,13 @@
   },
   "LandingPage": {
     "OnlineHeading": "Dostępny",
-    "OnlineParagraph": "Serwer mediów jest dostępny",
-    "PartiallyOnlineHeading": "Dostępny częściowo",
-    "PartiallyOnlineParagraph": "Serwer mediów jest dostępny częściowo.",
-    "MultipleServersUnavailable": "{{serversUnavailable}} serwerów spośród {{totalServers}} jest niedostępnych.",
-    "SingleServerUnavailable": "Jeden serwer spośród {{totalServers}} jest niedostępny.",
-    "OfflineHeading": "Niedostępny",
-    "OfflineParagraph": "Serwer mediów jest niedostępny.",
+    "OnlineParagraph": "Serwer multimediów jest aktualnie online",
+    "PartiallyOnlineHeading": "Częściowo online",
+    "PartiallyOnlineParagraph": "Serwer multimediów jest częściowo online.",
+    "MultipleServersUnavailable": "{{serversUnavailable}} serwerów spośród {{totalServers}} jest offline.",
+    "SingleServerUnavailable": "{{serversUnavailable}} serwer z {{totalServers}} jest w offline.",
+    "OfflineHeading": "Aktualnie offline",
+    "OfflineParagraph": "Serwer multimediów jest aktualnie offline.",
     "CheckPageForUpdates": "Tutaj znajdziesz aktualizacje dotyczące tej strony."
   },
   "NavigationBar": {
@@ -48,7 +48,7 @@
     "Requests": "Zgłoszenia",
     "UserManagement": "Zarządzanie użytkownikami",
     "Issues": "Problemy",
-    "Vote": "Vote",
+    "Vote": "Głosowania",
     "Donate": "Wesprzyj!",
     "DonateLibraryMaintainer": "Wesprzyj właściciela biblioteki",
     "DonateTooltip": "W ten sposób przekonuję moją żonę by spędzać mój wolny czas rozwijając Ombi ;)",
@@ -65,7 +65,7 @@
     "Paragraph": "Chcesz obejrzeć coś, co nie jest obecnie dostępne? Żaden problem, po prostu wyszukaj poniżej i dodaj zgłoszenie!",
     "MoviesTab": "Filmy",
     "TvTab": "Seriale",
-    "MusicTab": "Music",
+    "MusicTab": "Muzyka",
     "Suggestions": "Sugestie",
     "NoResults": "Niestety nic nie znaleziono!",
     "DigitalDate": "Wydanie cyfrowe: {{date}}",
@@ -74,7 +74,7 @@
     "ViewOnEmby": "Obejrzyj na Emby",
     "RequestAdded": "Zgłoszenie dla {{title}} zostało dodane",
     "Similar": "Podobne",
-    "Refine": "Refine",
+    "Refine": "Zawęź",
     "Movies": {
       "PopularMovies": "Popularne filmy",
       "UpcomingMovies": "Wkrótce w kinach",
@@ -103,14 +103,14 @@
     "Title": "Zgłoszenia",
     "Paragraph": "Poniżej są twoje i wszystkie inne zgłoszenia, a także ich status akceptacji i pobierania.",
     "MoviesTab": "Filmy",
-    "TvTab": "Seriale",
-    "MusicTab": "Music",
+    "TvTab": "Programy TV",
+    "MusicTab": "Muzyka",
     "RequestedBy": "Zgłoszone przez:",
-    "Status": "Stan:",
-    "RequestStatus": "Stan zgłoszenia:",
+    "Status": "Status:",
+    "RequestStatus": "Status zgłoszenia:",
     "Denied": "Odrzucono:",
     "TheatricalRelease": "Premiera kinowa: {{date}}",
-    "ReleaseDate": "Released: {{date}}",
+    "ReleaseDate": "Wydany: {{date}}",
     "TheatricalReleaseSort": "Premiera kinowa",
     "DigitalRelease": "Wydanie cyfrowe: {{date}}",
     "RequestDate": "Data zgłoszenia:",
@@ -125,7 +125,7 @@
     "Season": "Sezon:",
     "GridTitle": "Tytuł",
     "AirDate": "Data emisji",
-    "GridStatus": "Stan",
+    "GridStatus": "Status",
     "ReportIssue": "Zgłoś problem",
     "Filter": "Filtr",
     "Sort": "Sortowanie",
@@ -134,14 +134,14 @@
     "SortTitleDesc": "Tytuł ▼",
     "SortRequestDateAsc": "Data zgłoszenia ▲",
     "SortRequestDateDesc": "Data zgłoszenia ▼",
-    "SortStatusAsc": "Stan ▲",
-    "SortStatusDesc": "Stan ▼",
+    "SortStatusAsc": "Status ▲",
+    "SortStatusDesc": "Status ▼",
     "Remaining": {
-      "Quota": "{{remaining}}/{{total}} requests remaining",
-      "NextDays": "Another request will be added in {{time}} days",
-      "NextHours": "Another request will be added in {{time}} hours",
-      "NextMinutes": "Another request will be added in {{time}} minutes",
-      "NextMinute": "Another request will be added in {{time}} minute"
+      "Quota": "{{remaining}}/{{total}} pozostałych zgłoszeń",
+      "NextDays": "Kolejne zgłoszenie zostanie dodane za {{time}} dni",
+      "NextHours": "Kolejne zgłoszenie zostanie dodane za {{time}} godzin(y)",
+      "NextMinutes": "Kolejne zgłoszenie zostanie dodane za {{time}} minut(y)",
+      "NextMinute": "Kolejne zgłoszenie zostanie dodane za {{time}} minut(y)"
     }
   },
   "Issues": {
@@ -166,20 +166,20 @@
   "Filter": {
     "ClearFilter": "Wyczyść fltr",
     "FilterHeaderAvailability": "Dostępność",
-    "FilterHeaderRequestStatus": "Stan",
+    "FilterHeaderRequestStatus": "Status",
     "Approved": "Zatwierdzone",
     "PendingApproval": "Oczekujące na zatwierdzenie"
   },
   "UserManagment": {
-    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
-    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
-    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
+    "TvRemaining": "TV: pozostało {{remaining}}/{{total}}",
+    "MovieRemaining": "Filmy: pozostało {{remaining}}/{{total}}",
+    "MusicRemaining": "Muzyka: pozostało {{remaining}}/{{total}}",
     "TvDue": "TV: {{date}}",
-    "MovieDue": "Movie: {{date}}",
-    "MusicDue": "Music: {{date}}"
+    "MovieDue": "Film: {{date}}",
+    "MusicDue": "Muzyka: {{date}}"
   },
   "Votes": {
-    "CompletedVotesTab": "Voted",
-    "VotesTab": "Votes Needed"
+    "CompletedVotesTab": "Zagłosowano",
+    "VotesTab": "Potrzebne głosy"
   }
 }
