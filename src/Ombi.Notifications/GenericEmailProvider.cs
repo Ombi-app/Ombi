@@ -57,11 +57,6 @@ namespace Ombi.Notifications
                 
                 using (var client = new SmtpClient())
                 {
-                    if (customization.ApplicationUrl.HasValue())
-                    {
-                        client.LocalDomain = customization.ApplicationUrl;
-                    }
-
                     if (settings.DisableCertificateChecking)
                     {
                         // Disable validation of the certificate associated with the SMTP service
