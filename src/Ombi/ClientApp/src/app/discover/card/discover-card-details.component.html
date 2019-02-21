@@ -1,5 +1,5 @@
 <div class="spinner-container">
-<mat-spinner *ngIf="loading" [color]="'accent'"></mat-spinner>
+    <mat-spinner *ngIf="loading" [color]="'accent'"></mat-spinner>
 </div>
 <div *ngIf="!loading" mat-dialog-content class="background">
     <div class="row">
@@ -16,43 +16,48 @@
             </div>
             <div class="row top-spacing details">
                 <div class="col-6">
-                    <strong>Availability: </strong>      <small>                 <ng-template [ngIf]="data.available"><span class="label label-success" id="availableLabel"
-                        [translate]="'Common.Available'"></span></ng-template>
+                    <strong>Availability: </strong> <small>
+                        <ng-template [ngIf]="data.available"><span class="label label-success" id="availableLabel"
+                                [translate]="'Common.Available'"></span></ng-template>
                         <ng-template [ngIf]="!data.available"><span class="label label-success" id="availableLabel"
-                            [translate]="'Common.NotAvailable'"></span></ng-template></small>
+                                [translate]="'Common.NotAvailable'"></span></ng-template>
+                    </small>
                 </div>
                 <div class="col-6">
-                    <strong *ngIf="movie">Studio: </strong> 
+                    <strong *ngIf="movie">Studio: </strong>
                     <small *ngIf="movie">{{movie.productionCompanies[0].name}}</small>
-                    <strong *ngIf="tv">Network: </strong> 
+                    <strong *ngIf="tv">Network: </strong>
                     <small *ngIf="tv">{{tv.network.name}}</small>
                 </div>
                 <div class="col-6" *ngIf="!data.available">
                     <strong>Request Status: </strong> <small>
-                    <ng-template [ngIf]="data.approved && !data.available"><span class="label label-info"
-                            id="processingRequestLabel" [translate]="'Common.ProcessingRequest'"></span></ng-template>
-                    <ng-template [ngIf]="data.requested && !data.approved && !data.available"><span class="label label-warning"
-                            id="pendingApprovalLabel" [translate]="'Common.PendingApproval'"></span></ng-template>
-                    <ng-template [ngIf]="!data.requested && !data.available && !data.approved"><span
-                            class="label label-danger" id="notRequestedLabel" [translate]="'Common.NotRequested'"></span></ng-template>
-                        </small>
+                        <ng-template [ngIf]="data.approved && !data.available"><span class="label label-info"
+                                id="processingRequestLabel" [translate]="'Common.ProcessingRequest'"></span>
+                        </ng-template>
+                        <ng-template [ngIf]="data.requested && !data.approved && !data.available"><span
+                                class="label label-warning" id="pendingApprovalLabel"
+                                [translate]="'Common.PendingApproval'"></span></ng-template>
+                        <ng-template [ngIf]="!data.requested && !data.available && !data.approved"><span
+                                class="label label-danger" id="notRequestedLabel"
+                                [translate]="'Common.NotRequested'"></span></ng-template>
+                    </small>
                 </div>
                 <div class="col-6">
-                    <strong *ngIf="movie">Director: </strong> 
+                    <strong *ngIf="movie">Director: </strong>
                     <small *ngIf="movie">{{movie.credits.crew[0].name}}</small>
-                    <strong *ngIf="tvCreator">Director: </strong> 
+                    <strong *ngIf="tvCreator">Director: </strong>
                     <small *ngIf="tvCreator">{{tvCreator}}</small>
                 </div>
                 <div class="col-6">
-                    <strong *ngIf="movie">In Cinemas: </strong> 
+                    <strong *ngIf="movie">In Cinemas: </strong>
                     <small *ngIf="movie">{{movie.releaseDate | amLocal | amDateFormat: 'LL'}}</small>
-                    <strong *ngIf="tv">First Aired: </strong> 
+                    <strong *ngIf="tv">First Aired: </strong>
                     <small *ngIf="tv">{{tv.firstAired | amLocal | amDateFormat: 'LL'}}</small>
                 </div>
                 <div class="col-6">
-                    <strong *ngIf="movie">Writer: </strong> 
+                    <strong *ngIf="movie">Writer: </strong>
                     <small *ngIf="movie">{{movie.credits.crew[1].name}}</small>
-                    <strong *ngIf="tv">Exec Producer: </strong> 
+                    <strong *ngIf="tv">Exec Producer: </strong>
                     <small *ngIf="tv">{{tvProducer}}</small>
                 </div>
             </div>
@@ -70,12 +75,51 @@
 </div>
 <div mat-dialog-actions>
     <div class="action-buttons-right">
-            <div class="col-md-12">
-        <button mat-raised-button (click)="onNoClick()" class="request-btn">
-            <mat-icon>add</mat-icon>
-            Request
-        </button>
+        <div class="col-md-12" *ngIf="movie">
+            <button mat-raised-button class="btn-green btn-spacing" *ngIf="movie.available"> {{
+            'Common.Available' | translate }}</button>
+            <span *ngIf="!movie.available">
+                <span *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></span>
+                <ng-template #requestedBtn>
+                    <button mat-raised-button class="btn-spacing btn-orange" [disabled]><i class="fa fa-check"></i>
+                        {{ 'Common.Requested' | translate }}</button>
+                </ng-template>
+                <ng-template #notRequestedBtn>
+                    <button mat-raised-button class="btn-spacing  btn-orange" (click)="request()">
+                        <i *ngIf="movie.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> <i
+                            *ngIf="!movie.requestProcessing && !movie.processed" class="fa fa-plus"></i>
+                        <i *ngIf="movie.processed && !movie.requestProcessing" class="fa fa-check"></i> {{
+                'Common.Request' | translate }}</button>
+                </ng-template>
+            </span>
+
+            <span *ngIf="movie.available">
+                <a *ngIf="movie.plexUrl" mat-raised-button style="text-align: right" class="btn-spacing btn-greem"
+                    href="{{movie.plexUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnPlex' |
+            translate}}</a>
+                <a *ngIf="movie.embyUrl" mat-raised-button class="btn-green btn-spacing" href="{{movie.embyUrl}}"
+                    target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
+            translate}}</a>
+            </span>
+        </div>
+
+        <div class="col-md-12" *ngIf="tv">
+            <button mat-raised-button class="btn-green btn-spacing" *ngIf="tv.available"> {{
+                'Common.Available' | translate }}</button>
+                <button mat-raised-button class="btn-orange btn-spacing" *ngIf="tv.partlyAvailable"> {{
+                    'Common.PartlyAvailable' | translate }}</button>
+
+                    <span *ngIf="tv.available">
+                        <a *ngIf="tv.plexUrl" mat-raised-button style="text-align: right" class="btn-spacing btn-greem"
+                            href="{{tv.plexUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnPlex' |
+                    translate}}</a>
+                        <a *ngIf="tv.embyUrl" mat-raised-button class="btn-green btn-spacing" href="{{tv.embyUrl}}"
+                            target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
+                    translate}}</a>
+                    </span>
+                    <button mat-raised-button class="btn-green btn-spacing"> {{
+                        'Common.ViewDetails' | translate }}</button>
+        </div>
     </div>
-</div>
 
 </div>
