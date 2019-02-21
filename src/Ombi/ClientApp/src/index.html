@@ -6,7 +6,7 @@
   <script>
 
     const existingBaseUrl = window.localStorage.getItem("baseUrl");
-    if (existingBaseUrl === null || existingBaseUrl || existingBaseUrl.length === 0) {
+    if (existingBaseUrl && existingBaseUrl.length === 0) {
       document.write('<base href="/' + existingBaseUrl + '" />');
       if (existingBaseUrl.length === 0) {
         document.write("<link rel=\"stylesheet\" href='/loading.css'/>")
@@ -30,7 +30,6 @@
       }
       const data = JSON.parse(xmlhttp.responseText);
       hasFile = true;
-      debugger;
       document.write('<base href="/' + data + '" />');
       document.write("<link rel=\"stylesheet\" href=" + data + "/loading.css\"/>")
       window.localStorage.setItem("baseUrl", data);

@@ -184,13 +184,13 @@
 
                 <div class="col-12 col-md-9">
                     <mat-card class="card-full mat-elevation-z8">
-                            <mat-card-header>Cast</mat-card-header>
+                        <mat-card-header>Cast</mat-card-header>
                         <mat-card-content>
                             <p-carousel [value]="movie.credits.cast" [numVisible]="5" easing="easeOutStrong">
                                 <ng-template let-item pTemplate="item">
                                     <div class="row justify-content-md-center">
                                         <div class="col-12">
-                                            <img width="150px" *ngIf="item.profile_path"
+                                            <img class="cast-profile-img" *ngIf="item.profile_path"
                                                 src="https://image.tmdb.org/t/p/w300/{{item.profile_path}}">
                                             <!-- TODO get profile image default -->
                                         </div>
@@ -206,7 +206,11 @@
                         </mat-card-content>
                     </mat-card>
                 </div>
-                <!-- <div class="col-12 col-md-9">
+            </div>
+            <div class="row card-spacer media-row">
+                <div class="col-12 col-md-3"></div>
+
+                <div class="col-12 col-md-9">
                     <mat-accordion>
                         <mat-expansion-panel>
                             <mat-expansion-panel-header>
@@ -272,11 +276,15 @@
                             </div>
                         </mat-expansion-panel>
                     </mat-accordion>
-                </div> -->
-
-
-                < </div> </div> <div class="bottom-page-gap">
+                </div>
             </div>
+        </div>
+
+
+
+        
+        <div class="bottom-page-gap">
+        </div>
     </section>
 
 

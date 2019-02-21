@@ -155,7 +155,7 @@ section {
 }
 
 .btn-spacing {
-    margin-right:10px;
+    margin-right:10px !important;
 }
 
 .btn-spacing-below {
@@ -189,19 +189,8 @@ section {
 }
 
 .cast-profile-img {
-    width: 65px;
-    border-radius: 25%;
-}
-
-.cast-names {
-    margin-left:0;
-}
-.cast-name {
-    padding-top:15%;
-}
-
-.cast-row {
-    margin-top: 10%;
+    border-radius: 10%;
+    width: 170px;
 }
 
 .small-middle-container{
@@ -212,3 +201,4 @@ section {
 .keywords-panel {
     margin-top: 8%;
 }
+

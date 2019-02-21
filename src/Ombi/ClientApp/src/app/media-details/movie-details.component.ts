@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { ImageService, SearchV2Service, RequestService, NotificationService, MessageService } from "../services";
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -15,9 +15,9 @@ export class MovieDetailsComponent {
     private theMovidDbId: number;
 
     constructor(private searchService: SearchV2Service, private route: ActivatedRoute,
-                private sanitizer: DomSanitizer, private imageService: ImageService,
-                public dialog: MatDialog, private requestService: RequestService,
-                public messageService: MessageService) {
+        private sanitizer: DomSanitizer, private imageService: ImageService,
+        public dialog: MatDialog, private requestService: RequestService,
+        public messageService: MessageService) {
         this.route.params.subscribe((params: any) => {
             this.theMovidDbId = params.movieDbId;
             this.load();
@@ -25,19 +25,19 @@ export class MovieDetailsComponent {
     }
 
     public load() {
-       this.searchService.getFullMovieDetails(this.theMovidDbId).subscribe(x => {
-           this.movie = x;
+        this.searchService.getFullMovieDetails(this.theMovidDbId).subscribe(x => {
+            this.movie = x;
             this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
                 this.movie.background = this.sanitizer.bypassSecurityTrustStyle
-                ("url(" + x + ")");
+                    ("url(" + x + ")");
             });
         });
 
     }
 
     public async request() {
-        var result = await this.requestService.requestMovie({theMovieDbId: this.theMovidDbId, languageCode: null}).toPromise();
-        if(result.result) {
+        var result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: null }).toPromise();
+        if (result.result) {
             this.movie.requested = true;
             this.messageService.send(result.message, "Ok");
         } else {
@@ -47,8 +47,8 @@ export class MovieDetailsComponent {
 
     public openDialog() {
         this.dialog.open(MovieDetailsTrailerComponent, {
-          width: '560px',
-          data: this.movie
+            width: '560px',
+            data: this.movie
         });
-      }
+    }
 }
