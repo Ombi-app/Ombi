@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.TheMovieDb;
@@ -14,6 +17,7 @@ using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Search.V2;
 
 namespace Ombi.Core.Engine.V2
@@ -42,6 +46,114 @@ namespace Ombi.Core.Engine.V2
             return await ProcessSingleMovie(movieInfo);
         }
 
+        /// <summary>
+        /// Get similar movies to the id passed in
+        /// </summary>
+        /// <param name="theMovieDbId"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<SearchMovieViewModel>> SimilarMovies(int theMovieDbId, string langCode)
+        {
+            langCode = await DefaultLanguageCode(langCode);
+            var result = await MovieApi.SimilarMovies(theMovieDbId, langCode);
+            if (result != null)
+            {
+                Logger.LogDebug("Search Result: {result}", result);
+                return await TransformMovieResultsToResponse(result.Shuffle().Take(ResultLimit)); // Take x to stop us overloading the API
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets popular movies.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<SearchMovieViewModel>> PopularMovies()
+        {
+
+            var result = await Cache.GetOrAdd(CacheKeys.PopularMovies, async () =>
+            {
+                var langCode = await DefaultLanguageCode(null);
+                return await MovieApi.PopularMovies(langCode);
+            }, DateTime.Now.AddHours(12));
+            if (result != null)
+            {
+                return await TransformMovieResultsToResponse(result.Shuffle().Take(ResultLimit)); // Take x to stop us overloading the API
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets top rated movies.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<SearchMovieViewModel>> TopRatedMovies()
+        {
+            var result = await Cache.GetOrAdd(CacheKeys.TopRatedMovies, async () =>
+            {
+                var langCode = await DefaultLanguageCode(null);
+                return await MovieApi.TopRated(langCode);
+            }, DateTime.Now.AddHours(12));
+            if (result != null)
+            {
+                return await TransformMovieResultsToResponse(result.Shuffle().Take(ResultLimit)); // Take x to stop us overloading the API
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets upcoming movies.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies()
+        {
+            var result = await Cache.GetOrAdd(CacheKeys.UpcomingMovies, async () =>
+            {
+                var langCode = await DefaultLanguageCode(null);
+                return await MovieApi.Upcoming(langCode);
+            }, DateTime.Now.AddHours(12));
+            if (result != null)
+            {
+                Logger.LogDebug("Search Result: {result}", result);
+                return await TransformMovieResultsToResponse(result.Shuffle().Take(ResultLimit)); // Take x to stop us overloading the API
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets now playing movies.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies()
+        {
+            var result = await Cache.GetOrAdd(CacheKeys.NowPlayingMovies, async () =>
+            {
+                var langCode = await DefaultLanguageCode(null);
+                return await MovieApi.NowPlaying(langCode);
+            }, DateTime.Now.AddHours(12));
+            if (result != null)
+            {
+                return await TransformMovieResultsToResponse(result.Shuffle().Take(ResultLimit)); // Take x to stop us overloading the API
+            }
+            return null;
+        }
+
+        protected async Task<List<SearchMovieViewModel>> TransformMovieResultsToResponse(
+            IEnumerable<MovieSearchResult> movies)
+        {
+            var viewMovies = new List<SearchMovieViewModel>();
+            foreach (var movie in movies)
+            {
+                viewMovies.Add(await ProcessSingleMovie(movie));
+            }
+            return viewMovies;
+        }
+
+        private async Task<SearchMovieViewModel> ProcessSingleMovie(MovieSearchResult movie)
+        {
+            var viewMovie = Mapper.Map<SearchMovieViewModel>(movie);
+            return await ProcessSingleMovie(viewMovie);
+        }
+
         private async Task<MovieFullInfoViewModel> ProcessSingleMovie(FullMovieInfo movie)
         {
             var viewMovie = Mapper.Map<SearchMovieViewModel>(movie);
@@ -60,6 +172,25 @@ namespace Ombi.Core.Engine.V2
             mapped.ShowSubscribe = viewMovie.ShowSubscribe;
 
             return mapped;
+        }
+
+        private async Task<SearchMovieViewModel> ProcessSingleMovie(SearchMovieViewModel viewMovie)
+        {
+            if (viewMovie.ImdbId.IsNullOrEmpty())
+            {
+                var showInfo = await MovieApi.GetMovieInformation(viewMovie.Id);
+                viewMovie.Id = showInfo.Id; // TheMovieDbId
+                viewMovie.ImdbId = showInfo.ImdbId;
+            }
+            
+            viewMovie.TheMovieDbId = viewMovie.Id.ToString();
+
+            await RunSearchRules(viewMovie);
+
+            // This requires the rules to be run first to populate the RequestId property
+            await CheckForSubscription(viewMovie);
+
+            return viewMovie;
         }
 
         private async Task CheckForSubscription(SearchViewModel viewModel)

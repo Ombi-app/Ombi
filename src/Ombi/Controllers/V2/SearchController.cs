@@ -18,20 +18,18 @@ namespace Ombi.Controllers.V2
     [ApiController]
     public class SearchController : ControllerBase
     {
-        public SearchController(IMultiSearchEngine multiSearchEngine, IMovieEngine movieEngine,
+        public SearchController(IMultiSearchEngine multiSearchEngine,
             ITvSearchEngine tvSearchEngine, IMovieEngineV2 v2Movie, ITVSearchEngineV2 v2Tv)
         {
             _multiSearchEngine = multiSearchEngine;
-            _movieEngine = movieEngine;
-            _movieEngine.ResultLimit = 12;
             _tvSearchEngine = tvSearchEngine;
             _tvSearchEngine.ResultLimit = 12;
             _movieEngineV2 = v2Movie;
+            _movieEngineV2.ResultLimit = 12;
             _tvEngineV2 = v2Tv;
         }
 
         private readonly IMultiSearchEngine _multiSearchEngine;
-        private readonly IMovieEngine _movieEngine;
         private readonly IMovieEngineV2 _movieEngineV2;
         private readonly ITVSearchEngineV2 _tvEngineV2;
         private readonly ITvSearchEngine _tvSearchEngine;
@@ -78,7 +76,7 @@ namespace Ombi.Controllers.V2
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchMovieViewModel>> SimilarMovies([FromBody] SimilarMoviesRefineModel model)
         {
-            return await _movieEngine.SimilarMovies(model.TheMovieDbId, model.LanguageCode);
+            return await _movieEngineV2.SimilarMovies(model.TheMovieDbId, model.LanguageCode);
         }
 
        
@@ -92,7 +90,7 @@ namespace Ombi.Controllers.V2
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchMovieViewModel>> Popular()
         {
-            return await _movieEngine.PopularMovies();
+            return await _movieEngineV2.PopularMovies();
         }
 
         /// <summary>
@@ -105,7 +103,7 @@ namespace Ombi.Controllers.V2
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies()
         {
-            return await _movieEngine.NowPlayingMovies();
+            return await _movieEngineV2.NowPlayingMovies();
         }
 
         /// <summary>
@@ -118,7 +116,7 @@ namespace Ombi.Controllers.V2
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchMovieViewModel>> TopRatedMovies()
         {
-            return await _movieEngine.TopRatedMovies();
+            return await _movieEngineV2.TopRatedMovies();
         }
 
         /// <summary>
@@ -131,7 +129,7 @@ namespace Ombi.Controllers.V2
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies()
         {
-            return await _movieEngine.UpcomingMovies();
+            return await _movieEngineV2.UpcomingMovies();
         }
 
         /// <summary>
