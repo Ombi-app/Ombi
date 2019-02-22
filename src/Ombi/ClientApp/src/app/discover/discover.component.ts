@@ -28,28 +28,37 @@ export class DiscoverComponent implements OnInit {
     public trendingActive: boolean;
     public upcomingActive: boolean;
 
-    constructor(private searchService: SearchV2Service) {
+    public loadingFlag: boolean;
 
-    }
+    constructor(private searchService: SearchV2Service) { }
+
     public async ngOnInit() {
+        this.loading()
+
         this.movies = await this.searchService.popularMovies().toPromise();
         this.tvShows = await this.searchService.popularTv().toPromise();
 
+                
         this.createModel();
 
     }
 
     public async popular() {
+        this.clear();
+        this.loading()
         this.popularActive = true;
         this.trendingActive = false;
         this.upcomingActive = false;
         this.movies = await this.searchService.popularMovies().toPromise();
         this.tvShows = await this.searchService.popularTv().toPromise();
 
+        
         this.createModel();
     }
     
-    public async trending() {
+    public async trending() {      
+        this.clear();
+        this.loading()
         this.popularActive = false;
         this.trendingActive = true;
         this.upcomingActive = false;
@@ -59,7 +68,9 @@ export class DiscoverComponent implements OnInit {
         this.createModel();
     }  
 
-    public async upcoming() {
+    public async upcoming() {    
+        this.clear();
+        this.loading()
         this.popularActive = false;
         this.trendingActive = false;
         this.upcomingActive = true;
@@ -70,7 +81,7 @@ export class DiscoverComponent implements OnInit {
     }
 
     private createModel() {
-        this.discoverResults = [];
+        this.finishLoading();
         this.movies.forEach(m => {
             this.discoverResults.push({
                 available: m.available,
@@ -81,7 +92,8 @@ export class DiscoverComponent implements OnInit {
                 id: m.id,
                 url: `http://www.imdb.com/title/${m.imdbId}/`,
                 rating: m.voteAverage,
-                overview: m.overview
+                overview: m.overview,
+                approved: m.approved
             });
         });
         this.tvShows.forEach(m => {
@@ -94,7 +106,8 @@ export class DiscoverComponent implements OnInit {
                 id: m.id,
                 url: undefined,
                 rating: +m.rating,
-                overview: m.overview
+                overview: m.overview,
+                approved: m.approved
             });
         });
         
@@ -107,5 +120,17 @@ export class DiscoverComponent implements OnInit {
             [discover[i], discover[j]] = [discover[j], discover[i]];
         }
         return discover;
+    }
+
+    private loading() {
+        this.loadingFlag = true;
+    }
+
+    private clear() {
+        this.discoverResults = [];
+    }
+
+    private finishLoading() {
+        this.loadingFlag = false;
     }
 }

@@ -1,7 +1,7 @@
 ﻿import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
-import { SearchService } from "../services";
+import { SearchService, RequestService } from "../services";
 
 import { SharedModule } from "../shared/shared.module";
 import { DiscoverComponent } from "./discover.component";
@@ -34,6 +34,7 @@ const routes: Routes = [
     providers: [
         SearchService,
         MatDialog,
+        RequestService,
         ],
 
 })

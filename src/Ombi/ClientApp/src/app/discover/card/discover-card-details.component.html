@@ -4,7 +4,9 @@
 <div *ngIf="!loading" mat-dialog-content class="background">
     <div class="row">
         <div class="col-4">
+            <a (click)="openDetails()">
             <img id="cardImage" src="{{data.posterPath}}" class="poster" alt="{{data.title}}">
+        </a>
         </div>
         <div class="col-8">
 
@@ -27,7 +29,8 @@
                     <strong *ngIf="movie">Studio: </strong>
                     <small *ngIf="movie">{{movie.productionCompanies[0].name}}</small>
                     <strong *ngIf="tv">Network: </strong>
-                    <small *ngIf="tv">{{tv.network.name}}</small>
+                    <small *ngIf="tv && tv.network">{{tv.network.name}}</small>
+                    <small *ngIf="tv && !tv.network">Unknown</small>
                 </div>
                 <div class="col-6" *ngIf="!data.available">
                     <strong>Request Status: </strong> <small>
@@ -117,7 +120,7 @@
                             target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
                     translate}}</a>
                     </span>
-                    <button mat-raised-button class="btn-green btn-spacing"> {{
+                    <button mat-raised-button class="btn-green btn-spacing" (click)="openDetails()"> {{
                         'Common.ViewDetails' | translate }}</button>
         </div>
     </div>
