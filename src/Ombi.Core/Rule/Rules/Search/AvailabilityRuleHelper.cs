@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using Ombi.Core.Models.Search;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository.Requests;
@@ -24,7 +23,7 @@ namespace Ombi.Core.Rule.Rules.Search
                 if (!airedButNotAvailable)
                 {
                     var unairedEpisodes = search.SeasonRequests.Any(x =>
-                        x.Episodes.Any(c => !c.Available && c.AirDate > DateTime.Now.Date));
+                        x.Episodes.Any(c => !c.Available && c.AirDate > DateTime.Now.Date && c.AirDate != DateTime.MinValue));
                     if (unairedEpisodes)
                     {
                         search.FullyAvailable = true;
@@ -41,21 +40,21 @@ namespace Ombi.Core.Rule.Rules.Search
             {
                 epExists = await allEpisodes.FirstOrDefaultAsync(x =>
                     x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                    x.Series.ImdbId == item.ImdbId.ToString());
+                    x.Series.ImdbId == item.ImdbId);
             }
 
             if (useTheMovieDb)
             {
                 epExists = await allEpisodes.FirstOrDefaultAsync(x =>
                     x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                    x.Series.TheMovieDbId == item.TheMovieDbId.ToString());
+                    x.Series.TheMovieDbId == item.TheMovieDbId);
             }
 
             if (useTvDb)
             {
                 epExists = await allEpisodes.FirstOrDefaultAsync(x =>
                     x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                    x.Series.TvDbId == item.TvDbId.ToString());
+                    x.Series.TvDbId == item.TvDbId);
             }
 
             if (epExists != null)
@@ -71,21 +70,21 @@ namespace Ombi.Core.Rule.Rules.Search
             {
                 epExists = await allEpisodes.FirstOrDefaultAsync(x =>
                     x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                    x.Series.ImdbId == item.ImdbId.ToString());
+                    x.Series.ImdbId == item.ImdbId);
             }
 
             if (useTheMovieDb)
             {
                 epExists = await allEpisodes.FirstOrDefaultAsync(x =>
                     x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                    x.Series.TheMovieDbId == item.TheMovieDbId.ToString());
+                    x.Series.TheMovieDbId == item.TheMovieDbId);
             }
 
             if (useTvDb)
             {
                 epExists = await allEpisodes.FirstOrDefaultAsync(x =>
                     x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                    x.Series.TvDbId == item.TvDbId.ToString());
+                    x.Series.TvDbId == item.TvDbId);
             }
 
             if (epExists != null)
