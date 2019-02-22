@@ -20,6 +20,7 @@ export interface ISearchTvResultV2 {
     siteRating: number;
     trailer: string;
     homepage: string;
+    certifcation: string;
     seasonRequests: INewSeasonRequests[];
     requestAll: boolean;
     approved: boolean;

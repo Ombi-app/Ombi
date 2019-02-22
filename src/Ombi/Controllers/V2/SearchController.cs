@@ -44,10 +44,9 @@ namespace Ombi.Controllers.V2
             return await _multiSearchEngine.MultiSearch(searchTerm);
         }
 
-        // <summary>
+        /// <summary>
         /// Returns details for a single movie
         /// </summary>
-        /// <returns></returns>
         [HttpGet("movie/{movieDbId}")]
         public async Task<MovieFullInfoViewModel> GetMovieInfo(int movieDbId)
         {

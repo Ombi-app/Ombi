@@ -1,5 +1,17 @@
 ﻿using AutoMapper;
 
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Principal;
+using System.Threading.Tasks;
+using TraktApiSharp.Objects.Get.Shows;
+
+using Ombi.Core.Rule.Interfaces;
+using Ombi.Store.Repository.Requests;
+using Ombi.Core.Authentication;
+using Ombi.Helpers;
+using Ombi.Settings.Settings.Models;
+using Ombi.Store.Entities;
 using Ombi.Api.Trakt;
 using Ombi.Api.TvMaze;
 using Ombi.Core.Models.Requests;
@@ -8,17 +20,6 @@ using Ombi.Core.Models.Search.V2;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Store.Repository;
-
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Threading.Tasks;
-using Ombi.Core.Rule.Interfaces;
-using Ombi.Store.Repository.Requests;
-using Ombi.Core.Authentication;
-using Ombi.Helpers;
-using Ombi.Settings.Settings.Models;
-using Ombi.Store.Entities;
 
 namespace Ombi.Core.Engine.V2
 {
@@ -57,6 +58,13 @@ namespace Ombi.Core.Engine.V2
                 return null;
             }
             
+            // Setup the task so we can get the data later on if we have a IMDBID
+            Task<TraktShow> traktInfoTask = new Task<TraktShow>(() => null);
+            if (show.externals?.imdb.HasValue() ?? false)
+            {
+                traktInfoTask = TraktApi.GetTvExtendedInfo(show.externals?.imdb);
+            }
+
             var mapped = Mapper.Map<SearchFullInfoTvShowViewModel>(show);
 
             foreach (var e in show._embedded.episodes)
@@ -91,7 +99,7 @@ namespace Ombi.Core.Engine.V2
                     });
                 }
             }
-            return await ProcessResult(mapped);
+            return await ProcessResult(mapped, traktInfoTask);
         }
 
         private IEnumerable<SearchTvShowViewModel> ProcessResults<T>(IEnumerable<T> items)
@@ -109,7 +117,7 @@ namespace Ombi.Core.Engine.V2
             return Mapper.Map<SearchTvShowViewModel>(tvMazeSearch);
         }
 
-        private async Task<SearchFullInfoTvShowViewModel> ProcessResult(SearchFullInfoTvShowViewModel item)
+        private async Task<SearchFullInfoTvShowViewModel> ProcessResult(SearchFullInfoTvShowViewModel item, Task<TraktShow> showInfoTask)
         {
             item.TheTvDbId = item.Id.ToString();
 
@@ -123,7 +131,22 @@ namespace Ombi.Core.Engine.V2
             item.Available = oldModel.Available;
             item.Approved = oldModel.Approved;
 
-            return item;
+            return await GetExtraInfo(showInfoTask, item);
+        }
+
+        private async Task<SearchFullInfoTvShowViewModel> GetExtraInfo(Task<TraktShow> showInfoTask, SearchFullInfoTvShowViewModel model)
+        {
+            var result = await showInfoTask;
+            if(result == null)
+            {
+                return model;
+            }
+
+            model.Trailer = result.Trailer;
+            model.Certification = result.Certification;
+            model.Homepage = result.Homepage;
+
+            return model;
         }
     }
 }

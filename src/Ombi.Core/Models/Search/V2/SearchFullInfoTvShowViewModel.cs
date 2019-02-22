@@ -25,6 +25,7 @@ namespace Ombi.Core.Models.Search.V2
         public Images Images { get; set; }
         public List<CastViewModel> Cast { get; set; }
         public List<CrewViewModel> Crew { get; set; }
+        public string Certification { get; set; }
 
         /// <summary>
         ///     This is used from the Trakt API
