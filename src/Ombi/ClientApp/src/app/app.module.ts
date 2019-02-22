@@ -50,6 +50,7 @@ import { MyNavComponent } from './my-nav/my-nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { SearchV2Service } from "./services/searchV2.service";
 import { NavSearchComponent } from "./my-nav/nav-search.component";
+import { OverlayModule } from "@angular/cdk/overlay";
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
@@ -122,6 +123,7 @@ export function JwtTokenGetter() {
         OverlayPanelModule,
         CommonModule,
         CardsFreeModule,
+        OverlayModule,
         MatCheckboxModule,
         MDBBootstrapModule.forRoot(),
         JwtModule.forRoot({

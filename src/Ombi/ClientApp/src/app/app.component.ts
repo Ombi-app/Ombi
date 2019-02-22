@@ -1,5 +1,6 @@
-﻿import { PlatformLocation } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+﻿import { OverlayContainer } from '@angular/cdk/overlay';
+
+import { Component, OnInit, HostBinding } from "@angular/core";
 import { NavigationStart, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { AuthService } from "./auth/auth.service";
@@ -28,6 +29,9 @@ export class AppComponent implements OnInit {
 
     private checkedForUpdate: boolean;
 
+
+    @HostBinding('class') public componentCssClass;
+
     constructor(public notificationService: NotificationService,
         public authService: AuthService,
         private readonly router: Router,
@@ -35,7 +39,8 @@ export class AppComponent implements OnInit {
         private readonly jobService: JobService,
         public readonly translate: TranslateService,
         private readonly identityService: IdentityService,
-        private readonly customPageService: CustomPageService) {
+        private readonly customPageService: CustomPageService,
+        public overlayContainer: OverlayContainer) {
 
         // const base = this.platformLocation.getBaseHrefFromDOM();
         // if (base.length > 1) {
@@ -52,6 +57,8 @@ export class AppComponent implements OnInit {
     }
 
     public ngOnInit() {
+        const theme = localStorage.getItem("theme");
+        this.onSetTheme(theme);
         this.user = this.authService.claims();
 
         this.settingsService.getCustomization().subscribe(x => {
@@ -116,5 +123,12 @@ export class AppComponent implements OnInit {
     public logOut() {
         this.authService.logout();
         this.router.navigate(["login"]);
+    }
+
+    public onSetTheme(theme: string) {
+        if (theme) {
+            this.overlayContainer.getContainerElement().classList.add(theme);
+            this.componentCssClass = theme;
+        }
     }
 }
