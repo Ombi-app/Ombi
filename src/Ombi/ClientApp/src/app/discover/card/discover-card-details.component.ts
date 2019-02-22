@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { IDiscoverCardResult } from "../interfaces";
-import { SearchV2Service } from "../../services";
+import { SearchV2Service, RequestService, MessageService } from "../../services";
 import { RequestType } from "../../interfaces";
 import { ISearchMovieResultV2 } from "../../interfaces/ISearchMovieResultV2";
 import { ISearchTvResultV2 } from "../../interfaces/ISearchTvResultV2";
@@ -21,7 +21,8 @@ export class DiscoverCardDetailsComponent implements OnInit {
 
     constructor(
         public dialogRef: MatDialogRef<DiscoverCardDetailsComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: IDiscoverCardResult, private searchService: SearchV2Service) { }
+        @Inject(MAT_DIALOG_DATA) public data: IDiscoverCardResult, private searchService: SearchV2Service,
+        private requestService: RequestService, public messageService: MessageService) { }
         
         public async ngOnInit() {
             this.loading = true;
@@ -44,5 +45,19 @@ export class DiscoverCardDetailsComponent implements OnInit {
 
       public onNoClick(): void {
         this.dialogRef.close();
+      }
+
+      public async request() {
+        this.loading = true;
+        if (this.data.type === RequestType.movie) {
+            const result = await this.requestService.requestMovie({theMovieDbId: this.data.id, languageCode: ""}).toPromise();
+            if (result.result) {
+                this.movie.requested = true;
+                this.messageService.send(result.message, "Ok");
+            } else {
+                this.messageService.send(result.errorMessage, "Ok");
+            }
+        }
+
       }
 }
