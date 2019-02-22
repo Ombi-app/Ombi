@@ -4,6 +4,7 @@ export interface ISearchTvResultV2 {
     id: number;
     title: string; // used in the request
     aliases: string[];
+    background: any;
     banner: string;
     seriesId: number;
     status: string;
@@ -20,7 +21,7 @@ export interface ISearchTvResultV2 {
     siteRating: number;
     trailer: string;
     homepage: string;
-    certifcation: string;
+    certification: string;
     seasonRequests: INewSeasonRequests[];
     requestAll: boolean;
     approved: boolean;

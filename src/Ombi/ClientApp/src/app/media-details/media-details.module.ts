@@ -6,12 +6,14 @@ import { SearchService, RequestService } from "../services";
 import {CarouselModule} from 'primeng/carousel';
 
 import { SharedModule } from "../shared/shared.module";
-import { MovieDetailsComponent } from "./movie-details.component";
+import { MovieDetailsComponent } from "./movie/movie-details.component";
+import { TvDetailsComponent } from "./tv/tv-details.component";
 import { PipeModule } from "../pipes/pipe.module";
-import { MovieDetailsTrailerComponent } from "./movie-details-trailer.component";
+import { YoutubeTrailerComponent } from "./youtube-trailer.component";
 
 const routes: Routes = [
     { path: "movie/:movieDbId", component: MovieDetailsComponent },
+    { path: "tv/:tvdbId", component: TvDetailsComponent },
 ];
 @NgModule({
     imports: [
@@ -22,13 +24,14 @@ const routes: Routes = [
     ],
     declarations: [
         MovieDetailsComponent,
-        MovieDetailsTrailerComponent
+        YoutubeTrailerComponent,
+        TvDetailsComponent
     ],
     exports: [
         RouterModule,
     ],
     entryComponents: [
-        MovieDetailsTrailerComponent
+        YoutubeTrailerComponent
     ],
     providers: [
         SearchService,

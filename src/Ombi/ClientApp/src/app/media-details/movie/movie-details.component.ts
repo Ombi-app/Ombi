@@ -1,23 +1,25 @@
-import { Component, ViewEncapsulation } from "@angular/core";
-import { ImageService, SearchV2Service, RequestService, NotificationService, MessageService } from "../services";
+import { Component } from "@angular/core";
+import { ImageService, SearchV2Service, RequestService, MessageService } from "../../services";
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
-import { ISearchMovieResultV2 } from "../interfaces/ISearchMovieResultV2";
-import { MatDialog, MatSnackBar } from "@angular/material";
-import { MovieDetailsTrailerComponent } from "./movie-details-trailer.component";
+import { ISearchMovieResultV2 } from "../../interfaces/ISearchMovieResultV2";
+import { MatDialog } from "@angular/material";
+import { YoutubeTrailerComponent } from "../youtube-trailer.component";
+import { AuthService } from "../../auth/auth.service";
 
 @Component({
     templateUrl: "./movie-details.component.html",
-    styleUrls: ["./movie-details.component.scss"],
+    styleUrls: ["../media-details.component.scss"],
 })
 export class MovieDetailsComponent {
     public movie: ISearchMovieResultV2;
+    public isAdmin: boolean;
     private theMovidDbId: number;
 
     constructor(private searchService: SearchV2Service, private route: ActivatedRoute,
         private sanitizer: DomSanitizer, private imageService: ImageService,
         public dialog: MatDialog, private requestService: RequestService,
-        public messageService: MessageService) {
+        public messageService: MessageService, private auth: AuthService) {
         this.route.params.subscribe((params: any) => {
             this.theMovidDbId = params.movieDbId;
             this.load();
@@ -25,6 +27,8 @@ export class MovieDetailsComponent {
     }
 
     public load() {
+        
+        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
         this.searchService.getFullMovieDetails(this.theMovidDbId).subscribe(x => {
             this.movie = x;
             this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
@@ -46,9 +50,9 @@ export class MovieDetailsComponent {
     }
 
     public openDialog() {
-        this.dialog.open(MovieDetailsTrailerComponent, {
+        this.dialog.open(YoutubeTrailerComponent, {
             width: '560px',
-            data: this.movie
+            data: this.movie.videos.results[0].key
         });
     }
 }

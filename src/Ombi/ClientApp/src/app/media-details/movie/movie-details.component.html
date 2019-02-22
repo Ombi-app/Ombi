@@ -1,0 +1,297 @@
+<div *ngIf="movie">
+
+
+    <section id="summary-wrapper">
+        <div class="full-screenshot enabled" [style.background-image]="movie.background"></div>
+        <div class="shadow-base" [ngClass]="movie.available ? 'available-bottom-border' : ''"></div>
+
+        <div class="container summary">
+            <div class="container">
+                <div class="row">
+                    <div
+                        class="col-xl-12 col-lg-11 offset-lg-1 col-md-8 offset-md-4 col-sm-7 offset-sm-5 col-6 offset-6">
+                        <h1>{{movie.title}} <span *ngIf="movie.releaseDate" class="grey-text align-middle">({{movie.releaseDate
+                                | date:'yyyy'}})</span>
+                        </h1>
+
+                        <h5 class="tagline grey-text">{{movie.tagline}}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="info-wrapper">
+        <div class="small-middle-container">
+            <div class="row">
+                <div class="col-md-2 col-sm-3 hidden-xs">
+                    <div class="sidebar sidebar-poster affixable affix-top" style="width: 173px;">
+                        <div class="poster">
+                            <img class="real" src="https://image.tmdb.org/t/p/w300/{{movie.posterPath}}" alt="Poster"
+                                style="display: block;">
+                        </div>
+                        <!--Underneith poster-->
+                        <br />
+                    </div>
+                </div>
+
+                <!--Next to poster-->
+                <div class="col-10 col-lg-3 col-xl-3 media-row">
+
+                    <a *ngIf="movie.homepage" class="media-icons" h href="{{movie.homepage}}" target="_blank">
+                        <i matTooltip="Homepage" class="fa fa-home fa-2x grow"></i>
+                    </a>
+
+                    <a *ngIf="movie.id" href="https://www.themoviedb.org/movie/{{movie.id}}" class="media-icons"
+                        target="_blank">
+                        <i matTooltip="The Movie DB" class="fa fa-film fa-2x grow"></i>
+                    </a>
+
+                    <a *ngIf="movie.videos.results.length > 0" class="media-icons" (click)="openDialog()"><i
+                            matTooltip="Trailer" class="fa fa-youtube-play fa-2x grow"></i></a>
+
+                    <a *ngIf="movie.imdbId" class="media-icons" href="https://imdb.com/title/{{movie.imdbId}}"
+                        target="_blank">
+                        <i matTooltip="Imdb" class="fa fa-imdb fa-2x grow"></i>
+                    </a>
+                    <a *ngIf="movie.externalIds.twitterId" class="media-icons"
+                        href="https://twitter.com/{{movie.externalIds.twitterId}}" target="_blank">
+                        <i matTooltip="Twitter" class="fa fa-twitter fa-2x grow"></i>
+                    </a>
+                    <a *ngIf="movie.externalIds.facebookId" class="media-icons"
+                        href="https://facebook.com/{{movie.externalIds.facebookId}}" target="_blank">
+                        <i matTooltip="Facebook" class="fa fa-facebook fa-2x grow"></i>
+                    </a> <a *ngIf="movie.externalIds.instagramId" class="media-icons"
+                        href="https://instagram.com/{{movie.externalIds.instagramId}}" target="_blank">
+                        <i matTooltip="Instagram" class="fa fa-instagram fa-2x grow"></i>
+                    </a>
+
+
+                </div>
+
+                <div class="col-12 col-lg-7 col-xl-7 media-row">
+
+                    <button mat-raised-button class="btn-green btn-spacing" *ngIf="movie.available"> {{
+                            'Common.Available' | translate }}</button>
+                    <span *ngIf="!movie.available">
+                        <span *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></span>
+                        <ng-template #requestedBtn>
+                            <button mat-raised-button class="btn-spacing btn-orange" [disabled]><i
+                                    class="fa fa-check"></i>
+                                {{ 'Common.Requested' | translate }}</button>
+                        </ng-template>
+                        <ng-template #notRequestedBtn>
+                            <button mat-raised-button class="btn-spacing" (click)="request()">
+                                <i *ngIf="movie.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> <i
+                                    *ngIf="!movie.requestProcessing && !movie.processed" class="fa fa-plus"></i>
+                                <i *ngIf="movie.processed && !movie.requestProcessing" class="fa fa-check"></i> {{
+                                'Common.Request' | translate }}</button>
+                        </ng-template>
+                    </span>
+                    <span *ngIf="isAdmin"><button mat-raised-button class="btn-spacing" color="warn" (click)="deny()">Deny</button></span>
+                    <span *ngIf="movie.available">
+                        <a *ngIf="movie.plexUrl" mat-raised-button style="text-align: right"
+                            class="btn-spacing btn-greem" href="{{movie.plexUrl}}" target="_blank"><i
+                                class="fa fa-eye"></i> {{'Search.ViewOnPlex' |
+                            translate}}</a>
+                        <a *ngIf="movie.embyUrl" mat-raised-button class="btn-green btn-spacing"
+                            href="{{movie.embyUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
+                            translate}}</a>
+                    </span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-3">
+                    <button *ngIf="movie.belongsToCollection" mat-raised-button
+                        class="btn-spacing-below full-width mat-elevation-z8">{{movie.belongsToCollection.name}}</button>
+
+                    <mat-card class="card-full mat-elevation-z8">
+                        <mat-card-content>
+                            <div>
+                                <span><strong>Theatrical Release:</strong>
+                                    {{movie.releaseDate | date: 'mediumDate'}}</span></div>
+                            <div>
+                                <span *ngIf="movie.digitalReleaseDate"><strong>Digital Release:</strong>
+                                    {{movie.digitalReleaseDate | date:
+                                    'mediumDate'}}</span>
+                            </div>
+                            <div>
+                                <span *ngIf="movie.voteAverage"><strong>User Score:</strong> {{movie.voteAverage |
+                                    number:'1.0-1'}}/10</span>
+                            </div>
+                            <div>
+                                <span *ngIf="movie.voteCount"><strong>Votes:</strong> {{movie.voteCount |
+                                    thousandShort: 1}}</span>
+                            </div>
+                            <div>
+                                <span><strong>Status:</strong> {{movie.status}}</span>
+                            </div>
+                            <div>
+                                <span><strong>Runtime:</strong> {{movie.runtime}} Minutes</span>
+                            </div>
+                            <div>
+                                <span *ngIf="movie.revenue"><strong>Revenue:</strong> {{movie.revenue | currency:
+                                    'USD'}}</span>
+                            </div>
+                            <div>
+                                <span *ngIf="movie.budget"><strong>Budget:</strong>
+                                    {{movie.budget | currency: 'USD'}}</span>
+                            </div>
+
+                            <div>
+                                <span *ngIf="movie.genres"><strong>Genres:</strong>
+                                    <span *ngFor="let genre of movie.genres">
+                                        {{genre.name}} |
+                                    </span>
+                                </span>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
+
+
+                </div>
+                <div class="col-12 col-md-9">
+                    <mat-card class="card-full mat-elevation-z8">
+                        <mat-card-content>
+                            {{movie.overview}}
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
+
+            </div>
+
+
+            <div class="row card-spacer media-row">
+                <div class="col-12 col-md-3">
+                    <mat-card class="mat-elevation-z8 keywords-panel">
+                        <mat-card-content>
+                            <div>
+                                <span>
+                                    <strong>Keywords/Tags:</strong>
+                                    <mat-chip-list>
+                                        <mat-chip *ngFor="let keyword of movie.keywords.keywordsValue">
+                                            {{keyword.name}}
+                                        </mat-chip>
+                                    </mat-chip-list>
+                                </span>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
+                <div class="col-12 col-md-9">
+                    <mat-card class="card-full mat-elevation-z8">
+                        <mat-card-header>Cast</mat-card-header>
+                        <mat-card-content>
+                            <p-carousel [value]="movie.credits.cast" [numVisible]="5" easing="easeOutStrong">
+                                <ng-template let-item pTemplate="item">
+                                    <div class="row justify-content-md-center">
+                                        <div class="col-12">
+                                            <img class="cast-profile-img" *ngIf="item.profile_path"
+                                                src="https://image.tmdb.org/t/p/w300/{{item.profile_path}}">
+                                            <!-- TODO get profile image default -->
+                                        </div>
+                                        <div class="col-12">
+                                            <span><strong>Character:</strong> {{item.character}}</span>
+                                        </div>
+                                        <div class="col-12">
+                                            <span><strong>Actor:</strong> {{item.name}}</span>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </p-carousel>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+            <div class="row card-spacer media-row">
+                <div class="col-12 col-md-3"></div>
+
+                <div class="col-12 col-md-9">
+                    <mat-accordion>
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Recommendations
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <div class="row card-spacer" *ngIf="movie.recommendations.results.length > 0">
+
+                                <div class="col-md-2" *ngFor="let r of movie.recommendations.results">
+                                    <div class="sidebar affixable affix-top preview-poster">
+                                        <div class="poster">
+                                            <a [routerLink]="'/details/movie/'+r.id">
+                                                <img class="real grow" matTooltip="{{r.title}}"
+                                                    src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}" alt="Poster"
+                                                    style="display: block;">
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Similar
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <div class="row card-spacer" *ngIf="movie.similar.results.length > 0">
+
+                                <div class="col-md-2" *ngFor="let r of movie.similar.results">
+                                    <div class="sidebar affixable affix-top preview-poster">
+                                        <div class="poster ">
+                                            <a [routerLink]="'/details/movie/'+r.id">
+                                                <img class="real grow" matTooltip="{{r.title}}"
+                                                    src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}" alt="Poster"
+                                                    style="display: block;">
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Videos
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <div class="row card-spacer" *ngIf="movie.videos.results.length > 0">
+
+                                <div class="col-md-6" *ngFor="let video of movie.videos.results">
+                                    <iframe width="100%" height="315px"
+                                        [src]="'https://www.youtube.com/embed/' + video.key | safe" frameborder="0"
+                                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </div>
+        </div>
+
+
+
+        
+        <div class="bottom-page-gap">
+        </div>
+    </section>
+
+
+
+
+
+
+
+
+</div>
