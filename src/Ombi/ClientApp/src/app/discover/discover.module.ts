@@ -10,6 +10,7 @@ import { AuthGuard } from "../auth/auth.guard";
 import { PipeModule } from "../pipes/pipe.module";
 import { DiscoverCardDetailsComponent } from "./card/discover-card-details.component";
 import { MatDialog } from "@angular/material";
+import { EpisodeRequestComponent } from "../shared/episode-request/episode-request.component";
 
 const routes: Routes = [
     { path: "", component: DiscoverComponent, canActivate: [AuthGuard] },
@@ -24,9 +25,11 @@ const routes: Routes = [
         DiscoverComponent,
         DiscoverCardComponent,
         DiscoverCardDetailsComponent,
+        EpisodeRequestComponent,
     ],
     entryComponents: [
-        DiscoverCardDetailsComponent
+        DiscoverCardDetailsComponent,
+        EpisodeRequestComponent
     ],
     exports: [
         RouterModule,

@@ -139,6 +139,7 @@ export interface INewSeasonRequests {
   id: number;
   seasonNumber: number;
   episodes: IEpisodesRequests[];
+  seasonAvailable: boolean;
 }
 
 export interface IEpisodesRequests {

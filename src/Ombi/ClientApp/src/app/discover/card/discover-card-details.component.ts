@@ -1,11 +1,12 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from "@angular/material";
 import { IDiscoverCardResult } from "../interfaces";
 import { SearchV2Service, RequestService, MessageService } from "../../services";
 import { RequestType } from "../../interfaces";
 import { ISearchMovieResultV2 } from "../../interfaces/ISearchMovieResultV2";
 import { ISearchTvResultV2 } from "../../interfaces/ISearchTvResultV2";
 import { RouterLink, Router } from "@angular/router";
+import { EpisodeRequestComponent } from "../../shared/episode-request/episode-request.component";
 
 @Component({
     selector: "discover-card-details",
@@ -23,7 +24,7 @@ export class DiscoverCardDetailsComponent implements OnInit {
 
     constructor(
         public dialogRef: MatDialogRef<DiscoverCardDetailsComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: IDiscoverCardResult, private searchService: SearchV2Service,
+        @Inject(MAT_DIALOG_DATA) public data: IDiscoverCardResult, private searchService: SearchV2Service, private dialog: MatDialog,
         private requestService: RequestService, public messageService: MessageService, private router: Router) { }
 
     public async ngOnInit() {
@@ -74,6 +75,9 @@ export class DiscoverCardDetailsComponent implements OnInit {
             } else {
                 this.messageService.send(result.errorMessage, "Ok");
             }
+        } else if (this.data.type === RequestType.tvShow) {
+
+            this.dialog.open(EpisodeRequestComponent, { width: "700px", data: this.tv })
         }
         this.loading = false;
 

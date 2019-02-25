@@ -130,6 +130,7 @@ namespace Ombi.Core.Engine.V2
             item.Requested = oldModel.Requested;
             item.Available = oldModel.Available;
             item.Approved = oldModel.Approved;
+            item.SeasonRequests = oldModel.SeasonRequests;
 
             return await GetExtraInfo(showInfoTask, item);
         }

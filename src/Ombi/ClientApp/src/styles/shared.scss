@@ -18,3 +18,20 @@
 .bottom-page-gap {
     height: 50px;
 }
+
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 7px;
+    background: rgba(0, 0, 0, 0);
+  }
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: #41927b;
+  }
+  .sidenav ::-webkit-scrollbar-track {
+    display: none;
+  }

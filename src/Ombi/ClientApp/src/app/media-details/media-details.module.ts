@@ -10,6 +10,7 @@ import { MovieDetailsComponent } from "./movie/movie-details.component";
 import { TvDetailsComponent } from "./tv/tv-details.component";
 import { PipeModule } from "../pipes/pipe.module";
 import { YoutubeTrailerComponent } from "./youtube-trailer.component";
+import { EpisodeRequestComponent } from "../shared/episode-request/episode-request.component";
 
 const routes: Routes = [
     { path: "movie/:movieDbId", component: MovieDetailsComponent },
@@ -25,7 +26,8 @@ const routes: Routes = [
     declarations: [
         MovieDetailsComponent,
         YoutubeTrailerComponent,
-        TvDetailsComponent
+        TvDetailsComponent,
+        EpisodeRequestComponent,
     ],
     exports: [
         RouterModule,
