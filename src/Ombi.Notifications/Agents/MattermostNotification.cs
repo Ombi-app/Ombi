@@ -52,7 +52,7 @@ namespace Ombi.Notifications.Agents
         private void AddOtherInformation(NotificationOptions model, NotificationMessage notification,
             NotificationMessageContent parsed)
         {
-            notification.Other.Add("image", parsed.Image);
+            notification.Other.Add("image", parsed?.Image ?? string.Empty);
             notification.Other.Add("title", model.RequestType == RequestType.Movie ? MovieRequest.Title : TvRequest.Title);
         }
 
