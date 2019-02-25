@@ -40,27 +40,27 @@ namespace Ombi.Store.Repository
             _db.AddRange(content);
             if (save)
             {
-                await _ctx.SaveChangesAsync();
+                await SaveChangesAsync();
             }
         }
 
         public async Task<T> Add(T content)
         {
             await _db.AddAsync(content);
-            await _ctx.SaveChangesAsync();
+            await SaveChangesAsync();
             return content;
         }
 
         public async Task Delete(T request)
         {
             _db.Remove(request);
-            await _ctx.SaveChangesAsync();
+            await SaveChangesAsync();
         }
 
         public async Task DeleteRange(IEnumerable<T> req)
         {
             _db.RemoveRange(req);
-            await _ctx.SaveChangesAsync();
+            await SaveChangesAsync();
         }
 
         public async Task<int> SaveChangesAsync()
@@ -79,7 +79,7 @@ namespace Ombi.Store.Repository
         {
             await _ctx.Database.ExecuteSqlCommandAsync(sql);
         }
-
+        
 
         private bool _disposed;
         // Protected implementation of Dispose pattern.

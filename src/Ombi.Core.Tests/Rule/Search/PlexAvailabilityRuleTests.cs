@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Ombi.Core.Models.Search;
@@ -14,7 +15,7 @@ namespace Ombi.Core.Tests.Rule.Search
         public void Setup()
         {
             ContextMock = new Mock<IPlexContentRepository>();
-            Rule = new PlexAvailabilityRule(ContextMock.Object);
+            Rule = new PlexAvailabilityRule(ContextMock.Object, new Mock<ILogger<PlexAvailabilityRule>>().Object);
         }
 
         private PlexAvailabilityRule Rule { get; set; }
