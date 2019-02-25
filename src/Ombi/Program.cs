@@ -91,9 +91,7 @@ namespace Ombi
                 dbBaseUrl.Value = baseUrl;
                 ctx.SaveChanges();
             }
-
-            DeleteSchedulesDb();
-
+            
             Console.WriteLine($"We are running on {urlValue}");
 
             CreateWebHostBuilder(args).Build().Run();
@@ -223,20 +221,6 @@ namespace Ombi
             {
                 Console.WriteLine(e);
                 throw;
-            }
-        }
-
-        private static void DeleteSchedulesDb()
-        {
-            try
-            {
-                if (File.Exists("Schedules.db"))
-                {
-                    File.Delete("Schedules.db");
-                }
-            }
-            catch (Exception)
-            {
             }
         }
 
