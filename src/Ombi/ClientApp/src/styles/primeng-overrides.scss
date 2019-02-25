@@ -1,3 +1,4 @@
+@import "Styles.scss";
 // PrimeNG Carosel overrides
 .ui-carousel-dropdown {
     display:none;
@@ -8,6 +9,7 @@
 
 .ui-carousel-viewport {
     border:0 !important;
+    background-color:$background !important;
 }
 
 .ui-carousel .ui-carousel-header {

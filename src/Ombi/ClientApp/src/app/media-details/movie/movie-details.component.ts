@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { ImageService, SearchV2Service, RequestService, MessageService } from "../../services";
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -10,6 +10,7 @@ import { AuthService } from "../../auth/auth.service";
 @Component({
     templateUrl: "./movie-details.component.html",
     styleUrls: ["../media-details.component.scss"],
+    encapsulation: ViewEncapsulation.None
 })
 export class MovieDetailsComponent {
     public movie: ISearchMovieResultV2;

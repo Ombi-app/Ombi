@@ -13,10 +13,12 @@ import {
   MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatTooltipModule} from '@angular/material';
   import {  MatCardModule, MatInputModule, MatTabsModule, MatAutocompleteModule, MatCheckboxModule, MatExpansionModule, MatDialogModule, MatProgressSpinnerModule,
     MatChipsModule } from "@angular/material";
+import { EpisodeRequestComponent } from "./episode-request/episode-request.component";
 
 @NgModule({
   declarations: [
     IssuesReportComponent,
+    EpisodeRequestComponent,
   ],
   imports: [
     SidebarModule,
@@ -38,16 +40,22 @@ import {
     MatListModule, 
     MatToolbarModule,
     MatCheckboxModule,
+    TranslateModule,
     MatExpansionModule,
     MatDialogModule,
+  ],
+  entryComponents: [
+    EpisodeRequestComponent
   ],
   exports: [
       TranslateModule,
       CommonModule,
       FormsModule,
+      TranslateModule,
       SidebarModule,
       MatProgressSpinnerModule,
       IssuesReportComponent,
+      EpisodeRequestComponent,
       TruncateModule,
       InputSwitchModule,
       MomentModule,MatCardModule,

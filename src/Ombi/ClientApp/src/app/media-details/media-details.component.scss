@@ -1,5 +1,5 @@
 @import "~@angular/material/theming";
-@import "../../styles/Styles.scss";
+@import "~styles/Styles.scss";
 //MINE
 @media (max-width: 570px) {
     h1 {
@@ -198,8 +198,4 @@
 
 .keywords-panel {
     margin-top: 8%;
-}
-
-.card-color {
-    background: $panel-color;
 }
