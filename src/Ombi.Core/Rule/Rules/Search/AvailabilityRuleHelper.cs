@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Ombi.Core.Models.Search;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository.Requests;
@@ -33,28 +34,36 @@ namespace Ombi.Core.Rule.Rules.Search
         }
 
         public static async Task SingleEpisodeCheck(bool useImdb, IQueryable<PlexEpisode> allEpisodes, EpisodeRequests episode,
-            SeasonRequests season, PlexServerContent item, bool useTheMovieDb, bool useTvDb)
+            SeasonRequests season, PlexServerContent item, bool useTheMovieDb, bool useTvDb, ILogger log)
         {
             PlexEpisode epExists = null;
-            if (useImdb)
+            try
             {
-                epExists = await allEpisodes.FirstOrDefaultAsync(x =>
-                    x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                    x.Series.ImdbId == item.ImdbId);
-            }
 
-            if (useTheMovieDb)
-            {
-                epExists = await allEpisodes.FirstOrDefaultAsync(x =>
-                    x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                    x.Series.TheMovieDbId == item.TheMovieDbId);
-            }
+                if (useImdb)
+                {
+                    epExists = await allEpisodes.FirstOrDefaultAsync(x =>
+                        x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
+                        x.Series.ImdbId == item.ImdbId);
+                }
 
-            if (useTvDb)
+                if (useTheMovieDb)
+                {
+                    epExists = await allEpisodes.FirstOrDefaultAsync(x =>
+                        x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
+                        x.Series.TheMovieDbId == item.TheMovieDbId);
+                }
+
+                if (useTvDb)
+                {
+                    epExists = await allEpisodes.FirstOrDefaultAsync(x =>
+                        x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
+                        x.Series.TvDbId == item.TvDbId);
+                }
+            }
+            catch (Exception e)
             {
-                epExists = await allEpisodes.FirstOrDefaultAsync(x =>
-                    x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
-                    x.Series.TvDbId == item.TvDbId);
+                log.LogError(e, "Exception thrown when attempting to check if something is available");
             }
 
             if (epExists != null)
