@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from "@angular/material";
 import { IDiscoverCardResult } from "../interfaces";
 import { SearchV2Service, RequestService, MessageService } from "../../services";
@@ -12,6 +12,7 @@ import { EpisodeRequestComponent } from "../../shared/episode-request/episode-re
     selector: "discover-card-details",
     templateUrl: "./discover-card-details.component.html",
     styleUrls: ["./discover-card-details.component.scss"],
+    encapsulation: ViewEncapsulation.None,
 })
 export class DiscoverCardDetailsComponent implements OnInit {
 

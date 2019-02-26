@@ -1,15 +1,16 @@
-$ombi-primary:#3f3f3f;
-$ombi-primary-700:#313131;
-$ombi-accent-700:#166d50;
+@import "~styles/variables.scss";
 .poster {
     max-width: 100%;
     border-radius: 2%;
 }
 
 .details {
-    background: $ombi-primary-700;
     padding: 2%;
     border-radius: 10px;
+    background: $background;
+    div.dark & {
+        background: $backgroundTint-dark;
+    }
 }
 
 .details strong {
@@ -20,16 +21,11 @@ h3 strong {
     font-weight: bold;
 }
 
-.request-btn {
-    background-color: $ombi-accent-700;
-    color: white;
-}
-
 .action-buttons-right {
     width: 100%;
     text-align: right;
 }
 
 .btn-spacing {
-    margin-right:1%;
+    margin-right: 1%;
 }

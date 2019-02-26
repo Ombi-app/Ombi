@@ -3,21 +3,21 @@
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
     <mat-toolbar>Ombi</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item routerLink="/discover">
+      <a mat-list-item routerLink="/discover" [routerLinkActive]="['active-list-item']" >
         <mat-icon aria-label="Side nav toggle icon">find_replace</mat-icon>
         Discover
       </a>
-      <a mat-list-item [routerLinkActive]="['active']" routerLink="/search">
+      <a mat-list-item [routerLinkActive]="['active-list-item']" routerLink="/search">
         <mat-icon aria-label="Side nav toggle icon">search</mat-icon> Search
       </a>
-      <a mat-list-item [routerLinkActive]="['active']" routerLink="/requests">
+      <a mat-list-item [routerLinkActive]="['active-list-item']" routerLink="/requests">
         <mat-icon aria-label="Side nav toggle icon">list</mat-icon> Requests
       </a>
-      <a mat-list-item [routerLinkActive]="['active']" routerLink="/Settings/About">
+      <a mat-list-item [routerLinkActive]="['active-list-item']" routerLink="/Settings/About">
         <mat-icon aria-label="Side nav toggle icon">settings</mat-icon> Settings
       </a>
 
-      <a mat-list-item [routerLinkActive]="['active']" aria-label="Toggle sidenav" (click)="logOut();">
+      <a mat-list-item [routerLinkActive]="['active-list-item']" aria-label="Toggle sidenav" (click)="logOut();">
         <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
         {{ 'NavigationBar.Logout' | translate }}
       </a>

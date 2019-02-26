@@ -1,47 +1,26 @@
 ﻿@import '~@angular/material/theming';
-@import "./mat-palette.scss";
+@import "./variables.scss";
 // Plus imports for other components in your app.
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
 @include mat-core();
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
-$ombi-app-primary: mat-palette($ombi-primary, 500);
-$ombi-app-accent : mat-palette($ombi-accent, A200, A100, A400);
-$panel: white;
-$text:black;
-$background: white;
-// The warn palette is optional (defaults to red).
-$ombi-app-warn : mat-palette($mat-deep-orange);
-// Create the theme object (a Sass map containing all of the palettes).
-$ombi-app-theme: mat-light-theme($ombi-app-primary, $ombi-app-accent, $ombi-app-warn);
+
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
+// Create the theme object (a Sass map containing all of the palettes).
+$ombi-app-theme: mat-light-theme($ombi-app-primary, $ombi-app-accent, $ombi-app-warn);
 @include angular-material-theme($ombi-app-theme);
-// Define an alternate dark theme.
-$ombi-dark-app-primary: mat-palette($mat-grey, 800);
-$ombi-dark-app-accent : mat-palette($mat-amber, A200, A100, A400);
-$ombi-dark-app-warn : mat-palette($mat-deep-orange);
-$dark-theme : mat-dark-theme($ombi-dark-app-primary, $ombi-dark-app-accent, $ombi-dark-app-warn);
+
+$dark-theme: mat-dark-theme($ombi-dark-app-primary, $ombi-dark-app-accent, $ombi-dark-app-warn);
 
 
-$primary: mat-color($ombi-app-primary);
-$accent: mat-color($ombi-app-accent);
-$warn: mat-color($ombi-app-warn);
 // Include the alternative theme styles inside of a block with a CSS class. You can make this
 // CSS class whatever you want. In this example, any component inside of an element with
 // `.dark` will be affected by this alternate dark theme instead of the default theme.
 .dark {
     @include angular-material-theme($dark-theme);
-    $panel: mat-color(mat-palette($mat-grey, 800));
-    $primary: mat-color($ombi-dark-app-primary);
-    $accent: mat-color($ombi-dark-app-accent);
-    $warn: mat-color($ombi-dark-app-warn);
 
-    $background: #424242;
 
-    $text: white;
 }

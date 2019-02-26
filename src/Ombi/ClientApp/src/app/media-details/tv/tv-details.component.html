@@ -10,7 +10,8 @@
                 <div class="row">
                     <div
                         class="col-xl-12 col-lg-11 offset-lg-1 col-md-8 offset-md-4 col-sm-7 offset-sm-5 col-6 offset-6">
-                        <h1>{{tv.title}} <span *ngIf="tv.firstAired" class="grey-text align-middle">({{tv.firstAired  | amLocal | amDateFormat: 'YYYY'}})</span>
+                        <h1>{{tv.title}} <span *ngIf="tv.firstAired"
+                                class="grey-text align-middle">({{tv.firstAired  | amLocal | amDateFormat: 'YYYY'}})</span>
                         </h1>
 
                         <h5 class="tagline grey-text">{{tv.certification}}</h5>
@@ -26,8 +27,7 @@
                 <div class="col-md-2 col-sm-3 hidden-xs">
                     <div class="sidebar sidebar-poster affixable affix-top" style="width: 173px;">
                         <div class="poster">
-                            <img class="real" [src]="tv.images.medium" alt="Poster"
-                                style="display: block;">
+                            <img class="real" [src]="tv.images.medium" alt="Poster" style="display: block;">
                         </div>
                         <!--Underneith poster-->
                         <br />
@@ -41,52 +41,41 @@
                         <i matTooltip="Homepage" class="fa fa-home fa-2x grow"></i>
                     </a>
 
-                    <a *ngIf="tv.id" href="https://www.thetvdb.org/tv/{{tv.id}}" class="media-icons"
-                        target="_blank">
+                    <a *ngIf="tv.id" href="https://www.thetvdb.org/tv/{{tv.id}}" class="media-icons" target="_blank">
                         <i matTooltip="The TV DB" class="fa fa-tv fa-2x grow"></i>
                     </a>
 
-                    <a *ngIf="tv.trailer" class="media-icons" (click)="openDialog()"><i
-                            matTooltip="Trailer" class="fa fa-youtube-play fa-2x grow"></i></a>
+                    <a *ngIf="tv.trailer" class="media-icons" (click)="openDialog()"><i matTooltip="Trailer"
+                            class="fa fa-youtube-play fa-2x grow"></i></a>
 
                     <a *ngIf="tv.imdbId" class="media-icons" href="https://imdb.com/title/{{tv.imdbId}}"
                         target="_blank">
                         <i matTooltip="Imdb" class="fa fa-imdb fa-2x grow"></i>
                     </a>
-                     
+
 
 
                 </div>
 
                 <div class="col-12 col-lg-7 col-xl-7 media-row">
+                 
+                        <button *ngIf="!tv.fullyAvailable" mat-raised-button class="btn-spacing mat-warn" (click)="request()"
+                            ><i class="fa fa-plus"></i>
+                            {{ 'Common.Request' | translate }}</button>
 
-                    <button mat-raised-button class="btn-green btn-spacing" *ngIf="tv.available"> {{
-                            'Common.Available' | translate }}</button>
-                    <span *ngIf="!tv.available">
-                        <span *ngIf="tv.requested || tv.approved; then requestedBtn else notRequestedBtn"></span>
-                        <ng-template #requestedBtn>
-                            <button mat-raised-button class="btn-spacing btn-orange" [disabled]><i
-                                    class="fa fa-check"></i>
-                                {{ 'Common.Requested' | translate }}</button>
-                        </ng-template>
-                        <ng-template #notRequestedBtn>
-                            <button mat-raised-button class="btn-spacing" (click)="request()">
-                                <i *ngIf="tv.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> <i
-                                    *ngIf="!tv.requestProcessing && !tv.processed" class="fa fa-plus"></i>
-                                <i *ngIf="tv.processed && !tv.requestProcessing" class="fa fa-check"></i> {{
-                                'Common.Request' | translate }}</button>
-                        </ng-template>
-                    </span>
-                    
-                    <span *ngIf="tv.available">
-                        <a *ngIf="tv.plexUrl" mat-raised-button style="text-align: right"
-                            class="btn-spacing btn-greem" href="{{tv.plexUrl}}" target="_blank"><i
-                                class="fa fa-eye"></i> {{'Search.ViewOnPlex' |
+                        <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing mat-primary"  [disabled]>
+                            <i class="fa fa-check"></i> {{'Common.Available' | translate }}</button>
+
+
+                        <span *ngIf="tv.available">
+                            <a *ngIf="tv.plexUrl" mat-raised-button style="text-align: right"
+                                class="btn-spacing btn-greem" href="{{tv.plexUrl}}" target="_blank"><i
+                                    class="fa fa-eye"></i> {{'Search.ViewOnPlex' |
                             translate}}</a>
-                        <a *ngIf="tv.embyUrl" mat-raised-button class="btn-green btn-spacing"
-                            href="{{tv.embyUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
+                            <a *ngIf="tv.embyUrl" mat-raised-button class="mat-accent btn-spacing" href="{{tv.embyUrl}}"
+                                target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
                             translate}}</a>
-                    </span>
+                        </span>
                 </div>
             </div>
 
@@ -100,7 +89,7 @@
                             <div>
                                 <span><strong>First Aired:</strong>
                                     {{tv.firstAired | date: 'mediumDate'}}</span></div>
-                            
+
                             <div>
                                 <span *ngIf="tv.rating"><strong>Rating:</strong> {{tv.rating}}/10</span>
                             </div>
@@ -257,7 +246,7 @@
 
 
 
-        
+
         <div class="bottom-page-gap">
         </div>
     </section>

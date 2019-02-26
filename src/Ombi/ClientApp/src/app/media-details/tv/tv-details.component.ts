@@ -5,6 +5,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { ISearchTvResultV2 } from "../../interfaces/ISearchTvResultV2";
 import { MatDialog } from "@angular/material";
 import { YoutubeTrailerComponent } from "../youtube-trailer.component";
+import { EpisodeRequestComponent } from "../../shared/episode-request/episode-request.component";
 
 @Component({
     templateUrl: "./tv-details.component.html",
@@ -17,8 +18,7 @@ export class TvDetailsComponent {
 
     constructor(private searchService: SearchV2Service, private route: ActivatedRoute,
         private sanitizer: DomSanitizer, private imageService: ImageService,
-        public dialog: MatDialog, private requestService: RequestService,
-        public messageService: MessageService) {
+        public dialog: MatDialog, public messageService: MessageService) {
         this.route.params.subscribe((params: any) => {
             this.tvdbId = params.tvdbId;
             this.load();
@@ -32,13 +32,7 @@ export class TvDetailsComponent {
     }
 
     public async request() {
-        // var result = await this.requestService.requestTv({}).toPromise();
-        // if (result.result) {
-        //     this.movie.requested = true;
-        //     this.messageService.send(result.message, "Ok");
-        // } else {
-        //     this.messageService.send(result.errorMessage, "Ok");
-        // }
+        this.dialog.open(EpisodeRequestComponent, { width: "700px", data: this.tv })
     }
 
     public openDialog() {

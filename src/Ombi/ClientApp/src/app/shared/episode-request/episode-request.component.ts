@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA, MatCheckboxChange } from "@angular/material";
 import { ISearchTvResultV2 } from "../../interfaces/ISearchTvResultV2";
-import { RequestService, NotificationService } from "../../services";
+import { RequestService, MessageService } from "../../services";
 import { ITvRequestViewModel, ISeasonsViewModel, IEpisodesRequests, INewSeasonRequests } from "../../interfaces";
 
 
@@ -14,7 +14,7 @@ export class EpisodeRequestComponent implements OnInit {
     public loading: boolean;
 
     constructor(public dialogRef: MatDialogRef<EpisodeRequestComponent>, @Inject(MAT_DIALOG_DATA) public series: ISearchTvResultV2,
-        private requestService: RequestService, private notificationService: NotificationService) { }
+        private requestService: RequestService, private notificationService: MessageService) { }
 
     public ngOnInit() {
         this.loading = true;
@@ -22,7 +22,7 @@ export class EpisodeRequestComponent implements OnInit {
         this.loading = false;
     }
 
-    public submitRequests() {
+    public async submitRequests() {
         // Make sure something has been selected
         const selected = this.series.seasonRequests.some((season) => {
             return season.episodes.some((ep) => {
@@ -31,7 +31,7 @@ export class EpisodeRequestComponent implements OnInit {
         });
 
         if (!selected) {
-            this.notificationService.error("You need to select some episodes!");
+            this.notificationService.send("You need to select some episodes!", "OK");
             return;
         }
 
@@ -53,22 +53,22 @@ export class EpisodeRequestComponent implements OnInit {
             viewModel.seasons.push(seasonsViewModel);
         });
 
-        this.requestService.requestTv(viewModel)
-            .subscribe(x => {
-                if (x.result) {
-                    this.notificationService.success(
-                        `Request for ${this.series.title} has been added successfully`);
+        const requestResult = await this.requestService.requestTv(viewModel).toPromise();
 
-                    this.series.seasonRequests.forEach((season) => {
-                        season.episodes.forEach((ep) => {
-                            ep.selected = false;
-                        });
-                    });
+        if (requestResult.result) {
+            this.notificationService.send(
+                `Request for ${this.series.title} has been added successfully`);
 
-                } else {
-                    this.notificationService.warning("Request Added", x.errorMessage ? x.errorMessage : x.message);
-                }
+            this.series.seasonRequests.forEach((season) => {
+                season.episodes.forEach((ep) => {
+                    ep.selected = false;
+                });
             });
+
+        } else {
+            this.notificationService.send("Request Added", requestResult.errorMessage ? requestResult.errorMessage : requestResult.message);
+        }
+        this.dialogRef.close();
     }
 
     public addRequest(episode: IEpisodesRequests) {
