@@ -13,7 +13,7 @@ import { YoutubeTrailerComponent } from "./youtube-trailer.component";
 
 const routes: Routes = [
     { path: "movie/:movieDbId", component: MovieDetailsComponent },
-    { path: "tv/:tvdbId", component: TvDetailsComponent },
+    { path: "tv/:tvdbId/:search", component: TvDetailsComponent },
 ];
 @NgModule({
     imports: [

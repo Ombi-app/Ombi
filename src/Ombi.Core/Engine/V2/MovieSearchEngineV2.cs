@@ -46,6 +46,12 @@ namespace Ombi.Core.Engine.V2
             return await ProcessSingleMovie(movieInfo);
         }
 
+        public async Task<int> GetTvDbId(int theMovieDbId)
+        {
+            var result = await MovieApi.GetTvExternals(theMovieDbId);
+            return result.tvdb_id;
+        }
+
         /// <summary>
         /// Get similar movies to the id passed in
         /// </summary>

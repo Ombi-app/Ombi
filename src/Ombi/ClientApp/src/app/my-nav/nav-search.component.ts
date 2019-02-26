@@ -56,6 +56,9 @@ export class NavSearchComponent {
         if (event.item.media_type == "movie") {
             this.router.navigate([`details/movie/${event.item.id}`]);
             return;
+        } else if (event.item.media_type == "tv") {
+            this.router.navigate([`details/tv/${event.item.id}/true`]);
+            return;
         }
     }
 }

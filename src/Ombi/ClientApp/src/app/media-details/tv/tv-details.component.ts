@@ -14,6 +14,7 @@ import { EpisodeRequestComponent } from "../../shared/episode-request/episode-re
 })
 export class TvDetailsComponent {
     public tv: ISearchTvResultV2;
+    public fromSearch: boolean;
     private tvdbId: number;
 
     constructor(private searchService: SearchV2Service, private route: ActivatedRoute,
@@ -21,12 +22,19 @@ export class TvDetailsComponent {
         public dialog: MatDialog, public messageService: MessageService) {
         this.route.params.subscribe((params: any) => {
             this.tvdbId = params.tvdbId;
+            this.fromSearch = params.search;
+
             this.load();
         });
     }
 
     public async load() {
-        this.tv = await this.searchService.getTvInfo(this.tvdbId);
+        if(this.fromSearch) {
+            this.tv = await this.searchService.getTvInfoWithMovieDbId(this.tvdbId);
+            this.tvdbId = this.tv.id;
+        } else {
+            this.tv = await this.searchService.getTvInfo(this.tvdbId);
+        }
         const tvBanner = await this.imageService.getTvBanner(this.tvdbId).toPromise();
         this.tv.background = this.sanitizer.bypassSecurityTrustStyle("url(" + tvBanner + ")");
     }

@@ -65,6 +65,17 @@ namespace Ombi.Controllers.V2
         }
 
         /// <summary>
+        /// Returns details for a single show
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("tv/moviedb/{moviedbid}")]
+        public async Task<SearchFullInfoTvShowViewModel> GetTvInfoByMovieId(int moviedbid)
+        {
+            var tvDbId = await _movieEngineV2.GetTvDbId(moviedbid);
+            return await _tvEngineV2.GetShowInformation(tvDbId);
+        }
+
+        /// <summary>
         /// Returns similar movies to the movie id passed in
         /// </summary>
         /// <remarks>
