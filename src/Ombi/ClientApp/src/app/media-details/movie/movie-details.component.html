@@ -105,139 +105,135 @@
 
             <div class="row">
 
-                <div class="col-12 col-md-3">
-                    <button *ngIf="movie.belongsToCollection" mat-raised-button class="btn-spacing-below full-width mat-elevation-z8">{{movie.belongsToCollection.name}}</button>
-                    <mat-card class="card-full mat-elevation-z8">
+                <div class="col-12 col-md-2">
+                    <button *ngIf="movie.belongsToCollection" mat-raised-button
+                        class="spacing-below full-width mat-elevation-z8">{{movie.belongsToCollection.name}}</button>
+
+                    <mat-card class="mat-elevation-z8">
                         <mat-card-content class="medium-font">
-                           <movie-information-panel [movie]="movie"></movie-information-panel>
+                            <movie-information-panel [movie]="movie"></movie-information-panel>
                         </mat-card-content>
                     </mat-card>
                 </div>
 
-                <div class="col-12 col-md-9">
-                    <mat-card class="card-full mat-elevation-z8">
-                        <mat-card-content>
-                            {{movie.overview}}
-                        </mat-card-content>
-                    </mat-card>
+                <div class="col-12 col-md-10">
+                    <div class="row">
+                        <div class="col-12">
+                            <mat-card class=" mat-elevation-z8 spacing-below">
+                                <mat-card-content>
+                                    {{movie.overview}}
+                                </mat-card-content>
+                            </mat-card>
+
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <mat-card class="mat-elevation-z8  spacing-below">
+                                <mat-card-header>Cast</mat-card-header>
+                                <mat-card-content>
+                                    <p-carousel [value]="movie.credits.cast" [numVisible]="5" easing="easeOutStrong">
+                                        <ng-template let-item pTemplate="item">
+                                            <div class="row justify-content-md-center">
+                                                <div class="col-12">
+                                                    <img class="cast-profile-img" *ngIf="item.profile_path"
+                                                        src="https://image.tmdb.org/t/p/w300/{{item.profile_path}}">
+                                                    <!-- TODO get profile image default -->
+                                                </div>
+                                                <div class="col-12">
+                                                    <span><strong>Character:</strong> {{item.character}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <span><strong>Actor:</strong> {{item.name}}</span>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </p-carousel>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <mat-accordion class="mat-elevation-z8  spacing-below">
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            Recommendations
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+
+                                    <div class="row card-spacer" *ngIf="movie.recommendations.results.length > 0">
+
+                                        <div class="col-md-2" *ngFor="let r of movie.recommendations.results">
+                                            <div class="sidebar affixable affix-top preview-poster">
+                                                <div class="poster">
+                                                    <a [routerLink]="'/details/movie/'+r.id">
+                                                        <img class="real grow" matTooltip="{{r.title}}"
+                                                            src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}"
+                                                            alt="Poster" style="display: block;">
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            Similar
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+
+                                    <div class="row card-spacer" *ngIf="movie.similar.results.length > 0">
+
+                                        <div class="col-md-2" *ngFor="let r of movie.similar.results">
+                                            <div class="sidebar affixable affix-top preview-poster">
+                                                <div class="poster ">
+                                                    <a [routerLink]="'/details/movie/'+r.id">
+                                                        <img class="real grow" matTooltip="{{r.title}}"
+                                                            src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}"
+                                                            alt="Poster" style="display: block;">
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            Videos
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+
+                                    <div class="row card-spacer" *ngIf="movie.videos.results.length > 0">
+
+                                        <div class="col-md-6" *ngFor="let video of movie.videos.results">
+                                            <iframe width="100%" height="315px"
+                                                [src]="'https://www.youtube.com/embed/' + video.key | safe"
+                                                frameborder="0"
+                                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                                                allowfullscreen></iframe>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </div>
+                    </div>
+
+
+
                 </div>
             </div>
 
 
-            <div class="row card-spacer media-row">
-                <div class="col-12 col-md-3">
-                    <mat-card class="mat-elevation-z8 keywords-panel">
-                        <mat-card-content>
-                            <div>
-                                <span>
-                                    <strong>Keywords/Tags:</strong>
-                                    <mat-chip-list>
-                                        <mat-chip *ngFor="let keyword of movie.keywords.keywordsValue">
-                                            {{keyword.name}}
-                                        </mat-chip>
-                                    </mat-chip-list>
-                                </span>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-                </div>
 
-                <div class="col-12 col-md-9">
-                    <mat-card class="card-full mat-elevation-z8">
-                        <mat-card-header>Cast</mat-card-header>
-                        <mat-card-content>
-                            <p-carousel [value]="movie.credits.cast" [numVisible]="5" easing="easeOutStrong">
-                                <ng-template let-item pTemplate="item">
-                                    <div class="row justify-content-md-center">
-                                        <div class="col-12">
-                                            <img class="cast-profile-img" *ngIf="item.profile_path"
-                                                src="https://image.tmdb.org/t/p/w300/{{item.profile_path}}">
-                                            <!-- TODO get profile image default -->
-                                        </div>
-                                        <div class="col-12">
-                                            <span><strong>Character:</strong> {{item.character}}</span>
-                                        </div>
-                                        <div class="col-12">
-                                            <span><strong>Actor:</strong> {{item.name}}</span>
-                                        </div>
-                                    </div>
-                                </ng-template>
-                            </p-carousel>
-                        </mat-card-content>
-                    </mat-card>
-                </div>
-            </div>
-            <div class="row card-spacer media-row">
-                <div class="col-12 col-md-3"></div>
 
-                <div class="col-12 col-md-9">
-                    <mat-accordion>
-                        <mat-expansion-panel>
-                            <mat-expansion-panel-header>
-                                <mat-panel-title>
-                                    Recommendations
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
-
-                            <div class="row card-spacer" *ngIf="movie.recommendations.results.length > 0">
-
-                                <div class="col-md-2" *ngFor="let r of movie.recommendations.results">
-                                    <div class="sidebar affixable affix-top preview-poster">
-                                        <div class="poster">
-                                            <a [routerLink]="'/details/movie/'+r.id">
-                                                <img class="real grow" matTooltip="{{r.title}}"
-                                                    src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}" alt="Poster"
-                                                    style="display: block;">
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </mat-expansion-panel>
-                        <mat-expansion-panel>
-                            <mat-expansion-panel-header>
-                                <mat-panel-title>
-                                    Similar
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
-
-                            <div class="row card-spacer" *ngIf="movie.similar.results.length > 0">
-
-                                <div class="col-md-2" *ngFor="let r of movie.similar.results">
-                                    <div class="sidebar affixable affix-top preview-poster">
-                                        <div class="poster ">
-                                            <a [routerLink]="'/details/movie/'+r.id">
-                                                <img class="real grow" matTooltip="{{r.title}}"
-                                                    src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}" alt="Poster"
-                                                    style="display: block;">
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </mat-expansion-panel>
-                        <mat-expansion-panel>
-                            <mat-expansion-panel-header>
-                                <mat-panel-title>
-                                    Videos
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
-
-                            <div class="row card-spacer" *ngIf="movie.videos.results.length > 0">
-
-                                <div class="col-md-6" *ngFor="let video of movie.videos.results">
-                                    <iframe width="100%" height="315px"
-                                        [src]="'https://www.youtube.com/embed/' + video.key | safe" frameborder="0"
-                                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                        allowfullscreen></iframe>
-                                </div>
-                            </div>
-                        </mat-expansion-panel>
-                    </mat-accordion>
-                </div>
-            </div>
         </div>
 
 

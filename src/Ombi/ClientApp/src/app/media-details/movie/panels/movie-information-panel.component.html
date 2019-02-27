@@ -1,4 +1,19 @@
+<div *ngIf="movie.genres">
+    <strong>Genres:</strong>
+    <div>
+        <mat-chip-list>
+            <mat-chip *ngFor="let genre of movie.genres">
+                {{genre.name}}
+            </mat-chip>
+        </mat-chip-list>
+    </div>
+</div>
+<br />
 <div>
+    <div>
+        <strong>Status:</strong>
+        <div>{{movie.status}}</div>
+    </div>
     <strong>Theatrical Release:</strong>
     <div>
         {{movie.releaseDate | date: 'mediumDate'}}
@@ -23,10 +38,6 @@
     </div>
 </div>
 <div>
-    <strong>Status:</strong>
-    <div>{{movie.status}}</div>
-</div>
-<div>
     <strong>Runtime:</strong>
     <div>{{movie.runtime}} Minutes</div>
 </div>
@@ -39,13 +50,13 @@
     <div> {{movie.budget | currency: 'USD'}}</div>
 </div>
 
-<div *ngIf="movie.genres">
-    <strong>Genres:</strong>
-    <div>
-        <mat-chip-list>
-            <mat-chip *ngFor="let genre of movie.genres">
-                {{genre.name}}
-            </mat-chip>
-        </mat-chip-list>
-    </div>
+
+<br />
+<div>
+    <strong>Keywords/Tags:</strong>
+    <mat-chip-list>
+        <mat-chip *ngFor="let keyword of movie.keywords.keywordsValue">
+            {{keyword.name}}
+        </mat-chip>
+    </mat-chip-list>
 </div>
