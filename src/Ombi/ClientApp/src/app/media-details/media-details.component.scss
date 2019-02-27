@@ -33,7 +33,7 @@
     background-size: cover;
     background-position: 50% 10%;
     transition: all .5s;
-    height: 550px;
+    height: 450px;
     color: #fff;
     position: relative;
 }
@@ -49,11 +49,10 @@
 
 #summary-wrapper .shadow-base,
 .summary-wrapper .shadow-base {
-    height: 120px;
     bottom: 0;
-    background-image: -webkit-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
-    background-image: -o-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
-    background-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+    background-image: -webkit-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
+    background-image: -o-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
+    background-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
     background-repeat: repeat-x;
 }
 
@@ -101,7 +100,7 @@
 #summary-wrapper .summary .container h1,
 .summary-wrapper .summary .container h1 {
     margin: 0;
-    text-shadow: 0 0 20px #000;
+    text-shadow: 1px 1px 5px #000;
     line-height: 1.2;
 }
 
@@ -115,7 +114,8 @@
 }
 
 #info-wrapper .sidebar-poster {
-    margin-top: -180px;
+    margin-top: -300px;
+    width: 250px;
 }
 
 #info-wrapper .sidebar .poster {
@@ -163,6 +163,7 @@
 .tagline {
     margin-top: 10px;
     margin-left: 10px;
+    text-shadow: 1px 1px 5px #000;
 }
 
 .preview-poster {
@@ -193,7 +194,7 @@
 
 .small-middle-container{
 	margin: auto;
-	width: 86%;
+	width: 95%;
 }
 
 .keywords-panel {

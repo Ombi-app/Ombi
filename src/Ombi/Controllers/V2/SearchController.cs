@@ -1,11 +1,13 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+
+using System.Threading.Tasks;
+using System.Collections.Generic;
+
+using Ombi.Core;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Engine.V2;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-using Ombi.Core;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Models.Search.V2;
@@ -18,8 +20,8 @@ namespace Ombi.Controllers.V2
     [ApiController]
     public class SearchController : ControllerBase
     {
-        public SearchController(IMultiSearchEngine multiSearchEngine,
-            ITvSearchEngine tvSearchEngine, IMovieEngineV2 v2Movie, ITVSearchEngineV2 v2Tv)
+        public SearchController(IMultiSearchEngine multiSearchEngine, ITvSearchEngine tvSearchEngine,
+            IMovieEngineV2 v2Movie, ITVSearchEngineV2 v2Tv)
         {
             _multiSearchEngine = multiSearchEngine;
             _tvSearchEngine = tvSearchEngine;
@@ -37,6 +39,10 @@ namespace Ombi.Controllers.V2
         /// <summary>
         /// Returns search results for both TV and Movies
         /// </summary>
+        /// <remarks>The ID's returned by this are all TheMovieDbID's even for the TV Shows. You can call <see cref="GetTvInfoByMovieId"/> to get TV
+        ///  Show information using the MovieDbId.</remarks>
+        /// <param name="searchTerm">The search you want, this can be for a movie or TV show e.g. Star Wars will return
+        ///  all Star Wars movies and Star Wars Rebels the TV Sho</param>
         /// <returns></returns>
         [HttpGet("multi/{searchTerm}")]
         public async Task<List<MultiSearch>> MultiSearch(string searchTerm)
@@ -47,6 +53,7 @@ namespace Ombi.Controllers.V2
         /// <summary>
         /// Returns details for a single movie
         /// </summary>
+        /// <param name="movieDbId">The MovieDB Id</param>
         [HttpGet("movie/{movieDbId}")]
         public async Task<MovieFullInfoViewModel> GetMovieInfo(int movieDbId)
         {
@@ -57,7 +64,8 @@ namespace Ombi.Controllers.V2
         /// <summary>
         /// Returns details for a single show
         /// </summary>
-        /// <returns></returns>
+        /// <remarks>TVMaze is the TV Show Provider</remarks>
+        /// <param name="tvdbid">The TVDB Id</param>
         [HttpGet("tv/{tvdbId}")]
         public async Task<SearchFullInfoTvShowViewModel> GetTvInfo(int tvdbid)
         {

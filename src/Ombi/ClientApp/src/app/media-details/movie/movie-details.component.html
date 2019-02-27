@@ -23,9 +23,10 @@
 
     <section id="info-wrapper">
         <div class="small-middle-container">
+
             <div class="row">
                 <div class="col-md-2 col-sm-3 hidden-xs">
-                    <div class="sidebar sidebar-poster affixable affix-top" style="width: 173px;">
+                    <div class="sidebar sidebar-poster affixable affix-top">
                         <div class="poster">
                             <img class="real" src="https://image.tmdb.org/t/p/w300/{{movie.posterPath}}" alt="Poster"
                                 style="display: block;">
@@ -88,7 +89,8 @@
                                 'Common.Request' | translate }}</button>
                         </ng-template>
                     </span>
-                    <span *ngIf="isAdmin"><button mat-raised-button class="btn-spacing" color="warn" (click)="deny()">Deny</button></span>
+                    <span *ngIf="isAdmin"><button mat-raised-button class="btn-spacing" color="warn"
+                            (click)="deny()">Deny</button></span>
                     <span *ngIf="movie.available">
                         <a *ngIf="movie.plexUrl" mat-raised-button style="text-align: right"
                             class="btn-spacing btn-greem" href="{{movie.plexUrl}}" target="_blank"><i
@@ -139,12 +141,13 @@
                                     {{movie.budget | currency: 'USD'}}</span>
                             </div>
 
-                            <div>
-                                <span *ngIf="movie.genres"><strong>Genres:</strong>
-                                    <span *ngFor="let genre of movie.genres">
-                                        {{genre.name}} |
-                                    </span>
-                                </span>
+                            <div *ngIf="movie.genres">
+                                <strong>Genres:</strong>
+                                <mat-chip-list>
+                                    <mat-chip *ngFor="let genre of movie.genres">
+                                        {{genre.name}}
+                                    </mat-chip>
+                                </mat-chip-list>
                             </div>
                         </mat-card-content>
                     </mat-card>
@@ -282,7 +285,7 @@
 
 
 
-        
+
         <div class="bottom-page-gap">
         </div>
     </section>

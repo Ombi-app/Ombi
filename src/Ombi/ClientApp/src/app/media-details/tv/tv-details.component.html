@@ -25,7 +25,7 @@
         <div class="small-middle-container">
             <div class="row">
                 <div class="col-md-2 col-sm-3 hidden-xs">
-                    <div class="sidebar sidebar-poster affixable affix-top" style="width: 173px;">
+                    <div class="sidebar sidebar-poster affixable affix-top">
                         <div class="poster">
                             <img class="real" [src]="tv.images.medium" alt="Poster" style="display: block;">
                         </div>
@@ -58,31 +58,28 @@
                 </div>
 
                 <div class="col-12 col-lg-7 col-xl-7 media-row">
-                 
-                        <button *ngIf="!tv.fullyAvailable" mat-raised-button class="btn-spacing mat-warn" (click)="request()"
-                            ><i class="fa fa-plus"></i>
-                            {{ 'Common.Request' | translate }}</button>
 
-                        <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing mat-primary"  [disabled]>
-                            <i class="fa fa-check"></i> {{'Common.Available' | translate }}</button>
+                    <button *ngIf="!tv.fullyAvailable" mat-raised-button class="btn-spacing mat-warn"
+                        (click)="request()"><i class="fa fa-plus"></i>
+                        {{ 'Common.Request' | translate }}</button>
+
+                    <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing mat-primary" [disabled]>
+                        <i class="fa fa-check"></i> {{'Common.Available' | translate }}</button>
 
 
-                        <span *ngIf="tv.available">
-                            <a *ngIf="tv.plexUrl" mat-raised-button style="text-align: right"
-                                class="btn-spacing btn-greem" href="{{tv.plexUrl}}" target="_blank"><i
-                                    class="fa fa-eye"></i> {{'Search.ViewOnPlex' |
+                    <span *ngIf="tv.available">
+                        <a *ngIf="tv.plexUrl" mat-raised-button style="text-align: right" class="btn-spacing btn-greem"
+                            href="{{tv.plexUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnPlex' |
                             translate}}</a>
-                            <a *ngIf="tv.embyUrl" mat-raised-button class="mat-accent btn-spacing" href="{{tv.embyUrl}}"
-                                target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
+                        <a *ngIf="tv.embyUrl" mat-raised-button class="mat-accent btn-spacing" href="{{tv.embyUrl}}"
+                            target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
                             translate}}</a>
-                        </span>
+                    </span>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-12 col-md-3">
-                    <!-- <button *ngIf="tv.belongsToCollection" mat-raised-button
-                        class="btn-spacing-below full-width mat-elevation-z8">{{tv.belongsToCollection.name}}</button> -->
 
                     <mat-card class="card-full mat-elevation-z8">
                         <mat-card-content>
@@ -102,6 +99,9 @@
                             <div>
                                 <span *ngIf="tv.status"><strong>Status:</strong> {{tv.status}}</span>
                             </div>
+                            <div>
+                                <span *ngIf="tv.network"><strong>Network:</strong> {{tv.network.name}}</span>
+                            </div>
 
                             <div>
                                 <span *ngIf="tv.genre"><strong>Genres:</strong>
@@ -109,6 +109,14 @@
                                         {{genre}} |
                                     </span>
                                 </span>
+                            </div>
+
+
+                            <div>
+                                <span *ngIf="seasonCount"><strong>Seasons:</strong> {{seasonCount}}</span>
+                            </div>
+                            <div>
+                                <span *ngIf="totalEpisodes"><strong>Episodes:</strong> {{totalEpisodes}}</span>
                             </div>
                         </mat-card-content>
                     </mat-card>
@@ -145,6 +153,14 @@
                         </mat-card-content>
                     </mat-card>
                 </div> -->
+                <div class="col-12 col-md-3">
+                    <mat-card class="mat-elevation-z8">
+                        <mat-card-content>
+
+
+                        </mat-card-content>
+                    </mat-card>
+                </div>
 
                 <div class="col-12 col-md-9">
                     <mat-card class="card-full mat-elevation-z8">

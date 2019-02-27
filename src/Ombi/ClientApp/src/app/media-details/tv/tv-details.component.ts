@@ -15,6 +15,11 @@ import { EpisodeRequestComponent } from "../../shared/episode-request/episode-re
 export class TvDetailsComponent {
     public tv: ISearchTvResultV2;
     public fromSearch: boolean;
+
+    public seasonCount: number;
+    public totalEpisodes: number = 0;
+    public nextEpisode: any;
+
     private tvdbId: number;
 
     constructor(private searchService: SearchV2Service, private route: ActivatedRoute,
@@ -35,6 +40,12 @@ export class TvDetailsComponent {
         } else {
             this.tv = await this.searchService.getTvInfo(this.tvdbId);
         }
+
+        this.tv.seasonRequests.forEach(season => {
+            this.totalEpisodes = this.totalEpisodes + season.episodes.length;
+        });
+        this.seasonCount = this.tv.seasonRequests.length;
+
         const tvBanner = await this.imageService.getTvBanner(this.tvdbId).toPromise();
         this.tv.background = this.sanitizer.bypassSecurityTrustStyle("url(" + tvBanner + ")");
     }
