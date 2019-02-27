@@ -104,57 +104,16 @@
             </div>
 
             <div class="row">
+
                 <div class="col-12 col-md-3">
-                    <button *ngIf="movie.belongsToCollection" mat-raised-button
-                        class="btn-spacing-below full-width mat-elevation-z8">{{movie.belongsToCollection.name}}</button>
-
+                    <button *ngIf="movie.belongsToCollection" mat-raised-button class="btn-spacing-below full-width mat-elevation-z8">{{movie.belongsToCollection.name}}</button>
                     <mat-card class="card-full mat-elevation-z8">
-                        <mat-card-content>
-                            <div>
-                                <span><strong>Theatrical Release:</strong>
-                                    {{movie.releaseDate | date: 'mediumDate'}}</span></div>
-                            <div>
-                                <span *ngIf="movie.digitalReleaseDate"><strong>Digital Release:</strong>
-                                    {{movie.digitalReleaseDate | date:
-                                    'mediumDate'}}</span>
-                            </div>
-                            <div>
-                                <span *ngIf="movie.voteAverage"><strong>User Score:</strong> {{movie.voteAverage |
-                                    number:'1.0-1'}}/10</span>
-                            </div>
-                            <div>
-                                <span *ngIf="movie.voteCount"><strong>Votes:</strong> {{movie.voteCount |
-                                    thousandShort: 1}}</span>
-                            </div>
-                            <div>
-                                <span><strong>Status:</strong> {{movie.status}}</span>
-                            </div>
-                            <div>
-                                <span><strong>Runtime:</strong> {{movie.runtime}} Minutes</span>
-                            </div>
-                            <div>
-                                <span *ngIf="movie.revenue"><strong>Revenue:</strong> {{movie.revenue | currency:
-                                    'USD'}}</span>
-                            </div>
-                            <div>
-                                <span *ngIf="movie.budget"><strong>Budget:</strong>
-                                    {{movie.budget | currency: 'USD'}}</span>
-                            </div>
-
-                            <div *ngIf="movie.genres">
-                                <strong>Genres:</strong>
-                                <mat-chip-list>
-                                    <mat-chip *ngFor="let genre of movie.genres">
-                                        {{genre.name}}
-                                    </mat-chip>
-                                </mat-chip-list>
-                            </div>
+                        <mat-card-content class="medium-font">
+                           <movie-information-panel [movie]="movie"></movie-information-panel>
                         </mat-card-content>
                     </mat-card>
-
-
-
                 </div>
+
                 <div class="col-12 col-md-9">
                     <mat-card class="card-full mat-elevation-z8">
                         <mat-card-content>
@@ -162,8 +121,6 @@
                         </mat-card-content>
                     </mat-card>
                 </div>
-
-
             </div>
 
 
