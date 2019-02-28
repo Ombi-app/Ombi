@@ -50,7 +50,7 @@ export class DiscoverCardDetailsComponent implements OnInit {
         this.loading = false;
     }
 
-    public onNoClick(): void {
+    public close(): void {
         this.dialogRef.close();
     }
 

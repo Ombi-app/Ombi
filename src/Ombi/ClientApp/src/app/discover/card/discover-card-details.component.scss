@@ -7,7 +7,7 @@
 .details {
     padding: 2%;
     border-radius: 10px;
-    background: $background;
+    background: $backgroundTint;
     div.dark & {
         background: $backgroundTint-dark;
     }
@@ -16,7 +16,13 @@
 .details strong {
     font-weight: bold;
 }
+.grow {
+    transition: all .2s ease-in-out;
+}
 
+.grow:hover {
+    transform: scale(1.1);
+}
 h3 strong {
     font-weight: bold;
 }
@@ -29,3 +35,12 @@ h3 strong {
 .btn-spacing {
     margin-right: 1%;
 }
+
+.media-icons {
+    color: $primary;
+    padding: 2%;
+    div.dark & {
+        color: $warn-dark;
+    }
+}
+
