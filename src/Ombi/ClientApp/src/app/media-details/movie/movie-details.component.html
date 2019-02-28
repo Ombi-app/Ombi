@@ -68,15 +68,15 @@
                     </a>
 
                     <span class="left-seperator" *ngIf="movie.available">
-                            <a *ngIf="movie.plexUrl" class="media-icons" href="{{movie.plexUrl}}" target="_blank">
-                                    <i matTooltip=" {{'Search.ViewOnPlex' | translate}}"
-                                        class="fa fa-play-circle fa-2x grow"></i>
-                                </a>
+                        <a *ngIf="movie.plexUrl" class="media-icons" href="{{movie.plexUrl}}" target="_blank">
+                            <i matTooltip=" {{'Search.ViewOnPlex' | translate}}"
+                                class="fa fa-play-circle fa-2x grow"></i>
+                        </a>
 
-                                <a *ngIf="movie.embyUrl" class="media-icons" href="{{movie.embyUrl}}" target="_blank">
-                                        <i matTooltip=" {{'Search.ViewOnEmby' | translate}}"
-                                            class="fa fa-play-circle fa-2x grow"></i>
-                                    </a>
+                        <a *ngIf="movie.embyUrl" class="media-icons" href="{{movie.embyUrl}}" target="_blank">
+                            <i matTooltip=" {{'Search.ViewOnEmby' | translate}}"
+                                class="fa fa-play-circle fa-2x grow"></i>
+                        </a>
 
                     </span>
 
@@ -102,8 +102,13 @@
                                 'Common.Request' | translate }}</button>
                         </ng-template>
                     </span>
-                    <span *ngIf="isAdmin && hasRequest"><button mat-raised-button class="btn-spacing" color="warn"
-                            (click)="deny()">{{ 'Requests.Deny' | translate }}</button></span>
+                    <span *ngIf="isAdmin && hasRequest">
+                        <button (click)="approve()" mat-raised-button class="btn-spacing" color="accent">
+                            <i class="fa fa-plus"></i> {{ 'Common.Approve' | translate }}
+                        </button>
+
+                        <button mat-raised-button class="btn-spacing" color="warn"
+                            (click)="deny()">  <i class="fa fa-times"></i> {{ 'Requests.Deny' | translate }}</button></span>
 
                 </div>
             </div>
