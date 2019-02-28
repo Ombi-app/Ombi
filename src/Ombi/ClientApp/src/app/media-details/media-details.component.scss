@@ -157,7 +157,11 @@
 }
 
 .spacing-below {
-    margin-bottom: 15px;
+    margin-bottom: 15px !important;
+}
+
+.left-seperator {
+    margin-left:40px;
 }
 
 .tagline {

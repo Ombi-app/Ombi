@@ -67,6 +67,19 @@
                         <i matTooltip="Instagram" class="fa fa-instagram fa-2x grow"></i>
                     </a>
 
+                    <span class="left-seperator" *ngIf="movie.available">
+                            <a *ngIf="movie.plexUrl" class="media-icons" href="{{movie.plexUrl}}" target="_blank">
+                                    <i matTooltip=" {{'Search.ViewOnPlex' | translate}}"
+                                        class="fa fa-play-circle fa-2x grow"></i>
+                                </a>
+
+                                <a *ngIf="movie.embyUrl" class="media-icons" href="{{movie.embyUrl}}" target="_blank">
+                                        <i matTooltip=" {{'Search.ViewOnEmby' | translate}}"
+                                            class="fa fa-play-circle fa-2x grow"></i>
+                                    </a>
+
+                    </span>
+
 
                 </div>
 
@@ -89,17 +102,9 @@
                                 'Common.Request' | translate }}</button>
                         </ng-template>
                     </span>
-                    <span *ngIf="isAdmin"><button mat-raised-button class="btn-spacing" color="warn"
-                            (click)="deny()">Deny</button></span>
-                    <span *ngIf="movie.available">
-                        <a *ngIf="movie.plexUrl" mat-raised-button style="text-align: right"
-                            class="btn-spacing btn-greem" href="{{movie.plexUrl}}" target="_blank"><i
-                                class="fa fa-eye"></i> {{'Search.ViewOnPlex' |
-                            translate}}</a>
-                        <a *ngIf="movie.embyUrl" mat-raised-button class="btn-green btn-spacing"
-                            href="{{movie.embyUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
-                            translate}}</a>
-                    </span>
+                    <span *ngIf="isAdmin && hasRequest"><button mat-raised-button class="btn-spacing" color="warn"
+                            (click)="deny()">{{ 'Requests.Deny' | translate }}</button></span>
+
                 </div>
             </div>
 

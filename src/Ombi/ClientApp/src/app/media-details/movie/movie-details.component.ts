@@ -6,6 +6,7 @@ import { ISearchMovieResultV2 } from "../../interfaces/ISearchMovieResultV2";
 import { MatDialog } from "@angular/material";
 import { YoutubeTrailerComponent } from "../youtube-trailer.component";
 import { AuthService } from "../../auth/auth.service";
+import { IMovieRequests } from "../../interfaces";
 
 @Component({
     templateUrl: "./movie-details.component.html",
@@ -14,6 +15,8 @@ import { AuthService } from "../../auth/auth.service";
 })
 export class MovieDetailsComponent {
     public movie: ISearchMovieResultV2;
+    public hasRequest: boolean;
+    public movieRequest: IMovieRequests;
     public isAdmin: boolean;
     private theMovidDbId: number;
 
@@ -30,8 +33,13 @@ export class MovieDetailsComponent {
     public load() {
         
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
-        this.searchService.getFullMovieDetails(this.theMovidDbId).subscribe(x => {
+        this.searchService.getFullMovieDetails(this.theMovidDbId).subscribe(async x => {
             this.movie = x;
+            if(this.movie.requestId > 0) {
+                // Load up this request
+                this.hasRequest = true;
+                this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
+            }
             this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
                 this.movie.background = this.sanitizer.bypassSecurityTrustStyle
                     ("url(" + x + ")");
@@ -41,7 +49,7 @@ export class MovieDetailsComponent {
     }
 
     public async request() {
-        var result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: null }).toPromise();
+        const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: null }).toPromise();
         if (result.result) {
             this.movie.requested = true;
             this.messageService.send(result.message, "Ok");
@@ -55,5 +63,15 @@ export class MovieDetailsComponent {
             width: '560px',
             data: this.movie.videos.results[0].key
         });
+    }
+
+    public async deny() {
+        const result = await this.requestService.denyMovie({id: this.theMovidDbId, reason: ""}).toPromise();
+        if (result.result) {
+            this.movie.approved = false;
+            this.messageService.send(result.message, "Ok");
+        } else {
+            this.messageService.send(result.errorMessage, "Ok");
+        }
     }
 }

@@ -11,6 +11,7 @@ import { TvDetailsComponent } from "./tv/tv-details.component";
 import { PipeModule } from "../pipes/pipe.module";
 import { YoutubeTrailerComponent } from "./youtube-trailer.component";
 import { MovieInformationPanelComponent } from "./movie/panels/movie-information-panel.component";
+import { TvInformationPanelComponent } from "./tv/panels/tv-information-panel.component";
 
 const routes: Routes = [
     { path: "movie/:movieDbId", component: MovieDetailsComponent },
@@ -29,6 +30,7 @@ const routes: Routes = [
         YoutubeTrailerComponent,
         TvDetailsComponent,
         MovieInformationPanelComponent,
+        TvInformationPanelComponent,
     ],
     exports: [
         RouterModule,

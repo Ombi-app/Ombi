@@ -70,6 +70,10 @@ export class RequestService extends ServiceHelpers {
         return this.http.get<IMovieRequests[]>(`${this.url}movie/search/${search}`, {headers: this.headers});
     }
 
+    public getMovieRequest(requestId: number): Promise<IMovieRequests> {
+        return this.http.get<IMovieRequests>(`${this.url}movie/info/${requestId}`, {headers: this.headers}).toPromise();
+    }
+
     public removeMovieRequest(request: IMovieRequests) {
         this.http.delete(`${this.url}movie/${request.id}`, {headers: this.headers}).subscribe();
     }

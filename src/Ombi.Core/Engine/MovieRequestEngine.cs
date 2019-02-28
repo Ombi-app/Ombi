@@ -259,6 +259,15 @@ namespace Ombi.Core.Engine
             return allRequests;
         }
 
+        public async Task<MovieRequests> GetRequest(int requestId)
+        {
+            var request = await MovieRepository.GetWithUser().Where(x => x.Id == requestId).FirstOrDefaultAsync();
+            request.PosterPath = PosterPathHelper.FixPosterPath(request.PosterPath);
+            await CheckForSubscription(new HideResult(), request);
+
+            return request;
+        }
+
         private async Task CheckForSubscription(HideResult shouldHide, MovieRequests x)
         {
             if (shouldHide.UserId == x.RequestedUserId)
@@ -493,7 +502,7 @@ namespace Ombi.Core.Engine
                 RequestType = RequestType.Movie,
             });
 
-            return new RequestEngineResult {Result = true, Message = $"{movieName} has been successfully added!", RequestId = model.Id};
+            return new RequestEngineResult { Result = true, Message = $"{movieName} has been successfully added!", RequestId = model.Id };
         }
 
         public async Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user)
@@ -533,7 +542,7 @@ namespace Ombi.Core.Engine
 
             return new RequestQuotaCountModel()
             {
-                HasLimit = true,    
+                HasLimit = true,
                 Limit = limit,
                 Remaining = count,
                 NextRequest = DateTime.SpecifyKind(oldestRequestedAt.AddDays(7), DateTimeKind.Utc),

@@ -79,57 +79,53 @@
             </div>
 
             <div class="row">
-                <div class="col-12 col-md-3">
+                <div class="col-12 col-md-2">
 
-                    <mat-card class="card-full mat-elevation-z8">
-                        <mat-card-content>
-                            <div>
-                                <span><strong>First Aired:</strong>
-                                    {{tv.firstAired | date: 'mediumDate'}}</span></div>
-
-                            <div>
-                                <span *ngIf="tv.rating"><strong>Rating:</strong> {{tv.rating}}/10</span>
-                            </div>
-                            <div>
-                                <span><strong>Status:</strong> {{tv.status}}</span>
-                            </div>
-                            <div>
-                                <span><strong>Runtime:</strong> {{tv.runtime}} Minutes</span>
-                            </div>
-                            <div>
-                                <span *ngIf="tv.status"><strong>Status:</strong> {{tv.status}}</span>
-                            </div>
-                            <div>
-                                <span *ngIf="tv.network"><strong>Network:</strong> {{tv.network.name}}</span>
-                            </div>
-
-                            <div>
-                                <span *ngIf="tv.genre"><strong>Genres:</strong>
-                                    <span *ngFor="let genre of tv.genre">
-                                        {{genre}} |
-                                    </span>
-                                </span>
-                            </div>
-
-
-                            <div>
-                                <span *ngIf="seasonCount"><strong>Seasons:</strong> {{seasonCount}}</span>
-                            </div>
-                            <div>
-                                <span *ngIf="totalEpisodes"><strong>Episodes:</strong> {{totalEpisodes}}</span>
-                            </div>
+                    <mat-card class="mat-elevation-z8">
+                        <mat-card-content class="medium-font">
+                            <tv-information-panel [tv]="tv"></tv-information-panel>
                         </mat-card-content>
                     </mat-card>
-
-
 
                 </div>
-                <div class="col-12 col-md-9">
-                    <mat-card class="card-full mat-elevation-z8">
-                        <mat-card-content>
-                            {{tv.overview}}
-                        </mat-card-content>
-                    </mat-card>
+
+
+                <div class="col-12 col-md-10">
+                    <div class="row">
+                        <div class="col-12">
+                            <mat-card class="mat-elevation-z8 spacing-below">
+                                <mat-card-content>
+                                    {{tv.overview}}
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                        <div class="col-12">
+                            <mat-card class="mat-elevation-z8 spacing-below">
+                                <mat-card-header>Cast</mat-card-header>
+                                <mat-card-content>
+                                    <p-carousel [value]="tv.cast" [numVisible]="5" easing="easeOutStrong">
+                                        <ng-template let-item pTemplate="item">
+                                            <div class="row justify-content-md-center">
+                                                <div class="col-12">
+                                                    <img class="cast-profile-img" *ngIf="item.character.image.medium"
+                                                        [src]="item.character.image.medium">
+                                                    <!-- TODO get profile image default -->
+                                                </div>
+                                                <div class="col-12">
+                                                    <span><strong>Character:</strong> {{item.character.name}}</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <span><strong>Actor:</strong> {{item.person.name}}</span>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </p-carousel>
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+
+                    </div>
+
                 </div>
 
 
@@ -137,54 +133,10 @@
 
 
             <div class="row card-spacer media-row">
-                <!-- <div class="col-12 col-md-3">
-                    <mat-card class="mat-elevation-z8 keywords-panel">
-                        <mat-card-content>
-                            <div>
-                                <span>
-                                    <strong>Keywords/Tags:</strong>
-                                    <mat-chip-list>
-                                        <mat-chip *ngFor="let keyword of tv.keywords.keywordsValue">
-                                            {{keyword.name}}
-                                        </mat-chip>
-                                    </mat-chip-list>
-                                </span>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-                </div> -->
-                <div class="col-12 col-md-3">
-                    <mat-card class="mat-elevation-z8">
-                        <mat-card-content>
 
-
-                        </mat-card-content>
-                    </mat-card>
-                </div>
 
                 <div class="col-12 col-md-9">
-                    <mat-card class="card-full mat-elevation-z8">
-                        <mat-card-header>Cast</mat-card-header>
-                        <mat-card-content>
-                            <p-carousel [value]="tv.cast" [numVisible]="5" easing="easeOutStrong">
-                                <ng-template let-item pTemplate="item">
-                                    <div class="row justify-content-md-center">
-                                        <div class="col-12">
-                                            <img class="cast-profile-img" *ngIf="item.character.image.medium"
-                                                [src]="item.character.image.medium">
-                                            <!-- TODO get profile image default -->
-                                        </div>
-                                        <div class="col-12">
-                                            <span><strong>Character:</strong> {{item.character.name}}</span>
-                                        </div>
-                                        <div class="col-12">
-                                            <span><strong>Actor:</strong> {{item.person.name}}</span>
-                                        </div>
-                                    </div>
-                                </ng-template>
-                            </p-carousel>
-                        </mat-card-content>
-                    </mat-card>
+
                 </div>
             </div>
             <div class="row card-spacer media-row">

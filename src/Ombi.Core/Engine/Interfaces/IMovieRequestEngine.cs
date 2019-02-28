@@ -13,7 +13,7 @@ namespace Ombi.Core.Engine.Interfaces
 
         Task RemoveMovieRequest(int requestId);
         Task RemoveAllMovieRequests();
-
+        Task<MovieRequests> GetRequest(int requestId);
         Task<MovieRequests> UpdateMovieRequest(MovieRequests request);
         Task<RequestEngineResult> ApproveMovie(MovieRequests request);
         Task<RequestEngineResult> ApproveMovieById(int requestId);
