@@ -18,6 +18,7 @@ namespace Ombi.Store.Context
             if (_created) return;
 
             _created = true;
+            Database.SetCommandTimeout(60);
             Database.Migrate();
         }
 
@@ -107,6 +108,7 @@ namespace Ombi.Store.Context
             var allAgents = Enum.GetValues(typeof(NotificationAgent)).Cast<NotificationAgent>().ToList();
             var allTypes = Enum.GetValues(typeof(NotificationType)).Cast<NotificationType>().ToList();
 
+            var needToSave = false;
             foreach (var agent in allAgents)
             {
                 foreach (var notificationType in allTypes)
@@ -116,6 +118,8 @@ namespace Ombi.Store.Context
                         // We already have this
                         continue;
                     }
+
+                    needToSave = true;
                     NotificationTemplates notificationToAdd;
                     switch (notificationType)
                     {
@@ -230,7 +234,11 @@ namespace Ombi.Store.Context
                     NotificationTemplates.Add(notificationToAdd);
                 }
             }
-            SaveChanges();
+
+            if (needToSave)
+            {
+                SaveChanges();
+            }
         }
     }
 }

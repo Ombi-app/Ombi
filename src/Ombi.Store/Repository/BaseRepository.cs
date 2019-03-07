@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using Nito.AsyncEx;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
 
@@ -19,6 +20,7 @@ namespace Ombi.Store.Repository
         }
         public DbSet<T> _db { get; }
         private readonly U _ctx;
+        private readonly AsyncLock _mutex = new AsyncLock();
 
         public async Task<T> Find(object key)
         {
@@ -40,32 +42,32 @@ namespace Ombi.Store.Repository
             _db.AddRange(content);
             if (save)
             {
-                await _ctx.SaveChangesAsync();
+                await InternalSaveChanges();
             }
         }
 
         public async Task<T> Add(T content)
         {
             await _db.AddAsync(content);
-            await _ctx.SaveChangesAsync();
+            await InternalSaveChanges();
             return content;
         }
 
         public async Task Delete(T request)
         {
             _db.Remove(request);
-            await _ctx.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public async Task DeleteRange(IEnumerable<T> req)
         {
             _db.RemoveRange(req);
-            await _ctx.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public async Task<int> SaveChangesAsync()
         {
-            return await _ctx.SaveChangesAsync();
+            return await InternalSaveChanges();
         }
 
         public IIncludableQueryable<TEntity, TProperty> Include<TEntity, TProperty>(
@@ -80,6 +82,14 @@ namespace Ombi.Store.Repository
             await _ctx.Database.ExecuteSqlCommandAsync(sql);
         }
 
+        private async Task<int> InternalSaveChanges()
+        {
+            using (await _mutex.LockAsync())
+            {
+                return await _ctx.SaveChangesAsync();
+            }
+        }
+        
 
         private bool _disposed;
         // Protected implementation of Dispose pattern.

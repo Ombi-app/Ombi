@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Helpers;
@@ -10,12 +11,14 @@ namespace Ombi.Core.Rule.Rules.Search
 {
     public class PlexAvailabilityRule : BaseSearchRule, IRules<SearchViewModel>
     {
-        public PlexAvailabilityRule(IPlexContentRepository repo)
+        public PlexAvailabilityRule(IPlexContentRepository repo, ILogger<PlexAvailabilityRule> log)
         {
             PlexContentRepository = repo;
+            Log = log;
         }
 
         private IPlexContentRepository PlexContentRepository { get; }
+        private ILogger Log { get; }
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {
@@ -72,7 +75,7 @@ namespace Ombi.Core.Rule.Rules.Search
                         {
                             foreach (var episode in season.Episodes)
                             {
-                                await AvailabilityRuleHelper.SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb);
+                                await AvailabilityRuleHelper.SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb, Log);
                             }
                         }
 

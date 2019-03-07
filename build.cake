@@ -82,9 +82,9 @@ Task("SetVersionInfo")
 
     versionInfo = GitVersion(settings);
 	
-	Information("GitResults -> {0}", versionInfo.Dump());
+//	Information("GitResults -> {0}", versionInfo.Dump());
 
-    Information(@"Build:{0}",AppVeyor.Environment.Build.Dump());
+//Information(@"Build:{0}",AppVeyor.Environment.Build.Dump());
 
 	var buildVersion = string.Empty;
 	if(string.IsNullOrEmpty(AppVeyor.Environment.Build.Version))
