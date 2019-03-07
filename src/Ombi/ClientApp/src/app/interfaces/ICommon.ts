@@ -26,3 +26,9 @@ export interface IUsersModel {
     id: string;
     username: string;
 }
+
+export interface INavBar {
+    icon: string;
+    name: string;
+    link: string;
+}

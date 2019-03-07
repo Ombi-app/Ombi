@@ -1,21 +1,12 @@
 <mat-sidenav-container *ngIf="showNav" class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
-    <mat-toolbar>Ombi</mat-toolbar>
+    <mat-toolbar>{{applicationName}}</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item routerLink="/discover" [routerLinkActive]="['active-list-item']" >
-        <mat-icon aria-label="Side nav toggle icon">find_replace</mat-icon>
-        Discover
-      </a>
-      <a mat-list-item [routerLinkActive]="['active-list-item']" routerLink="/search">
-        <mat-icon aria-label="Side nav toggle icon">search</mat-icon> Search
-      </a>
-      <a mat-list-item [routerLinkActive]="['active-list-item']" routerLink="/requests">
-        <mat-icon aria-label="Side nav toggle icon">list</mat-icon> Requests
-      </a>
-      <a mat-list-item [routerLinkActive]="['active-list-item']" routerLink="/Settings/About">
-        <mat-icon aria-label="Side nav toggle icon">settings</mat-icon> Settings
-      </a>
+      <a *ngFor="let nav of navItems" mat-list-item [routerLink]="nav.link" [routerLinkActive]="['active-list-item']" >
+        <mat-icon aria-label="Side nav toggle icon">{{nav.icon}}</mat-icon>
+        {{nav.name | translate}}
+      </a>    
 
       <a mat-list-item [routerLinkActive]="['active-list-item']" aria-label="Toggle sidenav" (click)="logOut();">
         <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>

@@ -26,6 +26,7 @@ export class AppComponent implements OnInit {
     public currentUrl: string;
     public userAccessToken: string;
     public voteEnabled = false;
+    public applicationName: string = "Ombi"
 
     private checkedForUpdate: boolean;
 
@@ -63,6 +64,11 @@ export class AppComponent implements OnInit {
 
         this.settingsService.getCustomization().subscribe(x => {
             this.customizationSettings = x;
+            
+            if (this.customizationSettings && this.customizationSettings.applicationName) {
+                this.applicationName = this.customizationSettings.applicationName;
+            }
+
             if (this.customizationSettings.useCustomPage) {
                 this.customPageService.getCustomPage().subscribe(c => {
                     this.customPageSettings = c;

@@ -47,6 +47,7 @@
     "CheckPageForUpdates": "Check this page for continuous site updates."
   },
   "NavigationBar": {
+    "Discover":"Discover",
     "Search": "Search",
     "Requests": "Requests",
     "UserManagement": "User Management",
