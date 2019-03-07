@@ -85,7 +85,7 @@ export class MovieDetailsComponent {
     }
 
     public async deny() {
-        const result = await this.requestService.denyMovie({ id: this.theMovidDbId, reason: "" }).toPromise();
+        const result = await this.requestService.denyMovie({ id: this.movieRequest.id, reason: "" }).toPromise();
         if (result.result) {
             this.movie.approved = false;
             this.messageService.send(result.message, "Ok");
@@ -95,10 +95,10 @@ export class MovieDetailsComponent {
     }
 
     public async approve() {
-        const result = await this.requestService.approveMovie({ id: this.theMovidDbId }).toPromise();
+        const result = await this.requestService.approveMovie({ id: this.movieRequest.id }).toPromise();
         if (result.result) {
             this.movie.approved = false;
-            this.messageService.send(result.message, "Ok");
+            this.messageService.send("Successfully Approved", "Ok");
         } else {
             this.messageService.send(result.errorMessage, "Ok");
         }

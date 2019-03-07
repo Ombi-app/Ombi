@@ -44,12 +44,7 @@ div.bg {
     width: 100%;
 }
  
-::ng-deep  input.mat-input-element {
-    color: white;   // choose the color you want
-  }
-::ng-deep label.mat-input-placeholder {
-    color: #fff;   // choose the color you want
-  }
+
 .white-checkbox {
     color:white;
 }
@@ -211,4 +206,14 @@ div.bg {
 
 .full-width {
     width: 100%;
+}
+
+.small-middle-container{
+	margin: auto;
+    width: 25%;
+    overflow: auto;
+}
+
+.top-margin {
+    margin-top:10%;
 }

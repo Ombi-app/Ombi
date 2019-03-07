@@ -4,6 +4,7 @@ import { Component, OnInit } from "@angular/core";
 @Component({
     templateUrl: "./mediaserver.component.html",
     styleUrls: ["./mediaserver.component.scss"],
+    selector: "wizard-media-server",
 })
 export class MediaServerComponent implements OnInit {
 

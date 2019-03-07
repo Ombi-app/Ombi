@@ -9,9 +9,9 @@
     if (existingBaseUrl && existingBaseUrl.length === 0) {
       document.write('<base href="/' + existingBaseUrl + '" />');
       if (existingBaseUrl.length === 0) {
-        document.write("<link rel=\"stylesheet\" href='/loading.css'/>")
+        document.write("<link rel=\"stylesheet\" href='/loading.css' />")
       } else {
-        document.write("<link rel=\"stylesheet\" href='" + existingBaseUrl + "/loading.css'/>")
+        document.write("<link rel=\"stylesheet\" href='" + existingBaseUrl + "/loading.css' />")
       }
     } else {
       // Work out the base URL
@@ -31,7 +31,7 @@
       const data = JSON.parse(xmlhttp.responseText);
       hasFile = true;
       document.write('<base href="/' + data + '" />');
-      document.write("<link rel=\"stylesheet\" href=" + data + "/loading.css\"/>")
+        document.write("<link rel=\"stylesheet\" href='" + data + "/loading.css' />")
       window.localStorage.setItem("baseUrl", data);
 
       function tryGetBaseUrl(xmlhttp, url) {
