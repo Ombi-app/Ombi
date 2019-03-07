@@ -36,24 +36,26 @@ export class MovieDetailsComponent {
     }
 
     public load() {
-        
+
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
         this.searchService.getFullMovieDetails(this.theMovidDbId).subscribe(async x => {
             this.movie = x;
-            if(this.movie.requestId > 0) {
+            if (this.movie.requestId > 0) {
                 // Load up this request
                 this.hasRequest = true;
                 this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
 
                 if (this.isAdmin) {
-                    this.radarrService.getQualityProfilesFromSettings().subscribe(c => {
-                        this.radarrProfiles = c;
-                        this.setQualityOverrides();
-                    });
-                    this.radarrService.getRootFoldersFromSettings().subscribe(c => {
-                        this.radarrRootFolders = c;
-                        this.setRootFolderOverrides();
-                    });
+                    if (await this.radarrService.isRadarrEnabled()) {
+                        this.radarrService.getQualityProfilesFromSettings().subscribe(c => {
+                            this.radarrProfiles = c;
+                            this.setQualityOverrides();
+                        });
+                        this.radarrService.getRootFoldersFromSettings().subscribe(c => {
+                            this.radarrRootFolders = c;
+                            this.setRootFolderOverrides();
+                        });
+                    }
                 }
 
             }
@@ -83,7 +85,7 @@ export class MovieDetailsComponent {
     }
 
     public async deny() {
-        const result = await this.requestService.denyMovie({id: this.theMovidDbId, reason: ""}).toPromise();
+        const result = await this.requestService.denyMovie({ id: this.theMovidDbId, reason: "" }).toPromise();
         if (result.result) {
             this.movie.approved = false;
             this.messageService.send(result.message, "Ok");
@@ -93,7 +95,7 @@ export class MovieDetailsComponent {
     }
 
     public async approve() {
-        const result = await this.requestService.approveMovie({id: this.theMovidDbId}).toPromise();
+        const result = await this.requestService.approveMovie({ id: this.theMovidDbId }).toPromise();
         if (result.result) {
             this.movie.approved = false;
             this.messageService.send(result.message, "Ok");

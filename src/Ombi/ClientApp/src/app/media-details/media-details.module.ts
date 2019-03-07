@@ -1,7 +1,7 @@
 ﻿import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
-import { SearchService, RequestService } from "../services";
+import { SearchService, RequestService, RadarrService } from "../services";
 
 import {CarouselModule} from 'primeng/carousel';
 
@@ -41,6 +41,7 @@ const routes: Routes = [
     providers: [
         SearchService,
         RequestService,
+        RadarrService,
         ],
 
 })

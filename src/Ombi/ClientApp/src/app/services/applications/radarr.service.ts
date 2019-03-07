@@ -14,16 +14,19 @@ export class RadarrService extends ServiceHelpers {
     }
 
     public getRootFolders(settings: IRadarrSettings): Observable<IRadarrRootFolder[]> {
-        return this.http.post<IRadarrRootFolder[]>(`${this.url}/RootFolders/`, JSON.stringify(settings),  {headers: this.headers});
+        return this.http.post<IRadarrRootFolder[]>(`${this.url}/RootFolders/`, JSON.stringify(settings), { headers: this.headers });
     }
     public getQualityProfiles(settings: IRadarrSettings): Observable<IRadarrProfile[]> {
-        return this.http.post<IRadarrProfile[]>(`${this.url}/Profiles/`, JSON.stringify(settings),  {headers: this.headers});
+        return this.http.post<IRadarrProfile[]>(`${this.url}/Profiles/`, JSON.stringify(settings), { headers: this.headers });
     }
 
     public getRootFoldersFromSettings(): Observable<IRadarrRootFolder[]> {
-        return this.http.get<IRadarrRootFolder[]>(`${this.url}/RootFolders/`,  {headers: this.headers});
+        return this.http.get<IRadarrRootFolder[]>(`${this.url}/RootFolders/`, { headers: this.headers });
     }
     public getQualityProfilesFromSettings(): Observable<IRadarrProfile[]> {
-        return this.http.get<IRadarrProfile[]>(`${this.url}/Profiles/`,  {headers: this.headers});
+        return this.http.get<IRadarrProfile[]>(`${this.url}/Profiles/`, { headers: this.headers });
+    }
+    public isRadarrEnabled(): Promise<boolean> {
+        return this.http.get<boolean>(`${this.url}/enabled/`, { headers: this.headers }).toPromise();
     }
 }
