@@ -1,15 +1,15 @@
 import { Component, ViewEncapsulation } from "@angular/core";
-import { ImageService, SearchV2Service, RequestService, MessageService } from "../../services";
+import { ImageService, SearchV2Service, RequestService, MessageService } from "../../../services";
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
-import { ISearchTvResultV2 } from "../../interfaces/ISearchTvResultV2";
+import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { MatDialog } from "@angular/material";
-import { YoutubeTrailerComponent } from "../youtube-trailer.component";
-import { EpisodeRequestComponent } from "../../shared/episode-request/episode-request.component";
+import { YoutubeTrailerComponent } from "../shared/youtube-trailer.component";
+import { EpisodeRequestComponent } from "../../../shared/episode-request/episode-request.component";
 
 @Component({
     templateUrl: "./tv-details.component.html",
-    styleUrls: ["../media-details.component.scss"],
+    styleUrls: ["../../media-details.component.scss"],
     encapsulation: ViewEncapsulation.None
 })
 export class TvDetailsComponent {

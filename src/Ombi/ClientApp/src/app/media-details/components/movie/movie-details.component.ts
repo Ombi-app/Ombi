@@ -1,16 +1,16 @@
 import { Component, ViewEncapsulation } from "@angular/core";
-import { ImageService, SearchV2Service, RequestService, MessageService, RadarrService } from "../../services";
+import { ImageService, SearchV2Service, RequestService, MessageService, RadarrService } from "../../../services";
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
-import { ISearchMovieResultV2 } from "../../interfaces/ISearchMovieResultV2";
+import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
 import { MatDialog } from "@angular/material";
-import { YoutubeTrailerComponent } from "../youtube-trailer.component";
-import { AuthService } from "../../auth/auth.service";
-import { IMovieRequests, IRadarrProfile, IRadarrRootFolder } from "../../interfaces";
+import { YoutubeTrailerComponent } from "../shared/youtube-trailer.component";
+import { AuthService } from "../../../auth/auth.service";
+import { IMovieRequests, IRadarrProfile, IRadarrRootFolder } from "../../../interfaces";
 
 @Component({
     templateUrl: "./movie-details.component.html",
-    styleUrls: ["../media-details.component.scss"],
+    styleUrls: ["../../media-details.component.scss"],
     encapsulation: ViewEncapsulation.None
 })
 export class MovieDetailsComponent {

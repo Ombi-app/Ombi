@@ -6,17 +6,19 @@ import { SearchService, RequestService, RadarrService } from "../services";
 import {CarouselModule} from 'primeng/carousel';
 
 import { SharedModule } from "../shared/shared.module";
-import { MovieDetailsComponent } from "./movie/movie-details.component";
-import { TvDetailsComponent } from "./tv/tv-details.component";
+import { MovieDetailsComponent } from "./components/movie/movie-details.component";
+import { TvDetailsComponent } from "./components/tv/tv-details.component";
 import { PipeModule } from "../pipes/pipe.module";
-import { YoutubeTrailerComponent } from "./youtube-trailer.component";
-import { MovieInformationPanelComponent } from "./movie/panels/movie-information-panel.component";
-import { TvInformationPanelComponent } from "./tv/panels/tv-information-panel.component";
+import { YoutubeTrailerComponent } from "./components/shared/youtube-trailer.component";
+
+import * as fromComponents from './components';
+import { AuthGuard } from "../auth/auth.guard";
+
 
 const routes: Routes = [
-    { path: "movie/:movieDbId", component: MovieDetailsComponent },
-    { path: "tv/:tvdbId/:search", component: TvDetailsComponent },
-    { path: "tv/:tvdbId", component: TvDetailsComponent },
+    { path: "movie/:movieDbId", component: MovieDetailsComponent, canActivate: [AuthGuard] },
+    { path: "tv/:tvdbId/:search", component: TvDetailsComponent, canActivate: [AuthGuard] },
+    { path: "tv/:tvdbId", component: TvDetailsComponent, canActivate: [AuthGuard] },
 ];
 @NgModule({
     imports: [
@@ -26,11 +28,7 @@ const routes: Routes = [
         CarouselModule,
     ],
     declarations: [
-        MovieDetailsComponent,
-        YoutubeTrailerComponent,
-        TvDetailsComponent,
-        MovieInformationPanelComponent,
-        TvInformationPanelComponent,
+        ...fromComponents.components
     ],
     exports: [
         RouterModule,
