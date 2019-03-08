@@ -5,6 +5,8 @@ import { MovieInformationPanelComponent } from "./movie/panels/movie-information
 import { TvInformationPanelComponent } from "./tv/panels/tv-information-panel.component";
 import { TopBannerComponent } from "./shared/top-banner/top-banner.component";
 import { SocialIconsComponent } from "./shared/social-icons/social-icons.component";
+import { MediaPosterComponent } from "./shared/media-poster/media-poster.component";
+import { CastCarouselComponent } from "./shared/cast-carousel/cast-carousel.component";
 
 export const components: any[] = [
     MovieDetailsComponent,
@@ -14,4 +16,6 @@ export const components: any[] = [
     TvInformationPanelComponent,
     TopBannerComponent,
     SocialIconsComponent,
+    MediaPosterComponent,
+    CastCarouselComponent,
 ];

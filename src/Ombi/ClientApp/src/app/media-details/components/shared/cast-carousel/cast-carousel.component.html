@@ -1,0 +1,24 @@
+<mat-card class="mat-elevation-z8  spacing-below">
+    <mat-card-header>Cast</mat-card-header>
+    <mat-card-content>
+      <p-carousel [value]="cast" [numVisible]="5" easing="easeOutStrong">
+        <ng-template let-item pTemplate="item">
+          <div class="row justify-content-md-center">
+            <div class="col-12">
+              <img class="cast-profile-img" *ngIf="item.profile_path" src="https://image.tmdb.org/t/p/w300/{{item.profile_path}}">
+              <img class="cast-profile-img" *ngIf="item.character?.image?.medium" [src]="item.character.image.medium">
+              <!-- TODO get profile image default -->
+            </div>
+            <div class="col-12">
+              <span *ngIf="!item.character?.name"><strong>Character:</strong> {{item.character}}</span>
+              <span *ngIf="item.character.name"><strong>Character:</strong> {{item.character.name}}</span>
+            </div>
+            <div class="col-12">
+              <span *ngIf="item.name"><strong>Actor:</strong> {{item.name}}</span>
+              <span *ngIf="item.person?.name"><strong>Actor:</strong> {{item.person.name}}</span>
+            </div>
+          </div>
+        </ng-template>
+      </p-carousel>
+    </mat-card-content>
+  </mat-card>

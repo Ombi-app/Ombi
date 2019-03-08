@@ -18,10 +18,10 @@ export class SocialIconsComponent {
     @Input() plexUrl: string;
     @Input() embyUrl: string;
     
-    @Output() openTrailer: EventEmitter<any>;
+    @Output() openTrailer: EventEmitter<any> = new EventEmitter();
     
 
     public openDialog() {
-        this.openTrailer.emit;
+        this.openTrailer.emit();
     }
 }

@@ -1,106 +1,77 @@
 <div *ngIf="tv">
 
-    <top-banner [background]="tv.background" [available]="tv.available" 
-        [title]="tv.title" [releaseDate]="tv.firstAired" [tagline]="tv.certification"></top-banner>
+  <top-banner [background]="tv.background" [available]="tv.available" [title]="tv.title" [releaseDate]="tv.firstAired"
+    [tagline]="tv.certification"></top-banner>
 
-    <section id="info-wrapper">
-        <div class="small-middle-container">
-            <div class="row">
-                <div class="col-md-2 col-sm-3 hidden-xs">
-                    <div class="sidebar sidebar-poster affixable affix-top">
-                        <div class="poster">
-                            <img class="real" [src]="tv.images.medium" alt="Poster" style="display: block;">
-                        </div>
-                        <!--Underneith poster-->
-                        <br />
-                    </div>
-                </div>
+  <section id="info-wrapper">
+    <div class="small-middle-container">
+      <div class="row">
 
-                <!--Next to poster-->
-                <div class="col-10 col-lg-3 col-xl-3 media-row">
+        <media-poster [posterPath]="tv.images.medium"></media-poster>
 
-                        <social-icons [homepage]="tv.homepage" [tvdbId]="tv.id" [hasTrailer]="tv.trailer"
-                                (openTrailer)="openDialog()" [imdbId]="tv.imdbId" [available]="tv.available"
-                                [plexUrl]="tv.plexUrl" [embyUrl]="tv.embyUrl"></social-icons>
-               
-                </div>
+        <!--Next to poster-->
+        <div class="col-12 col-lg-3 col-xl-3 media-row">
 
-                <div class="col-12 col-lg-7 col-xl-7 media-row">
+          <social-icons [homepage]="tv.homepage" [tvdbId]="tv.id" [hasTrailer]="tv.trailer" (openTrailer)="openDialog()"
+            [imdbId]="tv.imdbId" [available]="tv.available" [plexUrl]="tv.plexUrl" [embyUrl]="tv.embyUrl"></social-icons>
 
-                    <button *ngIf="!tv.fullyAvailable" mat-raised-button class="btn-spacing mat-warn"
-                        (click)="request()"><i class="fa fa-plus"></i>
-                        {{ 'Common.Request' | translate }}</button>
+        </div>
 
-                    <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing mat-primary" [disabled]>
-                        <i class="fa fa-check"></i> {{'Common.Available' | translate }}</button>
-                </div>
+        <div class="col-12 col-lg-6 col-xl-6 media-row">
+
+          <button *ngIf="!tv.fullyAvailable" mat-raised-button class="btn-spacing mat-warn" (click)="request()"><i
+              class="fa fa-plus"></i>
+            {{ 'Common.Request' | translate }}</button>
+
+          <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing mat-primary" [disabled]>
+            <i class="fa fa-check"></i> {{'Common.Available' | translate }}</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 col-md-2">
+
+          <mat-card class="mat-elevation-z8">
+            <mat-card-content class="medium-font">
+              <tv-information-panel [tv]="tv"></tv-information-panel>
+            </mat-card-content>
+          </mat-card>
+
+        </div>
+
+
+        <div class="col-12 col-md-10">
+          <div class="row">
+            <div class="col-12">
+              <mat-card class="mat-elevation-z8 spacing-below">
+                <mat-card-content>
+                  {{tv.overview}}
+                </mat-card-content>
+              </mat-card>
+            </div>
+            <div class="col-12">
+              <cast-carousel [cast]="tv.cast"></cast-carousel>
             </div>
 
-            <div class="row">
-                <div class="col-12 col-md-2">
+          </div>
 
-                    <mat-card class="mat-elevation-z8">
-                        <mat-card-content class="medium-font">
-                            <tv-information-panel [tv]="tv"></tv-information-panel>
-                        </mat-card-content>
-                    </mat-card>
-
-                </div>
+        </div>
 
 
-                <div class="col-12 col-md-10">
-                    <div class="row">
-                        <div class="col-12">
-                            <mat-card class="mat-elevation-z8 spacing-below">
-                                <mat-card-content>
-                                    {{tv.overview}}
-                                </mat-card-content>
-                            </mat-card>
-                        </div>
-                        <div class="col-12">
-                            <mat-card class="mat-elevation-z8 spacing-below">
-                                <mat-card-header>Cast</mat-card-header>
-                                <mat-card-content>
-                                    <p-carousel [value]="tv.cast" [numVisible]="5" easing="easeOutStrong">
-                                        <ng-template let-item pTemplate="item">
-                                            <div class="row justify-content-md-center">
-                                                <div class="col-12">
-                                                    <img class="cast-profile-img" *ngIf="item.character.image.medium"
-                                                        [src]="item.character.image.medium">
-                                                    <!-- TODO get profile image default -->
-                                                </div>
-                                                <div class="col-12">
-                                                    <span><strong>Character:</strong> {{item.character.name}}</span>
-                                                </div>
-                                                <div class="col-12">
-                                                    <span><strong>Actor:</strong> {{item.person.name}}</span>
-                                                </div>
-                                            </div>
-                                        </ng-template>
-                                    </p-carousel>
-                                </mat-card-content>
-                            </mat-card>
-                        </div>
-
-                    </div>
-
-                </div>
+      </div>
 
 
-            </div>
+      <div class="row card-spacer media-row">
 
 
-            <div class="row card-spacer media-row">
+        <div class="col-12 col-md-9">
 
+        </div>
+      </div>
+      <div class="row card-spacer media-row">
+        <div class="col-12 col-md-3"></div>
 
-                <div class="col-12 col-md-9">
-
-                </div>
-            </div>
-            <div class="row card-spacer media-row">
-                <div class="col-12 col-md-3"></div>
-
-                <!-- <div class="col-12 col-md-9">
+        <!-- <div class="col-12 col-md-9">
                     <mat-accordion>
                         <mat-expansion-panel>
                             <mat-expansion-panel-header>
@@ -167,15 +138,15 @@
                         </mat-expansion-panel>
                     </mat-accordion>
                 </div> -->
-            </div>
-        </div>
+      </div>
+    </div>
 
 
 
 
-        <div class="bottom-page-gap">
-        </div>
-    </section>
+    <div class="bottom-page-gap">
+    </div>
+  </section>
 
 
 
