@@ -19,12 +19,14 @@
 
         <div class="col-12 col-lg-6 col-xl-6 media-row">
 
-          <button *ngIf="!tv.fullyAvailable" mat-raised-button class="btn-spacing mat-warn" (click)="request()"><i
+          <button *ngIf="!tv.fullyAvailable" mat-raised-button class="btn-spacing" color="primary" (click)="request()"><i
               class="fa fa-plus"></i>
             {{ 'Common.Request' | translate }}</button>
 
-          <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing mat-primary" [disabled]>
+          <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent" [disabled]>
             <i class="fa fa-check"></i> {{'Common.Available' | translate }}</button>
+          <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent" [disabled]>
+            <i class="fa fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
         </div>
       </div>
 

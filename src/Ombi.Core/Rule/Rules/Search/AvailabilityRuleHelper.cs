@@ -21,6 +21,10 @@ namespace Ombi.Core.Rule.Rules.Search
                     season.SeasonAvailable = true;
                 }
             }
+            if(search.SeasonRequests.Any(x => x.Episodes.Any(e => e.Available)))
+            {
+                search.PartlyAvailable = true;
+            }
             if (search.SeasonRequests.All(x => x.Episodes.All(e => e.Available)))
             {
                 search.FullyAvailable = true;

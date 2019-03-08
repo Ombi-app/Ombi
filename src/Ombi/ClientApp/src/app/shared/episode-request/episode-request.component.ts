@@ -66,7 +66,7 @@ export class EpisodeRequestComponent implements OnInit {
             });
 
         } else {
-            this.notificationService.send("Request Added", requestResult.errorMessage ? requestResult.errorMessage : requestResult.message);
+            this.notificationService.send(requestResult.errorMessage ? requestResult.errorMessage : requestResult.message);
         }
         this.dialogRef.close();
     }

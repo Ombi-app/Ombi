@@ -6,7 +6,8 @@ import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
 import { MatDialog } from "@angular/material";
 import { YoutubeTrailerComponent } from "../shared/youtube-trailer.component";
 import { AuthService } from "../../../auth/auth.service";
-import { IMovieRequests, IRadarrProfile, IRadarrRootFolder } from "../../../interfaces";
+import { IMovieRequests, IRadarrProfile, IRadarrRootFolder, RequestType } from "../../../interfaces";
+import { DenyDialogComponent } from "../shared/deny-dialog/deny-dialog.component";
 
 @Component({
     templateUrl: "./movie-details.component.html",
@@ -85,13 +86,17 @@ export class MovieDetailsComponent {
     }
 
     public async deny() {
-        const result = await this.requestService.denyMovie({ id: this.movieRequest.id, reason: "" }).toPromise();
-        if (result.result) {
-            this.movie.approved = false;
-            this.messageService.send(result.message, "Ok");
-        } else {
-            this.messageService.send(result.errorMessage, "Ok");
-        }
+        const dialogRef = this.dialog.open(DenyDialogComponent, {
+            width: '250px',
+            data: {requestId: this.movieRequest.id,  requestType: RequestType.movie}
+          });
+      
+          dialogRef.afterClosed().subscribe(result => {
+            this.movieRequest.denied = result;
+            if(this.movieRequest.denied) {
+                this.movie.approved = false;
+            }
+          });
     }
 
     public async approve() {

@@ -9,7 +9,6 @@ import { SharedModule } from "../shared/shared.module";
 import { MovieDetailsComponent } from "./components/movie/movie-details.component";
 import { TvDetailsComponent } from "./components/tv/tv-details.component";
 import { PipeModule } from "../pipes/pipe.module";
-import { YoutubeTrailerComponent } from "./components/shared/youtube-trailer.component";
 
 import * as fromComponents from './components';
 import { AuthGuard } from "../auth/auth.guard";
@@ -34,7 +33,7 @@ const routes: Routes = [
         RouterModule,
     ],
     entryComponents: [
-        YoutubeTrailerComponent
+        ...fromComponents.entryComponents
     ],
     providers: [
         SearchService,

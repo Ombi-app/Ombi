@@ -188,5 +188,8 @@
   "Votes": {
     "CompletedVotesTab": "Voted",
     "VotesTab": "Votes Needed"
+  },
+  "MediaDetails": {
+    "Denied": "Denied"
   }
 }
