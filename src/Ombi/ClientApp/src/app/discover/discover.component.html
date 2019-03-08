@@ -3,11 +3,11 @@
     <div class="row justify-content-md-center top-spacing">
         <div class="btn-group" role="group" aria-label="Basic example">
             <button type="button" (click)="popular()" [ngClass]="popularActive ? 'active-button' : ''" mat-raised-button
-                class="btn grow" color="primary">Popular</button>
+                class="btn grow" color="primary">{{'Discovery.PopularTab' | translate}}</button>
             <button type="button" (click)="trending()" [ngClass]="trendingActive ? 'active-button' : ''"
-                mat-raised-button class="btn grow" color="primary">Trending</button>
+                mat-raised-button class="btn grow" color="primary">{{'Discovery.TrendingTab' | translate}}</button>
             <button type="button" (click)="upcoming()" [ngClass]="upcomingActive ? 'active-button' : ''"
-                mat-raised-button class="btn grow" color="primary">Upcoming</button>
+                mat-raised-button class="btn grow" color="primary">{{'Discovery.UpcomingTab' | translate}}</button>
         </div>
     </div>
     <div *ngIf="loadingFlag" class="row justify-content-md-center top-spacing loading-spinner">

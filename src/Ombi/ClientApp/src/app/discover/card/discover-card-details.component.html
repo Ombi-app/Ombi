@@ -49,7 +49,7 @@
             </div>
             <div class="row top-spacing details">
                 <div class="col-6">
-                    <strong>Availability: </strong> <small>
+                    <strong>{{'Discovery.CardDetails.Availability' | translate}}: </strong> <small>
                         <ng-template [ngIf]="data.available"><span class="label label-success" id="availableLabel"
                                 [translate]="'Common.Available'"></span></ng-template>
                         <ng-template [ngIf]="!data.available"><span class="label label-success" id="availableLabel"
@@ -57,14 +57,14 @@
                     </small>
                 </div>
                 <div class="col-6">
-                    <strong *ngIf="movie">Studio: </strong>
+                    <strong *ngIf="movie">{{'Discovery.CardDetails.Studio' | translate}}: </strong>
                     <small *ngIf="movie">{{movie.productionCompanies[0].name}}</small>
-                    <strong *ngIf="tv">Network: </strong>
+                    <strong *ngIf="tv">{{'Discovery.CardDetails.Network' | translate}}: </strong>
                     <small *ngIf="tv && tv.network">{{tv.network.name}}</small>
-                    <small *ngIf="tv && !tv.network">Unknown</small>
+                    <small *ngIf="tv && !tv.network">{{'Discovery.CardDetails.UnknownNetwork' | translate}}</small>
                 </div>
                 <div class="col-6" *ngIf="!data.available">
-                    <strong>Request Status: </strong> <small>
+                    <strong>{{'Discovery.CardDetails.RequestStatus' | translate}}: </strong> <small>
                         <ng-template [ngIf]="data.approved && !data.available"><span class="label label-info"
                                 id="processingRequestLabel" [translate]="'Common.ProcessingRequest'"></span>
                         </ng-template>
@@ -77,21 +77,21 @@
                     </small>
                 </div>
                 <div class="col-6">
-                    <strong *ngIf="movie">Director: </strong>
+                    <strong *ngIf="movie">{{'Discovery.CardDetails.Director' | translate}}: </strong>
                     <small *ngIf="movie">{{movie.credits.crew[0].name}}</small>
                     <strong *ngIf="tvCreator">Director: </strong>
                     <small *ngIf="tvCreator">{{tvCreator}}</small>
                 </div>
                 <div class="col-6">
-                    <strong *ngIf="movie">In Cinemas: </strong>
+                    <strong *ngIf="movie">{{'Discovery.CardDetails.InCinemas' | translate}}: </strong>
                     <small *ngIf="movie">{{movie.releaseDate | amLocal | amDateFormat: 'LL'}}</small>
-                    <strong *ngIf="tv">First Aired: </strong>
+                    <strong *ngIf="tv">{{'Discovery.CardDetails.FirstAired' | translate}}: </strong>
                     <small *ngIf="tv">{{tv.firstAired | amLocal | amDateFormat: 'LL'}}</small>
                 </div>
                 <div class="col-6">
-                    <strong *ngIf="movie">Writer: </strong>
+                    <strong *ngIf="movie">{{'Discovery.CardDetails.Writer' | translate}}: </strong>
                     <small *ngIf="movie">{{movie.credits.crew[1].name}}</small>
-                    <strong *ngIf="tv">Exec Producer: </strong>
+                    <strong *ngIf="tv">{{'Discovery.CardDetails.ExecProducer' | translate}}: </strong>
                     <small *ngIf="tv">{{tvProducer}}</small>
                 </div>
             </div>

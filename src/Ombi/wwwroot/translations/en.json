@@ -129,6 +129,7 @@
     "MarkAvailable":"Mark Available",
     "Remove":"Remove",
     "Deny":"Deny",
+    "DenyReason":"Deny Reason",
     "Season":"Season:",
     "GridTitle":"Title",
     "AirDate":"AirDate",
@@ -190,6 +191,31 @@
     "VotesTab": "Votes Needed"
   },
   "MediaDetails": {
-    "Denied": "Denied"
+    "Denied": "Denied",
+    "RecommendationsTitle":"Recommendations",
+    "SimilarTitle":"Similar",
+    "VideosTitle":"Videos",
+    "Casts": {
+      "CastTitle":"Cast",
+      "Character":"Character",
+      "Actor":"Actor"
+    },
+    "Discovery": {
+      "PopularTab":"Popular",
+      "TrendingTab":"Trending",
+      "UpcomingTab":"Upcoming",
+      "CardDetails":{
+        "Availability":"Availability",
+        "Studio":"Studio",
+        "Network":"Network",
+        "UnknownNetwork":"Unknown",
+        "RequestStatus":"Request Status",
+        "Director":"Director",
+        "InCinemas":"In Cinemas",
+        "FirstAired":"First Aired",
+        "Writer":"Writer",
+        "ExecProducer":"Exec Producer"
+      }
+    }
   }
 }
