@@ -48,6 +48,8 @@ import { WikiComponent } from "./wiki.component";
 import { SettingsMenuComponent } from "./settingsmenu.component";
 
 import { AutoCompleteModule, CalendarModule, DialogModule, InputSwitchModule, InputTextModule, MenuModule, RadioButtonModule, TooltipModule } from "primeng/primeng";
+import { MatMenuModule} from "@angular/material";
+import { SharedModule } from "../shared/shared.module";
 
 const routes: Routes = [
     { path: "Ombi", component: OmbiComponent, canActivate: [AuthGuard] },
@@ -99,6 +101,8 @@ const routes: Routes = [
         PipeModule,
         RadioButtonModule,
         DialogModule,
+        SharedModule,
+        MatMenuModule
     ],
     declarations: [
         SettingsMenuComponent,

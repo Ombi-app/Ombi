@@ -1,15 +1,17 @@
 ﻿<div class="col-md-12">
-
-    <div *ngIf="!text" class="col-md-1 col-md-push-11">
-        <a href="{{url}}" target="_blank" class="btn btn-sm btn-info-outline">
-            <span >Wiki</span>
-        </a>
+    <div *ngIf="!text" class="col-md-1 offset-md-11">
+        <a href="{{url}}" target="_blank">
+        <button mat-raised-button color="accent">
+            <span>Wiki</span>
+        </button>
+    </a>
     </div>
 
-    <div  *ngIf="text" class="col-md-1 col-md-push-9">
-            <a href="{{url}}" target="_blank" class="btn btn-sm btn-info-outline">
+    <div  *ngIf="text" class="col-md-1 offset-md-9">
+            <a href="{{url}}" target="_blank">
+            <button mat-raised-button color="accent">
                 <span>{{text}}</span>
+            </button>
             </a>
         </div>
-
 </div>
