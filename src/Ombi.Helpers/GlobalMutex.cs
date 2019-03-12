@@ -9,7 +9,7 @@ namespace Ombi.Helpers
         {
             const string mutexId = "Global\\OMBI";
 
-            using (var mutex = new Mutex(false, mutexId, out __))
+            using (var mutex = new Mutex(false, mutexId, out var __))
             {
                 var hasHandle = false;
                 try

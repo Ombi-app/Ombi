@@ -51,7 +51,7 @@ export class TvDetailsComponent {
     }
 
     public async request() {
-        this.dialog.open(EpisodeRequestComponent, { width: "700px", data: this.tv })
+        this.dialog.open(EpisodeRequestComponent, { width: "800px", data: this.tv })
     }
 
     public openDialog() {

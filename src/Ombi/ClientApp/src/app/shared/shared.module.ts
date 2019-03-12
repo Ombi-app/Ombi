@@ -43,6 +43,7 @@ import { EpisodeRequestComponent } from "./episode-request/episode-request.compo
     TranslateModule,
     MatExpansionModule,
     MatDialogModule,
+    MatTooltipModule,
   ],
   entryComponents: [
     EpisodeRequestComponent

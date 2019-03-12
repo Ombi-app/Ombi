@@ -29,8 +29,8 @@ export class EpisodeRequestComponent implements OnInit {
                 return ep.selected;
             });
         });
-
-        if (!selected) {
+        debugger;
+        if (!selected && !this.series.requestAll && !this.series.firstSeason && !this.series.latestSeason) {
             this.notificationService.send("You need to select some episodes!", "OK");
             return;
         }
@@ -41,15 +41,14 @@ export class EpisodeRequestComponent implements OnInit {
         viewModel.seasons = [];
         this.series.seasonRequests.forEach((season) => {
             const seasonsViewModel = <ISeasonsViewModel>{ seasonNumber: season.seasonNumber, episodes: [] };
-            season.episodes.forEach(ep => {
-                if (!this.series.latestSeason || !this.series.requestAll || !this.series.firstSeason) {
+            if (!this.series.latestSeason && !this.series.requestAll && !this.series.firstSeason) {
+                season.episodes.forEach(ep => {
                     if (ep.selected) {
                         ep.requested = true;
                         seasonsViewModel.episodes.push({ episodeNumber: ep.episodeNumber });
                     }
-                }
-            });
-
+                });
+            }
             viewModel.seasons.push(seasonsViewModel);
         });
 
@@ -81,11 +80,26 @@ export class EpisodeRequestComponent implements OnInit {
 
     public seasonChanged(checkbox: MatCheckboxChange, season: INewSeasonRequests) {
         season.episodes.forEach((ep) => {
-            if (checkbox.checked) {
+            if (checkbox.checked && (!ep.available && !ep.requested && !ep.approved)) {
                 this.addRequest(ep)
             } else {
                 this.removeRequest(ep);
             }
         });
+    }
+
+    public async requestAllSeasons() {
+        this.series.requestAll = true;
+        await this.submitRequests();
+    }
+
+    public async requestFirstSeason() {
+        this.series.firstSeason = true;
+        await this.submitRequests();
+    }
+
+    public async requestLatestSeason() {
+        this.series.latestSeason = true;
+        await this.submitRequests();
     }
 }
