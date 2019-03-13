@@ -24,7 +24,7 @@ namespace Ombi.Core.Rule.Rules.Search
                 if (!airedButNotAvailable)
                 {
                     var unairedEpisodes = search.SeasonRequests.Any(x =>
-                        x.Episodes.Any(c => !c.Available && c.AirDate > DateTime.Now.Date && c.AirDate != DateTime.MinValue));
+                        x.Episodes.Any(c => !c.Available && c.AirDate > DateTime.Now.Date || c.AirDate != DateTime.MinValue));
                     if (unairedEpisodes)
                     {
                         search.FullyAvailable = true;
