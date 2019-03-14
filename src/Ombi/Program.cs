@@ -115,7 +115,7 @@ namespace Ombi
 
             try
             {
-                if (ombi.Settings.Any())
+                if (ombi.Settings.Any() && !settings.Settings.Any())
                 {
                     // OK migrate it!
                     var allSettings = ombi.Settings.ToList();
@@ -125,7 +125,7 @@ namespace Ombi
 
                 // Check for any application settings
 
-                if (ombi.ApplicationConfigurations.Any())
+                if (ombi.ApplicationConfigurations.Any() && !settings.ApplicationConfigurations.Any())
                 {
                     // OK migrate it!
                     var allSettings = ombi.ApplicationConfigurations.ToList();
