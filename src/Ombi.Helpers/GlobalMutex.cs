@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
+using Nito.AsyncEx;
 
 namespace Ombi.Helpers
 {
     public static class GlobalMutex
     {
-        public static T Lock<T>(Func<T> func)
+        public static async Task<T> Lock<T>(Func<Task<T>> func)
         {
             const string mutexId = "Global\\OMBI";
-
-            using (var mutex = new Mutex(false, mutexId, out __))
+            using (var mutex = new Mutex(false, mutexId, out _))
             {
                 var hasHandle = false;
                 try
@@ -25,7 +26,7 @@ namespace Ombi.Helpers
                         hasHandle = true;
                     }
 
-                    return func();
+                    return await func();
                 }
                 finally
                 {
