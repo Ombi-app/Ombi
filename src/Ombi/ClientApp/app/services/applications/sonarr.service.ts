@@ -1,11 +1,11 @@
-﻿import { PlatformLocation } from "@angular/common";
+import { PlatformLocation } from "@angular/common";
 import { Injectable } from "@angular/core";
 
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs/Rx";
+import { Observable } from "rxjs";
 
 import { ISonarrSettings } from "../../interfaces";
-import { ISonarrProfile, ISonarrRootFolder } from "../../interfaces";
+import { ILanguageProfiles, ISonarrProfile, ISonarrRootFolder } from "../../interfaces";
 import { ServiceHelpers } from "../service.helpers";
 
 @Injectable()
@@ -26,5 +26,9 @@ export class SonarrService extends ServiceHelpers {
     }
     public getQualityProfilesWithoutSettings(): Observable<ISonarrProfile[]> {
         return this.http.get<ISonarrProfile[]>(`${this.url}/Profiles/`, {headers: this.headers});
+    }
+
+    public getV3LanguageProfiles(settings: ISonarrSettings): Observable<ILanguageProfiles[]> {
+        return this.http.post<ILanguageProfiles[]>(`${this.url}/v3/languageprofiles/`, JSON.stringify(settings), {headers: this.headers});
     }
 }

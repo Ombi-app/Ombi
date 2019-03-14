@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using Moq;
+﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
-using Ombi.Core.Settings;
-using Ombi.Schedule.Jobs.Ombi;
-using Ombi.Settings.Settings.Models;
-using Ombi.Settings.Settings.Models.Notifications;
-using Ombi.Store.Entities;
+using Ombi.Helpers;
+using static Ombi.Schedule.Jobs.Ombi.NewsletterJob;
 
 namespace Ombi.Schedule.Tests
 {
@@ -15,17 +12,12 @@ namespace Ombi.Schedule.Tests
         [TestCaseSource(nameof(EpisodeListData))]
         public string BuildEpisodeListTest(List<int> episodes)
         {
-            var emailSettings = new Mock<ISettingsService<EmailNotificationSettings>>();
-            var customziation = new Mock<ISettingsService<CustomizationSettings>>();
-            var newsletterSettings = new Mock<ISettingsService<NewsletterSettings>>();
-            var newsletter = new NewsletterJob(null, null, null, null, null, null, customziation.Object, emailSettings.Object, null, null, newsletterSettings.Object, null);
-
             var ep = new List<int>();
             foreach (var i in episodes)
             {
                 ep.Add(i);
             }
-            var result = newsletter.BuildEpisodeList(ep);
+            var result = StringHelper.BuildEpisodeList(ep);
             return result;
         }
 

@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit } from "@angular/core";
 
-import { ICheckbox, ICustomizationSettings, IEmailNotificationSettings,IUser } from "../interfaces";
+import { ICheckbox, ICustomizationSettings, IEmailNotificationSettings, IUser } from "../interfaces";
 import { IdentityService, NotificationService, SettingsService } from "../services";
 
 @Component({
@@ -10,7 +10,7 @@ export class UserManagementComponent implements OnInit {
 
     public users: IUser[];
     public checkAll = false;
-    public emailSettings: IEmailNotificationSettings; 
+    public emailSettings: IEmailNotificationSettings;
     public customizationSettings: ICustomizationSettings;
 
     public order: string = "userName";
@@ -20,10 +20,12 @@ export class UserManagementComponent implements OnInit {
     public availableClaims: ICheckbox[];
     public bulkMovieLimit?: number;
     public bulkEpisodeLimit?: number;
+    public plexEnabled: boolean;
 
-    constructor(private readonly identityService: IdentityService,
-                private readonly settingsService: SettingsService,
-                private readonly notificationService: NotificationService) { }
+    constructor(private identityService: IdentityService,
+                private settingsService: SettingsService,
+                private notificationService: NotificationService,
+                private plexSettings: SettingsService) { }
 
     public ngOnInit() {
         this.users = [];
@@ -31,13 +33,15 @@ export class UserManagementComponent implements OnInit {
             this.users = x;
         });
 
+        this.plexSettings.getPlex().subscribe(x => this.plexEnabled = x.enable);
+
         this.identityService.getAllAvailableClaims().subscribe(x => this.availableClaims = x);
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
         this.settingsService.getEmailNotificationSettings().subscribe(x => this.emailSettings = x);
     }
 
     public welcomeEmail(user: IUser) {
-        if(!user.emailAddress) {
+        if (!user.emailAddress) {
             this.notificationService.error("The user needs an email address.");
             return;
         }
@@ -45,7 +49,13 @@ export class UserManagementComponent implements OnInit {
             this.notificationService.error("Email Notifications are not setup, cannot send welcome email");
             return;
         }
-        this.identityService.sendWelcomeEmail(user).subscribe();        
+        if (!this.emailSettings.notificationTemplates.some(x => {
+            return x.enabled && x.notificationType === 8;
+        })) {
+            this.notificationService.error("The Welcome Email template is not enabled in the Email Setings");
+            return;
+        }
+        this.identityService.sendWelcomeEmail(user).subscribe();
         this.notificationService.success(`Sent a welcome email to ${user.emailAddress}`);
     }
 
@@ -68,31 +78,31 @@ export class UserManagementComponent implements OnInit {
         });
 
         this.users.forEach(x => {
-            if(!x.checked) {
+            if (!x.checked) {
                 return;
             }
-            if(anyRoles) {
+            if (anyRoles) {
                 x.claims = this.availableClaims;
             }
-            if(this.bulkEpisodeLimit && this.bulkEpisodeLimit > 0) {
+            if (this.bulkEpisodeLimit) {
                 x.episodeRequestLimit = this.bulkEpisodeLimit;
             }
-            if(this.bulkMovieLimit && this.bulkMovieLimit > 0) {
+            if (this.bulkMovieLimit) {
                 x.movieRequestLimit = this.bulkMovieLimit;
             }
             this.identityService.updateUser(x).subscribe(y => {
-                if(!y.successful) {
+                if (!y.successful) {
                     this.notificationService.error(`Could not update user ${x.userName}. Reason ${y.errors[0]}`);
                 }
             });
         });
-        
+
         this.notificationService.success(`Updated users`);
         this.showBulkEdit = false;
         this.bulkMovieLimit = undefined;
         this.bulkEpisodeLimit = undefined;
     }
-    
+
     public setOrder(value: string, el: any) {
         el = el.toElement || el.relatedTarget || el.target || el.srcElement;
 
@@ -109,7 +119,7 @@ export class UserManagementComponent implements OnInit {
             previousFilter.className = "";
             el.className = "active";
         }
-    
+
         this.order = value;
-      }
+    }
 }

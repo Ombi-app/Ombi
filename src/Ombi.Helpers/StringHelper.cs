@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security;
@@ -74,6 +75,58 @@ namespace Ombi.Helpers
             }
 
             return -1;
+        }
+
+        public static string BuildEpisodeList(IEnumerable<int> orderedEpisodes)
+        {
+            var epSb = new StringBuilder();
+            var previousEpisodes = new List<int>();
+            var previousEpisode = -1;
+            foreach (var ep in orderedEpisodes)
+            {
+                if (ep - 1 == previousEpisode)
+                {
+                    // This is the next one
+                    previousEpisodes.Add(ep);
+                }
+                else
+                {
+                    if (previousEpisodes.Count > 1)
+                    {
+                        // End it
+                        epSb.Append($"{previousEpisodes.First()}-{previousEpisodes.Last()}, ");
+                    }
+                    else if (previousEpisodes.Count == 1)
+                    {
+                        epSb.Append($"{previousEpisodes.FirstOrDefault()}, ");
+                    }
+                    // New one
+                    previousEpisodes.Clear();
+                    previousEpisodes.Add(ep);
+                }
+                previousEpisode = ep;
+            }
+
+            if (previousEpisodes.Count > 1)
+            {
+                // Got some left over
+                epSb.Append($"{previousEpisodes.First()}-{previousEpisodes.Last()}");
+            }
+            else if (previousEpisodes.Count == 1)
+            {
+                epSb.Append(previousEpisodes.FirstOrDefault());
+            }
+
+            return epSb.ToString();
+        }
+
+        public static string RemoveSpaces(this string str)
+        {
+            return str.Replace(" ", "");
+        }
+        public static string StripCharacters(this string str, params char[] chars)
+        {
+            return string.Concat(str.Where(c => !chars.Contains(c)));
         }
     }
 }

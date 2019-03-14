@@ -51,17 +51,19 @@
                     <div *ngIf="comments" class="panel-body msg_container_base">
                         <div *ngIf="comments.length <= 0" class="row msg_container base_receive">
                             <div class="col-md-10 col-xs-10">
-                                <div class="messages msg_sent">
-                                    <p [translate]="'Issues.NoComments'"></p>
+                               
+                                <div class="messages msg_sent"> 
+                                       <p [translate]="'Issues.NoComments'"></p>
                                 </div>
                             </div>
                         </div>
 
                         <div *ngFor="let comment of comments" class="row msg_container" [ngClass]="{'base_sent': comment.adminComment, 'base_receive': !comment.adminComment}">
                             <div class="col-md-10 col-xs-10">
-                                <div class="messages msg_sent">
+                                
+                                <div class="messages msg_sent"> <i *ngIf="isAdmin" style="float:right;" class="fa fa-times" aria-hidden="true" (click)="deleteComment(comment.id)"></i>
                                     <p>{{comment.comment}}</p>
-                                    <time>{{comment.username}} • {{comment.date | date:'short'}}</time>
+                                    <time>{{comment.username}} • {{comment.date  | amLocal | amDateFormat: 'l LT'}}</time>
                                 </div>
                             </div>
                         </div>

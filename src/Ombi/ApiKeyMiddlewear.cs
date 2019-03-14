@@ -5,30 +5,28 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
+using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
 
 namespace Ombi
 {
     public class ApiKeyMiddlewear
     {
-        public ApiKeyMiddlewear(RequestDelegate next, ISettingsService<OmbiSettings> repo, OmbiUserManager um)
+        public ApiKeyMiddlewear(RequestDelegate next)
         {
             _next = next;
-            _repo = repo;
-            _userManager = um;
         }
         private readonly RequestDelegate _next;
-        private readonly ISettingsService<OmbiSettings> _repo;
-        private readonly OmbiUserManager _userManager;
 
         public async Task Invoke(HttpContext context)
         {
             if (context.Request.Path.StartsWithSegments(new PathString("/api")))
             {
                 //Let's check if this is an API Call
-                if (context.Request.Headers.Keys.Contains("ApiKey"))
+                if (context.Request.Headers.Keys.Contains("ApiKey", StringComparer.InvariantCultureIgnoreCase))
                 {
                     // validate the supplied API key
                     // Validate it
@@ -66,8 +64,9 @@ namespace Ombi
                 await context.Response.WriteAsync("Invalid User Access Token");
                 return;
             }
-            
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserAccessToken == key);
+
+            var um = context.RequestServices.GetService<OmbiUserManager>();
+            var user = await um.Users.FirstOrDefaultAsync(x => x.UserAccessToken == key);
             if (user == null)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
@@ -77,7 +76,7 @@ namespace Ombi
             {
 
                 var identity = new GenericIdentity(user.UserName);
-                var roles = await _userManager.GetRolesAsync(user);
+                var roles = await um.GetRolesAsync(user);
                 var principal = new GenericPrincipal(identity, roles.ToArray());
                 context.User = principal;
                 await next.Invoke(context);
@@ -86,7 +85,8 @@ namespace Ombi
 
         private async Task ValidateApiKey(HttpContext context, RequestDelegate next, string key)
         {
-            var ombiSettings = await _repo.GetSettingsAsync();
+            var repo = context.RequestServices.GetService<ISettingsService<OmbiSettings>>();
+            var ombiSettings = await repo.GetSettingsAsync();
             var valid = ombiSettings.ApiKey.Equals(key, StringComparison.CurrentCultureIgnoreCase);
             if (!valid)
             {
@@ -95,11 +95,42 @@ namespace Ombi
             }
             else
             {
-                var identity = new GenericIdentity("API");
-                var principal = new GenericPrincipal(identity, new[] { "Admin", "ApiUser" });
-                context.User = principal;
+                // Check if we have a UserName header if so we can impersonate that user
+                if (context.Request.Headers.Keys.Contains("UserName", StringComparer.InvariantCultureIgnoreCase))
+                {
+                    var username = context.Request.Headers["UserName"].FirstOrDefault();
+                    if (username.IsNullOrEmpty())
+                    {
+                        UseApiUser(context);
+                    }
+                    var um = context.RequestServices.GetService<OmbiUserManager>();
+                    var user = await um.Users.FirstOrDefaultAsync(x =>
+                        x.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+                    if (user == null)
+                    {
+                        context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        await context.Response.WriteAsync("Invalid User");
+                        await next.Invoke(context);
+                    }
+                    var roles = await um.GetRolesAsync(user);
+                    var identity = new GenericIdentity(user.UserName);
+                    var principal = new GenericPrincipal(identity, roles.ToArray());
+                    context.User = principal;
+                }
+                else
+                {
+                    UseApiUser(context);
+                }
+
                 await next.Invoke(context);
             }
+        }
+
+        private void UseApiUser(HttpContext context)
+        {
+            var identity = new GenericIdentity("API");
+            var principal = new GenericPrincipal(identity, new[] { "Admin", "ApiUser" });
+            context.User = principal;
         }
     }
 }

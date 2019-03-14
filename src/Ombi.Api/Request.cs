@@ -25,9 +25,10 @@ namespace Ombi.Api
         public string Endpoint { get; }
         public string BaseUrl { get; }
         public HttpMethod HttpMethod { get; }
-
+        public bool IgnoreErrors { get; set; }
         public bool Retry { get; set; }
         public List<HttpStatusCode> StatusCodeToRetry { get; set; } = new List<HttpStatusCode>();
+        public bool IgnoreBaseUrlAppend { get; set; }
 
         public Action<string> OnBeforeDeserialization { get; set; }
 
@@ -38,7 +39,7 @@ namespace Ombi.Api
                 var sb = new StringBuilder();
                 if (!string.IsNullOrEmpty(BaseUrl))
                 {
-                    sb.Append(!BaseUrl.EndsWith("/") ? string.Format("{0}/", BaseUrl) : BaseUrl);
+                    sb.Append(!BaseUrl.EndsWith("/") && !IgnoreBaseUrlAppend ? string.Format("{0}/", BaseUrl) : BaseUrl);
                 }
                 sb.Append(Endpoint.StartsWith("/") ? Endpoint.Remove(0, 1) : Endpoint);
                 return sb.ToString();

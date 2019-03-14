@@ -39,7 +39,11 @@ namespace Ombi.Api
 
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
-                    LogError(request, httpResponseMessage);
+                    if (!request.IgnoreErrors)
+                    {
+                        await LogError(request, httpResponseMessage);
+                    }
+
                     if (request.Retry)
                     {
 
@@ -76,13 +80,18 @@ namespace Ombi.Api
                 else
                 {
                     // XML
-                    XmlSerializer serializer = new XmlSerializer(typeof(T));
-                    StringReader reader = new StringReader(receivedString);
-                    var value = (T)serializer.Deserialize(reader);
-                    return value;
+                    return DeserializeXml<T>(receivedString);
                 }
             }
 
+        }
+
+        public T DeserializeXml<T>(string receivedString)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(T));
+            StringReader reader = new StringReader(receivedString);
+            var value = (T) serializer.Deserialize(reader);
+            return value;
         }
 
         public async Task<string> RequestContent(Request request)
@@ -94,7 +103,10 @@ namespace Ombi.Api
                 var httpResponseMessage = await _client.SendAsync(httpRequestMessage);
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
-                    LogError(request, httpResponseMessage);
+                    if (!request.IgnoreErrors)
+                    {
+                        await LogError(request, httpResponseMessage);
+                    }
                 }
                 // do something with the response
                 var data = httpResponseMessage.Content;
@@ -112,7 +124,10 @@ namespace Ombi.Api
                 var httpResponseMessage = await _client.SendAsync(httpRequestMessage);
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
-                    LogError(request, httpResponseMessage);
+                    if (!request.IgnoreErrors)
+                    {
+                        await LogError(request, httpResponseMessage);
+                    }
                 }
             }
         }
@@ -134,10 +149,15 @@ namespace Ombi.Api
             }
         }
 
-        private void LogError(Request request, HttpResponseMessage httpResponseMessage)
+        private async Task LogError(Request request, HttpResponseMessage httpResponseMessage)
         {
             Logger.LogError(LoggingEvents.Api,
                 $"StatusCode: {httpResponseMessage.StatusCode}, Reason: {httpResponseMessage.ReasonPhrase}, RequestUri: {request.FullUri}");
+            if (Logger.IsEnabled(LogLevel.Debug))
+            {
+                var content = await httpResponseMessage.Content.ReadAsStringAsync();
+                Logger.LogDebug(content);
+            }
         }
     }
 }

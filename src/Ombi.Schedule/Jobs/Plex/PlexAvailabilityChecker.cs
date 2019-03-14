@@ -79,9 +79,14 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     seriesEpisodes = plexEpisodes.Where(x => x.Series.ImdbId == imdbId.ToString());
                 }
-                if (useTvDb)
+                if (useTvDb && (seriesEpisodes == null ||  !seriesEpisodes.Any()) )
                 {
                     seriesEpisodes = plexEpisodes.Where(x => x.Series.TvDbId == tvDbId.ToString());
+                }
+
+                if (seriesEpisodes == null)
+                {
+                    continue;
                 }
 
                 if (!seriesEpisodes.Any())
@@ -118,11 +123,12 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     // We have fulfulled this request!
                     child.Available = true;
+                    child.MarkedAsAvailable = DateTime.Now;
                     _backgroundJobClient.Enqueue(() => _notificationService.Publish(new NotificationOptions
                     {
                         DateTime = DateTime.Now,
                         NotificationType = NotificationType.RequestAvailable,
-                        RequestId = child.ParentRequestId,
+                        RequestId = child.Id,
                         RequestType = RequestType.TvShow,
                         Recipient = child.RequestedUser.Email
                     }));
@@ -158,6 +164,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
 
                 movie.Available = true;
+                movie.MarkedAsAvailable = DateTime.Now;
                 if (movie.Available)
                 {
                     _backgroundJobClient.Enqueue(() => _notificationService.Publish(new NotificationOptions

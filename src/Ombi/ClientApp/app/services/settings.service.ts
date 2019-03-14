@@ -1,7 +1,7 @@
-﻿import { PlatformLocation } from "@angular/common";
+import { PlatformLocation } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs/Rx";
+import { Observable } from "rxjs";
 
 import {
     IAbout,
@@ -18,6 +18,7 @@ import {
     IJobSettings,
     IJobSettingsViewModel,
     ILandingPageSettings,
+    ILidarrSettings,
     IMattermostNotifcationSettings,
     IMobileNotifcationSettings,
     INewsletterNotificationSettings,
@@ -30,9 +31,9 @@ import {
     ISlackNotificationSettings,
     ISonarrSettings,
     ITelegramNotifcationSettings,
-    IThemes,
     IUpdateSettings,
     IUserManagementSettings,
+    IVoteSettings,
 } from "../interfaces";
 
 import { ServiceHelpers } from "./service.helpers";
@@ -49,6 +50,10 @@ export class SettingsService extends ServiceHelpers {
 
     public getOmbi(): Observable<IOmbiSettings> {
         return this.http.get<IOmbiSettings>(`${this.url}/Ombi/`, {headers: this.headers});
+    }
+
+    public getDefaultLanguage(): Observable<string> {
+        return this.http.get<string>(`${this.url}/defaultlanguage/`, {headers: this.headers});
     }
 
     public saveOmbi(settings: IOmbiSettings): Observable<boolean> {
@@ -91,8 +96,24 @@ export class SettingsService extends ServiceHelpers {
         return this.http.post<boolean>(`${this.url}/Radarr`, JSON.stringify(settings), {headers: this.headers});
     }
 
+    public getLidarr(): Observable<ILidarrSettings> {
+        return this.http.get<ILidarrSettings>(`${this.url}/Lidarr`, {headers: this.headers});
+    }
+
+    public lidarrEnabled(): Observable<boolean> {
+        return this.http.get<boolean>(`${this.url}/lidarrenabled`, {headers: this.headers});
+    }
+
+    public saveLidarr(settings: ILidarrSettings): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}/Lidarr`, JSON.stringify(settings), {headers: this.headers});
+    }
+
     public getAuthentication(): Observable<IAuthenticationSettings> {
         return this.http.get<IAuthenticationSettings>(`${this.url}/Authentication`, {headers: this.headers});
+    }
+
+    public getClientId(): Observable<string> {
+        return this.http.get<string>(`${this.url}/clientid`, {headers: this.headers});
     }
 
     public saveAuthentication(settings: IAuthenticationSettings): Observable<boolean> {
@@ -115,14 +136,6 @@ export class SettingsService extends ServiceHelpers {
 
     public saveCustomization(settings: ICustomizationSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}/customization`, JSON.stringify(settings), {headers: this.headers});
-    }
-
-    public getThemes(): Observable<IThemes[]> {
-        return this.http.get<IThemes[]>(`${this.url}/themes`, {headers: this.headers});
-    }
-
-    public getThemeContent(themeUrl: string): Observable<string> {
-        return this.http.get(`${this.url}/themecontent?url=${themeUrl}`, {responseType: "text", headers: this.headers});
     }
 
     public getEmailNotificationSettings(): Observable<IEmailNotificationSettings> {
@@ -181,7 +194,7 @@ export class SettingsService extends ServiceHelpers {
     public getMobileNotificationSettings(): Observable<IMobileNotifcationSettings> {
         return this.http.get<IMobileNotifcationSettings>(`${this.url}/notifications/mobile`, {headers: this.headers});
     }
-    
+
     public saveMobileNotificationSettings(settings: IMobileNotifcationSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}/notifications/mobile`, JSON.stringify(settings), {headers: this.headers});
     }
@@ -224,7 +237,7 @@ export class SettingsService extends ServiceHelpers {
 
     public getTelegramNotificationSettings(): Observable<ITelegramNotifcationSettings> {
         return this.http.get<ITelegramNotifcationSettings>(`${this.url}/notifications/telegram`, {headers: this.headers});
-    }    
+    }
 
     public saveTelegramNotificationSettings(settings: ITelegramNotifcationSettings): Observable<boolean> {
         return this.http
@@ -238,13 +251,13 @@ export class SettingsService extends ServiceHelpers {
     public saveJobSettings(settings: IJobSettings): Observable<IJobSettingsViewModel> {
         return this.http
             .post<IJobSettingsViewModel>(`${this.url}/jobs`, JSON.stringify(settings), {headers: this.headers});
-    } 
-    
+    }
+
     public testCron(body: ICronViewModelBody): Observable<ICronTestModel> {
         return this.http
             .post<ICronTestModel>(`${this.url}/testcron`, JSON.stringify(body), {headers: this.headers});
     }
-    
+
     public getSickRageSettings(): Observable<ISickRageSettings> {
         return this.http.get<ISickRageSettings>(`${this.url}/sickrage`, {headers: this.headers});
     }
@@ -267,16 +280,31 @@ export class SettingsService extends ServiceHelpers {
             .post<boolean>(`${this.url}/issues`, JSON.stringify(settings), {headers: this.headers});
     }
 
+    public getVoteSettings(): Observable<IVoteSettings> {
+        return this.http.get<IVoteSettings>(`${this.url}/vote`, {headers: this.headers});
+    }
+
+    public voteEnabled(): Observable<boolean> {
+        return this.http.get<boolean>(`${this.url}/voteenabled`, {headers: this.headers});
+    }
+
+    public saveVoteSettings(settings: IVoteSettings): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}/vote`, JSON.stringify(settings), {headers: this.headers});
+    }
+
     public getNewsletterSettings(): Observable<INewsletterNotificationSettings> {
         return this.http.get<INewsletterNotificationSettings>(`${this.url}/notifications/newsletter`, {headers: this.headers});
-    }  
+    }
 
     public updateNewsletterDatabase(): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}/notifications/newsletterdatabase`, {headers: this.headers});
-    }    
+    }
 
     public saveNewsletterSettings(settings: INewsletterNotificationSettings): Observable<boolean> {
         return this.http
             .post<boolean>(`${this.url}/notifications/newsletter`, JSON.stringify(settings), {headers: this.headers});
+    }
+    public verifyUrl(url: string): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}/customization/urlverify`, JSON.stringify({url}), {headers: this.headers});
     }
 }

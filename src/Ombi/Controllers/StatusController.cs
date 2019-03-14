@@ -30,13 +30,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Core.Settings;
+using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
 
 namespace Ombi.Controllers
 {
     [ApiV1]
     [Produces("application/json")]
-    public class StatusController : Controller
+    [ApiController]
+    public class StatusController : ControllerBase
     {
         public StatusController(ISettingsService<OmbiSettings> ombi)
         {
@@ -54,6 +56,18 @@ namespace Ombi.Controllers
         public HttpStatusCode GetStatus()
         {
             return HttpStatusCode.OK;
+        }
+
+
+        /// <summary>
+        /// Returns information about this ombi instance
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet("info")]
+        public string GetInfo()
+        {
+            return AssemblyHelper.GetRuntimeVersion();
         }
 
 

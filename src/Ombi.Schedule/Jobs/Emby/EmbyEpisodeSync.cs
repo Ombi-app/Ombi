@@ -49,7 +49,6 @@ namespace Ombi.Schedule.Jobs.Emby
             _settings = s;
             _repo = repo;
             _avaliabilityChecker = checker;
-            _settings.ClearCache();
         }
 
         private readonly ISettingsService<EmbySettings> _settings;
@@ -73,49 +72,58 @@ namespace Ombi.Schedule.Jobs.Emby
 
         private async Task CacheEpisodes(EmbyServers server)
         {
-            var allEpisodes = await _api.GetAllEpisodes(server.ApiKey, server.AdministratorId, server.FullUri);
-            var epToAdd = new List<EmbyEpisode>();
-
-            foreach (var ep in allEpisodes.Items)
+            var allEpisodes = await _api.GetAllEpisodes(server.ApiKey, 0, 200, server.AdministratorId, server.FullUri);
+            var total = allEpisodes.TotalRecordCount;
+            var processed = 1;
+            var epToAdd = new HashSet<EmbyEpisode>();
+            while (processed < total)
             {
-                if (ep.LocationType.Equals("Virtual", StringComparison.CurrentCultureIgnoreCase))
+                foreach (var ep in allEpisodes.Items)
                 {
-                    // This means that we don't actully have the file, it's just Emby being nice and showing future stuff
-                    continue;
-                }
+                    processed++;
 
-                var epInfo = await _api.GetEpisodeInformation(ep.Id, server.ApiKey, server.AdministratorId, server.FullUri);
-                //if (epInfo?.ProviderIds?.Tvdb == null)
-                //{
-                //    continue;
-                //}
-
-                // Let's make sure we have the parent request, stop those pesky forign key errors,
-                // Damn me having data integrity
-                var parent = await _repo.GetByEmbyId(epInfo.SeriesId);
-                if (parent == null)
-                {
-                    _logger.LogInformation("The episode {0} does not relate to a series, so we cannot save this", ep.Name);
-                    continue;
-                }
-
-                var existingEpisode = await _repo.GetEpisodeByEmbyId(ep.Id);
-                if (existingEpisode == null)
-                {
-                    // add it
-                    epToAdd.Add(new EmbyEpisode
+                    if (ep.LocationType?.Equals("Virtual", StringComparison.InvariantCultureIgnoreCase) ?? false)
                     {
-                        EmbyId = ep.Id,
-                        EpisodeNumber = ep.IndexNumber,
-                        SeasonNumber = ep.ParentIndexNumber,
-                        ParentId = ep.SeriesId,
-                        TvDbId = epInfo.ProviderIds.Tvdb,
-                        TheMovieDbId = epInfo.ProviderIds.Tmdb,
-                        ImdbId = epInfo.ProviderIds.Imdb,
-                        Title = ep.Name,
-                        AddedAt = DateTime.UtcNow
-                    });
+                        // For some reason Emby is not respecting the `IsVirtualItem` field.
+                        continue;
+                    }
+
+                    // Let's make sure we have the parent request, stop those pesky forign key errors,
+                    // Damn me having data integrity
+                    var parent = await _repo.GetByEmbyId(ep.SeriesId);
+                    if (parent == null)
+                    {
+                        _logger.LogInformation("The episode {0} does not relate to a series, so we cannot save this",
+                            ep.Name);
+                        continue;
+                    }
+
+                    var existingEpisode = await _repo.GetEpisodeByEmbyId(ep.Id);
+                    // Make sure it's not in the hashset too
+                    var existingInList = epToAdd.Any(x => x.EmbyId == ep.Id);
+
+                    if (existingEpisode == null && !existingInList)
+                    {
+                        _logger.LogDebug("Adding new episode {0} to parent {1}", ep.Name, ep.SeriesName);
+                        // add it
+                        epToAdd.Add(new EmbyEpisode
+                        {
+                            EmbyId = ep.Id,
+                            EpisodeNumber = ep.IndexNumber,
+                            SeasonNumber = ep.ParentIndexNumber,
+                            ParentId = ep.SeriesId,
+                            TvDbId = ep.ProviderIds.Tvdb,
+                            TheMovieDbId = ep.ProviderIds.Tmdb,
+                            ImdbId = ep.ProviderIds.Imdb,
+                            Title = ep.Name,
+                            AddedAt = DateTime.UtcNow
+                        });
+                    }
                 }
+
+                await _repo.AddRange(epToAdd);
+                epToAdd.Clear();
+                allEpisodes = await _api.GetAllEpisodes(server.ApiKey, processed, 200, server.AdministratorId, server.FullUri);
             }
 
             if (epToAdd.Any())

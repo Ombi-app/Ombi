@@ -5,18 +5,13 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Hangfire;
-using Hangfire.Console;
 using Hangfire.Server;
 using Microsoft.Extensions.Logging;
-
-using Ombi.Api.Service;
-using Ombi.Api.Service.Models;
 using Ombi.Core.Processor;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
@@ -33,14 +28,13 @@ namespace Ombi.Schedule.Jobs.Ombi
     public class OmbiAutomaticUpdater : IOmbiAutomaticUpdater
     {
         public OmbiAutomaticUpdater(ILogger<OmbiAutomaticUpdater> log, IChangeLogProcessor service,
-            ISettingsService<UpdateSettings> s, IProcessProvider proc, IRepository<ApplicationConfiguration> appConfig)
+            ISettingsService<UpdateSettings> s, IProcessProvider proc, IApplicationConfigRepository appConfig)
         {
             Logger = log;
             Processor = service;
             Settings = s;
             _processProvider = proc;
             _appConfig = appConfig;
-            Settings.ClearCache();
         }
 
         private ILogger<OmbiAutomaticUpdater> Logger { get; }
@@ -48,7 +42,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private ISettingsService<UpdateSettings> Settings { get; }
         private readonly IProcessProvider _processProvider;
         private static PerformContext Ctx { get; set; }
-        private readonly IRepository<ApplicationConfiguration> _appConfig;
+        private readonly IApplicationConfigRepository _appConfig;
 
         public string[] GetVersion()
         {
@@ -72,7 +66,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             Logger.LogDebug(LoggingEvents.Updater, "Starting Update job");
 
             var settings = await Settings.GetSettingsAsync();
-            if (!settings.AutoUpdateEnabled)
+            if (!settings.AutoUpdateEnabled && !settings.TestMode)
             {
                 Logger.LogDebug(LoggingEvents.Updater, "Auto update is not enabled");
                 return;
@@ -83,7 +77,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             var productVersion = AssemblyHelper.GetRuntimeVersion();
             Logger.LogDebug(LoggingEvents.Updater, "Product Version {0}", productVersion);
-
+            var serverVersion = string.Empty;
             try
             {
                 var productArray = GetVersion();
@@ -96,13 +90,17 @@ namespace Ombi.Schedule.Jobs.Ombi
                 Logger.LogDebug(LoggingEvents.Updater, "Branch {0}", branch);
 
                 Logger.LogDebug(LoggingEvents.Updater, "Looking for updates now");
+                //TODO this fails because the branch = featureupdater when it should be feature/updater
                 var updates = await Processor.Process(branch);
                 Logger.LogDebug(LoggingEvents.Updater, "Updates: {0}", updates);
-                var serverVersion = updates.UpdateVersionString;
+
+
+                serverVersion = updates.UpdateVersionString;
 
                 Logger.LogDebug(LoggingEvents.Updater, "Service Version {0}", updates.UpdateVersionString);
 
-                if (!serverVersion.Equals(version, StringComparison.CurrentCultureIgnoreCase))
+
+                if (!serverVersion.Equals(version, StringComparison.CurrentCultureIgnoreCase) || settings.TestMode)
                 {
                     // Let's download the correct zip
                     var desc = RuntimeInformation.OSDescription;
@@ -135,7 +133,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                         if (process == Architecture.Arm)
                         {
                             download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("arm.", CompareOptions.IgnoreCase));
-                        } else if (process == Architecture.Arm64)
+                        }
+                        else if (process == Architecture.Arm64)
                         {
                             download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("arm64.", CompareOptions.IgnoreCase));
                         }
@@ -206,32 +205,34 @@ namespace Ombi.Schedule.Jobs.Ombi
                         updaterExtension = ".exe";
                     }
                     var updaterFile = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
-                        "TempUpdate", $"Ombi.Updater{updaterExtension}");
+                        "TempUpdate", "updater", $"Ombi.Updater{updaterExtension}");
 
                     // Make sure the file is an executable
-                    ExecLinuxCommand($"chmod +x {updaterFile}");
+                    //ExecLinuxCommand($"chmod +x {updaterFile}");
+
 
                     // There must be an update
                     var start = new ProcessStartInfo
                     {
-                        UseShellExecute = true,
-                        CreateNoWindow = false, // Ignored if UseShellExecute is set to true
+                        UseShellExecute = false,
+                        CreateNoWindow = true, // Ignored if UseShellExecute is set to true
                         FileName = updaterFile,
                         Arguments = GetArgs(settings),
                         WorkingDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "TempUpdate"),
                     };
-                    if (settings.Username.HasValue())
+                    //if (settings.Username.HasValue())
+                    //{
+                    //    start.UserName = settings.Username;
+                    //}
+                    //if (settings.Password.HasValue())
+                    //{
+                    //    start.Password = settings.Password.ToSecureString();
+                    //}
+                    using (var proc = new Process { StartInfo = start })
                     {
-                        start.UserName = settings.Username;
+                        proc.Start();
                     }
-                    if (settings.Password.HasValue())
-                    {
-                        start.Password = settings.Password.ToSecureString();
-                    }
-                    var proc = new Process { StartInfo = start };
 
-
-                    proc.Start();
 
                     Logger.LogDebug(LoggingEvents.Updater, "Bye bye");
                 }
@@ -245,19 +246,18 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         private string GetArgs(UpdateSettings settings)
         {
-            var config = _appConfig.GetAll();
-            var url = config.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
-            var storage = config.FirstOrDefault(x => x.Type == ConfigurationTypes.StoragePath);
+            var url = _appConfig.Get(ConfigurationTypes.Url);
+            var storage = _appConfig.Get(ConfigurationTypes.StoragePath);
 
             var currentLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             var processName = (settings.ProcessName.HasValue() ? settings.ProcessName : "Ombi");
 
             var sb = new StringBuilder();
             sb.Append($"--applicationPath \"{currentLocation}\" --processname \"{processName}\" ");
-            if (settings.WindowsService)
-            {
-                sb.Append($"--windowsServiceName \"{settings.WindowsServiceName}\" ");
-            }
+            //if (settings.WindowsService)
+            //{
+            //    sb.Append($"--windowsServiceName \"{settings.WindowsServiceName}\" ");
+            //}
             var sb2 = new StringBuilder();
             if (url?.Value.HasValue() ?? false)
             {
@@ -338,7 +338,6 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (disposing)
             {
-                _appConfig?.Dispose();
                 Settings?.Dispose();
             }
             _disposed = true;

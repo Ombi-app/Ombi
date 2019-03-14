@@ -1,0 +1,116 @@
+<div class="row">
+    <!--Backdrop-->
+    <div class="album-bg backdrop" [style.background-image]="result.background"></div>
+    <div class="album-tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
+
+    <!--Album Art-->
+    <div class="col-sm-12 small-padding">
+        <img *ngIf="result.disk" class="img-responsive poster album-cover" src="{{result.disk}}" alt="poster">
+    </div>
+
+    <!--Artist Title-->
+    <div class="col-sm-12 small-padding">
+        <div>
+            <h4>
+                <a href="" target="_blank">
+                    {{result.title | truncate: 36}}
+                </a>
+
+            </h4>
+            <h5>
+                <a href="" (click)="selectArtist($event, result.foreignArtistId)">
+                    {{result.artistName}}
+                </a>
+            </h5>
+        </div>
+
+        <!--Tags-->
+        <div>
+            <span class="tags">
+                <!-- <span *ngIf="result.releaseDate" class="label label-info" id="releaseDateLabel" target="_blank">{{ 'Search.TheatricalRelease' | translate: {date: result.releaseDate | date: 'mediumDate'} }}</span>
+        <span *ngIf="result.digitalReleaseDate" class="label label-info" id="releaseDateLabel" target="_blank">{{ 'Search.DigitalDate' | translate: {date: result.digitalReleaseDate | date: 'mediumDate'} }}</span>
+
+        <a *ngIf="result.homepage" href="{{result.homepage}}" id="homePageLabel" target="_blank"><span class="label label-info" [translate]="'Search.Movies.HomePage'"></span></a>
+
+        <a *ngIf="result.trailer" href="{{result.trailer}}" id="trailerLabel" target="_blank"><span class="label label-info" [translate]="'Search.Movies.Trailer'"></span></a> -->
+        <ng-template [ngIf]="!result.requested && !result.fullyAvailable && !result.approved">
+                <span class="label label-danger" id="notRequestedLabel" [translate]="'Common.NotRequested'"></span>
+            </ng-template>
+                <ng-template [ngIf]="result.fullyAvailable">
+                        <span class="label label-success" id="availableLabel" [translate]="'Common.Available'"></span>
+                    </ng-template>
+                    <ng-template [ngIf]="result.partiallyAvailable">
+                            <span class="label label-info" id="availableLabel" [translate]="'Common.PartiallyAvailable'"></span>
+                        </ng-template>
+                <ng-template [ngIf]="result.monitored && !result.fullyAvailable">
+                    <span class="label label-info" id="processingRequestLabel" [translate]="'Common.Monitored'"></span>
+                </ng-template>
+                 <ng-template [ngIf]="result.requested && !result.approved && !result.partiallyAvailable">
+                    <span class="label label-warning" id="pendingApprovalLabel" [translate]="'Common.PendingApproval'"></span>
+                </ng-template>
+
+                <ng-template [ngIf]="result.approved && !result.fullyAvailable"><span class="label label-info" id="processingRequestLabel" [translate]="'Common.ProcessingRequest'"></span></ng-template>
+  
+
+                
+                <ng-template [ngIf]="result.releaseDate">
+                        <span class="label label-info" id="availableLabel">Release Date: {{result.releaseDate | amLocal | amDateFormat: 'L'}}</span>
+                    </ng-template>
+                    <ng-template [ngIf]="result.rating">
+                        <span class="label label-info" id="availableLabel">{{result.rating}}/10</span>
+                    </ng-template>
+
+
+            </span>
+
+        </div>
+    </div>
+
+    <!--Buttons-->
+    <div class="col-sm-12 small-padding">
+        <!-- <div class="row" *ngIf="result.requested">
+            <div class="col-md-2 col-md-push-10">
+
+                 <a *ngIf="result.showSubscribe && !result.subscribed" style="color:white" (click)="subscribe(result)" pTooltip="Subscribe for notifications"> <i class="fa fa-rss"></i></a>
+            <a *ngIf="result.showSubscribe && result.subscribed" style="color:red" (click)="unSubscribe(result)" pTooltip="Unsubscribe notification"> <i class="fa fa-rss"></i></a>
+            </div>
+        </div> -->
+        <div *ngIf="result.fullyAvailable">
+            <button style="text-align: right" class="btn btn-success-outline disabled" disabled>
+                <i class="fa fa-check"></i> {{ 'Common.Available' | translate }}</button>
+        </div>
+        <div *ngIf="!result.fullyAvailable">
+            <div *ngIf="result.requested || result.approved; then requestedBtn else notRequestedBtn"></div>
+            <ng-template #requestedBtn>
+                <button style="text-align: right" class="btn btn-primary-outline disabled" [disabled]>
+                    <i class="fa fa-check"></i> {{ 'Common.Requested' | translate }}</button>
+            </ng-template>
+            <ng-template #notRequestedBtn>
+                <button style="text-align: right" class="btn btn-primary-outline" (click)="request(result)">
+                    <i *ngIf="result.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+                    <i *ngIf="!result.requestProcessing && !result.processed" class="fa fa-plus"></i>
+                    <i *ngIf="result.processed && !result.requestProcessing" class="fa fa-check"></i> {{ 'Common.Request'
+                    | translate }}</button>
+            </ng-template>
+        </div>
+
+
+         <div class="dropdown" *ngIf="(result.partiallyAvailable || result.fullyAvailable) && issueCategories && issuesEnabled">
+            <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="true">
+                <i class="fa fa-plus"></i> Report Issue
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li *ngFor="let cat of issueCategories"><a [routerLink]="" (click)="reportIssue(cat, result)">{{cat.value}}</a></li>
+            </ul>
+        </div> 
+
+    </div>
+
+</div>
+
+
+
+<issue-report [movie]="true" [visible]="issuesBarVisible" (visibleChange)="issuesBarVisible = $event;" [title]="issueRequestTitle"
+[issueCategory]="issueCategorySelected" [id]="issueRequestId" [providerId]="issueProviderId"></issue-report>

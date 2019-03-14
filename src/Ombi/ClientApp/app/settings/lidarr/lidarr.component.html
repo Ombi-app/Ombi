@@ -1,0 +1,148 @@
+﻿
+<settings-menu></settings-menu>
+<div *ngIf="form">
+    <fieldset>
+        <legend>Lidarr Settings</legend>
+        <div style="float: right;">
+            <span style="vertical-align: top;">Advanced</span>
+            <p-inputSwitch id="customInputSwitch" [(ngModel)]="advanced"></p-inputSwitch>
+        </div>
+        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:5%;">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="enable" formControlName="enabled" ng-checked="form.enabled">
+                        <label for="enable">Enable</label>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="Ip" class="control-label">Hostname or IP
+                        
+                        <i *ngIf="form.get('ip').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="IP/Hostname is required"></i>
+                    </label>
+
+                        <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="localhost" formControlName="ip"  [ngClass]="{'form-error': form.get('ip').hasError('required')}">
+                </div>
+
+                <div class="form-group">
+                    <label for="portNumber" class="control-label">Port 
+                        <i *ngIf="form.get('port').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="Port is required"></i></label>
+
+                        <input type="text" class="form-control form-control-custom " formControlName="port" id="portNumber" name="Port" placeholder="Port Number"  [ngClass]="{'form-error': form.get('port').hasError('required')}">
+
+                </div>
+
+
+                <div class="form-group">
+                    <label for="ApiKey" class="control-label">API Key <i *ngIf="form.get('apiKey').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="API Key is required"></i></label>
+                    
+                        <input type="text" class="form-control form-control-custom "  [ngClass]="{'form-error': form.get('apiKey').hasError('required')}" id="ApiKey" name="ApiKey" formControlName="apiKey">
+
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+
+                        <input type="checkbox" id="Ssl" name="Ssl" formControlName="ssl"><label for="Ssl">SSL</label>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="SubDir" class="control-label">Base Url</label>
+                    <div>
+                        <input type="text" class="form-control form-control-custom" formControlName="subDir" id="SubDir" name="SubDir">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+
+                <div class="form-group">
+                    <label for="select" class="control-label">Quality Profiles 
+                        <i *ngIf="form.get('defaultQualityProfile').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="Quality Profile is required"></i>
+                    </label>
+                    <div id="profiles">
+                        <select formControlName="defaultQualityProfile" class="form-control form-control-custom  col-md-5 form-half" id="select"  [ngClass]="{'form-error': form.get('defaultQualityProfile').hasError('required')}">
+                            <option *ngFor="let quality of qualities" value="{{quality.id}}">{{quality.name}}</option>
+                        </select>
+                        <button (click)="getProfiles(form)" type="button" class="btn btn-primary-outline col-md-4 col-md-push-1">Get Quality Profiles <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"> </span></button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="rootFolders" class="control-label">Default Root Folders 
+                        
+                        <i *ngIf="form.get('defaultRootPath').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="Root Path is required"></i>
+                    </label>
+                    <div id="rootFolders">
+                        <select formControlName="defaultRootPath" class="form-control form-control-custom col-md-5 form-half"  [ngClass]="{'form-error': form.get('defaultRootPath').hasError('required')}">
+                            <option *ngFor="let folder of rootFolders" value="{{folder.path}}" >{{folder.path}}</option>
+                        </select>
+                        <button (click)="getRootFolders(form)" type="button" class="btn btn-primary-outline col-md-4 col-md-push-1">Get Root Folders <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
+
+                    </div>                    
+                </div>
+
+
+                <div class="form-group">
+                    <label for="languageProfileId" class="control-label">Language Profile
+                        
+                        <i *ngIf="form.get('languageProfileId').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="Language Profile is required"></i>
+                    </label>
+                    <div id="languageProfileId">
+                        <select formControlName="languageProfileId" class="form-control form-control-custom col-md-5 form-half"  [ngClass]="{'form-error': form.get('languageProfileId').hasError('required')}">
+                            <option *ngFor="let folder of languageProfiles" value="{{folder.id}}" >{{folder.name}}</option>
+                        </select>
+                        <button (click)="getLanguageProfiles(form)" type="button" class="btn btn-primary-outline col-md-4 col-md-push-1">Get Languages <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
+
+                    </div>                    
+                </div>
+
+
+                <div class="form-group">
+                    <label for="metadataProfileId" class="control-label">Metadata Profile
+                         
+                        <i *ngIf="form.get('metadataProfileId').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="Metadata Profile is required"></i>
+                    </label>
+                    <div id="metadataProfileId">
+                        
+                        <select formControlName="metadataProfileId" class="form-control form-control-custom col-md-5 form-half"  [ngClass]="{'form-error': form.get('metadataProfileId').hasError('required')}">
+                            <option *ngFor="let folder of metadataProfiles" value="{{folder.id}}" >{{folder.name}}</option>
+                        </select>
+                        <button (click)="getMetadataProfiles(form)" type="button" class="btn btn-primary-outline col-md-4  col-md-push-1">Get Metadata <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
+
+                    </div>                     
+                    
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="albumFolder" name="albumFolder" formControlName="albumFolder">
+                        <label for="albumFolder">Album Folder</label>
+                    </div>
+                </div>
+
+                <div class="form-group" *ngIf="advanced" style="color:#ff761b">
+                    <div class="checkbox">
+                        <input type="checkbox" id="addOnly" formControlName="addOnly">
+                        <label for="addOnly">Do not search</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div>
+                        <button type="button" [disabled]="form.invalid" (click)="test(form)" class="btn btn-primary-outline">Test Connectivity <span id="spinner"></span></button>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div>
+                        <button type="submit" [disabled]="form.invalid" class="btn btn-primary-outline ">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </fieldset>
+</div>

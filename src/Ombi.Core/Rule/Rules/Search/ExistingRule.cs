@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Models.Search;
@@ -11,20 +12,22 @@ namespace Ombi.Core.Rule.Rules.Search
 {
     public class ExistingRule : BaseSearchRule, IRules<SearchViewModel>
     {
-        public ExistingRule(IMovieRequestRepository movie, ITvRequestRepository tv)
+        public ExistingRule(IMovieRequestRepository movie, ITvRequestRepository tv, IMusicRequestRepository music)
         {
             Movie = movie;
             Tv = tv;
+            Music = music;
         }
 
         private IMovieRequestRepository Movie { get; }
+        private IMusicRequestRepository Music { get; }
         private ITvRequestRepository Tv { get; }
 
-        public Task<RuleResult> Execute(SearchViewModel obj)
+        public async Task<RuleResult> Execute(SearchViewModel obj)
         {
             if (obj.Type == RequestType.Movie)
             {
-                var movieRequests = Movie.GetRequest(obj.Id);
+                var movieRequests = await Movie.GetRequestAsync(obj.Id);
                 if (movieRequests != null) // Do we already have a request for this?
                 {
 
@@ -33,11 +36,11 @@ namespace Ombi.Core.Rule.Rules.Search
                     obj.Approved = movieRequests.Approved;
                     obj.Available = movieRequests.Available;
 
-                    return Task.FromResult(Success());
+                    return Success();
                 }
-                return Task.FromResult(Success());
+                return Success();
             }
-            else
+            if (obj.Type == RequestType.TvShow)
             {
                 //var tvRequests = Tv.GetRequest(obj.Id);
                 //if (tvRequests != null) // Do we already have a request for this?
@@ -50,7 +53,7 @@ namespace Ombi.Core.Rule.Rules.Search
                 //    return Task.FromResult(Success());
                 //}
 
-                var request = (SearchTvShowViewModel) obj;
+                var request = (SearchTvShowViewModel)obj;
                 var tvRequests = Tv.GetRequest(obj.Id);
                 if (tvRequests != null) // Do we already have a request for this?
                 {
@@ -85,17 +88,33 @@ namespace Ombi.Core.Rule.Rules.Search
                     }
                 }
 
-                if (request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.All(e => e.Available)))
+                if (request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.All(e => e.Available && e.AirDate > DateTime.MinValue)))
                 {
                     request.FullyAvailable = true;
                 }
-                if (request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.Any(e => e.Available)))
+                if (request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.Any(e => e.Available && e.AirDate > DateTime.MinValue)))
                 {
                     request.PartlyAvailable = true;
                 }
 
-                return Task.FromResult(Success());
+                return Success();
             }
+            if (obj.Type == RequestType.Album)
+            {
+                var album = (SearchAlbumViewModel) obj;
+                var albumRequest = await Music.GetRequestAsync(album.ForeignAlbumId);
+                if (albumRequest != null) // Do we already have a request for this?
+                {
+                    obj.Requested = true;
+                    obj.RequestId = albumRequest.Id;
+                    obj.Approved = albumRequest.Approved;
+                    obj.Available = albumRequest.Available;
+
+                    return Success();
+                }
+                return Success();
+            }
+            return Success();
         }
     }
 }

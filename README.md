@@ -32,7 +32,7 @@ ___
 # Features
 Here are some of the features Ombi V3 has:
 * Now working without crashes on Linux.
-* Lets users request Movies and TV Shows (whether it being the entire series, an entire season, or even single episodes.)
+* Lets users request Movies, Music, and TV Shows (whether it being the entire series, an entire season, or even single episodes.)
 * Easily manage your requests
 * User management system (supports plex.tv, Emby and local accounts)
 * A landing page that will give you the availability of your Plex/Emby server and also add custom notification text to inform your users of downtime.
@@ -50,6 +50,7 @@ We integrate with the following applications:
 * Emby
 * Sonarr
 * Radarr
+* Lidarr
 * DogNzb
 * Couch Potato
 
@@ -87,6 +88,7 @@ We are planning to bring back these features in V3 but for now you can find a li
 | DogNzb | Yes | No |
 | Issues | Yes | Yes |
 | Headphones | No | Yes |
+| Lidarr | Yes | No |
 
 # Feature Requests
 Feature requests are handled on FeatHub.
@@ -115,13 +117,12 @@ Please feel free to submit a pull request!
 # Donation
 If you feel like donating you can donate with the below buttons!
 
-[![Patreon](https://www.ombi.io/img/patreondonate.svg)](https://patreon.com/tidusjar/Ombi) 
-[![Paypal](https://www.ombi.io/img/paypaldonate.svg)](https://paypal.me/PlexRequestsNet)
+
+[![Patreon](https://img.shields.io/badge/patreon-donate-yellow.svg)](https://patreon.com/tidusjar/Ombi)
+[![Paypal](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://paypal.me/PlexRequestsNet)
 
 ### A massive thanks to everyone for all their help!
 
-## Stats
-[![Throughput Graph](https://graphs.waffle.io/tidusjar/PlexRequests.Net/throughput.svg)](https://waffle.io/tidusjar/PlexRequests.Net/metrics/throughput)
 
 ### Sponsors ###
 - [JetBrains](http://www.jetbrains.com/) for providing us with free licenses to their great tools

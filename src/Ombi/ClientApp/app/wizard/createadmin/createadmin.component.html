@@ -1,5 +1,5 @@
 ﻿
-<img class="landing-header" src="/images/logo.png" width="300" />
+<img class="landing-header" src="{{baseUrl}}/images/logo.png" width="300" />
 <div class="landing-block shadow">
 <div class="media">
 <div id="contentBody" class="media-body">
@@ -19,7 +19,7 @@
 
 <div class="form-group">
     <div style="text-align: center; margin-top: 20px">
-        <button (click)="createUser()" type="submit" class="btn btn-success-outline">Finish</button>
+        <button (click)="createUser()" data-test="createuserbtn" type="submit" class="btn btn-success-outline">Finish</button>
     </div>
 </div>
 </div>

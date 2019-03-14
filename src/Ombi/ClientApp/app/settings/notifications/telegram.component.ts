@@ -40,7 +40,7 @@ export class TelegramComponent implements OnInit {
             return;
         }
 
-        const settings = <ITelegramNotifcationSettings>form.value;
+        const settings = <ITelegramNotifcationSettings> form.value;
         settings.notificationTemplates = this.templates;
 
         this.settingsService.saveTelegramNotificationSettings(settings).subscribe(x => {

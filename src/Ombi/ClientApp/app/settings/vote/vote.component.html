@@ -1,0 +1,50 @@
+﻿<settings-menu></settings-menu>
+<wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Vote-Settings'"></wiki>
+
+<fieldset>
+    <legend>Vote</legend>
+    <form *ngIf="form" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:5%;">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" id="enable" formControlName="enabled" ng-checked="form.enabled">
+                    <label for="enable">Enable</label>
+                </div>
+            </div>
+
+            <p>Vote limits tell Ombi how many votes the request needs before approval.</p>
+            <p>e.g. If the Movie vote limit is 10, it requires 10 Upvotes from 10 different users before it will be approved.</p>
+            <div class="form-group">
+                <label for="movieVoteMax" class="control-label">Movie Vote Limit</label>
+                <input type="number" class="form-control form-control-custom form-small" min="1" id="movieVoteMax" [ngClass]="{'form-error': form.get('movieVoteMax').hasError('min')}"
+                    formControlName="movieVoteMax" ng-checked="form.movieVoteMax">
+                    
+                    <small *ngIf="form.get('movieVoteMax').hasError('min')" class="error-text">The limit needs to be greater than or equal to 1</small>
+            </div>
+            <div class="form-group">
+                <label for="musicVoteMax" class="control-label">Music Vote Limit</label>
+                <input type="number" class="form-control form-control-custom form-small" min="1" id="musicVoteMax"  [ngClass]="{'form-error': form.get('movieVoteMax').hasError('min')}"
+                    formControlName="musicVoteMax" ng-checked="form.musicVoteMax">
+                    <small *ngIf="form.get('movieVoteMax').hasError('min')" class="error-text">The limit needs to be greater than or equal to 1</small>
+            </div>
+            <div class="form-group">
+                <label for="tvShowVoteMax" class="control-label">TV Show Vote Limit</label>
+                <input type="number" class="form-control form-control-custom form-small" min="1" id="tvShowVoteMax"  [ngClass]="{'form-error': form.get('movieVoteMax').hasError('min')}"
+                    formControlName="tvShowVoteMax" ng-checked="form.tvShowVoteMax">
+                    <small *ngIf="form.get('movieVoteMax').hasError('min')" class="error-text">The limit needs to be greater than or equal to 1</small>
+            </div>
+
+            <div class="form-group">
+                <div>
+                    <button type="submit" [disabled]="form.invalid" class="btn btn-primary-outline ">Submit</button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+
+
+
+
+</fieldset>

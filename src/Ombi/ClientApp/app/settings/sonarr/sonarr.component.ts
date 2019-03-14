@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
-import { ISonarrProfile, ISonarrRootFolder } from "../../interfaces";
+import { ILanguageProfiles, ISonarrProfile, ISonarrRootFolder } from "../../interfaces";
 
 import { ISonarrSettings } from "../../interfaces";
 import { SonarrService } from "../../services";
@@ -18,10 +18,13 @@ export class SonarrComponent implements OnInit {
     public qualitiesAnime: ISonarrProfile[];
     public rootFolders: ISonarrRootFolder[];
     public rootFoldersAnime: ISonarrRootFolder[];
+    public languageProfiles: ILanguageProfiles[];
     public selectedRootFolder: ISonarrRootFolder;
     public selectedQuality: ISonarrProfile;
+    public selectedLanguageProfiles: ILanguageProfiles;
     public profilesRunning: boolean;
     public rootFoldersRunning: boolean;
+    public langRunning: boolean;
     public form: FormGroup;
     public advanced = false;
 
@@ -47,6 +50,8 @@ export class SonarrComponent implements OnInit {
                     port: [x.port, [Validators.required]],
                     addOnly: [x.addOnly],
                     seasonFolders: [x.seasonFolders],
+                    v3: [x.v3],
+                    languageProfile: [x.languageProfile],
                 });
 
                 if (x.qualityProfile) {
@@ -55,11 +60,19 @@ export class SonarrComponent implements OnInit {
                 if (x.rootPath) {
                     this.getRootFolders(this.form);
                 }
+                if(x.languageProfile) {
+                    this.getLanguageProfiles(this.form);
+                }
+                if(x.v3) {
+                    this.form.controls.languageProfile.setValidators([Validators.required]);
+                }
             });
         this.rootFolders = [];
         this.qualities = [];
+        this.languageProfiles = [];
         this.rootFolders.push({ path: "Please Select", id: -1 });
         this.qualities.push({ name: "Please Select", id: -1 });
+        this.languageProfiles.push({ name: "Please Select", id: -1 });
     }
 
     public getProfiles(form: FormGroup) {
@@ -88,12 +101,24 @@ export class SonarrComponent implements OnInit {
             });
     }
 
+    public getLanguageProfiles(form: FormGroup) {
+        this.langRunning = true;
+        this.sonarrService.getV3LanguageProfiles(form.value)
+            .subscribe(x => {
+                this.languageProfiles = x;
+                this.languageProfiles.unshift({ name: "Please Select", id: -1 });
+
+                this.langRunning = false;
+                this.notificationService.success("Successfully retrieved the Languge Profiles");
+            });
+    }
+
     public test(form: FormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
             return;
         }
-        const settings = <ISonarrSettings>form.value;
+        const settings = <ISonarrSettings> form.value;
         this.testerService.sonarrTest(settings).subscribe(x => {
             if (x) {
                 this.notificationService.success("Successfully connected to Sonarr!");
@@ -108,13 +133,13 @@ export class SonarrComponent implements OnInit {
             this.notificationService.error("Please check your entered values");
             return;
         }
-        if(form.controls.defaultQualityProfile) {
-            if(form.controls.defaultQualityProfile.value === "-1") {
+        if (form.controls.defaultQualityProfile) {
+            if (form.controls.defaultQualityProfile.value === "-1") {
                 this.notificationService.error("Please check your entered values");
             }
         }
-        if(form.controls.defaultRootPath) {
-            if(form.controls.defaultRootPath.value === "Please Select") {
+        if (form.controls.defaultRootPath) {
+            if (form.controls.defaultRootPath.value === "Please Select") {
                 this.notificationService.error("Please check your entered values");
             }
         }

@@ -11,7 +11,8 @@ namespace Ombi.Controllers
     [ApiV1]
     [Produces("application/json")]
     [AllowAnonymous]
-    public class UpdateController : Controller
+    [ApiController]
+    public class UpdateController : ControllerBase
     {
         public UpdateController(ICacheService cache, IChangeLogProcessor processor)
         {

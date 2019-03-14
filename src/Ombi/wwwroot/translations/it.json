@@ -12,6 +12,8 @@
   "Common": {
     "ContinueButton": "Continua",
     "Available": "Disponibile",
+    "PartiallyAvailable": "Partially Available",
+    "Monitored": "Monitored",
     "NotAvailable": "Not Available",
     "ProcessingRequest": "Richiesta in elaborazione",
     "PendingApproval": "In attesa di approvazione",
@@ -46,6 +48,7 @@
     "Requests": "Richieste",
     "UserManagement": "Gestione degli utenti",
     "Issues": "Problemi",
+    "Vote": "Vote",
     "Donate": "Fai una donazione!",
     "DonateLibraryMaintainer": "Dona al manutentore della libreria",
     "DonateTooltip": "Questo è come convinco mia moglie a farmi spendere il mio tempo libero nello sviluppo di Ombi ;)",
@@ -54,23 +57,15 @@
     "Welcome": "Benvenuto {{username}}",
     "UpdateDetails": "Aggiorna i tuoi dati",
     "Logout": "Logout",
-    "Language": {
-      "English": "Inglese",
-      "French": "Francese",
-      "Spanish": "Spagnolo",
-      "German": "Tedesco",
-      "Italian": "Italiano",
-      "Danish": "Danese",
-      "Dutch": "Olandese",
-      "Norwegian": "Norvegese"
-    },
-    "OpenMobileApp": "Apri l'applicazione mobile"
+    "OpenMobileApp": "Apri l'applicazione mobile",
+    "RecentlyAdded": "Recently Added"
   },
   "Search": {
     "Title": "Cerca",
     "Paragraph": "Vuoi vedere qualcosa che non è attualmente disponibile? Nessun problema, basta cercare qui sotto e richiederlo!",
     "MoviesTab": "Film",
     "TvTab": "Serie TV",
+    "MusicTab": "Music",
     "Suggestions": "Suggerimenti",
     "NoResults": "Ci dispiace, non abbiamo trovato alcun risultato!",
     "DigitalDate": "Digital Release: {{date}}",
@@ -79,6 +74,7 @@
     "ViewOnEmby": "Guarda su Emby",
     "RequestAdded": "La richiesta per {{title}} è stata aggiunta correttamente",
     "Similar": "Similar",
+    "Refine": "Refine",
     "Movies": {
       "PopularMovies": "Film popolari",
       "UpcomingMovies": "Film in arrivo",
@@ -108,11 +104,14 @@
     "Paragraph": "Qui sotto puoi vedere le tue e tutte le altre richieste con il loro stato di download e approvazione.",
     "MoviesTab": "Film",
     "TvTab": "Serie TV",
+    "MusicTab": "Music",
     "RequestedBy": "Richiesta da:",
     "Status": "Stato:",
     "RequestStatus": "Stato della richiesta:",
     "Denied": " Rifiutato:",
     "TheatricalRelease": "Theatrical Release: {{date}}",
+    "ReleaseDate": "Released: {{date}}",
+    "TheatricalReleaseSort": "Theatrical Release",
     "DigitalRelease": "Digital Release: {{date}}",
     "RequestDate": "Data della richiesta:",
     "QualityOverride": "Sovrascrivi qualità:",
@@ -129,7 +128,21 @@
     "GridStatus": "Stato",
     "ReportIssue": "Report Issue",
     "Filter": "Filter",
-    "SeasonNumberHeading": "Season: {seasonNumber}"
+    "Sort": "Sort",
+    "SeasonNumberHeading": "Season: {seasonNumber}",
+    "SortTitleAsc": "Title ▲",
+    "SortTitleDesc": "Title ▼",
+    "SortRequestDateAsc": "Request Date ▲",
+    "SortRequestDateDesc": "Request Date ▼",
+    "SortStatusAsc": "Status ▲",
+    "SortStatusDesc": "Status ▼",
+    "Remaining": {
+      "Quota": "{{remaining}}/{{total}} requests remaining",
+      "NextDays": "Another request will be added in {{time}} days",
+      "NextHours": "Another request will be added in {{time}} hours",
+      "NextMinutes": "Another request will be added in {{time}} minutes",
+      "NextMinute": "Another request will be added in {{time}} minute"
+    }
   },
   "Issues": {
     "Title": "Problemi",
@@ -154,6 +167,19 @@
     "ClearFilter": "Clear Filter",
     "FilterHeaderAvailability": "Availability",
     "FilterHeaderRequestStatus": "Status",
-    "Approved": "Approved"
+    "Approved": "Approved",
+    "PendingApproval": "Pending Approval"
+  },
+  "UserManagment": {
+    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
+    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
+    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
+    "TvDue": "TV: {{date}}",
+    "MovieDue": "Movie: {{date}}",
+    "MusicDue": "Music: {{date}}"
+  },
+  "Votes": {
+    "CompletedVotesTab": "Voted",
+    "VotesTab": "Votes Needed"
   }
 }

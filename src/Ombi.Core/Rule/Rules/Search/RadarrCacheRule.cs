@@ -9,12 +9,12 @@ namespace Ombi.Core.Rule.Rules.Search
 {
     public class RadarrCacheRule : BaseSearchRule, IRules<SearchViewModel>
     {
-        public RadarrCacheRule(IRepository<RadarrCache> db)
+        public RadarrCacheRule(IExternalRepository<RadarrCache> db)
         {
             _db = db;
         }
 
-        private readonly IRepository<RadarrCache> _db;
+        private readonly IExternalRepository<RadarrCache> _db;
 
         public Task<RuleResult> Execute(SearchViewModel obj)
         {

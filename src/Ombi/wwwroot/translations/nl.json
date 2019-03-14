@@ -12,6 +12,8 @@
   "Common": {
     "ContinueButton": "Doorgaan",
     "Available": "Beschikbaar",
+    "PartiallyAvailable": "Deels Beschikbaar",
+    "Monitored": "Onder toezicht",
     "NotAvailable": "Niet Beschikbaar",
     "ProcessingRequest": "Verzoek wordt verwerkt",
     "PendingApproval": "Wacht op goedkeuring",
@@ -23,7 +25,7 @@
     "Approve": "Accepteer",
     "PartlyAvailable": "Deels Beschikbaar",
     "Errors": {
-      "Validation": "Fout: Controleer de ingevulde waardes"
+      "Validation": "Controleer de ingevulde waardes"
     }
   },
   "PasswordReset": {
@@ -46,6 +48,7 @@
     "Requests": "Verzoeklijst",
     "UserManagement": "Gebruikersbeheer",
     "Issues": "Problemen",
+    "Vote": "Stem",
     "Donate": "Doneer!",
     "DonateLibraryMaintainer": "Doneren aan bibliotheek beheerder",
     "DonateTooltip": "Zo heb ik mijn vrouw overtuigd dat ik Ombi mag ontwikkelen ;)",
@@ -53,32 +56,25 @@
     "Settings": "Instellingen",
     "Welcome": "Welkom {{username}}",
     "UpdateDetails": "Update gegevens",
-    "Logout": "Logout",
-    "Language": {
-      "English": "Engels",
-      "French": "Frans",
-      "Spanish": "Spaans",
-      "German": "Duits",
-      "Italian": "Italiaans",
-      "Danish": "Deens",
-      "Dutch": "Nederlands",
-      "Norwegian": "Noors"
-    },
-    "OpenMobileApp": "Open Mobiele App"
+    "Logout": "Afmelden",
+    "OpenMobileApp": "Open Mobiele App",
+    "RecentlyAdded": "Onlangs Toegevoegd"
   },
   "Search": {
     "Title": "Zoeken",
     "Paragraph": "Wil je iets kijken dat momenteel niet beschikbaar is? Geen probleem, zoek het hieronder op en vraag het aan!",
     "MoviesTab": "Films",
     "TvTab": "TV Series",
+    "MusicTab": "Muziek",
     "Suggestions": "Suggesties",
     "NoResults": "Sorry, we hebben geen resultaten gevonden!",
-    "DigitalDate": "Digital Release: {{date}}",
-    "TheatricalRelease": "Theatrical Release: {{date}}",
+    "DigitalDate": "Digitale Uitgave: {{date}}",
+    "TheatricalRelease": "Bioscoop Uitgave: {{date}}",
     "ViewOnPlex": "Bekijk op Plex",
     "ViewOnEmby": "Bekijk op Emby",
     "RequestAdded": "Aanvraag voor {{title}} is succesvol toegevoegd",
-    "Similar": "Similar",
+    "Similar": "Vergelijkbaar",
+    "Refine": "Verfijn",
     "Movies": {
       "PopularMovies": "Populaire films",
       "UpcomingMovies": "Aankomende Films",
@@ -108,12 +104,15 @@
     "Paragraph": "Hieronder zie je jouw en alle andere verzoeken, evenals hun download en goedkeuring status.",
     "MoviesTab": "Films",
     "TvTab": "TV Series",
+    "MusicTab": "Muziek",
     "RequestedBy": "Verzocht Door:",
     "Status": "Status:",
     "RequestStatus": "Aanvraagstatus:",
     "Denied": " Geweigerd:",
-    "TheatricalRelease": "Theatrical Release: {{date}}",
-    "DigitalRelease": "Digital Release: {{date}}",
+    "TheatricalRelease": "Cinema Uitgave: {{date}}",
+    "ReleaseDate": "Uitgekomen: {{date}}",
+    "TheatricalReleaseSort": "Bioscoop Uitgave",
+    "DigitalRelease": "Digitale Uitgave: {{date}}",
     "RequestDate": "Aanvraag Datum:",
     "QualityOverride": "Kwaliteit overschrijven:",
     "RootFolderOverride": "Hoofdmap overschrijven:",
@@ -129,7 +128,21 @@
     "GridStatus": "Status",
     "ReportIssue": "Probleem Melden",
     "Filter": "Filter",
-    "SeasonNumberHeading": "Seizoen: {seasonNumber}"
+    "Sort": "Sorteer",
+    "SeasonNumberHeading": "Seizoen: {seasonNumber}",
+    "SortTitleAsc": "Titel ▲",
+    "SortTitleDesc": "Titel ▼",
+    "SortRequestDateAsc": "Aanvraag Datum ▲",
+    "SortRequestDateDesc": "Aanvraag Datum ▼",
+    "SortStatusAsc": "Status ▲",
+    "SortStatusDesc": "Status ▼",
+    "Remaining": {
+      "Quota": "{{remaining}}/{{total}} resterende aanvragen",
+      "NextDays": "Een ander verzoek zal worden toegevoegd in {{time}} Dagen",
+      "NextHours": "Een ander verzoek zal worden toegevoegd in {{time}} Uren",
+      "NextMinutes": "Een ander verzoek zal worden toegevoegd in {{time}} Minuten",
+      "NextMinute": "Een ander verzoek zal worden toegevoegd in {{time}} Minuut"
+    }
   },
   "Issues": {
     "Title": "Problemen",
@@ -154,6 +167,19 @@
     "ClearFilter": "Verwijder Filter",
     "FilterHeaderAvailability": "Beschikbaarheid",
     "FilterHeaderRequestStatus": "Status",
-    "Approved": "Goedgekeurd"
+    "Approved": "Goedgekeurd",
+    "PendingApproval": "In afwachting van goedkeuring"
+  },
+  "UserManagment": {
+    "TvRemaining": "Tv: {{remaining}}/{{total}} Resterend",
+    "MovieRemaining": "Tv: {{remaining}}/{{total}} Resterend",
+    "MusicRemaining": "Muziek: {{remaining}}/{{total}} Resterend",
+    "TvDue": "Tv: {{date}}",
+    "MovieDue": "Film: {{date}}",
+    "MusicDue": "Muziek: {{date}}"
+  },
+  "Votes": {
+    "CompletedVotesTab": "Gestemd",
+    "VotesTab": "Stemmen nodig"
   }
 }

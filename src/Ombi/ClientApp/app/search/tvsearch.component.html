@@ -5,7 +5,7 @@
         <div class="input-group-addon right-radius">
             <div class="btn-group">
                 <a href="#" class="btn btn-sm btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    {{ 'Search.Suggestions' | translate }} 
+                    {{ 'Search.Suggestions' | translate }}
                     <i class="fa fa-chevron-down"></i>
                 </a>
                 <ul class="dropdown-menu">
@@ -26,15 +26,13 @@
             <i id="tvSearchButton" class="fa fa-search"></i>
         </div>
     </div>
-    <br />
-    <br />
+
+    <remaining-requests [tv]="true" [quotaRefreshEvents]="tvRequested.asObservable()" #remainingTvShows></remaining-requests>
+
     <!-- Movie content -->
     <div id="actorMovieList">
     </div>
 
-
-    <br />
-    <br />
     <!-- TV content -->
     <div id="tvList">
 
@@ -42,129 +40,125 @@
             <i class='fa fa-film no-search-results-icon'></i>
             <div class='no-search-results-text'>{{ 'Search.NoResults' | translate }}</div>
         </div>
-        <p-treeTable [value]="tvResults">
-            <p-column>
-                <ng-template let-col let-node="rowData" pTemplate="header">
-                    {{ 'Search.TvShows.Results' | translate }}
-                </ng-template>
-                <ng-template let-col let-node="rowData" pTemplate="body">
-                    <!--This is the section that holds the parent level search results set-->
-                    <div *ngIf="!node.leaf">
-                        <div class="row" >
-                            
-                <div class="myBg backdrop" [style.background-image]="node?.data?.background"></div>
-                <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
-                            <div class="col-sm-2 small-padding">
+        <div *ngIf="tvResults" >
+          <div  *ngFor="let node of tvResults">
+                <!--This is the section that holds the parent level search results set-->
+                <div *ngIf="node">
+                    <div class="row">
 
-                                <img *ngIf="node?.data?.banner" class="img-responsive poster" width="150" [src]="node.data.banner" alt="poster">
+                        <div class="myBg backdrop" [style.background-image]="node?.background"></div>
+                        <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
+                        <div class="col-sm-2 small-padding">
 
-                            </div>
-                            <div class="col-sm-8 small-padding">
-                                <div>
+                            <img *ngIf="node.banner" class="img-responsive poster tv-poster" width="150" [src]="node.banner" alt="poster">
 
-                                    <a *ngIf="node.data.imdbId" href="{{node.data.imdbId}}" target="_blank">
-                                        <h4>{{node.data.title}} ({{node.data.firstAired | date: 'yyyy'}})</h4>
+                        </div>
+                        <div class="col-sm-8 small-padding">
+                            <div>
 
+                                <a *ngIf="node.imdbId" href="{{node.imdbId}}" target="_blank">
+                                    <h4>{{node.title}} ({{node.firstAired | amLocal | amDateFormat: 'YYYY'}})</h4>
+
+                                </a>
+                                <span class="tags">
+                                    <a *ngIf="node.homepage" id="homepageLabel" href="{{node.homepage}}" target="_blank">
+                                        <span class="label label-info">{{ 'Search.Movies.HomePage' | translate }}</span>
                                     </a>
-                                    <span class="tags">
-                                            <a *ngIf="node.data.homepage" id="homepageLabel" href="{{node.data.homepage}}" target="_blank"><span class="label label-info" >{{ 'Search.Movies.HomePage' | translate }}</span></a>
-  
-                                            <a *ngIf="node.data.trailer"  id="trailerLabel" href="{{node.data.trailer}}" target="_blank"><span class="label label-info">{{ 'Search.Movies.Trailer' | translate }}</span></a>
 
-                                    <span *ngIf="node.data.status" class="label label-primary" id="statusLabel" target="_blank">{{node.data.status}}</span>
+                                    <a *ngIf="node.trailer" id="trailerLabel" href="{{node.trailer}}" target="_blank">
+                                        <span class="label label-info">{{ 'Search.Movies.Trailer' | translate }}</span>
+                                    </a>
+
+                                    <span *ngIf="node.status" class="label label-primary" id="statusLabel" target="_blank">{{node.status}}</span>
 
 
-                                    <span *ngIf="node.data.firstAired" class="label label-info" target="_blank" id="airDateLabel">{{ 'Search.TvShows.AirDate' | translate }} {{node.data.firstAired | date: 'dd/MM/yyyy'}}</span>
+                                    <span *ngIf="node.firstAired" class="label label-info" target="_blank" id="airDateLabel">{{ 'Search.TvShows.AirDate' | translate }} {{node.firstAired | amLocal | amDateFormat: 'L'}}</span>
 
-                                    <span *ngIf="node.data.network" class="label label-info" id="networkLabel" target="_blank">{{node.data.network}}</span>
+                                    <span *ngIf="node.network" class="label label-info" id="networkLabel" target="_blank">{{node.network}}</span>
 
-                    
-                                        <span *ngIf="node.data.available" class="label label-success" id="availableLabel">{{ 'Common.Available' | translate }}</span>
-                                    
-                                        <span *ngIf="node.data.partlyAvailable" class="label label-warning" id="partiallyAvailableLabel">{{ 'Common.PartlyAvailable' | translate }}</span>
-                                   
 
-                                 
+                                    <span *ngIf="node.available" class="label label-success" id="availableLabel">{{ 'Common.Available' | translate }}</span>
+
+                                    <span *ngIf="node.partlyAvailable" class="label label-warning" id="partiallyAvailableLabel">{{ 'Common.PartlyAvailable' | translate }}</span>
+
+
+
                                 </span>
 
-                                    <br />
-                                    <br />
-                                </div>
-                                <p class="tv-overview">{{node.data.overview}}</p>
+                                <br />
+                                <br />
+                            </div>
+                            <p class="tv-overview">{{node.overview}}</p>
+                        </div>
+
+
+                        <div class="col-sm-2 small-padding">
+                            <div *ngIf="!node.fullyAvailable" class="dropdown">
+                                <button class="btn btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <i class="fa fa-plus"></i> {{ 'Common.Request' | translate }}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <li>
+                                        <a href="#" (click)="allSeasons(node, $event)">{{ 'Search.TvShows.AllSeasons' | translate }}</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" (click)="firstSeason(node, $event)">{{ 'Search.TvShows.FirstSeason' | translate }}</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" (click)="latestSeason(node, $event)">{{ 'Search.TvShows.LatestSeason' | translate }}</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" (click)="openClosestTab(node, $event)">{{ 'Search.TvShows.Select' | translate }}</a>
+                                    </li>
+                                </ul>
                             </div>
 
-
-                            <div class="col-sm-2 small-padding">
-                                <div *ngIf="!node.data.fullyAvailable" class="dropdown">
-                                    <button class="btn btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        <i class="fa fa-plus"></i> {{ 'Common.Request' | translate }}
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                        <li>
-                                            <a href="#" (click)="allSeasons(node.data, $event)">{{ 'Search.TvShows.AllSeasons' | translate }}</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" (click)="firstSeason(node.data, $event)">{{ 'Search.TvShows.FirstSeason' | translate }}</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" (click)="latestSeason(node.data, $event)">{{ 'Search.TvShows.LatestSeason' | translate }}</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" (click)="openClosestTab($event)">{{ 'Search.TvShows.Select' | translate }}</a>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div *ngIf="node.data.fullyAvailable">
-                                    <button style="text-align: right" class="btn btn-success-outline disabled" disabled>
-                                        <i class="fa fa-check"></i> {{ 'Common.Available' | translate }}
-                                    </button>
-                                </div>
+                            <div *ngIf="node.fullyAvailable">
+                                <button style="text-align: right" class="btn btn-success-outline disabled" disabled>
+                                    <i class="fa fa-check"></i> {{ 'Common.Available' | translate }}
+                                </button>
+                            </div>
+                            <br />
+                            <div *ngIf="node.plexUrl && node.available">
+                                <a style="text-align: right" class="btn btn-sm btn-success-outline" href="{{node.plexUrl}}" target="_blank">
+                                    <i class="fa fa-eye"></i> {{ 'Search.ViewOnPlex' | translate }}
+                                </a>
+                            </div>
+                            <div *ngIf="node.embyUrl && node.available">
+                                <a style="text-align: right" id="embybtn" class="btn btn-sm btn-success-outline" href="{{node.embyUrl}}" target="_blank">
+                                    <i class="fa fa-eye"></i> {{ 'Search.ViewOnEmby' | translate }}
+                                </a>
+                            </div>
+                            <div class="dropdown" *ngIf="issueCategories && issuesEnabled">
+                                <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="true">
+                                    <i class="fa fa-plus"></i> {{ 'Requests.ReportIssue' | translate }}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <li *ngFor="let cat of issueCategories">
+                                        <a [routerLink]="" (click)="reportIssue(cat, node)">{{cat.value}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div *ngIf="!node.available">
                                 <br />
-                                <div *ngIf="node.data.plexUrl && node.data.available">
-                                    <a style="text-align: right" class="btn btn-sm btn-success-outline" href="{{node.data.plexUrl}}"
-                                       target="_blank">
-                                        <i class="fa fa-eye"></i> {{ 'Search.ViewOnPlex' | translate }}
-                                    </a>
-                                </div>
-                                <div *ngIf="node.data.embyUrl && node.data.available">
-                                    <a style="text-align: right" id="embybtn" class="btn btn-sm btn-success-outline" href="{{node.data.embyUrl}}"
-                                       target="_blank">
-                                        <i class="fa fa-eye"></i> {{ 'Search.ViewOnEmby' | translate }}
-                                    </a>
-                                </div>
-                                <div class="dropdown" *ngIf="issueCategories && issuesEnabled">
-                                    <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="true">
-                                        <i class="fa fa-plus"></i> {{ 'Requests.ReportIssue' | translate }}
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                        <li *ngFor="let cat of issueCategories">
-                                            <a [routerLink]="" (click)="reportIssue(cat, node.data)">{{cat.value}}</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div *ngIf="!node.data.available">
-                                    <br />
-                                    <br />
-                                </div>
-
+                                <br />
                             </div>
 
                         </div>
-                    </div>
-                    <!--This is the section that holds the child seasons if they want to specify specific episodes-->
-                    <div *ngIf="node.leaf">
-                        <seriesinformation [seriesId]="node.data.id"></seriesinformation>
-                    </div>
 
-                    <br/>
-                    <br/>
-                </ng-template>
-            </p-column>
-        </p-treeTable>
+                    </div>
+                </div>
+                <!--This is the section that holds the child seasons if they want to specify specific episodes-->
+                <div *ngIf="node.open">
+                    <seriesinformation [seriesId]="node.id" [tvRequested]="tvRequested"></seriesinformation>
+                </div>
+
+                <br/>
+                <br/>
+            </div>
     </div>
 </div>
 

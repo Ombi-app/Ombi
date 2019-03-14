@@ -1,29 +1,37 @@
-﻿
-<img class="landing-header" src="/images/logo.png" width="300" />
+﻿<img class="landing-header" src="{{baseUrl}}/images/logo.png" width="300" />
 <div class="landing-block shadow">
-    <div class="media">
+    <div class="container">
         <div id="contentBody" class="media-body">
             <h4 class="media-heading landing-title wizard-heading" id="statusTitle">Please choose your media server</h4>
-            <div class="form-group">
-                <div class="row">
-                    <a (click)="emby()" id="embyImg">
-                        <img class="wizard-img" src="/images/emby-logo-dark.png" />
-                    </a>
+            <div class="form-group small-top-spacing">
+                <div class="col-md-6">
+                    <div class="row">
+                        <a routerLink="/Wizard/Emby" id="embyImg">
+                            <img class="wizard-img" src="{{baseUrl}}/images/emby-logo-dark.png" />
+                        </a>
+                    </div>
                 </div>
-                <div class="row">
-                    <a (click)="plex()" id="plexImg">
-                        <img class="wizard-img" src="/images/plex-logo-reversed.png" />
-                    </a>
+                <div class="col-md-6">
+                    <div class="row">
+                        <a routerLink="/Wizard/Plex" id="plexImg">
+                            <img class="wizard-img" src="{{baseUrl}}/images/plex-logo-reversed.png" />
+                        </a>
+                    </div>
                 </div>
-                <div class="row">
-                    <button (click)="skip()" class="btn btn-primary-outline wizard-img" id="plexImg">
-                        Skip
-                    </button>
+                <div class="col-md-12 top-spacing">
+                    <div class="row">
+                        <div class="text-center">If you do not yet want to setup a media server you can use the
+                            skip below. You can later setup your media servers via the settings.</div>
+                        <div class="row">
+                            <button routerLink="/Wizard/CreateAdmin" data-test="skipbtn" class="btn btn-primary-outline wizard-img"
+                                id="plexImg">
+                                Skip
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
             </div>
         </div>
-        </div>
+    </div>
 </div>
-
-

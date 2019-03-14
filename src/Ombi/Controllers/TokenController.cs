@@ -10,33 +10,31 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Ombi.Api;
 using Ombi.Core.Authentication;
 using Ombi.Helpers;
 using Ombi.Models;
+using Ombi.Models.External;
 using Ombi.Models.Identity;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
-using StackExchange.Profiling.Helpers;
 
 namespace Ombi.Controllers
 {
     [ApiV1]
     [Produces("application/json")]
-    public class TokenController : Controller
+    [ApiController]
+    public class TokenController : ControllerBase
     {
-        public TokenController(OmbiUserManager um, IOptions<TokenAuthentication> ta, IAuditRepository audit, ITokenRepository token,
+        public TokenController(OmbiUserManager um, IOptions<TokenAuthentication> ta, ITokenRepository token,
             IPlexOAuthManager oAuthManager)
         {
             _userManager = um;
             _tokenAuthenticationOptions = ta.Value;
-            _audit = audit;
             _token = token;
             _plexOAuthManager = oAuthManager;
         }
 
         private readonly TokenAuthentication _tokenAuthenticationOptions;
-        private readonly IAuditRepository _audit;
         private readonly ITokenRepository _token;
         private readonly OmbiUserManager _userManager;
         private readonly IPlexOAuthManager _plexOAuthManager;
@@ -47,13 +45,11 @@ namespace Ombi.Controllers
         /// <param name="model">The model.</param>
         /// <returns></returns>
         [HttpPost]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> GetToken([FromBody] UserAuthModel model)
         {
             if (!model.UsePlexOAuth)
             {
-                await _audit.Record(AuditType.None, AuditArea.Authentication,
-                $"UserName {model.Username} attempting to authenticate");
-
                 var user = await _userManager.FindByNameAsync(model.Username);
 
                 if (user == null)
@@ -80,12 +76,10 @@ namespace Ombi.Controllers
             {
                 // Plex OAuth
                 // Redirect them to Plex
-                // We need a PIN first
-                var pin = await _plexOAuthManager.RequestPin();
 
                 var websiteAddress = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
                 //https://app.plex.tv/auth#?forwardUrl=http://google.com/&clientID=Ombi-Test&context%5Bdevice%5D%5Bproduct%5D=Ombi%20SSO&pinID=798798&code=4lgfd
-                var url = await _plexOAuthManager.GetOAuthUrl(pin.id, pin.code, websiteAddress);
+                var url = await _plexOAuthManager.GetOAuthUrl(model.PlexTvPin.code, websiteAddress);
                 if (url == null)
                 {
                     return new JsonResult(new
@@ -93,11 +87,32 @@ namespace Ombi.Controllers
                         error = "Application URL has not been set"
                     });
                 }
-                return new JsonResult(new { url = url.ToString() });
+                return new JsonResult(new { url = url.ToString(), pinId = model.PlexTvPin.id });
             }
 
             return new UnauthorizedResult();
         }
+
+        /// <summary>
+        /// Returns the Token for the Ombi User if we can match the Plex user with a valid Ombi User
+        /// </summary>
+        [HttpPost("plextoken")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetTokenWithPlexToken([FromBody] PlexTokenAuthentication model)
+        {
+            if (!model.PlexToken.HasValue())
+            {
+                return BadRequest("Token was not provided");
+            }
+            var user = await _userManager.GetOmbiUserFromPlexToken(model.PlexToken);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+            return await CreateToken(true, user);
+        }
+
 
         private async Task<IActionResult> CreateToken(bool rememberMe, OmbiUser user)
         {
@@ -107,9 +122,6 @@ namespace Ombi.Controllers
             {
                 return new UnauthorizedResult();
             }
-
-            user.LastLoggedIn = DateTime.UtcNow;
-            await _userManager.UpdateAsync(user);
 
             var claims = new List<Claim>
             {
@@ -137,6 +149,9 @@ namespace Ombi.Controllers
                 //await _token.CreateToken(new Tokens() {Token = accessToken, User = user});
             }
 
+            user.LastLoggedIn = DateTime.UtcNow;
+            await GlobalMutex.Lock(async () => await _userManager.UpdateAsync(user)).ConfigureAwait(false);
+
             return new JsonResult(new
             {
                 access_token = accessToken,
@@ -145,6 +160,7 @@ namespace Ombi.Controllers
         }
 
         [HttpGet("{pinId:int}")]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> OAuth(int pinId)
         {
             var accessToken = await _plexOAuthManager.GetAccessTokenFromPin(pinId);
@@ -185,6 +201,7 @@ namespace Ombi.Controllers
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         [HttpPost("refresh")]
+        [ProducesResponseType(401)]
         public IActionResult RefreshToken([FromBody] TokenRefresh token)
         {
 

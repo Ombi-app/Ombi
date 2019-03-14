@@ -34,6 +34,14 @@
                             <i class="fa fa-th-list"></i> {{ 'NavigationBar.Requests' | translate }}</a>
                     </li>
                 </ul>
+                <div *ngIf="customizationSettings && customizationSettings.useCustomPage && customPageSettings">
+                        <ul class="nav navbar-nav">
+                            <li id="RecentlyAdded" [routerLinkActive]="['active']">
+                                <a [routerLink]="['/Custom']">
+                                    <i class="fa {{customPageSettings.fontAwesomeIcon}}"></i> {{customPageSettings.title}}</a>
+                            </li>
+                        </ul>
+                    </div>
                 <div *ngIf="customizationSettings">
                     <ul *ngIf="customizationSettings.recentlyAddedPage" class="nav navbar-nav">
                         <li id="RecentlyAdded" [routerLinkActive]="['active']">
@@ -52,6 +60,12 @@
                     <li id="UserManagement" [routerLinkActive]="['active']">
                         <a [routerLink]="['/usermanagement']">
                             <i class="fa fa-user"></i> {{ 'NavigationBar.UserManagement' | translate }}</a>
+                    </li>
+                </ul>
+                <ul *ngIf="voteEnabled" class="nav navbar-nav">
+                    <li id="Vote" [routerLinkActive]="['active']">
+                        <a [routerLink]="['/vote']">
+                            <i class="fa fa-thumbs-o-up"></i> {{ 'NavigationBar.Vote' | translate }}</a>
                     </li>
                 </ul>
                 
@@ -88,13 +102,13 @@
                         </a>
                     </li>
                     <li [routerLinkActive]="['active']" class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <a href="#" id="userDropdown" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             <i class="fa fa-user"></i>{{ 'NavigationBar.Welcome' | translate: {username: user.name} }}
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li [routerLinkActive]="['active']">
-                                <a [routerLink]="['/usermanagement/updatedetails']">
+                                <a id="updateUserDetails" [routerLink]="['/usermanagement/updatedetails']">
                                     <i class="fa fa-key"></i>{{ 'NavigationBar.UpdateDetails' | translate }}</a>
                             </li>
                             <li [routerLinkActive]="['active']">
@@ -111,28 +125,37 @@
                         </a>
                         <ul class="dropdown-menu" role="menu">
                             <li [ngClass]="{'active': 'en' === translate.currentLang}">
-                                <a (click)="translate.use('en')" [translate]="'NavigationBar.Language.English'"></a>
+                                <a (click)="translate.use('en')">English</a>
                             </li>
                             <li [ngClass]="{'active': 'fr' === translate.currentLang}">
-                                <a (click)="translate.use('fr')" [translate]="'NavigationBar.Language.French'"></a>
+                                <a (click)="translate.use('fr')">Français</a>
                             </li>
                             <li [ngClass]="{'active': 'da' === translate.currentLang}">
-                                <a (click)="translate.use('da')" [translate]="'NavigationBar.Language.Danish'"></a>
+                                <a (click)="translate.use('da')">Dansk</a>
                             </li>
                             <li [ngClass]="{'active': 'de' === translate.currentLang}">
-                                <a (click)="translate.use('de')" [translate]="'NavigationBar.Language.German'"></a>
+                                <a (click)="translate.use('de')">Deutsch</a>
                             </li>
                             <li [ngClass]="{'active': 'it' === translate.currentLang}">
-                                <a (click)="translate.use('it')" [translate]="'NavigationBar.Language.Italian'"></a>
+                                <a (click)="translate.use('it')">Italiano</a>
                             </li>
                             <li [ngClass]="{'active': 'es' === translate.currentLang}">
-                                <a (click)="translate.use('es')" [translate]="'NavigationBar.Language.Spanish'"></a>
+                                <a (click)="translate.use('es')">Español</a>
                             </li>
                             <li [ngClass]="{'active': 'nl' === translate.currentLang}">
-                                <a (click)="translate.use('nl')" [translate]="'NavigationBar.Language.Dutch'"></a>
+                                <a (click)="translate.use('nl')">Nederlands</a>
                             </li>
                             <li [ngClass]="{'active': 'no' === translate.currentLang}">
-                                <a (click)="translate.use('no')" [translate]="'NavigationBar.Language.Norwegian'"></a>
+                                <a (click)="translate.use('no')">Norsk</a>
+                            </li>
+                            <li [ngClass]="{'active': 'pt' === translate.currentLang}">
+                                <a (click)="translate.use('pt')">Português (Brasil)</a>
+                            </li>
+                            <li [ngClass]="{'active': 'pl' === translate.currentLang}">
+                                <a (click)="translate.use('pl')">Polski</a>
+                            </li>
+                            <li [ngClass]="{'active': 'sv' === translate.currentLang}">
+                                <a (click)="translate.use('sv')">Svenska</a>
                             </li>
                         </ul>
                     </li>

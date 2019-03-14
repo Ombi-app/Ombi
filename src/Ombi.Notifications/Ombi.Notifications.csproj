@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Ensure.That" Version="7.0.0-pre32" />
-    <PackageReference Include="MailKit" Version="2.0.4" />
+    <PackageReference Include="MailKit" Version="2.0.5" />
   </ItemGroup>
 
   <ItemGroup>

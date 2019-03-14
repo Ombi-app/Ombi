@@ -29,7 +29,10 @@ namespace Ombi.Core.Tests.Rule.Search
             {
                 ProviderId = "123"
             });
-            var search = new SearchMovieViewModel();
+            var search = new SearchMovieViewModel()
+            {
+                TheMovieDbId = "123",
+            };
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);

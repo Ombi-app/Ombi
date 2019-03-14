@@ -1,4 +1,5 @@
 ﻿@using Ombi.Core.Settings
+@using Ombi.Helpers
 @using Ombi.Settings.Settings.Models
 @inject ISettingsService<OmbiSettings> Settings
 @inject ISettingsService<CustomizationSettings> CustomizationSettings
@@ -60,19 +61,19 @@
          -->
          
     @*<!-- Start SmartBanner configuration -->
-  <meta name="smartbanner:title" content="Smart Application">
-  <meta name="smartbanner:author" content="SmartBanner Contributors">
-  <meta name="smartbanner:price" content=" ">
-  <meta name="smartbanner:price-suffix-apple" content=" On the App Store">
-  <meta name="smartbanner:price-suffix-google" content=" In Google Play">
-  <meta name="smartbanner:icon-apple" content="http://a3.mzstatic.com/us/r30/Purple60/v4/c1/3b/b0/c13bb085-64c0-cc90-f97a-521b96963986/icon350x350.jpeg">
-  <meta name="smartbanner:icon-google" content="http://lh3.ggpht.com/f4oX61ljZ6x8aYDELZOgxlvdUEu73-wSQ4fy5bx6fCRISnZP8T353wdaM43RO_DbGg=w300">
-  <meta name="smartbanner:button" content="View">
-  <meta name="smartbanner:button-url-apple" content="https://itunes.apple.com/us/genre/ios/id36?mt=8">
-  <meta name="smartbanner:button-url-google" content="https://play.google.com/store">
-  <meta name="smartbanner:enabled-platforms" content="android,ios">e.com/store/apps/details?id=com.tidusjar.Ombi">
-<meta name="smartbanner:enabled-platforms" content="android,ios">
-<!-- End SmartBanner configuration -->*@
+          <meta name="smartbanner:title" content="Smart Application">
+          <meta name="smartbanner:author" content="SmartBanner Contributors">
+          <meta name="smartbanner:price" content=" ">
+          <meta name="smartbanner:price-suffix-apple" content=" On the App Store">
+          <meta name="smartbanner:price-suffix-google" content=" In Google Play">
+          <meta name="smartbanner:icon-apple" content="http://a3.mzstatic.com/us/r30/Purple60/v4/c1/3b/b0/c13bb085-64c0-cc90-f97a-521b96963986/icon350x350.jpeg">
+          <meta name="smartbanner:icon-google" content="http://lh3.ggpht.com/f4oX61ljZ6x8aYDELZOgxlvdUEu73-wSQ4fy5bx6fCRISnZP8T353wdaM43RO_DbGg=w300">
+          <meta name="smartbanner:button" content="View">
+          <meta name="smartbanner:button-url-apple" content="https://itunes.apple.com/us/genre/ios/id36?mt=8">
+          <meta name="smartbanner:button-url-google" content="https://play.google.com/store">
+          <meta name="smartbanner:enabled-platforms" content="android,ios">e.com/store/apps/details?id=com.tidusjar.Ombi">
+        <meta name="smartbanner:enabled-platforms" content="android,ios">
+        <!-- End SmartBanner configuration -->*@
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="Ombi, media request tool">
@@ -92,39 +93,36 @@
     <meta name="theme-color" content="#df691a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
+    
+    @if (s?.CollectAnalyticData ?? true)
+    {
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89270627-3"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
 
+            gtag('config', 'UA-89270627-3');
+        </script>
+    }
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <link rel="stylesheet" href="~/loading.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/dist/vendor.css" asp-append-version="true" />
-    <script src="~/dist/vendor.js" asp-append-version="true" defer></script>
-    <script src="~/dist/main.js" asp-append-version="true" defer></script>
+    <environment include="Development">
+        <script src="~/dist/vendor.js" asp-append-version="true" defer></script>
+    </environment>
+    <script src="~/dist/app.js" asp-append-version="true" defer></script>
 </head>
 <body>
     @{
-        if (customization.HasPresetTheme)
+        if (customization.CustomCss.HasValue())
         {
-            if (!string.IsNullOrEmpty(baseUrl))
-            {
-                if (!customization.PresetThemeContent.Contains("/" + baseUrl))
-                {
-                    var index = customization.PresetThemeContent.IndexOf("/api/");
-                    if (index > 0)
-                    {
-                        customization.PresetThemeContent = customization.PresetThemeContent.Insert(index, "/" + baseUrl);
-                    }
-                }
-            }
-
-            <style>
-                @Html.Raw(customization.PresetThemeContent)
+           <style>
+                @Html.Raw(customization.CustomCss)
             </style>
-        }
-
-        if (!string.IsNullOrEmpty(customization.CustomCssLink))
-        {
-            <link rel="stylesheet" href="@customization.CustomCssLink" asp-append-version="true" />
         }
     }
 

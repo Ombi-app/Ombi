@@ -37,18 +37,9 @@ namespace Ombi.Controllers
     [Admin]
     [ApiV1]
     [Produces("application/json")]
-    public class SettingsController : Controller
+    [ApiController]
+    public class SettingsController : ControllerBase
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SettingsController" /> class.
-        /// </summary>
-        /// <param name="resolver">The resolver.</param>
-        /// <param name="mapper">The mapper.</param>
-        /// <param name="templateRepo">The templateRepo.</param>
-        /// <param name="embyApi">The embyApi.</param>
-        /// <param name="radarrSync">The radarrCacher.</param>
-        /// <param name="memCache">The memory cache.</param>
-        /// <param name="githubApi">The memory cache.</param>
         public SettingsController(ISettingsResolver resolver,
             IMapper mapper,
             INotificationTemplatesRepository templateRepo,
@@ -137,8 +128,21 @@ namespace Ombi.Controllers
         public async Task<PlexSettings> PlexSettings()
         {
             var s = await Get<PlexSettings>();
-
             return s;
+        }
+
+        [HttpGet("clientid")]
+        [AllowAnonymous]
+        public async Task<string> GetClientId()
+        {
+            var s = await Get<PlexSettings>();
+            if (s.InstallId == Guid.Empty)
+            {
+                s.InstallId = Guid.NewGuid();
+                // Save it
+                await PlexSettings(s);
+            }
+            return s.InstallId.ToString("N");
         }
 
         /// <summary>
@@ -149,6 +153,10 @@ namespace Ombi.Controllers
         [HttpPost("plex")]
         public async Task<bool> PlexSettings([FromBody]PlexSettings plex)
         {
+            if (plex.InstallId == null || plex.InstallId == Guid.Empty)
+            {
+                plex.InstallId = Guid.NewGuid();
+            }
             var result = await Save(plex);
             return result;
         }
@@ -217,6 +225,19 @@ namespace Ombi.Controllers
             return await Get<CustomizationSettings>();
         }
 
+
+        /// <summary>
+        /// Gets the default language set in Ombi
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("defaultlanguage")]
+        [AllowAnonymous]
+        public async Task<string> GetDefaultLanguage()
+        {
+           var s = await Get<OmbiSettings>();
+           return s.DefaultLanguageCode;
+        }
+
         /// <summary>
         /// Save the Customization settings.
         /// </summary>
@@ -226,6 +247,13 @@ namespace Ombi.Controllers
         public async Task<bool> CustomizationSettings([FromBody]CustomizationSettings settings)
         {
             return await Save(settings);
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpPost("customization/urlverify")]
+        public bool VerifyUrl([FromBody]UrlVerifyModel url)
+        {
+            return Uri.TryCreate(url.Url, UriKind.Absolute, out var __);
         }
 
         /// <summary>
@@ -261,19 +289,6 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
-        /// Gets the content of the theme available
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        [HttpGet("themecontent")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetThemeContent([FromQuery]string url)
-        {
-            var css = await _githubApi.GetThemesRawContent(url);
-            return Content(css, "text/css");
-        }
-
-        /// <summary>
         /// Gets the Sonarr Settings.
         /// </summary>
         /// <returns></returns>
@@ -302,6 +317,39 @@ namespace Ombi.Controllers
         public async Task<RadarrSettings> RadarrSettings()
         {
             return await Get<RadarrSettings>();
+        }
+
+        /// <summary>
+        /// Gets the Lidarr Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("lidarr")]
+        public async Task<LidarrSettings> LidarrSettings()
+        {
+            return await Get<LidarrSettings>();
+        }
+
+        /// <summary>
+        /// Gets the Lidarr Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("lidarrenabled")]
+        [AllowAnonymous]
+        public async Task<bool> LidarrEnabled()
+        {
+            var settings = await Get<LidarrSettings>();
+            return settings.Enabled;
+        }
+
+        /// <summary>
+        /// Save the Lidarr settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("lidarr")]
+        public async Task<bool> LidarrSettings([FromBody]LidarrSettings settings)
+        {
+            return await Save(settings);
         }
 
         /// <summary>
@@ -471,7 +519,11 @@ namespace Ombi.Controllers
             j.RefreshMetadata = j.RefreshMetadata.HasValue() ? j.RefreshMetadata : JobSettingsHelper.RefreshMetadata(j);
             j.PlexRecentlyAddedSync = j.PlexRecentlyAddedSync.HasValue() ? j.PlexRecentlyAddedSync : JobSettingsHelper.PlexRecentlyAdded(j);
             j.Newsletter = j.Newsletter.HasValue() ? j.Newsletter : JobSettingsHelper.Newsletter(j);
- 
+            j.LidarrArtistSync = j.LidarrArtistSync.HasValue() ? j.LidarrArtistSync : JobSettingsHelper.LidarrArtistSync(j);
+            j.IssuesPurge = j.IssuesPurge.HasValue() ? j.IssuesPurge : JobSettingsHelper.IssuePurge(j);
+            j.RetryRequests = j.RetryRequests.HasValue() ? j.RetryRequests : JobSettingsHelper.ResendFailedRequests(j);
+            j.MediaDatabaseRefresh = j.MediaDatabaseRefresh.HasValue() ? j.MediaDatabaseRefresh : JobSettingsHelper.MediaDatabaseRefresh(j);
+
             return j;
         }
 
@@ -550,12 +602,11 @@ namespace Ombi.Controllers
 
 
         /// <summary>
-        /// Save the Issues settings.
+        /// Save the Vote settings.
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("Issues")]
-        [AllowAnonymous]
         public async Task<bool> IssueSettings([FromBody]IssueSettings settings)
         {
             return await Save(settings);
@@ -578,6 +629,35 @@ namespace Ombi.Controllers
         {
             var issues = await Get<IssueSettings>();
             return issues.Enabled;
+        }
+
+        /// <summary>
+        /// Save the Vote settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("vote")]
+        public async Task<bool> VoteSettings([FromBody]VoteSettings settings)
+        {
+            return await Save(settings);
+        }
+
+        /// <summary>
+        /// Gets the Vote Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("vote")]
+        public async Task<VoteSettings> VoteSettings()
+        {
+            return await Get<VoteSettings>();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("voteenabled")]
+        public async Task<bool> VoteEnabled()
+        {
+            var vote = await Get<VoteSettings>();
+            return vote.Enabled;
         }
 
         /// <summary>

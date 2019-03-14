@@ -14,3 +14,6 @@ export * from "./issues.service";
 export * from "./mobile.service";
 export * from "./notificationMessage.service";
 export * from "./recentlyAdded.service";
+export * from "./vote.service";
+export * from "./requestretry.service";
+export * from "./custompage.service";

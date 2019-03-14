@@ -12,6 +12,7 @@
             <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Issues']">Issues</a></li>
             <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/UserManagement']">User Importer</a></li>
             <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Authentication']">Authentication</a></li>
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Vote']">Vote</a></li>
         </ul>
     </li>
 
@@ -48,6 +49,15 @@
         </ul>
     </li>
 
+    <li class="dropdown" [routerLinkActive]="['active']">
+        <a href="ignore($event)" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-music" aria-hidden="true"></i> Music <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Lidarr']">Lidarr</a></li>
+        </ul>
+    </li>
+
 
     <li class="dropdown" [routerLinkActive]="['active']">
         <a href="ignore($event)" class="dropdown-toggle" data-toggle="dropdown">
@@ -74,6 +84,7 @@
         </a>
         <ul class="dropdown-menu">
             <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/About']">About</a></li>
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/FailedRequests']">Failed Requests</a></li>
             <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Update']">Update</a></li>
             <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Jobs']">Jobs</a></li>
             <!-- <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Logs']">Logs (Not available)</a></li>

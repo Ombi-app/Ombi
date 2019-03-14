@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using MimeKit;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
-using Ombi.Notifications.Interfaces;
 using Ombi.Notifications.Models;
 using Ombi.Notifications.Templates;
 using Ombi.Settings.Settings.Models;
@@ -22,7 +21,8 @@ namespace Ombi.Notifications.Agents
     public class EmailNotification : BaseNotification<EmailNotificationSettings>, IEmailNotification
     {
         public EmailNotification(ISettingsService<EmailNotificationSettings> settings, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t, IEmailProvider prov, ISettingsService<CustomizationSettings> c,
-            ILogger<EmailNotification> log, UserManager<OmbiUser> um, IRepository<RequestSubscription> sub) : base(settings, r, m, t, c, log, sub)
+            ILogger<EmailNotification> log, UserManager<OmbiUser> um, IRepository<RequestSubscription> sub, IMusicRequestRepository music,
+            IRepository<UserNotificationPreferences> userPref) : base(settings, r, m, t, c, log, sub, music, userPref)
         {
             EmailProvider = prov;
             Logger = log;
@@ -89,7 +89,6 @@ namespace Ombi.Notifications.Agents
             }
             else
             {
-
                 // Send to admin
                 message.To = settings.AdminEmail;
             }
@@ -183,37 +182,21 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task AddedToRequestQueue(NotificationOptions model, EmailNotificationSettings settings)
         {
-            var email = new EmailBasicTemplate();
-            var user = string.Empty;
-            var title = string.Empty;
-            var img = string.Empty;
-            if (model.RequestType == RequestType.Movie)
+            if (!model.Recipient.HasValue())
             {
-                user = MovieRequest.RequestedUser.UserAlias;
-                title = MovieRequest.Title;
-                img = $"https://image.tmdb.org/t/p/w300/{MovieRequest.PosterPath}";
+                return;
             }
-            else
+            var message = await LoadTemplate(NotificationType.ItemAddedToFaultQueue, model, settings);
+            if (message == null)
             {
-                user = TvRequest.RequestedUser.UserAlias;
-                title = TvRequest.ParentRequest.Title;
-                img = TvRequest.ParentRequest.PosterPath;
+                return;
             }
 
-            var html = email.LoadTemplate(
-                $"{Customization.ApplicationName}: A request could not be added.",
-                $"Hello! The user '{user}' has requested {title} but it could not be added. This has been added into the requests queue and will keep retrying", img, Customization.Logo);
-
-            var message = new NotificationMessage
-            {
-                Message = html,
-                Subject = $"{Customization.ApplicationName}: A request could not be added",
-                To = settings.AdminEmail,
-            };
-
-            var plaintext = $"Hello! The user '{user}' has requested {title} but it could not be added. This has been added into the requests queue and will keep retrying";
+            var plaintext = await LoadPlainTextMessage(NotificationType.ItemAddedToFaultQueue, model, settings);
             message.Other.Add("PlainTextBody", plaintext);
 
+            // Issues resolved should be sent to the user
+            message.To = settings.AdminEmail;
             await Send(message, settings);
         }
 

@@ -27,12 +27,15 @@
 
 using System;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Ombi.Helpers
 {
     public class PlexHelper
     {
-       
+        private  const string ImdbMatchExpression = "tt([0-9]{1,10})";
+        private  const string TvDbIdMatchExpression = "//[0-9]+/([0-9]{1,3})/([0-9]{1,3})";
+
         public static ProviderId GetProviderIdFromPlexGuid(string guid)
         {
             //com.plexapp.agents.thetvdb://269586/2/8?lang=en
@@ -52,7 +55,7 @@ namespace Ombi.Helpers
                     {
                         TheTvDb = guidSplit[1]
                     };
-                }
+                } else
                 if (guid.Contains("themoviedb", CompareOptions.IgnoreCase))
                 {
                     return new ProviderId
@@ -60,12 +63,38 @@ namespace Ombi.Helpers
                         TheMovieDb = guidSplit[1]
                     };
                 }
+                else
                 if (guid.Contains("imdb", CompareOptions.IgnoreCase))
                 {
                     return new ProviderId
                     {
                         ImdbId = guidSplit[1]
                     };
+                }
+                else
+                {
+                    var imdbRegex = new Regex(ImdbMatchExpression, RegexOptions.Compiled);
+                    var tvdbRegex = new Regex(TvDbIdMatchExpression, RegexOptions.Compiled);
+                    var imdbMatch = imdbRegex.IsMatch(guid);
+                    if (imdbMatch)
+                    {
+                        return new ProviderId
+                        {
+                            ImdbId = guidSplit[1]
+                        };
+                    }
+                    else
+                    {
+                        // Check if it matches the TvDb pattern
+                        var tvdbMatch = tvdbRegex.IsMatch(guid);
+                        if (tvdbMatch)
+                        {
+                            return new ProviderId
+                            {
+                                TheTvDb = guidSplit[1]
+                            };
+                        }
+                    }
                 }
             }
             return new ProviderId();

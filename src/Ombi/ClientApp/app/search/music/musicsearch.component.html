@@ -1,0 +1,52 @@
+﻿<!-- Movie tab -->
+<div role="tabpanel" class="tab-pane active" id="MoviesTab">
+    <div class="input-group">
+        <input id="search" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons" (keyup)="search($event)">
+        <div class="input-group-addon right-radius">
+            <i class="fa fa-search"></i>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="radio">
+            <input type="radio" id="Album" name="Mode" [checked]="searchAlbum" (click)="searchMode(true)">
+            <label for="Album">Album Search</label>
+            <input type="radio" id="Artist" name="Mode" [checked]="!searchAlbum" (click)="searchMode(false)">
+            <label for="Artist">Artist Search</label>
+        </div>
+    </div>
+
+
+    <br />
+    <br />
+    <div id="movieList">
+        <div *ngIf="searchApplied && artistResult?.length <= 0 && !searchAlbum" class='no-search-results'>
+            <i class='fa fa-music no-search-results-icon'></i>
+            <div class='no-search-results-text' [translate]="'Search.NoResults'"></div>
+        </div>
+        <div *ngIf="searchApplied && albumResult?.length <= 0 && searchAlbum" class='no-search-results'>
+            <i class='fa fa-music no-search-results-icon'></i>
+            <div class='no-search-results-text' [translate]="'Search.NoResults'"></div>
+        </div>
+
+        
+        <remaining-requests [music]="true" [quotaRefreshEvents]="musicRequested.asObservable()" #remainingAlbums></remaining-requests>
+
+        <div *ngFor="let result of artistResult">
+            <artist-search [result]="result" [defaultPoster]="defaultPoster" (viewAlbumsResult)="viewAlbumsForArtist($event)"></artist-search>
+            <br/>
+            <br/>
+        </div>
+        <div class="col-md-12">
+            <div *ngFor="let result of albumResult" class="col-md-4">
+                <album-search [musicRequested]="musicRequested" [result]="result" [defaultPoster]="defaultPoster" (setSearch)="setArtistSearch($event)"></album-search>
+                <br/>
+                <br/>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<issue-report [movie]="true" [visible]="issuesBarVisible" (visibleChange)="issuesBarVisible = $event;" [title]="issueRequestTitle"
+    [issueCategory]="issueCategorySelected" [id]="issueRequestId" [providerId]="issueProviderId"></issue-report>

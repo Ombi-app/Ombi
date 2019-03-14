@@ -22,12 +22,19 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="radarrSync" class="control-label">Radarr Sync</label>              
-                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('radarrSync').hasError('required')}" id="radarrSync" name="radarrSync" formControlName="radarrSync">
-                        <small *ngIf="form.get('radarrSync').hasError('required')" class="error-text">The Radarr Sync is required</small>
-                        <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('radarrSync')?.value)">Test</button>
-                </div>
+                        <label for="radarrSync" class="control-label">Radarr Sync</label>              
+                            <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('radarrSync').hasError('required')}" id="radarrSync" name="radarrSync" formControlName="radarrSync">
+                            <small *ngIf="form.get('radarrSync').hasError('required')" class="error-text">The Radarr Sync is required</small>
+                            <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('radarrSync')?.value)">Test</button>
+                    </div>
 
+                    <div class="form-group">
+                            <label for="lidarrArtistSync" class="control-label">Lidarr Sync</label>              
+                                <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('lidarrArtistSync').hasError('required')}" id="lidarrArtistSync" name="lidarrArtistSync" formControlName="lidarrArtistSync">
+                                <small *ngIf="form.get('lidarrArtistSync').hasError('required')" class="error-text">The Lidarr Sync is required</small>
+                                <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('lidarrArtistSync')?.value)">Test</button>
+                        </div>
+        
                 <div class="form-group">
                     <label for="couchPotatoSync" class="control-label">CouchPotato Sync</label>              
                         <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('radarrSync').hasError('required')}" id="couchPotatoSync" name="couchPotatoSync" formControlName="couchPotatoSync">
@@ -40,6 +47,13 @@
                         <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('automaticUpdater').hasError('required')}" id="automaticUpdater" name="automaticUpdater" formControlName="automaticUpdater">
                         <small *ngIf="form.get('automaticUpdater').hasError('required')" class="error-text">The Automatic Update is required</small>
                         <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('automaticUpdater')?.value)">Test</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="retryRequests" class="control-label">Retry Failed Requests</label>              
+                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('retryRequests').hasError('required')}" id="retryRequests" name="retryRequests" formControlName="retryRequests">
+                        <small *ngIf="form.get('retryRequests').hasError('required')" class="error-text">The Retry Requests is required</small>
+                        <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('retryRequests')?.value)">Test</button>
                 </div>
             </div>
             <div class="col-md-6">
@@ -78,11 +92,25 @@
                     </div>
 
                     
-                <div class="form-group">
+                    <div class="form-group">
                         <label for="userImporter" class="control-label">Newsletter</label>              
                             <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('newsletter').hasError('required')}" id="newsletter" name="newsletter" formControlName="newsletter">
                             <small *ngIf="form.get('newsletter').hasError('required')" class="error-text">The Newsletter is required</small>
                             <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('newsletter')?.value)">Test</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="userImporter" class="control-label">Issue Purge/Delete</label>              
+                            <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('issuesPurge').hasError('required')}" id="issuesPurge" name="issuesPurge" formControlName="issuesPurge">
+                            <small *ngIf="form.get('issuesPurge').hasError('required')" class="error-text">The Issues Purge is required</small>
+                            <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('issuesPurge')?.value)">Test</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="userImporter" class="control-label">Media Data Refresh</label>              
+                            <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('mediaDatabaseRefresh').hasError('required')}" id="mediaDatabaseRefresh" name="mediaDatabaseRefresh" formControlName="mediaDatabaseRefresh">
+                            <small *ngIf="form.get('mediaDatabaseRefresh').hasError('required')" class="error-text">The Media Database Refresh is required</small>
+                            <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('mediaDatabaseRefresh')?.value)">Test</button>
                     </div>
             </div>
             <div class="form-group">

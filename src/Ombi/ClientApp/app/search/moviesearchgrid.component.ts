@@ -1,13 +1,10 @@
-﻿import { Component, OnInit } from "@angular/core";
-import "rxjs/add/operator/debounceTime";
-import "rxjs/add/operator/distinctUntilChanged";
-import "rxjs/add/operator/map";
-import { Subject } from "rxjs/Subject";
+import { Component, OnInit } from "@angular/core";
+import { Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { AuthService } from "../auth/auth.service";
-import { NotificationService, RequestService, SearchService } from "../services";
-
 import { IRequestEngineResult, ISearchMovieResult, ISearchMovieResultContainer } from "../interfaces";
+import { NotificationService, RequestService, SearchService } from "../services";
 
 @Component({
     selector: "movie-search-grid",
@@ -21,28 +18,29 @@ export class MovieSearchGridComponent implements OnInit {
     public movieResultGrid: ISearchMovieResultContainer[] = [];
     public result: IRequestEngineResult;
     public searchApplied = false;
-        
-    constructor(private searchService: SearchService, private requestService: RequestService,
-                private notificationService: NotificationService, private authService: AuthService) {
 
-        this.searchChanged
-            .debounceTime(600) // Wait Xms afterthe last event before emitting last event
-            .distinctUntilChanged() // only emit if value is different from previous value
-            .subscribe(x => {
-                this.searchText = x as string;
-                if (this.searchText === "") {
-                    this.clearResults();
-                    return;
-                }
-                this.searchService.searchMovie(this.searchText)
-                    .subscribe(x => {
-                        this.movieResults = x;
-                        this.searchApplied = true;
-                        // Now let's load some exta info including IMDBId
-                        // This way the search is fast at displaying results.
-                        this.getExtaInfo();
-                    });
-            });
+    constructor(
+        private searchService: SearchService, private requestService: RequestService,
+        private notificationService: NotificationService, private authService: AuthService) {
+
+        this.searchChanged.pipe(
+            debounceTime(600), // Wait Xms afterthe last event before emitting last event
+            distinctUntilChanged(), // only emit if value is different from previous value
+        ).subscribe(x => {
+            this.searchText = x as string;
+            if (this.searchText === "") {
+                this.clearResults();
+                return;
+            }
+            this.searchService.searchMovie(this.searchText)
+                .subscribe(x => {
+                    this.movieResults = x;
+                    this.searchApplied = true;
+                    // Now let's load some exta info including IMDBId
+                    // This way the search is fast at displaying results.
+                    this.getExtaInfo();
+                });
+        });
     }
 
     public ngOnInit() {
@@ -67,7 +65,7 @@ export class MovieSearchGridComponent implements OnInit {
         }
 
         try {
-            this.requestService.requestMovie({ theMovieDbId : searchResult.id})
+            this.requestService.requestMovie({ theMovieDbId: searchResult.id, languageCode: "en" })
                 .subscribe(x => {
                     this.result = x;
 
@@ -129,7 +127,7 @@ export class MovieSearchGridComponent implements OnInit {
             });
     }
 
-   private getExtaInfo() {
+    private getExtaInfo() {
         this.movieResults.forEach((val) => {
             this.searchService.getMovieInformation(val.id)
                 .subscribe(m => this.updateItem(val, m));
@@ -147,18 +145,17 @@ export class MovieSearchGridComponent implements OnInit {
         this.movieResults = [];
         this.searchApplied = false;
     }
-    
+
     private processGrid(movies: ISearchMovieResult[]) {
-        let container = <ISearchMovieResultContainer>{ movies: [] };
+        let container = <ISearchMovieResultContainer> { movies: [] };
         movies.forEach((movie, i) => {
             i++;
-            if((i % 4) === 0) {
-                container.movies.push(movie);  
+            if ((i % 4) === 0) {
+                container.movies.push(movie);
                 this.movieResultGrid.push(container);
-                container = <ISearchMovieResultContainer>{ movies: [] };
+                container = <ISearchMovieResultContainer> { movies: [] };
             } else {
-                
-                container.movies.push(movie);                
+                container.movies.push(movie);
             }
         });
         this.movieResultGrid.push(container);

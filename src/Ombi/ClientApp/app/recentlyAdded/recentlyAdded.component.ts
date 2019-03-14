@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
-import { NguCarousel } from "@ngu/carousel";
+import { NguCarouselConfig } from "@ngu/carousel";
 
+import { IRecentlyAddedMovies, IRecentlyAddedTvShows } from "../interfaces";
 import { ImageService, RecentlyAddedService } from "../services";
-import { IRecentlyAddedMovies, IRecentlyAddedTvShows } from "./../interfaces";
 
 @Component({
     templateUrl: "recentlyAdded.component.html",
@@ -41,13 +41,13 @@ export class RecentlyAddedComponent implements OnInit {
     public range: Date[];
 
     public groupTv: boolean = false;
-    
+
     // https://github.com/sheikalthaf/ngu-carousel
-    public carouselTile: NguCarousel;
-    
+    public carouselTile: NguCarouselConfig;
+
     constructor(private recentlyAddedService: RecentlyAddedService,
                 private imageService: ImageService) {}
-     
+
     public ngOnInit() {
         this.getMovies();
         this.getShows();
@@ -67,10 +67,10 @@ export class RecentlyAddedComponent implements OnInit {
      }
 
      public close() {
-         if(this.range.length < 2) {
+         if (this.range.length < 2) {
              return;
          }
-         if(!this.range[1]) {
+         if (!this.range[1]) {
              // If we do not have a second date then just set it to now
             this.range[1] = new Date();
          }
@@ -82,13 +82,13 @@ export class RecentlyAddedComponent implements OnInit {
      }
 
      private getShows() {
-         if(this.groupTv) {
+         if (this.groupTv) {
             this.recentlyAddedService.getRecentlyAddedTvGrouped().subscribe(x => {
                 this.tv = x;
-    
+
                 this.tv.forEach((t) => {
                     this.imageService.getTvPoster(t.tvDbId).subscribe(p => {
-                        if(p) {
+                        if (p) {
                             t.posterPath = p;
                         }
                     });
@@ -97,10 +97,10 @@ export class RecentlyAddedComponent implements OnInit {
          } else {
             this.recentlyAddedService.getRecentlyAddedTv().subscribe(x => {
                 this.tv = x;
-    
+
                 this.tv.forEach((t) => {
                     this.imageService.getTvPoster(t.tvDbId).subscribe(p => {
-                        if(p) {
+                        if (p) {
                             t.posterPath = p;
                         }
                     });
@@ -114,11 +114,11 @@ export class RecentlyAddedComponent implements OnInit {
             this.movies = x;
 
             this.movies.forEach((movie) => {
-                if(movie.theMovieDbId) {
+                if (movie.theMovieDbId) {
                 this.imageService.getMoviePoster(movie.theMovieDbId).subscribe(p => {
                     movie.posterPath = p;
                 });
-                } else if(movie.imdbId) {
+                } else if (movie.imdbId) {
                     this.imageService.getMoviePoster(movie.imdbId).subscribe(p => {
                         movie.posterPath = p;
                     });

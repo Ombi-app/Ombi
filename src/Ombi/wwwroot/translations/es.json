@@ -12,7 +12,9 @@
   "Common": {
     "ContinueButton": "Continuar",
     "Available": "Disponible",
-    "NotAvailable": "Not Available",
+    "PartiallyAvailable": "Disponible en parte",
+    "Monitored": "Monitoreado",
+    "NotAvailable": "No está disponible",
     "ProcessingRequest": "Procesando solicitud",
     "PendingApproval": "Pendiente de aprobación",
     "RequestDenied": "Solicitud denegada",
@@ -21,7 +23,7 @@
     "Request": "Solicitar",
     "Denied": "Denegado",
     "Approve": "Aprobar",
-    "PartlyAvailable": "Partly Available",
+    "PartlyAvailable": "Disponible en parte",
     "Errors": {
       "Validation": "Por favor, comprueba los datos introducidos"
     }
@@ -35,7 +37,7 @@
     "OnlineParagraph": "El servidor de medios esta en línea",
     "PartiallyOnlineHeading": "Parcialmente en línea",
     "PartiallyOnlineParagraph": "El servidor de medios está parcialmente en línea.",
-    "MultipleServersUnavailable": "{{serversUnavailable}} de {{totalServers}} servidores están fuera de línea.",
+    "MultipleServersUnavailable": "Hay {{serversUnavailable}} de {{totalServers}} servidores fuera de línea.",
     "SingleServerUnavailable": "Hay {{serversUnavailable}} de {{totalServers}} servidores fuera de línea.",
     "OfflineHeading": "Fuera de línea",
     "OfflineParagraph": "El servidor de medios está fuera de línea.",
@@ -46,39 +48,33 @@
     "Requests": "Solicitudes",
     "UserManagement": "Gestión de usuarios",
     "Issues": "Incidencias",
+    "Vote": "Votar",
     "Donate": "¡Donar!",
-    "DonateLibraryMaintainer": "Donate to Library Maintainer",
-    "DonateTooltip": "Para que mi esposa me deje desarrollar Ombi ;)",
+    "DonateLibraryMaintainer": "Donar al mantenedor de la biblioteca",
+    "DonateTooltip": "Así es como convenzo a mi esposa para que me deje pasar mi tiempo libre desarrollando ombi;)",
     "UpdateAvailableTooltip": "¡Actualización disponible!",
     "Settings": "Ajustes",
     "Welcome": "Bienvenido {{username}}",
-    "UpdateDetails": "Detalles de la actualización",
+    "UpdateDetails": "Editar cuenta usuario",
     "Logout": "Cerrar sesión",
-    "Language": {
-      "English": "Inglés",
-      "French": "Francés",
-      "Spanish": "Español",
-      "German": "Alemán",
-      "Italian": "Italiano",
-      "Danish": "Danés",
-      "Dutch": "Holandés",
-      "Norwegian": "Norwegian"
-    },
-    "OpenMobileApp": "Open Mobile App"
+    "OpenMobileApp": "Abrir aplicación móvil",
+    "RecentlyAdded": "Agregado recientemente"
   },
   "Search": {
     "Title": "Buscar",
     "Paragraph": "¿Quieres ver algo que no está disponible? No hay problema, búscalo y solicítalo!",
     "MoviesTab": "Películas",
     "TvTab": "Series",
+    "MusicTab": "Música",
     "Suggestions": "Sugerencias",
     "NoResults": "¡Lo sentimos, no encontramos ningún resultado!",
-    "DigitalDate": "Digital Release: {{date}}",
-    "TheatricalRelease": "Theatrical Release: {{date}}",
+    "DigitalDate": "Versión Digital: {{date}}",
+    "TheatricalRelease": "Estreno teatral: {{date}}",
     "ViewOnPlex": "Ver en Plex",
     "ViewOnEmby": "Ver en Emby",
     "RequestAdded": "La solicitud de {{title}} se ha agregado con éxito",
     "Similar": "Similar",
+    "Refine": "Filtros",
     "Movies": {
       "PopularMovies": "Películas populares",
       "UpcomingMovies": "Próximas películas",
@@ -89,18 +85,18 @@
     },
     "TvShows": {
       "Popular": "Popular",
-      "Trending": "Trending",
-      "MostWatched": "Most Watched",
-      "MostAnticipated": "Most Anticipated",
-      "Results": "Results",
-      "AirDate": "Air Date:",
-      "AllSeasons": "All Seasons",
-      "FirstSeason": "First Season",
-      "LatestSeason": "Latest Season",
-      "Select": "Select ...",
-      "SubmitRequest": "Submit Request",
-      "Season": "Season: {{seasonNumber}}",
-      "SelectAllInSeason": "Select All in Season {{seasonNumber}}"
+      "Trending": "Tendencias",
+      "MostWatched": "Más visto",
+      "MostAnticipated": "Más Anticipado",
+      "Results": "Resultados",
+      "AirDate": "Fecha de emisión:",
+      "AllSeasons": "Todas las temporadas",
+      "FirstSeason": "Primera temporada",
+      "LatestSeason": "Última temporada",
+      "Select": "Seleccione...",
+      "SubmitRequest": "Enviar Solicitud",
+      "Season": "Temporada: {{seasonNumber}}",
+      "SelectAllInSeason": "Seleccionar todo en temporada {{seasonNumber}}"
     }
   },
   "Requests": {
@@ -108,12 +104,15 @@
     "Paragraph": "A continuación puedes ver tanto las tuyas como las demás solicitudes, así como su estado de descarga y aprobación.",
     "MoviesTab": "Películas",
     "TvTab": "Series",
+    "MusicTab": "Música",
     "RequestedBy": "Solicitado por:",
     "Status": "Estado:",
     "RequestStatus": "Estado de la solicitud:",
     "Denied": " Denegado:",
-    "TheatricalRelease": "Theatrical Release: {{date}}",
-    "DigitalRelease": "Digital Release: {{date}}",
+    "TheatricalRelease": "Estreno teatral: {{date}}",
+    "ReleaseDate": "Lanzado el {{date}}",
+    "TheatricalReleaseSort": "Estreno teatral",
+    "DigitalRelease": "Presentación Digital: {{date}}",
     "RequestDate": "Fecha de solicitud:",
     "QualityOverride": "Sobreescribir calidad:",
     "RootFolderOverride": "Sobreescribir carpeta raíz:",
@@ -127,9 +126,23 @@
     "GridTitle": "Título",
     "AirDate": "Fecha de estreno",
     "GridStatus": "Estado",
-    "ReportIssue": "Report Issue",
-    "Filter": "Filter",
-    "SeasonNumberHeading": "Season: {seasonNumber}"
+    "ReportIssue": "Informar de Problema",
+    "Filter": "Filtrar",
+    "Sort": "Ordenar",
+    "SeasonNumberHeading": "Temporada: {seasonNumber}",
+    "SortTitleAsc": "Título ▲",
+    "SortTitleDesc": "Título ▼",
+    "SortRequestDateAsc": "Fecha de solicitud ▲",
+    "SortRequestDateDesc": "Fecha de solicitud ▼",
+    "SortStatusAsc": "Estado ▲",
+    "SortStatusDesc": "Estado ▼",
+    "Remaining": {
+      "Quota": "{{remaining}}/{{total}} solicitudes restantes",
+      "NextDays": "Se añadirá otra solicitud en {{time}} Días",
+      "NextHours": "Se añadirá otra solicitud en {{time}} Horas",
+      "NextMinutes": "Se añadirá otra solicitud en {{time}} Minutos",
+      "NextMinute": "Se añadirá otra solicitud en {{time}} Minuto"
+    }
   },
   "Issues": {
     "Title": "Incidencias",
@@ -151,9 +164,22 @@
     "ReportedBy": "Informado por"
   },
   "Filter": {
-    "ClearFilter": "Clear Filter",
-    "FilterHeaderAvailability": "Availability",
-    "FilterHeaderRequestStatus": "Status",
-    "Approved": "Approved"
+    "ClearFilter": "Eliminar Filtro",
+    "FilterHeaderAvailability": "Disponibilidad",
+    "FilterHeaderRequestStatus": "Estado",
+    "Approved": "¡Aprobado!",
+    "PendingApproval": "Aprobación Pendiente"
+  },
+  "UserManagment": {
+    "TvRemaining": "Música: {{remaining}}/{{total}} Restante",
+    "MovieRemaining": "Música: {{remaining}}/{{total}} Restante",
+    "MusicRemaining": "Música: {{remaining}}/{{total}} Restante",
+    "TvDue": "TV: {{date}}",
+    "MovieDue": "Película: {{date}}",
+    "MusicDue": "Música: {{date}}"
+  },
+  "Votes": {
+    "CompletedVotesTab": "¡Votado!",
+    "VotesTab": "Votos necesarios"
   }
 }

@@ -1,5 +1,4 @@
-﻿import { Component, Input, OnInit} from "@angular/core";
-import "rxjs/add/operator/takeUntil";
+﻿import { Component, Input, OnInit } from "@angular/core";
 
 import { NotificationService } from "../services";
 import { RequestService } from "../services";
@@ -8,6 +7,8 @@ import { SearchService } from "../services";
 import { INewSeasonRequests, IRequestEngineResult, ISeasonsViewModel, ITvRequestViewModel } from "../interfaces";
 import { IEpisodesRequests } from "../interfaces";
 import { ISearchTvResult } from "../interfaces";
+
+import { Subject } from "rxjs";
 
 @Component({
     selector: "seriesinformation",
@@ -19,7 +20,7 @@ export class SeriesInformationComponent implements OnInit {
     public result: IRequestEngineResult;
     public series: ISearchTvResult;
     public requestedEpisodes: IEpisodesRequests[] = [];
-
+    @Input() public tvRequested: Subject<void>;
     @Input() private seriesId: number;
 
     constructor(private searchService: SearchService, private requestService: RequestService, private notificationService: NotificationService) { }
@@ -39,30 +40,31 @@ export class SeriesInformationComponent implements OnInit {
             });
         });
 
-        if(!selected) {
+        if (!selected) {
             this.notificationService.error("You need to select some episodes!");
             return;
         }
 
         this.series.requested = true;
 
-        const viewModel = <ITvRequestViewModel>{ firstSeason: this.series.firstSeason, latestSeason: this.series.latestSeason, requestAll: this.series.requestAll, tvDbId: this.series.id};
+        const viewModel = <ITvRequestViewModel> { firstSeason: this.series.firstSeason, latestSeason: this.series.latestSeason, requestAll: this.series.requestAll, tvDbId: this.series.id};
         viewModel.seasons = [];
         this.series.seasonRequests.forEach((season) => {
-            const seasonsViewModel = <ISeasonsViewModel>{seasonNumber: season.seasonNumber, episodes: []};
+            const seasonsViewModel = <ISeasonsViewModel> {seasonNumber: season.seasonNumber, episodes: []};
             season.episodes.forEach(ep => {
-                if(!this.series.latestSeason || !this.series.requestAll || !this.series.firstSeason) {
-                    if(ep.selected) {
+                if (!this.series.latestSeason || !this.series.requestAll || !this.series.firstSeason) {
+                    if (ep.selected) {
                         seasonsViewModel.episodes.push({episodeNumber: ep.episodeNumber});
                     }
                 }
             });
-            
+
             viewModel.seasons.push(seasonsViewModel);
         });
 
         this.requestService.requestTv(viewModel)
             .subscribe(x => {
+                this.tvRequested.next();
                 this.result = x as IRequestEngineResult;
                 if (this.result.result) {
                     this.notificationService.success(

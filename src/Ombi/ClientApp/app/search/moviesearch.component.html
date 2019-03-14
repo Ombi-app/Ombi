@@ -1,9 +1,11 @@
 ﻿<!-- Movie tab -->
 <div role="tabpanel" class="tab-pane active" id="MoviesTab">
-    <div class="input-group">
-        <input id="search" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons" (keyup)="search($event)">
+
+    <div class="input-group search-bar-background">
+        <input id="search" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons"
+            (keyup)="search($event)">
         <div class="input-group-addon right-radius">
-            <div class="btn-group">
+            <div class="btn-group" role="group">
                 <a href="#" class="btn btn-sm btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     {{ 'Search.Suggestions' | translate }}
                     <i class="fa fa-chevron-down"></i>
@@ -14,88 +16,152 @@
                     <li><a (click)="topRatedMovies()" [translate]="'Search.Movies.TopRatedMovies'"></a></li>
                     <li><a (click)="nowPlayingMovies()" [translate]="'Search.Movies.NowPlayingMovies'"></a></li>
                 </ul>
+                <button class="btn btn-sm btn-primary-outline" (click)="refineOpen()">
+                    {{ 'Search.Refine' | translate }}
+                    <i class="fa" [ngClass]="{'fa-chevron-down': !refineSearchEnabled, 'fa-chevron-up': refineSearchEnabled}"></i>
+                </button>
             </div>
+
             <i class="fa fa-search"></i>
         </div>
     </div>
-    <br />
-    <br />
+    <!-- Refine search options -->
+    <div class="row top-spacing form-group vcenter" *ngIf="refineSearchEnabled">
+        <div class="col-md-1">
+            <div class="form-group">
+                <label class="control-label">Year</label>
+
+                <input [(ngModel)]="searchYear" class="form-control form-control-custom refine-option">
+            </div>
+        </div>
+
+        <!-- <label for="name" class="col-xs-2 col-md-1">Language:</label> -->
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="select" class="control-label">Language</label>
+                <div id="profiles">
+                    <select [(ngModel)]="selectedLanguage" class="form-control form-control-custom refine-option" id="select">
+                        <option *ngFor="let lang of langauges" value="{{lang.code}}">{{lang.nativeName}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" id="actorSearch" name="actorSearch" [(ngModel)]="actorSearch">
+                    <label for="actorSearch" tooltipPosition="top" pTooltip="Search for movies by actor">Actor Search</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <button class="btn pull-right btn-success-outline" (click)="applyRefinedSearch()">Apply</button>
+        </div>
+    </div>
+
+
+    <remaining-requests [movie]="true" [quotaRefreshEvents]="movieRequested.asObservable()" #remainingFilms></remaining-requests>
+
     <!-- Movie content -->
     <div id="movieList">
         <div *ngIf="searchApplied && movieResults?.length <= 0" class='no-search-results'>
-            <i class='fa fa-film no-search-results-icon'></i><div class='no-search-results-text' [translate]="'Search.NoResults'"></div>
+            <i class='fa fa-film no-search-results-icon'></i>
+            <div class='no-search-results-text' [translate]="'Search.NoResults'"></div>
         </div>
 
         <div *ngFor="let result of movieResults">
-        
-            <div class="row" >
-                
-                    <div class="myBg backdrop" [style.background-image]="result.background"></div>
-                    <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
+
+            <div class="row">
+
+                <div class="myBg backdrop" [style.background-image]="result.background"></div>
+                <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
                 <div class="col-sm-2 small-padding">
-                    <img *ngIf="result.posterPath"  class="img-responsive poster" src="{{result.posterPath}}" alt="poster">
+                    <img *ngIf="result.posterPath" class="img-responsive poster movie-poster" src="{{result.posterPath}}"
+                        alt="poster">
 
                 </div>
                 <div class="col-sm-8 small-padding">
                     <div>
                         <a href="https://www.themoviedb.org/movie/{{result.id}}/" target="_blank">
-                            <h4>{{result.title}} ({{result.releaseDate | date: 'yyyy'}})</h4>
+                            <h4>{{result.title}} ({{result.releaseDate | amLocal | amDateFormat: 'YYYY'}})</h4>
                         </a>
-                    <span class="tags">
-                        <span *ngIf="result.releaseDate" class="label label-info" id="releaseDateLabel" target="_blank">{{ 'Search.TheatricalRelease' | translate: {date: result.releaseDate | date: 'mediumDate'} }}</span>
-                        <span *ngIf="result.digitalReleaseDate" class="label label-info" id="releaseDateLabel" target="_blank">{{ 'Search.DigitalDate' | translate: {date: result.digitalReleaseDate | date: 'mediumDate'} }}</span>
+                        <span class="tags">
+                            <span *ngIf="result.releaseDate" class="label label-info" id="releaseDateLabel" target="_blank">{{
+                                'Search.TheatricalRelease' | translate: {date: result.releaseDate | amLocal |
+                                amDateFormat: 'LL'} }}</span>
+                            <span *ngIf="result.digitalReleaseDate" class="label label-info" id="releaseDateLabel"
+                                target="_blank">{{ 'Search.DigitalDate' | translate: {date: result.digitalReleaseDate |
+                                amLocal | amDateFormat: 'LL'} }}</span>
 
-                        <a *ngIf="result.homepage" href="{{result.homepage}}" id="homePageLabel" target="_blank"><span class="label label-info" [translate]="'Search.Movies.HomePage'"></span></a>
+                            <a *ngIf="result.homepage" href="{{result.homepage}}" id="homePageLabel" target="_blank"><span
+                                    class="label label-info" [translate]="'Search.Movies.HomePage'"></span></a>
 
-                        <a *ngIf="result.trailer" href="{{result.trailer}}" id="trailerLabel" target="_blank"><span class="label label-info" [translate]="'Search.Movies.Trailer'"></span></a>
-                        <span *ngIf="result.quality" id="qualityLabel" class="label label-success">{{result.quality}}p</span>
-                        
-                        <ng-template [ngIf]="result.available"><span class="label label-success" id="availableLabel" [translate]="'Common.Available'"></span></ng-template>
-                        <ng-template [ngIf]="result.approved && !result.available"><span class="label label-info" id="processingRequestLabel" [translate]="'Common.ProcessingRequest'"></span></ng-template>
-                        <ng-template [ngIf]="result.requested && !result.approved && !result.available"><span class="label label-warning" id="pendingApprovalLabel" [translate]="'Common.PendingApproval'"></span></ng-template>
-                        <ng-template [ngIf]="!result.requested && !result.available && !result.approved"><span class="label label-danger" id="notRequestedLabel" [translate]="'Common.NotRequested'"></span></ng-template>
+                            <a *ngIf="result.trailer" href="{{result.trailer}}" id="trailerLabel" target="_blank"><span
+                                    class="label label-info" [translate]="'Search.Movies.Trailer'"></span></a>
+                            <span *ngIf="result.quality" id="qualityLabel" class="label label-success">{{result.quality}}p</span>
+
+                            <ng-template [ngIf]="result.available"><span class="label label-success" id="availableLabel"
+                                    [translate]="'Common.Available'"></span></ng-template>
+                            <ng-template [ngIf]="result.approved && !result.available"><span class="label label-info"
+                                    id="processingRequestLabel" [translate]="'Common.ProcessingRequest'"></span></ng-template>
+                            <ng-template [ngIf]="result.requested && !result.approved && !result.available"><span class="label label-warning"
+                                    id="pendingApprovalLabel" [translate]="'Common.PendingApproval'"></span></ng-template>
+                            <ng-template [ngIf]="!result.requested && !result.available && !result.approved"><span
+                                    class="label label-danger" id="notRequestedLabel" [translate]="'Common.NotRequested'"></span></ng-template>
 
 
-                    </span>
+                        </span>
 
-                        <br/>
+                        <br />
                     </div>
                     <p style="font-size: 0.9rem !important">{{result.overview}}</p>
                 </div>
 
 
                 <div class="col-sm-2 small-padding">
-                    <div class="row" *ngIf="result.requested">
-                        <div class="col-md-2 col-md-push-10">
-    
-                            <a *ngIf="result.showSubscribe && !result.subscribed" style="color:white" (click)="subscribe(result)" pTooltip="Subscribe for notifications"> <i class="fa fa-rss"></i></a>
-                            <a *ngIf="result.showSubscribe && result.subscribed" style="color:red" (click)="unSubscribe(result)" pTooltip="Unsubscribe notification"> <i class="fa fa-rss"></i></a>
-                        </div>
-                    </div>
                     <div *ngIf="result.available">
-                        <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> {{ 'Common.Available' | translate }}</button>
+                        <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i>
+                            {{ 'Common.Available' | translate }}</button>
                     </div>
                     <div *ngIf="!result.available">
-                    <div *ngIf="result.requested || result.approved; then requestedBtn else notRequestedBtn"></div>
-                    <ng-template #requestedBtn>
-                        <button style="text-align: right" class="btn btn-primary-outline disabled" [disabled]><i class="fa fa-check"></i> {{ 'Common.Requested' | translate }}</button>
-                    </ng-template>
-                    <ng-template #notRequestedBtn>
-                        <button id="{{result.id}}" style="text-align: right" class="btn btn-primary-outline" (click)="request(result)">
-                            <i *ngIf="result.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> <i *ngIf="!result.requestProcessing && !result.processed" class="fa fa-plus"></i>
-                            <i *ngIf="result.processed && !result.requestProcessing" class="fa fa-check"></i>{{ 'Common.Request' | translate }}</button>
-                    </ng-template>
-                        </div>
-                        <button style="text-align: right" class="btn btn-sm btn-info-outline" (click)="similarMovies(result.id)"> <i class="fa fa-eye"></i> {{ 'Search.Similar' | translate }}</button>
-                    
-                    <br/>
+                        <div *ngIf="result.requested || result.approved; then requestedBtn else notRequestedBtn"></div>
+                        <ng-template #requestedBtn>
+                            <button style="text-align: right" class="btn btn-primary-outline disabled" [disabled]><i
+                                    class="fa fa-check"></i> {{ 'Common.Requested' | translate }}</button>
+                        </ng-template>
+                        <ng-template #notRequestedBtn>
+                            <button id="{{result.id}}" style="text-align: right" class="btn btn-primary-outline"
+                                (click)="request(result)">
+                                <i *ngIf="result.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> <i
+                                    *ngIf="!result.requestProcessing && !result.processed" class="fa fa-plus"></i>
+                                <i *ngIf="result.processed && !result.requestProcessing" class="fa fa-check"></i> {{
+                                'Common.Request' | translate }}</button>
+                        </ng-template>
+                    </div>
+                    <div *ngIf="result.requested">
+                        <a *ngIf="result.showSubscribe && !result.subscribed" style="text-align: right" class="btn btn btn-success-outline"
+                            (click)="subscribe(result)" pTooltip="Subscribe for notifications when this movie becomes available">
+                            <i class="fa fa-rss"></i> Subscribe</a>
+                        <a *ngIf="result.showSubscribe && result.subscribed" style="text-align: right;" class="btn btn btn-warning-outline"
+                            (click)="unSubscribe(result)" pTooltip="Unsubscribe notifications when this movie becomes available">
+                            <i class="fa fa-rss"></i> Unsubscribe</a>
+                    </div>
+                    <button style="text-align: right" class="btn btn-sm btn-info-outline" (click)="similarMovies(result.id)">
+                        <i class="fa fa-eye"></i> {{ 'Search.Similar' | translate }}</button>
+
+                    <br />
                     <div *ngIf="result.available">
-                        <a *ngIf="result.plexUrl" style="text-align: right" class="btn btn-sm btn-success-outline" href="{{result.plexUrl}}" target="_blank"><i class="fa fa-eye"></i> View On Plex</a>
-                        <a *ngIf="result.embyUrl" style="text-align: right" id="embybtn" class="btn btn-sm btn-success-outline" href="{{result.embyUrl}}" target="_blank"><i class="fa fa-eye"></i> View On Emby</a>
+                        <a *ngIf="result.plexUrl" style="text-align: right" class="btn btn-sm btn-success-outline" href="{{result.plexUrl}}"
+                            target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnPlex' | translate}}</a>
+                        <a *ngIf="result.embyUrl" style="text-align: right" id="embybtn" class="btn btn-sm btn-success-outline"
+                            href="{{result.embyUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
+                            translate}}</a>
                     </div>
                     <div class="dropdown" *ngIf="result.available && issueCategories && issuesEnabled">
-                        <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            <i class="fa fa-plus"></i> Report Issue
+                        <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="true">
+                            <i class="fa fa-plus"></i> {{'Requests.ReportIssue' | translate}}
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -106,8 +172,8 @@
                 </div>
 
             </div>
-            <br/>
-            <br/>
+            <br />
+            <br />
         </div>
 
     </div>
@@ -115,4 +181,4 @@
 
 
 <issue-report [movie]="true" [visible]="issuesBarVisible" (visibleChange)="issuesBarVisible = $event;" [title]="issueRequestTitle"
-[issueCategory]="issueCategorySelected" [id]="issueRequestId" [providerId]="issueProviderId"></issue-report>
+    [issueCategory]="issueCategorySelected" [id]="issueRequestId" [providerId]="issueProviderId"></issue-report>

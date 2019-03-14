@@ -12,6 +12,8 @@
   "Common": {
     "ContinueButton": "Fortsæt",
     "Available": "Tilgængelig",
+    "PartiallyAvailable": "Delvist tilgængelig",
+    "Monitored": "Overvåget",
     "NotAvailable": "Ikke tilgængelig",
     "ProcessingRequest": "Behandler anmodning",
     "PendingApproval": "Afventer godkendelse",
@@ -46,6 +48,7 @@
     "Requests": "Anmodninger",
     "UserManagement": "Brugeradministration",
     "Issues": "Problemer",
+    "Vote": "Stem",
     "Donate": "Donér!",
     "DonateLibraryMaintainer": "Donér til vedligeholder af bibliotek",
     "DonateTooltip": "Sådan overbeviser jeg min kone om, at jeg skal bruge min fritid på at udvikle Ombi :)",
@@ -54,31 +57,24 @@
     "Welcome": "Velkommen til {{username}}",
     "UpdateDetails": "Opdater loginoplysninger",
     "Logout": "Log af",
-    "Language": {
-      "English": "Engelsk",
-      "French": "Fransk",
-      "Spanish": "Spansk",
-      "German": "Tysk",
-      "Italian": "Italiensk",
-      "Danish": "Dansk",
-      "Dutch": "Hollandsk",
-      "Norwegian": "Norsk"
-    },
-    "OpenMobileApp": "Åbn mobilapp"
+    "OpenMobileApp": "Åbn mobilapp",
+    "RecentlyAdded": "Senest tilføjet"
   },
   "Search": {
     "Title": "Søg",
     "Paragraph": "Ønsker du at se noget, som er utilgængeligt? intet problem, bare søg efter det nedenfor og anmod om det!",
     "MoviesTab": "Film",
     "TvTab": "Tv-serier",
+    "MusicTab": "Musik",
     "Suggestions": "Forslag",
     "NoResults": "Beklager, vi fandt ingen resultater!",
-    "DigitalDate": "Digital Release: {{date}}",
-    "TheatricalRelease": "Theatrical Release: {{date}}",
+    "DigitalDate": "Digital udgivelse: {{date}}",
+    "TheatricalRelease": "Biografudgivelse: {{date}}",
     "ViewOnPlex": "Se på Plex",
     "ViewOnEmby": "Se på Emby",
     "RequestAdded": "{{title}} er anmodet med succes",
-    "Similar": "Similar",
+    "Similar": "Lignende",
+    "Refine": "Refine",
     "Movies": {
       "PopularMovies": "Populære film",
       "UpcomingMovies": "Kommende film",
@@ -108,12 +104,15 @@
     "Paragraph": "Herunder kan du se dine og alle andre anmodninger, samt status for download og godkendelse.",
     "MoviesTab": "Film",
     "TvTab": "Tv-serier",
+    "MusicTab": "Musik",
     "RequestedBy": "Anmodet af:",
     "Status": "Status:",
     "RequestStatus": "Status for anmodning:",
     "Denied": " Afvist:",
-    "TheatricalRelease": "Theatrical Release: {{date}}",
-    "DigitalRelease": "Digital Release: {{date}}",
+    "TheatricalRelease": "Biografudgivelse: {{date}}",
+    "ReleaseDate": "Udgivet: {{date}}",
+    "TheatricalReleaseSort": "Biografudgivelse",
+    "DigitalRelease": "Digital udgivelse: {{date}}",
     "RequestDate": "Dato for anmodning:",
     "QualityOverride": "Tilsidesæt kvalitet:",
     "RootFolderOverride": "Tilsidesæt rodmappe:",
@@ -129,7 +128,21 @@
     "GridStatus": "Status",
     "ReportIssue": "Rapportér problem",
     "Filter": "Filter",
-    "SeasonNumberHeading": "Sæson: {seasonNumber}"
+    "Sort": "Sorter",
+    "SeasonNumberHeading": "Sæson: {seasonNumber}",
+    "SortTitleAsc": "Titel ▲",
+    "SortTitleDesc": "Titel ▼",
+    "SortRequestDateAsc": "Dato for anmodning ▲",
+    "SortRequestDateDesc": "Dato for anmodning ▼",
+    "SortStatusAsc": "Status ▲",
+    "SortStatusDesc": "Status ▼",
+    "Remaining": {
+      "Quota": "{{remaining}}/{{total}} anmodninger, der er tilbage",
+      "NextDays": "En anden anmodning vil blive tilføjet i {{time}} Dage",
+      "NextHours": "En anden anmodning vil blive tilføjet i {{time}} Timer",
+      "NextMinutes": "En anden anmodning vil blive tilføjet i {{time}} Minutter",
+      "NextMinute": "En anden anmodning vil blive tilføjet i {{time}} Minut"
+    }
   },
   "Issues": {
     "Title": "Problemer",
@@ -154,6 +167,19 @@
     "ClearFilter": "Nulstil filter",
     "FilterHeaderAvailability": "Tilgængelighed",
     "FilterHeaderRequestStatus": "Status",
-    "Approved": "Godkendt"
+    "Approved": "Godkendt",
+    "PendingApproval": "Afventer godkendelse"
+  },
+  "UserManagment": {
+    "TvRemaining": "Tv: {{remaining}}/{{total}} Resterende",
+    "MovieRemaining": "Film: {{remaining}}/{{total}} Resterende",
+    "MusicRemaining": "Musik: {{remaining}}/{{total}} Resterende",
+    "TvDue": "Tv: {{date}}",
+    "MovieDue": "Film: {{date}}",
+    "MusicDue": "Musik: {{date}}"
+  },
+  "Votes": {
+    "CompletedVotesTab": "Stemt",
+    "VotesTab": "Nødvendige stemmer"
   }
 }

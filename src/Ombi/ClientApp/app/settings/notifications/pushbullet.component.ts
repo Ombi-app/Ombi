@@ -37,7 +37,7 @@ export class PushbulletComponent implements OnInit {
             return;
         }
 
-        const settings = <IPushbulletNotificationSettings>form.value;
+        const settings = <IPushbulletNotificationSettings> form.value;
         settings.notificationTemplates = this.templates;
 
         this.settingsService.savePushbulletNotificationSettings(settings).subscribe(x => {

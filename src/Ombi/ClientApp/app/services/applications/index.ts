@@ -5,3 +5,5 @@ export * from "./radarr.service";
 export * from "./sonarr.service";
 export * from "./tester.service";
 export * from "./plexoauth.service";
+export * from "./plextv.service";
+export * from "./lidarr.service";

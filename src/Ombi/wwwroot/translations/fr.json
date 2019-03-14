@@ -1,6 +1,6 @@
 {
   "Login": {
-    "SignInButton": "Connexion",
+    "SignInButton": "Se connecter",
     "UsernamePlaceholder": "Nom d’utilisateur",
     "PasswordPlaceholder": "Mot de passe",
     "RememberMe": "Se souvenir de moi",
@@ -12,7 +12,9 @@
   "Common": {
     "ContinueButton": "Continuer",
     "Available": "Disponible",
-    "NotAvailable": "Not Available",
+    "PartiallyAvailable": "Partiellement disponible",
+    "Monitored": "Suivi",
+    "NotAvailable": "Non disponible",
     "ProcessingRequest": "En cours de traitement",
     "PendingApproval": "En attente d'approbation",
     "RequestDenied": "Demande refusée",
@@ -21,13 +23,13 @@
     "Request": "Demander",
     "Denied": "Refusé",
     "Approve": "Approuver",
-    "PartlyAvailable": "Partly Available",
+    "PartlyAvailable": "Partiellement disponible",
     "Errors": {
       "Validation": "Veuillez vérifier les valeurs entrées"
     }
   },
   "PasswordReset": {
-    "EmailAddressPlaceholder": "Adresse e-mail",
+    "EmailAddressPlaceholder": "Courriel",
     "ResetPasswordButton": "Réinitialiser le mot de passe"
   },
   "LandingPage": {
@@ -35,10 +37,10 @@
     "OnlineParagraph": "Le serveur média est actuellement en ligne",
     "PartiallyOnlineHeading": "Partiellement en ligne",
     "PartiallyOnlineParagraph": "Le serveur média est partiellement en ligne.",
-    "MultipleServersUnavailable": "Il y a {{serversUnavailable}} serveurs hors ligne sur {{totalServers}}.",
-    "SingleServerUnavailable": "Il y a {{serversUnavailable}} serveur hors ligne sur {{totalServers}}.",
-    "OfflineHeading": "Actuellement hors ligne",
-    "OfflineParagraph": "Le serveur média est actuellement hors ligne.",
+    "MultipleServersUnavailable": "Il y a {{serversUnavailable}} serveurs hors-ligne sur {{totalServers}}.",
+    "SingleServerUnavailable": "Il y a {{serversUnavailable}} serveur hors-ligne sur {{totalServers}}.",
+    "OfflineHeading": "Actuellement hors-ligne",
+    "OfflineParagraph": "Le serveur média est actuellement hors-ligne.",
     "CheckPageForUpdates": "Consultez cette page pour voir les mises à jour du site."
   },
   "NavigationBar": {
@@ -46,61 +48,55 @@
     "Requests": "Demandes",
     "UserManagement": "Gestion des utilisateurs",
     "Issues": "Problèmes",
+    "Vote": "Vote",
     "Donate": "Faire un don !",
-    "DonateLibraryMaintainer": "Donate to Library Maintainer",
+    "DonateLibraryMaintainer": "Faire un don au mainteneur de la bibliothèque",
     "DonateTooltip": "C’est pour convaincre ma femme de me laisser passer mon temps libre à développer Ombi ;)",
     "UpdateAvailableTooltip": "Mise à jour disponible !",
     "Settings": "Paramètres",
     "Welcome": "Bienvenue {{username}}",
     "UpdateDetails": "Détails de la mise à jour",
     "Logout": "Déconnexion",
-    "Language": {
-      "English": "Anglais",
-      "French": "Français",
-      "Spanish": "Espagnol",
-      "German": "Allemand",
-      "Italian": "Italien",
-      "Danish": "Danois",
-      "Dutch": "Néerlandais",
-      "Norwegian": "Norvégien"
-    },
-    "OpenMobileApp": "Ouvrir l'application mobile"
+    "OpenMobileApp": "Ouvrir l'application mobile",
+    "RecentlyAdded": "Ajouts récents"
   },
   "Search": {
     "Title": "Rechercher",
     "Paragraph": "Vous voulez regarder quelque chose qui n'est pas disponible actuellement ? Pas de problème, recherchez-le ci-dessous et demandez-le !",
     "MoviesTab": "Films",
     "TvTab": "TV",
+    "MusicTab": "Musique",
     "Suggestions": "Suggestions",
     "NoResults": "Désolé, nous n'avons trouvé aucun résultat !",
-    "DigitalDate": "Digital Release: {{date}}",
-    "TheatricalRelease": "Theatrical Release: {{date}}",
+    "DigitalDate": "Sortie numérique: {{date}}",
+    "TheatricalRelease": "Sortie en salle: {{date}}",
     "ViewOnPlex": "Regarder sur Plex",
     "ViewOnEmby": "Regarder sur Emby",
     "RequestAdded": "La demande pour {{title}} a été ajoutée avec succès",
-    "Similar": "Similar",
+    "Similar": "Similaires",
+    "Refine": "Affiner",
     "Movies": {
       "PopularMovies": "Films populaires",
       "UpcomingMovies": "Films à venir",
       "TopRatedMovies": "Films les mieux notés",
       "NowPlayingMovies": "Films à l'affiche",
-      "HomePage": "Site du film",
+      "HomePage": "Accueil",
       "Trailer": "Bande-annonce"
     },
     "TvShows": {
-      "Popular": "Popular",
-      "Trending": "Trending",
-      "MostWatched": "Most Watched",
-      "MostAnticipated": "Most Anticipated",
-      "Results": "Results",
-      "AirDate": "Air Date:",
-      "AllSeasons": "All Seasons",
-      "FirstSeason": "First Season",
-      "LatestSeason": "Latest Season",
-      "Select": "Select ...",
-      "SubmitRequest": "Submit Request",
-      "Season": "Season: {{seasonNumber}}",
-      "SelectAllInSeason": "Select All in Season {{seasonNumber}}"
+      "Popular": "Populaire",
+      "Trending": "Tendances",
+      "MostWatched": "Les plus visionnées",
+      "MostAnticipated": "Les plus attendus",
+      "Results": "Résultats",
+      "AirDate": "Date de diffusion:",
+      "AllSeasons": "Toutes les saisons",
+      "FirstSeason": "Première saison",
+      "LatestSeason": "Dernière saison",
+      "Select": "Sélectionner...",
+      "SubmitRequest": "Envoyer la demande",
+      "Season": "Saison: {{seasonNumber}}",
+      "SelectAllInSeason": "Tout sélectionner dans la saison {{seasonNumber}}"
     }
   },
   "Requests": {
@@ -108,12 +104,15 @@
     "Paragraph": "Vous pouvez voir ci-dessous vos demandes et celles des autres, ainsi que leur statut de téléchargement et d'approbation.",
     "MoviesTab": "Films",
     "TvTab": "Émissions",
+    "MusicTab": "Musique",
     "RequestedBy": "Demandé par :",
     "Status": "Statut :",
     "RequestStatus": "Statut de la demande :",
     "Denied": " Refusé :",
-    "TheatricalRelease": "Theatrical Release: {{date}}",
-    "DigitalRelease": "Digital Release: {{date}}",
+    "TheatricalRelease": "Sortie en salle: {{date}}",
+    "ReleaseDate": "Sortie : {{date}}",
+    "TheatricalReleaseSort": "Sortie en salle",
+    "DigitalRelease": "Sortie numérique: {{date}}",
     "RequestDate": "Date de la demande :",
     "QualityOverride": "Remplacement de la qualité :",
     "RootFolderOverride": "Remplacement du répertoire racine :",
@@ -127,9 +126,23 @@
     "GridTitle": "Titre",
     "AirDate": "Date de diffusion",
     "GridStatus": "Statut",
-    "ReportIssue": "Report Issue",
-    "Filter": "Filter",
-    "SeasonNumberHeading": "Season: {seasonNumber}"
+    "ReportIssue": "Signaler un problème",
+    "Filter": "Filtre",
+    "Sort": "Trier",
+    "SeasonNumberHeading": "Saison: {seasonNumber}",
+    "SortTitleAsc": "Titre ▲",
+    "SortTitleDesc": "Titre ▼",
+    "SortRequestDateAsc": "Date de la demande ▲",
+    "SortRequestDateDesc": "Date de la demande ▼",
+    "SortStatusAsc": "Statut ▲",
+    "SortStatusDesc": "Statut ▼",
+    "Remaining": {
+      "Quota": "{{remaining}}/{{total}} demande(s) restante(s)",
+      "NextDays": "Une autre demande sera ajoutée dans {{time}} jours",
+      "NextHours": "Une autre demande sera ajoutée dans {{time}} heures",
+      "NextMinutes": "Une autre demande sera ajoutée dans {{time}} minutes",
+      "NextMinute": "Une autre demande sera ajoutée dans {{time}} minute"
+    }
   },
   "Issues": {
     "Title": "Problèmes",
@@ -151,9 +164,22 @@
     "ReportedBy": "Signalé par"
   },
   "Filter": {
-    "ClearFilter": "Clear Filter",
-    "FilterHeaderAvailability": "Availability",
-    "FilterHeaderRequestStatus": "Status",
-    "Approved": "Approved"
+    "ClearFilter": "Effacer les filtres",
+    "FilterHeaderAvailability": "Disponibilité",
+    "FilterHeaderRequestStatus": "Statut",
+    "Approved": "Validée",
+    "PendingApproval": "En attente de validation"
+  },
+  "UserManagment": {
+    "TvRemaining": "TV : {{remaining}}/{{total}} restant(s)",
+    "MovieRemaining": "Films : {{remaining}}/{{total}} restant(s)",
+    "MusicRemaining": "Musique : {{remaining}}/{{total}} restant(s)",
+    "TvDue": "TV : {{date}}",
+    "MovieDue": "Film : {{date}}",
+    "MusicDue": "Musique : {{date}}"
+  },
+  "Votes": {
+    "CompletedVotesTab": "Voté",
+    "VotesTab": "Votes nécessaires"
   }
 }

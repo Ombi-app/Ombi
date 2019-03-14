@@ -12,6 +12,8 @@
   "Common": {
     "ContinueButton": "Gå videre",
     "Available": "Tilgjengelig",
+    "PartiallyAvailable": "Partially Available",
+    "Monitored": "Overvåket",
     "NotAvailable": "Ikke tilgjengelig",
     "ProcessingRequest": "Behandler forespørsel",
     "PendingApproval": "Venter på godkjenning",
@@ -46,6 +48,7 @@
     "Requests": "Forespørsler",
     "UserManagement": "Brukeradministrasjon",
     "Issues": "Mangler",
+    "Vote": "Stem",
     "Donate": "Doner!",
     "DonateLibraryMaintainer": "Doner til vedlikeholderen av biblioteket",
     "DonateTooltip": "Dette er hvordan jeg overbevise min kone til å la meg bruke min fritid til å utvikle Ombi ;)",
@@ -54,23 +57,15 @@
     "Welcome": "Velkommen {{username}}",
     "UpdateDetails": "Oppdater detaljer",
     "Logout": "Logg av",
-    "Language": {
-      "English": "Engelsk",
-      "French": "Fransk",
-      "Spanish": "Spansk",
-      "German": "Tysk",
-      "Italian": "Italiensk",
-      "Danish": "Dansk",
-      "Dutch": "Nederlandsk",
-      "Norwegian": "Norsk"
-    },
-    "OpenMobileApp": "Åpne mobilapp"
+    "OpenMobileApp": "Åpne mobilapp",
+    "RecentlyAdded": "Nylig lagt til"
   },
   "Search": {
     "Title": "Søk",
     "Paragraph": "Vil du se noe som foreløpig ikke er tilgjengelig? Ikke noe problem, bare søk etter det nedenfor og be om det!",
     "MoviesTab": "Filmer",
     "TvTab": "TV serier",
+    "MusicTab": "Musikk",
     "Suggestions": "Forslag",
     "NoResults": "Beklager, vi fant ingen resultater!",
     "DigitalDate": "Digital utgivelse: {{date}}",
@@ -79,6 +74,7 @@
     "ViewOnEmby": "Spill av på Emby",
     "RequestAdded": "Forespørsel om {{title}} er lagt til",
     "Similar": "Lignende",
+    "Refine": "Refine",
     "Movies": {
       "PopularMovies": "Populære filmer",
       "UpcomingMovies": "Kommende filmer",
@@ -108,11 +104,14 @@
     "Paragraph": "Nedenfor kan du se dine og alle andres forespørsler, du ser også status for nedlasting og godkjenning.",
     "MoviesTab": "Filmer",
     "TvTab": "TV serier",
+    "MusicTab": "Musikk",
     "RequestedBy": "Etterspurt av:",
     "Status": "Status:",
     "RequestStatus": "Status for forespørsel:",
     "Denied": " Avslått:",
     "TheatricalRelease": "Kinopremiere: {{date}}",
+    "ReleaseDate": "Released: {{date}}",
+    "TheatricalReleaseSort": "Theatrical Release",
     "DigitalRelease": "Digital utgivelse: {{date}}",
     "RequestDate": "Dato for forespørsel:",
     "QualityOverride": "Overstyr kvalitet:",
@@ -129,7 +128,21 @@
     "GridStatus": "Status",
     "ReportIssue": "Rapportér en feil",
     "Filter": "Filter",
-    "SeasonNumberHeading": "Sesong: {seasonNumber}"
+    "Sort": "Sorter",
+    "SeasonNumberHeading": "Sesong: {seasonNumber}",
+    "SortTitleAsc": "Tittel ▲",
+    "SortTitleDesc": "Tittel ▼",
+    "SortRequestDateAsc": "Request Date ▲",
+    "SortRequestDateDesc": "Request Date ▼",
+    "SortStatusAsc": "Status ▲",
+    "SortStatusDesc": "Status ▼",
+    "Remaining": {
+      "Quota": "{{remaining}}/{{total}} requests remaining",
+      "NextDays": "Another request will be added in {{time}} days",
+      "NextHours": "Another request will be added in {{time}} hours",
+      "NextMinutes": "Another request will be added in {{time}} minutes",
+      "NextMinute": "Another request will be added in {{time}} minute"
+    }
   },
   "Issues": {
     "Title": "Mangler",
@@ -154,6 +167,19 @@
     "ClearFilter": "Tøm filter",
     "FilterHeaderAvailability": "Tilgjengelighet",
     "FilterHeaderRequestStatus": "Status",
-    "Approved": "Godkjent"
+    "Approved": "Godkjent",
+    "PendingApproval": "Venter på godkjenning"
+  },
+  "UserManagment": {
+    "TvRemaining": "TV: {{remaining}}/{{total}} gjenstående",
+    "MovieRemaining": "Filmer: {{remaining}}/{{total}} gjenstående",
+    "MusicRemaining": "Musikk: {{remaining}}/{{total}} gjenstående",
+    "TvDue": "TV: {{date}}",
+    "MovieDue": "Film:{{date}}",
+    "MusicDue": "Musikk:{{date}}"
+  },
+  "Votes": {
+    "CompletedVotesTab": "Stemt",
+    "VotesTab": "Votes Needed"
   }
 }

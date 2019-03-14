@@ -12,6 +12,8 @@
   "Common": {
     "ContinueButton": "Continue",
     "Available": "Available",
+    "PartiallyAvailable": "Partially Available",
+    "Monitored": "Monitored",
     "NotAvailable": "Not Available",
     "ProcessingRequest": "Processing Request",
     "PendingApproval": "Pending Approval",
@@ -48,6 +50,7 @@
     "Requests": "Requests",
     "UserManagement": "User Management",
     "Issues":"Issues",
+    "Vote":"Vote",
     "Donate": "Donate!",
     "DonateLibraryMaintainer": "Donate to Library Maintainer",
     "DonateTooltip":
@@ -57,16 +60,6 @@
     "Welcome": "Welcome {{username}}",
     "UpdateDetails": "Update Details",
     "Logout": "Logout",
-    "Language": {
-      "English": "English",
-      "French": "French",
-      "Spanish": "Spanish",
-      "German": "German",
-      "Italian": "Italian",
-      "Danish": "Danish",
-      "Dutch": "Dutch",
-      "Norwegian":"Norwegian"
-    },
     "OpenMobileApp":"Open Mobile App",
     "RecentlyAdded":"Recently Added"
   },
@@ -76,6 +69,7 @@
       "Want to watch something that is not currently available? No problem, just search for it below and request it!",
     "MoviesTab": "Movies",
     "TvTab": "TV Shows",
+    "MusicTab":"Music",
     "Suggestions": "Suggestions",
     "NoResults": "Sorry, we didn't find any results!",
     "DigitalDate": "Digital Release: {{date}}",
@@ -84,6 +78,7 @@
     "ViewOnEmby": "View On Emby",
     "RequestAdded": "Request for {{title}} has been added successfully",
     "Similar":"Similar",
+    "Refine":"Refine",
     "Movies": {
       "PopularMovies": "Popular Movies",
       "UpcomingMovies": "Upcoming Movies",
@@ -114,11 +109,13 @@
       "Below you can see yours and all other requests, as well as their download and approval status.",
     "MoviesTab": "Movies",
     "TvTab": "TV Shows",
+    "MusicTab":"Music",
     "RequestedBy": "Requested By:",
     "Status": "Status:",
     "RequestStatus": "Request status:",
     "Denied": " Denied:",
     "TheatricalRelease": "Theatrical Release: {{date}}",
+    "ReleaseDate": "Released: {{date}}",
     "TheatricalReleaseSort": "Theatrical Release",
     "DigitalRelease": "Digital Release: {{date}}",
     "RequestDate": "Request Date:",
@@ -143,7 +140,14 @@
     "SortRequestDateAsc": "Request Date ▲",
     "SortRequestDateDesc": "Request Date ▼",
     "SortStatusAsc":"Status ▲",  
-    "SortStatusDesc":"Status ▼"
+    "SortStatusDesc":"Status ▼",
+    "Remaining": {
+      "Quota": "{{remaining}}/{{total}} requests remaining",
+      "NextDays": "Another request will be added in {{time}} days",
+      "NextHours": "Another request will be added in {{time}} hours",
+      "NextMinutes": "Another request will be added in {{time}} minutes",
+      "NextMinute": "Another request will be added in {{time}} minute"
+    }
   },
   "Issues":{
     "Title":"Issues",
@@ -170,5 +174,17 @@
     "FilterHeaderRequestStatus":"Status",
     "Approved":"Approved", 
     "PendingApproval": "Pending Approval"
+  },
+  "UserManagment": {
+    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
+    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
+    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
+    "TvDue": "TV: {{date}}",
+    "MovieDue": "Movie: {{date}}",
+    "MusicDue": "Music: {{date}}"
+  },
+  "Votes": {
+    "CompletedVotesTab": "Voted",
+    "VotesTab": "Votes Needed"
   }
 }

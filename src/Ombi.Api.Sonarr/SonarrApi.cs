@@ -16,18 +16,19 @@ namespace Ombi.Api.Sonarr
             Api = api;
         }
 
-        private IApi Api { get; }
+        protected IApi Api { get; }
+        protected virtual string ApiBaseUrl => "/api/";
 
         public async Task<IEnumerable<SonarrProfile>> GetProfiles(string apiKey, string baseUrl)
         {
-            var request = new Request("/api/profile", baseUrl, HttpMethod.Get);
+            var request = new Request($"{ApiBaseUrl}profile", baseUrl, HttpMethod.Get);
             request.AddHeader("X-Api-Key", apiKey);
             return await Api.Request<List<SonarrProfile>>(request);
         }
 
         public async Task<IEnumerable<SonarrRootFolder>> GetRootFolders(string apiKey, string baseUrl)
         {
-            var request = new Request("/api/rootfolder", baseUrl, HttpMethod.Get);
+            var request = new Request($"{ApiBaseUrl}rootfolder", baseUrl, HttpMethod.Get);
             request.AddHeader("X-Api-Key", apiKey);
             return await Api.Request<List<SonarrRootFolder>>(request);
         }
@@ -40,7 +41,7 @@ namespace Ombi.Api.Sonarr
         /// <returns></returns>
         public async Task<IEnumerable<SonarrSeries>> GetSeries(string apiKey, string baseUrl)
         {
-            var request = new Request("/api/series", baseUrl, HttpMethod.Get);
+            var request = new Request($"{ApiBaseUrl}series", baseUrl, HttpMethod.Get);
             request.AddHeader("X-Api-Key", apiKey);
             var results = await Api.Request<List<SonarrSeries>>(request);
 
@@ -63,7 +64,7 @@ namespace Ombi.Api.Sonarr
         /// <returns></returns>
         public async Task<SonarrSeries> GetSeriesById(int id, string apiKey, string baseUrl)
         {
-            var request = new Request($"/api/series/{id}", baseUrl, HttpMethod.Get);
+            var request = new Request($"{ApiBaseUrl}series/{id}", baseUrl, HttpMethod.Get);
             request.AddHeader("X-Api-Key", apiKey);
             var result = await Api.Request<SonarrSeries>(request);
             if (result?.seasons?.Length > 0)
@@ -82,7 +83,7 @@ namespace Ombi.Api.Sonarr
         /// <returns></returns>
         public async Task<SonarrSeries> UpdateSeries(SonarrSeries updated, string apiKey, string baseUrl)
         {
-            var request = new Request("/api/series/", baseUrl, HttpMethod.Put);
+            var request = new Request($"{ApiBaseUrl}series/", baseUrl, HttpMethod.Put);
             request.AddHeader("X-Api-Key", apiKey);
             request.AddJsonBody(updated);
             return await Api.Request<SonarrSeries>(request);
@@ -94,7 +95,7 @@ namespace Ombi.Api.Sonarr
             {
                 return new NewSeries { ErrorMessages = new List<string> { seriesToAdd.Validate() } };
             }
-            var request = new Request("/api/series/", baseUrl, HttpMethod.Post);
+            var request = new Request($"{ApiBaseUrl}series/", baseUrl, HttpMethod.Post);
 
             request.AddHeader("X-Api-Key", apiKey);
             request.AddJsonBody(seriesToAdd);
@@ -120,7 +121,7 @@ namespace Ombi.Api.Sonarr
         /// <returns></returns>
         public async Task<IEnumerable<Episode>> GetEpisodes(int seriesId, string apiKey, string baseUrl)
         {
-            var request = new Request($"/api/Episode?seriesId={seriesId}", baseUrl, HttpMethod.Get);
+            var request = new Request($"{ApiBaseUrl}Episode?seriesId={seriesId}", baseUrl, HttpMethod.Get);
             request.AddHeader("X-Api-Key", apiKey);
             return await Api.Request<List<Episode>>(request);
         }
@@ -134,14 +135,14 @@ namespace Ombi.Api.Sonarr
         /// <returns></returns>
         public async Task<Episode> GetEpisodeById(int episodeId, string apiKey, string baseUrl)
         {
-            var request = new Request($"/api/Episode/{episodeId}", baseUrl, HttpMethod.Get);
+            var request = new Request($"{ApiBaseUrl}Episode/{episodeId}", baseUrl, HttpMethod.Get);
             request.AddHeader("X-Api-Key", apiKey);
             return await Api.Request<Episode>(request);
         }
 
         public async Task<EpisodeUpdateResult> UpdateEpisode(Episode episodeToUpdate, string apiKey, string baseUrl)
         {
-            var request = new Request($"/api/Episode/", baseUrl, HttpMethod.Put);
+            var request = new Request($"{ApiBaseUrl}Episode/", baseUrl, HttpMethod.Put);
             request.AddHeader("X-Api-Key", apiKey);
             request.AddJsonBody(episodeToUpdate);
             return await Api.Request<EpisodeUpdateResult>(request);
@@ -189,7 +190,7 @@ namespace Ombi.Api.Sonarr
 
         private async Task<CommandResult> Command(string apiKey, string baseUrl, object body)
         {
-            var request = new Request($"/api/Command/", baseUrl, HttpMethod.Post);
+            var request = new Request($"{ApiBaseUrl}Command/", baseUrl, HttpMethod.Post);
             request.AddHeader("X-Api-Key", apiKey);
             request.AddJsonBody(body);
             return await Api.Request<CommandResult>(request);
@@ -197,7 +198,7 @@ namespace Ombi.Api.Sonarr
 
         public async Task<SystemStatus> SystemStatus(string apiKey, string baseUrl)
         {
-            var request = new Request("/api/system/status", baseUrl, HttpMethod.Get);
+            var request = new Request($"{ApiBaseUrl}system/status", baseUrl, HttpMethod.Get);
             request.AddHeader("X-Api-Key", apiKey);
 
             return await Api.Request<SystemStatus>(request);
@@ -217,7 +218,7 @@ namespace Ombi.Api.Sonarr
                     ignoreEpisodesWithoutFiles = false,
                 }
             };
-            var request = new Request("/api/seasonpass", baseUrl, HttpMethod.Post);
+            var request = new Request($"{ApiBaseUrl}seasonpass", baseUrl, HttpMethod.Post);
             request.AddHeader("X-Api-Key", apiKey);
             request.AddJsonBody(seasonPass);
 

@@ -12,6 +12,7 @@ using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Models;
 using Ombi.Models.External;
 
 namespace Ombi.Controllers.External
@@ -126,6 +127,99 @@ namespace Ombi.Controllers.External
             }
         }
 
+
+        [HttpGet("Libraries/{machineId}")]
+        [PowerUser]
+        public async Task<PlexLibrariesLiteResponse> GetPlexLibraries(string machineId)
+        {
+            try
+            {
+                var s = await PlexSettings.GetSettingsAsync();
+                var settings = s.Servers.FirstOrDefault(x => x.MachineIdentifier == machineId);
+                var libs = await PlexApi.GetLibrariesForMachineId(settings.PlexAuthToken, machineId);
+
+                return new PlexLibrariesLiteResponse
+                {
+                    Successful = true,
+                    Data = libs.Server.Section
+                };
+            }
+            catch (Exception e)
+            {
+                _log.LogWarning(e, "Error thrown when attempting to obtain the plex libs");
+
+                var message = e.InnerException != null ? $"{e.Message} - {e.InnerException.Message}" : e.Message;
+                return new PlexLibrariesLiteResponse
+                {
+                    Successful = false,
+                    Message = message
+                };
+            }
+        }
+
+        [HttpPost("user")]
+        [PowerUser]
+        public async Task<IActionResult> AddUser([FromBody] PlexUserViewModel user)
+        {
+            var s = await PlexSettings.GetSettingsAsync();
+            var server = s.Servers.FirstOrDefault(x => x.MachineIdentifier == user.MachineIdentifier);
+            var result = await PlexApi.AddUser(user.Username, user.MachineIdentifier, server.PlexAuthToken,
+                user.LibsSelected);
+            if (result.HasError)
+            {
+                return Json(new
+                {
+                    Success = false,
+                    Error = result.Error.Status
+                });
+            }
+            else
+            {
+                return Json(new
+                {
+                    Success = true
+                });
+            }
+        }
+
+        /// <summary>
+        /// Gets the plex servers.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("servers")]
+        [PowerUser]
+        public async Task<IActionResult> GetServers()
+        {
+            try
+            {
+                var s = await PlexSettings.GetSettingsAsync();
+                var servers =  new List<PlexServersAddUserModel>();
+                foreach (var plexServer in s.Servers)
+                {
+                    servers.Add(new PlexServersAddUserModel
+                    {
+                        ServerId = plexServer.Id,
+                        MachineId = plexServer.MachineIdentifier,
+                        ServerName = plexServer.Name
+                    });
+                }
+
+                return Json(new
+                {
+                    Success = true,
+                    Servers = servers
+                });
+            }
+            catch (Exception e)
+            {
+                _log.LogWarning(e, "Error thrown when attempting to obtain the GetServers for Add User VM");
+                return Json(new PlexServersViewModel
+                {
+                    Success = false,
+                });
+            }
+        }
+
         /// <summary>
         /// Gets the plex servers.
         /// </summary>
@@ -177,25 +271,23 @@ namespace Ombi.Controllers.External
             return vm.DistinctBy(x => x.Id);
         }
 
-        [HttpGet("oauth/{wizard:bool}")]
+        [HttpPost("oauth")]
         [AllowAnonymous]
-        public async Task<IActionResult> OAuth(bool wizard)
+        public async Task<IActionResult> OAuth([FromBody]PlexOAuthViewModel wizard)
         {
             //https://app.plex.tv/auth#?forwardUrl=http://google.com/&clientID=Ombi-Test&context%5Bdevice%5D%5Bproduct%5D=Ombi%20SSO&pinID=798798&code=4lgfd
             // Plex OAuth
             // Redirect them to Plex
-            // We need a PIN first
-            var pin = await _plexOAuthManager.RequestPin();
 
             Uri url;
-            if (!wizard)
+            if (!wizard.Wizard)
             {
-                url = await _plexOAuthManager.GetOAuthUrl(pin.id, pin.code);
+                url = await _plexOAuthManager.GetOAuthUrl(wizard.Pin.code);
             }
             else
             {
                 var websiteAddress =$"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
-                url = _plexOAuthManager.GetWizardOAuthUrl(pin.id, pin.code, websiteAddress);
+                url = await _plexOAuthManager.GetWizardOAuthUrl(wizard.Pin.code, websiteAddress);
             }
 
             if (url == null)

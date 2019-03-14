@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Ombi.Attributes;
 using Ombi.Core.Authentication;
 using Ombi.Helpers;
@@ -17,19 +18,24 @@ namespace Ombi.Controllers
     [ApiV1]
     [Authorize]
     [Produces("application/json")]
-    public class MobileController : Controller
+    [ApiController]
+    public class MobileController : ControllerBase
     {
-        public MobileController(IRepository<NotificationUserId> notification, OmbiUserManager user)
+        public MobileController(IRepository<NotificationUserId> notification, OmbiUserManager user, ILogger<MobileController> log)
         {
             _notification = notification;
             _userManager = user;
+            _log = log;
         }
 
         private readonly IRepository<NotificationUserId> _notification;
         private readonly OmbiUserManager _userManager;
+        private readonly ILogger _log;
 
         [HttpPost("Notification")]
         [ApiExplorerSettings(IgnoreApi = true)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> AddNotitficationId([FromBody] NotificationIdBody body)
         {
             if (body?.PlayerId.HasValue() ?? false)
@@ -74,6 +80,25 @@ namespace Ombi.Controllers
                 });
             }
             return vm;
+        }
+
+        [HttpPost]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [Admin]
+        public async Task<bool> RemoveUser([FromBody] string userId)
+        {
+            var user = await _userManager.Users.Include(x => x.NotificationUserIds).FirstOrDefaultAsync(x => x.Id.Equals(userId, StringComparison.InvariantCultureIgnoreCase));
+            try
+            {
+                await _notification.DeleteRange(user.NotificationUserIds);
+                return true;
+            }
+            catch (Exception e)
+            {
+                _log.LogError(e, "Could not delete user notification");
+            }
+
+            return false;
         }
     }
 }

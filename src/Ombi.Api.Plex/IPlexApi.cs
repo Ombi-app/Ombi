@@ -11,6 +11,7 @@ namespace Ombi.Api.Plex
     public interface IPlexApi
     {
         Task<PlexStatus> GetStatus(string authToken, string uri);
+        Task<PlexLibrariesForMachineId> GetLibrariesForMachineId(string authToken, string machineId);
         Task<PlexAuthentication> SignIn(UserRequest user);
         Task<PlexServer> GetServer(string authToken);
         Task<PlexContainer> GetLibrarySections(string authToken, string plexFullHost);
@@ -22,8 +23,8 @@ namespace Ombi.Api.Plex
         Task<PlexFriends> GetUsers(string authToken);
         Task<PlexAccount> GetAccount(string authToken);
         Task<PlexMetadata> GetRecentlyAdded(string authToken, string uri, string sectionId);
-        Task<OAuthPin> CreatePin();
         Task<OAuthPin> GetPin(int pinId);
-        Uri GetOAuthUrl(int pinId, string code, string applicationUrl, bool wizard);
+        Task<Uri> GetOAuthUrl(string code, string applicationUrl);
+        Task<PlexAddWrapper> AddUser(string emailAddress, string serverId, string authToken, int[] libs);
     }
 }

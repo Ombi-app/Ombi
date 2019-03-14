@@ -17,10 +17,6 @@ namespace Ombi.Store.Entities.Requests
         public DateTime ReleaseDate { get; set; }
         public string Status { get; set; }
 
-        /// <summary>
-        /// This is so we can correctly send the right amount of seasons to Sonarr
-        /// </summary>
-        [NotMapped]
         public int TotalSeasons { get; set; }
 
         public List<ChildRequests> ChildRequests { get; set; }

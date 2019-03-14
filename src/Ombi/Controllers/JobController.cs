@@ -16,7 +16,8 @@ namespace Ombi.Controllers
     [ApiV1]
     [Admin]
     [Produces("application/json")]
-    public class JobController : Controller
+    [ApiController]
+    public class JobController : ControllerBase
     {
         public JobController(IOmbiAutomaticUpdater updater, IPlexUserImporter userImporter,
             ICacheService mem, IEmbyUserImporter embyImporter, IPlexContentSync plexContentSync,

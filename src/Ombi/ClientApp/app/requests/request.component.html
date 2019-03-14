@@ -3,10 +3,14 @@
 
 <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active">
-        <a id="movieTabButton" aria-controls="home" role="tab" data-toggle="tab" (click)="selectMovieTab()"><i class="fa fa-film"></i> {{ 'Requests.MoviesTab' | translate }}</a>
+        <a id="movieTabButton" aria-controls="home" role="tab" data-toggle="tab" (click)="selectMovieTab()" href="#movieTab"><i class="fa fa-film"></i> {{ 'Requests.MoviesTab' | translate }}</a>
     </li>
     <li role="presentation">
-        <a id="tvTabButton" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectTvTab()"><i class="fa fa-television"></i> {{ 'Requests.TvTab' | translate }}</a>
+        <a id="tvTabButton" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectTvTab()" href="#tvTab"><i class="fa fa-television"></i> {{ 'Requests.TvTab' | translate }}</a>
+
+    </li>
+    <li role="presentation" *ngIf="musicEnabled">
+        <a id="albumTabButton" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectMusicTab()" href="#albumTab"><i class="fa fa-music"></i> {{ 'Requests.MusicTab' | translate }}</a>
 
     </li>
 </ul>
@@ -18,6 +22,9 @@
     </div>
     <div [hidden]="!showTv">
         <tv-requests [issueCategories]="issueCategories" [issuesEnabled]="issuesEnabled"></tv-requests>
+    </div>
+    <div [hidden]="!showAlbums">
+        <music-requests [issueCategories]="issueCategories" [issuesEnabled]="issuesEnabled"></music-requests>
     </div>
 </div>
 

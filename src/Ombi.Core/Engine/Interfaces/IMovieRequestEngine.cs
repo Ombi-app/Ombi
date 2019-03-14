@@ -12,12 +12,11 @@ namespace Ombi.Core.Engine.Interfaces
         Task<IEnumerable<MovieRequests>> SearchMovieRequest(string search);
 
         Task RemoveMovieRequest(int requestId);
+        Task RemoveAllMovieRequests();
 
         Task<MovieRequests> UpdateMovieRequest(MovieRequests request);
         Task<RequestEngineResult> ApproveMovie(MovieRequests request);
         Task<RequestEngineResult> ApproveMovieById(int requestId);
-        Task<RequestEngineResult> DenyMovieById(int modelId);
-
-   
+        Task<RequestEngineResult> DenyMovieById(int modelId, string denyReason);
     }
 }
