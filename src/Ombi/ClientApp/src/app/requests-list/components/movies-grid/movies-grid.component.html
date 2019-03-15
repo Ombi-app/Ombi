@@ -1,0 +1,47 @@
+<table *ngIf="dataSource" mat-table [dataSource]="dataSource.collection" class="mat-elevation-z8 table">
+
+  <!--- Note that these columns can be defined in any order.
+        The actual rendered columns are set as a property on the row definition" -->
+
+  <ng-container matColumnDef="requestedBy">
+    <th mat-header-cell *matHeaderCellDef> Requested By </th>
+    <td mat-cell *matCellDef="let element"> {{element.requestedUser.userAlias}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="title">
+    <th mat-header-cell *matHeaderCellDef> Title </th>
+    <td mat-cell *matCellDef="let element"> {{element.title}} ({{element.releaseDate | amLocal | amDateFormat: 'YYYY'}}) </td>
+  </ng-container>
+
+  <ng-container matColumnDef="requestedDate">
+    <th mat-header-cell *matHeaderCellDef> Request Date </th>
+    <td mat-cell *matCellDef="let element"> {{element.requestedDate | amLocal | amDateFormat: 'LL'}} </td>
+  </ng-container>
+  
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef> Status </th>
+    <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+  </ng-container>
+
+    
+  <ng-container matColumnDef="requestStatus">
+    <th mat-header-cell *matHeaderCellDef> Request Status </th>
+    <td mat-cell *matCellDef="let element">   
+      <div *ngIf="element.approved && !element.available">{{'Common.ProcessingRequest' | translate}}</div>
+      <div *ngIf="element.requested && !element.approved && !element.available">{{'Common.PendingApproval' | translate}}
+      </div>
+      <div *ngIf="!element.requested && !element.available && !element.approved">{{'Common.NotRequested' | translate}}
+      </div>
+    </td>
+  </ng-container>  
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef> </th>
+    <td mat-cell *matCellDef="let element"> 
+    <button mat-raised-button color="primary" [routerLink]="">Details</button>  
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
