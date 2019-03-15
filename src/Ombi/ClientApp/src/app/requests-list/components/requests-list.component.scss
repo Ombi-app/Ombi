@@ -6,3 +6,21 @@
 .table {
     width: 100%;
 }
+.example-table-container {
+    position: relative;
+    max-height: 400px;
+    overflow: auto;
+  }
+  
+.example-loading-shade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 56px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
