@@ -1,14 +1,25 @@
-<div class="example-table-container mat-elevation-z8 ">
-  <div class="example-loading-shade" *ngIf="isLoadingResults">
-    <mat-spinner *ngIf="isLoading"></mat-spinner>
+<div class="mat-elevation-z8">
+  <div class="loading-shade" *ngIf="isLoadingResults">
+      <div *ngIf="isLoadingResults" class="row justify-content-md-center top-spacing loading-spinner">
+          <mat-spinner [color]="'accent'"></mat-spinner>
+      </div>
   </div>
+
+  <mat-form-field>
+      <mat-select placeholder="Requests to Display" [(value)]="gridCount" (selectionChange)="ngAfterViewInit()">
+        <mat-option value="10">10</mat-option>
+        <mat-option value="15">15</mat-option>
+        <mat-option value="30">30</mat-option>
+        <mat-option value="100">100</mat-option>
+      </mat-select>
+    </mat-form-field>
 
   <table mat-table [dataSource]="dataSource" class="table" matSort matSortActive="requestedDate"
     matSortDisableClear matSortDirection="desc">
 
 
-    <ng-container matColumnDef="requestedBy">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Requested By </th>
+    <ng-container matColumnDef="requestedUser.requestedBy">
+      <th mat-header-cell *matHeaderCellDef > Requested By </th>
       <td mat-cell *matCellDef="let element"> {{element.requestedUser?.userAlias}} </td>
     </ng-container>
 
@@ -24,13 +35,13 @@
     </ng-container>
 
     <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef> Status </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Status </th>
       <td mat-cell *matCellDef="let element"> {{element.status}} </td>
     </ng-container>
 
 
     <ng-container matColumnDef="requestStatus">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Request Status </th>
+      <th mat-header-cell *matHeaderCellDef > Request Status </th>
       <td mat-cell *matCellDef="let element">
         <div *ngIf="element.approved && !element.available">{{'Common.ProcessingRequest' | translate}}</div>
         <div *ngIf="element.requested && !element.approved && !element.available">{{'Common.PendingApproval' |
@@ -49,9 +60,9 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
-  <mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
+  <mat-paginator [length]="resultsLength" [pageSize]="gridCount"></mat-paginator>
 </div>

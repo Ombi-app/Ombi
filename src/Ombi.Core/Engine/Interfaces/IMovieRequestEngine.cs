@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ombi.Core.Models.Requests;
+using Ombi.Core.Models.UI;
 using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core.Engine.Interfaces
@@ -18,5 +19,6 @@ namespace Ombi.Core.Engine.Interfaces
         Task<RequestEngineResult> ApproveMovie(MovieRequests request);
         Task<RequestEngineResult> ApproveMovieById(int requestId);
         Task<RequestEngineResult> DenyMovieById(int modelId, string denyReason);
+        Task<RequestsViewModel<MovieRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder);
     }
 }

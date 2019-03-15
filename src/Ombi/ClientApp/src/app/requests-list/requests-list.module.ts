@@ -1,7 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
-import { RequestService } from "../services";
 
 import { SharedModule } from "../shared/shared.module";
 import { PipeModule } from "../pipes/pipe.module";
@@ -22,15 +21,15 @@ const routes: Routes = [
     ],
     declarations: [
         ...fromComponents.components
-      ],
+    ],
     exports: [
         RouterModule,
     ],
     entryComponents: [
     ],
     providers: [
-        RequestService,
-        ],
+        ...fromComponents.providers
+    ],
 
 })
 export class RequestsListModule { }

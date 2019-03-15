@@ -1,9 +1,10 @@
 import { Component, AfterViewInit, ViewChild } from "@angular/core";
-import { RequestService } from "../../../services";
 import { IMovieRequests, OrderType, FilterType, IRequestsViewModel } from "../../../interfaces";
 import { MatPaginator, MatSort } from "@angular/material";
 import { merge, Observable, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+
+import { RequestServiceV2 } from "../../../services/requestV2.service";
 
 @Component({
     templateUrl: "./movies-grid.component.html",
@@ -14,13 +15,13 @@ export class MoviesGridComponent implements AfterViewInit {
     public dataSource: IMovieRequests[] = [];
     public resultsLength: number;
     public isLoadingResults = true;
-    public displayedColumns: string[] = ['requestedBy', 'title', 'requestedDate', 'status', 'requestStatus', 'actions'];
-    public gridCount = 30;
+    public displayedColumns: string[] = ['requestedUser.requestedBy', 'title', 'requestedDate', 'status', 'requestStatus', 'actions'];
+    public gridCount: string = "15";
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    constructor(private requestService: RequestService) {
+    constructor(private requestService: RequestServiceV2) {
 
     }
 
@@ -40,8 +41,7 @@ export class MoviesGridComponent implements AfterViewInit {
                     this.isLoadingResults = true;
                     // eturn this.exampleDatabase!.getRepoIssues(
                     //     this.sort.active, this.sort.direction, this.paginator.pageIndex);
-                    return this.requestService.getMovieRequests(this.gridCount, this.paginator.pageIndex * this.gridCount, OrderType.RequestedDateDesc, 
-                        { availabilityFilter: FilterType.None, statusFilter: FilterType.None});
+                    return this.requestService.getMovieRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
                 }),
                 map((data: IRequestsViewModel<IMovieRequests>) => {
                     // Flip flag to show that loading has finished.
