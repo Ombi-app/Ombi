@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from "@angular/core";
-import { ImageService, SearchV2Service, RequestService, MessageService } from "../../../services";
+import { ImageService, SearchV2Service, MessageService } from "../../../services";
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
@@ -15,10 +15,6 @@ import { EpisodeRequestComponent } from "../../../shared/episode-request/episode
 export class TvDetailsComponent {
     public tv: ISearchTvResultV2;
     public fromSearch: boolean;
-
-    public seasonCount: number;
-    public totalEpisodes: number = 0;
-    public nextEpisode: any;
 
     private tvdbId: number;
 
@@ -41,12 +37,7 @@ export class TvDetailsComponent {
             this.tv = await this.searchService.getTvInfo(this.tvdbId);
         }
 
-        this.tv.seasonRequests.forEach(season => {
-            this.totalEpisodes = this.totalEpisodes + season.episodes.length;
-        });
-        this.seasonCount = this.tv.seasonRequests.length;
-
-        const tvBanner = await this.imageService.getTvBanner(this.tvdbId).toPromise();
+                const tvBanner = await this.imageService.getTvBanner(this.tvdbId).toPromise();
         this.tv.background = this.sanitizer.bypassSecurityTrustStyle("url(" + tvBanner + ")");
     }
 
