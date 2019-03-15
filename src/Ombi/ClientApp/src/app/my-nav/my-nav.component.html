@@ -8,9 +8,16 @@
         {{nav.name | translate}}
       </a>    
 
-      <a mat-list-item [routerLinkActive]="['active-list-item']" aria-label="Toggle sidenav" (click)="logOut();">
+      <a class="bottom-nav-link" mat-list-item [routerLinkActive]="['active-list-item']" aria-label="Toggle sidenav" (click)="logOut();">
         <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
         {{ 'NavigationBar.Logout' | translate }}
+      </a>
+
+      <a mat-list-item aria-label="Toggle sidenav" (click)="switchTheme();">
+        <mat-slide-toggle>
+          {{ 'NavigationBar.ChangeTheme' | translate }}
+      </mat-slide-toggle>
+        
       </a>
 
     </mat-nav-list>

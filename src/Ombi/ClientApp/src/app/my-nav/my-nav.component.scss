@@ -1,6 +1,6 @@
 @import "~styles/variables.scss";
 .sidenav-container {
-    height: 100%;
+    min-height: 100vh;
 }
 
 .sidenav {
@@ -44,4 +44,9 @@
 
 .active-list-item {
     background: $accent !important;
+}
+
+.bottom-nav-link {
+    bottom: 0;
+    position: absolute;
 }

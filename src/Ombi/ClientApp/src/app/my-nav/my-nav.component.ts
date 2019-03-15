@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostBinding } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -16,22 +16,41 @@ export class MyNavComponent {
       map(result => result.matches)
     );
 
-    @Input() public showNav: boolean;
-    @Input() public applicationName: string;
-    @Input() public username: string;
-    @Output() public logoutClick = new EventEmitter();
+  @Input() public showNav: boolean;
+  @Input() public applicationName: string;
+  @Input() public username: string;
+  @Output() public logoutClick = new EventEmitter();
+  @Output() public themeChange = new EventEmitter<string>();
+
 
   constructor(private breakpointObserver: BreakpointObserver) {
   }
 
   public navItems: INavBar[] = [
-    {name: "NavigationBar.Discover", icon: "find_replace", link: "/discover"},
-    {name: "NavigationBar.Search", icon: "search", link: "/search"},
-    {name: "NavigationBar.Requests", icon: "list", link: "/requests"},
-    {name: "NavigationBar.Settings", icon: "settings", link: "/Settings/About"},
-  ] 
+    { name: "NavigationBar.Discover", icon: "find_replace", link: "/discover" },
+    { name: "NavigationBar.Search", icon: "search", link: "/search" },
+    { name: "NavigationBar.Requests", icon: "list", link: "/requests" },
+    { name: "NavigationBar.Settings", icon: "settings", link: "/Settings/About" },
+  ]
 
   public logOut() {
     this.logoutClick.emit();
   }
+
+  public switchTheme() {
+    const theme = localStorage.getItem("theme");
+
+    if (theme) {
+      localStorage.removeItem("theme");
+      let newTheme = "";
+      if (theme === "dark") {
+        newTheme = "light";
+      } else {
+        newTheme = "dark";
+      }
+      localStorage.setItem("theme", newTheme)
+      this.themeChange.emit(newTheme);
+    }
+  }
+
 }

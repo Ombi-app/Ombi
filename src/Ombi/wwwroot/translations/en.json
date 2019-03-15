@@ -60,7 +60,8 @@
     "UpdateDetails": "Update Details",
     "Logout": "Logout",
     "OpenMobileApp": "Open Mobile App",
-    "RecentlyAdded": "Recently Added"
+    "RecentlyAdded": "Recently Added",
+    "ChangeTheme":"Change Theme"
   },
   "Search": {
     "Title": "Search",

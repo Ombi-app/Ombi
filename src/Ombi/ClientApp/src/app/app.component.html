@@ -168,7 +168,8 @@
 
     
 <div [ngClass]="user.name && roleClass()">
-    <app-my-nav [showNav]="showNav" [applicationName]="applicationName" [username]="user.name" (logoutClick)="logOut();"></app-my-nav>
+    <app-my-nav [showNav]="showNav" [applicationName]="applicationName" [username]="user.name" (logoutClick)="logOut();"
+    (themeChange)="onSetTheme($event)"></app-my-nav>
 
 
 </div>

@@ -23,7 +23,7 @@ import {
 import {
     MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatAutocompleteModule, MatCheckboxModule, MatSnackBarModule
 } from '@angular/material';
-import { MatCardModule, MatInputModule, MatTabsModule } from "@angular/material";
+import { MatCardModule, MatInputModule, MatTabsModule, MatSlideToggleModule } from "@angular/material";
 
 import { MDBBootstrapModule, CardsFreeModule, NavbarModule } from "angular-bootstrap-md";
 
@@ -139,7 +139,7 @@ export function JwtTokenGetter() {
             },
         }),
         SidebarModule,
-        MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, LayoutModule,
+        MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, LayoutModule, MatSlideToggleModule
     ],
     declarations: [
         AppComponent,
