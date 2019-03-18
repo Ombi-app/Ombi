@@ -23,5 +23,6 @@ namespace Ombi.Core.Engine.Interfaces
         Task<IEnumerable<TvRequests>> GetRequestsLite();
         Task UpdateQualityProfile(int requestId, int profileId);
         Task UpdateRootPath(int requestId, int rootPath);
+        Task<RequestsViewModel<TvRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder);
     }
 }

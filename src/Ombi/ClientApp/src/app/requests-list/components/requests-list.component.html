@@ -1,11 +1,14 @@
 <div class="small-middle-container">
   <mat-tab-group>
     <mat-tab label="Movies">
-      <movies-grid></movies-grid>
+        <ng-template matTabContent>
+            <movies-grid></movies-grid>
+          </ng-template>
     </mat-tab>
     <mat-tab label="TV Shows">
-      <h1>Some more tab content</h1>
-      <p>...</p>
+        <ng-template matTabContent>
+            <tv-grid></tv-grid>
+          </ng-template>
     </mat-tab>
     <mat-tab label="Albums">
       <h1>Some more tab content</h1>

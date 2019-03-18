@@ -1,9 +1,5 @@
 <div class="mat-elevation-z8">
-  <div class="loading-shade" *ngIf="isLoadingResults">
-      <div *ngIf="isLoadingResults" class="row justify-content-md-center top-spacing loading-spinner">
-          <mat-spinner [color]="'accent'"></mat-spinner>
-      </div>
-  </div>
+    <grid-spinner [loading]="isLoading"></grid-spinner>
 
   <mat-form-field>
       <mat-select placeholder="Requests to Display" [(value)]="gridCount" (selectionChange)="ngAfterViewInit()">

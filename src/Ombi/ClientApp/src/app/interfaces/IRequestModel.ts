@@ -114,6 +114,8 @@ export interface ITvRequests {
 
 export interface IChildRequests extends IBaseRequest {
   seasonRequests: INewSeasonRequests[];
+  parentRequestId: number;
+  parentRequest: ITvRequests;
   subscribed: boolean;
   showSubscribe: boolean;
 }
