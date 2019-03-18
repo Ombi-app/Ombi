@@ -28,7 +28,6 @@ export class MyNavComponent {
 
   public navItems: INavBar[] = [
     { name: "NavigationBar.Discover", icon: "find_replace", link: "/discover" },
-    { name: "NavigationBar.Search", icon: "search", link: "/search" },
     { name: "NavigationBar.Requests", icon: "list", link: "/requests" },
     { name: "NavigationBar.Settings", icon: "settings", link: "/Settings/About" },
   ]

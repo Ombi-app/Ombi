@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ServiceHelpers } from "./service.helpers";
-import { IRequestsViewModel, IMovieRequests, ITvRequests } from "../interfaces";
+import { IRequestsViewModel, IMovieRequests, ITvRequests, IChildRequests } from "../interfaces";
 
 
 @Injectable()
@@ -17,8 +17,8 @@ export class RequestServiceV2 extends ServiceHelpers {
         return this.http.get<IRequestsViewModel<IMovieRequests>>(`${this.url}movie/${count}/${position}/${sortProperty}/${order}`, {headers: this.headers});
     }
 
-    public getTvRequests(count: number, position: number, sortProperty: string , order: string): Observable<IRequestsViewModel<ITvRequests>> {
-        return this.http.get<IRequestsViewModel<ITvRequests>>(`${this.url}tv/${count}/${position}/${sortProperty}/${order}`, {headers: this.headers});
+    public getTvRequests(count: number, position: number, sortProperty: string , order: string): Observable<IRequestsViewModel<IChildRequests>> {
+        return this.http.get<IRequestsViewModel<IChildRequests>>(`${this.url}tv/${count}/${position}/${sortProperty}/${order}`, {headers: this.headers});
     }
 
 }

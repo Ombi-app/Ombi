@@ -226,44 +226,38 @@ namespace Ombi.Core.Engine
         }
 
 
-        public async Task<RequestsViewModel<TvRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder)
+        public async Task<RequestsViewModel<ChildRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder)
         {
             var shouldHide = await HideFromOtherUsers();
-            List<TvRequests> allRequests = null;
+            List<ChildRequests> allRequests;
             if (shouldHide.Hide)
             {
-                var tv = TvRepository.GetLite(shouldHide.UserId);
-                if (tv.Any() && tv.Select(x => x.ChildRequests).Any())
-                {
-                    allRequests = await tv.OrderByDescending(x => x.ChildRequests.Select(y => y.RequestedDate).FirstOrDefault()).Skip(position).Take(count).ToListAsync();
-                }
+                allRequests = await TvRepository.GetChild(shouldHide.UserId).ToListAsync();
 
                 // Filter out children
+
                 FilterChildren(allRequests, shouldHide);
             }
             else
             {
-                var tv = TvRepository.GetLite();
-                if (tv.Any() && tv.Select(x => x.ChildRequests).Any())
-                {
-                    allRequests = await tv.OrderByDescending(x => x.ChildRequests.Select(y => y.RequestedDate).FirstOrDefault()).Skip(position).Take(count).ToListAsync();
-                }
+                allRequests = await TvRepository.GetChild().ToListAsync();
+
             }
 
             if (allRequests == null)
             {
-                return new RequestsViewModel<TvRequests>();
+                return new RequestsViewModel<ChildRequests>();
             }
 
             var total = allRequests.Count;
 
 
-            var prop = TypeDescriptor.GetProperties(typeof(TvRequests)).Find(sortProperty, true);
+            var prop = TypeDescriptor.GetProperties(typeof(ChildRequests)).Find(sortProperty, true);
 
             if (sortProperty.Contains('.'))
             {
                 // This is a navigation property currently not supported
-                prop = TypeDescriptor.GetProperties(typeof(TvRequests)).Find("Title", true);
+                prop = TypeDescriptor.GetProperties(typeof(ChildRequests)).Find("Title", true);
                 //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
                 //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
                 //var propType = firstProp.PropertyType;
@@ -275,7 +269,7 @@ namespace Ombi.Core.Engine
             allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
 
          
-            return new RequestsViewModel<TvRequests>
+            return new RequestsViewModel<ChildRequests>
             {
                 Collection = allRequests,
                 Total = total,

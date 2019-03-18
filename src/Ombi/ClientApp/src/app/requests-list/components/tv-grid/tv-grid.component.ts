@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, ViewChild } from "@angular/core";
-import {  IRequestsViewModel, ITvRequests } from "../../../interfaces";
+import {  IRequestsViewModel, ITvRequests, IChildRequests } from "../../../interfaces";
 import { MatPaginator, MatSort } from "@angular/material";
 import { merge, Observable, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
@@ -12,10 +12,10 @@ import { RequestServiceV2 } from "../../../services/requestV2.service";
     styleUrls: ["../requests-list.component.scss"]
 })
 export class TvGridComponent implements AfterViewInit {
-    public dataSource: ITvRequests[] = [];
+    public dataSource: IChildRequests[] = [];
     public resultsLength: number;
     public isLoadingResults = true;
-    public displayedColumns: string[] = ['title',  'overview', 'status', 'requestCount', 'releaseDate','actions'];
+    public displayedColumns: string[] = ['series',  'requestedBy', 'status', 'requestStatus', 'requestedDate','actions'];
     public gridCount: string = "15";
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -37,7 +37,7 @@ export class TvGridComponent implements AfterViewInit {
                     this.isLoadingResults = true;
                     return this.requestService.getTvRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
                 }),
-                map((data: IRequestsViewModel<ITvRequests>) => {
+                map((data: IRequestsViewModel<IChildRequests>) => {
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
                     this.resultsLength = data.total;

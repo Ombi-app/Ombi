@@ -45,7 +45,7 @@ namespace Ombi.Controllers.V2
         /// <param name="sort">The item to sort on e.g. "requestDate"</param>
         /// <param name="sortOrder">asc or desc</param>
         [HttpGet("tv/{count:int}/{position:int}/{sort}/{sortOrder}")]
-        public async Task<RequestsViewModel<TvRequests>> GetTvRequests(int count, int position, string sort, string sortOrder)
+        public async Task<RequestsViewModel<ChildRequests>> GetTvRequests(int count, int position, string sort, string sortOrder)
         {
             return await _tvRequestEngine.GetRequests(count, position, sort, sortOrder);
         }

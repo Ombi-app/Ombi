@@ -15,42 +15,49 @@
     matSortDisableClear matSortDirection="desc">
 
 
-    <ng-container matColumnDef="title">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Title </th>
-      <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+    <ng-container matColumnDef="series">
+      <th mat-header-cell *matHeaderCellDef> Series </th>
+      <td mat-cell *matCellDef="let element"> {{element.parentRequest.title}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="requestCount">
-      <th mat-header-cell *matHeaderCellDef > Request Count </th>
-      <td mat-cell *matCellDef="let element"> {{element.childRequests.length}} </td>
+    <ng-container matColumnDef="requestedBy">
+      <th mat-header-cell *matHeaderCellDef > Requested By </th>
+      <td mat-cell *matCellDef="let element"> {{element.requestedUser.userAlias}} </td>
     </ng-container>
 
 
-    <ng-container matColumnDef="overview">
-        <th mat-header-cell *matHeaderCellDef > Overview </th>
-        <td mat-cell *matCellDef="let element"> 
-           <small>{{element.overview}}</small>
-        </td>
-      </ng-container>
       
       <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef  mat-sort-header disableClear> Status </th>
+          <th mat-header-cell *matHeaderCellDef > Status </th>
           <td mat-cell *matCellDef="let element"> 
-             <small>{{element.status}}</small>
+             {{element.parentRequest.status}}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="releaseDate">
-            <th mat-header-cell *matHeaderCellDef  mat-sort-header disableClear> Release Date </th>
+        <ng-container matColumnDef="requestedDate">
+            <th mat-header-cell *matHeaderCellDef  mat-sort-header disableClear> Requested Date </th>
             <td mat-cell *matCellDef="let element"> 
-               <small>{{element.releaseDate  | amLocal | amDateFormat: 'LL'}}</small>
+               {{element.requestedDate  | amLocal | amDateFormat: 'LL'}}
             </td>
           </ng-container>
+
+          <ng-container matColumnDef="requestStatus">
+              <th mat-header-cell *matHeaderCellDef > Request Status </th>
+              <td mat-cell *matCellDef="let element">
+                <div *ngIf="element.approved && !element.available">{{'Common.ProcessingRequest' | translate}}</div>
+                <div *ngIf="element.requested && !element.approved && !element.available">{{'Common.PendingApproval' |
+                  translate}}
+                </div>
+                <div *ngIf="!element.requested && !element.available && !element.approved">{{'Common.NotRequested' |
+                  translate}}
+                </div>
+              </td>
+            </ng-container>
 
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> </th>
       <td mat-cell *matCellDef="let element">
-        <button mat-raised-button color="primary" [routerLink]="'/details/movie/' + element.theMovieDbId">Details</button>
+        <button mat-raised-button color="primary" [routerLink]="'/details/tv/' + element.parentRequest.tvDbId">Details</button>
       </td>
     </ng-container>
 
