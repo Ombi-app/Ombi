@@ -56,7 +56,7 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> </th>
       <td mat-cell *matCellDef="let element">
-        <button mat-raised-button color="primary" [routerLink]="">Details</button>
+        <button mat-raised-button color="primary" [routerLink]="'/details/movie/' + element.theMovieDbId">Details</button>
       </td>
     </ng-container>
 
