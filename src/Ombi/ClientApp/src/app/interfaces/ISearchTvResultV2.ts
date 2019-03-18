@@ -41,6 +41,7 @@ export interface ISearchTvResultV2 {
     images: IImagesV2;
     cast: ICast[];
     crew: ICrew[];
+    requestId: number;
 }
 
 

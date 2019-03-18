@@ -13,19 +13,21 @@
         <div class="col-12 col-lg-3 col-xl-3 media-row">
 
           <social-icons [homepage]="tv.homepage" [tvdbId]="tv.id" [hasTrailer]="tv.trailer" (openTrailer)="openDialog()"
-            [imdbId]="tv.imdbId" [available]="tv.available" [plexUrl]="tv.plexUrl" [embyUrl]="tv.embyUrl"></social-icons>
+            [imdbId]="tv.imdbId" [available]="tv.available" [plexUrl]="tv.plexUrl" [embyUrl]="tv.embyUrl">
+          </social-icons>
 
         </div>
 
         <div class="col-12 col-lg-6 col-xl-6 media-row">
 
-          <button *ngIf="!tv.fullyAvailable" mat-raised-button class="btn-spacing" color="primary" (click)="request()"><i
-              class="fa fa-plus"></i>
+          <button *ngIf="!tv.fullyAvailable" mat-raised-button class="btn-spacing" color="primary"
+            (click)="request()"><i class="fa fa-plus"></i>
             {{ 'Common.Request' | translate }}</button>
 
           <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent" [disabled]>
             <i class="fa fa-check"></i> {{'Common.Available' | translate }}</button>
-          <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent" [disabled]>
+          <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent"
+            [disabled]>
             <i class="fa fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
         </div>
       </div>
@@ -56,6 +58,30 @@
             </div>
 
           </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-12 col-md-2">
+
+        <!--Just some space yo-->
+
+        </div>
+
+
+        <div class="col-12 col-md-10">
+          <mat-accordion>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Requests
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <tv-requests-panel [tvRequest]="tvRequest"></tv-requests-panel>
+            </mat-expansion-panel>
+
+          </mat-accordion>
 
         </div>
 
@@ -63,84 +89,7 @@
       </div>
 
 
-      <div class="row card-spacer media-row">
 
-
-        <div class="col-12 col-md-9">
-
-        </div>
-      </div>
-      <div class="row card-spacer media-row">
-        <div class="col-12 col-md-3"></div>
-
-        <!-- <div class="col-12 col-md-9">
-                    <mat-accordion>
-                        <mat-expansion-panel>
-                            <mat-expansion-panel-header>
-                                <mat-panel-title>
-                                    Recommendations
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
-
-                            <div class="row card-spacer" *ngIf="tv.recommendations.results.length > 0">
-
-                                <div class="col-md-2" *ngFor="let r of tv.recommendations.results">
-                                    <div class="sidebar affixable affix-top preview-poster">
-                                        <div class="poster">
-                                            <a [routerLink]="'/details/tv/'+r.id">
-                                                <img class="real grow" matTooltip="{{r.title}}"
-                                                    src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}" alt="Poster"
-                                                    style="display: block;">
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </mat-expansion-panel>
-                        <mat-expansion-panel>
-                            <mat-expansion-panel-header>
-                                <mat-panel-title>
-                                    Similar
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
-
-                            <div class="row card-spacer" *ngIf="tv.similar.results.length > 0">
-
-                                <div class="col-md-2" *ngFor="let r of tv.similar.results">
-                                    <div class="sidebar affixable affix-top preview-poster">
-                                        <div class="poster ">
-                                            <a [routerLink]="'/details/tv/'+r.id">
-                                                <img class="real grow" matTooltip="{{r.title}}"
-                                                    src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}" alt="Poster"
-                                                    style="display: block;">
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </mat-expansion-panel>
-                        <mat-expansion-panel>
-                            <mat-expansion-panel-header>
-                                <mat-panel-title>
-                                    Videos
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
-
-                            <div class="row card-spacer" *ngIf="tv.videos.results.length > 0">
-
-                                <div class="col-md-6" *ngFor="let video of tv.videos.results">
-                                    <iframe width="100%" height="315px"
-                                        [src]="'https://www.youtube.com/embed/' + video.key | safe" frameborder="0"
-                                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                        allowfullscreen></iframe>
-                                </div>
-                            </div>
-                        </mat-expansion-panel>
-                    </mat-accordion>
-                </div> -->
-      </div>
     </div>
 
 

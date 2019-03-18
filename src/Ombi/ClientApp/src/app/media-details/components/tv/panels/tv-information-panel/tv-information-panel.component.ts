@@ -1,9 +1,9 @@
 import { Component, ViewEncapsulation, Input, OnInit } from "@angular/core";
-import { ISearchTvResultV2 } from "../../../../interfaces/ISearchTvResultV2";
+import { ISearchTvResultV2 } from "../../../../../interfaces/ISearchTvResultV2"; 
 
 @Component({
     templateUrl: "./tv-information-panel.component.html",
-    styleUrls: ["../../../media-details.component.scss"],
+    styleUrls: ["../../../../media-details.component.scss"],
     selector: "tv-information-panel",
     encapsulation: ViewEncapsulation.None
 })

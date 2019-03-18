@@ -78,7 +78,7 @@ export class DiscoverCardDetailsComponent implements OnInit {
             }
         } else if (this.data.type === RequestType.tvShow) {
 
-            this.dialog.open(EpisodeRequestComponent, { width: "700px", data: this.tv })
+            this.dialog.open(EpisodeRequestComponent, { width: "700px", data: this.tv,  panelClass: 'modal-panel' })
         }
         this.loading = false;
 
