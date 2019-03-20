@@ -2,22 +2,13 @@
 import { ActivatedRoute, Router } from "@angular/router";
 
 import { ICheckbox, INotificationAgent, INotificationPreferences, IRadarrProfile, IRadarrRootFolder, ISonarrProfile, ISonarrRootFolder, IUser, UserType } from "../interfaces";
-import { IdentityService, NotificationService, RadarrService, SonarrService } from "../services";
+import { IdentityService, NotificationService, RadarrService, SonarrService, MessageService } from "../services";
 
 import { ConfirmationService } from "primeng/primeng";
 
 @Component({
     templateUrl: "./usermanagement-user.component.html",
-    styles: [`
-
-    ::ng-deep ngb-accordion > div.card >  div.card-header {
-        padding:0px;
-    }
-    ::ng-deep ngb-accordion > div.card {
-        color:white;
-        padding-top: 0px;
-    }
-    `],
+    styleUrls: ["./usermanagement-user.component.scss"],
 })
 export class UserManagementUserComponent implements OnInit {
 
@@ -36,7 +27,7 @@ export class UserManagementUserComponent implements OnInit {
     public edit: boolean;
 
     constructor(private identityService: IdentityService,
-                private notificationService: NotificationService,
+                private notificationService: MessageService,
                 private router: Router,
                 private route: ActivatedRoute,
                 private confirmationService: ConfirmationService,
@@ -102,7 +93,7 @@ export class UserManagementUserComponent implements OnInit {
 
         if (this.user.password) {
             if (this.user.password !== this.confirmPass) {
-                this.notificationService.error("Passwords do not match");
+                this.notificationService.send("Passwords do not match");
                 return;
             }
         }
@@ -113,17 +104,17 @@ export class UserManagementUserComponent implements OnInit {
         });
 
         if (!hasClaims) {
-            this.notificationService.error("Please assign a role");
+            this.notificationService.send("Please assign a role");
             return;
         }
 
         this.identityService.createUser(this.user).subscribe(x => {
             if (x.successful) {
-                this.notificationService.success(`The user ${this.user.userName} has been created successfully`);
+                this.notificationService.send(`The user ${this.user.userName} has been created successfully`);
                 this.router.navigate(["usermanagement"]);
             } else {
                 x.errors.forEach((val) => {
-                    this.notificationService.error(val);
+                    this.notificationService.send(val);
                 });
             }
         });
@@ -138,11 +129,11 @@ export class UserManagementUserComponent implements OnInit {
             accept: () => {
                 this.identityService.deleteUser(this.user).subscribe(x => {
                     if (x.successful) {
-                        this.notificationService.success(`The user ${this.user.userName} was deleted`);
+                        this.notificationService.send(`The user ${this.user.userName} was deleted`);
                         this.router.navigate(["usermanagement"]);
                     } else {
                         x.errors.forEach((val) => {
-                            this.notificationService.error(val);
+                            this.notificationService.send(val);
                         });
                     }
 
@@ -157,11 +148,11 @@ export class UserManagementUserComponent implements OnInit {
     public resetPassword() {
         this.identityService.submitResetPassword(this.user.emailAddress).subscribe(x => {
             if (x.successful) {
-                this.notificationService.success(`Sent reset password email to ${this.user.emailAddress}`);
+                this.notificationService.send(`Sent reset password email to ${this.user.emailAddress}`);
                 this.router.navigate(["usermanagement"]);
             } else {
                 x.errors.forEach((val) => {
-                    this.notificationService.error(val);
+                    this.notificationService.send(val);
                 });
             }
 
@@ -176,18 +167,18 @@ export class UserManagementUserComponent implements OnInit {
         });
 
         if (!hasClaims) {
-            this.notificationService.error("Please assign a role");
+            this.notificationService.send("Please assign a role");
             return;
         }
 
         this.identityService.updateUser(this.user).subscribe(x => {
             if (x.successful) {
                 this.identityService.updateNotificationPreferences(this.notificationPreferences).subscribe();
-                this.notificationService.success(`The user ${this.user.userName} has been updated successfully`);
+                this.notificationService.send(`The user ${this.user.userName} has been updated successfully`);
                 this.router.navigate(["usermanagement"]);
             } else {
                 x.errors.forEach((val) => {
-                    this.notificationService.error(val);
+                    this.notificationService.send(val);
                 });
             }
         });

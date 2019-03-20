@@ -10,7 +10,8 @@ import { IssuesReportComponent } from "./issues-report.component";
 import { InputSwitchModule, SidebarModule } from "primeng/primeng";
 
 import {
-  MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatTooltipModule, MatSelectModule, MatTableModule, MatPaginatorModule, MatSortModule, MatTreeModule} from '@angular/material';
+  MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatTooltipModule, MatSelectModule, MatTableModule, MatPaginatorModule, MatSortModule, 
+  MatTreeModule, MatStepperModule} from '@angular/material';
   import {  MatCardModule, MatInputModule, MatTabsModule, MatAutocompleteModule, MatCheckboxModule, MatExpansionModule, MatDialogModule, MatProgressSpinnerModule,
     MatChipsModule } from "@angular/material";
 import { EpisodeRequestComponent } from "./episode-request/episode-request.component";
@@ -48,6 +49,7 @@ import { EpisodeRequestComponent } from "./episode-request/episode-request.compo
     MatPaginatorModule,
     MatSortModule,
     MatTreeModule,
+    MatStepperModule,
   ],
   entryComponents: [
     EpisodeRequestComponent
@@ -83,6 +85,7 @@ import { EpisodeRequestComponent } from "./episode-request/episode-request.compo
       MatTableModule,
       MatPaginatorModule,
       MatSortModule,
+      MatStepperModule,
     ],
 })
 export class SharedModule {}
