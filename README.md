@@ -59,6 +59,7 @@ We integrate with the following applications:
 Supported notifications:
 * SMTP Notifications (Email)
 * Discord
+* Gotify
 * Slack
 * Pushbullet
 * Pushover
