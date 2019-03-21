@@ -124,7 +124,7 @@ namespace Ombi.Controllers
             }
 
             user.LastLoggedIn = DateTime.UtcNow;
-            await _userManager.UpdateAsync(user);
+            //await _userManager.UpdateAsync(user);
 
             var claims = new List<Claim>
             {
