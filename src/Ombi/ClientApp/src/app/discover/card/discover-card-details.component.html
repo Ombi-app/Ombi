@@ -140,7 +140,7 @@
 
             <button mat-raised-button class="btn-green btn-spacing" *ngIf="tv.available"> {{
                 'Common.Available' | translate }}</button>
-            <button mat-raised-button class="btn-orange btn-spacing" *ngIf="tv.partlyAvailable"> {{
+            <button mat-raised-button class="btn-orange btn-spacing" *ngIf="tv.partlyAvailable && !tv.available"> {{
                     'Common.PartlyAvailable' | translate }}</button>
 
             <span *ngIf="tv.available">

@@ -21,7 +21,6 @@ export interface IUser {
     episodeRequestQuota: IRemainingRequests | null;
     movieRequestQuota: IRemainingRequests | null;
     musicRequestQuota: IRemainingRequests | null;
-    checked: boolean;
 }
 
 export interface IUserQualityProfiles {
