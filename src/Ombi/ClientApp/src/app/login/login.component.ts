@@ -1,9 +1,9 @@
-﻿import { Component, OnDestroy, OnInit } from "@angular/core";
+﻿import { Component, OnDestroy, OnInit, Inject } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 
-import { PlatformLocation } from "@angular/common";
+import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
 import { AuthService } from "../auth/auth.service";
 import { IAuthenticationSettings, ICustomizationSettings } from "../interfaces";
 import { NotificationService, PlexTvService } from "../services";
@@ -45,11 +45,13 @@ export class LoginComponent implements OnDestroy, OnInit {
 
     private errorBody: string;
     private errorValidation: string;
+    private href: string;
 
     constructor(private authService: AuthService, private router: Router, private notify: NotificationService, private status: StatusService,
                 private fb: FormBuilder, private settingsService: SettingsService, private images: ImageService, private sanitizer: DomSanitizer,
-                private route: ActivatedRoute, private location: PlatformLocation, private translate: TranslateService, private plexTv: PlexTvService) {
-        this.route.params
+                private route: ActivatedRoute, @Inject(APP_BASE_HREF) href:string, private translate: TranslateService, private plexTv: PlexTvService) {
+        this.href = href;
+                    this.route.params
             .subscribe((params: any) => {
                 this.landingFlag = params.landing;
                 if (!this.landingFlag) {
@@ -89,7 +91,7 @@ export class LoginComponent implements OnDestroy, OnInit {
             this.cycleBackground();
         }, 15000);
 
-        const base = this.location.getBaseHrefFromDOM();
+        const base = this.href;
         if (base.length > 1) {
             this.baseUrl = base;
         }

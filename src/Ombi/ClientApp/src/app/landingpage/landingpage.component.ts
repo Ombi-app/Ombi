@@ -1,5 +1,5 @@
-﻿import { PlatformLocation } from "@angular/common";
-import { Component, OnDestroy, OnInit } from "@angular/core";
+﻿import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
+import { Component, OnDestroy, OnInit, Inject } from "@angular/core";
 
 import { IMediaServerStatus } from "../interfaces";
 import { ICustomizationSettings, ILandingPageSettings } from "../interfaces";
@@ -25,9 +25,11 @@ export class LandingPageComponent implements OnDestroy, OnInit {
     public baseUrl: string;
     private timer: any;
 
+    private href: string;
+
     constructor(private settingsService: SettingsService,
                 private images: ImageService, private sanitizer: DomSanitizer, private landingPageService: LandingPageService,
-                private location: PlatformLocation) { }
+                @Inject(APP_BASE_HREF) href :string) { this.href = href }
 
     public ngOnInit() {
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
@@ -39,7 +41,7 @@ export class LandingPageComponent implements OnDestroy, OnInit {
             this.cycleBackground();
         }, 15000);
 
-        const base = this.location.getBaseHrefFromDOM();
+        const base = this.href;
         if (base.length > 1) {
             this.baseUrl = base;
         }

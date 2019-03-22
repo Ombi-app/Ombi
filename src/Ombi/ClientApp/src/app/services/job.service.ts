@@ -1,5 +1,5 @@
-import { PlatformLocation } from "@angular/common";
-import { Injectable } from "@angular/core";
+import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
+import { Injectable, Inject } from "@angular/core";
 
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
@@ -8,8 +8,8 @@ import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()
 export class JobService extends ServiceHelpers {
-    constructor(http: HttpClient, public platformLocation: PlatformLocation) {
-        super(http, "/api/v1/Job/", platformLocation);
+    constructor(http: HttpClient, @Inject(APP_BASE_HREF) href:string) {
+        super(http, "/api/v1/Job/", href);
     }
     public forceUpdate(): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}update/`, {headers: this.headers});

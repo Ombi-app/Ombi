@@ -1,5 +1,5 @@
-import { PlatformLocation } from "@angular/common";
-import { Component, Input, OnInit } from "@angular/core";
+import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
+import { Component, Input, OnInit, Inject } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateService } from "@ngx-translate/core";
 import { Subject } from "rxjs";
@@ -39,12 +39,14 @@ export class MovieSearchComponent implements OnInit {
     public issueProviderId: string;
     public issueCategorySelected: IIssueCategory;
     public defaultPoster: string;
+    private href: string;
 
     constructor(
         private searchService: SearchService, private requestService: RequestService,
         private notificationService: NotificationService, private authService: AuthService,
         private readonly translate: TranslateService, private sanitizer: DomSanitizer,
-        private readonly platformLocation: PlatformLocation, private settingsService: SettingsService) {
+         @Inject(APP_BASE_HREF) href:string, private settingsService: SettingsService) {
+            this.href= href;
         this.langauges = <ILanguageRefine[]><any>languageData;
         this.searchChanged.pipe(
             debounceTime(600), // Wait Xms after the last event before emitting last event
@@ -54,7 +56,7 @@ export class MovieSearchComponent implements OnInit {
             this.runSearch();
         });
         this.defaultPoster = "../../../images/default_movie_poster.png";
-        const base = this.platformLocation.getBaseHrefFromDOM();
+        const base = this.href;
         if (base) {
             this.defaultPoster = "../../.." + base + "/images/default_movie_poster.png";
         }

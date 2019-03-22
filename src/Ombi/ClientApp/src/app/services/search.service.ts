@@ -1,5 +1,5 @@
-import { PlatformLocation } from "@angular/common";
-import { Injectable } from "@angular/core";
+import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
+import { Injectable, Inject } from "@angular/core";
 
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
@@ -12,8 +12,8 @@ import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()
 export class SearchService extends ServiceHelpers {
-    constructor(http: HttpClient, public platformLocation: PlatformLocation) {
-        super(http, "/api/v1/search", platformLocation);
+    constructor(http: HttpClient, @Inject(APP_BASE_HREF) href:string) {
+        super(http, "/api/v1/search", href);
     }
 
     // Movies

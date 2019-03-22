@@ -1,14 +1,14 @@
-import { PlatformLocation } from "@angular/common";
+import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Injectable, Inject } from "@angular/core";
 
 import { IVoteEngineResult, IVoteViewModel } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()
 export class VoteService extends ServiceHelpers {
-    constructor(public http: HttpClient, public platformLocation: PlatformLocation) {
-        super(http, "/api/v1/Vote/", platformLocation);
+    constructor(public http: HttpClient, @Inject(APP_BASE_HREF) href:string) {
+        super(http, "/api/v1/Vote/", href);
     }
 
     public async getModel(): Promise<IVoteViewModel[]> {

@@ -1,5 +1,5 @@
-import { PlatformLocation } from "@angular/common";
-import { Component, Input, OnInit } from "@angular/core";
+import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
+import { Component, Input, OnInit, Inject } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
@@ -38,6 +38,7 @@ export class TvRequestsComponent implements OnInit {
     public totalTv: number = 100;
     private currentlyLoaded: number;
     private amountToLoad: number;
+    private href: string;
 
     constructor(
         private requestService: RequestService,
@@ -46,8 +47,8 @@ export class TvRequestsComponent implements OnInit {
         private imageService: ImageService,
         private sonarrService: SonarrService,
         private notificationService: NotificationService,
-        private readonly platformLocation: PlatformLocation) {
-            
+         @Inject(APP_BASE_HREF) href:string) {
+            this.href= href;
             this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
             this.currentUser = this.auth.claims().name;
             if (this.isAdmin) {
@@ -86,7 +87,7 @@ export class TvRequestsComponent implements OnInit {
                 });
         });
         this.defaultPoster = "../../../images/default_tv_poster.png";
-        const base = this.platformLocation.getBaseHrefFromDOM();
+        const base = this.href;
         if (base) {
             this.defaultPoster = "../../.." + base + "/images/default_tv_poster.png";
         }

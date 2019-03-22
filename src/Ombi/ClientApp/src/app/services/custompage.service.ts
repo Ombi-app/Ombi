@@ -1,6 +1,6 @@
-import { PlatformLocation } from "@angular/common";
+import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Injectable, Inject } from "@angular/core";
 import { Observable } from "rxjs";
 
 import {
@@ -11,8 +11,8 @@ import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()
 export class CustomPageService extends ServiceHelpers {
-    constructor(public http: HttpClient, public platformLocation: PlatformLocation) {
-        super(http, "/api/v1/CustomPage", platformLocation);
+    constructor(public http: HttpClient, @Inject(APP_BASE_HREF) href:string) {
+        super(http, "/api/v1/CustomPage", href);
     } 
 
     public getCustomPage(): Observable<ICustomPage> {

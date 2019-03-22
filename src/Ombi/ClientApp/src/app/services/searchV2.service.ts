@@ -1,5 +1,5 @@
-import { PlatformLocation } from "@angular/common";
-import { Injectable } from "@angular/core";
+import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
+import { Injectable, Inject } from "@angular/core";
 
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
@@ -13,8 +13,8 @@ import { ISearchTvResultV2 } from "../interfaces/ISearchTvResultV2";
 
 @Injectable()
 export class SearchV2Service extends ServiceHelpers {
-    constructor(http: HttpClient, public platformLocation: PlatformLocation) {
-        super(http, "/api/v2/search", platformLocation);
+    constructor(http: HttpClient, @Inject(APP_BASE_HREF) href:string) {
+        super(http, "/api/v2/search", href);
     }
 
     public multiSearch(searchTerm: string): Observable<IMultiSearchResult[]> {
