@@ -82,8 +82,6 @@ namespace Ombi.Core.Engine
                 }
             }
 
-            await Audit.Record(AuditType.Added, AuditArea.TvRequest, $"Added Request {tvBuilder.ChildRequest.Title}", Username);
-
             var existingRequest = await TvRepository.Get().FirstOrDefaultAsync(x => x.TvDbId == tv.TvDbId);
             if (existingRequest != null)
             {
