@@ -1,6 +1,6 @@
-import { PlatformLocation } from "@angular/common";
+import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Injectable, Inject } from "@angular/core";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { Observable } from "rxjs";
 
@@ -10,8 +10,8 @@ import { ILocalUser, IUserLogin } from "./IUserLogin";
 @Injectable()
 export class AuthService extends ServiceHelpers {
 
-    constructor(http: HttpClient, public platformLocation: PlatformLocation, private jwtHelperService: JwtHelperService) {
-        super(http, "/api/v1/token", platformLocation);
+    constructor(http: HttpClient, @Inject(APP_BASE_HREF) href:string, private jwtHelperService: JwtHelperService) {
+        super(http, "/api/v1/token", href);
     }
 
     public login(login: IUserLogin): Observable<any> {

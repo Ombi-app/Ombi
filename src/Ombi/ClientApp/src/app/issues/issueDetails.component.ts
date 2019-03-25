@@ -1,5 +1,5 @@
-import { PlatformLocation } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
+import { Component, OnInit, Inject } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
 import { AuthService } from "../auth/auth.service";
@@ -37,7 +37,7 @@ export class IssueDetailsComponent implements OnInit {
                 private notificationService: NotificationService,
                 private imageService: ImageService,
                 private sanitizer: DomSanitizer,
-                private readonly platformLocation: PlatformLocation) {
+                @Inject(APP_BASE_HREF) href:string) {
             this.route.params
             .subscribe((params: any) => {
                   this.issueId = parseInt(params.id);
@@ -46,7 +46,7 @@ export class IssueDetailsComponent implements OnInit {
             this.isAdmin = this.authService.hasRole("Admin") || this.authService.hasRole("PowerUser");
             this.settingsService.getIssueSettings().subscribe(x => this.settings = x);
 
-            const base = this.platformLocation.getBaseHrefFromDOM();
+            const base = href;
             if (base) {
                 this.defaultPoster = "../../.." + base + "/images/";
             } else {

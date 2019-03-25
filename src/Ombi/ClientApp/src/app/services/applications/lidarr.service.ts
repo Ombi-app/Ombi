@@ -1,6 +1,6 @@
-import { PlatformLocation } from "@angular/common";
+import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Injectable, Inject } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { ILidarrProfile, ILidarrRootFolder, IProfiles } from "../../interfaces";
@@ -9,8 +9,8 @@ import { ServiceHelpers } from "../service.helpers";
 
 @Injectable()
 export class LidarrService extends ServiceHelpers {
-    constructor(http: HttpClient, public platformLocation: PlatformLocation) {
-        super(http, "/api/v1/Lidarr", platformLocation);
+    constructor(http: HttpClient, @Inject(APP_BASE_HREF) href:string) {
+        super(http, "/api/v1/Lidarr", href);
     }
 
     public getRootFolders(settings: ILidarrSettings): Observable<ILidarrRootFolder[]> {

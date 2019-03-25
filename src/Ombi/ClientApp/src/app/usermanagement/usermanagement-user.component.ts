@@ -66,7 +66,6 @@ export class UserManagementUserComponent implements OnInit {
                 password: "",
                 userName: "",
                 userType: UserType.LocalUser,
-                checked: false,
                 hasLoggedIn: false,
                 lastLoggedIn: new Date(),
                 episodeRequestLimit: 0,

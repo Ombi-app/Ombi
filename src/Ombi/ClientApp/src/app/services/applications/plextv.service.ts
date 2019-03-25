@@ -1,6 +1,6 @@
-﻿import { PlatformLocation } from "@angular/common";
+﻿import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Injectable, Inject } from "@angular/core";
 
 import { Observable } from "rxjs";
 
@@ -9,7 +9,7 @@ import { IPlexPin } from "../../interfaces";
 @Injectable()
 export class PlexTvService {
 
-    constructor(private http: HttpClient, public platformLocation: PlatformLocation) {
+    constructor(private http: HttpClient) {
     }
 
     public GetPin(clientId: string, applicationName: string): Observable<IPlexPin> {

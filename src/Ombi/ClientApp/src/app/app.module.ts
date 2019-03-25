@@ -51,6 +51,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { SearchV2Service } from "./services/searchV2.service";
 import { NavSearchComponent } from "./my-nav/nav-search.component";
 import { OverlayModule } from "@angular/cdk/overlay";
+import { getBaseLocation } from "./shared/functions/common-functions";
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
@@ -77,8 +78,8 @@ const routes: Routes = [
 ];
 
 // AoT requires an exported function for factories
-export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLocation) {
-    const base = platformLocation.getBaseHrefFromDOM();
+export function HttpLoaderFactory(http: HttpClient) {
+    const base = getBaseLocation();
     const version = Math.floor(Math.random() * 999999999);
     if (base.length > 1) {
         return new TranslateHttpLoader(http, `${base}/translations/`, `.json?v=${version}`);
@@ -173,6 +174,10 @@ export function JwtTokenGetter() {
         SearchService,
         SearchV2Service,
         MessageService,
+        {
+            provide: APP_BASE_HREF,
+            useFactory: getBaseLocation
+        }
        ],
     bootstrap: [AppComponent],
 })

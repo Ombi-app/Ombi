@@ -1,21 +1,25 @@
-﻿import { Component, OnInit } from "@angular/core";
+﻿import { Component, OnInit, ViewChild } from "@angular/core";
 
 import { ICheckbox, ICustomizationSettings, IEmailNotificationSettings, IUser } from "../interfaces";
 import { IdentityService, NotificationService, SettingsService } from "../services";
+import { MatSort, MatTableDataSource } from "@angular/material";
+import { SelectionModel } from "@angular/cdk/collections";
 
 @Component({
     templateUrl: "./usermanagement.component.html",
 })
 export class UserManagementComponent implements OnInit {
 
+    public displayedColumns: string[] = ['select', 'username', 'alias', 'email', 'roles', 'remainingRequests',
+        'nextRequestDue', 'lastLoggedIn', 'userType', 'actions', 'welcome'];
+    public dataSource: MatTableDataSource<IUser>;
+
+    public selection = new SelectionModel<IUser>(true, []);
+    @ViewChild(MatSort) public sort: MatSort;
     public users: IUser[];
     public checkAll = false;
     public emailSettings: IEmailNotificationSettings;
     public customizationSettings: ICustomizationSettings;
-
-    public order: string = "userName";
-    public reverse = false;
-
     public showBulkEdit = false;
     public availableClaims: ICheckbox[];
     public bulkMovieLimit?: number;
@@ -23,15 +27,15 @@ export class UserManagementComponent implements OnInit {
     public plexEnabled: boolean;
 
     constructor(private identityService: IdentityService,
-                private settingsService: SettingsService,
-                private notificationService: NotificationService,
-                private plexSettings: SettingsService) { }
+        private settingsService: SettingsService,
+        private notificationService: NotificationService,
+        private plexSettings: SettingsService) { }
 
-    public ngOnInit() {
-        this.users = [];
-        this.identityService.getUsers().subscribe(x => {
-            this.users = x;
-        });
+    public async ngOnInit() {
+        this.users = await this.identityService.getUsers().toPromise();
+        
+        this.dataSource = new MatTableDataSource(this.users);
+        this.dataSource.sort = this.sort;
 
         this.plexSettings.getPlex().subscribe(x => this.plexEnabled = x.enable);
 
@@ -59,28 +63,12 @@ export class UserManagementComponent implements OnInit {
         this.notificationService.success(`Sent a welcome email to ${user.emailAddress}`);
     }
 
-    public checkAllBoxes() {
-        this.checkAll = !this.checkAll;
-        this.users.forEach(user => {
-            user.checked = this.checkAll;
-        });
-    }
-
-    public hasChecked(): boolean {
-        return this.users.some(x => {
-            return x.checked;
-        });
-    }
-
     public bulkUpdate() {
         const anyRoles = this.availableClaims.some(x => {
             return x.enabled;
         });
 
-        this.users.forEach(x => {
-            if (!x.checked) {
-                return;
-            }
+        this.selection.selected.forEach(x => {
             if (anyRoles) {
                 x.claims = this.availableClaims;
             }
@@ -103,23 +91,24 @@ export class UserManagementComponent implements OnInit {
         this.bulkEpisodeLimit = undefined;
     }
 
-    public setOrder(value: string, el: any) {
-        el = el.toElement || el.relatedTarget || el.target || el.srcElement;
+    public isAllSelected() {
+        const numSelected = this.selection.selected.length;
+        const numRows = this.dataSource.data.length;
+        return numSelected === numRows;
+    }
 
-        if (el.nodeName === "A") {
-            el = el.parentElement;
+
+    public masterToggle() {
+        this.isAllSelected() ?
+            this.selection.clear() :
+            this.dataSource.data.forEach(row => this.selection.select(row));
+    }
+
+    /** The label for the checkbox on the passed row */
+    public checkboxLabel(row?: IUser): string {
+        if (!row) {
+            return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
         }
-
-        const parent = el.parentElement;
-        const previousFilter = parent.querySelector(".active");
-
-        if (this.order === value) {
-            this.reverse = !this.reverse;
-        } else {
-            previousFilter.className = "";
-            el.className = "active";
-        }
-
-        this.order = value;
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
     }
 }

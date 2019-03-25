@@ -1,6 +1,6 @@
-import { PlatformLocation } from "@angular/common";
+import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Injectable, Inject } from "@angular/core";
 
 import { Observable } from "rxjs";
 
@@ -10,8 +10,8 @@ import { IPlexOAuthAccessToken } from "../../interfaces";
 
 @Injectable()
 export class PlexOAuthService extends ServiceHelpers {
-    constructor(http: HttpClient, public platformLocation: PlatformLocation) {
-        super(http, "/api/v1/PlexOAuth/", platformLocation);
+    constructor(http: HttpClient, @Inject(APP_BASE_HREF) href:string) {
+        super(http, "/api/v1/PlexOAuth/", href);
     }
 
     public oAuth(pin: number): Observable<IPlexOAuthAccessToken> {
