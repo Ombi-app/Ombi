@@ -4,6 +4,7 @@ using EnsureThat;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
 using MimeKit;
+using MimeKit.Utils;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
@@ -37,6 +38,15 @@ namespace Ombi.Notifications
 
                 var customization = await CustomizationSettings.GetSettingsAsync();
                 var html = email.LoadTemplate(model.Subject, model.Message, null, customization.Logo);
+                
+                var messageId = MimeUtils.GenerateMessageId();
+                if (customization.ApplicationUrl.HasValue())
+                {
+                    if (Uri.TryCreate(customization.ApplicationUrl, UriKind.RelativeOrAbsolute, out var url))
+                    {
+                        messageId = MimeUtils.GenerateMessageId(url.IdnHost);
+                    }
+                }
 
                 var textBody = string.Empty;
 
@@ -50,7 +60,8 @@ namespace Ombi.Notifications
                 var message = new MimeMessage
                 {
                     Body = body.ToMessageBody(),
-                    Subject = model.Subject
+                    Subject = model.Subject,
+                    MessageId = messageId
                 };
                 message.From.Add(new MailboxAddress(string.IsNullOrEmpty(settings.SenderName) ? settings.SenderAddress : settings.SenderName, settings.SenderAddress));
                 message.To.Add(new MailboxAddress(model.To, model.To));
