@@ -62,14 +62,14 @@ namespace Ombi.Store.Repository
         {
             //_cache.Remove(GetName(entity.SettingsName));
             Db.Settings.Remove(entity);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public async Task UpdateAsync(GlobalSettings entity)
         {
             //_cache.Remove(GetName(entity.SettingsName));
             Db.Update(entity);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public void Delete(GlobalSettings entity)
@@ -89,6 +89,11 @@ namespace Ombi.Store.Repository
         private string GetName(string entity)
         {
             return $"{entity}Json";
+        }
+
+        private async Task<int> InternalSaveChanges()
+        {
+            return await GlobalMutex.Lock(async () => await Db.SaveChangesAsync());
         }
 
         private bool _disposed;

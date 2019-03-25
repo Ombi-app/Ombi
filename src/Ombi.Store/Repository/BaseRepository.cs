@@ -81,7 +81,7 @@ namespace Ombi.Store.Repository
             await _ctx.Database.ExecuteSqlCommandAsync(sql);
         }
 
-        private async Task<int> InternalSaveChanges()
+        protected async Task<int> InternalSaveChanges()
         {
             return await GlobalMutex.Lock(async () => await _ctx.SaveChangesAsync());
         }
