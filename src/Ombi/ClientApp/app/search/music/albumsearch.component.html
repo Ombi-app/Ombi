@@ -80,7 +80,7 @@
                 <i class="fa fa-check"></i> {{ 'Common.Available' | translate }}</button>
         </div>
         <div *ngIf="!result.fullyAvailable">
-            <div *ngIf="result.requested || result.approved; then requestedBtn else notRequestedBtn"></div>
+            <div *ngIf="result.requested || result.approved || result.monitored; then requestedBtn else notRequestedBtn"></div>
             <ng-template #requestedBtn>
                 <button style="text-align: right" class="btn btn-primary-outline disabled" [disabled]>
                     <i class="fa fa-check"></i> {{ 'Common.Requested' | translate }}</button>

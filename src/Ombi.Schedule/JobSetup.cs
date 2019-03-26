@@ -81,7 +81,7 @@ namespace Ombi.Schedule
             RecurringJob.AddOrUpdate(() => _embyUserImporter.Start(), JobSettingsHelper.UserImporter(s));
             RecurringJob.AddOrUpdate(() => _plexUserImporter.Start(), JobSettingsHelper.UserImporter(s));
             RecurringJob.AddOrUpdate(() => _newsletter.Start(), JobSettingsHelper.Newsletter(s));
-            RecurringJob.AddOrUpdate(() => _resender.Start(), JobSettingsHelper.ResendFailedRequests(s));
+           // RecurringJob.AddOrUpdate(() => _resender.Start(), JobSettingsHelper.ResendFailedRequests(s));
             RecurringJob.AddOrUpdate(() => _mediaDatabaseRefresh.Start(), JobSettingsHelper.MediaDatabaseRefresh(s));
         }
 

@@ -96,7 +96,7 @@ namespace Ombi.Store.Repository
         public async Task Update(PlexServerContent existingContent)
         {
             Db.PlexServerContent.Update(existingContent);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
         public void UpdateWithoutSave(PlexServerContent existingContent)
         {
@@ -106,7 +106,7 @@ namespace Ombi.Store.Repository
         public async Task UpdateRange(IEnumerable<PlexServerContent> existingContent)
         {
             Db.PlexServerContent.UpdateRange(existingContent);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public IQueryable<PlexEpisode> GetAllEpisodes()
@@ -127,14 +127,14 @@ namespace Ombi.Store.Repository
         public async Task<PlexEpisode> Add(PlexEpisode content)
         {
             await Db.PlexEpisode.AddAsync(content);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
             return content;
         }
 
         public async Task DeleteEpisode(PlexEpisode content)
         {
             Db.PlexEpisode.Remove(content);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public async Task<PlexEpisode> GetEpisodeByKey(int key)
@@ -144,7 +144,7 @@ namespace Ombi.Store.Repository
         public async Task AddRange(IEnumerable<PlexEpisode> content)
         {
             Db.PlexEpisode.AddRange(content);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
     }
 }
