@@ -49,6 +49,7 @@ namespace Ombi
             demoInstance.Demo = demo;
             instance.StoragePath = storagePath ?? string.Empty;
             // Check if we need to migrate the settings
+            DeleteSchedules();
             CheckAndMigrate();
             var ctx = new SettingsContext();
             var config = ctx.ApplicationConfigurations.ToList();
@@ -95,6 +96,20 @@ namespace Ombi
             Console.WriteLine($"We are running on {urlValue}");
 
             CreateWebHostBuilder(args).Build().Run();
+        }
+
+        private static void DeleteSchedules()
+        {
+            try
+            {
+                if (File.Exists("Schedules.db"))
+                {
+                    File.Delete("Schedules.db");
+                }
+            }
+            catch (Exception)
+            {
+            }
         }
 
         /// <summary>
