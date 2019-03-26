@@ -61,9 +61,6 @@ namespace Ombi
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            services.AddDbContext<OmbiContext>();
-
             services.AddIdentity<OmbiUser, IdentityRole>()
                 .AddEntityFrameworkStores<OmbiContext>()
                 .AddDefaultTokenProviders()
