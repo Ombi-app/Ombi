@@ -70,7 +70,7 @@ const routes: Routes = [
     { loadChildren: "./wizard/wizard.module#WizardModule", path: "Wizard" },
     { loadChildren: "./usermanagement/usermanagement.module#UserManagementModule", path: "usermanagement" },
     { loadChildren: "./requests/requests.module#RequestsModule", path: "requestsOld" },
-    { loadChildren: "./requests-list/requests-list.module#RequestsListModule", path: "requests" },
+    { loadChildren: "./requests-list/requests-list.module#RequestsListModule", path: "requests-list" },
     { loadChildren: "./search/search.module#SearchModule", path: "search" },
     { loadChildren: "./recentlyAdded/recentlyAdded.module#RecentlyAddedModule", path: "recentlyadded" },
     { loadChildren: "./vote/vote.module#VoteModule", path: "vote" },

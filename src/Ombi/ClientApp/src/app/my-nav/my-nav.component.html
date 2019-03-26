@@ -3,12 +3,13 @@
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
     <mat-toolbar>{{applicationName}}</mat-toolbar>
     <mat-nav-list>
-      <a *ngFor="let nav of navItems" mat-list-item [routerLink]="nav.link" [routerLinkActive]="['active-list-item']" >
+      <a *ngFor="let nav of navItems" mat-list-item [routerLink]="nav.link" 
+      [routerLinkActive]="getTheme()" >
         <mat-icon aria-label="Side nav toggle icon">{{nav.icon}}</mat-icon>
         {{nav.name | translate}}
       </a>    
 
-      <a class="bottom-nav-link" mat-list-item [routerLinkActive]="['active-list-item']" aria-label="Toggle sidenav" (click)="logOut();">
+      <a class="bottom-nav-link" mat-list-item  [routerLinkActive]="theme === 'dark' ? 'active-list-item-dark' : 'active-list-item'" aria-label="Toggle sidenav" (click)="logOut();">
         <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
         {{ 'NavigationBar.Logout' | translate }}
       </a>

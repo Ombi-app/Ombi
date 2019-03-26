@@ -4,8 +4,8 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$ombi-app-primary: mat-palette($ombi-primary, 500);
-$ombi-app-accent : mat-palette($ombi-accent, A200, A100, A400);
+$ombi-app-primary: mat-palette($ombi-primary);
+$ombi-app-accent : mat-palette($ombi-accent, 400);
 // The warn palette is optional (defaults to red).
 $ombi-app-warn : mat-palette($mat-deep-orange);
 

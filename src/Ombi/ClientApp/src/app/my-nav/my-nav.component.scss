@@ -44,6 +44,12 @@
 
 .active-list-item {
     background: $accent !important;
+    color:white;
+}
+
+.active-list-item-dark {
+    background: $accent-dark !important;
+    color:black;
 }
 
 .bottom-nav-link {
