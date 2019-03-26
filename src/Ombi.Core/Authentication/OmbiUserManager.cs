@@ -158,7 +158,7 @@ namespace Ombi.Core.Authentication
                     if (!email.Equals(result.User?.Email))
                     {
                         user.Email = result.User?.Email;
-                        await UpdateAsync(user);
+                        await GlobalMutex.Lock(async () => await UpdateAsync(user));
                     }
 
                     return true;

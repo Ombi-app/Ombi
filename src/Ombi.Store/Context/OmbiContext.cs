@@ -17,6 +17,7 @@ namespace Ombi.Store.Context
         {
             if (_created) return;
 
+
             _created = true;
             Database.SetCommandTimeout(60);
             Database.Migrate();
