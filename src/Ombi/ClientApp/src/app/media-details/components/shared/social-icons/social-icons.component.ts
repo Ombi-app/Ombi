@@ -3,6 +3,7 @@ import { Component, Inject, Input, Output, EventEmitter } from "@angular/core";
 @Component({
     selector: "social-icons",
     templateUrl: "./social-icons.component.html",
+    styleUrls: ["./social-icons.component.scss"]
 })
 export class SocialIconsComponent {
     

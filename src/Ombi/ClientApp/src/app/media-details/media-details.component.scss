@@ -174,14 +174,6 @@
     width: 173px;
 }
 
-.grow {
-    transition: all .2s ease-in-out;
-}
-.grow:hover {
-    transform: scale(1.1);
-    color: black;
-}
-
 .media-icons {
     color: mat-color($ombi-app-primary) !important;
     padding: 1%;
