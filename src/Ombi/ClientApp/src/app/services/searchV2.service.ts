@@ -1,4 +1,4 @@
-import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
+import { APP_BASE_HREF } from "@angular/common";
 import { Injectable, Inject } from "@angular/core";
 
 import { HttpClient } from "@angular/common/http";
@@ -8,8 +8,7 @@ import { IMultiSearchResult, ISearchMovieResult, ISearchTvResult } from "../inte
 import { ServiceHelpers } from "./service.helpers";
 
 import { ISearchMovieResultV2 } from "../interfaces/ISearchMovieResultV2";
-import { promise } from "selenium-webdriver";
-import { ISearchTvResultV2 } from "../interfaces/ISearchTvResultV2";
+import { ISearchTvResultV2, IMovieCollectionsViewModel } from "../interfaces/ISearchTvResultV2";
 
 @Injectable()
 export class SearchV2Service extends ServiceHelpers {
@@ -64,7 +63,12 @@ export class SearchV2Service extends ServiceHelpers {
     public getTvInfo(tvdbid: number): Promise<ISearchTvResultV2> {
         return this.http.get<ISearchTvResultV2>(`${this.url}/Tv/${tvdbid}`, { headers: this.headers }).toPromise();
     }
+    
     public getTvInfoWithMovieDbId(theMovieDbId: number): Promise<ISearchTvResultV2> {
         return this.http.get<ISearchTvResultV2>(`${this.url}/Tv/moviedb/${theMovieDbId}`, { headers: this.headers }).toPromise();
+    }
+        
+    public getMovieCollections(collectionId: number): Promise<IMovieCollectionsViewModel> {
+        return this.http.get<IMovieCollectionsViewModel>(`${this.url}/movie/collection/${collectionId}`, { headers: this.headers }).toPromise();
     }
 }

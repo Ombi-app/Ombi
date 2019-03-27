@@ -1,4 +1,4 @@
-﻿import { INewSeasonRequests } from "./IRequestModel";
+﻿import { INewSeasonRequests, RequestType } from "./IRequestModel";
 
 export interface ISearchTvResultV2 {
     id: number;
@@ -44,6 +44,26 @@ export interface ISearchTvResultV2 {
     requestId: number;
 }
 
+export interface IMovieCollectionsViewModel {
+    name: string;
+    overview: string;
+    collection: IMovieCollection[];
+}
+
+export interface IMovieCollection {
+    id: number;
+    overview: string;
+    posterPath: string;
+    title: string;
+    type: RequestType;
+
+    approved: boolean;
+    requested: boolean;
+    available: boolean;
+    plexUrl: string;
+    embyUrl: string; 
+    imdbId: string;
+}
 
 export interface INetwork {
     id: number;

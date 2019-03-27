@@ -64,7 +64,7 @@
       <div class="row">
 
         <div class="col-12 col-md-2">
-          <button *ngIf="movie.belongsToCollection" mat-raised-button class="spacing-below full-width mat-elevation-z8">{{movie.belongsToCollection.name}}</button>
+          <button *ngIf="movie.belongsToCollection" [routerLink]="/discover/{{movie.belongsToCollection.id}" mat-raised-button class="spacing-below full-width mat-elevation-z8">{{movie.belongsToCollection.name}}</button>
 
           <mat-card class="mat-elevation-z8">
             <mat-card-content class="medium-font">
