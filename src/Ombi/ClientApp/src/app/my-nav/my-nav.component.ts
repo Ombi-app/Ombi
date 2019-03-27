@@ -57,7 +57,6 @@ export class MyNavComponent implements OnInit {
   }
 
   public getTheme(){
-    debugger;
     return this.theme === 'dark' ? 'active-list-item-dark' : 'active-list-item';
   }
 
