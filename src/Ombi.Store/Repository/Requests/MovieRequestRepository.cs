@@ -78,10 +78,5 @@ namespace Ombi.Store.Repository.Requests
         {
             await InternalSaveChanges();
         }
-
-        private async Task<int> InternalSaveChanges()
-        {
-            return await GlobalMutex.Lock(async () => await Db.SaveChangesAsync());
-        }
     }
 }

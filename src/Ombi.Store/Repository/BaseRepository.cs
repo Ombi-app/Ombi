@@ -83,7 +83,7 @@ namespace Ombi.Store.Repository
 
         protected async Task<int> InternalSaveChanges()
         {
-            return await GlobalMutex.Lock(async () => await _ctx.SaveChangesAsync());
+            return await _ctx.SaveChangesAsync();
         }
 
 

@@ -93,7 +93,7 @@ namespace Ombi.Store.Repository
 
         private async Task<int> InternalSaveChanges()
         {
-            return await GlobalMutex.Lock(async () => await Db.SaveChangesAsync());
+            return await Db.SaveChangesAsync();
         }
 
         private bool _disposed;

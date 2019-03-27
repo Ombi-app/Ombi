@@ -16,7 +16,7 @@ namespace Ombi.Core.Tests.Rule.Request
         {
 
             PrincipalMock = new Mock<IPrincipal>();
-            Rule = new CanRequestRule(PrincipalMock.Object);
+            Rule = new CanRequestRule(PrincipalMock.Object, null);
         }
 
 
