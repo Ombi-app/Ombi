@@ -9,5 +9,6 @@
     "typescript.tsdk": "node_modules\\typescript\\lib",
     "cSpell.words": [
         "usermanagement"
-    ]
+    ],
+    "discord.enabled": true
 }

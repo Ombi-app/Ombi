@@ -3,7 +3,7 @@
 #addin "Cake.Gulp"
 #addin "SharpZipLib"
 #addin nuget:?package=Cake.Compression&version=0.1.4
-#addin "Cake.Incubator"
+#addin "Cake.Incubator&version=3.1.0"
 #addin "Cake.Yarn"
 
 //////////////////////////////////////////////////////////////////////

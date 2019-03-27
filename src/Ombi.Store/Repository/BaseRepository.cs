@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using Nito.AsyncEx;
+using Ombi.Helpers;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
 
@@ -20,7 +20,6 @@ namespace Ombi.Store.Repository
         }
         public DbSet<T> _db { get; }
         private readonly U _ctx;
-        private readonly AsyncLock _mutex = new AsyncLock();
 
         public async Task<T> Find(object key)
         {
@@ -32,7 +31,7 @@ namespace Ombi.Store.Repository
             return _db.AsQueryable();
         }
 
-        public async Task<T> FirstOrDefaultAsync(Expression<Func<T,bool>> predicate)
+        public async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
         {
             return await _db.FirstOrDefaultAsync(predicate);
         }
@@ -82,14 +81,11 @@ namespace Ombi.Store.Repository
             await _ctx.Database.ExecuteSqlCommandAsync(sql);
         }
 
-        private async Task<int> InternalSaveChanges()
+        protected async Task<int> InternalSaveChanges()
         {
-            using (await _mutex.LockAsync())
-            {
-                return await _ctx.SaveChangesAsync();
-            }
+            return await _ctx.SaveChangesAsync();
         }
-        
+
 
         private bool _disposed;
         // Protected implementation of Dispose pattern.
@@ -102,7 +98,7 @@ namespace Ombi.Store.Repository
             {
                 _ctx?.Dispose();
             }
-            
+
             _disposed = true;
         }
 
