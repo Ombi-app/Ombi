@@ -11,6 +11,7 @@ import {
     IDiscordNotifcationSettings,
     IEmailNotificationSettings,
     IEmbyServer,
+    IGotifyNotificationSettings,
     ILidarrSettings,
     IMattermostNotifcationSettings,
     IMobileNotificationTestSettings,
@@ -40,7 +41,11 @@ export class TesterService extends ServiceHelpers {
     }
 
     public pushoverTest(settings: IPushoverNotificationSettings): Observable<boolean> {
-        return this.http.post<boolean>(`${this.url}pushover`, JSON.stringify(settings),  {headers: this.headers});
+        return this.http.post<boolean>(`${this.url}pushover`, JSON.stringify(settings), { headers: this.headers });
+    }
+
+    public gotifyTest(settings: IGotifyNotificationSettings): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}gotify`, JSON.stringify(settings), { headers: this.headers });
     }
 
     public mattermostTest(settings: IMattermostNotifcationSettings): Observable<boolean> {

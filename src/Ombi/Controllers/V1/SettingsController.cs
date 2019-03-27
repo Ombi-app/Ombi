@@ -969,6 +969,40 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
+        /// Saves the gotify notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/gotify")]
+        public async Task<bool> GotifyNotificationSettings([FromBody] GotifyNotificationViewModel model)
+        {
+            // Save the email settings
+            var settings = Mapper.Map<GotifySettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.UpdateRange(model.NotificationTemplates);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the gotify Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/gotify")]
+        public async Task<GotifyNotificationViewModel> GotifyNotificationSettings()
+        {
+            var settings = await Get<GotifySettings>();
+            var model = Mapper.Map<GotifyNotificationViewModel>(settings);
+
+            // Lookup to see if we have any templates saved
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Gotify);
+
+            return model;
+        }
+
+        /// <summary>
         /// Saves the Newsletter notification settings.
         /// </summary>
         /// <param name="model">The model.</param>

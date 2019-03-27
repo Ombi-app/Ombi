@@ -4,6 +4,7 @@ using Moq;
 using Ombi.Core.Rule.Rules.Request;
 using Ombi.Store.Entities.Requests;
 using NUnit.Framework;
+using Ombi.Core.Authentication;
 using Ombi.Helpers;
 
 namespace Ombi.Core.Tests.Rule.Request
@@ -16,7 +17,7 @@ namespace Ombi.Core.Tests.Rule.Request
         {
 
             PrincipalMock = new Mock<IPrincipal>();
-            Rule = new AutoApproveRule(PrincipalMock.Object);
+            Rule = new AutoApproveRule(PrincipalMock.Object, null);
         }
 
 

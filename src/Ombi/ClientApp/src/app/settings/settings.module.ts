@@ -27,6 +27,7 @@ import { LidarrComponent } from "./lidarr/lidarr.component";
 import { MassEmailComponent } from "./massemail/massemail.component";
 import { DiscordComponent } from "./notifications/discord.component";
 import { EmailNotificationComponent } from "./notifications/emailnotification.component";
+import { GotifyComponent } from "./notifications/gotify.component";
 import { MattermostComponent } from "./notifications/mattermost.component";
 import { MobileComponent } from "./notifications/mobile.component";
 import { NewsletterComponent } from "./notifications/newsletter.component";
@@ -65,6 +66,7 @@ const routes: Routes = [
     { path: "Slack", component: SlackComponent, canActivate: [AuthGuard] },
     { path: "Pushover", component: PushoverComponent, canActivate: [AuthGuard] },
     { path: "Pushbullet", component: PushbulletComponent, canActivate: [AuthGuard] },
+    { path: "Gotify", component: GotifyComponent, canActivate: [AuthGuard] },
     { path: "Mattermost", component: MattermostComponent, canActivate: [AuthGuard] },
     { path: "UserManagement", component: UserManagementComponent, canActivate: [AuthGuard] },
     { path: "Update", component: UpdateComponent, canActivate: [AuthGuard] },
@@ -121,6 +123,7 @@ const routes: Routes = [
         PushoverComponent,
         MattermostComponent,
         PushbulletComponent,
+        GotifyComponent,
         UserManagementComponent,
         UpdateComponent,
         AboutComponent,

@@ -45,7 +45,7 @@ namespace Ombi.Store.Repository
                 Db.Attach(template);
                 Db.Entry(template).State = EntityState.Modified;
             }
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public async Task UpdateRange(IEnumerable<NotificationTemplates> templates)
@@ -56,14 +56,19 @@ namespace Ombi.Store.Repository
                 Db.Attach(t);
                 Db.Entry(t).State = EntityState.Modified;
             }
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public async Task<NotificationTemplates> Insert(NotificationTemplates entity)
         {
             var settings = await Db.NotificationTemplates.AddAsync(entity).ConfigureAwait(false);
-            await Db.SaveChangesAsync().ConfigureAwait(false);
+            await InternalSaveChanges().ConfigureAwait(false);
             return settings.Entity;
+        }
+
+        private async Task<int> InternalSaveChanges()
+        {
+            return await Db.SaveChangesAsync();
         }
 
         private bool _disposed;
