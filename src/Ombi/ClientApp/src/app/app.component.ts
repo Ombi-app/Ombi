@@ -27,6 +27,7 @@ export class AppComponent implements OnInit {
     public userAccessToken: string;
     public voteEnabled = false;
     public applicationName: string = "Ombi"
+    public isAdmin: boolean;
 
     private checkedForUpdate: boolean;
 
@@ -61,6 +62,7 @@ export class AppComponent implements OnInit {
         const theme = localStorage.getItem("theme");
         this.onSetTheme(theme);
         this.user = this.authService.claims();
+        this.isAdmin = this.authService.hasRole("admin");
 
         this.settingsService.getCustomization().subscribe(x => {
             this.customizationSettings = x;

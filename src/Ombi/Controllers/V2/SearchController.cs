@@ -60,6 +60,16 @@ namespace Ombi.Controllers.V2
             return await _movieEngineV2.GetFullMovieInformation(movieDbId);
         }
 
+        /// <summary>
+        /// Returns basic information about the provided collection
+        /// </summary>
+        /// <param name="collectionId">The collection id from TheMovieDb</param>
+        /// <returns></returns>
+        [HttpGet("movie/collection/{collectionId}")]
+        public async Task<MovieCollectionsViewModel> GetMovieCollections(int collectionId)
+        {
+            return await _movieEngineV2.GetCollection(collectionId);
+        }
 
         /// <summary>
         /// Returns details for a single show

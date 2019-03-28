@@ -19,6 +19,7 @@ export class MyNavComponent implements OnInit {
   @Input() public showNav: boolean;
   @Input() public applicationName: string;
   @Input() public username: string;
+  @Input() public isAdmin: string;
   @Output() public logoutClick = new EventEmitter();
   @Output() public themeChange = new EventEmitter<string>();
   public theme: string;
@@ -31,10 +32,10 @@ export class MyNavComponent implements OnInit {
   }
 
   public navItems: INavBar[] = [
-    { name: "NavigationBar.Discover", icon: "find_replace", link: "/discover" },
-    { name: "NavigationBar.Requests", icon: "list", link: "/requests-list" },   
-    { name: "NavigationBar.UserManagement", icon: "account_circle", link: "/usermanagement" },
-    { name: "NavigationBar.Settings", icon: "settings", link: "/Settings/About" },
+    { name: "NavigationBar.Discover", icon: "find_replace", link: "/discover", requiresAdmin: false },
+    { name: "NavigationBar.Requests", icon: "list", link: "/requests-list", requiresAdmin: false },   
+    { name: "NavigationBar.UserManagement", icon: "account_circle", link: "/usermanagement", requiresAdmin: true },
+    { name: "NavigationBar.Settings", icon: "settings", link: "/Settings/About", requiresAdmin: true },
   ]
 
   public logOut() {
@@ -57,7 +58,6 @@ export class MyNavComponent implements OnInit {
   }
 
   public getTheme(){
-    debugger;
     return this.theme === 'dark' ? 'active-list-item-dark' : 'active-list-item';
   }
 

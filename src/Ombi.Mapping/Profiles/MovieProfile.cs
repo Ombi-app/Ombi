@@ -91,6 +91,19 @@ namespace Ombi.Mapping.Profiles
             CreateMap<BelongsToCollection, Ombi.Core.Models.Search.V2.CollectionsViewModel>().ReverseMap();
             CreateMap<Api.TheMovieDb.Models.Keywords, Ombi.Core.Models.Search.V2.Keywords>().ReverseMap();
             CreateMap<KeywordsValue, Ombi.Core.Models.Search.V2.KeywordsValue>().ReverseMap();
+
+            CreateMap<Collections, Ombi.Core.Models.Search.V2.MovieCollectionsViewModel>()
+                .ForMember(x => x.Name, o => o.MapFrom(s => s.name))
+                .ForMember(x => x.Overview, o => o.MapFrom(s => s.overview))
+                .ForMember(x => x.Collection, o => o.MapFrom(s => s.parts));
+
+            CreateMap<Part, MovieCollection>()
+                .ForMember(x => x.Id, o => o.MapFrom(s => s.id))
+                .ForMember(x => x.Overview, o => o.MapFrom(s => s.overview))
+                .ForMember(x => x.PosterPath, o => o.MapFrom(s => s.poster_path))
+                .ForMember(x => x.Title, o => o.MapFrom(s => s.title));
+
+            CreateMap<SearchMovieViewModel, MovieCollection>().ReverseMap();
         }
     }
 }

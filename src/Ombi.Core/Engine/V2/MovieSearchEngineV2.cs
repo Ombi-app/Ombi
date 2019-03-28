@@ -1,24 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Authentication;
+using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
+using Ombi.Core.Models.Search.V2;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Ombi.Core.Engine.Interfaces;
-using Ombi.Core.Models.Search.V2;
 
 namespace Ombi.Core.Engine.V2
 {
@@ -44,6 +44,14 @@ namespace Ombi.Core.Engine.V2
             var movieInfo = await MovieApi.GetFullMovieInfo(theMovieDbId, langCode);
 
             return await ProcessSingleMovie(movieInfo);
+        }
+
+        public async Task<MovieCollectionsViewModel> GetCollection(int collectionId, string langCode = null)
+        {
+            langCode = await DefaultLanguageCode(langCode);
+            var collections = await MovieApi.GetCollection(langCode, collectionId);
+
+            return await ProcessCollection(collections);
         }
 
         public async Task<int> GetTvDbId(int theMovieDbId)
@@ -180,6 +188,30 @@ namespace Ombi.Core.Engine.V2
             return mapped;
         }
 
+
+        private async Task<MovieCollectionsViewModel> ProcessCollection(Collections collection)
+        {
+            var viewMovie = Mapper.Map<MovieCollectionsViewModel>(collection);
+            foreach (var movie in viewMovie.Collection)
+            {
+                var mappedMovie = Mapper.Map<SearchMovieViewModel>(movie);
+                await RunSearchRules(mappedMovie);
+
+                // This requires the rules to be run first to populate the RequestId property
+                await CheckForSubscription(mappedMovie);
+                var mapped = Mapper.Map<MovieCollection>(movie);
+
+                mapped.Available = movie.Available;
+                mapped.RequestId = movie.RequestId;
+                mapped.Requested = movie.Requested;
+                mapped.PlexUrl = movie.PlexUrl;
+                mapped.EmbyUrl = movie.EmbyUrl;
+                mapped.Subscribed = movie.Subscribed;
+                mapped.ShowSubscribe = movie.ShowSubscribe;
+            }
+            return viewMovie;
+        }
+
         private async Task<SearchMovieViewModel> ProcessSingleMovie(SearchMovieViewModel viewMovie)
         {
             if (viewMovie.ImdbId.IsNullOrEmpty())
@@ -188,7 +220,7 @@ namespace Ombi.Core.Engine.V2
                 viewMovie.Id = showInfo.Id; // TheMovieDbId
                 viewMovie.ImdbId = showInfo.ImdbId;
             }
-            
+
             viewMovie.TheMovieDbId = viewMovie.Id.ToString();
 
             await RunSearchRules(viewMovie);

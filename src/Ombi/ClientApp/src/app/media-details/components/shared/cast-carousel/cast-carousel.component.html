@@ -3,7 +3,7 @@
     <mat-card-content>
       <p-carousel [value]="cast" [numVisible]="5" easing="easeOutStrong">
         <ng-template let-item pTemplate="item">
-          <div class="row justify-content-md-center">
+          <div class="row justify-content-md-center mat-card mat-card-flat">
             <div class="col-12">
               <img class="cast-profile-img" *ngIf="item.profile_path" src="https://image.tmdb.org/t/p/w300/{{item.profile_path}}">
               <img class="cast-profile-img" *ngIf="item.character?.image?.medium" [src]="item.character.image.medium">

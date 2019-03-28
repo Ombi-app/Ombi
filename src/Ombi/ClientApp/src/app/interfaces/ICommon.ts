@@ -31,4 +31,5 @@ export interface INavBar {
     icon: string;
     name: string;
     link: string;
+    requiresAdmin: boolean;
 }
