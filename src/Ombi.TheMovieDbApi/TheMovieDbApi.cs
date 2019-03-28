@@ -58,10 +58,9 @@ namespace Ombi.Api.TheMovieDb
         public async Task<Collections> GetCollection(string langCode, int collectionId)
         {
             // https://developers.themoviedb.org/3/discover/movie-discover
-            var request = new Request("discover/movie", BaseUri, HttpMethod.Get);
+            var request = new Request($"/collection/{collectionId}", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
             request.FullUri = request.FullUri.AddQueryParameter("language", langCode);
-            request.FullUri = request.FullUri.AddQueryParameter("collection_id", collectionId.ToString());
 
             return await Api.Request<Collections> (request);
         }

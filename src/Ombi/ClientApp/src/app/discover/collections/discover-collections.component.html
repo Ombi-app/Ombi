@@ -1,19 +1,8 @@
-<div class="small-middle-container">
+<div class="small-middle-container" *ngIf="collection">
 
     <div class="row justify-content-md-center top-spacing">
-        <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" (click)="popular()" [attr.color]="popularActive ? 'accent' : 'primary'"
-            [ngClass]="popularActive ? 'mat-accent' : 'mat-primary'" mat-raised-button
-                class="btn grow" >{{'Discovery.PopularTab' | translate}}</button>
-            <button type="button" (click)="trending()" 
-            [attr.color]="trendingActive ? 'accent' : 'primary'"
-            [ngClass]="trendingActive ? 'mat-accent' : 'mat-primary'"
-                mat-raised-button class="btn grow" color="primary">{{'Discovery.TrendingTab' | translate}}</button>
-            <button type="button" (click)="upcoming()"
-            [attr.color]="upcomingActive ? 'accent' : 'primary'"
-            [ngClass]="upcomingActive ? 'mat-accent' : 'mat-primary'"
-                mat-raised-button class="btn grow" color="primary">{{'Discovery.UpcomingTab' | translate}}</button>
-        </div>
+       <h3 class="row">{{collection.name}}</h3>
+       <p class="row">{{collection.overview}}</p>
     </div>
     <div *ngIf="loadingFlag" class="row justify-content-md-center top-spacing loading-spinner">
         <mat-spinner [color]="'accent'"></mat-spinner>

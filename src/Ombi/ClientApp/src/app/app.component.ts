@@ -61,8 +61,6 @@ export class AppComponent implements OnInit {
     public ngOnInit() {
         const theme = localStorage.getItem("theme");
         this.onSetTheme(theme);
-        this.user = this.authService.claims();
-        this.isAdmin = this.authService.hasRole("admin");
 
         this.settingsService.getCustomization().subscribe(x => {
             this.customizationSettings = x;
@@ -88,10 +86,11 @@ export class AppComponent implements OnInit {
             this.currentUrl = event.url;
             if (event instanceof NavigationStart) {
                 this.user = this.authService.claims();
+                this.isAdmin = this.authService.hasRole("admin");
                 this.showNav = this.authService.loggedIn();
 
                 // tslint:disable-next-line:no-string-literal
-                if (this.user !== null && this.user.name && !this.checkedForUpdate && this.user.roles["Admin"]) {
+                if (this.user !== null && this.user.name && !this.checkedForUpdate && this.isAdmin) {
                     this.checkedForUpdate = true;
                     this.jobService.getCachedUpdate().subscribe(x => {
                         this.updateAvailable = x;
@@ -109,10 +108,6 @@ export class AppComponent implements OnInit {
             return "powerUser";
         }
         return "user";
-    }
-
-    public hasRole(role: string): boolean {
-        return this.user.roles.some(r => r === role);
     }
 
     public openMobileApp(event: any) {
