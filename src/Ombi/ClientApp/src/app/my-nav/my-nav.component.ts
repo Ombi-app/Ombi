@@ -29,6 +29,9 @@ export class MyNavComponent implements OnInit {
 
   public ngOnInit(): void {
     this.theme = localStorage.getItem("theme");
+    if(!this.theme) {
+      localStorage.setItem("theme","light");
+    }
   }
 
   public navItems: INavBar[] = [
