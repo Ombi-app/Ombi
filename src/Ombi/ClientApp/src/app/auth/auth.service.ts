@@ -10,20 +10,20 @@ import { ILocalUser, IUserLogin } from "./IUserLogin";
 @Injectable()
 export class AuthService extends ServiceHelpers {
 
-    constructor(http: HttpClient, @Inject(APP_BASE_HREF) href:string, private jwtHelperService: JwtHelperService) {
+    constructor(http: HttpClient, @Inject(APP_BASE_HREF) href: string, private jwtHelperService: JwtHelperService) {
         super(http, "/api/v1/token", href);
     }
 
     public login(login: IUserLogin): Observable<any> {
-        return this.http.post(`${this.url}/`, JSON.stringify(login), {headers: this.headers});
+        return this.http.post(`${this.url}/`, JSON.stringify(login), { headers: this.headers });
     }
 
     public oAuth(pin: number): Observable<any> {
-        return this.http.get<any>(`${this.url}/${pin}`, {headers: this.headers});
+        return this.http.get<any>(`${this.url}/${pin}`, { headers: this.headers });
     }
 
     public requiresPassword(login: IUserLogin): Observable<boolean> {
-        return this.http.post<boolean>(`${this.url}/requirePassword`, JSON.stringify(login), {headers: this.headers});
+        return this.http.post<boolean>(`${this.url}/requirePassword`, JSON.stringify(login), { headers: this.headers });
     }
 
     public loggedIn() {
@@ -49,17 +49,20 @@ export class AuthService extends ServiceHelpers {
 
             const u = { name, roles: [] as string[] };
             if (roles instanceof Array) {
-                u.roles  = roles;
+                u.roles = roles;
             } else {
                 u.roles.push(roles);
             }
-            return <ILocalUser> u;
+            return <ILocalUser>u;
         }
-        return <ILocalUser> { };
+        return <ILocalUser>{};
     }
 
     public hasRole(role: string): boolean {
-        return this.claims().roles.some(r => r.toUpperCase() === role.toUpperCase());
+        if (this.claims().roles) {
+            return this.claims().roles.some(r => r.toUpperCase() === role.toUpperCase());
+        }
+        return false;
     }
 
     public logout() {

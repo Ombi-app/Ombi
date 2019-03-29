@@ -28,6 +28,7 @@ export class AppComponent implements OnInit {
     public voteEnabled = false;
     public applicationName: string = "Ombi"
     public isAdmin: boolean;
+    public username: string;
 
     private checkedForUpdate: boolean;
 
@@ -86,6 +87,9 @@ export class AppComponent implements OnInit {
             this.currentUrl = event.url;
             if (event instanceof NavigationStart) {
                 this.user = this.authService.claims();
+                if(this.user && this.user.username) {
+                    this.username = this.user.username;
+                }
                 this.isAdmin = this.authService.hasRole("admin");
                 this.showNav = this.authService.loggedIn();
 
@@ -99,17 +103,6 @@ export class AppComponent implements OnInit {
                 }
             }
         });
-    }
-
-    public roleClass() {
-        if (this.user) {
-            if (this.user.roles.some(r => r === "Admin")) {
-                return "adminUser";
-            } else if (this.user.roles.some(r => r === "PowerUser")) {
-                return "powerUser";
-            }
-        }
-        return "user";
     }
 
     public openMobileApp(event: any) {
