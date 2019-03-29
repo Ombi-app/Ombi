@@ -264,6 +264,8 @@ namespace Ombi.Core.Engine
                 : allRequests.OrderByDescending(x => prop.GetValue(x)).ToList();
             allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
 
+            // Make sure we do not show duplicate child requests
+            allRequests = allRequests.DistinctBy(x => x.ParentRequest.Title).ToList();
          
             return new RequestsViewModel<ChildRequests>
             {
