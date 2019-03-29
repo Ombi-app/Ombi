@@ -11,7 +11,7 @@ ____
 
 ___
 
-[![Twitter](https://img.shields.io/twitter/follow/tidusjar.svg?style=social)](https://img.shields.io/twitter/follow/tidusjar.svg?style=social)
+[![Twitter](https://img.shields.io/twitter/follow/tidusjar.svg?style=social)](https://twitter.com/intent/follow?screen_name=tidusjar)
 
 Follow me developing Ombi!
 
