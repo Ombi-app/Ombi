@@ -43,6 +43,9 @@
             <button (click)="approve()" mat-raised-button class="btn-spacing" color="accent">
               <i class="fa fa-plus"></i> {{ 'Common.Approve' | translate }}
             </button>
+            <button *ngIf="!movie.available" (click)="markAvailable()" mat-raised-button class="btn-spacing" color="accent">
+              <i class="fa fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
+            </button>
 
             <button *ngIf="hasRequest && !movieRequest.denied" mat-raised-button class="btn-spacing" color="warn" (click)="deny()">
                     <i class="fa fa-times"></i> {{

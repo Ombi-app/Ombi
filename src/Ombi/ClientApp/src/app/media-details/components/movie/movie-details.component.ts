@@ -109,6 +109,16 @@ export class MovieDetailsComponent {
         }
     }
 
+    public async markAvailable() {
+        const result = await this.requestService.markMovieAvailable({id: this.movieRequest.id}).toPromise();
+        if (result.result) {
+            this.movie.available = true;
+            this.messageService.send(result.message, "Ok");
+        } else {
+            this.messageService.send(result.errorMessage, "Ok");
+        }
+    }
+
     private setQualityOverrides(): void {
         if (this.radarrProfiles) {
             const profile = this.radarrProfiles.filter((p) => {
@@ -119,6 +129,7 @@ export class MovieDetailsComponent {
             }
         }
     }
+
     private setRootFolderOverrides(): void {
         if (this.radarrRootFolders) {
             const path = this.radarrRootFolders.filter((folder) => {

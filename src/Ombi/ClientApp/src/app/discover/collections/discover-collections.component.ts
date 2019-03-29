@@ -24,8 +24,9 @@ export class DiscoverCollectionsComponent implements OnInit {
      }
 
     public async ngOnInit() {
-       this.collection = await this.searchService.getMovieCollections(this.collectionId);
-       this.createModel();
+        this.loadingFlag = true;
+        this.collection = await this.searchService.getMovieCollections(this.collectionId);
+        this.createModel();
     }
 
     private createModel() {
@@ -39,7 +40,7 @@ export class DiscoverCollectionsComponent implements OnInit {
                 type: RequestType.movie,
                 id: m.id,
                 url: `http://www.imdb.com/title/${m.imdbId}/`,
-                rating: null,
+                rating: 0,
                 overview: m.overview,
                 approved: m.approved
             });
