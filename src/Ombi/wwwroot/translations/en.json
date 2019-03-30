@@ -61,7 +61,8 @@
     "Logout": "Logout",
     "OpenMobileApp": "Open Mobile App",
     "RecentlyAdded": "Recently Added",
-    "ChangeTheme":"Change Theme"
+    "ChangeTheme":"Change Theme",
+    "Calendar":"Calendar"
   },
   "Search": {
     "Title": "Search",

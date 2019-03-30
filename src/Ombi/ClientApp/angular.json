@@ -31,12 +31,14 @@
               "node_modules/font-awesome/scss/font-awesome.scss",
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/primeng/resources/themes/nova-light/theme.css",
-              "node_modules/primeicons/primeicons.css"
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/fullcalendar/dist/fullcalendar.min.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/chart.js/dist/Chart.js",
-              "node_modules/hammerjs/hammer.min.js"
+              "node_modules/hammerjs/hammer.min.js",
+              "node_modules/fullcalendar/dist/fullcalendar.min.js"
             ]
           },
           "configurations": {

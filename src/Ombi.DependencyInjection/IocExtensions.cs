@@ -103,6 +103,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMultiSearchEngine, MultiSearchEngine>();
             services.AddTransient<IMovieEngineV2, MovieSearchEngineV2>();
             services.AddTransient<ITVSearchEngineV2, TvSearchEngineV2>();
+            services.AddTransient<ICalendarEngine, CalendarEngine>();
         }
 
         public static void RegisterHttp(this IServiceCollection services)

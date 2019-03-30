@@ -23,5 +23,6 @@ const invalidProxies: string[] = [
     'RESET',
     'CUSTOM',
     'AUTH',
-    'WIZARD'    
+    'WIZARD',
+    "CALENDAR"    
 ]

@@ -64,6 +64,7 @@ const routes: Routes = [
     { path: "token", component: TokenResetPasswordComponent },
     { path: "landingpage", component: LandingPageComponent },
     { path: "auth/cookie", component: CookieComponent },
+    { loadChildren: "./calendar/calendar.module#CalendarModule", path: "calendar" },
     { loadChildren: "./discover/discover.module#DiscoverModule", path: "discover" },
     { loadChildren: "./issues/issues.module#IssuesModule", path: "issues" },
     { loadChildren: "./settings/settings.module#SettingsModule", path: "Settings" },
