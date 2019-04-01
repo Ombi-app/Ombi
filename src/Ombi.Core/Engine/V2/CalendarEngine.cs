@@ -69,7 +69,7 @@ namespace Ombi.Core.Engine.V2
              return viewModel;
         }
 
-        private string GetBackgroundColor(MovieRequests req)
+        private string GetBackgroundColor(BaseRequest req)
         {
             if (req.Available)
             {

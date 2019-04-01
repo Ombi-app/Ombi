@@ -101,8 +101,40 @@ namespace Ombi.Core.Tests.Engine
             Assert.That(data[0].Title, Is.EqualTo("Valid"));
         }
 
+
+        [TestCaseSource(nameof(StatusTvColorData))]
+        public async Task<string> Calendar_Tv_StatusColor(AvailabilityTestModel model)
+        {
+            var tv = new List<ChildRequests>
+            {
+                new ChildRequests
+                {
+                    SeasonRequests = new List<SeasonRequests>
+                    {
+                        new SeasonRequests
+                        {
+                            Episodes = new List<EpisodeRequests>
+                            {
+                                new EpisodeRequests
+                                {
+                                    Title = "Valid",
+                                    AirDate = DateTime.Now,
+                                    Approved = model.Approved,
+                                    Available = model.Available
+                                },
+                            }
+                        }
+                    }
+                },
+            };
+            TvRepo.Setup(x => x.GetChild()).Returns(tv.AsQueryable());
+            var data = await CalendarEngine.GetCalendarData();
+
+            return data[0].BackgroundColor;
+        }
+
         [TestCaseSource(nameof(StatusColorData))]
-        public async Task<string> Calendar_StatusColor(AvailabilityTestModel model)
+        public async Task<string> Calendar_Movie_StatusColor(AvailabilityTestModel model)
         {
             var movies = new List<MovieRequests>
             {
@@ -130,6 +162,17 @@ namespace Ombi.Core.Tests.Engine
                     Approved = true,
                     Denied = true
                 }).Returns("red").SetName("Calendar_DeniedRequest");
+                foreach (var testCaseData in StatusTvColorData)
+                {
+                    yield return testCaseData;
+                }
+            }
+        }
+
+        public static IEnumerable<TestCaseData> StatusTvColorData
+        {
+            get
+            {
                 yield return new TestCaseData(new AvailabilityTestModel
                 {
                     Available = true,
