@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+
 import { CalendarService } from "../../services/calendar.service";
 import { ICalendarModel } from "../../interfaces/ICalendar";
 
@@ -19,31 +20,6 @@ export class CalendarComponent implements OnInit {
         debugger;
         this.loading()
         this.entries = await this.calendarService.getCalendarEntries();
-        this.events = [
-            {
-                "title": "All Day Event",
-                "start": new Date(),
-                "eventColor":"black"
-            },
-            {
-                "title": "Long Event",
-                "start": "2016-01-07",
-                "end": "2016-01-10"
-            },
-            {
-                "title": "Repeating Event",
-                "start": "2016-01-09T16:00:00"
-            },
-            {
-                "title": "Repeating Event",
-                "start": "2016-01-16T16:00:00"
-            },
-            {
-                "title": "Conference",
-                "start": "2016-01-11",
-                "end": "2016-01-13"
-            }
-        ];
 
         this.options = {
             defaultDate: new Date(),
@@ -52,6 +28,10 @@ export class CalendarComponent implements OnInit {
                 center: 'title',
                 right: 'month,agendaWeek'
             },
+            eventClick: (e: any) => {
+                debugger;
+                e.preventDefault();
+            }
         };
         this.finishLoading();
     }

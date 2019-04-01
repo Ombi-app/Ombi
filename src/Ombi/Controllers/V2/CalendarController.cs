@@ -23,7 +23,7 @@ namespace Ombi.Controllers.V2
 
 
         [HttpGet]
-        public async Task<List<CalendarViewModel>> GetCalendarEntried()
+        public async Task<List<CalendarViewModel>> GetCalendarEntries()
         {
             return await _calendarEngine.GetCalendarData();
         }

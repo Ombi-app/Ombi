@@ -3,16 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Ombi.Api.Sonarr.Models;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Search.V2;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Helpers;
+using Ombi.Store.Entities;
+using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Core.Engine.V2
 {
     public class CalendarEngine : BaseEngine, ICalendarEngine
     {
+        public DateTime DaysAgo => DateTime.Now.AddDays(-90);
+        public DateTime DaysAhead => DateTime.Now.AddDays(90);
         public CalendarEngine(IPrincipal user, OmbiUserManager um, IRuleEvaluator rules, IMovieRequestRepository movieRepo,
             ITvRequestRepository tvRequestRepo) : base(user, um, rules)
         {
@@ -27,14 +33,21 @@ namespace Ombi.Core.Engine.V2
         {
             var viewModel = new List<CalendarViewModel>();
             var movies = _movieRepo.GetAll().Where(x =>
-                x.ReleaseDate > DateTime.Now.AddDays(-30) && x.ReleaseDate < DateTime.Now.AddDays(30));
-            var episodes = _tvRepo.GetChild().SelectMany(x => x.SeasonRequests.SelectMany(e => e.Episodes)).ToList();
+                x.ReleaseDate > DaysAgo && x.ReleaseDate < DaysAhead);
+            var episodes = _tvRepo.GetChild().SelectMany(x => x.SeasonRequests.SelectMany(e => e.Episodes
+                .Where(w => w.AirDate > DaysAgo && w.AirDate < DaysAhead)));
             foreach (var e in episodes)
             {
                 viewModel.Add(new CalendarViewModel
                 {
                     Title = e.Title,
-                    Start = e.AirDate.Date
+                    Start = e.AirDate.Date,
+                    Type = RequestType.TvShow,
+                    BackgroundColor = GetBackgroundColor(e),
+                    ExtraParams = new List<ExtraParams>
+                    {
+                        new ExtraParams { Overview = e.Season?.ChildRequest?.ParentRequest?.Overview ?? string.Empty, ProviderId = e.Season?.ChildRequest?.ParentRequest?.TvDbId ?? 0} 
+                    }
                 });
             }
 
@@ -43,11 +56,72 @@ namespace Ombi.Core.Engine.V2
                  viewModel.Add(new CalendarViewModel
                  {
                      Title = m.Title,
-                     Start = m.ReleaseDate.Date
+                     Start = m.ReleaseDate.Date,
+                     BackgroundColor = GetBackgroundColor(m),
+                     Type = RequestType.Movie,
+                     ExtraParams = new List<ExtraParams>
+                     {
+                     new ExtraParams { Overview = m.Overview, ProviderId = m.TheMovieDbId}
+                 }
                  });
              }
 
              return viewModel;
+        }
+
+        private string GetBackgroundColor(MovieRequests req)
+        {
+            if (req.Available)
+            {
+                return "#469c83";
+            }
+
+            if (!req.Available)
+            {
+                if (req.Denied ?? false)
+                {
+                    return "red";
+                }
+                if (req.Approved)
+                {
+                    // We are approved state
+                    return "blue";
+                }
+
+                if (!req.Approved)
+                {
+                    // Processing
+                    return "teal";
+                }
+            }
+
+            return "gray";
+        }
+
+        private string GetBackgroundColor(EpisodeRequests req)
+        {
+            if (req.Available)
+            {
+                return "#469c83";
+            }
+
+            if (!req.Available)
+            {
+                if (req.Approved)
+                {
+                    // We are approved state
+                    return "blue";
+                }
+
+                if (!req.Approved)
+                {
+                    // Processing
+                    return "teal";
+                }
+
+            }
+
+            return "gray";
         }
     }
 }
