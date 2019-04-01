@@ -47,7 +47,7 @@
     "copy-webpack-plugin": "^4.5.2",
     "core-js": "^2.5.7",
     "css": "^2.2.3",
-    "css-loader": "^0.28.11",
+    "css-loader": "^1.0.0",
     "del": "^3.0.0",
     "event-source-polyfill": "^0.0.12",
     "expose-loader": "^0.7.5",
