@@ -20,7 +20,6 @@ export class NavSearchComponent {
     public searching = false;
     public searchFailed = false;
     
-    
     public formatter = (result: IMultiSearchResult) =>  {
         if(result.media_type === "movie") {
             let title = result.title;

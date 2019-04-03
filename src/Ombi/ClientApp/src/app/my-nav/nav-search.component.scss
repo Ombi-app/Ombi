@@ -19,9 +19,8 @@ $ombi-accent: #258a6d;
 
 ::ng-deep ngb-typeahead-window.dropdown-menu {
   background-color: $ombi-primary;
-  width: 24%;
   overflow: auto;
-  height: 500px;
+  height: 33em;
 }
 
 ::ng-deep ngb-typeahead-window button.dropdown-item {
