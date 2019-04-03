@@ -20,7 +20,7 @@ export class DiscoverCardDetailsComponent implements OnInit {
     public tv: ISearchTvResultV2;
     public tvCreator: string;
     public tvProducer: string;
-    public loading: boolean;;
+    public loading: boolean;
     public RequestType = RequestType;
 
     constructor(
@@ -77,7 +77,6 @@ export class DiscoverCardDetailsComponent implements OnInit {
                 this.messageService.send(result.errorMessage, "Ok");
             }
         } else if (this.data.type === RequestType.tvShow) {
-
             this.dialog.open(EpisodeRequestComponent, { width: "700px", data: this.tv,  panelClass: 'modal-panel' })
         }
         this.loading = false;

@@ -1,12 +1,12 @@
 import { Component, ViewEncapsulation } from "@angular/core";
-import { ImageService, SearchV2Service, RequestService, MessageService, RadarrService } from "../../../services";
+import { ImageService, SearchV2Service, RequestService, MessageService } from "../../../services";
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
 import { MatDialog } from "@angular/material";
 import { YoutubeTrailerComponent } from "../shared/youtube-trailer.component";
 import { AuthService } from "../../../auth/auth.service";
-import { IMovieRequests, IRadarrProfile, IRadarrRootFolder, RequestType } from "../../../interfaces";
+import { IMovieRequests, RequestType } from "../../../interfaces";
 import { DenyDialogComponent } from "../shared/deny-dialog/deny-dialog.component";
 
 @Component({
@@ -20,16 +20,12 @@ export class MovieDetailsComponent {
     public movieRequest: IMovieRequests;
     public isAdmin: boolean;
 
-    public radarrProfiles: IRadarrProfile[];
-    public radarrRootFolders: IRadarrRootFolder[];
-
     private theMovidDbId: number;
 
     constructor(private searchService: SearchV2Service, private route: ActivatedRoute,
         private sanitizer: DomSanitizer, private imageService: ImageService,
         public dialog: MatDialog, private requestService: RequestService,
-        public messageService: MessageService, private auth: AuthService,
-        private radarrService: RadarrService) {
+        public messageService: MessageService, private auth: AuthService) {
         this.route.params.subscribe((params: any) => {
             this.theMovidDbId = params.movieDbId;
             this.load();
@@ -45,20 +41,6 @@ export class MovieDetailsComponent {
                 // Load up this request
                 this.hasRequest = true;
                 this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
-
-                if (this.isAdmin) {
-                    if (await this.radarrService.isRadarrEnabled()) {
-                        this.radarrService.getQualityProfilesFromSettings().subscribe(c => {
-                            this.radarrProfiles = c;
-                            this.setQualityOverrides();
-                        });
-                        this.radarrService.getRootFoldersFromSettings().subscribe(c => {
-                            this.radarrRootFolders = c;
-                            this.setRootFolderOverrides();
-                        });
-                    }
-                }
-
             }
             this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
                 this.movie.background = this.sanitizer.bypassSecurityTrustStyle
@@ -116,28 +98,6 @@ export class MovieDetailsComponent {
             this.messageService.send(result.message, "Ok");
         } else {
             this.messageService.send(result.errorMessage, "Ok");
-        }
-    }
-
-    private setQualityOverrides(): void {
-        if (this.radarrProfiles) {
-            const profile = this.radarrProfiles.filter((p) => {
-                return p.id === this.movieRequest.qualityOverride;
-            });
-            if (profile.length > 0) {
-                this.movieRequest.qualityOverrideTitle = profile[0].name;
-            }
-        }
-    }
-
-    private setRootFolderOverrides(): void {
-        if (this.radarrRootFolders) {
-            const path = this.radarrRootFolders.filter((folder) => {
-                return folder.id === this.movieRequest.rootPathOverride;
-            });
-            if (path.length > 0) {
-                this.movieRequest.rootPathOverrideTitle = path[0].path;
-            }
         }
     }
 }

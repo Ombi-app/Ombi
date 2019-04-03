@@ -9,6 +9,8 @@ import { MediaPosterComponent } from "./shared/media-poster/media-poster.compone
 import { CastCarouselComponent } from "./shared/cast-carousel/cast-carousel.component";
 import { DenyDialogComponent } from "./shared/deny-dialog/deny-dialog.component";
 import { TvRequestsPanelComponent } from "./tv/panels/tv-requests/tv-requests-panel.component";
+import { MovieAdminPanelComponent } from "./movie/panels/movie-admin-panel/movie-admin-panel.component";
+import { MovieAdvancedOptionsComponent } from "./movie/panels/movie-advanced-options/movie-advanced-options.component";
 
 export const components: any[] = [
     MovieDetailsComponent,
@@ -21,7 +23,9 @@ export const components: any[] = [
     MediaPosterComponent,
     CastCarouselComponent,
     DenyDialogComponent,
-    TvRequestsPanelComponent
+    TvRequestsPanelComponent,
+    MovieAdminPanelComponent,
+    MovieAdvancedOptionsComponent
 ];
 
 
@@ -29,4 +33,5 @@ export const components: any[] = [
 export const entryComponents: any[] = [
     YoutubeTrailerComponent,
     DenyDialogComponent,
+    MovieAdvancedOptionsComponent,
 ];

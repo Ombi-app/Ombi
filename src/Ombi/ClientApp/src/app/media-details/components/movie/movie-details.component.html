@@ -1,7 +1,11 @@
+<div *ngIf="!movie" class="row justify-content-md-center top-spacing loading-spinner">
+  <mat-spinner [color]="'accent'"></mat-spinner>
+</div>
+
 <div *ngIf="movie" class="dark-theme">
 
-  <top-banner [background]="movie.background" [available]="movie.available" [title]="movie.title" [releaseDate]="movie.releaseDate"
-    [tagline]="movie.tagline"></top-banner>
+  <top-banner [background]="movie.background" [available]="movie.available" [title]="movie.title"
+    [releaseDate]="movie.releaseDate" [tagline]="movie.tagline"></top-banner>
 
   <section id="info-wrapper">
     <div class="small-middle-container">
@@ -13,8 +17,9 @@
         <!--Next to poster-->
         <div class="col-12 col-lg-3 col-xl-3 media-row">
 
-          <social-icons [homepage]="movie.homepage" [theMoviedbId]="movie.id" [hasTrailer]="movie.videos.results.length > 0"
-            (openTrailer)="openDialog()" [imdbId]="movie.imdbId" [twitter]="movie.externalIds.twitterId" [facebook]="movie.externalIds.facebookId"
+          <social-icons [homepage]="movie.homepage" [theMoviedbId]="movie.id"
+            [hasTrailer]="movie.videos.results.length > 0" (openTrailer)="openDialog()" [imdbId]="movie.imdbId"
+            [twitter]="movie.externalIds.twitterId" [facebook]="movie.externalIds.facebookId"
             [instagram]="movie.externalIds.instagramId" [available]="movie.available" [plexUrl]="movie.plexUrl"
             [embyUrl]="movie.embyUrl"></social-icons>
 
@@ -28,13 +33,14 @@
             <span *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></span>
 
             <ng-template #requestedBtn>
-              <button mat-raised-button *ngIf="!hasRequest || hasRequest && !movieRequest.denied" class="btn-spacing" color="warn" [disabled]><i class="fa fa-check"></i>
+              <button mat-raised-button *ngIf="!hasRequest || hasRequest && movieRequest && !movieRequest.denied" class="btn-spacing"
+                color="warn" [disabled]><i class="fa fa-check"></i>
                 {{ 'Common.Requested' | translate }}</button>
             </ng-template>
             <ng-template #notRequestedBtn>
               <button mat-raised-button class="btn-spacing" color="primary" (click)="request()">
-                <i *ngIf="movie.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> <i *ngIf="!movie.requestProcessing && !movie.processed"
-                  class="fa fa-plus"></i>
+                <i *ngIf="movie.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> <i
+                  *ngIf="!movie.requestProcessing && !movie.processed" class="fa fa-plus"></i>
                 <i *ngIf="movie.processed && !movie.requestProcessing" class="fa fa-check"></i> {{
                 'Common.Request' | translate }}</button>
             </ng-template>
@@ -43,23 +49,26 @@
             <button (click)="approve()" mat-raised-button class="btn-spacing" color="accent">
               <i class="fa fa-plus"></i> {{ 'Common.Approve' | translate }}
             </button>
-            <button *ngIf="!movie.available" (click)="markAvailable()" mat-raised-button class="btn-spacing" color="accent">
+            <button *ngIf="!movie.available" (click)="markAvailable()" mat-raised-button class="btn-spacing"
+              color="accent">
               <i class="fa fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
             </button>
 
-            <button *ngIf="hasRequest && !movieRequest.denied" mat-raised-button class="btn-spacing" color="warn" (click)="deny()">
-                    <i class="fa fa-times"></i> {{
+            <button *ngIf="hasRequest && !movieRequest.denied" mat-raised-button class="btn-spacing" color="warn"
+              (click)="deny()">
+              <i class="fa fa-times"></i> {{
                     'Requests.Deny' | translate }}</button>
-                
-                
-                
-                </span>
-                
-            <button *ngIf="hasRequest && movieRequest.denied" [matTooltip]="movieRequest.deniedReason" mat-raised-button class="btn-spacing" color="warn">
-                    <i class="fa fa-times"></i> {{
+
+
+
+          </span>
+
+          <button *ngIf="hasRequest && movieRequest.denied" [matTooltip]="movieRequest.deniedReason" mat-raised-button
+            class="btn-spacing" color="warn">
+            <i class="fa fa-times"></i> {{
                     'MediaDetails.Denied' | translate }}</button>
 
-                    
+
 
         </div>
       </div>
@@ -67,13 +76,23 @@
       <div class="row">
 
         <div class="col-12 col-md-2">
-          <button *ngIf="movie.belongsToCollection" [routerLink]="'/discover/collection/' + movie.belongsToCollection.id" mat-raised-button class="spacing-below full-width mat-elevation-z8">{{movie.belongsToCollection.name}}</button>
+          <button *ngIf="movie.belongsToCollection"
+            [routerLink]="'/discover/collection/' + movie.belongsToCollection.id" mat-raised-button
+            class="spacing-below full-width mat-elevation-z8">{{movie.belongsToCollection.name}}</button>
+
+          <mat-card class="mat-elevation-z8 spacing-below" *ngIf="isAdmin && movieRequest">
+            <mat-card-content class="medium-font">
+              <movie-admin-panel [movie]="movieRequest"></movie-admin-panel>
+            </mat-card-content>
+          </mat-card>
 
           <mat-card class="mat-elevation-z8">
             <mat-card-content class="medium-font">
               <movie-information-panel [movie]="movie"></movie-information-panel>
             </mat-card-content>
           </mat-card>
+
+
         </div>
 
         <div class="col-12 col-md-10">
@@ -84,14 +103,12 @@
                   {{movie.overview}}
                 </mat-card-content>
               </mat-card>
-
-
             </div>
           </div>
+
           <div class="row">
             <div class="col-12">
               <cast-carousel [cast]="movie.credits.cast"></cast-carousel>
-
             </div>
           </div>
 
@@ -101,7 +118,7 @@
                 <mat-expansion-panel>
                   <mat-expansion-panel-header>
                     <mat-panel-title>
-                            {{'MediaDetails.RecommendationsTitle' | translate}}
+                      {{'MediaDetails.RecommendationsTitle' | translate}}
                     </mat-panel-title>
                   </mat-expansion-panel-header>
 
@@ -111,8 +128,9 @@
                       <div class="sidebar affixable affix-top preview-poster">
                         <div class="poster">
                           <a [routerLink]="'/details/movie/'+r.id">
-                            <img class="real grow" matTooltip="{{r.title}}" src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}"
-                              alt="Poster" style="display: block;">
+                            <img class="real grow" matTooltip="{{r.title}}"
+                              src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}" alt="Poster"
+                              style="display: block;">
                           </a>
                         </div>
                       </div>
@@ -123,7 +141,7 @@
                 <mat-expansion-panel>
                   <mat-expansion-panel-header>
                     <mat-panel-title>
-                            {{'MediaDetails.SimilarTitle' | translate}}
+                      {{'MediaDetails.SimilarTitle' | translate}}
                     </mat-panel-title>
                   </mat-expansion-panel-header>
 
@@ -133,8 +151,9 @@
                       <div class="sidebar affixable affix-top preview-poster">
                         <div class="poster ">
                           <a [routerLink]="'/details/movie/'+r.id">
-                            <img class="real grow" matTooltip="{{r.title}}" src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}"
-                              alt="Poster" style="display: block;">
+                            <img class="real grow" matTooltip="{{r.title}}"
+                              src="https://image.tmdb.org/t/p/w300/{{r.poster_path}}" alt="Poster"
+                              style="display: block;">
                           </a>
                         </div>
                       </div>
@@ -145,7 +164,7 @@
                 <mat-expansion-panel>
                   <mat-expansion-panel-header>
                     <mat-panel-title>
-                            {{'MediaDetails.VideosTitle' | translate}}
+                      {{'MediaDetails.VideosTitle' | translate}}
                     </mat-panel-title>
                   </mat-expansion-panel-header>
 
