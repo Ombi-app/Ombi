@@ -1,8 +1,14 @@
 <div class="small-middle-container" *ngIf="collection">
 
-    <div class="row justify-content-md-center top-spacing">
-       <h3 class="row">{{collection.name}}</h3>
-       <p class="row">{{collection.overview}}</p>
+    <div class="row top-spacing">
+        <h3 class="col-12 text-center">{{collection.name}}</h3>
+    </div>
+    <div class="row">
+        <p class="col-12 text-center">{{collection.overview}}</p>
+    </div>
+    <div class="row justify-content-md-center">
+        <button class="col-2" mat-raised-button color="accent" (click)="requestCollection();">Request
+            Collection</button>
     </div>
     <div *ngIf="loadingFlag" class="row justify-content-md-center top-spacing loading-spinner">
         <mat-spinner [color]="'accent'"></mat-spinner>

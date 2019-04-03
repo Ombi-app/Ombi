@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { SearchV2Service } from "../../services";
+import { SearchV2Service, RequestService, NotificationService, MessageService } from "../../services";
 import { IMovieCollectionsViewModel } from "../../interfaces/ISearchTvResultV2";
 import { IDiscoverCardResult } from "../interfaces";
 import { RequestType } from "../../interfaces";
@@ -17,7 +17,10 @@ export class DiscoverCollectionsComponent implements OnInit {
     
     public discoverResults: IDiscoverCardResult[] = [];
 
-    constructor(private searchService: SearchV2Service, private route: ActivatedRoute) {
+    constructor(private searchService: SearchV2Service,
+         private route: ActivatedRoute,
+         private requestService: RequestService,
+         private messageService: MessageService) {
         this.route.params.subscribe((params: any) => {
             this.collectionId = params.collectionId;
         });
@@ -27,6 +30,13 @@ export class DiscoverCollectionsComponent implements OnInit {
         this.loadingFlag = true;
         this.collection = await this.searchService.getMovieCollections(this.collectionId);
         this.createModel();
+    }
+
+    public async requestCollection() {
+        await this.collection.collection.forEach(async (movie) => {
+            await this.requestService.requestMovie({theMovieDbId: movie.id, languageCode: null}).toPromise();
+        });
+        this.messageService.send("Requested Collection");
     }
 
     private createModel() {
