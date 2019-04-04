@@ -2,53 +2,26 @@
 <html lang="en">
 
 <head>
-
-  <!-- <script>
-
-    const existingBaseUrl = window.localStorage.getItem("baseUrl");
-    if (existingBaseUrl && existingBaseUrl.length === 0) {
-      document.write('<base href="/' + existingBaseUrl + '" />');
-      if (existingBaseUrl.length === 0) {
-        document.write("<link rel=\"stylesheet\" href='/loading.css' />")
-      } else {
-        document.write("<link rel=\"stylesheet\" href='" + existingBaseUrl + "/loading.css' />")
-      }
-    } else {
-      // Work out the base URL
-      // Need to find the baseUrl.txt file
-      let url = window.location.href;
-      let hasFile = false;
-
-      var xmlhttp = new XMLHttpRequest();
-
-      xmlhttp.open("GET", url + "api/v1/Settings/baseurl", false);
-      xmlhttp.send();
-      while (xmlhttp.status === 404) {
-        // try again
-        url = url.slice(0, url.lastIndexOf("/"));
-        tryGetBaseUrl(xmlhttp, url);
-      }
-      const data = JSON.parse(xmlhttp.responseText);
-      hasFile = true;
-      document.write('<base href="/' + data + '" />');
-        document.write("<link rel=\"stylesheet\" href='" + data + "/loading.css' />")
-      window.localStorage.setItem("baseUrl", data);
-
-      function tryGetBaseUrl(xmlhttp, url) {
-        if (endsWith(url, "/")) {
-          xmlhttp.open("GET", url + "api/v1/Settings/baseurl", false);
-        } else {
-          xmlhttp.open("GET", url + "/api/v1/Settings/baseurl", false);
+  <script>
+    // manually sets the <base> tag's href attribute so the app can be located in places other than root
+    debugger;
+    var split = location.pathname.split('/');
+    var base = "";
+    for (var i = 0; i < split.length - 1; i++) {
+        base += split[i];
+        if(base.length > 1) {
+          break;
         }
-
-        xmlhttp.send();
-      }
-
-      function endsWith(str, suffix) {
-        return str.indexOf(suffix, str.length - suffix.length) !== -1;
-      }
+        if (i < split.length - 2) {
+            base += "/";
+        }
     }
-  </script> -->
+    if(base === "") {
+      base = "./";
+    }
+    window['_app_base'] = base;
+    document.write("<base href='" + base + "' />");
+</script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
   <meta charset="utf-8" />
