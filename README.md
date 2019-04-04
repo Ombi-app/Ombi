@@ -15,7 +15,7 @@ ___
 
 Follow me developing Ombi!
 
-[![Twitch](https://img.shields.io/badge/Twitch-Watch-blue.svg?style=flat-square&logo=twitch)](https://twitch.tv/tiusjar)
+[![Twitch](https://img.shields.io/badge/Twitch-Watch-blue.svg?style=flat-square&logo=twitch)](https://www.twitch.tv/tidusjar)
 
 
 ___
