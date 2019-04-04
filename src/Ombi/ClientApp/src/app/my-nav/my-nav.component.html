@@ -7,7 +7,7 @@
       <a *ngIf="nav.requiresAdmin && isAdmin || !nav.requiresAdmin" mat-list-item [routerLink]="nav.link" 
       [routerLinkActive]="getTheme()" >
         <mat-icon aria-label="Side nav toggle icon">{{nav.icon}}</mat-icon>
-        {{nav.name | translate}}
+        &nbsp;{{nav.name | translate}}
       </a>    </span>
 
       <a class="bottom-nav-link" mat-list-item  [routerLinkActive]="theme === 'dark' ? 'active-list-item-dark' : 'active-list-item'" aria-label="Toggle sidenav" (click)="logOut();">

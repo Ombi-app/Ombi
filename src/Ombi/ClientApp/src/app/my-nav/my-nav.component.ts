@@ -38,7 +38,7 @@ export class MyNavComponent implements OnInit {
     { name: "NavigationBar.Discover", icon: "find_replace", link: "/discover", requiresAdmin: false },
     { name: "NavigationBar.Requests", icon: "list", link: "/requests-list", requiresAdmin: false },   
     { name: "NavigationBar.UserManagement", icon: "account_circle", link: "/usermanagement", requiresAdmin: true },
-    { name: "NavigationBar.Calendar", icon: "calendar", link: "/calendar", requiresAdmin: false },
+    { name: "NavigationBar.Calendar", icon: "calendar_today", link: "/calendar", requiresAdmin: false },
     { name: "NavigationBar.Settings", icon: "settings", link: "/Settings/About", requiresAdmin: true },
   ]
 

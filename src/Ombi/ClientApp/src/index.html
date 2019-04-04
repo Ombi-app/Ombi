@@ -4,10 +4,31 @@
 <head>
   <script>
     // manually sets the <base> tag's href attribute so the app can be located in places other than root
-    debugger;
+ 
     var split = location.pathname.split('/');
     var base = "";
+    var invalidProxies = ['DISCOVER',
+    'REQUESTS-LIST',
+    'DETAILS',
+    'SETTINGS',
+    'ISSUES',
+    'USERMANAGEMENT',
+    'RECENTLYADDED',
+    'DETAILS',
+    'VOTE',
+    'LOGIN',
+    'LANDINGPAGE',
+    'TOKEN',
+    'RESET',
+    'CUSTOM',
+    'AUTH',
+    'WIZARD',
+    "CALENDAR"    
+]
     for (var i = 0; i < split.length - 1; i++) {
+      if( invalidProxies.indexOf(split[i].toUpperCase()) !== -1) {
+        break;
+      }
         base += split[i];
         if(base.length > 1) {
           break;
@@ -17,7 +38,7 @@
         }
     }
     if(base === "") {
-      base = "./";
+      base = "/";
     }
     window['_app_base'] = base;
     document.write("<base href='" + base + "' />");

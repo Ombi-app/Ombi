@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Ombi.Store.Entities;
 
 namespace Ombi.Core.Models.Search.V2
@@ -16,6 +17,7 @@ namespace Ombi.Core.Models.Search.V2
         public string Overview { get; set; }
         public string PosterPath { get; set; }
         public string Title { get; set; }
+        public DateTime ReleaseDate { get; set; }
 
 
         public override RequestType Type => RequestType.Movie;

@@ -51,7 +51,9 @@ namespace Ombi.Core.Engine.V2
             langCode = await DefaultLanguageCode(langCode);
             var collections = await MovieApi.GetCollection(langCode, collectionId);
 
-            return await ProcessCollection(collections);
+            var c = await ProcessCollection(collections);
+            c.Collection = c.Collection.OrderBy(x => x.ReleaseDate).ToList();
+            return c;
         }
 
         public async Task<int> GetTvDbId(int theMovieDbId)
@@ -208,6 +210,7 @@ namespace Ombi.Core.Engine.V2
                 mapped.EmbyUrl = movie.EmbyUrl;
                 mapped.Subscribed = movie.Subscribed;
                 mapped.ShowSubscribe = movie.ShowSubscribe;
+                mapped.ReleaseDate = movie.ReleaseDate;
             }
             return viewMovie;
         }
