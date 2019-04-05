@@ -14,6 +14,5 @@ namespace Ombi.Helpers
             var step2 = Regex.Replace(step1, @"\s{2,}", " ");
             return step2;
         }
-
     }
 }
