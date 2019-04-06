@@ -152,7 +152,8 @@ namespace Ombi.Core.Engine
                 Rating = a.ratings?.value ?? 0m,
                 ReleaseDate = a.releaseDate,
                 Title = a.title,
-                Disk = a.images?.FirstOrDefault(x => x.coverType.Equals("disc"))?.url
+                Disk = a.images?.FirstOrDefault(x => x.coverType.Equals("disc"))?.url?.Replace("http","https"),
+                Genres = a.genres
             };
             if (a.artistId > 0)
             {
@@ -169,7 +170,7 @@ namespace Ombi.Core.Engine
                 vm.ArtistName = a.artist?.artistName;
             }
 
-            vm.Cover = a.images?.FirstOrDefault(x => x.coverType.Equals("cover"))?.url;
+            vm.Cover = a.images?.FirstOrDefault(x => x.coverType.Equals("cover"))?.url?.Replace("http", "https");
             if (vm.Cover.IsNullOrEmpty())
             {
                 vm.Cover = a.remoteCover;
