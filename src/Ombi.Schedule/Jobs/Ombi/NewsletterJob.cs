@@ -57,6 +57,10 @@ namespace Ombi.Schedule.Jobs.Ombi
             _ombiSettings = ombiSettings;
             _plexSettings = plexSettings;
             _embySettings = embySettings;
+            _ombiSettings.ClearCache();
+            _plexSettings.ClearCache();
+            _emailSettings.ClearCache();
+            _customizationSettings.ClearCache();
         }
 
         private readonly IPlexContentRepository _plex;

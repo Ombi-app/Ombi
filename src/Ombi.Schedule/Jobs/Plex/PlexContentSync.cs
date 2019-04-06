@@ -57,6 +57,7 @@ namespace Ombi.Schedule.Jobs.Plex
             EpisodeSync = epsiodeSync;
             Metadata = metadataRefresh;
             Checker = checker;
+            Plex.ClearCache();
         }
 
         private ISettingsService<PlexSettings> Plex { get; }

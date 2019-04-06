@@ -22,6 +22,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             _plexRepo = plexRepo;
             _embyRepo = embyRepo;
             _embyContentSync = embySync;
+            _settings.ClearCache();
         }
 
         private readonly ISettingsService<PlexSettings> _settings;

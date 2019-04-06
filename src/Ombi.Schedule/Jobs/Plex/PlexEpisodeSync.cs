@@ -26,6 +26,7 @@ namespace Ombi.Schedule.Jobs.Plex
             _api = plexApi;
             _repo = repo;
             _availabilityChecker = a;
+            _settings.ClearCache();
         }
 
         private readonly ISettingsService<PlexSettings> _settings;

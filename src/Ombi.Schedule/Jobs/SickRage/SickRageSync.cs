@@ -22,6 +22,7 @@ namespace Ombi.Schedule.Jobs.SickRage
             _api = api;
             _log = l;
             _ctx = ctx;
+            _settings.ClearCache();
         }
 
         private readonly ISettingsService<SickRageSettings> _settings;
