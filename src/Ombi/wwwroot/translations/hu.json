@@ -39,8 +39,8 @@
     "PartiallyOnlineParagraph": "A médiaszerver részben elérhető.",
     "MultipleServersUnavailable": "{{serversUnavailable}} szerver nem érhető el ennyiből: {{totalServers}}.",
     "SingleServerUnavailable": "{{serversUnavailable}} szerver nem érhető el ennyiből: {{totalServers}}.",
-    "OfflineHeading": "Currently Offline",
-    "OfflineParagraph": "The media server is currently offline.",
+    "OfflineHeading": "Jelenleg nem elérhető",
+    "OfflineParagraph": "A médiaszerver jelenleg nem elérhető.",
     "CheckPageForUpdates": "Check this page for continuous site updates."
   },
   "NavigationBar": {
