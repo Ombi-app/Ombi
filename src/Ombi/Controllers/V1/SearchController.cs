@@ -9,8 +9,6 @@ using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Search;
 using Ombi.Models;
-using StackExchange.Profiling;
-using Microsoft.AspNetCore.Http;
 using Ombi.Core.Engine.Demo;
 using Ombi.Helpers;
 
@@ -54,16 +52,13 @@ namespace Ombi.Controllers.V1
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchMovieViewModel>> SearchMovie(string searchTerm)
         {
-            using (MiniProfiler.Current.Step("SearchingMovie"))
-            {
-                Logger.LogDebug("Searching : {searchTerm}", searchTerm);
+            Logger.LogDebug("Searching : {searchTerm}", searchTerm);
 
-                if (IsDemo)
-                {
-                    return await DemoMovieSearch.Search(searchTerm);
-                }
-                return await MovieEngine.Search(searchTerm, null, null);
+            if (IsDemo)
+            {
+                return await DemoMovieSearch.Search(searchTerm);
             }
+            return await MovieEngine.Search(searchTerm, null, null);
         }
 
         /// <summary>
@@ -102,12 +97,9 @@ namespace Ombi.Controllers.V1
                 return BadRequest();
             }
 
-            using (MiniProfiler.Current.Step("SearchingMovie"))
-            {
-                Logger.LogDebug("Searching : {0}, Year: {1}, Lang: {2}", model.SearchTerm, model.Year, model.LanguageCode);
+            Logger.LogDebug("Searching : {0}, Year: {1}, Lang: {2}", model.SearchTerm, model.Year, model.LanguageCode);
 
-                return Json(await MovieEngine.Search(model.SearchTerm, model.Year, model.LanguageCode));
-            }
+            return Json(await MovieEngine.Search(model.SearchTerm, model.Year, model.LanguageCode));
         }
 
         /// <summary>
