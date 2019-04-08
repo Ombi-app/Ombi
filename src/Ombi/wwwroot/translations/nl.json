@@ -19,9 +19,9 @@
     "PendingApproval": "Wacht op goedkeuring",
     "RequestDenied": "Verzoek geweigerd",
     "NotRequested": "Niet verzocht",
-    "Requested": "Verzocht",
-    "Request": "Verzoek",
-    "Denied": "Geweigerd",
+    "Requested": "Aangevraagd",
+    "Request": "Aanvragen",
+    "Denied": "Afgewezen",
     "Approve": "Accepteer",
     "PartlyAvailable": "Deels Beschikbaar",
     "Errors": {
