@@ -12,6 +12,7 @@ using Ombi.Helpers;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Quartz;
 using Serilog;
 using EmbyMediaType = Ombi.Store.Entities.EmbyMediaType;
 
@@ -38,7 +39,7 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly IRefreshMetadata _metadata;
 
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             var embySettings = await _settings.GetSettingsAsync();
             if (!embySettings.Enable)
@@ -57,8 +58,8 @@ namespace Ombi.Schedule.Jobs.Emby
             }
 
             // Episodes
-            BackgroundJob.Enqueue(() => _episodeSync.Start());
-            BackgroundJob.Enqueue(() => _metadata.Start());
+            //BackgroundJob.Enqueue(() => _episodeSync.Start());
+            //BackgroundJob.Enqueue(() => _metadata.Start());
         }
 
 

@@ -9,6 +9,7 @@ using Ombi.Helpers;
 using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Store.Repository;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Ombi
 {
@@ -31,7 +32,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly IEmbyContentRepository _embyRepo;
         private readonly IEmbyContentSync _embyContentSync;
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             try
             {
@@ -60,7 +61,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 await _embyRepo.ExecuteSql(episodeSQL);
                 await _embyRepo.ExecuteSql(mainSql);
 
-                BackgroundJob.Enqueue(() => _embyContentSync.Start());
+                //BackgroundJob.Enqueue(() => _embyContentSync.Start()); // TODO
             }
             catch (Exception e)
             {

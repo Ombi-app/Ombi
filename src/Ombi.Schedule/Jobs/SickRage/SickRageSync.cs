@@ -11,6 +11,7 @@ using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.SickRage
 {
@@ -30,7 +31,7 @@ namespace Ombi.Schedule.Jobs.SickRage
         private readonly ILogger<SickRageSync> _log;
         private readonly IExternalContext _ctx;
         
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             try
             {

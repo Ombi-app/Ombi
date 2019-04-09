@@ -13,6 +13,7 @@ namespace Ombi.Settings.Settings.Models
         public static string Sonarr(JobSettings s)
         {
             return Get(s.SonarrSync, Cron.Hourly(10));
+            //return Get(s.SonarrSync, Cron.Hourly(10));
         }
 
         public static string EmbyContent(JobSettings s)
@@ -42,7 +43,7 @@ namespace Ombi.Settings.Settings.Models
         }
         public static string Newsletter(JobSettings s)
         {
-            return Get(s.Newsletter, Cron.Weekly(DayOfWeek.Friday, 12));
+            return Get(s.Newsletter, Cron.Weekly(Helpers.DayOfWeek.Friday, 12));
         }
         public static string SickRageSync(JobSettings s)
         {

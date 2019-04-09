@@ -192,8 +192,8 @@ namespace Ombi
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 3 });
             
             // Setup the scheduler
-            var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
-            jobSetup.Setup();
+            //var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
+            //jobSetup.Setup();
             ctx.Seed();
             var settingsctx = serviceProvider.GetService<ISettingsContext>();
             var externalctx = serviceProvider.GetService<IExternalContext>();

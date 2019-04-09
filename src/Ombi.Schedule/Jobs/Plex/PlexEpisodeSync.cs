@@ -13,6 +13,7 @@ using Ombi.Helpers;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
@@ -35,7 +36,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly IPlexContentRepository _repo;
         private readonly IPlexAvailabilityChecker _availabilityChecker;
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             try
             {
@@ -56,7 +57,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 _log.LogError(LoggingEvents.Cacher, e, "Caching Episodes Failed");
             }
 
-            BackgroundJob.Enqueue(() => _availabilityChecker.Start());
+            //BackgroundJob.Enqueue(() => _availabilityChecker.Start()); // TODO
         }
 
         private async Task Cache(PlexServers settings)

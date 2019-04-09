@@ -15,6 +15,7 @@ using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Ombi
 {
@@ -48,7 +49,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly ISettingsService<EmbySettings> _embySettings;
         private readonly IEmbyApi _embyApi;
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             _log.LogInformation("Starting the Metadata refresh");
             try
@@ -93,12 +94,12 @@ namespace Ombi.Schedule.Jobs.Ombi
             {
                 if (plexSettings.Enable)
                 {
-                    BackgroundJob.Enqueue(() => _plexAvailabilityChecker.Start());
+                    //BackgroundJob.Enqueue(() => _plexAvailabilityChecker.Start()); // TODO
                 }
 
                 if (embySettings.Enable)
                 {
-                    BackgroundJob.Enqueue(() => _embyAvaliabilityChecker.Start());
+                    //BackgroundJob.Enqueue(() => _embyAvaliabilityChecker.Start()); // TODO
 
                 }
             }

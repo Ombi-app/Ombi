@@ -50,7 +50,7 @@ namespace Ombi.Controllers
         [HttpPost("update")]
         public bool ForceUpdate()
         {
-            BackgroundJob.Enqueue(() => _updater.Update(null));
+            //BackgroundJob.Enqueue(() => _updater.Update(null));
             return true;
         }
 
@@ -99,7 +99,7 @@ namespace Ombi.Controllers
         [HttpPost("plexuserimporter")]
         public bool PlexUserImporter()
         {
-            BackgroundJob.Enqueue(() => _plexUserImporter.Start());
+            //BackgroundJob.Enqueue(() => _plexUserImporter.Start()); //TODO
             return true;
         }
 
@@ -110,7 +110,7 @@ namespace Ombi.Controllers
         [HttpPost("embyuserimporter")]
         public bool EmbyUserImporter()
         {
-            BackgroundJob.Enqueue(() => _embyUserImporter.Start());
+            //BackgroundJob.Enqueue(() => _embyUserImporter.Start()); // TODO
             return true;
         }
 
@@ -143,7 +143,7 @@ namespace Ombi.Controllers
         [HttpPost("embycontentcacher")]
         public bool StartEmbyContentCacher()
         {
-            BackgroundJob.Enqueue(() => _embyContentSync.Start());
+            //BackgroundJob.Enqueue(() => _embyContentSync.Start()); // TODO
             return true;
         }
 
@@ -154,7 +154,7 @@ namespace Ombi.Controllers
         [HttpPost("newsletter")]
         public bool StartNewsletter()
         {
-            BackgroundJob.Enqueue(() => _newsletterJob.Start());
+            //BackgroundJob.Enqueue(() => _newsletterJob.Start()); // TODO
             return true;
         }
     }

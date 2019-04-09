@@ -105,7 +105,7 @@ namespace Ombi.Schedule.Jobs.Plex
             if (!recentlyAddedSearch)
             {
                 Logger.LogInformation("Starting EP Cacher");
-                BackgroundJob.Enqueue(() => EpisodeSync.Start());
+                //BackgroundJob.Enqueue(() => EpisodeSync.Start()); //TODO
             }
 
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
@@ -116,7 +116,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if ((processedContent?.HasProcessedEpisodes ?? false) && recentlyAddedSearch)
             {
-                BackgroundJob.Enqueue(() => Checker.Start());
+                //BackgroundJob.Enqueue(() => Checker.Start()); // TODO
             }
         }
 

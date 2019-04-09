@@ -11,6 +11,7 @@ using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
@@ -35,7 +36,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
 
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             var userManagementSettings = await _userManagementSettings.GetSettingsAsync();
             if (!userManagementSettings.ImportPlexUsers)

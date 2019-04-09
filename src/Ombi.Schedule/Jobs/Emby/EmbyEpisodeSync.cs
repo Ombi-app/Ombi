@@ -36,6 +36,7 @@ using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Emby
 {
@@ -58,7 +59,7 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly IEmbyAvaliabilityChecker _avaliabilityChecker;
 
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             var settings = await _settings.GetSettingsAsync();
 
@@ -67,7 +68,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 await CacheEpisodes(server);
             }
 
-            BackgroundJob.Enqueue(() => _avaliabilityChecker.Start());
+            //BackgroundJob.Enqueue(() => _avaliabilityChecker.Start());
         }
 
         private async Task CacheEpisodes(EmbyServers server)

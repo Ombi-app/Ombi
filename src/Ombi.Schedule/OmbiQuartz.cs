@@ -35,7 +35,6 @@ namespace Ombi.Schedule
             return Scheduler;
         }
 
-
         public async void AddJob<T>(string name, string group, string cronExpression, Dictionary<string, string> jobData = null)
             where T : IJob
         {
@@ -49,13 +48,13 @@ namespace Ombi.Schedule
                 }
             }
 
-            var job = jobBuilder.Build();
-
-                
+            var job = jobBuilder.Build();              
             
             ITrigger jobTrigger = TriggerBuilder.Create()
                 .WithIdentity(name + "Trigger", group)
-                .StartNow() 
+
+                .StartNow()
+
                 .WithCronSchedule(cronExpression)
                 .Build();
             

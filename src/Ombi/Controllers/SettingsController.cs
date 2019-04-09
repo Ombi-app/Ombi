@@ -387,7 +387,7 @@ namespace Ombi.Controllers
             {
                 _cache.Remove(CacheKeys.RadarrRootProfiles);
                 _cache.Remove(CacheKeys.RadarrQualityProfiles);
-                BackgroundJob.Enqueue(() => _radarrSync.CacheContent());
+                //BackgroundJob.Enqueue(() => _radarrSync.CacheContent()); // TODO
             }
             return result;
         }

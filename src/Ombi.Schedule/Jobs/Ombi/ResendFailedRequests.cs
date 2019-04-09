@@ -7,6 +7,7 @@ using Ombi.Core.Senders;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Ombi
 {
@@ -32,7 +33,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly ITvRequestRepository _tvRequestRepository;
         private readonly IMusicRequestRepository _musicRequestRepository;
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             // Get all the failed ones!
             var failedRequests = _requestQueue.GetAll().Where(x => !x.Completed.HasValue);
