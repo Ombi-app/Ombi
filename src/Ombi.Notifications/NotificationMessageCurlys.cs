@@ -17,10 +17,6 @@ namespace Ombi.Notifications
         public void Setup(NotificationOptions opts, FullBaseRequest req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
-            if (pref != null)
-            {
-                UserPreference = pref.Enabled ? pref.Value : string.Empty;
-            }
 
             string title;
             if (req == null)
@@ -41,6 +37,10 @@ namespace Ombi.Notifications
             }
 
             Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
+            if (pref != null)
+            {
+                UserPreference = pref.Value.HasValue() ? pref.Value : Alias;
+            }
             Title = title;
             RequestedDate = req?.RequestedDate.ToString("D");
             if (Type.IsNullOrEmpty())
@@ -49,7 +49,8 @@ namespace Ombi.Notifications
             }
             Overview = req?.Overview;
             Year = req?.ReleaseDate.Year.ToString();
-
+            DenyReason = req?.DeniedReason;
+            AvailableDate = req?.MarkedAsAvailable?.ToString("D") ?? string.Empty;
             if (req?.RequestType == RequestType.Movie)
             {
                 PosterImage = string.Format((req?.PosterPath ?? string.Empty).StartsWith("/", StringComparison.InvariantCultureIgnoreCase)
@@ -66,10 +67,7 @@ namespace Ombi.Notifications
         public void Setup(NotificationOptions opts, AlbumRequest req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
-            if (pref != null)
-            {
-                UserPreference = pref.Enabled ? pref.Value : string.Empty;
-            }
+
             string title;
             if (req == null)
             {
@@ -88,7 +86,13 @@ namespace Ombi.Notifications
                 UserName = req?.RequestedUser?.UserName;
             }
 
+            AvailableDate = req?.MarkedAsAvailable?.ToString("D") ?? string.Empty;
+            DenyReason = req?.DeniedReason;
             Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
+            if (pref != null)
+            {
+                UserPreference = pref.Value.HasValue() ? pref.Value : Alias;
+            }
             Title = title;
             RequestedDate = req?.RequestedDate.ToString("D");
             if (Type.IsNullOrEmpty())
@@ -101,22 +105,15 @@ namespace Ombi.Notifications
             AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
         }
 
-        public void SetupNewsletter(CustomizationSettings s, OmbiUser username)
+        public void SetupNewsletter(CustomizationSettings s)
         {
             ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
-            RequestedUser = username.UserName;
-            UserName = username.UserName;
-            Alias = username.Alias.HasValue() ? username.Alias : username.UserName;
         }
 
         public void Setup(NotificationOptions opts, ChildRequests req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
-            if (pref != null)
-            {
-                UserPreference = pref.Enabled ? pref.Value : string.Empty;
-            }
             string title;
             if (req == null)
             {
@@ -126,6 +123,7 @@ namespace Ombi.Notifications
             {
                 title = req?.ParentRequest.Title;
             }
+            DenyReason = req?.DeniedReason;
             ApplicationUrl = (s?.ApplicationUrl.HasValue() ?? false) ? s.ApplicationUrl : string.Empty;
             ApplicationName = string.IsNullOrEmpty(s?.ApplicationName) ? "Ombi" : s?.ApplicationName;
             RequestedUser = req?.RequestedUser?.UserName;
@@ -134,7 +132,12 @@ namespace Ombi.Notifications
                 // Can be set if it's an issue
                 UserName = req?.RequestedUser?.UserName;
             }
+            AvailableDate = req?.MarkedAsAvailable?.ToString("D") ?? string.Empty;
             Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
+            if (pref != null)
+            {
+                UserPreference = pref.Value.HasValue() ? pref.Value : Alias;
+            }
             Title = title;
             RequestedDate = req?.RequestedDate.ToString("D");
             if (Type.IsNullOrEmpty())
@@ -217,7 +220,6 @@ namespace Ombi.Notifications
         public string UserName { get; set; }
         public string IssueUser => UserName;
         public string Alias { get; set; }
-
         public string Title { get; set; }
         public string RequestedDate { get; set; }
         public string Type { get; set; }
@@ -235,6 +237,8 @@ namespace Ombi.Notifications
         public string IssueSubject { get; set; }
         public string NewIssueComment { get; set; }
         public string UserPreference { get; set; }
+        public string DenyReason { get; set; }
+        public string AvailableDate { get; set; }
 
         // System Defined
         private string LongDate => DateTime.Now.ToString("D");
@@ -268,6 +272,9 @@ namespace Ombi.Notifications
             {nameof(IssueUser),IssueUser},
             {nameof(UserName),UserName},
             {nameof(Alias),Alias},
+            {nameof(UserPreference),UserPreference},
+            {nameof(DenyReason),DenyReason},
+            {nameof(AvailableDate),AvailableDate},
         };
     }
 }

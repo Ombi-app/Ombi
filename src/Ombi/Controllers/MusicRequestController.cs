@@ -1,27 +1,37 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Core.Engine;
 using Ombi.Core.Models.Requests;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Ombi.Store.Entities.Requests;
 using Ombi.Attributes;
 using Ombi.Core.Models;
 using Ombi.Core.Models.UI;
+using Ombi.Store.Entities;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
+using System.Linq;
 
 namespace Ombi.Controllers
 {
     [Authorize]
     [Route("api/v1/request/music")]
     [Produces("application/json")]
-    public class MusicRequestController : Controller
+    [ApiController]
+    public class MusicRequestController : ControllerBase
     {
-        public MusicRequestController(IMusicRequestEngine engine)
+        public MusicRequestController(IMusicRequestEngine engine, IVoteEngine voteEngine, ILogger<MusicRequestController> log)
         {
             _engine = engine;
+            _voteEngine = voteEngine;
+            _log = log;
         }
 
         private readonly IMusicRequestEngine _engine;
+        private readonly IVoteEngine _voteEngine;
+        private readonly ILogger _log;
 
         /// <summary>
         /// Gets album requests.
@@ -66,9 +76,20 @@ namespace Ombi.Controllers
         /// <param name="album">The album.</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<RequestEngineResult> Request([FromBody] MusicAlbumRequestViewModel album)
+        public async Task<RequestEngineResult> RequestAlbum([FromBody] MusicAlbumRequestViewModel album)
         {
-            return await _engine.RequestAlbum(album);
+            album.RequestedByAlias = GetApiAlias();
+            var result = await _engine.RequestAlbum(album);
+            if (result.Result)
+            {
+                var voteResult = await _voteEngine.UpVote(result.RequestId, RequestType.Album);
+                if (voteResult.IsError)
+                {
+                    _log.LogError("Couldn't automatically add the vote for the album {0} because {1}", album.ForeignAlbumId, voteResult.ErrorMessage);
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -88,7 +109,7 @@ namespace Ombi.Controllers
         /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
         [HttpDelete("{requestId:int}")]
-        [PowerUser]
+        [Authorize(Roles = "Admin,PowerUser,ManageOwnRequests")]
         public async Task DeleteRequest(int requestId)
         {
             await _engine.RemoveAlbumRequest(requestId);
@@ -137,9 +158,9 @@ namespace Ombi.Controllers
         /// <returns></returns>
         [HttpPut("deny")]
         [PowerUser]
-        public async Task<RequestEngineResult> Deny([FromBody] AlbumUpdateModel model)
+        public async Task<RequestEngineResult> Deny([FromBody] DenyAlbumModel model)
         {
-            return await _engine.DenyAlbumById(model.Id);
+            return await _engine.DenyAlbumById(model.Id, model.Reason);
         }
 
         /// <summary>
@@ -149,6 +170,18 @@ namespace Ombi.Controllers
         public async Task<RequestQuotaCountModel> GetRemainingMusicRequests()
         {
             return await _engine.GetRemainingRequests();
+        }
+        private string GetApiAlias()
+        {
+            // Make sure this only applies when using the API KEY
+            if (HttpContext.Request.Headers.Keys.Contains("ApiKey", StringComparer.InvariantCultureIgnoreCase))
+            {
+                if (HttpContext.Request.Headers.TryGetValue("ApiAlias", out var apiAlias))
+                {
+                    return apiAlias;
+                }
+            }
+            return null;
         }
     }
 }

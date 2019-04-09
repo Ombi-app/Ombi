@@ -36,7 +36,8 @@ namespace Ombi.Controllers
     [Admin]
     [ApiV1]
     [Produces("application/json")]
-    public class NotificationsController : Controller
+    [ApiController]
+    public class NotificationsController : ControllerBase
     {
         public NotificationsController(IMassEmailSender sender)
         {

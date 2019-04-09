@@ -3,6 +3,7 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { TruncateModule } from "@yellowspot/ng-truncate";
+import { MomentModule } from "ngx-moment";
 
 import { IssuesReportComponent } from "./issues-report.component";
 
@@ -18,6 +19,7 @@ import { InputSwitchModule, SidebarModule } from "primeng/primeng";
     CommonModule,
     InputSwitchModule,
     TruncateModule,
+    MomentModule,
   ],
   exports: [
       TranslateModule,
@@ -27,6 +29,7 @@ import { InputSwitchModule, SidebarModule } from "primeng/primeng";
       IssuesReportComponent,
       TruncateModule,
       InputSwitchModule,
+      MomentModule,
     ],
 })
 export class SharedModule {}

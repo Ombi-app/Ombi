@@ -61,7 +61,7 @@ namespace Ombi.Settings.Settings
                 var model = obj;
 
                 return model;
-            }, DateTime.Now.AddHours(2));
+            }, DateTime.Now.AddHours(5));
         }
 
         public bool SaveSettings(T model)

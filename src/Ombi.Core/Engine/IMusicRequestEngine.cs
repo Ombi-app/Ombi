@@ -12,7 +12,7 @@ namespace Ombi.Core.Engine
     {
         Task<RequestEngineResult>ApproveAlbum(AlbumRequest request);
         Task<RequestEngineResult> ApproveAlbumById(int requestId);
-        Task<RequestEngineResult> DenyAlbumById(int modelId);
+        Task<RequestEngineResult> DenyAlbumById(int modelId, string reason);
         Task<IEnumerable<AlbumRequest>> GetRequests();
         Task<RequestsViewModel<AlbumRequest>> GetRequests(int count, int position, OrderFilterModel orderFilter);
         Task<int> GetTotal();

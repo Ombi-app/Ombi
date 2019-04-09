@@ -10,7 +10,8 @@ namespace Ombi.Controllers
     [Admin]
     [Authorize]
     [Produces("application/json")]
-    public class StatsController : Controller
+    [ApiController]
+    public class StatsController : ControllerBase
     {
         public StatsController(IUserStatsEngine eng)
         {

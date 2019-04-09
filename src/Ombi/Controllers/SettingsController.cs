@@ -37,7 +37,8 @@ namespace Ombi.Controllers
     [Admin]
     [ApiV1]
     [Produces("application/json")]
-    public class SettingsController : Controller
+    [ApiController]
+    public class SettingsController : ControllerBase
     {
         public SettingsController(ISettingsResolver resolver,
             IMapper mapper,
@@ -224,6 +225,19 @@ namespace Ombi.Controllers
             return await Get<CustomizationSettings>();
         }
 
+
+        /// <summary>
+        /// Gets the default language set in Ombi
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("defaultlanguage")]
+        [AllowAnonymous]
+        public async Task<string> GetDefaultLanguage()
+        {
+           var s = await Get<OmbiSettings>();
+           return s.DefaultLanguageCode;
+        }
+
         /// <summary>
         /// Save the Customization settings.
         /// </summary>
@@ -272,19 +286,6 @@ namespace Ombi.Controllers
             // In dropdown display as "theBlur 1.1"
 
             return model;
-        }
-
-        /// <summary>
-        /// Gets the content of the theme available
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        [HttpGet("themecontent")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetThemeContent([FromQuery]string url)
-        {
-            var css = await _githubApi.GetThemesRawContent(url);
-            return Content(css, "text/css");
         }
 
         /// <summary>
@@ -520,6 +521,8 @@ namespace Ombi.Controllers
             j.Newsletter = j.Newsletter.HasValue() ? j.Newsletter : JobSettingsHelper.Newsletter(j);
             j.LidarrArtistSync = j.LidarrArtistSync.HasValue() ? j.LidarrArtistSync : JobSettingsHelper.LidarrArtistSync(j);
             j.IssuesPurge = j.IssuesPurge.HasValue() ? j.IssuesPurge : JobSettingsHelper.IssuePurge(j);
+            j.RetryRequests = j.RetryRequests.HasValue() ? j.RetryRequests : JobSettingsHelper.ResendFailedRequests(j);
+            j.MediaDatabaseRefresh = j.MediaDatabaseRefresh.HasValue() ? j.MediaDatabaseRefresh : JobSettingsHelper.MediaDatabaseRefresh(j);
 
             return j;
         }
@@ -599,12 +602,11 @@ namespace Ombi.Controllers
 
 
         /// <summary>
-        /// Save the Issues settings.
+        /// Save the Vote settings.
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("Issues")]
-        [AllowAnonymous]
         public async Task<bool> IssueSettings([FromBody]IssueSettings settings)
         {
             return await Save(settings);
@@ -627,6 +629,35 @@ namespace Ombi.Controllers
         {
             var issues = await Get<IssueSettings>();
             return issues.Enabled;
+        }
+
+        /// <summary>
+        /// Save the Vote settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("vote")]
+        public async Task<bool> VoteSettings([FromBody]VoteSettings settings)
+        {
+            return await Save(settings);
+        }
+
+        /// <summary>
+        /// Gets the Vote Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("vote")]
+        public async Task<VoteSettings> VoteSettings()
+        {
+            return await Get<VoteSettings>();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("voteenabled")]
+        public async Task<bool> VoteEnabled()
+        {
+            var vote = await Get<VoteSettings>();
+            return vote.Enabled;
         }
 
         /// <summary>
@@ -912,6 +943,40 @@ namespace Ombi.Controllers
 
             // Lookup to see if we have any templates saved
             model.NotificationTemplates = BuildTemplates(NotificationAgent.Mobile);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Saves the gotify notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/gotify")]
+        public async Task<bool> GotifyNotificationSettings([FromBody] GotifyNotificationViewModel model)
+        {
+            // Save the email settings
+            var settings = Mapper.Map<GotifySettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.UpdateRange(model.NotificationTemplates);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the gotify Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/gotify")]
+        public async Task<GotifyNotificationViewModel> GotifyNotificationSettings()
+        {
+            var settings = await Get<GotifySettings>();
+            var model = Mapper.Map<GotifyNotificationViewModel>(settings);
+
+            // Lookup to see if we have any templates saved
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Gotify);
 
             return model;
         }

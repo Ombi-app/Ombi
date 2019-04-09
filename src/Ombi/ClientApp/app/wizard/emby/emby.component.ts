@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { EmbyService } from "../../services";
 import { NotificationService } from "../../services";
 
+import { PlatformLocation } from "@angular/common";
 import { IEmbySettings } from "../../interfaces";
 
 @Component({
@@ -12,13 +13,19 @@ import { IEmbySettings } from "../../interfaces";
 export class EmbyComponent implements OnInit {
 
     public embySettings: IEmbySettings;
+    public baseUrl: string;
 
     constructor(private embyService: EmbyService,
                 private router: Router,
-                private notificationService: NotificationService) {
+                private notificationService: NotificationService, 
+                private location: PlatformLocation) {
     }
 
     public ngOnInit() {
+        const base = this.location.getBaseHrefFromDOM();
+        if (base.length > 1) {
+            this.baseUrl = base;
+        }
         this.embySettings = {
             servers: [],
             id: 0,
@@ -34,6 +41,7 @@ export class EmbyComponent implements OnInit {
             port: 8096,
             ssl: false,
             subDir: "",
+            serverHostname: "",
 
         });
     }

@@ -12,5 +12,6 @@ namespace Ombi.Core.Engine
         Task<IEnumerable<SearchAlbumViewModel>> GetArtistAlbums(string foreignArtistId);
         Task<IEnumerable<SearchAlbumViewModel>> SearchAlbum(string search);
         Task<IEnumerable<SearchArtistViewModel>> SearchArtist(string search);
+        Task<SearchAlbumViewModel> GetAlbumInformation(string foreignAlbumId);
     }
 }

@@ -1,8 +1,9 @@
 ﻿import { IUser } from "./IUser";
 
 export enum RequestType {
+  tvShow = 0,
   movie = 1,
-  tvShow = 2,
+  album = 2,
 }
 
 // NEW WORLD
@@ -46,8 +47,16 @@ export interface IMovieUpdateModel {
   id: number;
 }
 
+export interface IDenyMovieModel extends IMovieUpdateModel {
+  reason: string;
+}
+
 export interface IAlbumUpdateModel {
   id: number;
+}
+
+export interface IDenyAlbumModel extends IAlbumUpdateModel {
+  reason: string;
 }
 
 export interface IFullBaseRequest extends IBaseRequest {
@@ -78,6 +87,7 @@ export interface IBaseRequest {
   requestedUser: IUser;
   canApprove: boolean;
   title: string;
+  requestedByAlias: string;
 }
 
 export interface ITvRequests {
@@ -112,6 +122,10 @@ export interface ITvUpdateModel {
   id: number;
 }
 
+export interface ITvDenyModel extends ITvUpdateModel {
+  reason: string;
+}
+
 export enum OrderType {
   RequestedDateAsc = 1,
   RequestedDateDesc = 2,
@@ -132,6 +146,7 @@ export interface IEpisodesRequests {
   episodeNumber: number;
   title: string;
   airDate: Date;
+  airDateDisplay: string;
   url: string;
   available: boolean;
   requested: boolean;
@@ -141,6 +156,7 @@ export interface IEpisodesRequests {
 
 export interface IMovieRequestModel {
   theMovieDbId: number;
+  languageCode: string | undefined;
 }
 
 export interface IFilter {

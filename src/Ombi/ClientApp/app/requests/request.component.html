@@ -9,7 +9,7 @@
         <a id="tvTabButton" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectTvTab()" href="#tvTab"><i class="fa fa-television"></i> {{ 'Requests.TvTab' | translate }}</a>
 
     </li>
-    <li role="presentation">
+    <li role="presentation" *ngIf="musicEnabled">
         <a id="albumTabButton" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectMusicTab()" href="#albumTab"><i class="fa fa-music"></i> {{ 'Requests.MusicTab' | translate }}</a>
 
     </li>

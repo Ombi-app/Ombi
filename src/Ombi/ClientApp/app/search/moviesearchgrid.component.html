@@ -67,10 +67,10 @@
                 <div class="col-sm-8">
                     <div>
                         <a href="https://www.themoviedb.org/movie/{{result.id}}/" target="_blank">
-                            <h4>{{result.title}} ({{result.releaseDate | date: 'yyyy'}})</h4>
+                            <h4>{{result.title}} ({{result.releaseDate | amLocal | amDateFormat: 'YYYY'}})</h4>
                         </a>
 
-                        <span *ngIf="result.releaseDate" class="label label-info" target="_blank">Release Date: {{result.releaseDate | date: 'dd/MM/yyyy'}}</span>
+                        <span *ngIf="result.releaseDate" class="label label-info" target="_blank">Release Date: {{result.releaseDate | amLocal | amDateFormat: 'L'}}</span>
 
                         <a *ngIf="result.homepage" href="{{result.homepage}}" id="homepageLabel" target="_blank">
                             <span class="label label-info">HomePage</span>

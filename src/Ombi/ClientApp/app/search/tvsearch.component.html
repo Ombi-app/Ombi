@@ -50,14 +50,14 @@
                         <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
                         <div class="col-sm-2 small-padding">
 
-                            <img *ngIf="node.banner" class="img-responsive poster" width="150" [src]="node.banner" alt="poster">
+                            <img *ngIf="node.banner" class="img-responsive poster tv-poster" width="150" [src]="node.banner" alt="poster">
 
                         </div>
                         <div class="col-sm-8 small-padding">
                             <div>
 
                                 <a *ngIf="node.imdbId" href="{{node.imdbId}}" target="_blank">
-                                    <h4>{{node.title}} ({{node.firstAired | date: 'yyyy'}})</h4>
+                                    <h4>{{node.title}} ({{node.firstAired | amLocal | amDateFormat: 'YYYY'}})</h4>
 
                                 </a>
                                 <span class="tags">
@@ -72,7 +72,7 @@
                                     <span *ngIf="node.status" class="label label-primary" id="statusLabel" target="_blank">{{node.status}}</span>
 
 
-                                    <span *ngIf="node.firstAired" class="label label-info" target="_blank" id="airDateLabel">{{ 'Search.TvShows.AirDate' | translate }} {{node.firstAired | date: 'dd/MM/yyyy'}}</span>
+                                    <span *ngIf="node.firstAired" class="label label-info" target="_blank" id="airDateLabel">{{ 'Search.TvShows.AirDate' | translate }} {{node.firstAired | amLocal | amDateFormat: 'L'}}</span>
 
                                     <span *ngIf="node.network" class="label label-info" id="networkLabel" target="_blank">{{node.network}}</span>
 

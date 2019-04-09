@@ -9,7 +9,7 @@ import { AuthGuard } from "../auth/auth.guard";
 import { AuthService } from "../auth/auth.service";
 import {
     CouchPotatoService, EmbyService, IssuesService, JobService, LidarrService, MobileService, NotificationMessageService, PlexService, RadarrService,
-    SonarrService, TesterService, ValidationService,
+    RequestRetryService, SonarrService, TesterService, ValidationService,
 } from "../services";
 
 import { PipeModule } from "../pipes/pipe.module";
@@ -19,6 +19,7 @@ import { CouchPotatoComponent } from "./couchpotato/couchpotato.component";
 import { CustomizationComponent } from "./customization/customization.component";
 import { DogNzbComponent } from "./dognzb/dognzb.component";
 import { EmbyComponent } from "./emby/emby.component";
+import { FailedRequestsComponent } from "./failedrequests/failedrequests.component";
 import { IssuesComponent } from "./issues/issues.component";
 import { JobsComponent } from "./jobs/jobs.component";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
@@ -26,6 +27,7 @@ import { LidarrComponent } from "./lidarr/lidarr.component";
 import { MassEmailComponent } from "./massemail/massemail.component";
 import { DiscordComponent } from "./notifications/discord.component";
 import { EmailNotificationComponent } from "./notifications/emailnotification.component";
+import { GotifyComponent } from "./notifications/gotify.component";
 import { MattermostComponent } from "./notifications/mattermost.component";
 import { MobileComponent } from "./notifications/mobile.component";
 import { NewsletterComponent } from "./notifications/newsletter.component";
@@ -41,6 +43,7 @@ import { SickRageComponent } from "./sickrage/sickrage.component";
 import { SonarrComponent } from "./sonarr/sonarr.component";
 import { UpdateComponent } from "./update/update.component";
 import { UserManagementComponent } from "./usermanagement/usermanagement.component";
+import { VoteComponent } from "./vote/vote.component";
 import { WikiComponent } from "./wiki.component";
 
 import { SettingsMenuComponent } from "./settingsmenu.component";
@@ -61,6 +64,7 @@ const routes: Routes = [
     { path: "Slack", component: SlackComponent, canActivate: [AuthGuard] },
     { path: "Pushover", component: PushoverComponent, canActivate: [AuthGuard] },
     { path: "Pushbullet", component: PushbulletComponent, canActivate: [AuthGuard] },
+    { path: "Gotify", component: GotifyComponent, canActivate: [AuthGuard] },
     { path: "Mattermost", component: MattermostComponent, canActivate: [AuthGuard] },
     { path: "UserManagement", component: UserManagementComponent, canActivate: [AuthGuard] },
     { path: "Update", component: UpdateComponent, canActivate: [AuthGuard] },
@@ -75,6 +79,8 @@ const routes: Routes = [
     { path: "MassEmail", component: MassEmailComponent, canActivate: [AuthGuard] },
     { path: "Newsletter", component: NewsletterComponent, canActivate: [AuthGuard] },
     { path: "Lidarr", component: LidarrComponent, canActivate: [AuthGuard] },
+    { path: "Vote", component: VoteComponent, canActivate: [AuthGuard] },
+    { path: "FailedRequests", component: FailedRequestsComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -113,6 +119,7 @@ const routes: Routes = [
         PushoverComponent,
         MattermostComponent,
         PushbulletComponent,
+        GotifyComponent,
         UserManagementComponent,
         UpdateComponent,
         AboutComponent,
@@ -127,6 +134,8 @@ const routes: Routes = [
         MassEmailComponent,
         NewsletterComponent,
         LidarrComponent,
+        VoteComponent,
+        FailedRequestsComponent,
     ],
     exports: [
         RouterModule,
@@ -146,6 +155,7 @@ const routes: Routes = [
         MobileService,
         NotificationMessageService,
         LidarrService,
+        RequestRetryService,
     ],
 
 })

@@ -34,9 +34,12 @@ export class MusicRequestsComponent implements OnInit {
 
     public orderType: OrderType = OrderType.RequestedDateDesc;
     public OrderType = OrderType;
+    public denyDisplay: boolean;
+    public requestToDeny: IAlbumRequest;
+    public rejectionReason: string;
 
     public totalAlbums: number = 100;
-    private currentlyLoaded: number;
+    public currentlyLoaded: number;
     private amountToLoad: number;
 
     constructor(
@@ -87,11 +90,10 @@ export class MusicRequestsComponent implements OnInit {
         this.searchChanged.next(text.target.value);
     }
 
-    public removeRequest(request: IAlbumRequest) {
-        this.requestService.removeAlbumRequest(request).subscribe(x => {
-            this.removeRequestFromUi(request);
-            this.loadRequests(this.amountToLoad, this.currentlyLoaded = 0);
-        });
+    public async removeRequest(request: IAlbumRequest) {
+        await this.requestService.removeAlbumRequest(request).toPromise();
+        this.removeRequestFromUi(request);
+        this.loadRequests(this.amountToLoad, this.currentlyLoaded = 0);
     }
 
     public changeAvailability(request: IAlbumRequest, available: boolean) {
@@ -126,23 +128,22 @@ export class MusicRequestsComponent implements OnInit {
     }
 
     public deny(request: IAlbumRequest) {
-        request.denied = true;
-        this.denyRequest(request);
+        this.requestToDeny = request;
+        this.denyDisplay = true;
     }
 
-    // public selectRootFolder(searchResult: IAlbumRequest, rootFolderSelected: IRadarrRootFolder, event: any) {
-    //     event.preventDefault();
-    //     // searchResult.rootPathOverride = rootFolderSelected.id;
-    //     this.setOverride(searchResult);
-    //     this.updateRequest(searchResult);
-    // }
-
-    // public selectQualityProfile(searchResult: IMovieRequests, profileSelected: IRadarrProfile, event: any) {
-    //     event.preventDefault();
-    //     searchResult.qualityOverride = profileSelected.id;
-    //     this.setOverride(searchResult);
-    //     this.updateRequest(searchResult);
-    // }
+    public denyRequest() {
+        this.requestService.denyAlbum({ id: this.requestToDeny.id, reason: this.rejectionReason })
+            .subscribe(x => {
+                if (x.result) {
+                    this.notificationService.success(
+                        `Request for ${this.requestToDeny.title} has been denied successfully`);
+                } else {
+                    this.notificationService.warning("Request Denied", x.message ? x.message : x.errorMessage);
+                    this.requestToDeny.denied = false;
+                }
+            });
+    }
 
     public reportIssue(catId: IIssueCategory, req: IAlbumRequest) {
         this.issueRequest = req;
@@ -196,6 +197,13 @@ export class MusicRequestsComponent implements OnInit {
         this.orderType = value;
 
         this.loadInit();
+    }
+
+    public isRequestUser(request: IAlbumRequest) {
+        if (request.requestedUser.userName === this.auth.claims().name) {
+            return true;
+        }
+        return false;
     }
 
     // public subscribe(request: IAlbumRequest) {
@@ -255,19 +263,6 @@ export class MusicRequestsComponent implements OnInit {
                 } else {
                     this.notificationService.warning("Request Approved", x.message ? x.message : x.errorMessage);
                     request.approved = false;
-                }
-            });
-    }
-
-    private denyRequest(request: IAlbumRequest) {
-        this.requestService.denyAlbum({ id: request.id })
-            .subscribe(x => {
-                if (x.result) {
-                    this.notificationService.success(
-                        `Request for ${request.title} has been denied successfully`);
-                } else {
-                    this.notificationService.warning("Request Denied", x.message ? x.message : x.errorMessage);
-                    request.denied = false;
                 }
             });
     }
@@ -339,7 +334,7 @@ export class MusicRequestsComponent implements OnInit {
     }
     private setAlbumBackground(req: IAlbumRequest) {
         if (req.disk === null) {
-            if(req.cover === null) {
+            if (req.cover === null) {
                 req.disk = this.defaultPoster;
             } else {
                 req.disk = req.cover;
@@ -348,4 +343,5 @@ export class MusicRequestsComponent implements OnInit {
         req.background = this.sanitizer.bypassSecurityTrustStyle
             ("url(" + req.cover + ")");
     }
+
 }

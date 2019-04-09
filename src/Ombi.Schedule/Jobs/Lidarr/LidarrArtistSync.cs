@@ -1,26 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Lidarr;
-using Ombi.Api.Radarr;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
-using Serilog;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Ombi.Schedule.Jobs.Lidarr
 {
     public class LidarrArtistSync : ILidarrArtistSync
     {
-        public LidarrArtistSync(ISettingsService<LidarrSettings> lidarr, ILidarrApi lidarrApi, ILogger<LidarrArtistSync> log, IOmbiContext ctx,
+        public LidarrArtistSync(ISettingsService<LidarrSettings> lidarr, ILidarrApi lidarrApi, ILogger<LidarrArtistSync> log, IExternalContext ctx,
             IBackgroundJobClient background, ILidarrAlbumSync album)
         {
             _lidarrSettings = lidarr;
@@ -29,13 +26,12 @@ namespace Ombi.Schedule.Jobs.Lidarr
             _ctx = ctx;
             _job = background;
             _albumSync = album;
-            _lidarrSettings.ClearCache();
         }
 
         private readonly ISettingsService<LidarrSettings> _lidarrSettings;
         private readonly ILidarrApi _lidarrApi;
         private readonly ILogger _logger;
-        private readonly IOmbiContext _ctx;
+        private readonly IExternalContext _ctx;
         private readonly IBackgroundJobClient _job;
         private readonly ILidarrAlbumSync _albumSync;
         

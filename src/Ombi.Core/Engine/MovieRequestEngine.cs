@@ -51,7 +51,7 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<RequestEngineResult> RequestMovie(MovieRequestViewModel model)
         {
-            var movieInfo = await MovieApi.GetMovieInformationWithExtraInfo(model.TheMovieDbId);
+            var movieInfo = await MovieApi.GetMovieInformationWithExtraInfo(model.TheMovieDbId, model.LanguageCode);
             if (movieInfo == null || movieInfo.Id == 0)
             {
                 return new RequestEngineResult
@@ -82,7 +82,9 @@ namespace Ombi.Core.Engine
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
                 RequestedUserId = userDetails.Id,
-                Background = movieInfo.BackdropPath
+                Background = movieInfo.BackdropPath,
+                LangCode = model.LanguageCode,
+                RequestedByAlias = model.RequestedByAlias
             };
 
             var usDates = movieInfo.ReleaseDates?.Results?.FirstOrDefault(x => x.IsoCode == "US");
@@ -305,7 +307,7 @@ namespace Ombi.Core.Engine
             return await ApproveMovie(request);
         }
 
-        public async Task<RequestEngineResult> DenyMovieById(int modelId)
+        public async Task<RequestEngineResult> DenyMovieById(int modelId, string denyReason)
         {
             var request = await MovieRepository.Find(modelId);
             if (request == null)
@@ -317,12 +319,14 @@ namespace Ombi.Core.Engine
             }
 
             request.Denied = true;
+            request.DeniedReason = denyReason;
             // We are denying a request
             NotificationHelper.Notify(request, NotificationType.RequestDeclined);
             await MovieRepository.Update(request);
 
             return new RequestEngineResult
             {
+                Result = true,
                 Message = "Request successfully deleted",
             };
         }
@@ -416,6 +420,12 @@ namespace Ombi.Core.Engine
             await MovieRepository.Delete(request);
         }
 
+        public async Task RemoveAllMovieRequests()
+        {
+            var request = MovieRepository.GetAll();
+            await MovieRepository.DeleteRange(request);
+        }
+
         public async Task<bool> UserHasRequest(string userId)
         {
             return await MovieRepository.GetAll().AnyAsync(x => x.RequestedUserId == userId);
@@ -483,7 +493,7 @@ namespace Ombi.Core.Engine
                 RequestType = RequestType.Movie,
             });
 
-            return new RequestEngineResult {Result = true, Message = $"{movieName} has been successfully added!"};
+            return new RequestEngineResult {Result = true, Message = $"{movieName} has been successfully added!", RequestId = model.Id};
         }
 
         public async Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user)

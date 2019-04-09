@@ -8,6 +8,16 @@ import { ConfirmationService } from "primeng/primeng";
 
 @Component({
     templateUrl: "./usermanagement-user.component.html",
+    styles: [`
+
+    ::ng-deep ngb-accordion > div.card >  div.card-header {
+        padding:0px;
+    }
+    ::ng-deep ngb-accordion > div.card {
+        color:white;
+        padding-top: 0px;
+    }
+    `],
 })
 export class UserManagementUserComponent implements OnInit {
 

@@ -1,21 +1,19 @@
-﻿import { Component } from "@angular/core";
-import { Router } from "@angular/router";
+﻿import { PlatformLocation } from "@angular/common";
+import { Component, OnInit } from "@angular/core";
 
 @Component({
     templateUrl: "./mediaserver.component.html",
+    styleUrls: ["./mediaserver.component.scss"],
 })
-export class MediaServerComponent {
-    constructor(private router: Router) { }
+export class MediaServerComponent implements OnInit {
 
-    public plex() {
-        this.router.navigate(["Wizard/Plex"]);
-    }
+    public baseUrl: string;
+    constructor(private location: PlatformLocation) { }
 
-    public emby() {
-        this.router.navigate(["Wizard/Emby"]);
-    }
-
-    public skip() {
-        this.router.navigate(["Wizard/CreateAdmin"]);
+    public ngOnInit(): void {
+        const base = this.location.getBaseHrefFromDOM();
+        if (base.length > 1) {
+            this.baseUrl = base;
+        }
     }
 }

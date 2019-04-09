@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
@@ -8,27 +9,36 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ombi.Store.Entities.Requests;
 using System.Diagnostics;
+using System.Linq;
+using Microsoft.Extensions.Logging;
 using Ombi.Attributes;
 using Ombi.Core.Models.UI;
 using Ombi.Models;
 using Ombi.Store.Entities;
 using Ombi.Core.Models;
+using Ombi.Helpers;
 
 namespace Ombi.Controllers
 {
     [Authorize]
     [ApiV1]
     [Produces("application/json")]
-    public class RequestController : Controller
+    [ApiController]
+    public class RequestController : ControllerBase
     {
-        public RequestController(IMovieRequestEngine engine, ITvRequestEngine tvRequestEngine)
+        public RequestController(IMovieRequestEngine engine, ITvRequestEngine tvRequestEngine, IVoteEngine vote,
+            ILogger<RequestController> log)
         {
             MovieRequestEngine = engine;
             TvRequestEngine = tvRequestEngine;
+            VoteEngine = vote;
+            Log = log;
         }
 
         private IMovieRequestEngine MovieRequestEngine { get; }
         private ITvRequestEngine TvRequestEngine { get; }
+        private IVoteEngine VoteEngine { get; }
+        private ILogger Log { get; }
 
         /// <summary>
         /// Gets movie requests.
@@ -75,7 +85,18 @@ namespace Ombi.Controllers
         [HttpPost("movie")]
         public async Task<RequestEngineResult> RequestMovie([FromBody] MovieRequestViewModel movie)
         {
-            return await MovieRequestEngine.RequestMovie(movie);
+            movie.RequestedByAlias = GetApiAlias();
+            var result = await MovieRequestEngine.RequestMovie(movie);
+            if (result.Result)
+            {
+                var voteResult = await VoteEngine.UpVote(result.RequestId, RequestType.Movie);
+                if (voteResult.IsError)
+                {
+                    Log.LogError("Couldn't automatically add the vote for the movie {0} because {1}", movie.TheMovieDbId, voteResult.ErrorMessage);
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -95,10 +116,21 @@ namespace Ombi.Controllers
         /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
         [HttpDelete("movie/{requestId:int}")]
-        [PowerUser]
+        [Authorize(Roles = "Admin,PowerUser,ManageOwnRequests")]
         public async Task DeleteRequest(int requestId)
         {
             await MovieRequestEngine.RemoveMovieRequest(requestId);
+        }
+
+        /// <summary>
+        /// Deletes the all movie request.
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete("movie/all")]
+        [PowerUser]
+        public async Task DeleteAllRequests()
+        {
+            await MovieRequestEngine.RemoveAllMovieRequests();
         }
 
         /// <summary>
@@ -156,9 +188,9 @@ namespace Ombi.Controllers
         /// <returns></returns>
         [HttpPut("movie/deny")]
         [PowerUser]
-        public async Task<RequestEngineResult> DenyMovie([FromBody] MovieUpdateModel model)
+        public async Task<RequestEngineResult> DenyMovie([FromBody] DenyMovieModel model)
         {
-            return await MovieRequestEngine.DenyMovieById(model.Id);
+            return await MovieRequestEngine.DenyMovieById(model.Id, model.Reason);
         }
 
         /// <summary>
@@ -249,7 +281,18 @@ namespace Ombi.Controllers
         [HttpPost("tv")]
         public async Task<RequestEngineResult> RequestTv([FromBody] TvRequestViewModel tv)
         {
-            return await TvRequestEngine.RequestTvShow(tv);
+            tv.RequestedByAlias = GetApiAlias();
+            var result = await TvRequestEngine.RequestTvShow(tv);
+            if (result.Result)
+            {
+                var voteResult = await VoteEngine.UpVote(result.RequestId, RequestType.TvShow);
+                if (voteResult.IsError)
+                {
+                    Log.LogError("Couldn't automatically add the vote for the tv {0} because {1}", tv.TvDbId, voteResult.ErrorMessage);
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -269,7 +312,7 @@ namespace Ombi.Controllers
         /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
         [HttpDelete("tv/{requestId:int}")]
-        [PowerUser]
+        [Authorize(Roles = "Admin,PowerUser,ManageOwnRequests")]
         public async Task DeleteTvRequest(int requestId)
         {
             await TvRequestEngine.RemoveTvRequest(requestId);
@@ -334,9 +377,9 @@ namespace Ombi.Controllers
         /// <returns></returns>
         [HttpPut("tv/deny")]
         [PowerUser]
-        public async Task<RequestEngineResult> DenyChild([FromBody] TvUpdateModel model)
+        public async Task<RequestEngineResult> DenyChild([FromBody] DenyTvModel model)
         {
-            return await TvRequestEngine.DenyChildRequest(model.Id);
+            return await TvRequestEngine.DenyChildRequest(model.Id, model.Reason);
         }
 
         /// <summary>
@@ -380,7 +423,7 @@ namespace Ombi.Controllers
         /// </summary>
         /// <param name="requestId">The model.</param>
         /// <returns></returns>
-        [PowerUser]
+        [Authorize(Roles = "Admin,PowerUser,ManageOwnRequests")]
         [HttpDelete("tv/child/{requestId:int}")]
         public async Task<bool> DeleteChildRequest(int requestId)
         {
@@ -482,6 +525,20 @@ namespace Ombi.Controllers
         public async Task<RequestQuotaCountModel> GetRemainingTvRequests()
         {
             return await TvRequestEngine.GetRemainingRequests();
+        }
+
+        private string GetApiAlias()
+        {
+            // Make sure this only applies when using the API KEY
+            if (HttpContext.Request.Headers.Keys.Contains("ApiKey", StringComparer.InvariantCultureIgnoreCase))
+            {
+                if (HttpContext.Request.Headers.TryGetValue("ApiAlias", out var apiAlias))
+                {
+                    return apiAlias;
+                }
+            }
+
+            return null;
         }
     }
 }

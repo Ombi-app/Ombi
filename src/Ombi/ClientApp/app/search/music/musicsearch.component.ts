@@ -1,14 +1,11 @@
 import { PlatformLocation } from "@angular/common";
 import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { TranslateService } from "@ngx-translate/core";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
-
-import { AuthService } from "../../auth/auth.service";
-import { IIssueCategory, IRequestEngineResult, ISearchMovieResult } from "../../interfaces";
+import { IIssueCategory, IRequestEngineResult } from "../../interfaces";
 import { ISearchAlbumResult, ISearchArtistResult } from "../../interfaces/ISearchMusicResult";
-import { NotificationService, RequestService, SearchService } from "../../services";
+import { SearchService } from "../../services";
 
 @Component({
     selector: "music-search",
@@ -35,10 +32,8 @@ export class MusicSearchComponent implements OnInit {
     public defaultPoster: string;
 
     constructor(
-        private searchService: SearchService, private requestService: RequestService,
-        private notificationService: NotificationService, private authService: AuthService,
-        private readonly translate: TranslateService, private sanitizer: DomSanitizer,
-        private readonly platformLocation: PlatformLocation) {
+        private searchService: SearchService, private sanitizer: DomSanitizer,
+        private platformLocation: PlatformLocation) {
 
         this.searchChanged.pipe(
             debounceTime(600), // Wait Xms after the last event before emitting last event
@@ -108,45 +103,6 @@ export class MusicSearchComponent implements OnInit {
         this.searchAlbum = false;
         this.clearAlbumResults();
         this.searchChanged.next(`lidarr:${artistId}`);
-    }
-
-    public request(searchResult: ISearchMovieResult) {
-        searchResult.requested = true;
-        searchResult.requestProcessing = true;
-        searchResult.showSubscribe = false;
-        if (this.authService.hasRole("admin") || this.authService.hasRole("AutoApproveMovie")) {
-            searchResult.approved = true;
-        }
-
-        try {
-            this.requestService.requestMovie({ theMovieDbId: searchResult.id })
-                .subscribe(x => {
-                    this.result = x;
-
-                    if (this.result.result) {
-                        this.translate.get("Search.RequestAdded", { title: searchResult.title }).subscribe(x => {
-                            this.notificationService.success(x);
-                            searchResult.processed = true;
-                        });
-                    } else {
-                        if (this.result.errorMessage && this.result.message) {
-                            this.notificationService.warning("Request Added", `${this.result.message} - ${this.result.errorMessage}`);
-                        } else {
-                            this.notificationService.warning("Request Added", this.result.message ? this.result.message : this.result.errorMessage);
-                        }
-                        searchResult.requested = false;
-                        searchResult.approved = false;
-                        searchResult.processed = false;
-                        searchResult.requestProcessing = false;
-
-                    }
-                });
-        } catch (e) {
-
-            searchResult.processed = false;
-            searchResult.requestProcessing = false;
-            this.notificationService.error(e);
-        }
     }
 
     public viewAlbumsForArtist(albums: ISearchAlbumResult[]) {

@@ -16,16 +16,18 @@ using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
+using Remotion.Linq.Parsing.Structure.IntermediateModel;
 
 namespace Ombi.Core.Senders
 {
     public class TvSender : ITvSender
     {
-        public TvSender(ISonarrApi sonarrApi, ILogger<TvSender> log, ISettingsService<SonarrSettings> sonarrSettings,
+        public TvSender(ISonarrApi sonarrApi, ISonarrV3Api sonarrV3Api, ILogger<TvSender> log, ISettingsService<SonarrSettings> sonarrSettings,
             ISettingsService<DogNzbSettings> dog, IDogNzbApi dogApi, ISettingsService<SickRageSettings> srSettings,
-            ISickRageApi srApi, IRepository<UserQualityProfiles> userProfiles)
+            ISickRageApi srApi, IRepository<UserQualityProfiles> userProfiles, IRepository<RequestQueue> requestQueue, INotificationHelper notify)
         {
             SonarrApi = sonarrApi;
+            SonarrV3Api = sonarrV3Api;
             Logger = log;
             SonarrSettings = sonarrSettings;
             DogNzbSettings = dog;
@@ -33,9 +35,12 @@ namespace Ombi.Core.Senders
             SickRageSettings = srSettings;
             SickRageApi = srApi;
             UserQualityProfiles = userProfiles;
+            _requestQueueRepository = requestQueue;
+            _notificationHelper = notify;
         }
 
         private ISonarrApi SonarrApi { get; }
+        private ISonarrV3Api SonarrV3Api { get; }
         private IDogNzbApi DogNzbApi { get; }
         private ISickRageApi SickRageApi { get; }
         private ILogger<TvSender> Logger { get; }
@@ -43,59 +48,94 @@ namespace Ombi.Core.Senders
         private ISettingsService<DogNzbSettings> DogNzbSettings { get; }
         private ISettingsService<SickRageSettings> SickRageSettings { get; }
         private IRepository<UserQualityProfiles> UserQualityProfiles { get; }
+        private readonly IRepository<RequestQueue> _requestQueueRepository;
+        private readonly INotificationHelper _notificationHelper;
 
         public async Task<SenderResult> Send(ChildRequests model)
         {
-            var sonarr = await SonarrSettings.GetSettingsAsync();
-            if (sonarr.Enabled)
+            try
             {
-                var result = await SendToSonarr(model);
-                if (result != null)
+                var sonarr = await SonarrSettings.GetSettingsAsync();
+                if (sonarr.Enabled)
                 {
+                    var result = await SendToSonarr(model, sonarr);
+                    if (result != null)
+                    {
+                        return new SenderResult
+                        {
+                            Sent = true,
+                            Success = true
+                        };
+                    }
+                }
+                var dog = await DogNzbSettings.GetSettingsAsync();
+                if (dog.Enabled)
+                {
+                    var result = await SendToDogNzb(model, dog);
+                    if (!result.Failure)
+                    {
+                        return new SenderResult
+                        {
+                            Sent = true,
+                            Success = true
+                        };
+                    }
                     return new SenderResult
                     {
-                        Sent = true,
-                        Success = true
+                        Message = result.ErrorMessage
                     };
                 }
-            }
-            var dog = await DogNzbSettings.GetSettingsAsync();
-            if (dog.Enabled)
-            {
-                var result = await SendToDogNzb(model, dog);
-                if (!result.Failure)
+                var sr = await SickRageSettings.GetSettingsAsync();
+                if (sr.Enabled)
                 {
+                    var result = await SendToSickRage(model, sr);
+                    if (result)
+                    {
+                        return new SenderResult
+                        {
+                            Sent = true,
+                            Success = true
+                        };
+                    }
                     return new SenderResult
                     {
-                        Sent = true,
-                        Success = true
+                        Message = "Could not send to SickRage!"
                     };
                 }
                 return new SenderResult
                 {
-                    Message = result.ErrorMessage
+                    Success = true
                 };
             }
-            var sr = await SickRageSettings.GetSettingsAsync();
-            if (sr.Enabled)
+            catch (Exception e)
             {
-                var result = await SendToSickRage(model, sr);
-                if (result)
+                Logger.LogError(e, "Exception thrown when sending a movie to DVR app, added to the request queue");
+                // Check if already in request queue
+                var existingQueue = await _requestQueueRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id);
+                if (existingQueue != null)
                 {
-                    return new SenderResult
-                    {
-                        Sent = true,
-                        Success = true
-                    };
+                    existingQueue.RetryCount++;
+                    existingQueue.Error = e.Message;
+                    await _requestQueueRepository.SaveChangesAsync();
                 }
-                return new SenderResult
+                else
                 {
-                    Message = "Could not send to SickRage!"
-                };
+                    await _requestQueueRepository.Add(new RequestQueue
+                    {
+                        Dts = DateTime.UtcNow,
+                        Error = e.Message,
+                        RequestId = model.Id,
+                        Type = RequestType.TvShow,
+                        RetryCount = 0
+                    });
+                    _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
+                }
             }
+
             return new SenderResult
             {
-                Success = true
+                Success = false,
+                Message = "Something went wrong!"
             };
         }
 
@@ -111,13 +151,8 @@ namespace Ombi.Core.Senders
         /// <param name="s"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<NewSeries> SendToSonarr(ChildRequests model)
+        public async Task<NewSeries> SendToSonarr(ChildRequests model, SonarrSettings s)
         {
-            var s = await SonarrSettings.GetSettingsAsync();
-            if (!s.Enabled)
-            {
-                return null;
-            }
             if (string.IsNullOrEmpty(s.ApiKey))
             {
                 return null;
@@ -143,7 +178,7 @@ namespace Ombi.Core.Senders
                     }
                     if (profiles.SonarrQualityProfileAnime > 0)
                     {
-                       qualityToUse = profiles.SonarrQualityProfileAnime;
+                        qualityToUse = profiles.SonarrQualityProfileAnime;
                     }
                 }
                 seriesType = "anime";
@@ -163,7 +198,7 @@ namespace Ombi.Core.Senders
                     }
                     if (profiles.SonarrQualityProfile > 0)
                     {
-                       qualityToUse = profiles.SonarrQualityProfile;
+                        qualityToUse = profiles.SonarrQualityProfile;
                     }
                 }
                 seriesType = "standard";
@@ -174,7 +209,11 @@ namespace Ombi.Core.Senders
             {
                 qualityToUse = model.ParentRequest.QualityOverride.Value;
             }
-            
+      
+            // Are we using v3 sonarr?
+            var sonarrV3 = s.V3;
+            var languageProfileId = s.LanguageProfile;
+
             try
             {
                 // Does the series actually exist?
@@ -203,6 +242,11 @@ namespace Ombi.Core.Senders
                             searchForMissingEpisodes = false // we want dont want to search yet. We want to make sure everything is unmonitored/monitored correctly.
                         }
                     };
+
+                    if (sonarrV3)
+                    {
+                        newSeries.languageProfileId = languageProfileId;
+                    }
 
                     // Montitor the correct seasons,
                     // If we have that season in the model then it's monitored!
@@ -268,12 +312,21 @@ namespace Ombi.Core.Senders
                 }
             }
             var seriesChanges = false;
-            
+
             foreach (var season in model.SeasonRequests)
             {
-                var sonarrSeason = sonarrEpList.Where(x => x.seasonNumber == season.SeasonNumber);
-                var sonarrEpCount = sonarrSeason.Count();
+                var sonarrEpisodeList = sonarrEpList.Where(x => x.seasonNumber == season.SeasonNumber).ToList();
+                var sonarrEpCount = sonarrEpisodeList.Count; 
                 var ourRequestCount = season.Episodes.Count;
+
+                var ourEpisodes = season.Episodes.Select(x => x.EpisodeNumber).ToList();
+                var unairedEpisodes = sonarrEpisodeList.Where(x => x.airDateUtc > DateTime.UtcNow).Select(x => x.episodeNumber).ToList();
+
+                //// Check if we have requested all the latest episodes, if we have then monitor 
+                //// NOTE, not sure if needed since ombi ui displays future episodes anyway...
+                //ourEpisodes.AddRange(unairedEpisodes);
+                //var distinctEpisodes = ourEpisodes.Distinct().ToList();
+                //var missingEpisodes = Enumerable.Range(distinctEpisodes.Min(), distinctEpisodes.Count).Except(distinctEpisodes);
 
                 var existingSeason =
                     result.seasons.FirstOrDefault(x => x.seasonNumber == season.SeasonNumber);
@@ -284,7 +337,7 @@ namespace Ombi.Core.Senders
                 }
 
 
-                if (sonarrEpCount == ourRequestCount)
+                if (sonarrEpCount == ourRequestCount /*|| !missingEpisodes.Any()*/)
                 {
                     // We have the same amount of requests as all of the episodes in the season.
 
@@ -300,16 +353,16 @@ namespace Ombi.Core.Senders
                     if (!existingSeason.monitored)
                     {
                         // We need to monitor it, problem being is all episodes will now be monitored
-                        // So we need to monior the series but unmonitor every episode
-                        // Except the episodes that are already monitored before we update the series (we do not want to unmonitor episodes that are monitored beforehand)
+                        // So we need to monitor the series but unmonitor every episode
+                        // Except the episodes that are already monitored before we update the series (we do not want to unmonitored episodes that are monitored beforehand)
                         existingSeason.monitored = true;
                         var sea = result.seasons.FirstOrDefault(x => x.seasonNumber == existingSeason.seasonNumber);
                         sea.monitored = true;
                         //var previouslyMonitoredEpisodes = sonarrEpList.Where(x =>
                         //    x.seasonNumber == existingSeason.seasonNumber && x.monitored).Select(x => x.episodeNumber).ToList(); // We probably don't actually care about this
                         result = await SonarrApi.UpdateSeries(result, s.ApiKey, s.FullUri);
-                        var epToUnmonitor = new List<Episode>();
-                        var newEpList = sonarrEpList.ConvertAll(ep => new Episode(ep)); // Clone it so we don't modify the orignal member
+                        var epToUnmonitored = new List<Episode>();
+                        var newEpList = sonarrEpList.ConvertAll(ep => new Episode(ep)); // Clone it so we don't modify the original member
                         foreach (var ep in newEpList.Where(x => x.seasonNumber == existingSeason.seasonNumber).ToList())
                         {
                             //if (previouslyMonitoredEpisodes.Contains(ep.episodeNumber))
@@ -318,10 +371,10 @@ namespace Ombi.Core.Senders
                             //    continue;
                             //}
                             ep.monitored = false;
-                            epToUnmonitor.Add(ep);
+                            epToUnmonitored.Add(ep);
                         }
 
-                        foreach (var epToUpdate in epToUnmonitor)
+                        foreach (var epToUpdate in epToUnmonitored)
                         {
                             await SonarrApi.UpdateEpisode(epToUpdate, s.ApiKey, s.FullUri);
                         }
@@ -355,7 +408,7 @@ namespace Ombi.Core.Senders
                 var sea = new Season
                 {
                     seasonNumber = i,
-                    monitored = model.SeasonRequests.Any(x => x.SeasonNumber == index && x.SeasonNumber != 0)
+                    monitored = false
                 };
                 seasonsToUpdate.Add(sea);
             }

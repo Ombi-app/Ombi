@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -19,7 +20,7 @@ namespace Ombi.Core.Senders
     {
         public MovieSender(ISettingsService<RadarrSettings> radarrSettings, IRadarrApi api, ILogger<MovieSender> log,
             ISettingsService<DogNzbSettings> dogSettings, IDogNzbApi dogApi, ISettingsService<CouchPotatoSettings> cpSettings,
-            ICouchPotatoApi cpApi, IRepository<UserQualityProfiles> userProfiles)
+            ICouchPotatoApi cpApi, IRepository<UserQualityProfiles> userProfiles, IRepository<RequestQueue> requestQueue, INotificationHelper notify)
         {
             RadarrSettings = radarrSettings;
             RadarrApi = api;
@@ -29,6 +30,8 @@ namespace Ombi.Core.Senders
             CouchPotatoSettings = cpSettings;
             CouchPotatoApi = cpApi;
             _userProfiles = userProfiles;
+            _requestQueuRepository = requestQueue;
+            _notificationHelper = notify;
         }
 
         private ISettingsService<RadarrSettings> RadarrSettings { get; }
@@ -39,38 +42,62 @@ namespace Ombi.Core.Senders
         private ISettingsService<CouchPotatoSettings> CouchPotatoSettings { get; }
         private ICouchPotatoApi CouchPotatoApi { get; }
         private readonly IRepository<UserQualityProfiles> _userProfiles;
+        private readonly IRepository<RequestQueue> _requestQueuRepository;
+        private readonly INotificationHelper _notificationHelper;
 
         public async Task<SenderResult> Send(MovieRequests model)
         {
-            var cpSettings = await CouchPotatoSettings.GetSettingsAsync();
-            //var watcherSettings = await WatcherSettings.GetSettingsAsync();
-            var radarrSettings = await RadarrSettings.GetSettingsAsync();
-            if (radarrSettings.Enabled)
+            try
             {
-                return await SendToRadarr(model, radarrSettings);
-            }
-
-            var dogSettings = await DogNzbSettings.GetSettingsAsync();
-            if (dogSettings.Enabled)
-            {
-                await SendToDogNzb(model, dogSettings);
-                return new SenderResult
+                var cpSettings = await CouchPotatoSettings.GetSettingsAsync();
+                //var watcherSettings = await WatcherSettings.GetSettingsAsync();
+                var radarrSettings = await RadarrSettings.GetSettingsAsync();
+                if (radarrSettings.Enabled)
                 {
-                    Success = true,
-                    Sent = true,
-                };
-            }
+                    return await SendToRadarr(model, radarrSettings);
+                }
 
-            if (cpSettings.Enabled)
+                var dogSettings = await DogNzbSettings.GetSettingsAsync();
+                if (dogSettings.Enabled)
+                {
+                    await SendToDogNzb(model, dogSettings);
+                    return new SenderResult
+                    {
+                        Success = true,
+                        Sent = true,
+                    };
+                }
+
+                if (cpSettings.Enabled)
+                {
+                    return await SendToCp(model, cpSettings, cpSettings.DefaultProfileId);
+                }
+            }
+            catch (Exception e)
             {
-                return await SendToCp(model, cpSettings, cpSettings.DefaultProfileId);
+                Log.LogError(e, "Error when sending movie to DVR app, added to the request queue");
+
+                // Check if already in request quee
+                var existingQueue = await _requestQueuRepository.FirstOrDefaultAsync(x => x.RequestId == model.Id);
+                if (existingQueue != null)
+                {
+                    existingQueue.RetryCount++;
+                    existingQueue.Error = e.Message;
+                    await _requestQueuRepository.SaveChangesAsync();
+                }
+                else
+                {
+                    await _requestQueuRepository.Add(new RequestQueue
+                    {
+                        Dts = DateTime.UtcNow,
+                        Error = e.Message,
+                        RequestId = model.Id,
+                        Type = RequestType.Movie,
+                        RetryCount = 0
+                    });
+                    _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
+                }
             }
-
-            //if (watcherSettings.Enabled)
-            //{
-            //    return SendToWatcher(model, watcherSettings);
-            //}
-
 
             return new SenderResult
             {
@@ -93,21 +120,25 @@ namespace Ombi.Core.Senders
 
         private async Task<SenderResult> SendToRadarr(MovieRequests model, RadarrSettings settings)
         {
- 
+
             var qualityToUse = int.Parse(settings.DefaultQualityProfile);
-       
+
             var rootFolderPath = settings.DefaultRootPath;
 
             var profiles = await _userProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == model.RequestedUserId);
             if (profiles != null)
             {
-                if (profiles.SonarrRootPathAnime > 0)
-                {
-                    rootFolderPath = await RadarrRootPath(profiles.SonarrRootPathAnime, settings);
+                if (profiles.RadarrRootPath > 0)
+                { 
+                    var tempPath = await RadarrRootPath(profiles.RadarrRootPath, settings);
+                    if (tempPath.HasValue())
+                    {
+                        rootFolderPath = tempPath;
+                    }
                 }
-                if (profiles.SonarrQualityProfileAnime > 0)
+                if (profiles.RadarrQualityProfile > 0)
                 {
-                    qualityToUse = profiles.SonarrQualityProfileAnime;
+                    qualityToUse = profiles.RadarrQualityProfile;
                 }
             }
 
@@ -150,7 +181,7 @@ namespace Ombi.Core.Senders
                 // Search for it
                 if (!settings.AddOnly)
                 {
-                    await RadarrApi.MovieSearch(new[] {existingMovie.id}, settings.ApiKey, settings.FullUri);
+                    await RadarrApi.MovieSearch(new[] { existingMovie.id }, settings.ApiKey, settings.FullUri);
                 }
 
                 return new SenderResult { Success = true, Sent = true };
@@ -163,7 +194,7 @@ namespace Ombi.Core.Senders
         {
             var paths = await RadarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
             var selectedPath = paths.FirstOrDefault(x => x.id == overrideId);
-            return selectedPath.path;
+            return selectedPath?.path ?? String.Empty;
         }
     }
 }

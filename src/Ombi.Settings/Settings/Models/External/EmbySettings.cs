@@ -14,6 +14,7 @@ namespace Ombi.Core.Settings.Models.External
         public string Name { get; set; }
         public string ApiKey { get; set; }
         public string AdministratorId { get; set; }
+        public string ServerHostname { get; set; }
         public bool EnableEpisodeSearching { get; set; }
     }
 }

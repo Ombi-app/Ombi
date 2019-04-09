@@ -23,25 +23,20 @@ export class RemainingRequestsComponent implements OnInit  {
     }
 
     public ngOnInit() {
-        const self = this;
-
         this.update();
 
-        this.quotaRefreshEvents.subscribe(() => {
+        this.quotaRefreshEvents.subscribe(() => {   
             this.update();
         });
-
-        setInterval(() => {
-            self.update();
-        }, 60000);
     }
 
     public update(): void {
         const callback = (remaining => {
             this.remaining = remaining;
-            this.calculateTime();
+            if(this.remaining) {
+                this.calculateTime();
+            }
         });
-
         if (this.movie) {
             this.requestService.getRemainingMovieRequests().subscribe(callback);
         } 

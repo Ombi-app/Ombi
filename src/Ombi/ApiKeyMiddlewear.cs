@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
+using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
 
 namespace Ombi
@@ -98,6 +99,10 @@ namespace Ombi
                 if (context.Request.Headers.Keys.Contains("UserName", StringComparer.InvariantCultureIgnoreCase))
                 {
                     var username = context.Request.Headers["UserName"].FirstOrDefault();
+                    if (username.IsNullOrEmpty())
+                    {
+                        UseApiUser(context);
+                    }
                     var um = context.RequestServices.GetService<OmbiUserManager>();
                     var user = await um.Users.FirstOrDefaultAsync(x =>
                         x.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
@@ -114,13 +119,18 @@ namespace Ombi
                 }
                 else
                 {
-                    var identity = new GenericIdentity("API");
-                    var principal = new GenericPrincipal(identity, new[] { "Admin", "ApiUser" });
-                    context.User = principal;
+                    UseApiUser(context);
                 }
 
                 await next.Invoke(context);
             }
+        }
+
+        private void UseApiUser(HttpContext context)
+        {
+            var identity = new GenericIdentity("API");
+            var principal = new GenericPrincipal(identity, new[] { "Admin", "ApiUser" });
+            context.User = principal;
         }
     }
 }

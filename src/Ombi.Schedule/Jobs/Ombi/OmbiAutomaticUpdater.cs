@@ -5,18 +5,13 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Hangfire;
-using Hangfire.Console;
 using Hangfire.Server;
 using Microsoft.Extensions.Logging;
-
-using Ombi.Api.Service;
-using Ombi.Api.Service.Models;
 using Ombi.Core.Processor;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
@@ -33,14 +28,13 @@ namespace Ombi.Schedule.Jobs.Ombi
     public class OmbiAutomaticUpdater : IOmbiAutomaticUpdater
     {
         public OmbiAutomaticUpdater(ILogger<OmbiAutomaticUpdater> log, IChangeLogProcessor service,
-            ISettingsService<UpdateSettings> s, IProcessProvider proc, IRepository<ApplicationConfiguration> appConfig)
+            ISettingsService<UpdateSettings> s, IProcessProvider proc, IApplicationConfigRepository appConfig)
         {
             Logger = log;
             Processor = service;
             Settings = s;
             _processProvider = proc;
             _appConfig = appConfig;
-            Settings.ClearCache();
         }
 
         private ILogger<OmbiAutomaticUpdater> Logger { get; }
@@ -48,7 +42,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private ISettingsService<UpdateSettings> Settings { get; }
         private readonly IProcessProvider _processProvider;
         private static PerformContext Ctx { get; set; }
-        private readonly IRepository<ApplicationConfiguration> _appConfig;
+        private readonly IApplicationConfigRepository _appConfig;
 
         public string[] GetVersion()
         {
@@ -252,9 +246,8 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         private string GetArgs(UpdateSettings settings)
         {
-            var config = _appConfig.GetAll();
-            var url = config.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
-            var storage = config.FirstOrDefault(x => x.Type == ConfigurationTypes.StoragePath);
+            var url = _appConfig.Get(ConfigurationTypes.Url);
+            var storage = _appConfig.Get(ConfigurationTypes.StoragePath);
 
             var currentLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             var processName = (settings.ProcessName.HasValue() ? settings.ProcessName : "Ombi");
@@ -345,7 +338,6 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (disposing)
             {
-                _appConfig?.Dispose();
                 Settings?.Dispose();
             }
             _disposed = true;

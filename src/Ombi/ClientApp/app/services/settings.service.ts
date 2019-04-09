@@ -14,6 +14,7 @@ import {
     IDogNzbSettings,
     IEmailNotificationSettings,
     IEmbySettings,
+    IGotifyNotificationSettings,
     IIssueSettings,
     IJobSettings,
     IJobSettingsViewModel,
@@ -31,9 +32,9 @@ import {
     ISlackNotificationSettings,
     ISonarrSettings,
     ITelegramNotifcationSettings,
-    IThemes,
     IUpdateSettings,
     IUserManagementSettings,
+    IVoteSettings,
 } from "../interfaces";
 
 import { ServiceHelpers } from "./service.helpers";
@@ -50,6 +51,10 @@ export class SettingsService extends ServiceHelpers {
 
     public getOmbi(): Observable<IOmbiSettings> {
         return this.http.get<IOmbiSettings>(`${this.url}/Ombi/`, {headers: this.headers});
+    }
+
+    public getDefaultLanguage(): Observable<string> {
+        return this.http.get<string>(`${this.url}/defaultlanguage/`, {headers: this.headers});
     }
 
     public saveOmbi(settings: IOmbiSettings): Observable<boolean> {
@@ -134,14 +139,6 @@ export class SettingsService extends ServiceHelpers {
         return this.http.post<boolean>(`${this.url}/customization`, JSON.stringify(settings), {headers: this.headers});
     }
 
-    public getThemes(): Observable<IThemes[]> {
-        return this.http.get<IThemes[]>(`${this.url}/themes`, {headers: this.headers});
-    }
-
-    public getThemeContent(themeUrl: string): Observable<string> {
-        return this.http.get(`${this.url}/themecontent?url=${themeUrl}`, {responseType: "text", headers: this.headers});
-    }
-
     public getEmailNotificationSettings(): Observable<IEmailNotificationSettings> {
         return this.http.get<IEmailNotificationSettings>(`${this.url}/notifications/email`, {headers: this.headers});
     }
@@ -184,6 +181,14 @@ export class SettingsService extends ServiceHelpers {
     public savePushoverNotificationSettings(settings: IPushoverNotificationSettings): Observable<boolean> {
         return this.http
             .post<boolean>(`${this.url}/notifications/pushover`, JSON.stringify(settings), {headers: this.headers});
+    }
+
+    public getGotifyNotificationSettings(): Observable<IGotifyNotificationSettings> {
+        return this.http.get<IGotifyNotificationSettings>(`${this.url}/notifications/gotify`, { headers: this.headers });
+    }
+    public saveGotifyNotificationSettings(settings: IGotifyNotificationSettings): Observable<boolean> {
+        return this.http
+            .post<boolean>(`${this.url}/notifications/gotify`, JSON.stringify(settings), { headers: this.headers });
     }
 
     public getSlackNotificationSettings(): Observable<ISlackNotificationSettings> {
@@ -282,6 +287,18 @@ export class SettingsService extends ServiceHelpers {
     public saveIssueSettings(settings: IIssueSettings): Observable<boolean> {
         return this.http
             .post<boolean>(`${this.url}/issues`, JSON.stringify(settings), {headers: this.headers});
+    }
+
+    public getVoteSettings(): Observable<IVoteSettings> {
+        return this.http.get<IVoteSettings>(`${this.url}/vote`, {headers: this.headers});
+    }
+
+    public voteEnabled(): Observable<boolean> {
+        return this.http.get<boolean>(`${this.url}/voteenabled`, {headers: this.headers});
+    }
+
+    public saveVoteSettings(settings: IVoteSettings): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}/vote`, JSON.stringify(settings), {headers: this.headers});
     }
 
     public getNewsletterSettings(): Observable<INewsletterNotificationSettings> {

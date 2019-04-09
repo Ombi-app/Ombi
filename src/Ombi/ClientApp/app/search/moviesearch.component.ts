@@ -6,12 +6,15 @@ import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { AuthService } from "../auth/auth.service";
-import { IIssueCategory, IRequestEngineResult, ISearchMovieResult } from "../interfaces";
-import { NotificationService, RequestService, SearchService } from "../services";
+import { IIssueCategory, ILanguageRefine, IRequestEngineResult, ISearchMovieResult } from "../interfaces";
+import { NotificationService, RequestService, SearchService, SettingsService } from "../services";
+
+import * as languageData from "../../other/iso-lang.json";
 
 @Component({
     selector: "movie-search",
     templateUrl: "./moviesearch.component.html",
+    styleUrls: ["./search.component.scss"],
 })
 export class MovieSearchComponent implements OnInit {
 
@@ -22,6 +25,11 @@ export class MovieSearchComponent implements OnInit {
     public result: IRequestEngineResult;
 
     public searchApplied = false;
+    public refineSearchEnabled = false;
+    public searchYear?: number;
+    public actorSearch: boolean;
+    public selectedLanguage: string;
+    public langauges: ILanguageRefine[];
 
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
@@ -36,24 +44,14 @@ export class MovieSearchComponent implements OnInit {
         private searchService: SearchService, private requestService: RequestService,
         private notificationService: NotificationService, private authService: AuthService,
         private readonly translate: TranslateService, private sanitizer: DomSanitizer,
-        private readonly platformLocation: PlatformLocation) {
+        private readonly platformLocation: PlatformLocation, private settingsService: SettingsService) {
+        this.langauges = <ILanguageRefine[]><any>languageData;
         this.searchChanged.pipe(
             debounceTime(600), // Wait Xms after the last event before emitting last event
             distinctUntilChanged(), // only emit if value is different from previous value
         ).subscribe(x => {
             this.searchText = x as string;
-            if (this.searchText === "") {
-                this.clearResults();
-                return;
-            }
-            this.searchService.searchMovie(this.searchText)
-                .subscribe(x => {
-                    this.movieResults = x;
-                    this.searchApplied = true;
-                    // Now let's load some extra info including IMDB Id
-                    // This way the search is fast at displaying results.
-                    this.getExtraInfo();
-                });
+            this.runSearch();
         });
         this.defaultPoster = "../../../images/default_movie_poster.png";
         const base = this.platformLocation.getBaseHrefFromDOM();
@@ -70,7 +68,7 @@ export class MovieSearchComponent implements OnInit {
             result: false,
             errorMessage: "",
         };
-
+        this.settingsService.getDefaultLanguage().subscribe(x => this.selectedLanguage = x);
         this.popularMovies();
     }
 
@@ -87,7 +85,8 @@ export class MovieSearchComponent implements OnInit {
         }
 
         try {
-            this.requestService.requestMovie({ theMovieDbId: searchResult.id })
+            const language = this.selectedLanguage && this.selectedLanguage.length > 0 ? this.selectedLanguage : "en";
+            this.requestService.requestMovie({ theMovieDbId: searchResult.id, languageCode: language })
                 .subscribe(x => {
                     this.result = x;
                     if (this.result.result) {
@@ -161,7 +160,8 @@ export class MovieSearchComponent implements OnInit {
 
     public similarMovies(theMovieDbId: number) {
         this.clearResults();
-        this.searchService.similarMovies(theMovieDbId)
+        const lang = this.selectedLanguage && this.selectedLanguage.length > 0 ? this.selectedLanguage : "";
+        this.searchService.similarMovies(theMovieDbId, lang)
             .subscribe(x => {
                 this.movieResults = x;
                 this.getExtraInfo();
@@ -172,7 +172,7 @@ export class MovieSearchComponent implements OnInit {
         r.subscribed = true;
         this.requestService.subscribeToMovie(r.requestId)
             .subscribe(x => {
-                this.notificationService.success("Subscribed To Movie!");
+                this.notificationService.success(`Subscribed To Movie ${r.title}!`);
             });
     }
 
@@ -182,6 +182,17 @@ export class MovieSearchComponent implements OnInit {
             .subscribe(x => {
                 this.notificationService.success("Unsubscribed Movie!");
             });
+    }
+
+    public refineOpen() {
+        this.refineSearchEnabled = !this.refineSearchEnabled;
+        if (!this.refineSearchEnabled) {
+            this.searchYear = undefined;
+        }
+    }
+
+    public applyRefinedSearch() {
+        this.runSearch();
     }
 
     private getExtraInfo() {
@@ -194,10 +205,18 @@ export class MovieSearchComponent implements OnInit {
             }
             val.background = this.sanitizer.bypassSecurityTrustStyle
                 ("url(" + "https://image.tmdb.org/t/p/w1280" + val.backdropPath + ")");
-            this.searchService.getMovieInformation(val.id)
-                .subscribe(m => {
-                    this.updateItem(val, m);
-                });
+            
+            if (this.applyRefinedSearch) {
+                this.searchService.getMovieInformationWithRefined(val.id, this.selectedLanguage)
+                    .subscribe(m => {
+                        this.updateItem(val, m);
+                    });
+            } else {
+                this.searchService.getMovieInformation(val.id)
+                    .subscribe(m => {
+                        this.updateItem(val, m);
+                    });
+            }
         });
     }
 
@@ -213,5 +232,42 @@ export class MovieSearchComponent implements OnInit {
     private clearResults() {
         this.movieResults = [];
         this.searchApplied = false;
+    }
+
+    private runSearch() {
+        if (this.searchText === "") {
+            this.clearResults();
+            return;
+        }
+        if (this.refineOpen) {
+            if (!this.actorSearch) {
+                this.searchService.searchMovieWithRefined(this.searchText, this.searchYear, this.selectedLanguage)
+                    .subscribe(x => {
+                        this.movieResults = x;
+                        this.searchApplied = true;
+                        // Now let's load some extra info including IMDB Id
+                        // This way the search is fast at displaying results.
+                        this.getExtraInfo();
+                    });
+            } else {
+                this.searchService.searchMovieByActor(this.searchText, this.selectedLanguage)
+                    .subscribe(x => {
+                        this.movieResults = x;
+                        this.searchApplied = true;
+                        // Now let's load some extra info including IMDB Id
+                        // This way the search is fast at displaying results.
+                        this.getExtraInfo();
+                    });
+            }
+        } else {
+            this.searchService.searchMovie(this.searchText)
+                .subscribe(x => {
+                    this.movieResults = x;
+                    this.searchApplied = true;
+                    // Now let's load some extra info including IMDB Id
+                    // This way the search is fast at displaying results.
+                    this.getExtraInfo();
+                });
+        }
     }
 }

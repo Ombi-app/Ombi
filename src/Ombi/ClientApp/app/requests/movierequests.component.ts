@@ -37,9 +37,12 @@ export class MovieRequestsComponent implements OnInit {
 
     public orderType: OrderType = OrderType.RequestedDateDesc;
     public OrderType = OrderType;
+    public denyDisplay: boolean;
+    public requestToDeny: IMovieRequests;
+    public rejectionReason: string;
 
     public totalMovies: number = 100;
-    private currentlyLoaded: number;
+    public currentlyLoaded: number;
     private amountToLoad: number;
 
     constructor(
@@ -130,8 +133,26 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     public deny(request: IMovieRequests) {
-        request.denied = true;
-        this.denyRequest(request);
+        this.requestToDeny = request;
+        this.denyDisplay = true;
+    }
+
+    public denyRequest() {
+        this.requestService.denyMovie({ id: this.requestToDeny.id, reason: this.rejectionReason })
+            .subscribe(x => {
+                this.denyDisplay = false;
+                if (x.result) {
+                    this.notificationService.success(
+                        `Request for ${this.requestToDeny.title} has been denied successfully`);
+                    const index = this.movieRequests.indexOf(this.requestToDeny, 0);
+                    if (index > -1) {
+                        this.movieRequests[index].denied = true;
+                    }
+                } else {
+                    this.notificationService.warning("Request Denied", x.message ? x.message : x.errorMessage);
+                    this.requestToDeny.denied = false;
+                }
+            });
     }
 
     public selectRootFolder(searchResult: IMovieRequests, rootFolderSelected: IRadarrRootFolder, event: any) {
@@ -218,6 +239,13 @@ export class MovieRequestsComponent implements OnInit {
             });
     }
 
+    public isRequestUser(request: IMovieRequests) {
+        if (request.requestedUser.userName === this.auth.claims().name) {
+            return true;
+        }
+        return false;
+    }
+
     private filterActiveStyle(el: any) {
         el = el.toElement || el.relatedTarget || el.target || el.srcElement;
 
@@ -267,19 +295,6 @@ export class MovieRequestsComponent implements OnInit {
                 } else {
                     this.notificationService.warning("Request Approved", x.message ? x.message : x.errorMessage);
                     request.approved = false;
-                }
-            });
-    }
-
-    private denyRequest(request: IMovieRequests) {
-        this.requestService.denyMovie({ id: request.id })
-            .subscribe(x => {
-                if (x.result) {
-                    this.notificationService.success(
-                        `Request for ${request.title} has been denied successfully`);
-                } else {
-                    this.notificationService.warning("Request Denied", x.message ? x.message : x.errorMessage);
-                    request.denied = false;
                 }
             });
     }
@@ -365,4 +380,5 @@ export class MovieRequestsComponent implements OnInit {
         req.backgroundPath = this.sanitizer.bypassSecurityTrustStyle
             ("url(" + "https://image.tmdb.org/t/p/w1280" + req.background + ")");
     }
+
 }

@@ -14,7 +14,7 @@ namespace Ombi.Store.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.3-rtm-32065");
+                .HasAnnotation("ProductVersion", "2.2.1-servicing-10028");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -508,6 +508,46 @@ namespace Ombi.Store.Migrations
                     b.ToTable("RecentlyAddedLog");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.RequestQueue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime?>("Completed");
+
+                    b.Property<DateTime>("Dts");
+
+                    b.Property<string>("Error");
+
+                    b.Property<int>("RequestId");
+
+                    b.Property<int>("RetryCount");
+
+                    b.Property<int>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequestQueue");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("RequestId");
+
+                    b.Property<int>("RequestType");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RequestSubscription");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.Requests.AlbumRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -542,6 +582,8 @@ namespace Ombi.Store.Migrations
                     b.Property<DateTime>("ReleaseDate");
 
                     b.Property<int>("RequestType");
+
+                    b.Property<string>("RequestedByAlias");
 
                     b.Property<DateTime>("RequestedDate");
 
@@ -580,6 +622,8 @@ namespace Ombi.Store.Migrations
                     b.Property<int>("ParentRequestId");
 
                     b.Property<int>("RequestType");
+
+                    b.Property<string>("RequestedByAlias");
 
                     b.Property<DateTime>("RequestedDate");
 
@@ -691,6 +735,8 @@ namespace Ombi.Store.Migrations
 
                     b.Property<int?>("IssueId");
 
+                    b.Property<string>("LangCode");
+
                     b.Property<DateTime>("MarkedAsApproved");
 
                     b.Property<DateTime?>("MarkedAsAvailable");
@@ -706,6 +752,8 @@ namespace Ombi.Store.Migrations
                     b.Property<DateTime>("ReleaseDate");
 
                     b.Property<int>("RequestType");
+
+                    b.Property<string>("RequestedByAlias");
 
                     b.Property<DateTime>("RequestedDate");
 
@@ -771,29 +819,13 @@ namespace Ombi.Store.Migrations
 
                     b.Property<string>("Title");
 
+                    b.Property<int>("TotalSeasons");
+
                     b.Property<int>("TvDbId");
 
                     b.HasKey("Id");
 
                     b.ToTable("TvRequests");
-                });
-
-            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("RequestId");
-
-                    b.Property<int>("RequestType");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("RequestSubscription");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.SickRageCache", b =>
@@ -916,6 +948,30 @@ namespace Ombi.Store.Migrations
                     b.ToTable("UserQualityProfiles");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.Votes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<bool>("Deleted");
+
+                    b.Property<int>("RequestId");
+
+                    b.Property<int>("RequestType");
+
+                    b.Property<string>("UserId");
+
+                    b.Property<int>("VoteType");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Votes");
+                });
+
             modelBuilder.Entity("Ombi.Store.Repository.Requests.EpisodeRequests", b =>
                 {
                     b.Property<int>("Id")
@@ -1036,6 +1092,13 @@ namespace Ombi.Store.Migrations
                         .HasForeignKey("PlexServerContentId");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.Requests.AlbumRequest", b =>
                 {
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "RequestedUser")
@@ -1100,13 +1163,6 @@ namespace Ombi.Store.Migrations
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
-                {
-                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("Ombi.Store.Entities.Tokens", b =>
                 {
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
@@ -1122,6 +1178,13 @@ namespace Ombi.Store.Migrations
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.UserQualityProfiles", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.Votes", b =>
                 {
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany()

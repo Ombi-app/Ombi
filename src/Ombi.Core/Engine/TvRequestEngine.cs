@@ -31,14 +31,13 @@ namespace Ombi.Core.Engine
     {
         public TvRequestEngine(ITvMazeApi tvApi, IMovieDbApi movApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IRuleEvaluator rule, OmbiUserManager manager,
-            ITvSender sender, IAuditRepository audit, IRepository<RequestLog> rl, ISettingsService<OmbiSettings> settings, ICacheService cache,
+            ITvSender sender, IRepository<RequestLog> rl, ISettingsService<OmbiSettings> settings, ICacheService cache,
             IRepository<RequestSubscription> sub) : base(user, requestService, rule, manager, cache, settings, sub)
         {
             TvApi = tvApi;
             MovieDbApi = movApi;
             NotificationHelper = helper;
             TvSender = sender;
-            Audit = audit;
             _requestLog = rl;
         }
 
@@ -46,7 +45,6 @@ namespace Ombi.Core.Engine
         private ITvMazeApi TvApi { get; }
         private IMovieDbApi MovieDbApi { get; }
         private ITvSender TvSender { get; }
-        private IAuditRepository Audit { get; }
         private readonly IRepository<RequestLog> _requestLog;
 
         public async Task<RequestEngineResult> RequestTvShow(TvRequestViewModel tv)
@@ -84,8 +82,6 @@ namespace Ombi.Core.Engine
                 }
             }
 
-            await Audit.Record(AuditType.Added, AuditArea.TvRequest, $"Added Request {tvBuilder.ChildRequest.Title}", Username);
-
             var existingRequest = await TvRepository.Get().FirstOrDefaultAsync(x => x.TvDbId == tv.TvDbId);
             if (existingRequest != null)
             {
@@ -116,6 +112,7 @@ namespace Ombi.Core.Engine
                     }
 
                 // Remove the ID since this is a new child
+                // This was a TVDBID for the request rules to run
                 tvBuilder.ChildRequest.Id = 0;
                 if (!tvBuilder.ChildRequest.SeasonRequests.Any())
                 {
@@ -350,7 +347,6 @@ namespace Ombi.Core.Engine
 
         public async Task<TvRequests> UpdateTvRequest(TvRequests request)
         {
-            await Audit.Record(AuditType.Updated, AuditArea.TvRequest, $"Updated Request {request.Title}", Username);
             var allRequests = TvRepository.Get();
             var results = await allRequests.FirstOrDefaultAsync(x => x.Id == request.Id);
 
@@ -384,6 +380,7 @@ namespace Ombi.Core.Engine
                 foreach (var ep in s.Episodes)
                 {
                     ep.Approved = true;
+                    ep.Requested = true;
                 }
             }
 
@@ -392,7 +389,6 @@ namespace Ombi.Core.Engine
             if (request.Approved)
             {
                 NotificationHelper.Notify(request, NotificationType.RequestApproved);
-                await Audit.Record(AuditType.Approved, AuditArea.TvRequest, $"Approved Request {request.Title}", Username);
                 // Autosend
                 await TvSender.Send(request);
             }
@@ -402,7 +398,7 @@ namespace Ombi.Core.Engine
             };
         }
 
-        public async Task<RequestEngineResult> DenyChildRequest(int requestId)
+        public async Task<RequestEngineResult> DenyChildRequest(int requestId, string reason)
         {
             var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId);
             if (request == null)
@@ -413,6 +409,7 @@ namespace Ombi.Core.Engine
                 };
             }
             request.Denied = true;
+            request.DeniedReason = reason;
             await TvRepository.UpdateChild(request);
             NotificationHelper.Notify(request, NotificationType.RequestDeclined);
             return new RequestEngineResult
@@ -423,9 +420,7 @@ namespace Ombi.Core.Engine
 
         public async Task<ChildRequests> UpdateChildRequest(ChildRequests request)
         {
-            await Audit.Record(AuditType.Updated, AuditArea.TvRequest, $"Updated Request {request.Title}", Username);
-
-            await TvRepository.UpdateChild(request);
+             await TvRepository.UpdateChild(request);
             return request;
         }
 
@@ -443,16 +438,14 @@ namespace Ombi.Core.Engine
                 // Delete the parent
                 TvRepository.Db.TvRequests.Remove(parent);
             }
-            await Audit.Record(AuditType.Deleted, AuditArea.TvRequest, $"Deleting Request {request.Title}", Username);
-
+            
             await TvRepository.Db.SaveChangesAsync();
         }
 
         public async Task RemoveTvRequest(int requestId)
         {
             var request = await TvRepository.Get().FirstOrDefaultAsync(x => x.Id == requestId);
-            await Audit.Record(AuditType.Deleted, AuditArea.TvRequest, $"Deleting Request {request.Title}", Username);
-            await TvRepository.Delete(request);
+             await TvRepository.Delete(request);
         }
 
         public async Task<bool> UserHasRequest(string userId)
@@ -604,15 +597,16 @@ namespace Ombi.Core.Engine
                 var result = await TvSender.Send(model);
                 if (result.Success)
                 {
-                    return new RequestEngineResult { Result = true };
+                    return new RequestEngineResult { Result = true, RequestId = model.Id};
                 }
                 return new RequestEngineResult
                 {
-                    ErrorMessage = result.Message
+                    ErrorMessage = result.Message,
+                    RequestId = model.Id
                 };
             }
 
-            return new RequestEngineResult { Result = true };
+            return new RequestEngineResult { Result = true, RequestId = model.Id };
         }
 
         public async Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user)

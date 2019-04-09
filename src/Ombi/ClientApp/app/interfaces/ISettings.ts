@@ -15,6 +15,7 @@ export interface IOmbiSettings extends ISettings {
   ignoreCertificateErrors: boolean;
   doNotSendNotificationsForAutoApprove: boolean;
   hideRequestsUsers: boolean;
+  defaultLanguageCode: string;
 }
 
 export interface IUpdateSettings extends ISettings {
@@ -40,6 +41,7 @@ export interface IEmbyServer extends IExternalSettings {
   apiKey: string;
   administratorId: string;
   enableEpisodeSearching: boolean;
+  serverHostname: string;
 }
 
 export interface IPlexSettings extends ISettings {
@@ -72,6 +74,8 @@ export interface ISonarrSettings extends IExternalSettings {
   rootPathAnime: string;
   fullRootPath: string;
   addOnly: boolean;
+  v3: boolean;
+  languageProfile: number;
 }
 
 export interface IRadarrSettings extends IExternalSettings {
@@ -112,23 +116,12 @@ export interface ICustomizationSettings extends ISettings {
   applicationName: string;
   applicationUrl: string;
   logo: string;
-  customCssLink: string;
+  customCss: string;
   enableCustomDonations: boolean;
   customDonationUrl: string;
   customDonationMessage: string;
-  hasPresetTheme: boolean;
-  presetThemeName: string;
-  presetThemeContent: string;
-  presetThemeDisplayName: string;
-  presetThemeVersion: string;
   recentlyAddedPage: boolean;
-}
-
-export interface IThemes {
-  fullName: string;
-  displayName: string;
-  version: string;
-  url: string;
+  useCustomPage: boolean;
 }
 
 export interface IJobSettings {
@@ -145,6 +138,8 @@ export interface IJobSettings {
   plexRecentlyAddedSync: string;
   lidarrArtistSync: string;
   issuesPurge: string;
+  retryRequests: string;
+  mediaDatabaseRefresh: string;
 }
 
 export interface IIssueSettings extends ISettings {
@@ -164,6 +159,13 @@ export interface IAuthenticationSettings extends ISettings {
   requireNonAlphanumeric: boolean;
   requireUppercase: boolean;
   enableOAuth: boolean;
+}
+
+export interface ICustomPage extends ISettings {
+  enabled: boolean;
+  fontAwesomeIcon: string;
+  title: string;
+  html: any;
 }
 
 export interface IUserManagementSettings extends ISettings {
@@ -230,4 +232,11 @@ export interface ICronViewModelBody {
 export interface IJobSettingsViewModel {
   result: boolean;
   message: string;
+}
+
+export interface IVoteSettings extends ISettings {
+  enabled: boolean;
+  movieVoteMax: number;
+  musicVoteMax: number;
+  tvShowVoteMax: number;
 }

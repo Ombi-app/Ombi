@@ -9,12 +9,14 @@ using MailKit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MimeKit;
 using Ombi.Api.Lidarr;
 using Ombi.Api.Lidarr.Models;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Api.TvMaze;
 using Ombi.Core.Settings;
+using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Notifications;
 using Ombi.Notifications.Models;
@@ -24,6 +26,7 @@ using Ombi.Settings.Settings.Models.External;
 using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using ContentType = Ombi.Store.Entities.ContentType;
 
 namespace Ombi.Schedule.Jobs.Ombi
 {
@@ -33,7 +36,8 @@ namespace Ombi.Schedule.Jobs.Ombi
             IMovieDbApi movieApi, ITvMazeApi tvApi, IEmailProvider email, ISettingsService<CustomizationSettings> custom,
             ISettingsService<EmailNotificationSettings> emailSettings, INotificationTemplatesRepository templateRepo,
             UserManager<OmbiUser> um, ISettingsService<NewsletterSettings> newsletter, ILogger<NewsletterJob> log,
-            ILidarrApi lidarrApi, IRepository<LidarrAlbumCache> albumCache, ISettingsService<LidarrSettings> lidarrSettings)
+            ILidarrApi lidarrApi, IRepository<LidarrAlbumCache> albumCache, ISettingsService<LidarrSettings> lidarrSettings,
+            ISettingsService<OmbiSettings> ombiSettings, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmbySettings> embySettings)
         {
             _plex = plex;
             _emby = emby;
@@ -46,14 +50,17 @@ namespace Ombi.Schedule.Jobs.Ombi
             _emailSettings = emailSettings;
             _newsletterSettings = newsletter;
             _userManager = um;
-            _emailSettings.ClearCache();
-            _customizationSettings.ClearCache();
-            _newsletterSettings.ClearCache();
             _log = log;
             _lidarrApi = lidarrApi;
             _lidarrAlbumRepository = albumCache;
             _lidarrSettings = lidarrSettings;
-            _lidarrSettings.ClearCache();
+            _ombiSettings = ombiSettings;
+            _plexSettings = plexSettings;
+            _embySettings = embySettings;
+            _ombiSettings.ClearCache();
+            _plexSettings.ClearCache();
+            _emailSettings.ClearCache();
+            _customizationSettings.ClearCache();
         }
 
         private readonly IPlexContentRepository _plex;
@@ -66,11 +73,14 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly INotificationTemplatesRepository _templateRepo;
         private readonly ISettingsService<EmailNotificationSettings> _emailSettings;
         private readonly ISettingsService<NewsletterSettings> _newsletterSettings;
+        private readonly ISettingsService<OmbiSettings> _ombiSettings;
         private readonly UserManager<OmbiUser> _userManager;
         private readonly ILogger _log;
         private readonly ILidarrApi _lidarrApi;
         private readonly IRepository<LidarrAlbumCache> _lidarrAlbumRepository;
         private readonly ISettingsService<LidarrSettings> _lidarrSettings;
+        private readonly ISettingsService<PlexSettings> _plexSettings;
+        private readonly ISettingsService<EmbySettings> _embySettings;
 
         public async Task Start(NewsletterSettings settings, bool test)
         {
@@ -98,12 +108,12 @@ namespace Ombi.Schedule.Jobs.Ombi
                 // Get the Content
                 var plexContent = _plex.GetAll().Include(x => x.Episodes).AsNoTracking();
                 var embyContent = _emby.GetAll().Include(x => x.Episodes).AsNoTracking();
-                var lidarrContent = _lidarrAlbumRepository.GetAll().AsNoTracking();
+                var lidarrContent = _lidarrAlbumRepository.GetAll().Where(x => x.FullyAvailable).AsNoTracking();
 
                 var addedLog = _recentlyAddedLog.GetAll();
-                var addedPlexMovieLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Parent).Select(x => x.ContentId);
-                var addedEmbyMoviesLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Emby && x.ContentType == ContentType.Parent).Select(x => x.ContentId);
-                var addedAlbumLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Lidarr && x.ContentType == ContentType.Album).Select(x => x.AlbumId);
+                var addedPlexMovieLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Parent).Select(x => x.ContentId).ToHashSet();
+                var addedEmbyMoviesLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Emby && x.ContentType == ContentType.Parent).Select(x => x.ContentId).ToHashSet();
+                var addedAlbumLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Lidarr && x.ContentType == ContentType.Album).Select(x => x.AlbumId).ToHashSet();
 
                 var addedPlexEpisodesLogIds =
                 addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Episode);
@@ -126,6 +136,8 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 _log.LogInformation("Plex Episodes to send: {0}", plexEpisodesToSend.Count());
                 _log.LogInformation("Emby Episodes to send: {0}", embyEpisodesToSend.Count());
+                var plexSettings = await _plexSettings.GetSettingsAsync();
+                var embySettings = await _embySettings.GetSettingsAsync();
                 var body = string.Empty;
                 if (test)
                 {
@@ -134,11 +146,11 @@ namespace Ombi.Schedule.Jobs.Ombi
                     var plext = _plex.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.Series.AddedAt).Take(10).ToHashSet();
                     var embyt = _emby.GetAllEpisodes().Include(x => x.Series).OrderByDescending(x => x.AddedAt).Take(10).ToHashSet();
                     var lidarr = lidarrContent.OrderByDescending(x => x.AddedAt).Take(10).ToHashSet();
-                    body = await BuildHtml(plexm, embym, plext, embyt, lidarr, settings);
+                    body = await BuildHtml(plexm, embym, plext, embyt, lidarr, settings, embySettings, plexSettings);
                 }
                 else
                 {
-                    body = await BuildHtml(plexContentMoviesToSend, embyContentMoviesToSend, plexEpisodesToSend, embyEpisodesToSend, lidarrContentAlbumsToSend, settings);
+                    body = await BuildHtml(plexContentMoviesToSend, embyContentMoviesToSend, plexEpisodesToSend, embyEpisodesToSend, lidarrContentAlbumsToSend, settings, embySettings, plexSettings);
                     if (body.IsNullOrEmpty())
                     {
                         return;
@@ -162,7 +174,23 @@ namespace Ombi.Schedule.Jobs.Ombi
                             Email = emails
                         });
                     }
-                    var emailTasks = new List<Task>();
+
+                    var messageContent = ParseTemplate(template, customization);
+                    var email = new NewsletterTemplate();
+
+                    var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo);
+
+                    var bodyBuilder = new BodyBuilder
+                    {
+                        HtmlBody = html,
+                    };
+
+                    var message = new MimeMessage
+                    {
+                        Body = bodyBuilder.ToMessageBody(),
+                        Subject = messageContent.Subject
+                    };
+                    
                     foreach (var user in users)
                     {
                         // Get the users to send it to
@@ -170,16 +198,12 @@ namespace Ombi.Schedule.Jobs.Ombi
                         {
                             continue;
                         }
-
-                        var messageContent = ParseTemplate(template, customization, user);
-                        var email = new NewsletterTemplate();
-
-                        var html = email.LoadTemplate(messageContent.Subject, messageContent.Message, body, customization.Logo);
-
-                        emailTasks.Add(_email.Send(
-                            new NotificationMessage { Message = html, Subject = messageContent.Subject, To = user.Email },
-                            emailSettings));
+                        // BCC the messages
+                        message.Bcc.Add(new MailboxAddress(user.Email, user.Email));
                     }
+
+                    // Send the email
+                    await _email.Send(message, emailSettings);
 
                     // Now add all of this to the Recently Added log
                     var recentlyAddedLog = new HashSet<RecentlyAddedLog>();
@@ -234,7 +258,6 @@ namespace Ombi.Schedule.Jobs.Ombi
                         });
                     }
                     await _recentlyAddedLog.AddRange(recentlyAddedLog);
-                    await Task.WhenAll(emailTasks.ToArray());
                 }
                 else
                 {
@@ -245,7 +268,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         {
                             continue;
                         }
-                        var messageContent = ParseTemplate(template, customization, a);
+                        var messageContent = ParseTemplate(template, customization);
 
                         var email = new NewsletterTemplate();
 
@@ -305,19 +328,21 @@ namespace Ombi.Schedule.Jobs.Ombi
             return itemsToReturn;
         }
 
-        private NotificationMessageContent ParseTemplate(NotificationTemplates template, CustomizationSettings settings, OmbiUser username)
+        private NotificationMessageContent ParseTemplate(NotificationTemplates template, CustomizationSettings settings)
         {
             var resolver = new NotificationMessageResolver();
             var curlys = new NotificationMessageCurlys();
 
-            curlys.SetupNewsletter(settings, username);
+            curlys.SetupNewsletter(settings);
 
             return resolver.ParseMessage(template, curlys);
         }
 
         private async Task<string> BuildHtml(IQueryable<PlexServerContent> plexContentToSend, IQueryable<EmbyContent> embyContentToSend, 
-            HashSet<PlexEpisode> plexEpisodes, HashSet<EmbyEpisode> embyEp, HashSet<LidarrAlbumCache> albums, NewsletterSettings settings)
+            HashSet<PlexEpisode> plexEpisodes, HashSet<EmbyEpisode> embyEp, HashSet<LidarrAlbumCache> albums, NewsletterSettings settings, EmbySettings embySettings,
+            PlexSettings plexSettings)
         {
+            var ombiSettings = await _ombiSettings.GetSettingsAsync();
             var sb = new StringBuilder();
 
             var plexMovies = plexContentToSend.Where(x => x.Type == PlexMediaTypeEntity.Movie);
@@ -331,8 +356,16 @@ namespace Ombi.Schedule.Jobs.Ombi
                 sb.Append("<td style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-size: 14px; vertical-align: top; \">");
                 sb.Append("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; \">");
                 sb.Append("<tr>");
-                await ProcessPlexMovies(plexMovies, sb);
-                await ProcessEmbyMovies(embyMovies, sb);
+                if (plexSettings.Enable)
+                {
+                    await ProcessPlexMovies(plexMovies, sb, ombiSettings.DefaultLanguageCode);
+                }
+
+                if (embySettings.Enable)
+                {
+                    await ProcessEmbyMovies(embyMovies, sb, ombiSettings.DefaultLanguageCode);
+                }
+
                 sb.Append("</tr>");
                 sb.Append("</table>");
                 sb.Append("</td>");
@@ -349,8 +382,16 @@ namespace Ombi.Schedule.Jobs.Ombi
                 sb.Append("<td style=\"font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-size: 14px; vertical-align: top; \">");
                 sb.Append("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; \">");
                 sb.Append("<tr>");
-                await ProcessPlexTv(plexEpisodes, sb);
-                await ProcessEmbyTv(embyEp, sb);
+                if (plexSettings.Enable)
+                {
+                    await ProcessPlexTv(plexEpisodes, sb);
+                }
+
+                if (embySettings.Enable)
+                {
+                    await ProcessEmbyTv(embyEp, sb);
+                }
+
                 sb.Append("</tr>");
                 sb.Append("</table>");
                 sb.Append("</td>");
@@ -379,7 +420,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             return sb.ToString();
         }
 
-        private async Task ProcessPlexMovies(IQueryable<PlexServerContent> plexContentToSend, StringBuilder sb)
+        private async Task ProcessPlexMovies(IQueryable<PlexServerContent> plexContentToSend, StringBuilder sb, string defaultLanguageCode)
         {
             int count = 0;
             var ordered = plexContentToSend.OrderByDescending(x => x.AddedAt);
@@ -390,7 +431,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 {
                     continue;
                 }
-                var info = await _movieApi.GetMovieInformationWithExtraInfo(movieDbId);
+                var info = await _movieApi.GetMovieInformationWithExtraInfo(movieDbId, defaultLanguageCode);
                 var mediaurl = content.Url;
                 if (info == null)
                 {
@@ -453,7 +494,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        private async Task ProcessEmbyMovies(IQueryable<EmbyContent> embyContent, StringBuilder sb)
+        private async Task ProcessEmbyMovies(IQueryable<EmbyContent> embyContent, StringBuilder sb, string defaultLangaugeCode)
         {
             int count = 0;
             var ordered = embyContent.OrderByDescending(x => x.AddedAt);
@@ -474,7 +515,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
 
                 var mediaurl = content.Url;
-                var info = await _movieApi.GetMovieInformationWithExtraInfo(StringHelper.IntParseLinq(theMovieDbId));
+                var info = await _movieApi.GetMovieInformationWithExtraInfo(StringHelper.IntParseLinq(theMovieDbId), defaultLangaugeCode);
                 if (info == null)
                 {
                     continue;
@@ -654,7 +695,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     AddInfoTable(sb);
 
                     var title = "";
-                    if (!String.IsNullOrEmpty(info.premiered) && info.premiered.Length > 4)
+                    if (!string.IsNullOrEmpty(info.premiered) && info.premiered.Length > 4)
                     {
                         title = $"{t.Title} ({info.premiered.Remove(4)})";
                     } else
@@ -677,7 +718,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     foreach (var epInformation in results.OrderBy(x => x.SeasonNumber))
                     {
                         var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
-                        var episodeString = BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
+                        var episodeString = StringHelper.BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
                         finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString}");
                         finalsb.Append("<br />");
                     }
@@ -715,48 +756,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        public string BuildEpisodeList(IEnumerable<int> orderedEpisodes)
-        {
-            var epSb = new StringBuilder();
-            var previousEpisodes = new List<int>();
-            var previousEpisode = -1;
-            foreach (var ep in orderedEpisodes)
-            {
-                if (ep - 1 == previousEpisode)
-                {
-                    // This is the next one
-                    previousEpisodes.Add(ep);
-                }
-                else
-                {
-                    if (previousEpisodes.Count > 1)
-                    {
-                        // End it
-                        epSb.Append($"{previousEpisodes.First()}-{previousEpisodes.Last()}, ");
-                    }
-                    else if (previousEpisodes.Count == 1)
-                    {
-                        epSb.Append($"{previousEpisodes.FirstOrDefault()}, ");
-                    }
-                    // New one
-                    previousEpisodes.Clear();
-                    previousEpisodes.Add(ep);
-                }
-                previousEpisode = ep;
-            }
-
-            if (previousEpisodes.Count > 1)
-            {
-                // Got some left over
-                epSb.Append($"{previousEpisodes.First()}-{previousEpisodes.Last()}");
-            }
-            else if(previousEpisodes.Count == 1)
-            {
-                epSb.Append(previousEpisodes.FirstOrDefault());
-            }
-
-            return epSb.ToString();
-        }
+        
 
         private async Task ProcessEmbyTv(HashSet<EmbyEpisode> embyContent, StringBuilder sb)
         {
@@ -841,7 +841,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     foreach (var epInformation in results.OrderBy(x => x.SeasonNumber))
                     {
                         var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
-                        var episodeString = BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
+                        var episodeString = StringHelper.BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
                         finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString}");
                         finalsb.Append("<br />");
                     }

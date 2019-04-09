@@ -41,7 +41,7 @@ namespace Ombi.Api
                 {
                     if (!request.IgnoreErrors)
                     {
-                        LogError(request, httpResponseMessage);
+                        await LogError(request, httpResponseMessage);
                     }
 
                     if (request.Retry)
@@ -105,7 +105,7 @@ namespace Ombi.Api
                 {
                     if (!request.IgnoreErrors)
                     {
-                        LogError(request, httpResponseMessage);
+                        await LogError(request, httpResponseMessage);
                     }
                 }
                 // do something with the response
@@ -126,7 +126,7 @@ namespace Ombi.Api
                 {
                     if (!request.IgnoreErrors)
                     {
-                        LogError(request, httpResponseMessage);
+                        await LogError(request, httpResponseMessage);
                     }
                 }
             }
@@ -149,10 +149,15 @@ namespace Ombi.Api
             }
         }
 
-        private void LogError(Request request, HttpResponseMessage httpResponseMessage)
+        private async Task LogError(Request request, HttpResponseMessage httpResponseMessage)
         {
             Logger.LogError(LoggingEvents.Api,
                 $"StatusCode: {httpResponseMessage.StatusCode}, Reason: {httpResponseMessage.ReasonPhrase}, RequestUri: {request.FullUri}");
+            if (Logger.IsEnabled(LogLevel.Debug))
+            {
+                var content = await httpResponseMessage.Content.ReadAsStringAsync();
+                Logger.LogDebug(content);
+            }
         }
     }
 }

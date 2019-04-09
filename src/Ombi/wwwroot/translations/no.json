@@ -13,7 +13,7 @@
     "ContinueButton": "Gå videre",
     "Available": "Tilgjengelig",
     "PartiallyAvailable": "Partially Available",
-    "Monitored": "Monitored",
+    "Monitored": "Overvåket",
     "NotAvailable": "Ikke tilgjengelig",
     "ProcessingRequest": "Behandler forespørsel",
     "PendingApproval": "Venter på godkjenning",
@@ -48,6 +48,7 @@
     "Requests": "Forespørsler",
     "UserManagement": "Brukeradministrasjon",
     "Issues": "Mangler",
+    "Vote": "Stem",
     "Donate": "Doner!",
     "DonateLibraryMaintainer": "Doner til vedlikeholderen av biblioteket",
     "DonateTooltip": "Dette er hvordan jeg overbevise min kone til å la meg bruke min fritid til å utvikle Ombi ;)",
@@ -56,28 +57,15 @@
     "Welcome": "Velkommen {{username}}",
     "UpdateDetails": "Oppdater detaljer",
     "Logout": "Logg av",
-    "Language": {
-      "English": "Engelsk",
-      "French": "Fransk",
-      "Spanish": "Spansk",
-      "German": "Tysk",
-      "Italian": "Italiensk",
-      "Danish": "Dansk",
-      "Dutch": "Nederlandsk",
-      "Norwegian": "Norsk",
-      "BrazillianPortuguese": "Brazillian Portuguese",
-      "Polish": "Polish",
-      "Swedish": "Swedish"
-    },
     "OpenMobileApp": "Åpne mobilapp",
-    "RecentlyAdded": "Recently Added"
+    "RecentlyAdded": "Nylig lagt til"
   },
   "Search": {
     "Title": "Søk",
     "Paragraph": "Vil du se noe som foreløpig ikke er tilgjengelig? Ikke noe problem, bare søk etter det nedenfor og be om det!",
     "MoviesTab": "Filmer",
     "TvTab": "TV serier",
-    "MusicTab": "Music",
+    "MusicTab": "Musikk",
     "Suggestions": "Forslag",
     "NoResults": "Beklager, vi fant ingen resultater!",
     "DigitalDate": "Digital utgivelse: {{date}}",
@@ -86,6 +74,7 @@
     "ViewOnEmby": "Spill av på Emby",
     "RequestAdded": "Forespørsel om {{title}} er lagt til",
     "Similar": "Lignende",
+    "Refine": "Refine",
     "Movies": {
       "PopularMovies": "Populære filmer",
       "UpcomingMovies": "Kommende filmer",
@@ -115,7 +104,7 @@
     "Paragraph": "Nedenfor kan du se dine og alle andres forespørsler, du ser også status for nedlasting og godkjenning.",
     "MoviesTab": "Filmer",
     "TvTab": "TV serier",
-    "MusicTab": "Music",
+    "MusicTab": "Musikk",
     "RequestedBy": "Etterspurt av:",
     "Status": "Status:",
     "RequestStatus": "Status for forespørsel:",
@@ -139,10 +128,10 @@
     "GridStatus": "Status",
     "ReportIssue": "Rapportér en feil",
     "Filter": "Filter",
-    "Sort": "Sort",
+    "Sort": "Sorter",
     "SeasonNumberHeading": "Sesong: {seasonNumber}",
-    "SortTitleAsc": "Title ▲",
-    "SortTitleDesc": "Title ▼",
+    "SortTitleAsc": "Tittel ▲",
+    "SortTitleDesc": "Tittel ▼",
     "SortRequestDateAsc": "Request Date ▲",
     "SortRequestDateDesc": "Request Date ▼",
     "SortStatusAsc": "Status ▲",
@@ -179,14 +168,18 @@
     "FilterHeaderAvailability": "Tilgjengelighet",
     "FilterHeaderRequestStatus": "Status",
     "Approved": "Godkjent",
-    "PendingApproval": "Pending Approval"
+    "PendingApproval": "Venter på godkjenning"
   },
   "UserManagment": {
-    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
-    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
-    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
+    "TvRemaining": "TV: {{remaining}}/{{total}} gjenstående",
+    "MovieRemaining": "Filmer: {{remaining}}/{{total}} gjenstående",
+    "MusicRemaining": "Musikk: {{remaining}}/{{total}} gjenstående",
     "TvDue": "TV: {{date}}",
-    "MovieDue": "Movie: {{date}}",
-    "MusicDue": "Music: {{date}}"
+    "MovieDue": "Film:{{date}}",
+    "MusicDue": "Musikk:{{date}}"
+  },
+  "Votes": {
+    "CompletedVotesTab": "Stemt",
+    "VotesTab": "Votes Needed"
   }
 }

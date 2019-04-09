@@ -3,7 +3,7 @@
 #addin "Cake.Gulp"
 #addin "SharpZipLib"
 #addin nuget:?package=Cake.Compression&version=0.1.4
-#addin "Cake.Incubator"
+#addin "Cake.Incubator&version=3.1.0"
 #addin "Cake.Yarn"
 
 //////////////////////////////////////////////////////////////////////
@@ -26,7 +26,7 @@ var csProj = "./src/Ombi/Ombi.csproj";          // Path to the project.csproj
 var solutionFile = "Ombi.sln";                  // Solution file if needed
 GitVersion versionInfo = null;
 
-var frameworkVer = "netcoreapp2.1";
+var frameworkVer = "netcoreapp2.2";
 
 var buildSettings = new DotNetCoreBuildSettings
 {
@@ -81,9 +81,9 @@ Task("SetVersionInfo")
 
     versionInfo = GitVersion(settings);
 	
-	Information("GitResults -> {0}", versionInfo.Dump());
+//	Information("GitResults -> {0}", versionInfo.Dump());
 
-    Information(@"Build:{0}",AppVeyor.Environment.Build.Dump());
+//Information(@"Build:{0}",AppVeyor.Environment.Build.Dump());
 
 	var buildVersion = string.Empty;
 	if(string.IsNullOrEmpty(AppVeyor.Environment.Build.Version))
@@ -151,7 +151,7 @@ Task("Package")
 	GZipCompress(osxArtifactsFolder, artifactsFolder + "osx.tar.gz");
 	GZipCompress(linuxArtifactsFolder, artifactsFolder + "linux.tar.gz");
 	GZipCompress(linuxArmArtifactsFolder, artifactsFolder + "linux-arm.tar.gz");
-	//GZipCompress(linuxArm64BitArtifactsFolder, artifactsFolder + "linux-arm64.tar.gz");
+	GZipCompress(linuxArm64BitArtifactsFolder, artifactsFolder + "linux-arm64.tar.gz");
 });
 
 Task("Publish")
@@ -227,7 +227,7 @@ Task("Publish-Linux-ARM")
     CopyFile(
       buildDir + "/"+frameworkVer+"/linux-arm/Swagger.xml",
       buildDir + "/"+frameworkVer+"/linux-arm/published/Swagger.xml");
-	  
+
     publishSettings.OutputDirectory = Directory(buildDir) + Directory(frameworkVer +"/linux-arm/published/updater");
     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });

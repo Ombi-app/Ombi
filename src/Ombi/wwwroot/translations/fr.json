@@ -1,6 +1,6 @@
 {
   "Login": {
-    "SignInButton": "Connexion",
+    "SignInButton": "Se connecter",
     "UsernamePlaceholder": "Nom d’utilisateur",
     "PasswordPlaceholder": "Mot de passe",
     "RememberMe": "Se souvenir de moi",
@@ -12,8 +12,8 @@
   "Common": {
     "ContinueButton": "Continuer",
     "Available": "Disponible",
-    "PartiallyAvailable": "Partially Available",
-    "Monitored": "Monitored",
+    "PartiallyAvailable": "Partiellement disponible",
+    "Monitored": "Suivi",
     "NotAvailable": "Non disponible",
     "ProcessingRequest": "En cours de traitement",
     "PendingApproval": "En attente d'approbation",
@@ -29,7 +29,7 @@
     }
   },
   "PasswordReset": {
-    "EmailAddressPlaceholder": "Adresse e-mail",
+    "EmailAddressPlaceholder": "Courriel",
     "ResetPasswordButton": "Réinitialiser le mot de passe"
   },
   "LandingPage": {
@@ -37,10 +37,10 @@
     "OnlineParagraph": "Le serveur média est actuellement en ligne",
     "PartiallyOnlineHeading": "Partiellement en ligne",
     "PartiallyOnlineParagraph": "Le serveur média est partiellement en ligne.",
-    "MultipleServersUnavailable": "Il y a {{serversUnavailable}} serveurs hors ligne sur {{totalServers}}.",
-    "SingleServerUnavailable": "Il y a {{serversUnavailable}} serveur hors ligne sur {{totalServers}}.",
-    "OfflineHeading": "Actuellement hors ligne",
-    "OfflineParagraph": "Le serveur média est actuellement hors ligne.",
+    "MultipleServersUnavailable": "Il y a {{serversUnavailable}} serveurs hors-ligne sur {{totalServers}}.",
+    "SingleServerUnavailable": "Il y a {{serversUnavailable}} serveur hors-ligne sur {{totalServers}}.",
+    "OfflineHeading": "Actuellement hors-ligne",
+    "OfflineParagraph": "Le serveur média est actuellement hors-ligne.",
     "CheckPageForUpdates": "Consultez cette page pour voir les mises à jour du site."
   },
   "NavigationBar": {
@@ -48,6 +48,7 @@
     "Requests": "Demandes",
     "UserManagement": "Gestion des utilisateurs",
     "Issues": "Problèmes",
+    "Vote": "Vote",
     "Donate": "Faire un don !",
     "DonateLibraryMaintainer": "Faire un don au mainteneur de la bibliothèque",
     "DonateTooltip": "C’est pour convaincre ma femme de me laisser passer mon temps libre à développer Ombi ;)",
@@ -56,19 +57,6 @@
     "Welcome": "Bienvenue {{username}}",
     "UpdateDetails": "Détails de la mise à jour",
     "Logout": "Déconnexion",
-    "Language": {
-      "English": "Anglais",
-      "French": "Français",
-      "Spanish": "Espagnol",
-      "German": "Allemand",
-      "Italian": "Italien",
-      "Danish": "Danois",
-      "Dutch": "Néerlandais",
-      "Norwegian": "Norvégien",
-      "BrazillianPortuguese": "Portuguais brésilien",
-      "Polish": "Polonais",
-      "Swedish": "Swedish"
-    },
     "OpenMobileApp": "Ouvrir l'application mobile",
     "RecentlyAdded": "Ajouts récents"
   },
@@ -77,7 +65,7 @@
     "Paragraph": "Vous voulez regarder quelque chose qui n'est pas disponible actuellement ? Pas de problème, recherchez-le ci-dessous et demandez-le !",
     "MoviesTab": "Films",
     "TvTab": "TV",
-    "MusicTab": "Music",
+    "MusicTab": "Musique",
     "Suggestions": "Suggestions",
     "NoResults": "Désolé, nous n'avons trouvé aucun résultat !",
     "DigitalDate": "Sortie numérique: {{date}}",
@@ -86,12 +74,13 @@
     "ViewOnEmby": "Regarder sur Emby",
     "RequestAdded": "La demande pour {{title}} a été ajoutée avec succès",
     "Similar": "Similaires",
+    "Refine": "Affiner",
     "Movies": {
       "PopularMovies": "Films populaires",
       "UpcomingMovies": "Films à venir",
       "TopRatedMovies": "Films les mieux notés",
       "NowPlayingMovies": "Films à l'affiche",
-      "HomePage": "Site du film",
+      "HomePage": "Accueil",
       "Trailer": "Bande-annonce"
     },
     "TvShows": {
@@ -115,13 +104,13 @@
     "Paragraph": "Vous pouvez voir ci-dessous vos demandes et celles des autres, ainsi que leur statut de téléchargement et d'approbation.",
     "MoviesTab": "Films",
     "TvTab": "Émissions",
-    "MusicTab": "Music",
+    "MusicTab": "Musique",
     "RequestedBy": "Demandé par :",
     "Status": "Statut :",
     "RequestStatus": "Statut de la demande :",
     "Denied": " Refusé :",
     "TheatricalRelease": "Sortie en salle: {{date}}",
-    "ReleaseDate": "Released: {{date}}",
+    "ReleaseDate": "Sortie : {{date}}",
     "TheatricalReleaseSort": "Sortie en salle",
     "DigitalRelease": "Sortie numérique: {{date}}",
     "RequestDate": "Date de la demande :",
@@ -148,11 +137,11 @@
     "SortStatusAsc": "Statut ▲",
     "SortStatusDesc": "Statut ▼",
     "Remaining": {
-      "Quota": "{{remaining}}/{{total}} requests remaining",
-      "NextDays": "Another request will be added in {{time}} days",
-      "NextHours": "Another request will be added in {{time}} hours",
-      "NextMinutes": "Another request will be added in {{time}} minutes",
-      "NextMinute": "Another request will be added in {{time}} minute"
+      "Quota": "{{remaining}}/{{total}} demande(s) restante(s)",
+      "NextDays": "Une autre demande sera ajoutée dans {{time}} jours",
+      "NextHours": "Une autre demande sera ajoutée dans {{time}} heures",
+      "NextMinutes": "Une autre demande sera ajoutée dans {{time}} minutes",
+      "NextMinute": "Une autre demande sera ajoutée dans {{time}} minute"
     }
   },
   "Issues": {
@@ -182,11 +171,15 @@
     "PendingApproval": "En attente de validation"
   },
   "UserManagment": {
-    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
-    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
-    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
-    "TvDue": "TV: {{date}}",
-    "MovieDue": "Movie: {{date}}",
-    "MusicDue": "Music: {{date}}"
+    "TvRemaining": "TV : {{remaining}}/{{total}} restant(s)",
+    "MovieRemaining": "Films : {{remaining}}/{{total}} restant(s)",
+    "MusicRemaining": "Musique : {{remaining}}/{{total}} restant(s)",
+    "TvDue": "TV : {{date}}",
+    "MovieDue": "Film : {{date}}",
+    "MusicDue": "Musique : {{date}}"
+  },
+  "Votes": {
+    "CompletedVotesTab": "Voté",
+    "VotesTab": "Votes nécessaires"
   }
 }

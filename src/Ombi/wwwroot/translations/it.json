@@ -48,6 +48,7 @@
     "Requests": "Richieste",
     "UserManagement": "Gestione degli utenti",
     "Issues": "Problemi",
+    "Vote": "Vote",
     "Donate": "Fai una donazione!",
     "DonateLibraryMaintainer": "Dona al manutentore della libreria",
     "DonateTooltip": "Questo è come convinco mia moglie a farmi spendere il mio tempo libero nello sviluppo di Ombi ;)",
@@ -56,19 +57,6 @@
     "Welcome": "Benvenuto {{username}}",
     "UpdateDetails": "Aggiorna i tuoi dati",
     "Logout": "Logout",
-    "Language": {
-      "English": "Inglese",
-      "French": "Francese",
-      "Spanish": "Spagnolo",
-      "German": "Tedesco",
-      "Italian": "Italiano",
-      "Danish": "Danese",
-      "Dutch": "Olandese",
-      "Norwegian": "Norvegese",
-      "BrazillianPortuguese": "Brazillian Portuguese",
-      "Polish": "Polish",
-      "Swedish": "Swedish"
-    },
     "OpenMobileApp": "Apri l'applicazione mobile",
     "RecentlyAdded": "Recently Added"
   },
@@ -86,6 +74,7 @@
     "ViewOnEmby": "Guarda su Emby",
     "RequestAdded": "La richiesta per {{title}} è stata aggiunta correttamente",
     "Similar": "Similar",
+    "Refine": "Refine",
     "Movies": {
       "PopularMovies": "Film popolari",
       "UpcomingMovies": "Film in arrivo",
@@ -188,5 +177,9 @@
     "TvDue": "TV: {{date}}",
     "MovieDue": "Movie: {{date}}",
     "MusicDue": "Music: {{date}}"
+  },
+  "Votes": {
+    "CompletedVotesTab": "Voted",
+    "VotesTab": "Votes Needed"
   }
 }

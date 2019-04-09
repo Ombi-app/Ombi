@@ -26,6 +26,7 @@ using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Serilog;
+using ILogger = Serilog.ILogger;
 
 namespace Ombi
 {
@@ -42,35 +43,12 @@ namespace Ombi
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
 
-            //if (env.IsDevelopment())
-            //{
-            Serilog.ILogger config;
-            if (string.IsNullOrEmpty(StoragePath.StoragePath))
-            {
-                config = new LoggerConfiguration()
-                    .MinimumLevel.Debug()
-                    .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "Logs", "log-{Date}.txt"))
-                    .CreateLogger();
-            }
-            else
-            {
-                config = new LoggerConfiguration()
-                    .MinimumLevel.Debug()
-                    .WriteTo.RollingFile(Path.Combine(StoragePath.StoragePath, "Logs", "log-{Date}.txt"))
-                    .CreateLogger();
-            }
+            ILogger config = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.RollingFile(Path.Combine(StoragePath.StoragePath.IsNullOrEmpty() ? env.ContentRootPath : StoragePath.StoragePath, "Logs", "log-{Date}.txt"))
+                .CreateLogger();
+
             Log.Logger = config;
-
-
-            //}
-            //if (env.IsProduction())
-            //{
-            //    Log.Logger = new LoggerConfiguration()
-            //        .MinimumLevel.Debug()
-            //        .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "Logs", "log-{Date}.txt"))
-            //        .WriteTo.SQLite("Ombi.db", "Logs", LogEventLevel.Debug)
-            //        .CreateLogger();
-            //}
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -78,9 +56,6 @@ namespace Ombi
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            services.AddDbContext<OmbiContext>();
-
             services.AddIdentity<OmbiUser, IdentityRole>()
                 .AddEntityFrameworkStores<OmbiContext>()
                 .AddDefaultTokenProviders()
@@ -96,6 +71,8 @@ namespace Ombi
                 options.User.AllowedUserNameCharacters = string.Empty;
             });
 
+
+            services.AddHealthChecks();
             services.AddMemoryCache();
 
             services.AddJwtAuthentication(Configuration);
@@ -124,7 +101,6 @@ namespace Ombi
             {
                 x.UseSQLiteStorage(sqliteStorage);
                 x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
-                //x.UseConsole();
             });
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
@@ -152,6 +128,7 @@ namespace Ombi
             var ctx = serviceProvider.GetService<IOmbiContext>();
             loggerFactory.AddSerilog();
 
+            app.UseHealthChecks("/health");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -174,12 +151,21 @@ namespace Ombi
             {
                 // Generate a API Key
                 settings.ApiKey = Guid.NewGuid().ToString("N");
+                settings.CollectAnalyticData = true; // Since this is a first setup, enable analytical data collection
+                settings.Set = true;
+                ombiService.SaveSettings(settings);
+            }
+
+            if (!settings.Set)
+            {
+                settings.Set = true;
+                settings.CollectAnalyticData = true;
                 ombiService.SaveSettings(settings);
             }
 
             // Check if it's in the startup args
             var appConfig = serviceProvider.GetService<IApplicationConfigRepository>();
-            var baseUrl = appConfig.Get(ConfigurationTypes.BaseUrl).Result;
+            var baseUrl = appConfig.Get(ConfigurationTypes.BaseUrl);
             if (baseUrl != null)
             {
                 if (baseUrl.Value.HasValue())
@@ -199,7 +185,7 @@ namespace Ombi
                 app.UseHangfireDashboard(settings.BaseUrl.HasValue() ? $"{settings.BaseUrl}/hangfire" : "/hangfire",
                     new DashboardOptions
                     {
-                        Authorization = new[] {new HangfireAuthorizationFilter()}
+                        Authorization = new[] { new HangfireAuthorizationFilter() }
                     });
             }
 
@@ -209,7 +195,11 @@ namespace Ombi
             var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
             jobSetup.Setup();
             ctx.Seed();
-            
+            var settingsctx = serviceProvider.GetService<ISettingsContext>();
+            var externalctx = serviceProvider.GetService<IExternalContext>();
+            settingsctx.Seed();
+            externalctx.Seed();
+
             var provider = new FileExtensionContentTypeProvider { Mappings = { [".map"] = "application/octet-stream" } };
 
             app.UseStaticFiles(new StaticFileOptions()
@@ -223,14 +213,11 @@ namespace Ombi
             app.UseMiddleware<ApiKeyMiddlewear>();
 
             app.UseCors("MyPolicy");
-            //app.ApiKeyMiddlewear(app.ApplicationServices);
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
-
-
 
             app.UseMvc(routes =>
             {
@@ -242,8 +229,6 @@ namespace Ombi
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
             });
-
-            ombiService.Dispose();
         }
     }
 

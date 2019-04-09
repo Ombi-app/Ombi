@@ -14,5 +14,7 @@
         public const string RequestMusic = nameof(RequestMusic);
         public const string Disabled = nameof(Disabled);
         public const string ReceivesNewsletter = nameof(ReceivesNewsletter);
+        public const string ManageOwnRequests = nameof(ManageOwnRequests);
+        public const string EditCustomPage = nameof(EditCustomPage);
     }
 }

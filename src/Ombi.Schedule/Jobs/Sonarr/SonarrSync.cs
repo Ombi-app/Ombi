@@ -19,7 +19,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
 {
     public class SonarrSync : ISonarrSync
     {
-        public SonarrSync(ISettingsService<SonarrSettings> s, ISonarrApi api, ILogger<SonarrSync> l, IOmbiContext ctx)
+        public SonarrSync(ISettingsService<SonarrSettings> s, ISonarrApi api, ILogger<SonarrSync> l, IExternalContext ctx)
         {
             _settings = s;
             _api = api;
@@ -31,7 +31,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
         private readonly ISettingsService<SonarrSettings> _settings;
         private readonly ISonarrApi _api;
         private readonly ILogger<SonarrSync> _log;
-        private readonly IOmbiContext _ctx;
+        private readonly IExternalContext _ctx;
         
         public async Task Start()
         {

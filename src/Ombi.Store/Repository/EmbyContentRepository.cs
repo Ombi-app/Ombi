@@ -35,15 +35,15 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public class EmbyContentRepository : Repository<EmbyContent>, IEmbyContentRepository
+    public class EmbyContentRepository : ExternalRepository<EmbyContent>, IEmbyContentRepository
     {
 
-        public EmbyContentRepository(IOmbiContext db):base(db)
+        public EmbyContentRepository(IExternalContext db):base(db)
         {
             Db = db;
         }
 
-        private IOmbiContext Db { get; }
+        private IExternalContext Db { get; }
 
         
         public async Task<EmbyContent> GetByImdbId(string imdbid)
@@ -72,7 +72,7 @@ namespace Ombi.Store.Repository
         public async Task Update(EmbyContent existingContent)
         {
             Db.EmbyContent.Update(existingContent);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public IQueryable<EmbyEpisode> GetAllEpisodes()
@@ -83,7 +83,7 @@ namespace Ombi.Store.Repository
         public async Task<EmbyEpisode> Add(EmbyEpisode content)
         {
             await Db.EmbyEpisode.AddAsync(content);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
             return content;
         }
         public async Task<EmbyEpisode> GetEpisodeByEmbyId(string key)
@@ -94,12 +94,13 @@ namespace Ombi.Store.Repository
         public async Task AddRange(IEnumerable<EmbyEpisode> content)
         {
             Db.EmbyEpisode.AddRange(content);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public void UpdateWithoutSave(EmbyContent existingContent)
         {
             Db.EmbyContent.Update(existingContent);
         }
+        
     }
 }

@@ -185,7 +185,6 @@ namespace Ombi.Controllers.External
         /// <summary>
         /// Gets the plex servers.
         /// </summary>
-        /// <param name="u">The u.</param>
         /// <returns></returns>
         [HttpGet("servers")]
         [PowerUser]

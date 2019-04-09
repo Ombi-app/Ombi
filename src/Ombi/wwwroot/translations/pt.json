@@ -48,6 +48,7 @@
     "Requests": "Solicitações",
     "UserManagement": "Gerenciador de Usuário",
     "Issues": "Problemas",
+    "Vote": "Votar",
     "Donate": "Fazer uma doação!",
     "DonateLibraryMaintainer": "Doar para o Dono da Biblioteca",
     "DonateTooltip": "É assim que eu convenço a minha mulher a deixar-me passar o meu tempo livre desenvolvendo Ombi;)",
@@ -56,19 +57,6 @@
     "Welcome": "Bem-vindo, {{username}}",
     "UpdateDetails": "Detalhes da Atualização",
     "Logout": "Sair",
-    "Language": {
-      "English": "Inglês",
-      "French": "Francês",
-      "Spanish": "Espanhol",
-      "German": "Alemão",
-      "Italian": "Italiano",
-      "Danish": "Dinamarquês",
-      "Dutch": "Holandês",
-      "Norwegian": "Norueguês",
-      "BrazillianPortuguese": "Português (Brasil)",
-      "Polish": "Polonês",
-      "Swedish": "Swedish"
-    },
     "OpenMobileApp": "Abrir aplicativo do celular",
     "RecentlyAdded": "Recentemente adicionado"
   },
@@ -86,6 +74,7 @@
     "ViewOnEmby": "Assistir no Emby",
     "RequestAdded": "Pedido de {{title}} foi adicionado com sucesso",
     "Similar": "Semelhante",
+    "Refine": "Filtro",
     "Movies": {
       "PopularMovies": "Filmes populares",
       "UpcomingMovies": "Próximos filmes",
@@ -148,11 +137,11 @@
     "SortStatusAsc": "Status ▲",
     "SortStatusDesc": "Status ▼",
     "Remaining": {
-      "Quota": "{{remaining}}/{{total}} requests remaining",
-      "NextDays": "Another request will be added in {{time}} days",
-      "NextHours": "Another request will be added in {{time}} hours",
-      "NextMinutes": "Another request will be added in {{time}} minutes",
-      "NextMinute": "Another request will be added in {{time}} minute"
+      "Quota": "{{remaining}}/{{total}} solicitações restantes",
+      "NextDays": "Outro pedido será adicionado em {{time}} dias",
+      "NextHours": "Outro pedido será adicionado em {{time}} horas",
+      "NextMinutes": "Outro pedido será adicionado em {{time}} minutos",
+      "NextMinute": "Outro pedido será adicionado em {{time}} minuto"
     }
   },
   "Issues": {
@@ -182,11 +171,15 @@
     "PendingApproval": "Aprovação Pendente"
   },
   "UserManagment": {
-    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
-    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
-    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
+    "TvRemaining": "Tv: {{remaining}}/{{total}} restantes",
+    "MovieRemaining": "Filmes: {{remaining}}/{{total}} restantes",
+    "MusicRemaining": "Música: {{remaining}}/{{total}} restantes",
     "TvDue": "TV: {{date}}",
-    "MovieDue": "Movie: {{date}}",
-    "MusicDue": "Music: {{date}}"
+    "MovieDue": "Filme: {{date}}",
+    "MusicDue": "Música: {{date}}"
+  },
+  "Votes": {
+    "CompletedVotesTab": "Votado",
+    "VotesTab": "Votos necessários"
   }
 }

@@ -4,7 +4,9 @@ using EnsureThat;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
 using MimeKit;
+using MimeKit.Utils;
 using Ombi.Core.Settings;
+using Ombi.Helpers;
 using Ombi.Notifications.Models;
 using Ombi.Notifications.Templates;
 using Ombi.Settings.Settings.Models;
@@ -36,6 +38,15 @@ namespace Ombi.Notifications
 
                 var customization = await CustomizationSettings.GetSettingsAsync();
                 var html = email.LoadTemplate(model.Subject, model.Message, null, customization.Logo);
+                
+                var messageId = MimeUtils.GenerateMessageId();
+                if (customization.ApplicationUrl.HasValue())
+                {
+                    if (Uri.TryCreate(customization.ApplicationUrl, UriKind.RelativeOrAbsolute, out var url))
+                    {
+                        messageId = MimeUtils.GenerateMessageId(url.IdnHost);
+                    }
+                }
 
                 var textBody = string.Empty;
 
@@ -49,7 +60,8 @@ namespace Ombi.Notifications
                 var message = new MimeMessage
                 {
                     Body = body.ToMessageBody(),
-                    Subject = model.Subject
+                    Subject = model.Subject,
+                    MessageId = messageId
                 };
                 message.From.Add(new MailboxAddress(string.IsNullOrEmpty(settings.SenderName) ? settings.SenderAddress : settings.SenderName, settings.SenderAddress));
                 message.To.Add(new MailboxAddress(model.To, model.To));
@@ -83,22 +95,20 @@ namespace Ombi.Notifications
                     {
                         client.Authenticate(settings.Username, settings.Password);
                     }
-                    //Log.Info("sending message to {0} \r\n from: {1}\r\n Are we authenticated: {2}", message.To, message.From, client.IsAuthenticated);
+                    _log.LogDebug("sending message to {0} \r\n from: {1}\r\n Are we authenticated: {2}", message.To, message.From, client.IsAuthenticated);
                     await client.SendAsync(message);
                     await client.DisconnectAsync(true);
                 }
             }
             catch (Exception e)
             {
-                //Log.Error(e);
-                throw new InvalidOperationException(e.Message);
+                _log.LogError(e, "Exception when attempting to send an email");
+                throw;
             }
         }
 
         public async Task Send(NotificationMessage model, EmailNotificationSettings settings)
         {
-            try
-            {
                 EnsureArg.IsNotNullOrEmpty(settings.SenderAddress);
                 EnsureArg.IsNotNullOrEmpty(model.To);
                 EnsureArg.IsNotNullOrEmpty(model.Message);
@@ -120,8 +130,17 @@ namespace Ombi.Notifications
                     Subject = model.Subject
                 };
 
-                message.From.Add(new MailboxAddress(string.IsNullOrEmpty(settings.SenderName) ? settings.SenderAddress : settings.SenderName, settings.SenderAddress));
                 message.To.Add(new MailboxAddress(model.To, model.To));
+
+                await Send(message, settings);
+
+        }
+
+        public async Task Send(MimeMessage message, EmailNotificationSettings settings)
+        {
+            try
+            {
+                message.From.Add(new MailboxAddress(string.IsNullOrEmpty(settings.SenderName) ? settings.SenderAddress : settings.SenderName, settings.SenderAddress));
 
                 using (var client = new SmtpClient())
                 {

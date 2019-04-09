@@ -5,8 +5,8 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 import { TreeNode } from "primeng/primeng";
-import { FilterType, IAlbumRequest, IAlbumRequestModel, IAlbumUpdateModel, IChildRequests, IFilter, IMovieRequestModel, IMovieRequests,
-      IMovieUpdateModel, IRequestEngineResult, IRequestsViewModel, ITvRequests, ITvUpdateModel, OrderType } from "../interfaces";
+import { FilterType, IAlbumRequest, IAlbumRequestModel, IAlbumUpdateModel, IChildRequests, IDenyAlbumModel, IDenyMovieModel, IFilter,
+      IMovieRequestModel, IMovieRequests, IMovieUpdateModel, IRequestEngineResult, IRequestsViewModel, ITvDenyModel, ITvRequests, ITvUpdateModel, OrderType } from "../interfaces";
 import { ITvRequestViewModel } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
@@ -50,7 +50,7 @@ export class RequestService extends ServiceHelpers {
         return this.http.post<IRequestEngineResult>(`${this.url}Movie/Approve`, JSON.stringify(movie),  {headers: this.headers});
     }
 
-    public denyMovie(movie: IMovieUpdateModel): Observable<IRequestEngineResult> {
+    public denyMovie(movie: IDenyMovieModel): Observable<IRequestEngineResult> {
         return this.http.put<IRequestEngineResult>(`${this.url}Movie/Deny`, JSON.stringify(movie),  {headers: this.headers});
     }
 
@@ -118,7 +118,7 @@ export class RequestService extends ServiceHelpers {
         return this.http.put<IChildRequests>(`${this.url}tv/child`, JSON.stringify(child), {headers: this.headers});
     }
 
-    public denyChild(child: ITvUpdateModel): Observable<IRequestEngineResult> {
+    public denyChild(child: ITvDenyModel): Observable<IRequestEngineResult> {
         return this.http.put<IRequestEngineResult>(`${this.url}tv/deny`, JSON.stringify(child), {headers: this.headers});
     }
 
@@ -161,7 +161,7 @@ export class RequestService extends ServiceHelpers {
         return this.http.post<IRequestEngineResult>(`${this.url}music/Approve`, JSON.stringify(Album),  {headers: this.headers});
     }
 
-    public denyAlbum(Album: IAlbumUpdateModel): Observable<IRequestEngineResult> {
+    public denyAlbum(Album: IDenyAlbumModel): Observable<IRequestEngineResult> {
         return this.http.put<IRequestEngineResult>(`${this.url}music/Deny`, JSON.stringify(Album),  {headers: this.headers});
     }
 
@@ -182,7 +182,7 @@ export class RequestService extends ServiceHelpers {
     }
 
     public removeAlbumRequest(request: IAlbumRequest): any {
-        this.http.delete(`${this.url}music/${request.id}`, {headers: this.headers}).subscribe();
+        return this.http.delete(`${this.url}music/${request.id}`, {headers: this.headers});
     }
 
 }

@@ -10,12 +10,12 @@ namespace Ombi.Core.Rule.Rules.Search
 {
     public class LidarrAlbumCacheRule : SpecificRule, ISpecificRule<object>
     {
-        public LidarrAlbumCacheRule(IRepository<LidarrAlbumCache> db)
+        public LidarrAlbumCacheRule(IExternalRepository<LidarrAlbumCache> db)
         {
             _db = db;
         }
 
-        private readonly IRepository<LidarrAlbumCache> _db;
+        private readonly IExternalRepository<LidarrAlbumCache> _db;
 
         public Task<RuleResult> Execute(object objec)
         {

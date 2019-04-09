@@ -17,14 +17,18 @@ namespace Ombi.Store.Context
         {
             if (_created) return;
 
+
             _created = true;
+            Database.SetCommandTimeout(60);
             Database.Migrate();
         }
 
         public DbSet<NotificationTemplates> NotificationTemplates { get; set; }
-        public DbSet<GlobalSettings> Settings { get; set; }
+        public DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
         public DbSet<PlexServerContent> PlexServerContent { get; set; }
+        public DbSet<PlexSeasonsContent> PlexSeasonsContent { get; set; }
         public DbSet<PlexEpisode> PlexEpisode { get; set; }
+        public DbSet<GlobalSettings> Settings { get; set; }
         public DbSet<RadarrCache> RadarrCache { get; set; }
         public DbSet<CouchPotatoCache> CouchPotatoCache { get; set; }
         public DbSet<EmbyContent> EmbyContent { get; set; }
@@ -40,6 +44,7 @@ namespace Ombi.Store.Context
         public DbSet<IssueComments> IssueComments { get; set; }
         public DbSet<RequestLog> RequestLogs { get; set; }
         public DbSet<RecentlyAddedLog> RecentlyAddedLogs { get; set; }
+        public DbSet<Votes> Votes { get; set; }
 
 
         public DbSet<Audit> Audit { get; set; }
@@ -53,7 +58,7 @@ namespace Ombi.Store.Context
         public DbSet<RequestSubscription> RequestSubscription { get; set; }
         public DbSet<UserNotificationPreferences> UserNotificationPreferences { get; set; }
         public DbSet<UserQualityProfiles> UserQualityProfileses { get; set; }
-        public DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
+        public DbSet<RequestQueue> RequestQueue { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -84,66 +89,6 @@ namespace Ombi.Store.Context
 
         public void Seed()
         {
-
-            // Add the tokens
-            var fanArt = ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.FanartTv);
-            if (fanArt == null)
-            {
-                ApplicationConfigurations.Add(new ApplicationConfiguration
-                {
-                    Type = ConfigurationTypes.FanartTv,
-                    Value = "4b6d983efa54d8f45c68432521335f15"
-                });
-                SaveChanges();
-            }
-            var movieDb = ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.FanartTv);
-            if (movieDb == null)
-            {
-                ApplicationConfigurations.Add(new ApplicationConfiguration
-                {
-                    Type = ConfigurationTypes.TheMovieDb,
-                    Value = "b8eabaf5608b88d0298aa189dd90bf00"
-                });
-                SaveChanges();
-            }
-            var notification = ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.Notification);
-            if (notification == null)
-            {
-                ApplicationConfigurations.Add(new ApplicationConfiguration
-                {
-                    Type = ConfigurationTypes.Notification,
-                    Value = "4f0260c4-9c3d-41ab-8d68-27cb5a593f0e"
-                });
-                SaveChanges();
-            }
-
-            // VACUUM;
-            Database.ExecuteSqlCommand("VACUUM;");
-
-            // Make sure we have the roles
-            var newsletterRole = Roles.Where(x => x.Name == OmbiRoles.ReceivesNewsletter);
-            if (!newsletterRole.Any())
-            {
-                Roles.Add(new IdentityRole(OmbiRoles.ReceivesNewsletter)
-                {
-                    NormalizedName = OmbiRoles.ReceivesNewsletter.ToUpper()
-                });
-                SaveChanges();
-            }
-            var requestMusicRole = Roles.Where(x => x.Name == OmbiRoles.RequestMusic);
-            if (!requestMusicRole.Any())
-            {
-                Roles.Add(new IdentityRole(OmbiRoles.RequestMusic)
-                {
-                    NormalizedName = OmbiRoles.RequestMusic.ToUpper()
-                });
-                Roles.Add(new IdentityRole(OmbiRoles.AutoApproveMusic)
-                {
-                    NormalizedName = OmbiRoles.AutoApproveMusic.ToUpper()
-                });
-                SaveChanges();
-            }
-
             // Make sure we have the API User
             var apiUserExists = Users.Any(x => x.UserName.Equals("Api", StringComparison.CurrentCultureIgnoreCase));
             if (!apiUserExists)
@@ -164,6 +109,7 @@ namespace Ombi.Store.Context
             var allAgents = Enum.GetValues(typeof(NotificationAgent)).Cast<NotificationAgent>().ToList();
             var allTypes = Enum.GetValues(typeof(NotificationType)).Cast<NotificationType>().ToList();
 
+            var needToSave = false;
             foreach (var agent in allAgents)
             {
                 foreach (var notificationType in allTypes)
@@ -173,6 +119,8 @@ namespace Ombi.Store.Context
                         // We already have this
                         continue;
                     }
+
+                    needToSave = true;
                     NotificationTemplates notificationToAdd;
                     switch (notificationType)
                     {
@@ -229,7 +177,15 @@ namespace Ombi.Store.Context
                             };
                             break;
                         case NotificationType.ItemAddedToFaultQueue:
-                            continue;
+                            notificationToAdd = new NotificationTemplates
+                            {
+                                NotificationType = notificationType,
+                                Message = "Hello! The user '{UserName}' has requested {Title} but it could not be added. This has been added into the requests queue and will keep retrying",
+                                Subject = "Item Added To Retry Queue",
+                                Agent = agent,
+                                Enabled = true,
+                            };
+                            break;
                         case NotificationType.WelcomeEmail:
                             notificationToAdd = new NotificationTemplates
                             {
@@ -279,7 +235,11 @@ namespace Ombi.Store.Context
                     NotificationTemplates.Add(notificationToAdd);
                 }
             }
-            SaveChanges();
+
+            if (needToSave)
+            {
+                SaveChanges();
+            }
         }
     }
 }
