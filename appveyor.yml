@@ -22,7 +22,12 @@ build_script:
   - ps: ./build.ps1 --settings_skipverification=true
  # - dotnet sonarscanner end /d:sonar.login="%sonarrcloudtoken%"
 
-test: true
+test:
+  # only assemblies to test
+  assemblies:
+    only:
+      - '**\*.Tests.dll'
+
 
 after_build:
 - cmd: >-
