@@ -156,6 +156,7 @@ Task("Package")
 });
 
 Task("Publish")
+    .IsDependentOn("Run-Unit-Tests")
     .IsDependentOn("PrePublish")
     .IsDependentOn("Publish-Windows")
     .IsDependentOn("Publish-Windows-32bit")
@@ -251,7 +252,7 @@ Task("Publish-Linux-ARM-64Bit")
 Task("Run-Unit-Tests")
     .Does(() =>
 {  
-	DotNetCoreBuild(csProj, buildSettings);
+    DotNetCoreTest(projDir);
 });
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
