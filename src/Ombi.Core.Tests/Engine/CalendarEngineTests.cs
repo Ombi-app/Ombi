@@ -181,7 +181,7 @@ namespace Ombi.Core.Tests.Engine
                 yield return new TestCaseData(new AvailabilityTestModel
                 {
                     Approved = true
-                }).Returns("teal").SetName("Calendar_ApprovedRequest");
+                }).Returns("blue").SetName("Calendar_ApprovedRequest");
             }
         }
     }

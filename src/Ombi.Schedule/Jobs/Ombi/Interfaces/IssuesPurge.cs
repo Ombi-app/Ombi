@@ -28,9 +28,10 @@ namespace Ombi.Schedule.Jobs.Ombi
                 return;
             }
 
-            var deletionDate = DateTime.Now.AddDays(settings.DaysAfterResolvedToDelete).Date;
+            var today = DateTime.UtcNow.Date;
+            
             var resolved = _issuesRepository.GetAll().Where(x => x.Status == IssueStatus.Resolved);
-            var toDelete = resolved.Where(x => x.ResovledDate.HasValue && x.ResovledDate.Value.Date >= deletionDate);
+            var toDelete = resolved.Where(x => x.ResovledDate.HasValue && (today - x.ResovledDate.Value.Date).TotalDays >= settings.DaysAfterResolvedToDelete);
 
             foreach (var d in toDelete)
             {

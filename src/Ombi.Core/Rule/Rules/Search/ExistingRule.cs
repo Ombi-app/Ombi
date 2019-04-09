@@ -30,7 +30,6 @@ namespace Ombi.Core.Rule.Rules.Search
                 var movieRequests = await Movie.GetRequestAsync(obj.Id);
                 if (movieRequests != null) // Do we already have a request for this?
                 {
-
                     obj.Requested = true;
                     obj.RequestId = movieRequests.Id;
                     obj.Approved = movieRequests.Approved;
