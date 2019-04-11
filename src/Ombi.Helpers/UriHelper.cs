@@ -35,6 +35,11 @@ namespace Ombi.Helpers
             }
             else
             {
+                if(val.EndsWith("/"))
+                {
+                    // Remove a trailing slash, since the URIBuilder adds one
+                    val = val.Remove(val.Length - 1, 1);
+                }
                 uri = new UriBuilder(Http, val);
             }
 
@@ -59,24 +64,34 @@ namespace Ombi.Helpers
             }
             var uri = new UriBuilder();
 
-            if (val.StartsWith("http://", StringComparison.Ordinal))
+            if (val.StartsWith("http://", StringComparison.InvariantCultureIgnoreCase))
             {
                 var split = val.Split('/');
                 uri = split.Length >= 4 ? new UriBuilder(Http, split[2], port, "/" + split[3]) : new UriBuilder(new Uri($"{val}:{port}"));
             }
-            else if (val.StartsWith("https://", StringComparison.Ordinal))
+            else if (val.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase))
             {
                 var split = val.Split('/');
                 uri = split.Length >= 4
                     ? new UriBuilder(Https, split[2], port, "/" + split[3])
                     : new UriBuilder(Https, split[2], port);
             }
-            else if (ssl)
+            else if ((ssl || port == 443) && port != 80)
             {
+                if (val.EndsWith("/"))
+                {
+                    // Remove a trailing slash, since the URIBuilder adds one
+                    val = val.Remove(val.Length - 1, 1);
+                }
                 uri = new UriBuilder(Https, val, port);
             }
             else
             {
+                if (val.EndsWith("/"))
+                {
+                    // Remove a trailing slash, since the URIBuilder adds one
+                    val = val.Remove(val.Length - 1, 1);
+                }
                 uri = new UriBuilder(Http, val, port);
             }
 
