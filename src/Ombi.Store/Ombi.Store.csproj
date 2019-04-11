@@ -19,9 +19,6 @@
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="1.1.9" />
   </ItemGroup>
   <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
   </ItemGroup>
   <ItemGroup>

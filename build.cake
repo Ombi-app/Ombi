@@ -135,7 +135,7 @@ Task("Gulp Publish")
 Task("TSLint")
     .Does(() =>
 {
-	// Yarn.FromPath(uiProjectDir).RunScript("lint");
+	Yarn.FromPath(uiProjectDir).RunScript("lint");
 });
 
 Task("PrePublish")
@@ -263,12 +263,33 @@ Task("Run-Unit-Tests")
         DotNetCoreTest(file.FullPath, settings);
     }
 });
+
+Task("Run-Server-Build")
+    .Does(() => 
+    {
+        var settings = new DotNetCoreBuildSettings
+        {
+            Framework = frameworkVer,
+            Configuration = "Release",
+            OutputDirectory = Directory(buildDir)
+        };
+        DotNetCoreBuild(csProj, settings);
+    });
+
+Task("Run-UI-Build")
+	.IsDependentOn("PrePublish");
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
  
 Task("Default")
     .IsDependentOn("Publish");
+
+Task("Build")
+    .IsDependentOn("SetVersionInfo")
+    .IsDependentOn("Run-Unit-Tests")
+    .IsDependentOn("Run-Server-Build")
+    .IsDependentOn("Run-UI-Build");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION
