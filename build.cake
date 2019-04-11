@@ -1,10 +1,9 @@
 
-#tool "nuget:?package=GitVersion.CommandLine"
-#addin "Cake.Gulp"
-#addin "SharpZipLib"
-#addin nuget:?package=Cake.Compression&version=0.1.4
+#tool "nuget:?package=GitVersion.CommandLine&version=4.0.0"
+#addin nuget:?package=SharpZipLib&version=1.1.0
+#addin nuget:?package=Cake.Compression&version=0.2.2
 #addin "Cake.Incubator&version=3.1.0"
-#addin "Cake.Yarn"
+#addin nuget:?package=Cake.Yarn&version=0.4.5
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -288,8 +287,8 @@ Task("Default")
 Task("Build")
     .IsDependentOn("SetVersionInfo")
     .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Run-Server-Build")
-    .IsDependentOn("Run-UI-Build");
+    .IsDependentOn("Run-Server-Build");
+    // .IsDependentOn("Run-UI-Build");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION
