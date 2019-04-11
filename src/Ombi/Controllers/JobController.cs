@@ -22,27 +22,14 @@ namespace Ombi.Controllers
     [ApiController]
     public class JobController : ControllerBase
     {
-        public JobController(IOmbiAutomaticUpdater updater, IPlexUserImporter userImporter,
-            ICacheService mem, IEmbyUserImporter embyImporter, IPlexContentSync plexContentSync,
-            IEmbyContentSync embyContentSync, INewsletterJob newsletter)
+        public JobController(IOmbiAutomaticUpdater updater, ICacheService mem)
         {
             _updater = updater;
-            _plexUserImporter = userImporter;
-            _embyUserImporter = embyImporter;
             _memCache = mem;
-            _plexContentSync = plexContentSync;
-            _embyContentSync = embyContentSync;
-            _newsletterJob = newsletter;
         }
 
         private readonly IOmbiAutomaticUpdater _updater;
-        private readonly IPlexUserImporter _plexUserImporter;
-        private readonly IEmbyUserImporter _embyUserImporter;
         private readonly ICacheService _memCache;
-        private readonly IPlexContentSync _plexContentSync;
-        private readonly IEmbyContentSync _embyContentSync;
-        private readonly INewsletterJob _newsletterJob;
-
         /// <summary>
         /// Runs the update job
         /// </summary>
