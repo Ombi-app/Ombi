@@ -21,12 +21,12 @@ install:
   - cmd: tsc -v
 build_script:
   - ps: |
-      $deployBranches = {
+      $deployBranches =
         "feature/v4",
         "develop",
-        "master"
-      }
-      If(($env:APPVEYOR_REPO_BRANCH -in $deployBranches -Or $env:APPVEYOR_REPO_COMMIT_MESSAGE -Match '!deploy') -And $env:APPVEYOR_REPO_COMMIT_MESSAGE -notlike '!build') {
+        "master";
+
+      If(($env:APPVEYOR_REPO_BRANCH -in $deployBranches -Or $env:APPVEYOR_REPO_COMMIT_MESSAGE -Match '!deploy') -And $env:APPVEYOR_REPO_COMMIT_MESSAGE -NotMatch '!build') {
         Write-Output "This is a deployment build"
         ./build.ps1 --settings_skipverification=true --target=build
       }
@@ -34,7 +34,7 @@ build_script:
       {
         Write-Output "This is a not a deployment build"
         ./build.ps1 --settings_skipverification=true --target=build
-      }    
+      }   
 
 skip_commits:
   files:
