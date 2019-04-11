@@ -18,7 +18,7 @@ namespace Ombi.Core.Tests
         {
             get
             {
-                yield return new TestCaseData("this!is^a*string",new []{'!','^','*'}).Returns("thisisastring").SetName("Basic Strip Multipe Chars");
+                yield return new TestCaseData("this!is^a*string",new []{'!','^','*'}).Returns("thisisastring").SetName("Basic Strip Multiple Chars");
                 yield return new TestCaseData("What is this madness'",new []{'\'','^','*'}).Returns("What is this madness").SetName("Basic Strip Multipe Chars");
             }
         }
