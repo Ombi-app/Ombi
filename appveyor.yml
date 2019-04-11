@@ -33,7 +33,7 @@ build_script:
       }
       Else 
       {
-        $emv:Deploy = false
+        $env:Deploy = false
         Write-Output "This is a not a deployment build"
         ./build.ps1 --settings_skipverification=true --target=build
       }   
