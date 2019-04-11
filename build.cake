@@ -135,7 +135,7 @@ Task("Gulp Publish")
 Task("TSLint")
     .Does(() =>
 {
-	Yarn.FromPath(uiProjectDir).RunScript("lint");
+	//Yarn.FromPath(uiProjectDir).RunScript("lint");
 });
 
 Task("PrePublish")
