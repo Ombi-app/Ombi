@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
@@ -7,19 +8,19 @@ namespace Ombi.Schedule
 {
     public class OmbiQuartz
     {
-        private IScheduler _scheduler;
+        protected IScheduler _scheduler { get; set; }
         
         public static IScheduler Scheduler => Instance._scheduler;
 
         // Singleton
-        private static OmbiQuartz _instance;
+        protected static OmbiQuartz _instance;
 
         /// <summary>
         /// Singleton
         /// </summary>
         public static OmbiQuartz Instance => _instance ?? (_instance = new OmbiQuartz());
 
-        private OmbiQuartz()
+        protected OmbiQuartz()
         {
             Init();
         }
@@ -35,7 +36,7 @@ namespace Ombi.Schedule
             return Scheduler;
         }
 
-        public async void AddJob<T>(string name, string group, string cronExpression, Dictionary<string, string> jobData = null)
+        public async Task AddJob<T>(string name, string group, string cronExpression, Dictionary<string, string> jobData = null)
             where T : IJob
         {
             var jobBuilder = JobBuilder.Create<T>()
@@ -52,16 +53,18 @@ namespace Ombi.Schedule
             
             ITrigger jobTrigger = TriggerBuilder.Create()
                 .WithIdentity(name + "Trigger", group)
-
-                .StartNow()
-
                 .WithCronSchedule(cronExpression)
                 .Build();
             
             await Scheduler.ScheduleJob(job, jobTrigger);
         }
+
+        public static async Task TriggerJob(string jobName)
+        {
+            await Scheduler.TriggerJob(new JobKey(jobName));
+        }
         
-        public static async void Start()
+        public static async Task Start()
         {
             await Scheduler.Start();
         }

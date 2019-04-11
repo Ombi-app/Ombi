@@ -48,9 +48,10 @@ namespace Ombi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("update")]
-        public bool ForceUpdate()
+        public async Task<bool> ForceUpdate()
         {
-            //BackgroundJob.Enqueue(() => _updater.Update(null));
+
+            await OmbiQuartz.TriggerJob(nameof(IOmbiAutomaticUpdater));
             return true;
         }
 
@@ -97,9 +98,9 @@ namespace Ombi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("plexuserimporter")]
-        public bool PlexUserImporter()
+        public async Task<bool> PlexUserImporter()
         {
-            //BackgroundJob.Enqueue(() => _plexUserImporter.Start()); //TODO
+            await OmbiQuartz.TriggerJob(nameof(IPlexUserImporter));
             return true;
         }
 
@@ -108,9 +109,9 @@ namespace Ombi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("embyuserimporter")]
-        public bool EmbyUserImporter()
+        public async Task<bool> EmbyUserImporter()
         {
-            //BackgroundJob.Enqueue(() => _embyUserImporter.Start()); // TODO
+            await OmbiQuartz.TriggerJob(nameof(IEmbyUserImporter));
             return true;
         }
 
@@ -141,9 +142,9 @@ namespace Ombi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("embycontentcacher")]
-        public bool StartEmbyContentCacher()
+        public async Task<bool> StartEmbyContentCacher()
         {
-            //BackgroundJob.Enqueue(() => _embyContentSync.Start()); // TODO
+            await OmbiQuartz.TriggerJob(nameof(IEmbyContentSync));
             return true;
         }
 
@@ -152,9 +153,9 @@ namespace Ombi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("newsletter")]
-        public bool StartNewsletter()
+        public async Task<bool> StartNewsletter()
         {
-            //BackgroundJob.Enqueue(() => _newsletterJob.Start()); // TODO
+            await OmbiQuartz.TriggerJob(nameof(INewsletterJob));
             return true;
         }
     }

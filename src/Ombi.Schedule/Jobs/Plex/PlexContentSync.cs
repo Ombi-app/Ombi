@@ -49,7 +49,7 @@ namespace Ombi.Schedule.Jobs.Plex
     public class PlexContentSync : IPlexContentSync
     {
         public PlexContentSync(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentSync> logger, IPlexContentRepository repo,
-            IPlexEpisodeSync epsiodeSync, IRefreshMetadata metadataRefresh, IPlexAvailabilityChecker checker)
+            IPlexEpisodeSync epsiodeSync, IRefreshMetadata metadataRefresh)
         {
             Plex = plex;
             PlexApi = plexApi;
@@ -57,7 +57,6 @@ namespace Ombi.Schedule.Jobs.Plex
             Repo = repo;
             EpisodeSync = epsiodeSync;
             Metadata = metadataRefresh;
-            Checker = checker;
             Plex.ClearCache();
         }
 
@@ -67,7 +66,6 @@ namespace Ombi.Schedule.Jobs.Plex
         private IPlexContentRepository Repo { get; }
         private IPlexEpisodeSync EpisodeSync { get; }
         private IRefreshMetadata Metadata { get; }
-        private IPlexAvailabilityChecker Checker { get; }
 
         public async Task Execute(IJobExecutionContext context)
         {
@@ -105,7 +103,8 @@ namespace Ombi.Schedule.Jobs.Plex
             if (!recentlyAddedSearch)
             {
                 Logger.LogInformation("Starting EP Cacher");
-                //BackgroundJob.Enqueue(() => EpisodeSync.Start()); //TODO
+
+                await OmbiQuartz.TriggerJob(nameof(IPlexEpisodeSync));
             }
 
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
@@ -116,7 +115,8 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if ((processedContent?.HasProcessedEpisodes ?? false) && recentlyAddedSearch)
             {
-                //BackgroundJob.Enqueue(() => Checker.Start()); // TODO
+
+                await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker));
             }
         }
 

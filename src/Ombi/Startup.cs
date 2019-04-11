@@ -123,7 +123,7 @@ namespace Ombi
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
 
-            app.UseQuartz();
+            app.UseQuartz().GetAwaiter().GetResult();
 
             var ctx = serviceProvider.GetService<IOmbiContext>();
             loggerFactory.AddSerilog();

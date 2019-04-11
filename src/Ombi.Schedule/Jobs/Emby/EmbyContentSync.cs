@@ -21,22 +21,18 @@ namespace Ombi.Schedule.Jobs.Emby
     public class EmbyContentSync : IEmbyContentSync
     {
         public EmbyContentSync(ISettingsService<EmbySettings> settings, IEmbyApi api, ILogger<EmbyContentSync> logger,
-            IEmbyContentRepository repo, IEmbyEpisodeSync epSync, IRefreshMetadata metadata)
+            IEmbyContentRepository repo)
         {
             _logger = logger;
             _settings = settings;
             _api = api;
             _repo = repo;
-            _episodeSync = epSync;
-            _metadata = metadata;
         }
 
         private readonly ILogger<EmbyContentSync> _logger;
         private readonly ISettingsService<EmbySettings> _settings;
         private readonly IEmbyApi _api;
         private readonly IEmbyContentRepository _repo;
-        private readonly IEmbyEpisodeSync _episodeSync;
-        private readonly IRefreshMetadata _metadata;
 
 
         public async Task Execute(IJobExecutionContext job)
@@ -58,6 +54,10 @@ namespace Ombi.Schedule.Jobs.Emby
             }
 
             // Episodes
+
+            await OmbiQuartz.TriggerJob(nameof(IEmbyEpisodeSync));
+
+            await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata));
             //BackgroundJob.Enqueue(() => _episodeSync.Start());
             //BackgroundJob.Enqueue(() => _metadata.Start());
         }

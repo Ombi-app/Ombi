@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Ombi.Core.Settings;
 using Ombi.Schedule.Jobs;
@@ -38,7 +39,7 @@ namespace Ombi.Schedule
         //        .Build();
         //}
 
-        public static void UseQuartz(this IApplicationBuilder app)
+        public static async Task UseQuartz(this IApplicationBuilder app)
         {
             // Job Factory through IOC container
             var jobFactory = (IJobFactory)app.ApplicationServices.GetService(typeof(IJobFactory));
@@ -48,47 +49,47 @@ namespace Ombi.Schedule
             OmbiQuartz.Instance.UseJobFactory(jobFactory);
 
             // Run Quartz
-            OmbiQuartz.Start();
+            await OmbiQuartz.Start();
 
             // Run configuration
-            AddPlex(s);
-            AddEmby(s);
-            AddDvrApps(s);
-            AddSystem(s);
+            await AddPlex(s);
+            await AddEmby(s);
+            await AddDvrApps(s);
+            await AddSystem(s);
 
         }
 
-        private static void AddSystem(JobSettings s)
+        private static async Task AddSystem(JobSettings s)
         {
-            OmbiQuartz.Instance.AddJob<IRefreshMetadata>(nameof(IRefreshMetadata), "System", JobSettingsHelper.RefreshMetadata(s));
-            OmbiQuartz.Instance.AddJob<IIssuesPurge>(nameof(IIssuesPurge), "System", JobSettingsHelper.IssuePurge(s));
+            await OmbiQuartz.Instance.AddJob<IRefreshMetadata>(nameof(IRefreshMetadata), "System", JobSettingsHelper.RefreshMetadata(s));
+            await OmbiQuartz.Instance.AddJob<IIssuesPurge>(nameof(IIssuesPurge), "System", JobSettingsHelper.IssuePurge(s));
             //OmbiQuartz.Instance.AddJob<IOmbiAutomaticUpdater>(nameof(IOmbiAutomaticUpdater), "System", JobSettingsHelper.Updater(s));
-            OmbiQuartz.Instance.AddJob<INewsletterJob>(nameof(INewsletterJob), "System", JobSettingsHelper.Newsletter(s));
-            OmbiQuartz.Instance.AddJob<IResendFailedRequests>(nameof(IResendFailedRequests), "System", JobSettingsHelper.ResendFailedRequests(s));
-            OmbiQuartz.Instance.AddJob<IMediaDatabaseRefresh>(nameof(IMediaDatabaseRefresh), "System", JobSettingsHelper.MediaDatabaseRefresh(s));
+            await OmbiQuartz.Instance.AddJob<INewsletterJob>(nameof(INewsletterJob), "System", JobSettingsHelper.Newsletter(s));
+            await OmbiQuartz.Instance.AddJob<IResendFailedRequests>(nameof(IResendFailedRequests), "System", JobSettingsHelper.ResendFailedRequests(s));
+            await OmbiQuartz.Instance.AddJob<IMediaDatabaseRefresh>(nameof(IMediaDatabaseRefresh), "System", JobSettingsHelper.MediaDatabaseRefresh(s));
         }
 
-        private static void AddDvrApps(JobSettings s)
+        private static async Task AddDvrApps(JobSettings s)
         {
-            OmbiQuartz.Instance.AddJob<ISonarrSync>(nameof(ISonarrSync), "DVR", JobSettingsHelper.Sonarr(s));
-            OmbiQuartz.Instance.AddJob<IRadarrSync>(nameof(IRadarrSync), "DVR", JobSettingsHelper.Radarr(s));
-            OmbiQuartz.Instance.AddJob<ICouchPotatoSync>(nameof(ICouchPotatoSync), "DVR", JobSettingsHelper.CouchPotato(s));
-            OmbiQuartz.Instance.AddJob<ISickRageSync>(nameof(ISickRageSync), "DVR", JobSettingsHelper.SickRageSync(s));
-            OmbiQuartz.Instance.AddJob<ILidarrArtistSync>(nameof(ILidarrArtistSync), "DVR", JobSettingsHelper.LidarrArtistSync(s));
+            await OmbiQuartz.Instance.AddJob<ISonarrSync>(nameof(ISonarrSync), "DVR", JobSettingsHelper.Sonarr(s));
+            await OmbiQuartz.Instance.AddJob<IRadarrSync>(nameof(IRadarrSync), "DVR", JobSettingsHelper.Radarr(s));
+            await OmbiQuartz.Instance.AddJob<ICouchPotatoSync>(nameof(ICouchPotatoSync), "DVR", JobSettingsHelper.CouchPotato(s));
+            await OmbiQuartz.Instance.AddJob<ISickRageSync>(nameof(ISickRageSync), "DVR", JobSettingsHelper.SickRageSync(s));
+            await OmbiQuartz.Instance.AddJob<ILidarrArtistSync>(nameof(ILidarrArtistSync), "DVR", JobSettingsHelper.LidarrArtistSync(s));
         }
 
-        private static void AddPlex(JobSettings s)
+        private static async Task AddPlex(JobSettings s)
         {
-            OmbiQuartz.Instance.AddJob<IPlexContentSync>(nameof(IPlexContentSync), "Plex", JobSettingsHelper.PlexContent(s), new Dictionary<string, string> { { "recentlyAddedSearch", "false" } });
-            OmbiQuartz.Instance.AddJob<IPlexContentSync>(nameof(IPlexContentSync) + "RecentlyAdded", "Plex", JobSettingsHelper.PlexContent(s), new Dictionary<string, string> { { "recentlyAddedSearch", "true" } });
-            OmbiQuartz.Instance.AddJob<IPlexRecentlyAddedSync>(nameof(IPlexRecentlyAddedSync), "Plex", JobSettingsHelper.PlexRecentlyAdded(s));
-            OmbiQuartz.Instance.AddJob<IPlexUserImporter>(nameof(IPlexUserImporter), "Plex", JobSettingsHelper.UserImporter(s));
+            await OmbiQuartz.Instance.AddJob<IPlexContentSync>(nameof(IPlexContentSync), "Plex", JobSettingsHelper.PlexContent(s), new Dictionary<string, string> { { "recentlyAddedSearch", "false" } });
+            await OmbiQuartz.Instance.AddJob<IPlexContentSync>(nameof(IPlexContentSync) + "RecentlyAdded", "Plex", JobSettingsHelper.PlexContent(s), new Dictionary<string, string> { { "recentlyAddedSearch", "true" } });
+            await OmbiQuartz.Instance.AddJob<IPlexRecentlyAddedSync>(nameof(IPlexRecentlyAddedSync), "Plex", JobSettingsHelper.PlexRecentlyAdded(s));
+            await OmbiQuartz.Instance.AddJob<IPlexUserImporter>(nameof(IPlexUserImporter), "Plex", JobSettingsHelper.UserImporter(s));
         }
 
-        private static void AddEmby(JobSettings s)
+        private static async Task AddEmby(JobSettings s)
         {
-            OmbiQuartz.Instance.AddJob<IEmbyContentSync>(nameof(IEmbyContentSync), "Emby", JobSettingsHelper.EmbyContent(s));
-            OmbiQuartz.Instance.AddJob<IEmbyUserImporter>(nameof(IEmbyUserImporter), "Emby", JobSettingsHelper.UserImporter(s));
+            await OmbiQuartz.Instance.AddJob<IEmbyContentSync>(nameof(IEmbyContentSync), "Emby", JobSettingsHelper.EmbyContent(s));
+            await OmbiQuartz.Instance.AddJob<IEmbyUserImporter>(nameof(IEmbyUserImporter), "Emby", JobSettingsHelper.UserImporter(s));
         }
     }
 }

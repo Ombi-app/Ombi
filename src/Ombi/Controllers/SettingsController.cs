@@ -27,6 +27,7 @@ using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Api.Github;
 using Ombi.Core.Engine;
+using Ombi.Schedule;
 
 namespace Ombi.Controllers
 {
@@ -44,7 +45,6 @@ namespace Ombi.Controllers
             IMapper mapper,
             INotificationTemplatesRepository templateRepo,
             IEmbyApi embyApi,
-            IRadarrSync radarrSync,
             ICacheService memCache,
             IGithubApi githubApi,
             IRecentlyAddedEngine engine)
@@ -53,7 +53,6 @@ namespace Ombi.Controllers
             Mapper = mapper;
             TemplateRepository = templateRepo;
             _embyApi = embyApi;
-            _radarrSync = radarrSync;
             _cache = memCache;
             _githubApi = githubApi;
             _recentlyAdded = engine;
@@ -63,7 +62,6 @@ namespace Ombi.Controllers
         private IMapper Mapper { get; }
         private INotificationTemplatesRepository TemplateRepository { get; }
         private readonly IEmbyApi _embyApi;
-        private readonly IRadarrSync _radarrSync;
         private readonly ICacheService _cache;
         private readonly IGithubApi _githubApi;
         private readonly IRecentlyAddedEngine _recentlyAdded;
@@ -387,7 +385,8 @@ namespace Ombi.Controllers
             {
                 _cache.Remove(CacheKeys.RadarrRootProfiles);
                 _cache.Remove(CacheKeys.RadarrQualityProfiles);
-                //BackgroundJob.Enqueue(() => _radarrSync.CacheContent()); // TODO
+
+                await OmbiQuartz.TriggerJob(nameof(IRadarrSync));
             }
             return result;
         }

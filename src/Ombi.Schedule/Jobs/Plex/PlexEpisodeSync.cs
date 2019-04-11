@@ -20,13 +20,12 @@ namespace Ombi.Schedule.Jobs.Plex
     public class PlexEpisodeSync : IPlexEpisodeSync
     {
         public PlexEpisodeSync(ISettingsService<PlexSettings> s, ILogger<PlexEpisodeSync> log, IPlexApi plexApi,
-            IPlexContentRepository repo, IPlexAvailabilityChecker a)
+            IPlexContentRepository repo)
         {
             _settings = s;
             _log = log;
             _api = plexApi;
             _repo = repo;
-            _availabilityChecker = a;
             _settings.ClearCache();
         }
 
@@ -34,7 +33,6 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly ILogger<PlexEpisodeSync> _log;
         private readonly IPlexApi _api;
         private readonly IPlexContentRepository _repo;
-        private readonly IPlexAvailabilityChecker _availabilityChecker;
 
         public async Task Execute(IJobExecutionContext job)
         {
@@ -57,6 +55,8 @@ namespace Ombi.Schedule.Jobs.Plex
                 _log.LogError(LoggingEvents.Cacher, e, "Caching Episodes Failed");
             }
 
+
+            await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker));
             //BackgroundJob.Enqueue(() => _availabilityChecker.Start()); // TODO
         }
 

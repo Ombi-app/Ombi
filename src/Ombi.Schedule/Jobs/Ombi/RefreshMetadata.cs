@@ -23,8 +23,7 @@ namespace Ombi.Schedule.Jobs.Ombi
     {
         public RefreshMetadata(IPlexContentRepository plexRepo, IEmbyContentRepository embyRepo,
             ILogger<RefreshMetadata> log, ITvMazeApi tvApi, ISettingsService<PlexSettings> plexSettings,
-            IMovieDbApi movieApi, ISettingsService<EmbySettings> embySettings, IPlexAvailabilityChecker plexAvailability, IEmbyAvaliabilityChecker embyAvaliability,
-            IEmbyApi embyApi)
+            IMovieDbApi movieApi, ISettingsService<EmbySettings> embySettings, IEmbyApi embyApi)
         {
             _plexRepo = plexRepo;
             _embyRepo = embyRepo;
@@ -33,15 +32,11 @@ namespace Ombi.Schedule.Jobs.Ombi
             _tvApi = tvApi;
             _plexSettings = plexSettings;
             _embySettings = embySettings;
-            _plexAvailabilityChecker = plexAvailability;
-            _embyAvaliabilityChecker = embyAvaliability;
             _embyApi = embyApi;
         }
 
         private readonly IPlexContentRepository _plexRepo;
         private readonly IEmbyContentRepository _embyRepo;
-        private readonly IPlexAvailabilityChecker _plexAvailabilityChecker;
-        private readonly IEmbyAvaliabilityChecker _embyAvaliabilityChecker;
         private readonly ILogger _log;
         private readonly IMovieDbApi _movieApi;
         private readonly ITvMazeApi _tvApi;
@@ -94,12 +89,12 @@ namespace Ombi.Schedule.Jobs.Ombi
             {
                 if (plexSettings.Enable)
                 {
-                    //BackgroundJob.Enqueue(() => _plexAvailabilityChecker.Start()); // TODO
+                    await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker));
                 }
 
                 if (embySettings.Enable)
                 {
-                    //BackgroundJob.Enqueue(() => _embyAvaliabilityChecker.Start()); // TODO
+                    await OmbiQuartz.TriggerJob(nameof(IEmbyAvaliabilityChecker));
 
                 }
             }
