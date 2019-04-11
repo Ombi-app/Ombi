@@ -26,11 +26,11 @@ build_script:
         'develop' = $true,
         'master' = $true
       }
-      if(($env:APPVEYOR_REPO_BRANCH -in $deployBranches || $env:APPVEYOR_REPO_COMMIT_MESSAGE -Match '!deploy') && $env:APPVEYOR_REPO_COMMIT_MESSAGE -notlike '!build') {
+      If(($env:APPVEYOR_REPO_BRANCH -in $deployBranches -Or $env:APPVEYOR_REPO_COMMIT_MESSAGE -Match '!deploy') -And $env:APPVEYOR_REPO_COMMIT_MESSAGE -notlike '!build') {
         Write-Output "This is a deployment build"
         ./build.ps1 --settings_skipverification=true --target=build
       }
-      else 
+      Else 
       {
         Write-Output "This is a not a deployment build"
         ./build.ps1 --settings_skipverification=true --target=build
