@@ -251,8 +251,17 @@ Task("Publish-Linux-ARM-64Bit")
 
 Task("Run-Unit-Tests")
     .Does(() =>
-{  
-    DotNetCoreTest(projDir);
+{    
+    var settings = new DotNetCoreTestSettings
+    {
+        ArgumentCustomization = args => args.Append("--logger \"trx;LogFileName=Test.trx\""),
+        Configuration = "Release"
+    };
+    var projectFiles = GetFiles("./**/*Tests.csproj");
+    foreach(var file in projectFiles)
+    {
+        DotNetCoreTest(file.FullPath, settings);
+    }
 });
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS

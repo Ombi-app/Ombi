@@ -48,7 +48,11 @@ after_build:
 
     
     appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.2\linux-arm64.tar.gz"
-    
+
+- ps: >-
+  $wc = New-Object 'System.Net.WebClient'
+
+  $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\src\**\TestResults\Test*.trx))
     
 
 #cache:
