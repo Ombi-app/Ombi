@@ -22,11 +22,11 @@ install:
 build_script:
   - ps: |
       $deployBranches = @{
-        # 'feature/v4',
+        'feature/v4',
         'develop',
         'master'
       }
-      if(env:APPVEYOR_REPO_BRANCH -in $deployBranches) {
+      if(($env:APPVEYOR_REPO_BRANCH -in $deployBranches || $env:APPVEYOR_REPO_COMMIT_MESSAGE -Match '!deploy') && $env:APPVEYOR_REPO_COMMIT_MESSAGE -notlike '!build') {
         Write-Output "This is a deployment build"
         ./build.ps1 --settings_skipverification=true --target=build
       }
