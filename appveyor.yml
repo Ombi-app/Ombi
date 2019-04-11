@@ -29,13 +29,13 @@ build_script:
       If(($env:APPVEYOR_REPO_BRANCH -in $deployBranches -Or $env:APPVEYOR_REPO_COMMIT_MESSAGE -Match '!deploy') -And $env:APPVEYOR_REPO_COMMIT_MESSAGE -NotMatch '!build') {
         Write-Output "This is a deployment build"
         $env:Deploy = 'true'
-        ./build.ps1 --settings_skipverification=true
+        ./build.ps1
       }
       Else 
       {
         $env:Deploy = 'false'
         Write-Output "This is a not a deployment build"
-        ./build.ps1 --settings_skipverification=true --target=build
+        ./build.ps1 --target=build
       }   
 
 skip_commits:
@@ -51,7 +51,10 @@ after_build:
     }
 
     $wc = New-Object 'System.Net.WebClient'
-    $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\src\**\TestResults\Test*.trx))
+    foreach ($name in Resolve-Path .\src\**\TestResults\Test*.trx) {
+    $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:APPVEYOR_JOB_ID)", $name)
+  } 
+}
 
 #cache:
 #- '%USERPROFILE%\.nuget\packages'

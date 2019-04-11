@@ -287,7 +287,7 @@ Task("Default")
 Task("Build")
     .IsDependentOn("SetVersionInfo")
     .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Run-Server-Build");
+    .IsDependentOn("Run-Server-Build"); 
     // .IsDependentOn("Run-UI-Build");
 
 //////////////////////////////////////////////////////////////////////
