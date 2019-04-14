@@ -11,6 +11,7 @@ using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
+using Quartz;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Ombi.Schedule.Jobs.Lidarr
@@ -35,7 +36,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
         private readonly IBackgroundJobClient _job;
         private readonly ILidarrAlbumSync _albumSync;
         
-        public async Task CacheContent()
+        public async Task Execute(IJobExecutionContext job)
         {
             try
             {

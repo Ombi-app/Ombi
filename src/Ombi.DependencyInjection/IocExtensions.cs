@@ -61,6 +61,7 @@ using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.SickRage;
 using Ombi.Schedule.Processor;
 using Ombi.Store.Entities;
+using Quartz.Spi;
 
 namespace Ombi.DependencyInjection
 {
@@ -180,6 +181,7 @@ namespace Ombi.DependencyInjection
 
         public static void RegisterJobs(this IServiceCollection services)
         {
+            services.AddTransient<IJobFactory, IoCJobFactory>(provider => new IoCJobFactory(provider));
             services.AddTransient<IBackgroundJobClient, BackgroundJobClient>();
 
             services.AddTransient<IPlexContentSync, PlexContentSync>();
@@ -200,7 +202,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ISickRageSync, SickRageSync>();
             services.AddTransient<IRefreshMetadata, RefreshMetadata>();
             services.AddTransient<INewsletterJob, NewsletterJob>();
-            services.AddTransient<IPlexRecentlyAddedSync, PlexRecentlyAddedSync>();
+            //services.AddTransient<IPlexRecentlyAddedSync, PlexRecentlyAddedSync>();
             services.AddTransient<ILidarrAlbumSync, LidarrAlbumSync>();
             services.AddTransient<ILidarrArtistSync, LidarrArtistSync>();
             services.AddTransient<ILidarrAvailabilityChecker, LidarrAvailabilityChecker>();

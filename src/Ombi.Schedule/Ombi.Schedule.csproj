@@ -17,6 +17,7 @@
     <PackageReference Include="Hangfire.RecurringJobExtensions" Version="1.1.6" />
     <PackageReference Include="Hangfire.SQLite" Version="1.4.2" />
     <PackageReference Include="Serilog" Version="2.7.1" />
+    <PackageReference Include="Quartz" Version="3.0.7" />
     <PackageReference Include="SharpCompress" Version="0.18.2" />
     <PackageReference Include="System.Diagnostics.Process" Version="4.3.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.6.13" />

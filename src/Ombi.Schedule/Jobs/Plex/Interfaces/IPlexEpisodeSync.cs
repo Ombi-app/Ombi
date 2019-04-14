@@ -9,7 +9,6 @@ namespace Ombi.Schedule.Jobs.Plex.Interfaces
 {
     public interface IPlexEpisodeSync : IBaseJob
     {
-        Task Start();
         Task<HashSet<PlexEpisode>> ProcessEpsiodes(Metadata[] episodes, IQueryable<PlexEpisode> currentEpisodes);
     }
 }

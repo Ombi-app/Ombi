@@ -42,13 +42,14 @@ using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.Plex.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
     public class PlexContentSync : IPlexContentSync
     {
         public PlexContentSync(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentSync> logger, IPlexContentRepository repo,
-            IPlexEpisodeSync epsiodeSync, IRefreshMetadata metadataRefresh, IPlexAvailabilityChecker checker)
+            IPlexEpisodeSync epsiodeSync, IRefreshMetadata metadataRefresh)
         {
             Plex = plex;
             PlexApi = plexApi;
@@ -56,7 +57,6 @@ namespace Ombi.Schedule.Jobs.Plex
             Repo = repo;
             EpisodeSync = epsiodeSync;
             Metadata = metadataRefresh;
-            Checker = checker;
             Plex.ClearCache();
         }
 
@@ -66,10 +66,12 @@ namespace Ombi.Schedule.Jobs.Plex
         private IPlexContentRepository Repo { get; }
         private IPlexEpisodeSync EpisodeSync { get; }
         private IRefreshMetadata Metadata { get; }
-        private IPlexAvailabilityChecker Checker { get; }
 
-        public async Task CacheContent(bool recentlyAddedSearch = false)
+        public async Task Execute(IJobExecutionContext context)
         {
+            JobDataMap dataMap = context.JobDetail.JobDataMap;
+            var recentlyAddedSearch = dataMap.GetBooleanValueFromString("recentlyAddedSearch");
+
             var plexSettings = await Plex.GetSettingsAsync();
             if (!plexSettings.Enable)
             {
@@ -101,7 +103,8 @@ namespace Ombi.Schedule.Jobs.Plex
             if (!recentlyAddedSearch)
             {
                 Logger.LogInformation("Starting EP Cacher");
-                BackgroundJob.Enqueue(() => EpisodeSync.Start());
+
+                await OmbiQuartz.TriggerJob(nameof(IPlexEpisodeSync));
             }
 
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
@@ -112,7 +115,8 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if ((processedContent?.HasProcessedEpisodes ?? false) && recentlyAddedSearch)
             {
-                BackgroundJob.Enqueue(() => Checker.Start());
+
+                await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker));
             }
         }
 

@@ -37,6 +37,7 @@ using Ombi.Notifications.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Emby
 {
@@ -58,7 +59,7 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly INotificationService _notificationService;
         private readonly ILogger<EmbyAvaliabilityChecker> _log;
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             await ProcessMovies();
             await ProcessTv();
