@@ -109,7 +109,8 @@ namespace Ombi.Controllers
         [HttpPost("plexcontentcacher")]
         public bool StartPlexContentCacher()
         {
-            OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(PlexContentSync)), new JobDataMap(new Dictionary<string, string> { { "recentlyAddedSearch", "false" } }));
+            OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IPlexContentSync) + 
+                 "Trigger"), new JobDataMap(new Dictionary<string, string> { { "recentlyAddedSearch", "false" } }));
             return true;
         }
 
