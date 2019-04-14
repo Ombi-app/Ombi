@@ -55,11 +55,8 @@ namespace Ombi.Schedule.Jobs.Emby
 
             // Episodes
 
-            await OmbiQuartz.TriggerJob(nameof(IEmbyEpisodeSync));
-
-            await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata));
-            //BackgroundJob.Enqueue(() => _episodeSync.Start());
-            //BackgroundJob.Enqueue(() => _metadata.Start());
+            await OmbiQuartz.TriggerJob(nameof(IEmbyEpisodeSync), "Emby");
+            await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "Emby");
         }
 
 

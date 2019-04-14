@@ -56,8 +56,7 @@ namespace Ombi.Schedule.Jobs.Plex
             }
 
 
-            await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker));
-            //BackgroundJob.Enqueue(() => _availabilityChecker.Start()); // TODO
+            await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
         }
 
         private async Task Cache(PlexServers settings)

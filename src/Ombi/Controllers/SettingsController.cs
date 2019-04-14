@@ -386,7 +386,7 @@ namespace Ombi.Controllers
                 _cache.Remove(CacheKeys.RadarrRootProfiles);
                 _cache.Remove(CacheKeys.RadarrQualityProfiles);
 
-                await OmbiQuartz.TriggerJob(nameof(IRadarrSync));
+                await OmbiQuartz.TriggerJob(nameof(IRadarrSync), "DVR");
             }
             return result;
         }

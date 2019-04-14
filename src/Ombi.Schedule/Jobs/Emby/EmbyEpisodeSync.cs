@@ -66,7 +66,7 @@ namespace Ombi.Schedule.Jobs.Emby
             }
 
 
-            await OmbiQuartz.TriggerJob(nameof(IEmbyAvaliabilityChecker));
+            await OmbiQuartz.TriggerJob(nameof(IEmbyAvaliabilityChecker), "Emby");
         }
 
         private async Task CacheEpisodes(EmbyServers server)

@@ -59,7 +59,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 await _embyRepo.ExecuteSql(episodeSQL);
                 await _embyRepo.ExecuteSql(mainSql);
 
-                await OmbiQuartz.TriggerJob(nameof(IEmbyContentSync));
+                await OmbiQuartz.TriggerJob(nameof(IEmbyContentSync), "Emby");
             }
             catch (Exception e)
             {

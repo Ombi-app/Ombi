@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Quartz.Spi;
 
@@ -14,7 +15,12 @@ namespace Ombi.Schedule
         }
         public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
         {
-            return _factory.GetService(bundle.JobDetail.JobType) as IJob;
+            var scopeFactory = _factory.GetService<IServiceScopeFactory>();
+            var scope = scopeFactory.CreateScope();
+            var scopedContainer = scope.ServiceProvider;
+
+            var implementation = scopedContainer.GetRequiredService(bundle.JobDetail.JobType) as IJob;
+            return implementation;
         }
 
         public void ReturnJob(IJob job)

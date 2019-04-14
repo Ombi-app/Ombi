@@ -104,19 +104,19 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 Logger.LogInformation("Starting EP Cacher");
 
-                await OmbiQuartz.TriggerJob(nameof(IPlexEpisodeSync));
+                await OmbiQuartz.TriggerJob(nameof(IPlexEpisodeSync), "Plex");
             }
 
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
                 // Just check what we send it
-                BackgroundJob.Enqueue(() => Metadata.ProcessPlexServerContent(processedContent.Content));
+                await OmbiQuartz.TriggerJob(nameof(IMediaDatabaseRefresh), "System");
             }
 
             if ((processedContent?.HasProcessedEpisodes ?? false) && recentlyAddedSearch)
             {
 
-                await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker));
+                await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
             }
         }
 

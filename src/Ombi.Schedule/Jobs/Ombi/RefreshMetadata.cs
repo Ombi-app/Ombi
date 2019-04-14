@@ -89,12 +89,12 @@ namespace Ombi.Schedule.Jobs.Ombi
             {
                 if (plexSettings.Enable)
                 {
-                    await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker));
+                    await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
                 }
 
                 if (embySettings.Enable)
                 {
-                    await OmbiQuartz.TriggerJob(nameof(IEmbyAvaliabilityChecker));
+                    await OmbiQuartz.TriggerJob(nameof(IEmbyAvaliabilityChecker), "Emby");
 
                 }
             }

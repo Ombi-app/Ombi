@@ -19,7 +19,7 @@ namespace Ombi.Schedule.Tests
                 It.IsAny<CancellationToken>()));
             var sut = new QuartzMock(scheduleMock);
 
-            await QuartzMock.TriggerJob("ABC");
+            //await QuartzMock.TriggerJob("ABC");
 
             scheduleMock.Verify(x => x.TriggerJob(It.Is<JobKey>(j => j.Name == "ABC"), 
                 default(CancellationToken)), Times.Once);

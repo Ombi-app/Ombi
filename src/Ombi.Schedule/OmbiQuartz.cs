@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Ombi.Helpers;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
@@ -40,7 +41,7 @@ namespace Ombi.Schedule
             where T : IJob
         {
             var jobBuilder = JobBuilder.Create<T>()
-                .WithIdentity(name, group);
+                .WithIdentity(new JobKey(name, group));
             if (jobData != null)
             {
                 foreach (var o in jobData)
@@ -49,19 +50,30 @@ namespace Ombi.Schedule
                 }
             }
 
-            var job = jobBuilder.Build();              
+            if(!cronExpression.HasValue())
+            {
+                jobBuilder.StoreDurably(true);
+            }
+
+            var job = jobBuilder.Build();
+            if (cronExpression.HasValue())
+            {
+                ITrigger jobTrigger = TriggerBuilder.Create()
+                    .WithIdentity(name + "Trigger", group)
+                    .WithCronSchedule(cronExpression)
+                    .Build();
+                await Scheduler.ScheduleJob(job, jobTrigger);
+            } 
+            else
+            {
+                await Scheduler.AddJob(job, true);
+            }
             
-            ITrigger jobTrigger = TriggerBuilder.Create()
-                .WithIdentity(name + "Trigger", group)
-                .WithCronSchedule(cronExpression)
-                .Build();
-            
-            await Scheduler.ScheduleJob(job, jobTrigger);
         }
 
-        public static async Task TriggerJob(string jobName)
+        public static async Task TriggerJob(string jobName, string group)
         {
-            await Scheduler.TriggerJob(new JobKey(jobName));
+            await Scheduler.TriggerJob(new JobKey(jobName, group));
         }
         
         public static async Task Start()
