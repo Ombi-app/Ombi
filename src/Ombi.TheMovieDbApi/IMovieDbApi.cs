@@ -25,5 +25,6 @@ namespace Ombi.Api.TheMovieDb
         Task<FullMovieInfo> GetFullMovieInfo(int movieId, string langCode);
         Task<TheMovieDbContainer<DiscoverMovies>> DiscoverMovies(string langCode, int keywordId);
         Task<Collections> GetCollection(string langCode, int collectionId);
+        Task<List<MovieSearchResult>> PopularMovies(string langageCode, int page);
     }
 }

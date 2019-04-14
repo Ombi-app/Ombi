@@ -1,5 +1,6 @@
-<div class="small-middle-container">
 
+                <div   class="small-middle-container">
+                     
     <div class="row justify-content-md-center top-spacing">
         <div class="btn-group" role="group" aria-label="Basic example">
             <button type="button" (click)="popular()" [attr.color]="popularActive ? 'accent' : 'primary'"
@@ -18,8 +19,15 @@
     <div *ngIf="loadingFlag" class="row justify-content-md-center top-spacing loading-spinner">
         <mat-spinner [color]="'accent'"></mat-spinner>
     </div>
-    <div *ngIf="discoverResults" class="row full-height">
+    <div *ngIf="discoverResults" class="row full-height discoverResults">
+            <div *ngIf="discoverResults"
+            infiniteScroll
+            [infiniteScrollDistance]="2"
+            [infiniteScrollThrottle]="300"
+            (scrolled)="onScroll()"
+            ></div>
         <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-4 small-padding" *ngFor="let result of discoverResults">
+
             <discover-card [result]="result"></discover-card>
         </div>
     </div>

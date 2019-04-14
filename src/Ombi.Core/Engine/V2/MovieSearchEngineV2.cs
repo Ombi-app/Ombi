@@ -99,6 +99,31 @@ namespace Ombi.Core.Engine.V2
         }
 
         /// <summary>
+        /// Gets popular movies by paging
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<SearchMovieViewModel>> PopularMovies(int currentlyLoaded, int toLoad)
+        {
+            var langCode = await DefaultLanguageCode(null);
+
+            // Pages of 20
+            if(toLoad > 20)
+            {
+                throw new ApplicationException("Please load less than 20 items at a time due to a API limit");
+            }
+
+
+
+            var result = await MovieApi.PopularMovies(langCode);
+
+            if (result != null)
+            {
+                return await TransformMovieResultsToResponse(result.Shuffle().Take(ResultLimit)); // Take x to stop us overloading the API
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Gets top rated movies.
         /// </summary>
         /// <returns></returns>

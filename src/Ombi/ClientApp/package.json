@@ -48,7 +48,7 @@
     "ngx-bootstrap": "^3.1.4",
     "ngx-clipboard": "^11.1.1",
     "ngx-editor": "^4.1.0",
-    "ngx-infinite-scroll": "^6.0.1",
+    "ngx-infinite-scroll": "^7.1.0",
     "ngx-moment": "^3.0.1",
     "ngx-order-pipe": "^2.0.1",
     "ngx-page-scroll": "^5.0.1",

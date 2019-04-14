@@ -166,6 +166,17 @@ namespace Ombi.Api.TheMovieDb
             return Mapper.Map<List<MovieSearchResult>>(result.results);
         }
 
+        public async Task<List<MovieSearchResult>> PopularMovies(string langageCode, int page)
+        {
+            var request = new Request($"movie/popular", BaseUri, HttpMethod.Get);
+            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+            request.FullUri = request.FullUri.AddQueryParameter("language", langageCode);
+            request.FullUri = request.FullUri.AddQueryParameter("page", page,ToString());
+            AddRetry(request);
+            var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
+            return Mapper.Map<List<MovieSearchResult>>(result.results);
+        }
+
         public async Task<List<MovieSearchResult>> TopRated(string langageCode)
         {
             var request = new Request($"movie/top_rated", BaseUri, HttpMethod.Get);

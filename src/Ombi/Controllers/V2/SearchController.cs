@@ -107,7 +107,7 @@ namespace Ombi.Controllers.V2
             return await _movieEngineV2.SimilarMovies(model.TheMovieDbId, model.LanguageCode);
         }
 
-       
+
         /// <summary>
         /// Returns Popular Movies
         /// </summary>
@@ -119,6 +119,20 @@ namespace Ombi.Controllers.V2
         public async Task<IEnumerable<SearchMovieViewModel>> Popular()
         {
             return await _movieEngineV2.PopularMovies();
+        }
+
+
+        /// <summary>
+        /// Returns Popular Movies using paging
+        /// </summary>
+        /// <remarks>We use TheMovieDb as the Movie Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("movie/popular/{currentPostion}/{amountToLoad}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<IEnumerable<SearchMovieViewModel>> Popular(int currentPosition, int amountToLoad)
+        {
+            return await _movieEngineV2.PopularMovies(currentPosition, amountToLoad);
         }
 
         /// <summary>

@@ -19,8 +19,8 @@ import { trigger, transition, style, animate } from "@angular/animations";
 export class DiscoverComponent implements OnInit {
 
     public discoverResults: IDiscoverCardResult[] = [];
-    private movies: ISearchMovieResult[];
-    private tvShows: ISearchTvResult[];
+    public movies: ISearchMovieResult[];
+    public tvShows: ISearchTvResult[];
 
     public defaultTvPoster: string;
 
@@ -30,6 +30,8 @@ export class DiscoverComponent implements OnInit {
 
     public loadingFlag: boolean;
 
+    private contentLoaded: number;
+
     constructor(private searchService: SearchV2Service) { }
 
     public async ngOnInit() {
@@ -38,13 +40,25 @@ export class DiscoverComponent implements OnInit {
         this.movies = await this.searchService.popularMovies().toPromise();
         this.tvShows = await this.searchService.popularTv().toPromise();
 
+        this.contentLoaded = 12;
                 
-        this.createModel();
+        this.createModel(true);
 
+    }
+
+    public async onScroll() {
+        console.log("SCROLLED!")
+        this.movies = await this.searchService.popularMoviesByPage(this.contentLoaded, 12).toPromise();
+        this.tvShows = [];
+        this.contentLoaded+=12;
+        
+        this.createModel(false);
     }
 
     public async popular() {
         this.clear();
+        
+        this.contentLoaded = 12;
         this.loading()
         this.popularActive = true;
         this.trendingActive = false;
@@ -53,11 +67,13 @@ export class DiscoverComponent implements OnInit {
         this.tvShows = await this.searchService.popularTv().toPromise();
 
         
-        this.createModel();
+        this.createModel(true);
     }
     
     public async trending() {      
         this.clear();
+        
+        this.contentLoaded = 12;
         this.loading()
         this.popularActive = false;
         this.trendingActive = true;
@@ -65,11 +81,12 @@ export class DiscoverComponent implements OnInit {
         this.movies = await this.searchService.nowPlayingMovies().toPromise();
         this.tvShows = await this.searchService.trendingTv().toPromise();
 
-        this.createModel();
+        this.createModel(true);
     }  
 
     public async upcoming() {    
         this.clear();
+        this.contentLoaded = 12;
         this.loading()
         this.popularActive = false;
         this.trendingActive = false;
@@ -77,10 +94,10 @@ export class DiscoverComponent implements OnInit {
         this.movies = await this.searchService.upcomingMovies().toPromise();
         this.tvShows = await this.searchService.anticipatedTv().toPromise();
 
-        this.createModel();
+        this.createModel(true);
     }
 
-    private createModel() {
+    private createModel(shuffle: boolean) {
         this.finishLoading();
         this.movies.forEach(m => {
             this.discoverResults.push({
@@ -110,8 +127,9 @@ export class DiscoverComponent implements OnInit {
                 approved: m.approved
             });
         });
-        
-        this.shuffle(this.discoverResults);
+        if(shuffle) {
+            this.shuffle(this.discoverResults);
+        }
     }
 
     private shuffle(discover: IDiscoverCardResult[]) : IDiscoverCardResult[] {

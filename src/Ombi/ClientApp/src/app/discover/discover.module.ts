@@ -1,5 +1,6 @@
 ﻿import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { SearchService, RequestService } from "../services";
 
@@ -21,6 +22,7 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         SharedModule,
         PipeModule,
+        InfiniteScrollModule,
     ],
     declarations: [
         DiscoverComponent,

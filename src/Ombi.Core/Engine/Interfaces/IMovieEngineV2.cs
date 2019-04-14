@@ -15,6 +15,7 @@ namespace Ombi.Core.Engine.Interfaces
         Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies();
         Task<MovieCollectionsViewModel> GetCollection(int collectionId, string langCode = null);
         Task<int> GetTvDbId(int theMovieDbId);
+        Task<IEnumerable<SearchMovieViewModel>> PopularMovies(int currentlyLoaded, int toLoad);
         int ResultLimit { get; set; }
     }
 }
