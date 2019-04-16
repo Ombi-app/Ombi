@@ -86,8 +86,8 @@ namespace Ombi.Helpers.Tests
                     .SetName("PaginationPosition_Load_EndSecondPage_Beginning_ThirdPage");
                 yield return new TestCaseData(18, 22, 20, new List<MultiplePagesTestData> { new MultiplePagesTestData(1, 2, 18), new MultiplePagesTestData(2, 20, 0) })
                     .SetName("PaginationPosition_Load_EndFirstPage_Full_SecondPage");
-                yield return new TestCaseData(38, 4, 20, new List<MultiplePagesTestData> { new MultiplePagesTestData(2, 2, 18), new MultiplePagesTestData(3, 20, 0) })
-                    .SetName("PaginationPosition_Load_EndSecondPage_Full_ThirdPage");
+                yield return new TestCaseData(38, 4, 20, new List<MultiplePagesTestData> { new MultiplePagesTestData(2, 2, 18), new MultiplePagesTestData(3, 2, 0) })
+                    .SetName("PaginationPosition_Load_EndSecondPage_Some_ThirdPage");
             }
         }
 
