@@ -1,17 +1,14 @@
 ﻿using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Ombi.Helpers.Tests
 {
     [TestFixture]
     public class PaginationHelperTests
     {
-        [TestCaseSource(nameof(TestData))]
-        [Ignore("https://stackoverflow.com/questions/55710966/working-out-how-many-items-to-take-in-a-paginated-list")]
-        public void TestPaginationPagesToLoad(int currentlyLoaded, int toLoad, int maxItemsPerPage, int[] expectedPages)
+        [TestCaseSource(nameof(TestPageData))]
+        public void TestPaginationPages(int currentlyLoaded, int toLoad, int maxItemsPerPage, int[] expectedPages)
         {
             var result = PaginationHelper.GetNextPages(currentlyLoaded, toLoad, maxItemsPerPage);
             var pages = result.Select(x => x.Page).ToArray();
@@ -21,21 +18,92 @@ namespace Ombi.Helpers.Tests
             {
                 Assert.That(pages[i], Is.EqualTo(expectedPages[i]));
             }
-
-
         }
 
-        public static IEnumerable<TestCaseData> TestData
+        public static IEnumerable<TestCaseData> TestPageData
         {
             get
             {
-                yield return new TestCaseData(0, 10, 20,  new [] { 1 }).SetName("Load_First_Page");
-                yield return new TestCaseData(20, 10, 20, new [] { 2 }).SetName("Load_Second_Page");
-                yield return new TestCaseData(0, 20, 20,  new [] { 2 }).SetName("Load_Full_First_Page_Should_Get_NextPage");
-                yield return new TestCaseData(20, 20, 20, new [] { 3 }).SetName("Load_Full_Second_Page_Should_Get_Next_Page");
-                yield return new TestCaseData(10, 20, 20, new [] { 1, 2 }).SetName("Load_Half_First_Page_And_Half_Second_Page");
-                yield return new TestCaseData(19, 20, 20, new [] { 1, 2 }).SetName("Load_End_First_Page_And_Most_Second_Page");
+                yield return new TestCaseData(0, 10, 20,  new [] { 1 }).SetName("Pagination_Load_First_Page");
+                yield return new TestCaseData(20, 10, 20, new [] { 2 }).SetName("Pagination_Load_Second_Page");
+                yield return new TestCaseData(0, 20, 20,  new [] { 1 }).SetName("Pagination_Load_Full_First_Page");
+                yield return new TestCaseData(20, 20, 20, new [] { 2 }).SetName("Pagination_Load_Full_Second_Page");
+                yield return new TestCaseData(10, 20, 20, new [] { 1, 2 }).SetName("Pagination_Load_Half_First_Page_And_Half_Second_Page");
+                yield return new TestCaseData(19, 20, 20, new[] { 1, 2 }).SetName("Pagination_Load_End_First_Page_And_Most_Second_Page");
+                yield return new TestCaseData(19, 40, 20, new[] { 1, 2, 3 }).SetName("Pagination_Load_End_First_Page_And_Most_Second_And_Third_Page");
+                yield return new TestCaseData(10, 10, 20, new[] { 1 }).SetName("Pagination_Load_Half_First_Page");
+                yield return new TestCaseData(10, 9, 20, new[] { 1 }).SetName("Pagination_Load_LessThan_Half_First_Page");
+                yield return new TestCaseData(20, 10, 20, new[] { 2 }).SetName("Pagination_Load_Half_Second_Page");
+                yield return new TestCaseData(20, 9, 20, new[] { 2 }).SetName("Pagination_Load_LessThan_Half_Second_Page");
+                yield return new TestCaseData(30, 10, 20, new[] { 2 }).SetName("Pagination_Load_All_Second_Page_With_Half_Take");
+                yield return new TestCaseData(49, 1, 50, new[] { 1 }).SetName("Pagination_Load_49_OutOf_50");
             }
         }
+
+        [TestCaseSource(nameof(CurrentPositionTestData))]
+        public void TestCurrentPositionOfPagination(int currentlyLoaded, int toLoad, int maxItemsPerPage, int expectedTake, int expectedSkip)
+        {
+            var result = PaginationHelper.GetNextPages(currentlyLoaded, toLoad, maxItemsPerPage);
+
+            var first = result.FirstOrDefault();
+            Assert.That(first.Take, Is.EqualTo(expectedTake));
+            Assert.That(first.Skip, Is.EqualTo(expectedSkip));
+        }
+        public static IEnumerable<TestCaseData> CurrentPositionTestData
+        {
+            get
+            {
+                yield return new TestCaseData(0, 10, 20, 10, 0).SetName("PaginationPosition_Load_First_Half_Of_Page");
+                yield return new TestCaseData(10, 10, 20, 10, 10).SetName("PaginationPosition_Load_EndHalf_First_Page");
+                yield return new TestCaseData(19, 1, 20, 1, 19).SetName("PaginationPosition_Load_LastItem_Of_First_Page");
+                yield return new TestCaseData(20, 20, 20, 20, 20).SetName("PaginationPosition_Load_Full_Second_Page");
+            }
+        }
+
+        [TestCaseSource(nameof(CurrentPositionMultiplePagesTestData))]
+        public void TestCurrentPositionOfPaginationWithMultiplePages(int currentlyLoaded, int toLoad, int maxItemsPerPage, List<MultiplePagesTestData> data)
+        {
+            var result = PaginationHelper.GetNextPages(currentlyLoaded, toLoad, maxItemsPerPage);
+
+            foreach (var r in result)
+            {
+                // get result data for this page
+                var expectedPage = data.FirstOrDefault(x => x.Page == r.Page);
+                Assert.That(r.Take, Is.EqualTo(expectedPage.ExpectedTake));
+                Assert.That(r.Skip, Is.EqualTo(expectedPage.ExpectedSkip));
+            }
+        }
+
+        public static IEnumerable<TestCaseData> CurrentPositionMultiplePagesTestData
+        {
+            get
+            {
+                yield return new TestCaseData(10, 20, 20, new List<MultiplePagesTestData> { new MultiplePagesTestData(1, 10, 10), new MultiplePagesTestData(2, 10, 0) })
+                    .SetName("PaginationPosition_Load_SecondHalf_FirstPage_FirstHalf_SecondPage");
+                yield return new TestCaseData(0, 40, 20, new List<MultiplePagesTestData> { new MultiplePagesTestData(1, 20, 0), new MultiplePagesTestData(2, 20, 0) })
+                    .SetName("PaginationPosition_Load_Full_First_And_SecondPage");
+                yield return new TestCaseData(35, 15, 20, new List<MultiplePagesTestData> { new MultiplePagesTestData(2, 5, 15), new MultiplePagesTestData(3, 10, 0) })
+                    .SetName("PaginationPosition_Load_EndSecondPage_Beginning_ThirdPage");
+                yield return new TestCaseData(18, 22, 20, new List<MultiplePagesTestData> { new MultiplePagesTestData(1, 2, 18), new MultiplePagesTestData(2, 20, 0) })
+                    .SetName("PaginationPosition_Load_EndFirstPage_Full_SecondPage");
+                yield return new TestCaseData(38, 4, 20, new List<MultiplePagesTestData> { new MultiplePagesTestData(2, 2, 18), new MultiplePagesTestData(3, 20, 0) })
+                    .SetName("PaginationPosition_Load_EndSecondPage_Full_ThirdPage");
+            }
+        }
+
+        public class MultiplePagesTestData
+        {
+            public MultiplePagesTestData(int page, int take, int skip)
+            {
+                Page = page;
+                ExpectedTake = take;
+                ExpectedSkip = skip;
+            }
+            public int Page { get; set; }
+            public int ExpectedTake { get; set; }
+            public int ExpectedSkip { get; set; }
+        }
+
+
     }
 }
