@@ -28,6 +28,7 @@ using Ombi.Store.Repository;
 using Ombi.Api.Github;
 using Ombi.Core.Engine;
 using Ombi.Schedule;
+using Quartz;
 
 namespace Ombi.Controllers
 {
@@ -546,8 +547,8 @@ namespace Ombi.Controllers
 
                 try
                 {
-                    var r = CrontabSchedule.TryParse(expression);
-                    if (r == null)
+                    var isValid = CronExpression.IsValidExpression(expression);
+                    if (!isValid)
                     {
                         return new JobSettingsViewModel
                         {
@@ -577,14 +578,15 @@ namespace Ombi.Controllers
             var model = new CronTestModel();
             try
             {
-                var time = DateTime.UtcNow;
-                var result = CrontabSchedule.TryParse(body.Expression);
-                for (int i = 0; i < 10; i++)
+                var isValid = CronExpression.IsValidExpression(body.Expression);
+                if (!isValid)
                 {
-                    var next = result.GetNextOccurrence(time);
-                    model.Schedule.Add(next);
-                    time = next;
+                    return new CronTestModel
+                    {
+                        Message = $"CRON Expression {body.Expression} is not valid"
+                    };
                 }
+               
                 model.Success = true;
                 return model;
             }
@@ -595,8 +597,6 @@ namespace Ombi.Controllers
                     Message = $"CRON Expression {body.Expression} is not valid"
                 };
             }
-
-
         }
 
 
