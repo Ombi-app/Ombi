@@ -109,9 +109,16 @@ namespace Ombi.Core.Engine.V2
             // Pages of 20
             if(toLoad > 20)
             {
-                throw new ApplicationException("Please load less than 20 items at a time due to a API limit");
+                throw new ApplicationException("Please load less than or equal to 20 items at a time due to a API limit");
             }
 
+            // TheMovieDb only shows pages of 20, let's work out how many we need to load
+
+            var page = Math.Round((decimal)(currentlyLoaded / 10) / 2, 0);
+            if(page == 0)
+            {
+                // First page
+            }
 
 
             var result = await MovieApi.PopularMovies(langCode);
