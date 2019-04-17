@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Castle.Components.DictionaryAdapter;
 using Hangfire;
 using Moq;
+using MockQueryable.Moq;
 using NUnit.Framework;
 using Ombi.Core.Notifications;
 using Ombi.Schedule.Jobs.Plex;
@@ -68,7 +69,6 @@ namespace Ombi.Schedule.Tests
         }
 
         [Test]
-        [Ignore("EF IAsyncQueryProvider")]
         public async Task ProcessTv_ShouldMark_Episode_Available_WhenInPlex()
         {
             var request = new ChildRequests
@@ -90,21 +90,25 @@ namespace Ombi.Schedule.Tests
                             }
                         }
                     }
+                },
+                RequestedUser = new OmbiUser
+                {
+                    Email = "abc"
                 }
             };
-            _tv.Setup(x => x.GetChild()).Returns(new List<ChildRequests> { request }.AsQueryable());
+            _tv.Setup(x => x.GetChild()).Returns(new List<ChildRequests> { request }.AsQueryable().BuildMock().Object);
             _repo.Setup(x => x.GetAllEpisodes()).Returns(new List<PlexEpisode>
             {
                 new PlexEpisode
                 {
                     Series = new  PlexServerContent
                     {
-                        ImdbId = 1.ToString(),
+                        TvDbId = 1.ToString(),
                     },
                     EpisodeNumber = 1,
                     SeasonNumber = 2
                 }
-            }.AsQueryable);
+            }.AsQueryable().BuildMock().Object);
             _repo.Setup(x => x.Include(It.IsAny<IQueryable<PlexEpisode>>(),It.IsAny<Expression<Func<PlexEpisode, PlexServerContent>>>()));
 
             await Checker.Start();

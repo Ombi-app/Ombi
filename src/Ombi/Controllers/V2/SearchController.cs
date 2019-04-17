@@ -127,7 +127,7 @@ namespace Ombi.Controllers.V2
         /// </summary>
         /// <remarks>We use TheMovieDb as the Movie Provider</remarks>
         /// <returns></returns>
-        [HttpGet("movie/popular/{currentPostion}/{amountToLoad}")]
+        [HttpGet("movie/popular/{currentPosition}/{amountToLoad}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchMovieViewModel>> Popular(int currentPosition, int amountToLoad)
@@ -185,6 +185,19 @@ namespace Ombi.Controllers.V2
         public async Task<IEnumerable<SearchTvShowViewModel>> PopularTv()
         {
             return await _tvSearchEngine.Popular();
+        }
+
+        /// <summary>
+        /// Returns Popular Tv Shows
+        /// </summary>
+        /// <remarks>We use Trakt.tv as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("tv/popular/{currentPosition}/{amountToLoad}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<IEnumerable<SearchTvShowViewModel>> PopularTv(int currentPosition, int amountToLoad)
+        {
+            return await _tvSearchEngine.Popular(currentPosition, amountToLoad);
         }
 
         /// <summary>

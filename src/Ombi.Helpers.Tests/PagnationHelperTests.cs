@@ -14,12 +14,12 @@ namespace Ombi.Helpers.Tests
             var pages = result.Select(x => x.Page).ToArray();
 
             Assert.That(pages.Length, Is.EqualTo(expectedPages.Length), "Did not contain the correct amount of pages");
-            for (int i = 0; i < pages.Length; i++)
+            for (var i = 0; i < pages.Length; i++)
             {
                 Assert.That(pages[i], Is.EqualTo(expectedPages[i]));
             }
         }
-
+        
         public static IEnumerable<TestCaseData> TestPageData
         {
             get
@@ -37,6 +37,7 @@ namespace Ombi.Helpers.Tests
                 yield return new TestCaseData(20, 9, 20, new[] { 2 }).SetName("Pagination_Load_LessThan_Half_Second_Page");
                 yield return new TestCaseData(30, 10, 20, new[] { 2 }).SetName("Pagination_Load_All_Second_Page_With_Half_Take");
                 yield return new TestCaseData(49, 1, 50, new[] { 1 }).SetName("Pagination_Load_49_OutOf_50");
+                yield return new TestCaseData(49, 1, 100,new[] { 1 }).SetName("Pagination_Load_50_OutOf_100");
             }
         }
 
@@ -56,7 +57,7 @@ namespace Ombi.Helpers.Tests
                 yield return new TestCaseData(0, 10, 20, 10, 0).SetName("PaginationPosition_Load_First_Half_Of_Page");
                 yield return new TestCaseData(10, 10, 20, 10, 10).SetName("PaginationPosition_Load_EndHalf_First_Page");
                 yield return new TestCaseData(19, 1, 20, 1, 19).SetName("PaginationPosition_Load_LastItem_Of_First_Page");
-                yield return new TestCaseData(20, 20, 20, 20, 20).SetName("PaginationPosition_Load_Full_Second_Page");
+                yield return new TestCaseData(20, 20, 300, 20, 20).SetName("PaginationPosition_Load_Full_Second_Page");
             }
         }
 
@@ -87,10 +88,20 @@ namespace Ombi.Helpers.Tests
                 yield return new TestCaseData(18, 22, 20, new List<MultiplePagesTestData> { new MultiplePagesTestData(1, 2, 18), new MultiplePagesTestData(2, 20, 0) })
                     .SetName("PaginationPosition_Load_EndFirstPage_Full_SecondPage");
                 yield return new TestCaseData(38, 4, 20, new List<MultiplePagesTestData> { new MultiplePagesTestData(2, 2, 18), new MultiplePagesTestData(3, 2, 0) })
-                    .SetName("PaginationPosition_Load_EndSecondPage_Some_ThirdPage");
+                    .SetName("PaginationPosition_Load_EndSecondPage_Some_ThirdPage"); 
+                yield return new TestCaseData(15, 20, 10, new List<MultiplePagesTestData> { new MultiplePagesTestData(2, 5, 5), new MultiplePagesTestData(3, 10, 0), new MultiplePagesTestData(4, 5, 0) })
+                    .SetName("PaginationPosition_Load_EndSecondPage_All_ThirdPage_Some_ForthPage");
+                yield return new TestCaseData(24, 12, 12, new List<MultiplePagesTestData> { new MultiplePagesTestData(3, 12, 0) })
+                    .SetName("PaginationPosition_Load_ThirdPage_Of_12");
+                yield return new TestCaseData(12, 12, 12, new List<MultiplePagesTestData> { new MultiplePagesTestData(2, 12, 0) })
+                    .SetName("PaginationPosition_Load_SecondPage_Of_12");
+                yield return new TestCaseData(40, 20, 20, new List<MultiplePagesTestData> { new MultiplePagesTestData(3, 20, 0) })
+                    .SetName("PaginationPosition_Load_FullThird_Page");
+                yield return new TestCaseData(240, 12, 20, new List<MultiplePagesTestData> { new MultiplePagesTestData(13, 12, 0) })
+                    .SetName("PaginationPosition_Load_Page_13");
             }
         }
-
+         
         public class MultiplePagesTestData
         {
             public MultiplePagesTestData(int page, int take, int skip)

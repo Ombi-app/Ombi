@@ -98,6 +98,9 @@ namespace Ombi.Core.Engine.V2
             return null;
         }
 
+
+        private const int _theMovieDbMaxPageItems = 20;
+
         /// <summary>
         /// Gets popular movies by paging
         /// </summary>
@@ -106,28 +109,15 @@ namespace Ombi.Core.Engine.V2
         {
             var langCode = await DefaultLanguageCode(null);
 
-            // Pages of 20
-            if(toLoad > 20)
+            var pages = PaginationHelper.GetNextPages(currentlyLoaded, toLoad, _theMovieDbMaxPageItems);
+
+            var results = new List<MovieSearchResult>();
+            foreach (var pagesToLoad in pages)
             {
-                throw new ApplicationException("Please load less than or equal to 20 items at a time due to a API limit");
+                var apiResult = await MovieApi.PopularMovies(langCode, pagesToLoad.Page);
+                results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
-
-            // TheMovieDb only shows pages of 20, let's work out how many we need to load
-
-            var page = Math.Round((decimal)(currentlyLoaded / 10) / 2, 0);
-            if(page == 0)
-            {
-                // First page
-            }
-
-
-            var result = await MovieApi.PopularMovies(langCode);
-
-            if (result != null)
-            {
-                return await TransformMovieResultsToResponse(result.Shuffle().Take(ResultLimit)); // Take x to stop us overloading the API
-            }
-            return null;
+            return await TransformMovieResultsToResponse(results);
         }
 
         /// <summary>

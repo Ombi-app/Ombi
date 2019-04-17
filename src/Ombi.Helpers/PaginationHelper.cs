@@ -17,12 +17,16 @@ namespace Ombi.Helpers
             var lastPage = lastItemIndex / maxItemsPerPage + 1;
             var stopPos = lastItemIndex % maxItemsPerPage + 1;
 
-            if (currentlyLoaded > maxItemsPerPage)
+            while (currentlyLoaded > maxItemsPerPage)
             {
-                currentlyLoaded = currentlyLoaded - maxItemsPerPage;
+                currentlyLoaded -= maxItemsPerPage;
+            }
+            if ((currentlyLoaded % maxItemsPerPage) == 0 && (currentlyLoaded % toTake) == 0)
+            {
+                currentlyLoaded = 0;
             }
 
-            var page1 = new PagesToLoad {Page = firstPage, Skip = currentlyLoaded, Take = toTake};
+            var page1 = new PagesToLoad { Page = firstPage, Skip = currentlyLoaded, Take = toTake };
 
             if (toTake + startPos - 1 > maxItemsPerPage)
             {
@@ -31,15 +35,19 @@ namespace Ombi.Helpers
 
                 for (var i = firstPage + 1; i < lastPage; i++)
                 {
-                    var nextPage = new PagesToLoad {Page = i, Skip = 0, Take = maxItemsPerPage};
+                    var nextPage = new PagesToLoad { Page = i, Skip = 0, Take = maxItemsPerPage };
                     result.Add(nextPage);
                 }
 
-                var pageN = new PagesToLoad {Page = lastPage, Skip = 0, Take = stopPos};
+                var pageN = new PagesToLoad { Page = lastPage, Skip = 0, Take = stopPos };
                 result.Add(pageN);
             }
             else
             {
+                if (page1.Skip + page1.Take > maxItemsPerPage)
+                {
+                    page1.Skip = 0;
+                }
                 result.Add(page1);
             }
 

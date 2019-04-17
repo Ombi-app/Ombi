@@ -21,6 +21,7 @@ using Ombi.Core.Authentication;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
+using TraktApiSharp.Objects.Get.Shows;
 
 namespace Ombi.Core.Engine
 {
@@ -124,6 +125,19 @@ namespace Ombi.Core.Engine
         {
             var result = await Cache.GetOrAdd(CacheKeys.PopularTv, async () => await TraktApi.GetPopularShows(null, ResultLimit), DateTime.Now.AddHours(12));
             var processed = ProcessResults(result);
+            return processed;
+        }
+
+        public async Task<IEnumerable<SearchTvShowViewModel>> Popular(int currentlyLoaded, int amountToLoad)
+        {
+            var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
+            var results = new List<TraktShow>();
+            foreach (var pagesToLoad in pages)
+            {
+                var apiResult = await TraktApi.GetPopularShows(pagesToLoad.Page, ResultLimit);
+                results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
+            }
+            var processed = ProcessResults(results);
             return processed;
         }
 

@@ -53,6 +53,11 @@ export class SearchV2Service extends ServiceHelpers {
     public popularTv(): Observable<ISearchTvResult[]> {
         return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/popular`, { headers: this.headers });
     }
+
+    public popularTvByPage(currentlyLoaded: number, toLoad: number): Promise<ISearchTvResult[]> {
+        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/popular/${currentlyLoaded}/${toLoad}`, { headers: this.headers }).toPromise();
+    }
+
     public mostWatchedTv(): Observable<ISearchTvResult[]> {
         return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/mostwatched`, { headers: this.headers });
     }
