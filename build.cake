@@ -4,6 +4,7 @@
 #addin nuget:?package=Cake.Compression&version=0.2.2
 #addin "Cake.Incubator&version=3.1.0"
 #addin nuget:?package=Cake.Yarn&version=0.4.5
+#addin "Cake.Powershell"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -261,6 +262,16 @@ Task("Run-Unit-Tests")
     {
         DotNetCoreTest(file.FullPath, settings);
     }
+
+    var script = @"
+    $wc = New-Object 'System.Net.WebClient'
+    foreach ($name in Resolve-Path .\src\**\TestResults\Test*.trx) 
+    {
+    $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:APPVEYOR_JOB_ID)", $name)
+    }
+";
+    // Upload the results
+     StartPowershellScript(script);
 });
 
 Task("Run-Server-Build")

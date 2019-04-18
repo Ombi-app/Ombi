@@ -50,12 +50,6 @@ after_build:
       Get-ChildItem .\*.gz | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
     }
 
-    $wc = New-Object 'System.Net.WebClient'
-    foreach ($name in Resolve-Path .\src\**\TestResults\Test*.trx) 
-    {
-    $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:APPVEYOR_JOB_ID)", $name)
-    }
-
 #cache:
 #- '%USERPROFILE%\.nuget\packages'
 deploy:
