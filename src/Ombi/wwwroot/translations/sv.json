@@ -75,6 +75,7 @@
     "RequestAdded": "Begäran av {{title}} har lagts till",
     "Similar": "Liknande",
     "Refine": "Förfina",
+    "SearchBarPlaceholder": "Type Here to Search",
     "Movies": {
       "PopularMovies": "Populära filmer",
       "UpcomingMovies": "Kommande filmer",
