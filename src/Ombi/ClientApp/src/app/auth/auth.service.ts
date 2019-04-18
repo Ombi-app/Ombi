@@ -6,11 +6,13 @@ import { Observable } from "rxjs";
 
 import { ServiceHelpers } from "../services";
 import { ILocalUser, IUserLogin } from "./IUserLogin";
+import { StorageService } from "../shared/storage/storage-service";
 
 @Injectable()
 export class AuthService extends ServiceHelpers {
 
-    constructor(http: HttpClient, @Inject(APP_BASE_HREF) href: string, private jwtHelperService: JwtHelperService) {
+    constructor(http: HttpClient, @Inject(APP_BASE_HREF) href: string, private jwtHelperService: JwtHelperService,
+                private store: StorageService) {
         super(http, "/api/v1/token", href);
     }
 
@@ -39,7 +41,7 @@ export class AuthService extends ServiceHelpers {
 
     public claims(): ILocalUser {
         if (this.loggedIn()) {
-            const token = localStorage.getItem("id_token");
+            const token = this.store.get("id_token");
             if (!token) {
                 throw new Error("Invalid token");
             }
@@ -68,6 +70,6 @@ export class AuthService extends ServiceHelpers {
     }
 
     public logout() {
-        localStorage.removeItem("id_token");
+        this.store.remove("id_token");
     }
 }

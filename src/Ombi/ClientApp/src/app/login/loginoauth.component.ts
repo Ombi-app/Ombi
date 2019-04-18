@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 
 import { AuthService } from "../auth/auth.service";
 import { NotificationService } from "../services";
+import { StorageService } from "../shared/storage/storage-service";
 
 @Component({
     templateUrl: "./loginoauth.component.html",
@@ -12,7 +13,8 @@ export class LoginOAuthComponent implements OnInit {
     public error: string;
 
     constructor(private authService: AuthService, private router: Router,
-                private route: ActivatedRoute, private notify: NotificationService) {
+                private route: ActivatedRoute, private notify: NotificationService,
+                private store: StorageService) {
         this.route.params
             .subscribe((params: any) => {
                 this.pin = params.pin;
@@ -26,7 +28,7 @@ export class LoginOAuthComponent implements OnInit {
     public auth() {
       this.authService.oAuth(this.pin).subscribe(x => {
           if (x.access_token) {
-            localStorage.setItem("id_token", x.access_token);
+            this.store.save("id_token", x.access_token);
 
             if (this.authService.loggedIn()) {
                 this.router.navigate(["search"]);

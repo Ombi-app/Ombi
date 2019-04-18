@@ -78,15 +78,4 @@ export class IdentityService extends ServiceHelpers {
     public getNotificationPreferencesForUser(userId: string): Observable<INotificationPreferences[]> {
         return this.http.get<INotificationPreferences[]>(`${this.url}notificationpreferences/${userId}`, {headers: this.headers});
     }
-
-    public hasRole(role: string): boolean {
-        const roles = localStorage.getItem("roles") as any as string[] | null;
-        if (roles) {
-            if (roles.indexOf(role) > -1) {
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
 }

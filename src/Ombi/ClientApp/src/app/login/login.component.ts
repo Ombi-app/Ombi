@@ -14,6 +14,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { ImageService } from "../services";
 
 import { fadeInOutAnimation } from "../animations/fadeinout";
+import { StorageService } from "../shared/storage/storage-service";
 
 @Component({
     templateUrl: "./login.component.html",
@@ -49,7 +50,8 @@ export class LoginComponent implements OnDestroy, OnInit {
 
     constructor(private authService: AuthService, private router: Router, private notify: NotificationService, private status: StatusService,
                 private fb: FormBuilder, private settingsService: SettingsService, private images: ImageService, private sanitizer: DomSanitizer,
-                private route: ActivatedRoute, @Inject(APP_BASE_HREF) href:string, private translate: TranslateService, private plexTv: PlexTvService) {
+                private route: ActivatedRoute, @Inject(APP_BASE_HREF) href:string, private translate: TranslateService, private plexTv: PlexTvService,
+                private store: StorageService) {
         this.href = href;
                     this.route.params
             .subscribe((params: any) => {
@@ -115,7 +117,7 @@ export class LoginComponent implements OnDestroy, OnInit {
             }
             this.authService.login(user)
                 .subscribe(x => {
-                    localStorage.setItem("id_token", x.access_token);
+                    this.store.save("id_token", x.access_token);
 
                     if (this.authService.loggedIn()) {
                         this.ngOnDestroy();
@@ -153,7 +155,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     public getPinResult(pinId: number) {
         this.authService.oAuth(pinId).subscribe(x => {
             if(x.access_token) {
-              localStorage.setItem("id_token", x.access_token);
+              this.store.save("id_token", x.access_token);
   
               if (this.authService.loggedIn()) {
                   this.ngOnDestroy();

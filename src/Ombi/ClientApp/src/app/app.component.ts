@@ -68,7 +68,7 @@ export class AppComponent implements OnInit {
     }
 
     public ngOnInit() {
-        const theme = localStorage.getItem("theme");
+        const theme = this.storage.get("theme");
         this.onSetTheme(theme);
 
         this.settingsService.getCustomization().subscribe(x => {

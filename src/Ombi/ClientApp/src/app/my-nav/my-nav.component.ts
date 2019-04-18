@@ -3,6 +3,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { INavBar } from '../interfaces/ICommon';
+import { StorageService } from '../shared/storage/storage-service';
 
 @Component({
   selector: 'app-my-nav',
@@ -24,13 +25,14 @@ export class MyNavComponent implements OnInit {
   @Output() public themeChange = new EventEmitter<string>();
   public theme: string;
 
-  constructor(private breakpointObserver: BreakpointObserver) {
+  constructor(private breakpointObserver: BreakpointObserver,
+              private store: StorageService) {
   }
 
   public ngOnInit(): void {
-    this.theme = localStorage.getItem("theme");
+    this.theme = this.store.get("theme");
     if(!this.theme) {
-      localStorage.setItem("theme","light");
+      this.store.save("theme","light");
     }
   }
 
@@ -49,14 +51,13 @@ export class MyNavComponent implements OnInit {
 
   public switchTheme() {
     if (this.theme) {
-      localStorage.removeItem("theme");
       let newTheme = "";
       if (this.theme === "dark") {
         newTheme = "light";
       } else {
         newTheme = "dark";
       }
-      localStorage.setItem("theme", newTheme)
+      this.store.save("theme", newTheme)
       this.theme = newTheme;
       this.themeChange.emit(newTheme);
     }
