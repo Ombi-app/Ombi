@@ -267,7 +267,7 @@ Task("Run-Unit-Tests")
     $wc = New-Object 'System.Net.WebClient'
     foreach ($name in Resolve-Path .\src\**\TestResults\Test*.trx) 
     {
-    $wc.UploadFile("https://ci.appveyor.com/api/testresults/mstest/$($env:APPVEYOR_JOB_ID)", $name)
+    $wc.UploadFile(""https://ci.appveyor.com/api/testresults/mstest/$($env:APPVEYOR_JOB_ID)\"", $name)
     }
 ";
     // Upload the results
