@@ -59,8 +59,10 @@ export class AuthService extends ServiceHelpers {
     }
 
     public hasRole(role: string): boolean {
-        if (this.claims().roles) {
-            return this.claims().roles.some(r => r.toUpperCase() === role.toUpperCase());
+        const claims = this.claims();
+
+        if (claims && claims.roles && role) {
+            return claims.roles.some(r => r.toUpperCase() === role.toUpperCase());
         }
         return false;
     }
