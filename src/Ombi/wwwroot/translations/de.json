@@ -75,6 +75,7 @@
     "RequestAdded": "Anfrage für {{title}} wurde erfolgreich hinzugefügt",
     "Similar": "Ähnliche",
     "Refine": "Auswahl verfeinern",
+    "SearchBarPlaceholder": "Type Here to Search",
     "Movies": {
       "PopularMovies": "Beliebte Filme",
       "UpcomingMovies": "Kommende Filme",
