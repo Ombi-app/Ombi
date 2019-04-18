@@ -75,6 +75,7 @@
     "RequestAdded": "Zgłoszenie dla {{title}} zostało dodane",
     "Similar": "Podobne",
     "Refine": "Zawęź",
+    "SearchBarPlaceholder": "Type Here to Search",
     "Movies": {
       "PopularMovies": "Popularne filmy",
       "UpcomingMovies": "Wkrótce w kinach",
