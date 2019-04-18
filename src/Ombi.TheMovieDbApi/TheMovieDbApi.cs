@@ -156,52 +156,57 @@ namespace Ombi.Api.TheMovieDb
             return Mapper.Map<List<MovieSearchResult>>(result.results);
         }
 
-        public async Task<List<MovieSearchResult>> PopularMovies(string langageCode)
+        public async Task<List<MovieSearchResult>> PopularMovies(string langageCode, int? page = null)
         {
             var request = new Request($"movie/popular", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
             request.FullUri = request.FullUri.AddQueryParameter("language", langageCode);
+            if (page != null)
+            {
+                request.FullUri = request.FullUri.AddQueryParameter("page", page.ToString());
+            }
             AddRetry(request);
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
             return Mapper.Map<List<MovieSearchResult>>(result.results);
         }
 
-        public async Task<List<MovieSearchResult>> PopularMovies(string langageCode, int page)
-        {
-            var request = new Request($"movie/popular", BaseUri, HttpMethod.Get);
-            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
-            request.FullUri = request.FullUri.AddQueryParameter("language", langageCode);
-            request.FullUri = request.FullUri.AddQueryParameter("page", page.ToString());
-            AddRetry(request);
-            var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
-            return Mapper.Map<List<MovieSearchResult>>(result.results);
-        }
-
-        public async Task<List<MovieSearchResult>> TopRated(string langageCode)
+        public async Task<List<MovieSearchResult>> TopRated(string langageCode, int? page = null)
         {
             var request = new Request($"movie/top_rated", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
             request.FullUri = request.FullUri.AddQueryParameter("language", langageCode);
+            if (page != null)
+            {
+                request.FullUri = request.FullUri.AddQueryParameter("page", page.ToString());
+            }
             AddRetry(request);
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
             return Mapper.Map<List<MovieSearchResult>>(result.results);
         }
 
-        public async Task<List<MovieSearchResult>> Upcoming(string langageCode)
+        public async Task<List<MovieSearchResult>> Upcoming(string langageCode, int? page = null)
         {
             var request = new Request($"movie/upcoming", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
             request.FullUri = request.FullUri.AddQueryParameter("language", langageCode);
+            if (page != null)
+            {
+                request.FullUri = request.FullUri.AddQueryParameter("page", page.ToString());
+            }
             AddRetry(request);
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
             return Mapper.Map<List<MovieSearchResult>>(result.results);
         }
 
-        public async Task<List<MovieSearchResult>> NowPlaying(string langageCode)
+        public async Task<List<MovieSearchResult>> NowPlaying(string langageCode, int? page = null)
         {
             var request = new Request($"movie/now_playing", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
             request.FullUri = request.FullUri.AddQueryParameter("language", langageCode);
+            if (page != null)
+            {
+                request.FullUri = request.FullUri.AddQueryParameter("page", page.ToString());
+            }
             AddRetry(request);
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
             return Mapper.Map<List<MovieSearchResult>>(result.results);

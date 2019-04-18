@@ -29,6 +29,7 @@ export class DiscoverComponent implements OnInit {
     public upcomingActive: boolean;
 
     public loadingFlag: boolean;
+    public scrollDisabled: boolean;
 
     private contentLoaded: number;
     private isScrolling: boolean = false;
@@ -37,14 +38,14 @@ export class DiscoverComponent implements OnInit {
 
     public async ngOnInit() {
         this.loading()
-
-        this.movies = await this.searchService.popularMoviesByPage(0,12).toPromise();
+        this.scrollDisabled = true;
+        this.movies = await this.searchService.popularMoviesByPage(0,12);
         this.tvShows = await this.searchService.popularTvByPage(0,12);
 
         this.contentLoaded = 12;
 
         this.createInitialModel();
-
+        this.scrollDisabled = false;
     }
 
     public async onScroll() {
@@ -57,10 +58,18 @@ export class DiscoverComponent implements OnInit {
             console.log("SCROLLED!")
             this.loading();
             if (this.popularActive) {
-                this.movies = await this.searchService.popularMoviesByPage(this.contentLoaded, 12).toPromise();
+                this.movies = await this.searchService.popularMoviesByPage(this.contentLoaded, 12);
                 this.tvShows = await this.searchService.popularTvByPage(this.contentLoaded, 12);
-                this.contentLoaded += 12;
             }
+            if(this.trendingActive) {
+                this.movies = await this.searchService.nowPlayingMoviesByPage(this.contentLoaded, 12);
+                this.tvShows = await this.searchService.trendingTvByPage(this.contentLoaded, 12);
+            }
+            if(this.upcomingActive) {
+                this.movies = await this.searchService.upcomingMoviesByPage(this.contentLoaded, 12);
+                this.tvShows = await this.searchService.anticipatedTvByPage(this.contentLoaded, 12);                
+            }
+            this.contentLoaded += 12;
 
             this.createModel();
             this.isScrolling = false;
@@ -69,44 +78,51 @@ export class DiscoverComponent implements OnInit {
 
     public async popular() {
         this.clear();
-
+        this.scrollDisabled = true;
+        this.isScrolling = false;
         this.contentLoaded = 12;
         this.loading()
         this.popularActive = true;
         this.trendingActive = false;
         this.upcomingActive = false;
-        this.movies = await this.searchService.popularMoviesByPage(0, 12).toPromise();
+        this.movies = await this.searchService.popularMoviesByPage(0, 12);
         this.tvShows = await this.searchService.popularTvByPage(0, 12);
 
-
         this.createModel();
+        this.scrollDisabled = false;
     }
 
     public async trending() {
         this.clear();
 
+        this.scrollDisabled = true;
+        this.isScrolling = false;
         this.contentLoaded = 12;
         this.loading()
         this.popularActive = false;
         this.trendingActive = true;
         this.upcomingActive = false;
-        this.movies = await this.searchService.nowPlayingMovies().toPromise();
-        this.tvShows = await this.searchService.trendingTv().toPromise();
+        this.movies = await this.searchService.nowPlayingMoviesByPage(0, 12);
+        this.tvShows = await this.searchService.trendingTvByPage(0, 12);
 
         this.createModel();
+        this.scrollDisabled = false;
     }
 
     public async upcoming() {
         this.clear();
+        this.scrollDisabled = true;
+        this.isScrolling = false;
         this.contentLoaded = 12;
         this.loading()
         this.popularActive = false;
         this.trendingActive = false;
         this.upcomingActive = true;
-        this.movies = await this.searchService.upcomingMovies().toPromise();
-        this.tvShows = await this.searchService.anticipatedTv().toPromise();
+        this.movies = await this.searchService.upcomingMoviesByPage(0, 12);
+        this.tvShows = await this.searchService.anticipatedTvByPage(0, 12);
 
         this.createModel();
+        this.scrollDisabled = false;
     }
 
     private createModel() {

@@ -16,8 +16,9 @@
 
   <div *ngIf="discoverResults" class="row full-height discoverResults"  
   infiniteScroll
-  [fromRoot]="true"
-  [infiniteScrollDistance]="1"
+  [fromRoot]="false"
+  [infiniteScrollDistance]="0.5"
+  [infiniteScrollDisabled]="scrollDisabled"
   (scrolled)="onScroll()">
       <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-4 small-padding" *ngFor="let result of discoverResults">
         <discover-card [result]="result"></discover-card>

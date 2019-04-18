@@ -138,6 +138,37 @@ namespace Ombi.Core.Engine.V2
             return null;
         }
 
+        public async Task<IEnumerable<SearchMovieViewModel>> TopRatedMovies(int currentPosition, int amountToLoad)
+        {
+            var langCode = await DefaultLanguageCode(null);
+
+            var pages = PaginationHelper.GetNextPages(currentPosition, amountToLoad, _theMovieDbMaxPageItems);
+
+            var results = new List<MovieSearchResult>();
+            foreach (var pagesToLoad in pages)
+            {
+                var apiResult = await MovieApi.TopRated(langCode, pagesToLoad.Page);
+                results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
+            }
+            return await TransformMovieResultsToResponse(results);
+        }
+
+        public async Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies(int currentPosition, int amountToLoad)
+        {
+            var langCode = await DefaultLanguageCode(null);
+
+            var pages = PaginationHelper.GetNextPages(currentPosition, amountToLoad, _theMovieDbMaxPageItems);
+
+            var results = new List<MovieSearchResult>();
+            foreach (var pagesToLoad in pages)
+            {
+                var apiResult = await MovieApi.NowPlaying(langCode, pagesToLoad.Page);
+                results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
+            }
+            return await TransformMovieResultsToResponse(results);
+        }
+
+
         /// <summary>
         /// Gets upcoming movies.
         /// </summary>
@@ -155,6 +186,21 @@ namespace Ombi.Core.Engine.V2
                 return await TransformMovieResultsToResponse(result.Shuffle().Take(ResultLimit)); // Take x to stop us overloading the API
             }
             return null;
+        }
+
+        public async Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies(int currentPosition, int amountToLoad)
+        {
+            var langCode = await DefaultLanguageCode(null);
+
+            var pages = PaginationHelper.GetNextPages(currentPosition, amountToLoad, _theMovieDbMaxPageItems);
+
+            var results = new List<MovieSearchResult>();
+            foreach (var pagesToLoad in pages)
+            {
+                var apiResult = await MovieApi.Upcoming(langCode, pagesToLoad.Page);
+                results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
+            }
+            return await TransformMovieResultsToResponse(results);
         }
 
         /// <summary>

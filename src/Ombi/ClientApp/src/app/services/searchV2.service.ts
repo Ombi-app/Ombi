@@ -34,16 +34,23 @@ export class SearchV2Service extends ServiceHelpers {
         return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/Popular`);
     }
 
-    public popularMoviesByPage(currentlyLoaded: number, toLoad: number): Observable<ISearchMovieResult[]> {
-        return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/Popular/${currentlyLoaded}/${toLoad}`);
+    public popularMoviesByPage(currentlyLoaded: number, toLoad: number): Promise<ISearchMovieResult[]> {
+        return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/Popular/${currentlyLoaded}/${toLoad}`).toPromise();
     }
 
     public upcomingMovies(): Observable<ISearchMovieResult[]> {
         return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/upcoming`);
     }
 
+    public upcomingMoviesByPage(currentlyLoaded: number, toLoad: number): Promise<ISearchMovieResult[]> {
+        return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/upcoming/${currentlyLoaded}/${toLoad}`).toPromise();
+    }
+
     public nowPlayingMovies(): Observable<ISearchMovieResult[]> {
         return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/nowplaying`);
+    }
+    public nowPlayingMoviesByPage(currentlyLoaded: number, toLoad: number): Promise<ISearchMovieResult[]> {
+        return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/nowplaying/${currentlyLoaded}/${toLoad}`).toPromise();
     }
     
     public topRatedMovies(): Observable<ISearchMovieResult[]> {
@@ -64,9 +71,16 @@ export class SearchV2Service extends ServiceHelpers {
     public anticipatedTv(): Observable<ISearchTvResult[]> {
         return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/anticipated`, { headers: this.headers });
     }
+    public anticipatedTvByPage(currentlyLoaded: number, toLoad: number): Promise<ISearchTvResult[]> {
+        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/anticipated/${currentlyLoaded}/${toLoad}`, { headers: this.headers }).toPromise();
+    }
     
     public trendingTv(): Observable<ISearchTvResult[]> {
         return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/trending`, { headers: this.headers });
+    }
+
+    public trendingTvByPage(currentlyLoaded: number, toLoad: number): Promise<ISearchTvResult[]> {
+        return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/trending/${currentlyLoaded}/${toLoad}`, { headers: this.headers }).toPromise();
     }
     
     public getTvInfo(tvdbid: number): Promise<ISearchTvResultV2> {
