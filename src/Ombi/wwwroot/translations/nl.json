@@ -75,6 +75,7 @@
     "RequestAdded": "Aanvraag voor {{title}} is succesvol toegevoegd",
     "Similar": "Vergelijkbaar",
     "Refine": "Verfijn",
+    "SearchBarPlaceholder": "Type Here to Search",
     "Movies": {
       "PopularMovies": "Populaire films",
       "UpcomingMovies": "Aankomende Films",
