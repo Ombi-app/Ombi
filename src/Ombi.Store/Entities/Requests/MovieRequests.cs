@@ -8,6 +8,10 @@ namespace Ombi.Store.Entities.Requests
     [Table("MovieRequests")]
     public class MovieRequests : FullBaseRequest
     {
+        public MovieRequests()
+        {
+            RequestType = RequestType.Movie;
+        }
         public int TheMovieDbId { get; set; }
         public int? IssueId { get; set; }
         [ForeignKey(nameof(IssueId))]
