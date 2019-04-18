@@ -75,6 +75,7 @@
     "RequestAdded": "Kérés sikeresen leadva erre: {{title}}",
     "Similar": "Hasonló",
     "Refine": "Finomítás",
+    "SearchBarPlaceholder": "Type Here to Search",
     "Movies": {
       "PopularMovies": "Népszerű filmek",
       "UpcomingMovies": "Közelgő filmek",
