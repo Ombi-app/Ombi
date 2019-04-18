@@ -52,6 +52,7 @@ import { SearchV2Service } from "./services/searchV2.service";
 import { NavSearchComponent } from "./my-nav/nav-search.component";
 import { OverlayModule } from "@angular/cdk/overlay";
 import { getBaseLocation } from "./shared/functions/common-functions";
+import { StorageService } from "./shared/storage/storage-service";
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
@@ -76,6 +77,7 @@ const routes: Routes = [
     { loadChildren: "./recentlyAdded/recentlyAdded.module#RecentlyAddedModule", path: "recentlyadded" },
     { loadChildren: "./vote/vote.module#VoteModule", path: "vote" },
     { loadChildren: "./media-details/media-details.module#MediaDetailsModule", path: "details" },
+    { loadChildren: "./user-preferences/user-preferences.module#UserPreferencesModule", path: "user-preferences" },
 ];
 
 // AoT requires an exported function for factories
@@ -176,6 +178,7 @@ export function JwtTokenGetter() {
         SearchService,
         SearchV2Service,
         MessageService,
+        StorageService,
         { provide: APP_BASE_HREF, useValue: window['_app_base'] || '/' }
         // {
         //     provide: APP_BASE_HREF,

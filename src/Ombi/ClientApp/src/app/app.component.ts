@@ -9,6 +9,7 @@ import { IdentityService, NotificationService, CustomPageService } from "./servi
 import { JobService, SettingsService } from "./services";
 
 import { ICustomizationSettings, ICustomPage } from "./interfaces";
+import { StorageService } from './shared/storage/storage-service';
 
 @Component({
     selector: "app-ombi",
@@ -43,7 +44,8 @@ export class AppComponent implements OnInit {
         public readonly translate: TranslateService,
         private readonly identityService: IdentityService,
         private readonly customPageService: CustomPageService,
-        public overlayContainer: OverlayContainer) {
+        public overlayContainer: OverlayContainer,
+        private storage: StorageService) {
 
         // const base = this.platformLocation.getBaseHrefFromDOM();
         // if (base.length > 1) {
@@ -51,12 +53,18 @@ export class AppComponent implements OnInit {
         // }
 
         this.translate.addLangs(["en", "de", "fr", "da", "es", "it", "nl", "sv", "no", "pl", "pt"]);
+
+        const selectedLang = this.storage.get("Language");
+
         // this language will be used as a fallback when a translation isn't found in the current language
         this.translate.setDefaultLang("en");
-
-        // See if we can match the supported langs with the current browser lang
-        const browserLang: string = translate.getBrowserLang();
-        this.translate.use(browserLang.match(/en|fr|da|de|es|it|nl|sv|no|pl|pt/) ? browserLang : "en");
+        if (selectedLang) {
+            this.translate.use(selectedLang);
+        } else {
+            // See if we can match the supported langs with the current browser lang
+            const browserLang: string = translate.getBrowserLang();
+            this.translate.use(browserLang.match(/en|fr|da|de|es|it|nl|sv|no|pl|pt/) ? browserLang : "en");
+        }
     }
 
     public ngOnInit() {
@@ -87,7 +95,7 @@ export class AppComponent implements OnInit {
             this.currentUrl = event.url;
             if (event instanceof NavigationStart) {
                 this.user = this.authService.claims();
-                if(this.user && this.user.username) {
+                if (this.user && this.user.username) {
                     this.username = this.user.username;
                 }
                 this.isAdmin = this.authService.hasRole("admin");

@@ -62,7 +62,8 @@
     "OpenMobileApp": "Open Mobile App",
     "RecentlyAdded": "Recently Added",
     "ChangeTheme":"Change Theme",
-    "Calendar":"Calendar"
+    "Calendar":"Calendar",
+    "UserPreferences": "Preferences"
   },
   "Search": {
     "Title": "Search",
@@ -219,5 +220,9 @@
       "Writer": "Writer",
       "ExecProducer": "Exec Producer"
     }
+  },
+  "UserPreferences": {
+    "Welcome":"Welcome {{username}}!",
+    "OmbiLanguage":"Ombi Language"
   }
 }

@@ -40,6 +40,7 @@ export class MyNavComponent implements OnInit {
     { name: "NavigationBar.UserManagement", icon: "account_circle", link: "/usermanagement", requiresAdmin: true },
     { name: "NavigationBar.Calendar", icon: "calendar_today", link: "/calendar", requiresAdmin: false },
     { name: "NavigationBar.Settings", icon: "settings", link: "/Settings/About", requiresAdmin: true },
+    { name: "NavigationBar.UserPreferences", icon: "person", link: "/user-preferences", requiresAdmin: false },
   ]
 
   public logOut() {
