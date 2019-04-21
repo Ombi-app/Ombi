@@ -52,8 +52,8 @@ after_build:
     If(($env:APPVEYOR_REPO_BRANCH -in $deployBranches -Or $env:APPVEYOR_REPO_COMMIT_MESSAGE -Match '!deploy') -And $env:APPVEYOR_REPO_COMMIT_MESSAGE -NotMatch '!build') 
     {
       Write-Output "Deploying!"
-      Get-ChildItem .\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-      Get-ChildItem .\*.gz | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+      Get-ChildItem -Recurse .\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+      Get-ChildItem -Recurse .\*.gz | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
     }
     Else 
     {
