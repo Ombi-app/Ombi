@@ -41,7 +41,7 @@ build_script:
 skip_commits:
   files:
     - '**/*.md'
-
+ 
 after_build:
 - ps: |
     $deployBranches =
