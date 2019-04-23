@@ -14,7 +14,7 @@ import { StorageService } from './shared/storage/storage-service';
 
 import { HubConnection } from '@aspnet/signalr';
 import * as signalR from '@aspnet/signalr';
- 
+
 
 @Component({
     selector: "app-ombi",
@@ -37,11 +37,12 @@ export class AppComponent implements OnInit {
     public username: string;
 
     private checkedForUpdate: boolean;
+    private hubConnected: boolean;
 
 
     @HostBinding('class') public componentCssClass;
 
-    private scheduleHubConnection: HubConnection | undefined;
+    private notificationHubConnection: HubConnection | undefined;
 
     constructor(public notificationService: NotificationService,
         public authService: AuthService,
@@ -117,26 +118,27 @@ export class AppComponent implements OnInit {
                     },
                         err => this.checkedForUpdate = true);
                 }
-            }
-        });
 
-        this.scheduleHubConnection = new signalR.HubConnectionBuilder().withUrl("/hubs/schedules", {
-            accessTokenFactory: () => {
-                return this.authService.getToken();
-            }
-        })
-        .configureLogging(signalR.LogLevel.Information).build();
+                if (this.authService.loggedIn() && !this.hubConnected) {
+                    this.notificationHubConnection = new signalR.HubConnectionBuilder().withUrl("/hubs/notification", {
+                        accessTokenFactory: () => {
+                            return this.authService.getToken();
+                        }
+                    }).configureLogging(signalR.LogLevel.Information).build();
         
-        this.scheduleHubConnection
-        .start()
-        .then(() => console.info('Connection started!'))
-        .catch(err => console.error(err));
-        this.scheduleHubConnection.on("Send", (data: any) => {
-           this.snackBar.open(data,"OK", {
-            duration: 3000
-           });
-        });
+                    this.notificationHubConnection
+                        .start()
+                        .then(() => this.hubConnected = true)
+                        .catch(err => console.error(err));
+                    this.notificationHubConnection.on("Notification", (data: any) => {
+                        this.snackBar.open(data, "OK", {
+                            duration: 3000
+                        });
+                    });
+                }
 
+            }
+        });
     }
 
     public openMobileApp(event: any) {

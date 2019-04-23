@@ -20,12 +20,12 @@ namespace Ombi.Controllers.V2
     [ApiController]
     public class HubController : ControllerBase
     {
-        public HubController(IHubContext<ScheduledJobsHub> hub)
+        public HubController(IHubContext<NotificationHub> hub)
         {
             _hub = hub;
         }
 
-        private readonly IHubContext<ScheduledJobsHub> _hub;
+        private readonly IHubContext<NotificationHub> _hub;
 
         /// <summary>
         /// Returns search results for both TV and Movies
@@ -34,7 +34,7 @@ namespace Ombi.Controllers.V2
         [HttpGet("{searchTerm}")]
         public async Task MultiSearch(string searchTerm)
         {
-            await _hub.Clients.All.SendAsync("Send", searchTerm);
+            await _hub.Clients.All.SendAsync("Notification", searchTerm);
         }
     }
 }

@@ -221,7 +221,7 @@ namespace Ombi
                 c.SwaggerEndpoint("/swagger/v2/swagger.json", "API V2");
             });
 
-            app.UseSignalR(routes => { routes.MapHub<ScheduledJobsHub>("/hubs/schedules"); });
+            app.UseSignalR(routes => { routes.MapHub<NotificationHub>("/hubs/notification"); });
 
             app.UseMvcWithDefaultRoute();
 

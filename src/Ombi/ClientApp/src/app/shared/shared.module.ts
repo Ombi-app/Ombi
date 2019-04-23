@@ -11,7 +11,7 @@ import { InputSwitchModule, SidebarModule } from "primeng/primeng";
 
 import {
   MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatTooltipModule, MatSelectModule, MatTableModule, MatPaginatorModule, MatSortModule, 
-  MatTreeModule, MatStepperModule} from '@angular/material';
+  MatTreeModule, MatStepperModule, MatSnackBarModule} from '@angular/material';
   import {  MatCardModule, MatInputModule, MatTabsModule, MatAutocompleteModule, MatCheckboxModule, MatExpansionModule, MatDialogModule, MatProgressSpinnerModule,
     MatChipsModule } from "@angular/material";
 import { EpisodeRequestComponent } from "./episode-request/episode-request.component";
