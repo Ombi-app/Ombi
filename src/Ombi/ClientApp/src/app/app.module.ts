@@ -52,6 +52,7 @@ import { NavSearchComponent } from "./my-nav/nav-search.component";
 import { OverlayModule } from "@angular/cdk/overlay";
 import { getBaseLocation } from "./shared/functions/common-functions";
 import { StorageService } from "./shared/storage/storage-service";
+import { SignalRNotificationService } from "./services/signlarnotification.service";
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
@@ -179,6 +180,7 @@ export function JwtTokenGetter() {
         SearchV2Service,
         MessageService,
         StorageService,
+        SignalRNotificationService,
         { provide: APP_BASE_HREF, useValue: window['_app_base'] || '/' }
         // {
         //     provide: APP_BASE_HREF,

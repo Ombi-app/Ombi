@@ -12,8 +12,7 @@ import { MatSnackBar } from '@angular/material';
 import { ICustomizationSettings, ICustomPage } from "./interfaces";
 import { StorageService } from './shared/storage/storage-service';
 
-import { HubConnection } from '@aspnet/signalr';
-import * as signalR from '@aspnet/signalr';
+import { SignalRNotificationService } from './services/signlarnotification.service';
 
 
 @Component({
@@ -42,8 +41,6 @@ export class AppComponent implements OnInit {
 
     @HostBinding('class') public componentCssClass;
 
-    private notificationHubConnection: HubConnection | undefined;
-
     constructor(public notificationService: NotificationService,
         public authService: AuthService,
         private readonly router: Router,
@@ -54,6 +51,7 @@ export class AppComponent implements OnInit {
         private readonly customPageService: CustomPageService,
         public overlayContainer: OverlayContainer,
         private storage: StorageService,
+        private signalrNotification: SignalRNotificationService,
         private readonly snackBar: MatSnackBar) {
 
         // const base = this.platformLocation.getBaseHrefFromDOM();
@@ -120,23 +118,15 @@ export class AppComponent implements OnInit {
                 }
 
                 if (this.authService.loggedIn() && !this.hubConnected) {
-                    this.notificationHubConnection = new signalR.HubConnectionBuilder().withUrl("/hubs/notification", {
-                        accessTokenFactory: () => {
-                            return this.authService.getToken();
-                        }
-                    }).configureLogging(signalR.LogLevel.Information).build();
-        
-                    this.notificationHubConnection
-                        .start()
-                        .then(() => this.hubConnected = true)
-                        .catch(err => console.error(err));
-                    this.notificationHubConnection.on("Notification", (data: any) => {
+                    this.signalrNotification.initialize();
+                    this.hubConnected = true;
+
+                    this.signalrNotification.Notification.subscribe(data => {
                         this.snackBar.open(data, "OK", {
                             duration: 3000
                         });
                     });
                 }
-
             }
         });
     }
