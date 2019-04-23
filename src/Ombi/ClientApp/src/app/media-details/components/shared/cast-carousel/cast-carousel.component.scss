@@ -1,0 +1,7 @@
+@import "~@angular/material/theming";
+@import "~styles/variables.scss";
+.actor-background {
+  .dark & {  
+    background: $backgroundTint-dark;
+  }
+} 

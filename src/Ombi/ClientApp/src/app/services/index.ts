@@ -17,3 +17,5 @@ export * from "./recentlyAdded.service";
 export * from "./vote.service";
 export * from "./requestretry.service";
 export * from "./searchV2.service";
+export * from "./custompage.service";
+export * from "./message.service";

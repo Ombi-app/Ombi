@@ -1,10 +1,104 @@
 # Changelog
 
-## (unreleased)
+## v3.0.4256 (2019-02-18)
 
 ### **New Features**
 
+- Update discord link to follow the scheme of other links. [Tom McClellan]
+
+- Update issue templates. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update CHANGELOG.md. [Jamie]
+
+- Added the functionality to remove a user from getting notifications to their mobile device #2780. [tidusjar]
+
+- Added a demo mode, this will only show movies and shows that are in the public domain. Dam that stupid fruit company. [tidusjar]
+
+- Added Actor Searching for Movies! [TidusJar]
+
+- Added the ability to change where the View on Emby link goes to #2730. [TidusJar]
+
+- Added the request queue to the notifications UI so you can turn it off per notification agent #2747. [TidusJar]
+
 - Added new classes to the posters #2732. [TidusJar]
+
+### **Fixes**
+
+- Fix: src/Ombi/package.json to reduce vulnerabilities. [snyk-bot]
+
+- Fixed #2801 this is when a season is not correctly monitored in sonarr when approved by an admin. [tidusjar]
+
+- Small improvements to try and mitigate #2750. [tidusjar]
+
+- Removed some areas where we clear out the cache. This should help with DB locking #2750. [tidusjar]
+
+- Fixed #2810. [tidusjar]
+
+- Cannot create an issue comment with the API #2811. [tidusjar]
+
+- Set the local domain if the Application URL is set for the HELO or EHLO commands. #2636. [tidusjar]
+
+- New translations en.json (Spanish) [Jamie]
+
+- Delete ISSUE_TEMPLATE.md. [Jamie]
+
+- More minor grammatical edits. [Andrew Metzger]
+
+- Minor grammatical edits. [Andrew Metzger]
+
+- Fixed #2802 the issue where "Issues" were not being deleted correctly. [tidusjar]
+
+- Fixed #2797. [tidusjar]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- Fixed #2786. [tidusjar]
+
+- Fixed #2756. [tidusjar]
+
+- Ignore the UserName header as part of the Api is the value is an empty string. [tidusjar]
+
+- Fixed #2759. [tidusjar]
+
+- Did #2756. [TidusJar]
+
+- Fixed the exception that sometimes makes ombi fallover. [TidusJar]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- Log the error to the ui to figure out what's going on with #2755. [tidusjar]
+
+- Small fix when denying a request with a reason, we wasn't updating the ui. [TidusJar]
+
+- Make sure we can only set the ApiAlias when using the API Key. [tidusjar]
+
+- #2363 Added the ability to pass any username into the API using the ApiAlias header. [tidusjar]
+
+- Removed the Add user to Plex from Ombi. [tidusjar]
 
 
 ## v3.0.4119 (2019-01-09)

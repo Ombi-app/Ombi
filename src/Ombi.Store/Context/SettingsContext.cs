@@ -14,6 +14,7 @@ namespace Ombi.Store.Context
             if (_created) return;
 
             _created = true;
+            Database.SetCommandTimeout(60);
             Database.Migrate();
         }
         
@@ -27,7 +28,7 @@ namespace Ombi.Store.Context
             {
                 i.StoragePath = string.Empty;
             }
-            optionsBuilder.UseSqlite($"Data Source={Path.Combine(i.StoragePath, "OmbiSettings.db")}");
+            optionsBuilder.UseSqlite($"Data Source={Path.Combine(i.StoragePath, "OmbiSettings" + ".db")}");
         }
 
         public void Seed()
@@ -63,13 +64,6 @@ namespace Ombi.Store.Context
                 });
                 SaveChanges();
             }
-
-            SaveChanges();
-        }
-
-        ~SettingsContext()
-        {
-
         }
     }
 }

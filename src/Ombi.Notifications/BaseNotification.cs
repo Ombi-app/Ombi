@@ -26,8 +26,6 @@ namespace Ombi.Notifications
             MovieRepository = movie;
             TvRepository = tv;
             CustomizationSettings = customization;
-            Settings.ClearCache();
-            CustomizationSettings.ClearCache();
             RequestSubscription = sub;
             _log = log;
             AlbumRepository = album;
@@ -55,14 +53,12 @@ namespace Ombi.Notifications
 
         public async Task NotifyAsync(NotificationOptions model)
         {
-            Settings.ClearCache();
             var configuration = await GetConfiguration();
             await NotifyAsync(model, configuration);
         }
 
         public async Task NotifyAsync(NotificationOptions model, Settings.Settings.Models.Settings settings)
         {
-            Settings.ClearCache();
             if (settings == null) await NotifyAsync(model);
 
             var notificationSettings = (T)settings;

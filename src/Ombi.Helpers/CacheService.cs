@@ -28,7 +28,7 @@ namespace Ombi.Helpers
                 return result;
             }
 
-            using (await _mutex.LockAsync())
+            //using (await _mutex.LockAsync())
             {
                 if (_memoryCache.TryGetValue(cacheKey, out result))
                 {

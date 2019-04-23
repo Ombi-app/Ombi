@@ -35,7 +35,7 @@
 
                 <div class="row">
                     <div class="form-group">
-                        <label  for="select" class="control-label">User to send test notification to</label>
+                        <label  for="select" class="control-label">Users</label>
                         <div>
                             <select class="form-control form-control-custom" id="select" [(ngModel)]="testUserId" [ngModelOptions]="{standalone: true}">
                                 <option value="">Please select</option>    
@@ -46,7 +46,12 @@
 
                     <div class="form-group">
                         <div>
-                            <button [disabled]="form.invalid" type="button" (click)="test(form)" class="btn btn-danger-outline">Test</button>
+                            <button [disabled]="form.invalid" type="button" (click)="test(form)" class="btn btn-danger-outline">Send Test Notification</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div>
+                            <button [disabled]="form.invalid" type="button" (click)="remove(form)" class="btn btn-danger-outline">Remove User</button>
                         </div>
                     </div>
 

@@ -23,7 +23,7 @@ namespace Ombi.Api.Trakt
 
         public async Task<IEnumerable<TraktShow>> GetPopularShows(int? page = null, int? limitPerPage = null)
         {
-            var popular = await Client.Shows.GetPopularShowsAsync(new TraktExtendedInfo { Full = true, Images = true}, null, page ?? 1, limitPerPage ?? 10);
+            var popular = await Client.Shows.GetPopularShowsAsync(new TraktExtendedInfo { Full = true, Images = true }, null, page ?? 1, limitPerPage ?? 10);
             return popular.Value;
         }
 
@@ -43,6 +43,11 @@ namespace Ombi.Api.Trakt
         {
             var anticipatedShows = await Client.Shows.GetMostWatchedShowsAsync(period ?? TraktTimePeriod.Monthly, new TraktExtendedInfo { Full = true, Images = true }, null, page ?? 1, limitPerPage ?? 10);
             return anticipatedShows.Value;
+        }
+
+        public async Task<TraktShow> GetTvExtendedInfo(string imdbId)
+        {
+            return await Client.Shows.GetShowAsync(imdbId, new TraktExtendedInfo { Full = true });
         }
     }
 }

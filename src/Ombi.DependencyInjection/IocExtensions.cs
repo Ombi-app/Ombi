@@ -33,6 +33,7 @@ using Ombi.Api.CouchPotato;
 using Ombi.Api.DogNzb;
 using Ombi.Api.FanartTv;
 using Ombi.Api.Github;
+using Ombi.Api.Gotify;
 using Ombi.Api.Lidarr;
 using Ombi.Api.Mattermost;
 using Ombi.Api.Notifications;
@@ -51,16 +52,15 @@ using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Jobs.Sonarr;
 using Ombi.Store.Repository.Requests;
 using Ombi.Updater;
-using PlexContentCacher = Ombi.Schedule.Jobs.Plex;
 using Ombi.Api.Telegram;
 using Ombi.Core.Authentication;
+using Ombi.Core.Engine.Demo;
 using Ombi.Core.Engine.V2;
 using Ombi.Core.Processor;
 using Ombi.Schedule.Jobs.Lidarr;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.SickRage;
 using Ombi.Schedule.Processor;
-using Ombi.Store.Entities;
 
 namespace Ombi.DependencyInjection
 {
@@ -95,12 +95,16 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMassEmailSender, MassEmailSender>();
             services.AddTransient<IPlexOAuthManager, PlexOAuthManager>();
             services.AddTransient<IVoteEngine, VoteEngine>();
+            services.AddTransient<IDemoMovieSearchEngine, DemoMovieSearchEngine>();
+            services.AddTransient<IDemoTvSearchEngine, DemoTvSearchEngine>();
         }
 
         public static void RegisterEnginesV2(this IServiceCollection services)
         {
             services.AddTransient<IMultiSearchEngine, MultiSearchEngine>();
             services.AddTransient<IMovieEngineV2, MovieSearchEngineV2>();
+            services.AddTransient<ITVSearchEngineV2, TvSearchEngineV2>();
+            services.AddTransient<ICalendarEngine, CalendarEngine>();
         }
 
         public static void RegisterHttp(this IServiceCollection services)
@@ -127,6 +131,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IOmbiService, OmbiService>();
             services.AddTransient<IFanartTvApi, FanartTvApi>();
             services.AddTransient<IPushoverApi, PushoverApi>();
+            services.AddTransient<IGotifyApi, GotifyApi>();
             services.AddTransient<IMattermostApi, MattermostApi>();
             services.AddTransient<ICouchPotatoApi, CouchPotatoApi>();
             services.AddTransient<IDogNzbApi, DogNzbApi>();
@@ -139,28 +144,28 @@ namespace Ombi.DependencyInjection
         }
 
         public static void RegisterStore(this IServiceCollection services) { 
-            services.AddEntityFrameworkSqlite().AddDbContext<OmbiContext>();
-            services.AddEntityFrameworkSqlite().AddDbContext<SettingsContext>();
-            services.AddEntityFrameworkSqlite().AddDbContext<ExternalContext>();
+            services.AddDbContext<OmbiContext>();
+            services.AddDbContext<SettingsContext>();
+            services.AddDbContext<ExternalContext>();
             
             services.AddScoped<IOmbiContext, OmbiContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
             services.AddScoped<ISettingsContext, SettingsContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
             services.AddScoped<IExternalContext, ExternalContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
-            services.AddTransient<ISettingsRepository, SettingsJsonRepository>();
-            services.AddTransient<ISettingsResolver, SettingsResolver>();
-            services.AddTransient<IPlexContentRepository, PlexServerContentRepository>();
-            services.AddTransient<IEmbyContentRepository, EmbyContentRepository>();
-            services.AddTransient<INotificationTemplatesRepository, NotificationTemplatesRepository>();
+            services.AddScoped<ISettingsRepository, SettingsJsonRepository>();
+            services.AddScoped<ISettingsResolver, SettingsResolver>();
+            services.AddScoped<IPlexContentRepository, PlexServerContentRepository>();
+            services.AddScoped<IEmbyContentRepository, EmbyContentRepository>();
+            services.AddScoped<INotificationTemplatesRepository, NotificationTemplatesRepository>();
             
-            services.AddTransient<ITvRequestRepository, TvRequestRepository>();
-            services.AddTransient<IMovieRequestRepository, MovieRequestRepository>();
-            services.AddTransient<IMusicRequestRepository, MusicRequestRepository>();
-            services.AddTransient<IAuditRepository, AuditRepository>();
-            services.AddTransient<IApplicationConfigRepository, ApplicationConfigRepository>();
-            services.AddTransient<ITokenRepository, TokenRepository>();
-            services.AddTransient(typeof(ISettingsService<>), typeof(SettingsService<>));
-            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
-            services.AddTransient(typeof(IExternalRepository<>), typeof(ExternalRepository<>));
+            services.AddScoped<ITvRequestRepository, TvRequestRepository>();
+            services.AddScoped<IMovieRequestRepository, MovieRequestRepository>();
+            services.AddScoped<IMusicRequestRepository, MusicRequestRepository>();
+            services.AddScoped<IAuditRepository, AuditRepository>();
+            services.AddScoped<IApplicationConfigRepository, ApplicationConfigRepository>();
+            services.AddScoped<ITokenRepository, TokenRepository>();
+            services.AddScoped(typeof(ISettingsService<>), typeof(SettingsService<>));
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(IExternalRepository<>), typeof(ExternalRepository<>));
         }
         public static void RegisterServices(this IServiceCollection services)
         {
@@ -168,7 +173,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IEmailProvider, GenericEmailProvider>();
             services.AddTransient<INotificationHelper, NotificationHelper>();
-            services.AddTransient<ICacheService, CacheService>();
+            services.AddSingleton<ICacheService, CacheService>();
 
             services.AddTransient<IDiscordNotification, DiscordNotification>();
             services.AddTransient<IEmailNotification, EmailNotification>();
@@ -177,6 +182,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ISlackNotification, SlackNotification>();
             services.AddTransient<IMattermostNotification, MattermostNotification>();
             services.AddTransient<IPushoverNotification, PushoverNotification>();
+            services.AddTransient<IGotifyNotification, GotifyNotification>();
             services.AddTransient<ITelegramNotification, TelegramNotification>();
             services.AddTransient<IMobileNotification, MobileNotification>();
             services.AddTransient<IChangeLogProcessor, ChangeLogProcessor>();

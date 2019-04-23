@@ -93,6 +93,14 @@ export interface IPushoverNotificationSettings extends INotificationSettings {
     sound: string;
 }
 
+export interface IGotifyNotificationSettings extends INotificationSettings {
+    accessToken: string;
+    notificationTemplates: INotificationTemplates[];
+    baseUrl: string;
+    applicationToken: string;
+    priority: number;
+}
+
 export interface IMattermostNotifcationSettings extends INotificationSettings {
     webhookUrl: string;
     username: string;

@@ -1,4 +1,4 @@
-import { CommonModule, PlatformLocation } from "@angular/common";
+import { CommonModule, PlatformLocation, APP_BASE_HREF } from "@angular/common";
 import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -14,12 +14,15 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { CookieService } from "ng2-cookies";
 import { NgxEditorModule } from "ngx-editor";
 import { GrowlModule } from "primeng/components/growl/growl";
-import { ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DialogModule, OverlayPanelModule, SharedModule, SidebarModule,
-    TooltipModule } from "primeng/primeng";
+import {
+    ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DialogModule, OverlayPanelModule, SharedModule, SidebarModule,
+    TooltipModule
+} from "primeng/primeng";
 
-    import {
-        MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatAutocompleteModule, MatCheckboxModule, MatSnackBarModule} from '@angular/material';
-        import {  MatCardModule, MatInputModule, MatTabsModule } from "@angular/material";
+import {
+    MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatAutocompleteModule, MatCheckboxModule, MatSnackBarModule
+} from '@angular/material';
+import { MatCardModule, MatInputModule, MatTabsModule, MatSlideToggleModule } from "@angular/material";
 
 import { MDBBootstrapModule, CardsFreeModule, NavbarModule } from "angular-bootstrap-md";
 
@@ -38,15 +41,17 @@ import { TokenResetPasswordComponent } from "./login/tokenresetpassword.componen
 // Services
 import { AuthGuard } from "./auth/auth.guard";
 import { AuthService } from "./auth/auth.service";
-import { ImageService } from "./services";
+import { ImageService, SettingsService, CustomPageService } from "./services";
 import { LandingPageService } from "./services";
 import { NotificationService } from "./services";
-import { SettingsService } from "./services";
-import { IssuesService, JobService, PlexTvService, StatusService, SearchService, IdentityService } from "./services";
+import { IssuesService, JobService, PlexTvService, StatusService, SearchService, IdentityService, MessageService } from "./services";
 import { MyNavComponent } from './my-nav/my-nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { SearchV2Service } from "./services/searchV2.service";
 import { NavSearchComponent } from "./my-nav/nav-search.component";
+import { OverlayModule } from "@angular/cdk/overlay";
+import { getBaseLocation } from "./shared/functions/common-functions";
+import { StorageService } from "./shared/storage/storage-service";
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
@@ -59,20 +64,24 @@ const routes: Routes = [
     { path: "token", component: TokenResetPasswordComponent },
     { path: "landingpage", component: LandingPageComponent },
     { path: "auth/cookie", component: CookieComponent },
+    { loadChildren: "./calendar/calendar.module#CalendarModule", path: "calendar" },
     { loadChildren: "./discover/discover.module#DiscoverModule", path: "discover" },
     { loadChildren: "./issues/issues.module#IssuesModule", path: "issues" },
     { loadChildren: "./settings/settings.module#SettingsModule", path: "Settings" },
     { loadChildren: "./wizard/wizard.module#WizardModule", path: "Wizard" },
     { loadChildren: "./usermanagement/usermanagement.module#UserManagementModule", path: "usermanagement" },
-    { loadChildren: "./requests/requests.module#RequestsModule", path: "requests" },
+    { loadChildren: "./requests/requests.module#RequestsModule", path: "requestsOld" },
+    { loadChildren: "./requests-list/requests-list.module#RequestsListModule", path: "requests-list" },
     { loadChildren: "./search/search.module#SearchModule", path: "search" },
     { loadChildren: "./recentlyAdded/recentlyAdded.module#RecentlyAddedModule", path: "recentlyadded" },
     { loadChildren: "./vote/vote.module#VoteModule", path: "vote" },
     { loadChildren: "./media-details/media-details.module#MediaDetailsModule", path: "details" },
+    { loadChildren: "./user-preferences/user-preferences.module#UserPreferencesModule", path: "user-preferences" },
 ];
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLocation) {
+    // const base = getBaseLocation();
     const base = platformLocation.getBaseHrefFromDOM();
     const version = Math.floor(Math.random() * 999999999);
     if (base.length > 1) {
@@ -89,6 +98,7 @@ export function JwtTokenGetter() {
     return token;
 }
 
+
 @NgModule({
     imports: [
         RouterModule.forRoot(routes),
@@ -100,6 +110,7 @@ export function JwtTokenGetter() {
         ButtonModule,
         FormsModule,
         DataTableModule,
+        MatSnackBarModule,
         SharedModule,
         NgxEditorModule,
         MatSnackBarModule,
@@ -118,6 +129,7 @@ export function JwtTokenGetter() {
         OverlayPanelModule,
         CommonModule,
         CardsFreeModule,
+        OverlayModule,
         MatCheckboxModule,
         MDBBootstrapModule.forRoot(),
         JwtModule.forRoot({
@@ -133,7 +145,7 @@ export function JwtTokenGetter() {
             },
         }),
         SidebarModule,
-        MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, LayoutModule,
+        MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, LayoutModule, MatSlideToggleModule
     ],
     declarations: [
         AppComponent,
@@ -158,13 +170,21 @@ export function JwtTokenGetter() {
         LandingPageService,
         ConfirmationService,
         ImageService,
+        CustomPageService,
         CookieService,
         JobService,
         IssuesService,
         PlexTvService,
         SearchService,
         SearchV2Service,
-    ],
+        MessageService,
+        StorageService,
+        { provide: APP_BASE_HREF, useValue: window['_app_base'] || '/' }
+        // {
+        //     provide: APP_BASE_HREF,
+        //     useFactory: getBaseLocation
+        // }
+       ],
     bootstrap: [AppComponent],
 })
 export class AppModule { }

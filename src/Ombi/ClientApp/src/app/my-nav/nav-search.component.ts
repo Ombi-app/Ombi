@@ -20,8 +20,21 @@ export class NavSearchComponent {
     public searching = false;
     public searchFailed = false;
     
-    
-    public formatter = (result: IMultiSearchResult) => result.media_type == "movie" ? result.title + ` (${result.release_date.slice(0,4)})` : result.name + ` (${result.release_date.slice(0,4)})`;
+    public formatter = (result: IMultiSearchResult) =>  {
+        if(result.media_type === "movie") {
+            let title = result.title;
+            if(result.release_date) {
+                title += ` (${result.release_date.slice(0,4)})`;
+            }
+            return title;
+        } else {
+            let title = result.name;
+            if(result.release_date) {
+                title += ` (${result.release_date.slice(0,4)})`;
+            }
+            return title;
+        }
+    }
     
     public searchModel = (text$: Observable<string>) =>
     text$.pipe(
@@ -41,6 +54,9 @@ export class NavSearchComponent {
     public selected(event: NgbTypeaheadSelectItemEvent) {
         if (event.item.media_type == "movie") {
             this.router.navigate([`details/movie/${event.item.id}`]);
+            return;
+        } else if (event.item.media_type == "tv") {
+            this.router.navigate([`details/tv/${event.item.id}/true`]);
             return;
         }
     }

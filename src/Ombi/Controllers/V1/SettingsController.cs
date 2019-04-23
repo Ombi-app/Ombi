@@ -79,6 +79,27 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
+        /// Gets the base url.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("baseurl")]
+        [AllowAnonymous]
+        public async Task<string> GetBaseUrl()
+        {
+            var s = await Get<OmbiSettings>();
+            var baseUrl = s?.BaseUrl ?? string.Empty;
+            if (!baseUrl.EndsWith("/"))
+            {
+                baseUrl = baseUrl.TrimEnd('/');
+            }
+            if (baseUrl.StartsWith("/"))
+            {
+                baseUrl = baseUrl.TrimStart('/');
+            }
+            return baseUrl;
+        }
+
+        /// <summary>
         /// Save the Ombi settings.
         /// </summary>
         /// <param name="ombi">The ombi.</param>
@@ -708,27 +729,6 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
-        /// Gets the Custom Page Settings.
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("CustomPage")]
-        [AllowAnonymous]
-        public async Task<CustomPageSettings> CustomPageSettings()
-        {
-            return await Get<CustomPageSettings>();
-        }
-
-        /// <summary>
-        /// Saves the Custom Page Settings.
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost("CustomPage")]
-        public async Task<bool> CustomPageSettings([FromBody] CustomPageSettings page)
-        {
-            return await Save(page);
-        }
-
-        /// <summary>
         /// Saves the discord notification settings.
         /// </summary>
         /// <param name="model">The model.</param>
@@ -964,6 +964,40 @@ namespace Ombi.Controllers.V1
 
             // Lookup to see if we have any templates saved
             model.NotificationTemplates = BuildTemplates(NotificationAgent.Mobile);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Saves the gotify notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/gotify")]
+        public async Task<bool> GotifyNotificationSettings([FromBody] GotifyNotificationViewModel model)
+        {
+            // Save the email settings
+            var settings = Mapper.Map<GotifySettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.UpdateRange(model.NotificationTemplates);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the gotify Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/gotify")]
+        public async Task<GotifyNotificationViewModel> GotifyNotificationSettings()
+        {
+            var settings = await Get<GotifySettings>();
+            var model = Mapper.Map<GotifyNotificationViewModel>(settings);
+
+            // Lookup to see if we have any templates saved
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Gotify);
 
             return model;
         }

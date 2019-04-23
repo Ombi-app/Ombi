@@ -21,7 +21,7 @@
 
             if (ApplicationUrl.EndsWith("/"))
             {
-                ApplicationUrl.Remove(ApplicationUrl.Length - 1);
+                ApplicationUrl = ApplicationUrl.Remove(ApplicationUrl.Length - 1);
             }
             if (!part.StartsWith("/"))
             {

@@ -1,10 +1,10 @@
 
-#tool "nuget:?package=GitVersion.CommandLine"
-#addin "Cake.Gulp"
-#addin "SharpZipLib"
-#addin nuget:?package=Cake.Compression&version=0.1.4
-#addin "Cake.Incubator"
-#addin "Cake.Yarn"
+#tool "nuget:?package=GitVersion.CommandLine&version=4.0.0"
+#addin nuget:?package=SharpZipLib&version=1.1.0
+#addin nuget:?package=Cake.Compression&version=0.2.2
+#addin "Cake.Incubator&version=3.1.0"
+#addin nuget:?package=Cake.Yarn&version=0.4.5
+#addin "Cake.Powershell"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -82,9 +82,9 @@ Task("SetVersionInfo")
 
     versionInfo = GitVersion(settings);
 	
-	Information("GitResults -> {0}", versionInfo.Dump());
+//	Information("GitResults -> {0}", versionInfo.Dump());
 
-    Information(@"Build:{0}",AppVeyor.Environment.Build.Dump());
+//Information(@"Build:{0}",AppVeyor.Environment.Build.Dump());
 
 	var buildVersion = string.Empty;
 	if(string.IsNullOrEmpty(AppVeyor.Environment.Build.Version))
@@ -135,7 +135,7 @@ Task("Gulp Publish")
 Task("TSLint")
     .Does(() =>
 {
-	// Yarn.FromPath(uiProjectDir).RunScript("lint");
+	//Yarn.FromPath(uiProjectDir).RunScript("lint");
 });
 
 Task("PrePublish")
@@ -156,6 +156,7 @@ Task("Package")
 });
 
 Task("Publish")
+    .IsDependentOn("Run-Unit-Tests")
     .IsDependentOn("PrePublish")
     .IsDependentOn("Publish-Windows")
     .IsDependentOn("Publish-Windows-32bit")
@@ -250,15 +251,55 @@ Task("Publish-Linux-ARM-64Bit")
 
 Task("Run-Unit-Tests")
     .Does(() =>
-{  
-	DotNetCoreBuild(csProj, buildSettings);
+{    
+    var settings = new DotNetCoreTestSettings
+    {
+        ArgumentCustomization = args => args.Append("--logger \"trx;LogFileName=Test.trx\""),
+        Configuration = "Release"
+    };
+    var projectFiles = GetFiles("./**/*Tests.csproj");
+    foreach(var file in projectFiles)
+    {
+        DotNetCoreTest(file.FullPath, settings);
+    }
+
+    var script = @"
+    $wc = New-Object 'System.Net.WebClient'
+    foreach ($name in Resolve-Path .\src\**\TestResults\Test*.trx) 
+    {
+    $wc.UploadFile(""https://ci.appveyor.com/api/testresults/mstest/$($env:APPVEYOR_JOB_ID)\"", $name)
+    }
+";
+    // Upload the results
+     StartPowershellScript(script);
 });
+
+Task("Run-Server-Build")
+    .Does(() => 
+    {
+        var settings = new DotNetCoreBuildSettings
+        {
+            Framework = frameworkVer,
+            Configuration = "Release",
+            OutputDirectory = Directory(buildDir)
+        };
+        DotNetCoreBuild(csProj, settings);
+    });
+
+Task("Run-UI-Build")
+	.IsDependentOn("PrePublish");
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
  
 Task("Default")
     .IsDependentOn("Publish");
+
+Task("Build")
+    .IsDependentOn("SetVersionInfo")
+    .IsDependentOn("Run-Unit-Tests")
+    .IsDependentOn("Run-Server-Build"); 
+    // .IsDependentOn("Run-UI-Build");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION

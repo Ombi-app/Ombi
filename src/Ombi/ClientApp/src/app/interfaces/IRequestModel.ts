@@ -114,6 +114,8 @@ export interface ITvRequests {
 
 export interface IChildRequests extends IBaseRequest {
   seasonRequests: INewSeasonRequests[];
+  parentRequestId: number;
+  parentRequest: ITvRequests;
   subscribed: boolean;
   showSubscribe: boolean;
 }
@@ -139,6 +141,7 @@ export interface INewSeasonRequests {
   id: number;
   seasonNumber: number;
   episodes: IEpisodesRequests[];
+  seasonAvailable: boolean;
 }
 
 export interface IEpisodesRequests {
@@ -146,6 +149,7 @@ export interface IEpisodesRequests {
   episodeNumber: number;
   title: string;
   airDate: Date;
+  airDateDisplay: string;
   url: string;
   available: boolean;
   requested: boolean;

@@ -1,27 +1,64 @@
-﻿
-@media (max-width: 978px) {
+﻿@media (max-width: 978px) {
     .top-spacing {
         padding-top: 10%;
     }
-  }
-  @media (min-width: 979px) {
+    .modal-panel {    
+      max-height: 100vh !important;
+      max-width: 100vw !important;
+      height: 100%;
+    }
+}
+
+@media (min-width: 979px) {
     .top-spacing {
         padding-top: 4%;
     }
-  }
-  
+}
 
-  .btn-blue {
-      background-color: #1976D2;
-  }
+html,
+body {
+    min-height: 100vh;
+    overflow: auto;
+}
 
-  .btn-pink {
-    background-color: #C2185B;
-  }
-  .btn-green {
-    background-color: #1DE9B6;
-  }
+.spinner-container {
+    position: relative;
+    margin-left: 50%;
+}
 
-  .btn-orange {
-      background-color: #F57C00;
-  }
+.bottom-page-gap {
+    height: 50px;
+}
+
+/* Scrollbar */
+
+::-webkit-scrollbar {
+    width: 7px;
+    background: rgba(0, 0, 0, 0);
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: #41927b;
+}
+
+.sidenav ::-webkit-scrollbar-track {
+    display: none;
+}
+
+.grow {
+    transition: all .2s ease-in-out;
+}
+
+.grow:hover {
+    transform: scale(1.1);
+    color: black;
+}
+
+table {
+  width: 100%;
+}

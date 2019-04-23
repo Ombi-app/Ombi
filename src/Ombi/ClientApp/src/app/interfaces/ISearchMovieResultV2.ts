@@ -39,11 +39,30 @@
     subscribed: boolean;
     showSubscribe: boolean;
     externalIds: IExternalIds;
+    keywords: IKeywords;
+    belongsToCollection: ICollectionsModel;
 
     // for the UI
     requestProcessing: boolean;
     processed: boolean;
     background: any;
+}
+
+
+export interface ICollectionsModel {
+    id: number;
+    name: string;
+    posterPath: string;
+    backdropPath: string;
+}
+
+export interface IKeywords {
+    keywordsValue: IKeywordsValue[];
+}
+
+export interface IKeywordsValue {
+    id: number;
+    name: string;
 }
 
 export interface IVideos {

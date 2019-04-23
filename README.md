@@ -59,6 +59,7 @@ We integrate with the following applications:
 Supported notifications:
 * SMTP Notifications (Email)
 * Discord
+* Gotify
 * Slack
 * Pushbullet
 * Pushover
@@ -117,13 +118,12 @@ Please feel free to submit a pull request!
 # Donation
 If you feel like donating you can donate with the below buttons!
 
-[![Patreon](https://www.ombi.io/img/patreondonate.svg)](https://patreon.com/tidusjar/Ombi) 
-[![Paypal](https://www.ombi.io/img/paypaldonate.svg)](https://paypal.me/PlexRequestsNet)
+
+[![Patreon](https://img.shields.io/badge/patreon-donate-yellow.svg)](https://patreon.com/tidusjar/Ombi)
+[![Paypal](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://paypal.me/PlexRequestsNet)
 
 ### A massive thanks to everyone for all their help!
 
-## Stats
-[![Throughput Graph](https://graphs.waffle.io/tidusjar/PlexRequests.Net/throughput.svg)](https://waffle.io/tidusjar/PlexRequests.Net/metrics/throughput)
 
 ### Sponsors ###
 - [JetBrains](http://www.jetbrains.com/) for providing us with free licenses to their great tools

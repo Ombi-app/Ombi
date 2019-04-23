@@ -1,14 +1,16 @@
-﻿import { PlatformLocation } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+﻿import { OverlayContainer } from '@angular/cdk/overlay';
+
+import { Component, OnInit, HostBinding } from "@angular/core";
 import { NavigationStart, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { AuthService } from "./auth/auth.service";
 import { ILocalUser } from "./auth/IUserLogin";
-import { IdentityService, NotificationService } from "./services";
+import { IdentityService, NotificationService, CustomPageService } from "./services";
 import { JobService, SettingsService } from "./services";
 import { MatSnackBar } from '@angular/material';
 
 import { ICustomizationSettings, ICustomPage } from "./interfaces";
+import { StorageService } from './shared/storage/storage-service';
 
 import { HubConnection } from '@aspnet/signalr';
 import * as signalR from '@aspnet/signalr';
@@ -30,8 +32,14 @@ export class AppComponent implements OnInit {
     public currentUrl: string;
     public userAccessToken: string;
     public voteEnabled = false;
+    public applicationName: string = "Ombi"
+    public isAdmin: boolean;
+    public username: string;
 
     private checkedForUpdate: boolean;
+
+
+    @HostBinding('class') public componentCssClass;
 
     private scheduleHubConnection: HubConnection | undefined;
 
@@ -42,30 +50,44 @@ export class AppComponent implements OnInit {
         private readonly jobService: JobService,
         public readonly translate: TranslateService,
         private readonly identityService: IdentityService,
-        private readonly platformLocation: PlatformLocation,
+        private readonly customPageService: CustomPageService,
+        public overlayContainer: OverlayContainer,
+        private storage: StorageService,
         private readonly snackBar: MatSnackBar) {
 
-        const base = this.platformLocation.getBaseHrefFromDOM();
-        if (base.length > 1) {
-            __webpack_public_path__ = base + "/dist/";
-        }
+        // const base = this.platformLocation.getBaseHrefFromDOM();
+        // if (base.length > 1) {
+        //     __webpack_public_path__ = base + "/dist/";
+        // }
 
         this.translate.addLangs(["en", "de", "fr", "da", "es", "it", "nl", "sv", "no", "pl", "pt"]);
+
+        const selectedLang = this.storage.get("Language");
+
         // this language will be used as a fallback when a translation isn't found in the current language
         this.translate.setDefaultLang("en");
-
-        // See if we can match the supported langs with the current browser lang
-        const browserLang: string = translate.getBrowserLang();
-        this.translate.use(browserLang.match(/en|fr|da|de|es|it|nl|sv|no|pl|pt/) ? browserLang : "en");
+        if (selectedLang) {
+            this.translate.use(selectedLang);
+        } else {
+            // See if we can match the supported langs with the current browser lang
+            const browserLang: string = translate.getBrowserLang();
+            this.translate.use(browserLang.match(/en|fr|da|de|es|it|nl|sv|no|pl|pt/) ? browserLang : "en");
+        }
     }
 
     public ngOnInit() {
-        this.user = this.authService.claims();
+        const theme = this.storage.get("theme");
+        this.onSetTheme(theme);
 
         this.settingsService.getCustomization().subscribe(x => {
             this.customizationSettings = x;
+
+            if (this.customizationSettings && this.customizationSettings.applicationName) {
+                this.applicationName = this.customizationSettings.applicationName;
+            }
+
             if (this.customizationSettings.useCustomPage) {
-                this.settingsService.getCustomPage().subscribe(c => {
+                this.customPageService.getCustomPage().subscribe(c => {
                     this.customPageSettings = c;
                     if (!this.customPageSettings.title) {
                         this.customPageSettings.title = "Custom Page";
@@ -81,10 +103,14 @@ export class AppComponent implements OnInit {
             this.currentUrl = event.url;
             if (event instanceof NavigationStart) {
                 this.user = this.authService.claims();
+                if (this.user && this.user.username) {
+                    this.username = this.user.username;
+                }
+                this.isAdmin = this.authService.hasRole("admin");
                 this.showNav = this.authService.loggedIn();
 
                 // tslint:disable-next-line:no-string-literal
-                if (this.user !== null && this.user.name && !this.checkedForUpdate && this.user.roles["Admin"]) {
+                if (this.user !== null && this.user.name && !this.checkedForUpdate && this.isAdmin) {
                     this.checkedForUpdate = true;
                     this.jobService.getCachedUpdate().subscribe(x => {
                         this.updateAvailable = x;
@@ -113,19 +139,6 @@ export class AppComponent implements OnInit {
 
     }
 
-    public roleClass() {
-        if (this.user.roles.some(r => r === "Admin")) {
-            return "adminUser";
-        } else if (this.user.roles.some(r => r === "PowerUser")) {
-            return "powerUser";
-        }
-        return "user";
-    }
-
-    public hasRole(role: string): boolean {
-        return this.user.roles.some(r => r === role);
-    }
-
     public openMobileApp(event: any) {
         event.preventDefault();
         if (!this.customizationSettings.applicationUrl) {
@@ -142,5 +155,12 @@ export class AppComponent implements OnInit {
     public logOut() {
         this.authService.logout();
         this.router.navigate(["login"]);
+    }
+
+    public onSetTheme(theme: string) {
+        if (theme) {
+            this.overlayContainer.getContainerElement().classList.add(theme);
+            this.componentCssClass = theme;
+        }
     }
 }

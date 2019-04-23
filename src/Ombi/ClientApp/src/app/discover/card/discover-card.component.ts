@@ -27,7 +27,7 @@ export class DiscoverCardComponent implements OnInit {
     }
     
     public openDetails(details: IDiscoverCardResult) {
-        const ref = this.dialog.open(DiscoverCardDetailsComponent, { width:"700px", data: details })
+        const ref = this.dialog.open(DiscoverCardDetailsComponent, { width:"700px", data: details,  panelClass: 'modal-panel' })
 
         ref.afterClosed().subscribe(result => {
             console.log('The dialog was closed');

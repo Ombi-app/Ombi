@@ -1,14 +1,13 @@
 $ombi-primary:#3f3f3f;
+$card-background: #2b2b2b;
 #cardImage {
-    max-height: 163px;
+    max-height: 68%;
     border-radius: 5px 5px 0px 0px;
 }
 
 .dark-card {
-    background-color: $ombi-primary;
     border-radius: 8px;
-    color: white;
-    height: 360px;
+    height: 435px;
 }
 
 .card-spacing {
@@ -21,13 +20,13 @@ $ombi-primary:#3f3f3f;
     font-weight: bold;
 }
 
-$border-width: 2px;
+$border-width: 3px;
 .movie-image {
     border-bottom: $border-width orange solid;
 }
 
 .tv-image {
-    border-bottom: $border-width teal solid;
+    border-bottom: $border-width #1DE9B6 solid;
 }
 
 .expand {
@@ -43,7 +42,7 @@ $border-width: 2px;
 }
 
 ::ng-deep mat-dialog-container.mat-dialog-container {
-    background-color: $ombi-primary;
-    color: white;
+    // background-color: $ombi-primary;
+    // color: white;
     border-radius: 2%
 }

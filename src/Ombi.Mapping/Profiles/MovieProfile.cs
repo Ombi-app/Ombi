@@ -4,6 +4,8 @@ using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Models.Search.V2;
 using Ombi.TheMovieDbApi.Models;
+using Keywords = Ombi.Core.Models.Search.V2.Keywords;
+using KeywordsValue = Ombi.Api.TheMovieDb.Models.KeywordsValue;
 
 namespace Ombi.Mapping.Profiles
 {
@@ -86,6 +88,22 @@ namespace Ombi.Mapping.Profiles
             CreateMap<Ombi.Api.TheMovieDb.Models.FullMovieCast, Ombi.Core.Models.Search.V2.FullMovieCastViewModel>().ReverseMap();
             CreateMap<Ombi.Api.TheMovieDb.Models.FullMovieCrew, Ombi.Core.Models.Search.V2.FullMovieCrewViewModel>().ReverseMap();
             CreateMap<Ombi.Api.TheMovieDb.Models.ExternalIds, Ombi.Core.Models.Search.V2.ExternalIds>().ReverseMap();
+            CreateMap<BelongsToCollection, Ombi.Core.Models.Search.V2.CollectionsViewModel>().ReverseMap();
+            CreateMap<Api.TheMovieDb.Models.Keywords, Ombi.Core.Models.Search.V2.Keywords>().ReverseMap();
+            CreateMap<KeywordsValue, Ombi.Core.Models.Search.V2.KeywordsValue>().ReverseMap();
+
+            CreateMap<Collections, Ombi.Core.Models.Search.V2.MovieCollectionsViewModel>()
+                .ForMember(x => x.Name, o => o.MapFrom(s => s.name))
+                .ForMember(x => x.Overview, o => o.MapFrom(s => s.overview))
+                .ForMember(x => x.Collection, o => o.MapFrom(s => s.parts));
+
+            CreateMap<Part, MovieCollection>()
+                .ForMember(x => x.Id, o => o.MapFrom(s => s.id))
+                .ForMember(x => x.Overview, o => o.MapFrom(s => s.overview))
+                .ForMember(x => x.PosterPath, o => o.MapFrom(s => s.poster_path))
+                .ForMember(x => x.Title, o => o.MapFrom(s => s.title));
+
+            CreateMap<SearchMovieViewModel, MovieCollection>().ReverseMap();
         }
     }
 }

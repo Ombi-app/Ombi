@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using CommandLine;
@@ -24,12 +23,14 @@ namespace Ombi
             var host = string.Empty;
             var storagePath = string.Empty;
             var baseUrl = string.Empty;
+            var demo = false;
             var result = Parser.Default.ParseArguments<Options>(args)
                 .WithParsed(o =>
                 {
                     host = o.Host;
                     storagePath = o.StoragePath;
                     baseUrl = o.BaseUrl;
+                    demo = o.Demo;
                 }).WithNotParsed(err =>
                 {
                     foreach (var e in err)
@@ -44,8 +45,11 @@ namespace Ombi
 
             var urlValue = string.Empty;
             var instance = StoragePathSingleton.Instance;
+            var demoInstance = DemoSingleton.Instance;
+            demoInstance.Demo = demo;
             instance.StoragePath = storagePath ?? string.Empty;
             // Check if we need to migrate the settings
+            DeleteSchedules();
             CheckAndMigrate();
             var ctx = new SettingsContext();
             var config = ctx.ApplicationConfigurations.ToList();
@@ -88,12 +92,24 @@ namespace Ombi
                 dbBaseUrl.Value = baseUrl;
                 ctx.SaveChanges();
             }
-
-            DeleteSchedulesDb();
-
+            
             Console.WriteLine($"We are running on {urlValue}");
 
             CreateWebHostBuilder(args).Build().Run();
+        }
+
+        private static void DeleteSchedules()
+        {
+            try
+            {
+                if (File.Exists("Schedules.db"))
+                {
+                    File.Delete("Schedules.db");
+                }
+            }
+            catch (Exception)
+            {
+            }
         }
 
         /// <summary>
@@ -114,7 +130,7 @@ namespace Ombi
 
             try
             {
-                if (ombi.Settings.Any())
+                if (ombi.Settings.Any() && !settings.Settings.Any())
                 {
                     // OK migrate it!
                     var allSettings = ombi.Settings.ToList();
@@ -124,7 +140,7 @@ namespace Ombi
 
                 // Check for any application settings
 
-                if (ombi.ApplicationConfigurations.Any())
+                if (ombi.ApplicationConfigurations.Any() && !settings.ApplicationConfigurations.Any())
                 {
                     // OK migrate it!
                     var allSettings = ombi.ApplicationConfigurations.ToList();
@@ -223,20 +239,6 @@ namespace Ombi
             }
         }
 
-        private static void DeleteSchedulesDb()
-        {
-            try
-            {
-                if (File.Exists("Schedules.db"))
-                {
-                    File.Delete("Schedules.db");
-                }
-            }
-            catch (Exception)
-            {
-            }
-        }
-
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
@@ -268,6 +270,9 @@ namespace Ombi
 
         [Option("baseurl", Required = false, HelpText = "The base URL for reverse proxy scenarios")]
         public string BaseUrl { get; set; }
+
+        [Option("demo", Required = false, HelpText = "Demo mode, you will never need to use this, fuck that fruit company...")]
+        public bool Demo { get; set; }
 
     }
 }

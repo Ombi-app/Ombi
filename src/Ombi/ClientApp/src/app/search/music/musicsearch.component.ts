@@ -1,5 +1,5 @@
-import { PlatformLocation } from "@angular/common";
-import { Component, Input, OnInit } from "@angular/core";
+import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
+import { Component, Input, OnInit, Inject } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
@@ -31,10 +31,11 @@ export class MusicSearchComponent implements OnInit {
     public issueCategorySelected: IIssueCategory;
     public defaultPoster: string;
 
+    private href: string;
     constructor(
         private searchService: SearchService, private sanitizer: DomSanitizer,
-        private platformLocation: PlatformLocation) {
-
+         @Inject(APP_BASE_HREF) href:string) {
+this.href = href;
         this.searchChanged.pipe(
             debounceTime(600), // Wait Xms after the last event before emitting last event
             distinctUntilChanged(), // only emit if value is different from previous value
@@ -69,7 +70,7 @@ export class MusicSearchComponent implements OnInit {
             }
         });
         this.defaultPoster = "../../../images/default-music-placeholder.png";
-        const base = this.platformLocation.getBaseHrefFromDOM();
+        const base = this.href;
         if (base) {
             this.defaultPoster = "../../.." + base + "/images/default-music-placeholder.png";
         }

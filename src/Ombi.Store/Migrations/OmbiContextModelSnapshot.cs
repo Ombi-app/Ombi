@@ -819,6 +819,8 @@ namespace Ombi.Store.Migrations
 
                     b.Property<string>("Title");
 
+                    b.Property<int>("TotalSeasons");
+
                     b.Property<int>("TvDbId");
 
                     b.HasKey("Id");

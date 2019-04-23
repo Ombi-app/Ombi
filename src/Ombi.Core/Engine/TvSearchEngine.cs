@@ -21,6 +21,8 @@ using Ombi.Core.Authentication;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
+using TraktApiSharp.Objects.Get.Shows;
+using TraktApiSharp.Objects.Get.Shows.Common;
 
 namespace Ombi.Core.Engine
 {
@@ -40,8 +42,8 @@ namespace Ombi.Core.Engine
             EmbyContentRepo = embyRepo;
         }
 
-        private ITvMazeApi TvMazeApi { get; }
-        private IMapper Mapper { get; }
+        protected ITvMazeApi TvMazeApi { get; }
+        protected IMapper Mapper { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private ISettingsService<EmbySettings> EmbySettings { get; }
         private IPlexContentRepository PlexContentRepo { get; }
@@ -99,7 +101,7 @@ namespace Ombi.Core.Engine
                     {
                         Url = e.url,
                         Title = e.name,
-                        AirDate = DateTime.Parse(e.airstamp ?? DateTime.MinValue.ToString()),
+                        AirDate = e.airstamp.HasValue() ? DateTime.Parse(e.airstamp) : DateTime.MinValue,
                         EpisodeNumber = e.number,
 
                     });
@@ -112,7 +114,7 @@ namespace Ombi.Core.Engine
                     {
                         Url = e.url,
                         Title = e.name,
-                        AirDate = DateTime.Parse(e.airstamp ?? DateTime.MinValue.ToString()),
+                        AirDate = e.airstamp.HasValue() ? DateTime.Parse(e.airstamp) : DateTime.MinValue,
                         EpisodeNumber = e.number,
                     });
                 }
@@ -127,11 +129,37 @@ namespace Ombi.Core.Engine
             return processed;
         }
 
+        public async Task<IEnumerable<SearchTvShowViewModel>> Popular(int currentlyLoaded, int amountToLoad)
+        {
+            var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
+            var results = new List<TraktShow>();
+            foreach (var pagesToLoad in pages)
+            {
+                var apiResult = await TraktApi.GetPopularShows(pagesToLoad.Page, ResultLimit);
+                results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
+            }
+            var processed = ProcessResults(results);
+            return processed;
+        }
+
         public async Task<IEnumerable<SearchTvShowViewModel>> Anticipated()
         {
 
             var result = await Cache.GetOrAdd(CacheKeys.AnticipatedTv, async () => await TraktApi.GetAnticipatedShows(null, ResultLimit), DateTime.Now.AddHours(12));
             var processed = ProcessResults(result);
+            return processed;
+        }
+
+        public async Task<IEnumerable<SearchTvShowViewModel>> Anticipated(int currentlyLoaded, int amountToLoad)
+        {
+            var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
+            var results = new List<TraktMostAnticipatedShow>();
+            foreach (var pagesToLoad in pages)
+            {
+                var apiResult = await TraktApi.GetAnticipatedShows(pagesToLoad.Page, ResultLimit);
+                results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
+            }
+            var processed = ProcessResults(results);
             return processed;
         }
 
@@ -149,7 +177,33 @@ namespace Ombi.Core.Engine
             return processed;
         }
 
-        private IEnumerable<SearchTvShowViewModel> ProcessResults<T>(IEnumerable<T> items)
+        public async Task<IEnumerable<SearchTvShowViewModel>> MostWatches(int currentlyLoaded, int amountToLoad)
+        {
+            var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
+            var results = new List<TraktMostWatchedShow>();
+            foreach (var pagesToLoad in pages)
+            {
+                var apiResult = await TraktApi.GetMostWatchesShows(null, pagesToLoad.Page, ResultLimit);
+                results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
+            }
+            var processed = ProcessResults(results);
+            return processed;
+        }
+
+        public async Task<IEnumerable<SearchTvShowViewModel>> Trending(int currentlyLoaded, int amountToLoad)
+        {
+            var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
+            var results = new List<TraktTrendingShow>();
+            foreach (var pagesToLoad in pages)
+            {
+                var apiResult = await TraktApi.GetTrendingShows(pagesToLoad.Page, ResultLimit);
+                results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
+            }
+            var processed = ProcessResults(results);
+            return processed;
+        }
+
+        protected IEnumerable<SearchTvShowViewModel> ProcessResults<T>(IEnumerable<T> items)
         {
             var retVal = new List<SearchTvShowViewModel>();
             foreach (var tvMazeSearch in items)
@@ -159,7 +213,7 @@ namespace Ombi.Core.Engine
             return retVal;
         }
 
-        private SearchTvShowViewModel ProcessResult<T>(T tvMazeSearch)
+        protected SearchTvShowViewModel ProcessResult<T>(T tvMazeSearch)
         {
             return Mapper.Map<SearchTvShowViewModel>(tvMazeSearch);
         }

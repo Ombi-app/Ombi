@@ -24,8 +24,6 @@ namespace Ombi.Schedule.Jobs.Plex
             _log = log;
             _plexSettings = plexSettings;
             _userManagementSettings = ums;
-            _userManagementSettings.ClearCache();
-            _plexSettings.ClearCache();
         }
 
         private readonly IPlexApi _api;

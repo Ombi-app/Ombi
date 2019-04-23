@@ -5,6 +5,7 @@ import { PlatformLocation } from "@angular/common";
 import { AuthService } from "../../auth/auth.service";
 import { PlexOAuthService, PlexService, PlexTvService, SettingsService } from "../../services";
 import { IdentityService, NotificationService } from "../../services";
+import { StorageService } from "../../shared/storage/storage-service";
 
 @Component({
     templateUrl: "./plex.component.html",
@@ -23,7 +24,7 @@ export class PlexComponent implements OnInit, OnDestroy {
                 private identityService: IdentityService, private plexTv: PlexTvService,
                 private settingsService: SettingsService,
                 private location: PlatformLocation, private authService: AuthService,
-                private plexOauth: PlexOAuthService) { }
+                private plexOauth: PlexOAuthService, private store: StorageService) { }
 
     public ngOnInit(): void {
         const base = this.location.getBaseHrefFromDOM();
@@ -95,7 +96,7 @@ export class PlexComponent implements OnInit, OnDestroy {
             }).subscribe(u => {
                 if (u.result) {
                     this.authService.oAuth(pinId).subscribe(c => {
-                        localStorage.setItem("id_token", c.access_token);
+                        this.store.save("id_token", c.access_token);
                         this.router.navigate(["login"]);
                     });
                 } else {

@@ -57,6 +57,16 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
+        /// Returns information about the Single Movie Request
+        /// </summary>
+        /// <param name="requestId">the movie request id</param>
+        [HttpGet("movie/info/{requestId}")]
+        public async Task<MovieRequests> GetMovieRequest(int requestId)
+        {
+            return await MovieRequestEngine.GetRequest(requestId);
+        }
+
+        /// <summary>
         /// Gets the total amount of movie requests.
         /// </summary>
         [HttpGet("movie/total")]

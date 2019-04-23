@@ -28,7 +28,6 @@ namespace Ombi.Schedule.Jobs.Emby
             _repo = repo;
             _episodeSync = epSync;
             _metadata = metadata;
-            _settings.ClearCache();
         }
 
         private readonly ILogger<EmbyContentSync> _logger;

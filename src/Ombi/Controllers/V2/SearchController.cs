@@ -1,11 +1,13 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+
+using System.Threading.Tasks;
+using System.Collections.Generic;
+
+using Ombi.Core;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Engine.V2;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-using Ombi.Core;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Models.Search.V2;
@@ -18,25 +20,29 @@ namespace Ombi.Controllers.V2
     [ApiController]
     public class SearchController : ControllerBase
     {
-        public SearchController(IMultiSearchEngine multiSearchEngine, IMovieEngine movieEngine,
-            ITvSearchEngine tvSearchEngine, IMovieEngineV2 v2Movie)
+        public SearchController(IMultiSearchEngine multiSearchEngine, ITvSearchEngine tvSearchEngine,
+            IMovieEngineV2 v2Movie, ITVSearchEngineV2 v2Tv)
         {
             _multiSearchEngine = multiSearchEngine;
-            _movieEngine = movieEngine;
-            _movieEngine.ResultLimit = 12;
             _tvSearchEngine = tvSearchEngine;
             _tvSearchEngine.ResultLimit = 12;
             _movieEngineV2 = v2Movie;
+            _movieEngineV2.ResultLimit = 12;
+            _tvEngineV2 = v2Tv;
         }
 
         private readonly IMultiSearchEngine _multiSearchEngine;
-        private readonly IMovieEngine _movieEngine;
         private readonly IMovieEngineV2 _movieEngineV2;
+        private readonly ITVSearchEngineV2 _tvEngineV2;
         private readonly ITvSearchEngine _tvSearchEngine;
 
         /// <summary>
         /// Returns search results for both TV and Movies
         /// </summary>
+        /// <remarks>The ID's returned by this are all TheMovieDbID's even for the TV Shows. You can call <see cref="GetTvInfoByMovieId"/> to get TV
+        ///  Show information using the MovieDbId.</remarks>
+        /// <param name="searchTerm">The search you want, this can be for a movie or TV show e.g. Star Wars will return
+        ///  all Star Wars movies and Star Wars Rebels the TV Sho</param>
         /// <returns></returns>
         [HttpGet("multi/{searchTerm}")]
         public async Task<List<MultiSearch>> MultiSearch(string searchTerm)
@@ -44,14 +50,47 @@ namespace Ombi.Controllers.V2
             return await _multiSearchEngine.MultiSearch(searchTerm);
         }
 
-        // <summary>
+        /// <summary>
         /// Returns details for a single movie
         /// </summary>
-        /// <returns></returns>
+        /// <param name="movieDbId">The MovieDB Id</param>
         [HttpGet("movie/{movieDbId}")]
         public async Task<MovieFullInfoViewModel> GetMovieInfo(int movieDbId)
         {
             return await _movieEngineV2.GetFullMovieInformation(movieDbId);
+        }
+
+        /// <summary>
+        /// Returns basic information about the provided collection
+        /// </summary>
+        /// <param name="collectionId">The collection id from TheMovieDb</param>
+        /// <returns></returns>
+        [HttpGet("movie/collection/{collectionId}")]
+        public async Task<MovieCollectionsViewModel> GetMovieCollections(int collectionId)
+        {
+            return await _movieEngineV2.GetCollection(collectionId);
+        }
+
+        /// <summary>
+        /// Returns details for a single show
+        /// </summary>
+        /// <remarks>TVMaze is the TV Show Provider</remarks>
+        /// <param name="tvdbid">The TVDB Id</param>
+        [HttpGet("tv/{tvdbId}")]
+        public async Task<SearchFullInfoTvShowViewModel> GetTvInfo(int tvdbid)
+        {
+            return await _tvEngineV2.GetShowInformation(tvdbid);
+        }
+
+        /// <summary>
+        /// Returns details for a single show
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("tv/moviedb/{moviedbid}")]
+        public async Task<SearchFullInfoTvShowViewModel> GetTvInfoByMovieId(int moviedbid)
+        {
+            var tvDbId = await _movieEngineV2.GetTvDbId(moviedbid);
+            return await _tvEngineV2.GetShowInformation(tvDbId);
         }
 
         /// <summary>
@@ -65,10 +104,10 @@ namespace Ombi.Controllers.V2
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchMovieViewModel>> SimilarMovies([FromBody] SimilarMoviesRefineModel model)
         {
-            return await _movieEngine.SimilarMovies(model.TheMovieDbId, model.LanguageCode);
+            return await _movieEngineV2.SimilarMovies(model.TheMovieDbId, model.LanguageCode);
         }
 
-       
+
         /// <summary>
         /// Returns Popular Movies
         /// </summary>
@@ -79,7 +118,21 @@ namespace Ombi.Controllers.V2
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchMovieViewModel>> Popular()
         {
-            return await _movieEngine.PopularMovies();
+            return await _movieEngineV2.PopularMovies();
+        }
+
+
+        /// <summary>
+        /// Returns Popular Movies using paging
+        /// </summary>
+        /// <remarks>We use TheMovieDb as the Movie Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("movie/popular/{currentPosition}/{amountToLoad}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<IEnumerable<SearchMovieViewModel>> Popular(int currentPosition, int amountToLoad)
+        {
+            return await _movieEngineV2.PopularMovies(currentPosition, amountToLoad);
         }
 
         /// <summary>
@@ -92,7 +145,20 @@ namespace Ombi.Controllers.V2
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies()
         {
-            return await _movieEngine.NowPlayingMovies();
+            return await _movieEngineV2.NowPlayingMovies();
+        }
+
+        /// <summary>
+        /// Returns Now Playing Movies by page
+        /// </summary>
+        /// <remarks>We use TheMovieDb as the Movie Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("movie/nowplaying/{currentPosition}/{amountToLoad}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies(int currentPosition, int amountToLoad)
+        {
+            return await _movieEngineV2.NowPlayingMovies(currentPosition, amountToLoad);
         }
 
         /// <summary>
@@ -105,7 +171,20 @@ namespace Ombi.Controllers.V2
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchMovieViewModel>> TopRatedMovies()
         {
-            return await _movieEngine.TopRatedMovies();
+            return await _movieEngineV2.TopRatedMovies();
+        }
+
+        /// <summary>
+        /// Returns top rated movies by page.
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>We use TheMovieDb as the Movie Provider</remarks>
+        [HttpGet("movie/toprated/{currentPosition}/{amountToLoad}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<IEnumerable<SearchMovieViewModel>> TopRatedMovies(int currentPosition, int amountToLoad)
+        {
+            return await _movieEngineV2.TopRatedMovies(currentPosition, amountToLoad);
         }
 
         /// <summary>
@@ -118,7 +197,20 @@ namespace Ombi.Controllers.V2
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies()
         {
-            return await _movieEngine.UpcomingMovies();
+            return await _movieEngineV2.UpcomingMovies();
+        }
+
+        /// <summary>
+        /// Returns Upcoming movies by page.
+        /// </summary>
+        /// <remarks>We use TheMovieDb as the Movie Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("movie/upcoming/{currentPosition}/{amountToLoad}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies(int currentPosition, int amountToLoad)
+        {
+            return await _movieEngineV2.UpcomingMovies(currentPosition, amountToLoad);
         }
 
         /// <summary>
@@ -135,7 +227,20 @@ namespace Ombi.Controllers.V2
         }
 
         /// <summary>
-        /// Returns most Anticiplateds tv shows.
+        /// Returns Popular Tv Shows
+        /// </summary>
+        /// <remarks>We use Trakt.tv as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("tv/popular/{currentPosition}/{amountToLoad}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<IEnumerable<SearchTvShowViewModel>> PopularTv(int currentPosition, int amountToLoad)
+        {
+            return await _tvSearchEngine.Popular(currentPosition, amountToLoad);
+        }
+
+        /// <summary>
+        /// Returns most Anticipated tv shows.
         /// </summary>
         /// <remarks>We use Trakt.tv as the Provider</remarks>
         /// <returns></returns>
@@ -145,6 +250,19 @@ namespace Ombi.Controllers.V2
         public async Task<IEnumerable<SearchTvShowViewModel>> AnticipatedTv()
         {
             return await _tvSearchEngine.Anticipated();
+        }
+
+        /// <summary>
+        /// Returns most Anticipated tv shows by page.
+        /// </summary>
+        /// <remarks>We use Trakt.tv as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("tv/anticipated/{currentPosition}/{amountToLoad}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<IEnumerable<SearchTvShowViewModel>> AnticipatedTv(int currentPosition, int amountToLoad)
+        {
+            return await _tvSearchEngine.Anticipated(currentPosition, amountToLoad);
         }
 
 
@@ -162,6 +280,19 @@ namespace Ombi.Controllers.V2
         }
 
         /// <summary>
+        /// Returns Most watched shows by page.
+        /// </summary>
+        /// <remarks>We use Trakt.tv as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("tv/mostwatched/{currentPosition}/{amountToLoad}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<IEnumerable<SearchTvShowViewModel>> MostWatched(int currentPosition, int amountToLoad)
+        {
+            return await _tvSearchEngine.MostWatches(currentPosition, amountToLoad);
+        }
+
+        /// <summary>
         /// Returns trending shows
         /// </summary>
         /// <remarks>We use Trakt.tv as the Provider</remarks>
@@ -172,6 +303,19 @@ namespace Ombi.Controllers.V2
         public async Task<IEnumerable<SearchTvShowViewModel>> Trending()
         {
             return await _tvSearchEngine.Trending();
+        }
+
+        /// <summary>
+        /// Returns trending shows by page
+        /// </summary>
+        /// <remarks>We use Trakt.tv as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("tv/trending/{currentPosition}/{amountToLoad}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<IEnumerable<SearchTvShowViewModel>> Trending(int currentPosition, int amountToLoad)
+        {
+            return await _tvSearchEngine.Trending(currentPosition, amountToLoad);
         }
     }
 }

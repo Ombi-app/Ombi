@@ -10,5 +10,6 @@
         Slack = 5,
         Mattermost = 6,
         Mobile = 7,
+        Gotify = 8,
     }
 }

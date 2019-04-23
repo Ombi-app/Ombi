@@ -13,16 +13,16 @@ namespace Ombi.Controllers.V1.External
 {
     [Authorize]
     [ApiV1]
+    [ApiController]
     [Produces("application/json")]
-    public class RadarrController : Controller
-    {
+    public class RadarrController : ControllerBase
+    { 
         public RadarrController(IRadarrApi radarr, ISettingsService<RadarrSettings> settings,
             ICacheService mem)
         {
             RadarrApi = radarr;
             RadarrSettings = settings;
             Cache = mem;
-            RadarrSettings.ClearCache();
         }
 
         private IRadarrApi RadarrApi { get; }
@@ -38,6 +38,14 @@ namespace Ombi.Controllers.V1.External
         public async Task<IEnumerable<RadarrProfile>> GetProfiles([FromBody] RadarrSettings settings)
         {
             return await RadarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
+        }
+
+        [HttpGet("enabled")]
+        [PowerUser]
+        public async Task<bool> Enabled()
+        {
+            var settings = await RadarrSettings.GetSettingsAsync();
+            return settings.Enabled;
         }
 
         /// <summary>

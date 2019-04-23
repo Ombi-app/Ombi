@@ -27,6 +27,7 @@ import { LidarrComponent } from "./lidarr/lidarr.component";
 import { MassEmailComponent } from "./massemail/massemail.component";
 import { DiscordComponent } from "./notifications/discord.component";
 import { EmailNotificationComponent } from "./notifications/emailnotification.component";
+import { GotifyComponent } from "./notifications/gotify.component";
 import { MattermostComponent } from "./notifications/mattermost.component";
 import { MobileComponent } from "./notifications/mobile.component";
 import { NewsletterComponent } from "./notifications/newsletter.component";
@@ -48,6 +49,8 @@ import { WikiComponent } from "./wiki.component";
 import { SettingsMenuComponent } from "./settingsmenu.component";
 
 import { AutoCompleteModule, CalendarModule, DialogModule, InputSwitchModule, InputTextModule, MenuModule, RadioButtonModule, TooltipModule } from "primeng/primeng";
+import { MatMenuModule} from "@angular/material";
+import { SharedModule } from "../shared/shared.module";
 
 const routes: Routes = [
     { path: "Ombi", component: OmbiComponent, canActivate: [AuthGuard] },
@@ -63,6 +66,7 @@ const routes: Routes = [
     { path: "Slack", component: SlackComponent, canActivate: [AuthGuard] },
     { path: "Pushover", component: PushoverComponent, canActivate: [AuthGuard] },
     { path: "Pushbullet", component: PushbulletComponent, canActivate: [AuthGuard] },
+    { path: "Gotify", component: GotifyComponent, canActivate: [AuthGuard] },
     { path: "Mattermost", component: MattermostComponent, canActivate: [AuthGuard] },
     { path: "UserManagement", component: UserManagementComponent, canActivate: [AuthGuard] },
     { path: "Update", component: UpdateComponent, canActivate: [AuthGuard] },
@@ -99,6 +103,8 @@ const routes: Routes = [
         PipeModule,
         RadioButtonModule,
         DialogModule,
+        SharedModule,
+        MatMenuModule
     ],
     declarations: [
         SettingsMenuComponent,
@@ -117,6 +123,7 @@ const routes: Routes = [
         PushoverComponent,
         MattermostComponent,
         PushbulletComponent,
+        GotifyComponent,
         UserManagementComponent,
         UpdateComponent,
         AboutComponent,

@@ -1,5 +1,5 @@
-import { PlatformLocation } from "@angular/common";
-import { Injectable } from "@angular/core";
+import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
+import { Injectable, Inject } from "@angular/core";
 
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
@@ -9,8 +9,8 @@ import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()
 export class IdentityService extends ServiceHelpers {
-    constructor(http: HttpClient, public platformLocation: PlatformLocation) {
-        super(http, "/api/v1/Identity/", platformLocation);
+    constructor(http: HttpClient, @Inject(APP_BASE_HREF) href:string) {
+        super(http, "/api/v1/Identity/", href);
     }
     public createWizardUser(user: ICreateWizardUser): Observable<IWizardUserResult> {
         return this.http.post<IWizardUserResult>(`${this.url}Wizard/`, JSON.stringify(user),  {headers: this.headers});
@@ -77,16 +77,5 @@ export class IdentityService extends ServiceHelpers {
     }
     public getNotificationPreferencesForUser(userId: string): Observable<INotificationPreferences[]> {
         return this.http.get<INotificationPreferences[]>(`${this.url}notificationpreferences/${userId}`, {headers: this.headers});
-    }
-
-    public hasRole(role: string): boolean {
-        const roles = localStorage.getItem("roles") as any as string[] | null;
-        if (roles) {
-            if (roles.indexOf(role) > -1) {
-                return true;
-            }
-            return false;
-        }
-        return false;
     }
 }

@@ -11,4 +11,5 @@ export interface IUserLogin {
 export interface ILocalUser {
     roles: string[];
     name: string;
+    username:string;
 }

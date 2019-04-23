@@ -4,6 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
 
 import {ConfirmationService, ConfirmDialogModule } from "primeng/primeng";
+import { MatStepperModule } from "@angular/material";
 
 import { CreateAdminComponent } from "./createadmin/createadmin.component";
 import { EmbyComponent } from "./emby/emby.component";
@@ -45,6 +46,7 @@ const routes: Routes = [
         IdentityService,
         EmbyService,
         ConfirmationService,
+        MatStepperModule,
         PlexOAuthService,
     ],
 

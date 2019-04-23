@@ -8,6 +8,7 @@ namespace Ombi.Core.Models.Search.V2
     public class MovieFullInfoViewModel : SearchViewModel
     {
         public bool Adult { get; set; }
+        public CollectionsViewModel BelongsToCollection { get; set; }
         public string BackdropPath { get; set; }
         public string OriginalLanguage { get; set; }
         public int Budget { get; set; }
@@ -39,8 +40,26 @@ namespace Ombi.Core.Models.Search.V2
         public Similar Similar { get; set; }
         public Recommendations Recommendations { get; set; }
         public ExternalIds ExternalIds { get; set; }
+        public Keywords Keywords { get; set; }
+    }
+    public class Keywords
+    {
+        public List<KeywordsValue> KeywordsValue { get; set; }
     }
 
+    public class KeywordsValue
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class CollectionsViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string PosterPath { get; set; }
+        public string BackdropPath { get; set; }
+    }
     public class ExternalIds
     {
         public string ImdbId { get; set; }

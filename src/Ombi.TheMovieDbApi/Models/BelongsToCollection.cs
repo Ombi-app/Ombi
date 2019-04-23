@@ -1,10 +1,16 @@
-﻿namespace Ombi.TheMovieDbApi.Models
+﻿using Newtonsoft.Json;
+
+namespace Ombi.TheMovieDbApi.Models
 {
     public class BelongsToCollection
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public string poster_path { get; set; }
-        public string backdrop_path { get; set; }
+        [JsonProperty("id")]
+        public int Id { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("poster_path")]
+        public string PosterPath { get; set; }
+        [JsonProperty("backdrop_path")]
+        public string BackdropPath { get; set; }
     }
 }

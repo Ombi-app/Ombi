@@ -12,5 +12,6 @@ namespace Ombi.Api.Trakt
         Task<IEnumerable<TraktMostWatchedShow>> GetMostWatchesShows(TraktTimePeriod period = null, int? page = default(int?), int? limitPerPage = default(int?));
         Task<IEnumerable<TraktShow>> GetPopularShows(int? page = default(int?), int? limitPerPage = default(int?));
         Task<IEnumerable<TraktTrendingShow>> GetTrendingShows(int? page = default(int?), int? limitPerPage = default(int?));
+        Task<TraktShow> GetTvExtendedInfo(string imdbId);
     }
 }

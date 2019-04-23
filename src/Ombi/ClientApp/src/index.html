@@ -1,17 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+  <script>
+    // manually sets the <base> tag's href attribute so the app can be located in places other than root
+ 
+    var split = location.pathname.split('/');
+    var base = "";
+    var invalidProxies = ['DISCOVER',
+    'REQUESTS-LIST',
+    'DETAILS',
+    'SETTINGS',
+    'ISSUES',
+    'USERMANAGEMENT',
+    'RECENTLYADDED',
+    'DETAILS',
+    'VOTE',
+    'LOGIN',
+    'LANDINGPAGE',
+    'TOKEN',
+    'RESET',
+    'CUSTOM',
+    'AUTH',
+    'WIZARD',
+    "CALENDAR"    
+]
+    for (var i = 0; i < split.length - 1; i++) {
+      if( invalidProxies.indexOf(split[i].toUpperCase()) !== -1) {
+        break;
+      }
+        base += split[i];
+        if(base.length > 1) {
+          break;
+        }
+        if (i < split.length - 2) {
+            base += "/";
+        }
+    }
+    if(base === "") {
+      base = "/";
+    }
+    window['_app_base'] = base;
+    document.write("<base href='" + base + "' />");
+</script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Ombi</title>
-  <base href="/" />
-  <link rel="stylesheet" href="/loading.css" />
-  <script src="//maps.google.com/maps/api/js?libraries=visualization&key=AIzaSyBDar8LXU5vbURGTMcNLI0f9AsoSnpiV3I" async defer></script>
-  
+
+
+
+  <script src="//maps.google.com/maps/api/js?libraries=visualization&key=AIzaSyBDar8LXU5vbURGTMcNLI0f9AsoSnpiV3I" async
+    defer></script>
+
 </head>
+
 <body>
-  <app-ombi><p class="loading">Loading<span>.</span><span>.</span><span>.</span></p></app-ombi>
+
+  <app-ombi>
+    <p class="loading">Loading<span>.</span><span>.</span><span>.</span></p>
+  </app-ombi>
 </body>
+
 </html>

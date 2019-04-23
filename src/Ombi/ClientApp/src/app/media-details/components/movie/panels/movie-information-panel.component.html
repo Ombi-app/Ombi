@@ -1,0 +1,80 @@
+<div *ngIf="movie">
+    <div>
+        <strong>Status:</strong>
+        <div>{{movie.status}}</div>
+    </div>
+    <div>
+        <strong>Availability</strong>
+        <div *ngIf="movie.available">{{'Common.Available' | translate}}</div>
+        <div *ngIf="!movie.available">{{'Common.NotAvailable' | translate}}</div>
+
+    </div>
+
+    <div>
+        <strong>Request Status</strong>
+        <div *ngIf="movie.approved && !movie.available">{{'Common.ProcessingRequest' | translate}}</div>
+        <div *ngIf="movie.requested && !movie.approved && !movie.available">{{'Common.PendingApproval' | translate}}
+        </div>
+        <div *ngIf="!movie.requested && !movie.available && !movie.approved">{{'Common.NotRequested' | translate}}
+        </div>
+    </div>
+
+    <br />
+    <div *ngIf="movie.genres">
+        <strong>Genres:</strong>
+        <div>
+            <mat-chip-list>
+                <mat-chip color="accent" selected *ngFor="let genre of movie.genres">
+                    {{genre.name}}
+                </mat-chip>
+            </mat-chip-list>
+        </div>
+    </div>
+    <br />
+
+    <strong>Theatrical Release:</strong>
+    <div>
+
+        {{movie.releaseDate | date: 'mediumDate'}}
+        <div *ngIf="movie.digitalReleaseDate">
+            <strong>Digital Release:</strong>
+            <div>
+                {{movie.digitalReleaseDate | date: 'mediumDate'}}
+            </div>
+        </div>
+        <div *ngIf="movie.voteAverage">
+            <strong>User Score:</strong>
+            <div>
+                {{movie.voteAverage | number:'1.0-1'}} / 10
+            </div>
+        </div>
+        <div *ngIf="movie.voteCount">
+            <strong>Votes:</strong>
+            <div>
+                {{movie.voteCount | thousandShort: 1}}
+            </div>
+        </div>
+        <div>
+            <strong>Runtime:</strong>
+            <div>{{movie.runtime}} Minutes</div>
+        </div>
+        <div *ngIf="movie.revenue">
+            <strong>Revenue:</strong>
+            <div> {{movie.revenue | currency: 'USD'}}</div>
+        </div>
+        <div *ngIf="movie.budget">
+            <strong>Budget:</strong>
+            <div> {{movie.budget | currency: 'USD'}}</div>
+        </div>
+
+
+        <br />
+        <div>
+            <strong>Keywords/Tags:</strong>
+            <mat-chip-list>
+                <mat-chip color="accent" selected  *ngFor="let keyword of movie.keywords.keywordsValue">
+                    {{keyword.name}}
+                </mat-chip>
+            </mat-chip-list>
+        </div>
+    </div>

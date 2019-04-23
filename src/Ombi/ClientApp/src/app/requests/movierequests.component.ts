@@ -1,5 +1,5 @@
-import { PlatformLocation } from "@angular/common";
-import { Component, Input, OnInit } from "@angular/core";
+import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
+import { Component, Input, OnInit, Inject } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
@@ -44,6 +44,7 @@ export class MovieRequestsComponent implements OnInit {
     public totalMovies: number = 100;
     public currentlyLoaded: number;
     private amountToLoad: number;
+    private href: string;
 
     constructor(
         private requestService: RequestService,
@@ -51,7 +52,8 @@ export class MovieRequestsComponent implements OnInit {
         private notificationService: NotificationService,
         private radarrService: RadarrService,
         private sanitizer: DomSanitizer,
-        private readonly platformLocation: PlatformLocation) {
+        @Inject(APP_BASE_HREF) href:string) {
+            this.href = href;
         this.searchChanged.pipe(
             debounceTime(600), // Wait Xms after the last event before emitting last event
             distinctUntilChanged(), // only emit if value is different from previous value
@@ -68,7 +70,7 @@ export class MovieRequestsComponent implements OnInit {
                 });
         });
         this.defaultPoster = "../../../images/default_movie_poster.png";
-        const base = this.platformLocation.getBaseHrefFromDOM();
+        const base = this.href;
         if (base) {
             this.defaultPoster = "../../.." + base + "/images/default_movie_poster.png";
         }

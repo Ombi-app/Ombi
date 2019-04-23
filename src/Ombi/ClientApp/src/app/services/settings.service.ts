@@ -1,6 +1,6 @@
-import { PlatformLocation } from "@angular/common";
+import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Injectable, Inject } from "@angular/core";
 import { Observable } from "rxjs";
 
 import {
@@ -10,11 +10,11 @@ import {
     ICronTestModel,
     ICronViewModelBody,
     ICustomizationSettings,
-    ICustomPage,
     IDiscordNotifcationSettings,
     IDogNzbSettings,
     IEmailNotificationSettings,
     IEmbySettings,
+    IGotifyNotificationSettings,
     IIssueSettings,
     IJobSettings,
     IJobSettingsViewModel,
@@ -41,8 +41,8 @@ import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()
 export class SettingsService extends ServiceHelpers {
-    constructor(public http: HttpClient, public platformLocation: PlatformLocation) {
-        super(http, "/api/v1/Settings", platformLocation);
+    constructor(public http: HttpClient, @Inject(APP_BASE_HREF) href:string) {
+        super(http, "/api/v1/Settings", href);
     }
 
     public about(): Observable<IAbout> {
@@ -113,14 +113,6 @@ export class SettingsService extends ServiceHelpers {
         return this.http.get<IAuthenticationSettings>(`${this.url}/Authentication`, {headers: this.headers});
     }
 
-    public getCustomPage(): Observable<ICustomPage> {
-        return this.http.get<ICustomPage>(`${this.url}/CustomPage`, {headers: this.headers});
-    }
-
-    public saveCustomPage(model: ICustomPage): Observable<boolean> {
-        return this.http.post<boolean>(`${this.url}/CustomPage`, model, {headers: this.headers});
-    }
-
     public getClientId(): Observable<string> {
         return this.http.get<string>(`${this.url}/clientid`, {headers: this.headers});
     }
@@ -189,6 +181,14 @@ export class SettingsService extends ServiceHelpers {
     public savePushoverNotificationSettings(settings: IPushoverNotificationSettings): Observable<boolean> {
         return this.http
             .post<boolean>(`${this.url}/notifications/pushover`, JSON.stringify(settings), {headers: this.headers});
+    }
+
+    public getGotifyNotificationSettings(): Observable<IGotifyNotificationSettings> {
+        return this.http.get<IGotifyNotificationSettings>(`${this.url}/notifications/gotify`, { headers: this.headers });
+    }
+    public saveGotifyNotificationSettings(settings: IGotifyNotificationSettings): Observable<boolean> {
+        return this.http
+            .post<boolean>(`${this.url}/notifications/gotify`, JSON.stringify(settings), { headers: this.headers });
     }
 
     public getSlackNotificationSettings(): Observable<ISlackNotificationSettings> {

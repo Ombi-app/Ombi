@@ -121,9 +121,6 @@ namespace Ombi.Controllers.V1
                 return new UnauthorizedResult();
             }
 
-            user.LastLoggedIn = DateTime.UtcNow;
-            await _userManager.UpdateAsync(user);
-
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
@@ -149,6 +146,9 @@ namespace Ombi.Controllers.V1
                 // Save the token so we can refresh it later
                 //await _token.CreateToken(new Tokens() {Token = accessToken, User = user});
             }
+
+            user.LastLoggedIn = DateTime.UtcNow;
+            await _userManager.UpdateAsync(user);
 
             return new JsonResult(new
             {

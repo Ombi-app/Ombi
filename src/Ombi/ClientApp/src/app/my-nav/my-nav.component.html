@@ -1,25 +1,25 @@
 <mat-sidenav-container *ngIf="showNav" class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
-    <mat-toolbar>Ombi</mat-toolbar>
+    <mat-toolbar>{{applicationName}}</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item routerLink="/discover">
-        <mat-icon aria-label="Side nav toggle icon">find_replace</mat-icon>
-        Discover
-      </a>
-      <a mat-list-item [routerLinkActive]="['active']" routerLink="/search">
-        <mat-icon aria-label="Side nav toggle icon">search</mat-icon> Search
-      </a>
-      <a mat-list-item [routerLinkActive]="['active']" routerLink="/requests">
-        <mat-icon aria-label="Side nav toggle icon">list</mat-icon> Requests
-      </a>
-      <a mat-list-item [routerLinkActive]="['active']" routerLink="/Settings/About">
-        <mat-icon aria-label="Side nav toggle icon">settings</mat-icon> Settings
-      </a>
+      <span *ngFor="let nav of navItems">
+      <a *ngIf="nav.requiresAdmin && isAdmin || !nav.requiresAdmin" mat-list-item [routerLink]="nav.link" 
+      [routerLinkActive]="getTheme()" >
+        <mat-icon aria-label="Side nav toggle icon">{{nav.icon}}</mat-icon>
+        &nbsp;{{nav.name | translate}}
+      </a>    </span>
 
-      <a mat-list-item [routerLinkActive]="['active']" aria-label="Toggle sidenav" (click)="logOut();">
+      <a class="bottom-nav-link" mat-list-item  [routerLinkActive]="theme === 'dark' ? 'active-list-item-dark' : 'active-list-item'" aria-label="Toggle sidenav" (click)="logOut();">
         <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
         {{ 'NavigationBar.Logout' | translate }}
+      </a>
+
+      <a mat-list-item aria-label="Toggle sidenav" (click)="switchTheme();">
+        <mat-slide-toggle>
+          {{ 'NavigationBar.ChangeTheme' | translate }}
+      </mat-slide-toggle>
+        
       </a>
 
     </mat-nav-list>

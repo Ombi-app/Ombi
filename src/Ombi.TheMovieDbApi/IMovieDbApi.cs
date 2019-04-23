@@ -9,12 +9,12 @@ namespace Ombi.Api.TheMovieDb
     {
         Task<MovieResponseDto> GetMovieInformation(int movieId);
         Task<MovieResponseDto> GetMovieInformationWithExtraInfo(int movieId, string langCode = "en");
-        Task<List<MovieSearchResult>> NowPlaying(string languageCode);
-        Task<List<MovieSearchResult>> PopularMovies(string languageCode);
+        Task<List<MovieSearchResult>> NowPlaying(string languageCode, int? page = null);
+        Task<List<MovieSearchResult>> PopularMovies(string languageCode, int? page = null);
         Task<List<MovieSearchResult>> SearchMovie(string searchTerm, int? year, string languageCode);
         Task<List<TvSearchResult>> SearchTv(string searchTerm);
-        Task<List<MovieSearchResult>> TopRated(string languageCode);
-        Task<List<MovieSearchResult>> Upcoming(string languageCode);
+        Task<List<MovieSearchResult>> TopRated(string languageCode, int? page = null);
+        Task<List<MovieSearchResult>> Upcoming(string languageCode, int? page = null);
         Task<List<MovieSearchResult>> SimilarMovies(int movieId, string langCode);
         Task<FindResult> Find(string externalId, ExternalSource source);
         Task<TvExternals> GetTvExternals(int theMovieDbId);
@@ -23,5 +23,7 @@ namespace Ombi.Api.TheMovieDb
         Task<ActorCredits> GetActorMovieCredits(int actorId, string langCode);
         Task<TheMovieDbContainer<MultiSearch>> MultiSearch(string searchTerm, string languageCode);
         Task<FullMovieInfo> GetFullMovieInfo(int movieId, string langCode);
+        Task<TheMovieDbContainer<DiscoverMovies>> DiscoverMovies(string langCode, int keywordId);
+        Task<Collections> GetCollection(string langCode, int collectionId);
     }
 }

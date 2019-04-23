@@ -1,5 +1,5 @@
-import { PlatformLocation } from "@angular/common";
-import { Injectable } from "@angular/core";
+import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
+import { Injectable, Inject } from "@angular/core";
 
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
@@ -11,6 +11,7 @@ import {
     IDiscordNotifcationSettings,
     IEmailNotificationSettings,
     IEmbyServer,
+    IGotifyNotificationSettings,
     ILidarrSettings,
     IMattermostNotifcationSettings,
     IMobileNotificationTestSettings,
@@ -27,8 +28,8 @@ import {
 
 @Injectable()
 export class TesterService extends ServiceHelpers {
-    constructor(http: HttpClient, public platformLocation: PlatformLocation) {
-        super(http, "/api/v1/tester/", platformLocation);
+    constructor(http: HttpClient, @Inject(APP_BASE_HREF) href:string) {
+        super(http, "/api/v1/tester/", href);
     }
 
     public discordTest(settings: IDiscordNotifcationSettings): Observable<boolean> {
@@ -40,7 +41,11 @@ export class TesterService extends ServiceHelpers {
     }
 
     public pushoverTest(settings: IPushoverNotificationSettings): Observable<boolean> {
-        return this.http.post<boolean>(`${this.url}pushover`, JSON.stringify(settings),  {headers: this.headers});
+        return this.http.post<boolean>(`${this.url}pushover`, JSON.stringify(settings), { headers: this.headers });
+    }
+
+    public gotifyTest(settings: IGotifyNotificationSettings): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}gotify`, JSON.stringify(settings), { headers: this.headers });
     }
 
     public mattermostTest(settings: IMattermostNotifcationSettings): Observable<boolean> {
