@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MailKit;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MimeKit;
@@ -18,6 +19,7 @@ using Ombi.Api.TvMaze;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Hubs;
 using Ombi.Notifications;
 using Ombi.Notifications.Models;
 using Ombi.Notifications.Templates;
@@ -38,7 +40,8 @@ namespace Ombi.Schedule.Jobs.Ombi
             ISettingsService<EmailNotificationSettings> emailSettings, INotificationTemplatesRepository templateRepo,
             UserManager<OmbiUser> um, ISettingsService<NewsletterSettings> newsletter, ILogger<NewsletterJob> log,
             ILidarrApi lidarrApi, IRepository<LidarrAlbumCache> albumCache, ISettingsService<LidarrSettings> lidarrSettings,
-            ISettingsService<OmbiSettings> ombiSettings, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmbySettings> embySettings)
+            ISettingsService<OmbiSettings> ombiSettings, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmbySettings> embySettings
+            , IHubContext<NotificationHub> notification)
         {
             _plex = plex;
             _emby = emby;
@@ -58,6 +61,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             _ombiSettings = ombiSettings;
             _plexSettings = plexSettings;
             _embySettings = embySettings;
+            _notification = notification;
             _ombiSettings.ClearCache();
             _plexSettings.ClearCache();
             _emailSettings.ClearCache();
@@ -82,6 +86,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly ISettingsService<LidarrSettings> _lidarrSettings;
         private readonly ISettingsService<PlexSettings> _plexSettings;
         private readonly ISettingsService<EmbySettings> _embySettings;
+        private readonly IHubContext<NotificationHub> _notification;
 
         public async Task Start(NewsletterSettings settings, bool test)
         {
@@ -95,9 +100,13 @@ namespace Ombi.Schedule.Jobs.Ombi
                 return;
             }
 
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Newsletter Started");
             var emailSettings = await _emailSettings.GetSettingsAsync();
             if (!ValidateConfiguration(emailSettings))
             {
+                await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                    .SendAsync(NotificationHub.NotificationEvent, "Newsletter Email Settings Not Configured");
                 return;
             }
 
@@ -284,9 +293,14 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
             catch (Exception e)
             {
+                await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                    .SendAsync(NotificationHub.NotificationEvent, "Newsletter Failed");
                 _log.LogError(e, "Error when attempting to create newsletter");
                 throw;
             }
+
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Newsletter Finished");
         }
 
         public async Task Execute(IJobExecutionContext job)

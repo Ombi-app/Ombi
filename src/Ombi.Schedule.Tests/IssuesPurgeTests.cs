@@ -101,7 +101,7 @@ namespace Ombi.Schedule.Tests
 
             Settings.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new IssueSettings { DeleteIssues = true, DaysAfterResolvedToDelete = 5 });
             Repo.Setup(x => x.GetAll()).Returns(new EnumerableQuery<Issues>(issues));
-            await Job.Start();
+            await Job.Execute(null);
 
             Assert.That(issues[0].Status, Is.Not.EqualTo(IssueStatus.Deleted));
             Assert.That(issues[1].Status, Is.Not.EqualTo(IssueStatus.Deleted));

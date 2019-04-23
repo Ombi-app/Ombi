@@ -3,28 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Notifications;
 using Ombi.Helpers;
+using Ombi.Hubs;
 using Ombi.Notifications.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Lidarr
 {
     public class LidarrAvailabilityChecker : ILidarrAvailabilityChecker
     {
         public LidarrAvailabilityChecker(IMusicRequestRepository requests, IRepository<LidarrAlbumCache> albums, ILogger<LidarrAvailabilityChecker> log,
-            IBackgroundJobClient job, INotificationService notification)
+            IBackgroundJobClient job, INotificationService notification, IHubContext<NotificationHub> notificationHub)
         {
             _cachedAlbums = albums;
             _requestRepository = requests;
             _logger = log;
             _job = job;
             _notificationService = notification;
+            _notification = notificationHub;
         }
 
         private readonly IMusicRequestRepository _requestRepository;
@@ -32,9 +36,13 @@ namespace Ombi.Schedule.Jobs.Lidarr
         private readonly ILogger _logger;
         private readonly IBackgroundJobClient _job;
         private readonly INotificationService _notificationService;
+        private readonly IHubContext<NotificationHub> _notification;
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext ctx)
         {
+
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Lidarr Availability Check Started");
             var allAlbumRequests = _requestRepository.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available);
             var albumsToUpdate = new List<AlbumRequest>();
             foreach (var request in allAlbumRequests)
@@ -68,6 +76,9 @@ namespace Ombi.Schedule.Jobs.Lidarr
                     Recipient = recipient,
                 }));
             }
+
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Lidarr Availability Check Finished");
         }
     }
 }
