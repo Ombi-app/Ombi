@@ -110,9 +110,10 @@ namespace Ombi
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
-                builder.AllowAnyOrigin()
+                builder.AllowAnyHeader()
                     .AllowAnyMethod()
-                    .AllowAnyHeader().AllowCredentials();
+                    .SetIsOriginAllowed(isOriginAllowed: _ => true)
+                    .AllowCredentials();
             }));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
