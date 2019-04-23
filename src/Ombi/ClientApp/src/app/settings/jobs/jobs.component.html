@@ -7,7 +7,8 @@
         <legend>Job Settings</legend>
         <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:5%;">
             <div class="col-md-6">
-                <small>Changes to any of the below requires you to restart Ombi.</small>
+                <small>Changes to any of the below requires you to restart Ombi. </small>
+                <small>You can generate valid CRON Expressions here: <a href="http://www.cronmaker.com/" target="_blank">http://www.cronmaker.com/</a></small>
                 <div class="form-group">
                     <label for="sonarrSync" class="control-label">Sonarr Sync</label>              
                         <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('sonarrSync').hasError('required')}" id="sonarrSync" name="sonarrSync" formControlName="sonarrSync">
@@ -121,9 +122,3 @@
         </form>
     </fieldset>
 </div>
-
-<p-dialog header="CRON Schedule" [(visible)]="displayTest">
-    <ul *ngIf="testModel">
-        <li *ngFor="let item of testModel.schedule">{{item | date:'short'}}</li>
-    </ul>
-</p-dialog>

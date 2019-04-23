@@ -27,6 +27,10 @@ using Ombi.Settings.Settings.Models.External;
 using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Ombi.Api.Github;
+using Ombi.Core.Engine;
+using Ombi.Schedule;
+using Quartz;
 
 namespace Ombi.Controllers.V1
 {
@@ -44,7 +48,6 @@ namespace Ombi.Controllers.V1
             IMapper mapper,
             INotificationTemplatesRepository templateRepo,
             IEmbyApi embyApi,
-            IRadarrSync radarrSync,
             ICacheService memCache,
             IGithubApi githubApi,
             IRecentlyAddedEngine engine)
@@ -53,7 +56,6 @@ namespace Ombi.Controllers.V1
             Mapper = mapper;
             TemplateRepository = templateRepo;
             _embyApi = embyApi;
-            _radarrSync = radarrSync;
             _cache = memCache;
             _githubApi = githubApi;
             _recentlyAdded = engine;
@@ -63,7 +65,6 @@ namespace Ombi.Controllers.V1
         private IMapper Mapper { get; }
         private INotificationTemplatesRepository TemplateRepository { get; }
         private readonly IEmbyApi _embyApi;
-        private readonly IRadarrSync _radarrSync;
         private readonly ICacheService _cache;
         private readonly IGithubApi _githubApi;
         private readonly IRecentlyAddedEngine _recentlyAdded;
@@ -408,7 +409,8 @@ namespace Ombi.Controllers.V1
             {
                 _cache.Remove(CacheKeys.RadarrRootProfiles);
                 _cache.Remove(CacheKeys.RadarrQualityProfiles);
-                BackgroundJob.Enqueue(() => _radarrSync.CacheContent());
+
+                await OmbiQuartz.TriggerJob(nameof(IRadarrSync), "DVR");
             }
             return result;
         }
@@ -568,8 +570,8 @@ namespace Ombi.Controllers.V1
 
                 try
                 {
-                    var r = CrontabSchedule.TryParse(expression);
-                    if (r == null)
+                    var isValid = CronExpression.IsValidExpression(expression);
+                    if (!isValid)
                     {
                         return new JobSettingsViewModel
                         {
@@ -599,14 +601,15 @@ namespace Ombi.Controllers.V1
             var model = new CronTestModel();
             try
             {
-                var time = DateTime.UtcNow;
-                var result = CrontabSchedule.TryParse(body.Expression);
-                for (int i = 0; i < 10; i++)
+                var isValid = CronExpression.IsValidExpression(body.Expression);
+                if (!isValid)
                 {
-                    var next = result.GetNextOccurrence(time);
-                    model.Schedule.Add(next);
-                    time = next;
+                    return new CronTestModel
+                    {
+                        Message = $"CRON Expression {body.Expression} is not valid"
+                    };
                 }
+               
                 model.Success = true;
                 return model;
             }
@@ -617,8 +620,6 @@ namespace Ombi.Controllers.V1
                     Message = $"CRON Expression {body.Expression} is not valid"
                 };
             }
-
-
         }
 
 

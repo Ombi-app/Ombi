@@ -26,6 +26,7 @@ using Ombi.Settings.Settings.Models.External;
 using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Quartz;
 using ContentType = Ombi.Store.Entities.ContentType;
 
 namespace Ombi.Schedule.Jobs.Ombi
@@ -57,6 +58,10 @@ namespace Ombi.Schedule.Jobs.Ombi
             _ombiSettings = ombiSettings;
             _plexSettings = plexSettings;
             _embySettings = embySettings;
+            _ombiSettings.ClearCache();
+            _plexSettings.ClearCache();
+            _emailSettings.ClearCache();
+            _customizationSettings.ClearCache();
         }
 
         private readonly IPlexContentRepository _plex;
@@ -284,7 +289,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             var newsletterSettings = await _newsletterSettings.GetSettingsAsync();
             await Start(newsletterSettings, false);

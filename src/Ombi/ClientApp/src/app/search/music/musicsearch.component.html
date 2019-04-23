@@ -1,7 +1,7 @@
 ﻿<!-- Movie tab -->
 <div role="tabpanel" class="tab-pane active" id="MoviesTab">
     <div class="input-group">
-        <input id="search" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons" (keyup)="search($event)">
+        <input id="search" type="text" placeholder="{{ 'Search.SearchBarPlaceholder' | translate }}" class="form-control form-control-custom form-control-search form-control-withbuttons" (keyup)="search($event)">
         <div class="input-group-addon right-radius">
             <i class="fa fa-search"></i>
         </div>

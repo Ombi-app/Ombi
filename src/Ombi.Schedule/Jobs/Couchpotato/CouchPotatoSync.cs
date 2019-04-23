@@ -36,6 +36,7 @@ using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Couchpotato
 {
@@ -56,7 +57,7 @@ namespace Ombi.Schedule.Jobs.Couchpotato
         private readonly ILogger<CouchPotatoSync> _log;
         private readonly IExternalContext _ctx;
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             var settings = await _settings.GetSettingsAsync();
             if (!settings.Enabled)

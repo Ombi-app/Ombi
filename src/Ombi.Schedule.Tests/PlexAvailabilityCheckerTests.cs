@@ -47,7 +47,7 @@ namespace Ombi.Schedule.Tests
             _movie.Setup(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
             _repo.Setup(x => x.Get("test")).ReturnsAsync(new PlexServerContent());
 
-            await Checker.Start();
+            await Checker.Execute(null);
 
             _movie.Verify(x => x.Save(), Times.Once);
 
@@ -63,8 +63,8 @@ namespace Ombi.Schedule.Tests
             };
             _movie.Setup(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
 
-            await Checker.Start();
-            
+            await Checker.Execute(null);
+
             Assert.False(request.Available);
         }
 
@@ -111,7 +111,7 @@ namespace Ombi.Schedule.Tests
             }.AsQueryable().BuildMock().Object);
             _repo.Setup(x => x.Include(It.IsAny<IQueryable<PlexEpisode>>(),It.IsAny<Expression<Func<PlexEpisode, PlexServerContent>>>()));
 
-            await Checker.Start();
+            await Checker.Execute(null);
 
             _tv.Verify(x => x.Save(), Times.Once);
 

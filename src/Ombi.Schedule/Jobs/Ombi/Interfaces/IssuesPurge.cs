@@ -5,6 +5,7 @@ using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Ombi
 {
@@ -20,7 +21,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly IRepository<Issues> _issuesRepository;
         private readonly ISettingsService<IssueSettings> _settings;
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             var settings = await _settings.GetSettingsAsync();
             if (!settings.DeleteIssues)

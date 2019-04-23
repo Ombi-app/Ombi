@@ -44,6 +44,7 @@ using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.Plex.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
@@ -60,6 +61,7 @@ namespace Ombi.Schedule.Jobs.Plex
             Metadata = metadataRefresh;
             Checker = checker;
             Notification = hub;
+            Plex.ClearCache();
         }
 
         private ISettingsService<PlexSettings> Plex { get; }
@@ -71,9 +73,11 @@ namespace Ombi.Schedule.Jobs.Plex
         private IPlexAvailabilityChecker Checker { get; }
         private IHubContext<NotificationHub> Notification { get; set; }
 
-        public async Task CacheContent(bool recentlyAddedSearch = false)
+        public async Task Execute(IJobExecutionContext context)
         {
-           
+            JobDataMap dataMap = context.JobDetail.JobDataMap;
+            var recentlyAddedSearch = dataMap.GetBooleanValueFromString("recentlyAddedSearch");
+
             var plexSettings = await Plex.GetSettingsAsync();
             if (!plexSettings.Enable)
             {
@@ -111,18 +115,20 @@ namespace Ombi.Schedule.Jobs.Plex
             if (!recentlyAddedSearch)
             {
                 Logger.LogInformation("Starting EP Cacher");
-                BackgroundJob.Enqueue(() => EpisodeSync.Start());
+
+                await OmbiQuartz.TriggerJob(nameof(IPlexEpisodeSync), "Plex");
             }
 
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
                 // Just check what we send it
-                BackgroundJob.Enqueue(() => Metadata.ProcessPlexServerContent(processedContent.Content));
+                await OmbiQuartz.TriggerJob(nameof(IMediaDatabaseRefresh), "System");
             }
 
             if ((processedContent?.HasProcessedEpisodes ?? false) && recentlyAddedSearch)
             {
-                BackgroundJob.Enqueue(() => Checker.Start());
+
+                await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
             }
 
             await Notification.Clients.Clients(NotificationHub.AdminConnectionIds)
