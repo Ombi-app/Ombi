@@ -218,7 +218,7 @@
         /// <param name="interval">The number of minutes to wait between every activation.</param>
         public static string MinuteInterval(int interval)
         {
-            return $"	0 0/{interval} * 1/1 * ? *";
+            return $"0 0/{interval} * 1/1 * ? *";
         }
 
         /// <summary>

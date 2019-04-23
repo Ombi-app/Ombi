@@ -142,7 +142,7 @@ namespace Ombi.Controllers
         [HttpPost("newsletter")]
         public async Task<bool> StartNewsletter()
         {
-            await OmbiQuartz.TriggerJob(nameof(INewsletterJob), "Emby");
+            await OmbiQuartz.TriggerJob(nameof(INewsletterJob), "System");
             return true;
         }
     }
