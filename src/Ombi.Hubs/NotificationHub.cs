@@ -68,6 +68,6 @@ namespace Ombi.Hubs
     public class HubUsers
     {
         public string UserId { get; set; }
-        public IList<string> Roles { get; set; }
+        public IList<string> Roles { get; set; } = new List<string>();
     }
 }
