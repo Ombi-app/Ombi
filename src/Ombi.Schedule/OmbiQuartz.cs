@@ -60,7 +60,10 @@ namespace Ombi.Schedule
             {
                 ITrigger jobTrigger = TriggerBuilder.Create()
                     .WithIdentity(name + "Trigger", group)
-                    .WithCronSchedule(cronExpression)
+                    .WithCronSchedule(cronExpression, 
+                        x => x.WithMisfireHandlingInstructionFireAndProceed())
+                    .ForJob(name, group)
+                    .StartNow()
                     .Build();
                 await Scheduler.ScheduleJob(job, jobTrigger);
             } 

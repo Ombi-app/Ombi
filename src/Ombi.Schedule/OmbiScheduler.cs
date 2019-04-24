@@ -48,15 +48,14 @@ namespace Ombi.Schedule
             // Set job factory
             OmbiQuartz.Instance.UseJobFactory(jobFactory);
 
-            // Run Quartz
-            await OmbiQuartz.Start();
-
             // Run configuration
             await AddPlex(s);
             await AddEmby(s);
             await AddDvrApps(s);
             await AddSystem(s);
 
+            // Run Quartz
+            await OmbiQuartz.Start();
         }
 
         private static async Task AddSystem(JobSettings s)
