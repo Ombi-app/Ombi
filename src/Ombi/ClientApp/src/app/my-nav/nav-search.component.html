@@ -1,0 +1,25 @@
+<input class="form-control quater-width search-bar" type="text" [(ngModel)]="selectedItem"
+    placeholder="{{'NavigationBar.Search' | translate}}" aria-label="Search" [ngbTypeahead]="searchModel"
+    [resultFormatter]="formatter" [resultTemplate]="template" (selectItem)="selected($event)">
+
+<ng-template #template let-result="result">
+
+    <div *ngIf="result.media_type === 'movie'">
+        <i class="fa fa-film"></i> &nbsp;
+        <span *ngIf="result.release_date">
+            {{result.title}} ({{result.release_date.slice(0,4)}})
+        </span>
+        <span *ngIf="!result.release_date">{{result.title}}</span>
+    </div>
+    <div *ngIf="result.media_type === 'tv'">
+            <i class="fa fa-tv"></i> &nbsp;
+        <span *ngIf="result.release_date">
+            {{result.name}} ({{result.release_date.slice(0,4)}})
+        </span>
+        <span *ngIf="!result.release_date">{{result.name}}</span>
+    </div>
+    <!-- Collection -->
+    <!-- <i class="fa fa-file-video-o" aria-hidden="true"></i> -->
+
+
+</ng-template>

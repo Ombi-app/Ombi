@@ -2,6 +2,7 @@
 using System.Security.Principal;
 using Hangfire;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 
 using Ombi.Api.Discord;
@@ -51,10 +52,10 @@ using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Jobs.Sonarr;
 using Ombi.Store.Repository.Requests;
 using Ombi.Updater;
-using PlexContentCacher = Ombi.Schedule.Jobs.Plex;
 using Ombi.Api.Telegram;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Demo;
+using Ombi.Core.Engine.V2;
 using Ombi.Core.Processor;
 using Ombi.Schedule.Jobs.Lidarr;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
@@ -71,6 +72,7 @@ namespace Ombi.DependencyInjection
         public static void RegisterApplicationDependencies(this IServiceCollection services)
         {
             services.RegisterEngines();
+            services.RegisterEnginesV2();
             services.RegisterApi();
             services.RegisterServices();
             services.RegisterStore();
@@ -98,6 +100,15 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IDemoMovieSearchEngine, DemoMovieSearchEngine>();
             services.AddTransient<IDemoTvSearchEngine, DemoTvSearchEngine>();
         }
+
+        public static void RegisterEnginesV2(this IServiceCollection services)
+        {
+            services.AddTransient<IMultiSearchEngine, MultiSearchEngine>();
+            services.AddTransient<IMovieEngineV2, MovieSearchEngineV2>();
+            services.AddTransient<ITVSearchEngineV2, TvSearchEngineV2>();
+            services.AddTransient<ICalendarEngine, CalendarEngine>();
+        }
+
         public static void RegisterHttp(this IServiceCollection services)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -202,7 +213,6 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ISickRageSync, SickRageSync>();
             services.AddTransient<IRefreshMetadata, RefreshMetadata>();
             services.AddTransient<INewsletterJob, NewsletterJob>();
-            //services.AddTransient<IPlexRecentlyAddedSync, PlexRecentlyAddedSync>();
             services.AddTransient<ILidarrAlbumSync, LidarrAlbumSync>();
             services.AddTransient<ILidarrArtistSync, LidarrArtistSync>();
             services.AddTransient<ILidarrAvailabilityChecker, LidarrAvailabilityChecker>();

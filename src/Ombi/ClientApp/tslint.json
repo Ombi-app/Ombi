@@ -1,0 +1,31 @@
+{
+  "rulesDirectory": [
+    "node_modules/codelyzer"
+  ],
+  "extends": [
+    "tslint:recommended",
+    "tslint-angular"
+  ],
+  "rules": {
+    "max-line-length": [
+      true,
+      250
+    ],
+    "arrow-parens": false,
+    "radix": false,
+    "no-angle-bracket-type-assertion": false,
+    "no-unused-expression": [
+      true,
+      "allow-new"
+    ],
+    "max-classes-per-file": false,
+    "no-namespace": false,
+    "no-internal-module": false,
+    "quotemark": [ true, "double", "avoid-template" ],
+    "no-console": false,
+    "no-non-null-assertion": false,
+  },
+  "compilerOptions": {
+    "experimentalDecorators":true,
+  }
+}

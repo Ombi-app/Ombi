@@ -1,0 +1,84 @@
+﻿
+  <div *ngIf="background" @fadeInOut class="bg" [style.background-image]="background"></div>
+<div class="small-middle-container">
+<div *ngIf="form && customizationSettings && authenticationSettings">
+
+  <!--TODO TURN BACK ON-->
+  <mat-card class="mat-elevation-z8 top-margin">
+    <img mat-card-image src="{{baseUrl}}/images/logo.png">
+    <mat-card-content>
+      <form *ngIf="authenticationSettings" class="form-signin" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+
+
+        <mat-form-field class="full-width">
+          <input type="text" matInput placeholder="{{'Login.UsernamePlaceholder' | translate}}" formControlName="username" />
+          <mat-error *ngIf="form.get('username').hasError('required')">
+            {{'Login.UsernamePlaceholder' | translate}} is <strong>required</strong></mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <input color="black" type="password" matInput placeholder="{{'Login.PasswordPlaceholder' | translate}}" formControlName="password" />
+        </mat-form-field>
+
+        <mat-checkbox class="white-checkbox" formControlName="rememberMe">{{'Login.RememberMe' | translate}}</mat-checkbox>
+
+        <button mat-raised-button color="accent" type="submit">{{'Login.SignInButton' | translate}}</button>
+
+        <a [routerLink]="['/reset']" class="forgot-password col-md-12">
+          <b [translate]="'Login.ForgottenPassword'"></b>
+        </a>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+
+  <!-- <div class="container" id="login">
+    <div class="card card-container">
+
+      <div *ngIf="!customizationSettings.logo">
+        <img id="profile-img" class="profile-img-card" src="{{baseUrl}}/images/logo.png" />
+      </div>
+      <div *ngIf="customizationSettings.logo">
+        <img id="profile-img" class="center" [src]="customizationSettings.logo" />
+      </div>
+      <p id="profile-name" class="profile-name-card"></p>
+
+      <div *ngIf="!authenticationSettings.enableOAuth || loginWithOmbi">
+        <form *ngIf="authenticationSettings" class="form-signin" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+
+
+          <mat-form-field class="full-width">
+            <input type="text" matInput placeholder="{{'Login.UsernamePlaceholder' | translate}}" formControlName="username" />
+            <mat-error *ngIf="form.get('username').hasError('required')">
+              {{'Login.UsernamePlaceholder' | translate}} is <strong>required</strong></mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="full-width">
+            <input type="password" matInput placeholder="{{'Login.PasswordPlaceholder' | translate}}" formControlName="password" />
+          </mat-form-field>
+
+          <mat-checkbox class="white-checkbox" formControlName="rememberMe">{{'Login.RememberMe' | translate}}</mat-checkbox>
+
+          <button mat-raised-button color="accent" type="submit">{{'Login.SignInButton' | translate}}</button>
+
+          <a [routerLink]="['/reset']" class="forgot-password col-md-12">
+            <b [translate]="'Login.ForgottenPassword'"></b>
+          </a>
+        </form>
+      </div>
+
+      <div *ngIf="authenticationSettings.enableOAuth && !loginWithOmbi">
+        <div class="form-signin">
+          <button mat-raised-button color="warn" type="button" (click)="loginWithOmbi = true">
+            Sign In With {{appName}}</button>
+        </div>
+        <div class="form-signin">
+          <button mat-raised-button color="warn" type="button" (click)="oauth()">
+            Sign In With Plex</button>
+        </div>
+      </div>
+
+    </div>
+  </div> -->
+</div>
+</div>

@@ -51,6 +51,8 @@ namespace Ombi.Core.Engine
             return await ProcessSingleMovie(viewMovie, true);
         }
 
+
+
         /// <summary>
         /// Searches the specified movie.
         /// </summary>
@@ -61,7 +63,7 @@ namespace Ombi.Core.Engine
 
             if (result != null)
             {
-                return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
+                return await TransformMovieResultsToResponse(result.Take(ResultLimit)); // Take x to stop us overloading the API
             }
             return null;
         }
@@ -105,7 +107,7 @@ namespace Ombi.Core.Engine
             if (result != null)
             {
                 Logger.LogDebug("Search Result: {result}", result);
-                return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
+                return await TransformMovieResultsToResponse(result.Take(ResultLimit)); // Take x to stop us overloading the API
             }
             return null;
         }
@@ -124,7 +126,7 @@ namespace Ombi.Core.Engine
             }, DateTime.Now.AddHours(12));
             if (result != null)
             {
-                return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
+                return await TransformMovieResultsToResponse(result.Take(ResultLimit)); // Take x to stop us overloading the API
             }
             return null;
         }
@@ -142,7 +144,7 @@ namespace Ombi.Core.Engine
             }, DateTime.Now.AddHours(12));
             if (result != null)
             {
-                return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
+                return await TransformMovieResultsToResponse(result.Take(ResultLimit)); // Take x to stop us overloading the API
             }
             return null;
         }
@@ -161,7 +163,7 @@ namespace Ombi.Core.Engine
             if (result != null)
             {
                 Logger.LogDebug("Search Result: {result}", result);
-                return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
+                return await TransformMovieResultsToResponse(result.Take(ResultLimit)); // Take x to stop us overloading the API
             }
             return null;
         }
@@ -179,7 +181,7 @@ namespace Ombi.Core.Engine
             }, DateTime.Now.AddHours(12));
             if (result != null)
             {
-                return await TransformMovieResultsToResponse(result.Take(MovieLimit)); // Take x to stop us overloading the API
+                return await TransformMovieResultsToResponse(result.Take(ResultLimit)); // Take x to stop us overloading the API
             }
             return null;
         }

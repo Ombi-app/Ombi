@@ -6,46 +6,44 @@ namespace Ombi.Helpers
     {
         private const string Https = "Https";
         private const string Http = "Http";
-        
+
         public static Uri ReturnUri(this string val)
         {
             if (val == null)
             {
                 throw new ApplicationSettingsException("The URI is null, please check your settings to make sure you have configured the applications correctly.");
             }
-            try
+            var uri = new UriBuilder();
+
+            if (val.StartsWith("http://", StringComparison.Ordinal))
             {
-                var uri = new UriBuilder();
-
-                if (val.StartsWith("http://", StringComparison.Ordinal))
-                {
-                    uri = new UriBuilder(val);
-                }
-                else if (val.StartsWith("https://", StringComparison.Ordinal))
-                {
-                    uri = new UriBuilder(val);
-                }
-                else if (val.Contains(":"))
-                {
-                    var split = val.Split(':', '/');
-                    int port;
-                    int.TryParse(split[1], out port);
-
-                    uri = split.Length == 3
-                        ? new UriBuilder(Http, split[0], port, "/" + split[2])
-                        : new UriBuilder(Http, split[0], port);
-                }
-                else
-                {
-                    uri = new UriBuilder(Http, val);
-                }
-
-                return uri.Uri;
+                uri = new UriBuilder(val);
             }
-            catch (Exception exception)
+            else if (val.StartsWith("https://", StringComparison.Ordinal))
             {
-                throw new Exception(exception.Message, exception);
+                uri = new UriBuilder(val);
             }
+            else if (val.Contains(":"))
+            {
+                var split = val.Split(':', '/');
+                int port;
+                int.TryParse(split[1], out port);
+
+                uri = split.Length == 3
+                    ? new UriBuilder(Http, split[0], port, "/" + split[2])
+                    : new UriBuilder(Http, split[0], port);
+            }
+            else
+            {
+                if(val.EndsWith("/"))
+                {
+                    // Remove a trailing slash, since the URIBuilder adds one
+                    val = val.Remove(val.Length - 1, 1);
+                }
+                uri = new UriBuilder(Http, val);
+            }
+
+            return uri.Uri;
         }
 
         /// <summary>
@@ -64,37 +62,40 @@ namespace Ombi.Helpers
             {
                 throw new ApplicationSettingsException("The URI is null, please check your settings to make sure you have configured the applications correctly.");
             }
-            try
-            {
-                var uri = new UriBuilder();
+            var uri = new UriBuilder();
 
-                if (val.StartsWith("http://", StringComparison.Ordinal))
-                {
-                    var split = val.Split('/');
-                    uri = split.Length >= 4 ? new UriBuilder(Http, split[2], port, "/" + split[3]) : new UriBuilder(new Uri($"{val}:{port}"));
-                }
-                else if (val.StartsWith("https://", StringComparison.Ordinal))
-                {
-                    var split = val.Split('/');
-                    uri = split.Length >= 4
-                        ? new UriBuilder(Https, split[2], port, "/" + split[3])
-                        : new UriBuilder(Https, split[2], port);
-                }
-                else if (ssl)
-                {
-                    uri = new UriBuilder(Https, val, port);
-                }
-                else
-                {
-                    uri = new UriBuilder(Http, val, port);
-                }
-
-                return uri.Uri;
-            }
-            catch (Exception exception)
+            if (val.StartsWith("http://", StringComparison.InvariantCultureIgnoreCase))
             {
-                throw new Exception(exception.Message, exception);
+                var split = val.Split('/');
+                uri = split.Length >= 4 ? new UriBuilder(Http, split[2], port, "/" + split[3]) : new UriBuilder(new Uri($"{val}:{port}"));
             }
+            else if (val.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var split = val.Split('/');
+                uri = split.Length >= 4
+                    ? new UriBuilder(Https, split[2], port, "/" + split[3])
+                    : new UriBuilder(Https, split[2], port);
+            }
+            else if ((ssl || port == 443) && port != 80)
+            {
+                if (val.EndsWith("/"))
+                {
+                    // Remove a trailing slash, since the URIBuilder adds one
+                    val = val.Remove(val.Length - 1, 1);
+                }
+                uri = new UriBuilder(Https, val, port);
+            }
+            else
+            {
+                if (val.EndsWith("/"))
+                {
+                    // Remove a trailing slash, since the URIBuilder adds one
+                    val = val.Remove(val.Length - 1, 1);
+                }
+                uri = new UriBuilder(Http, val, port);
+            }
+
+            return uri.Uri;
         }
 
         public static Uri ReturnUriWithSubDir(this string val, int port, bool ssl, string subDir)
@@ -112,7 +113,7 @@ namespace Ombi.Helpers
 
             return uriBuilder.Uri;
         }
-        
+
     }
 
     public class ApplicationSettingsException : Exception

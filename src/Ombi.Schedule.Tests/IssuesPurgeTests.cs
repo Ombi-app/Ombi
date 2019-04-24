@@ -44,7 +44,7 @@ namespace Ombi.Schedule.Tests
                 new Issues
                 {
                     Status = IssueStatus.Resolved,
-                    ResovledDate = DateTime.Now.AddDays(-5).AddHours(-1)
+                    ResovledDate = DateTime.UtcNow.AddDays(-5).AddHours(-8)
                 }
             };
 
@@ -57,7 +57,7 @@ namespace Ombi.Schedule.Tests
         }
 
         [Test]
-        public async Task DoesNot_Delete_AnyIssues()
+        public async Task DoesNot_Delete_AllIssues()
         {
             var issues = new List<Issues>()
             {
@@ -79,6 +79,32 @@ namespace Ombi.Schedule.Tests
 
             Assert.That(issues[0].Status, Is.Not.EqualTo(IssueStatus.Deleted));
             Assert.That(issues[1].Status, Is.EqualTo(IssueStatus.Deleted));
+            Repo.Verify(x => x.SaveChangesAsync(), Times.Once);
+        }
+
+        [Test]
+        public async Task DoesNot_Delete_AnyIssues()
+        {
+            var issues = new List<Issues>()
+            {
+                new Issues
+                {
+                    Status = IssueStatus.Resolved,
+                    ResovledDate = DateTime.Now.AddDays(-2)
+                },
+                new Issues
+                {
+                    Status = IssueStatus.Resolved,
+                    ResovledDate = DateTime.Now.AddDays(-4)
+                }
+            };
+
+            Settings.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new IssueSettings { DeleteIssues = true, DaysAfterResolvedToDelete = 5 });
+            Repo.Setup(x => x.GetAll()).Returns(new EnumerableQuery<Issues>(issues));
+            await Job.Execute(null);
+
+            Assert.That(issues[0].Status, Is.Not.EqualTo(IssueStatus.Deleted));
+            Assert.That(issues[1].Status, Is.Not.EqualTo(IssueStatus.Deleted));
             Repo.Verify(x => x.SaveChangesAsync(), Times.Once);
         }
     }

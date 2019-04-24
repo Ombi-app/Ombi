@@ -59,7 +59,6 @@
 
 
          -->
-         
     @*<!-- Start SmartBanner configuration -->
           <meta name="smartbanner:title" content="Smart Application">
           <meta name="smartbanner:author" content="SmartBanner Contributors">
@@ -81,6 +80,8 @@
     <title>@appName</title>
     <meta property="og:title" content=“@appName” />
     <meta property="og:image" content="~/images/logo.png" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
     <meta property="og:site_name" content=“@appName” />
     <base href="/@baseUrl" />
     <link rel="apple-touch-icon" sizes="180x180" href="~/images/favicon/apple-touch-icon.png">
@@ -92,40 +93,34 @@
     <meta name="msapplication-config" content="~/images/favicon/browserconfig.xml">
     <meta name="theme-color" content="#df691a">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    
+    <meta name="mobile-web-app-capable" content="yes">  
+    <link rel="stylesheet" href="/loading.css" />
+    <script src="//maps.google.com/maps/api/js?libraries=visualization&key=AIzaSyBDar8LXU5vbURGTMcNLI0f9AsoSnpiV3I" async defer></script>
+
     @if (s?.CollectAnalyticData ?? true)
     {
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89270627-3"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
+            function gtag() { dataLayer.push(arguments); }
             gtag('js', new Date());
 
             gtag('config', 'UA-89270627-3');
         </script>
     }
 
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <link rel="stylesheet" href="~/loading.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/dist/vendor.css" asp-append-version="true" />
-    <environment include="Development">
-        <script src="~/dist/vendor.js" asp-append-version="true" defer></script>
-    </environment>
-    <script src="~/dist/app.js" asp-append-version="true" defer></script>
 </head>
 <body>
     @{
         if (customization.CustomCss.HasValue())
         {
-           <style>
+            <style>
                 @Html.Raw(customization.CustomCss)
             </style>
         }
     }
-
-    @RenderBody()
+    <app-ombi><p class="loading">Loading<span>.</span><span>.</span><span>.</span></p></app-ombi>
 </body>
 </html>

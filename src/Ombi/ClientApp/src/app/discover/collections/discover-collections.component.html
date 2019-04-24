@@ -1,0 +1,21 @@
+<div class="small-middle-container" *ngIf="collection">
+
+    <div class="row top-spacing">
+        <h3 class="col-12 text-center">{{collection.name}}</h3>
+    </div>
+    <div class="row">
+        <p class="col-12 text-center">{{collection.overview}}</p>
+    </div>
+    <div class="row justify-content-md-center">
+        <button class="col-2" mat-raised-button color="accent" (click)="requestCollection();">Request
+            Collection</button>
+    </div>
+    <div *ngIf="loadingFlag" class="row justify-content-md-center top-spacing loading-spinner">
+        <mat-spinner [color]="'accent'"></mat-spinner>
+    </div>
+    <div *ngIf="discoverResults" class="row full-height">
+        <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-4 small-padding" *ngFor="let result of discoverResults">
+            <discover-card [result]="result"></discover-card>
+        </div>
+    </div>
+</div>

@@ -1,13 +1,17 @@
-version: 3.0.{build}
+version: 4.0.{build}
 configuration: Release
 os: Visual Studio 2017
+
 environment:
-  nodejs_version: "9.8.0"
+  nodejs_version: "11.5.0"
   typescript_version: "3.0.1"  
   github_auth_token:
     secure: H/7uCrjmWHGJxgN3l9fbhhdVjvvWI8VVF4ZzQqeXuJwAf+PgSNBdxv4SS+rMQ+RH
-  sonarrcloudtoken:
-    secure: WGkIog4wuMSx1q5vmSOgIBXMtI/leMpLbZhi9MJnJdBBuDfcv12zwXg3LQwY0WbE
+
+
+    
+# Do not build on tags (GitHub and BitBucket)
+skip_tags: true
 
 install:
   # Get the latest stable version of Node.js or io.js
@@ -16,35 +20,45 @@ install:
   - cmd: set path=%programfiles(x86)%\\Microsoft SDKs\TypeScript\3.0;%path%
   - cmd: tsc -v
 build_script:
- # - dotnet tool install --global dotnet-sonarscanner
- #- ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { dotnet sonarscanner begin /k:"tidusjar_Ombi"  /d:sonar.organization="tidusjar-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$env.sonarrcloud_token" /d:sonar.analysis.mode="preview" /d:sonar.github.pullRequest="$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:sonar.github.repository="https://github.com/tidusjar/ombi" /d:sonar.github.oauth="$env.github_auth_token" }
- # - ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { dotnet sonarscanner begin /k:"tidusjar_Ombi"  /d:sonar.organization="tidusjar-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$env.SONARRCLOUDTOKEN" }
-  - ps: ./build.ps1 --settings_skipverification=true
- # - dotnet sonarscanner end /d:sonar.login="%sonarrcloudtoken%"
+  - ps: |
+      $deployBranches =
+        "feature/v4",
+        "develop",
+        "master";
 
-test: off
+      If(($env:APPVEYOR_REPO_BRANCH -in $deployBranches -Or $env:APPVEYOR_REPO_COMMIT_MESSAGE -Match '!deploy') -And $env:APPVEYOR_REPO_COMMIT_MESSAGE -NotMatch '!build') {
+        Write-Output "This is a deployment build"
+        $env:Deploy = 'true'
+        ./build.ps1
+      }
+      Else 
+      {
+        $env:Deploy = 'false'
+        Write-Output "This is a not a deployment build"
+        ./build.ps1 --target=build
+      }   
 
+skip_commits:
+  files:
+    - '**/*.md'
+ 
 after_build:
-- cmd: >-
-    
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.2\windows.zip"
-    
-    
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.2\osx.tar.gz"  
-    
-    
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.2\linux.tar.gz"
+- ps: |
+    $deployBranches =
+        "feature/v4",
+        "develop",
+        "master";
 
-
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.2\linux-arm.tar.gz"
-
-
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.2\windows-32bit.zip"
-
-    
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.2\linux-arm64.tar.gz"
-    
-    
+    If(($env:APPVEYOR_REPO_BRANCH -in $deployBranches -Or $env:APPVEYOR_REPO_COMMIT_MESSAGE -Match '!deploy') -And $env:APPVEYOR_REPO_COMMIT_MESSAGE -NotMatch '!build') 
+    {
+      Write-Output "Deploying!"
+      Get-ChildItem -Recurse .\*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+      Get-ChildItem -Recurse .\*.gz | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+    }
+    Else 
+    {
+      Write-Output "No Deployment"
+    }
 
 #cache:
 #- '%USERPROFILE%\.nuget\packages'

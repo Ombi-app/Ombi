@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ombi.Api.TvMaze.Models;
+using Ombi.Api.TvMaze.Models.V2;
 
 namespace Ombi.Api.TvMaze
 {
@@ -11,5 +12,6 @@ namespace Ombi.Api.TvMaze
         Task<List<TvMazeSearch>> Search(string searchTerm);
         Task<TvMazeShow> ShowLookup(int showId);
         Task<TvMazeShow> ShowLookupByTheTvDbId(int theTvDbId);
+        Task<FullSearch> GetTvFullInformation(int id); 
     }
 }

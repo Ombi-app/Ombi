@@ -75,6 +75,8 @@ namespace Ombi.Schedule
             await OmbiQuartz.Instance.AddJob<ICouchPotatoSync>(nameof(ICouchPotatoSync), "DVR", JobSettingsHelper.CouchPotato(s));
             await OmbiQuartz.Instance.AddJob<ISickRageSync>(nameof(ISickRageSync), "DVR", JobSettingsHelper.SickRageSync(s));
             await OmbiQuartz.Instance.AddJob<ILidarrArtistSync>(nameof(ILidarrArtistSync), "DVR", JobSettingsHelper.LidarrArtistSync(s));
+            await OmbiQuartz.Instance.AddJob<ILidarrAlbumSync>(nameof(ILidarrAlbumSync), "DVR", null);
+            await OmbiQuartz.Instance.AddJob<ILidarrAvailabilityChecker>(nameof(ILidarrAvailabilityChecker), "DVR", null);
         }
 
         private static async Task AddPlex(JobSettings s)

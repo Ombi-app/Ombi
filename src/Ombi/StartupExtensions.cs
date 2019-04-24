@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -43,13 +45,14 @@ namespace Ombi
                 c.SwaggerDoc("v1", new Info
                 {
                     Version = "v1",
-                    Title = "Ombi Api",
+                    Title = "Ombi Api V1",
                     Contact = new Contact
                     {
                         Name = "Jamie Rees",
                         Url = "https://www.ombi.io/"
                     }
                 });
+
                 var security = new Dictionary<string, IEnumerable<string>>
                 {
                     //{"Bearer", new string[] { }},
@@ -138,7 +141,25 @@ namespace Ombi
             {
                 x.Audience = "Ombi";
                 x.TokenValidationParameters = tokenValidationParameters;
+                x.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        // If the request is for our hub...
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            (path.StartsWithSegments("/hubs")))
+                        {
+                            // Read the token out of the query string
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
+
         }
     }
 }

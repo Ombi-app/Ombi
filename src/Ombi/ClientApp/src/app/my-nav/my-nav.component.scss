@@ -1,0 +1,58 @@
+@import "~styles/variables.scss";
+.sidenav-container {
+    min-height: 100vh;
+}
+
+.sidenav {
+    width: 200px;
+}
+
+.sidenav .mat-toolbar {
+    background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.middle {
+    display: flex;
+}
+
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.quater-width {
+    width: 25%;
+}
+
+.autocomplete-img {
+    vertical-align: middle;
+    height: 63px;
+}
+
+.mat-option {
+    height: 50px;
+    line-height: 50px;
+    padding: 0px 5px;
+}
+
+.active-list-item {
+    background: $accent !important;
+    color:white;
+}
+
+.active-list-item-dark {
+    background: $accent-dark !important;
+    color:black;
+}
+
+.bottom-nav-link {
+    bottom: 0;
+    position: absolute;
+}

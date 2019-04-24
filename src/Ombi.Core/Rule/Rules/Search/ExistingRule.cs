@@ -30,7 +30,6 @@ namespace Ombi.Core.Rule.Rules.Search
                 var movieRequests = await Movie.GetRequestAsync(obj.Id);
                 if (movieRequests != null) // Do we already have a request for this?
                 {
-
                     obj.Requested = true;
                     obj.RequestId = movieRequests.Id;
                     obj.Approved = movieRequests.Approved;
@@ -42,22 +41,11 @@ namespace Ombi.Core.Rule.Rules.Search
             }
             if (obj.Type == RequestType.TvShow)
             {
-                //var tvRequests = Tv.GetRequest(obj.Id);
-                //if (tvRequests != null) // Do we already have a request for this?
-                //{
-
-                //    obj.Requested = true;
-                //    obj.Approved = tvRequests.ChildRequests.Any(x => x.Approved);
-                //    obj.Available = tvRequests.ChildRequests.Any(x => x.Available);
-
-                //    return Task.FromResult(Success());
-                //}
-
                 var request = (SearchTvShowViewModel)obj;
                 var tvRequests = Tv.GetRequest(obj.Id);
                 if (tvRequests != null) // Do we already have a request for this?
                 {
-
+                    request.RequestId = tvRequests.Id;
                     request.Requested = true;
                     request.Approved = tvRequests.ChildRequests.Any(x => x.Approved);
 

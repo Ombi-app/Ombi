@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Lidarr
 {
-    public interface ILidarrAvailabilityChecker
+    public interface ILidarrAvailabilityChecker : IJob
     {
-        Task Start();
     }
 }

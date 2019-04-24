@@ -1,9 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Ombi.Helpers
+﻿namespace Ombi.Helpers
 {
     public class EmbyHelper
     {
@@ -11,6 +6,10 @@ namespace Ombi.Helpers
         {
             if (customerServerUrl.HasValue())
             {
+                if(!customerServerUrl.EndsWith("/"))
+                {
+                    return $"{customerServerUrl}/#!/itemdetails.html?id={mediaId}";
+                } 
                 return $"{customerServerUrl}#!/itemdetails.html?id={mediaId}";
             }
             else

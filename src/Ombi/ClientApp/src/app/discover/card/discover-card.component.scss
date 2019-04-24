@@ -1,0 +1,48 @@
+$ombi-primary:#3f3f3f;
+$card-background: #2b2b2b;
+#cardImage {
+    max-height: 68%;
+    border-radius: 5px 5px 0px 0px;
+}
+
+.dark-card {
+    border-radius: 8px;
+    height: 435px;
+}
+
+.card-spacing {
+    margin-top: 10%;
+}
+
+
+.rating {
+    position: absolute;
+    font-weight: bold;
+}
+
+$border-width: 3px;
+.movie-image {
+    border-bottom: $border-width orange solid;
+}
+
+.tv-image {
+    border-bottom: $border-width #1DE9B6 solid;
+}
+
+.expand {
+    text-align: center;
+}
+
+.grow {
+    transition: all .2s ease-in-out;
+}
+
+.grow:hover {
+    transform: scale(1.1);
+}
+
+::ng-deep mat-dialog-container.mat-dialog-container {
+    // background-color: $ombi-primary;
+    // color: white;
+    border-radius: 2%
+}

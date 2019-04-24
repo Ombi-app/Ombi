@@ -1,0 +1,20 @@
+
+    <section id="summary-wrapper">
+        <div class="full-screenshot enabled" [style.background-image]="background"></div>
+        <div class="shadow-base" [ngClass]="available ? 'available-bottom-border' : ''"></div>
+
+        <div class="container summary">
+            <div class="container">
+                <div class="row">
+                    <div
+                        class="col-xl-12 col-lg-11 offset-lg-1 col-md-8 offset-md-4 col-sm-7 offset-sm-5 col-6 offset-6">
+                        <h1>{{title}} <span *ngIf="releaseDate" class="grey-text align-middle">
+                            ({{releaseDate | amLocal | amDateFormat: 'YYYY'}})</span>
+                        </h1>
+
+                        <h5 class="tagline grey-text">{{tagline}}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>

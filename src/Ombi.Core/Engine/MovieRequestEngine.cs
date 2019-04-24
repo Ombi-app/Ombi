@@ -4,6 +4,7 @@ using Ombi.Helpers;
 using Ombi.Store.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
@@ -200,6 +201,54 @@ namespace Ombi.Core.Engine
             };
         }
 
+        public async Task<RequestsViewModel<MovieRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder)
+        {
+            var shouldHide = await HideFromOtherUsers();
+            IQueryable<MovieRequests> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests =
+                    MovieRepository.GetWithUser(shouldHide
+                        .UserId); 
+            }
+            else
+            {
+                allRequests =
+                    MovieRepository
+                        .GetWithUser(); 
+            }
+
+            var prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(sortProperty, true);
+
+            if (sortProperty.Contains('.'))
+            {
+                // This is a navigation property currently not supported
+                prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find("RequestedDate", true);
+                //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
+                //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
+                //var propType = firstProp.PropertyType;
+                //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
+            }
+
+            allRequests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase) 
+                ? allRequests.OrderBy(x => prop.GetValue(x)) 
+                : allRequests.OrderByDescending(x => prop.GetValue(x));
+            var total = await allRequests.CountAsync();
+            var requests = await allRequests.Skip(position).Take(count)
+                .ToListAsync();
+            requests.ForEach(async x =>
+            {
+                x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
+                await CheckForSubscription(shouldHide, x);
+            });
+            return new RequestsViewModel<MovieRequests>
+            {
+                Collection = requests,
+                Total = total
+            };
+
+        }
+
         private IQueryable<MovieRequests> OrderMovies(IQueryable<MovieRequests> allRequests, OrderType type)
         {
             switch (type)
@@ -257,6 +306,15 @@ namespace Ombi.Core.Engine
                 await CheckForSubscription(shouldHide, x);
             });
             return allRequests;
+        }
+
+        public async Task<MovieRequests> GetRequest(int requestId)
+        {
+            var request = await MovieRepository.GetWithUser().Where(x => x.Id == requestId).FirstOrDefaultAsync();
+            request.PosterPath = PosterPathHelper.FixPosterPath(request.PosterPath);
+            await CheckForSubscription(new HideResult(), request);
+
+            return request;
         }
 
         private async Task CheckForSubscription(HideResult shouldHide, MovieRequests x)
@@ -493,7 +551,7 @@ namespace Ombi.Core.Engine
                 RequestType = RequestType.Movie,
             });
 
-            return new RequestEngineResult {Result = true, Message = $"{movieName} has been successfully added!", RequestId = model.Id};
+            return new RequestEngineResult { Result = true, Message = $"{movieName} has been successfully added!", RequestId = model.Id };
         }
 
         public async Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user)
@@ -533,7 +591,7 @@ namespace Ombi.Core.Engine
 
             return new RequestQuotaCountModel()
             {
-                HasLimit = true,    
+                HasLimit = true,
                 Limit = limit,
                 Remaining = count,
                 NextRequest = DateTime.SpecifyKind(oldestRequestedAt.AddDays(7), DateTimeKind.Utc),

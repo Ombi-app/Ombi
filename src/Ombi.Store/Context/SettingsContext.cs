@@ -28,7 +28,7 @@ namespace Ombi.Store.Context
             {
                 i.StoragePath = string.Empty;
             }
-            optionsBuilder.UseSqlite($"Data Source={Path.Combine(i.StoragePath, "OmbiSettings.db")}");
+            optionsBuilder.UseSqlite($"Data Source={Path.Combine(i.StoragePath, "OmbiSettings" + ".db")}");
         }
 
         public void Seed()

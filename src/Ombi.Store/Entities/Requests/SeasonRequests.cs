@@ -16,6 +16,7 @@ namespace Ombi.Store.Repository.Requests
         public int ChildRequestId { get; set; }
         [ForeignKey(nameof(ChildRequestId))]
         public ChildRequests ChildRequest { get; set; }
+        [NotMapped] public bool SeasonAvailable { get; set; }
     }
 
     public class EpisodeRequests : Entity

@@ -1,24 +1,27 @@
-﻿using System;
-using System.IO;
-using AutoMapper;
+﻿using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using Hangfire;
 using Hangfire.Dashboard;
 using Hangfire.SQLite;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.SpaServices.Webpack;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SpaServices;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.DependencyInjection;
 using Ombi.Helpers;
+using Ombi.Hubs;
 using Ombi.Mapping;
 using Ombi.Schedule;
 using Ombi.Settings.Settings.Models;
@@ -26,6 +29,8 @@ using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Serilog;
+using System;
+using System.IO;
 using ILogger = Serilog.ILogger;
 
 namespace Ombi
@@ -33,6 +38,7 @@ namespace Ombi
     public class Startup
     {
         public static StoragePathSingleton StoragePath => StoragePathSingleton.Instance;
+
         public Startup(IHostingEnvironment env)
         {
             Console.WriteLine(env.ContentRootPath);
@@ -78,13 +84,11 @@ namespace Ombi
             services.AddJwtAuthentication(Configuration);
 
             services.AddMvc()
-                .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+                .AddJsonOptions(x =>
+                    x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddOmbiMappingProfile();
-            services.AddAutoMapper(expression =>
-            {
-                expression.AddCollectionMappers();
-            });
+            services.AddAutoMapper(expression => { expression.AddCollectionMappers(); });
 
             services.RegisterApplicationDependencies(); // Ioc and EF
             services.AddSwagger();
@@ -95,6 +99,7 @@ namespace Ombi
             {
                 i.StoragePath = string.Empty;
             }
+
             var sqliteStorage = $"Data Source={Path.Combine(i.StoragePath, "Schedules.db")};";
 
             services.AddHangfire(x =>
@@ -105,10 +110,18 @@ namespace Ombi
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
-                builder.AllowAnyOrigin()
+                builder.AllowAnyHeader()
                     .AllowAnyMethod()
-                    .AllowAnyHeader();
+                    .SetIsOriginAllowed(isOriginAllowed: _ => true)
+                    .AllowCredentials();
             }));
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddSignalR();
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/dist";
+            });
 
             // Build the intermediate service provider
             return services.BuildServiceProvider();
@@ -129,20 +142,9 @@ namespace Ombi
             loggerFactory.AddSerilog();
 
             app.UseHealthChecks("/health");
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
-                {
-                    HotModuleReplacement = true,
-                    ConfigFile = "webpack.config.ts",
-                    
-                    //EnvParam = new
-                    //{
-                    //    aot = true // can't use AOT with HMR currently https://github.com/angular/angular-cli/issues/6347
-                    //}
-                });
-            }
+
+            app.UseSpaStaticFiles();
+
 
             var ombiService =
                 app.ApplicationServices.GetService<ISettingsService<OmbiSettings>>();
@@ -174,23 +176,25 @@ namespace Ombi
                     ombiService.SaveSettings(settings);
                 }
             }
+
             if (settings.BaseUrl.HasValue())
             {
                 app.UsePathBase(settings.BaseUrl);
             }
 
-            app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1, ServerTimeout = TimeSpan.FromDays(1), ShutdownTimeout = TimeSpan.FromDays(1)});
+            app.UseHangfireServer(new BackgroundJobServerOptions
+                {WorkerCount = 1, ServerTimeout = TimeSpan.FromDays(1), ShutdownTimeout = TimeSpan.FromDays(1)});
             if (env.IsDevelopment())
             {
                 app.UseHangfireDashboard(settings.BaseUrl.HasValue() ? $"{settings.BaseUrl}/hangfire" : "/hangfire",
                     new DashboardOptions
                     {
-                        Authorization = new[] { new HangfireAuthorizationFilter() }
+                        Authorization = new[] {new HangfireAuthorizationFilter()}
                     });
             }
 
-            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 3 });
-            
+            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute {Attempts = 3});
+
             // Setup the scheduler
             //var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
             //jobSetup.Setup();
@@ -200,7 +204,7 @@ namespace Ombi
             settingsctx.Seed();
             externalctx.Seed();
 
-            var provider = new FileExtensionContentTypeProvider { Mappings = { [".map"] = "application/octet-stream" } };
+            var provider = new FileExtensionContentTypeProvider {Mappings = {[".map"] = "application/octet-stream"}};
 
             app.UseStaticFiles(new StaticFileOptions()
             {
@@ -216,27 +220,42 @@ namespace Ombi
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "API V2");
             });
 
-            app.UseMvc(routes =>
+            app.UseSignalR(routes => { routes.MapHub<NotificationHub>("/hubs/notification"); });
+
+            app.UseMvcWithDefaultRoute();
+
+            app.UseSpa(spa =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-
-                routes.MapSpaFallbackRoute(
-                    name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
+                if (env.IsDevelopment())
+                {
+                    spa.Options.SourcePath = "ClientApp";
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3578");
+                }
             });
+            
         }
-    }
 
-    public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
-    {
-        public bool Authorize(DashboardContext context)
+        private static bool IsSpaRoute(HttpContext context)
         {
-            return true;
+            var path = context.Request.Path;
+            // This should probably be a compiled regex
+            return path.StartsWithSegments("/static")
+                   || path.StartsWithSegments("/sockjs-node")
+                   || path.StartsWithSegments("/socket.io")
+                   || path.ToString().Contains(".hot-update.");
         }
+
+        public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
+        {
+            public bool Authorize(DashboardContext context)
+            {
+                return true;
+            }
+        }
+
     }
 }

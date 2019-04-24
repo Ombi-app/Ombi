@@ -1,0 +1,21 @@
+
+
+  <h1 mat-dialog-title>Advanced Options</h1>
+  <div mat-dialog-content>
+    <mat-form-field>
+      <mat-label>Radarr Quality Profile</mat-label>
+      <mat-select [(value)]="options.profile">
+        <mat-option *ngFor="let profile of data.profiles" value="{{profile.id}}">{{profile.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Radarr Root Folders</mat-label>
+        <mat-select [(value)]="options.rootFolder">
+          <mat-option *ngFor="let profile of data.rootFolders" value="{{profile.id}}">{{profile.path}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="options" cdkFocusInitial>Ok</button>
+  </div>

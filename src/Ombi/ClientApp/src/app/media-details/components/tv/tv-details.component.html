@@ -1,0 +1,102 @@
+<div *ngIf="tv">
+
+  <top-banner [background]="tv.background" [available]="tv.available" [title]="tv.title" [releaseDate]="tv.firstAired"
+    [tagline]="tv.certification"></top-banner>
+
+  <section id="info-wrapper">
+    <div class="small-middle-container">
+      <div class="row">
+
+        <media-poster [posterPath]="tv.images.medium"></media-poster>
+
+        <!--Next to poster-->
+        <div class="col-12 col-lg-3 col-xl-3 media-row">
+
+          <social-icons [homepage]="tv.homepage" [tvdbId]="tv.id" [hasTrailer]="tv.trailer" (openTrailer)="openDialog()"
+            [imdbId]="tv.imdbId" [available]="tv.available" [plexUrl]="tv.plexUrl" [embyUrl]="tv.embyUrl">
+          </social-icons>
+
+        </div>
+
+        <div class="col-12 col-lg-6 col-xl-6 media-row">
+
+          <button *ngIf="!tv.fullyAvailable" mat-raised-button class="btn-spacing" color="primary"
+            (click)="request()"><i class="fa fa-plus"></i>
+            {{ 'Common.Request' | translate }}</button>
+
+          <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent" [disabled]>
+            <i class="fa fa-check"></i> {{'Common.Available' | translate }}</button>
+          <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent"
+            [disabled]>
+            <i class="fa fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 col-md-2">
+
+          <mat-card class="mat-elevation-z8">
+            <mat-card-content class="medium-font">
+              <tv-information-panel [tv]="tv"></tv-information-panel>
+            </mat-card-content>
+          </mat-card>
+
+        </div>
+
+
+        <div class="col-12 col-md-10">
+          <div class="row">
+            <div class="col-12">
+              <mat-card class="mat-elevation-z8 spacing-below">
+                <mat-card-content>
+                  {{tv.overview}}
+                </mat-card-content>
+              </mat-card>
+            </div>
+            <div class="col-12">
+              <cast-carousel [cast]="tv.cast"></cast-carousel>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-12 col-md-2">
+
+        <!--Just some space yo-->
+
+        </div>
+
+
+        <div class="col-12 col-md-10" *ngIf="tvRequest">
+          <mat-accordion>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Requests
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <tv-requests-panel [tvRequest]="tvRequest" [isAdmin]="isAdmin"></tv-requests-panel>
+            </mat-expansion-panel>
+
+          </mat-accordion>
+
+        </div>
+
+
+      </div>
+
+
+
+    </div>
+
+
+
+
+    <div class="bottom-page-gap">
+    </div>
+  </section>
+
+</div>

@@ -11,7 +11,7 @@ using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Core.Tests.Rule.Search
 {
-    public class ExistignRequestRuleTests
+    public class ExistingRequestRuleTests
     {
         [SetUp]
         public void Setup()
@@ -39,18 +39,16 @@ namespace Ombi.Core.Tests.Rule.Search
                 RequestType = RequestType.Movie
             };
 
-            MovieMock.Setup(x => x.GetRequest(123)).Returns(list);
+            MovieMock.Setup(x => x.GetRequestAsync(123)).ReturnsAsync(list);
             var search = new SearchMovieViewModel
             {
                 Id = 123,
-                
-
             };
             var result = await Rule.Execute(search);
 
-            Assert.True(result.Success);
-            Assert.True(search.Approved);
-            Assert.True(search.Requested);
+            Assert.That(result.Success, Is.True);
+            Assert.That(search.Approved, Is.True);
+            Assert.That(search.Requested, Is.True);
         }
 
         [Test]
@@ -62,7 +60,7 @@ namespace Ombi.Core.Tests.Rule.Search
                 Approved = true
             };
 
-            MovieMock.Setup(x => x.GetRequest(123)).Returns(list);
+            MovieMock.Setup(x => x.GetRequestAsync(123)).ReturnsAsync(list);
             var search = new SearchMovieViewModel
             {
                 Id = 999,
