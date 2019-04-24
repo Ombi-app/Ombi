@@ -3,22 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Notifications;
 using Ombi.Helpers;
+using Ombi.Hubs;
 using Ombi.Notifications.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
     public class PlexAvailabilityChecker : IPlexAvailabilityChecker
     {
         public PlexAvailabilityChecker(IPlexContentRepository repo, ITvRequestRepository tvRequest, IMovieRequestRepository movies,
-            INotificationService notification, IBackgroundJobClient background, ILogger<PlexAvailabilityChecker> log)
+            INotificationService notification, IBackgroundJobClient background, ILogger<PlexAvailabilityChecker> log, IHubContext<NotificationHub> hub)
         {
             _tvRepo = tvRequest;
             _repo = repo;
@@ -26,6 +29,7 @@ namespace Ombi.Schedule.Jobs.Plex
             _notificationService = notification;
             _backgroundJobClient = background;
             _log = log;
+            _notification = hub;
         }
 
         private readonly ITvRequestRepository _tvRepo;
@@ -34,18 +38,27 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly INotificationService _notificationService;
         private readonly IBackgroundJobClient _backgroundJobClient;
         private readonly ILogger _log;
+        private readonly IHubContext<NotificationHub> _notification;
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             try
             {
+
+                await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                    .SendAsync(NotificationHub.NotificationEvent, "Plex Availability Check Started");
                 await ProcessMovies();
                 await ProcessTv();
             }
             catch (Exception e)
             {
+                await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                    .SendAsync(NotificationHub.NotificationEvent, "Plex Availability Check Failed");
                 _log.LogError(e, "Exception thrown in Plex availbility checker");
             }
+
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Plex Availability Check Finished");
         }
 
         private Task ProcessTv()

@@ -8,7 +8,6 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule, Routes } from "@angular/router";
 
 import { JwtModule } from "@auth0/angular-jwt";
-
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
@@ -53,6 +52,7 @@ import { NavSearchComponent } from "./my-nav/nav-search.component";
 import { OverlayModule } from "@angular/cdk/overlay";
 import { getBaseLocation } from "./shared/functions/common-functions";
 import { StorageService } from "./shared/storage/storage-service";
+import { SignalRNotificationService } from "./services/signlarnotification.service";
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
@@ -114,6 +114,7 @@ export function JwtTokenGetter() {
         MatSnackBarModule,
         SharedModule,
         NgxEditorModule,
+        MatSnackBarModule,
         DialogModule,
         MatButtonModule,
         NavbarModule,
@@ -179,6 +180,7 @@ export function JwtTokenGetter() {
         SearchV2Service,
         MessageService,
         StorageService,
+        SignalRNotificationService,
         { provide: APP_BASE_HREF, useValue: window['_app_base'] || '/' }
         // {
         //     provide: APP_BASE_HREF,

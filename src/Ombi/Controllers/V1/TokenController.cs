@@ -126,7 +126,8 @@ namespace Ombi.Controllers.V1
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim("Id", user.Id)
             };
             claims.AddRange(roles.Select(role => new Claim("role", role)));
 

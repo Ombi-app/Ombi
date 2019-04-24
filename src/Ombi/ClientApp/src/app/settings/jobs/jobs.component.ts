@@ -3,8 +3,6 @@
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NotificationService, SettingsService } from "../../services";
 
-import { ICronTestModel } from "../../interfaces";
-
 @Component({
     templateUrl: "./jobs.component.html",
 })
@@ -13,8 +11,6 @@ export class JobsComponent implements OnInit {
     public form: FormGroup;
     
     public profilesRunning: boolean;
-    public testModel: ICronTestModel;
-    public displayTest: boolean;
     
     constructor(private readonly settingsService: SettingsService,
                 private readonly fb: FormBuilder,
@@ -44,9 +40,8 @@ export class JobsComponent implements OnInit {
 
     public testCron(expression: string) {
         this.settingsService.testCron({ expression }).subscribe(x => {
-            if(x.success) {
-                this.testModel = x;
-                this.displayTest = true;              
+            if(x.success) {    
+                this.notificationService.success("Cron is Valid");    
             } else {
                 this.notificationService.error(x.message);
             }

@@ -20,6 +20,7 @@ using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Updater;
+using Quartz;
 using SharpCompress.Readers;
 using SharpCompress.Readers.Tar;
 
@@ -41,7 +42,6 @@ namespace Ombi.Schedule.Jobs.Ombi
         private IChangeLogProcessor Processor { get; }
         private ISettingsService<UpdateSettings> Settings { get; }
         private readonly IProcessProvider _processProvider;
-        private static PerformContext Ctx { get; set; }
         private readonly IApplicationConfigRepository _appConfig;
 
         public string[] GetVersion()
@@ -59,10 +59,8 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         }
 
-        [AutomaticRetry(Attempts = 1)]
-        public async Task Update(PerformContext c)
+        public async Task Execute(IJobExecutionContext job)
         {
-            Ctx = c;
             Logger.LogDebug(LoggingEvents.Updater, "Starting Update job");
 
             var settings = await Settings.GetSettingsAsync();
@@ -182,7 +180,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         }
 
                         Logger.LogDebug(LoggingEvents.Updater, "Starting Download");
-                        await DownloadAsync(download.Url, zipDir, c);
+                        await DownloadAsync(download.Url, zipDir);
                         Logger.LogDebug(LoggingEvents.Updater, "Finished Download");
                     }
                     catch (Exception e)
@@ -321,7 +319,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        public async Task DownloadAsync(string requestUri, string filename, PerformContext ctx)
+        public async Task DownloadAsync(string requestUri, string filename)
         {
             Logger.LogDebug(LoggingEvents.Updater, "Starting the DownloadAsync");
             using (var client = new WebClient())

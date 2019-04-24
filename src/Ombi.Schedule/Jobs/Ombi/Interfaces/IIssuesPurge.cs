@@ -3,7 +3,6 @@
 namespace Ombi.Schedule.Jobs.Ombi
 {
     public interface IIssuesPurge : IBaseJob
-    {
-        Task Start();
+    { 
     }
 }

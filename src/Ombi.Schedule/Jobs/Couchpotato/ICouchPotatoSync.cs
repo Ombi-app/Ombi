@@ -4,6 +4,5 @@ namespace Ombi.Schedule.Jobs.Couchpotato
 {
     public interface ICouchPotatoSync : IBaseJob
     {
-        Task Start();
     }
 }

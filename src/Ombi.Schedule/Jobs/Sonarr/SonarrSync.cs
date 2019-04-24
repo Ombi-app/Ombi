@@ -14,6 +14,7 @@ using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Sonarr
 {
@@ -25,6 +26,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
             _api = api;
             _log = l;
             _ctx = ctx;
+            _settings.ClearCache();
         }
 
         private readonly ISettingsService<SonarrSettings> _settings;
@@ -32,7 +34,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
         private readonly ILogger<SonarrSync> _log;
         private readonly IExternalContext _ctx;
         
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             try
             {

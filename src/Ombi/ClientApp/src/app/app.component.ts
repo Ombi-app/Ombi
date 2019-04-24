@@ -7,9 +7,13 @@ import { AuthService } from "./auth/auth.service";
 import { ILocalUser } from "./auth/IUserLogin";
 import { IdentityService, NotificationService, CustomPageService } from "./services";
 import { JobService, SettingsService } from "./services";
+import { MatSnackBar } from '@angular/material';
 
 import { ICustomizationSettings, ICustomPage } from "./interfaces";
 import { StorageService } from './shared/storage/storage-service';
+
+import { SignalRNotificationService } from './services/signlarnotification.service';
+
 
 @Component({
     selector: "app-ombi",
@@ -32,6 +36,7 @@ export class AppComponent implements OnInit {
     public username: string;
 
     private checkedForUpdate: boolean;
+    private hubConnected: boolean;
 
 
     @HostBinding('class') public componentCssClass;
@@ -45,7 +50,9 @@ export class AppComponent implements OnInit {
         private readonly identityService: IdentityService,
         private readonly customPageService: CustomPageService,
         public overlayContainer: OverlayContainer,
-        private storage: StorageService) {
+        private storage: StorageService,
+        private signalrNotification: SignalRNotificationService,
+        private readonly snackBar: MatSnackBar) {
 
         // const base = this.platformLocation.getBaseHrefFromDOM();
         // if (base.length > 1) {
@@ -108,6 +115,17 @@ export class AppComponent implements OnInit {
                         this.updateAvailable = x;
                     },
                         err => this.checkedForUpdate = true);
+                }
+
+                if (this.authService.loggedIn() && !this.hubConnected) {
+                    this.signalrNotification.initialize();
+                    this.hubConnected = true;
+
+                    this.signalrNotification.Notification.subscribe(data => {
+                        this.snackBar.open(data, "OK", {
+                            duration: 3000
+                        });
+                    });
                 }
             }
         });

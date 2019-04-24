@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Attributes;
 using Ombi.Helpers;
+using Ombi.Schedule;
 using Ombi.Schedule.Jobs;
 using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
+using Quartz;
 
 namespace Ombi.Controllers.V1
 {
@@ -17,35 +20,23 @@ namespace Ombi.Controllers.V1
     [ApiController]
     public class JobController : ControllerBase
     {
-        public JobController(IOmbiAutomaticUpdater updater, IPlexUserImporter userImporter,
-            ICacheService mem, IEmbyUserImporter embyImporter, IPlexContentSync plexContentSync,
-            IEmbyContentSync embyContentSync, INewsletterJob newsletter)
+        public JobController(IOmbiAutomaticUpdater updater, ICacheService mem)
         {
             _updater = updater;
-            _plexUserImporter = userImporter;
-            _embyUserImporter = embyImporter;
             _memCache = mem;
-            _plexContentSync = plexContentSync;
-            _embyContentSync = embyContentSync;
-            _newsletterJob = newsletter;
         }
 
         private readonly IOmbiAutomaticUpdater _updater;
-        private readonly IPlexUserImporter _plexUserImporter;
-        private readonly IEmbyUserImporter _embyUserImporter;
         private readonly ICacheService _memCache;
-        private readonly IPlexContentSync _plexContentSync;
-        private readonly IEmbyContentSync _embyContentSync;
-        private readonly INewsletterJob _newsletterJob;
-
         /// <summary>
         /// Runs the update job
         /// </summary>
         /// <returns></returns>
         [HttpPost("update")]
-        public bool ForceUpdate()
+        public async Task<bool> ForceUpdate()
         {
-            BackgroundJob.Enqueue(() => _updater.Update(null));
+
+            await OmbiQuartz.TriggerJob(nameof(IOmbiAutomaticUpdater), "System");
             return true;
         }
 
@@ -92,9 +83,9 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <returns></returns>
         [HttpPost("plexuserimporter")]
-        public bool PlexUserImporter()
+        public async Task<bool> PlexUserImporter()
         {
-            BackgroundJob.Enqueue(() => _plexUserImporter.Start());
+            await OmbiQuartz.TriggerJob(nameof(IPlexUserImporter), "Plex");
             return true;
         }
 
@@ -103,9 +94,9 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <returns></returns>
         [HttpPost("embyuserimporter")]
-        public bool EmbyUserImporter()
+        public async Task<bool> EmbyUserImporter()
         {
-            BackgroundJob.Enqueue(() => _embyUserImporter.Start());
+            await OmbiQuartz.TriggerJob(nameof(IEmbyUserImporter), "Emby");
             return true;
         }
 
@@ -116,7 +107,7 @@ namespace Ombi.Controllers.V1
         [HttpPost("plexcontentcacher")]
         public bool StartPlexContentCacher()
         {
-            BackgroundJob.Enqueue(() => _plexContentSync.CacheContent(false));
+            OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IPlexContentSync), "Plex"), new JobDataMap(new Dictionary<string, string> { { "recentlyAddedSearch", "false" } }));
             return true;
         }
 
@@ -127,7 +118,7 @@ namespace Ombi.Controllers.V1
         [HttpPost("plexrecentlyadded")]
         public bool StartRecentlyAdded()
         {
-            BackgroundJob.Enqueue(() => _plexContentSync.CacheContent(true));
+            OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IPlexContentSync), "Plex"), new JobDataMap(new Dictionary<string, string> { { "recentlyAddedSearch", "true" } }));
             return true;
         }
 
@@ -136,9 +127,9 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <returns></returns>
         [HttpPost("embycontentcacher")]
-        public bool StartEmbyContentCacher()
+        public async Task<bool> StartEmbyContentCacher()
         {
-            BackgroundJob.Enqueue(() => _embyContentSync.Start());
+            await OmbiQuartz.TriggerJob(nameof(IEmbyContentSync), "Emby");
             return true;
         }
 
@@ -147,9 +138,9 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <returns></returns>
         [HttpPost("newsletter")]
-        public bool StartNewsletter()
+        public async Task<bool> StartNewsletter()
         {
-            BackgroundJob.Enqueue(() => _newsletterJob.Start());
+            await OmbiQuartz.TriggerJob(nameof(INewsletterJob), "System");
             return true;
         }
     }

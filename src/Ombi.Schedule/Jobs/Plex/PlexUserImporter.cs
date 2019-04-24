@@ -3,27 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Hubs;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
     public class PlexUserImporter : IPlexUserImporter
     {
         public PlexUserImporter(IPlexApi api, UserManager<OmbiUser> um, ILogger<PlexUserImporter> log,
-            ISettingsService<PlexSettings> plexSettings, ISettingsService<UserManagementSettings> ums)
+            ISettingsService<PlexSettings> plexSettings, ISettingsService<UserManagementSettings> ums, IHubContext<NotificationHub> hub)
         {
             _api = api;
             _userManager = um;
             _log = log;
             _plexSettings = plexSettings;
             _userManagementSettings = ums;
+            _notification = hub;
+            _plexSettings.ClearCache();
+            _userManagementSettings.ClearCache();
         }
 
         private readonly IPlexApi _api;
@@ -31,9 +37,10 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly ILogger<PlexUserImporter> _log;
         private readonly ISettingsService<PlexSettings> _plexSettings;
         private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
+        private readonly IHubContext<NotificationHub> _notification;
 
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             var userManagementSettings = await _userManagementSettings.GetSettingsAsync();
             if (!userManagementSettings.ImportPlexUsers)
@@ -47,6 +54,8 @@ namespace Ombi.Schedule.Jobs.Plex
             }
 
 
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Plex User Importer Started");
             var allUsers = await _userManager.Users.Where(x => x.UserType == UserType.PlexUser).ToListAsync();
             foreach (var server in settings.Servers)
             {
@@ -118,6 +127,9 @@ namespace Ombi.Schedule.Jobs.Plex
                     }
                 }
             }
+
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Plex User Importer Finished");
         }
 
         private async Task ImportAdmin(UserManagementSettings settings, PlexServers server, List<OmbiUser> allUsers)

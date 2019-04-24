@@ -16,7 +16,6 @@
     // You should have received a copy of the GNU Lesser General Public 
     // License along with Hangfire. If not, see <http://www.gnu.org/licenses/>.
 
-    using System;
     /// <summary>
     /// Helper class that provides common values for the cron expressions.
     /// </summary>
@@ -44,7 +43,7 @@
         /// <param name="minute">The minute in which the schedule will be activated (0-59).</param>
         public static string Hourly(int minute)
         {
-            return $"{minute} * * * *";
+            return $"0 {minute} 0/1 1/1 * ? *";
         }
 
         /// <summary>
@@ -73,7 +72,7 @@
         /// <param name="minute">The minute in which the schedule will be activated (0-59).</param>
         public static string Daily(int hour, int minute)
         {
-            return $"{minute} {hour} * * *";
+            return $"0 {minute} {hour} 1/1 * ? *";
         }
 
         /// <summary>
@@ -114,7 +113,7 @@
         /// <param name="minute">The minute in which the schedule will be activated (0-59).</param>
         public static string Weekly(DayOfWeek dayOfWeek, int hour, int minute)
         {
-            return $"{minute} {hour} * * {(int)dayOfWeek}";
+            return $"0 {minute} {hour} ? * {(int)dayOfWeek} *";
         }
 
         /// <summary>
@@ -219,7 +218,7 @@
         /// <param name="interval">The number of minutes to wait between every activation.</param>
         public static string MinuteInterval(int interval)
         {
-            return $"*/{interval} * * * *";
+            return $"0 0/{interval} * 1/1 * ? *";
         }
 
         /// <summary>
@@ -228,7 +227,7 @@
         /// <param name="interval">The number of hours to wait between every activation.</param>
         public static string HourInterval(int interval)
         {
-            return $"0 */{interval} * * *";
+            return $"0 0 0/{interval} 1/1 * ? *";
         }
 
         /// <summary>
@@ -237,7 +236,7 @@
         /// <param name="interval">The number of days to wait between every activation.</param>
         public static string DayInterval(int interval)
         {
-            return $"0 0 */{interval} * *";
+            return $"0 0 12 1/{interval} * ? *";
         }
 
         /// <summary>
@@ -248,5 +247,40 @@
         {
             return $"0 0 1 */{interval} *";
         }
+    }
+
+    //
+    // Summary:
+    //     Specifies the day of the week.
+    public enum DayOfWeek
+    {
+        //
+        // Summary:
+        //     Indicates Sunday.
+        Sunday = 1,
+        //
+        // Summary:
+        //     Indicates Monday.
+        Monday = 2,
+        //
+        // Summary:
+        //     Indicates Tuesday.
+        Tuesday = 3,
+        //
+        // Summary:
+        //     Indicates Wednesday.
+        Wednesday = 4,
+        //
+        // Summary:
+        //     Indicates Thursday.
+        Thursday = 5,
+        //
+        // Summary:
+        //     Indicates Friday.
+        Friday = 6,
+        //
+        // Summary:
+        //     Indicates Saturday.
+        Saturday = 7
     }
 }

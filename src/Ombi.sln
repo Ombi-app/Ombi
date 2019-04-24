@@ -104,6 +104,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Settings.Tests", "Ombi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Test.Common", "Ombi.Test.Common\Ombi.Test.Common.csproj", "{27111E7C-748E-4996-BD71-2117027C6460}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Hubs", "Ombi.Hubs\Ombi.Hubs.csproj", "{67416CC5-13B2-44BB-98CE-39DA93D6F70E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -274,6 +276,10 @@ Global
 		{27111E7C-748E-4996-BD71-2117027C6460}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27111E7C-748E-4996-BD71-2117027C6460}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27111E7C-748E-4996-BD71-2117027C6460}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67416CC5-13B2-44BB-98CE-39DA93D6F70E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67416CC5-13B2-44BB-98CE-39DA93D6F70E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67416CC5-13B2-44BB-98CE-39DA93D6F70E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67416CC5-13B2-44BB-98CE-39DA93D6F70E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

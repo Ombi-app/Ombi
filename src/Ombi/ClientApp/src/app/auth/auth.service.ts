@@ -28,6 +28,10 @@ export class AuthService extends ServiceHelpers {
         return this.http.post<boolean>(`${this.url}/requirePassword`, JSON.stringify(login), { headers: this.headers });
     }
 
+    public getToken() {
+        return this.jwtHelperService.tokenGetter();
+    }
+
     public loggedIn() {
         const token: string = this.jwtHelperService.tokenGetter();
 

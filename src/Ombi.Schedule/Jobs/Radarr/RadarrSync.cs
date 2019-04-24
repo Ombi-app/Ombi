@@ -10,6 +10,7 @@ using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
+using Quartz;
 using Serilog;
 
 namespace Ombi.Schedule.Jobs.Radarr
@@ -22,6 +23,7 @@ namespace Ombi.Schedule.Jobs.Radarr
             RadarrApi = radarrApi;
             Logger = log;
             _ctx = ctx;
+            RadarrSettings.ClearCache();
         }
 
         private ISettingsService<RadarrSettings> RadarrSettings { get; }
@@ -31,7 +33,7 @@ namespace Ombi.Schedule.Jobs.Radarr
 
         private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
 
-        public async Task CacheContent()
+        public async Task Execute(IJobExecutionContext job)
         {
             await SemaphoreSlim.WaitAsync();
             try

@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Hangfire;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Lidarr;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
+using Ombi.Hubs;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
+using Quartz;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Ombi.Schedule.Jobs.Lidarr
@@ -18,7 +21,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
     public class LidarrAlbumSync : ILidarrAlbumSync
     {
         public LidarrAlbumSync(ISettingsService<LidarrSettings> lidarr, ILidarrApi lidarrApi, ILogger<LidarrAlbumSync> log, IExternalContext ctx,
-            IBackgroundJobClient job, ILidarrAvailabilityChecker availability)
+            IBackgroundJobClient job, ILidarrAvailabilityChecker availability, IHubContext<NotificationHub> notification)
         {
             _lidarrSettings = lidarr;
             _lidarrApi = lidarrApi;
@@ -26,6 +29,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
             _ctx = ctx;
             _job = job;
             _availability = availability;
+            _notification = notification;
         }
 
         private readonly ISettingsService<LidarrSettings> _lidarrSettings;
@@ -34,14 +38,18 @@ namespace Ombi.Schedule.Jobs.Lidarr
         private readonly IExternalContext _ctx;
         private readonly IBackgroundJobClient _job;
         private readonly ILidarrAvailabilityChecker _availability;
-        
-        public async Task CacheContent()
+        private readonly IHubContext<NotificationHub> _notification;
+
+        public async Task Execute(IJobExecutionContext ctx)
         {
             try
             {
                 var settings = await _lidarrSettings.GetSettingsAsync();
                 if (settings.Enabled)
                 {
+
+                    await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                        .SendAsync(NotificationHub.NotificationEvent, "Lidarr Album Sync Started");
                     try
                     {
                         var albums = await _lidarrApi.GetAllAlbums(settings.ApiKey, settings.FullUri);
@@ -75,10 +83,15 @@ namespace Ombi.Schedule.Jobs.Lidarr
                     }
                     catch (System.Exception ex)
                     {
+                        await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                            .SendAsync(NotificationHub.NotificationEvent, "Lidarr Album Sync Failed");
                         _logger.LogError(LoggingEvents.Cacher, ex, "Failed caching queued items from Lidarr Album");
                     }
 
-                    _job.Enqueue(() => _availability.Start());
+                    await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                        .SendAsync(NotificationHub.NotificationEvent, "Lidarr Album Sync Finished");
+
+                    await OmbiQuartz.TriggerJob(nameof(ILidarrAvailabilityChecker), "DVR");
                 }
             }
             catch (Exception)

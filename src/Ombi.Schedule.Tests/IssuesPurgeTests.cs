@@ -32,7 +32,7 @@ namespace Ombi.Schedule.Tests
         [Test]
         public async Task DoesNotRun_WhenDisabled()
         {
-            await Job.Start();
+            await Job.Execute(null);
             Repo.Verify(x => x.GetAll(),Times.Never);
         }
 
@@ -49,8 +49,8 @@ namespace Ombi.Schedule.Tests
             };
 
             Settings.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new IssueSettings { DeleteIssues = true, DaysAfterResolvedToDelete = 5 });
-            Repo.Setup(x => x.GetAll()).Returns(issues.AsQueryable());
-            await Job.Start();
+            Repo.Setup(x => x.GetAll()).Returns(new EnumerableQuery<Issues>(issues));
+            await Job.Execute(null);
 
             Assert.That(issues.First().Status, Is.EqualTo(IssueStatus.Deleted));
             Repo.Verify(x => x.SaveChangesAsync(), Times.Once);
@@ -75,7 +75,7 @@ namespace Ombi.Schedule.Tests
 
             Settings.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new IssueSettings { DeleteIssues = true, DaysAfterResolvedToDelete = 5 });
             Repo.Setup(x => x.GetAll()).Returns(new EnumerableQuery<Issues>(issues));
-            await Job.Start();
+            await Job.Execute(null);
 
             Assert.That(issues[0].Status, Is.Not.EqualTo(IssueStatus.Deleted));
             Assert.That(issues[1].Status, Is.EqualTo(IssueStatus.Deleted));
@@ -101,7 +101,7 @@ namespace Ombi.Schedule.Tests
 
             Settings.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new IssueSettings { DeleteIssues = true, DaysAfterResolvedToDelete = 5 });
             Repo.Setup(x => x.GetAll()).Returns(new EnumerableQuery<Issues>(issues));
-            await Job.Start();
+            await Job.Execute(null);
 
             Assert.That(issues[0].Status, Is.Not.EqualTo(IssueStatus.Deleted));
             Assert.That(issues[1].Status, Is.Not.EqualTo(IssueStatus.Deleted));

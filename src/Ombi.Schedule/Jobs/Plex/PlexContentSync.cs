@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
@@ -37,18 +38,20 @@ using Ombi.Api.Plex.Models;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Hubs;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.Plex.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
     public class PlexContentSync : IPlexContentSync
     {
         public PlexContentSync(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentSync> logger, IPlexContentRepository repo,
-            IPlexEpisodeSync epsiodeSync, IRefreshMetadata metadataRefresh, IPlexAvailabilityChecker checker)
+            IPlexEpisodeSync epsiodeSync, IRefreshMetadata metadataRefresh, IPlexAvailabilityChecker checker, IHubContext<NotificationHub> hub)
         {
             Plex = plex;
             PlexApi = plexApi;
@@ -57,6 +60,8 @@ namespace Ombi.Schedule.Jobs.Plex
             EpisodeSync = epsiodeSync;
             Metadata = metadataRefresh;
             Checker = checker;
+            Notification = hub;
+            Plex.ClearCache();
         }
 
         private ISettingsService<PlexSettings> Plex { get; }
@@ -66,17 +71,25 @@ namespace Ombi.Schedule.Jobs.Plex
         private IPlexEpisodeSync EpisodeSync { get; }
         private IRefreshMetadata Metadata { get; }
         private IPlexAvailabilityChecker Checker { get; }
+        private IHubContext<NotificationHub> Notification { get; set; }
 
-        public async Task CacheContent(bool recentlyAddedSearch = false)
+        public async Task Execute(IJobExecutionContext context)
         {
+            JobDataMap dataMap = context.JobDetail.JobDataMap;
+            var recentlyAddedSearch = dataMap.GetBooleanValueFromString("recentlyAddedSearch");
+
             var plexSettings = await Plex.GetSettingsAsync();
             if (!plexSettings.Enable)
             {
                 return;
             }
+            await Notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, recentlyAddedSearch ? "Plex Recently Added Sync Started" : "Plex Content Sync Started");
             if (!ValidateSettings(plexSettings))
             {
                 Logger.LogError("Plex Settings are not valid");
+                await Notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                    .SendAsync(NotificationHub.NotificationEvent, recentlyAddedSearch ? "Plex Recently Added Sync, Settings Not Valid" : "Plex Content, Settings Not Valid");
                 return;
             }
             var processedContent = new ProcessedContent();
@@ -94,25 +107,35 @@ namespace Ombi.Schedule.Jobs.Plex
             }
             catch (Exception e)
             {
+                await Notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                    .SendAsync(NotificationHub.NotificationEvent, recentlyAddedSearch ? "Plex Recently Added Sync Errored" : "Plex Content Sync Errored");
                 Logger.LogWarning(LoggingEvents.PlexContentCacher, e, "Exception thrown when attempting to cache the Plex Content");
             }
 
             if (!recentlyAddedSearch)
             {
                 Logger.LogInformation("Starting EP Cacher");
-                BackgroundJob.Enqueue(() => EpisodeSync.Start());
+
+                await OmbiQuartz.TriggerJob(nameof(IPlexEpisodeSync), "Plex");
             }
 
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
                 // Just check what we send it
-                BackgroundJob.Enqueue(() => Metadata.ProcessPlexServerContent(processedContent.Content));
+                await OmbiQuartz.TriggerJob(nameof(IMediaDatabaseRefresh), "System");
             }
 
             if ((processedContent?.HasProcessedEpisodes ?? false) && recentlyAddedSearch)
             {
-                BackgroundJob.Enqueue(() => Checker.Start());
+
+                await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
             }
+
+            Logger.LogInformation("Finished Plex Content Cacher, with processed content: {0}, episodes: {0}", processedContent.Content.Count(), processedContent.Episodes.Count());
+
+            await Notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, recentlyAddedSearch ? "Plex Recently Added Sync Finished" : "Plex Content Sync Finished");
+
         }
 
         private async Task<ProcessedContent> StartTheCache(PlexSettings plexSettings, bool recentlyAddedSearch)
