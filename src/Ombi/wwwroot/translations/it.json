@@ -24,6 +24,7 @@
     "Denied": "Rifiutato",
     "Approve": "Approva",
     "PartlyAvailable": "Partly Available",
+    "ViewDetails": "View Details",
     "Errors": {
       "Validation": "Per favore, controlla i valori che hai inserito"
     }
@@ -44,6 +45,7 @@
     "CheckPageForUpdates": "Controlla questa pagina per ottenere aggiornamenti del sito."
   },
   "NavigationBar": {
+    "Discover": "Discover",
     "Search": "Cerca",
     "Requests": "Richieste",
     "UserManagement": "Gestione degli utenti",
@@ -58,7 +60,10 @@
     "UpdateDetails": "Aggiorna i tuoi dati",
     "Logout": "Logout",
     "OpenMobileApp": "Apri l'applicazione mobile",
-    "RecentlyAdded": "Recently Added"
+    "RecentlyAdded": "Recently Added",
+    "ChangeTheme": "Change Theme",
+    "Calendar": "Calendar",
+    "UserPreferences": "Preferences"
   },
   "Search": {
     "Title": "Cerca",
@@ -123,6 +128,7 @@
     "MarkAvailable": "Segna come Disponibile",
     "Remove": "Elimina",
     "Deny": "Nega",
+    "DenyReason": "Deny Reason",
     "Season": "Stagione:",
     "GridTitle": "Titolo",
     "AirDate": "Data di trasmissione",
@@ -182,5 +188,42 @@
   "Votes": {
     "CompletedVotesTab": "Voted",
     "VotesTab": "Votes Needed"
+  },
+  "MediaDetails": {
+    "Denied": "Denied",
+    "RecommendationsTitle": "Recommendations",
+    "SimilarTitle": "Similar",
+    "VideosTitle": "Videos",
+    "Casts": {
+      "CastTitle": "Cast",
+      "Character": "Character",
+      "Actor": "Actor"
+    },
+    "EpisodeSelector": {
+      "AllSeasonsTooltip": "This will request every season for this show",
+      "FirstSeasonTooltip": "This will only request the First Season for this show",
+      "LatestSeasonTooltip": "This will only request the Latest Season for this show"
+    }
+  },
+  "Discovery": {
+    "PopularTab": "Popular",
+    "TrendingTab": "Trending",
+    "UpcomingTab": "Upcoming",
+    "CardDetails": {
+      "Availability": "Availability",
+      "Studio": "Studio",
+      "Network": "Network",
+      "UnknownNetwork": "Unknown",
+      "RequestStatus": "Request Status",
+      "Director": "Director",
+      "InCinemas": "In Cinemas",
+      "FirstAired": "First Aired",
+      "Writer": "Writer",
+      "ExecProducer": "Exec Producer"
+    }
+  },
+  "UserPreferences": {
+    "Welcome": "Welcome {{username}}!",
+    "OmbiLanguage": "Ombi Language"
   }
 }
