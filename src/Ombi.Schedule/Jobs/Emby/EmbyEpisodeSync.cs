@@ -30,44 +30,52 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
+using Ombi.Hubs;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Emby
 {
     public class EmbyEpisodeSync : IEmbyEpisodeSync
     {
-        public EmbyEpisodeSync(ISettingsService<EmbySettings> s, IEmbyApi api, ILogger<EmbyEpisodeSync> l, IEmbyContentRepository repo,
-            IEmbyAvaliabilityChecker checker)
+        public EmbyEpisodeSync(ISettingsService<EmbySettings> s, IEmbyApi api, ILogger<EmbyEpisodeSync> l, IEmbyContentRepository repo
+            , IHubContext<NotificationHub> notification)
         {
             _api = api;
             _logger = l;
             _settings = s;
             _repo = repo;
-            _avaliabilityChecker = checker;
+            _notification = notification;
         }
 
         private readonly ISettingsService<EmbySettings> _settings;
         private readonly IEmbyApi _api;
         private readonly ILogger<EmbyEpisodeSync> _logger;
         private readonly IEmbyContentRepository _repo;
-        private readonly IEmbyAvaliabilityChecker _avaliabilityChecker;
+        private readonly IHubContext<NotificationHub> _notification;
 
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             var settings = await _settings.GetSettingsAsync();
 
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Emby Episode Sync Started");
             foreach (var server in settings.Servers)
             {
                 await CacheEpisodes(server);
             }
 
-            BackgroundJob.Enqueue(() => _avaliabilityChecker.Start());
+
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Emby Episode Sync Finished");
+            await OmbiQuartz.TriggerJob(nameof(IEmbyAvaliabilityChecker), "Emby");
         }
 
         private async Task CacheEpisodes(EmbyServers server)
@@ -142,7 +150,6 @@ namespace Ombi.Schedule.Jobs.Emby
             {
                 _settings?.Dispose();
                 _repo?.Dispose();
-                _avaliabilityChecker?.Dispose();
             }
             _disposed = true;
         }

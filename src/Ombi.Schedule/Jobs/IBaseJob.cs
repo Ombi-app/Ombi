@@ -25,11 +25,12 @@
 //  ************************************************************************/
 #endregion
 
+using Quartz;
 using System;
 
 namespace Ombi.Schedule
 {
-    public interface IBaseJob : IDisposable
+    public interface IBaseJob : IJob, IDisposable
     {
         
     }

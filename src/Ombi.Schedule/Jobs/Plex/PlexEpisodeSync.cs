@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
@@ -10,31 +11,34 @@ using Ombi.Api.Plex.Models;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Hubs;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
     public class PlexEpisodeSync : IPlexEpisodeSync
     {
         public PlexEpisodeSync(ISettingsService<PlexSettings> s, ILogger<PlexEpisodeSync> log, IPlexApi plexApi,
-            IPlexContentRepository repo, IPlexAvailabilityChecker a)
+            IPlexContentRepository repo, IHubContext<NotificationHub> hub)
         {
             _settings = s;
             _log = log;
             _api = plexApi;
             _repo = repo;
-            _availabilityChecker = a;
+            _notification = hub;
+            _settings.ClearCache();
         }
 
         private readonly ISettingsService<PlexSettings> _settings;
         private readonly ILogger<PlexEpisodeSync> _log;
         private readonly IPlexApi _api;
         private readonly IPlexContentRepository _repo;
-        private readonly IPlexAvailabilityChecker _availabilityChecker;
+        private readonly IHubContext<NotificationHub> _notification;
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             try
             {
@@ -43,6 +47,8 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     return;
                 }
+                await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                    .SendAsync(NotificationHub.NotificationEvent, "Plex Episode Sync Started");
 
                 foreach (var server in s.Servers)
                 {
@@ -52,10 +58,15 @@ namespace Ombi.Schedule.Jobs.Plex
             }
             catch (Exception e)
             {
+                await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                    .SendAsync(NotificationHub.NotificationEvent, "Plex Episode Sync Failed");
                 _log.LogError(LoggingEvents.Cacher, e, "Caching Episodes Failed");
             }
 
-            BackgroundJob.Enqueue(() => _availabilityChecker.Start());
+
+            await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Plex Episode Sync Finished");
         }
 
         private async Task Cache(PlexServers settings)

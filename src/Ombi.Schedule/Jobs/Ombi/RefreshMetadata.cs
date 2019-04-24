@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
 using Ombi.Api.TheMovieDb;
@@ -11,10 +12,12 @@ using Ombi.Api.TvMaze;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Hubs;
 using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Ombi
 {
@@ -22,8 +25,7 @@ namespace Ombi.Schedule.Jobs.Ombi
     {
         public RefreshMetadata(IPlexContentRepository plexRepo, IEmbyContentRepository embyRepo,
             ILogger<RefreshMetadata> log, ITvMazeApi tvApi, ISettingsService<PlexSettings> plexSettings,
-            IMovieDbApi movieApi, ISettingsService<EmbySettings> embySettings, IPlexAvailabilityChecker plexAvailability, IEmbyAvaliabilityChecker embyAvaliability,
-            IEmbyApi embyApi)
+            IMovieDbApi movieApi, ISettingsService<EmbySettings> embySettings, IEmbyApi embyApi, IHubContext<NotificationHub> notification)
         {
             _plexRepo = plexRepo;
             _embyRepo = embyRepo;
@@ -32,25 +34,26 @@ namespace Ombi.Schedule.Jobs.Ombi
             _tvApi = tvApi;
             _plexSettings = plexSettings;
             _embySettings = embySettings;
-            _plexAvailabilityChecker = plexAvailability;
-            _embyAvaliabilityChecker = embyAvaliability;
             _embyApi = embyApi;
+            _notification = notification;
         }
 
         private readonly IPlexContentRepository _plexRepo;
         private readonly IEmbyContentRepository _embyRepo;
-        private readonly IPlexAvailabilityChecker _plexAvailabilityChecker;
-        private readonly IEmbyAvaliabilityChecker _embyAvaliabilityChecker;
         private readonly ILogger _log;
         private readonly IMovieDbApi _movieApi;
         private readonly ITvMazeApi _tvApi;
         private readonly ISettingsService<PlexSettings> _plexSettings;
         private readonly ISettingsService<EmbySettings> _embySettings;
         private readonly IEmbyApi _embyApi;
+        private readonly IHubContext<NotificationHub> _notification;
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             _log.LogInformation("Starting the Metadata refresh");
+
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Metadata Refresh Started");
             try
             {
                 var settings = await _plexSettings.GetSettingsAsync();
@@ -68,8 +71,14 @@ namespace Ombi.Schedule.Jobs.Ombi
             catch (Exception e)
             {
                 _log.LogError(e, "Exception when refreshing the Plex Metadata");
+
+                await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                    .SendAsync(NotificationHub.NotificationEvent, "Metadata Refresh Failed");
                 throw;
             }
+
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Metadata Refresh Finished");
         }
 
         public async Task ProcessPlexServerContent(IEnumerable<int> contentIds)
@@ -93,12 +102,12 @@ namespace Ombi.Schedule.Jobs.Ombi
             {
                 if (plexSettings.Enable)
                 {
-                    BackgroundJob.Enqueue(() => _plexAvailabilityChecker.Start());
+                    await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
                 }
 
                 if (embySettings.Enable)
                 {
-                    BackgroundJob.Enqueue(() => _embyAvaliabilityChecker.Start());
+                    await OmbiQuartz.TriggerJob(nameof(IEmbyAvaliabilityChecker), "Emby");
 
                 }
             }

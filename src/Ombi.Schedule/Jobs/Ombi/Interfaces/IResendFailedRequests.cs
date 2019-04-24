@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using Quartz;
+using System.Threading.Tasks;
 
 namespace Ombi.Schedule.Jobs.Ombi
 {
-    public interface IResendFailedRequests
+    public interface IResendFailedRequests : IJob
     {
-        Task Start();
     }
 }

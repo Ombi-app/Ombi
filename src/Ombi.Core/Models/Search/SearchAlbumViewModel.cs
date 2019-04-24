@@ -16,8 +16,13 @@ namespace Ombi.Core.Models.Search
         public string Cover { get; set; }
         public string Disk { get; set; }
         public decimal PercentOfTracks { get; set; }
+        public object[] Genres { get; set; }
         public override RequestType Type => RequestType.Album;
         public bool PartiallyAvailable => PercentOfTracks != 100 && PercentOfTracks > 0;
         public bool FullyAvailable => PercentOfTracks == 100;
+
+
+        // Below is from the INFO call NEED A SEPERATE VM FOR THIS IN V4 TODO
+        // TODO ADD TRACK COUNT
     }
 }

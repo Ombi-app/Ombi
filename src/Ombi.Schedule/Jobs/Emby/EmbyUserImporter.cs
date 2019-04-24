@@ -29,27 +29,31 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Hubs;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Emby
 {
     public class EmbyUserImporter : IEmbyUserImporter
     {
         public EmbyUserImporter(IEmbyApi api, UserManager<OmbiUser> um, ILogger<EmbyUserImporter> log,
-            ISettingsService<EmbySettings> embySettings, ISettingsService<UserManagementSettings> ums)
+            ISettingsService<EmbySettings> embySettings, ISettingsService<UserManagementSettings> ums, IHubContext<NotificationHub> notification)
         {
             _api = api;
             _userManager = um;
             _log = log;
             _embySettings = embySettings;
             _userManagementSettings = ums;
+            _notification = notification;
         }
 
         private readonly IEmbyApi _api;
@@ -57,8 +61,9 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly ILogger<EmbyUserImporter> _log;
         private readonly ISettingsService<EmbySettings> _embySettings;
         private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
+        private readonly IHubContext<NotificationHub> _notification;
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             var userManagementSettings = await _userManagementSettings.GetSettingsAsync();
             if (!userManagementSettings.ImportEmbyUsers)
@@ -70,6 +75,9 @@ namespace Ombi.Schedule.Jobs.Emby
             {
                 return;
             }
+
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Emby User Importer Started");
             var allUsers = await _userManager.Users.Where(x => x.UserType == UserType.EmbyUser).ToListAsync();
             foreach (var server in settings.Servers)
             {
@@ -147,6 +155,9 @@ namespace Ombi.Schedule.Jobs.Emby
                     }
                 }
             }
+
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Emby User Importer Finished");
         }
 
         private bool _disposed;

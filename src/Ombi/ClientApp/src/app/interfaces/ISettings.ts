@@ -222,7 +222,6 @@ export interface IIssueCategory extends ISettings {
 export interface ICronTestModel {
   success: boolean;
   message: string;
-  schedule: Date[];
 }
 
 export interface ICronViewModelBody {

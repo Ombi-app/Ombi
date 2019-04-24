@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
 using Ombi.Api.Emby.Models.Movie;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Hubs;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Quartz;
 using Serilog;
 using EmbyMediaType = Ombi.Store.Entities.EmbyMediaType;
 
@@ -20,29 +23,30 @@ namespace Ombi.Schedule.Jobs.Emby
     public class EmbyContentSync : IEmbyContentSync
     {
         public EmbyContentSync(ISettingsService<EmbySettings> settings, IEmbyApi api, ILogger<EmbyContentSync> logger,
-            IEmbyContentRepository repo, IEmbyEpisodeSync epSync, IRefreshMetadata metadata)
+            IEmbyContentRepository repo, IHubContext<NotificationHub> notification)
         {
             _logger = logger;
             _settings = settings;
             _api = api;
             _repo = repo;
-            _episodeSync = epSync;
-            _metadata = metadata;
+            _notification = notification;
         }
 
         private readonly ILogger<EmbyContentSync> _logger;
         private readonly ISettingsService<EmbySettings> _settings;
         private readonly IEmbyApi _api;
         private readonly IEmbyContentRepository _repo;
-        private readonly IEmbyEpisodeSync _episodeSync;
-        private readonly IRefreshMetadata _metadata;
+        private readonly IHubContext<NotificationHub> _notification;
 
-
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             var embySettings = await _settings.GetSettingsAsync();
             if (!embySettings.Enable)
                 return;
+
+
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Emby Content Sync Started");
 
             foreach (var server in embySettings.Servers)
             {
@@ -52,13 +56,18 @@ namespace Ombi.Schedule.Jobs.Emby
                 }
                 catch (Exception e)
                 {
+                    await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                        .SendAsync(NotificationHub.NotificationEvent, "Emby Content Sync Failed");
                     _logger.LogError(e, "Exception when caching Emby for server {0}", server.Name);
                 }
             }
 
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Emby Content Sync Finished");
             // Episodes
-            BackgroundJob.Enqueue(() => _episodeSync.Start());
-            BackgroundJob.Enqueue(() => _metadata.Start());
+
+            await OmbiQuartz.TriggerJob(nameof(IEmbyEpisodeSync), "Emby");
+            await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "Emby");
         }
 
 

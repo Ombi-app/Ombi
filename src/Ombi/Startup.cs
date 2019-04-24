@@ -21,6 +21,7 @@ using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.DependencyInjection;
 using Ombi.Helpers;
+using Ombi.Hubs;
 using Ombi.Mapping;
 using Ombi.Schedule;
 using Ombi.Settings.Settings.Models;
@@ -109,13 +110,18 @@ namespace Ombi
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
-                builder.AllowAnyOrigin()
+                builder.AllowAnyHeader()
                     .AllowAnyMethod()
-                    .AllowAnyHeader();
+                    .SetIsOriginAllowed(isOriginAllowed: _ => true)
+                    .AllowCredentials();
             }));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddSignalR();
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/dist";
+            });
 
             // Build the intermediate service provider
             return services.BuildServiceProvider();
@@ -129,6 +135,8 @@ namespace Ombi
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
+
+            app.UseQuartz().GetAwaiter().GetResult();
 
             var ctx = serviceProvider.GetService<IOmbiContext>();
             loggerFactory.AddSerilog();
@@ -188,8 +196,8 @@ namespace Ombi
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute {Attempts = 3});
 
             // Setup the scheduler
-            var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
-            jobSetup.Setup();
+            //var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
+            //jobSetup.Setup();
             ctx.Seed();
             var settingsctx = serviceProvider.GetService<ISettingsContext>();
             var externalctx = serviceProvider.GetService<IExternalContext>();
@@ -215,6 +223,8 @@ namespace Ombi
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
                 c.SwaggerEndpoint("/swagger/v2/swagger.json", "API V2");
             });
+
+            app.UseSignalR(routes => { routes.MapHub<NotificationHub>("/hubs/notification"); });
 
             app.UseMvcWithDefaultRoute();
 

@@ -1,7 +1,7 @@
 ﻿<!-- Movie tab -->
 <div role="tabpanel" class="tab-pane" id="TvShowTab">
     <div class="input-group">
-        <input id="search" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons" (keyup)="search($event)">
+        <input id="search" type="text" placeholder="{{ 'Search.SearchBarPlaceholder' | translate }}" class="form-control form-control-custom form-control-search form-control-withbuttons" (keyup)="search($event)">
         <div class="input-group-addon right-radius">
             <div class="btn-group">
                 <a href="#" class="btn btn-sm btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">

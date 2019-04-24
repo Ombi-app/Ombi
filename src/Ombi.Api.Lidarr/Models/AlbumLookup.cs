@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Ombi.Api.Lidarr.Models
 {
     public class AlbumLookup
     {
         public string title { get; set; }
+        public string status { get; set; }
+        public string artistType { get; set; }
+        public string disambiguation { get; set; }
+        public List<LidarrLinks> links { get; set; }
         public int artistId { get; set; }
         public string foreignAlbumId { get; set; }
         public bool monitored { get; set; }

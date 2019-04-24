@@ -29,27 +29,31 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Notifications;
 using Ombi.Helpers;
+using Ombi.Hubs;
 using Ombi.Notifications.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Emby
 {
     public class EmbyAvaliabilityChecker : IEmbyAvaliabilityChecker
     {
         public EmbyAvaliabilityChecker(IEmbyContentRepository repo, ITvRequestRepository t, IMovieRequestRepository m,
-            INotificationService n, ILogger<EmbyAvaliabilityChecker> log)
+            INotificationService n, ILogger<EmbyAvaliabilityChecker> log, IHubContext<NotificationHub> notification)
         {
             _repo = repo;
             _tvRepo = t;
             _movieRepo = m;
             _notificationService = n;
             _log = log;
+            _notification = notification;
         }
 
         private readonly ITvRequestRepository _tvRepo;
@@ -57,11 +61,17 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly IEmbyContentRepository _repo;
         private readonly INotificationService _notificationService;
         private readonly ILogger<EmbyAvaliabilityChecker> _log;
+        private readonly IHubContext<NotificationHub> _notification;
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Emby Availability Checker Started");
             await ProcessMovies();
             await ProcessTv();
+
+            await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, "Emby Availability Checker Finished");
         }
 
         private async Task ProcessMovies()
