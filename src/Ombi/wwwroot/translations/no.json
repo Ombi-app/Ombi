@@ -24,6 +24,7 @@
     "Denied": "Avslått",
     "Approve": "Godkjenn",
     "PartlyAvailable": "Delvis tilgjengelig",
+    "ViewDetails": "View Details",
     "Errors": {
       "Validation": "Kontroller de angitte verdiene"
     }
@@ -44,6 +45,7 @@
     "CheckPageForUpdates": "Sjekk denne siden for kontinuerlige oppdateringer."
   },
   "NavigationBar": {
+    "Discover": "Discover",
     "Search": "Søk",
     "Requests": "Forespørsler",
     "UserManagement": "Brukeradministrasjon",
@@ -58,7 +60,10 @@
     "UpdateDetails": "Oppdater detaljer",
     "Logout": "Logg av",
     "OpenMobileApp": "Åpne mobilapp",
-    "RecentlyAdded": "Nylig lagt til"
+    "RecentlyAdded": "Nylig lagt til",
+    "ChangeTheme": "Change Theme",
+    "Calendar": "Calendar",
+    "UserPreferences": "Preferences"
   },
   "Search": {
     "Title": "Søk",
@@ -123,6 +128,7 @@
     "MarkAvailable": "Merk tilgjengelig",
     "Remove": "Fjern",
     "Deny": "Avslå",
+    "DenyReason": "Deny Reason",
     "Season": "Sesong:",
     "GridTitle": "Tittel",
     "AirDate": "Sendedato",
@@ -182,5 +188,42 @@
   "Votes": {
     "CompletedVotesTab": "Stemt",
     "VotesTab": "Votes Needed"
+  },
+  "MediaDetails": {
+    "Denied": "Denied",
+    "RecommendationsTitle": "Recommendations",
+    "SimilarTitle": "Similar",
+    "VideosTitle": "Videos",
+    "Casts": {
+      "CastTitle": "Cast",
+      "Character": "Character",
+      "Actor": "Actor"
+    },
+    "EpisodeSelector": {
+      "AllSeasonsTooltip": "This will request every season for this show",
+      "FirstSeasonTooltip": "This will only request the First Season for this show",
+      "LatestSeasonTooltip": "This will only request the Latest Season for this show"
+    }
+  },
+  "Discovery": {
+    "PopularTab": "Popular",
+    "TrendingTab": "Trending",
+    "UpcomingTab": "Upcoming",
+    "CardDetails": {
+      "Availability": "Availability",
+      "Studio": "Studio",
+      "Network": "Network",
+      "UnknownNetwork": "Unknown",
+      "RequestStatus": "Request Status",
+      "Director": "Director",
+      "InCinemas": "In Cinemas",
+      "FirstAired": "First Aired",
+      "Writer": "Writer",
+      "ExecProducer": "Exec Producer"
+    }
+  },
+  "UserPreferences": {
+    "Welcome": "Welcome {{username}}!",
+    "OmbiLanguage": "Ombi Language"
   }
 }
