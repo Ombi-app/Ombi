@@ -131,8 +131,11 @@ namespace Ombi.Schedule.Jobs.Plex
                 await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
             }
 
+            Logger.LogInformation("Finished Plex Content Cacher, with processed content: {0}, episodes: {0}", processedContent.Content.Count(), processedContent.Episodes.Count());
+
             await Notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, recentlyAddedSearch ? "Plex Recently Added Sync Finished" : "Plex Content Sync Finished");
+
         }
 
         private async Task<ProcessedContent> StartTheCache(PlexSettings plexSettings, bool recentlyAddedSearch)
