@@ -24,6 +24,7 @@
     "Denied": "Denied",
     "Approve": "Approve",
     "PartlyAvailable": "Partly Available",
+    "ViewDetails": "View Details",
     "Errors": {
       "Validation": "Please check your entered values"
     }
@@ -44,6 +45,7 @@
     "CheckPageForUpdates": "Check this page for continuous site updates."
   },
   "NavigationBar": {
+    "Discover": "Discover",
     "Search": "Search",
     "Requests": "Requests",
     "UserManagement": "User Management",
@@ -58,7 +60,10 @@
     "UpdateDetails": "Update Details",
     "Logout": "Logout",
     "OpenMobileApp": "Open Mobile App",
-    "RecentlyAdded": "Recently Added"
+    "RecentlyAdded": "Recently Added",
+    "ChangeTheme": "Change Theme",
+    "Calendar": "Calendar",
+    "UserPreferences": "Preferences"
   },
   "Search": {
     "Title": "Search",
@@ -123,6 +128,7 @@
     "MarkAvailable": "Mark Available",
     "Remove": "Remove",
     "Deny": "Deny",
+    "DenyReason": "Deny Reason",
     "Season": "Season:",
     "GridTitle": "Title",
     "AirDate": "AirDate",
@@ -182,5 +188,42 @@
   "Votes": {
     "CompletedVotesTab": "Voted",
     "VotesTab": "Votes Needed"
+  },
+  "MediaDetails": {
+    "Denied": "Denied",
+    "RecommendationsTitle": "Recommendations",
+    "SimilarTitle": "Similar",
+    "VideosTitle": "Videos",
+    "Casts": {
+      "CastTitle": "Cast",
+      "Character": "Character",
+      "Actor": "Actor"
+    },
+    "EpisodeSelector": {
+      "AllSeasonsTooltip": "This will request every season for this show",
+      "FirstSeasonTooltip": "This will only request the First Season for this show",
+      "LatestSeasonTooltip": "This will only request the Latest Season for this show"
+    }
+  },
+  "Discovery": {
+    "PopularTab": "Popular",
+    "TrendingTab": "Trending",
+    "UpcomingTab": "Upcoming",
+    "CardDetails": {
+      "Availability": "Availability",
+      "Studio": "Studio",
+      "Network": "Network",
+      "UnknownNetwork": "Unknown",
+      "RequestStatus": "Request Status",
+      "Director": "Director",
+      "InCinemas": "In Cinemas",
+      "FirstAired": "First Aired",
+      "Writer": "Writer",
+      "ExecProducer": "Exec Producer"
+    }
+  },
+  "UserPreferences": {
+    "Welcome": "Welcome {{username}}!",
+    "OmbiLanguage": "Ombi Language"
   }
 }
