@@ -198,8 +198,8 @@
 
                 </div>
                 <div *ngIf="isAdmin || isRequestUser(request)">
-                    <form id="removeBtn">
-                        <button (click)="removeRequest(request)" style="text-align: right" class="btn btn-sm btn-danger-outline delete">
+                    <form>
+                        <button id="removeBtn" (click)="removeRequest(request)" style="text-align: right" class="btn btn-sm btn-danger-outline delete">
                             <i class="fa fa-minus"></i> {{ 'Requests.Remove' | translate }}
                         </button>
                     </form>
