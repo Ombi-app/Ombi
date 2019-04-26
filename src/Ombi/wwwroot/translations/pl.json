@@ -200,8 +200,8 @@
       "Actor": "Aktor"
     },
     "EpisodeSelector": {
-      "AllSeasonsTooltip": "This will request every season for this show",
-      "FirstSeasonTooltip": "This will only request the First Season for this show",
+      "AllSeasonsTooltip": "Zgłoszenie obejmie wszystkie sezony tego serialu",
+      "FirstSeasonTooltip": "Zgłoszenie obejmie pierwszy sezon tego serialu",
       "LatestSeasonTooltip": "This will only request the Latest Season for this show"
     }
   },
