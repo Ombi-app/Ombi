@@ -282,7 +282,7 @@ Task("Upload-Test-Results")
     }).OnError(exception =>
     {
         Error("Exception when attempting to upload the unit test results to AppVeyor");
-        Error(exception.Dump());
+        Error(exception);
     });
 
 Task("Run-Server-Build")
