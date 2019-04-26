@@ -24,7 +24,7 @@
     "Denied": "Odrzucone",
     "Approve": "Zatwierdź",
     "PartlyAvailable": "Częściowo dostępne",
-    "ViewDetails": "View Details",
+    "ViewDetails": "Pokaż szczegóły",
     "Errors": {
       "Validation": "Sprawdź wprowadzone dane"
     }
@@ -45,7 +45,7 @@
     "CheckPageForUpdates": "Tutaj znajdziesz aktualizacje dotyczące tej strony."
   },
   "NavigationBar": {
-    "Discover": "Discover",
+    "Discover": "Odkryj",
     "Search": "Szukaj",
     "Requests": "Zgłoszenia",
     "UserManagement": "Zarządzanie użytkownikami",
@@ -61,9 +61,9 @@
     "Logout": "Wyloguj",
     "OpenMobileApp": "Otwórz aplikację mobilną",
     "RecentlyAdded": "Ostatnio dodane",
-    "ChangeTheme": "Change Theme",
-    "Calendar": "Calendar",
-    "UserPreferences": "Preferences"
+    "ChangeTheme": "Zmień motyw",
+    "Calendar": "Kalendarz",
+    "UserPreferences": "Preferencje"
   },
   "Search": {
     "Title": "Szukaj",
@@ -80,7 +80,7 @@
     "RequestAdded": "Zgłoszenie dla {{title}} zostało dodane",
     "Similar": "Podobne",
     "Refine": "Zawęź",
-    "SearchBarPlaceholder": "Type Here to Search",
+    "SearchBarPlaceholder": "Wpisz tutaj, aby wyszukać",
     "Movies": {
       "PopularMovies": "Popularne filmy",
       "UpcomingMovies": "Wkrótce w kinach",
@@ -128,7 +128,7 @@
     "MarkAvailable": "Oznacz jako dostępne",
     "Remove": "Usuń",
     "Deny": "Odrzuć",
-    "DenyReason": "Deny Reason",
+    "DenyReason": "Powód odrzucenia",
     "Season": "Sezon:",
     "GridTitle": "Tytuł",
     "AirDate": "Data emisji",
@@ -190,14 +190,14 @@
     "VotesTab": "Potrzebne głosy"
   },
   "MediaDetails": {
-    "Denied": "Denied",
-    "RecommendationsTitle": "Recommendations",
-    "SimilarTitle": "Similar",
-    "VideosTitle": "Videos",
+    "Denied": "Odrzucone",
+    "RecommendationsTitle": "Rekomendacje",
+    "SimilarTitle": "Podobne",
+    "VideosTitle": "Wideo",
     "Casts": {
-      "CastTitle": "Cast",
+      "CastTitle": "Obsada",
       "Character": "Character",
-      "Actor": "Actor"
+      "Actor": "Aktor"
     },
     "EpisodeSelector": {
       "AllSeasonsTooltip": "This will request every season for this show",
