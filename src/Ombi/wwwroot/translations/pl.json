@@ -158,7 +158,7 @@
     "ResolvedTitle": "Problemy rozwiązane",
     "ColumnTitle": "Tytuł",
     "Category": "Kategoria",
-    "Status": "Stan",
+    "Status": "Status",
     "Details": "Szczegóły",
     "Description": "Opis",
     "NoComments": "Brak komentarzy!",
@@ -196,34 +196,34 @@
     "VideosTitle": "Wideo",
     "Casts": {
       "CastTitle": "Obsada",
-      "Character": "Character",
+      "Character": "Postać",
       "Actor": "Aktor"
     },
     "EpisodeSelector": {
       "AllSeasonsTooltip": "Zgłoszenie obejmie wszystkie sezony tego serialu",
       "FirstSeasonTooltip": "Zgłoszenie obejmie pierwszy sezon tego serialu",
-      "LatestSeasonTooltip": "This will only request the Latest Season for this show"
+      "LatestSeasonTooltip": "Zgłoszenie obejmie najnowszy sezon tego serialu"
     }
   },
   "Discovery": {
-    "PopularTab": "Popular",
-    "TrendingTab": "Trending",
-    "UpcomingTab": "Upcoming",
+    "PopularTab": "Popularne",
+    "TrendingTab": "Zyskujące popularność",
+    "UpcomingTab": "Nadchodzące",
     "CardDetails": {
-      "Availability": "Availability",
+      "Availability": "Dostępność",
       "Studio": "Studio",
-      "Network": "Network",
-      "UnknownNetwork": "Unknown",
-      "RequestStatus": "Request Status",
-      "Director": "Director",
-      "InCinemas": "In Cinemas",
-      "FirstAired": "First Aired",
-      "Writer": "Writer",
-      "ExecProducer": "Exec Producer"
+      "Network": "Sieć",
+      "UnknownNetwork": "Nieznane",
+      "RequestStatus": "Status zgłoszenia",
+      "Director": "Reżyser",
+      "InCinemas": "W kinach",
+      "FirstAired": "Pierwsza emisja",
+      "Writer": "Scenarzysta",
+      "ExecProducer": "Producent wykonawczy"
     }
   },
   "UserPreferences": {
-    "Welcome": "Welcome {{username}}!",
-    "OmbiLanguage": "Ombi Language"
+    "Welcome": "Witaj {{username}}!",
+    "OmbiLanguage": "Język Ombi"
   }
 }
