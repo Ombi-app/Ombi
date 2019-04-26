@@ -212,7 +212,7 @@
     "CardDetails": {
       "Availability": "Dostępność",
       "Studio": "Studio",
-      "Network": "Sieć",
+      "Network": "Stacja",
       "UnknownNetwork": "Nieznane",
       "RequestStatus": "Status zgłoszenia",
       "Director": "Reżyser",
