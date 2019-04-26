@@ -268,6 +268,7 @@ Task("Run-Unit-Tests")
 
 Task("Upload-Test-Results")
     .IsDependentOn("Run-Unit-Tests")
+    .ContinueOnError()
     .Does(() => {
     var script = @"
         $wc = New-Object 'System.Net.WebClient'
@@ -279,10 +280,6 @@ Task("Upload-Test-Results")
     ";
     // Upload the results
      StartPowershellScript(script);
-    }).OnError(exception =>
-    {
-        Error("Exception when attempting to upload the unit test results to AppVeyor");
-        Error(exception);
     });
 
 Task("Run-Server-Build")
