@@ -10,7 +10,7 @@
     }
   },
   "Common": {
-    "ContinueButton": "Dalej",
+    "ContinueButton": "Kontynuuj",
     "Available": "Dostępne",
     "PartiallyAvailable": "Częściowo dostępne",
     "Monitored": "Monitorowane",
@@ -18,7 +18,7 @@
     "ProcessingRequest": "Przetwarzanie zgłoszenia",
     "PendingApproval": "Oczekujące na zatwierdzenie",
     "RequestDenied": "Zgłoszenie odrzucone",
-    "NotRequested": "Nie zgłoszone",
+    "NotRequested": "Niezgłoszone",
     "Requested": "Zgłoszone",
     "Request": "Zgłoszenie",
     "Denied": "Odrzucone",
@@ -26,7 +26,7 @@
     "PartlyAvailable": "Częściowo dostępne",
     "ViewDetails": "Pokaż szczegóły",
     "Errors": {
-      "Validation": "Sprawdź wprowadzone dane"
+      "Validation": "Proszę sprawdzić wprowadzone wartości"
     }
   },
   "PasswordReset": {
@@ -34,11 +34,11 @@
     "ResetPasswordButton": "Zresetuj hasło"
   },
   "LandingPage": {
-    "OnlineHeading": "Dostępny",
+    "OnlineHeading": "Aktualnie online",
     "OnlineParagraph": "Serwer multimediów jest aktualnie online",
     "PartiallyOnlineHeading": "Częściowo online",
     "PartiallyOnlineParagraph": "Serwer multimediów jest częściowo online.",
-    "MultipleServersUnavailable": "{{serversUnavailable}} serwerów spośród {{totalServers}} jest offline.",
+    "MultipleServersUnavailable": "{{serversUnavailable}} serwery(ów) spośród {{totalServers}} jest offline.",
     "SingleServerUnavailable": "{{serversUnavailable}} serwer z {{totalServers}} jest w offline.",
     "OfflineHeading": "Aktualnie offline",
     "OfflineParagraph": "Serwer multimediów jest aktualnie offline.",
