@@ -156,7 +156,7 @@ Task("Package")
 });
 
 Task("Publish")
-    .IsDependentOn("Run-Unit-Tests")
+    .IsDependentOn("Upload-Test-Results")
     .IsDependentOn("PrePublish")
     .IsDependentOn("Publish-Windows")
     .IsDependentOn("Publish-Windows-32bit")
@@ -263,17 +263,27 @@ Task("Run-Unit-Tests")
         DotNetCoreTest(file.FullPath, settings);
     }
 
+   
+});
+
+Task("Upload-Test-Results")
+    .IsDependentOn("Run-Unit-Tests")
+    .Does(() => {
     var script = @"
-    $wc = New-Object 'System.Net.WebClient'
-    foreach ($name in Resolve-Path .\src\**\TestResults\Test*.trx) 
-    {
-        Write-Host ""Uploading File: "" + $name
-        $wc.UploadFile(""https://ci.appveyor.com/api/testresults/mstest/$($env:APPVEYOR_JOB_ID)"", $name)
-    }
-";
+        $wc = New-Object 'System.Net.WebClient'
+        foreach ($name in Resolve-Path .\src\**\TestResults\Test*.trx) 
+        {
+            Write-Host ""Uploading File: "" + $name
+            $wc.UploadFile(""https://ci.appveyor.com/api/testresults/mstest/$($env:APPVEYOR_JOB_ID)"", $name)
+        }
+    ";
     // Upload the results
      StartPowershellScript(script);
-});
+    }).OnError(exception =>
+    {
+        Error("Exception when attempting to upload the unit test results to AppVeyor");
+        Error(exception.Dump());
+    });
 
 Task("Run-Server-Build")
     .Does(() => 
@@ -298,7 +308,7 @@ Task("Default")
 
 Task("Build")
     .IsDependentOn("SetVersionInfo")
-    .IsDependentOn("Run-Unit-Tests")
+    .IsDependentOn("Upload-Test-Results")
     .IsDependentOn("Run-Server-Build"); 
     // .IsDependentOn("Run-UI-Build");
 
