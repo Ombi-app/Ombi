@@ -123,7 +123,7 @@
     "QualityOverride": "Wymuszenie jakości:",
     "RootFolderOverride": "Wymuszenie folderu głównego:",
     "ChangeRootFolder": "Folder główny",
-    "ChangeQualityProfile": "Wybór jakości",
+    "ChangeQualityProfile": "Profil jakości",
     "MarkUnavailable": "Oznacz jako niedostępne",
     "MarkAvailable": "Oznacz jako dostępne",
     "Remove": "Usuń",
@@ -135,7 +135,7 @@
     "GridStatus": "Status",
     "ReportIssue": "Zgłoś problem",
     "Filter": "Filtr",
-    "Sort": "Sortowanie",
+    "Sort": "Sortuj",
     "SeasonNumberHeading": "Sezon: {seasonNumber}",
     "SortTitleAsc": "Tytuł ▲",
     "SortTitleDesc": "Tytuł ▼",
@@ -171,7 +171,7 @@
     "ReportedBy": "Zgłoszone przez"
   },
   "Filter": {
-    "ClearFilter": "Wyczyść fltr",
+    "ClearFilter": "Wyczyść filtr",
     "FilterHeaderAvailability": "Dostępność",
     "FilterHeaderRequestStatus": "Status",
     "Approved": "Zatwierdzone",
