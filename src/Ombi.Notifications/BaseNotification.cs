@@ -30,6 +30,7 @@ namespace Ombi.Notifications
             _log = log;
             AlbumRepository = album;
             UserNotificationPreferences = notificationUserPreferences;
+            Settings.ClearCache();
         }
 
         protected ISettingsService<T> Settings { get; }

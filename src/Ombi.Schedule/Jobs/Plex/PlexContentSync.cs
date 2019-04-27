@@ -113,7 +113,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 await OmbiQuartz.TriggerJob(nameof(IMediaDatabaseRefresh), "System");
             }
 
-            if ((processedContent?.HasProcessedEpisodes ?? false) && recentlyAddedSearch)
+            if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
 
                 await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
