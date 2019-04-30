@@ -191,23 +191,23 @@
   },
   "MediaDetails": {
     "Denied": "Rejeitado",
-    "RecommendationsTitle": "Recommendations",
-    "SimilarTitle": "Similar",
-    "VideosTitle": "Videos",
+    "RecommendationsTitle": "Recomendações",
+    "SimilarTitle": "Semelhante",
+    "VideosTitle": "Vídeos",
     "Casts": {
-      "CastTitle": "Cast",
-      "Character": "Character",
+      "CastTitle": "Projectar",
+      "Character": "Personagem",
       "Actor": "Actor"
     },
     "EpisodeSelector": {
-      "AllSeasonsTooltip": "This will request every season for this show",
-      "FirstSeasonTooltip": "This will only request the First Season for this show",
-      "LatestSeasonTooltip": "This will only request the Latest Season for this show"
+      "AllSeasonsTooltip": "Isto irá pedir todas as temporadas da série",
+      "FirstSeasonTooltip": "Isto irá pedir a 1ª temporada da série",
+      "LatestSeasonTooltip": "Isto irá pedir a última temporada da série"
     }
   },
   "Discovery": {
     "PopularTab": "Popular",
-    "TrendingTab": "Trending",
+    "TrendingTab": "Tendências",
     "UpcomingTab": "Upcoming",
     "CardDetails": {
       "Availability": "Availability",
