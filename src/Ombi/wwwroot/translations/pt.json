@@ -24,7 +24,7 @@
     "Denied": "Negado",
     "Approve": "Aprovar",
     "PartlyAvailable": "Parcialmente Disponível",
-    "ViewDetails": "View Details",
+    "ViewDetails": "Ver detalhes",
     "Errors": {
       "Validation": "Por favor, verifique os dados inseridos"
     }
@@ -45,7 +45,7 @@
     "CheckPageForUpdates": "Verifique esta página para atualizações contínuas do site."
   },
   "NavigationBar": {
-    "Discover": "Discover",
+    "Discover": "Descobrir",
     "Search": "Pesquisar",
     "Requests": "Solicitações",
     "UserManagement": "Gerenciador de Usuário",
@@ -61,9 +61,9 @@
     "Logout": "Sair",
     "OpenMobileApp": "Abrir aplicativo do celular",
     "RecentlyAdded": "Recentemente adicionado",
-    "ChangeTheme": "Change Theme",
-    "Calendar": "Calendar",
-    "UserPreferences": "Preferences"
+    "ChangeTheme": "Alterar tema",
+    "Calendar": "Calendário",
+    "UserPreferences": "Preferências"
   },
   "Search": {
     "Title": "Pesquisar",
@@ -80,7 +80,7 @@
     "RequestAdded": "Pedido de {{title}} foi adicionado com sucesso",
     "Similar": "Semelhante",
     "Refine": "Filtro",
-    "SearchBarPlaceholder": "Type Here to Search",
+    "SearchBarPlaceholder": "Digite aqui para pesquisar",
     "Movies": {
       "PopularMovies": "Filmes populares",
       "UpcomingMovies": "Próximos filmes",
@@ -128,7 +128,7 @@
     "MarkAvailable": "Marcar como Disponível",
     "Remove": "Remover",
     "Deny": "Negar",
-    "DenyReason": "Deny Reason",
+    "DenyReason": "Qual a razão da rejeição",
     "Season": "Temporada:",
     "GridTitle": "Título",
     "AirDate": "Data de exibição",
@@ -190,7 +190,7 @@
     "VotesTab": "Votos necessários"
   },
   "MediaDetails": {
-    "Denied": "Denied",
+    "Denied": "Rejeitado",
     "RecommendationsTitle": "Recommendations",
     "SimilarTitle": "Similar",
     "VideosTitle": "Videos",
