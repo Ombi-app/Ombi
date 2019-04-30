@@ -1,12 +1,12 @@
 {
   "Login": {
-    "SignInButton": "Registrar",
+    "SignInButton": "Iniciar sessão",
     "UsernamePlaceholder": "Nome de usuário",
-    "PasswordPlaceholder": "Senha",
-    "RememberMe": "Lembre-se de mim",
-    "ForgottenPassword": "Esqueceu sua senha?",
+    "PasswordPlaceholder": "Palavra-passe",
+    "RememberMe": "Guardar a minha autênticação",
+    "ForgottenPassword": "Esqueceu-se da sua palavra-passe?",
     "Errors": {
-      "IncorrectCredentials": "Nome de usuário ou senha incorretos"
+      "IncorrectCredentials": "Nome de usuário ou palavra-passe incorretos"
     }
   },
   "Common": {
@@ -14,13 +14,13 @@
     "Available": "Disponível",
     "PartiallyAvailable": "Parcialmente Disponível",
     "Monitored": "Monitorado",
-    "NotAvailable": "Inisponível",
-    "ProcessingRequest": "Processando Solicitação",
+    "NotAvailable": "Não Disponível",
+    "ProcessingRequest": "A processar o pedido",
     "PendingApproval": "Aprovação Pendente",
-    "RequestDenied": "Solicitação Negada",
-    "NotRequested": "Não Solicitado",
-    "Requested": "Solicitado",
-    "Request": "Solicitar",
+    "RequestDenied": "Pedido negado",
+    "NotRequested": "Não pedido",
+    "Requested": "Pedido",
+    "Request": "Pedir",
     "Denied": "Negado",
     "Approve": "Aprovar",
     "PartlyAvailable": "Parcialmente Disponível",
@@ -31,16 +31,16 @@
   },
   "PasswordReset": {
     "EmailAddressPlaceholder": "Endereço de e-mail",
-    "ResetPasswordButton": "Redefinir Senha"
+    "ResetPasswordButton": "Redefinir palavra-passe"
   },
   "LandingPage": {
     "OnlineHeading": "Online Agora",
-    "OnlineParagraph": "O servidor de mídia está atualmente online",
+    "OnlineParagraph": "O servidor de media está actualmente online",
     "PartiallyOnlineHeading": "Parcialmente Online",
-    "PartiallyOnlineParagraph": "O servidor de mídia está parcialmente online.",
-    "MultipleServersUnavailable": "Existem {{serversUnavailable}} servidores offline em um total de {{totalServers}}.",
-    "SingleServerUnavailable": "Existe {{serversUnavailable}} servidor offline em um total de {{totalServers}}.",
-    "OfflineHeading": "Offline Agora",
+    "PartiallyOnlineParagraph": "O servidor de media está parcialmente online.",
+    "MultipleServersUnavailable": "Existem {{serversUnavailable}} servidores offline de um total de {{totalServers}}.",
+    "SingleServerUnavailable": "Existe {{serversUnavailable}} servidor offline de um total de {{totalServers}}.",
+    "OfflineHeading": "Actualmente Offline",
     "OfflineParagraph": "O servidor de mídia está atualmente offline.",
     "CheckPageForUpdates": "Verifique esta página para atualizações contínuas do site."
   },
@@ -208,22 +208,22 @@
   "Discovery": {
     "PopularTab": "Popular",
     "TrendingTab": "Tendências",
-    "UpcomingTab": "Upcoming",
+    "UpcomingTab": "Próximo",
     "CardDetails": {
-      "Availability": "Availability",
-      "Studio": "Studio",
-      "Network": "Network",
-      "UnknownNetwork": "Unknown",
-      "RequestStatus": "Request Status",
-      "Director": "Director",
-      "InCinemas": "In Cinemas",
-      "FirstAired": "First Aired",
-      "Writer": "Writer",
-      "ExecProducer": "Exec Producer"
+      "Availability": "Disponibilidade",
+      "Studio": "Estúdio",
+      "Network": "Rede",
+      "UnknownNetwork": "Desconhecido",
+      "RequestStatus": "Estado da solicitação",
+      "Director": "Realizador",
+      "InCinemas": "No cinema",
+      "FirstAired": "Primeira Exibição",
+      "Writer": "Escritor",
+      "ExecProducer": "Produtor Executivo"
     }
   },
   "UserPreferences": {
-    "Welcome": "Welcome {{username}}!",
-    "OmbiLanguage": "Ombi Language"
+    "Welcome": "Bem-vindo, {{username}}!",
+    "OmbiLanguage": "Língua Ombi"
   }
 }
