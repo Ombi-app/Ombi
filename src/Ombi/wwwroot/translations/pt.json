@@ -41,15 +41,15 @@
     "MultipleServersUnavailable": "Existem {{serversUnavailable}} servidores offline de um total de {{totalServers}}.",
     "SingleServerUnavailable": "Existe {{serversUnavailable}} servidor offline de um total de {{totalServers}}.",
     "OfflineHeading": "Actualmente Offline",
-    "OfflineParagraph": "O servidor de mídia está atualmente offline.",
-    "CheckPageForUpdates": "Verifique esta página para atualizações contínuas do site."
+    "OfflineParagraph": "O servidor de media está actualmente offline.",
+    "CheckPageForUpdates": "Verifique esta página para acompanhar as atualizações do site."
   },
   "NavigationBar": {
     "Discover": "Descobrir",
     "Search": "Pesquisar",
     "Requests": "Solicitações",
-    "UserManagement": "Gerenciador de Usuário",
-    "Issues": "Problemas",
+    "UserManagement": "Gestor de utilizadores",
+    "Issues": "Incidentes",
     "Vote": "Votar",
     "Donate": "Fazer uma doação!",
     "DonateLibraryMaintainer": "Doar para o Dono da Biblioteca",
