@@ -51,6 +51,7 @@ import { SettingsMenuComponent } from "./settingsmenu.component";
 import { AutoCompleteModule, CalendarModule, DialogModule, InputSwitchModule, InputTextModule, MenuModule, RadioButtonModule, TooltipModule } from "primeng/primeng";
 import { MatMenuModule} from "@angular/material";
 import { SharedModule } from "../shared/shared.module";
+import { HubService } from "../services/hub.service";
 
 const routes: Routes = [
     { path: "Ombi", component: OmbiComponent, canActivate: [AuthGuard] },
@@ -160,6 +161,7 @@ const routes: Routes = [
         NotificationMessageService,
         LidarrService,
         RequestRetryService,
+        HubService,
     ],
 
 })

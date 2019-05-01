@@ -1,53 +1,56 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Ombi.Api.TheMovieDb.Models;
-using Ombi.Core.Engine.V2;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
-using Ombi.Core;
-using Ombi.Core.Engine.Interfaces;
-using Ombi.Core.Models.Search;
-using Ombi.Core.Models.Search.V2;
-using Ombi.Helpers;
+using Microsoft.EntityFrameworkCore;
+using Ombi.Attributes;
+using Ombi.Core.Authentication;
 using Ombi.Hubs;
 using Ombi.Models;
 
 namespace Ombi.Controllers.V2
 {
     [ApiV2]
-    [Authorize]
+    [Admin]
     [ApiController]
     public class HubController : ControllerBase
     {
-        public HubController(IHubContext<NotificationHub> hub)
+        public HubController(OmbiUserManager um)
         {
-            _hub = hub;
+            _um = um;
         }
 
-        private readonly IHubContext<NotificationHub> _hub;
+        private readonly OmbiUserManager _um;
 
         /// <summary>
-        /// Returns search results for both TV and Movies
+        /// Returns the currently connected users in Ombi
         /// </summary>
         /// <returns></returns>
-        [HttpGet("{searchTerm}")]
-        public async Task MultiSearch(string searchTerm)
+        [HttpGet("Users")]
+        public async Task<List<ConnectedUsersViewModel>> GetConnectedUsers()
         {
-            await _hub.Clients.All.SendAsync("Notification", searchTerm);
-        }
+            var users = NotificationHub.UsersOnline.Values;
+            var allUsers = _um.Users;
+            var model = new List<ConnectedUsersViewModel>();
+            foreach (var user in users)
+            {
+                var ombiUser = await allUsers.FirstOrDefaultAsync(x => x.Id.Equals(user.UserId, StringComparison.InvariantCultureIgnoreCase));
 
-        /// <summary>
-        /// Returns search results for both TV and Movies
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("admin/{searchTerm}")]
-        public async Task Admin(string searchTerm)
-        {
-            var admins = NotificationHub.UsersOnline.Where(x => x.Value.Roles.Contains(OmbiRoles.Admin)).Select(x => x.Key).ToList();
-            await _hub.Clients.Clients(admins).SendAsync("Notification", searchTerm);
+                if (ombiUser == null)
+                {
+                    continue;
+                }
+
+                model.Add(new ConnectedUsersViewModel
+                {
+                    UserId = ombiUser.Id,
+                    DisplayName = ombiUser.UserAlias,
+                    UserType = ombiUser.UserType
+                });
+            }
+
+            return model;
         }
     }
 }

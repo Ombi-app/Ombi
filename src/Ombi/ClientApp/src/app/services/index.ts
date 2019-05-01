@@ -19,3 +19,4 @@ export * from "./requestretry.service";
 export * from "./searchV2.service";
 export * from "./custompage.service";
 export * from "./message.service";
+export * from "./hub.service";

@@ -51,15 +51,13 @@ namespace Ombi.Schedule.Jobs.Plex
     public class PlexContentSync : IPlexContentSync
     {
         public PlexContentSync(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentSync> logger, IPlexContentRepository repo,
-            IPlexEpisodeSync epsiodeSync, IRefreshMetadata metadataRefresh, IPlexAvailabilityChecker checker, IHubContext<NotificationHub> hub)
+            IPlexEpisodeSync epsiodeSync, IHubContext<NotificationHub> hub)
         {
             Plex = plex;
             PlexApi = plexApi;
             Logger = logger;
             Repo = repo;
             EpisodeSync = epsiodeSync;
-            Metadata = metadataRefresh;
-            Checker = checker;
             Notification = hub;
             Plex.ClearCache();
         }
@@ -69,8 +67,6 @@ namespace Ombi.Schedule.Jobs.Plex
         private ILogger<PlexContentSync> Logger { get; }
         private IPlexContentRepository Repo { get; }
         private IPlexEpisodeSync EpisodeSync { get; }
-        private IRefreshMetadata Metadata { get; }
-        private IPlexAvailabilityChecker Checker { get; }
         private IHubContext<NotificationHub> Notification { get; set; }
 
         public async Task Execute(IJobExecutionContext context)

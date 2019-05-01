@@ -1,106 +1,71 @@
-﻿
-<settings-menu></settings-menu>
+﻿<settings-menu></settings-menu>
 <div *ngIf="about" class="container">
-    <fieldset>
-        <legend>About</legend>
-        <form>
-            <div class="col-md-8">
-                <table class="table table-striped table-hover table-responsive table-condensed">
-                    <thead>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <span>Version</span>
-                            </td>
-                            <td>
-                                <span>{{about.version}} <a [routerLink]="['/Settings/Update']" *ngIf="newUpdate" style="color:#df691a"><b>(New Update Available)</b></a></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span>Branch</span>
-                            </td>
-                            <td>
-                                <span>{{about.branch}}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span>Github</span>
-                            </td>
-                            <td>
-                                <a href="https://github.com/tidusjar/Ombi" target="_blank">https://github.com/tidusjar/Ombi</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span>Discord</span>
-                            </td>
-                            <td>
-                                <a href="https://discord.gg/Sa7wNWb" target="_blank">https://discord.gg/Sa7wNWb</a>
-                            </td>
-                        </tr>
+  <legend>About</legend>
 
-                        <tr>
-                            <td>
-                                <span>Reddit</span>
-                            </td>
-                            <td>
-                                <a href="https://www.reddit.com/r/Ombi/" target="_blank">https://www.reddit.com/r/Ombi/</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span>Issues</span>
-                            </td>
-                            <td>
-                                <a href="https://github.com/tidusjar/Ombi/issues" target="_blank">https://github.com/tidusjar/Ombi/issues</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span>Wiki</span>
-                            </td>
-                            <td>
-                                <a href="https://github.com/tidusjar/Ombi/wiki" target="_blank">https://github.com/tidusjar/Ombi/wiki</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span>OS Architecture</span>
-                            </td>
-                            <td>
-                                <span>{{about.osArchitecture}}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span>OS Description</span>
-                            </td>
-                            <td>
-                                <span>{{about.osDescription}}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span>Process Architecture</span>
-                            </td>
-                            <td>
-                                <span>{{about.processArchitecture}}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span>Application Base Path</span>
-                            </td>
-                            <td>
-                                <span>{{about.applicationBasePath}}</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </form>
-    </fieldset>
+  <div class="mat-table">
+    <div class="mat-row" *ngIf="connectedUsers">
+      <div class="mat-cell">Users Online</div>
+      <div class="mat-cell">{{connectedUsers.length}}</div>
+    </div>
+    <div class="mat-row">
+      <div class="mat-cell">Version</div>
+      <div class="mat-cell">{{about.version}} <a [routerLink]="['/Settings/Update']" *ngIf="newUpdate"
+          style="color:#df691a"><b>(New Update Available)</b></a></div>
+    </div>
+
+    <div class="mat-row">
+      <div class="mat-cell">Branch</div>
+      <div class="mat-cell">{{about.branch}}</div>
+    </div>
+
+    <div class="mat-row">
+      <div class="mat-cell">Github</div>
+      <div class="mat-cell"> <a href="https://github.com/tidusjar/Ombi"
+          target="_blank">https://github.com/tidusjar/Ombi</a></div>
+    </div>
+
+    <div class="mat-row">
+      <div class="mat-cell">Discord</div>
+      <div class="mat-cell"><a href="https://discord.gg/Sa7wNWb" target="_blank">https://discord.gg/Sa7wNWb</a></div>
+    </div>
+
+    <div class="mat-row">
+      <div class="mat-cell">Reddit</div>
+      <div class="mat-cell"> <a href="https://www.reddit.com/r/Ombi/" target="_blank">https://www.reddit.com/r/Ombi/</a>
+      </div>
+    </div>
+
+    <div class="mat-row">
+      <div class="mat-cell">Issues</div>
+      <div class="mat-cell"> <a href="https://github.com/tidusjar/Ombi/issues"
+          target="_blank">https://github.com/tidusjar/Ombi/issues</a></div>
+    </div>
+
+    <div class="mat-row">
+      <div class="mat-cell">Wiki</div>
+      <div class="mat-cell"> <a href="https://github.com/tidusjar/Ombi/wiki"
+          target="_blank">https://github.com/tidusjar/Ombi/wiki</a></div>
+    </div>
+
+    <div class="mat-row">
+      <div class="mat-cell">OS Architecture</div>
+      <div class="mat-cell"> {{about.osArchitecture}}</div>
+    </div>
+
+    <div class="mat-row">
+      <div class="mat-cell">OS Description</div>
+      <div class="mat-cell">{{about.osDescription}}</div>
+    </div>
+
+    <div class="mat-row">
+      <div class="mat-cell">Process Architecture</div>
+      <div class="mat-cell">{{about.processArchitecture}}</div>
+    </div>
+
+    <div class="mat-row">
+      <div class="mat-cell">Application Base Path</div>
+      <div class="mat-cell">{{about.applicationBasePath}}</div>
+    </div>
+
+  </div>
 </div>

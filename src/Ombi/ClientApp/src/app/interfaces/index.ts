@@ -18,3 +18,4 @@ export * from "./ILidarr";
 export * from "./ISearchMusicResult";
 export * from "./IVote";
 export * from "./IFailedRequests";
+export * from "./IHub";
