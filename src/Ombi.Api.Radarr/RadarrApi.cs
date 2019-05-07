@@ -123,6 +123,14 @@ namespace Ombi.Api.Radarr
         {
             var result = await Command(apiKey, baseUrl, new { name = "MoviesSearch", movieIds });
             return result != null;
+        }        
+        
+        public async Task<List<Tag>> GetTags(string apiKey, string baseUrl)
+        {
+            var request = new Request("/api/tag", baseUrl, HttpMethod.Get);
+            AddHeaders(request, apiKey);
+
+            return await Api.Request<List<Tag>>(request);
         }
 
         private async Task<CommandResult> Command(string apiKey, string baseUrl, object body)

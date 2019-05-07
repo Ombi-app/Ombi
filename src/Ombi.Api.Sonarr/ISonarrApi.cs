@@ -21,5 +21,6 @@ namespace Ombi.Api.Sonarr
         Task<bool> SeriesSearch(int seriesId, string apiKey, string baseUrl);
         Task<SystemStatus> SystemStatus(string apiKey, string baseUrl);
         Task<bool> SeasonPass(string apiKey, string baseUrl, SonarrSeries series);
+        Task<List<Tag>> GetTags(string apiKey, string baseUrl);
     }
 }

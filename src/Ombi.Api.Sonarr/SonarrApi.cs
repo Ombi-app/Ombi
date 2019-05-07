@@ -225,5 +225,13 @@ namespace Ombi.Api.Sonarr
             var content = await Api.RequestContent(request);
             return content.Equals("ok", StringComparison.CurrentCultureIgnoreCase);
         }
+
+        public async Task<List<Tag>> GetTags(string apiKey, string baseUrl)
+        {
+            var request = new Request($"{ApiBaseUrl}tag", baseUrl, HttpMethod.Get);
+            request.AddHeader("X-Api-Key", apiKey);
+
+            return await Api.Request<List<Tag>>(request);
+        }
     }
 }

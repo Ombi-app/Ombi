@@ -93,5 +93,36 @@ namespace Ombi.Controllers.V1.External
             }
             return null;
         }
+        
+        /// <summary>
+        /// Gets the Radarr tags
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("tags")]
+        [PowerUser]
+        public async Task<IEnumerable<Tag>> GetTags([FromBody] SonarrSettings settings)
+        {
+            return await RadarrApi.GetTags(settings.ApiKey, settings.FullUri);
+        }
+
+                
+        /// <summary>
+        /// Gets the Radarr tags
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("tags")]
+        [PowerUser]
+        public async Task<IEnumerable<Tag>> GetTags()
+        {
+            var settings = await RadarrSettings.GetSettingsAsync();
+            if (settings.Enabled)
+            {
+                return await RadarrApi.GetTags(settings.ApiKey, settings.FullUri);
+            }
+
+            return null;
+        }
     }
 }

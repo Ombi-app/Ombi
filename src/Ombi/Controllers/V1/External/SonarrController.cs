@@ -101,6 +101,36 @@ namespace Ombi.Controllers.V1.External
             return null;
         }
 
+        /// <summary>
+        /// Gets the Sonarr tags
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("tags")]
+        [PowerUser]
+        public async Task<IEnumerable<Tag>> GetTags([FromBody] SonarrSettings settings)
+        {
+            return await SonarrApi.GetTags(settings.ApiKey, settings.FullUri);
+        }
+
+
+        /// <summary>
+        /// Gets the Sonarr tags
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("tags")]
+        [PowerUser]
+        public async Task<IEnumerable<Tag>> GetTags()
+        {
+            var settings = await SonarrSettings.GetSettingsAsync();
+            if (settings.Enabled)
+            {
+                return await SonarrApi.GetTags(settings.ApiKey, settings.FullUri);
+            }
+
+            return null;
+        }
 
         /// <summary>
         /// Gets the Sonarr V3 language profiles
