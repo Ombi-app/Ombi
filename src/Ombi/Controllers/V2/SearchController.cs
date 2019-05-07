@@ -317,5 +317,19 @@ namespace Ombi.Controllers.V2
         {
             return await _tvSearchEngine.Trending(currentPosition, amountToLoad);
         }
+
+        
+        /// <summary>
+        /// Returns all the movies that is by the actor id 
+        /// </summary>
+        /// <param name="actorId">TheMovieDb Actor ID</param>
+        /// <returns></returns>
+        [HttpGet("actor/{actorId}/movie")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<ActorCredits> GetMoviesByActor(int actorId)
+        {
+           return await _movieEngineV2.GetMoviesByActor(actorId, null);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Models.Search.V2;
 
@@ -19,6 +20,7 @@ namespace Ombi.Core.Engine.Interfaces
         Task<IEnumerable<SearchMovieViewModel>> PopularMovies(int currentlyLoaded, int toLoad);
         Task<IEnumerable<SearchMovieViewModel>> TopRatedMovies(int currentlyLoaded, int toLoad);
         Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies(int currentlyLoaded, int toLoad);
+        Task<ActorCredits> GetMoviesByActor(int actorId, string langCode);
         int ResultLimit { get; set; }
     }
 }

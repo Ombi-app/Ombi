@@ -227,6 +227,14 @@ namespace Ombi.Core.Engine.V2
             return null;
         }
 
+        public async Task<ActorCredits> GetMoviesByActor(int actorId, string langCode)
+        {
+            var result = await Cache.GetOrAdd(nameof(GetMoviesByActor) + actorId + langCode,
+                async () => await MovieApi.GetActorMovieCredits(actorId, langCode));
+            //TODO need to run through the rules so we can get the availability etc
+            return result;
+        }
+
         protected async Task<List<SearchMovieViewModel>> TransformMovieResultsToResponse(
             IEnumerable<MovieSearchResult> movies)
         {
