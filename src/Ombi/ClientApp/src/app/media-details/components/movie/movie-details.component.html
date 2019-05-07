@@ -1,4 +1,4 @@
-<div *ngIf="!movie" class="row justify-content-md-center top-spacing loading-spinner">
+<div *ngIf="!movie" class="justify-content-md-center top-spacing loading-spinner">
   <mat-spinner [color]="'accent'"></mat-spinner>
 </div>
 
@@ -54,7 +54,7 @@
               <i class="fa fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
             </button>
 
-            <button *ngIf="hasRequest && !movieRequest.denied" mat-raised-button class="btn-spacing" color="warn"
+            <button *ngIf="hasRequest &&  movieRequest && !movieRequest.denied" mat-raised-button class="btn-spacing" color="warn"
               (click)="deny()">
               <i class="fa fa-times"></i> {{
                     'Requests.Deny' | translate }}</button>
@@ -63,7 +63,7 @@
 
           </span>
 
-          <button *ngIf="hasRequest && movieRequest.denied" [matTooltip]="movieRequest.deniedReason" mat-raised-button
+          <button *ngIf="hasRequest &&  movieRequest && movieRequest.denied" [matTooltip]="movieRequest.deniedReason" mat-raised-button
             class="btn-spacing" color="warn">
             <i class="fa fa-times"></i> {{
                     'MediaDetails.Denied' | translate }}</button>

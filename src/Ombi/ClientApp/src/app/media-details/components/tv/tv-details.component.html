@@ -1,3 +1,6 @@
+<div *ngIf="!tv" class="justify-content-md-center top-spacing loading-spinner">
+  <mat-spinner [color]="'accent'"></mat-spinner>
+</div>
 <div *ngIf="tv">
 
   <top-banner [background]="tv.background" [available]="tv.available" [title]="tv.title" [releaseDate]="tv.firstAired"
