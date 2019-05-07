@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -50,8 +51,10 @@ namespace Ombi.Core.Engine.V2
        
         public async Task<SearchFullInfoTvShowViewModel> GetShowInformation(int tvdbid)
         {
-            var tvdbshow = await TvMazeApi.ShowLookupByTheTvDbId(tvdbid);
-            var show = await TvMazeApi.GetTvFullInformation(tvdbshow.id);
+            var tvdbshow = await Cache.GetOrAdd(nameof(GetShowInformation) + tvdbid,
+                async () => await TvMazeApi.ShowLookupByTheTvDbId(tvdbid), DateTime.Now.AddHours(12));
+            var show = await Cache.GetOrAdd("GetTvFullInformation" + tvdbshow.id,
+                async () => await TvMazeApi.GetTvFullInformation(tvdbshow.id), DateTime.Now.AddHours(12));
             if (show == null)
             { 
                 // We don't have enough information
@@ -62,7 +65,8 @@ namespace Ombi.Core.Engine.V2
             Task<TraktShow> traktInfoTask = new Task<TraktShow>(() => null);
             if (show.externals?.imdb.HasValue() ?? false)
             {
-                traktInfoTask = TraktApi.GetTvExtendedInfo(show.externals?.imdb);
+                traktInfoTask = Cache.GetOrAdd("GetExtendedTvInfoTrakt" + show.externals?.imdb,
+                    () => TraktApi.GetTvExtendedInfo(show.externals?.imdb), DateTime.Now.AddHours(12));
             }
 
             var mapped = Mapper.Map<SearchFullInfoTvShowViewModel>(show);

@@ -45,7 +45,9 @@ namespace Ombi.Core.Engine
         public async Task<SearchMovieViewModel> LookupImdbInformation(int theMovieDbId, string langCode = null)
         {
             langCode = await DefaultLanguageCode(langCode);
-            var movieInfo = await MovieApi.GetMovieInformationWithExtraInfo(theMovieDbId, langCode);
+            var movieInfo = await Cache.GetOrAdd(nameof(LookupImdbInformation) + langCode + theMovieDbId,
+                async () => await MovieApi.GetMovieInformationWithExtraInfo(theMovieDbId, langCode),
+                DateTime.Now.AddHours(12));
             var viewMovie = Mapper.Map<SearchMovieViewModel>(movieInfo);
 
             return await ProcessSingleMovie(viewMovie, true);
