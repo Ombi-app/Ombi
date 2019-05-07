@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using Ombi.Api.Pushover.Models;
 
 namespace Ombi.Api.Pushover
@@ -18,11 +19,7 @@ namespace Ombi.Api.Pushover
 
         public async Task<PushoverResponse> PushAsync(string accessToken, string message, string userToken,  sbyte priority, string sound)
         {
-            if (message.Contains("'"))
-            {
-                message = message.Replace("'", "&#39;");
-            }
-            var request = new Request($"messages.json?token={accessToken}&user={userToken}&priority={priority}&sound={sound}&message={WebUtility.HtmlEncode(message)}", PushoverEndpoint, HttpMethod.Post);
+            var request = new Request($"messages.json?token={accessToken}&user={userToken}&priority={priority}&sound={sound}&message={WebUtility.UrlEncode(message)}", PushoverEndpoint, HttpMethod.Post);
             
             var result = await _api.Request<PushoverResponse>(request);
             return result;
