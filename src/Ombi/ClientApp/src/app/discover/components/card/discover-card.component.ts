@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { IDiscoverCardResult } from "../interfaces";
-import { RequestType, ISearchTvResult, ISearchMovieResult } from "../../interfaces";
-import { SearchService } from "../../services";
+import { IDiscoverCardResult } from "../../interfaces";
+import { RequestType, ISearchTvResult, ISearchMovieResult } from "../../../interfaces";
+import { SearchService } from "../../../services";
 import { MatDialog } from "@angular/material";
 import { DiscoverCardDetailsComponent } from "./discover-card-details.component";
 

@@ -53,7 +53,7 @@ namespace Ombi.Api.Emby.Models.Movie
         public string MediaType { get; set; }
         public string HomePageUrl { get; set; }
         public int Budget { get; set; }
-        public int Revenue { get; set; }
+        public float Revenue { get; set; }
         public object[] LockedFields { get; set; }
         public bool LockData { get; set; }
     }

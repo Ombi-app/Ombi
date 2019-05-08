@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { SearchV2Service } from "../services";
-import { ISearchMovieResult, ISearchTvResult, RequestType } from "../interfaces";
-import { IDiscoverCardResult } from "./interfaces";
+import { SearchV2Service } from "../../../services";
+import { ISearchMovieResult, ISearchTvResult, RequestType } from "../../../interfaces";
+import { IDiscoverCardResult } from "../../interfaces";
 import { trigger, transition, style, animate } from "@angular/animations";
 
 @Component({

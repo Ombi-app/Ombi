@@ -1,9 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { SearchV2Service, RequestService, NotificationService, MessageService } from "../../services";
-import { IMovieCollectionsViewModel } from "../../interfaces/ISearchTvResultV2";
-import { IDiscoverCardResult } from "../interfaces";
-import { RequestType } from "../../interfaces";
+import { SearchV2Service, RequestService, MessageService } from "../../../services";
+import { IMovieCollectionsViewModel } from "../../../interfaces/ISearchTvResultV2";
+import { IDiscoverCardResult } from "../../interfaces";
+import { RequestType } from "../../../interfaces";
 
 @Component({
     templateUrl: "./discover-collections.component.html",

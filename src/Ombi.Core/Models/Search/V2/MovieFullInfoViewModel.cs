@@ -17,7 +17,7 @@ namespace Ombi.Core.Models.Search.V2
         public string Overview { get; set; }
         public List<ProductionCompaniesViewModel> ProductionCompanies { get; set; }
         public double Popularity { get; set; }
-        public int Revenue { get; set; }
+        public float Revenue { get; set; }
         public long Runtime { get; set; }
         public string PosterPath { get; set; }
         public DateTime? ReleaseDate { get; set; }

@@ -39,7 +39,7 @@ namespace Ombi.Api.TheMovieDb.Models
         [JsonProperty("release_date")]
         public string ReleaseDate { get; set; }
         [JsonProperty("revenue")]
-        public int Revenue { get; set; }
+        public float Revenue { get; set; }
         [JsonProperty("runtime")]
         public long Runtime { get; set; }
         [JsonProperty("spoken_languages")]

@@ -1,12 +1,12 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from "@angular/material";
-import { IDiscoverCardResult } from "../interfaces";
-import { SearchV2Service, RequestService, MessageService } from "../../services";
-import { RequestType } from "../../interfaces";
-import { ISearchMovieResultV2 } from "../../interfaces/ISearchMovieResultV2";
-import { ISearchTvResultV2 } from "../../interfaces/ISearchTvResultV2";
-import { RouterLink, Router } from "@angular/router";
-import { EpisodeRequestComponent } from "../../shared/episode-request/episode-request.component";
+import { IDiscoverCardResult } from "../../interfaces";
+import { SearchV2Service, RequestService, MessageService } from "../../../services";
+import { RequestType } from "../../../interfaces";
+import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
+import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
+import { Router } from "@angular/router";
+import { EpisodeRequestComponent } from "../../../shared/episode-request/episode-request.component";
 
 @Component({
     selector: "discover-card-details",

@@ -1,9 +1,9 @@
 import { Component, AfterViewInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { SearchV2Service } from "../../services";
-import { IActorCredits } from "../../interfaces/ISearchTvResultV2";
-import { IDiscoverCardResult } from "../interfaces";
-import { RequestType } from "../../interfaces";
+import { SearchV2Service } from "../../../services";
+import { IActorCredits } from "../../../interfaces/ISearchTvResultV2";
+import { IDiscoverCardResult } from "../../interfaces";
+import { RequestType } from "../../../interfaces";
 
 @Component({
     templateUrl: "./discover-actor.component.html",
