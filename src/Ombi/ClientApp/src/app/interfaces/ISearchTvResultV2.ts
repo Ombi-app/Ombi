@@ -107,3 +107,30 @@ export interface ICrew {
     type: string;
     person: IPersonViewModel;
 }
+
+export interface IActorCredits {
+    cast: IActorCast[];
+    crew: IActorCrew[];
+}
+
+export interface IActorCast {
+    character: string;
+    poster_path: string;
+    id: number;
+    backdrop_path: string;
+    title: string;
+    overview: string;
+    release_date: Date;
+}
+
+export interface IActorCrew {
+    id: number;
+    department: string;
+    job: string;
+    overview: string;
+    release_date: Date;
+    title: string;
+    backdrop_path: string;
+    poster_path: string;
+    credit_id: number;
+}

@@ -27,12 +27,14 @@ export class NavSearchComponent {
                 title += ` (${result.release_date.slice(0,4)})`;
             }
             return title;
-        } else {
+        } else if (result.media_type === "tv") {
             let title = result.name;
             if(result.release_date) {
                 title += ` (${result.release_date.slice(0,4)})`;
             }
             return title;
+        } else if(result.media_type === "person"){
+            return result.name;
         }
     }
     
@@ -40,8 +42,8 @@ export class NavSearchComponent {
     text$.pipe(
       debounceTime(600),
       distinctUntilChanged(),
-      switchMap(term =>
-        this.searchService.multiSearch(term)
+      switchMap(term => term.length < 2 ? []
+        : this.searchService.multiSearch(term)
       )
     )
 
@@ -57,6 +59,9 @@ export class NavSearchComponent {
             return;
         } else if (event.item.media_type == "tv") {
             this.router.navigate([`details/tv/${event.item.id}/true`]);
+            return;
+        } else if (event.item.media_type == "person") {
+            this.router.navigate([`discover/actor/${event.item.id}`]);
             return;
         }
     }

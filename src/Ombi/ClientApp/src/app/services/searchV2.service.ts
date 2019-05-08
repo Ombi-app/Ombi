@@ -8,7 +8,7 @@ import { IMultiSearchResult, ISearchMovieResult, ISearchTvResult } from "../inte
 import { ServiceHelpers } from "./service.helpers";
 
 import { ISearchMovieResultV2 } from "../interfaces/ISearchMovieResultV2";
-import { ISearchTvResultV2, IMovieCollectionsViewModel } from "../interfaces/ISearchTvResultV2";
+import { ISearchTvResultV2, IMovieCollectionsViewModel, IActorCredits } from "../interfaces/ISearchTvResultV2";
 
 @Injectable()
 export class SearchV2Service extends ServiceHelpers {
@@ -93,5 +93,9 @@ export class SearchV2Service extends ServiceHelpers {
         
     public getMovieCollections(collectionId: number): Promise<IMovieCollectionsViewModel> {
         return this.http.get<IMovieCollectionsViewModel>(`${this.url}/movie/collection/${collectionId}`, { headers: this.headers }).toPromise();
+    }
+
+    public getMoviesByActor(actorId: number): Observable<IActorCredits> {
+        return this.http.get<IActorCredits>(`${this.url}/actor/${actorId}/movie`, { headers: this.headers });
     }
 }

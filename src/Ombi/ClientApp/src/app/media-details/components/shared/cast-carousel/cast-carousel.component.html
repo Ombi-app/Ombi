@@ -5,9 +5,14 @@
         <ng-template let-item pTemplate="item">
           <div class="row justify-content-md-center mat-card mat-card-flat">
             <div class="col-12">
-              <img class="cast-profile-img" *ngIf="item.profile_path" src="https://image.tmdb.org/t/p/w300/{{item.profile_path}}">
-              <img class="cast-profile-img" *ngIf="item.character?.image?.medium" [src]="item.character.image.medium">
+              <a *ngIf="item.profile_path" [routerLink]="'/discover/actor/' + item.id">
+              <img class="cast-profile-img" src="https://image.tmdb.org/t/p/w300/{{item.profile_path}}">
+            </a>
+            <a *ngIf="item.character?.image?.medium" [routerLink]="'/discover/actor/' + item.person.id">
+              <img class="cast-profile-img" [src]="item.character.image.medium">
+            </a>
               <!-- TODO get profile image default -->
+      
             </div>
             <div class="col-12">
               <span *ngIf="!item.character?.name"><strong>{{'MediaDetails.Casts.Character' | translate}}:</strong> {{item.character}}</span>

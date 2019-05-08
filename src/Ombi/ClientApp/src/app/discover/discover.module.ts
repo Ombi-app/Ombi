@@ -12,10 +12,12 @@ import { PipeModule } from "../pipes/pipe.module";
 import { DiscoverCardDetailsComponent } from "./card/discover-card-details.component";
 import { MatDialog } from "@angular/material";
 import { DiscoverCollectionsComponent } from "./collections/discover-collections.component";
+import { DiscoverActorComponent } from "./actor/discover-actor.component";
 
 const routes: Routes = [
     { path: "", component: DiscoverComponent, canActivate: [AuthGuard] },
-    { path: "collection/:collectionId", component: DiscoverCollectionsComponent, canActivate: [AuthGuard] }
+    { path: "collection/:collectionId", component: DiscoverCollectionsComponent, canActivate: [AuthGuard] },
+    { path: "actor/:actorId", component: DiscoverActorComponent, canActivate: [AuthGuard] }
 ];
 @NgModule({
     imports: [
@@ -29,6 +31,7 @@ const routes: Routes = [
         DiscoverCardComponent,
         DiscoverCardDetailsComponent,
         DiscoverCollectionsComponent,
+        DiscoverActorComponent,
     ],
     entryComponents: [
         DiscoverCardDetailsComponent

@@ -18,6 +18,11 @@
         </span>
         <span *ngIf="!result.release_date">{{result.name}}</span>
     </div>
+
+    <div *ngIf="result.media_type === 'person'">
+        <i class="fa fa-user"></i> &nbsp;
+    <span *ngIf="result.name">{{result.name}}</span>
+</div>
     <!-- Collection -->
     <!-- <i class="fa fa-file-video-o" aria-hidden="true"></i> -->
 
