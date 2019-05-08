@@ -1,6 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, AfterViewInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { SearchV2Service, RequestService, MessageService } from "../../services";
+import { SearchV2Service } from "../../services";
 import { IActorCredits } from "../../interfaces/ISearchTvResultV2";
 import { IDiscoverCardResult } from "../interfaces";
 import { RequestType } from "../../interfaces";
@@ -9,7 +9,7 @@ import { RequestType } from "../../interfaces";
     templateUrl: "./discover-actor.component.html",
     styleUrls: ["./discover-actor.component.scss"],
 })
-export class DiscoverActorComponent {
+export class DiscoverActorComponent implements AfterViewInit {
     public actorId: number;
     public actorCredits: IActorCredits;
     public loadingFlag: boolean;
@@ -17,9 +17,7 @@ export class DiscoverActorComponent {
     public discoverResults: IDiscoverCardResult[] = [];
 
     constructor(private searchService: SearchV2Service,
-        private route: ActivatedRoute,
-        private requestService: RequestService,
-        private messageService: MessageService) {
+        private route: ActivatedRoute) {
         this.route.params.subscribe((params: any) => {
             this.actorId = params.actorId;
             this.loading();
@@ -30,21 +28,33 @@ export class DiscoverActorComponent {
         });
     }
 
+    public async ngAfterViewInit() {
+        this.discoverResults.forEach((result) => {
+            this.searchService.getFullMovieDetails(result.id).subscribe(x => {
+                result.available = x.available;
+                result.approved = x.approved;
+                result.rating = x.voteAverage;
+                result.requested = x.requested;
+                result.url = x.homepage;
+            });
+        });
+    }
+
     private createModel() {
         this.finishLoading();
         this.discoverResults = [];
         this.actorCredits.cast.forEach(m => {
             this.discoverResults.push({
-                available: false, // TODO
-                posterPath: `https://image.tmdb.org/t/p/w300/${m.poster_path}`,
-                requested: false, // TODO
+                available: false, 
+                posterPath: m.poster_path ? `https://image.tmdb.org/t/p/w300/${m.poster_path}` : "../../../images/default_movie_poster.png",
+                requested: false, 
                 title: m.title,
                 type: RequestType.movie,
                 id: m.id,
-                url: null, // TODO
+                url: null,
                 rating: 0,
                 overview: m.overview,
-                approved: false // TODO
+                approved: false
             });
         });
     }

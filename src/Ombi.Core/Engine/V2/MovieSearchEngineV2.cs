@@ -231,7 +231,7 @@ namespace Ombi.Core.Engine.V2
         {
             var result = await Cache.GetOrAdd(nameof(GetMoviesByActor) + actorId + langCode,
                 async () => await MovieApi.GetActorMovieCredits(actorId, langCode));
-            //TODO need to run through the rules so we can get the availability etc
+            // Later we run this through the rules engine
             return result;
         }
 

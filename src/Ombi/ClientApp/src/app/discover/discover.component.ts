@@ -130,7 +130,7 @@ export class DiscoverComponent implements OnInit {
         this.movies.forEach(m => {
             tempResults.push({
                 available: m.available,
-                posterPath: `https://image.tmdb.org/t/p/w300/${m.posterPath}`,
+                posterPath: m.posterPath ? `https://image.tmdb.org/t/p/w300/${m.posterPath}` : "../../../images/default_movie_poster.png",
                 requested: m.requested,
                 title: m.title,
                 type: RequestType.movie,
