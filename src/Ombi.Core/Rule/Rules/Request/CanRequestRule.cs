@@ -53,6 +53,7 @@ namespace Ombi.Core.Rule.Rules
                 return Task.FromResult(Fail("You do not have permissions to Request an Album"));
             }
 
+            throw new InvalidDataException("Permission check failed: unknown RequestType");
         }
     }
 }
