@@ -1,28 +1,28 @@
 {
   "Login": {
-    "SignInButton": "Sign in",
+    "SignInButton": "Войти",
     "UsernamePlaceholder": "Имя пользователя",
     "PasswordPlaceholder": "Пароль",
     "RememberMe": "Запомнить Меня",
-    "ForgottenPassword": "Forgot your password?",
+    "ForgottenPassword": "Забыли пароль?",
     "Errors": {
-      "IncorrectCredentials": "Incorrect username or password"
+      "IncorrectCredentials": "Неверное имя пользователя или пароль"
     }
   },
   "Common": {
-    "ContinueButton": "Continue",
-    "Available": "Available",
-    "PartiallyAvailable": "Partially Available",
-    "Monitored": "Monitored",
-    "NotAvailable": "Not Available",
-    "ProcessingRequest": "Processing Request",
-    "PendingApproval": "Pending Approval",
-    "RequestDenied": "Request Denied",
-    "NotRequested": "Not Requested",
-    "Requested": "Requested",
-    "Request": "Request",
-    "Denied": "Denied",
-    "Approve": "Approve",
+    "ContinueButton": "Продолжить",
+    "Available": "Доступно",
+    "PartiallyAvailable": "Частично доступно",
+    "Monitored": "Мониторинг",
+    "NotAvailable": "Недоступно",
+    "ProcessingRequest": "Обработка запроса",
+    "PendingApproval": "Ожидание утверждения",
+    "RequestDenied": "Запрос отклонен",
+    "NotRequested": "Не запрошено",
+    "Requested": "Запрос отправлен",
+    "Request": "Запрос",
+    "Denied": "Запрещено",
+    "Approve": "Утвердить",
     "PartlyAvailable": "Partly Available",
     "ViewDetails": "View Details",
     "Errors": {
