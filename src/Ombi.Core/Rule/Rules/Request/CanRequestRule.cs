@@ -32,15 +32,16 @@ namespace Ombi.Core.Rule.Rules
             {
                 if (User.IsInRole(OmbiRoles.RequestTv) || User.IsInRole(OmbiRoles.AutoApproveTv))
                     return Task.FromResult(Success());
+                return Task.FromResult(Fail("You do not have permissions to Request a TV Show"));
             }
 
             if (obj.RequestType == RequestType.Album)
             {
                 if (User.IsInRole(OmbiRoles.RequestMusic) || User.IsInRole(OmbiRoles.AutoApproveMusic))
                     return Task.FromResult(Success());
+                return Task.FromResult(Fail("You do not have permissions to Request an Album"));
             }
 
-            return Task.FromResult(Fail("You do not have permissions to Request a TV Show"));
         }
     }
 }
