@@ -1,9 +1,9 @@
 {
   "Login": {
     "SignInButton": "Sign in",
-    "UsernamePlaceholder": "Username",
-    "PasswordPlaceholder": "Password",
-    "RememberMe": "Remember Me",
+    "UsernamePlaceholder": "Имя пользователя",
+    "PasswordPlaceholder": "Пароль",
+    "RememberMe": "Запомнить Меня",
     "ForgottenPassword": "Forgot your password?",
     "Errors": {
       "IncorrectCredentials": "Incorrect username or password"
