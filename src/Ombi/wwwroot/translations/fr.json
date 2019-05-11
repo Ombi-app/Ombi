@@ -24,7 +24,7 @@
     "Denied": "Refusé",
     "Approve": "Approuver",
     "PartlyAvailable": "Partiellement disponible",
-    "ViewDetails": "View Details",
+    "ViewDetails": "Voir les détails",
     "Errors": {
       "Validation": "Veuillez vérifier les valeurs entrées"
     }
@@ -45,7 +45,7 @@
     "CheckPageForUpdates": "Consultez cette page pour voir les mises à jour du site."
   },
   "NavigationBar": {
-    "Discover": "Discover",
+    "Discover": "Découvrir",
     "Search": "Rechercher",
     "Requests": "Demandes",
     "UserManagement": "Gestion des utilisateurs",
