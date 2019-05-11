@@ -61,9 +61,9 @@
     "Logout": "Déconnexion",
     "OpenMobileApp": "Ouvrir l'application mobile",
     "RecentlyAdded": "Ajouts récents",
-    "ChangeTheme": "Change Theme",
-    "Calendar": "Calendar",
-    "UserPreferences": "Preferences"
+    "ChangeTheme": "Changer de thème",
+    "Calendar": "Calendrier",
+    "UserPreferences": "Paramètres"
   },
   "Search": {
     "Title": "Rechercher",
@@ -80,7 +80,7 @@
     "RequestAdded": "La demande pour {{title}} a été ajoutée avec succès",
     "Similar": "Similaires",
     "Refine": "Affiner",
-    "SearchBarPlaceholder": "Type Here to Search",
+    "SearchBarPlaceholder": "Tapez ici pour rechercher",
     "Movies": {
       "PopularMovies": "Films populaires",
       "UpcomingMovies": "Films à venir",
@@ -128,7 +128,7 @@
     "MarkAvailable": "Marquer comme disponible",
     "Remove": "Supprimer",
     "Deny": "Refuser",
-    "DenyReason": "Deny Reason",
+    "DenyReason": "Raison de refus",
     "Season": "Saison :",
     "GridTitle": "Titre",
     "AirDate": "Date de diffusion",
@@ -190,10 +190,10 @@
     "VotesTab": "Votes nécessaires"
   },
   "MediaDetails": {
-    "Denied": "Denied",
-    "RecommendationsTitle": "Recommendations",
-    "SimilarTitle": "Similar",
-    "VideosTitle": "Videos",
+    "Denied": "Refusé",
+    "RecommendationsTitle": "Suggestions",
+    "SimilarTitle": "Similaires",
+    "VideosTitle": "Vidéos",
     "Casts": {
       "CastTitle": "Cast",
       "Character": "Character",
