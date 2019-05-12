@@ -24,7 +24,7 @@
     "Denied": "Denegado",
     "Approve": "Aprobar",
     "PartlyAvailable": "Disponible en parte",
-    "ViewDetails": "View Details",
+    "ViewDetails": "Más Detalles",
     "Errors": {
       "Validation": "Por favor, comprueba los datos introducidos"
     }
@@ -45,7 +45,7 @@
     "CheckPageForUpdates": "Consulte esta página para ver las últimas novedades."
   },
   "NavigationBar": {
-    "Discover": "Discover",
+    "Discover": "Descubre",
     "Search": "Buscar",
     "Requests": "Solicitudes",
     "UserManagement": "Gestión de usuarios",
@@ -61,9 +61,9 @@
     "Logout": "Cerrar sesión",
     "OpenMobileApp": "Abrir aplicación móvil",
     "RecentlyAdded": "Agregado recientemente",
-    "ChangeTheme": "Change Theme",
-    "Calendar": "Calendar",
-    "UserPreferences": "Preferences"
+    "ChangeTheme": "Cambiar Tema",
+    "Calendar": "Calendario",
+    "UserPreferences": "Configuración"
   },
   "Search": {
     "Title": "Buscar",
@@ -80,7 +80,7 @@
     "RequestAdded": "La solicitud de {{title}} se ha agregado con éxito",
     "Similar": "Similar",
     "Refine": "Filtros",
-    "SearchBarPlaceholder": "Type Here to Search",
+    "SearchBarPlaceholder": "Escriba aquí para buscar",
     "Movies": {
       "PopularMovies": "Películas populares",
       "UpcomingMovies": "Próximas películas",
@@ -128,7 +128,7 @@
     "MarkAvailable": "Marcar como disponible",
     "Remove": "Eliminar",
     "Deny": "Denegar",
-    "DenyReason": "Deny Reason",
+    "DenyReason": "Razón Denegada",
     "Season": "Temporada:",
     "GridTitle": "Título",
     "AirDate": "Fecha de estreno",
@@ -190,40 +190,40 @@
     "VotesTab": "Votos necesarios"
   },
   "MediaDetails": {
-    "Denied": "Denied",
-    "RecommendationsTitle": "Recommendations",
+    "Denied": "Denegado",
+    "RecommendationsTitle": "Recomendaciones",
     "SimilarTitle": "Similar",
-    "VideosTitle": "Videos",
+    "VideosTitle": "Vídeos",
     "Casts": {
-      "CastTitle": "Cast",
-      "Character": "Character",
+      "CastTitle": "Enviar pantalla",
+      "Character": "Personaje",
       "Actor": "Actor"
     },
     "EpisodeSelector": {
-      "AllSeasonsTooltip": "This will request every season for this show",
-      "FirstSeasonTooltip": "This will only request the First Season for this show",
-      "LatestSeasonTooltip": "This will only request the Latest Season for this show"
+      "AllSeasonsTooltip": "Esto solicitará cada temporada para este programa",
+      "FirstSeasonTooltip": "Esto solo solicitará la primera temporada para este programa",
+      "LatestSeasonTooltip": "Esto solo solicitará la última temporada para este programa"
     }
   },
   "Discovery": {
     "PopularTab": "Popular",
-    "TrendingTab": "Trending",
-    "UpcomingTab": "Upcoming",
+    "TrendingTab": "Tendencias",
+    "UpcomingTab": "Próximamente",
     "CardDetails": {
-      "Availability": "Availability",
-      "Studio": "Studio",
-      "Network": "Network",
-      "UnknownNetwork": "Unknown",
-      "RequestStatus": "Request Status",
+      "Availability": "Disponibilidad",
+      "Studio": "Estudio",
+      "Network": "Red",
+      "UnknownNetwork": "Desconocido",
+      "RequestStatus": "Estado de solicitud",
       "Director": "Director",
-      "InCinemas": "In Cinemas",
-      "FirstAired": "First Aired",
-      "Writer": "Writer",
-      "ExecProducer": "Exec Producer"
+      "InCinemas": "En Cines",
+      "FirstAired": "Emitido por primera vez",
+      "Writer": "Guionistas",
+      "ExecProducer": "Productor ejecutivo"
     }
   },
   "UserPreferences": {
-    "Welcome": "Welcome {{username}}!",
-    "OmbiLanguage": "Ombi Language"
+    "Welcome": "Bienvenido {{username}}!",
+    "OmbiLanguage": "Idioma Ombi"
   }
 }
