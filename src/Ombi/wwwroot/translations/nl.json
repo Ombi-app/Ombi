@@ -24,7 +24,7 @@
     "Denied": "Afgewezen",
     "Approve": "Accepteer",
     "PartlyAvailable": "Deels Beschikbaar",
-    "ViewDetails": "View Details",
+    "ViewDetails": "Eigenschappen bekijken",
     "Errors": {
       "Validation": "Controleer de ingevulde waardes"
     }
@@ -45,7 +45,7 @@
     "CheckPageForUpdates": "Controleer deze pagina voor updates."
   },
   "NavigationBar": {
-    "Discover": "Discover",
+    "Discover": "Ontdekken",
     "Search": "Zoeken",
     "Requests": "Verzoeklijst",
     "UserManagement": "Gebruikersbeheer",
@@ -61,9 +61,9 @@
     "Logout": "Afmelden",
     "OpenMobileApp": "Open Mobiele App",
     "RecentlyAdded": "Onlangs Toegevoegd",
-    "ChangeTheme": "Change Theme",
-    "Calendar": "Calendar",
-    "UserPreferences": "Preferences"
+    "ChangeTheme": "Thema wijzigen",
+    "Calendar": "Agenda",
+    "UserPreferences": "Instellingen"
   },
   "Search": {
     "Title": "Zoeken",
@@ -80,7 +80,7 @@
     "RequestAdded": "Aanvraag voor {{title}} is succesvol toegevoegd",
     "Similar": "Vergelijkbaar",
     "Refine": "Verfijn",
-    "SearchBarPlaceholder": "Type Here to Search",
+    "SearchBarPlaceholder": "Voer zoekterm in",
     "Movies": {
       "PopularMovies": "Populaire films",
       "UpcomingMovies": "Aankomende Films",
@@ -128,7 +128,7 @@
     "MarkAvailable": "Markeren als beschikbaar",
     "Remove": "Verwijderen",
     "Deny": "Weigeren",
-    "DenyReason": "Deny Reason",
+    "DenyReason": "Reden van afwijzing",
     "Season": "Seizoen:",
     "GridTitle": "Titel",
     "AirDate": "Uitzenddatum",
@@ -190,12 +190,12 @@
     "VotesTab": "Stemmen nodig"
   },
   "MediaDetails": {
-    "Denied": "Denied",
-    "RecommendationsTitle": "Recommendations",
-    "SimilarTitle": "Similar",
-    "VideosTitle": "Videos",
+    "Denied": "Afgewezen",
+    "RecommendationsTitle": "Aanbevelingen",
+    "SimilarTitle": "Vergelijkbaar",
+    "VideosTitle": "Video's",
     "Casts": {
-      "CastTitle": "Cast",
+      "CastTitle": "Acteurs",
       "Character": "Character",
       "Actor": "Actor"
     },
@@ -210,9 +210,9 @@
     "TrendingTab": "Trending",
     "UpcomingTab": "Upcoming",
     "CardDetails": {
-      "Availability": "Availability",
+      "Availability": "Beschikbaarheid",
       "Studio": "Studio",
-      "Network": "Network",
+      "Network": "Netwerk",
       "UnknownNetwork": "Unknown",
       "RequestStatus": "Request Status",
       "Director": "Director",
