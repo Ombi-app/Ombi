@@ -72,7 +72,7 @@
     "TvTab": "TV Series",
     "MusicTab": "Muziek",
     "Suggestions": "Suggesties",
-    "NoResults": "Sorry, we hebben geen resultaten gevonden!",
+    "NoResults": "Sorry, er zijn geen resultaten gevonden!",
     "DigitalDate": "Digitale Uitgave: {{date}}",
     "TheatricalRelease": "Bioscoop Uitgave: {{date}}",
     "ViewOnPlex": "Bekijk op Plex",
@@ -85,7 +85,7 @@
       "PopularMovies": "Populaire films",
       "UpcomingMovies": "Aankomende Films",
       "TopRatedMovies": "Best Beoordeelde Films",
-      "NowPlayingMovies": "In Cinema Films",
+      "NowPlayingMovies": "Nu in de bioscoop",
       "HomePage": "Startpagina",
       "Trailer": "Trailer"
     },
@@ -196,34 +196,34 @@
     "VideosTitle": "Video's",
     "Casts": {
       "CastTitle": "Acteurs",
-      "Character": "Character",
-      "Actor": "Actor"
+      "Character": "Personage",
+      "Actor": "Acteur"
     },
     "EpisodeSelector": {
-      "AllSeasonsTooltip": "This will request every season for this show",
-      "FirstSeasonTooltip": "This will only request the First Season for this show",
-      "LatestSeasonTooltip": "This will only request the Latest Season for this show"
+      "AllSeasonsTooltip": "Dit verzoekt ieder seizoen van deze serie",
+      "FirstSeasonTooltip": "Dit verzoekt alleen het eerste seizoen van deze serie",
+      "LatestSeasonTooltip": "Dit verzoekt alleen het laatste seizoen van deze show"
     }
   },
   "Discovery": {
-    "PopularTab": "Popular",
-    "TrendingTab": "Trending",
-    "UpcomingTab": "Upcoming",
+    "PopularTab": "Populair",
+    "TrendingTab": "Populair",
+    "UpcomingTab": "Aankomend",
     "CardDetails": {
       "Availability": "Beschikbaarheid",
       "Studio": "Studio",
       "Network": "Netwerk",
-      "UnknownNetwork": "Unknown",
-      "RequestStatus": "Request Status",
-      "Director": "Director",
-      "InCinemas": "In Cinemas",
-      "FirstAired": "First Aired",
-      "Writer": "Writer",
-      "ExecProducer": "Exec Producer"
+      "UnknownNetwork": "Niet bekend",
+      "RequestStatus": "Aanvraagstatus",
+      "Director": "Regisseur",
+      "InCinemas": "In de bioscoop",
+      "FirstAired": "Eerste uitzending",
+      "Writer": "Schrijver",
+      "ExecProducer": "Uitvoerende producent"
     }
   },
   "UserPreferences": {
-    "Welcome": "Welkom {{gebruiker}}!",
-    "OmbiLanguage": "Ombi Language"
+    "Welcome": "Welkom {{username}}!",
+    "OmbiLanguage": "Taal van Ombi"
   }
 }
