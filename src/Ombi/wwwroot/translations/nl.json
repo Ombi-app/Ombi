@@ -223,7 +223,7 @@
     }
   },
   "UserPreferences": {
-    "Welcome": "Welcome {{username}}!",
+    "Welcome": "Welkom {{gebruiker}}!",
     "OmbiLanguage": "Ombi Language"
   }
 }
