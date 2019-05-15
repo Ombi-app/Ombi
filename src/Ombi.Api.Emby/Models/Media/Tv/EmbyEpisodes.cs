@@ -16,6 +16,7 @@ namespace Ombi.Api.Emby.Models.Media.Tv
         public int ProductionYear { get; set; }
         public bool IsPlaceHolder { get; set; }
         public int IndexNumber { get; set; }
+        public int? IndexNumberEnd { get; set; }
         public int ParentIndexNumber { get; set; }
         public bool IsHD { get; set; }
         public bool IsFolder { get; set; }
