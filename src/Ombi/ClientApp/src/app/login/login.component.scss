@@ -208,10 +208,18 @@ div.bg {
     width: 100%;
 }
 
-.small-middle-container{
-	margin: auto;
-    width: 25%;
-    overflow: auto;
+@media (max-width: 570px) {
+    .small-middle-container{
+        margin: auto;
+        overflow: auto;
+    }
+}
+@media (min-width: 571px) {
+    .small-middle-container{
+        margin: auto;
+        width: 25%;
+        overflow: auto;
+    }
 }
 
 .top-margin {
