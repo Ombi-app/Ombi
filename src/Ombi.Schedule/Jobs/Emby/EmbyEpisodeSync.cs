@@ -117,6 +117,22 @@ namespace Ombi.Schedule.Jobs.Emby
                             Title = ep.Name,
                             AddedAt = DateTime.UtcNow
                         });
+
+                        if (ep.IndexNumberEnd.HasValue && ep.IndexNumberEnd.Value != ep.IndexNumber)
+                        {
+                            epToAdd.Add(new EmbyEpisode
+                            {
+                                EmbyId = ep.Id,
+                                EpisodeNumber = ep.IndexNumberEnd.Value,
+                                SeasonNumber = ep.ParentIndexNumber,
+                                ParentId = ep.SeriesId,
+                                TvDbId = ep.ProviderIds.Tvdb,
+                                TheMovieDbId = ep.ProviderIds.Tmdb,
+                                ImdbId = ep.ProviderIds.Imdb,
+                                Title = ep.Name,
+                                AddedAt = DateTime.UtcNow
+                            });
+                        }
                     }
                 }
 
