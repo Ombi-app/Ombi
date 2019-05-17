@@ -1,4 +1,5 @@
 ﻿using Ombi.Store.Entities;
+using System.IO;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Ombi.Core.Rule.Interfaces;
