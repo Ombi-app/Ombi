@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, EventEmitter, Output } from "@angular/core";
 import { RadarrService } from "../../../../../services";
 import { IRadarrProfile, IRadarrRootFolder, IMovieRequests, IAdvancedData } from "../../../../../interfaces";
 import { MatDialog } from "@angular/material";
 import { MovieAdvancedOptionsComponent } from "../movie-advanced-options/movie-advanced-options.component";
+import { RequestServiceV2 } from "../../../../../services/requestV2.service";
 
 @Component({
     templateUrl: "./movie-admin-panel.component.html",
@@ -11,16 +12,19 @@ import { MovieAdvancedOptionsComponent } from "../movie-advanced-options/movie-a
 export class MovieAdminPanelComponent implements OnInit {
 
     @Input() public movie: IMovieRequests;
+    @Output() public advancedOptionsChanged = new EventEmitter<IAdvancedData>();
 
+    public radarrEnabled: boolean;
     public radarrProfiles: IRadarrProfile[];
     public selectedRadarrProfile: IRadarrProfile;
     public radarrRootFolders: IRadarrRootFolder[];
     public selectRadarrRootFolders: IRadarrRootFolder;
 
-    constructor(private radarrService: RadarrService, private dialog: MatDialog) { }
+    constructor(private radarrService: RadarrService, private requestService: RequestServiceV2, private dialog: MatDialog) { }
 
     public async ngOnInit() {
-        if (await this.radarrService.isRadarrEnabled()) {
+        this.radarrEnabled = await this.radarrService.isRadarrEnabled();
+        if (this.radarrEnabled) {
             this.radarrService.getQualityProfilesFromSettings().subscribe(c => {
                 this.radarrProfiles = c;
                 this.setQualityOverrides();
@@ -32,10 +36,16 @@ export class MovieAdminPanelComponent implements OnInit {
         }
     }
 
-    public openAdvancedOptions() {
+    public async openAdvancedOptions() {
         const dialog = this.dialog.open(MovieAdvancedOptionsComponent, { width: "700px", data: <IAdvancedData>{ profiles: this.radarrProfiles, rootFolders: this.radarrRootFolders }, panelClass: 'modal-panel' })
-        dialog.afterClosed().subscribe(result => {
-            console.log(result);
+        await dialog.afterClosed().subscribe(async result => {
+            if(result) {
+                // get the name and ids
+                result.rootFolder = result.rootFolders.filter(f => f.id === +result.rootFolderId)[0];
+                result.profile = result.profiles.filter(f => f.id === +result.profileId)[0];
+                await this.requestService.updateMovieAdvancedOptions({qualityOverride: result.profileId, rootPathOverride: result.rootFolderId, requestId: this.movie.id}).toPromise();
+                this.advancedOptionsChanged.emit(result);
+            }
         });
     }
 

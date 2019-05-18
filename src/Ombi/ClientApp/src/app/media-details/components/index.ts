@@ -11,6 +11,8 @@ import { DenyDialogComponent } from "./shared/deny-dialog/deny-dialog.component"
 import { TvRequestsPanelComponent } from "./tv/panels/tv-requests/tv-requests-panel.component";
 import { MovieAdminPanelComponent } from "./movie/panels/movie-admin-panel/movie-admin-panel.component";
 import { MovieAdvancedOptionsComponent } from "./movie/panels/movie-advanced-options/movie-advanced-options.component";
+import { SearchService, RequestService, RadarrService } from "../../services";
+import { RequestServiceV2 } from "../../services/requestV2.service";
 
 export const components: any[] = [
     MovieDetailsComponent,
@@ -28,10 +30,15 @@ export const components: any[] = [
     MovieAdvancedOptionsComponent
 ];
 
-
-
 export const entryComponents: any[] = [
     YoutubeTrailerComponent,
     DenyDialogComponent,
     MovieAdvancedOptionsComponent,
+];
+
+export const providers: any[] = [
+    SearchService,
+    RequestService,
+    RadarrService,
+    RequestServiceV2,
 ];

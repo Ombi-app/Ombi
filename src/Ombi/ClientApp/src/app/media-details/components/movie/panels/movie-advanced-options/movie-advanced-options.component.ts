@@ -1,6 +1,6 @@
 import { Component, Inject } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
-import { IAdvancedModel, IAdvancedData } from "../../../../../interfaces";
+import { IAdvancedData } from "../../../../../interfaces";
 
 @Component({
     templateUrl: "./movie-advanced-options.component.html",
@@ -8,7 +8,7 @@ import { IAdvancedModel, IAdvancedData } from "../../../../../interfaces";
 })
 export class MovieAdvancedOptionsComponent {
     
-    public options: IAdvancedModel;
-
-    constructor(public dialogRef: MatDialogRef<MovieAdvancedOptionsComponent>, @Inject(MAT_DIALOG_DATA) public data: IAdvancedData) { }
+    constructor(public dialogRef: MatDialogRef<MovieAdvancedOptionsComponent>, @Inject(MAT_DIALOG_DATA) public data: IAdvancedData,
+               ) {
+                 }
 }

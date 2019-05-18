@@ -249,6 +249,29 @@ namespace Ombi.Core.Engine
 
         }
 
+        public async Task<RequestEngineResult> UpdateAdvancedOptions(MovieAdvancedOptions options)
+        {
+            var request = await MovieRepository.Find(options.RequestId);
+            if (request == null)
+            {
+                return new RequestEngineResult
+                {
+                    Result = false,
+                    ErrorMessage = "Request does not exist"
+                };
+            }
+
+            request.QualityOverride = options.QualityOverride;
+            request.RootPathOverride = options.RootPathOverride;
+
+            await MovieRepository.Update(request);
+
+            return new RequestEngineResult
+            {
+                Result = true
+            };
+        }
+
         private IQueryable<MovieRequests> OrderMovies(IQueryable<MovieRequests> allRequests, OrderType type)
         {
             switch (type)

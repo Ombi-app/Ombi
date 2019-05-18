@@ -21,6 +21,12 @@ export interface IMovieRequests extends IFullBaseRequest {
   qualityOverrideTitle: string;
 }
 
+export interface IMovieAdvancedOptions {
+  requestId: number;
+  qualityOverride: number;
+  rootPathOverride: number;
+}
+
 export interface IAlbumRequest extends IBaseRequest {
   foreignAlbumId: string;
   foreignArtistId: string;

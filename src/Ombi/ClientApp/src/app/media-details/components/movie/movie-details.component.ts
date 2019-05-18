@@ -6,7 +6,7 @@ import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
 import { MatDialog } from "@angular/material";
 import { YoutubeTrailerComponent } from "../shared/youtube-trailer.component";
 import { AuthService } from "../../../auth/auth.service";
-import { IMovieRequests, RequestType } from "../../../interfaces";
+import { IMovieRequests, RequestType, IAdvancedData } from "../../../interfaces";
 import { DenyDialogComponent } from "../shared/deny-dialog/deny-dialog.component";
 
 @Component({
@@ -19,6 +19,7 @@ export class MovieDetailsComponent {
     public hasRequest: boolean;
     public movieRequest: IMovieRequests;
     public isAdmin: boolean;
+    public advancedOptions: IAdvancedData;
 
     private theMovidDbId: number;
 
@@ -99,5 +100,9 @@ export class MovieDetailsComponent {
         } else {
             this.messageService.send(result.errorMessage, "Ok");
         }
+    }
+
+    public setAdvancedOptions(data: any) {
+        this.advancedOptions = data;
     }
 }

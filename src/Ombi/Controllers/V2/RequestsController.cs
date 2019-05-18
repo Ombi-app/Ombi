@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 using Ombi.Core;
+using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.UI;
 using Ombi.Store.Entities.Requests;
 
@@ -48,6 +50,12 @@ namespace Ombi.Controllers.V2
         public async Task<RequestsViewModel<ChildRequests>> GetTvRequests(int count, int position, string sort, string sortOrder)
         {
             return await _tvRequestEngine.GetRequests(count, position, sort, sortOrder);
+        }
+
+        [HttpPost("movie/advancedoptions")]
+        public async Task<RequestEngineResult> UpdateAdvancedOptions([FromBody] MovieAdvancedOptions options)
+        {
+            return await _movieRequestEngine.UpdateAdvancedOptions(options);
         }
     }
 }

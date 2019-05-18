@@ -12,6 +12,7 @@ import { PipeModule } from "../pipes/pipe.module";
 
 import * as fromComponents from './components';
 import { AuthGuard } from "../auth/auth.guard";
+import { RequestServiceV2 } from "../services/requestV2.service";
 
 
 const routes: Routes = [
@@ -36,9 +37,7 @@ const routes: Routes = [
         ...fromComponents.entryComponents
     ],
     providers: [
-        SearchService,
-        RequestService,
-        RadarrService,
+        ...fromComponents.providers
         ],
 
 })

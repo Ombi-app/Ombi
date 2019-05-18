@@ -19,6 +19,14 @@
         </div>
     </div>
 
+    <div *ngIf="advancedOptions">
+        <strong>Root Folder Override</strong>
+        <div>{{advancedOptions.rootFolder.path}}</div>
+    </div>
+    <div *ngIf="advancedOptions">
+        <strong>Quality Override</strong>
+        <div>{{advancedOptions.profile.name}}</div>
+    </div>
     <br />
     <div *ngIf="movie.genres">
         <strong>Genres:</strong>

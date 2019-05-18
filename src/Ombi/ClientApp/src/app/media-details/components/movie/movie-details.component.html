@@ -82,13 +82,13 @@
 
           <mat-card class="mat-elevation-z8 spacing-below" *ngIf="isAdmin && movieRequest">
             <mat-card-content class="medium-font">
-              <movie-admin-panel [movie]="movieRequest"></movie-admin-panel>
+              <movie-admin-panel [movie]="movieRequest" (advancedOptionsChange)="setAdvancedOptions($event)"></movie-admin-panel>
             </mat-card-content>
           </mat-card>
 
           <mat-card class="mat-elevation-z8">
             <mat-card-content class="medium-font">
-              <movie-information-panel [movie]="movie"></movie-information-panel>
+              <movie-information-panel [movie]="movie" [advancedOptions]="advancedOptions"></movie-information-panel>
             </mat-card-content>
           </mat-card>
 

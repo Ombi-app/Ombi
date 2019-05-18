@@ -26,7 +26,6 @@ export class SignalRNotificationService {
 
 
         this.hubConnection.on("Notification", (data: any) => {
-            debugger;
             this.Notification.emit(data);
         });
 

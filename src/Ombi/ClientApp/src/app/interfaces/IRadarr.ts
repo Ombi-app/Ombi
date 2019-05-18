@@ -17,13 +17,11 @@ export interface IMinimumAvailability {
     value: string;
     name: string;
 }
-
-export interface IAdvancedModel {
-    profile: IRadarrProfile;
-    rootFolder: IRadarrRootFolder;
-}
-
 export interface IAdvancedData {
+    profile: IRadarrProfile;
     profiles: IRadarrProfile[];
+    profileId: number;
+    rootFolder: IRadarrRootFolder;
     rootFolders: IRadarrRootFolder[];
+    rootFolderId: number;
 }

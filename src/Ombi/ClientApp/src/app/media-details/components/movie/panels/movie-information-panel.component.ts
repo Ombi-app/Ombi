@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, Input } from "@angular/core";
 import { ISearchMovieResultV2 } from "../../../../interfaces/ISearchMovieResultV2";
+import { IAdvancedData } from "../../../../interfaces";
 
 @Component({
     templateUrl: "./movie-information-panel.component.html",
@@ -9,4 +10,5 @@ import { ISearchMovieResultV2 } from "../../../../interfaces/ISearchMovieResultV
 })
 export class MovieInformationPanelComponent {
     @Input() public movie: ISearchMovieResultV2;
+    @Input() public advancedOptions: IAdvancedData;
 }

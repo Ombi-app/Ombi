@@ -20,5 +20,6 @@ namespace Ombi.Core.Engine.Interfaces
         Task<RequestEngineResult> ApproveMovieById(int requestId);
         Task<RequestEngineResult> DenyMovieById(int modelId, string denyReason);
         Task<RequestsViewModel<MovieRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder);
+        Task<RequestEngineResult> UpdateAdvancedOptions(MovieAdvancedOptions options);
     }
 }
