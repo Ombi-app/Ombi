@@ -262,6 +262,7 @@ namespace Ombi.Core.Engine.V2
             var mapped = Mapper.Map<MovieFullInfoViewModel>(movie);
 
             mapped.Available = viewMovie.Available;
+            mapped.Approved = viewMovie.Approved;
             mapped.RequestId = viewMovie.RequestId;
             mapped.Requested = viewMovie.Requested;
             mapped.PlexUrl = viewMovie.PlexUrl;
@@ -286,6 +287,7 @@ namespace Ombi.Core.Engine.V2
                 var mapped = Mapper.Map<MovieCollection>(movie);
 
                 mapped.Available = movie.Available;
+                mapped.Approved = movie.Approved;
                 mapped.RequestId = movie.RequestId;
                 mapped.Requested = movie.Requested;
                 mapped.PlexUrl = movie.PlexUrl;

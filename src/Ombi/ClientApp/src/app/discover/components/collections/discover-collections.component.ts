@@ -52,7 +52,8 @@ export class DiscoverCollectionsComponent implements OnInit {
                 url: `http://www.imdb.com/title/${m.imdbId}/`,
                 rating: 0,
                 overview: m.overview,
-                approved: m.approved
+                approved: m.approved,
+                imdbid: m.imdbId,
             });
         });
     }

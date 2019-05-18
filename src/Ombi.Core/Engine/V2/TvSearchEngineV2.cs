@@ -53,6 +53,10 @@ namespace Ombi.Core.Engine.V2
         {
             var tvdbshow = await Cache.GetOrAdd(nameof(GetShowInformation) + tvdbid,
                 async () => await TvMazeApi.ShowLookupByTheTvDbId(tvdbid), DateTime.Now.AddHours(12));
+            if (tvdbshow == null)
+            {
+                return null;
+            }
             var show = await Cache.GetOrAdd("GetTvFullInformation" + tvdbshow.id,
                 async () => await TvMazeApi.GetTvFullInformation(tvdbshow.id), DateTime.Now.AddHours(12));
             if (show == null)
@@ -148,9 +152,9 @@ namespace Ombi.Core.Engine.V2
                 return model;
             }
 
-            model.Trailer = result.Trailer.AbsoluteUri;
+            model.Trailer = result.Trailer?.AbsoluteUri ?? string.Empty;
             model.Certification = result.Certification;
-            model.Homepage = result.Homepage.AbsoluteUri;
+            model.Homepage = result.Homepage?.AbsoluteUri ?? string.Empty;
 
             return model;
         }

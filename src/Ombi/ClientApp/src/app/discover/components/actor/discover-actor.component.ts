@@ -54,7 +54,8 @@ export class DiscoverActorComponent implements AfterViewInit {
                 url: null,
                 rating: 0,
                 overview: m.overview,
-                approved: false
+                approved: false,
+                imdbid: "",
             });
         });
     }
