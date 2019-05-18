@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 
@@ -274,9 +275,10 @@ namespace Ombi.Controllers.V2
         [HttpGet("tv/mostwatched")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
+        [Obsolete("This method is obsolete, Trakt API no longer supports this")]
         public async Task<IEnumerable<SearchTvShowViewModel>> MostWatched()
         {
-            return await _tvSearchEngine.MostWatches();
+            return await _tvSearchEngine.Popular();
         }
 
         /// <summary>
@@ -287,9 +289,10 @@ namespace Ombi.Controllers.V2
         [HttpGet("tv/mostwatched/{currentPosition}/{amountToLoad}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
+        [Obsolete("This method is obsolete, Trakt API no longer supports this")]
         public async Task<IEnumerable<SearchTvShowViewModel>> MostWatched(int currentPosition, int amountToLoad)
         {
-            return await _tvSearchEngine.MostWatches(currentPosition, amountToLoad);
+            return await _tvSearchEngine.Popular(currentPosition, amountToLoad);
         }
 
         /// <summary>

@@ -12,9 +12,7 @@ namespace Ombi.Core.Engine.Interfaces
         Task<IEnumerable<SearchTvShowViewModel>> Popular(int currentlyLoaded, int amountToLoad);
         Task<IEnumerable<SearchTvShowViewModel>> Anticipated();
         Task<IEnumerable<SearchTvShowViewModel>> Anticipated(int currentlyLoaded, int amountToLoad);
-        Task<IEnumerable<SearchTvShowViewModel>> MostWatches();
         Task<IEnumerable<SearchTvShowViewModel>> Trending();
-        Task<IEnumerable<SearchTvShowViewModel>> MostWatches(int currentlyLoaded, int amountToLoad);
         Task<IEnumerable<SearchTvShowViewModel>> Trending(int currentlyLoaded, int amountToLoad);
         int ResultLimit { get; set; }
     }

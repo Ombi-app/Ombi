@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="TraktApiSharp" Version="1.0.0-alpha1-fixed-issue59" />
+    <PackageReference Include="TraktSharp.NetStandard2" Version="0.3.0" />
   </ItemGroup>
 
   <ItemGroup>

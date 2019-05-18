@@ -1,12 +1,11 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Ombi.Helpers;
-using TraktApiSharp;
-using TraktApiSharp.Enums;
-using TraktApiSharp.Objects.Get.Shows;
-using TraktApiSharp.Objects.Get.Shows.Common;
-using TraktApiSharp.Requests.Parameters;
+using TraktSharp;
+using TraktSharp.Entities;
+using TraktSharp.Enums;
 
 namespace Ombi.Api.Trakt
 {
@@ -18,36 +17,38 @@ namespace Ombi.Api.Trakt
         private readonly string _apiKey = StringCipher.DecryptString(Encrypted, "ApiKey");
         public TraktApi()
         {
-            Client = new TraktClient(_apiKey);
+            Client = new TraktClient
+            {
+                Authentication =
+                {
+                    ClientId = _apiKey,
+                    ClientSecret = "7beeb6f1c0c842341f6bd285adb86200cb810e431fff0a8a1ed7158af4cffbbb"
+                }
+            };
         }
 
         public async Task<IEnumerable<TraktShow>> GetPopularShows(int? page = null, int? limitPerPage = null)
         {
-            var popular = await Client.Shows.GetPopularShowsAsync(new TraktExtendedInfo { Full = true, Images = true }, null, page ?? 1, limitPerPage ?? 10);
-            return popular.Value;
+            var popular = await Client.Shows.GetPopularShowsAsync(TraktExtendedOption.Full, page, limitPerPage);
+            return popular;
         }
 
-        public async Task<IEnumerable<TraktTrendingShow>> GetTrendingShows(int? page = null, int? limitPerPage = null)
+        public async Task<IEnumerable<TraktShow>> GetTrendingShows(int? page = null, int? limitPerPage = null)
         {
-            var trendingShowsTop10 = await Client.Shows.GetTrendingShowsAsync(new TraktExtendedInfo { Full = true, Images = true }, null, page ?? 1, limitPerPage ?? 10);
-            return trendingShowsTop10.Value;
+            var trendingShowsTop10 = await Client.Shows.GetTrendingShowsAsync(TraktExtendedOption.Full, page, limitPerPage);
+            return trendingShowsTop10.Select(x => x.Show);
         }
 
-        public async Task<IEnumerable<TraktMostAnticipatedShow>> GetAnticipatedShows(int? page = null, int? limitPerPage = null)
+        public async Task<IEnumerable<TraktShow>> GetAnticipatedShows(int? page = null, int? limitPerPage = null)
         {
-            var anticipatedShows = await Client.Shows.GetMostAnticipatedShowsAsync(new TraktExtendedInfo { Full = true, Images = true }, null, page ?? 1, limitPerPage ?? 10);
-            return anticipatedShows.Value;
+            var anticipatedShows = await Client.Shows.GetAnticipatedShowsAsync(TraktExtendedOption.Full, page, limitPerPage);
+            return anticipatedShows.Select(x => x.Show);
         }
 
-        public async Task<IEnumerable<TraktMostWatchedShow>> GetMostWatchesShows(TraktTimePeriod period = null, int? page = null, int? limitPerPage = null)
-        {
-            var anticipatedShows = await Client.Shows.GetMostWatchedShowsAsync(period ?? TraktTimePeriod.Monthly, new TraktExtendedInfo { Full = true, Images = true }, null, page ?? 1, limitPerPage ?? 10);
-            return anticipatedShows.Value;
-        }
 
         public async Task<TraktShow> GetTvExtendedInfo(string imdbId)
         {
-            return await Client.Shows.GetShowAsync(imdbId, new TraktExtendedInfo { Full = true });
+            return await Client.Shows.GetShowAsync(imdbId, TraktExtendedOption.Full);
         }
     }
 }

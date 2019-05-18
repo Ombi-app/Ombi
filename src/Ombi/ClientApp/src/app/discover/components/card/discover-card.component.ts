@@ -1,9 +1,11 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { IDiscoverCardResult } from "../../interfaces";
 import { RequestType, ISearchTvResult, ISearchMovieResult } from "../../../interfaces";
-import { SearchService } from "../../../services";
+import { SearchV2Service } from "../../../services";
 import { MatDialog } from "@angular/material";
 import { DiscoverCardDetailsComponent } from "./discover-card-details.component";
+import { ISearchTvResultV2 } from "../../interfaces/ISearchTvResultV2";
+import { ISearchMovieResultV2 } from "../../interfaces/ISearchMovieResultV2";
 
 @Component({
     selector: "discover-card",
@@ -15,7 +17,7 @@ export class DiscoverCardComponent implements OnInit {
     @Input() public result: IDiscoverCardResult;
     public RequestType = RequestType;
 
-    constructor(private searchService: SearchService, private dialog: MatDialog) { }
+    constructor(private searchService: SearchV2Service, private dialog: MatDialog) { }
 
     public ngOnInit() {
         if (this.result.type == RequestType.tvShow) {
@@ -34,23 +36,22 @@ export class DiscoverCardComponent implements OnInit {
           });
     }
 
-    public getExtraTvInfo() {
-        this.searchService.getShowInformation(this.result.id)
-            .subscribe(x => {
-                if (x) {
-                    this.setTvDefaults(x);
-                    this.updateTvItem(x);
-                }
-            });
+    public async getExtraTvInfo() {
+        var result = await this.searchService.getTvInfo(this.result.id);
+        this.setTvDefaults(result);
+        this.updateTvItem(result);
+           
     }
     private getExtraMovieInfo() {
-        this.searchService.getMovieInformation(this.result.id)
-            .subscribe(m => {
-                this.updateMovieItem(m);
-            });
+        // if(!this.result.imdbid) {
+            this.searchService.getFullMovieDetails(this.result.id)
+                .subscribe(m => {
+                    this.updateMovieItem(m);
+                });
+        // }
     }
 
-    private updateMovieItem(updated: ISearchMovieResult) {
+    private updateMovieItem(updated: ISearchMovieResultV2) {
         this.result.url = "http://www.imdb.com/title/" + updated.imdbId + "/";  
         this.result.available = updated.available;
         this.result.requested = updated.requested;
@@ -59,7 +60,7 @@ export class DiscoverCardComponent implements OnInit {
     }
 
 
-    private setTvDefaults(x: ISearchTvResult) {
+    private setTvDefaults(x: ISearchTvResultV2) {
         if (!x.imdbId) {
             x.imdbId = "https://www.tvmaze.com/shows/" + x.seriesId;
         } else {
@@ -67,7 +68,7 @@ export class DiscoverCardComponent implements OnInit {
         }
     }
 
-    private updateTvItem(updated: ISearchTvResult) {
+    private updateTvItem(updated: ISearchTvResultV2) {
         this.result.title = updated.title;
         this.result.id = updated.id;
         this.result.available = updated.fullyAvailable;

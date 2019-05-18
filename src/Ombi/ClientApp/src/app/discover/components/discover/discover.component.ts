@@ -53,9 +53,7 @@ export class DiscoverComponent implements OnInit {
             return;
         }
         if (!this.isScrolling) {
-            debugger;
             this.isScrolling = true;
-            console.log("SCROLLED!")
             this.loading();
             if (this.popularActive) {
                 this.movies = await this.searchService.popularMoviesByPage(this.contentLoaded, 12);
@@ -138,7 +136,8 @@ export class DiscoverComponent implements OnInit {
                 url: `http://www.imdb.com/title/${m.imdbId}/`,
                 rating: m.voteAverage,
                 overview: m.overview,
-                approved: m.approved
+                approved: m.approved,
+                imdbid: m.imdbId
             });
         });
         this.tvShows.forEach(m => {
@@ -152,7 +151,8 @@ export class DiscoverComponent implements OnInit {
                 url: undefined,
                 rating: +m.rating,
                 overview: m.overview,
-                approved: m.approved
+                approved: m.approved,
+                imdbid: m.imdbId
             });
         });
         this.shuffle(tempResults);
@@ -173,7 +173,8 @@ export class DiscoverComponent implements OnInit {
                 url: `http://www.imdb.com/title/${m.imdbId}/`,
                 rating: m.voteAverage,
                 overview: m.overview,
-                approved: m.approved
+                approved: m.approved,
+                imdbid: m.imdbId
             });
         });
         this.tvShows.forEach(m => {
@@ -187,7 +188,8 @@ export class DiscoverComponent implements OnInit {
                 url: undefined,
                 rating: +m.rating,
                 overview: m.overview,
-                approved: m.approved
+                approved: m.approved,
+                imdbid: m.imdbId
             });
         });
         this.shuffle(this.discoverResults);

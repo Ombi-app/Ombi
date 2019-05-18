@@ -11,4 +11,5 @@ export interface IDiscoverCardResult {
     requested: boolean;
     rating: number;
     overview: string;
+    imdbid: string;
 }

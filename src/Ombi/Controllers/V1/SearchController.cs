@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -309,13 +310,14 @@ namespace Ombi.Controllers.V1
         [HttpGet("tv/mostwatched")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
+        [Obsolete("This method is obsolete, Trakt API no longer supports this")]
         public async Task<IEnumerable<SearchTvShowViewModel>> MostWatched()
         {
             if (IsDemo)
             {
                 return await DemoTvSearch.NowPlayingMovies();
             }
-            return await TvEngine.MostWatches();
+            return await TvEngine.Popular();
         }
 
         /// <summary>

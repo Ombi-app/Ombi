@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using TraktApiSharp.Objects.Get.Shows;
 
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Repository.Requests;
@@ -21,6 +20,7 @@ using Ombi.Core.Models.Search.V2;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Store.Repository;
+using TraktSharp.Entities;
 
 namespace Ombi.Core.Engine.V2
 {
@@ -148,9 +148,9 @@ namespace Ombi.Core.Engine.V2
                 return model;
             }
 
-            model.Trailer = result.Trailer;
+            model.Trailer = result.Trailer.AbsoluteUri;
             model.Certification = result.Certification;
-            model.Homepage = result.Homepage;
+            model.Homepage = result.Homepage.AbsoluteUri;
 
             return model;
         }
