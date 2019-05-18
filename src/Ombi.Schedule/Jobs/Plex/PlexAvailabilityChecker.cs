@@ -12,6 +12,7 @@ using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
@@ -35,7 +36,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly IBackgroundJobClient _backgroundJobClient;
         private readonly ILogger _log;
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             try
             {

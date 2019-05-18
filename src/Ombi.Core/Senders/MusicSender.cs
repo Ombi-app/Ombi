@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using EnsureThat;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Lidarr;
 using Ombi.Api.Lidarr.Models;
@@ -87,6 +88,11 @@ namespace Ombi.Core.Senders
 
             if (artist == null || artist.id <= 0)
             {
+                EnsureArg.IsNotNullOrEmpty(model.ForeignArtistId, nameof(model.ForeignArtistId));
+                EnsureArg.IsNotNullOrEmpty(model.ForeignAlbumId, nameof(model.ForeignAlbumId));
+                EnsureArg.IsNotNullOrEmpty(model.ArtistName, nameof(model.ArtistName));
+                EnsureArg.IsNotNullOrEmpty(rootFolderPath, nameof(rootFolderPath));
+
                 // Create artist
                 var newArtist = new ArtistAdd
                 {

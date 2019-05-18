@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Ombi.Helpers;
 using Ombi.Store.Context;
 using Ombi.Store.Entities.Requests;
 
@@ -70,12 +71,12 @@ namespace Ombi.Store.Repository.Requests
                 Db.MovieRequests.Attach(request);
                 Db.Update(request);
             }
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public async Task Save()
         {
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
     }
 }

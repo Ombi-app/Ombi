@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using Ombi.Core.Rule.Rules;
+using Ombi.Core.Rule.Rules.Request;
 using Ombi.Helpers;
 using Ombi.Store.Entities.Requests;
 
@@ -15,7 +16,7 @@ namespace Ombi.Core.Tests.Rule.Request
         {
 
             PrincipalMock = new Mock<IPrincipal>();
-            Rule = new CanRequestRule(PrincipalMock.Object);
+            Rule = new CanRequestRule(PrincipalMock.Object, null);
         }
 
 

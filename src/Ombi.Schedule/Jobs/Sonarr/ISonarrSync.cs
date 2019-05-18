@@ -4,6 +4,5 @@ namespace Ombi.Schedule.Jobs.Sonarr
 {
     public interface ISonarrSync : IBaseJob
     {
-        Task Start();
     }
 }

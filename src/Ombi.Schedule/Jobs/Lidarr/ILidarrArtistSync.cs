@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ombi.Store.Entities;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Lidarr
 {
-    public interface ILidarrArtistSync
+    public interface ILidarrArtistSync : IJob
     {
-        Task CacheContent();
         void Dispose();
         Task<IEnumerable<LidarrArtistCache>> GetCachedContent();
     }

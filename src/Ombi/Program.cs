@@ -49,6 +49,7 @@ namespace Ombi
             demoInstance.Demo = demo;
             instance.StoragePath = storagePath ?? string.Empty;
             // Check if we need to migrate the settings
+            DeleteSchedules();
             CheckAndMigrate();
             var ctx = new SettingsContext();
             var config = ctx.ApplicationConfigurations.ToList();
@@ -91,12 +92,24 @@ namespace Ombi
                 dbBaseUrl.Value = baseUrl;
                 ctx.SaveChanges();
             }
-
-            DeleteSchedulesDb();
-
+            
             Console.WriteLine($"We are running on {urlValue}");
 
             CreateWebHostBuilder(args).Build().Run();
+        }
+
+        private static void DeleteSchedules()
+        {
+            try
+            {
+                if (File.Exists("Schedules.db"))
+                {
+                    File.Delete("Schedules.db");
+                }
+            }
+            catch (Exception)
+            {
+            }
         }
 
         /// <summary>
@@ -117,7 +130,7 @@ namespace Ombi
 
             try
             {
-                if (ombi.Settings.Any())
+                if (ombi.Settings.Any() && !settings.Settings.Any())
                 {
                     // OK migrate it!
                     var allSettings = ombi.Settings.ToList();
@@ -127,7 +140,7 @@ namespace Ombi
 
                 // Check for any application settings
 
-                if (ombi.ApplicationConfigurations.Any())
+                if (ombi.ApplicationConfigurations.Any() && !settings.ApplicationConfigurations.Any())
                 {
                     // OK migrate it!
                     var allSettings = ombi.ApplicationConfigurations.ToList();
@@ -223,20 +236,6 @@ namespace Ombi
             {
                 Console.WriteLine(e);
                 throw;
-            }
-        }
-
-        private static void DeleteSchedulesDb()
-        {
-            try
-            {
-                if (File.Exists("Schedules.db"))
-                {
-                    File.Delete("Schedules.db");
-                }
-            }
-            catch (Exception)
-            {
             }
         }
 

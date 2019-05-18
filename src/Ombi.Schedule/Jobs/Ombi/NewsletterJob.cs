@@ -26,6 +26,7 @@ using Ombi.Settings.Settings.Models.External;
 using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Quartz;
 using ContentType = Ombi.Store.Entities.ContentType;
 
 namespace Ombi.Schedule.Jobs.Ombi
@@ -57,6 +58,10 @@ namespace Ombi.Schedule.Jobs.Ombi
             _ombiSettings = ombiSettings;
             _plexSettings = plexSettings;
             _embySettings = embySettings;
+            _ombiSettings.ClearCache();
+            _plexSettings.ClearCache();
+            _emailSettings.ClearCache();
+            _customizationSettings.ClearCache();
         }
 
         private readonly IPlexContentRepository _plex;
@@ -284,7 +289,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             var newsletterSettings = await _newsletterSettings.GetSettingsAsync();
             await Start(newsletterSettings, false);
@@ -359,7 +364,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 if (embySettings.Enable)
                 {
-                    await ProcessEmbyMovies(embyMovies, sb, ombiSettings.DefaultLanguageCode);
+                    await ProcessEmbyMovies(embyMovies, sb, ombiSettings.DefaultLanguageCode, embySettings.Servers.FirstOrDefault()?.ServerHostname ?? string.Empty);
                 }
 
                 sb.Append("</tr>");
@@ -385,7 +390,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 if (embySettings.Enable)
                 {
-                    await ProcessEmbyTv(embyEp, sb);
+                    await ProcessEmbyTv(embyEp, sb, embySettings.Servers.FirstOrDefault()?.ServerHostname ?? string.Empty);
                 }
 
                 sb.Append("</tr>");
@@ -490,7 +495,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        private async Task ProcessEmbyMovies(IQueryable<EmbyContent> embyContent, StringBuilder sb, string defaultLangaugeCode)
+        private async Task ProcessEmbyMovies(IQueryable<EmbyContent> embyContent, StringBuilder sb, string defaultLangaugeCode, string customUrl)
         {
             int count = 0;
             var ordered = embyContent.OrderByDescending(x => x.AddedAt);
@@ -511,6 +516,10 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
 
                 var mediaurl = content.Url;
+                if (customUrl.HasValue())
+                {
+                    mediaurl = customUrl;
+                }
                 var info = await _movieApi.GetMovieInformationWithExtraInfo(StringHelper.IntParseLinq(theMovieDbId), defaultLangaugeCode);
                 if (info == null)
                 {
@@ -754,7 +763,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         
 
-        private async Task ProcessEmbyTv(HashSet<EmbyEpisode> embyContent, StringBuilder sb)
+        private async Task ProcessEmbyTv(HashSet<EmbyEpisode> embyContent, StringBuilder sb, string serverUrl)
         {
             var series = new List<EmbyContent>();
             foreach (var episode in embyContent)
@@ -809,7 +818,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         AddBackgroundInsideTable(sb, $"https://image.tmdb.org/t/p/w1280/");
                     }
                     AddPosterInsideTable(sb, banner);
-                    AddMediaServerUrl(sb, t.Url, banner);
+                    AddMediaServerUrl(sb, serverUrl.HasValue() ? serverUrl : t.Url, banner);
                     AddInfoTable(sb);
 
                     var title = "";

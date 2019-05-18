@@ -14,6 +14,7 @@ import {
     IDogNzbSettings,
     IEmailNotificationSettings,
     IEmbySettings,
+    IGotifyNotificationSettings,
     IIssueSettings,
     IJobSettings,
     IJobSettingsViewModel,
@@ -180,6 +181,14 @@ export class SettingsService extends ServiceHelpers {
     public savePushoverNotificationSettings(settings: IPushoverNotificationSettings): Observable<boolean> {
         return this.http
             .post<boolean>(`${this.url}/notifications/pushover`, JSON.stringify(settings), {headers: this.headers});
+    }
+
+    public getGotifyNotificationSettings(): Observable<IGotifyNotificationSettings> {
+        return this.http.get<IGotifyNotificationSettings>(`${this.url}/notifications/gotify`, { headers: this.headers });
+    }
+    public saveGotifyNotificationSettings(settings: IGotifyNotificationSettings): Observable<boolean> {
+        return this.http
+            .post<boolean>(`${this.url}/notifications/gotify`, JSON.stringify(settings), { headers: this.headers });
     }
 
     public getSlackNotificationSettings(): Observable<ISlackNotificationSettings> {

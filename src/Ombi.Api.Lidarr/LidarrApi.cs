@@ -105,6 +105,32 @@ namespace Ombi.Api.Lidarr
             return Api.Request<List<AlbumResponse>>(request);
         }
 
+        public async Task<AlbumResponse> AlbumInformation(string albumId, string apiKey, string baseUrl)
+        {
+            var request = new Request($"{ApiVersion}/album", baseUrl, HttpMethod.Get);
+            request.AddQueryString("foreignAlbumId", albumId);
+            AddHeaders(request, apiKey);
+            var albums = await Api.Request<List<AlbumResponse>>(request);
+            return albums.Where(x => x.foreignAlbumId.Equals(albumId, StringComparison.InvariantCultureIgnoreCase))
+                .FirstOrDefault();
+        }
+
+
+        /// <summary>
+        /// THIS ONLY SUPPORTS ALBUMS THAT THE ARTIST IS IN LIDARR
+        /// </summary>
+        /// <param name="albumId"></param>
+        /// <param name="apiKey"></param>
+        /// <param name="baseUrl"></param>
+        /// <returns></returns>
+        public Task<List<LidarrTrack>> GetTracksForAlbum(int albumId, string apiKey, string baseUrl)
+        {
+            var request = new Request($"{ApiVersion}/album", baseUrl, HttpMethod.Get);
+            request.AddQueryString("albumId", albumId.ToString());
+            AddHeaders(request, apiKey);
+            return Api.Request<List<LidarrTrack>>(request);
+        }
+
         public Task<ArtistResult> AddArtist(ArtistAdd artist, string apiKey, string baseUrl)
         {
             var request = new Request($"{ApiVersion}/artist", baseUrl, HttpMethod.Post);
