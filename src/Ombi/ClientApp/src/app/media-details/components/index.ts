@@ -13,6 +13,7 @@ import { MovieAdminPanelComponent } from "./movie/panels/movie-admin-panel/movie
 import { MovieAdvancedOptionsComponent } from "./movie/panels/movie-advanced-options/movie-advanced-options.component";
 import { SearchService, RequestService, RadarrService } from "../../services";
 import { RequestServiceV2 } from "../../services/requestV2.service";
+import { NewIssueComponent } from "./shared/new-issue/new-issue.component";
 
 export const components: any[] = [
     MovieDetailsComponent,
@@ -27,13 +28,15 @@ export const components: any[] = [
     DenyDialogComponent,
     TvRequestsPanelComponent,
     MovieAdminPanelComponent,
-    MovieAdvancedOptionsComponent
+    MovieAdvancedOptionsComponent,
+    NewIssueComponent,
 ];
 
 export const entryComponents: any[] = [
     YoutubeTrailerComponent,
     DenyDialogComponent,
     MovieAdvancedOptionsComponent,
+    NewIssueComponent,
 ];
 
 export const providers: any[] = [

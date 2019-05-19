@@ -8,6 +8,7 @@ import { YoutubeTrailerComponent } from "../shared/youtube-trailer.component";
 import { AuthService } from "../../../auth/auth.service";
 import { IMovieRequests, RequestType, IAdvancedData } from "../../../interfaces";
 import { DenyDialogComponent } from "../shared/deny-dialog/deny-dialog.component";
+import { NewIssueComponent } from "../shared/new-issue/new-issue.component";
 
 @Component({
     templateUrl: "./movie-details.component.html",
@@ -79,6 +80,13 @@ export class MovieDetailsComponent {
             if(this.movieRequest.denied) {
                 this.movie.approved = false;
             }
+          });
+    }
+
+    public async issue() {
+        const dialogRef = this.dialog.open(NewIssueComponent, {
+            width: '500px',
+            data: {requestId: this.movieRequest ? this.movieRequest.id : null,  requestType: RequestType.movie, imdbid: this.movie.imdbId}
           });
     }
 

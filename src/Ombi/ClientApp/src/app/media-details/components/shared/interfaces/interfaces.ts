@@ -5,3 +5,9 @@ export interface IDenyDialogData {
     requestId: number;
     denied: boolean;
 }
+
+export interface IIssueDialogData {
+    requestType: RequestType;
+    requestId: number;
+    imdbId: string;
+}

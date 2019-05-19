@@ -30,12 +30,12 @@
     </a>
 
     <span class="left-seperator" *ngIf="available">
-        <a *ngIf="plexUrl" class="media-icons" href="{{plexUrl}}" target="_blank">
+        <a *ngIf="plexUrl" class="media-icons plex" href="{{plexUrl}}" target="_blank">
             <i matTooltip=" {{'Search.ViewOnPlex' | translate}}"
                 class="fa fa-play-circle fa-2x grow-social"></i>
         </a>
 
-        <a *ngIf="embyUrl" class="media-icons" href="{{embyUrl}}" target="_blank">
+        <a *ngIf="embyUrl" class="media-icons emby" href="{{embyUrl}}" target="_blank">
             <i matTooltip=" {{'Search.ViewOnEmby' | translate}}"
                 class="fa fa-play-circle fa-2x grow-social"></i>
         </a>

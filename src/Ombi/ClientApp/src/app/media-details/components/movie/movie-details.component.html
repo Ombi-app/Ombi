@@ -33,8 +33,8 @@
             <span *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></span>
 
             <ng-template #requestedBtn>
-              <button mat-raised-button *ngIf="!hasRequest || hasRequest && movieRequest && !movieRequest.denied" class="btn-spacing"
-                color="warn" [disabled]><i class="fa fa-check"></i>
+              <button mat-raised-button *ngIf="!hasRequest || hasRequest && movieRequest && !movieRequest.denied"
+                class="btn-spacing" color="warn" [disabled]><i class="fa fa-check"></i>
                 {{ 'Common.Requested' | translate }}</button>
             </ng-template>
             <ng-template #notRequestedBtn>
@@ -54,19 +54,21 @@
               <i class="fa fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
             </button>
 
-            <button *ngIf="hasRequest &&  movieRequest && !movieRequest.denied" mat-raised-button class="btn-spacing" color="warn"
+            <button *ngIf="movieRequest && !movieRequest.denied" mat-raised-button class="btn-spacing" color="warn"
               (click)="deny()">
               <i class="fa fa-times"></i> {{
                     'Requests.Deny' | translate }}</button>
-
-
-
+            <button *ngIf="movieRequest && movieRequest.denied" [matTooltip]="movieRequest.deniedReason"
+              mat-raised-button class="btn-spacing" color="warn">
+              <i class="fa fa-times"></i> {{
+                            'MediaDetails.Denied' | translate }}</button>
           </span>
+          
+          <button *ngIf="(hasRequest && movieRequest) || movie.available" mat-raised-button class="btn-spacing"
+            color="danger" (click)="issue()">
+            <i class="fa fa-exclamation"></i> {{
+                'Requests.ReportIssue' | translate }}</button>
 
-          <button *ngIf="hasRequest &&  movieRequest && movieRequest.denied" [matTooltip]="movieRequest.deniedReason" mat-raised-button
-            class="btn-spacing" color="warn">
-            <i class="fa fa-times"></i> {{
-                    'MediaDetails.Denied' | translate }}</button>
 
 
 
@@ -82,7 +84,8 @@
 
           <mat-card class="mat-elevation-z8 spacing-below" *ngIf="isAdmin && movieRequest">
             <mat-card-content class="medium-font">
-              <movie-admin-panel [movie]="movieRequest" (advancedOptionsChange)="setAdvancedOptions($event)"></movie-admin-panel>
+              <movie-admin-panel [movie]="movieRequest" (advancedOptionsChange)="setAdvancedOptions($event)">
+              </movie-admin-panel>
             </mat-card-content>
           </mat-card>
 

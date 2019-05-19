@@ -27,7 +27,9 @@
     "ViewDetails": "View Details",
     "Errors": {
       "Validation": "Please check your entered values"
-    }
+    },
+    "Cancel":"Cancel",
+    "Submit":"Submit"
   },
   "PasswordReset": {
     "EmailAddressPlaceholder": "Email Address",
@@ -168,7 +170,14 @@
     "Subject": "Subject",
     "Comments": "Comments",
     "WriteMessagePlaceholder": "Write your message here...",
-    "ReportedBy": "Reported By"
+    "ReportedBy": "Reported By",
+    "IssueDialog": {
+      "Title":"Report an issue",
+      "DescriptionPlaceholder":"Please describe the issue",
+      "TitlePlaceholder":"Short title of your issue",
+      "SelectCategory": "Select Category",
+      "IssueCreated":"Issue has been created"
+    }
   },
   "Filter": {
     "ClearFilter": "Clear Filter",
