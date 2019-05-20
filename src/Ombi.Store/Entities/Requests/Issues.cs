@@ -13,6 +13,8 @@ namespace Ombi.Store.Entities.Requests
         public int? RequestId { get; set; }
         public string Subject { get; set; }
         public string Description { get; set; }
+        public int SeasonNumber { get; set; }
+        public int EpisodeNumber { get; set; }
         public int IssueCategoryId { get; set; }
         [ForeignKey(nameof(IssueCategoryId))]
         public IssueCategory IssueCategory { get; set; }
