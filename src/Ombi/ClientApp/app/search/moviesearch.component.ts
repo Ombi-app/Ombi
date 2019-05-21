@@ -27,6 +27,7 @@ export class MovieSearchComponent implements OnInit {
     public searchApplied = false;
     public refineSearchEnabled = false;
     public searchYear?: number;
+    public actorSearch: boolean;
     public selectedLanguage: string;
     public langauges: ILanguageRefine[];
 
@@ -204,7 +205,7 @@ export class MovieSearchComponent implements OnInit {
             }
             val.background = this.sanitizer.bypassSecurityTrustStyle
                 ("url(" + "https://image.tmdb.org/t/p/w1280" + val.backdropPath + ")");
-
+            
             if (this.applyRefinedSearch) {
                 this.searchService.getMovieInformationWithRefined(val.id, this.selectedLanguage)
                     .subscribe(m => {
@@ -212,9 +213,9 @@ export class MovieSearchComponent implements OnInit {
                     });
             } else {
                 this.searchService.getMovieInformation(val.id)
-                .subscribe(m => {
-                    this.updateItem(val, m);
-                });
+                    .subscribe(m => {
+                        this.updateItem(val, m);
+                    });
             }
         });
     }
@@ -239,14 +240,25 @@ export class MovieSearchComponent implements OnInit {
             return;
         }
         if (this.refineOpen) {
-            this.searchService.searchMovieWithRefined(this.searchText, this.searchYear, this.selectedLanguage)
-                .subscribe(x => {
-                    this.movieResults = x;
-                    this.searchApplied = true;
-                    // Now let's load some extra info including IMDB Id
-                    // This way the search is fast at displaying results.
-                    this.getExtraInfo();
-                });
+            if (!this.actorSearch) {
+                this.searchService.searchMovieWithRefined(this.searchText, this.searchYear, this.selectedLanguage)
+                    .subscribe(x => {
+                        this.movieResults = x;
+                        this.searchApplied = true;
+                        // Now let's load some extra info including IMDB Id
+                        // This way the search is fast at displaying results.
+                        this.getExtraInfo();
+                    });
+            } else {
+                this.searchService.searchMovieByActor(this.searchText, this.selectedLanguage)
+                    .subscribe(x => {
+                        this.movieResults = x;
+                        this.searchApplied = true;
+                        // Now let's load some extra info including IMDB Id
+                        // This way the search is fast at displaying results.
+                        this.getExtraInfo();
+                    });
+            }
         } else {
             this.searchService.searchMovie(this.searchText)
                 .subscribe(x => {

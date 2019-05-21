@@ -15,4 +15,8 @@ export class MobileService extends ServiceHelpers {
     public getUserDeviceList(): Observable<IMobileUsersViewModel[]> {
         return this.http.get<IMobileUsersViewModel[]>(`${this.url}notification/`, {headers: this.headers});
     }
+
+    public deleteUser(userId: string): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}remove/`, userId, {headers: this.headers});
+    }
 }

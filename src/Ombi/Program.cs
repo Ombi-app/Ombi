@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using CommandLine;
@@ -24,12 +23,14 @@ namespace Ombi
             var host = string.Empty;
             var storagePath = string.Empty;
             var baseUrl = string.Empty;
+            var demo = false;
             var result = Parser.Default.ParseArguments<Options>(args)
                 .WithParsed(o =>
                 {
                     host = o.Host;
                     storagePath = o.StoragePath;
                     baseUrl = o.BaseUrl;
+                    demo = o.Demo;
                 }).WithNotParsed(err =>
                 {
                     foreach (var e in err)
@@ -44,51 +45,51 @@ namespace Ombi
 
             var urlValue = string.Empty;
             var instance = StoragePathSingleton.Instance;
+            var demoInstance = DemoSingleton.Instance;
+            demoInstance.Demo = demo;
             instance.StoragePath = storagePath ?? string.Empty;
             // Check if we need to migrate the settings
             CheckAndMigrate();
-            using (var ctx = new SettingsContext())
+            var ctx = new SettingsContext();
+            var config = ctx.ApplicationConfigurations.ToList();
+            var url = config.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
+            var dbBaseUrl = config.FirstOrDefault(x => x.Type == ConfigurationTypes.BaseUrl);
+            if (url == null)
             {
-                var config = ctx.ApplicationConfigurations.ToList();
-                var url = config.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
-                var dbBaseUrl = config.FirstOrDefault(x => x.Type == ConfigurationTypes.BaseUrl);
-                if (url == null)
+                url = new ApplicationConfiguration
                 {
-                    url = new ApplicationConfiguration
+                    Type = ConfigurationTypes.Url,
+                    Value = "http://*:5000"
+                };
+
+                ctx.ApplicationConfigurations.Add(url);
+                ctx.SaveChanges();
+                urlValue = url.Value;
+            }
+            if (!url.Value.Equals(host))
+            {
+                url.Value = UrlArgs;
+                ctx.SaveChanges();
+                urlValue = url.Value;
+            }
+
+            if (dbBaseUrl == null)
+            {
+                if (baseUrl.HasValue() && baseUrl.StartsWith("/"))
+                {
+                    dbBaseUrl = new ApplicationConfiguration
                     {
-                        Type = ConfigurationTypes.Url,
-                        Value = "http://*:5000"
+                        Type = ConfigurationTypes.BaseUrl,
+                        Value = baseUrl
                     };
-
-                    ctx.ApplicationConfigurations.Add(url);
-                    ctx.SaveChanges();
-                    urlValue = url.Value;
-                }
-                if (!url.Value.Equals(host))
-                {
-                    url.Value = UrlArgs;
-                    ctx.SaveChanges();
-                    urlValue = url.Value;
-                }
-
-                if (dbBaseUrl == null)
-                {
-                    if (baseUrl.HasValue() && baseUrl.StartsWith("/"))
-                    {
-                        dbBaseUrl = new ApplicationConfiguration
-                        {
-                            Type = ConfigurationTypes.BaseUrl,
-                            Value = baseUrl
-                        };
-                        ctx.ApplicationConfigurations.Add(dbBaseUrl);
-                        ctx.SaveChanges();
-                    }
-                }
-                else if (baseUrl.HasValue() && !baseUrl.Equals(dbBaseUrl.Value))
-                {
-                    dbBaseUrl.Value = baseUrl;
+                    ctx.ApplicationConfigurations.Add(dbBaseUrl);
                     ctx.SaveChanges();
                 }
+            }
+            else if (baseUrl.HasValue() && !baseUrl.Equals(dbBaseUrl.Value))
+            {
+                dbBaseUrl.Value = baseUrl;
+                ctx.SaveChanges();
             }
 
             DeleteSchedulesDb();
@@ -111,124 +112,118 @@ namespace Ombi
         {
             var doneGlobal = false;
             var doneConfig = false;
-            using (var ombi = new OmbiContext())
-            using (var settings = new SettingsContext())
+            var ombi = new OmbiContext();
+            var settings = new SettingsContext();
+
+            try
             {
-                try
+                if (ombi.Settings.Any())
                 {
-                    if (ombi.Settings.Any())
-                    {
-                        // OK migrate it!
-                        var allSettings = ombi.Settings.ToList();
-                        settings.Settings.AddRange(allSettings);
-                        doneGlobal = true;
-                    }
-
-                    // Check for any application settings
-
-                    if (ombi.ApplicationConfigurations.Any())
-                    {
-                        // OK migrate it!
-                        var allSettings = ombi.ApplicationConfigurations.ToList();
-                        settings.ApplicationConfigurations.AddRange(allSettings);
-                        doneConfig = true;
-                    }
-
-                    settings.SaveChanges();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
+                    // OK migrate it!
+                    var allSettings = ombi.Settings.ToList();
+                    settings.Settings.AddRange(allSettings);
+                    doneGlobal = true;
                 }
 
-                // Now delete the old stuff
-                if (doneGlobal)
-                    ombi.Database.ExecuteSqlCommand("DELETE FROM GlobalSettings");
-                if (doneConfig)
-                    ombi.Database.ExecuteSqlCommand("DELETE FROM ApplicationConfiguration");
+                // Check for any application settings
 
+                if (ombi.ApplicationConfigurations.Any())
+                {
+                    // OK migrate it!
+                    var allSettings = ombi.ApplicationConfigurations.ToList();
+                    settings.ApplicationConfigurations.AddRange(allSettings);
+                    doneConfig = true;
+                }
+
+                settings.SaveChanges();
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            // Now delete the old stuff
+            if (doneGlobal)
+                ombi.Database.ExecuteSqlCommand("DELETE FROM GlobalSettings");
+            if (doneConfig)
+                ombi.Database.ExecuteSqlCommand("DELETE FROM ApplicationConfiguration");
 
             // Now migrate all the external stuff
-            using (var ombi = new OmbiContext())
-            using (var external = new ExternalContext())
+            var external = new ExternalContext();
+
+            try
             {
-                try
+                if (ombi.PlexEpisode.Any())
                 {
-
-                    if (ombi.PlexEpisode.Any())
-                    {
-                        external.PlexEpisode.AddRange(ombi.PlexEpisode.ToList());
-                        ombi.Database.ExecuteSqlCommand("DELETE FROM PlexEpisode");
-                    }
-
-                    if (ombi.PlexSeasonsContent.Any())
-                    {
-                        external.PlexSeasonsContent.AddRange(ombi.PlexSeasonsContent.ToList());
-                        ombi.Database.ExecuteSqlCommand("DELETE FROM PlexSeasonsContent");
-                    }
-                    if (ombi.PlexServerContent.Any())
-                    {
-                        external.PlexServerContent.AddRange(ombi.PlexServerContent.ToList());
-                        ombi.Database.ExecuteSqlCommand("DELETE FROM PlexServerContent");
-                    }
-                    if (ombi.EmbyEpisode.Any())
-                    {
-                        external.EmbyEpisode.AddRange(ombi.EmbyEpisode.ToList());
-                        ombi.Database.ExecuteSqlCommand("DELETE FROM EmbyEpisode");
-                    }
-
-                    if (ombi.EmbyContent.Any())
-                    {
-                        external.EmbyContent.AddRange(ombi.EmbyContent.ToList());
-                        ombi.Database.ExecuteSqlCommand("DELETE FROM EmbyContent");
-                    }
-                    if (ombi.RadarrCache.Any())
-                    {
-                        external.RadarrCache.AddRange(ombi.RadarrCache.ToList());
-                        ombi.Database.ExecuteSqlCommand("DELETE FROM RadarrCache");
-                    }
-                    if (ombi.SonarrCache.Any())
-                    {
-                        external.SonarrCache.AddRange(ombi.SonarrCache.ToList());
-                        ombi.Database.ExecuteSqlCommand("DELETE FROM SonarrCache");
-                    }
-                    if (ombi.LidarrAlbumCache.Any())
-                    {
-                        external.LidarrAlbumCache.AddRange(ombi.LidarrAlbumCache.ToList());
-                        ombi.Database.ExecuteSqlCommand("DELETE FROM LidarrAlbumCache");
-                    }
-                    if (ombi.LidarrArtistCache.Any())
-                    {
-                        external.LidarrArtistCache.AddRange(ombi.LidarrArtistCache.ToList());
-                        ombi.Database.ExecuteSqlCommand("DELETE FROM LidarrArtistCache");
-                    }
-                    if (ombi.SickRageEpisodeCache.Any())
-                    {
-                        external.SickRageEpisodeCache.AddRange(ombi.SickRageEpisodeCache.ToList());
-                        ombi.Database.ExecuteSqlCommand("DELETE FROM SickRageEpisodeCache");
-                    }
-                    if (ombi.SickRageCache.Any())
-                    {
-                        external.SickRageCache.AddRange(ombi.SickRageCache.ToList());
-                        ombi.Database.ExecuteSqlCommand("DELETE FROM SickRageCache");
-                    }
-                    if (ombi.CouchPotatoCache.Any())
-                    {
-                        external.CouchPotatoCache.AddRange(ombi.CouchPotatoCache.ToList());
-                        ombi.Database.ExecuteSqlCommand("DELETE FROM CouchPotatoCache");
-                    }
-
-                    external.SaveChanges();
+                    external.PlexEpisode.AddRange(ombi.PlexEpisode.ToList());
+                    ombi.Database.ExecuteSqlCommand("DELETE FROM PlexEpisode");
                 }
-                catch (Exception e)
+
+                if (ombi.PlexSeasonsContent.Any())
                 {
-                    Console.WriteLine(e);
-                    throw;
+                    external.PlexSeasonsContent.AddRange(ombi.PlexSeasonsContent.ToList());
+                    ombi.Database.ExecuteSqlCommand("DELETE FROM PlexSeasonsContent");
                 }
+                if (ombi.PlexServerContent.Any())
+                {
+                    external.PlexServerContent.AddRange(ombi.PlexServerContent.ToList());
+                    ombi.Database.ExecuteSqlCommand("DELETE FROM PlexServerContent");
+                }
+                if (ombi.EmbyEpisode.Any())
+                {
+                    external.EmbyEpisode.AddRange(ombi.EmbyEpisode.ToList());
+                    ombi.Database.ExecuteSqlCommand("DELETE FROM EmbyEpisode");
+                }
+
+                if (ombi.EmbyContent.Any())
+                {
+                    external.EmbyContent.AddRange(ombi.EmbyContent.ToList());
+                    ombi.Database.ExecuteSqlCommand("DELETE FROM EmbyContent");
+                }
+                if (ombi.RadarrCache.Any())
+                {
+                    external.RadarrCache.AddRange(ombi.RadarrCache.ToList());
+                    ombi.Database.ExecuteSqlCommand("DELETE FROM RadarrCache");
+                }
+                if (ombi.SonarrCache.Any())
+                {
+                    external.SonarrCache.AddRange(ombi.SonarrCache.ToList());
+                    ombi.Database.ExecuteSqlCommand("DELETE FROM SonarrCache");
+                }
+                if (ombi.LidarrAlbumCache.Any())
+                {
+                    external.LidarrAlbumCache.AddRange(ombi.LidarrAlbumCache.ToList());
+                    ombi.Database.ExecuteSqlCommand("DELETE FROM LidarrAlbumCache");
+                }
+                if (ombi.LidarrArtistCache.Any())
+                {
+                    external.LidarrArtistCache.AddRange(ombi.LidarrArtistCache.ToList());
+                    ombi.Database.ExecuteSqlCommand("DELETE FROM LidarrArtistCache");
+                }
+                if (ombi.SickRageEpisodeCache.Any())
+                {
+                    external.SickRageEpisodeCache.AddRange(ombi.SickRageEpisodeCache.ToList());
+                    ombi.Database.ExecuteSqlCommand("DELETE FROM SickRageEpisodeCache");
+                }
+                if (ombi.SickRageCache.Any())
+                {
+                    external.SickRageCache.AddRange(ombi.SickRageCache.ToList());
+                    ombi.Database.ExecuteSqlCommand("DELETE FROM SickRageCache");
+                }
+                if (ombi.CouchPotatoCache.Any())
+                {
+                    external.CouchPotatoCache.AddRange(ombi.CouchPotatoCache.ToList());
+                    ombi.Database.ExecuteSqlCommand("DELETE FROM CouchPotatoCache");
+                }
+
+                external.SaveChanges();
             }
-
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         private static void DeleteSchedulesDb()
@@ -276,6 +271,9 @@ namespace Ombi
 
         [Option("baseurl", Required = false, HelpText = "The base URL for reverse proxy scenarios")]
         public string BaseUrl { get; set; }
+
+        [Option("demo", Required = false, HelpText = "Demo mode, you will never need to use this, fuck that fruit company...")]
+        public bool Demo { get; set; }
 
     }
 }

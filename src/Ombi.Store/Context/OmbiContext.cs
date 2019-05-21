@@ -87,43 +87,6 @@ namespace Ombi.Store.Context
 
         public void Seed()
         {
-            // VACUUM;
-            Database.ExecuteSqlCommand("VACUUM;");
-
-            // Make sure we have the roles
-            var newsletterRole = Roles.Where(x => x.Name == OmbiRoles.ReceivesNewsletter);
-            if (!newsletterRole.Any())
-            {
-                Roles.Add(new IdentityRole(OmbiRoles.ReceivesNewsletter)
-                {
-                    NormalizedName = OmbiRoles.ReceivesNewsletter.ToUpper()
-                });
-                SaveChanges();
-            }
-            var requestMusicRole = Roles.Where(x => x.Name == OmbiRoles.RequestMusic);
-            if (!requestMusicRole.Any())
-            {
-                Roles.Add(new IdentityRole(OmbiRoles.RequestMusic)
-                {
-                    NormalizedName = OmbiRoles.RequestMusic.ToUpper()
-                });
-                Roles.Add(new IdentityRole(OmbiRoles.AutoApproveMusic)
-                {
-                    NormalizedName = OmbiRoles.AutoApproveMusic.ToUpper()
-                });
-                SaveChanges();
-            }
-
-            var manageOwnRequestsRole = Roles.Where(x => x.Name == OmbiRoles.ManageOwnRequests);
-            if (!manageOwnRequestsRole.Any())
-            {
-                Roles.Add(new IdentityRole(OmbiRoles.ManageOwnRequests)
-                {
-                    NormalizedName = OmbiRoles.ManageOwnRequests.ToUpper()
-                });
-                SaveChanges();
-            }
-
             // Make sure we have the API User
             var apiUserExists = Users.Any(x => x.UserName.Equals("Api", StringComparison.CurrentCultureIgnoreCase));
             if (!apiUserExists)
@@ -209,7 +172,15 @@ namespace Ombi.Store.Context
                             };
                             break;
                         case NotificationType.ItemAddedToFaultQueue:
-                            continue;
+                            notificationToAdd = new NotificationTemplates
+                            {
+                                NotificationType = notificationType,
+                                Message = "Hello! The user '{UserName}' has requested {Title} but it could not be added. This has been added into the requests queue and will keep retrying",
+                                Subject = "Item Added To Retry Queue",
+                                Agent = agent,
+                                Enabled = true,
+                            };
+                            break;
                         case NotificationType.WelcomeEmail:
                             notificationToAdd = new NotificationTemplates
                             {

@@ -39,7 +39,7 @@ import { ImageService } from "./services";
 import { LandingPageService } from "./services";
 import { NotificationService } from "./services";
 import { SettingsService } from "./services";
-import { IssuesService, JobService, PlexTvService, StatusService } from "./services";
+import { CustomPageService, IssuesService, JobService, PlexTvService, StatusService } from "./services";
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
@@ -144,6 +144,7 @@ export function JwtTokenGetter() {
         JobService,
         IssuesService,
         PlexTvService,
+        CustomPageService,
     ],
     bootstrap: [AppComponent],
 })

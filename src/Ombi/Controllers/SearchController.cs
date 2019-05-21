@@ -10,6 +10,8 @@ using Ombi.Core.Models.Search;
 using Ombi.Models;
 using StackExchange.Profiling;
 using Microsoft.AspNetCore.Http;
+using Ombi.Core.Engine.Demo;
+using Ombi.Helpers;
 
 namespace Ombi.Controllers
 {
@@ -19,18 +21,26 @@ namespace Ombi.Controllers
     [ApiController]
     public class SearchController : Controller
     {
-        public SearchController(IMovieEngine movie, ITvSearchEngine tvEngine, ILogger<SearchController> logger, IMusicSearchEngine music)
+        public SearchController(IMovieEngine movie, ITvSearchEngine tvEngine, ILogger<SearchController> logger, IMusicSearchEngine music,
+            IDemoMovieSearchEngine demoMovieSearch, IDemoTvSearchEngine demoTvSearchEngine)
         {
             MovieEngine = movie;
             TvEngine = tvEngine;
             Logger = logger;
             MusicEngine = music;
+            DemoMovieSearch = demoMovieSearch;
+            DemoTvSearch = demoTvSearchEngine;
+            IsDemo = DemoSingleton.Instance.Demo;
         }
+
         private ILogger<SearchController> Logger { get; }
 
         private IMovieEngine MovieEngine { get; }
         private ITvSearchEngine TvEngine { get; }
         private IMusicSearchEngine MusicEngine { get; }
+        private IDemoMovieSearchEngine DemoMovieSearch { get; }
+        private IDemoTvSearchEngine DemoTvSearch { get; }
+        private readonly bool IsDemo;
 
         /// <summary>
         /// Searches for a movie.
@@ -47,8 +57,31 @@ namespace Ombi.Controllers
             {
                 Logger.LogDebug("Searching : {searchTerm}", searchTerm);
 
+                if (IsDemo)
+                {
+                    return await DemoMovieSearch.Search(searchTerm);
+                }
                 return await MovieEngine.Search(searchTerm, null, null);
             }
+        }
+
+        /// <summary>
+        /// Searches for movies by a certain actor.
+        /// </summary>
+        /// <param name="model">language code is optional, by default it will be en. Language code uses ISO 639-1</param>
+        /// <returns></returns>
+        [HttpPost("movie/actor")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> SearchActor([FromBody] SearchActorModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+
+            return Json(await MovieEngine.SearchActor(model.SearchTerm, model.LanguageCode));
         }
 
         /// <summary>
@@ -154,6 +187,10 @@ namespace Ombi.Controllers
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchMovieViewModel>> Popular()
         {
+            if (IsDemo)
+            {
+                return await DemoMovieSearch.PopularMovies();
+            }
             return await MovieEngine.PopularMovies();
         }
         /// <summary>
@@ -166,6 +203,10 @@ namespace Ombi.Controllers
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies()
         {
+            if (IsDemo)
+            {
+                return await DemoMovieSearch.NowPlayingMovies();
+            }
             return await MovieEngine.NowPlayingMovies();
         }
         /// <summary>
@@ -178,6 +219,10 @@ namespace Ombi.Controllers
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchMovieViewModel>> TopRatedMovies()
         {
+            if (IsDemo)
+            {
+                return await DemoMovieSearch.TopRatedMovies();
+            }
             return await MovieEngine.TopRatedMovies();
         }
         /// <summary>
@@ -190,6 +235,10 @@ namespace Ombi.Controllers
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies()
         {
+            if (IsDemo)
+            {
+                return await DemoMovieSearch.UpcomingMovies();
+            }
             return await MovieEngine.UpcomingMovies();
         }
 
@@ -204,6 +253,10 @@ namespace Ombi.Controllers
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchTvShowViewModel>> SearchTv(string searchTerm)
         {
+            if (IsDemo)
+            {
+                return await DemoTvSearch.Search(searchTerm);
+            }
             return await TvEngine.Search(searchTerm);
         }
 
@@ -231,6 +284,10 @@ namespace Ombi.Controllers
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchTvShowViewModel>> PopularTv()
         {
+            if (IsDemo)
+            {
+                return await DemoTvSearch.NowPlayingMovies();
+            }
             return await TvEngine.Popular();
         }
 
@@ -244,6 +301,10 @@ namespace Ombi.Controllers
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchTvShowViewModel>> AnticipatedTv()
         {
+            if (IsDemo)
+            {
+                return await DemoTvSearch.NowPlayingMovies();
+            }
             return await TvEngine.Anticipated();
         }
 
@@ -258,6 +319,10 @@ namespace Ombi.Controllers
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchTvShowViewModel>> MostWatched()
         {
+            if (IsDemo)
+            {
+                return await DemoTvSearch.NowPlayingMovies();
+            }
             return await TvEngine.MostWatches();
         }
 
@@ -271,6 +336,10 @@ namespace Ombi.Controllers
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchTvShowViewModel>> Trending()
         {
+            if (IsDemo)
+            {
+                return await DemoTvSearch.NowPlayingMovies();
+            }
             return await TvEngine.Trending();
         }
 

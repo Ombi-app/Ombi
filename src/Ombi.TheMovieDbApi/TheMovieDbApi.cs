@@ -43,6 +43,27 @@ namespace Ombi.Api.TheMovieDb
             return await Api.Request<FindResult>(request);
         }
 
+        public async Task<TheMovieDbContainer<ActorResult>> SearchByActor(string searchTerm, string langCode)
+        {
+            var request = new Request($"search/person", BaseUri, HttpMethod.Get);
+            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+            request.FullUri = request.FullUri.AddQueryParameter("query", searchTerm);
+            request.FullUri = request.FullUri.AddQueryParameter("language", langCode);
+
+            var result = await Api.Request<TheMovieDbContainer<ActorResult>>(request);
+            return result;
+        }
+
+        public async Task<ActorCredits> GetActorMovieCredits(int actorId, string langCode)
+        {
+            var request = new Request($"person/{actorId}/movie_credits", BaseUri, HttpMethod.Get);
+            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+            request.FullUri = request.FullUri.AddQueryParameter("language", langCode);
+
+            var result = await Api.Request<ActorCredits>(request);
+            return result;
+        }
+
         public async Task<List<TvSearchResult>> SearchTv(string searchTerm)
         {
             var request = new Request($"search/tv", BaseUri, HttpMethod.Get);

@@ -41,6 +41,7 @@ export class EmbyComponent implements OnInit {
             port: 8096,
             ssl: false,
             subDir: "",
+            serverHostname: "",
 
         });
     }

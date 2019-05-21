@@ -17,6 +17,7 @@ namespace Ombi.Store.Entities.Requests
         public DateTime MarkedAsDenied { get; set; }
         public string DeniedReason { get; set; }
         public RequestType RequestType { get; set; }
+        public string RequestedByAlias { get; set; }
 
         [ForeignKey(nameof(RequestedUserId))]
         public OmbiUser RequestedUser { get; set; }
