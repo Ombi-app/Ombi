@@ -105,13 +105,13 @@ namespace Ombi.Api.Lidarr
             return Api.Request<List<AlbumResponse>>(request);
         }
 
-        public async Task<AlbumResponse> AlbumInformation(string albumId, string apiKey, string baseUrl)
+        public async Task<AlbumByForeignId> AlbumInformation(string albumId, string apiKey, string baseUrl)
         {
             var request = new Request($"{ApiVersion}/album", baseUrl, HttpMethod.Get);
             request.AddQueryString("foreignAlbumId", albumId);
             AddHeaders(request, apiKey);
-            var albums = await Api.Request<List<AlbumResponse>>(request);
-            return albums.Where(x => x.foreignAlbumId.Equals(albumId, StringComparison.InvariantCultureIgnoreCase))
+            var albums = await Api.Request<List<AlbumByForeignId>>(request);
+            return albums.
                 .FirstOrDefault();
         }
 
