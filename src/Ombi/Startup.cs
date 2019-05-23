@@ -219,7 +219,7 @@ namespace Ombi
             {
                 if (settings.BaseUrl.HasValue())
                 {
-                    c.SwaggerEndpoint(settings.BaseUrl + "/swagger/v1/swagger.json", "My API V1");
+                    c.SwaggerEndpoint($"{settings.BaseUrl}/swagger/v1/swagger.json", "My API V1");
                 }
                 else
                 {
