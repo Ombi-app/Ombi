@@ -217,7 +217,14 @@ namespace Ombi
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                if (settings.BaseUrl.HasValue())
+                {
+                    c.SwaggerEndpoint(settings.BaseUrl + "/swagger/v1/swagger.json", "My API V1");
+                }
+                else
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                }
             });
 
             app.UseMvc(routes =>
