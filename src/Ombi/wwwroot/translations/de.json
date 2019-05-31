@@ -24,7 +24,6 @@
     "Denied": "Abgelehnt",
     "Approve": "Genehmigen",
     "PartlyAvailable": "Teilweise verfügbar",
-    "ViewDetails": "Details anzeigen",
     "Errors": {
       "Validation": "Bitte überprüfen Sie die eingegebenen Werte"
     }
@@ -45,7 +44,6 @@
     "CheckPageForUpdates": "Überprüfe diese Seite für kontinuierliche Website-Updates."
   },
   "NavigationBar": {
-    "Discover": "Entdecken",
     "Search": "Suche",
     "Requests": "Anfragen",
     "UserManagement": "Benutzerverwaltung",
@@ -60,10 +58,7 @@
     "UpdateDetails": "Update-Details",
     "Logout": "Ausloggen",
     "OpenMobileApp": "Mobile App",
-    "RecentlyAdded": "Kürzlich hinzugefügt",
-    "ChangeTheme": "Theme ändern",
-    "Calendar": "Kalneder",
-    "UserPreferences": "Einstellungen"
+    "RecentlyAdded": "Kürzlich hinzugefügt"
   },
   "Search": {
     "Title": "Suche",
@@ -128,7 +123,6 @@
     "MarkAvailable": "Als verfügbar markieren",
     "Remove": "Entfernen",
     "Deny": "Ablehnen",
-    "DenyReason": "Ablehnungsgrund",
     "Season": "Staffel:",
     "GridTitle": "Titel",
     "AirDate": "Erstausstrahlung",
@@ -188,42 +182,5 @@
   "Votes": {
     "CompletedVotesTab": "Bewertet",
     "VotesTab": "Erforderliche Bewertungen"
-  },
-  "MediaDetails": {
-    "Denied": "Abgelehnt",
-    "RecommendationsTitle": "Empfehlungen",
-    "SimilarTitle": "Ähnliche",
-    "VideosTitle": "Videos",
-    "Casts": {
-      "CastTitle": "Besetzung",
-      "Character": "Person",
-      "Actor": "Schauspieler"
-    },
-    "EpisodeSelector": {
-      "AllSeasonsTooltip": "Dies wird jede Saison für diese Show anfordern",
-      "FirstSeasonTooltip": "Dies wird nur die erste Saison für diese Show anfordern",
-      "LatestSeasonTooltip": "Dies wird nur die letzte Saison für diese Show anfordern"
-    }
-  },
-  "Discovery": {
-    "PopularTab": "Beliebt",
-    "TrendingTab": "Angesagt",
-    "UpcomingTab": "Demnächst",
-    "CardDetails": {
-      "Availability": "Verfügbarkeit",
-      "Studio": "Studio",
-      "Network": "Netzwerk",
-      "UnknownNetwork": "Unbekannt",
-      "RequestStatus": "Anfrage Status",
-      "Director": "Director",
-      "InCinemas": "In Kinos",
-      "FirstAired": "Erstausstrahlung",
-      "Writer": "AutorIn",
-      "ExecProducer": "Ausführender Produzent"
-    }
-  },
-  "UserPreferences": {
-    "Welcome": "Willkommen {{username}}!",
-    "OmbiLanguage": "Ombi-Sprache"
   }
 }
