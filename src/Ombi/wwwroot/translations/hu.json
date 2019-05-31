@@ -24,7 +24,6 @@
     "Denied": "Megtagadva",
     "Approve": "Jóváhagyva",
     "PartlyAvailable": "Részlegesen elérhető",
-    "ViewDetails": "View Details",
     "Errors": {
       "Validation": "Kérjük, ellenőrizze a beírt értékeket"
     }
@@ -45,7 +44,6 @@
     "CheckPageForUpdates": "Látogasd meg ezt az oldalt a frissítésekhez."
   },
   "NavigationBar": {
-    "Discover": "Discover",
     "Search": "Keresés",
     "Requests": "Kérések",
     "UserManagement": "Felhasználók kezelése",
@@ -60,10 +58,7 @@
     "UpdateDetails": "Fiók beállításai",
     "Logout": "Kilépés",
     "OpenMobileApp": "Mobil app megnyitása",
-    "RecentlyAdded": "Nemrég hozzáadott",
-    "ChangeTheme": "Change Theme",
-    "Calendar": "Calendar",
-    "UserPreferences": "Preferences"
+    "RecentlyAdded": "Nemrég hozzáadott"
   },
   "Search": {
     "Title": "Keresés",
@@ -128,7 +123,6 @@
     "MarkAvailable": "Megjelölés elérhetőnek",
     "Remove": "Törlés",
     "Deny": "Elutasítás",
-    "DenyReason": "Deny Reason",
     "Season": "Évad:",
     "GridTitle": "Cím",
     "AirDate": "Bemutató",
@@ -188,42 +182,5 @@
   "Votes": {
     "CompletedVotesTab": "Szavazott",
     "VotesTab": "Szavazat szükséges"
-  },
-  "MediaDetails": {
-    "Denied": "Denied",
-    "RecommendationsTitle": "Recommendations",
-    "SimilarTitle": "Similar",
-    "VideosTitle": "Videos",
-    "Casts": {
-      "CastTitle": "Cast",
-      "Character": "Character",
-      "Actor": "Actor"
-    },
-    "EpisodeSelector": {
-      "AllSeasonsTooltip": "This will request every season for this show",
-      "FirstSeasonTooltip": "This will only request the First Season for this show",
-      "LatestSeasonTooltip": "This will only request the Latest Season for this show"
-    }
-  },
-  "Discovery": {
-    "PopularTab": "Popular",
-    "TrendingTab": "Trending",
-    "UpcomingTab": "Upcoming",
-    "CardDetails": {
-      "Availability": "Availability",
-      "Studio": "Studio",
-      "Network": "Network",
-      "UnknownNetwork": "Unknown",
-      "RequestStatus": "Request Status",
-      "Director": "Director",
-      "InCinemas": "In Cinemas",
-      "FirstAired": "First Aired",
-      "Writer": "Writer",
-      "ExecProducer": "Exec Producer"
-    }
-  },
-  "UserPreferences": {
-    "Welcome": "Welcome {{username}}!",
-    "OmbiLanguage": "Ombi Language"
   }
 }
