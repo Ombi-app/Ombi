@@ -24,7 +24,6 @@
     "Denied": "Odrzucone",
     "Approve": "Zatwierdź",
     "PartlyAvailable": "Częściowo dostępne",
-    "ViewDetails": "Pokaż szczegóły",
     "Errors": {
       "Validation": "Proszę sprawdzić wprowadzone wartości"
     }
@@ -45,7 +44,6 @@
     "CheckPageForUpdates": "Tutaj znajdziesz aktualizacje dotyczące tej strony."
   },
   "NavigationBar": {
-    "Discover": "Odkryj",
     "Search": "Szukaj",
     "Requests": "Zgłoszenia",
     "UserManagement": "Zarządzanie użytkownikami",
@@ -60,10 +58,7 @@
     "UpdateDetails": "Podaj szczegóły",
     "Logout": "Wyloguj",
     "OpenMobileApp": "Otwórz aplikację mobilną",
-    "RecentlyAdded": "Ostatnio dodane",
-    "ChangeTheme": "Zmień motyw",
-    "Calendar": "Kalendarz",
-    "UserPreferences": "Preferencje"
+    "RecentlyAdded": "Ostatnio dodane"
   },
   "Search": {
     "Title": "Szukaj",
@@ -128,7 +123,6 @@
     "MarkAvailable": "Oznacz jako dostępne",
     "Remove": "Usuń",
     "Deny": "Odrzuć",
-    "DenyReason": "Powód odrzucenia",
     "Season": "Sezon:",
     "GridTitle": "Tytuł",
     "AirDate": "Data emisji",
@@ -188,42 +182,5 @@
   "Votes": {
     "CompletedVotesTab": "Zagłosowano",
     "VotesTab": "Potrzebne głosy"
-  },
-  "MediaDetails": {
-    "Denied": "Odrzucone",
-    "RecommendationsTitle": "Rekomendacje",
-    "SimilarTitle": "Podobne",
-    "VideosTitle": "Wideo",
-    "Casts": {
-      "CastTitle": "Obsada",
-      "Character": "Postać",
-      "Actor": "Aktor"
-    },
-    "EpisodeSelector": {
-      "AllSeasonsTooltip": "Zgłoszenie obejmie wszystkie sezony tego serialu",
-      "FirstSeasonTooltip": "Zgłoszenie obejmie pierwszy sezon tego serialu",
-      "LatestSeasonTooltip": "Zgłoszenie obejmie najnowszy sezon tego serialu"
-    }
-  },
-  "Discovery": {
-    "PopularTab": "Popularne",
-    "TrendingTab": "Zyskujące popularność",
-    "UpcomingTab": "Nadchodzące",
-    "CardDetails": {
-      "Availability": "Dostępność",
-      "Studio": "Studio",
-      "Network": "Stacja",
-      "UnknownNetwork": "Nieznane",
-      "RequestStatus": "Status zgłoszenia",
-      "Director": "Reżyser",
-      "InCinemas": "W kinach",
-      "FirstAired": "Pierwsza emisja",
-      "Writer": "Scenarzysta",
-      "ExecProducer": "Producent wykonawczy"
-    }
-  },
-  "UserPreferences": {
-    "Welcome": "Witaj {{username}}!",
-    "OmbiLanguage": "Język Ombi"
   }
 }
