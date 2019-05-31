@@ -16,9 +16,12 @@ import { IssuesComponent } from "./issues.component";
 import { IssuesTableComponent } from "./issuestable.component";
 
 import { PipeModule } from "../pipes/pipe.module";
+import { IssuesListComponent } from "./components/issues-list/issues-list.component";
+
+import * as fromComponents from "./components";
 
 const routes: Routes = [
-    { path: "", component: IssuesComponent, canActivate: [AuthGuard] },
+    { path: "", component: IssuesListComponent, canActivate: [AuthGuard] },
     { path: ":id", component: IssueDetailsComponent, canActivate: [AuthGuard] },
 ];
 
@@ -37,6 +40,7 @@ const routes: Routes = [
         IssuesComponent,
         IssueDetailsComponent,
         IssuesTableComponent,
+        ...fromComponents.components
     ],
     exports: [
         RouterModule,

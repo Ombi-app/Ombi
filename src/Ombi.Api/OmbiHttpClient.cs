@@ -27,6 +27,7 @@
 
 using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
@@ -59,6 +60,12 @@ namespace Ombi.Api
         {
             await Setup();
             return await _client.SendAsync(request);
+        }
+
+        public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            await Setup();
+            return await _client.SendAsync(request, cancellationToken);
         }
 
         public async Task<string> GetStringAsync(Uri requestUri)

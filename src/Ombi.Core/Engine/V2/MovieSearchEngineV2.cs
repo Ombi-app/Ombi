@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ombi.Core.Engine.V2
@@ -38,20 +39,20 @@ namespace Ombi.Core.Engine.V2
         private ILogger Logger { get; }
 
 
-        public async Task<MovieFullInfoViewModel> GetFullMovieInformation(int theMovieDbId, string langCode = null)
+        public async Task<MovieFullInfoViewModel> GetFullMovieInformation(int theMovieDbId, CancellationToken cancellationToken, string langCode = null)
         {
             langCode = await DefaultLanguageCode(langCode);
             var movieInfo = await Cache.GetOrAdd(nameof(GetFullMovieInformation) + theMovieDbId + langCode,
-                async () => await MovieApi.GetFullMovieInfo(theMovieDbId, langCode), DateTime.Now.AddHours(12));
+                async () => await MovieApi.GetFullMovieInfo(theMovieDbId, cancellationToken, langCode), DateTime.Now.AddHours(12), cancellationToken);
 
             return await ProcessSingleMovie(movieInfo);
         }
 
-        public async Task<MovieCollectionsViewModel> GetCollection(int collectionId, string langCode = null)
+        public async Task<MovieCollectionsViewModel> GetCollection(int collectionId, CancellationToken cancellationToken, string langCode = null)
         {
             langCode = await DefaultLanguageCode(langCode);
             var collections = await Cache.GetOrAdd(nameof(GetCollection) + collectionId + langCode,
-                async () => await MovieApi.GetCollection(langCode, collectionId), DateTime.Now.AddDays(1));
+                async () => await MovieApi.GetCollection(langCode, collectionId, cancellationToken), DateTime.Now.AddDays(1), cancellationToken);
 
             var c = await ProcessCollection(collections);
             c.Collection = c.Collection.OrderBy(x => x.ReleaseDate).ToList();
@@ -107,7 +108,7 @@ namespace Ombi.Core.Engine.V2
         /// Gets popular movies by paging
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<SearchMovieViewModel>> PopularMovies(int currentlyLoaded, int toLoad)
+        public async Task<IEnumerable<SearchMovieViewModel>> PopularMovies(int currentlyLoaded, int toLoad, CancellationToken cancellationToken)
         {
             var langCode = await DefaultLanguageCode(null);
             
@@ -117,7 +118,7 @@ namespace Ombi.Core.Engine.V2
             foreach (var pagesToLoad in pages)
             {
                 var apiResult = await Cache.GetOrAdd(nameof(PopularMovies) + pagesToLoad.Page + langCode,
-                    async () => await MovieApi.PopularMovies(langCode, pagesToLoad.Page), DateTime.Now.AddHours(12));
+                    async () => await MovieApi.PopularMovies(langCode, pagesToLoad.Page, cancellationToken), DateTime.Now.AddHours(12), cancellationToken);
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
             return await TransformMovieResultsToResponse(results);

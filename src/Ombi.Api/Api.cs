@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -29,13 +30,13 @@ namespace Ombi.Api
             NullValueHandling = NullValueHandling.Ignore
         };
 
-        public async Task<T> Request<T>(Request request)
+        public async Task<T> Request<T>(Request request, CancellationToken cancellationToken = default(CancellationToken))
         {
             using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, request.FullUri))
             {
                 AddHeadersBody(request, httpRequestMessage);
-
-                var httpResponseMessage = await _client.SendAsync(httpRequestMessage);
+                
+                var httpResponseMessage = await _client.SendAsync(httpRequestMessage, cancellationToken);
 
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {

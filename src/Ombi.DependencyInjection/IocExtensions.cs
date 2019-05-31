@@ -34,6 +34,7 @@ using Ombi.Api.DogNzb;
 using Ombi.Api.FanartTv;
 using Ombi.Api.Github;
 using Ombi.Api.Gotify;
+using Ombi.Api.GroupMe;
 using Ombi.Api.Lidarr;
 using Ombi.Api.Mattermost;
 using Ombi.Api.Notifications;
@@ -143,6 +144,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IAppVeyorApi, AppVeyorApi>();
             services.AddTransient<IOneSignalApi, OneSignalApi>();
             services.AddTransient<ILidarrApi, LidarrApi>();
+            services.AddTransient<IGroupMeApi, GroupMeApi>();
         }
 
         public static void RegisterStore(this IServiceCollection services) { 

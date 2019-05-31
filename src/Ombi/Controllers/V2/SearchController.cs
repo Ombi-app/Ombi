@@ -48,7 +48,7 @@ namespace Ombi.Controllers.V2
         [HttpGet("multi/{searchTerm}")]
         public async Task<List<MultiSearch>> MultiSearch(string searchTerm)
         {
-            return await _multiSearchEngine.MultiSearch(searchTerm);
+            return await _multiSearchEngine.MultiSearch(searchTerm, Request.HttpContext.RequestAborted);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Ombi.Controllers.V2
         [HttpGet("movie/{movieDbId}")]
         public async Task<MovieFullInfoViewModel> GetMovieInfo(int movieDbId)
         {
-            return await _movieEngineV2.GetFullMovieInformation(movieDbId);
+            return await _movieEngineV2.GetFullMovieInformation(movieDbId, Request.HttpContext.RequestAborted);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Ombi.Controllers.V2
         [HttpGet("movie/collection/{collectionId}")]
         public async Task<MovieCollectionsViewModel> GetMovieCollections(int collectionId)
         {
-            return await _movieEngineV2.GetCollection(collectionId);
+            return await _movieEngineV2.GetCollection(collectionId, Request.HttpContext.RequestAborted);
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace Ombi.Controllers.V2
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchMovieViewModel>> Popular(int currentPosition, int amountToLoad)
         {
-            return await _movieEngineV2.PopularMovies(currentPosition, amountToLoad);
+            return await _movieEngineV2.PopularMovies(currentPosition, amountToLoad, Request.HttpContext.RequestAborted);
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Nito.AsyncEx;
@@ -16,7 +17,7 @@ namespace Ombi.Helpers
             _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
         }
 
-        public async Task<T> GetOrAdd<T>(string cacheKey, Func<Task<T>> factory, DateTime absoluteExpiration = default(DateTime))
+        public async Task<T> GetOrAdd<T>(string cacheKey, Func<Task<T>> factory, DateTime absoluteExpiration = default(DateTime), CancellationToken cancellationToken = default(CancellationToken))
         {
             if (absoluteExpiration == default(DateTime))
             {
@@ -31,6 +32,11 @@ namespace Ombi.Helpers
             if (_memoryCache.TryGetValue(cacheKey, out result))
             {
                 return result;
+            }
+
+            if (cancellationToken.CanBeCanceled)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
             }
 
             result = await factory();

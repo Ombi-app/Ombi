@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Ombi.Api.TheMovieDb.Models;
@@ -32,7 +33,7 @@ namespace Ombi.Api.TheMovieDb
         }
 
 
-        public async Task<FullMovieInfo> GetFullMovieInfo(int movieId, string langCode)
+        public async Task<FullMovieInfo> GetFullMovieInfo(int movieId, CancellationToken cancellationToken, string langCode)
         {
             var request = new Request($"movie/{movieId}", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
@@ -40,7 +41,7 @@ namespace Ombi.Api.TheMovieDb
             request.FullUri = request.FullUri.AddQueryParameter("append_to_response", "videos,credits,similar,recommendations,release_dates,external_ids,keywords");
             AddRetry(request);
 
-            return await Api.Request<FullMovieInfo>(request);
+            return await Api.Request<FullMovieInfo>(request, cancellationToken);
         }
 
         public async Task<TheMovieDbContainer<DiscoverMovies>> DiscoverMovies(string langCode, int keywordId)
@@ -55,14 +56,14 @@ namespace Ombi.Api.TheMovieDb
             return await Api.Request<TheMovieDbContainer<DiscoverMovies>>(request);
         }
 
-        public async Task<Collections> GetCollection(string langCode, int collectionId)
+        public async Task<Collections> GetCollection(string langCode, int collectionId, CancellationToken cancellationToken)
         {
             // https://developers.themoviedb.org/3/discover/movie-discover
             var request = new Request($"collection/{collectionId}", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
             request.FullUri = request.FullUri.AddQueryParameter("language", langCode);
 
-            return await Api.Request<Collections> (request);
+            return await Api.Request<Collections>(request, cancellationToken);
         }
 
         public async Task<FindResult> Find(string externalId, ExternalSource source)
@@ -156,7 +157,7 @@ namespace Ombi.Api.TheMovieDb
             return Mapper.Map<List<MovieSearchResult>>(result.results);
         }
 
-        public async Task<List<MovieSearchResult>> PopularMovies(string langageCode, int? page = null)
+        public async Task<List<MovieSearchResult>> PopularMovies(string langageCode, int? page = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             var request = new Request($"movie/popular", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
@@ -166,7 +167,7 @@ namespace Ombi.Api.TheMovieDb
                 request.FullUri = request.FullUri.AddQueryParameter("page", page.ToString());
             }
             AddRetry(request);
-            var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
+            var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request, cancellationToken);
             return Mapper.Map<List<MovieSearchResult>>(result.results);
         }
 
@@ -222,13 +223,13 @@ namespace Ombi.Api.TheMovieDb
             return await Api.Request<TvInfo>(request);
         }
 
-        public async Task<TheMovieDbContainer<MultiSearch>> MultiSearch(string searchTerm, string languageCode)
+        public async Task<TheMovieDbContainer<MultiSearch>> MultiSearch(string searchTerm, string languageCode, CancellationToken cancellationToken)
         {
             var request = new Request("search/multi", BaseUri, HttpMethod.Get);
             request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
             request.FullUri = request.FullUri.AddQueryParameter("language", languageCode);
             request.FullUri = request.FullUri.AddQueryParameter("query", searchTerm);
-            var result = await Api.Request<TheMovieDbContainer<MultiSearch>>(request);
+            var result = await Api.Request<TheMovieDbContainer<MultiSearch>>(request, cancellationToken);
             return result;
         }
 

@@ -38,6 +38,7 @@ namespace Ombi
 
             //if (exception is NotFoundException) code = HttpStatusCode.NotFound;
             if (exception is UnauthorizedAccessException) code = HttpStatusCode.Unauthorized;
+            if (exception is OperationCanceledException) code = HttpStatusCode.NoContent;
             string result;
             if (exception.InnerException != null)
             {

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Security.Principal;
+using System.Threading;
 using System.Threading.Tasks;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
@@ -27,9 +28,9 @@ namespace Ombi.Core.Engine.V2
         private readonly IMovieDbApi _movieDbApi;
 
 
-        public async Task<List<MultiSearch>> MultiSearch(string searchTerm, string lang = "en")
+        public async Task<List<MultiSearch>> MultiSearch(string searchTerm,  CancellationToken cancellationToken, string lang = "en")
         {
-            return (await _movieDbApi.MultiSearch(searchTerm, lang)).results;
+            return (await _movieDbApi.MultiSearch(searchTerm, lang, cancellationToken)).results;
         }
     }
 }
