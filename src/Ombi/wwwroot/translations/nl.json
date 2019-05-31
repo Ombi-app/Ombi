@@ -24,7 +24,6 @@
     "Denied": "Afgewezen",
     "Approve": "Accepteer",
     "PartlyAvailable": "Deels Beschikbaar",
-    "ViewDetails": "Eigenschappen bekijken",
     "Errors": {
       "Validation": "Controleer de ingevulde waardes"
     }
@@ -45,7 +44,6 @@
     "CheckPageForUpdates": "Controleer deze pagina voor updates."
   },
   "NavigationBar": {
-    "Discover": "Ontdekken",
     "Search": "Zoeken",
     "Requests": "Verzoeken",
     "UserManagement": "Gebruikersmanagement",
@@ -60,10 +58,7 @@
     "UpdateDetails": "Gegevens updaten",
     "Logout": "Afmelden",
     "OpenMobileApp": "Mobiele App Openen",
-    "RecentlyAdded": "Onlangs Toegevoegd",
-    "ChangeTheme": "Thema wijzigen",
-    "Calendar": "Agenda",
-    "UserPreferences": "Instellingen"
+    "RecentlyAdded": "Onlangs Toegevoegd"
   },
   "Search": {
     "Title": "Zoeken",
@@ -128,7 +123,6 @@
     "MarkAvailable": "Markeren als beschikbaar",
     "Remove": "Verwijderen",
     "Deny": "Weigeren",
-    "DenyReason": "Reden van afwijzing",
     "Season": "Seizoen:",
     "GridTitle": "Titel",
     "AirDate": "Uitzenddatum",
@@ -188,42 +182,5 @@
   "Votes": {
     "CompletedVotesTab": "Gestemd",
     "VotesTab": "Stemmen nodig"
-  },
-  "MediaDetails": {
-    "Denied": "Afgewezen",
-    "RecommendationsTitle": "Aanbevelingen",
-    "SimilarTitle": "Vergelijkbaar",
-    "VideosTitle": "Video's",
-    "Casts": {
-      "CastTitle": "Acteurs",
-      "Character": "Personage",
-      "Actor": "Acteur"
-    },
-    "EpisodeSelector": {
-      "AllSeasonsTooltip": "Dit verzoekt ieder seizoen van deze serie",
-      "FirstSeasonTooltip": "Dit verzoekt alleen het eerste seizoen van deze serie",
-      "LatestSeasonTooltip": "Dit verzoekt alleen het laatste seizoen van deze show"
-    }
-  },
-  "Discovery": {
-    "PopularTab": "Populair",
-    "TrendingTab": "Populair",
-    "UpcomingTab": "Aankomend",
-    "CardDetails": {
-      "Availability": "Beschikbaarheid",
-      "Studio": "Studio",
-      "Network": "Netwerk",
-      "UnknownNetwork": "Niet bekend",
-      "RequestStatus": "Aanvraagstatus",
-      "Director": "Regisseur",
-      "InCinemas": "In de bioscoop",
-      "FirstAired": "Eerste uitzending",
-      "Writer": "Schrijver",
-      "ExecProducer": "Uitvoerende producent"
-    }
-  },
-  "UserPreferences": {
-    "Welcome": "Welkom {{username}}!",
-    "OmbiLanguage": "Taal van Ombi"
   }
 }
