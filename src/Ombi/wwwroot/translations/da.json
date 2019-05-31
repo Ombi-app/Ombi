@@ -24,7 +24,6 @@
     "Denied": "Afvist",
     "Approve": "Godkendt",
     "PartlyAvailable": "Delvist tilgængelig",
-    "ViewDetails": "View Details",
     "Errors": {
       "Validation": "Tjek venligst dine indtastede værdier"
     }
@@ -45,7 +44,6 @@
     "CheckPageForUpdates": "Tjek denne side for løbende opdateringer."
   },
   "NavigationBar": {
-    "Discover": "Discover",
     "Search": "Søg",
     "Requests": "Anmodninger",
     "UserManagement": "Brugeradministration",
@@ -60,10 +58,7 @@
     "UpdateDetails": "Opdater loginoplysninger",
     "Logout": "Log af",
     "OpenMobileApp": "Åbn mobilapp",
-    "RecentlyAdded": "Senest tilføjet",
-    "ChangeTheme": "Change Theme",
-    "Calendar": "Calendar",
-    "UserPreferences": "Preferences"
+    "RecentlyAdded": "Senest tilføjet"
   },
   "Search": {
     "Title": "Søg",
@@ -128,7 +123,6 @@
     "MarkAvailable": "Markér som tilgængelig",
     "Remove": "Fjern",
     "Deny": "Afvis",
-    "DenyReason": "Deny Reason",
     "Season": "Sæson:",
     "GridTitle": "Titel",
     "AirDate": "Sendt",
@@ -188,42 +182,5 @@
   "Votes": {
     "CompletedVotesTab": "Stemt",
     "VotesTab": "Nødvendige stemmer"
-  },
-  "MediaDetails": {
-    "Denied": "Denied",
-    "RecommendationsTitle": "Recommendations",
-    "SimilarTitle": "Similar",
-    "VideosTitle": "Videos",
-    "Casts": {
-      "CastTitle": "Cast",
-      "Character": "Character",
-      "Actor": "Actor"
-    },
-    "EpisodeSelector": {
-      "AllSeasonsTooltip": "This will request every season for this show",
-      "FirstSeasonTooltip": "This will only request the First Season for this show",
-      "LatestSeasonTooltip": "This will only request the Latest Season for this show"
-    }
-  },
-  "Discovery": {
-    "PopularTab": "Popular",
-    "TrendingTab": "Trending",
-    "UpcomingTab": "Upcoming",
-    "CardDetails": {
-      "Availability": "Availability",
-      "Studio": "Studio",
-      "Network": "Network",
-      "UnknownNetwork": "Unknown",
-      "RequestStatus": "Request Status",
-      "Director": "Director",
-      "InCinemas": "In Cinemas",
-      "FirstAired": "First Aired",
-      "Writer": "Writer",
-      "ExecProducer": "Exec Producer"
-    }
-  },
-  "UserPreferences": {
-    "Welcome": "Welcome {{username}}!",
-    "OmbiLanguage": "Ombi Language"
   }
 }
