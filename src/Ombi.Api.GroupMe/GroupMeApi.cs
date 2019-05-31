@@ -21,8 +21,9 @@ namespace Ombi.Api.GroupMe
         public async Task<GroupMeResponse<List<Groups>>> GetGroups(string token, CancellationToken cancellationToken)
         {
             var request = new Request($"groups", BaseUrl, HttpMethod.Get);
-            request.AddQueryString("token", token);
             request.AddQueryString("omit", "memberships");
+
+            AddHeaders(request, token);
 
             return await _api.Request<GroupMeResponse<List<Groups>>>(request, cancellationToken);
         } 
@@ -30,7 +31,8 @@ namespace Ombi.Api.GroupMe
         public async Task<GroupMeResponse<SendResponse>> Send(string message, string token, int groupId)
         {
             var request = new Request($"groups/{groupId}/messages", BaseUrl, HttpMethod.Post);
-            request.AddQueryString("token", token);
+
+            AddHeaders(request, token);
 
             var body = new
             {
@@ -43,6 +45,11 @@ namespace Ombi.Api.GroupMe
 
             request.AddJsonBody(body);
             return await _api.Request<GroupMeResponse<SendResponse>>(request);
+        }
+
+        private void AddHeaders(Request req, string token)
+        {
+            req.AddHeader("X-Access-Token", token);
         }
     }
 }
