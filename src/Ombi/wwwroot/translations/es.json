@@ -24,7 +24,6 @@
     "Denied": "Denegado",
     "Approve": "Aprobar",
     "PartlyAvailable": "Disponible en parte",
-    "ViewDetails": "Más Detalles",
     "Errors": {
       "Validation": "Por favor, comprueba los datos introducidos"
     }
@@ -45,7 +44,6 @@
     "CheckPageForUpdates": "Consulte esta página para ver las últimas novedades."
   },
   "NavigationBar": {
-    "Discover": "Descubre",
     "Search": "Buscar",
     "Requests": "Solicitudes",
     "UserManagement": "Gestión de usuarios",
@@ -60,10 +58,7 @@
     "UpdateDetails": "Editar cuenta usuario",
     "Logout": "Cerrar sesión",
     "OpenMobileApp": "Abrir aplicación móvil",
-    "RecentlyAdded": "Agregado recientemente",
-    "ChangeTheme": "Cambiar Tema",
-    "Calendar": "Calendario",
-    "UserPreferences": "Configuración"
+    "RecentlyAdded": "Agregado recientemente"
   },
   "Search": {
     "Title": "Buscar",
@@ -128,7 +123,6 @@
     "MarkAvailable": "Marcar como disponible",
     "Remove": "Eliminar",
     "Deny": "Denegar",
-    "DenyReason": "Razón Denegada",
     "Season": "Temporada:",
     "GridTitle": "Título",
     "AirDate": "Fecha de estreno",
@@ -188,42 +182,5 @@
   "Votes": {
     "CompletedVotesTab": "¡Votado!",
     "VotesTab": "Votos necesarios"
-  },
-  "MediaDetails": {
-    "Denied": "Denegado",
-    "RecommendationsTitle": "Recomendaciones",
-    "SimilarTitle": "Similar",
-    "VideosTitle": "Vídeos",
-    "Casts": {
-      "CastTitle": "Enviar pantalla",
-      "Character": "Personaje",
-      "Actor": "Actor"
-    },
-    "EpisodeSelector": {
-      "AllSeasonsTooltip": "Esto solicitará cada temporada para este programa",
-      "FirstSeasonTooltip": "Esto solo solicitará la primera temporada para este programa",
-      "LatestSeasonTooltip": "Esto solo solicitará la última temporada para este programa"
-    }
-  },
-  "Discovery": {
-    "PopularTab": "Popular",
-    "TrendingTab": "Tendencias",
-    "UpcomingTab": "Próximamente",
-    "CardDetails": {
-      "Availability": "Disponibilidad",
-      "Studio": "Estudio",
-      "Network": "Red",
-      "UnknownNetwork": "Desconocido",
-      "RequestStatus": "Estado de solicitud",
-      "Director": "Director",
-      "InCinemas": "En Cines",
-      "FirstAired": "Emitido por primera vez",
-      "Writer": "Guionistas",
-      "ExecProducer": "Productor ejecutivo"
-    }
-  },
-  "UserPreferences": {
-    "Welcome": "Bienvenido {{username}}!",
-    "OmbiLanguage": "Idioma Ombi"
   }
 }
