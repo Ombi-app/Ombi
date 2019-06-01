@@ -111,8 +111,7 @@ namespace Ombi.Api.Lidarr
             request.AddQueryString("foreignAlbumId", albumId);
             AddHeaders(request, apiKey);
             var albums = await Api.Request<List<AlbumByForeignId>>(request);
-            return albums.
-                .FirstOrDefault();
+            return albums.FirstOrDefault();
         }
 
 

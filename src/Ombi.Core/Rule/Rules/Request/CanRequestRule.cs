@@ -40,7 +40,7 @@ namespace Ombi.Core.Rule.Rules.Request
             {
                 if (await _manager.IsInRoleAsync(user, OmbiRoles.RequestTv) || await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveTv))
                 {
-                    return TSuccess();
+                    return Success();
                 }
 
                 return Fail("You do not have permissions to Request a TV Show");
