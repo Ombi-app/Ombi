@@ -1,4 +1,6 @@
-﻿using System.Security.Claims;
+using Ombi.Store.Entities;
+using System.IO;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -37,16 +39,24 @@ namespace Ombi.Core.Rule.Rules.Request
             if (obj.RequestType == RequestType.TvShow)
             {
                 if (await _manager.IsInRoleAsync(user, OmbiRoles.RequestTv) || await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveTv))
+                {
                     return Success();
+                }
+
+                return Fail("You do not have permissions to Request a TV Show");
             }
 
             if (obj.RequestType == RequestType.Album)
             {
                 if (await _manager.IsInRoleAsync(user, OmbiRoles.RequestMusic) || await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveMusic))
+                {
                     return Success();
+                }
+
+                return Fail("You do not have permissions to Request an Album");
             }
 
-            return Fail("You do not have permissions to Request a TV Show");
+            throw new InvalidDataException("Permission check failed: unknown RequestType");
         }
     }
 }
