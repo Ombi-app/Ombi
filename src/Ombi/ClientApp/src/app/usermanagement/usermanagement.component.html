@@ -107,7 +107,7 @@
           <ng-container matColumnDef="welcome">
                 <th mat-header-cell *matHeaderCellDef> </th>
                 <td mat-cell *matCellDef="let u">
-                  <button *ngIf="!u.hasLoggedIn" mat-raised-button color="accent"  (click)="welcomeEmail(u)" [disabled]="!customizationSettings.applicationUrl">Send Welcome Email</button>
+                  <button *ngIf="!u.hasLoggedIn" mat-raised-button color="accent"  (click)="welcomeEmail(u)" [disabled]="!customizationSettings?.applicationUrl">Send Welcome Email</button>
                 </td>
               </ng-container>
   

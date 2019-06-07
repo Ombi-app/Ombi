@@ -18,8 +18,8 @@ export class MoviesGridComponent implements AfterViewInit {
     public displayedColumns: string[] = ['requestedUser.requestedBy', 'title', 'requestedDate', 'status', 'requestStatus', 'actions'];
     public gridCount: string = "15";
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+    @ViewChild(MatSort, {static: false}) sort: MatSort;
 
     constructor(private requestService: RequestServiceV2) {
 

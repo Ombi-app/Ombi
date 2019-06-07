@@ -18,7 +18,7 @@ export class VoteComponent implements OnInit {
     public completedVotes: IVoteViewModel[];
     public VoteType = VoteType;
     public panelImage: string;
-    @ViewChild("op") public overlayPanel: OverlayPanel;
+    @ViewChild("op", {static: false}) public overlayPanel: OverlayPanel;
 
     constructor(private voteService: VoteService, private notificationSerivce: NotificationService) { }
 

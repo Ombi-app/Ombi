@@ -18,8 +18,8 @@ export class TvGridComponent implements AfterViewInit {
     public displayedColumns: string[] = ['series',  'requestedBy', 'status', 'requestStatus', 'requestedDate','actions'];
     public gridCount: string = "15";
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+    @ViewChild(MatSort, {static: false}) sort: MatSort;
 
     constructor(private requestService: RequestServiceV2) {
 
