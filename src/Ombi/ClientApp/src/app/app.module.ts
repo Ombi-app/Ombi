@@ -83,9 +83,9 @@ const routes: Routes = [
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLocation) {
     // const base = getBaseLocation();
-    const base = platformLocation.getBaseHrefFromDOM();
+    const base = '/' + (window.location.pathname.split('/')[1] || '')
     const version = Math.floor(Math.random() * 999999999);
-    if (base.length > 1) {
+    if (base !== null && base.length > 1) {
         return new TranslateHttpLoader(http, `${base}/translations/`, `.json?v=${version}`);
     }
     return new TranslateHttpLoader(http, "/translations/", `.json?v=${version}`);
@@ -181,11 +181,10 @@ export function JwtTokenGetter() {
         MessageService,
         StorageService,
         SignalRNotificationService,
-        { provide: APP_BASE_HREF, useValue: window['_app_base'] || '/' }
-        // {
-        //     provide: APP_BASE_HREF,
-        //     useFactory: getBaseLocation
-        // }
+        {
+            provide: APP_BASE_HREF,
+            useValue: '/' + (window.location.pathname.split('/')[1] || '')
+        }
        ],
     bootstrap: [AppComponent],
 })
