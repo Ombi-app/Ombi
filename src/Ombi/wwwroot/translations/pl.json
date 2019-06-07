@@ -172,10 +172,10 @@
     "PendingApproval": "Oczekujące na zatwierdzenie"
   },
   "UserManagment": {
-    "TvRemaining": "TV: pozostało {{remaining}}/{{total}}",
+    "TvRemaining": "Seriale: pozostało {{remaining}}/{{total}}",
     "MovieRemaining": "Filmy: pozostało {{remaining}}/{{total}}",
     "MusicRemaining": "Muzyka: pozostało {{remaining}}/{{total}}",
-    "TvDue": "TV: {{date}}",
+    "TvDue": "Serial: {{date}}",
     "MovieDue": "Film: {{date}}",
     "MusicDue": "Muzyka: {{date}}"
   },
