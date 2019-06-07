@@ -3911,6 +3911,13 @@ ngx-clipboard@^12.1.0:
     ngx-window-token "^2.0.0"
     tslib "^1.9.0"
 
+ngx-editor@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/ngx-editor/-/ngx-editor-4.1.0.tgz#3ec5820627f25a2239094747cccf88a7ca02f79f"
+  integrity sha512-TdbFoHYJjWjyrYEw6fiYrP50s7mLcRErvSYfQ+Nz47Hse44klogi7FDl+hUjVZPBQVc5xXtTwcGSzId3ptxf8w==
+  dependencies:
+    tslib "^1.9.0"
+
 ngx-infinite-scroll@^7.1.0:
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/ngx-infinite-scroll/-/ngx-infinite-scroll-7.1.0.tgz#87dd5e0c596cd4795d2a487f7e30a0eabbb5e442"
