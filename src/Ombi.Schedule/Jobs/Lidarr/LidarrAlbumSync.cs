@@ -60,7 +60,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
                                         ArtistId = a.artistId,
                                         ForeignAlbumId = a.foreignAlbumId,
                                         ReleaseDate = a.releaseDate,
-                                        TrackCount = a.currentRelease.trackCount,
+                                        TrackCount = a.currentRelease?.trackCount ?? 0,
                                         Monitored = a.monitored,
                                         Title = a.title,
                                         PercentOfTracks = a.statistics?.percentOfEpisodes ?? 0m,

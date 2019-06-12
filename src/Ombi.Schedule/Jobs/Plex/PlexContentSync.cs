@@ -196,7 +196,7 @@ namespace Ombi.Schedule.Jobs.Plex
                             }
                             contentToAdd.Clear();
                         }
-                        if (count > 200)
+                        if (count > 30)
                         {
                             await Repo.SaveChangesAsync();
 
@@ -233,7 +233,7 @@ namespace Ombi.Schedule.Jobs.Plex
                             }
                             contentToAdd.Clear();
                         }
-                        if (count > 200)
+                        if (count > 30)
                         {
                             await Repo.SaveChangesAsync();
                         }

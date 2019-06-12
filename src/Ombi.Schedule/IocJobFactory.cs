@@ -15,7 +15,7 @@ namespace Ombi.Schedule
         }
         public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
         {
-            var scopeFactory = _factory.GetService<IServiceScopeFactory>();
+            var scopeFactory = _factory.GetService<IServiceScopeFactory>(); 
             var scope = scopeFactory.CreateScope();
             var scopedContainer = scope.ServiceProvider;
 
