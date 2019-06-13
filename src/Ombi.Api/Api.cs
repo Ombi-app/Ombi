@@ -134,11 +134,12 @@ namespace Ombi.Api
             }
         }
 
-        private static void AddHeadersBody(Request request, HttpRequestMessage httpRequestMessage)
+        private void AddHeadersBody(Request request, HttpRequestMessage httpRequestMessage)
         {
             // Add the Json Body
             if (request.JsonBody != null)
             {
+                LogDebugContent("REQUEST: " + request.JsonBody);
                 httpRequestMessage.Content = new JsonContent(request.JsonBody);
                 httpRequestMessage.Content.Headers.ContentType =
                     new MediaTypeHeaderValue("application/json"); // Emby connect fails if we have the charset in the header
