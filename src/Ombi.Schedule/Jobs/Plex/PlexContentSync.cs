@@ -110,7 +110,7 @@ namespace Ombi.Schedule.Jobs.Plex
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
                 // Just check what we send it
-                await OmbiQuartz.TriggerJob(nameof(IMediaDatabaseRefresh), "System");
+                await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
             }
 
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)

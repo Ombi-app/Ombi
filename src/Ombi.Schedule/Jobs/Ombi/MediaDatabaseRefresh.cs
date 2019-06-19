@@ -53,7 +53,6 @@ namespace Ombi.Schedule.Jobs.Ombi
                 {
                     return;
                 }
-
                 const string episodeSQL = "DELETE FROM EmbyEpisode";
                 const string mainSql = "DELETE FROM EmbyContent";
                 await _embyRepo.ExecuteSql(episodeSQL);
