@@ -47,7 +47,11 @@ namespace Ombi.Schedule.Jobs.Radarr
                         if (movies != null)
                         {
                             // Let's remove the old cached data
-                            await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM RadarrCache");
+                            using (var tran = await _ctx.Database.BeginTransactionAsync())
+                            {
+                                await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM RadarrCache");
+                                tran.Commit();
+                            }
 
                             var movieIds = new List<RadarrCache>();
                             foreach (var m in movies)
@@ -65,9 +69,14 @@ namespace Ombi.Schedule.Jobs.Radarr
                                    Logger.LogError("TMDBId is not > 0 for movie {0}", m.title);
                                 }
                             }
-                            await _ctx.RadarrCache.AddRangeAsync(movieIds);
 
-                            await _ctx.SaveChangesAsync();
+                            using (var tran = await _ctx.Database.BeginTransactionAsync())
+                            {
+                                await _ctx.RadarrCache.AddRangeAsync(movieIds);
+
+                                await _ctx.SaveChangesAsync();
+                                tran.Commit();
+                            }
                         }
                     }
                     catch (System.Exception ex)

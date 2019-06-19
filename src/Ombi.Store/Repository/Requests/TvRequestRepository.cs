@@ -8,9 +8,9 @@ using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Store.Repository.Requests
 {
-    public class TvRequestRepository : ITvRequestRepository
+    public class TvRequestRepository : BaseRepository<TvRequests, IOmbiContext>, ITvRequestRepository
     {
-        public TvRequestRepository(IOmbiContext ctx)
+        public TvRequestRepository(IOmbiContext ctx) : base(ctx)
         {
             Db = ctx;
         }
@@ -150,11 +150,6 @@ namespace Ombi.Store.Repository.Requests
             Db.Update(request);
 
             await InternalSaveChanges();
-        }
-
-        private async Task<int> InternalSaveChanges()
-        {
-            return await Db.SaveChangesAsync();
         }
     }
 }

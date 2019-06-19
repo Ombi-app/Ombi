@@ -89,18 +89,23 @@ namespace Ombi.Store.Context
 
         public void Seed()
         {
-            // Make sure we have the API User
-            var apiUserExists = Users.Any(x => x.UserName.Equals("Api", StringComparison.CurrentCultureIgnoreCase));
-            if (!apiUserExists)
-            {
-                Users.Add(new OmbiUser
-                {
-                    UserName = "Api",
-                    UserType = UserType.SystemUser,
-                    NormalizedUserName = "API",
 
-                });
-                SaveChanges();
+            using (var tran = Database.BeginTransaction())
+            {
+                // Make sure we have the API User
+                var apiUserExists = Users.Any(x => x.UserName.Equals("Api", StringComparison.CurrentCultureIgnoreCase));
+                if (!apiUserExists)
+                {
+                    Users.Add(new OmbiUser
+                    {
+                        UserName = "Api",
+                        UserType = UserType.SystemUser,
+                        NormalizedUserName = "API",
+
+                    });
+                    SaveChanges();
+                    tran.Commit();
+                }
             }
 
             //Check if templates exist
@@ -238,7 +243,12 @@ namespace Ombi.Store.Context
 
             if (needToSave)
             {
-                SaveChanges();
+
+                using (var tran = Database.BeginTransaction())
+                {
+                    SaveChanges();
+                    tran.Commit();
+                }
             }
         }
     }

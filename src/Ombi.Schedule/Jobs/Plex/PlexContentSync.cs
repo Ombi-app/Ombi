@@ -199,7 +199,7 @@ namespace Ombi.Schedule.Jobs.Plex
                         if (count > 30)
                         {
                             await Repo.SaveChangesAsync();
-
+                            count = 0;
                         }
                     }
 

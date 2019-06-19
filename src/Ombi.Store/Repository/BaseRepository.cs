@@ -94,7 +94,15 @@ namespace Ombi.Store.Repository
                     TimeSpan.FromSeconds(3)
                 });
 
-            var result = await policy.ExecuteAndCaptureAsync(async () => await _ctx.SaveChangesAsync());
+            var result = await policy.ExecuteAndCaptureAsync(async () =>
+            {
+                using (var tran = await _ctx.Database.BeginTransactionAsync())
+                {
+                    var r = await _ctx.SaveChangesAsync();
+                    tran.Commit();      
+                    return r;
+                }
+            });
             return result.Result;
         }
 
