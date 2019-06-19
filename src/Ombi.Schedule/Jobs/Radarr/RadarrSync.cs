@@ -56,7 +56,7 @@ namespace Ombi.Schedule.Jobs.Radarr
                             var movieIds = new List<RadarrCache>();
                             foreach (var m in movies)
                             {
-                                if (m.tmdbId > 0)
+                                if (m.tmdbId > 0 && m.monitored)
                                 {
                                     movieIds.Add(new RadarrCache
                                     {

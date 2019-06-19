@@ -84,7 +84,7 @@ namespace Ombi.Api.Lidarr
 
         public Task<AlbumByArtistResponse> GetAlbumsByArtist(string foreignArtistId)
         {
-            var request = new Request(string.Empty, $"https://api.lidarr.audio/api/v0.3/artist/{foreignArtistId}",
+            var request = new Request(string.Empty, $"https://api.lidarr.audio/api/v0.4/artist/{foreignArtistId}",
                 HttpMethod.Get) {IgnoreBaseUrlAppend = true};
             return Api.Request<AlbumByArtistResponse>(request);
         }
