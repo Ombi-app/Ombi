@@ -12,18 +12,18 @@
   "Common": {
     "ContinueButton": "Continuar",
     "Available": "Disponible",
-    "PartiallyAvailable": "Disponible en parte",
+    "PartiallyAvailable": "Disponible parcialmente",
     "Monitored": "Monitoreado",
-    "NotAvailable": "No está disponible",
+    "NotAvailable": "No disponible",
     "ProcessingRequest": "Procesando solicitud",
     "PendingApproval": "Pendiente de aprobación",
     "RequestDenied": "Solicitud denegada",
-    "NotRequested": "No solicitados",
+    "NotRequested": "No solicitado",
     "Requested": "Solicitado",
     "Request": "Solicitar",
     "Denied": "Denegado",
     "Approve": "Aprobar",
-    "PartlyAvailable": "Disponible en parte",
+    "PartlyAvailable": "Disponible parcialmente",
     "Errors": {
       "Validation": "Por favor, comprueba los datos introducidos"
     }
@@ -75,6 +75,7 @@
     "RequestAdded": "La solicitud de {{title}} se ha agregado con éxito",
     "Similar": "Similar",
     "Refine": "Filtros",
+    "SearchBarPlaceholder": "Escriba aquí para buscar",
     "Movies": {
       "PopularMovies": "Películas populares",
       "UpcomingMovies": "Próximas películas",
