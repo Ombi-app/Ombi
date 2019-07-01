@@ -6,7 +6,9 @@
     <fieldset>
         <legend>Landing Page Configuration</legend>
 
-
+        <mat-checkbox [(ngModel)]="settings.enabled"> 
+                Enable
+              </mat-checkbox>
         <div class="form-group">
             <div class="checkbox">
                 <input type="checkbox" id="enable" name="enable" [(ngModel)]="settings.enabled" ng-checked="settings.enabled">
