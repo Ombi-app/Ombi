@@ -3,10 +3,10 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 
-import { PlatformLocation, APP_BASE_HREF } from "@angular/common";
+import { APP_BASE_HREF } from "@angular/common";
 import { AuthService } from "../auth/auth.service";
 import { IAuthenticationSettings, ICustomizationSettings } from "../interfaces";
-import { NotificationService, PlexTvService } from "../services";
+import { PlexTvService } from "../services";
 import { SettingsService } from "../services";
 import { StatusService } from "../services";
 
@@ -15,6 +15,7 @@ import { ImageService } from "../services";
 
 import { fadeInOutAnimation } from "../animations/fadeinout";
 import { StorageService } from "../shared/storage/storage-service";
+import { MatSnackBar } from "@angular/material";
 
 @Component({
     templateUrl: "./login.component.html",
@@ -48,10 +49,10 @@ export class LoginComponent implements OnDestroy, OnInit {
     private errorValidation: string;
     private href: string;
 
-    constructor(private authService: AuthService, private router: Router, private notify: NotificationService, private status: StatusService,
+    constructor(private authService: AuthService, private router: Router, private status: StatusService,
                 private fb: FormBuilder, private settingsService: SettingsService, private images: ImageService, private sanitizer: DomSanitizer,
                 private route: ActivatedRoute, @Inject(APP_BASE_HREF) href:string, private translate: TranslateService, private plexTv: PlexTvService,
-                private store: StorageService) {
+                private store: StorageService, private readonly notify: MatSnackBar) {
         this.href = href;
                     this.route.params
             .subscribe((params: any) => {
@@ -104,7 +105,9 @@ export class LoginComponent implements OnDestroy, OnInit {
 
     public onSubmit(form: FormGroup) {
         if (form.invalid) {
-            this.notify.error(this.errorValidation);
+            this.notify.open(this.errorValidation, "OK", {
+                duration: 3000
+            });
             return;
         }
         const value = form.value;
@@ -123,10 +126,15 @@ export class LoginComponent implements OnDestroy, OnInit {
                         this.ngOnDestroy();
                         this.router.navigate(["/"]);
                     } else {
-                        this.notify.error(this.errorBody);
+                        this.notify.open(this.errorBody, "OK", {
+                            duration: 3000
+                        });
                     }
 
-                }, err => this.notify.error(this.errorBody));
+                }, err => 
+                this.notify.open(err.errorBody, "OK", {
+                    duration: 3000
+                }));
         });
     }
 
@@ -145,7 +153,10 @@ export class LoginComponent implements OnDestroy, OnInit {
                 oAuthWindow!.location.replace(x.url);
 
                 this.pinTimer = setInterval(() => {
-                    this.notify.info("Authenticating", "Loading... Please Wait");
+                    
+                    this.notify.open("Authenticating. Loading... Please Wait", "OK", {
+                        duration: 3000
+                    });
                     this.getPinResult(x.pinId);
                 }, 10000);
             });
@@ -166,7 +177,9 @@ export class LoginComponent implements OnDestroy, OnInit {
   
           }, err => {
               console.log(err);
-              this.notify.error(err.body);
+              this.notify.open(err.body, "OK", {
+                duration: 3000
+            });
               
               this.router.navigate(["login"]);
           });
