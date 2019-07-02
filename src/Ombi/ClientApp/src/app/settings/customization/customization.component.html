@@ -1,7 +1,7 @@
 ﻿<settings-menu></settings-menu>
 <wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Customization-Settings'"></wiki>
 
-<fieldset *ngIf="settings">
+<fieldset *ngIf="settings" class="container">
     <legend>Customization</legend>
 
     <div class="col-5">
@@ -50,17 +50,12 @@
 
     </div>
     <div class="col-7">
-        <div>
-            <div class="form-group">
-                <label for="customCss" class="control-label">Custom CSS</label>
-            </div>
-            <div class="form-group language-css" pCode>
-                <textarea rows="25" type="text" pTooltip="Enter your custom styles here" tooltipPosition="top" class="form-control-custom form-control "
-                    id="themeContent" name="themeContent" [(ngModel)]="settings.customCss"> {{settings.customCss}} </textarea>
-            </div>
-        </div>
-    </div>
+            <mat-form-field>
+                    <textarea matInput  [(ngModel)]="settings.customCss" placeholder="Custom CSS"></textarea>
+                  </mat-form-field>
 
+    </div>
+ 
 
 
 

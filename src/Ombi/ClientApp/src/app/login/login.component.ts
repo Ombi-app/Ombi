@@ -131,10 +131,11 @@ export class LoginComponent implements OnDestroy, OnInit {
                         });
                     }
 
-                }, err => 
-                this.notify.open(err.errorBody, "OK", {
+                }, err => {
+                this.notify.open(this.errorBody, "OK", {
                     duration: 3000
-                }));
+                })
+            });
         });
     }
 
