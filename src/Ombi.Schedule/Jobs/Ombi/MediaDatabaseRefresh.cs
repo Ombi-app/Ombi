@@ -9,28 +9,28 @@ using Ombi.Helpers;
 using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Store.Repository;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Ombi
 {
     public class MediaDatabaseRefresh : IMediaDatabaseRefresh
     {
         public MediaDatabaseRefresh(ISettingsService<PlexSettings> s, ILogger<MediaDatabaseRefresh> log,
-            IPlexContentRepository plexRepo, IEmbyContentRepository embyRepo, IEmbyContentSync embySync)
+            IPlexContentRepository plexRepo, IEmbyContentRepository embyRepo)
         {
             _settings = s;
             _log = log;
             _plexRepo = plexRepo;
             _embyRepo = embyRepo;
-            _embyContentSync = embySync;
+            _settings.ClearCache();
         }
 
         private readonly ISettingsService<PlexSettings> _settings;
         private readonly ILogger _log;
         private readonly IPlexContentRepository _plexRepo;
         private readonly IEmbyContentRepository _embyRepo;
-        private readonly IEmbyContentSync _embyContentSync;
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             try
             {
@@ -53,13 +53,12 @@ namespace Ombi.Schedule.Jobs.Ombi
                 {
                     return;
                 }
-
                 const string episodeSQL = "DELETE FROM EmbyEpisode";
                 const string mainSql = "DELETE FROM EmbyContent";
                 await _embyRepo.ExecuteSql(episodeSQL);
                 await _embyRepo.ExecuteSql(mainSql);
 
-                BackgroundJob.Enqueue(() => _embyContentSync.Start());
+                await OmbiQuartz.TriggerJob(nameof(IEmbyContentSync), "Emby");
             }
             catch (Exception e)
             {

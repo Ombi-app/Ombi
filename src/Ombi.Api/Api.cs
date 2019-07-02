@@ -72,6 +72,7 @@ namespace Ombi.Api
 
                 // do something with the response
                 var receivedString = await httpResponseMessage.Content.ReadAsStringAsync();
+                LogDebugContent(receivedString);
                 if (request.ContentType == ContentType.Json)
                 {
                     request.OnBeforeDeserialization?.Invoke(receivedString);
@@ -110,7 +111,7 @@ namespace Ombi.Api
                 }
                 // do something with the response
                 var data = httpResponseMessage.Content;
-
+                await LogDebugContent(httpResponseMessage);
                 return await data.ReadAsStringAsync();
             }
 
@@ -122,6 +123,7 @@ namespace Ombi.Api
             {
                 AddHeadersBody(request, httpRequestMessage);
                 var httpResponseMessage = await _client.SendAsync(httpRequestMessage);
+                await LogDebugContent(httpResponseMessage);
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
                     if (!request.IgnoreErrors)
@@ -132,11 +134,12 @@ namespace Ombi.Api
             }
         }
 
-        private static void AddHeadersBody(Request request, HttpRequestMessage httpRequestMessage)
+        private void AddHeadersBody(Request request, HttpRequestMessage httpRequestMessage)
         {
             // Add the Json Body
             if (request.JsonBody != null)
             {
+                LogDebugContent("REQUEST: " + request.JsonBody);
                 httpRequestMessage.Content = new JsonContent(request.JsonBody);
                 httpRequestMessage.Content.Headers.ContentType =
                     new MediaTypeHeaderValue("application/json"); // Emby connect fails if we have the charset in the header
@@ -153,10 +156,23 @@ namespace Ombi.Api
         {
             Logger.LogError(LoggingEvents.Api,
                 $"StatusCode: {httpResponseMessage.StatusCode}, Reason: {httpResponseMessage.ReasonPhrase}, RequestUri: {request.FullUri}");
+            await LogDebugContent(httpResponseMessage);
+        }
+
+        private async Task LogDebugContent(HttpResponseMessage message)
+        {
             if (Logger.IsEnabled(LogLevel.Debug))
             {
-                var content = await httpResponseMessage.Content.ReadAsStringAsync();
+                var content = await message.Content.ReadAsStringAsync();
                 Logger.LogDebug(content);
+            }
+        }
+
+        private void LogDebugContent(string message)
+        {
+            if (Logger.IsEnabled(LogLevel.Debug))
+            {
+                Logger.LogDebug(message);
             }
         }
     }

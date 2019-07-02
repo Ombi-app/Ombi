@@ -65,25 +65,24 @@ namespace Ombi.Schedule
         {
             var s = _jobSettings.GetSettings();
 
-            RecurringJob.AddOrUpdate(() => _embyContentSync.Start(), JobSettingsHelper.EmbyContent(s));
-            RecurringJob.AddOrUpdate(() => _sonarrSync.Start(), JobSettingsHelper.Sonarr(s));
-            RecurringJob.AddOrUpdate(() => _radarrSync.CacheContent(), JobSettingsHelper.Radarr(s));
-            RecurringJob.AddOrUpdate(() => _plexContentSync.CacheContent(false), JobSettingsHelper.PlexContent(s));
-            RecurringJob.AddOrUpdate(() => _plexRecentlyAddedSync.Start(), JobSettingsHelper.PlexRecentlyAdded(s));
-            RecurringJob.AddOrUpdate(() => _cpCache.Start(), JobSettingsHelper.CouchPotato(s));
-            RecurringJob.AddOrUpdate(() => _srSync.Start(), JobSettingsHelper.SickRageSync(s));
-            RecurringJob.AddOrUpdate(() => _refreshMetadata.Start(), JobSettingsHelper.RefreshMetadata(s));
-            RecurringJob.AddOrUpdate(() => _lidarrArtistSync.CacheContent(), JobSettingsHelper.LidarrArtistSync(s));
-            RecurringJob.AddOrUpdate(() => _issuesPurge.Start(), JobSettingsHelper.IssuePurge(s));
+           // RecurringJob.AddOrUpdate(() => _embyContentSync.Start(), JobSettingsHelper.EmbyContent(s));
+           // RecurringJob.AddOrUpdate(() => _sonarrSync.Start(), JobSettingsHelper.Sonarr(s));
+           // RecurringJob.AddOrUpdate(() => _radarrSync.CacheContent(), JobSettingsHelper.Radarr(s));
+           // //RecurringJob.AddOrUpdate(() => _plexContentSync.Execute(null), JobSettingsHelper.PlexContent(s));
+           // //RecurringJob.AddOrUpdate(() => _plexRecentlyAddedSync.Start(), JobSettingsHelper.PlexRecentlyAdded(s));
+           // RecurringJob.AddOrUpdate(() => _cpCache.Start(), JobSettingsHelper.CouchPotato(s));
+           // RecurringJob.AddOrUpdate(() => _srSync.Start(), JobSettingsHelper.SickRageSync(s));
+           // RecurringJob.AddOrUpdate(() => _refreshMetadata.Start(), JobSettingsHelper.RefreshMetadata(s));
+           // RecurringJob.AddOrUpdate(() => _lidarrArtistSync.CacheContent(), JobSettingsHelper.LidarrArtistSync(s));
+           // RecurringJob.AddOrUpdate(() => _issuesPurge.Start(), JobSettingsHelper.IssuePurge(s));
 
-            RecurringJob.AddOrUpdate(() => _updater.Update(null), JobSettingsHelper.Updater(s));
+           // RecurringJob.AddOrUpdate(() => _updater.Update(null), JobSettingsHelper.Updater(s));
 
-            RecurringJob.AddOrUpdate(() => _embyUserImporter.Start(), JobSettingsHelper.UserImporter(s));
-            RecurringJob.AddOrUpdate(() => _plexUserImporter.Start(), JobSettingsHelper.UserImporter(s));
-            RecurringJob.AddOrUpdate(() => _newsletter.Start(), JobSettingsHelper.Newsletter(s));
-            RecurringJob.AddOrUpdate(() => _newsletter.Start(), JobSettingsHelper.Newsletter(s));
-            RecurringJob.AddOrUpdate(() => _resender.Start(), JobSettingsHelper.ResendFailedRequests(s));
-            RecurringJob.AddOrUpdate(() => _mediaDatabaseRefresh.Start(), JobSettingsHelper.MediaDatabaseRefresh(s));
+           // RecurringJob.AddOrUpdate(() => _embyUserImporter.Start(), JobSettingsHelper.UserImporter(s));
+           // RecurringJob.AddOrUpdate(() => _plexUserImporter.Start(), JobSettingsHelper.UserImporter(s));
+           // RecurringJob.AddOrUpdate(() => _newsletter.Start(), JobSettingsHelper.Newsletter(s));
+           //// RecurringJob.AddOrUpdate(() => _resender.Start(), JobSettingsHelper.ResendFailedRequests(s));
+           // RecurringJob.AddOrUpdate(() => _mediaDatabaseRefresh.Start(), JobSettingsHelper.MediaDatabaseRefresh(s));
         }
 
         private bool _disposed;
@@ -94,7 +93,6 @@ namespace Ombi.Schedule
 
             if (disposing)
             {
-                _plexContentSync?.Dispose();
                 _radarrSync?.Dispose();
                 _updater?.Dispose();
                 _plexUserImporter?.Dispose();

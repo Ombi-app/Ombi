@@ -3,7 +3,7 @@
 #addin "Cake.Gulp"
 #addin "SharpZipLib"
 #addin nuget:?package=Cake.Compression&version=0.1.4
-#addin "Cake.Incubator"
+#addin "Cake.Incubator&version=3.1.0"
 #addin "Cake.Yarn"
 
 //////////////////////////////////////////////////////////////////////
@@ -81,9 +81,9 @@ Task("SetVersionInfo")
 
     versionInfo = GitVersion(settings);
 	
-	Information("GitResults -> {0}", versionInfo.Dump());
+//	Information("GitResults -> {0}", versionInfo.Dump());
 
-    Information(@"Build:{0}",AppVeyor.Environment.Build.Dump());
+//Information(@"Build:{0}",AppVeyor.Environment.Build.Dump());
 
 	var buildVersion = string.Empty;
 	if(string.IsNullOrEmpty(AppVeyor.Environment.Build.Version))

@@ -90,11 +90,10 @@ export class MusicRequestsComponent implements OnInit {
         this.searchChanged.next(text.target.value);
     }
 
-    public removeRequest(request: IAlbumRequest) {
-        this.requestService.removeAlbumRequest(request).subscribe(x => {
-            this.removeRequestFromUi(request);
-            this.loadRequests(this.amountToLoad, this.currentlyLoaded = 0);
-        });
+    public async removeRequest(request: IAlbumRequest) {
+        await this.requestService.removeAlbumRequest(request).toPromise();
+        this.removeRequestFromUi(request);
+        this.loadRequests(this.amountToLoad, this.currentlyLoaded = 0);
     }
 
     public changeAvailability(request: IAlbumRequest, available: boolean) {
@@ -335,7 +334,7 @@ export class MusicRequestsComponent implements OnInit {
     }
     private setAlbumBackground(req: IAlbumRequest) {
         if (req.disk === null) {
-            if(req.cover === null) {
+            if (req.cover === null) {
                 req.disk = this.defaultPoster;
             } else {
                 req.disk = req.cover;

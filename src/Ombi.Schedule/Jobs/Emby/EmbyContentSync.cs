@@ -12,6 +12,7 @@ using Ombi.Helpers;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Quartz;
 using Serilog;
 using EmbyMediaType = Ombi.Store.Entities.EmbyMediaType;
 
@@ -20,25 +21,21 @@ namespace Ombi.Schedule.Jobs.Emby
     public class EmbyContentSync : IEmbyContentSync
     {
         public EmbyContentSync(ISettingsService<EmbySettings> settings, IEmbyApi api, ILogger<EmbyContentSync> logger,
-            IEmbyContentRepository repo, IEmbyEpisodeSync epSync, IRefreshMetadata metadata)
+            IEmbyContentRepository repo)
         {
             _logger = logger;
             _settings = settings;
             _api = api;
             _repo = repo;
-            _episodeSync = epSync;
-            _metadata = metadata;
         }
 
         private readonly ILogger<EmbyContentSync> _logger;
         private readonly ISettingsService<EmbySettings> _settings;
         private readonly IEmbyApi _api;
         private readonly IEmbyContentRepository _repo;
-        private readonly IEmbyEpisodeSync _episodeSync;
-        private readonly IRefreshMetadata _metadata;
 
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             var embySettings = await _settings.GetSettingsAsync();
             if (!embySettings.Enable)
@@ -57,8 +54,9 @@ namespace Ombi.Schedule.Jobs.Emby
             }
 
             // Episodes
-            BackgroundJob.Enqueue(() => _episodeSync.Start());
-            BackgroundJob.Enqueue(() => _metadata.Start());
+
+            await OmbiQuartz.TriggerJob(nameof(IEmbyEpisodeSync), "Emby");
+            await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
         }
 
 

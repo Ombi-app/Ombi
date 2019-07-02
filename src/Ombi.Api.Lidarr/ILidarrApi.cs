@@ -23,5 +23,6 @@ namespace Ombi.Api.Lidarr
         Task<List<LanguageProfiles>> GetLanguageProfile(string apiKey, string baseUrl);
         Task<LidarrStatus> Status(string apiKey, string baseUrl);
         Task<CommandResult> AlbumSearch(int[] albumIds, string apiKey, string baseUrl);
+        Task<AlbumByForeignId> AlbumInformation(string albumId, string apiKey, string baseUrl);
     }
 }

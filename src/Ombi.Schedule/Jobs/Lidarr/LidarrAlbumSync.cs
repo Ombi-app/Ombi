@@ -48,7 +48,11 @@ namespace Ombi.Schedule.Jobs.Lidarr
                         if (albums != null && albums.Any())
                         {
                             // Let's remove the old cached data
-                            await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM LidarrAlbumCache");
+                            using (var tran = await _ctx.Database.BeginTransactionAsync())
+                            {
+                                await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM LidarrAlbumCache");
+                                tran.Commit();
+                            }
 
                             var albumCache = new List<LidarrAlbumCache>();
                             foreach (var a in albums)
@@ -60,7 +64,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
                                         ArtistId = a.artistId,
                                         ForeignAlbumId = a.foreignAlbumId,
                                         ReleaseDate = a.releaseDate,
-                                        TrackCount = a.currentRelease.trackCount,
+                                        TrackCount = a.currentRelease?.trackCount ?? 0,
                                         Monitored = a.monitored,
                                         Title = a.title,
                                         PercentOfTracks = a.statistics?.percentOfEpisodes ?? 0m,
@@ -68,9 +72,14 @@ namespace Ombi.Schedule.Jobs.Lidarr
                                     });
                                 }
                             }
-                            await _ctx.LidarrAlbumCache.AddRangeAsync(albumCache);
 
-                            await _ctx.SaveChangesAsync();
+                            using (var tran = await _ctx.Database.BeginTransactionAsync())
+                            {
+                                await _ctx.LidarrAlbumCache.AddRangeAsync(albumCache);
+
+                                await _ctx.SaveChangesAsync();
+                                tran.Commit();
+                            }
                         }
                     }
                     catch (System.Exception ex)

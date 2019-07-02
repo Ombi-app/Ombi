@@ -370,6 +370,19 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Returns the album information specified by the foreignAlbumId passed in
+        /// </summary>
+        /// <remarks>We use Lidarr as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("music/album/info/{foreignAlbumId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<SearchAlbumViewModel> GetAlbumInformation(string foreignAlbumId)
+        {
+            return await MusicEngine.GetAlbumInformation(foreignAlbumId);
+        }
+
+        /// <summary>
         /// Returns all albums for the artist using the ForeignArtistId
         /// </summary>
         /// <remarks>We use Lidarr as the Provider</remarks>

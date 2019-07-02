@@ -1,46 +1,62 @@
-﻿using Ombi.Store.Entities;
+using Ombi.Store.Entities;
+using System.IO;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Ombi.Core.Authentication;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Helpers;
+using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 
-namespace Ombi.Core.Rule.Rules
+namespace Ombi.Core.Rule.Rules.Request
 {
     public class CanRequestRule : BaseRequestRule, IRules<BaseRequest>
     {
-        public CanRequestRule(IPrincipal principal)
+        public CanRequestRule(IPrincipal principal, OmbiUserManager manager)
         {
             User = principal;
+            _manager = manager;
         }
 
         private IPrincipal User { get; }
+        private readonly OmbiUserManager _manager;
 
-        public Task<RuleResult> Execute(BaseRequest obj)
+        public async Task<RuleResult> Execute(BaseRequest obj)
         {
-            if (User.IsInRole(OmbiRoles.Admin))
-                return Task.FromResult(Success());
+            var user = await _manager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+            if (await _manager.IsInRoleAsync(user, OmbiRoles.Admin))
+                return Success();
 
             if (obj.RequestType == RequestType.Movie)
             {
-                if (User.IsInRole(OmbiRoles.RequestMovie) || User.IsInRole(OmbiRoles.AutoApproveMovie))
-                    return Task.FromResult(Success());
-                return Task.FromResult(Fail("You do not have permissions to Request a Movie"));
+                if (await _manager.IsInRoleAsync(user, OmbiRoles.RequestMovie) || await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveMovie))
+                    return Success();
+                return Fail("You do not have permissions to Request a Movie");
             }
 
             if (obj.RequestType == RequestType.TvShow)
             {
-                if (User.IsInRole(OmbiRoles.RequestTv) || User.IsInRole(OmbiRoles.AutoApproveTv))
-                    return Task.FromResult(Success());
+                if (await _manager.IsInRoleAsync(user, OmbiRoles.RequestTv) || await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveTv))
+                {
+                    return Success();
+                }
+
+                return Fail("You do not have permissions to Request a TV Show");
             }
 
             if (obj.RequestType == RequestType.Album)
             {
-                if (User.IsInRole(OmbiRoles.RequestMusic) || User.IsInRole(OmbiRoles.AutoApproveMusic))
-                    return Task.FromResult(Success());
+                if (await _manager.IsInRoleAsync(user, OmbiRoles.RequestMusic) || await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveMusic))
+                {
+                    return Success();
+                }
+
+                return Fail("You do not have permissions to Request an Album");
             }
 
-            return Task.FromResult(Fail("You do not have permissions to Request a TV Show"));
+            throw new InvalidDataException("Permission check failed: unknown RequestType");
         }
     }
 }

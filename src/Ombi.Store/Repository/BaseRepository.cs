@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using Ombi.Helpers;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
+using Polly;
 
 namespace Ombi.Store.Repository
 {
@@ -30,7 +33,7 @@ namespace Ombi.Store.Repository
             return _db.AsQueryable();
         }
 
-        public async Task<T> FirstOrDefaultAsync(Expression<Func<T,bool>> predicate)
+        public async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
         {
             return await _db.FirstOrDefaultAsync(predicate);
         }
@@ -40,32 +43,32 @@ namespace Ombi.Store.Repository
             _db.AddRange(content);
             if (save)
             {
-                await _ctx.SaveChangesAsync();
+                await InternalSaveChanges();
             }
         }
 
         public async Task<T> Add(T content)
         {
             await _db.AddAsync(content);
-            await _ctx.SaveChangesAsync();
+            await InternalSaveChanges();
             return content;
         }
 
         public async Task Delete(T request)
         {
             _db.Remove(request);
-            await _ctx.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public async Task DeleteRange(IEnumerable<T> req)
         {
             _db.RemoveRange(req);
-            await _ctx.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public async Task<int> SaveChangesAsync()
         {
-            return await _ctx.SaveChangesAsync();
+            return await InternalSaveChanges();
         }
 
         public IIncludableQueryable<TEntity, TProperty> Include<TEntity, TProperty>(
@@ -80,6 +83,29 @@ namespace Ombi.Store.Repository
             await _ctx.Database.ExecuteSqlCommandAsync(sql);
         }
 
+        protected async Task<int> InternalSaveChanges()
+        {
+            var policy = Policy
+                .Handle<SqliteException>()
+                .WaitAndRetryAsync(new[]
+                {
+                    TimeSpan.FromSeconds(1),
+                    TimeSpan.FromSeconds(2),
+                    TimeSpan.FromSeconds(3)
+                });
+
+            var result = await policy.ExecuteAndCaptureAsync(async () =>
+            {
+                using (var tran = await _ctx.Database.BeginTransactionAsync())
+                {
+                    var r = await _ctx.SaveChangesAsync();
+                    tran.Commit();      
+                    return r;
+                }
+            });
+            return result.Result;
+        }
+
 
         private bool _disposed;
         // Protected implementation of Dispose pattern.
@@ -92,7 +118,7 @@ namespace Ombi.Store.Repository
             {
                 _ctx?.Dispose();
             }
-            
+
             _disposed = true;
         }
 

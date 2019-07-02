@@ -11,6 +11,7 @@ using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
+using Quartz;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Ombi.Schedule.Jobs.Lidarr
@@ -35,7 +36,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
         private readonly IBackgroundJobClient _job;
         private readonly ILidarrAlbumSync _albumSync;
         
-        public async Task CacheContent()
+        public async Task Execute(IJobExecutionContext job)
         {
             try
             {
@@ -48,7 +49,11 @@ namespace Ombi.Schedule.Jobs.Lidarr
                         if (artists != null && artists.Any())
                         {
                             // Let's remove the old cached data
-                            await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM LidarrArtistCache");
+                            using (var tran = await _ctx.Database.BeginTransactionAsync())
+                            {
+                                await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM LidarrArtistCache");
+                                tran.Commit();
+                            }
 
                             var artistCache = new List<LidarrArtistCache>();
                             foreach (var a in artists)
@@ -64,9 +69,14 @@ namespace Ombi.Schedule.Jobs.Lidarr
                                     });
                                 }
                             }
-                            await _ctx.LidarrArtistCache.AddRangeAsync(artistCache);
 
-                            await _ctx.SaveChangesAsync();
+                            using (var tran = await _ctx.Database.BeginTransactionAsync())
+                            {
+                                await _ctx.LidarrArtistCache.AddRangeAsync(artistCache);
+
+                                await _ctx.SaveChangesAsync();
+                                tran.Commit();
+                            }
                         }
                     }
                     catch (Exception ex)

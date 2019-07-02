@@ -74,7 +74,8 @@
     "ViewOnEmby": "Regarder sur Emby",
     "RequestAdded": "La demande pour {{title}} a été ajoutée avec succès",
     "Similar": "Similaires",
-    "Refine": "Refine",
+    "Refine": "Affiner",
+    "SearchBarPlaceholder": "Tapez ici pour rechercher",
     "Movies": {
       "PopularMovies": "Films populaires",
       "UpcomingMovies": "Films à venir",

@@ -27,6 +27,8 @@ using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Api.Github;
 using Ombi.Core.Engine;
+using Ombi.Schedule;
+using Quartz;
 
 namespace Ombi.Controllers
 {
@@ -44,7 +46,6 @@ namespace Ombi.Controllers
             IMapper mapper,
             INotificationTemplatesRepository templateRepo,
             IEmbyApi embyApi,
-            IRadarrSync radarrSync,
             ICacheService memCache,
             IGithubApi githubApi,
             IRecentlyAddedEngine engine)
@@ -53,7 +54,6 @@ namespace Ombi.Controllers
             Mapper = mapper;
             TemplateRepository = templateRepo;
             _embyApi = embyApi;
-            _radarrSync = radarrSync;
             _cache = memCache;
             _githubApi = githubApi;
             _recentlyAdded = engine;
@@ -63,7 +63,6 @@ namespace Ombi.Controllers
         private IMapper Mapper { get; }
         private INotificationTemplatesRepository TemplateRepository { get; }
         private readonly IEmbyApi _embyApi;
-        private readonly IRadarrSync _radarrSync;
         private readonly ICacheService _cache;
         private readonly IGithubApi _githubApi;
         private readonly IRecentlyAddedEngine _recentlyAdded;
@@ -387,7 +386,8 @@ namespace Ombi.Controllers
             {
                 _cache.Remove(CacheKeys.RadarrRootProfiles);
                 _cache.Remove(CacheKeys.RadarrQualityProfiles);
-                BackgroundJob.Enqueue(() => _radarrSync.CacheContent());
+
+                await OmbiQuartz.TriggerJob(nameof(IRadarrSync), "DVR");
             }
             return result;
         }
@@ -547,8 +547,8 @@ namespace Ombi.Controllers
 
                 try
                 {
-                    var r = CrontabSchedule.TryParse(expression);
-                    if (r == null)
+                    var isValid = CronExpression.IsValidExpression(expression);
+                    if (!isValid)
                     {
                         return new JobSettingsViewModel
                         {
@@ -578,14 +578,15 @@ namespace Ombi.Controllers
             var model = new CronTestModel();
             try
             {
-                var time = DateTime.UtcNow;
-                var result = CrontabSchedule.TryParse(body.Expression);
-                for (int i = 0; i < 10; i++)
+                var isValid = CronExpression.IsValidExpression(body.Expression);
+                if (!isValid)
                 {
-                    var next = result.GetNextOccurrence(time);
-                    model.Schedule.Add(next);
-                    time = next;
+                    return new CronTestModel
+                    {
+                        Message = $"CRON Expression {body.Expression} is not valid"
+                    };
                 }
+               
                 model.Success = true;
                 return model;
             }
@@ -596,8 +597,6 @@ namespace Ombi.Controllers
                     Message = $"CRON Expression {body.Expression} is not valid"
                 };
             }
-
-
         }
 
 
@@ -943,6 +942,40 @@ namespace Ombi.Controllers
 
             // Lookup to see if we have any templates saved
             model.NotificationTemplates = BuildTemplates(NotificationAgent.Mobile);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Saves the gotify notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/gotify")]
+        public async Task<bool> GotifyNotificationSettings([FromBody] GotifyNotificationViewModel model)
+        {
+            // Save the email settings
+            var settings = Mapper.Map<GotifySettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.UpdateRange(model.NotificationTemplates);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the gotify Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/gotify")]
+        public async Task<GotifyNotificationViewModel> GotifyNotificationSettings()
+        {
+            var settings = await Get<GotifySettings>();
+            var model = Mapper.Map<GotifyNotificationViewModel>(settings);
+
+            // Lookup to see if we have any templates saved
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Gotify);
 
             return model;
         }

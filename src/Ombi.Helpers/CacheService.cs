@@ -28,18 +28,15 @@ namespace Ombi.Helpers
                 return result;
             }
 
-            using (await _mutex.LockAsync())
+            if (_memoryCache.TryGetValue(cacheKey, out result))
             {
-                if (_memoryCache.TryGetValue(cacheKey, out result))
-                {
-                    return result;
-                }
-
-                result = await factory();
-                _memoryCache.Set(cacheKey, result, absoluteExpiration);
-
                 return result;
             }
+
+            result = await factory();
+            _memoryCache.Set(cacheKey, result, absoluteExpiration);
+
+            return result;
         }
 
         public void Remove(string key)
@@ -47,34 +44,34 @@ namespace Ombi.Helpers
             _memoryCache.Remove(key);
         }
 
-        
-           
-            public T GetOrAdd<T>(string cacheKey, Func<T> factory, DateTime absoluteExpiration)
+
+
+        public T GetOrAdd<T>(string cacheKey, Func<T> factory, DateTime absoluteExpiration)
+        {
+            // locks get and set internally
+            if (_memoryCache.TryGetValue<T>(cacheKey, out var result))
             {
-                // locks get and set internally
-                if (_memoryCache.TryGetValue<T>(cacheKey, out var result))
+                return result;
+            }
+
+            lock (TypeLock<T>.Lock)
+            {
+                if (_memoryCache.TryGetValue(cacheKey, out result))
                 {
                     return result;
                 }
 
-                lock (TypeLock<T>.Lock)
-                {
-                    if (_memoryCache.TryGetValue(cacheKey, out result))
-                    {
-                        return result;
-                    }
+                result = factory();
+                _memoryCache.Set(cacheKey, result, absoluteExpiration);
 
-                    result = factory();
-                    _memoryCache.Set(cacheKey, result, absoluteExpiration);
-
-                    return result;
-                }
+                return result;
             }
+        }
 
-            private static class TypeLock<T>
-            {
-                public static object Lock { get; } = new object();
-            }
-        
+        private static class TypeLock<T>
+        {
+            public static object Lock { get; } = new object();
+        }
+
     }
 }

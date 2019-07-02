@@ -4,12 +4,13 @@ using Ombi.Store.Entities;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Ombi.Helpers;
 
 namespace Ombi.Store.Repository
 {
-    public class TokenRepository : ITokenRepository
+    public class TokenRepository : BaseRepository<Tokens, IOmbiContext>, ITokenRepository
     {
-        public TokenRepository(IOmbiContext db)
+        public TokenRepository(IOmbiContext db) : base(db)
         {
             Db = db;
         }
@@ -19,7 +20,7 @@ namespace Ombi.Store.Repository
         public async Task CreateToken(Tokens token)
         {
             await Db.Tokens.AddAsync(token);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public IQueryable<Tokens> GetToken(string tokenId)

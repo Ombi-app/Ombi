@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Core.Settings;
+using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -11,12 +13,14 @@ namespace Ombi.Core.Rule.Rules.Search
 {
     public class EmbyAvailabilityRule : BaseSearchRule, IRules<SearchViewModel>
     {
-        public EmbyAvailabilityRule(IEmbyContentRepository repo)
+        public EmbyAvailabilityRule(IEmbyContentRepository repo, ISettingsService<EmbySettings> s)
         {
             EmbyContentRepository = repo;
+            EmbySettings = s;
         }
 
         private IEmbyContentRepository EmbyContentRepository { get; }
+        private ISettingsService<EmbySettings> EmbySettings { get; }
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {
@@ -60,7 +64,16 @@ namespace Ombi.Core.Rule.Rules.Search
             if (item != null)
             {
                 obj.Available = true;
-                obj.EmbyUrl = item.Url;
+                var s = await EmbySettings.GetSettingsAsync();
+                var server = s.Servers.FirstOrDefault(x => x.ServerHostname != null);
+                if ((server?.ServerHostname ?? string.Empty).HasValue())
+                {
+                    obj.EmbyUrl = $"{server.ServerHostname}#!/itemdetails.html?id={item.EmbyId}";
+                }
+                else
+                {
+                    obj.EmbyUrl = $"https://app.emby.media/#!/itemdetails.html?id={item.EmbyId}";
+                }
 
                 if (obj.Type == RequestType.TvShow)
                 {

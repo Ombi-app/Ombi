@@ -40,7 +40,7 @@ namespace Ombi.Controllers.External
             IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
             IPlexApi plex, IEmbyApi emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider,
             ICouchPotatoApi cpApi, ITelegramNotification telegram, ISickRageApi srApi, INewsletterJob newsletter, IMobileNotification mobileNotification,
-            ILidarrApi lidarrApi)
+            ILidarrApi lidarrApi, IGotifyNotification gotifyNotification)
         {
             Service = service;
             DiscordNotification = notification;
@@ -61,6 +61,7 @@ namespace Ombi.Controllers.External
             Newsletter = newsletter;
             MobileNotification = mobileNotification;
             LidarrApi = lidarrApi;
+            GotifyNotification = gotifyNotification;
         }
 
         private INotificationService Service { get; }
@@ -69,6 +70,7 @@ namespace Ombi.Controllers.External
         private IPushbulletNotification PushbulletNotification { get; }
         private ISlackNotification SlackNotification { get; }
         private IPushoverNotification PushoverNotification { get; }
+        private IGotifyNotification GotifyNotification { get; }
         private IMattermostNotification MattermostNotification { get; }
         private IPlexApi PlexApi { get; }
         private IRadarrApi RadarrApi { get; }
@@ -150,6 +152,30 @@ namespace Ombi.Controllers.External
             catch (Exception e)
             {
                 Log.LogError(LoggingEvents.Api, e, "Could not test Pushover");
+                return false;
+            }
+
+        }
+
+        /// <summary>
+        /// Sends a test message to Gotify using the provided settings
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("gotify")]
+        public bool Gotify([FromBody] GotifySettings settings)
+        {
+            try
+            {
+                settings.Enabled = true;
+                GotifyNotification.NotifyAsync(
+                    new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test Gotify");
                 return false;
             }
 

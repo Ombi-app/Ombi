@@ -84,7 +84,7 @@ namespace Ombi.Api.Lidarr
 
         public Task<AlbumByArtistResponse> GetAlbumsByArtist(string foreignArtistId)
         {
-            var request = new Request(string.Empty, $"https://api.lidarr.audio/api/v0.3/artist/{foreignArtistId}",
+            var request = new Request(string.Empty, $"https://api.lidarr.audio/api/v0.4/artist/{foreignArtistId}",
                 HttpMethod.Get) {IgnoreBaseUrlAppend = true};
             return Api.Request<AlbumByArtistResponse>(request);
         }
@@ -103,6 +103,31 @@ namespace Ombi.Api.Lidarr
 
             AddHeaders(request, apiKey);
             return Api.Request<List<AlbumResponse>>(request);
+        }
+
+        public async Task<AlbumByForeignId> AlbumInformation(string albumId, string apiKey, string baseUrl)
+        {
+            var request = new Request($"{ApiVersion}/album", baseUrl, HttpMethod.Get);
+            request.AddQueryString("foreignAlbumId", albumId);
+            AddHeaders(request, apiKey);
+            var albums = await Api.Request<List<AlbumByForeignId>>(request);
+            return albums.FirstOrDefault();
+        }
+
+
+        /// <summary>
+        /// THIS ONLY SUPPORTS ALBUMS THAT THE ARTIST IS IN LIDARR
+        /// </summary>
+        /// <param name="albumId"></param>
+        /// <param name="apiKey"></param>
+        /// <param name="baseUrl"></param>
+        /// <returns></returns>
+        public Task<List<LidarrTrack>> GetTracksForAlbum(int albumId, string apiKey, string baseUrl)
+        {
+            var request = new Request($"{ApiVersion}/album", baseUrl, HttpMethod.Get);
+            request.AddQueryString("albumId", albumId.ToString());
+            AddHeaders(request, apiKey);
+            return Api.Request<List<LidarrTrack>>(request);
         }
 
         public Task<ArtistResult> AddArtist(ArtistAdd artist, string apiKey, string baseUrl)

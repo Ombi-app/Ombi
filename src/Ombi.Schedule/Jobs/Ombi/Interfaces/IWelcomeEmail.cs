@@ -3,7 +3,7 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Schedule.Jobs.Ombi
 {
-    public interface IWelcomeEmail : IBaseJob
+    public interface IWelcomeEmail
     {
         Task SendEmail(OmbiUser user);
     }

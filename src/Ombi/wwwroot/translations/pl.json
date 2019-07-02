@@ -10,7 +10,7 @@
     }
   },
   "Common": {
-    "ContinueButton": "Dalej",
+    "ContinueButton": "Kontynuuj",
     "Available": "Dostępne",
     "PartiallyAvailable": "Częściowo dostępne",
     "Monitored": "Monitorowane",
@@ -18,14 +18,14 @@
     "ProcessingRequest": "Przetwarzanie zgłoszenia",
     "PendingApproval": "Oczekujące na zatwierdzenie",
     "RequestDenied": "Zgłoszenie odrzucone",
-    "NotRequested": "Nie zgłoszone",
+    "NotRequested": "Niezgłoszone",
     "Requested": "Zgłoszone",
     "Request": "Zgłoszenie",
     "Denied": "Odrzucone",
     "Approve": "Zatwierdź",
     "PartlyAvailable": "Częściowo dostępne",
     "Errors": {
-      "Validation": "Sprawdź wprowadzone dane"
+      "Validation": "Proszę sprawdzić wprowadzone wartości"
     }
   },
   "PasswordReset": {
@@ -33,11 +33,11 @@
     "ResetPasswordButton": "Zresetuj hasło"
   },
   "LandingPage": {
-    "OnlineHeading": "Dostępny",
+    "OnlineHeading": "Aktualnie online",
     "OnlineParagraph": "Serwer multimediów jest aktualnie online",
     "PartiallyOnlineHeading": "Częściowo online",
     "PartiallyOnlineParagraph": "Serwer multimediów jest częściowo online.",
-    "MultipleServersUnavailable": "{{serversUnavailable}} serwerów spośród {{totalServers}} jest offline.",
+    "MultipleServersUnavailable": "{{serversUnavailable}} serwery(ów) spośród {{totalServers}} jest offline.",
     "SingleServerUnavailable": "{{serversUnavailable}} serwer z {{totalServers}} jest w offline.",
     "OfflineHeading": "Aktualnie offline",
     "OfflineParagraph": "Serwer multimediów jest aktualnie offline.",
@@ -51,7 +51,7 @@
     "Vote": "Głosowania",
     "Donate": "Wesprzyj!",
     "DonateLibraryMaintainer": "Wesprzyj właściciela biblioteki",
-    "DonateTooltip": "W ten sposób przekonuję moją żonę by spędzać mój wolny czas rozwijając Ombi ;)",
+    "DonateTooltip": "Tak przekonuję moją żonę, aby pozwalała mi w wolnym czasie rozwijać Ombi ;)",
     "UpdateAvailableTooltip": "Dostępna aktualizacja!",
     "Settings": "Ustawienia",
     "Welcome": "Witaj {{username}}",
@@ -71,13 +71,14 @@
     "DigitalDate": "Wydanie cyfrowe: {{date}}",
     "TheatricalRelease": "Premiera kinowa: {{date}}",
     "ViewOnPlex": "Obejrzyj w Plex",
-    "ViewOnEmby": "Obejrzyj na Emby",
-    "RequestAdded": "Zgłoszenie dla {{title}} zostało dodane",
+    "ViewOnEmby": "Obejrzyj w Emby",
+    "RequestAdded": "Zgłoszenie dla {{title}} zostało pomyślnie dodane",
     "Similar": "Podobne",
     "Refine": "Zawęź",
+    "SearchBarPlaceholder": "Wpisz tutaj, aby wyszukać",
     "Movies": {
       "PopularMovies": "Popularne filmy",
-      "UpcomingMovies": "Wkrótce w kinach",
+      "UpcomingMovies": "Nadchodzące filmy",
       "TopRatedMovies": "Najwyżej oceniane filmy",
       "NowPlayingMovies": "W kinach",
       "HomePage": "Strona główna",
@@ -101,9 +102,9 @@
   },
   "Requests": {
     "Title": "Zgłoszenia",
-    "Paragraph": "Poniżej są twoje i wszystkie inne zgłoszenia, a także ich status akceptacji i pobierania.",
+    "Paragraph": "Poniżej znajdują się Twoje i wszystkie inne zgłoszenia, a także ich status akceptacji i pobierania.",
     "MoviesTab": "Filmy",
-    "TvTab": "Programy TV",
+    "TvTab": "Seriale",
     "MusicTab": "Muzyka",
     "RequestedBy": "Zgłoszone przez:",
     "Status": "Status:",
@@ -117,7 +118,7 @@
     "QualityOverride": "Wymuszenie jakości:",
     "RootFolderOverride": "Wymuszenie folderu głównego:",
     "ChangeRootFolder": "Folder główny",
-    "ChangeQualityProfile": "Wybór jakości",
+    "ChangeQualityProfile": "Profil jakości",
     "MarkUnavailable": "Oznacz jako niedostępne",
     "MarkAvailable": "Oznacz jako dostępne",
     "Remove": "Usuń",
@@ -128,7 +129,7 @@
     "GridStatus": "Status",
     "ReportIssue": "Zgłoś problem",
     "Filter": "Filtr",
-    "Sort": "Sortowanie",
+    "Sort": "Sortuj",
     "SeasonNumberHeading": "Sezon: {seasonNumber}",
     "SortTitleAsc": "Tytuł ▲",
     "SortTitleDesc": "Tytuł ▼",
@@ -151,7 +152,7 @@
     "ResolvedTitle": "Problemy rozwiązane",
     "ColumnTitle": "Tytuł",
     "Category": "Kategoria",
-    "Status": "Stan",
+    "Status": "Status",
     "Details": "Szczegóły",
     "Description": "Opis",
     "NoComments": "Brak komentarzy!",
@@ -164,17 +165,17 @@
     "ReportedBy": "Zgłoszone przez"
   },
   "Filter": {
-    "ClearFilter": "Wyczyść fltr",
+    "ClearFilter": "Wyczyść filtr",
     "FilterHeaderAvailability": "Dostępność",
     "FilterHeaderRequestStatus": "Status",
     "Approved": "Zatwierdzone",
     "PendingApproval": "Oczekujące na zatwierdzenie"
   },
   "UserManagment": {
-    "TvRemaining": "TV: pozostało {{remaining}}/{{total}}",
+    "TvRemaining": "Seriale: pozostało {{remaining}}/{{total}}",
     "MovieRemaining": "Filmy: pozostało {{remaining}}/{{total}}",
     "MusicRemaining": "Muzyka: pozostało {{remaining}}/{{total}}",
-    "TvDue": "TV: {{date}}",
+    "TvDue": "Serial: {{date}}",
     "MovieDue": "Film: {{date}}",
     "MusicDue": "Muzyka: {{date}}"
   },

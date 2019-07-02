@@ -16,7 +16,7 @@ namespace Ombi.Core.Tests.Rule.Search
         public void Setup()
         {
             ContextMock = new Mock<IEmbyContentRepository>();
-            Rule = new EmbyAvailabilityRule(ContextMock.Object);
+            Rule = new EmbyAvailabilityRule(ContextMock.Object, null);
         }
 
         private EmbyAvailabilityRule Rule { get; set; }

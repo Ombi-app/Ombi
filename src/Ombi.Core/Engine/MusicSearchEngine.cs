@@ -60,6 +60,18 @@ namespace Ombi.Core.Engine
             return vm;
         }
 
+        public async Task<SearchAlbumViewModel> GetAlbumInformation(string foreignAlbumId)
+        {
+            var settings = await GetSettings();
+            var result = await _lidarrApi.AlbumInformation(foreignAlbumId, settings.ApiKey, settings.FullUri);
+
+
+            var vm = await MapIntoAlbumVm(result, settings);
+
+
+            return vm;
+        }
+
         /// <summary>
         /// Searches the specified artist
         /// </summary>
@@ -143,6 +155,47 @@ namespace Ombi.Core.Engine
             return vm;
         }
 
+
+        // TODO
+        private async Task<SearchAlbumViewModel> MapIntoAlbumVm(AlbumByForeignId a, LidarrSettings settings)
+        {
+            var vm = new SearchAlbumViewModel
+            {
+                ForeignAlbumId = a.foreignAlbumId,
+                Monitored = a.monitored,
+                Rating = a.ratings?.value ?? 0m,
+                ReleaseDate = a.releaseDate,
+                Title = a.title,
+                Disk = a.images?.FirstOrDefault(x => x.coverType.Equals("disc"))?.url?.Replace("http", "https"),
+                Genres = a.genres,
+                AlbumType = a.albumType,
+                ArtistName = a.artist.artistName,
+                ForeignArtistId = a.artist.foreignArtistId,
+            };
+            if (a.artistId > 0)
+            {
+                //TODO THEY HAVE FIXED THIS IN DEV
+                // The JSON is different for some stupid reason
+                // Need to lookup the artist now and all the images -.-"
+                var artist = await _lidarrApi.GetArtist(a.artistId, settings.ApiKey, settings.FullUri);
+                vm.ArtistName = artist.artistName;
+                vm.ForeignArtistId = artist.foreignArtistId;
+            }
+            else
+            {
+                //vm.ForeignArtistId = a.artistId?.foreignArtistId;
+                //vm.ArtistName = a.artist?.artistName;
+            }
+
+            vm.Cover = a.images?.FirstOrDefault(x => x.coverType.Equals("cover"))?.url?.Replace("http", "https");
+
+            await Rules.StartSpecificRules(vm, SpecificRules.LidarrAlbum);
+
+            await RunSearchRules(vm);
+
+            return vm;
+        }
+
         private async Task<SearchAlbumViewModel> MapIntoAlbumVm(AlbumLookup a, LidarrSettings settings)
         {
             var vm = new SearchAlbumViewModel
@@ -152,7 +205,8 @@ namespace Ombi.Core.Engine
                 Rating = a.ratings?.value ?? 0m,
                 ReleaseDate = a.releaseDate,
                 Title = a.title,
-                Disk = a.images?.FirstOrDefault(x => x.coverType.Equals("disc"))?.url
+                Disk = a.images?.FirstOrDefault(x => x.coverType.Equals("disc"))?.url?.Replace("http", "https"),
+                Genres = a.genres
             };
             if (a.artistId > 0)
             {
@@ -169,7 +223,7 @@ namespace Ombi.Core.Engine
                 vm.ArtistName = a.artist?.artistName;
             }
 
-            vm.Cover = a.images?.FirstOrDefault(x => x.coverType.Equals("cover"))?.url;
+            vm.Cover = a.images?.FirstOrDefault(x => x.coverType.Equals("cover"))?.url?.Replace("http", "https");
             if (vm.Cover.IsNullOrEmpty())
             {
                 vm.Cover = a.remoteCover;

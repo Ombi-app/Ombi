@@ -1,12 +1,12 @@
 {
   "Login": {
-    "SignInButton": "Registrar",
+    "SignInButton": "Iniciar sessão",
     "UsernamePlaceholder": "Nome de usuário",
-    "PasswordPlaceholder": "Senha",
-    "RememberMe": "Lembre-se de mim",
-    "ForgottenPassword": "Esqueceu sua senha?",
+    "PasswordPlaceholder": "Palavra-passe",
+    "RememberMe": "Guardar a minha autênticação",
+    "ForgottenPassword": "Esqueceu-se da sua palavra-passe?",
     "Errors": {
-      "IncorrectCredentials": "Nome de usuário ou senha incorretos"
+      "IncorrectCredentials": "Nome de usuário ou palavra-passe incorretos"
     }
   },
   "Common": {
@@ -14,13 +14,13 @@
     "Available": "Disponível",
     "PartiallyAvailable": "Parcialmente Disponível",
     "Monitored": "Monitorado",
-    "NotAvailable": "Inisponível",
-    "ProcessingRequest": "Processando Solicitação",
+    "NotAvailable": "Não Disponível",
+    "ProcessingRequest": "A processar o pedido",
     "PendingApproval": "Aprovação Pendente",
-    "RequestDenied": "Solicitação Negada",
-    "NotRequested": "Não Solicitado",
-    "Requested": "Solicitado",
-    "Request": "Solicitar",
+    "RequestDenied": "Pedido negado",
+    "NotRequested": "Não pedido",
+    "Requested": "Pedido",
+    "Request": "Pedir",
     "Denied": "Negado",
     "Approve": "Aprovar",
     "PartlyAvailable": "Parcialmente Disponível",
@@ -30,34 +30,34 @@
   },
   "PasswordReset": {
     "EmailAddressPlaceholder": "Endereço de e-mail",
-    "ResetPasswordButton": "Redefinir Senha"
+    "ResetPasswordButton": "Redefinir palavra-passe"
   },
   "LandingPage": {
     "OnlineHeading": "Online Agora",
-    "OnlineParagraph": "O servidor de mídia está atualmente online",
+    "OnlineParagraph": "O servidor de media está actualmente online",
     "PartiallyOnlineHeading": "Parcialmente Online",
-    "PartiallyOnlineParagraph": "O servidor de mídia está parcialmente online.",
-    "MultipleServersUnavailable": "Existem {{serversUnavailable}} servidores offline em um total de {{totalServers}}.",
-    "SingleServerUnavailable": "Existe {{serversUnavailable}} servidor offline em um total de {{totalServers}}.",
-    "OfflineHeading": "Offline Agora",
-    "OfflineParagraph": "O servidor de mídia está atualmente offline.",
-    "CheckPageForUpdates": "Verifique esta página para atualizações contínuas do site."
+    "PartiallyOnlineParagraph": "O servidor de media está parcialmente online.",
+    "MultipleServersUnavailable": "Existem {{serversUnavailable}} servidores offline de um total de {{totalServers}}.",
+    "SingleServerUnavailable": "Existe {{serversUnavailable}} servidor offline de um total de {{totalServers}}.",
+    "OfflineHeading": "Actualmente Offline",
+    "OfflineParagraph": "O servidor de media está actualmente offline.",
+    "CheckPageForUpdates": "Verifique esta página para acompanhar as atualizações do site."
   },
   "NavigationBar": {
     "Search": "Pesquisar",
-    "Requests": "Solicitações",
-    "UserManagement": "Gerenciador de Usuário",
-    "Issues": "Problemas",
+    "Requests": "Pedidos",
+    "UserManagement": "Gestor de utilizadores",
+    "Issues": "Incidentes",
     "Vote": "Votar",
     "Donate": "Fazer uma doação!",
     "DonateLibraryMaintainer": "Doar para o Dono da Biblioteca",
-    "DonateTooltip": "É assim que eu convenço a minha mulher a deixar-me passar o meu tempo livre desenvolvendo Ombi;)",
+    "DonateTooltip": "É assim que eu convenço a minha mulher a deixar-me passar o meu tempo livre a desenvolver o Ombi ;)",
     "UpdateAvailableTooltip": "Atualização Disponível!",
     "Settings": "Configurações",
     "Welcome": "Bem-vindo, {{username}}",
-    "UpdateDetails": "Detalhes da Atualização",
+    "UpdateDetails": "Detalhes da Actualização",
     "Logout": "Sair",
-    "OpenMobileApp": "Abrir aplicativo do celular",
+    "OpenMobileApp": "Abrir app móvel",
     "RecentlyAdded": "Recentemente adicionado"
   },
   "Search": {
@@ -75,6 +75,7 @@
     "RequestAdded": "Pedido de {{title}} foi adicionado com sucesso",
     "Similar": "Semelhante",
     "Refine": "Filtro",
+    "SearchBarPlaceholder": "Digite aqui para pesquisar",
     "Movies": {
       "PopularMovies": "Filmes populares",
       "UpcomingMovies": "Próximos filmes",

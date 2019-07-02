@@ -57,9 +57,6 @@ namespace Ombi
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            services.AddDbContext<OmbiContext>();
-
             services.AddIdentity<OmbiUser, IdentityRole>()
                 .AddEntityFrameworkStores<OmbiContext>()
                 .AddDefaultTokenProviders()
@@ -125,6 +122,8 @@ namespace Ombi
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
+
+            app.UseQuartz().GetAwaiter().GetResult();
 
             var ctx = serviceProvider.GetService<IOmbiContext>();
             loggerFactory.AddSerilog();
@@ -193,8 +192,8 @@ namespace Ombi
             GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 3 });
             
             // Setup the scheduler
-            var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
-            jobSetup.Setup();
+            //var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
+            //jobSetup.Setup();
             ctx.Seed();
             var settingsctx = serviceProvider.GetService<ISettingsContext>();
             var externalctx = serviceProvider.GetService<IExternalContext>();
@@ -217,7 +216,14 @@ namespace Ombi
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                if (settings.BaseUrl.HasValue())
+                {
+                    c.SwaggerEndpoint($"{settings.BaseUrl}/swagger/v1/swagger.json", "My API V1");
+                }
+                else
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                }
             });
 
             app.UseMvc(routes =>
