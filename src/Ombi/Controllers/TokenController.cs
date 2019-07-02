@@ -150,7 +150,14 @@ namespace Ombi.Controllers
             }
 
             user.LastLoggedIn = DateTime.UtcNow;
-            //await GlobalMutex.Lock(async () => await _userManager.UpdateAsync(user)).ConfigureAwait(false);
+            try
+            {
+                await _userManager.UpdateAsync(user);
+            }
+            catch (Exception)
+            {
+                
+            }
 
             return new JsonResult(new
             {
