@@ -1,6 +1,332 @@
 # Changelog
 
-## v3.0.4256 (2019-02-18)
+## (unreleased)
+
+### **New Features**
+
+- Added further logging into the API's (debug logging) [tidusjar]
+
+- Added transactions around all of the CUD operations. [Jamie Rees]
+
+- Update stale.yml. [Jamie]
+
+- Update README.md. [Dyson Parkes]
+
+- Added stalebot. [tidusjar]
+
+- Added some validation around the new crons. [Jamie Rees]
+
+- Added some defensive coding around when we create an artist for #2915. [tidusjar]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update JobSetup.cs. [Jamie]
+
+- Update JobSetup.cs. [Jamie]
+
+- Added a global mutex (not used yet) and moved around the code for loggin in since I suspect the Get Roles call is using deffered execution on the database causing the lock when attempting to access straight away #2750. [Jamie Rees]
+
+- Added a lock on the database commit level to see if I can improve locked db's. [Jamie Rees]
+
+- Update dependancies. [TidusJar]
+
+- Update CHANGELOG.md. [Jamie]
+
+### **Fixes**
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (Hungarian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- New translations en.json (Bulgarian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Hungarian) [Jamie]
+
+- New translations en.json (Bulgarian) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Hungarian) [Jamie]
+
+- New translations en.json (Bulgarian) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Hungarian) [Jamie]
+
+- New translations en.json (Hungarian) [Jamie]
+
+- New translations en.json (Hungarian) [Jamie]
+
+- New translations en.json (Hungarian) [Jamie]
+
+- New translations en.json (Hungarian) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Hungarian) [Jamie]
+
+- New translations en.json (Bulgarian) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- Fixed the issue where the recently added scan was actually calling the RefreshMedia which ends up wiping out the Plex cache instead of refreshing the metadata... i'm a dumbass #3023. [tidusjar]
+
+- Fix #3027. [Jamie]
+
+- Log the request. [tidusjar]
+
+- Really fixed #3010 this time. That's embarrassing. [Jamie]
+
+- Renamed "Extensions" for Spelling Mistake. [bdrumm1234]
+
+- #3010 - Make sure we only sync the Monitored Radarr movies... [tidusjar]
+
+- Fixed build. [Jamie Rees]
+
+- Fixed #2995. [Jamie Rees]
+
+- Fixed. [tidusjar]
+
+- Import System.IO. [Patrick Collins]
+
+- Add exception to handle unknown RequestType. [Patrick Collins]
+
+- Add braces to all if statements. [Patrick Collins]
+
+- Fix album-request-permission error message. [Patrick Collins]
+
+- Use string interpolation. [Austin Jackson]
+
+- Swagger index prepends configured baseurl. [Austin Jackson]
+
+- Add a internal retry when we have a locked db. [Jamie Rees]
+
+- Fixed #2374. [tidusjar]
+
+- Fixed #2950. [Jamie Rees]
+
+- Fixed #2967. [Jamie Rees]
+
+- Re-re fix the remove button. [goldenpipes]
+
+- Fixed the other error for #2955. [tidusjar]
+
+- Stuff. [tidusjar]
+
+- Logging. [tidusjar]
+
+- More to debug logging. [tidusjar]
+
+- Start the scheduler after the jobs have been assigned. [tidusjar]
+
+- Fixed some of the issues with the new scheduler not firing correctly. [Jamie Rees]
+
+- Placeholder Text for Search Boxes (#2939) [Kris Klosterman]
+
+- Reset all of the schedules due to Quartz using a different CRON system. Updated the UI code to reflect this. [tidusjar]
+
+- Fixed the scheduler! [tidusjar]
+
+- Attempting to get the new triggers working. [Jamie Rees]
+
+- Swap out the scheduler #2750. [Jamie Rees]
+
+- Moved the jobs to use quartz. [tidusjar]
+
+- Fixed the mixed content warnings and the error when removing a album request #2884. [tidusjar]
+
+- Fixed #2910. [tidusjar]
+
+- Fix for broken twitch url in readme file. [PotatoQuality]
+
+- Reverted the global app lock for the db #2750. [tidusjar]
+
+- #2750 stuff. [Jamie Rees]
+
+- More for #2750. [Jamie Rees]
+
+- Removed the auditing, was not used anyway #2750. [Jamie Rees]
+
+- Fixed #2803 in regards to the Request Button showing up. Still need to investiagte the availability side of things. [Jamie Rees]
+
+- Delete the schedules db on startup, we don't want it trying to recover the jobs. [tidusjar]
+
+- Fixed the issue where it was not picking up roles until the JWT was refreshed. [tidusjar]
+
+- Add Gotify as notification provider. [Guillaume Taquet Gasperini]
+
+- Fix cake build by setting Incubator version. [Guillaume Taquet Gasperini]
+
+- Set the View On Emby Url at runtime so the user can configure and change the URL and it will take effect straight away. [Jamie Rees]
+
+- Made use of the global mutex, this should now hopefully work #2750. [Jamie Rees]
+
+- Fixed #2636. [TidusJar]
+
+- Take out the lastlogindate update for now #2750. [tidusjar]
+
+- Fixed build. [Jamie Rees]
+
+- Fixed #2860 When a future series is unknown it should appear as available when we have the other seasons. [Jamie Rees]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- Fixed a migration issue. [tidusjar]
+
+- Set the CommandTimeout longer to see if EF can get a handle on the SQLite file when it's locked #2750. [tidusjar]
+
+- Prevented #2848 from erroring out causing further issues. [TidusJar]
+
+- Fixed #2847. [TidusJar]
+
+- Fixed a regression issue where TV Shows couldn't be requested. [TidusJar]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- Fix typo. [Jeff]
+
+- Fixed an issue where the Subscribe button was appearing on available movies. [TidusJar]
+
+- Converted the Plex Jobs to use Quartz. [Jamie]
+
+
+## v3.0.4256 (2019-02-19)
+
+### **New Features**
+
+- Update CHANGELOG.md. [Jamie]
+
+### **Fixes**
+
+- Fixed #2826. [tidusjar]
+
+
+## v3.0.4248 (2019-02-18)
 
 ### **New Features**
 
@@ -25,6 +351,22 @@
 - Added new classes to the posters #2732. [TidusJar]
 
 ### **Fixes**
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (German) [Jamie]
 
 - Fix: src/Ombi/package.json to reduce vulnerabilities. [snyk-bot]
 
