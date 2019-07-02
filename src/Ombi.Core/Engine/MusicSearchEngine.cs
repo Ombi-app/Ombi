@@ -157,7 +157,7 @@ namespace Ombi.Core.Engine
 
 
         // TODO
-        private async Task<SearchAlbumViewModel> MapIntoAlbumVm(AlbumResponse a, LidarrSettings settings)
+        private async Task<SearchAlbumViewModel> MapIntoAlbumVm(AlbumByForeignId a, LidarrSettings settings)
         {
             var vm = new SearchAlbumViewModel
             {
@@ -167,7 +167,10 @@ namespace Ombi.Core.Engine
                 ReleaseDate = a.releaseDate,
                 Title = a.title,
                 Disk = a.images?.FirstOrDefault(x => x.coverType.Equals("disc"))?.url?.Replace("http", "https"),
-                Genres = a.genres
+                Genres = a.genres,
+                AlbumType = a.albumType,
+                ArtistName = a.artist.artistName,
+                ForeignArtistId = a.artist.foreignArtistId,
             };
             if (a.artistId > 0)
             {
@@ -185,10 +188,6 @@ namespace Ombi.Core.Engine
             }
 
             vm.Cover = a.images?.FirstOrDefault(x => x.coverType.Equals("cover"))?.url?.Replace("http", "https");
-            if (vm.Cover.IsNullOrEmpty())
-            {
-                //vm.Cover = a.remoteCover;
-            }
 
             await Rules.StartSpecificRules(vm, SpecificRules.LidarrAlbum);
 

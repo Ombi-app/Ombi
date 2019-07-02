@@ -75,6 +75,7 @@
     "RequestAdded": "{{title}} er anmodet med succes",
     "Similar": "Lignende",
     "Refine": "Refine",
+    "SearchBarPlaceholder": "Type Here to Search",
     "Movies": {
       "PopularMovies": "Populære film",
       "UpcomingMovies": "Kommende film",

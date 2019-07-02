@@ -63,7 +63,12 @@ namespace Ombi.Store.Context
         {
             // VACUUM;
             Database.ExecuteSqlCommand("VACUUM;");
-            SaveChanges();
+
+            using (var tran = Database.BeginTransaction())
+            {
+                SaveChanges();
+                tran.Commit();
+            }
         }
     }
 }

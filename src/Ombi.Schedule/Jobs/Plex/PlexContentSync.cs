@@ -118,10 +118,10 @@ namespace Ombi.Schedule.Jobs.Plex
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
                 // Just check what we send it
-                await OmbiQuartz.TriggerJob(nameof(IMediaDatabaseRefresh), "System");
+                await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
             }
 
-            if ((processedContent?.HasProcessedEpisodes ?? false) && recentlyAddedSearch)
+            if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
 
                 await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
@@ -208,10 +208,10 @@ namespace Ombi.Schedule.Jobs.Plex
                             }
                             contentToAdd.Clear();
                         }
-                        if (count > 200)
+                        if (count > 30)
                         {
                             await Repo.SaveChangesAsync();
-
+                            count = 0;
                         }
                     }
 
@@ -245,7 +245,7 @@ namespace Ombi.Schedule.Jobs.Plex
                             }
                             contentToAdd.Clear();
                         }
-                        if (count > 200)
+                        if (count > 30)
                         {
                             await Repo.SaveChangesAsync();
                         }

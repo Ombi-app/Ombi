@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Ombi.Helpers;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
+using Polly;
 
 namespace Ombi.Store.Repository
 {
@@ -83,7 +85,25 @@ namespace Ombi.Store.Repository
 
         protected async Task<int> InternalSaveChanges()
         {
-            return await _ctx.SaveChangesAsync();
+            var policy = Policy
+                .Handle<SqliteException>()
+                .WaitAndRetryAsync(new[]
+                {
+                    TimeSpan.FromSeconds(1),
+                    TimeSpan.FromSeconds(2),
+                    TimeSpan.FromSeconds(3)
+                });
+
+            var result = await policy.ExecuteAndCaptureAsync(async () =>
+            {
+                using (var tran = await _ctx.Database.BeginTransactionAsync())
+                {
+                    var r = await _ctx.SaveChangesAsync();
+                    tran.Commit();      
+                    return r;
+                }
+            });
+            return result.Result;
         }
 
 

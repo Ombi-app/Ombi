@@ -84,7 +84,7 @@ namespace Ombi.Api.Lidarr
 
         public Task<AlbumByArtistResponse> GetAlbumsByArtist(string foreignArtistId)
         {
-            var request = new Request(string.Empty, $"https://api.lidarr.audio/api/v0.3/artist/{foreignArtistId}",
+            var request = new Request(string.Empty, $"https://api.lidarr.audio/api/v0.4/artist/{foreignArtistId}",
                 HttpMethod.Get) {IgnoreBaseUrlAppend = true};
             return Api.Request<AlbumByArtistResponse>(request);
         }
@@ -105,14 +105,13 @@ namespace Ombi.Api.Lidarr
             return Api.Request<List<AlbumResponse>>(request);
         }
 
-        public async Task<AlbumResponse> AlbumInformation(string albumId, string apiKey, string baseUrl)
+        public async Task<AlbumByForeignId> AlbumInformation(string albumId, string apiKey, string baseUrl)
         {
             var request = new Request($"{ApiVersion}/album", baseUrl, HttpMethod.Get);
             request.AddQueryString("foreignAlbumId", albumId);
             AddHeaders(request, apiKey);
-            var albums = await Api.Request<List<AlbumResponse>>(request);
-            return albums.Where(x => x.foreignAlbumId.Equals(albumId, StringComparison.InvariantCultureIgnoreCase))
-                .FirstOrDefault();
+            var albums = await Api.Request<List<AlbumByForeignId>>(request);
+            return albums.FirstOrDefault();
         }
 
 

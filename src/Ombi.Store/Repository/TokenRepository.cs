@@ -8,9 +8,9 @@ using Ombi.Helpers;
 
 namespace Ombi.Store.Repository
 {
-    public class TokenRepository : ITokenRepository
+    public class TokenRepository : BaseRepository<Tokens, IOmbiContext>, ITokenRepository
     {
-        public TokenRepository(IOmbiContext db)
+        public TokenRepository(IOmbiContext db) : base(db)
         {
             Db = db;
         }
@@ -26,10 +26,6 @@ namespace Ombi.Store.Repository
         public IQueryable<Tokens> GetToken(string tokenId)
         {
             return Db.Tokens.Where(x => x.Token == tokenId);
-        }
-        private async Task<int> InternalSaveChanges()
-        {
-            return await Db.SaveChangesAsync();
         }
     }
 }

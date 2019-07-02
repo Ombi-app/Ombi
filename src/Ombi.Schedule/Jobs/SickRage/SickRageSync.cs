@@ -46,8 +46,12 @@ namespace Ombi.Schedule.Jobs.SickRage
                 {
                     var srShows = shows.data.Values;
                     var ids = srShows.Select(x => x.tvdbid);
+                    using (var tran = await _ctx.Database.BeginTransactionAsync())
+                    {
+                        await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM SickRageCache");
+                        tran.Commit();
+                    }
 
-                    await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM SickRageCache");
                     var entites = ids.Select(id => new SickRageCache { TvDbId = id }).ToList();
 
                     await _ctx.SickRageCache.AddRangeAsync(entites);
@@ -74,8 +78,12 @@ namespace Ombi.Schedule.Jobs.SickRage
 
                     }
 
-                    await _ctx.SickRageEpisodeCache.AddRangeAsync(episodesToAdd);
-                    await _ctx.SaveChangesAsync();
+                    using (var tran = await _ctx.Database.BeginTransactionAsync())
+                    {
+                        await _ctx.SickRageEpisodeCache.AddRangeAsync(episodesToAdd);
+                        await _ctx.SaveChangesAsync();
+                        tran.Commit();
+                    }
                 }
             }
             catch (Exception e)

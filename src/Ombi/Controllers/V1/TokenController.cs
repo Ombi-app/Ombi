@@ -149,7 +149,14 @@ namespace Ombi.Controllers.V1
             }
 
             user.LastLoggedIn = DateTime.UtcNow;
-            await _userManager.UpdateAsync(user);
+            try
+            {
+                await _userManager.UpdateAsync(user);
+            }
+            catch (Exception)
+            {
+                
+            }
 
             return new JsonResult(new
             {
