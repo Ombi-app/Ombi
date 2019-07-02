@@ -12,7 +12,6 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { CookieService } from "ng2-cookies";
-import { NgxEditorModule } from "ngx-editor";
 import { GrowlModule } from "primeng/components/growl/growl";
 import {
     ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DialogModule, OverlayPanelModule, SharedModule, SidebarModule,
@@ -113,7 +112,6 @@ export function JwtTokenGetter() {
         DataTableModule,
         MatSnackBarModule,
         SharedModule,
-        NgxEditorModule,
         MatSnackBarModule,
         DialogModule,
         MatButtonModule,
