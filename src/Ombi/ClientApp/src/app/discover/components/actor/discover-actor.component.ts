@@ -15,7 +15,7 @@ export class DiscoverActorComponent implements AfterViewInit {
     public loadingFlag: boolean;
 
     public discoverResults: IDiscoverCardResult[] = [];
-
+    
     constructor(private searchService: SearchV2Service,
         private route: ActivatedRoute) {
         this.route.params.subscribe((params: any) => {
@@ -29,15 +29,15 @@ export class DiscoverActorComponent implements AfterViewInit {
     }
 
     public async ngAfterViewInit() {
-        this.discoverResults.forEach((result) => {
-            this.searchService.getFullMovieDetails(result.id).subscribe(x => {
-                result.available = x.available;
-                result.approved = x.approved;
-                result.rating = x.voteAverage;
-                result.requested = x.requested;
-                result.url = x.homepage;
-            });
-        });
+        // this.discoverResults.forEach((result) => {
+        //     this.searchService.getFullMovieDetails(result.id).subscribe(x => {
+        //         result.available = x.available;
+        //         result.approved = x.approved;
+        //         result.rating = x.voteAverage;
+        //         result.requested = x.requested;
+        //         result.url = x.homepage;
+        //     });
+        // });
     }
 
     private createModel() {

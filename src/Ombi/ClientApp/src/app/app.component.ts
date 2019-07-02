@@ -54,10 +54,10 @@ export class AppComponent implements OnInit {
         private signalrNotification: SignalRNotificationService,
         private readonly snackBar: MatSnackBar) {
 
-        // const base = this.platformLocation.getBaseHrefFromDOM();
-        // if (base.length > 1) {
-        //     __webpack_public_path__ = base + "/dist/";
-        // }
+        const base = '/' + (window.location.pathname.split('/')[1] || '');
+        if (base.length > 1) {
+            __webpack_public_path__ = base + "/dist/";
+        }
 
         this.translate.addLangs(["en", "de", "fr", "da", "es", "it", "nl", "sv", "no", "pl", "pt"]);
 

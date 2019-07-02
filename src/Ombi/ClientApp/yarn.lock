@@ -645,9 +645,12 @@ amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
 
-angular-bootstrap-md@^7.3.0:
-  version "7.3.0"
-  resolved "https://registry.yarnpkg.com/angular-bootstrap-md/-/angular-bootstrap-md-7.3.0.tgz#cc0db9035553ffe0168049bfac9de92cfe5ee268"
+angular-bootstrap-md@^7.5.4:
+  version "7.5.4"
+  resolved "https://registry.yarnpkg.com/angular-bootstrap-md/-/angular-bootstrap-md-7.5.4.tgz#1e6c482729380b98aea7dec9b4d7a4f4e187e08c"
+  integrity sha512-LBVqSswd49hJ3YNTkXzwM0Cn1+9SQ2kVYQxX36ZjxaKNeDQKaUk3V2Rb/y8krhDJrPJh37pDzRmlCDObg37EIA==
+  dependencies:
+    tslib "^1.9.0"
 
 angular-router-loader@^0.8.5:
   version "0.8.5"
