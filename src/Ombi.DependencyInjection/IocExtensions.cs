@@ -64,6 +64,7 @@ using Ombi.Schedule.Jobs.SickRage;
 using Ombi.Schedule.Processor;
 using Ombi.Store.Entities;
 using Quartz.Spi;
+using Ombi.Api.MusicBrainz;
 
 namespace Ombi.DependencyInjection
 {
@@ -145,6 +146,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IOneSignalApi, OneSignalApi>();
             services.AddTransient<ILidarrApi, LidarrApi>();
             services.AddTransient<IGroupMeApi, GroupMeApi>();
+            services.AddTransient<IMusicBrainzApi, MusicBrainzApi>();
         }
 
         public static void RegisterStore(this IServiceCollection services) { 

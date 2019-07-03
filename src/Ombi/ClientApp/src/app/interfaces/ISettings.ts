@@ -186,6 +186,7 @@ export interface IAbout {
   osDescription: string;
   processArchitecture: string;
   applicationBasePath: string;
+  notSupported: boolean;
 }
 
 export interface ICouchPotatoSettings extends IExternalSettings {
