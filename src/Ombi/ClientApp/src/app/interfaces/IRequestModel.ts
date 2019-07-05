@@ -15,6 +15,7 @@ export interface IMovieRequests extends IFullBaseRequest {
   digitalReleaseDate: Date;
   subscribed: boolean;
   showSubscribe: boolean;
+  requestStatus: string;
 
   // For the UI
   rootPathOverrideTitle: string;
