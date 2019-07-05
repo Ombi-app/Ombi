@@ -9,5 +9,6 @@
         public string OsDescription { get; set; }
         public string ProcessArchitecture { get; set; }
         public string ApplicationBasePath { get; set; }
+        public bool NotSupported { get; set; }
     }
 }

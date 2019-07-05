@@ -27,7 +27,8 @@ namespace Ombi.Api
 
         private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
-            NullValueHandling = NullValueHandling.Ignore
+            NullValueHandling = NullValueHandling.Ignore,
+            ContractResolver = new PluralPropertyContractResolver()
         };
 
         public async Task<T> Request<T>(Request request, CancellationToken cancellationToken = default(CancellationToken))

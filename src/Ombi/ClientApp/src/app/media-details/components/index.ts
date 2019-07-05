@@ -14,6 +14,7 @@ import { MovieAdvancedOptionsComponent } from "./movie/panels/movie-advanced-opt
 import { SearchService, RequestService, RadarrService } from "../../services";
 import { RequestServiceV2 } from "../../services/requestV2.service";
 import { NewIssueComponent } from "./shared/new-issue/new-issue.component";
+import { ArtistDetailsComponent } from "./artist/artist-details.component";
 
 export const components: any[] = [
     MovieDetailsComponent,
@@ -30,6 +31,7 @@ export const components: any[] = [
     MovieAdminPanelComponent,
     MovieAdvancedOptionsComponent,
     NewIssueComponent,
+    ArtistDetailsComponent,
 ];
 
 export const entryComponents: any[] = [

@@ -122,7 +122,8 @@ namespace Ombi.Controllers.V1
                 OsArchitecture = RuntimeInformation.OSArchitecture.ToString(),
                 OsDescription = RuntimeInformation.OSDescription,
                 ProcessArchitecture = RuntimeInformation.ProcessArchitecture.ToString(),
-                ApplicationBasePath =Directory.GetCurrentDirectory()
+                ApplicationBasePath = Directory.GetCurrentDirectory(),
+                NotSupported = Directory.GetCurrentDirectory().Contains("qpkg")
             };
             
             var version = AssemblyHelper.GetRuntimeVersion();
