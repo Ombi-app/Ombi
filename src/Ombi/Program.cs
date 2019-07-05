@@ -20,6 +20,8 @@ namespace Ombi
         {
             Console.Title = "Ombi";
 
+            SQLitePCL.raw.sqlite3_config(2);
+
             var host = string.Empty;
             var storagePath = string.Empty;
             var baseUrl = string.Empty;
