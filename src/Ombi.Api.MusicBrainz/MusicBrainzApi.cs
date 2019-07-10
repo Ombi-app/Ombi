@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Ombi.Api;
+
 using Ombi.Api.MusicBrainz.Models;
-using Ombi.Api.MusicBrainz.Models.Lookup;
+using Ombi.Api.MusicBrainz.Models.Browse;
 using Ombi.Api.MusicBrainz.Models.Search;
 
 namespace Ombi.Api.MusicBrainz
@@ -30,16 +30,16 @@ namespace Ombi.Api.MusicBrainz
             return albums.Data.Where(x => !x.type.Equals("Person", StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public async Task<IEnumerable<ReleaseGroups>> GetReleaseGroups(string artistId)
+        public async Task<IEnumerable<Release>> GetReleaseForArtist(string artistId)
         {
-            var request = new Request("release-group", _baseUrl, HttpMethod.Get);
+            var request = new Request("release", _baseUrl, HttpMethod.Get);
 
             request.AddQueryString("artist", artistId);
+            request.AddQueryString("inc", "recordings");
             AddHeaders(request);
 
-            // The count properties for release groups is called releasegroupcount... Will sort this out if I need paging
-            var releases = await _api.Request<MusicBrainzResult<ReleaseGroups>>(request);
-            return releases.Data;
+            var releases = await _api.Request<ReleaseResult>(request);
+            return releases.releases;
         }
 
         private void AddHeaders(Request req)

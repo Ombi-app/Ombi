@@ -1,15 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
+using Ombi.Api.MusicBrainz;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Authentication;
 using Ombi.Core.Models.Requests;
+using Ombi.Core.Models.Search.V2;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
+using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 
@@ -19,18 +23,54 @@ namespace Ombi.Core.Engine.V2
     {
         public MultiSearchEngine(IPrincipal identity, IRequestServiceMain requestService, IRuleEvaluator rules,
             OmbiUserManager um, ICacheService cache, ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub,
-            IMovieDbApi movieDbApi) 
+            IMovieDbApi movieDbApi, ISettingsService<LidarrSettings> lidarrSettings, IMusicBrainzApi musicApi) 
             : base(identity, requestService, rules, um, cache, ombiSettings, sub)
         {
             _movieDbApi = movieDbApi;
+            _lidarrSettings = lidarrSettings;
+            _musicApi = musicApi;
         }
 
         private readonly IMovieDbApi _movieDbApi;
+        private readonly ISettingsService<LidarrSettings> _lidarrSettings;
+        private readonly IMusicBrainzApi _musicApi;
 
 
-        public async Task<List<MultiSearch>> MultiSearch(string searchTerm,  CancellationToken cancellationToken, string lang = "en")
+        public async Task<List<MultiSearchResult>> MultiSearch(string searchTerm,  CancellationToken cancellationToken, string lang = "en")
         {
-            return (await _movieDbApi.MultiSearch(searchTerm, lang, cancellationToken)).results;
+            var model = new List<MultiSearchResult>();
+
+            var movieDbData = (await _movieDbApi.MultiSearch(searchTerm, lang, cancellationToken)).results;
+            
+            var lidarrSettings = await _lidarrSettings.GetSettingsAsync();
+            if (lidarrSettings.Enabled)
+            {
+                var artistResult = await _musicApi.SearchArtist(searchTerm);
+                foreach (var artist in artistResult)
+                {
+                    model.Add(new MultiSearchResult
+                    {
+                        MediaType = "Artist",
+                        Title = artist.name
+                    });
+                }
+            }
+
+            foreach (var multiSearch in movieDbData)
+            {
+                var result = new MultiSearchResult
+                {
+                    MediaType = multiSearch.media_type,
+                };
+
+                if (multiSearch.media_type.Equals("movie", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    if (multiSearch.release_date.HasValue() && DateTime.TryParse(multiSearch.release_date, out var releaseDate))
+                    {
+                        result.Title =  
+                    }
+                }
+            }
         }
     }
 }

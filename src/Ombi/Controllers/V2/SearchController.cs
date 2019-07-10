@@ -49,7 +49,7 @@ namespace Ombi.Controllers.V2
         ///  all Star Wars movies and Star Wars Rebels the TV Sho</param>
         /// <returns></returns>
         [HttpGet("multi/{searchTerm}")]
-        public async Task<List<MultiSearch>> MultiSearch(string searchTerm)
+        public async Task<List<MultiSearchResult>> MultiSearch(string searchTerm)
         {
             return await _multiSearchEngine.MultiSearch(searchTerm, Request.HttpContext.RequestAborted);
         }

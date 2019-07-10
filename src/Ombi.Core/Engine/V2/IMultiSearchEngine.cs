@@ -2,11 +2,12 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Ombi.Api.TheMovieDb.Models;
+using Ombi.Core.Models.Search.V2;
 
 namespace Ombi.Core.Engine.V2
 {
     public interface IMultiSearchEngine
     {
-        Task<List<MultiSearch>> MultiSearch(string searchTerm, CancellationToken cancellationToken, string lang = "en");
+        Task<List<MultiSearchResult>> MultiSearch(string searchTerm, CancellationToken cancellationToken, string lang = "en");
     }
 }
