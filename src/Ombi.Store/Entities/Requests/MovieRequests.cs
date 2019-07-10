@@ -33,5 +33,28 @@ namespace Ombi.Store.Entities.Requests
         [NotMapped]
         [JsonIgnore]
         public string LanguageCode => LangCode.IsNullOrEmpty() ? "en" : LangCode;
+
+        [NotMapped]
+        public string RequestStatus {
+            get
+            {
+                if (Approved & Available)
+                {
+                    return "Common.Available";
+                }
+
+                if (Approved & !Available)
+                {
+                    return "Common.ProcessingRequest";
+                }
+
+                if (!Approved && !Available)
+                {
+                    return "Common.PendingApproval";
+                }
+
+                return string.Empty;
+            }
+        }
     }
 }
