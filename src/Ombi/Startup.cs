@@ -91,17 +91,14 @@ namespace Ombi
             services.AddSwagger();
             services.AddAppSettingsValues(Configuration);
 
-            var i  = StoragePathSingleton.Instance;
-            if (string.IsNullOrEmpty(i.StoragePath))
-            {
-                i.StoragePath = string.Empty;
-            }
-
             services.AddHangfire(x =>
             {
                 x.UseMemoryStorage();
                 x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
             });
+
+
+            SQLitePCL.raw.sqlite3_config(2);
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
