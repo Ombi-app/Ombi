@@ -1,6 +1,6 @@
 # Changelog
 
-## (unreleased)
+## v3.0.4659 (2019-07-02)
 
 ### **New Features**
 

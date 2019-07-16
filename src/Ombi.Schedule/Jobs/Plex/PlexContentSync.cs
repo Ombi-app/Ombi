@@ -167,7 +167,8 @@ namespace Ombi.Schedule.Jobs.Plex
 
             foreach (var content in allContent)
             {
-                if (content.viewGroup.Equals(PlexMediaType.Episode.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                Logger.LogDebug($"Got type '{content.viewGroup}' to process");
+                if (content.viewGroup.Equals(PlexMediaType.Episode.ToString(), StringComparison.InvariantCultureIgnoreCase))
                 {
                     Logger.LogDebug("Found some episodes, this must be a recently added sync");
                     var count = 0;
@@ -211,7 +212,7 @@ namespace Ombi.Schedule.Jobs.Plex
                         episodesProcessed.AddRange(episodesAdded.Select(x => x.Id));
                     }
                 }
-                if (content.viewGroup.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                if (content.viewGroup.Equals(PlexMediaType.Show.ToString(), StringComparison.InvariantCultureIgnoreCase))
                 {
                     // Process Shows
                     Logger.LogDebug("Processing TV Shows");
@@ -241,7 +242,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
                     await Repo.SaveChangesAsync();
                 }
-                if (content.viewGroup.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                if (content.viewGroup.Equals(PlexMediaType.Movie.ToString(), StringComparison.InvariantCultureIgnoreCase))
                 {
                     Logger.LogDebug("Processing Movies");
                     foreach (var movie in content?.Metadata ?? new Metadata[] { })
