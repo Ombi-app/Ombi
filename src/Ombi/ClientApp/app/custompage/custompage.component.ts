@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, SecurityContext } from "@angular/core";
+﻿import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
 import { AuthService } from "../auth/auth.service";
@@ -15,13 +15,13 @@ export class CustomPageComponent implements OnInit {
     public isAdmin: boolean;
 
     constructor(private auth: AuthService, private settings: CustomPageService, private fb: FormBuilder,
-                private notificationService: NotificationService, 
-                private sanitizer: DomSanitizer) {
+        private notificationService: NotificationService,
+        private sanitizer: DomSanitizer) {
     }
 
     public ngOnInit() {
         this.settings.getCustomPage().subscribe(x => {
-            x.html = this.sanitizer.sanitize(SecurityContext.HTML, this.sanitizer.bypassSecurityTrustHtml(x.html));
+            x.html = this.sanitizer.bypassSecurityTrustHtml(x.html);
             this.form = this.fb.group({
                 enabled: [x.enabled],
                 title: [x.title, [Validators.required]],
