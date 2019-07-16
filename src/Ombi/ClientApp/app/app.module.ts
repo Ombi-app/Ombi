@@ -16,8 +16,7 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { CookieService } from "ng2-cookies";
 import { NgxEditorModule } from "ngx-editor";
 import { GrowlModule } from "primeng/components/growl/growl";
-import { ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DialogModule, OverlayPanelModule, SharedModule, SidebarModule,
-    TooltipModule } from "primeng/primeng";
+import { ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DialogModule, OverlayPanelModule, SharedModule, SidebarModule, TooltipModule } from "primeng/primeng";
 
 // Components
 import { AppComponent } from "./app.component";
@@ -39,7 +38,7 @@ import { ImageService } from "./services";
 import { LandingPageService } from "./services";
 import { NotificationService } from "./services";
 import { SettingsService } from "./services";
-import { CustomPageService, IssuesService, JobService, PlexTvService, StatusService } from "./services";
+import { CustomPageService, IssuesService, JobService, PlexTvService, SafeHtmlPipe, StatusService } from "./services";
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
@@ -129,6 +128,7 @@ export function JwtTokenGetter() {
         CustomPageComponent,
         CookieComponent,
         LoginOAuthComponent,
+        SafeHtmlPipe,
     ],
     providers: [
         NotificationService,
