@@ -223,11 +223,11 @@ namespace Ombi.Api.Plex
             await AddHeaders(request);
             
             request.AddQueryString("code", code);
-            request.AddQueryString("context[device][product]", ApplicationName);
+            request.AddQueryString("context[device][product]", "Plex Web"); // Note this is to work around Plex's shit https://forums.plex.tv/t/plex-oauth-not-working-with-tautulli-ombi-etc/433945
             request.AddQueryString("context[device][environment]", "bundled");
             request.AddQueryString("context[device][layout]", "desktop");
             request.AddQueryString("context[device][platform]", "Web");
-            request.AddQueryString("context[device][device]", "Ombi (Web)");
+            request.AddQueryString("context[device][device]", "Plex");
 
             var s = await GetSettings();
             await CheckInstallId(s);
@@ -293,9 +293,9 @@ namespace Ombi.Api.Plex
             var s = await GetSettings();
             await CheckInstallId(s);
             request.AddHeader("X-Plex-Client-Identifier", s.InstallId.ToString("N"));
-            request.AddHeader("X-Plex-Product", ApplicationName);
+            request.AddHeader("X-Plex-Product", "Plex Web");
             request.AddHeader("X-Plex-Version", "3");
-            request.AddHeader("X-Plex-Device", "Ombi (Web)");
+            request.AddHeader("X-Plex-Device", "Plex");
             request.AddHeader("X-Plex-Platform", "Web");
             request.AddContentHeader("Content-Type", request.ContentType == ContentType.Json ? "application/json" : "application/xml");
             request.AddHeader("Accept", "application/json");
