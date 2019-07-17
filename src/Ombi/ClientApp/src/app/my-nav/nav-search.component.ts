@@ -15,27 +15,12 @@ import { NgbTypeaheadSelectItemEvent } from '@ng-bootstrap/ng-bootstrap';
 export class NavSearchComponent {
 
     public selectedItem: string;
-
     
     public searching = false;
     public searchFailed = false;
     
     public formatter = (result: IMultiSearchResult) =>  {
-        if(result.media_type === "movie") {
-            let title = result.title;
-            if(result.release_date) {
-                title += ` (${result.release_date.slice(0,4)})`;
-            }
-            return title;
-        } else if (result.media_type === "tv") {
-            let title = result.name;
-            if(result.release_date) {
-                title += ` (${result.release_date.slice(0,4)})`;
-            }
-            return title;
-        } else if(result.media_type === "person"){
-            return result.name;
-        }
+        return result.title;
     }
     
     public searchModel = (text$: Observable<string>) =>
@@ -54,13 +39,13 @@ export class NavSearchComponent {
   
 
     public selected(event: NgbTypeaheadSelectItemEvent) {
-        if (event.item.media_type == "movie") {
+        if (event.item.mediaType == "movie") {
             this.router.navigate([`details/movie/${event.item.id}`]);
             return;
-        } else if (event.item.media_type == "tv") {
+        } else if (event.item.mediaType == "tv") {
             this.router.navigate([`details/tv/${event.item.id}/true`]);
             return;
-        } else if (event.item.media_type == "person") {
+        } else if (event.item.mediaType == "person") {
             this.router.navigate([`discover/actor/${event.item.id}`]);
             return;
         }

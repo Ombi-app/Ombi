@@ -23,7 +23,7 @@ namespace Ombi.Core.Engine.V2
     {
         public MultiSearchEngine(IPrincipal identity, IRequestServiceMain requestService, IRuleEvaluator rules,
             OmbiUserManager um, ICacheService cache, ISettingsService<OmbiSettings> ombiSettings, IRepository<RequestSubscription> sub,
-            IMovieDbApi movieDbApi, ISettingsService<LidarrSettings> lidarrSettings, IMusicBrainzApi musicApi) 
+            IMovieDbApi movieDbApi, ISettingsService<LidarrSettings> lidarrSettings, IMusicBrainzApi musicApi)
             : base(identity, requestService, rules, um, cache, ombiSettings, sub)
         {
             _movieDbApi = movieDbApi;
@@ -36,12 +36,12 @@ namespace Ombi.Core.Engine.V2
         private readonly IMusicBrainzApi _musicApi;
 
 
-        public async Task<List<MultiSearchResult>> MultiSearch(string searchTerm,  CancellationToken cancellationToken, string lang = "en")
+        public async Task<List<MultiSearchResult>> MultiSearch(string searchTerm, CancellationToken cancellationToken, string lang = "en")
         {
             var model = new List<MultiSearchResult>();
 
             var movieDbData = (await _movieDbApi.MultiSearch(searchTerm, lang, cancellationToken)).results;
-            
+
             var lidarrSettings = await _lidarrSettings.GetSettingsAsync();
             if (lidarrSettings.Enabled)
             {
@@ -51,7 +51,8 @@ namespace Ombi.Core.Engine.V2
                     model.Add(new MultiSearchResult
                     {
                         MediaType = "Artist",
-                        Title = artist.name
+                        Title = artist.name,
+                        Id = artist.id
                     });
                 }
             }
@@ -67,10 +68,36 @@ namespace Ombi.Core.Engine.V2
                 {
                     if (multiSearch.release_date.HasValue() && DateTime.TryParse(multiSearch.release_date, out var releaseDate))
                     {
-                        result.Title =  
+                        result.Title = $"{multiSearch.title} ({releaseDate.Year})";
+                    }
+                    else
+                    {
+                        result.Title = multiSearch.title;
                     }
                 }
+
+                if (multiSearch.media_type.Equals("tv", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    if (multiSearch.release_date.HasValue() && DateTime.TryParse(multiSearch.release_date, out var releaseDate))
+                    {
+                        result.Title = $"{multiSearch.name} ({releaseDate.Year})";
+                    }
+                    else
+                    {
+                        result.Title = multiSearch.name;
+                    }
+                }
+
+                if (multiSearch.media_type.Equals("person", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    result.Title = multiSearch.name;
+                }
+
+                result.Id = multiSearch.id.ToString();
+                model.Add(result);
             }
+
+            return model;
         }
     }
 }

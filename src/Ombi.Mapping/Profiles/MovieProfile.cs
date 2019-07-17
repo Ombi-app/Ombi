@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Models.Search;
@@ -101,6 +102,7 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(x => x.Id, o => o.MapFrom(s => s.id))
                 .ForMember(x => x.Overview, o => o.MapFrom(s => s.overview))
                 .ForMember(x => x.PosterPath, o => o.MapFrom(s => s.poster_path))
+                .ForMember(x => x.ReleaseDate, o => o.MapFrom(s => DateTime.Parse(s.release_date)))
                 .ForMember(x => x.Title, o => o.MapFrom(s => s.title));
 
             CreateMap<SearchMovieViewModel, MovieCollection>().ReverseMap();

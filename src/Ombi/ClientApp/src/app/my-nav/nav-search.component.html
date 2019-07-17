@@ -4,24 +4,19 @@
 
 <ng-template #template let-result="result">
 
-    <div *ngIf="result.media_type === 'movie'">
+    <div *ngIf="result.mediaType === 'movie'">
         <i class="fa fa-film"></i> &nbsp;
-        <span *ngIf="result.release_date">
-            {{result.title}} ({{result.release_date.slice(0,4)}})
-        </span>
-        <span *ngIf="!result.release_date">{{result.title}}</span>
+        <span >{{result.title}}</span>
     </div>
-    <div *ngIf="result.media_type === 'tv'">
+    <div *ngIf="result.mediaType === 'tv'">
             <i class="fa fa-tv"></i> &nbsp;
-        <span *ngIf="result.release_date">
-            {{result.name}} ({{result.release_date.slice(0,4)}})
-        </span>
-        <span *ngIf="!result.release_date">{{result.name}}</span>
+     
+        <span>{{result.title}}</span>
     </div>
 
-    <div *ngIf="result.media_type === 'person'">
+    <div *ngIf="result.mediaType === 'person'">
         <i class="fa fa-user"></i> &nbsp;
-    <span *ngIf="result.name">{{result.name}}</span>
+    <span >{{result.title}}</span>
 </div>
     <!-- Collection -->
     <!-- <i class="fa fa-file-video-o" aria-hidden="true"></i> -->
