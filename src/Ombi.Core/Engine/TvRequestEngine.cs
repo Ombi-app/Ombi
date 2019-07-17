@@ -266,7 +266,61 @@ namespace Ombi.Core.Engine
 
             // Make sure we do not show duplicate child requests
             allRequests = allRequests.DistinctBy(x => x.ParentRequest.Title).ToList();
-         
+
+            allRequests = allRequests.Skip(position).Take(count).ToList();
+
+            return new RequestsViewModel<ChildRequests>
+            {
+                Collection = allRequests,
+                Total = total,
+            };
+        }
+        public async Task<RequestsViewModel<ChildRequests>> GetUnavailableRequests(int count, int position, string sortProperty, string sortOrder)
+        {
+            var shouldHide = await HideFromOtherUsers();
+            List<ChildRequests> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests = await TvRepository.GetChild(shouldHide.UserId).Where(x => !x.Available).ToListAsync();
+
+                // Filter out children
+
+                FilterChildren(allRequests, shouldHide);
+            }
+            else
+            {
+                allRequests = await TvRepository.GetChild().Where(x => !x.Available).ToListAsync();
+
+            }
+
+            if (allRequests == null)
+            {
+                return new RequestsViewModel<ChildRequests>();
+            }
+
+            var total = allRequests.Count;
+
+
+            var prop = TypeDescriptor.GetProperties(typeof(ChildRequests)).Find(sortProperty, true);
+
+            if (sortProperty.Contains('.'))
+            {
+                // This is a navigation property currently not supported
+                prop = TypeDescriptor.GetProperties(typeof(ChildRequests)).Find("Title", true);
+                //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
+                //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
+                //var propType = firstProp.PropertyType;
+                //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
+            }
+            allRequests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
+                ? allRequests.OrderBy(x => prop.GetValue(x)).ToList()
+                : allRequests.OrderByDescending(x => prop.GetValue(x)).ToList();
+            allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
+
+            // Make sure we do not show duplicate child requests
+            allRequests = allRequests.DistinctBy(x => x.ParentRequest.Title).ToList();
+            allRequests = allRequests.Skip(position).Take(count).ToList();
+
             return new RequestsViewModel<ChildRequests>
             {
                 Collection = allRequests,

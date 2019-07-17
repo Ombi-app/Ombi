@@ -209,13 +209,13 @@ namespace Ombi.Core.Engine
             {
                 allRequests =
                     MovieRepository.GetWithUser(shouldHide
-                        .UserId); 
+                        .UserId);
             }
             else
             {
                 allRequests =
                     MovieRepository
-                        .GetWithUser(); 
+                        .GetWithUser();
             }
 
             var prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(sortProperty, true);
@@ -230,8 +230,8 @@ namespace Ombi.Core.Engine
                 //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
             }
 
-            allRequests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase) 
-                ? allRequests.OrderBy(x => prop.GetValue(x)) 
+            allRequests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
+                ? allRequests.OrderBy(x => prop.GetValue(x))
                 : allRequests.OrderByDescending(x => prop.GetValue(x));
             var total = await allRequests.CountAsync();
             var requests = await allRequests.Skip(position).Take(count)
@@ -246,8 +246,54 @@ namespace Ombi.Core.Engine
                 Collection = requests,
                 Total = total
             };
-
         }
+        public async Task<RequestsViewModel<MovieRequests>> GetUnavailableRequests(int count, int position, string sortProperty, string sortOrder)
+        {
+            var shouldHide = await HideFromOtherUsers();
+            IQueryable<MovieRequests> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests =
+                    MovieRepository.GetWithUser(shouldHide
+                        .UserId).Where(x => !x.Available);
+            }
+            else
+            {
+                allRequests =
+                    MovieRepository
+                        .GetWithUser().Where(x => !x.Available);
+            }
+
+            var prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(sortProperty, true);
+
+            if (sortProperty.Contains('.'))
+            {
+                // This is a navigation property currently not supported
+                prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find("RequestedDate", true);
+                //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
+                //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
+                //var propType = firstProp.PropertyType;
+                //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
+            }
+
+            allRequests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
+                ? allRequests.OrderBy(x => prop.GetValue(x))
+                : allRequests.OrderByDescending(x => prop.GetValue(x));
+            var total = await allRequests.CountAsync();
+            var requests = await allRequests.Skip(position).Take(count)
+                .ToListAsync();
+            requests.ForEach(async x =>
+            {
+                x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
+                await CheckForSubscription(shouldHide, x);
+            });
+            return new RequestsViewModel<MovieRequests>
+            {
+                Collection = requests,
+                Total = total
+            };
+        }
+
 
         public async Task<RequestEngineResult> UpdateAdvancedOptions(MovieAdvancedOptions options)
         {
