@@ -281,7 +281,7 @@ namespace Ombi.Core.Engine
             List<ChildRequests> allRequests;
             if (shouldHide.Hide)
             {
-                allRequests = await TvRepository.GetChild(shouldHide.UserId).Where(x => !x.Available).ToListAsync();
+                allRequests = await TvRepository.GetChild(shouldHide.UserId).Where(x => !x.Available && x.Approved).ToListAsync();
 
                 // Filter out children
 
@@ -289,7 +289,7 @@ namespace Ombi.Core.Engine
             }
             else
             {
-                allRequests = await TvRepository.GetChild().Where(x => !x.Available).ToListAsync();
+                allRequests = await TvRepository.GetChild().Where(x => !x.Available && x.Approved).ToListAsync();
 
             }
 

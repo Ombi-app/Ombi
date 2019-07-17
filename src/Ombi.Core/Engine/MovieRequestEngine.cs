@@ -255,13 +255,13 @@ namespace Ombi.Core.Engine
             {
                 allRequests =
                     MovieRepository.GetWithUser(shouldHide
-                        .UserId).Where(x => !x.Available);
+                        .UserId).Where(x => !x.Available && x.Approved);
             }
             else
             {
                 allRequests =
                     MovieRepository
-                        .GetWithUser().Where(x => !x.Available);
+                        .GetWithUser().Where(x => !x.Available && x.Approved);
             }
 
             var prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(sortProperty, true);
