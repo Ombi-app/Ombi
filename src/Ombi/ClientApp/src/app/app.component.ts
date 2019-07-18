@@ -38,6 +38,7 @@ export class AppComponent implements OnInit {
     private checkedForUpdate: boolean;
     private hubConnected: boolean;
 
+    
 
     @HostBinding('class') public componentCssClass;
 
@@ -54,10 +55,9 @@ export class AppComponent implements OnInit {
         private signalrNotification: SignalRNotificationService,
         private readonly snackBar: MatSnackBar) {
 
-        const base = '/' + (window.location.pathname.split('/')[1] || '');
-        if (base.length > 1) {
-            __webpack_public_path__ = base + "/dist/";
-        }
+        
+            // __webpack_public_path__ = window['base-href']
+      
 
         this.translate.addLangs(["en", "de", "fr", "da", "es", "it", "nl", "sv", "no", "pl", "pt"]);
 

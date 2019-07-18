@@ -79,6 +79,8 @@ const routes: Routes = [
     { loadChildren: () => import("./user-preferences/user-preferences.module").then(m => m.UserPreferencesModule), path: "user-preferences" },
 ];
 
+
+
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLocation) {
     // const base = getBaseLocation();
@@ -181,7 +183,7 @@ export function JwtTokenGetter() {
         SignalRNotificationService,
         {
             provide: APP_BASE_HREF,
-            useValue: '/' + (window.location.pathname.split('/')[1] || '')
+            useValue: window["baseHref"]
         }
        ],
     bootstrap: [AppComponent],

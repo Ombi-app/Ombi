@@ -4,8 +4,14 @@
 <head>
   <script>
 
-var base = "/"+ (window.location.pathname.split('/')[1] || '');
-    //document.write("<base href='" + base + "' />");
+var base = "/";
+var locations = window.location.pathname.split('/');
+if(locations[1] !== 'login' && locations[1] !== 'discover') {
+  base = "/" + locations[1];
+}
+document.write("<base href='" + base + "' />");
+window["baseHref"] = base;
+console.log(base);
 </script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
