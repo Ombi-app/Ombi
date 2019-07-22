@@ -4570,6 +4570,11 @@ pkg-dir@^3.0.0:
   dependencies:
     find-up "^3.0.0"
 
+please-wait@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/please-wait/-/please-wait-0.0.5.tgz#67098ce6260e92e0809e2d3b7c23f1d167dad960"
+  integrity sha1-ZwmM5iYOkuCAni07fCPx0Wfa2WA=
+
 popper.js@^1.14.3:
   version "1.14.6"
   resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.14.6.tgz#ab20dd4edf9288b8b3b6531c47c361107b60b4b0"
@@ -5635,6 +5640,11 @@ speed-measure-webpack-plugin@1.3.1:
   integrity sha512-qVIkJvbtS9j/UeZumbdfz0vg+QfG/zxonAjzefZrqzkr7xOncLVXkeGbTpzd1gjCBM4PmVNkWlkeTVhgskAGSQ==
   dependencies:
     chalk "^2.0.1"
+
+spinkit@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/spinkit/-/spinkit-1.2.5.tgz#90f9f466a20e8e39ef24da959c1e611c2a30dd54"
+  integrity sha1-kPn0ZqIOjjnvJNqVnB5hHCow3VQ=
 
 split-string@^3.0.1, split-string@^3.0.2:
   version "3.1.0"

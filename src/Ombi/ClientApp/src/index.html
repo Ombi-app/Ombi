@@ -15,6 +15,10 @@ console.log(base);
 </script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+  <link href="/styles/please-wait.css" rel="stylesheet">
+  <link href="/styles/spinkit.css" rel="stylesheet">
+  <link href="/styles/11-folding-cube.css" rel="stylesheet">
+  <script src="/styles/please-wait.js"></script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -25,7 +29,26 @@ console.log(base);
 <body>
 
   <app-ombi>
-    <p class="loading">Loading<span>.</span><span>.</span><span>.</span></p>
+      <script type="text/javascript">
+      var colors = ["#f44336","#f44336","#9c27b0","#673ab7","#3f51b5","#2196f3","#03a9f4","#00bcd4","#009688","#4caf50","#cddc39","#ffeb3b","#ffc107","#ff9800","#ff5722","#9e9e9e","#607d8b"];
+      var bgColor = colors[Math.floor(Math.random() * colors.length)];
+        window.loading_screen = window.pleaseWait({
+          // logo: "assets/images/logo.png",
+          template: `<div class='pg-loading-inner'>
+  <div class='pg-loading-center-outer'>
+    <div class='pg-loading-center-middle'>
+      <h1 class='pg-loading-logo-header'>
+      </h1>
+      <div class='pg-loading-html'>
+      </div>
+      Loading
+    </div>
+  </div>
+</div>`,
+          backgroundColor: bgColor,
+          loadingHtml: "<div class='sk-folding-cube'><div class='sk-cube1 sk-cube'></div><div class='sk-cube2 sk-cube'></div><div class='sk-cube4 sk-cube'></div><div class='sk-cube3 sk-cube'></div></div>"
+        });
+      </script>
   </app-ombi>
 </body>
 

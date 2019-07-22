@@ -75,6 +75,7 @@ export class AppComponent implements OnInit {
     }
 
     public ngOnInit() {
+        window["loading_screen"].finish();
         const theme = this.storage.get("theme");
         this.onSetTheme(theme);
 
