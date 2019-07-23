@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 
 using Ombi.Api.MusicBrainz.Models;
+using Ombi.Api.MusicBrainz.Models.Artist;
 using Ombi.Api.MusicBrainz.Models.Browse;
 using Ombi.Api.MusicBrainz.Models.Search;
 
@@ -28,6 +29,14 @@ namespace Ombi.Api.MusicBrainz
             AddHeaders(request);
             var albums = await _api.Request<MusicBrainzResult<Artist>>(request);
             return albums.Data.Where(x => !x.type.Equals("Person", StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        public async Task<ArtistInformation> GetArtistInformation(string artistId)
+        {
+            var request = new Request($"artist/{artistId}", _baseUrl, HttpMethod.Get);
+            AddHeaders(request);
+
+            return await _api.Request<ArtistInformation>(request);
         }
 
         public async Task<IEnumerable<Release>> GetReleaseForArtist(string artistId)

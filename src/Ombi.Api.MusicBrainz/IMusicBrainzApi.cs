@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Ombi.Api.MusicBrainz.Models.Artist;
 using Ombi.Api.MusicBrainz.Models.Browse;
 using Ombi.Api.MusicBrainz.Models.Search;
 
@@ -9,5 +10,6 @@ namespace Ombi.Api.MusicBrainz
     {
         Task<IEnumerable<Artist>> SearchArtist(string artistQuery);
         Task<IEnumerable<Release>> GetReleaseForArtist(string artistId);
+        Task<ArtistInformation> GetArtistInformation(string artistId);
     }
 }
