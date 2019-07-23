@@ -1,8 +1,15 @@
 ﻿import { Injectable } from "@angular/core";
 import { Message } from "primeng/components/common/api";
+import { MatSnackBar, MatSnackBarConfig } from "@angular/material";
 
 @Injectable()
 export class NotificationService {
+    constructor(private snackbar: MatSnackBar) { }
+
+    private config: MatSnackBarConfig<any> = {
+        duration:3000,
+        
+    }
     public messages: Message[] = [];
     public addMessage(message: Message) {
         this.clearMessages();
@@ -11,19 +18,19 @@ export class NotificationService {
     }
 
     public success(body: string) {
-        this.addMessage({ severity: "success", detail: body });
+        this.snackbar.open(body, "OK", this.config);
     }
 
     public info(title: string, body: string) {
-        this.addMessage({ severity: "info", detail: body, summary: title });
+        this.snackbar.open(body, "OK", this.config);
     }
 
     public warning(title: string, body: string) {
-        this.addMessage({ severity: "warning", detail: body, summary: title });
+        this.snackbar.open(body, "OK", this.config);
     }
 
     public error(body: string) {
-        this.addMessage({ severity: "error", detail: body });
+        this.snackbar.open(body, "OK", this.config);
     }
 
     public clearMessages() {

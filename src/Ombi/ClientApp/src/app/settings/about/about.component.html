@@ -3,8 +3,8 @@
   <legend>About</legend>
 
   <div class="mat-table">
-      <div class="mat-row" style="background:red;" *ngIf="!notSupported">
-          <div class="mat-cell" style="text-align: center;"><b>NOT SUPPORTED OS. Please use the docker image available on the Container Station</b></div>
+      <div class="mat-row" style="background:red;" *ngIf="notSupported">
+          <div class="mat-cell" style="text-align: center;"><b>NOT SUPPORTED OS. Please use the docker image available on the Container Station (It's free)</b></div>
         </div>
     <div class="mat-row" *ngIf="connectedUsers">
       <div class="mat-cell">Users Online</div>

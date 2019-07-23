@@ -28,7 +28,7 @@ export class ArtistDetailsComponent {
         public dialog: MatDialog, private requestService: RequestService,
         public messageService: MessageService, private auth: AuthService) {
         this.route.params.subscribe((params: any) => {
-            this.theMovidDbId = params.movieDbId;
+            this.theMovidDbId = params.artistId;
             this.load();
         });
     }

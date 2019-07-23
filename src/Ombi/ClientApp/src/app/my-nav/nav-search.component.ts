@@ -48,6 +48,9 @@ export class NavSearchComponent {
         } else if (event.item.mediaType == "person") {
             this.router.navigate([`discover/actor/${event.item.id}`]);
             return;
+        } else if (event.item.mediaType == "Artist") {
+            this.router.navigate([`details/artist/${event.item.id}`]);
+            return;
         }
     }
 }

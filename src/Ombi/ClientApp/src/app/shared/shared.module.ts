@@ -13,7 +13,7 @@ import {
   MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatTooltipModule, MatSelectModule, MatTableModule, MatPaginatorModule, MatSortModule, 
   MatTreeModule, MatStepperModule, MatSnackBarModule} from '@angular/material';
   import {  MatCardModule, MatInputModule, MatTabsModule, MatAutocompleteModule, MatCheckboxModule, MatExpansionModule, MatDialogModule, MatProgressSpinnerModule,
-    MatChipsModule } from "@angular/material";
+    MatChipsModule, MatSlideToggleModule } from "@angular/material";
 import { EpisodeRequestComponent } from "./episode-request/episode-request.component";
 
 @NgModule({
@@ -51,6 +51,7 @@ import { EpisodeRequestComponent } from "./episode-request/episode-request.compo
     MatTreeModule,
     MatStepperModule,
     MatSnackBarModule,
+    MatSlideToggleModule,
   ],
   entryComponents: [
     EpisodeRequestComponent
@@ -88,6 +89,7 @@ import { EpisodeRequestComponent } from "./episode-request/episode-request.compo
       MatPaginatorModule,
       MatSortModule,
       MatStepperModule,
+      MatSlideToggleModule,
     ],
 })
 export class SharedModule {}
