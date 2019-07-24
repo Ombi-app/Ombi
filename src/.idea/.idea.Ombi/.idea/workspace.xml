@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="57001998-efde-494a-80b3-d7acfc91f770" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Ombi.Schedule.Tests/OmbiQuartzTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi.Schedule.Tests/OmbiQuartzTests.cs" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Ombi.Core/Engine/RecentlyAddedEngine.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="48">
+              <caret line="13" column="35" selection-start-line="13" selection-start-column="35" selection-end-line="13" selection-end-column="35" />
+              <folding>
+                <marker date="1551794439508" expanded="false" signature="6:298" ph="..." />
+                <marker date="1551794439508" expanded="true" signature="326:9789" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="388:9787" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="532:651" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="940:1305" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="1383:1650" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="1767:2189" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="2279:2616" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="2679:5848" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="2942:4312" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="2994:3060" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="3117:3484" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="3218:3464" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="3505:4298" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="3614:4280" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="3684:3774" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="3865:4256" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="4356:5748" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="4422:4488" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="4539:4906" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="4640:4886" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="4927:5734" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="5036:5716" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="5120:5210" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="5301:5692" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="6020:6344" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="6217:6307" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="6499:6714" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="6839:7280" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="6894:7270" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="6979:7254" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="7411:7905" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="7466:7895" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="7551:7879" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="8031:8974" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="8085:8964" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="8152:8950" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="8229:8932" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="8335:8908" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="9094:9781" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="9148:9771" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="9217:9757" ph="{...}" />
+                <marker date="1551794439508" expanded="true" signature="9311:9737" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Ombi/Controllers/V1/TokenController.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="368">
+              <caret line="52" column="33" lean-forward="true" selection-start-line="52" selection-start-column="33" selection-end-line="52" selection-end-column="33" />
+              <folding>
+                <marker date="1563908143819" expanded="false" signature="6:473" ph="..." />
+                <marker date="1563908143819" expanded="true" signature="504:8324" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="623:8322" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="782:959" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="1211:1358" ph="/// Gets the token. ... " />
+                <marker date="1563908143819" expanded="true" signature="1495:3130" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="1542:2262" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="1670:2024" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="1860:1961" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="2142:2248" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="2279:3074" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="2310:2364" ph="/* Plex OAuth ... */" />
+                <marker date="1563908143819" expanded="true" signature="2768:2963" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="2853:2943" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="3140:3277" ph="/// Returns the Token for the Ombi User if we can match the Plex user with a valid Ombi User ... " />
+                <marker date="1563908143819" expanded="true" signature="3486:3872" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="3541:3630" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="3745:3812" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="3960:5778" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="4087:4164" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="4219:4551" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="5207:5389" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="5238:5375" ph="/* Save the token so we can refresh it later ... */" />
+                <marker date="1563908143819" expanded="true" signature="5455:5537" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="5567:5612" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="5664:5766" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="5906:6893" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="6046:6280" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="6175:6264" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="6551:6832" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="6729:6818" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="6903:7122" ph="/// Refreshes the token. ... " />
+                <marker date="1563908143819" expanded="true" signature="7261:7553" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="7415:7492" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="7681:8164" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="7797:8054" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="7971:8040" ph="{...}" />
+                <marker date="1563908143819" expanded="true" signature="8199:8315" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/RecentlyAddedEngine.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi/Controllers/V1/TokenController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Helpers.Tests/EmbyHelperTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Schedule.Tests/OmbiQuartzTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/UserStatsEngine.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/Ombi.Schedule.Tests/OmbiQuartzTests.cs" />
+      </list>
+    </option>
+  </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/Ombi/ClientApp/package.json" />
+  </component>
+  <component name="ProjectConfigurationFiles">
+    <option name="files">
+      <list>
+        <option value="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/vcs.xml" />
+        <option value="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/indexLayout.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="260" />
+    <option name="y" value="20" />
+    <option name="width" value="1400" />
+    <option name="height" value="1000" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator currentView="SolutionExplorer" proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="SolutionExplorer">
+        <subPane>
+          <expand>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="Ombi" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="Ombi" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Ombi" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="Ombi" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Ombi" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Controllers" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="Ombi" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Ombi" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Controllers" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="V1" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+        <option name="show-all-files" value="false" />
+      </pane>
+      <pane id="AssemblyExplorer" />
+      <pane id="FileSystemExplorer" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="Rider.DefaultBreakpoints.AreToggled" value="true" />
+    <property name="Rider.ProjectViewActivator.IsNotFirstRun" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="nodejs_package_manager_path" value="npm" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected=".NET Launch Settings Profile.Ombi: IIS Express">
+    <configuration name="Ombi" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/Ombi/Ombi.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value=".NETCoreApp,Version=v2.2" />
+      <option name="LAUNCH_PROFILE_NAME" value="Ombi" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <method v="2">
+        <option name="Build" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Ombi: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/Ombi/Ombi.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value=".NETCoreApp,Version=v2.2" />
+      <option name="LAUNCH_PROFILE_NAME" value="IIS Express" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <method v="2">
+        <option name="Build" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Ombi.Schedule.Tests" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/Ombi.Schedule.Tests/Ombi.Schedule.Tests.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value=".NETCoreApp,Version=v2.2" />
+      <option name="LAUNCH_PROFILE_NAME" value="Ombi.Schedule.Tests" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <method v="2">
+        <option name="Build" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Ombi.Schedule.Tests: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/Ombi.Schedule.Tests/Ombi.Schedule.Tests.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value=".NETCoreApp,Version=v2.2" />
+      <option name="LAUNCH_PROFILE_NAME" value="IIS Express" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <method v="2">
+        <option name="Build" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Ombi.Updater" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/Ombi.Updater/Ombi.Updater.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value=".NETCoreApp,Version=v2.2" />
+      <option name="LAUNCH_PROFILE_NAME" value="Ombi.Updater" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <method v="2">
+        <option name="Build" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="57001998-efde-494a-80b3-d7acfc91f770" name="Default Changelist" comment="" />
+      <created>1563957157468</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1563957157468</updated>
+      <workItem from="1563957162999" duration="1390000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="1390000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <layout>
+      <window_info id="Favorites" order="0" side_tool="true" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="REST Client" weight="0.32977587" />
+      <window_info anchor="bottom" id="Build" weight="0.32977587" />
+      <window_info anchor="bottom" id="NuGet" order="0" />
+      <window_info anchor="bottom" id="Docker" order="1" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="2" />
+      <window_info anchor="bottom" id="Unit Tests" order="3" weight="0.32977587" />
+      <window_info anchor="bottom" id="Terminal" order="4" />
+      <window_info anchor="bottom" id="Event Log" order="5" side_tool="true" />
+      <window_info anchor="bottom" id="Performance Profiler" order="6" />
+      <window_info anchor="bottom" id="Message" order="7" />
+      <window_info anchor="bottom" id="Find" order="8" />
+      <window_info anchor="bottom" id="Run" order="9" weight="0.32977587" />
+      <window_info active="true" anchor="bottom" id="Debug" order="10" visible="true" weight="0.3991462" />
+      <window_info anchor="bottom" id="Cvs" order="11" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="12" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="13" weight="0.32977587" />
+      <window_info anchor="bottom" id="Errors In Solution" order="14" weight="0.15581644" />
+      <window_info anchor="right" content_ui="combo" id="Project" order="0" visible="true" weight="0.14651039" />
+      <window_info anchor="right" id="Unit Tests Coverage" order="1" weight="0.32978156" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="2" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="3" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="4" weight="0.25" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" displayValue="System.Threading.ThreadAbortException" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Ombi/Controllers/V1/TokenController.cs</url>
+          <line>48</line>
+          <properties documentPath="$PROJECT_DIR$/Ombi/Controllers/V1/TokenController.cs" initialLine="48">
+            <startOffsets>
+              <option value="1518" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1542" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Ombi.Schedule.Tests/OmbiQuartzTests.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="14" column="26" lean-forward="true" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
+          <folding>
+            <marker date="1563957568221" expanded="false" signature="6:101" ph="..." />
+            <marker date="1563957568221" expanded="true" signature="132:919" ph="{...}" />
+            <marker date="1563957568221" expanded="true" signature="185:727" ph="{...}" />
+            <marker date="1563957568221" expanded="true" signature="278:721" ph="{...}" />
+            <marker date="1563957568221" expanded="true" signature="768:917" ph="{...}" />
+            <marker date="1563957568221" expanded="true" signature="823:911" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ombi.Helpers.Tests/EmbyHelperTests.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32">
+          <caret line="5" column="28" lean-forward="true" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="28" />
+          <folding>
+            <marker date="1563908140200" expanded="false" signature="6:89" ph="..." />
+            <marker date="1563908140200" expanded="true" signature="119:1158" ph="{...}" />
+            <marker date="1563908140200" expanded="true" signature="172:1156" ph="{...}" />
+            <marker date="1563908140200" expanded="true" signature="278:359" ph="{...}" />
+            <marker date="1563908140200" expanded="true" signature="416:1150" ph="{...}" />
+            <marker date="1563908140200" expanded="true" signature="442:1140" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ombi/Program.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="15" column="17" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="17" />
+          <folding>
+            <marker date="1563349133381" expanded="false" signature="6:285" ph="..." />
+            <marker date="1563349133381" expanded="true" signature="301:11710" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="328:10630" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="433:3802" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="751:930" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="969:1121" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="1013:1103" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="1896:2383" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="1978:2092" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="2177:2330" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="2424:2706" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="2560:2653" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="2742:3346" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="2823:3332" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="2923:3045" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="3139:3314" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="3423:3672" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="3565:3658" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="3849:4105" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="3875:4037" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="3938:4023" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="4067:4095" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="4115:4518" ph="/// This is to remove the Settings from the Ombi.db to the &quot;new&quot;  ... " />
+            <marker date="1563349133381" expanded="true" signature="4564:10029" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="4755:5766" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="4859:5752" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="4933:5193" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="5360:5654" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="5798:5887" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="5966:6296" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="6414:9898" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="6518:9884" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="6567:6777" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="6833:7064" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="7119:7347" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="7396:7606" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="7655:7865" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="7914:8124" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="8173:8383" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="8437:8662" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="8717:8945" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="9003:9240" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="9291:9507" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="9561:9786" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="9930:10019" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="10339:10624" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="10656:11708" ph="{...}" />
+            <marker date="1563349133381" expanded="true" signature="10671:11187" ph="[...]" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ombi.Core/Engine/UserStatsEngine.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="48">
+          <caret line="12" column="17" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
+          <folding>
+            <marker date="1551794439511" expanded="false" signature="6:249" ph="..." />
+            <marker date="1551794439511" expanded="true" signature="277:3169" ph="{...}" />
+            <marker date="1551794439511" expanded="true" signature="331:2454" ph="{...}" />
+            <marker date="1551794439511" expanded="true" signature="458:587" ph="{...}" />
+            <marker date="1551794439511" expanded="true" signature="845:2448" ph="{...}" />
+            <marker date="1551794439511" expanded="true" signature="2007:2437" ph="{...}" />
+            <marker date="1551794439511" expanded="true" signature="2487:2583" ph="{...}" />
+            <marker date="1551794439511" expanded="true" signature="2618:3167" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ombi.Core/Engine/RecentlyAddedEngine.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="48">
+          <caret line="13" column="35" selection-start-line="13" selection-start-column="35" selection-end-line="13" selection-end-column="35" />
+          <folding>
+            <marker date="1551794439508" expanded="false" signature="6:298" ph="..." />
+            <marker date="1551794439508" expanded="true" signature="326:9789" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="388:9787" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="532:651" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="940:1305" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="1383:1650" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="1767:2189" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="2279:2616" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="2679:5848" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="2942:4312" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="2994:3060" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="3117:3484" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="3218:3464" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="3505:4298" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="3614:4280" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="3684:3774" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="3865:4256" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="4356:5748" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="4422:4488" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="4539:4906" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="4640:4886" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="4927:5734" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="5036:5716" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="5120:5210" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="5301:5692" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="6020:6344" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="6217:6307" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="6499:6714" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="6839:7280" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="6894:7270" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="6979:7254" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="7411:7905" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="7466:7895" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="7551:7879" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="8031:8974" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="8085:8964" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="8152:8950" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="8229:8932" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="8335:8908" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="9094:9781" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="9148:9771" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="9217:9757" ph="{...}" />
+            <marker date="1551794439508" expanded="true" signature="9311:9737" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ombi/Controllers/V1/TokenController.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="368">
+          <caret line="52" column="33" lean-forward="true" selection-start-line="52" selection-start-column="33" selection-end-line="52" selection-end-column="33" />
+          <folding>
+            <marker date="1563908143819" expanded="false" signature="6:473" ph="..." />
+            <marker date="1563908143819" expanded="true" signature="504:8324" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="623:8322" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="782:959" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="1211:1358" ph="/// Gets the token. ... " />
+            <marker date="1563908143819" expanded="true" signature="1495:3130" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="1542:2262" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="1670:2024" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="1860:1961" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="2142:2248" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="2279:3074" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="2310:2364" ph="/* Plex OAuth ... */" />
+            <marker date="1563908143819" expanded="true" signature="2768:2963" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="2853:2943" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="3140:3277" ph="/// Returns the Token for the Ombi User if we can match the Plex user with a valid Ombi User ... " />
+            <marker date="1563908143819" expanded="true" signature="3486:3872" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="3541:3630" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="3745:3812" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="3960:5778" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="4087:4164" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="4219:4551" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="5207:5389" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="5238:5375" ph="/* Save the token so we can refresh it later ... */" />
+            <marker date="1563908143819" expanded="true" signature="5455:5537" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="5567:5612" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="5664:5766" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="5906:6893" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="6046:6280" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="6175:6264" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="6551:6832" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="6729:6818" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="6903:7122" ph="/// Refreshes the token. ... " />
+            <marker date="1563908143819" expanded="true" signature="7261:7553" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="7415:7492" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="7681:8164" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="7797:8054" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="7971:8040" ph="{...}" />
+            <marker date="1563908143819" expanded="true" signature="8199:8315" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

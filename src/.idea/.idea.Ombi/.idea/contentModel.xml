@@ -1,0 +1,2298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\git\Ombi\appveyor.yml" t="Include" />
+    <e p="C:\git\Ombi\build.cake" t="Include" />
+    <e p="C:\git\Ombi\CHANGELOG.md" t="Include" />
+    <e p="C:\git\Ombi\src" t="IncludeFlat">
+      <e p="Api" t="Include" />
+      <e p="DI" t="Include" />
+      <e p="Mappers" t="Include" />
+      <e p="Notifications" t="Include" />
+      <e p="Ombi" t="IncludeRecursive">
+        <e p=".gitignore" t="Include" />
+        <e p="ApiKeyMiddlewear.cs" t="Include" />
+        <e p="appsettings.Development.json" t="Include" />
+        <e p="appsettings.json" t="Include" />
+        <e p="Attributes" t="Include">
+          <e p="AdminAttribute.cs" t="Include" />
+          <e p="ApiV1Attribute.cs" t="Include" />
+          <e p="ApiV2Attribute.cs" t="Include" />
+          <e p="PowerUserAttribute.cs" t="Include" />
+          <e p="UserAttribute.cs" t="Include" />
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ClientApp" t="Include">
+          <e p=".editorconfig" t="Include" />
+          <e p=".gitignore" t="Include" />
+          <e p=".vscode" t="Include">
+            <e p="launch.json" t="Include" />
+          </e>
+          <e p="angular.json" t="Include" />
+          <e p="dist" t="Include">
+            <e p="3rdpartylicenses.txt" t="Include" />
+            <e p="main.00c720ca02fb0cb5e17a.css" t="Include" />
+            <e p="main.5876f0e8e0da59e5d855.js" t="Include" />
+            <e p="polyfills-es5.613d1909ec381c0aefb7.js" t="Include" />
+            <e p="polyfills.2411d542207b17f33801.js" t="Include" />
+            <e p="runtime.741402d1d47331ce975c.js" t="Include" />
+            <e p="scripts.813077f9253febfeddc1.js" t="Include" />
+            <e p="styles.5b8a29998d46502f0e3f.css" t="Include" />
+          </e>
+          <e p="node_modules\@angular\animations" t="IncludeRecursive" />
+          <e p="node_modules\@angular\cdk" t="IncludeRecursive" />
+          <e p="node_modules\@angular\cli" t="IncludeRecursive" />
+          <e p="node_modules\@angular\common" t="IncludeRecursive" />
+          <e p="node_modules\@angular\compiler" t="IncludeRecursive" />
+          <e p="node_modules\@angular\compiler-cli" t="IncludeRecursive" />
+          <e p="node_modules\@angular\core" t="IncludeRecursive" />
+          <e p="node_modules\@angular\forms" t="IncludeRecursive" />
+          <e p="node_modules\@angular\http" t="IncludeRecursive" />
+          <e p="node_modules\@angular\material" t="IncludeRecursive" />
+          <e p="node_modules\@angular\platform-browser" t="IncludeRecursive" />
+          <e p="node_modules\@angular\platform-browser-dynamic" t="IncludeRecursive" />
+          <e p="node_modules\@angular\platform-server" t="IncludeRecursive" />
+          <e p="node_modules\@angular\router" t="IncludeRecursive" />
+          <e p="node_modules\@angular-devkit\build-angular" t="IncludeRecursive" />
+          <e p="node_modules\@angularclass\hmr" t="IncludeRecursive" />
+          <e p="node_modules\@aspnet\signalr" t="IncludeRecursive" />
+          <e p="node_modules\@auth0\angular-jwt" t="IncludeRecursive" />
+          <e p="node_modules\@fullcalendar\core" t="IncludeRecursive" />
+          <e p="node_modules\@fullcalendar\interaction" t="IncludeRecursive" />
+          <e p="node_modules\@ng-bootstrap\ng-bootstrap" t="IncludeRecursive" />
+          <e p="node_modules\@ngu\carousel" t="IncludeRecursive" />
+          <e p="node_modules\@ngx-translate\core" t="IncludeRecursive" />
+          <e p="node_modules\@ngx-translate\http-loader" t="IncludeRecursive" />
+          <e p="node_modules\@types" t="IncludeRecursive">
+            <e p="events" t="IncludeRecursive" />
+            <e p="jasmine" t="IncludeRecursive" />
+            <e p="jasminewd2" t="IncludeRecursive" />
+            <e p="jquery" t="IncludeRecursive" />
+            <e p="minimatch" t="IncludeRecursive" />
+            <e p="node" t="IncludeRecursive" />
+            <e p="sizzle" t="IncludeRecursive" />
+            <e p="source-list-map" t="IncludeRecursive" />
+          </e>
+          <e p="node_modules\@yellowspot\ng-truncate" t="IncludeRecursive" />
+          <e p="node_modules\angular-bootstrap-md" t="IncludeRecursive" />
+          <e p="node_modules\angular-router-loader" t="IncludeRecursive" />
+          <e p="node_modules\angular2-template-loader" t="IncludeRecursive" />
+          <e p="node_modules\aspnet-prerendering" t="IncludeRecursive" />
+          <e p="node_modules\awesome-typescript-loader" t="IncludeRecursive" />
+          <e p="node_modules\bootstrap" t="IncludeRecursive" />
+          <e p="node_modules\chart.js" t="IncludeRecursive" />
+          <e p="node_modules\codelyzer" t="IncludeRecursive" />
+          <e p="node_modules\core-js" t="IncludeRecursive" />
+          <e p="node_modules\eventemitter2" t="IncludeRecursive" />
+          <e p="node_modules\font-awesome" t="IncludeRecursive" />
+          <e p="node_modules\hammerjs" t="IncludeRecursive" />
+          <e p="node_modules\jquery" t="IncludeRecursive" />
+          <e p="node_modules\moment" t="IncludeRecursive" />
+          <e p="node_modules\ng2-cookies" t="IncludeRecursive" />
+          <e p="node_modules\ngx-bootstrap" t="IncludeRecursive" />
+          <e p="node_modules\ngx-clipboard" t="IncludeRecursive" />
+          <e p="node_modules\ngx-infinite-scroll" t="IncludeRecursive" />
+          <e p="node_modules\ngx-moment" t="IncludeRecursive" />
+          <e p="node_modules\ngx-order-pipe" t="IncludeRecursive" />
+          <e p="node_modules\ngx-page-scroll" t="IncludeRecursive" />
+          <e p="node_modules\node-sass" t="IncludeRecursive" />
+          <e p="node_modules\pace" t="IncludeRecursive" />
+          <e p="node_modules\please-wait" t="IncludeRecursive" />
+          <e p="node_modules\popper.js" t="IncludeRecursive" />
+          <e p="node_modules\primeicons" t="IncludeRecursive" />
+          <e p="node_modules\primeng" t="IncludeRecursive" />
+          <e p="node_modules\protractor" t="IncludeRecursive" />
+          <e p="node_modules\rxjs" t="IncludeRecursive" />
+          <e p="node_modules\socket.io-client" t="IncludeRecursive" />
+          <e p="node_modules\source-map" t="IncludeRecursive" />
+          <e p="node_modules\spinkit" t="IncludeRecursive" />
+          <e p="node_modules\store" t="IncludeRecursive" />
+          <e p="node_modules\sweetalert2" t="IncludeRecursive" />
+          <e p="node_modules\ts-node" t="IncludeRecursive" />
+          <e p="node_modules\tslint" t="IncludeRecursive" />
+          <e p="node_modules\tslint-angular" t="IncludeRecursive" />
+          <e p="node_modules\zone.js" t="IncludeRecursive" />
+          <e p="package-lock.json" t="Include" />
+          <e p="package.json" t="Include" />
+          <e p="src" t="Include">
+            <e p="app" t="Include">
+              <e p="animations" t="Include">
+                <e p="fadeinout.ts" t="Include" />
+              </e>
+              <e p="app.component.html" t="Include" />
+              <e p="app.component.scss" t="Include" />
+              <e p="app.component.ts" t="Include" />
+              <e p="app.module.ts" t="Include" />
+              <e p="auth" t="Include">
+                <e p="auth.guard.ts" t="Include" />
+                <e p="auth.service.ts" t="Include" />
+                <e p="cookie.component.html" t="Include" />
+                <e p="cookie.component.ts" t="Include" />
+                <e p="IUserLogin.ts" t="Include" />
+              </e>
+              <e p="calendar" t="Include">
+                <e p="calendar.module.ts" t="Include" />
+                <e p="components" t="Include">
+                  <e p="calendar.component.html" t="Include" />
+                  <e p="calendar.component.scss" t="Include" />
+                  <e p="calendar.component.ts" t="Include" />
+                  <e p="index.ts" t="Include" />
+                </e>
+              </e>
+              <e p="custompage" t="Include">
+                <e p="custompage.component.html" t="Include" />
+                <e p="custompage.component.scss" t="Include" />
+                <e p="custompage.component.ts" t="Include" />
+              </e>
+              <e p="discover" t="Include">
+                <e p="components" t="Include">
+                  <e p="actor" t="Include">
+                    <e p="discover-actor.component.html" t="Include" />
+                    <e p="discover-actor.component.scss" t="Include" />
+                    <e p="discover-actor.component.ts" t="Include" />
+                  </e>
+                  <e p="card" t="Include">
+                    <e p="discover-card-details.component.html" t="Include" />
+                    <e p="discover-card-details.component.scss" t="Include" />
+                    <e p="discover-card-details.component.ts" t="Include" />
+                    <e p="discover-card.component.html" t="Include" />
+                    <e p="discover-card.component.scss" t="Include" />
+                    <e p="discover-card.component.ts" t="Include" />
+                  </e>
+                  <e p="collections" t="Include">
+                    <e p="discover-collections.component.html" t="Include" />
+                    <e p="discover-collections.component.scss" t="Include" />
+                    <e p="discover-collections.component.ts" t="Include" />
+                  </e>
+                  <e p="discover" t="Include">
+                    <e p="discover.component.html" t="Include" />
+                    <e p="discover.component.scss" t="Include" />
+                    <e p="discover.component.ts" t="Include" />
+                  </e>
+                  <e p="index.ts" t="Include" />
+                </e>
+                <e p="discover.module.ts" t="Include" />
+                <e p="interfaces.ts" t="Include" />
+              </e>
+              <e p="errors" t="Include">
+                <e p="not-found.component.ts" t="Include" />
+              </e>
+              <e p="interfaces" t="Include">
+                <e p="ICalendar.ts" t="Include" />
+                <e p="ICommon.ts" t="Include" />
+                <e p="ICouchPotato.ts" t="Include" />
+                <e p="IFailedRequests.ts" t="Include" />
+                <e p="IHub.ts" t="Include" />
+                <e p="IImages.ts" t="Include" />
+                <e p="IIssues.ts" t="Include" />
+                <e p="ILidarr.ts" t="Include" />
+                <e p="IMediaServerStatus.ts" t="Include" />
+                <e p="index.ts" t="Include" />
+                <e p="INotificationSettings.ts" t="Include" />
+                <e p="IPlex.ts" t="Include" />
+                <e p="IRadarr.ts" t="Include" />
+                <e p="IRecentlyAdded.ts" t="Include" />
+                <e p="IRemainingRequests.ts" t="Include" />
+                <e p="IRequestEngineResult.ts" t="Include" />
+                <e p="IRequestModel.ts" t="Include" />
+                <e p="ISearchMovieResult.ts" t="Include" />
+                <e p="ISearchMovieResultV2.ts" t="Include" />
+                <e p="ISearchMusicResult.ts" t="Include" />
+                <e p="ISearchTvResult.ts" t="Include" />
+                <e p="ISearchTvResultV2.ts" t="Include" />
+                <e p="ISettings.ts" t="Include" />
+                <e p="ISonarr.ts" t="Include" />
+                <e p="IUser.ts" t="Include" />
+                <e p="IVote.ts" t="Include" />
+              </e>
+              <e p="issues" t="Include">
+                <e p="components" t="Include">
+                  <e p="index.ts" t="Include" />
+                  <e p="issues-list" t="Include">
+                    <e p="issues-list.component.html" t="Include" />
+                    <e p="issues-list.component.ts" t="Include" />
+                    <e p="issues-list.constants.ts" t="Include" />
+                  </e>
+                </e>
+                <e p="issueDetails.component.html" t="Include" />
+                <e p="issueDetails.component.scss" t="Include" />
+                <e p="issueDetails.component.ts" t="Include" />
+                <e p="issues.component.html" t="Include" />
+                <e p="issues.component.ts" t="Include" />
+                <e p="issues.module.ts" t="Include" />
+                <e p="issuestable.component.html" t="Include" />
+                <e p="issuestable.component.ts" t="Include" />
+              </e>
+              <e p="landingpage" t="Include">
+                <e p="landingpage.component.html" t="Include" />
+                <e p="landingpage.component.scss" t="Include" />
+                <e p="landingpage.component.ts" t="Include" />
+              </e>
+              <e p="login" t="Include">
+                <e p="login.component.html" t="Include" />
+                <e p="login.component.scss" t="Include" />
+                <e p="login.component.ts" t="Include" />
+                <e p="loginoauth.component.html" t="Include" />
+                <e p="loginoauth.component.ts" t="Include" />
+                <e p="resetpassword.component.html" t="Include" />
+                <e p="resetpassword.component.ts" t="Include" />
+                <e p="tokenresetpassword.component.html" t="Include" />
+                <e p="tokenresetpassword.component.ts" t="Include" />
+              </e>
+              <e p="media-details" t="Include">
+                <e p="components" t="Include">
+                  <e p="artist" t="Include">
+                    <e p="artist-details.component.html" t="Include" />
+                    <e p="artist-details.component.ts" t="Include" />
+                  </e>
+                  <e p="index.ts" t="Include" />
+                  <e p="movie" t="Include">
+                    <e p="movie-details.component.html" t="Include" />
+                    <e p="movie-details.component.ts" t="Include" />
+                    <e p="panels" t="Include">
+                      <e p="movie-admin-panel" t="Include">
+                        <e p="movie-admin-panel.component.html" t="Include" />
+                        <e p="movie-admin-panel.component.ts" t="Include" />
+                      </e>
+                      <e p="movie-advanced-options" t="Include">
+                        <e p="movie-advanced-options.component.html" t="Include" />
+                        <e p="movie-advanced-options.component.ts" t="Include" />
+                      </e>
+                      <e p="movie-information-panel.component.html" t="Include" />
+                      <e p="movie-information-panel.component.ts" t="Include" />
+                    </e>
+                  </e>
+                  <e p="Shared" t="Include">
+                    <e p="cast-carousel" t="Include">
+                      <e p="cast-carousel.component.html" t="Include" />
+                      <e p="cast-carousel.component.scss" t="Include" />
+                      <e p="cast-carousel.component.ts" t="Include" />
+                    </e>
+                    <e p="deny-dialog" t="Include">
+                      <e p="deny-dialog.component.html" t="Include" />
+                      <e p="deny-dialog.component.ts" t="Include" />
+                    </e>
+                    <e p="interfaces" t="Include">
+                      <e p="interfaces.ts" t="Include" />
+                    </e>
+                    <e p="media-poster" t="Include">
+                      <e p="media-poster.component.html" t="Include" />
+                      <e p="media-poster.component.ts" t="Include" />
+                    </e>
+                    <e p="new-issue" t="Include">
+                      <e p="new-issue.component.html" t="Include" />
+                      <e p="new-issue.component.ts" t="Include" />
+                    </e>
+                    <e p="social-icons" t="Include">
+                      <e p="social-icons.component.html" t="Include" />
+                      <e p="social-icons.component.scss" t="Include" />
+                      <e p="social-icons.component.ts" t="Include" />
+                    </e>
+                    <e p="top-banner" t="Include">
+                      <e p="top-banner.component.html" t="Include" />
+                      <e p="top-banner.component.ts" t="Include" />
+                    </e>
+                    <e p="youtube-trailer.component.html" t="Include" />
+                    <e p="youtube-trailer.component.ts" t="Include" />
+                  </e>
+                  <e p="tv" t="Include">
+                    <e p="panels" t="Include">
+                      <e p="tv-information-panel" t="Include">
+                        <e p="tv-information-panel.component.html" t="Include" />
+                        <e p="tv-information-panel.component.ts" t="Include" />
+                      </e>
+                      <e p="tv-requests" t="Include">
+                        <e p="tv-requests-panel.component.html" t="Include" />
+                        <e p="tv-requests-panel.component.scss" t="Include" />
+                        <e p="tv-requests-panel.component.ts" t="Include" />
+                      </e>
+                    </e>
+                    <e p="tv-details.component.html" t="Include" />
+                    <e p="tv-details.component.ts" t="Include" />
+                  </e>
+                </e>
+                <e p="media-details.component.scss" t="Include" />
+                <e p="media-details.module.ts" t="Include" />
+              </e>
+              <e p="my-nav" t="Include">
+                <e p="my-nav.component.html" t="Include" />
+                <e p="my-nav.component.scss" t="Include" />
+                <e p="my-nav.component.ts" t="Include" />
+                <e p="nav-search.component.html" t="Include" />
+                <e p="nav-search.component.scss" t="Include" />
+                <e p="nav-search.component.ts" t="Include" />
+              </e>
+              <e p="pipes" t="Include">
+                <e p="HumanizePipe.ts" t="Include" />
+                <e p="pipe.module.ts" t="Include" />
+                <e p="SafePipe.ts" t="Include" />
+                <e p="ThousandShortPipe.ts" t="Include" />
+              </e>
+              <e p="recentlyAdded" t="Include">
+                <e p="recentlyAdded.component.html" t="Include" />
+                <e p="recentlyAdded.component.ts" t="Include" />
+                <e p="recentlyAdded.module.ts" t="Include" />
+              </e>
+              <e p="requests" t="Include">
+                <e p="movierequests.component.html" t="Include" />
+                <e p="movierequests.component.ts" t="Include" />
+                <e p="music" t="Include">
+                  <e p="musicrequests.component.html" t="Include" />
+                  <e p="musicrequests.component.ts" t="Include" />
+                </e>
+                <e p="remainingrequests.component.html" t="Include" />
+                <e p="remainingrequests.component.ts" t="Include" />
+                <e p="remainingrequests.module.ts" t="Include" />
+                <e p="request.component.html" t="Include" />
+                <e p="request.component.ts" t="Include" />
+                <e p="requests.module.ts" t="Include" />
+                <e p="tvrequest-children.component.html" t="Include" />
+                <e p="tvrequest-children.component.ts" t="Include" />
+                <e p="tvrequests.component.html" t="Include" />
+                <e p="tvrequests.component.scss" t="Include" />
+                <e p="tvrequests.component.ts" t="Include" />
+              </e>
+              <e p="requests-list" t="Include">
+                <e p="components" t="Include">
+                  <e p="grid-spinner" t="Include">
+                    <e p="grid-spinner.component.html" t="Include" />
+                    <e p="grid-spinner.component.scss" t="Include" />
+                    <e p="grid-spinner.component.ts" t="Include" />
+                  </e>
+                  <e p="index.ts" t="Include" />
+                  <e p="movies-grid" t="Include">
+                    <e p="movies-grid.component.html" t="Include" />
+                    <e p="movies-grid.component.ts" t="Include" />
+                  </e>
+                  <e p="requests-list.component.html" t="Include" />
+                  <e p="requests-list.component.scss" t="Include" />
+                  <e p="requests-list.component.ts" t="Include" />
+                  <e p="tv-grid" t="Include">
+                    <e p="tv-grid.component.html" t="Include" />
+                    <e p="tv-grid.component.ts" t="Include" />
+                  </e>
+                </e>
+                <e p="requests-list.module.ts" t="Include" />
+              </e>
+              <e p="search" t="Include">
+                <e p="moviesearch.component.html" t="Include" />
+                <e p="moviesearch.component.ts" t="Include" />
+                <e p="moviesearchgrid.component.html" t="Include" />
+                <e p="moviesearchgrid.component.ts" t="Include" />
+                <e p="music" t="Include">
+                  <e p="albumsearch.component.html" t="Include" />
+                  <e p="albumsearch.component.ts" t="Include" />
+                  <e p="artistsearch.component.html" t="Include" />
+                  <e p="artistsearch.component.ts" t="Include" />
+                  <e p="musicsearch.component.html" t="Include" />
+                  <e p="musicsearch.component.ts" t="Include" />
+                </e>
+                <e p="search.component.html" t="Include" />
+                <e p="search.component.scss" t="Include" />
+                <e p="search.component.ts" t="Include" />
+                <e p="search.module.ts" t="Include" />
+                <e p="seriesinformation.component.html" t="Include" />
+                <e p="seriesinformation.component.scss" t="Include" />
+                <e p="seriesinformation.component.ts" t="Include" />
+                <e p="tvsearch.component.html" t="Include" />
+                <e p="tvsearch.component.ts" t="Include" />
+              </e>
+              <e p="services" t="Include">
+                <e p="applications" t="Include">
+                  <e p="couchpotato.service.ts" t="Include" />
+                  <e p="emby.service.ts" t="Include" />
+                  <e p="index.ts" t="Include" />
+                  <e p="lidarr.service.ts" t="Include" />
+                  <e p="plex.service.ts" t="Include" />
+                  <e p="plexoauth.service.ts" t="Include" />
+                  <e p="plextv.service.ts" t="Include" />
+                  <e p="radarr.service.ts" t="Include" />
+                  <e p="sonarr.service.ts" t="Include" />
+                  <e p="tester.service.ts" t="Include" />
+                </e>
+                <e p="calendar.service.ts" t="Include" />
+                <e p="custompage.service.ts" t="Include" />
+                <e p="helpers" t="Include">
+                  <e p="index.ts" t="Include" />
+                  <e p="validation.service.ts" t="Include" />
+                </e>
+                <e p="hub.service.ts" t="Include" />
+                <e p="identity.service.ts" t="Include" />
+                <e p="image.service.ts" t="Include" />
+                <e p="index.ts" t="Include" />
+                <e p="issues.service.ts" t="Include" />
+                <e p="job.service.ts" t="Include" />
+                <e p="landingpage.service.ts" t="Include" />
+                <e p="message.service.ts" t="Include" />
+                <e p="mobile.service.ts" t="Include" />
+                <e p="notification.service.ts" t="Include" />
+                <e p="notificationMessage.service.ts" t="Include" />
+                <e p="recentlyAdded.service.ts" t="Include" />
+                <e p="request.service.ts" t="Include" />
+                <e p="requestretry.service.ts" t="Include" />
+                <e p="requestV2.service.ts" t="Include" />
+                <e p="search.service.ts" t="Include" />
+                <e p="searchV2.service.ts" t="Include" />
+                <e p="service.helpers.ts" t="Include" />
+                <e p="settings.service.ts" t="Include" />
+                <e p="signlarnotification.service.ts" t="Include" />
+                <e p="status.service.ts" t="Include" />
+                <e p="vote.service.ts" t="Include" />
+              </e>
+              <e p="settings" t="Include">
+                <e p="about" t="Include">
+                  <e p="about.component.html" t="Include" />
+                  <e p="about.component.scss" t="Include" />
+                  <e p="about.component.ts" t="Include" />
+                </e>
+                <e p="authentication" t="Include">
+                  <e p="authentication.component.html" t="Include" />
+                  <e p="authentication.component.ts" t="Include" />
+                </e>
+                <e p="couchpotato" t="Include">
+                  <e p="couchpotato.component.html" t="Include" />
+                  <e p="couchpotato.component.ts" t="Include" />
+                </e>
+                <e p="customization" t="Include">
+                  <e p="customization.component.html" t="Include" />
+                  <e p="customization.component.ts" t="Include" />
+                </e>
+                <e p="dognzb" t="Include">
+                  <e p="dognzb.component.html" t="Include" />
+                  <e p="dognzb.component.ts" t="Include" />
+                </e>
+                <e p="emby" t="Include">
+                  <e p="emby.component.html" t="Include" />
+                  <e p="emby.component.ts" t="Include" />
+                </e>
+                <e p="failedrequests" t="Include">
+                  <e p="failedrequest.component.html" t="Include" />
+                  <e p="failedrequests.component.ts" t="Include" />
+                </e>
+                <e p="issues" t="Include">
+                  <e p="issues.component.html" t="Include" />
+                  <e p="issues.component.ts" t="Include" />
+                </e>
+                <e p="jobs" t="Include">
+                  <e p="jobs.component.html" t="Include" />
+                  <e p="jobs.component.ts" t="Include" />
+                </e>
+                <e p="landingpage" t="Include">
+                  <e p="landingpage.component.html" t="Include" />
+                  <e p="landingpage.component.ts" t="Include" />
+                </e>
+                <e p="lidarr" t="Include">
+                  <e p="lidarr.component.html" t="Include" />
+                  <e p="lidarr.component.ts" t="Include" />
+                </e>
+                <e p="massemail" t="Include">
+                  <e p="massemail.component.html" t="Include" />
+                  <e p="massemail.component.ts" t="Include" />
+                </e>
+                <e p="Notifications" t="Include">
+                  <e p="discord.component.html" t="Include" />
+                  <e p="discord.component.ts" t="Include" />
+                  <e p="emailnotification.component.html" t="Include" />
+                  <e p="emailnotification.component.ts" t="Include" />
+                  <e p="gotify.component.html" t="Include" />
+                  <e p="gotify.component.ts" t="Include" />
+                  <e p="mattermost.component.html" t="Include" />
+                  <e p="mattermost.component.ts" t="Include" />
+                  <e p="mobile.component.html" t="Include" />
+                  <e p="mobile.component.ts" t="Include" />
+                  <e p="newsletter.component.html" t="Include" />
+                  <e p="newsletter.component.ts" t="Include" />
+                  <e p="notificationtemplate.component.html" t="Include" />
+                  <e p="notificationtemplate.component.scss" t="Include" />
+                  <e p="notificationtemplate.component.ts" t="Include" />
+                  <e p="pushbullet.component.html" t="Include" />
+                  <e p="pushbullet.component.ts" t="Include" />
+                  <e p="pushover.component.html" t="Include" />
+                  <e p="pushover.component.ts" t="Include" />
+                  <e p="slack.component.html" t="Include" />
+                  <e p="slack.component.ts" t="Include" />
+                  <e p="telegram.component.html" t="Include" />
+                  <e p="telegram.component.ts" t="Include" />
+                </e>
+                <e p="Ombi" t="Include">
+                  <e p="ombi.component.html" t="Include" />
+                  <e p="ombi.component.ts" t="Include" />
+                </e>
+                <e p="plex" t="Include">
+                  <e p="plex.component.html" t="Include" />
+                  <e p="plex.component.ts" t="Include" />
+                </e>
+                <e p="radarr" t="Include">
+                  <e p="radarr.component.html" t="Include" />
+                  <e p="radarr.component.ts" t="Include" />
+                </e>
+                <e p="settings.module.ts" t="Include" />
+                <e p="settingsmenu.component.html" t="Include" />
+                <e p="settingsmenu.component.ts" t="Include" />
+                <e p="sickrage" t="Include">
+                  <e p="sickrage.component.html" t="Include" />
+                  <e p="sickrage.component.ts" t="Include" />
+                </e>
+                <e p="sonarr" t="Include">
+                  <e p="sonarr.component.html" t="Include" />
+                  <e p="sonarr.component.ts" t="Include" />
+                </e>
+                <e p="Update" t="Include">
+                  <e p="update.component.html" t="Include" />
+                  <e p="update.component.ts" t="Include" />
+                </e>
+                <e p="usermanagement" t="Include">
+                  <e p="usermanagement.component.html" t="Include" />
+                  <e p="usermanagement.component.ts" t="Include" />
+                </e>
+                <e p="vote" t="Include">
+                  <e p="vote.component.html" t="Include" />
+                  <e p="vote.component.ts" t="Include" />
+                </e>
+                <e p="wiki.component.html" t="Include" />
+                <e p="wiki.component.ts" t="Include" />
+              </e>
+              <e p="Shared" t="Include">
+                <e p="episode-request" t="Include">
+                  <e p="episode-request.component.html" t="Include" />
+                  <e p="episode-request.component.ts" t="Include" />
+                </e>
+                <e p="functions" t="Include">
+                  <e p="common-functions.ts" t="Include" />
+                </e>
+                <e p="issues-report.component.html" t="Include" />
+                <e p="issues-report.component.ts" t="Include" />
+                <e p="shared.module.ts" t="Include" />
+                <e p="storage" t="Include">
+                  <e p="storage-service.ts" t="Include" />
+                </e>
+              </e>
+              <e p="user-preferences" t="Include">
+                <e p="components" t="Include">
+                  <e p="index.ts" t="Include" />
+                  <e p="user-preference" t="Include">
+                    <e p="user-preference.component.html" t="Include" />
+                    <e p="user-preference.component.scss" t="Include" />
+                    <e p="user-preference.component.ts" t="Include" />
+                    <e p="user-preference.constants.ts" t="Include" />
+                  </e>
+                </e>
+                <e p="user-preferences.module.ts" t="Include" />
+              </e>
+              <e p="usermanagement" t="Include">
+                <e p="updatedetails.component.html" t="Include" />
+                <e p="updatedetails.component.ts" t="Include" />
+                <e p="usermanagement-user.component.html" t="Include" />
+                <e p="usermanagement-user.component.scss" t="Include" />
+                <e p="usermanagement-user.component.ts" t="Include" />
+                <e p="usermanagement.component.html" t="Include" />
+                <e p="usermanagement.component.ts" t="Include" />
+                <e p="usermanagement.module.ts" t="Include" />
+              </e>
+              <e p="vote" t="Include">
+                <e p="vote.component.html" t="Include" />
+                <e p="vote.component.scss" t="Include" />
+                <e p="vote.component.ts" t="Include" />
+                <e p="vote.module.ts" t="Include" />
+              </e>
+              <e p="wizard" t="Include">
+                <e p="createadmin" t="Include">
+                  <e p="createadmin.component.html" t="Include" />
+                  <e p="createadmin.component.ts" t="Include" />
+                </e>
+                <e p="emby" t="Include">
+                  <e p="emby.component.html" t="Include" />
+                  <e p="emby.component.ts" t="Include" />
+                </e>
+                <e p="mediaserver" t="Include">
+                  <e p="mediaserver.component.html" t="Include" />
+                  <e p="mediaserver.component.scss" t="Include" />
+                  <e p="mediaserver.component.ts" t="Include" />
+                </e>
+                <e p="plex" t="Include">
+                  <e p="plex.component.html" t="Include" />
+                  <e p="plex.component.ts" t="Include" />
+                </e>
+                <e p="welcome" t="Include">
+                  <e p="welcome.component.html" t="Include" />
+                  <e p="welcome.component.ts" t="Include" />
+                </e>
+                <e p="wizard.module.ts" t="Include" />
+              </e>
+            </e>
+            <e p="environments" t="Include">
+              <e p="environment.hmr.ts" t="Include" />
+              <e p="environment.prod.ts" t="Include" />
+              <e p="environment.ts" t="Include" />
+            </e>
+            <e p="hmr.ts" t="Include" />
+            <e p="index.html" t="Include" />
+            <e p="main.ts" t="Include" />
+            <e p="other" t="Include">
+              <e p="iso-lang.json" t="Include" />
+            </e>
+            <e p="polyfills.ts" t="Include" />
+            <e p="styles" t="Include">
+              <e p="_imports.scss" t="Include" />
+              <e p="buttons.scss" t="Include" />
+              <e p="mat-palette.scss" t="Include" />
+              <e p="primeng-overrides.scss" t="Include" />
+              <e p="shared.scss" t="Include" />
+              <e p="Styles.scss" t="Include" />
+              <e p="variables.scss" t="Include" />
+            </e>
+            <e p="tsconfig.app.json" t="Include" />
+            <e p="typings" t="Include">
+              <e p="globals.d.ts" t="Include" />
+              <e p="index.d.ts" t="Include" />
+            </e>
+          </e>
+          <e p="tslint.json" t="Include" />
+          <e p="yarn.lock" t="Include" />
+        </e>
+        <e p="Config" t="Include">
+          <e p="LandingPageBackground.cs" t="Include" />
+          <e p="UserSettings.cs" t="Include" />
+        </e>
+        <e p="Controllers" t="Include">
+          <e p="V1" t="Include">
+            <e p="CustomPageController.cs" t="Include" />
+            <e p="External" t="Include">
+              <e p="CouchPotatoController.cs" t="Include" />
+              <e p="EmbyController.cs" t="Include" />
+              <e p="LidarrController.cs" t="Include" />
+              <e p="PlexController.cs" t="Include" />
+              <e p="RadarrController.cs" t="Include" />
+              <e p="SonarrController.cs" t="Include" />
+              <e p="TesterController.cs" t="Include" />
+            </e>
+            <e p="IdentityController.cs" t="Include" />
+            <e p="ImagesController.cs" t="Include" />
+            <e p="IssuesController.cs" t="Include" />
+            <e p="JobController.cs" t="Include" />
+            <e p="LandingPageController.cs" t="Include" />
+            <e p="LoggingController.cs" t="Include" />
+            <e p="MobileController.cs" t="Include" />
+            <e p="MusicRequestController.cs" t="Include" />
+            <e p="NotificationsController.cs" t="Include" />
+            <e p="PlexOAuthController.cs" t="Include" />
+            <e p="RecentlyAddedController.cs" t="Include" />
+            <e p="RequestController.cs" t="Include" />
+            <e p="RequestRetryController.cs" t="Include" />
+            <e p="SearchController.cs" t="Include" />
+            <e p="SettingsController.cs" t="Include" />
+            <e p="StatsController.cs" t="Include" />
+            <e p="StatusController.cs" t="Include" />
+            <e p="TokenController.cs" t="Include" />
+            <e p="UpdateController.cs" t="Include" />
+            <e p="VoteController.cs" t="Include" />
+          </e>
+          <e p="V2" t="Include">
+            <e p="CalendarController.cs" t="Include" />
+            <e p="HubController.cs" t="Include" />
+            <e p="RequestsController.cs" t="Include" />
+            <e p="SearchController.cs" t="Include" />
+          </e>
+        </e>
+        <e p="ErrorHandlingMiddlewear.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="AboutViewModel.cs" t="Include" />
+          <e p="AlbumUpdateModel.cs" t="Include" />
+          <e p="ConnectedUsersViewModel.cs" t="Include" />
+          <e p="CreateUserWizardModel.cs" t="Include" />
+          <e p="CronTestModel.cs" t="Include" />
+          <e p="CronViewModelBody.cs" t="Include" />
+          <e p="DenyAlbumMOdel.cs" t="Include" />
+          <e p="DenyMovieModel.cs" t="Include" />
+          <e p="DenyTvModel.cs" t="Include" />
+          <e p="External" t="Include">
+            <e p="PlexLibrariesResponse.cs" t="Include" />
+            <e p="PlexServersAddUserModel.cs" t="Include" />
+            <e p="PlexServersViewModel.cs" t="Include" />
+            <e p="PlexTokenAuthentication.cs" t="Include" />
+            <e p="PlexUserViewModel.cs" t="Include" />
+            <e p="UsersViewModel.cs" t="Include" />
+          </e>
+          <e p="FailedRequestViewModel.cs" t="Include" />
+          <e p="Identity" t="Include">
+            <e p="AddNotificationPreference.cs" t="Include" />
+            <e p="IdentityResult.cs" t="Include" />
+            <e p="ResetPasswordToken.cs" t="Include" />
+            <e p="SaveWizardResult.cs" t="Include" />
+            <e p="SubmitPasswordReset.cs" t="Include" />
+            <e p="TokenAuthentication.cs" t="Include" />
+            <e p="UpdateLocalUserModel.cs" t="Include" />
+          </e>
+          <e p="IssueCommentChatViewModel.cs" t="Include" />
+          <e p="IssueCountModel.cs" t="Include" />
+          <e p="IssueStateViewModel.cs" t="Include" />
+          <e p="JobSettingsViewModel.cs" t="Include" />
+          <e p="MediaSeverAvailibilityViewModel.cs" t="Include" />
+          <e p="MobileNotificationTestViewModel.cs" t="Include" />
+          <e p="MobileUsersViewModel.cs" t="Include" />
+          <e p="MovieUpdateModel.cs" t="Include" />
+          <e p="NewIssueCommentViewModel.cs" t="Include" />
+          <e p="NotificationIdBody.cs" t="Include" />
+          <e p="PlexOAuthViewModel.cs" t="Include" />
+          <e p="PresetThemeViewModel.cs" t="Include" />
+          <e p="RequestGridModel.cs" t="Include" />
+          <e p="RequestResult.cs" t="Include" />
+          <e p="SearchActorModel.cs" t="Include" />
+          <e p="SearchMovieExtraInfoRefineModel.cs" t="Include" />
+          <e p="SearchMovieRefineModel.cs" t="Include" />
+          <e p="SimilarMoviesRefineModel.cs" t="Include" />
+          <e p="TvUpdateModel.cs" t="Include" />
+          <e p="UiLoggingModel.cs" t="Include" />
+          <e p="UrlVerifyModel.cs" t="Include" />
+          <e p="UserAuthModel.cs" t="Include" />
+        </e>
+        <e p="nuget.config" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.2" t="Include">
+              <e p="Ombi.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.csproj" t="IncludeRecursive" />
+        <e p="Ombi.db" t="Include" />
+        <e p="OmbiExternal.db" t="Include" />
+        <e p="OmbiSettings.db" t="Include" />
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="launchSettings.json" t="Include" />
+        </e>
+        <e p="Schedules.db" t="Include" />
+        <e p="Startup.cs" t="Include" />
+        <e p="StartupExtensions.cs" t="Include" />
+        <e p="SwaggerOperationFilter.cs" t="Include" />
+        <e p="Views" t="Include">
+          <e p="_ViewImports.cshtml" t="Include" />
+          <e p="_ViewStart.cshtml" t="Include" />
+          <e p="Shared" t="Include">
+            <e p="_Layout.cshtml" t="Include" />
+            <e p="Error.cshtml" t="Include" />
+          </e>
+        </e>
+        <e p="wwwroot" t="Include">
+          <e p="baseUrl.json" t="Include" />
+          <e p="images" t="Include">
+            <e p="default-music-placeholder.png" t="Include" />
+            <e p="default_movie_poster.png" t="Include" />
+            <e p="default_tv_poster.png" t="Include" />
+            <e p="emby-logo-dark.png" t="Include" />
+            <e p="emby-logo.png" t="Include" />
+            <e p="favicon" t="Include">
+              <e p="android-chrome-192x192.png" t="Include" />
+              <e p="android-chrome-512x512.png" t="Include" />
+              <e p="apple-touch-icon.png" t="Include" />
+              <e p="browserconfig.xml" t="Include" />
+              <e p="favicon-16x16.png" t="Include" />
+              <e p="favicon-32x32.png" t="Include" />
+              <e p="favicon.ico" t="Include" />
+              <e p="mstile-150x150.png" t="Include" />
+              <e p="safari-pinned-tab.svg" t="Include" />
+              <e p="site.webmanifest" t="Include" />
+            </e>
+            <e p="icons_16.png" t="Include" />
+            <e p="logo original.png" t="Include" />
+            <e p="logo.png" t="Include" />
+            <e p="ms-icon-150x150.png" t="Include" />
+            <e p="ms-icon-310x310.png" t="Include" />
+            <e p="plex-logo-reversed.png" t="Include" />
+            <e p="plex-logo.png" t="Include" />
+            <e p="slider_handles.png" t="Include" />
+            <e p="slider_handles@2x.png" t="Include" />
+            <e p="ui-bg_flat_0_aaaaaa_40x100.png" t="Include" />
+            <e p="ui-bg_flat_75_ffffff_40x100.png" t="Include" />
+            <e p="ui-bg_glass_55_fbf9ee_1x400.png" t="Include" />
+            <e p="ui-bg_glass_65_ffffff_1x400.png" t="Include" />
+            <e p="ui-bg_glass_75_dadada_1x400.png" t="Include" />
+            <e p="ui-bg_glass_75_e6e6e6_1x400.png" t="Include" />
+            <e p="ui-bg_glass_95_fef1ec_1x400.png" t="Include" />
+            <e p="ui-bg_highlight-soft_75_cccccc_1x100.png" t="Include" />
+            <e p="ui-icons_222222_256x240.png" t="Include" />
+            <e p="ui-icons_2e83ff_256x240.png" t="Include" />
+            <e p="ui-icons_454545_256x240.png" t="Include" />
+            <e p="ui-icons_cd0a0a_256x240.png" t="Include" />
+            <e p="ui-icons_ffffff_256x240.png" t="Include" />
+          </e>
+          <e p="loading.css" t="Include" />
+          <e p="styles" t="Include">
+            <e p="11-folding-cube.css" t="Include" />
+            <e p="please-wait.css" t="Include" />
+            <e p="please-wait.js" t="Include" />
+            <e p="spinkit.css" t="Include" />
+          </e>
+          <e p="translations" t="Include">
+            <e p="bg.json" t="Include" />
+            <e p="da.json" t="Include" />
+            <e p="de.json" t="Include" />
+            <e p="en.json" t="Include" />
+            <e p="es.json" t="Include" />
+            <e p="fr.json" t="Include" />
+            <e p="hu.json" t="Include" />
+            <e p="it.json" t="Include" />
+            <e p="nl.json" t="Include" />
+            <e p="no.json" t="Include" />
+            <e p="pl.json" t="Include" />
+            <e p="pt.json" t="Include" />
+            <e p="ru.json" t="Include" />
+            <e p="sv.json" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="Ombi.Api" t="IncludeRecursive">
+        <e p="Api.cs" t="Include" />
+        <e p="ApiHelper.cs" t="Include" />
+        <e p="Attribute" t="Include">
+          <e p="JsonPluralNameAttribute.cs" t="Include" />
+          <e p="PluralPropertyContractResolver.cs" t="Include" />
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ContentType.cs" t="Include" />
+        <e p="HttpRequestExtensions.cs" t="Include" />
+        <e p="IApi.cs" t="Include" />
+        <e p="IOmbiHttpClient.cs" t="Include" />
+        <e p="JsonContent.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.csproj" t="IncludeRecursive" />
+        <e p="OmbiHttpClient.cs" t="Include" />
+        <e p="Request.cs" t="Include" />
+      </e>
+      <e p="Ombi.Api.CouchPotato" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="CouchPotatoApi.cs" t="Include" />
+        <e p="ICouchPotatoApi.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="CouchPotatoApiKey.cs" t="Include" />
+          <e p="CouchPotatoMovies.cs" t="Include" />
+          <e p="CouchPotatoProfiles.cs" t="Include" />
+          <e p="CouchPotatoStatus.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.CouchPotato.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.CouchPotato.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Ombi.Api.Discord" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="DiscordApi.cs" t="Include" />
+        <e p="IDiscordApi.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="DiscordWebhookBody.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.Discord.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.Discord.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Ombi.Api.DogNzb" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="DogNzbApi.cs" t="Include" />
+        <e p="IDogNzbApi.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="DogNzbAddResult.cs" t="Include" />
+          <e p="DogNzbError.cs" t="Include" />
+          <e p="DogNzbMovieAddResult.cs" t="Include" />
+          <e p="DogNzbMovies.cs" t="Include" />
+          <e p="DogNzbTvShows.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.DogNzb.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.DogNzb.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Ombi.Api.Emby" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="EmbyApi.cs" t="Include" />
+        <e p="IEmbyApi.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="EmbyConfiguration.cs" t="Include" />
+          <e p="EmbyConnectUser.cs" t="Include" />
+          <e p="EmbyItemContainer.cs" t="Include" />
+          <e p="EmbyMediaType.cs" t="Include" />
+          <e p="EmbyPolicy.cs" t="Include" />
+          <e p="EmbySystemInfo.cs" t="Include" />
+          <e p="EmbyUser.cs" t="Include" />
+          <e p="EmbyUserLogin.cs" t="Include" />
+          <e p="Media" t="Include">
+            <e p="EmbyChapter.cs" t="Include" />
+            <e p="EmbyExternalurl.cs" t="Include" />
+            <e p="EmbyImagetags.cs" t="Include" />
+            <e p="EmbyMediasource.cs" t="Include" />
+            <e p="EmbyMediastream.cs" t="Include" />
+            <e p="EmbyPerson.cs" t="Include" />
+            <e p="EmbyProviderids.cs" t="Include" />
+            <e p="EmbyRemotetrailer.cs" t="Include" />
+            <e p="EmbyStudio.cs" t="Include" />
+            <e p="EmbyUserdata.cs" t="Include" />
+            <e p="movie" t="Include">
+              <e p="EmbyMovie.cs" t="Include" />
+              <e p="MovieInformation.cs" t="Include" />
+            </e>
+            <e p="tv" t="Include">
+              <e p="EmbyEpisodes.cs" t="Include" />
+              <e p="EmbyRemotetrailer.cs" t="Include" />
+              <e p="EmbySeries.cs" t="Include" />
+              <e p="EmbySeriesstudioinfo.cs" t="Include" />
+              <e p="EpisodeInformation.cs" t="Include" />
+              <e p="SeriesInformation.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.Emby.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.Emby.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Ombi.Api.FanartTv" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="FanartTvApi.cs" t="Include" />
+        <e p="IFanartTvApi.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="MovieResult.cs" t="Include" />
+          <e p="TvResult.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.FanartTv.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.FanartTv.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Ombi.Api.Github" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="GithubApi.cs" t="Include" />
+        <e p="IGithubApi.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="CakeThemes.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.Github.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.Github.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Ombi.Api.Gotify" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="GotifyApi.cs" t="Include" />
+        <e p="IGotifyApi.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.Gotify.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.Gotify.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Ombi.Api.GroupMe" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="GroupMeApi.cs" t="Include" />
+        <e p="IGroupMeApi.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="GroupMeResponse.cs" t="Include" />
+          <e p="Groups.cs" t="Include" />
+          <e p="SendMessageResponse.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.GroupMe.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.GroupMe.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Ombi.Api.Lidarr" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ILidarrApi.cs" t="Include" />
+        <e p="LidarrApi.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="AlbumByArtistResponse.cs" t="Include" />
+          <e p="AlbumByForeignId.cs" t="Include" />
+          <e p="AlbumLookup.cs" t="Include" />
+          <e p="AlbumResponse.cs" t="Include" />
+          <e p="Artist.cs" t="Include" />
+          <e p="ArtistAdd.cs" t="Include" />
+          <e p="ArtistLookup.cs" t="Include" />
+          <e p="ArtistResult.cs" t="Include" />
+          <e p="CommandResult.cs" t="Include" />
+          <e p="Image.cs" t="Include" />
+          <e p="LanguageProfiles.cs" t="Include" />
+          <e p="LidarrLinks.cs" t="Include" />
+          <e p="LidarrProfile.cs" t="Include" />
+          <e p="LidarrRatings.cs" t="Include" />
+          <e p="LidarrRootFolder.cs" t="Include" />
+          <e p="LidarrStatus.cs" t="Include" />
+          <e p="LidarrTrack.cs" t="Include" />
+          <e p="Link.cs" t="Include" />
+          <e p="MetadataProfile.cs" t="Include" />
+          <e p="Ratings.cs" t="Include" />
+          <e p="Statistics.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.Lidarr.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.Lidarr.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Ombi.Api.Mattermost" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="IMattermostApi.cs" t="Include" />
+        <e p="MattermostApi.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="MattermostBody.cs" t="Include" />
+          <e p="MattermostClient.cs" t="Include" />
+          <e p="MattermostMessage.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.Mattermost.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.Mattermost.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Ombi.Api.MusicBrainz" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="IMusicBrainzApi.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="artist" t="Include">
+            <e p="ArtistInformation.cs" t="Include" />
+          </e>
+          <e p="Browse" t="Include">
+            <e p="ReleaseResult.cs" t="Include" />
+          </e>
+          <e p="MusicBrainzResult.cs" t="Include" />
+          <e p="search" t="Include">
+            <e p="ArtistSearchResult.cs" t="Include" />
+          </e>
+        </e>
+        <e p="MusicBrainzApi.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.MusicBrainz.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.MusicBrainz.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Ombi.Api.Notifications" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="IOneSignalApi.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="OneSignalNotificationBody.cs" t="Include" />
+          <e p="OneSignalNotificationResponse.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.Notifications.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.Notifications.csproj" t="IncludeRecursive" />
+        <e p="OneSignalApi.cs" t="Include" />
+      </e>
+      <e p="Ombi.Api.Plex" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="IPlexApi.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="Director.cs" t="Include" />
+          <e p="Directory.cs" t="Include" />
+          <e p="Friends" t="Include">
+            <e p="PlexFriends.cs" t="Include" />
+          </e>
+          <e p="Genre.cs" t="Include" />
+          <e p="Location.cs" t="Include" />
+          <e p="Mediacontainer.cs" t="Include" />
+          <e p="Medium.cs" t="Include" />
+          <e p="Metadata.cs" t="Include" />
+          <e p="OAuth" t="Include">
+            <e p="OAuthPin.cs" t="Include" />
+          </e>
+          <e p="Part.cs" t="Include" />
+          <e p="PlexAdd.cs" t="Include" />
+          <e p="PlexAuthentication.cs" t="Include" />
+          <e p="PlexContainer.cs" t="Include" />
+          <e p="PlexLibrariesForMachineId.cs" t="Include" />
+          <e p="PlexMetadata.cs" t="Include" />
+          <e p="PlexUserRequest.cs" t="Include" />
+          <e p="Role.cs" t="Include" />
+          <e p="Roles.cs" t="Include" />
+          <e p="Server" t="Include">
+            <e p="PlexServer.cs" t="Include" />
+            <e p="ServerInfo.cs" t="Include" />
+          </e>
+          <e p="Status" t="Include">
+            <e p="Directory.cs" t="Include" />
+            <e p="Mediacontainer.cs" t="Include" />
+            <e p="PlexStatus.cs" t="Include" />
+          </e>
+          <e p="Stream.cs" t="Include" />
+          <e p="Subscription.cs" t="Include" />
+          <e p="User.cs" t="Include" />
+          <e p="UserRequest.cs" t="Include" />
+          <e p="Writer.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.Plex.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.Plex.csproj" t="IncludeRecursive" />
+        <e p="PlexApi.cs" t="Include" />
+      </e>
+      <e p="Ombi.Api.Pushbullet" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="IPushbulletApi.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.Pushbullet.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.Pushbullet.csproj" t="IncludeRecursive" />
+        <e p="PushbulletApi.cs" t="Include" />
+      </e>
+      <e p="Ombi.Api.Pushover" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="IPushoverApi.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="PushoverResponse.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.Pushover.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.Pushover.csproj" t="IncludeRecursive" />
+        <e p="PushoverApi.cs" t="Include" />
+      </e>
+      <e p="Ombi.Api.Radarr" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="CommandResult.cs" t="Include" />
+        <e p="IRadarrApi.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="Cutoff.cs" t="Include" />
+          <e p="Image.cs" t="Include" />
+          <e p="Item.cs" t="Include" />
+          <e p="MovieResponse.cs" t="Include" />
+          <e p="Quality.cs" t="Include" />
+          <e p="RadarrAddMovie.cs" t="Include" />
+          <e p="RadarrAddOptions.cs" t="Include" />
+          <e p="RadarrError.cs" t="Include" />
+          <e p="RadarrProfile.cs" t="Include" />
+          <e p="RadarrRootFolder.cs" t="Include" />
+          <e p="Ratings.cs" t="Include" />
+          <e p="SystemStatus.cs" t="Include" />
+          <e p="Tag.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.Radarr.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.Radarr.csproj" t="IncludeRecursive" />
+        <e p="RadarrApi.cs" t="Include" />
+      </e>
+      <e p="Ombi.Api.Service" t="IncludeRecursive">
+        <e p="AppVeyorApi.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="IAppVeyorApi.cs" t="Include" />
+        <e p="IOmbiService.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="Updates.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.Service.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.Service.csproj" t="IncludeRecursive" />
+        <e p="OmbiService.cs" t="Include" />
+      </e>
+      <e p="Ombi.Api.SickRage" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ISickRageApi.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="SeasonList.cs" t="Include" />
+          <e p="SickRageBase.cs" t="Include" />
+          <e p="SickRageEpisodesData.cs" t="Include" />
+          <e p="SickRageEpisodeStatus.cs" t="Include" />
+          <e p="SickRagePing.cs" t="Include" />
+          <e p="SickRageSeasonList.cs" t="Include" />
+          <e p="SickRageShowInformation.cs" t="Include" />
+          <e p="SickRageShows.cs" t="Include" />
+          <e p="SickRageStatus.cs" t="Include" />
+          <e p="SickRageTvAdd.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.SickRage.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.SickRage.csproj" t="IncludeRecursive" />
+        <e p="SickRageApi.cs" t="Include" />
+      </e>
+      <e p="Ombi.Api.Slack" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ISlackApi.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="SlackNotificationBody.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.Slack.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.Slack.csproj" t="IncludeRecursive" />
+        <e p="SlackApi.cs" t="Include" />
+      </e>
+      <e p="Ombi.Api.Sonarr" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ISonarrApi.cs" t="Include" />
+        <e p="ISonarrV3Api.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="CommandResult.cs" t="Include" />
+          <e p="Cutoff.cs" t="Include" />
+          <e p="Episode.cs" t="Include" />
+          <e p="Item.cs" t="Include" />
+          <e p="NewSeries.cs" t="Include" />
+          <e p="Quality.cs" t="Include" />
+          <e p="SeasonPass.cs" t="Include" />
+          <e p="SonarrProfile.cs" t="Include" />
+          <e p="SonarrRootFolder.cs" t="Include" />
+          <e p="SonarrSeries.cs" t="Include" />
+          <e p="SystemStatus.cs" t="Include" />
+          <e p="Tag.cs" t="Include" />
+          <e p="V3" t="Include">
+            <e p="LanguageProfiles.cs" t="Include" />
+          </e>
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.Sonarr.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.Sonarr.csproj" t="IncludeRecursive" />
+        <e p="SonarrApi.cs" t="Include" />
+        <e p="SonarrV3Api.cs" t="Include" />
+      </e>
+      <e p="Ombi.Api.Telegram" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ITelegramApi.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.Telegram.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.Telegram.csproj" t="IncludeRecursive" />
+        <e p="TelegramApi.cs" t="Include" />
+      </e>
+      <e p="Ombi.Api.Trakt" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ITraktApi.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.Trakt.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.Trakt.csproj" t="IncludeRecursive" />
+        <e p="TraktApi.cs" t="Include" />
+      </e>
+      <e p="Ombi.Api.TvMaze" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ITvMazeApi.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="search" t="Include">
+            <e p="Country.cs" t="Include" />
+            <e p="Externals.cs" t="Include" />
+            <e p="Image.cs" t="Include" />
+            <e p="Links.cs" t="Include" />
+            <e p="Network.cs" t="Include" />
+            <e p="Nextepisode.cs" t="Include" />
+            <e p="Previousepisode.cs" t="Include" />
+            <e p="Rating.cs" t="Include" />
+            <e p="Schedule.cs" t="Include" />
+            <e p="Self.cs" t="Include" />
+            <e p="Show.cs" t="Include" />
+            <e p="TvMazeSearch.cs" t="Include" />
+          </e>
+          <e p="TvMazeEpisode.cs" t="Include" />
+          <e p="TVMazeSeasons.cs" t="Include" />
+          <e p="TvMazeShow.cs" t="Include" />
+          <e p="V2" t="Include">
+            <e p="FullSearch.cs" t="Include" />
+          </e>
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.TvMaze.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.TvMaze.csproj" t="IncludeRecursive" />
+        <e p="TvMazeApi.cs" t="Include" />
+      </e>
+      <e p="Ombi.Core" t="IncludeRecursive">
+        <e p="authentication" t="Include">
+          <e p="OmbiUserManager.cs" t="Include" />
+          <e p="PlexOAuthManager.cs" t="Include" />
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Engine" t="Include">
+          <e p="BaseMediaEngine.cs" t="Include" />
+          <e p="Demo" t="Include">
+            <e p="DemoMovieSearchEngine.cs" t="Include" />
+            <e p="DemoTvSearchEngine.cs" t="Include" />
+          </e>
+          <e p="IMusicRequestEngine.cs" t="Include" />
+          <e p="interfaces" t="Include">
+            <e p="BaseEngine.cs" t="Include" />
+            <e p="IMovieEngine.cs" t="Include" />
+            <e p="IMovieEngineV2.cs" t="Include" />
+            <e p="IMovieRequestEngine.cs" t="Include" />
+            <e p="IMusicSearchEngine.cs" t="Include" />
+            <e p="IRecentlyAddedEngine.cs" t="Include" />
+            <e p="IRequestEngine.cs" t="Include" />
+            <e p="ITvRequestEngine.cs" t="Include" />
+            <e p="ITvSearchEngine.cs" t="Include" />
+            <e p="ITvSearchEngineV2.cs" t="Include" />
+            <e p="IUserStatsEngine.cs" t="Include" />
+          </e>
+          <e p="IVoteEngine.cs" t="Include" />
+          <e p="MovieRequestEngine.cs" t="Include" />
+          <e p="MovieSearchEngine.cs" t="Include" />
+          <e p="MusicRequestEngine.cs" t="Include" />
+          <e p="MusicSearchEngine.cs" t="Include" />
+          <e p="RecentlyAddedEngine.cs" t="Include" />
+          <e p="RequestEngineResult.cs" t="Include" />
+          <e p="TvRequestEngine.cs" t="Include" />
+          <e p="TvSearchEngine.cs" t="Include" />
+          <e p="UserStatsEngine.cs" t="Include" />
+          <e p="V2" t="Include">
+            <e p="CalendarEngine.cs" t="Include" />
+            <e p="ICalendarEngine.cs" t="Include" />
+            <e p="IMultiSearchEngine.cs" t="Include" />
+            <e p="MovieSearchEngineV2.cs" t="Include" />
+            <e p="MultiSearchEngine.cs" t="Include" />
+            <e p="TvSearchEngineV2.cs" t="Include" />
+          </e>
+          <e p="VoteEngine.cs" t="Include" />
+        </e>
+        <e p="helpers" t="Include">
+          <e p="EmailValidator.cs" t="Include" />
+          <e p="NotificationHelper.cs" t="Include" />
+          <e p="TvShowRequestBuilder.cs" t="Include" />
+        </e>
+        <e p="IMassEmailSender.cs" t="Include" />
+        <e p="IPlexOAuthManager.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="MassEmailModel.cs" t="Include" />
+          <e p="QualityModel.cs" t="Include" />
+          <e p="RecentlyAddedMovieModel.cs" t="Include" />
+          <e p="RecentlyAddedTvModel.cs" t="Include" />
+          <e p="RequestQuotaCountModel.cs" t="Include" />
+          <e p="requests" t="Include">
+            <e p="FilterResult.cs" t="Include" />
+            <e p="FilterViewModel.cs" t="Include" />
+            <e p="IRequestServiceMain.cs" t="Include" />
+            <e p="MovieAdvancedOptions.cs" t="Include" />
+            <e p="MovieRequestViewModel.cs" t="Include" />
+            <e p="MusicArtistRequestViewModel.cs" t="Include" />
+            <e p="RequestCountModel.cs" t="Include" />
+            <e p="RequestService.cs" t="Include" />
+            <e p="TvRequestViewModel.cs" t="Include" />
+          </e>
+          <e p="RootFolderModel.cs" t="Include" />
+          <e p="search" t="Include">
+            <e p="SearchAlbumViewModel.cs" t="Include" />
+            <e p="SearchArtistViewModel.cs" t="Include" />
+            <e p="SearchMovieViewModel.cs" t="Include" />
+            <e p="SearchTvShowViewModel.cs" t="Include" />
+            <e p="SearchViewModel.cs" t="Include" />
+            <e p="V2" t="Include">
+              <e p="CalendarViewModel.cs" t="Include" />
+              <e p="MovieCollectionsViewModel.cs" t="Include" />
+              <e p="MovieFullInfoViewModel.cs" t="Include" />
+              <e p="MultiSearchResult.cs" t="Include" />
+              <e p="SearchFullInfoTvShowViewModel.cs" t="Include" />
+            </e>
+          </e>
+          <e p="UI" t="Include">
+            <e p="DiscordNotificationsViewModel.cs" t="Include" />
+            <e p="EmailNotificationsViewModel.cs" t="Include" />
+            <e p="GotifyNotificationViewModel.cs" t="Include" />
+            <e p="MattermostNotificationsViewModel.cs" t="Include" />
+            <e p="MobileNotificationsViewModel.cs" t="Include" />
+            <e p="NewsletterNotificationViewModel.cs" t="Include" />
+            <e p="OrderFilterModel.cs" t="Include" />
+            <e p="OrderType.cs" t="Include" />
+            <e p="PushbulletNotificationViewModel.cs" t="Include" />
+            <e p="PushoverNotificationViewModel.cs" t="Include" />
+            <e p="RequestsViewModel.cs" t="Include" />
+            <e p="SlackNotificationsViewModel.cs" t="Include" />
+            <e p="TelegramNotificationViewModel.cs" t="Include" />
+            <e p="UpdateSettingsViewModel.cs" t="Include" />
+            <e p="UserViewModel.cs" t="Include" />
+            <e p="VoteViewModel.cs" t="Include" />
+          </e>
+          <e p="UserDto.cs" t="Include" />
+          <e p="VoteEngineResult.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Core.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Core.csproj" t="IncludeRecursive" />
+        <e p="Rule" t="Include">
+          <e p="BaseRequestRule.cs" t="Include" />
+          <e p="BaseSearchRule.cs" t="Include" />
+          <e p="interfaces" t="Include">
+            <e p="IRuleEvaluator.cs" t="Include" />
+            <e p="IRules.cs" t="Include" />
+            <e p="ISpecificRule.cs" t="Include" />
+            <e p="SpecificRules.cs" t="Include" />
+          </e>
+          <e p="RuleEvaluator.cs" t="Include" />
+          <e p="RuleResult.cs" t="Include" />
+          <e p="Rules" t="Include">
+            <e p="Request" t="Include">
+              <e p="AutoApproveRule.cs" t="Include" />
+              <e p="CanRequestRule.cs" t="Include" />
+              <e p="ExistingMovieRequestRule.cs" t="Include" />
+              <e p="ExistingPlexRequestRule.cs" t="Include" />
+              <e p="ExistingTVRequestRule.cs" t="Include" />
+              <e p="RequestLimitRule.cs" t="Include" />
+              <e p="SonarrCacheRequestRule.cs" t="Include" />
+            </e>
+            <e p="search" t="Include">
+              <e p="AvailabilityRuleHelper.cs" t="Include" />
+              <e p="CouchPotatoCacheRule.cs" t="Include" />
+              <e p="EmbyAvailabilityRule.cs" t="Include" />
+              <e p="ExistingRule.cs" t="Include" />
+              <e p="LidarrAlbumCacheRule.cs" t="Include" />
+              <e p="LidarrArtistCacheRule.cs" t="Include" />
+              <e p="PlexAvailabilityRule.cs" t="Include" />
+              <e p="RadarrCacheRule.cs" t="Include" />
+              <e p="SonarrCacheSearchRule.cs" t="Include" />
+            </e>
+            <e p="SonarrCacheRule.cs" t="Include" />
+            <e p="Specific" t="Include">
+              <e p="SendNotificationRule.cs" t="Include" />
+            </e>
+          </e>
+          <e p="SpecificRule.cs" t="Include" />
+        </e>
+        <e p="Senders" t="Include">
+          <e p="IMovieSender.cs" t="Include" />
+          <e p="IMusicSender.cs" t="Include" />
+          <e p="INotificationHelper.cs" t="Include" />
+          <e p="ITvSender.cs" t="Include" />
+          <e p="MassEmailSender.cs" t="Include" />
+          <e p="MovieSender.cs" t="Include" />
+          <e p="MusicSender.cs" t="Include" />
+          <e p="SenderResult.cs" t="Include" />
+          <e p="TvSender.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Ombi.Core.Tests" t="IncludeRecursive">
+        <e p="authentication" t="Include">
+          <e p="OmbiUserManagerTests.cs" t="Include" />
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="DbHelper.cs" t="Include" />
+        <e p="Engine" t="Include">
+          <e p="CalendarEngineTests.cs" t="Include" />
+          <e p="MovieRequestEngineTests.cs" t="Include" />
+          <e p="TvRequestEngineTests.cs" t="Include" />
+          <e p="V2" t="Include">
+            <e p="MovieRequestEngineTests.cs" t="Include" />
+          </e>
+          <e p="VoteEngineTests.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.2" t="Include">
+              <e p="Ombi.Core.Tests.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Core.Tests.csproj" t="IncludeRecursive" />
+        <e p="Rule" t="Include">
+          <e p="Request" t="Include">
+            <e p="AutoApproveRuleTests.cs" t="Include" />
+            <e p="CanRequestRuleTests.cs" t="Include" />
+            <e p="ExistingMovieRequestRuleTests.cs" t="Include" />
+          </e>
+          <e p="search" t="Include">
+            <e p="AvailabilityRuleHelperTests.cs" t="Include" />
+            <e p="CouchPotatoCacheRuleTests.cs" t="Include" />
+            <e p="EmbyAvailabilityRuleTests.cs" t="Include" />
+            <e p="ExistingRequestRuleTests.cs" t="Include" />
+            <e p="LidarrAlbumCacheRuleTests.cs" t="Include" />
+            <e p="LidarrArtistCacheRuleTests.cs" t="Include" />
+            <e p="RadarrCacheRuleTests.cs" t="Include" />
+          </e>
+        </e>
+        <e p="StringHelperTests.cs" t="Include" />
+        <e p="TestResults" t="Include">
+          <e p="abc_2019-04-11_16-00-07-401.trx" t="Include" />
+          <e p="Test_2019-04-11_16-08-23-858.trx" t="Include" />
+          <e p="Test_2019-04-11_16-14-04-759.trx" t="Include" />
+          <e p="Test_2019-04-11_20-37-55-534.trx" t="Include" />
+          <e p="Test_2019-04-11_20-41-57-955.trx" t="Include" />
+          <e p="Test_2019-04-11_20-44-35-153.trx" t="Include" />
+          <e p="Test_2019-04-11_20-56-07-690.trx" t="Include" />
+          <e p="Test_2019-04-11_20-59-53-909.trx" t="Include" />
+          <e p="Test_2019-04-11_21-48-43-078.trx" t="Include" />
+          <e p="Test_2019-04-11_21-52-52-668.trx" t="Include" />
+        </e>
+      </e>
+      <e p="Ombi.DependencyInjection" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="IocExtensions.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.DependencyInjection.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.DependencyInjection.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Ombi.Helpers" t="IncludeRecursive">
+        <e p="ApplicationSettings.cs" t="Include" />
+        <e p="AssemblyHelper.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ByteConverterHelper.cs" t="Include" />
+        <e p="CacheKeys.cs" t="Include" />
+        <e p="CacheService.cs" t="Include" />
+        <e p="Cron.cs" t="Include" />
+        <e p="DemoLists.cs" t="Include" />
+        <e p="DemoSingleton.cs" t="Include" />
+        <e p="EmbyHelper.cs" t="Include" />
+        <e p="HtmlHelper.cs" t="Include" />
+        <e p="ICacheService.cs" t="Include" />
+        <e p="IProcessProvider.cs" t="Include" />
+        <e p="JsonConvertHelper.cs" t="Include" />
+        <e p="LinqHelpers.cs" t="Include" />
+        <e p="LoggingEvents.cs" t="Include" />
+        <e p="NotificationAgent.cs" t="Include" />
+        <e p="NotificationType.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Helpers.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Helpers.csproj" t="IncludeRecursive" />
+        <e p="OmbiRoles.cs" t="Include" />
+        <e p="PaginationHelper.cs" t="Include" />
+        <e p="PlexHelper.cs" t="Include" />
+        <e p="PosterPathHelper.cs" t="Include" />
+        <e p="ProcessProvider.cs" t="Include" />
+        <e p="RuleNotFoundException.cs" t="Include" />
+        <e p="SerializerSettings.cs" t="Include" />
+        <e p="StoragePathSingleton.cs" t="Include" />
+        <e p="StringCipher.cs" t="Include" />
+        <e p="StringHelper.cs" t="Include" />
+        <e p="UriHelper.cs" t="Include" />
+      </e>
+      <e p="Ombi.Helpers.Tests" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="EmbyHelperTests.cs" t="Include" />
+        <e p="HtmlHelperTests.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.2" t="Include">
+              <e p="Ombi.Helpers.Tests.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Helpers.Tests.csproj" t="IncludeRecursive" />
+        <e p="PagnationHelperTests.cs" t="Include" />
+        <e p="PlexHelperTests.cs" t="Include" />
+        <e p="TestResults" t="Include">
+          <e p="Test_2019-04-11_16-14-10-415.trx" t="Include" />
+          <e p="Test_2019-04-11_20-38-01-127.trx" t="Include" />
+          <e p="Test_2019-04-11_20-42-03-393.trx" t="Include" />
+          <e p="Test_2019-04-11_20-44-40-772.trx" t="Include" />
+          <e p="Test_2019-04-11_20-56-13-222.trx" t="Include" />
+          <e p="Test_2019-04-11_20-59-59-428.trx" t="Include" />
+          <e p="Test_2019-04-11_21-48-48-892.trx" t="Include" />
+          <e p="Test_2019-04-11_21-52-58-659.trx" t="Include" />
+        </e>
+        <e p="UriHelperTests.cs" t="Include" />
+      </e>
+      <e p="Ombi.Hubs" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="NotificationHub.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Hubs.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Hubs.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Ombi.Mapping" t="IncludeRecursive">
+        <e p="AutoMapperProfile.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="MappingConverters.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Mapping.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Mapping.csproj" t="IncludeRecursive" />
+        <e p="Profiles" t="Include">
+          <e p="MovieProfile.cs" t="Include" />
+          <e p="OmbiProfile.cs" t="Include" />
+          <e p="SettingsProfile.cs" t="Include" />
+          <e p="TvProfile.cs" t="Include" />
+          <e p="TvProfileV2.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Ombi.Notifications" t="IncludeRecursive">
+        <e p="Agents" t="Include">
+          <e p="DiscordNotification.cs" t="Include" />
+          <e p="EmailNotification.cs" t="Include" />
+          <e p="GotifyNotification.cs" t="Include" />
+          <e p="interfaces" t="Include">
+            <e p="IDiscordNotification.cs" t="Include" />
+            <e p="IEmailNotification.cs" t="Include" />
+            <e p="IGotifyNotification.cs" t="Include" />
+            <e p="IMattermostNotification.cs" t="Include" />
+            <e p="IMobileNotification.cs" t="Include" />
+            <e p="IPushbulletNotification.cs" t="Include" />
+            <e p="IPushoverNotification.cs" t="Include" />
+            <e p="ISlackNotification.cs" t="Include" />
+            <e p="ITelegramNotification.cs" t="Include" />
+          </e>
+          <e p="MattermostNotification.cs" t="Include" />
+          <e p="MobileNotification.cs" t="Include" />
+          <e p="PushbulletNotification.cs" t="Include" />
+          <e p="PushoverNotification.cs" t="Include" />
+          <e p="SlackNotification.cs" t="Include" />
+          <e p="TelegramNotification.cs" t="Include" />
+        </e>
+        <e p="BaseNotification.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Exceptions" t="Include">
+          <e p="TemplateMissingException.cs" t="Include" />
+        </e>
+        <e p="GenericEmailProvider.cs" t="Include" />
+        <e p="IEmailProvider.cs" t="Include" />
+        <e p="interfaces" t="Include">
+          <e p="INotification.cs" t="Include" />
+          <e p="INotificationService.cs" t="Include" />
+        </e>
+        <e p="Models" t="Include">
+          <e p="NotificationMessage.cs" t="Include" />
+          <e p="NotificationOptions.cs" t="Include" />
+        </e>
+        <e p="NotificationMessageContent.cs" t="Include" />
+        <e p="NotificationMessageCurlys.cs" t="Include" />
+        <e p="NotificationMessageResolver.cs" t="Include" />
+        <e p="NotificationService.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Notifications.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Notifications.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Ombi.Notifications.Templates" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="EmailBasicTemplate.cs" t="Include" />
+        <e p="IEmailBasicTemplate.cs" t="Include" />
+        <e p="INewsletterTemplate.cs" t="Include" />
+        <e p="NewsletterTemplate.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Notifications.Templates.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Notifications.Templates.csproj" t="IncludeRecursive" />
+        <e p="TemplateBase.cs" t="Include" />
+        <e p="Templates" t="Include">
+          <e p="BasicTemplate.html" t="Include" />
+          <e p="NewsletterTemplate.html" t="Include" />
+        </e>
+      </e>
+      <e p="Ombi.Notifications.Tests" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="NotificationMessageResolverTests.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.2" t="Include">
+              <e p="Ombi.Notifications.Tests.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Notifications.Tests.csproj" t="IncludeRecursive" />
+        <e p="TestResults" t="Include">
+          <e p="abc_2019-04-11_16-00-24-503.trx" t="Include" />
+          <e p="Test_2019-04-11_16-08-41-250.trx" t="Include" />
+          <e p="Test_2019-04-11_16-14-24-466.trx" t="Include" />
+          <e p="Test_2019-04-11_20-38-14-728.trx" t="Include" />
+          <e p="Test_2019-04-11_20-42-16-560.trx" t="Include" />
+          <e p="Test_2019-04-11_20-56-29-174.trx" t="Include" />
+          <e p="Test_2019-04-11_21-00-14-173.trx" t="Include" />
+          <e p="Test_2019-04-11_21-53-13-378.trx" t="Include" />
+        </e>
+      </e>
+      <e p="Ombi.Schedule" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="IoCJobActivator.cs" t="Include" />
+        <e p="IocJobFactory.cs" t="Include" />
+        <e p="jobs" t="Include">
+          <e p="couchpotato" t="Include">
+            <e p="CouchPotatoSync.cs" t="Include" />
+            <e p="ICouchPotatoSync.cs" t="Include" />
+          </e>
+          <e p="emby" t="Include">
+            <e p="EmbyAvaliabilityChecker.cs" t="Include" />
+            <e p="EmbyContentSync.cs" t="Include" />
+            <e p="EmbyEpisodeSync.cs" t="Include" />
+            <e p="EmbyUserImporter.cs" t="Include" />
+            <e p="IEmbyAvaliabilityChecker.cs" t="Include" />
+            <e p="IEmbyContentSync.cs" t="Include" />
+            <e p="IEmbyEpisodeSync.cs" t="Include" />
+            <e p="IEmbyUserImporter.cs" t="Include" />
+          </e>
+          <e p="IBaseJob.cs" t="Include" />
+          <e p="IJobSetup.cs" t="Include" />
+          <e p="lidarr" t="Include">
+            <e p="ILidarrAlbumSync.cs" t="Include" />
+            <e p="ILidarrArtistSync.cs" t="Include" />
+            <e p="ILidarrAvailabilityChecker.cs" t="Include" />
+            <e p="LidarrAlbumSync.cs" t="Include" />
+            <e p="LidarrArtistSync.cs" t="Include" />
+            <e p="LidarrAvailabilityChecker.cs" t="Include" />
+          </e>
+          <e p="Ombi" t="Include">
+            <e p="HtmlTemplateGenerator.cs" t="Include" />
+            <e p="interfaces" t="Include">
+              <e p="IIssuesPurge.cs" t="Include" />
+              <e p="IMediaDatabaseRefresh.cs" t="Include" />
+              <e p="INewsletterJob.cs" t="Include" />
+              <e p="IOmbiAutomaticUpdater.cs" t="Include" />
+              <e p="IRefreshMetadata.cs" t="Include" />
+              <e p="IResendFailedRequests.cs" t="Include" />
+              <e p="IssuesPurge.cs" t="Include" />
+              <e p="IWelcomeEmail.cs" t="Include" />
+            </e>
+            <e p="MediaDatabaseRefresh.cs" t="Include" />
+            <e p="NewsletterJob.cs" t="Include" />
+            <e p="OmbiAutomaticUpdater.cs" t="Include" />
+            <e p="RefreshMetadata.cs" t="Include" />
+            <e p="ResendFailedRequests.cs" t="Include" />
+            <e p="WelcomeEmail.cs" t="Include" />
+          </e>
+          <e p="plex" t="Include">
+            <e p="interfaces" t="Include">
+              <e p="IPlexAvailabilityChecker.cs" t="Include" />
+              <e p="IPlexContentSync.cs" t="Include" />
+              <e p="IPlexEpisodeSync.cs" t="Include" />
+              <e p="IPlexRecentlyAddedSync.cs" t="Include" />
+              <e p="IPlexUserImporter.cs" t="Include" />
+            </e>
+            <e p="Models" t="Include">
+              <e p="ProcessedContent.cs" t="Include" />
+            </e>
+            <e p="PlexAvailabilityChecker.cs" t="Include" />
+            <e p="PlexContentSync.cs" t="Include" />
+            <e p="PlexEpisodeSync.cs" t="Include" />
+            <e p="PlexMediaType.cs" t="Include" />
+            <e p="PlexRecentlyAddedSync.cs" t="Include" />
+            <e p="PlexUserImporter.cs" t="Include" />
+          </e>
+          <e p="radarr" t="Include">
+            <e p="IRadarrSync.cs" t="Include" />
+            <e p="RadarrSync.cs" t="Include" />
+          </e>
+          <e p="sickrage" t="Include">
+            <e p="ISickRageSync.cs" t="Include" />
+            <e p="SickRageSync.cs" t="Include" />
+          </e>
+          <e p="sonarr" t="Include">
+            <e p="ISonarrSync.cs" t="Include" />
+            <e p="SonarrSync.cs" t="Include" />
+          </e>
+        </e>
+        <e p="JobSetup.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Schedule.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Schedule.csproj" t="IncludeRecursive" />
+        <e p="OmbiQuartz.cs" t="Include" />
+        <e p="OmbiScheduler.cs" t="Include" />
+        <e p="Processor" t="Include">
+          <e p="AppVeyor.cs" t="Include" />
+          <e p="ChangeLogProcessor.cs" t="Include" />
+          <e p="IChangeLogProcessor.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Ombi.Schedule.Tests" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="IssuesPurgeTests.cs" t="Include" />
+        <e p="NewsletterTests.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.2" t="Include">
+              <e p="Ombi.Schedule.Tests.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Schedule.Tests.csproj" t="IncludeRecursive" />
+        <e p="OmbiQuartzTests.cs" t="Include" />
+        <e p="PlexAvailabilityCheckerTests.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="launchSettings.json" t="Include" />
+        </e>
+        <e p="TestResults" t="Include">
+          <e p="abc_2019-04-11_16-00-40-181.trx" t="Include" />
+          <e p="Test_2019-04-11_16-08-56-948.trx" t="Include" />
+          <e p="Test_2019-04-11_16-14-41-574.trx" t="Include" />
+          <e p="Test_2019-04-11_20-38-31-166.trx" t="Include" />
+          <e p="Test_2019-04-11_20-42-33-256.trx" t="Include" />
+          <e p="Test_2019-04-11_20-56-48-285.trx" t="Include" />
+          <e p="Test_2019-04-11_21-00-33-108.trx" t="Include" />
+          <e p="Test_2019-04-11_21-53-32-507.trx" t="Include" />
+        </e>
+      </e>
+      <e p="Ombi.Settings" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Settings.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Settings.csproj" t="IncludeRecursive" />
+        <e p="settings" t="Include">
+          <e p="ISettingsResolver.cs" t="Include" />
+          <e p="ISettingsService.cs" t="Include" />
+          <e p="Models" t="Include">
+            <e p="AuthenticationSettings.cs" t="Include" />
+            <e p="CustomizationSettings.cs" t="Include" />
+            <e p="CustomPageSettings.cs" t="Include" />
+            <e p="External" t="Include">
+              <e p="CouchPotatoSettings.cs" t="Include" />
+              <e p="DogNzbSettings.cs" t="Include" />
+              <e p="EmbySettings.cs" t="Include" />
+              <e p="ExternalSettings.cs" t="Include" />
+              <e p="LidarrSettings.cs" t="Include" />
+              <e p="PlexSettings.cs" t="Include" />
+              <e p="RadarrSettings.cs" t="Include" />
+              <e p="SickRageSettings.cs" t="Include" />
+              <e p="SonarrSettings.cs" t="Include" />
+            </e>
+            <e p="IssueSettings.cs" t="Include" />
+            <e p="JobSettings.cs" t="Include" />
+            <e p="JobSettingsHelper.cs" t="Include" />
+            <e p="LandingPageSettings.cs" t="Include" />
+            <e p="Notifications" t="Include">
+              <e p="DiscordNotificationSettings.cs" t="Include" />
+              <e p="EmailNotificationSettings.cs" t="Include" />
+              <e p="GotifySettings.cs" t="Include" />
+              <e p="MattermostNotificationSettings.cs" t="Include" />
+              <e p="MobileNotificationSettings.cs" t="Include" />
+              <e p="NewsletterSettings.cs" t="Include" />
+              <e p="PushbulletSettings.cs" t="Include" />
+              <e p="PushoverSettings.cs" t="Include" />
+              <e p="SlackNotificationSettings.cs" t="Include" />
+              <e p="TelegramSettings.cs" t="Include" />
+            </e>
+            <e p="OmbiSettings.cs" t="Include" />
+            <e p="Settings.cs" t="Include" />
+            <e p="UpdateSettings.cs" t="Include" />
+            <e p="UserManagementSettings.cs" t="Include" />
+            <e p="VoteSettings.cs" t="Include" />
+          </e>
+          <e p="SettingsResolver.cs" t="Include" />
+          <e p="SettingsService.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Ombi.Settings.Tests" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="CustomizationSettingsTests.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.2" t="Include">
+              <e p="Ombi.Settings.Tests.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Settings.Tests.csproj" t="IncludeRecursive" />
+        <e p="TestResults" t="Include">
+          <e p="abc_2019-04-11_16-00-48-843.trx" t="Include" />
+          <e p="Test_2019-04-11_16-09-05-360.trx" t="Include" />
+          <e p="Test_2019-04-11_16-14-50-599.trx" t="Include" />
+          <e p="Test_2019-04-11_20-38-40-298.trx" t="Include" />
+          <e p="Test_2019-04-11_20-42-43-578.trx" t="Include" />
+          <e p="Test_2019-04-11_20-56-57-982.trx" t="Include" />
+          <e p="Test_2019-04-11_21-00-43-155.trx" t="Include" />
+          <e p="Test_2019-04-11_21-53-43-252.trx" t="Include" />
+        </e>
+      </e>
+      <e p="Ombi.sln" t="IncludeFlat" />
+      <e p="Ombi.Store" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Context" t="Include">
+          <e p="ExternalContext.cs" t="Include" />
+          <e p="IDbContext.cs" t="Include" />
+          <e p="IExternalContext.cs" t="Include" />
+          <e p="IOmbiContext.cs" t="Include" />
+          <e p="ISettingsContext.cs" t="Include" />
+          <e p="OmbiContext.cs" t="Include" />
+          <e p="SettingsContext.cs" t="Include" />
+        </e>
+        <e p="Entities" t="Include">
+          <e p="ApplicationConfiguration.cs" t="Include" />
+          <e p="Audit.cs" t="Include" />
+          <e p="CouchPotatoCache.cs" t="Include" />
+          <e p="EmbyContent.cs" t="Include" />
+          <e p="EmbyEpisode.cs" t="Include" />
+          <e p="Entity.cs" t="Include" />
+          <e p="GlobalSettings.cs" t="Include" />
+          <e p="LidarrAlbumCache.cs" t="Include" />
+          <e p="LidarrArtistCache.cs" t="Include" />
+          <e p="NotificationTemplates.cs" t="Include" />
+          <e p="NotificationUserId.cs" t="Include" />
+          <e p="OmbiUser.cs" t="Include" />
+          <e p="PlexEpisode.cs" t="Include" />
+          <e p="PlexServerContent.cs" t="Include" />
+          <e p="RadarrCache.cs" t="Include" />
+          <e p="RecentlyAddedLog.cs" t="Include" />
+          <e p="RequestQueue.cs" t="Include" />
+          <e p="requests" t="Include">
+            <e p="AlbumRequest.cs" t="Include" />
+            <e p="BaseRequest.cs" t="Include" />
+            <e p="ChildRequests.cs" t="Include" />
+            <e p="FullBaseRequest.cs" t="Include" />
+            <e p="IssueCategory.cs" t="Include" />
+            <e p="IssueComments.cs" t="Include" />
+            <e p="Issues.cs" t="Include" />
+            <e p="MovieRequests.cs" t="Include" />
+            <e p="RequestLog.cs" t="Include" />
+            <e p="SeasonRequests.cs" t="Include" />
+            <e p="TvRequests.cs" t="Include" />
+          </e>
+          <e p="RequestSubscription.cs" t="Include" />
+          <e p="RequestType.cs" t="Include" />
+          <e p="SickRageCache.cs" t="Include" />
+          <e p="SickRageEpisodeCache.cs" t="Include" />
+          <e p="SonarrCache.cs" t="Include" />
+          <e p="SonarrEpisodeCache.cs" t="Include" />
+          <e p="Tokens.cs" t="Include" />
+          <e p="User.cs" t="Include" />
+          <e p="UserNotificationPreferences.cs" t="Include" />
+          <e p="UserQualityProfiles.cs" t="Include" />
+          <e p="Votes.cs" t="Include" />
+        </e>
+        <e p="Migration.txt" t="Include" />
+        <e p="Migrations" t="Include">
+          <e p="20171103003202_Inital.cs" t="Include" />
+          <e p="20171103003202_Inital.Designer.cs" t="Include" />
+          <e p="20171103224757_MovieBackground.cs" t="Include" />
+          <e p="20171103224757_MovieBackground.Designer.cs" t="Include" />
+          <e p="20171123144147_EmbyConnectUser.cs" t="Include" />
+          <e p="20171123144147_EmbyConnectUser.Designer.cs" t="Include" />
+          <e p="20171128081222_SickRage.cs" t="Include" />
+          <e p="20171128081222_SickRage.Designer.cs" t="Include" />
+          <e p="20171208232545_RequestLimit.cs" t="Include" />
+          <e p="20171208232545_RequestLimit.Designer.cs" t="Include" />
+          <e p="20171209223349_RequestLimitSettings.cs" t="Include" />
+          <e p="20171209223349_RequestLimitSettings.Designer.cs" t="Include" />
+          <e p="20171213154624_Issues.cs" t="Include" />
+          <e p="20171213154624_Issues.Designer.cs" t="Include" />
+          <e p="20180102155757_RadarrAndSonarrHasFileCheck.cs" t="Include" />
+          <e p="20180102155757_RadarrAndSonarrHasFileCheck.Designer.cs" t="Include" />
+          <e p="20180111221357_SonarrSeriesType.cs" t="Include" />
+          <e p="20180111221357_SonarrSeriesType.Designer.cs" t="Include" />
+          <e p="20180112132036_UserAccessToken.cs" t="Include" />
+          <e p="20180112132036_UserAccessToken.Designer.cs" t="Include" />
+          <e p="20180128212409_EmbyEpisodeClear.cs" t="Include" />
+          <e p="20180128212409_EmbyEpisodeClear.Designer.cs" t="Include" />
+          <e p="20180201140230_NotificationIds.cs" t="Include" />
+          <e p="20180201140230_NotificationIds.Designer.cs" t="Include" />
+          <e p="20180228114507_DigitalRelease.cs" t="Include" />
+          <e p="20180228114507_DigitalRelease.Designer.cs" t="Include" />
+          <e p="20180307131304_SonarrOverrides.cs" t="Include" />
+          <e p="20180307131304_SonarrOverrides.Designer.cs" t="Include" />
+          <e p="20180322204610_RecentlyAddedLog.cs" t="Include" />
+          <e p="20180322204610_RecentlyAddedLog.Designer.cs" t="Include" />
+          <e p="20180406224743_EmbyMetadata.cs" t="Include" />
+          <e p="20180406224743_EmbyMetadata.Designer.cs" t="Include" />
+          <e p="20180413021646_tvrequestsbackground.cs" t="Include" />
+          <e p="20180413021646_tvrequestsbackground.Designer.cs" t="Include" />
+          <e p="20180419054711_EmbyButton.cs" t="Include" />
+          <e p="20180419054711_EmbyButton.Designer.cs" t="Include" />
+          <e p="20180420225638_NewsletterChanges.cs" t="Include" />
+          <e p="20180420225638_NewsletterChanges.Designer.cs" t="Include" />
+          <e p="20180516090124_RequestSubscription.cs" t="Include" />
+          <e p="20180516090124_RequestSubscription.Designer.cs" t="Include" />
+          <e p="20180613203443_RoleRename.cs" t="Include" />
+          <e p="20180613203443_RoleRename.Designer.cs" t="Include" />
+          <e p="20180703200952_EmbyUrlFix.cs" t="Include" />
+          <e p="20180703200952_EmbyUrlFix.Designer.cs" t="Include" />
+          <e p="20180730085903_UserStats.cs" t="Include" />
+          <e p="20180730085903_UserStats.Designer.cs" t="Include" />
+          <e p="20180824152254_MusicRequests.cs" t="Include" />
+          <e p="20180824152254_MusicRequests.Designer.cs" t="Include" />
+          <e p="20180824211553_LidarrSyncJobs.cs" t="Include" />
+          <e p="20180824211553_LidarrSyncJobs.Designer.cs" t="Include" />
+          <e p="20180828083219_MusicIssues.cs" t="Include" />
+          <e p="20180828083219_MusicIssues.Designer.cs" t="Include" />
+          <e p="20180919073124_UserNotificationPreferences.cs" t="Include" />
+          <e p="20180919073124_UserNotificationPreferences.Designer.cs" t="Include" />
+          <e p="20180920201101_UserQualityProfiles.cs" t="Include" />
+          <e p="20180920201101_UserQualityProfiles.Designer.cs" t="Include" />
+          <e p="20180928201334_Votes.cs" t="Include" />
+          <e p="20180928201334_Votes.Designer.cs" t="Include" />
+          <e p="20181204084915_RequestQueue.cs" t="Include" />
+          <e p="20181204084915_RequestQueue.Designer.cs" t="Include" />
+          <e p="20190104203305_LanguageCode.cs" t="Include" />
+          <e p="20190104203305_LanguageCode.Designer.cs" t="Include" />
+          <e p="20190116212601_RequestedByAlias.cs" t="Include" />
+          <e p="20190116212601_RequestedByAlias.Designer.cs" t="Include" />
+          <e p="20190216224539_Roles.cs" t="Include" />
+          <e p="20190216224539_Roles.Designer.cs" t="Include" />
+          <e p="20190216231519_TvRequestsTotalSeasons.cs" t="Include" />
+          <e p="20190216231519_TvRequestsTotalSeasons.Designer.cs" t="Include" />
+          <e p="20190520121742_IssueSeasonAndEpisode.cs" t="Include" />
+          <e p="20190520121742_IssueSeasonAndEpisode.Designer.cs" t="Include" />
+          <e p="External" t="Include">
+            <e p="20181004134907_Inital.cs" t="Include" />
+            <e p="20181004134907_Inital.Designer.cs" t="Include" />
+            <e p="ExternalContextModelSnapshot.cs" t="Include" />
+          </e>
+          <e p="OmbiContextModelSnapshot.cs" t="Include" />
+          <e p="settings" t="Include">
+            <e p="20181004132516_Inital.cs" t="Include" />
+            <e p="20181004132516_Inital.Designer.cs" t="Include" />
+            <e p="20190416204533_ResetSchedules.cs" t="Include" />
+            <e p="20190416204533_ResetSchedules.Designer.cs" t="Include" />
+            <e p="SettingsContextModelSnapshot.cs" t="Include" />
+          </e>
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Store.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Store.csproj" t="IncludeRecursive" />
+        <e p="Repository" t="Include">
+          <e p="ApplicationConfigRepository.cs" t="Include" />
+          <e p="AuditRepository.cs" t="Include" />
+          <e p="BaseRepository.cs" t="Include" />
+          <e p="EmbyContentRepository.cs" t="Include" />
+          <e p="ExternalRepository.cs" t="Include" />
+          <e p="IApplicationConfigRepository.cs" t="Include" />
+          <e p="IAuditRepository.cs" t="Include" />
+          <e p="IEmbyContentRepository.cs" t="Include" />
+          <e p="IExternalRepository.cs" t="Include" />
+          <e p="INotificationTemplatesRepository.cs" t="Include" />
+          <e p="IPlexContentRepository.cs" t="Include" />
+          <e p="IRepository.cs" t="Include" />
+          <e p="ISettingsRepository.cs" t="Include" />
+          <e p="ITokenRepository.cs" t="Include" />
+          <e p="IUserRepository.cs" t="Include" />
+          <e p="NotificationTemplatesRepository.cs" t="Include" />
+          <e p="PlexContentRepository.cs" t="Include" />
+          <e p="Repository.cs" t="Include" />
+          <e p="requests" t="Include">
+            <e p="IMovieRequestRepository.cs" t="Include" />
+            <e p="IMusicRequestRepository.cs" t="Include" />
+            <e p="ITvRequestRepository.cs" t="Include" />
+            <e p="MovieRequestRepository.cs" t="Include" />
+            <e p="MusicRequestRepository.cs" t="Include" />
+            <e p="TvRequestRepository.cs" t="Include" />
+          </e>
+          <e p="SettingsJsonRepository.cs" t="Include" />
+          <e p="TokenRepository.cs" t="Include" />
+          <e p="UserRepository.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Ombi.Test.Common" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="MockHelper.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Test.Common.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Test.Common.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="Ombi.Tests" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="IdentityControllerTests.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.2" t="Include">
+              <e p="Ombi.Tests.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Tests.csproj" t="IncludeRecursive" />
+        <e p="PosterPathHelperTests.cs" t="Include" />
+        <e p="TestResults" t="Include">
+          <e p="abc_2019-04-11_16-01-10-604.trx" t="Include" />
+          <e p="Test_2019-04-11_16-09-30-639.trx" t="Include" />
+          <e p="Test_2019-04-11_16-15-16-457.trx" t="Include" />
+          <e p="Test_2019-04-11_20-39-11-219.trx" t="Include" />
+          <e p="Test_2019-04-11_20-43-16-409.trx" t="Include" />
+          <e p="Test_2019-04-11_20-57-24-054.trx" t="Include" />
+          <e p="Test_2019-04-11_21-01-07-583.trx" t="Include" />
+          <e p="Test_2019-04-11_21-54-19-532.trx" t="Include" />
+        </e>
+        <e p="TestStartup.cs" t="Include" />
+      </e>
+      <e p="Ombi.TheMovieDbApi" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="IMovieDbApi.cs" t="Include" />
+        <e p="Models" t="Include">
+          <e p="ActorCredits.cs" t="Include" />
+          <e p="ActorSearchResult.cs" t="Include" />
+          <e p="BelongsToCollection.cs" t="Include" />
+          <e p="Collections.cs" t="Include" />
+          <e p="DiscoverMovies.cs" t="Include" />
+          <e p="FindResult.cs" t="Include" />
+          <e p="FullMovieInfo.cs" t="Include" />
+          <e p="Genre.cs" t="Include" />
+          <e p="GenreDto.cs" t="Include" />
+          <e p="MovieResponse.cs" t="Include" />
+          <e p="MovieResponseDTO.cs" t="Include" />
+          <e p="MovieSearchResult.cs" t="Include" />
+          <e p="MultiSearch.cs" t="Include" />
+          <e p="ProductionCompanies.cs" t="Include" />
+          <e p="ProductionCountries.cs" t="Include" />
+          <e p="SearchResult.cs" t="Include" />
+          <e p="SpokenLanguages.cs" t="Include" />
+          <e p="TheMovieDbContainer.cs" t="Include" />
+          <e p="TvExternals.cs" t="Include" />
+          <e p="TvInfo.cs" t="Include" />
+          <e p="TvSearchResult.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ombi.Api.TheMovieDb.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Api.TheMovieDb.csproj" t="IncludeRecursive" />
+        <e p="TheMovieDbApi.cs" t="Include" />
+      </e>
+      <e p="Ombi.Updater" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="IInstaller.cs" t="Include" />
+        <e p="Installer.cs" t="Include" />
+        <e p="IProcessProvider.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.2" t="Include">
+              <e p="Ombi.Updater.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ombi.Updater.csproj" t="IncludeRecursive" />
+        <e p="ProcessProvider.cs" t="Include" />
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="launchSettings.json" t="Include" />
+        </e>
+      </e>
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Solution Items" t="Include" />
+      <e p="Tests" t="Include" />
+      <e p="Update" t="Include" />
+    </e>
+    <e p="C:\Users\jrees\.nuget\packages\microsoft.net.test.sdk\16.0.1\build\netcoreapp1.0" t="Include">
+      <e p="Microsoft.NET.Test.Sdk.Program.cs" t="Include" />
+    </e>
+    <e p="C:\Users\jrees\.nuget\packages\nunit3testadapter\3.13.0\build\netcoreapp1.0\nunit.engine.netstandard.dll" t="Include" />
+    <e p="C:\Users\jrees\.nuget\packages\nunit3testadapter\3.13.0\build\netcoreapp1.0\NUnit3.TestAdapter.dll" t="Include" />
+    <e p="C:\Users\jrees\.nuget\packages\nunit3testadapter\3.13.0\build\netcoreapp1.0\NUnit3.TestAdapter.pdb" t="Include" />
+    <e p="C:\Users\jrees\.Rider2019.1\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\jrees\.Rider2019.1\system\resharper-host\local\Transient\ReSharperHost\v191\SolutionCaches\_Ombi.-616636193.00" t="ExcludeRecursive" />
+  </component>
+</project>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="RIDER_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$USER_HOME$/.nuget/packages/microsoft.net.test.sdk/16.0.1/build/netcoreapp1.0" />
+    <content url="file://$USER_HOME$/.nuget/packages/nunit3testadapter/3.13.0/build/netcoreapp1.0/NUnit3.TestAdapter.dll" />
+    <content url="file://$USER_HOME$/.nuget/packages/nunit3testadapter/3.13.0/build/netcoreapp1.0/NUnit3.TestAdapter.pdb" />
+    <content url="file://$USER_HOME$/.nuget/packages/nunit3testadapter/3.13.0/build/netcoreapp1.0/nunit.engine.netstandard.dll" />
+    <content url="file://$MODULE_DIR$/../../../CHANGELOG.md" />
+    <content url="file://$MODULE_DIR$/../../../appveyor.yml" />
+    <content url="file://$MODULE_DIR$/../../../build.cake" />
+    <content url="file://$MODULE_DIR$/../.." />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

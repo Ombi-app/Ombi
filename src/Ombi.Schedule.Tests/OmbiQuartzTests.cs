@@ -12,7 +12,7 @@ namespace Ombi.Schedule.Tests
 
         [Test]
         [Ignore("Cannot get this to work")]
-        public async Task Test()
+        public void Test()
         {
             var scheduleMock = new Mock<IScheduler>();
             scheduleMock.Setup(x => x.TriggerJob(It.IsAny<JobKey>(),
