@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Ombi.Api.MusicBrainz;
@@ -30,16 +31,31 @@ namespace Ombi.Core.Engine.V2
         {
             var artist = await _musicBrainzApi.GetArtistInformation(artistId);
             
-            return new ArtistInformation{
+            var info = new ArtistInformation
+            {
                 Id = artistId,
-                Name = artist.name,
-                Country = artist.country,
-                Region = artist.begin_area?.name,
-                Type = artist.type,
-                StartYear = artist.lifespan?.begin ?? "",
-                EndYear = artist.lifespan?.end?? "",
+                Name = artist.Name,
+                Country = artist.Country,
+                Region = artist.Area?.Name,
+                Type = artist.Type,
+                StartYear = artist.LifeSpan?.Begin ?? "",
+                EndYear = artist.LifeSpan?.End?? "",
+                Disambiguation = artist.Disambiguation,
+                ReleaseGroups = new List<ReleaseGroup>()
             };
-            
+            // TODO FINISH MAPPING
+            foreach (var g in artist.ReleaseGroups)
+            {
+                info.ReleaseGroups.Add(new ReleaseGroup
+                {
+                    Type = g.PrimaryType,
+                    Id = g.Id,
+                    Title = g.Title,
+                    ReleaseDate = g.FirstReleaseDate
+                });
+            }
+
+            return info;
         } 
     }
 }

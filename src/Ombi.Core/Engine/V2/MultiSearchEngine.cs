@@ -51,8 +51,8 @@ namespace Ombi.Core.Engine.V2
                     model.Add(new MultiSearchResult
                     {
                         MediaType = "Artist",
-                        Title = artist.name,
-                        Id = artist.id
+                        Title = artist.Name,
+                        Id = artist.Id
                     });
                 }
             }

@@ -9,6 +9,7 @@ import { ServiceHelpers } from "./service.helpers";
 
 import { ISearchMovieResultV2 } from "../interfaces/ISearchMovieResultV2";
 import { ISearchTvResultV2, IMovieCollectionsViewModel, IActorCredits } from "../interfaces/ISearchTvResultV2";
+import { IArtistSearchResult } from "../interfaces/IMusicSearchResultV2";
 
 @Injectable()
 export class SearchV2Service extends ServiceHelpers {
@@ -99,7 +100,7 @@ export class SearchV2Service extends ServiceHelpers {
         return this.http.get<IActorCredits>(`${this.url}/actor/${actorId}/movie`, { headers: this.headers });
     }
 
-    public getArtistInformation(artistId: string): Observable<any> {
-        return this.http.get<any>(`${this.url}/artist/${artistId}`);
+    public getArtistInformation(artistId: string): Observable<IArtistSearchResult> {
+        return this.http.get<IArtistSearchResult>(`${this.url}/artist/${artistId}`);
     }
 }

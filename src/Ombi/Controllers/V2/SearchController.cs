@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Http;
 
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Ombi.Api.MusicBrainz;
-using Ombi.Api.MusicBrainz.Models.Search;
 using Ombi.Core;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Engine.V2;

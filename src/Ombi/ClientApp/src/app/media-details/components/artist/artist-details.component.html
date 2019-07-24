@@ -1,11 +1,10 @@
-<div *ngIf="!movie" class="justify-content-md-center top-spacing loading-spinner">
+<div *ngIf="!artist" class="justify-content-md-center top-spacing loading-spinner">
   <mat-spinner [color]="'accent'"></mat-spinner>
 </div>
 
-<div *ngIf="movie" class="dark-theme">
+<div *ngIf="artist" class="dark-theme">
 
-  <top-banner [background]="movie.background" [available]="movie.available" [title]="movie.title"
-    [releaseDate]="movie.releaseDate" [tagline]="movie.tagline"></top-banner>
+  <top-banner [title]="artist.name"></top-banner>
 
   <section id="info-wrapper">
     <div class="small-middle-container">

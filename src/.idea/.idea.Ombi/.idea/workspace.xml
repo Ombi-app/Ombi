@@ -26,7 +26,7 @@
         <entry file="file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MusicSearchEngineV2.cs">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="240">
-              <caret line="15" column="1" lean-forward="true" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
+              <caret line="15" column="1" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
               <folding>
                 <marker date="1563971976383" expanded="true" signature="6:402" ph="..." />
                 <marker date="1563971976383" expanded="true" signature="512:1600" ph="{...}" />
@@ -42,7 +42,7 @@
         <entry file="file://$PROJECT_DIR$/Ombi.Core/Engine/Interfaces/IMusicSearchEngineV2.cs">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="48">
-              <caret line="3" column="37" lean-forward="true" selection-start-line="3" selection-start-column="37" selection-end-line="3" selection-end-column="37" />
+              <caret line="3" column="37" selection-start-line="3" selection-start-column="37" selection-end-line="3" selection-end-column="37" />
               <folding>
                 <marker date="1563971976358" expanded="true" signature="6:69" ph="..." />
                 <marker date="1563971976358" expanded="true" signature="108:237" ph="{...}" />
@@ -99,7 +99,7 @@
         <entry file="file://$PROJECT_DIR$/Ombi/Controllers/V2/SearchController.cs">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="290">
-              <caret line="54" column="48" lean-forward="true" selection-start-line="54" selection-start-column="48" selection-end-line="54" selection-end-column="48" />
+              <caret line="54" column="48" selection-start-line="54" selection-start-column="48" selection-end-line="54" selection-end-column="48" />
               <folding>
                 <marker date="1563972058760" expanded="false" signature="6:492" ph="..." />
                 <marker date="1563972058760" expanded="true" signature="523:13818" ph="{...}" />
@@ -175,7 +175,7 @@
         <entry file="file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="146">
-              <caret line="47" column="58" lean-forward="true" selection-start-line="47" selection-start-column="58" selection-end-line="47" selection-end-column="58" />
+              <caret line="47" column="58" selection-start-line="47" selection-start-column="58" selection-end-line="47" selection-end-column="58" />
               <folding>
                 <marker date="1563908151735" expanded="false" signature="6:540" ph="..." />
                 <marker date="1563908151735" expanded="true" signature="571:3867" ph="{...}" />
@@ -216,8 +216,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="30" column="21" selection-start-line="30" selection-start-column="21" selection-end-line="30" selection-end-column="21" />
+            <state relative-caret-position="320">
+              <caret line="32" selection-start-line="32" selection-end-line="32" />
               <folding>
                 <marker date="1563915793306" expanded="false" signature="6:281" ph="..." />
                 <marker date="1563915793306" expanded="true" signature="313:1888" ph="{...}" />
@@ -447,12 +447,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1563957157468</updated>
-      <workItem from="1563957162999" duration="5139000" />
+      <workItem from="1563957162999" duration="5401000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5139000" />
+    <option name="totallyTimeSpent" value="5401000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -465,7 +465,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="977" y="-1093" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Favorites" order="0" side_tool="true" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -481,7 +480,7 @@
       <window_info anchor="bottom" id="Message" order="7" />
       <window_info anchor="bottom" id="Find" order="8" />
       <window_info anchor="bottom" id="Run" order="9" weight="0.32977587" />
-      <window_info active="true" anchor="bottom" id="Debug" order="10" sideWeight="0.49973363" visible="true" weight="0.29775882" />
+      <window_info anchor="bottom" id="Debug" order="10" sideWeight="0.49973363" weight="0.29775882" />
       <window_info anchor="bottom" id="Cvs" order="11" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="12" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="13" weight="0.32977587" />
@@ -850,7 +849,7 @@
     <entry file="file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MusicSearchEngineV2.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
-          <caret line="15" column="1" lean-forward="true" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
+          <caret line="15" column="1" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
           <folding>
             <marker date="1563971976383" expanded="true" signature="6:402" ph="..." />
             <marker date="1563971976383" expanded="true" signature="512:1600" ph="{...}" />
@@ -878,7 +877,7 @@
     <entry file="file://$PROJECT_DIR$/Ombi.Core/Engine/Interfaces/IMusicSearchEngineV2.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="48">
-          <caret line="3" column="37" lean-forward="true" selection-start-line="3" selection-start-column="37" selection-end-line="3" selection-end-column="37" />
+          <caret line="3" column="37" selection-start-line="3" selection-start-column="37" selection-end-line="3" selection-end-column="37" />
           <folding>
             <marker date="1563971976358" expanded="true" signature="6:69" ph="..." />
             <marker date="1563971976358" expanded="true" signature="108:237" ph="{...}" />
@@ -913,7 +912,7 @@
     <entry file="file://$PROJECT_DIR$/Ombi/Controllers/V2/SearchController.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="290">
-          <caret line="54" column="48" lean-forward="true" selection-start-line="54" selection-start-column="48" selection-end-line="54" selection-end-column="48" />
+          <caret line="54" column="48" selection-start-line="54" selection-start-column="48" selection-end-line="54" selection-end-column="48" />
           <folding>
             <marker date="1563972058760" expanded="false" signature="6:492" ph="..." />
             <marker date="1563972058760" expanded="true" signature="523:13818" ph="{...}" />
@@ -985,7 +984,7 @@
     <entry file="file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="146">
-          <caret line="47" column="58" lean-forward="true" selection-start-line="47" selection-start-column="58" selection-end-line="47" selection-end-column="58" />
+          <caret line="47" column="58" selection-start-line="47" selection-start-column="58" selection-end-line="47" selection-end-column="58" />
           <folding>
             <marker date="1563908151735" expanded="false" signature="6:540" ph="..." />
             <marker date="1563908151735" expanded="true" signature="571:3867" ph="{...}" />
@@ -1022,8 +1021,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="30" column="21" selection-start-line="30" selection-start-column="21" selection-end-line="30" selection-end-column="21" />
+        <state relative-caret-position="320">
+          <caret line="32" selection-start-line="32" selection-end-line="32" />
           <folding>
             <marker date="1563915793306" expanded="false" signature="6:281" ph="..." />
             <marker date="1563915793306" expanded="true" signature="313:1888" ph="{...}" />

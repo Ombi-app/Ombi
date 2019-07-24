@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MusicBrainzAPI" Version="2.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Ombi.Api\Ombi.Api.csproj" />
   </ItemGroup>
 </Project>
