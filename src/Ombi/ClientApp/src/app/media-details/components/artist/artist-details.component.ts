@@ -21,14 +21,14 @@ export class ArtistDetailsComponent {
     public isAdmin: boolean;
     public advancedOptions: IAdvancedData;
 
-    private theMovidDbId: number;
+    private artistId: string;
 
     constructor(private searchService: SearchV2Service, private route: ActivatedRoute,
         private sanitizer: DomSanitizer, private imageService: ImageService,
         public dialog: MatDialog, private requestService: RequestService,
         public messageService: MessageService, private auth: AuthService) {
         this.route.params.subscribe((params: any) => {
-            this.theMovidDbId = params.artistId;
+            this.artistId = params.artistId;
             this.load();
         });
     }
@@ -36,29 +36,30 @@ export class ArtistDetailsComponent {
     public load() {
 
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
-        this.searchService.getFullMovieDetails(this.theMovidDbId).subscribe(async x => {
-            this.movie = x;
-            if (this.movie.requestId > 0) {
-                // Load up this request
-                this.hasRequest = true;
-                this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
-            }
-            this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
-                this.movie.background = this.sanitizer.bypassSecurityTrustStyle
-                    ("url(" + x + ")");
-            });
-        });
+        this.searchService.getArtistInformation(this.artistId).subscribe();
+        // this.searchService.getFullMovieDetails(this.theMovidDbId).subscribe(async x => {
+        //     this.movie = x;
+        //     if (this.movie.requestId > 0) {
+        //         // Load up this request
+        //         this.hasRequest = true;
+        //         this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
+        //     }
+        //     this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
+        //         this.movie.background = this.sanitizer.bypassSecurityTrustStyle
+        //             ("url(" + x + ")");
+        //     });
+        // });
 
     }
 
     public async request() {
-        const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: null }).toPromise();
-        if (result.result) {
-            this.movie.requested = true;
-            this.messageService.send(result.message, "Ok");
-        } else {
-            this.messageService.send(result.errorMessage, "Ok");
-        }
+        // const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: null }).toPromise();
+        // if (result.result) {
+        //     this.movie.requested = true;
+        //     this.messageService.send(result.message, "Ok");
+        // } else {
+        //     this.messageService.send(result.errorMessage, "Ok");
+        // }
     }
 
     public openDialog() {

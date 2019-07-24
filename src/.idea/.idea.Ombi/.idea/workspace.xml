@@ -2,7 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="57001998-efde-494a-80b3-d7acfc91f770" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Ombi.Schedule.Tests/OmbiQuartzTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi.Schedule.Tests/OmbiQuartzTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ombi.Core/Engine/Interfaces/IMusicSearchEngineV2.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ombi.Core/Engine/V2/MusicSearchEngineV2.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Ombi.Core/Models/Search/V2/Music/ArtistInformation.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/contentModel.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/config/applicationhost.config" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/config/applicationhost.config" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi.Api.MusicBrainz/Models/Artist/ArtistInformation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi.Api.MusicBrainz/Models/Artist/ArtistInformation.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi.DependencyInjection/IocExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi.DependencyInjection/IocExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/media-details/components/artist/artist-details.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/media-details/components/artist/artist-details.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi/ClientApp/src/app/services/searchV2.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/ClientApp/src/app/services/searchV2.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Ombi/Controllers/V2/SearchController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Ombi/Controllers/V2/SearchController.cs" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -13,103 +23,210 @@
   <component name="FileEditorManager">
     <leaf>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Ombi.Core/Engine/RecentlyAddedEngine.cs">
+        <entry file="file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MusicSearchEngineV2.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="15" column="1" lean-forward="true" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
+              <folding>
+                <marker date="1563971976383" expanded="true" signature="6:402" ph="..." />
+                <marker date="1563971976383" expanded="true" signature="512:1600" ph="{...}" />
+                <marker date="1563971976383" expanded="true" signature="955:1021" ph="{...}" />
+                <marker date="1563971976383" expanded="true" signature="1105:1593" ph="{...}" />
+                <marker date="1563971976383" expanded="true" signature="1248:1569" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Ombi.Core/Engine/Interfaces/IMusicSearchEngineV2.cs">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="48">
-              <caret line="13" column="35" selection-start-line="13" selection-start-column="35" selection-end-line="13" selection-end-column="35" />
+              <caret line="3" column="37" lean-forward="true" selection-start-line="3" selection-start-column="37" selection-end-line="3" selection-end-column="37" />
               <folding>
-                <marker date="1551794439508" expanded="false" signature="6:298" ph="..." />
-                <marker date="1551794439508" expanded="true" signature="326:9789" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="388:9787" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="532:651" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="940:1305" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="1383:1650" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="1767:2189" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="2279:2616" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="2679:5848" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="2942:4312" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="2994:3060" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="3117:3484" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="3218:3464" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="3505:4298" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="3614:4280" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="3684:3774" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="3865:4256" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="4356:5748" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="4422:4488" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="4539:4906" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="4640:4886" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="4927:5734" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="5036:5716" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="5120:5210" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="5301:5692" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="6020:6344" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="6217:6307" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="6499:6714" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="6839:7280" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="6894:7270" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="6979:7254" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="7411:7905" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="7466:7895" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="7551:7879" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="8031:8974" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="8085:8964" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="8152:8950" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="8229:8932" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="8335:8908" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="9094:9781" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="9148:9771" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="9217:9757" ph="{...}" />
-                <marker date="1551794439508" expanded="true" signature="9311:9737" ph="{...}" />
+                <marker date="1563971976358" expanded="true" signature="6:69" ph="..." />
+                <marker date="1563971976358" expanded="true" signature="108:237" ph="{...}" />
+                <marker date="1563971976358" expanded="true" signature="152:235" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Ombi.DependencyInjection/Ombi.DependencyInjection.csproj">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Ombi.DependencyInjection/IocExtensions.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="704">
+              <caret line="111" column="61" selection-start-line="111" selection-start-column="61" selection-end-line="111" selection-end-column="61" />
+              <folding>
+                <marker date="1563971931059" expanded="false" signature="6:1820" ph="..." />
+                <marker date="1563971931059" expanded="true" signature="1856:11609" ph="{...}" />
+                <marker date="1563971931059" expanded="true" signature="1960:11607" ph="{...}" />
+                <marker date="1563971931059" expanded="true" signature="2059:2350" ph="{...}" />
+                <marker date="1563971931059" expanded="true" signature="2428:3668" ph="{...}" />
+                <marker date="1563971931059" expanded="true" signature="3748:4142" ph="{...}" />
+                <marker date="1563971931059" expanded="true" signature="4217:4423" ph="{...}" />
+                <marker date="1563971931059" expanded="true" signature="4497:6375" ph="{...}" />
+                <marker date="1563971931059" expanded="true" signature="6452:8213" ph="{...}" />
+                <marker date="1563971931059" expanded="true" signature="8291:9563" ph="{...}" />
+                <marker date="1563971931059" expanded="true" signature="9638:11601" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/Models/Artist/ArtistInformation.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="496">
+              <caret line="41" column="21" selection-start-line="41" selection-start-column="21" selection-end-line="41" selection-end-column="21" />
+              <folding>
+                <marker date="1563971757391" expanded="true" signature="68:1698" ph="{...}" />
+                <marker date="1563971757391" expanded="true" signature="106:930" ph="{...}" />
+                <marker date="1563971757391" expanded="true" signature="959:1183" ph="{...}" />
+                <marker date="1563971757391" expanded="true" signature="1210:1344" ph="{...}" />
+                <marker date="1563971757391" expanded="true" signature="1367:1695" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Ombi/Controllers/V2/SearchController.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="290">
+              <caret line="54" column="48" lean-forward="true" selection-start-line="54" selection-start-column="48" selection-end-line="54" selection-end-column="48" />
+              <folding>
+                <marker date="1563972058760" expanded="false" signature="6:492" ph="..." />
+                <marker date="1563972058760" expanded="true" signature="523:13818" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="624:13816" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="826:1145" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="1450:1980" ph="/// Returns search results for both TV and Movies ... " />
+                <marker date="1563972058760" expanded="true" signature="2102:2227" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="2237:2379" ph="/// Returns details for a single movie ... " />
+                <marker date="1563972058760" expanded="true" signature="2496:2628" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="2638:2855" ph="/// Returns basic information about the provided collection ... " />
+                <marker date="1563972058760" expanded="true" signature="2999:3124" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="3134:3331" ph="/// Returns details for a single show ... " />
+                <marker date="1563972058760" expanded="true" signature="3443:3528" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="3538:3652" ph="/// Returns details for a single show ... " />
+                <marker date="1563972058760" expanded="true" signature="3787:3940" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="3950:4144" ph="/// Returns similar movies to the movie id passed in ... " />
+                <marker date="1563972058760" expanded="true" signature="4392:4507" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="4518:4692" ph="/// Returns Popular Movies ... " />
+                <marker date="1563972058760" expanded="true" signature="4892:4969" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="4980:5167" ph="/// Returns Popular Movies using paging ... " />
+                <marker date="1563972058760" expanded="true" signature="5437:5579" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="5589:5767" ph="/// Returns Now Playing Movies ... " />
+                <marker date="1563972058760" expanded="true" signature="5979:6059" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="6069:6255" ph="/// Returns Now Playing Movies by page ... " />
+                <marker date="1563972058760" expanded="true" signature="6537:6646" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="6656:6833" ph="/// Returns top rated movies. ... " />
+                <marker date="1563972058760" expanded="true" signature="7041:7119" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="7129:7314" ph="/// Returns top rated movies by page. ... " />
+                <marker date="1563972058760" expanded="true" signature="7592:7699" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="7709:7885" ph="/// Returns Upcoming movies. ... " />
+                <marker date="1563972058760" expanded="true" signature="8093:8171" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="8181:8365" ph="/// Returns Upcoming movies by page. ... " />
+                <marker date="1563972058760" expanded="true" signature="8643:8750" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="8760:8928" ph="/// Returns Popular Tv Shows ... " />
+                <marker date="1563972058760" expanded="true" signature="9128:9200" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="9210:9378" ph="/// Returns Popular Tv Shows ... " />
+                <marker date="1563972058760" expanded="true" signature="9648:9749" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="9759:9937" ph="/// Returns most Anticipated tv shows. ... " />
+                <marker date="1563972058760" expanded="true" signature="10145:10221" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="10231:10417" ph="/// Returns most Anticipated tv shows by page. ... " />
+                <marker date="1563972058760" expanded="true" signature="10695:10800" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="10811:10982" ph="/// Returns Most watched shows. ... " />
+                <marker date="1563972058760" expanded="true" signature="11269:11341" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="11351:11530" ph="/// Returns Most watched shows by page. ... " />
+                <marker date="1563972058760" expanded="true" signature="11887:11988" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="11998:12164" ph="/// Returns trending shows ... " />
+                <marker date="1563972058760" expanded="true" signature="12364:12437" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="12447:12621" ph="/// Returns trending shows by page ... " />
+                <marker date="1563972058760" expanded="true" signature="12891:12993" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="13012:13202" ph="/// Returns all the movies that is by the actor id  ... " />
+                <marker date="1563972058760" expanded="true" signature="13409:13501" ph="{...}" />
+                <marker date="1563972058760" expanded="true" signature="13719:13809" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Ombi.Core/Engine/V2/IMultiSearchEngine.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="96">
+              <caret line="10" column="38" selection-start-line="10" selection-start-column="38" selection-end-line="10" selection-end-column="38" />
+              <folding>
+                <marker date="1563908151732" expanded="false" signature="6:155" ph="..." />
+                <marker date="1563908151732" expanded="true" signature="186:369" ph="{...}" />
+                <marker date="1563908151732" expanded="true" signature="228:367" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="146">
+              <caret line="47" column="58" lean-forward="true" selection-start-line="47" selection-start-column="58" selection-end-line="47" selection-end-column="58" />
+              <folding>
+                <marker date="1563908151735" expanded="false" signature="6:540" ph="..." />
+                <marker date="1563908151735" expanded="true" signature="571:3867" ph="{...}" />
+                <marker date="1563908151735" expanded="true" signature="646:3865" ph="{...}" />
+                <marker date="1563908151735" expanded="true" signature="1093:1231" ph="{...}" />
+                <marker date="1563908151735" expanded="true" signature="1550:3859" ph="{...}" />
+                <marker date="1563908151735" expanded="true" signature="1840:2262" ph="{...}" />
+                <marker date="1563908151735" expanded="true" signature="1984:2248" ph="{...}" />
+                <marker date="1563908151735" expanded="true" signature="2075:2228" ph="{...}" />
+                <marker date="1563908151735" expanded="true" signature="2316:3822" ph="{...}" />
+                <marker date="1563908151735" expanded="true" signature="2398:2473" ph="{...}" />
+                <marker date="1563908151735" expanded="true" signature="2580:3000" ph="{...}" />
+                <marker date="1563908151735" expanded="true" signature="2727:2855" ph="{...}" />
+                <marker date="1563908151735" expanded="true" signature="2880:2982" ph="{...}" />
+                <marker date="1563908151735" expanded="true" signature="3103:3521" ph="{...}" />
+                <marker date="1563908151735" expanded="true" signature="3250:3377" ph="{...}" />
+                <marker date="1563908151735" expanded="true" signature="3402:3503" ph="{...}" />
+                <marker date="1563908151735" expanded="true" signature="3628:3717" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/IMusicBrainzApi.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="96">
+              <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
+              <folding>
+                <marker date="1563915808324" expanded="false" signature="6:189" ph="..." />
+                <marker date="1563915808324" expanded="true" signature="221:486" ph="{...}" />
+                <marker date="1563915808324" expanded="true" signature="260:484" ph="{...}" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Ombi/Controllers/V1/TokenController.cs">
+        <entry file="file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="368">
-              <caret line="52" column="33" lean-forward="true" selection-start-line="52" selection-start-column="33" selection-end-line="52" selection-end-column="33" />
+            <state relative-caret-position="288">
+              <caret line="30" column="21" selection-start-line="30" selection-start-column="21" selection-end-line="30" selection-end-column="21" />
               <folding>
-                <marker date="1563908143819" expanded="false" signature="6:473" ph="..." />
-                <marker date="1563908143819" expanded="true" signature="504:8324" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="623:8322" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="782:959" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="1211:1358" ph="/// Gets the token. ... " />
-                <marker date="1563908143819" expanded="true" signature="1495:3130" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="1542:2262" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="1670:2024" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="1860:1961" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="2142:2248" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="2279:3074" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="2310:2364" ph="/* Plex OAuth ... */" />
-                <marker date="1563908143819" expanded="true" signature="2768:2963" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="2853:2943" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="3140:3277" ph="/// Returns the Token for the Ombi User if we can match the Plex user with a valid Ombi User ... " />
-                <marker date="1563908143819" expanded="true" signature="3486:3872" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="3541:3630" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="3745:3812" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="3960:5778" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="4087:4164" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="4219:4551" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="5207:5389" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="5238:5375" ph="/* Save the token so we can refresh it later ... */" />
-                <marker date="1563908143819" expanded="true" signature="5455:5537" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="5567:5612" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="5664:5766" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="5906:6893" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="6046:6280" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="6175:6264" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="6551:6832" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="6729:6818" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="6903:7122" ph="/// Refreshes the token. ... " />
-                <marker date="1563908143819" expanded="true" signature="7261:7553" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="7415:7492" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="7681:8164" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="7797:8054" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="7971:8040" ph="{...}" />
-                <marker date="1563908143819" expanded="true" signature="8199:8315" ph="{...}" />
+                <marker date="1563915793306" expanded="false" signature="6:281" ph="..." />
+                <marker date="1563915793306" expanded="true" signature="313:1888" ph="{...}" />
+                <marker date="1563915793306" expanded="true" signature="365:1886" ph="{...}" />
+                <marker date="1563915793306" expanded="true" signature="411:455" ph="{...}" />
+                <marker date="1563915793306" expanded="true" signature="646:1026" ph="{...}" />
+                <marker date="1563915793306" expanded="true" signature="1110:1318" ph="{...}" />
+                <marker date="1563915793306" expanded="true" signature="1404:1757" ph="{...}" />
+                <marker date="1563915793306" expanded="true" signature="1803:1880" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -121,40 +238,56 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/RecentlyAddedEngine.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Ombi/Controllers/V1/TokenController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Ombi.Helpers.Tests/EmbyHelperTests.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Ombi/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Ombi.Schedule.Tests/OmbiQuartzTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/Models/Artist/ArtistInformation.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi/Controllers/V2/SearchController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.DependencyInjection/IocExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/V2/IMultiSearchEngine.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/IMusicBrainzApi.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/Interfaces/IMusicSearchEngineV2.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Core/Models/Search/V2/Music/ArtistInformation.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MusicSearchEngineV2.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/RecentlyAddedEngine.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi/Controllers/V1/TokenController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/MusicSearchEngine.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Ombi/Program.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Ombi.Core/Engine/UserStatsEngine.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/Ombi.Schedule.Tests/OmbiQuartzTests.cs" />
+        <option value="$PROJECT_DIR$/Ombi.Core/Models/Search/V2/Music/ArtistInformation.cs" />
+        <option value="$PROJECT_DIR$/Ombi.Api.MusicBrainz/Models/Artist/ArtistInformation.cs" />
+        <option value="$PROJECT_DIR$/Ombi.Core/Engine/V2/MusicSearchEngineV2.cs" />
+        <option value="$PROJECT_DIR$/Ombi.Core/Engine/Interfaces/IMusicSearchEngineV2.cs" />
+        <option value="$PROJECT_DIR$/Ombi.DependencyInjection/IocExtensions.cs" />
+        <option value="$PROJECT_DIR$/Ombi/Controllers/V2/SearchController.cs" />
       </list>
     </option>
   </component>
   <component name="PackageJsonUpdateNotifier">
     <dismissed value="$PROJECT_DIR$/Ombi/ClientApp/package.json" />
   </component>
-  <component name="ProjectConfigurationFiles">
-    <option name="files">
-      <list>
-        <option value="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/vcs.xml" />
-        <option value="$PROJECT_DIR$/.idea/.idea.Ombi/.idea/indexLayout.xml" />
-      </list>
-    </option>
-  </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="260" />
-    <option name="y" value="20" />
+    <option name="x" value="1087" />
+    <option name="y" value="-1113" />
     <option name="width" value="1400" />
     <option name="height" value="1000" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectView">
     <navigator currentView="SolutionExplorer" proportions="" version="1">
+      <autoscrollToSource SolutionExplorer="true" />
+      <autoscrollFromSource SolutionExplorer="false" />
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
@@ -164,6 +297,17 @@
             <path>
               <item name="" type="784c90a0:SolutionExplorerRootNode" />
               <item name="Ombi" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="Ombi" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="DI" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="Ombi" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="DI" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Ombi.DependencyInjection" type="24d0babc:SolutionExplorerModelNode" />
             </path>
             <path>
               <item name="" type="784c90a0:SolutionExplorerRootNode" />
@@ -183,6 +327,13 @@
               <item name="Controllers" type="24d0babc:SolutionExplorerModelNode" />
               <item name="V1" type="24d0babc:SolutionExplorerModelNode" />
             </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="Ombi" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Ombi" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Controllers" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="V2" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -193,8 +344,10 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="Rider.DefaultBreakpoints.AreToggled" value="true" />
     <property name="Rider.ProjectViewActivator.IsNotFirstRun" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_package_manager_path" value="npm" />
   </component>
@@ -294,12 +447,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1563957157468</updated>
-      <workItem from="1563957162999" duration="1390000" />
+      <workItem from="1563957162999" duration="5139000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1390000" />
+    <option name="totallyTimeSpent" value="5139000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -311,7 +464,8 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="977" y="-1093" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Favorites" order="0" side_tool="true" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -319,15 +473,15 @@
       <window_info anchor="bottom" id="Build" weight="0.32977587" />
       <window_info anchor="bottom" id="NuGet" order="0" />
       <window_info anchor="bottom" id="Docker" order="1" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="2" />
+      <window_info anchor="bottom" id="Version Control" order="2" weight="0.32977587" />
       <window_info anchor="bottom" id="Unit Tests" order="3" weight="0.32977587" />
       <window_info anchor="bottom" id="Terminal" order="4" />
-      <window_info anchor="bottom" id="Event Log" order="5" side_tool="true" />
-      <window_info anchor="bottom" id="Performance Profiler" order="6" />
+      <window_info anchor="bottom" id="Event Log" order="5" sideWeight="0.5002664" side_tool="true" weight="0.29775882" />
+      <window_info anchor="bottom" id="Performance Profiler" order="6" weight="0.32977587" />
       <window_info anchor="bottom" id="Message" order="7" />
       <window_info anchor="bottom" id="Find" order="8" />
       <window_info anchor="bottom" id="Run" order="9" weight="0.32977587" />
-      <window_info active="true" anchor="bottom" id="Debug" order="10" visible="true" weight="0.3991462" />
+      <window_info active="true" anchor="bottom" id="Debug" order="10" sideWeight="0.49973363" visible="true" weight="0.29775882" />
       <window_info anchor="bottom" id="Cvs" order="11" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="12" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="13" weight="0.32977587" />
@@ -362,8 +516,76 @@
           </properties>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs</url>
+          <line>59</line>
+          <properties documentPath="$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs" initialLine="59">
+            <startOffsets>
+              <option value="2276" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2316" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs</url>
+          <line>49</line>
+          <properties documentPath="$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs" initialLine="49">
+            <startOffsets>
+              <option value="2001" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2002" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs</url>
+          <line>30</line>
+          <properties documentPath="$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs" initialLine="30">
+            <startOffsets>
+              <option value="917" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1016" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="LaunchSettings">
+        <watch expression="artist.name" language="C#" custom="RiderImportsList:" />
+        <watch expression="artist" language="C#" custom="RiderImportsList:" />
+        <watch expression="artist.id" language="C#" custom="RiderImportsList:" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="watch">
+      <expression>
+        <expression-string>artist</expression-string>
+        <language-id>C#</language-id>
+        <custom-info>RiderImportsList:</custom-info>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>artist.id</expression-string>
+        <language-id>C#</language-id>
+        <custom-info>RiderImportsList:</custom-info>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>artist.name</expression-string>
+        <language-id>C#</language-id>
+        <custom-info>RiderImportsList:</custom-info>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Ombi.Schedule.Tests/OmbiQuartzTests.cs">
@@ -524,8 +746,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Ombi/Controllers/V1/TokenController.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="368">
-          <caret line="52" column="33" lean-forward="true" selection-start-line="52" selection-start-column="33" selection-end-line="52" selection-end-column="33" />
+        <state relative-caret-position="256">
+          <caret line="45" column="35" lean-forward="true" selection-start-line="45" selection-start-column="35" selection-end-line="45" selection-end-column="35" />
           <folding>
             <marker date="1563908143819" expanded="false" signature="6:473" ph="..." />
             <marker date="1563908143819" expanded="true" signature="504:8324" ph="{...}" />
@@ -565,6 +787,252 @@
             <marker date="1563908143819" expanded="true" signature="7797:8054" ph="{...}" />
             <marker date="1563908143819" expanded="true" signature="7971:8040" ph="{...}" />
             <marker date="1563908143819" expanded="true" signature="8199:8315" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ombi.Core/Engine/MusicSearchEngine.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="59">
+          <caret line="159" column="49" selection-start-line="159" selection-start-column="49" selection-end-line="159" selection-end-column="49" />
+          <folding>
+            <marker date="1562139350084" expanded="false" signature="6:691" ph="..." />
+            <marker date="1562139350084" expanded="true" signature="719:10207" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="794:10205" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="1216:1376" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="1590:1753" ph="/// Searches the specified album. ... " />
+            <marker date="1562139350084" expanded="true" signature="1841:2211" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="2090:2177" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="2303:2570" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="2580:2743" ph="/// Searches the specified artist ... " />
+            <marker date="1562139350084" expanded="true" signature="2833:3197" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="3085:3163" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="3207:3381" ph="/// Returns all albums by the specified artist ... " />
+            <marker date="1562139350084" expanded="true" signature="3482:4082" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="3928:4049" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="4092:4266" ph="/// Returns the artist that produced the album ... " />
+            <marker date="1562139350084" expanded="true" signature="4345:4523" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="4588:4748" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="4831:5701" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="4901:5396" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="5517:5589" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="5828:7328" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="5897:6430" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="6463:6895" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="6494:6665" ph="/* TODO THEY HAVE FIXED THIS IN DEV ... */" />
+            <marker date="1562139350084" expanded="true" signature="6912:7064" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="6943:7050" ph="/* vm.ForeignArtistId = a.artistId?.foreignArtistId; ... */" />
+            <marker date="1562139350084" expanded="true" signature="7433:8887" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="7502:7883" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="7916:8348" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="7947:8118" ph="/* TODO THEY HAVE FIXED THIS IN DEV ... */" />
+            <marker date="1562139350084" expanded="true" signature="8365:8511" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="8668:8738" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="9022:9991" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="9198:9720" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="9764:9842" ph="{...}" />
+            <marker date="1562139350084" expanded="true" signature="10091:10199" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ombi.Core/Models/Search/V2/Music/ArtistInformation.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="7" column="21" selection-start-line="7" selection-start-column="21" selection-end-line="7" selection-end-column="21" />
+          <folding>
+            <marker date="1563971976401" expanded="true" signature="42:391" ph="{...}" />
+            <marker date="1563971976401" expanded="true" signature="79:389" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MusicSearchEngineV2.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="15" column="1" lean-forward="true" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
+          <folding>
+            <marker date="1563971976383" expanded="true" signature="6:402" ph="..." />
+            <marker date="1563971976383" expanded="true" signature="512:1600" ph="{...}" />
+            <marker date="1563971976383" expanded="true" signature="955:1021" ph="{...}" />
+            <marker date="1563971976383" expanded="true" signature="1105:1593" ph="{...}" />
+            <marker date="1563971976383" expanded="true" signature="1248:1569" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/Models/Artist/ArtistInformation.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="496">
+          <caret line="41" column="21" selection-start-line="41" selection-start-column="21" selection-end-line="41" selection-end-column="21" />
+          <folding>
+            <marker date="1563971757391" expanded="true" signature="68:1698" ph="{...}" />
+            <marker date="1563971757391" expanded="true" signature="106:930" ph="{...}" />
+            <marker date="1563971757391" expanded="true" signature="959:1183" ph="{...}" />
+            <marker date="1563971757391" expanded="true" signature="1210:1344" ph="{...}" />
+            <marker date="1563971757391" expanded="true" signature="1367:1695" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ombi.Core/Engine/Interfaces/IMusicSearchEngineV2.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="48">
+          <caret line="3" column="37" lean-forward="true" selection-start-line="3" selection-start-column="37" selection-end-line="3" selection-end-column="37" />
+          <folding>
+            <marker date="1563971976358" expanded="true" signature="6:69" ph="..." />
+            <marker date="1563971976358" expanded="true" signature="108:237" ph="{...}" />
+            <marker date="1563971976358" expanded="true" signature="152:235" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ombi.DependencyInjection/Ombi.DependencyInjection.csproj">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ombi.DependencyInjection/IocExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="704">
+          <caret line="111" column="61" selection-start-line="111" selection-start-column="61" selection-end-line="111" selection-end-column="61" />
+          <folding>
+            <marker date="1563971931059" expanded="false" signature="6:1820" ph="..." />
+            <marker date="1563971931059" expanded="true" signature="1856:11609" ph="{...}" />
+            <marker date="1563971931059" expanded="true" signature="1960:11607" ph="{...}" />
+            <marker date="1563971931059" expanded="true" signature="2059:2350" ph="{...}" />
+            <marker date="1563971931059" expanded="true" signature="2428:3668" ph="{...}" />
+            <marker date="1563971931059" expanded="true" signature="3748:4142" ph="{...}" />
+            <marker date="1563971931059" expanded="true" signature="4217:4423" ph="{...}" />
+            <marker date="1563971931059" expanded="true" signature="4497:6375" ph="{...}" />
+            <marker date="1563971931059" expanded="true" signature="6452:8213" ph="{...}" />
+            <marker date="1563971931059" expanded="true" signature="8291:9563" ph="{...}" />
+            <marker date="1563971931059" expanded="true" signature="9638:11601" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ombi/Controllers/V2/SearchController.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="290">
+          <caret line="54" column="48" lean-forward="true" selection-start-line="54" selection-start-column="48" selection-end-line="54" selection-end-column="48" />
+          <folding>
+            <marker date="1563972058760" expanded="false" signature="6:492" ph="..." />
+            <marker date="1563972058760" expanded="true" signature="523:13818" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="624:13816" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="826:1145" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="1450:1980" ph="/// Returns search results for both TV and Movies ... " />
+            <marker date="1563972058760" expanded="true" signature="2102:2227" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="2237:2379" ph="/// Returns details for a single movie ... " />
+            <marker date="1563972058760" expanded="true" signature="2496:2628" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="2638:2855" ph="/// Returns basic information about the provided collection ... " />
+            <marker date="1563972058760" expanded="true" signature="2999:3124" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="3134:3331" ph="/// Returns details for a single show ... " />
+            <marker date="1563972058760" expanded="true" signature="3443:3528" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="3538:3652" ph="/// Returns details for a single show ... " />
+            <marker date="1563972058760" expanded="true" signature="3787:3940" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="3950:4144" ph="/// Returns similar movies to the movie id passed in ... " />
+            <marker date="1563972058760" expanded="true" signature="4392:4507" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="4518:4692" ph="/// Returns Popular Movies ... " />
+            <marker date="1563972058760" expanded="true" signature="4892:4969" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="4980:5167" ph="/// Returns Popular Movies using paging ... " />
+            <marker date="1563972058760" expanded="true" signature="5437:5579" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="5589:5767" ph="/// Returns Now Playing Movies ... " />
+            <marker date="1563972058760" expanded="true" signature="5979:6059" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="6069:6255" ph="/// Returns Now Playing Movies by page ... " />
+            <marker date="1563972058760" expanded="true" signature="6537:6646" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="6656:6833" ph="/// Returns top rated movies. ... " />
+            <marker date="1563972058760" expanded="true" signature="7041:7119" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="7129:7314" ph="/// Returns top rated movies by page. ... " />
+            <marker date="1563972058760" expanded="true" signature="7592:7699" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="7709:7885" ph="/// Returns Upcoming movies. ... " />
+            <marker date="1563972058760" expanded="true" signature="8093:8171" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="8181:8365" ph="/// Returns Upcoming movies by page. ... " />
+            <marker date="1563972058760" expanded="true" signature="8643:8750" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="8760:8928" ph="/// Returns Popular Tv Shows ... " />
+            <marker date="1563972058760" expanded="true" signature="9128:9200" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="9210:9378" ph="/// Returns Popular Tv Shows ... " />
+            <marker date="1563972058760" expanded="true" signature="9648:9749" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="9759:9937" ph="/// Returns most Anticipated tv shows. ... " />
+            <marker date="1563972058760" expanded="true" signature="10145:10221" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="10231:10417" ph="/// Returns most Anticipated tv shows by page. ... " />
+            <marker date="1563972058760" expanded="true" signature="10695:10800" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="10811:10982" ph="/// Returns Most watched shows. ... " />
+            <marker date="1563972058760" expanded="true" signature="11269:11341" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="11351:11530" ph="/// Returns Most watched shows by page. ... " />
+            <marker date="1563972058760" expanded="true" signature="11887:11988" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="11998:12164" ph="/// Returns trending shows ... " />
+            <marker date="1563972058760" expanded="true" signature="12364:12437" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="12447:12621" ph="/// Returns trending shows by page ... " />
+            <marker date="1563972058760" expanded="true" signature="12891:12993" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="13012:13202" ph="/// Returns all the movies that is by the actor id  ... " />
+            <marker date="1563972058760" expanded="true" signature="13409:13501" ph="{...}" />
+            <marker date="1563972058760" expanded="true" signature="13719:13809" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ombi.Core/Engine/V2/IMultiSearchEngine.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="10" column="38" selection-start-line="10" selection-start-column="38" selection-end-line="10" selection-end-column="38" />
+          <folding>
+            <marker date="1563908151732" expanded="false" signature="6:155" ph="..." />
+            <marker date="1563908151732" expanded="true" signature="186:369" ph="{...}" />
+            <marker date="1563908151732" expanded="true" signature="228:367" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ombi.Core/Engine/V2/MultiSearchEngine.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="146">
+          <caret line="47" column="58" lean-forward="true" selection-start-line="47" selection-start-column="58" selection-end-line="47" selection-end-column="58" />
+          <folding>
+            <marker date="1563908151735" expanded="false" signature="6:540" ph="..." />
+            <marker date="1563908151735" expanded="true" signature="571:3867" ph="{...}" />
+            <marker date="1563908151735" expanded="true" signature="646:3865" ph="{...}" />
+            <marker date="1563908151735" expanded="true" signature="1093:1231" ph="{...}" />
+            <marker date="1563908151735" expanded="true" signature="1550:3859" ph="{...}" />
+            <marker date="1563908151735" expanded="true" signature="1840:2262" ph="{...}" />
+            <marker date="1563908151735" expanded="true" signature="1984:2248" ph="{...}" />
+            <marker date="1563908151735" expanded="true" signature="2075:2228" ph="{...}" />
+            <marker date="1563908151735" expanded="true" signature="2316:3822" ph="{...}" />
+            <marker date="1563908151735" expanded="true" signature="2398:2473" ph="{...}" />
+            <marker date="1563908151735" expanded="true" signature="2580:3000" ph="{...}" />
+            <marker date="1563908151735" expanded="true" signature="2727:2855" ph="{...}" />
+            <marker date="1563908151735" expanded="true" signature="2880:2982" ph="{...}" />
+            <marker date="1563908151735" expanded="true" signature="3103:3521" ph="{...}" />
+            <marker date="1563908151735" expanded="true" signature="3250:3377" ph="{...}" />
+            <marker date="1563908151735" expanded="true" signature="3402:3503" ph="{...}" />
+            <marker date="1563908151735" expanded="true" signature="3628:3717" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/IMusicBrainzApi.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
+          <folding>
+            <marker date="1563915808324" expanded="false" signature="6:189" ph="..." />
+            <marker date="1563915808324" expanded="true" signature="221:486" ph="{...}" />
+            <marker date="1563915808324" expanded="true" signature="260:484" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ombi.Api.MusicBrainz/MusicBrainzApi.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="30" column="21" selection-start-line="30" selection-start-column="21" selection-end-line="30" selection-end-column="21" />
+          <folding>
+            <marker date="1563915793306" expanded="false" signature="6:281" ph="..." />
+            <marker date="1563915793306" expanded="true" signature="313:1888" ph="{...}" />
+            <marker date="1563915793306" expanded="true" signature="365:1886" ph="{...}" />
+            <marker date="1563915793306" expanded="true" signature="411:455" ph="{...}" />
+            <marker date="1563915793306" expanded="true" signature="646:1026" ph="{...}" />
+            <marker date="1563915793306" expanded="true" signature="1110:1318" ph="{...}" />
+            <marker date="1563915793306" expanded="true" signature="1404:1757" ph="{...}" />
+            <marker date="1563915793306" expanded="true" signature="1803:1880" ph="{...}" />
           </folding>
         </state>
       </provider>

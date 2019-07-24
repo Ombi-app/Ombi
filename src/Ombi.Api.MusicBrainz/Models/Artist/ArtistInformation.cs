@@ -39,7 +39,7 @@ namespace Ombi.Api.MusicBrainz.Models.Artist
     public class LifeSpan
     {
         public bool ended { get; set; }
-        public object end { get; set; }
+        public string end { get; set; }
         public string begin { get; set; }
     }
 

@@ -13,6 +13,7 @@ using Ombi.Core.Engine.V2;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Models.Search.V2;
+using Ombi.Core.Models.Search.V2.Music;
 using Ombi.Models;
 
 namespace Ombi.Controllers.V2
@@ -23,7 +24,7 @@ namespace Ombi.Controllers.V2
     public class SearchController : ControllerBase
     {
         public SearchController(IMultiSearchEngine multiSearchEngine, ITvSearchEngine tvSearchEngine,
-            IMovieEngineV2 v2Movie, ITVSearchEngineV2 v2Tv, IMusicBrainzApi musicApi)
+            IMovieEngineV2 v2Movie, ITVSearchEngineV2 v2Tv, IMusicSearchEngineV2 musicEngine)
         {
             _multiSearchEngine = multiSearchEngine;
             _tvSearchEngine = tvSearchEngine;
@@ -31,14 +32,14 @@ namespace Ombi.Controllers.V2
             _movieEngineV2 = v2Movie;
             _movieEngineV2.ResultLimit = 12;
             _tvEngineV2 = v2Tv;
-            music = musicApi;
+            _musicEngine = musicEngine;
         }
 
         private readonly IMultiSearchEngine _multiSearchEngine;
         private readonly IMovieEngineV2 _movieEngineV2;
         private readonly ITVSearchEngineV2 _tvEngineV2;
         private readonly ITvSearchEngine _tvSearchEngine;
-        private readonly IMusicBrainzApi music;
+        private readonly IMusicSearchEngineV2 _musicEngine;
 
         /// <summary>
         /// Returns search results for both TV and Movies
@@ -339,12 +340,12 @@ namespace Ombi.Controllers.V2
         }
 
 
-        [HttpGet("artist/{name}")]
+        [HttpGet("artist/{artistId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public async Task<IEnumerable<Artist>> GetArtists(string name)
+        public async Task<ArtistInformation> GetArtistInformation(string artistId)
         {
-            return await music.SearchArtist(name);
+            return await _musicEngine.GetArtistInformation(artistId);
         }
 
     }
