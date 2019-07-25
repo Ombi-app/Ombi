@@ -255,6 +255,16 @@
   dependencies:
     url "^0.11.0"
 
+"@fullcalendar/core@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-4.2.0.tgz#16716d6617137e54fceeb03c72f5124c92b86e58"
+  integrity sha512-4kd5OGHxjMtwI0gUHKwAYzmR0Z79Qf8y0ARx2Ruh20JdVy3Tznn6oKwdpkUbaXWrLXNDoXYRkBiFCIgC27VNCw==
+
+"@fullcalendar/interaction@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-4.2.0.tgz#312e83f575aed67c33aec69884664d436aaedef2"
+  integrity sha512-wwAyocUp1HEY7c7xCymR9EGdh7AWZrwNiBQlIpP3ne0eJT0U4ZjlnoOoels3VPsTJ9a6pdO1/XoGjEvL1T5y4g==
+
 "@ng-bootstrap/ng-bootstrap@^4.0.1":
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/@ng-bootstrap/ng-bootstrap/-/ng-bootstrap-4.0.1.tgz#75a6b881b24d869624caa5b5f8a4070650ad5bc4"
@@ -2498,15 +2508,15 @@ fstream@^1.0.0, fstream@^1.0.2:
     mkdirp ">=0.5 0"
     rimraf "2"
 
-fullcalendar@4.0.0-alpha.2:
-  version "4.0.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/fullcalendar/-/fullcalendar-4.0.0-alpha.2.tgz#af5219bd955ee3c3549a39777808dd1dda645111"
-  integrity sha512-2trFzbvQWHijyt+u8Zv98PPfDkFH5bU5Yoqvn2ot5PTwIkLK95xrNat5jTHfpBMwh+KqHQSnux/BcGXARYgwcw==
+fullcalendar@^4.0.0-alpha.4:
+  version "4.0.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/fullcalendar/-/fullcalendar-4.0.0-alpha.4.tgz#c33035af6cf13559b628525a8fb8169cc15f13ca"
+  integrity sha512-6uup/KTSSlybpj3ntiYvDlpbU82Z9deeW9D8zO/MJLcsKD/i+I4kWEnoJLp1egZdAHq9xGsJ9PLTBU/xz6QqGw==
   dependencies:
-    luxon "^1.4.2"
-    moment "^2.22.2"
-    moment-timezone "^0.5.21"
-    rrule "^2.5.6"
+    luxon "^1.10.0"
+    moment "^2.23.0"
+    moment-timezone "^0.5.23"
+    rrule "^2.6.0"
     superagent "^3.8.3"
 
 function-bind@^1.1.1:
@@ -3536,7 +3546,12 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
-luxon@^1.3.3, luxon@^1.4.2:
+luxon@^1.10.0:
+  version "1.17.2"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.17.2.tgz#95189c450341cfddf5f826ef8c32b5b022943fd5"
+  integrity sha512-qELKtIj3HD41N+MvgoxArk8DZGUb4Gpiijs91oi+ZmKJzRlxY6CoyTwNoUwnogCVs4p8HuxVJDik9JbnYgrCng==
+
+luxon@^1.3.3:
   version "1.12.0"
   resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.12.0.tgz#d02d53c8d8aaebe6b4c00ba1ce1be3913546b2e7"
   integrity sha512-enPnPIHd5ZnZT0vpj9Xv8aq4j0yueAkhnh4xUKUHpqlgSm1r/8s6xTMjfyp2ugOWP7zivqJqgVTkW+rpHed61w==
@@ -3803,14 +3818,14 @@ mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0:
   dependencies:
     minimist "0.0.8"
 
-moment-timezone@^0.5.21:
-  version "0.5.23"
-  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.23.tgz#7cbb00db2c14c71b19303cb47b0fb0a6d8651463"
-  integrity sha512-WHFH85DkCfiNMDX5D3X7hpNH3/PUhjTGcD0U1SgfBGZxJ3qUmJh5FdvaFjcClxOvB3rzdfj4oRffbI38jEnC1w==
+moment-timezone@^0.5.23:
+  version "0.5.26"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.26.tgz#c0267ca09ae84631aa3dc33f65bedbe6e8e0d772"
+  integrity sha512-sFP4cgEKTCymBBKgoxZjYzlSovC20Y6J7y3nanDc5RoBIXKlZhoYwBoZGe3flwU6A372AcRwScH8KiwV6zjy1g==
   dependencies:
     moment ">= 2.9.0"
 
-"moment@>= 2.9.0", moment@^2.10.6, moment@^2.22.2, moment@^2.23.0:
+"moment@>= 2.9.0", moment@^2.10.6, moment@^2.23.0:
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
 
@@ -5123,10 +5138,12 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
-rrule@^2.5.6:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/rrule/-/rrule-2.6.0.tgz#7aeefe89273e4796d1fabf03051d5e1d68169502"
-  integrity sha512-TRigkTJtG7Y1yOjNSKvFvVmvj/PzRZLR8lLcPW9GASOlaoqoL1J0kNuUV9I3LuZc7qFT+QB2NbxSLL9d33/ylg==
+rrule@^2.6.0:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/rrule/-/rrule-2.6.2.tgz#f175c6c0b20d6f798739e4e1d979ffb3d79589e8"
+  integrity sha512-xL38CM1zOYOIp4OO8hdD6zHH5UdR9siHMvPiv+CCSh7o0LYJ0owg87QcFW7GXJ0PfpLBHjanEMvvBjJxbRhAcQ==
+  dependencies:
+    tslib "^1.9.0"
   optionalDependencies:
     luxon "^1.3.3"
 

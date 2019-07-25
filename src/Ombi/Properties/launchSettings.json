@@ -2,6 +2,10 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/Ombi",
+      "sslPort": 0
+    },
     "iisExpress": {
       "applicationUrl": "http://localhost:3577/",
       "sslPort": 0
@@ -17,7 +21,9 @@
       }
     },
     "Ombi": {
-      "commandName": "Project"
+      "commandName": "IISExpress",
+      "commandLineArgs": "--host http://*:3577",
+      "applicationUrl": "http://localhost:3577/"
     }
   }
 }

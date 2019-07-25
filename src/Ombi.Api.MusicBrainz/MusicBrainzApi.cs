@@ -12,8 +12,8 @@ namespace Ombi.Api.MusicBrainz
     {
         public async Task<IEnumerable<Artist>> SearchArtist(string artistQuery)
         {
-            var artist = await Hqub.MusicBrainz.API.Entities.Artist.SearchAsync(artistQuery, 10);
-            return artist.Items.Where(x => !x.Type.Equals("Person", StringComparison.CurrentCultureIgnoreCase));
+            var artist = await Artist.SearchAsync(artistQuery, 10);
+            return artist.Items.Where(x => x.Type != null);
         }
 
         public async Task<Artist> GetArtistInformation(string artistId)
