@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Linq;
 using AutoFixture;
 using Hqub.MusicBrainz.API.Entities;
-using Microsoft.EntityFrameworkCore.Internal;
 using Moq;
 using NUnit.Framework;
 using Ombi.Api.Lidarr;
@@ -55,6 +54,7 @@ namespace Ombi.Core.Tests.Engine.V2
             _musicApi = new Mock<IMusicBrainzApi>();
             _lidarrSettings = new Mock<ISettingsService<LidarrSettings>>();
             _lidarrApi = new Mock<ILidarrApi>();
+            _lidarrSettings.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new LidarrSettings());
             _engine = new MusicSearchEngineV2(principle.Object, requestService.Object, ruleEval.Object,
                 um.Object, cache.Object, ombiSettings.Object, requestSub.Object, _musicApi.Object,
                 _lidarrSettings.Object, _lidarrApi.Object);
