@@ -14,6 +14,7 @@
         public const string Streams = "769085a1-c2f7-4c24-a532-2375a77693bd";
         public const string YouTube = "6a540e5b-58c6-4192-b6ba-dbc71ec8fcf0";
         public const string Download = "f8319a2f-f824-4617-81c8-be6560b3b203";
+        public const string BandMember = "5be4c609-9afa-4ea0-910b-12ffb71e3821";
 
     }
 }

@@ -13,6 +13,7 @@ using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
+using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using ReleaseGroup = Ombi.Core.Models.Search.V2.Music.ReleaseGroup;
@@ -22,13 +23,15 @@ namespace Ombi.Core.Engine.V2
     public class MusicSearchEngineV2 : BaseMediaEngine, IMusicSearchEngineV2
     {
         private readonly IMusicBrainzApi _musicBrainzApi;
+        private readonly ISettingsService<LidarrSettings> _lidarrSettings;
 
         public MusicSearchEngineV2(IPrincipal identity, IRequestServiceMain requestService, IRuleEvaluator rules,
             OmbiUserManager um, ICacheService cache, ISettingsService<OmbiSettings> ombiSettings,
-            IRepository<RequestSubscription> sub, IMusicBrainzApi musicBrainzApi)
+            IRepository<RequestSubscription> sub, IMusicBrainzApi musicBrainzApi, ISettingsService<LidarrSettings> lidarrSettings)
             : base(identity, requestService, rules, um, cache, ombiSettings, sub)
         {
             _musicBrainzApi = musicBrainzApi;
+            _lidarrSettings = lidarrSettings;
         }
 
         public async Task<ArtistInformation> GetArtistInformation(string artistId)
@@ -48,7 +51,7 @@ namespace Ombi.Core.Engine.V2
                 ReleaseGroups = new List<ReleaseGroup>(),
                 Members = new List<BandMember>()
             };
-            // TODO FINISH MAPPING
+
             foreach (var g in artist.ReleaseGroups)
             {
                 info.ReleaseGroups.Add(new ReleaseGroup
@@ -68,7 +71,7 @@ namespace Ombi.Core.Engine.V2
         private List<BandMember> GetBandMembers(Artist artist)
         {
             var members = new List<BandMember>();
-            var membersOfBand = artist.Relations.Where(x => x.TypeId == "5be4c609-9afa-4ea0-910b-12ffb71e3821");
+            var membersOfBand = artist.Relations.Where(x => x.TypeId == RelationLinks.BandMember);
             foreach (var member in membersOfBand)
             {
                 members.Add(new BandMember
