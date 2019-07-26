@@ -15,6 +15,7 @@ import { SearchService, RequestService, RadarrService } from "../../services";
 import { RequestServiceV2 } from "../../services/requestV2.service";
 import { NewIssueComponent } from "./shared/new-issue/new-issue.component";
 import { ArtistDetailsComponent } from "./artist/artist-details.component";
+import { ArtistInformationPanel } from "./artist/panels/artist-information-panel/artist-information-panel.component";
 
 export const components: any[] = [
     MovieDetailsComponent,
@@ -32,6 +33,7 @@ export const components: any[] = [
     MovieAdvancedOptionsComponent,
     NewIssueComponent,
     ArtistDetailsComponent,
+    ArtistInformationPanel
 ];
 
 export const entryComponents: any[] = [

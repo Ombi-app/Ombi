@@ -1,0 +1,18 @@
+<div *ngIf="artist">
+    <div>
+        <strong>Type:</strong>
+        <div>{{artist.type}}</div>
+    </div>
+    <div>
+        <strong>Country</strong>
+        <div>{{artist.country}}</div>
+    </div>
+    <div>
+        <strong>Start Date</strong>
+        <div>{{artist.startYear}}</div>
+    </div>
+    <div *ngIf="artist.endYear">
+        <strong>End Date</strong>
+        <div>{{artist.endYear}}</div>
+    </div>
+</div>

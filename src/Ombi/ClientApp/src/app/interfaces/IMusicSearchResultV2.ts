@@ -7,9 +7,16 @@ export interface IArtistSearchResult {
     country: string;
     region: string;
     disambiguation: string;
+    banner: string;
+    logo: string;
+    poster: string;
+    fanArt: string;
     releaseGroups: IReleaseGroups[];
     links: IArtistLinks;
     members: IBandMembers[];
+    overview: string;
+
+    background: any;
 }
 
 export interface IReleaseGroups {

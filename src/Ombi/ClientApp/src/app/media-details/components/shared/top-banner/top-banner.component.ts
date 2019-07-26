@@ -1,4 +1,5 @@
 import { Component, Inject, Input } from "@angular/core";
+import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
 
 @Component({
     selector: "top-banner",
@@ -11,5 +12,11 @@ export class TopBannerComponent {
     @Input() tagline: string;
     @Input() available: boolean;
     @Input() background: any;
+
     
+    constructor(private sanitizer:DomSanitizer){}    
+
+    public getBackgroundImage(): SafeStyle {
+        return this.sanitizer.bypassSecurityTrustStyle(this.background);
+    }
 }

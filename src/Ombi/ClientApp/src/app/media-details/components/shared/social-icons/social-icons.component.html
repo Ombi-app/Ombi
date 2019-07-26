@@ -13,19 +13,19 @@
     <a *ngIf="hasTrailer" class="media-icons" (click)="openDialog()"><i
             matTooltip="Trailer" class="fa fa-youtube-play fa-2x grow-social"></i></a>
 
-    <a *ngIf="imdbId" class="media-icons" href="https://imdb.com/title/{{imdbId}}"
+    <a *ngIf="imdbId" class="media-icons" [href]="doNotAppend ? imdbid : 'https://imdb.com/title/' + imdbId"
         target="_blank">
         <i matTooltip="Imdb" class="fa fa-imdb fa-2x grow-social"></i>
     </a>
     <a *ngIf="twitter" class="media-icons"
-        href="https://twitter.com/{{twitter}}" target="_blank">
+        [href]="doNotAppend ? twitter : 'https://twitter.com/' + twitter" target="_blank">
         <i matTooltip="Twitter" class="fa fa-twitter fa-2x grow-social"></i>
     </a>
     <a *ngIf="facebook" class="media-icons"
-        href="https://facebook.com/{{facebook}}" target="_blank">
+        [href]="doNotAppend ? facebook : 'https://facebook.com/' + facebook" target="_blank">
         <i matTooltip="Facebook" class="fa fa-facebook fa-2x grow-social"></i>
     </a> <a *ngIf="instagram" class="media-icons"
-        href="https://instagram.com/{{instagram}}" target="_blank">
+        [href]="doNotAppend ? instagram : 'https://instagram.com/' + instagram" target="_blank">
         <i matTooltip="Instagram" class="fa fa-instagram fa-2x grow-social"></i>
     </a>
 

@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Hqub.MusicBrainz.API.Entities;
+using Ombi.Api.Lidarr;
+using Ombi.Api.Lidarr.Models;
 using Ombi.Api.MusicBrainz;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
@@ -16,6 +18,7 @@ using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Artist = Hqub.MusicBrainz.API.Entities.Artist;
 using ReleaseGroup = Ombi.Core.Models.Search.V2.Music.ReleaseGroup;
 
 namespace Ombi.Core.Engine.V2
@@ -24,19 +27,28 @@ namespace Ombi.Core.Engine.V2
     {
         private readonly IMusicBrainzApi _musicBrainzApi;
         private readonly ISettingsService<LidarrSettings> _lidarrSettings;
+        private readonly ILidarrApi _lidarrApi;
 
         public MusicSearchEngineV2(IPrincipal identity, IRequestServiceMain requestService, IRuleEvaluator rules,
             OmbiUserManager um, ICacheService cache, ISettingsService<OmbiSettings> ombiSettings,
-            IRepository<RequestSubscription> sub, IMusicBrainzApi musicBrainzApi, ISettingsService<LidarrSettings> lidarrSettings)
+            IRepository<RequestSubscription> sub, IMusicBrainzApi musicBrainzApi, ISettingsService<LidarrSettings> lidarrSettings,
+            ILidarrApi lidarrApi)
             : base(identity, requestService, rules, um, cache, ombiSettings, sub)
         {
             _musicBrainzApi = musicBrainzApi;
             _lidarrSettings = lidarrSettings;
+            _lidarrApi = lidarrApi;
         }
 
         public async Task<ArtistInformation> GetArtistInformation(string artistId)
         {
             var artist = await _musicBrainzApi.GetArtistInformation(artistId);
+            var lidarrSettings = await GetLidarrSettings();
+            Task<ArtistResult> lidarrArtistTask = null;
+            if (lidarrSettings.Enabled)
+            {
+                lidarrArtistTask = _lidarrApi.GetArtistByForeignId(artistId, lidarrSettings.ApiKey, lidarrSettings.FullUri);
+            }
 
             var info = new ArtistInformation
             {
@@ -65,9 +77,20 @@ namespace Ombi.Core.Engine.V2
 
             info.Links = GetLinksForArtist(artist);
             info.Members = GetBandMembers(artist);
+
+            if (lidarrArtistTask != null)
+            {
+                var artistResult = await lidarrArtistTask;
+                info.Banner = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("banner", StringComparison.InvariantCultureIgnoreCase))?.url.Replace("http","https");
+                info.Logo = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("logo", StringComparison.InvariantCultureIgnoreCase))?.url.Replace("http", "https");
+                info.Poster = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("poster", StringComparison.InvariantCultureIgnoreCase))?.url.Replace("http", "https");
+                info.FanArt = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("fanart", StringComparison.InvariantCultureIgnoreCase))?.url.Replace("http", "https");
+                info.Overview = artistResult.overview;
+            }
+
             return info;
         }
-
+        
         private List<BandMember> GetBandMembers(Artist artist)
         {
             var members = new List<BandMember>();
@@ -165,6 +188,12 @@ namespace Ombi.Core.Engine.V2
             }
 
             return links;
+        }
+
+        private LidarrSettings __lidarrSettings;
+        private async Task<LidarrSettings> GetLidarrSettings()
+        {
+            return __lidarrSettings ?? (__lidarrSettings = await _lidarrSettings.GetSettingsAsync());
         }
     }
 }

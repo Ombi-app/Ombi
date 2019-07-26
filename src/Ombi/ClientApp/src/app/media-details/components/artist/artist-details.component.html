@@ -4,31 +4,33 @@
 
 <div *ngIf="artist" class="dark-theme">
 
-  <top-banner [title]="artist.name"></top-banner>
+  <top-banner [title]="artist.name" [background]="getBackground()" [tagline]="artist.disambiguation"></top-banner>
 
   <section id="info-wrapper">
     <div class="small-middle-container">
 
       <div class="row">
 
-        <media-poster [posterPath]="'https://image.tmdb.org/t/p/w300/' + movie.posterPath"></media-poster>
+        <media-poster [posterPath]="artist.poster"></media-poster>
 
         <!--Next to poster-->
         <div class="col-12 col-lg-3 col-xl-3 media-row">
 
-          <social-icons [homepage]="movie.homepage" [theMoviedbId]="movie.id"
-            [hasTrailer]="movie.videos.results.length > 0" (openTrailer)="openDialog()" [imdbId]="movie.imdbId"
-            [twitter]="movie.externalIds.twitterId" [facebook]="movie.externalIds.facebookId"
-            [instagram]="movie.externalIds.instagramId" [available]="movie.available" [plexUrl]="movie.plexUrl"
-            [embyUrl]="movie.embyUrl"></social-icons>
+          <social-icons 
+          [homepage]="artist.links.homePage"
+            [doNotAppend]="true"
+            [imdbId]="artist.links.imdb"
+            [twitter]="artist.links.twitter" 
+            [facebook]="artist.links.facebook"
+            [instagram]="artist.links.instagram"></social-icons>
 
         </div>
 
         <div class="col-12 col-lg-6 col-xl-6 media-row">
 
-          <button mat-raised-button class="btn-green btn-spacing" *ngIf="movie.available"> {{
-            'Common.Available' | translate }}</button>
-          <span *ngIf="!movie.available">
+          <!-- <button mat-raised-button class="btn-green btn-spacing" *ngIf="movie.available"> {{
+            'Common.Available' | translate }}</button> -->
+          <!-- <span *ngIf="!movie.available">
             <span *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></span>
 
             <ng-template #requestedBtn>
@@ -43,8 +45,8 @@
                 <i *ngIf="movie.processed && !movie.requestProcessing" class="fa fa-check"></i> {{
                 'Common.Request' | translate }}</button>
             </ng-template>
-          </span>
-          <span *ngIf="isAdmin && hasRequest">
+          </span> -->
+          <!-- <span *ngIf="isAdmin && hasRequest">
             <button (click)="approve()" mat-raised-button class="btn-spacing" color="accent">
               <i class="fa fa-plus"></i> {{ 'Common.Approve' | translate }}
             </button>
@@ -61,12 +63,12 @@
               mat-raised-button class="btn-spacing" color="warn">
               <i class="fa fa-times"></i> {{
                             'MediaDetails.Denied' | translate }}</button>
-          </span>
+          </span> -->
           
-          <button *ngIf="(hasRequest && movieRequest) || movie.available" mat-raised-button class="btn-spacing"
+          <!-- <button *ngIf="(hasRequest && movieRequest) || movie.available" mat-raised-button class="btn-spacing"
             color="danger" (click)="issue()">
             <i class="fa fa-exclamation"></i> {{
-                'Requests.ReportIssue' | translate }}</button>
+                'Requests.ReportIssue' | translate }}</button> -->
 
 
 
@@ -77,20 +79,10 @@
       <div class="row">
 
         <div class="col-12 col-md-2">
-          <button *ngIf="movie.belongsToCollection"
-            [routerLink]="'/discover/collection/' + movie.belongsToCollection.id" mat-raised-button
-            class="spacing-below full-width mat-elevation-z8">{{movie.belongsToCollection.name}}</button>
-
-          <mat-card class="mat-elevation-z8 spacing-below" *ngIf="isAdmin && movieRequest">
-            <mat-card-content class="medium-font">
-              <movie-admin-panel [movie]="movieRequest" (advancedOptionsChange)="setAdvancedOptions($event)">
-              </movie-admin-panel>
-            </mat-card-content>
-          </mat-card>
-
+         
           <mat-card class="mat-elevation-z8">
             <mat-card-content class="medium-font">
-              <movie-information-panel [movie]="movie" [advancedOptions]="advancedOptions"></movie-information-panel>
+              <artist-information-panel [artist]="artist"></artist-information-panel>
             </mat-card-content>
           </mat-card>
 
@@ -102,19 +94,19 @@
             <div class="col-12">
               <mat-card class=" mat-elevation-z8 spacing-below">
                 <mat-card-content>
-                  {{movie.overview}}
+                  {{artist.overview}}
                 </mat-card-content>
               </mat-card>
             </div>
           </div>
 
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-12">
               <cast-carousel [cast]="movie.credits.cast"></cast-carousel>
             </div>
-          </div>
+          </div> -->
 
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-12">
               <mat-accordion class="mat-elevation-z8  spacing-below">
                 <mat-expansion-panel>
@@ -181,7 +173,7 @@
                 </mat-expansion-panel>
               </mat-accordion>
             </div>
-          </div>
+          </div> -->
 
 
 

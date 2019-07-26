@@ -16,7 +16,7 @@ import { IArtistSearchResult } from "../../../interfaces/IMusicSearchResultV2";
 export class ArtistDetailsComponent {
     private artistId: string;
 
-    public artist: IArtistSearchResult;
+    public artist: IArtistSearchResult = null;
 
     public isAdmin: boolean;
 
@@ -33,6 +33,26 @@ export class ArtistDetailsComponent {
     public load() {
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
         this.searchService.getArtistInformation(this.artistId).subscribe(x => this.artist = x);
+    }
+
+    public getBackground(): string {
+        if(this.artist.fanArt) {
+            this.artist.background = this.sanitizer.bypassSecurityTrustStyle
+            ("url(" + this.artist.fanArt + ")");
+            return this.artist.background
+        }
+        if(this.artist.logo) {
+            this.artist.background = this.sanitizer.bypassSecurityTrustStyle
+            ("url(" + this.artist.logo + ")");
+            return this.artist.background
+        }
+        if(this.artist.poster) {
+            this.artist.background = this.sanitizer.bypassSecurityTrustStyle
+            ("url(" + this.artist.poster + ")");
+            return this.artist.background
+        }
+
+        return this.artist.background
     }
 
     public async request() {
