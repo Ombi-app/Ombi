@@ -455,7 +455,7 @@ namespace Ombi.Controllers.V1.External
             }
             catch (Exception e)
             {
-                Log.LogError(LoggingEvents.Api, e, "Could not test Mobile Notifications");
+                Log.LogError(LoggingEvents.Api, e, "Could not test Lidarr");
                 return false;
             }
         }
