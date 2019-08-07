@@ -16,10 +16,7 @@ using Ombi.Models;
 
 namespace Ombi.Controllers.V2
 {
-    [ApiV2]
-    [Authorize]
-    [ApiController]
-    public class SearchController : ControllerBase
+    public class SearchController : V2Controller
     {
         public SearchController(IMultiSearchEngine multiSearchEngine, ITvSearchEngine tvSearchEngine,
             IMovieEngineV2 v2Movie, ITVSearchEngineV2 v2Tv, IMusicSearchEngineV2 musicEngine)

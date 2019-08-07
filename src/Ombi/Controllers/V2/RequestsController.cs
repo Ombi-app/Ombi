@@ -12,10 +12,7 @@ using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Controllers.V2
 {
-    [ApiV2]
-    [Authorize]
-    [ApiController]
-    public class RequestsController : ControllerBase
+    public class RequestsController : V2Controller
     {
         public RequestsController(IMovieRequestEngine movieRequestEngine, ITvRequestEngine tvRequestEngine)
         {

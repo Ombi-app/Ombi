@@ -10,10 +10,8 @@ using Ombi.Models;
 
 namespace Ombi.Controllers.V2
 {
-    [ApiV2]
     [Admin]
-    [ApiController]
-    public class HubController : ControllerBase
+    public class HubController : V2Controller
     {
         public HubController(OmbiUserManager um)
         {

@@ -9,10 +9,7 @@ using Ombi.Core.Models.Search.V2;
 
 namespace Ombi.Controllers.V2
 {
-    [ApiV2]
-    [Authorize]
-    [ApiController]
-    public class CalendarController : ControllerBase
+    public class CalendarController : V2Controller
     {
         public CalendarController(ICalendarEngine calendarEngine)
         {
