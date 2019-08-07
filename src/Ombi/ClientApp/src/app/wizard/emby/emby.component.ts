@@ -8,6 +8,7 @@ import { PlatformLocation } from "@angular/common";
 import { IEmbySettings } from "../../interfaces";
 
 @Component({
+    selector: "wizard-emby",
     templateUrl: "./emby.component.html",
 })
 export class EmbyComponent implements OnInit {
@@ -52,7 +53,8 @@ export class EmbyComponent implements OnInit {
                 this.notificationService.error("Username or password was incorrect. Could not authenticate with Emby.");
                 return;
             }
-            this.router.navigate(["Wizard/CreateAdmin"]);
+            
+            this.notificationService.success("Done! Please press next");
         });
     }
 }

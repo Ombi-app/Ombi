@@ -8,6 +8,7 @@ import { IdentityService, NotificationService } from "../../services";
 import { StorageService } from "../../shared/storage/storage-service";
 
 @Component({
+    selector: "wizard-plex",
     templateUrl: "./plex.component.html",
 })
 export class PlexComponent implements OnInit, OnDestroy {

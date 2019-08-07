@@ -204,17 +204,17 @@ namespace Ombi.Controllers.V1
                 {
                     _log.LogInformation("Added the Admin role");
                 }
+
+                // Update the wizard flag
+                var settings = await OmbiSettings.GetSettingsAsync();
+                settings.Wizard = true;
+                await OmbiSettings.SaveSettingsAsync(settings);
             }
             if (!result.Succeeded)
             {
                 LogErrors(result);
                 retVal.Errors.AddRange(result.Errors.Select(x => x.Description));
             }
-
-            // Update the wizard flag
-            var settings = await OmbiSettings.GetSettingsAsync();
-            settings.Wizard = true;
-            await OmbiSettings.SaveSettingsAsync(settings);
 
             retVal.Result = result.Succeeded;
             return retVal;

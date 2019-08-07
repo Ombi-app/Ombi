@@ -1,27 +1,12 @@
 ﻿
-<img class="landing-header" src="{{baseUrl}}/images/logo.png" width="300" />
-<div class="landing-block shadow">
-<div class="media">
-<div id="contentBody" class="media-body">
-<h4 class="media-heading landing-title">Create the Admin account</h4>
 <small>This account will be used to configure your settings and also manage all of the requests.</small>
-<div class="form-group">
-    <div>
-        <label for="adminUsername">Username</label>
-        <input type="text" class="form-control form-control-custom" id="adminUsername" name="Username" [(ngModel)]="username" placeholder="Username">
-    </div>
-    <br />
-    <div>
-        <label for="adminPassword">Password</label>
-        <input type="password" class="form-control form-control-custom" id="adminPassword" name="Password" [(ngModel)]="password" placeholder="Password">
-    </div>
+<div>
+    <mat-form-field>
+        <input matInput type="text" id="adminUsername" name="Username" [(ngModel)]="user.username" placeholder="Username">
+    </mat-form-field>
+   </div> <div>
+    <mat-form-field>
+        <input type="password" matInput id="adminPassword" name="Password" [(ngModel)]="user.password" placeholder="Password">
+    </mat-form-field>
 </div>
 
-<div class="form-group">
-    <div style="text-align: center; margin-top: 20px">
-        <button (click)="createUser()" data-test="createuserbtn" type="submit" class="btn btn-success-outline">Finish</button>
-    </div>
-</div>
-</div>
-</div>
-</div>

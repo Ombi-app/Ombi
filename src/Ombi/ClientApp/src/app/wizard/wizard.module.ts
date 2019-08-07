@@ -1,6 +1,6 @@
 ﻿import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
 
 import {ConfirmationService, ConfirmDialogModule } from "primeng/primeng";
@@ -17,6 +17,8 @@ import { PlexService } from "../services";
 import { IdentityService } from "../services";
 import { PlexOAuthService } from "../services";
 
+import { SharedModule } from "../shared/shared.module";
+
 const routes: Routes = [
     { path: "", component: WelcomeComponent},
     { path: "MediaServer", component: MediaServerComponent},
@@ -28,7 +30,10 @@ const routes: Routes = [
     imports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
         ConfirmDialogModule,
+        SharedModule,
+        MatStepperModule,
         RouterModule.forChild(routes),
     ],
     declarations: [
@@ -46,7 +51,6 @@ const routes: Routes = [
         IdentityService,
         EmbyService,
         ConfirmationService,
-        MatStepperModule,
         PlexOAuthService,
     ],
 

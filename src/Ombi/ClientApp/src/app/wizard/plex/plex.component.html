@@ -1,34 +1,24 @@
-﻿
-<img class="landing-header" src="{{baseUrl}}/images/logo.png" width="300" />
-<div class="landing-block shadow">
-<div class="media">
-<div id="contentBody" class="media-body">
-<h4 class="media-heading landing-title">Plex Authentication</h4>
-<div class="form-group">
-    <label for="username" class="control-label">Username and Password</label>
+﻿<div class="form-group">
     <div>
-        <input type="text" [(ngModel)]="login" class="form-control form-control-custom" id="username"  placeholder="Username">
-    </div>
-    <br />
-    <div>
-        <input type="password" [(ngModel)]="password" class="form-control form-control-custom" placeholder="Password">
-    </div>
+    <mat-form-field>
+        <input matInput type="text" [(ngModel)]="login"  id="username"  placeholder="Username">
+    </mat-form-field>
 </div>
-<small>Please note we do not store this information, we only store your Plex Authorization Token that will allow Ombi to view your media and friends</small>
+<div>
+    <mat-form-field>
+        <input matInput type="password" [(ngModel)]="password"  placeholder="Password">
+    </mat-form-field>
+</div>
+</div>
+<small>Please note we do not store this information, we only store your Plex Authorization Token that will allow Ombi to view your media and users</small>
 <div class="form-group">
     <div style="text-align: center; margin-top: 20px">
-        <button (click)="requestAuthToken()" class="btn btn-success-outline">Request Token <i class="fa fa-key"></i></button>
+        <button (click)="requestAuthToken()" mat-raised-button color="primary" >Request Token <i class="fa fa-key"></i></button>
     </div>
 </div>
 <p class="text-center">OR</p>
 <div class="form-group">
     <div style="text-align: center; margin-top: 20px">
-        <button (click)="oauth()" class="btn btn-primary" type="button">Continue With Plex</button>
+        <button (click)="oauth()" mat-raised-button color="accent" type="button">Continue With Plex</button>
     </div>
 </div>
-
-</div>
-</div>
-</div>
-
-<p-confirmDialog></p-confirmDialog>
