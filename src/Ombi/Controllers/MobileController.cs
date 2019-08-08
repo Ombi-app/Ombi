@@ -40,7 +40,7 @@ namespace Ombi.Controllers
         {
             if (body?.PlayerId.HasValue() ?? false)
             {
-                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
                 // Check if we already have this notification id
                 var alreadyExists = await _notification.GetAll().AnyAsync(x => x.PlayerId == body.PlayerId && x.UserId == user.Id);
 

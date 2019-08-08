@@ -101,7 +101,6 @@ namespace Ombi.Store.Context
                         UserName = "Api",
                         UserType = UserType.SystemUser,
                         NormalizedUserName = "API",
-
                     });
                     SaveChanges();
                     tran.Commit();
