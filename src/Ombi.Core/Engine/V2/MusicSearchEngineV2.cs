@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
+using System.Threading;
 using System.Threading.Tasks;
 using Ombi.Api.Lidarr;
 using Ombi.Api.Lidarr.Models;
@@ -81,7 +82,7 @@ namespace Ombi.Core.Engine.V2
             if (lidarrArtistTask != null)
             {
                 var artistResult = await lidarrArtistTask;
-                info.Banner = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("banner", StringComparison.InvariantCultureIgnoreCase))?.url.Replace("http","https");
+                info.Banner = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("banner", StringComparison.InvariantCultureIgnoreCase))?.url.Replace("http", "https");
                 info.Logo = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("logo", StringComparison.InvariantCultureIgnoreCase))?.url.Replace("http", "https");
                 info.Poster = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("poster", StringComparison.InvariantCultureIgnoreCase))?.url.Replace("http", "https");
                 info.FanArt = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("fanart", StringComparison.InvariantCultureIgnoreCase))?.url.Replace("http", "https");
@@ -90,7 +91,39 @@ namespace Ombi.Core.Engine.V2
 
             return info;
         }
-        
+
+        public async Task<AlbumArt> GetReleaseGroupArt(string musicBrainzId, CancellationToken token)
+        {
+            var art = await _musicBrainzApi.GetCoverArtForReleaseGroup(musicBrainzId, token);
+
+            if (art == null || !art.images.Any())
+            {
+                return new AlbumArt();
+            }
+
+            foreach (var cover in art.images)
+            {
+                //if ((cover.thumbnails?.px250 ?? string.Empty).HasValue())
+                //{
+                //    return new AlbumArt(cover.thumbnails.px250);
+                //}
+                if ((cover.thumbnails?.small ?? string.Empty).HasValue())
+                {
+                    return new AlbumArt(cover.thumbnails.small);
+                }
+                //if ((cover.thumbnails?.px500 ?? string.Empty).HasValue())
+                //{
+                //    return new AlbumArt(cover.thumbnails.px500);
+                //}
+                if ((cover.thumbnails?.large ?? string.Empty).HasValue())
+                {
+                    return new AlbumArt(cover.thumbnails.large);
+                }
+            }
+
+            return new AlbumArt();
+        }
+
         private List<BandMember> GetBandMembers(Artist artist)
         {
             var members = new List<BandMember>();

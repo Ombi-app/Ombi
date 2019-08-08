@@ -25,7 +25,7 @@ namespace Ombi.Api
         private ILogger<Api> Logger { get; }
         private readonly IOmbiHttpClient _client;
 
-        private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
+        public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore,
             ContractResolver = new PluralPropertyContractResolver()
@@ -66,7 +66,7 @@ namespace Ombi.Api
                         {
                             using (var req = await httpRequestMessage.Clone())
                             {
-                                return await _client.SendAsync(req);
+                                return await _client.SendAsync(req, cancellationToken);
                             }
                         });
                     }
@@ -119,12 +119,12 @@ namespace Ombi.Api
 
         }
 
-        public async Task Request(Request request)
+        public async Task<HttpResponseMessage> Request(Request request, CancellationToken token = default(CancellationToken))
         {
             using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, request.FullUri))
             {
                 AddHeadersBody(request, httpRequestMessage);
-                var httpResponseMessage = await _client.SendAsync(httpRequestMessage);
+                var httpResponseMessage = await _client.SendAsync(httpRequestMessage, token);
                 await LogDebugContent(httpResponseMessage);
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
@@ -133,6 +133,8 @@ namespace Ombi.Api
                         await LogError(request, httpResponseMessage);
                     }
                 }
+
+                return httpResponseMessage;
             }
         }
 

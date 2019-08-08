@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Threading;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ombi.Controllers.V2
@@ -9,6 +10,6 @@ namespace Ombi.Controllers.V2
     [ApiController]
     public class V2Controller : ControllerBase
     {
-        
+        public CancellationToken CancellationToken => HttpContext.RequestAborted;
     }
 }

@@ -24,6 +24,8 @@ export interface IReleaseGroups {
     title: string;
     releaseDate: string;
     type: string;
+
+    image: string; // Set by another api call
 }
 
 export interface IArtistLinks {
@@ -53,4 +55,8 @@ export interface IBandMembers {
     isCurrentMember: boolean;
     start: string;
     end: string;
+}
+
+export interface IAlbumArt {
+    image: string;
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Threading;
 using Ombi.Core;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Engine.V2;
@@ -343,5 +344,12 @@ namespace Ombi.Controllers.V2
             return await _musicEngine.GetArtistInformation(artistId);
         }
 
+        [HttpGet("releasegroupart/{musicBrainzId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<AlbumArt> GetReleaseGroupARt(string musicBrainzId)
+        {
+            return await _musicEngine.GetReleaseGroupArt(musicBrainzId, CancellationToken);
+        }
     }
 }
