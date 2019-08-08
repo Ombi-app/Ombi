@@ -1,0 +1,71 @@
+<mat-accordion class="mat-elevation-z8  spacing-below">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{'MediaDetails.AlbumsTitle' | translate}}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="row card-spacer">
+
+            <div class="col-md-2" *ngFor="let r of albums">
+              <div class="sidebar affixable affix-top preview-poster">
+                <div class="poster">
+                    <!-- <img class="real grow" matTooltip="{{r.title}}"
+                      src="{{r.title}}" alt="Poster"
+                      style="display: block;"> -->
+                      {{r.title}} | {{r.type}}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel *ngIf="ep">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    {{'MediaDetails.SinglesTitle' | translate}}
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+      
+                <div class="row card-spacer">
+      
+                  <div class="col-md-2" *ngFor="let r of singles">
+                    <div class="sidebar affixable affix-top preview-poster">
+                      <div class="poster">
+                          <!-- <img class="real grow" matTooltip="{{r.title}}"
+                            src="{{r.title}}" alt="Poster"
+                            style="display: block;"> -->
+                            {{r.title}} | {{r.type}}
+                      </div>
+                    </div>
+      
+                  </div>
+                </div>
+              </mat-expansion-panel>
+
+              <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        {{'MediaDetails.EpTitle' | translate}}
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+          
+                    <div class="row card-spacer">
+          
+                      <div class="col-md-2" *ngFor="let r of ep">
+                        <div class="sidebar affixable affix-top preview-poster">
+                          <div class="poster">
+                              <!-- <img class="real grow" matTooltip="{{r.title}}"
+                                src="{{r.title}}" alt="Poster"
+                                style="display: block;"> -->
+                                {{r.title}} | {{r.type}}
+                          </div>
+                        </div>
+          
+                      </div>
+                    </div>
+                  </mat-expansion-panel>
+    
+      </mat-accordion>

@@ -16,6 +16,7 @@ import { RequestServiceV2 } from "../../services/requestV2.service";
 import { NewIssueComponent } from "./shared/new-issue/new-issue.component";
 import { ArtistDetailsComponent } from "./artist/artist-details.component";
 import { ArtistInformationPanel } from "./artist/panels/artist-information-panel/artist-information-panel.component";
+import { ArtistReleasePanel } from "./artist/panels/artist-release-panel/artist-release-panel.component";
 
 export const components: any[] = [
     MovieDetailsComponent,
@@ -33,7 +34,8 @@ export const components: any[] = [
     MovieAdvancedOptionsComponent,
     NewIssueComponent,
     ArtistDetailsComponent,
-    ArtistInformationPanel
+    ArtistInformationPanel,
+    ArtistReleasePanel,
 ];
 
 export const entryComponents: any[] = [
