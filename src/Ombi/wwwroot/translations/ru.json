@@ -16,13 +16,13 @@
     "Monitored": "Мониторинг",
     "NotAvailable": "Недоступно",
     "ProcessingRequest": "Обработка запроса",
-    "PendingApproval": "Ожидание утверждения",
+    "PendingApproval": "В ожидании одобрения",
     "RequestDenied": "Запрос отклонен",
     "NotRequested": "Не запрошено",
     "Requested": "Запрос отправлен",
-    "Request": "Запрос",
-    "Denied": "Запрещено",
-    "Approve": "Утвердить",
+    "Request": "Запросить",
+    "Denied": "Отказано",
+    "Approve": "Одобрить",
     "PartlyAvailable": "Partly Available",
     "Errors": {
       "Validation": "Please check your entered values"
@@ -160,27 +160,27 @@
     "MarkResolved": "Mark Resolved",
     "SendMessageButton": "Send",
     "Subject": "Subject",
-    "Comments": "Comments",
-    "WriteMessagePlaceholder": "Write your message here...",
-    "ReportedBy": "Reported By"
+    "Comments": "Комментарии",
+    "WriteMessagePlaceholder": "Введите текст сообщения здесь...",
+    "ReportedBy": "Жалоба поступила от"
   },
   "Filter": {
-    "ClearFilter": "Clear Filter",
-    "FilterHeaderAvailability": "Availability",
-    "FilterHeaderRequestStatus": "Status",
-    "Approved": "Approved",
-    "PendingApproval": "Pending Approval"
+    "ClearFilter": "Сбросить фильтр",
+    "FilterHeaderAvailability": "Доступность",
+    "FilterHeaderRequestStatus": "Статус",
+    "Approved": "Одобрено",
+    "PendingApproval": "В ожидании одобрения"
   },
   "UserManagment": {
-    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
-    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
-    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
-    "TvDue": "TV: {{date}}",
-    "MovieDue": "Movie: {{date}}",
-    "MusicDue": "Music: {{date}}"
+    "TvRemaining": "Сериалы: {{remaining}}/{{total}} осталось",
+    "MovieRemaining": "Фильмы: {{remaining}}/{{total}} осталось",
+    "MusicRemaining": "Музыка: {{remaining}}/{{total}} осталось",
+    "TvDue": "Сериалы: {{date}}",
+    "MovieDue": "Фильм: {{date}}",
+    "MusicDue": "Музыка: {{date}}"
   },
   "Votes": {
-    "CompletedVotesTab": "Voted",
-    "VotesTab": "Votes Needed"
+    "CompletedVotesTab": "Проголосовано",
+    "VotesTab": "Необходимы голоса"
   }
 }
