@@ -24,4 +24,13 @@ export class RequestServiceV2 extends ServiceHelpers {
     public updateMovieAdvancedOptions(options: IMovieAdvancedOptions): Observable<IRequestEngineResult> {
         return this.http.post<IRequestEngineResult>(`${this.url}movie/advancedoptions`, options, {headers: this.headers});
     }
+    
+    public getMovieUnavailableRequests(count: number, position: number, sortProperty: string , order: string): Observable<IRequestsViewModel<IMovieRequests>> {
+        return this.http.get<IRequestsViewModel<IMovieRequests>>(`${this.url}movie/unavailable/${count}/${position}/${sortProperty}/${order}`, {headers: this.headers});
+    }
+
+    public getTvUnavailableRequests(count: number, position: number, sortProperty: string , order: string): Observable<IRequestsViewModel<IChildRequests>> {
+        return this.http.get<IRequestsViewModel<IChildRequests>>(`${this.url}tv/unavailable/${count}/${position}/${sortProperty}/${order}`, {headers: this.headers});
+    }    
+    
 }

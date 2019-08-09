@@ -8,7 +8,8 @@ namespace Ombi.Core.Engine.Interfaces
 {
     public interface ITvRequestEngine : IRequestEngine<TvRequests>
     {
-
+        Task<RequestsViewModel<ChildRequests>> GetUnavailableRequests(int count, int position, string sortProperty,
+            string sortOrder);
         Task RemoveTvRequest(int requestId);
         Task<TvRequests> GetTvRequest(int requestId);
         Task<RequestEngineResult> RequestTvShow(TvRequestViewModel tv);

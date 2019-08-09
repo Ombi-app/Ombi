@@ -69,10 +69,10 @@ namespace Ombi.Controllers.V2
         /// <param name="position">The position. e.g. position 60 for a 2nd page (since we have already got the first 30 items)</param>
         /// <param name="sort">The item to sort on e.g. "requestDate"</param>
         /// <param name="sortOrder">asc or desc</param>
-        [HttpGet("tv/{count:int}/{position:int}/{sort}/{sortOrder}")]
+        [HttpGet("tv/unavailable/{count:int}/{position:int}/{sort}/{sortOrder}")]
         public async Task<RequestsViewModel<ChildRequests>> GetNotAvailableTvRequests(int count, int position, string sort, string sortOrder)
         {
-            return await _tvRequestEngine.GetRequests(count, position, sort, sortOrder);
+            return await _tvRequestEngine.GetUnavailableRequests(count, position, sort, sortOrder);
         }
 
         [HttpPost("movie/advancedoptions")]
