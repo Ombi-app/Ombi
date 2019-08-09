@@ -1,0 +1,19 @@
+﻿<settings-menu></settings-menu>
+<div *ngIf="logs" class="small-middle-container">
+  <legend>Logs</legend>
+  
+  <mat-tab-group (selectedTabChange)="logDetail = null">
+    <mat-tab *ngFor="let log of logs" label="{{log}}">
+      <ng-template matTabContent>
+        <button mat-raised-button color="primary" (click)="loadLog(log);">Load</button>
+
+        <pre class="code-block">
+          <code>
+          {{logDetail}}
+        </code>
+      </pre>
+
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+ </div>

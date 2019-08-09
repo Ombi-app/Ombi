@@ -17,6 +17,7 @@ export class MoviesGridComponent implements AfterViewInit {
     public isLoadingResults = true;
     public displayedColumns: string[] = ['requestedUser.requestedBy', 'title', 'requestedDate', 'status', 'requestStatus', 'actions'];
     public gridCount: string = "15";
+    public showUnavailableRequests: boolean;
 
     @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
     @ViewChild(MatSort, {static: false}) sort: MatSort;
@@ -41,7 +42,7 @@ export class MoviesGridComponent implements AfterViewInit {
                     this.isLoadingResults = true;
                     // eturn this.exampleDatabase!.getRepoIssues(
                     //     this.sort.active, this.sort.direction, this.paginator.pageIndex);
-                    return this.requestService.getMovieRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                    return this.loadData();
                 }),
                 map((data: IRequestsViewModel<IMovieRequests>) => {
                     // Flip flag to show that loading has finished.
@@ -55,5 +56,13 @@ export class MoviesGridComponent implements AfterViewInit {
                     return observableOf([]);
                 })
             ).subscribe(data => this.dataSource = data);
+    }
+
+    public loadData(): Observable<IRequestsViewModel<IMovieRequests>> {
+        if (this.showUnavailableRequests) {
+            return this.requestService.getMovieUnavailableRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+        } else {
+            return this.requestService.getMovieRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+        }
     }
 }

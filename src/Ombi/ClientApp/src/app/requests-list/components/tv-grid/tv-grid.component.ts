@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, ViewChild } from "@angular/core";
-import {  IRequestsViewModel, ITvRequests, IChildRequests } from "../../../interfaces";
+import {  IRequestsViewModel, IChildRequests } from "../../../interfaces";
 import { MatPaginator, MatSort } from "@angular/material";
-import { merge, Observable, of as observableOf } from 'rxjs';
+import { merge, of as observableOf, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 import { RequestServiceV2 } from "../../../services/requestV2.service";
@@ -17,6 +17,7 @@ export class TvGridComponent implements AfterViewInit {
     public isLoadingResults = true;
     public displayedColumns: string[] = ['series',  'requestedBy', 'status', 'requestStatus', 'requestedDate','actions'];
     public gridCount: string = "15";
+    public showUnavailableRequests: boolean;
 
     @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
     @ViewChild(MatSort, {static: false}) sort: MatSort;
@@ -35,7 +36,7 @@ export class TvGridComponent implements AfterViewInit {
                 startWith({}),
                 switchMap(() => {
                     this.isLoadingResults = true;
-                    return this.requestService.getTvRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                    return this.loadData();
                 }),
                 map((data: IRequestsViewModel<IChildRequests>) => {
                     // Flip flag to show that loading has finished.
@@ -49,5 +50,13 @@ export class TvGridComponent implements AfterViewInit {
                     return observableOf([]);
                 })
             ).subscribe(data => this.dataSource = data);
+    }
+
+    private loadData(): Observable<IRequestsViewModel<IChildRequests>> {
+        if(this.showUnavailableRequests) {
+            return this.requestService.getTvUnavailableRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+        } else {
+            return this.requestService.getTvRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+        }
     }
 }

@@ -9,7 +9,7 @@ import { AuthGuard } from "../auth/auth.guard";
 import { AuthService } from "../auth/auth.service";
 import {
     CouchPotatoService, EmbyService, IssuesService, JobService, LidarrService, MobileService, NotificationMessageService, PlexService, RadarrService,
-    RequestRetryService, SonarrService, TesterService, ValidationService,
+    RequestRetryService, SonarrService, TesterService, ValidationService, SystemService, FileDownloadService,
 } from "../services";
 
 import { PipeModule } from "../pipes/pipe.module";
@@ -52,6 +52,7 @@ import { AutoCompleteModule, CalendarModule, DialogModule, InputSwitchModule, In
 import { MatMenuModule} from "@angular/material";
 import { SharedModule } from "../shared/shared.module";
 import { HubService } from "../services/hub.service";
+import { LogsComponent } from "./logs/logs.component";
 
 const routes: Routes = [
     { path: "Ombi", component: OmbiComponent, canActivate: [AuthGuard] },
@@ -84,6 +85,7 @@ const routes: Routes = [
     { path: "Lidarr", component: LidarrComponent, canActivate: [AuthGuard] },
     { path: "Vote", component: VoteComponent, canActivate: [AuthGuard] },
     { path: "FailedRequests", component: FailedRequestsComponent, canActivate: [AuthGuard] },
+    { path: "Logs", component: LogsComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -141,6 +143,7 @@ const routes: Routes = [
         LidarrComponent,
         VoteComponent,
         FailedRequestsComponent,
+        LogsComponent,
     ],
     exports: [
         RouterModule,
@@ -162,6 +165,8 @@ const routes: Routes = [
         LidarrService,
         RequestRetryService,
         HubService,
+        SystemService,
+        FileDownloadService
     ],
 
 })
