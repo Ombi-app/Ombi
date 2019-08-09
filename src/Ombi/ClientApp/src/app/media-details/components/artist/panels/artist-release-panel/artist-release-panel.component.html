@@ -12,11 +12,11 @@
             <div class="row card-spacer">
 
               <span *ngFor="let r of albums">
-              <div class="col-md-2" *ngIf="r.image" >
+              <div class="col-md-2" >
                 <div  class="sidebar affixable affix-top preview-poster">
                   <div class="poster">
                       <img class="real grow" matTooltip="{{r.title}}"
-                        src="{{r.image}}" alt="Poster"
+                        src="{{r.image ? r.image : 'images/default-music-placeholder.png'}}" alt="Poster"
                         style="display: block;">
                   </div>
                 </div>

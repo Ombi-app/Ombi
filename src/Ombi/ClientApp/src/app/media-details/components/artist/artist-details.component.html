@@ -102,7 +102,7 @@
 
           <div class="row">
             <div class="col-12">
-             <artist-release-panel [releases]="artist.releaseGroups"></artist-release-panel>
+             <artist-release-panel *ngIf="artist.releaseGroups.length > 0" [releases]="artist.releaseGroups"></artist-release-panel>
             </div>
           </div>
 
