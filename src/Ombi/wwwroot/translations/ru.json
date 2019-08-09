@@ -23,24 +23,24 @@
     "Request": "Запросить",
     "Denied": "Отказано",
     "Approve": "Одобрить",
-    "PartlyAvailable": "Partly Available",
+    "PartlyAvailable": "Частично доступно",
     "Errors": {
-      "Validation": "Please check your entered values"
+      "Validation": "Пожалуйста, проверьте введенные значения"
     }
   },
   "PasswordReset": {
-    "EmailAddressPlaceholder": "Email Address",
-    "ResetPasswordButton": "Reset Password"
+    "EmailAddressPlaceholder": "Адрес эл. почты",
+    "ResetPasswordButton": "Сбросить пароль"
   },
   "LandingPage": {
-    "OnlineHeading": "Currently Online",
-    "OnlineParagraph": "The media server is currently online",
-    "PartiallyOnlineHeading": "Partially Online",
-    "PartiallyOnlineParagraph": "The media server is partially online.",
-    "MultipleServersUnavailable": "There are {{serversUnavailable}} servers offline out of {{totalServers}}.",
-    "SingleServerUnavailable": "There is {{serversUnavailable}} server offline out of {{totalServers}}.",
-    "OfflineHeading": "Currently Offline",
-    "OfflineParagraph": "The media server is currently offline.",
+    "OnlineHeading": "Сейчас в сети",
+    "OnlineParagraph": "Медиа-сервер в настоящее время в сети",
+    "PartiallyOnlineHeading": "Частично в сети",
+    "PartiallyOnlineParagraph": "Медиа-сервер частично в сети.",
+    "MultipleServersUnavailable": "В сети нет {{serversUnavailable}} серверов из {{totalServers}}.",
+    "SingleServerUnavailable": "В сети нет {{serversUnavailable}} серверов из {{totalServers}}.",
+    "OfflineHeading": "В настоящее время в offline",
+    "OfflineParagraph": "Медиа-сервер в настоящее время не в сети.",
     "CheckPageForUpdates": "Check this page for continuous site updates."
   },
   "NavigationBar": {
@@ -139,27 +139,27 @@
     "SortStatusDesc": "Status ▼",
     "Remaining": {
       "Quota": "{{remaining}}/{{total}} requests remaining",
-      "NextDays": "Another request will be added in {{time}} days",
-      "NextHours": "Another request will be added in {{time}} hours",
-      "NextMinutes": "Another request will be added in {{time}} minutes",
-      "NextMinute": "Another request will be added in {{time}} minute"
+      "NextDays": "Следующий запрос будет добавлен через {{time}} дней",
+      "NextHours": "Следующий запрос будет добавлен через {{time}} часов",
+      "NextMinutes": "Следующий запрос будет добавлен через {{time}} минут",
+      "NextMinute": "Следующий запрос будет добавлен через {{time}} минуту"
     }
   },
   "Issues": {
-    "Title": "Issues",
-    "PendingTitle": "Pending Issues",
-    "InProgressTitle": "In Progress Issues",
-    "ResolvedTitle": "Resolved Issues",
-    "ColumnTitle": "Title",
-    "Category": "Category",
-    "Status": "Status",
-    "Details": "Details",
-    "Description": "Description",
-    "NoComments": "No Comments!",
-    "MarkInProgress": "Mark In Progress",
-    "MarkResolved": "Mark Resolved",
-    "SendMessageButton": "Send",
-    "Subject": "Subject",
+    "Title": "Проблемы",
+    "PendingTitle": "Проблемы в ожидании",
+    "InProgressTitle": "Проблемы в процессе",
+    "ResolvedTitle": "Решенные проблемы",
+    "ColumnTitle": "Название",
+    "Category": "Категория",
+    "Status": "Статус",
+    "Details": "Подробная информация",
+    "Description": "Описание",
+    "NoComments": "Нет комментариев!",
+    "MarkInProgress": "Отметить в процессе",
+    "MarkResolved": "Отметить как решенное",
+    "SendMessageButton": "Отправить",
+    "Subject": "Тема",
     "Comments": "Комментарии",
     "WriteMessagePlaceholder": "Введите текст сообщения здесь...",
     "ReportedBy": "Жалоба поступила от"
