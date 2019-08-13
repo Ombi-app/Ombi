@@ -28,7 +28,6 @@ namespace Ombi.Core.Models.Search
         [NotMapped]
         public string TheMovieDbId { get; set; }
 
-
         [NotMapped]
         public bool Subscribed { get; set; }
         [NotMapped]

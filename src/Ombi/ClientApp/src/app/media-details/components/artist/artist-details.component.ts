@@ -55,7 +55,7 @@ export class ArtistDetailsComponent {
         return this.artist.background
     }
 
-    public async request() {
+    public async requestAllAlbums() {
         // const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: null }).toPromise();
         // if (result.result) {
         //     this.movie.requested = true;

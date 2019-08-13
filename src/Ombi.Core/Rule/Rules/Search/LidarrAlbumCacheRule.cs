@@ -2,13 +2,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Ombi.Core.Models.Search;
+using Ombi.Core.Models.Search.V2.Music;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 
 namespace Ombi.Core.Rule.Rules.Search
 {
-    public class LidarrAlbumCacheRule : SpecificRule, ISpecificRule<object>
+    public class LidarrAlbumCacheRule : BaseSearchRule, IRules<SearchViewModel>
     {
         public LidarrAlbumCacheRule(IExternalRepository<LidarrAlbumCache> db)
         {
@@ -17,20 +18,33 @@ namespace Ombi.Core.Rule.Rules.Search
 
         private readonly IExternalRepository<LidarrAlbumCache> _db;
 
-        public Task<RuleResult> Execute(object objec)
+        public Task<RuleResult> Execute(SearchViewModel objec)
         {
-            var obj = (SearchAlbumViewModel) objec;
-            // Check if it's in Lidarr
-            var result = _db.GetAll().FirstOrDefault(x => x.ForeignAlbumId.Equals(obj.ForeignAlbumId, StringComparison.InvariantCultureIgnoreCase));
-            if (result != null)
+            if (objec is SearchAlbumViewModel obj)
             {
-                obj.PercentOfTracks = result.PercentOfTracks;
-                obj.Monitored = true; // It's in Lidarr so it's monitored
+                // Check if it's in Lidarr
+                var result = _db.GetAll().FirstOrDefault(x =>
+                    x.ForeignAlbumId.Equals(obj.ForeignAlbumId, StringComparison.InvariantCultureIgnoreCase));
+                if (result != null)
+                {
+                    obj.PercentOfTracks = result.PercentOfTracks;
+                    obj.Monitored = true; // It's in Lidarr so it's monitored
+                }
+            }
+
+            if (objec is ReleaseGroup release)
+            {
+                // Check if it's in Lidarr
+                var result = _db.GetAll().FirstOrDefault(x =>
+                    x.ForeignAlbumId.Equals(release.Id, StringComparison.InvariantCultureIgnoreCase));
+                if (result != null)
+                {
+                    release.PercentOfTracks = result.PercentOfTracks;
+                    release.Monitored = true; // It's in Lidarr so it's monitored
+                }
             }
 
             return Task.FromResult(Success());
         }
-
-        public override SpecificRules Rule => SpecificRules.LidarrAlbum;
     }
 }

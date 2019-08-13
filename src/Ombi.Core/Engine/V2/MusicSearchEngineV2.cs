@@ -67,13 +67,16 @@ namespace Ombi.Core.Engine.V2
 
             foreach (var g in artist.ReleaseGroups)
             {
-                info.ReleaseGroups.Add(new ReleaseGroup
+                var release = new ReleaseGroup
                 {
-                    Type = g.PrimaryType,
+                    ReleaseType = g.PrimaryType,
                     Id = g.Id,
                     Title = g.Title,
                     ReleaseDate = g.FirstReleaseDate,
-                });
+                };
+
+                await RunSearchRules(release);
+                info.ReleaseGroups.Add(release);
             }
 
             info.Links = GetLinksForArtist(artist);

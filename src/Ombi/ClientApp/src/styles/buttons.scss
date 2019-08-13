@@ -1,15 +1,21 @@
-﻿.btn-blue {
-    background-color: #1976D2;
+﻿
+$blue: #1976D2;
+$pink: #C2185B;
+$green:#1DE9B6;
+$orange:#F57C00;
+
+.btn-blue {
+    background-color: $blue;
 }
 
 .btn-pink {
-    background-color: #C2185B;
+    background-color: $pink;
 }
 
 .btn-green {
-    background-color: #1DE9B6;
+    background-color: $green;
 }
 
 .btn-orange {
-    background-color: #F57C00;
+    background-color: $orange;
 }

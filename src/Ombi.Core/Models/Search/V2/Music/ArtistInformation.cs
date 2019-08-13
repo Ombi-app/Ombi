@@ -53,13 +53,4 @@ namespace Ombi.Core.Models.Search.V2.Music
         public string Google { get; set; }
         public string Apple { get; set; }
     }
-
-    public class ReleaseGroup
-    {
-        public string Id { get; set; }
-        public string Title { get; set; }
-        public string ReleaseDate { get; set; }
-        public string Type { get; set; }
-
-    }
 }

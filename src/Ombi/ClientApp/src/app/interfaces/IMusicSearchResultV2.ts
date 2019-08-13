@@ -23,7 +23,16 @@ export interface IReleaseGroups {
     id: string;
     title: string;
     releaseDate: string;
-    type: string;
+    releaseType: string; 
+    approved: boolean;
+    requested: boolean;
+    requestId: number;
+    available: boolean; 
+    subscribed: boolean;
+    showSubscribe: boolean;
+    monitored: boolean;
+    partiallyAvailable: boolean;
+    fullyAvailable: boolean;
 
     image: string; // Set by another api call
 }

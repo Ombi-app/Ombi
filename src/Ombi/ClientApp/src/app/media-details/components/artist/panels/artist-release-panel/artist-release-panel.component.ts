@@ -5,7 +5,7 @@ import { ActivatedRoute } from "@angular/router";
 
 @Component({
     templateUrl: "./artist-release-panel.component.html",
-    styleUrls: ["../../../../media-details.component.scss"],
+    styleUrls: ["../../../../media-details.component.scss", "./artist-release-panel.component.scss"],
     selector: "artist-release-panel",
     encapsulation: ViewEncapsulation.None
 })
@@ -27,7 +27,7 @@ export class ArtistReleasePanel implements OnChanges {
 
     private loadAlbums(): void {
         if (this.releases) {
-            this.albums = this.releases.filter(x => x.type === "Album");
+            this.albums = this.releases.filter(x => x.releaseType === "Album");
             this.albums = this.albums.sort((a: IReleaseGroups, b: IReleaseGroups) =>  {
                 return this.getTime(new Date(b.releaseDate)) - this.getTime(new Date(a.releaseDate));
             });

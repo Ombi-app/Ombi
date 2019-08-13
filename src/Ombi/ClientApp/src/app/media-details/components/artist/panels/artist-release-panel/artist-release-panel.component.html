@@ -14,7 +14,7 @@
               <span *ngFor="let r of albums">
               <div class="col-md-2" >
                 <div  class="sidebar affixable affix-top preview-poster">
-                  <div class="poster">
+                  <div class="poster" [class.monitored]="r.monitored" [class.available]="r.available">
                       <img class="real grow" matTooltip="{{r.title}}"
                         src="{{r.image ? r.image : 'images/default-music-placeholder.png'}}" alt="Poster"
                         style="display: block;">

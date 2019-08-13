@@ -204,6 +204,7 @@
     "SimilarTitle": "Similar",
     "VideosTitle": "Videos",
     "AlbumsTitle":"Albums",
+    "RequestAllAlbums":"Request All Albums",
     "Casts": {
       "CastTitle": "Cast",
       "Character": "Character",
