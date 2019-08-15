@@ -71,8 +71,8 @@
                                 </label>
                                 <div>
                                     <input type="text" class="form-control-custom form-control" id="authToken" [(ngModel)]="server.serverHostname" placeholder="e.g. https://jellyfin.server.com/" value="{{server.serverHostname}}">
-                                    <small><span *ngIf="server.serverHostname">Current URL: "{{server.serverHostname}}/#!/itemdetails.html?id=1"</span>
-                                    <span *ngIf="!server.serverHostname">Current URL: "https://app.emby.media/#!/itemdetails.html?id=1</span></small>
+                                    <small><span *ngIf="server.serverHostname">Current URL: "{{server.serverHostname}}/#!/item/item.html?id=1"</span>
+                                    <span *ngIf="!server.serverHostname">Current URL: "https://app.emby.media/#!/item/item.html?id=1</span></small>
                                 </div>
                             </div>
                             <div class="form-group">
