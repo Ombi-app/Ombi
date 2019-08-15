@@ -11,11 +11,11 @@ namespace Ombi.Helpers
         {
             if (customerServerUrl.HasValue())
             {
-                return $"{customerServerUrl}#!/itemdetails.html?id={mediaId}";
+                return $"{customerServerUrl}#!/item/item.html?id={mediaId}";
             }
             else
             {
-                return $"https://app.emby.media/#!/itemdetails.html?id={mediaId}";
+                return $"https://app.emby.media/#!/item/item.html?id={mediaId}";
             }
         }
     }

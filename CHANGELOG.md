@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.0.4680 (2019-07-17)
+
+
+### **Fixes**
+
+- Fixed the database lock issues - [TidusJar]
+- Fixed the issue with [Plex OAuth](https://forums.plex.tv/t/plex-oauth-not-working-with-tautulli-ombi-etc/433945) - [TidusJar]
+
 ## v3.0.4659 (2019-07-02)
 
 ### **New Features**
