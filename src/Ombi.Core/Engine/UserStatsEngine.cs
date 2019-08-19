@@ -12,14 +12,12 @@ namespace Ombi.Core.Engine
 {
     public class UserStatsEngine : IUserStatsEngine
     {
-        public UserStatsEngine(OmbiUserManager um, IMovieRequestRepository movieRequest, ITvRequestRepository tvRequest)
+        public UserStatsEngine(IMovieRequestRepository movieRequest, ITvRequestRepository tvRequest)
         {
-            _userManager = um;
             _movieRequest = movieRequest;
             _tvRequest = tvRequest;
         }
 
-        private readonly OmbiUserManager _userManager;
         private readonly IMovieRequestRepository _movieRequest;
         private readonly ITvRequestRepository _tvRequest;
 
@@ -31,26 +29,24 @@ namespace Ombi.Core.Engine
             var tv = _tvRequest.GetLite();
             var children = tv.SelectMany(x =>
                 x.ChildRequests.Where(c => c.RequestedDate >= request.From && c.RequestedDate <= request.To));
+            
+            var userMovie = filteredMovies.GroupBy(x => x.RequestedUserId).OrderBy(x => x.Key).FirstOrDefaultAsync();
+            var userTv = children.GroupBy(x => x.RequestedUserId).OrderBy(x => x.Key).FirstOrDefaultAsync();
 
             var moviesCount = filteredMovies.CountAsync();
             var childrenCount = children.CountAsync();
             var availableMovies =
-                movies.Select(x => x.MarkedAsAvailable >= request.From && x.MarkedAsAvailable <= request.To).CountAsync();
-            var availableChildren = tv.SelectMany(x =>
-                x.ChildRequests.Where(c => c.MarkedAsAvailable >= request.From && c.MarkedAsAvailable <= request.To)).CountAsync();
-
-            var userMovie = filteredMovies.GroupBy(x => x.RequestedUserId).OrderBy(x => x.Key).FirstOrDefaultAsync();
-            var userTv = children.GroupBy(x => x.RequestedUserId).OrderBy(x => x.Key).FirstOrDefaultAsync();
-
-
+                filteredMovies.Select(x => x.MarkedAsAvailable >= request.From && x.MarkedAsAvailable <= request.To).CountAsync();
+            var availableChildren = children.Where(c => c.MarkedAsAvailable >= request.From && c.MarkedAsAvailable <= request.To).CountAsync();
+            
             return new UserStatsSummary
             {
                 TotalMovieRequests = await moviesCount,
                 TotalTvRequests = await childrenCount,
                 CompletedRequestsTv = await availableChildren,
                 CompletedRequestsMovies = await availableMovies,
-                MostRequestedUserMovie = (await userMovie).FirstOrDefault().RequestedUser,
-                MostRequestedUserTv = (await userTv).FirstOrDefault().RequestedUser,
+                MostRequestedUserMovie = (await userMovie).FirstOrDefault()?.RequestedUser ?? new OmbiUser(),
+                MostRequestedUserTv = (await userTv).FirstOrDefault()?.RequestedUser ?? new OmbiUser(),
             };
         }
     }

@@ -35,5 +35,8 @@ namespace Ombi.Core.Models.Search.V2
     {
         public int ProviderId { get; set; }
         public string Overview { get; set; }
+        public RequestType Type { get; set; }
+        public DateTime ReleaseDate { get; set; }
+        public string RequestStatus { get; set; }
     }
 }

@@ -106,18 +106,10 @@ namespace Ombi.Core.Engine.V2
 
             foreach (var cover in art.images)
             {
-                //if ((cover.thumbnails?.px250 ?? string.Empty).HasValue())
-                //{
-                //    return new AlbumArt(cover.thumbnails.px250);
-                //}
                 if ((cover.thumbnails?.small ?? string.Empty).HasValue())
                 {
                     return new AlbumArt(cover.thumbnails.small);
                 }
-                //if ((cover.thumbnails?.px500 ?? string.Empty).HasValue())
-                //{
-                //    return new AlbumArt(cover.thumbnails.px500);
-                //}
                 if ((cover.thumbnails?.large ?? string.Empty).HasValue())
                 {
                     return new AlbumArt(cover.thumbnails.large);

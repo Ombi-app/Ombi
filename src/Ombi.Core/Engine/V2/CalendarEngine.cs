@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Ombi.Api.Sonarr.Models;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Search.V2;
 using Ombi.Core.Rule.Interfaces;
-using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository.Requests;
@@ -46,27 +44,41 @@ namespace Ombi.Core.Engine.V2
                     BackgroundColor = GetBackgroundColor(e),
                     ExtraParams = new List<ExtraParams>
                     {
-                        new ExtraParams { Overview = e.Season?.ChildRequest?.ParentRequest?.Overview ?? string.Empty, ProviderId = e.Season?.ChildRequest?.ParentRequest?.TvDbId ?? 0} 
+                        new ExtraParams
+                        {
+                            Overview = e.Season?.ChildRequest?.ParentRequest?.Overview ?? string.Empty,
+                            ProviderId = e.Season?.ChildRequest?.ParentRequest?.TvDbId ?? 0,
+                            Type = RequestType.TvShow,
+                            ReleaseDate = e.AirDate,
+                            RequestStatus = e.RequestStatus
+                        }
                     }
                 });
             }
 
             foreach (var m in movies)
-             {
-                 viewModel.Add(new CalendarViewModel
-                 {
-                     Title = m.Title,
-                     Start = m.ReleaseDate.Date,
-                     BackgroundColor = GetBackgroundColor(m),
-                     Type = RequestType.Movie,
-                     ExtraParams = new List<ExtraParams>
+            {
+                viewModel.Add(new CalendarViewModel
+                {
+                    Title = m.Title,
+                    Start = m.ReleaseDate.Date,
+                    BackgroundColor = GetBackgroundColor(m),
+                    Type = RequestType.Movie,
+                    ExtraParams = new List<ExtraParams>
                      {
-                     new ExtraParams { Overview = m.Overview, ProviderId = m.TheMovieDbId}
+                     new ExtraParams
+                     {
+                         Overview = m.Overview,
+                         ProviderId = m.TheMovieDbId,
+                         Type = RequestType.Movie,
+                         ReleaseDate = m.ReleaseDate,
+                         RequestStatus = m.RequestStatus
+                     }
                  }
-                 });
-             }
+                });
+            }
 
-             return viewModel;
+            return viewModel;
         }
 
         private string GetBackgroundColor(BaseRequest req)

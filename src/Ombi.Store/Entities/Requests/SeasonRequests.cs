@@ -34,5 +34,29 @@ namespace Ombi.Store.Repository.Requests
         public SeasonRequests Season { get; set; }
 
         [NotMapped] public string AirDateDisplay => AirDate == DateTime.MinValue ? "Unknown" : AirDate.ToString(CultureInfo.InvariantCulture);
+
+        [NotMapped]
+        public string RequestStatus
+        {
+            get
+            {
+                if (Available)
+                {
+                    return "Common.Available";
+                }
+
+                if (Approved & !Available)
+                {
+                    return "Common.ProcessingRequest";
+                }
+
+                if (!Approved && !Available)
+                {
+                    return "Common.PendingApproval";
+                }
+
+                return string.Empty;
+            }
+        }
     }
 }

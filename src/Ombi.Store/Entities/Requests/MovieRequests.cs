@@ -38,7 +38,7 @@ namespace Ombi.Store.Entities.Requests
         public string RequestStatus {
             get
             {
-                if (Approved & Available)
+                if (Available)
                 {
                     return "Common.Available";
                 }
