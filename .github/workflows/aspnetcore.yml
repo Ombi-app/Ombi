@@ -15,5 +15,3 @@ jobs:
         dotnet-version: 2.2.108
     - name: Build with dotnet
       run: dotnet build src/Ombi.sln --configuration Release
-    - name: Run Tests
-      run: dotnet test src/Ombi.sln
