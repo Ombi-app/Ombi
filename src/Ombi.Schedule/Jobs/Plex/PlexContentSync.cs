@@ -113,12 +113,6 @@ namespace Ombi.Schedule.Jobs.Plex
                 await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
             }
 
-            if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
-            {
-
-                await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
-            }
-
             Logger.LogInformation("Finished Plex Content Cacher, with processed content: {0}, episodes: {0}", processedContent?.Content?.Count() ?? 0, processedContent?.Episodes?.Count() ?? 0);
         }
 
