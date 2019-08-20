@@ -16,4 +16,4 @@ jobs:
     - name: Build with dotnet
       run: dotnet build src/Ombi.sln --configuration Release
     - name: Run Tests
-      run: dotnet test src/Ombi.sln --no-build
+      run: dotnet test src/Ombi.sln
