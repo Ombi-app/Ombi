@@ -13,5 +13,12 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 2.2.108
-    - name: Build with dotnet
+    
+    - name: Build Backend
       run: dotnet build src/Ombi.sln --configuration Release
+     
+     - name: Install Yarn
+       uses: nuxt/actions-yarn@master
+     
+     - name: Build Frontend
+       run: yarn --cdw src/Ombi/ build
