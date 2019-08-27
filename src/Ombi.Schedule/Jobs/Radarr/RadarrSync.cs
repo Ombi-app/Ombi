@@ -56,7 +56,9 @@ namespace Ombi.Schedule.Jobs.Radarr
                             var movieIds = new List<RadarrCache>();
                             foreach (var m in movies)
                             {
-                                if (m.tmdbId > 0 && m.monitored)
+                            if(m.monitored)
+                            {
+                                if (m.tmdbId > 0)
                                 {
                                     movieIds.Add(new RadarrCache
                                     {
@@ -68,6 +70,7 @@ namespace Ombi.Schedule.Jobs.Radarr
                                 {
                                    Logger.LogError("TMDBId is not > 0 for movie {0}", m.title);
                                 }
+                            }
                             }
 
                             using (var tran = await _ctx.Database.BeginTransactionAsync())
