@@ -5,6 +5,8 @@
 
 trigger:
 - master
+- feature/v4
+- develop
 
 variables:
   solution: '**/*.sln'
