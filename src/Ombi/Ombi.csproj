@@ -104,3 +104,5 @@
     <Message Importance="high" Text="Restoring dependencies using 'yarn'. This may take several minutes..." />
     <Exec WorkingDirectory="$(SpaRoot)" Command="yarn install" />
   </Target>
+
+</Project>
