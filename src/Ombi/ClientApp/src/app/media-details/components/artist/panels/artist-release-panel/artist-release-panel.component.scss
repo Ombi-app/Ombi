@@ -1,10 +1,10 @@
-
-@import 'Styles/buttons.scss';
+    @import '../../../../../../styles/buttons.scss';
 
     // border: solid 3px #fff;
     .monitored {
         border: solid 3px $orange !important;
     }
+
     .available {
-        border: solid 3px $green  !important;
+        border: solid 3px $green !important;
     }
