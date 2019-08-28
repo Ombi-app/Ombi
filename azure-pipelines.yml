@@ -13,7 +13,7 @@ variables:
   testProj: '**/*.Tests.csproj'
   csProj: '**/*.csproj'
   buildConfiguration: 'Release'
-  publishLocation: '$(Build.SourcesDirectory)/src/Ombi/bin/Release/netcoreapp2.2/'
+  publishLocation: '$(Build.SourcesDirectory)/src/Ombi/bin/Release/netcoreapp2.2'
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -24,11 +24,17 @@ steps:
   displayName: Run Build Script
   inputs:
     script: './build.sh'
-
+- task: CmdLine@2
+  inputs:
+    script: |
+      cd src/Ombi/bin/Release/netcoreapp2.2
+      
+      ls
+    workingDirectory: '$(Build.SourcesDirectory)'
 - task: CopyFiles@2
   displayName: Upload Windows Build
   inputs:
-    SourceFolder: '**/windows.zip'
+    SourceFolder: '$(publishLocation)/windows.zip'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     OverWrite: true
 
@@ -42,28 +48,28 @@ steps:
 - task: CopyFiles@2
   displayName: Upload Linux Build
   inputs:
-    SourceFolder: '**/linux.tar.gz'
+    SourceFolder: '$(publishLocation)/linux.tar.gz'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     OverWrite: true
 
 - task: CopyFiles@2
   displayName: Upload Linux-ARM Build
   inputs:
-    SourceFolder: '**/linux-arm.tar.gz'
+    SourceFolder: '$(publishLocation)/linux-arm.tar.gz'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     OverWrite: true
 
 - task: CopyFiles@2
   displayName: Upload Windows 32Bit Build
   inputs:
-    SourceFolder: '**/windows-32bit.zip'
+    SourceFolder: '$(publishLocation)/windows-32bit.zip'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     OverWrite: true
 
 - task: CopyFiles@2
   displayName: Upload Linux-ARM64 Build
   inputs:
-    SourceFolder: '**/linux-arm64.tar.gz'
+    SourceFolder: '$(publishLocation)/linux-arm64.tar.gz'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     OverWrite: true
 
