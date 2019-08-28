@@ -36,12 +36,3 @@ steps:
   inputs:
     projectDirectory: '$(Build.SourcesDirectory)/src/Ombi/ClientApp/'
     arguments: 'run build'
-
-- task: PublishTestResults@2
-  displayName: Upload Test Results
-  inputs:
-    testResultsFormat: 'VSTest'
-    testResultsFiles: '**/Test-*.trx'
-    mergeTestResults: true
-    failTaskOnFailedTests: true
-    testRunTitle: 'Unit Tests'
