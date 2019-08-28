@@ -20,7 +20,6 @@ pool:
 
 
 steps:
-
 - task: CmdLine@2
   displayName: Run Build Script
   inputs:
@@ -29,42 +28,42 @@ steps:
 - task: CopyFiles@2
   displayName: Upload Windows Build
   inputs:
-    SourceFolder: '$(publishLocation)windows.zip'
+    SourceFolder: '**/windows.zip'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     OverWrite: true
 
 - task: CopyFiles@2
   displayName: Upload OSX Build
   inputs:
-    SourceFolder: '$(publishLocation)osx.tar.gz'
+    SourceFolder: '**/osx.tar.gz'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     OverWrite: true
 
 - task: CopyFiles@2
   displayName: Upload Linux Build
   inputs:
-    SourceFolder: '$(publishLocation)linux.tar.gz'
+    SourceFolder: '**/linux.tar.gz'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     OverWrite: true
 
 - task: CopyFiles@2
   displayName: Upload Linux-ARM Build
   inputs:
-    SourceFolder: '$(publishLocation)linux-arm.tar.gz'
+    SourceFolder: '**/linux-arm.tar.gz'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     OverWrite: true
 
 - task: CopyFiles@2
   displayName: Upload Windows 32Bit Build
   inputs:
-    SourceFolder: '$(publishLocation)windows-32bit.zip'
+    SourceFolder: '**/windows-32bit.zip'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     OverWrite: true
 
 - task: CopyFiles@2
   displayName: Upload Linux-ARM64 Build
   inputs:
-    SourceFolder: '$(publishLocation)linux-arm64.tar.gz'
+    SourceFolder: '**/linux-arm64.tar.gz'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     OverWrite: true
 
@@ -72,7 +71,7 @@ steps:
   displayName: Upload Test Results
   inputs:
     testResultsFormat: 'VSTest'
-    testResultsFiles: '**/Test-*.trx'
+    testResultsFiles: '**/Test.trx'
     mergeTestResults: true
     failTaskOnFailedTests: true
     testRunTitle: 'Unit Tests'
