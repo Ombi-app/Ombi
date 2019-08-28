@@ -19,5 +19,48 @@ pool:
 steps:
 
 - task: CmdLine@2
+  displayName: Run Build Script
   inputs:
     script: './build.sh --settings_skipverification=true'
+
+- task: CopyFiles@2
+  displayName: Upload Windows Build
+  inputs:
+    SourceFolder: 'src/Ombi/bin/Release/netcoreapp2.2/windows.zip'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    OverWrite: true
+
+- task: CopyFiles@2
+  displayName: Upload OSX Build
+  inputs:
+    SourceFolder: 'src/Ombi/bin/Release/netcoreapp2.2/osx.tar.gz'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    OverWrite: true
+
+- task: CopyFiles@2
+  displayName: Upload Linux Build
+  inputs:
+    SourceFolder: 'src/Ombi/bin/Release/netcoreapp2.2/linux.tar.gz'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    OverWrite: true
+
+- task: CopyFiles@2
+  displayName: Upload Linux-ARM Build
+  inputs:
+    SourceFolder: 'src/Ombi/bin/Release/netcoreapp2.2/linux-arm.tar.gz'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    OverWrite: true
+
+- task: CopyFiles@2
+  displayName: Upload Windows 32Bit Build
+  inputs:
+    SourceFolder: 'src/Ombi/bin/Release/netcoreapp2.2/windows-32bit.zip'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    OverWrite: true
+
+- task: CopyFiles@2
+  displayName: Upload Linux-ARM64 Build
+  inputs:
+    SourceFolder: 'src/Ombi/bin/Release/netcoreapp2.2/linux-arm64.tar.gz'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    OverWrite: true
