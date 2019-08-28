@@ -45,7 +45,7 @@
   },
   "NavigationBar": {
     "Search": "Rechercher",
-    "Requests": "Demandes",
+    "Requests": "En attente",
     "UserManagement": "Gestion des utilisateurs",
     "Issues": "Problèmes",
     "Vote": "Vote",
