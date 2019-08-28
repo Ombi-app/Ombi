@@ -20,4 +20,4 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: './build.sh'
+    script: './build.sh --settings_skipverification=true'
