@@ -13,7 +13,7 @@ variables:
   testProj: '**/*.Tests.csproj'
   csProj: '**/*.csproj'
   buildConfiguration: 'Release'
-  publishLocation: '$(Build.SourcesDirectory)src/Ombi/bin/Release/netcoreapp2.2/'
+  publishLocation: '$(Build.SourcesDirectory)/src/Ombi/bin/Release/netcoreapp2.2/'
 
 pool:
   vmImage: 'ubuntu-latest'
