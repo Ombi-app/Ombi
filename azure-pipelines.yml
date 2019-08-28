@@ -18,16 +18,6 @@ pool:
 
 steps:
 
-- task: DotNetCoreCLI@2
-  displayName: Build
+- task: CmdLine@2
   inputs:
-    command: build
-    projects: '$(csProj)'
-    arguments: '--configuration $(buildConfiguration)'
-
-- task: DotNetCoreCLI@2
-  displayName: Test
-  inputs:
-    command: test
-    projects: '$(testProj)'
-    arguments: '--configuration $(buildConfiguration)  --collect "Code coverage"'
+    script: './build.sh'
