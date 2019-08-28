@@ -65,3 +65,11 @@ steps:
     SourceFolder: '$(publishLocation)linux-arm64.tar.gz'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
     OverWrite: true
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '**/Test-*.trx'
+    mergeTestResults: true
+    failTaskOnFailedTests: true
+    testRunTitle: 'Unit Tests'
