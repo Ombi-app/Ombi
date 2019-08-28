@@ -1,10 +1,9 @@
 
-#tool "nuget:?package=GitVersion.CommandLine&version=4.0.0"
-#addin nuget:?package=SharpZipLib&version=1.1.0
-#addin nuget:?package=Cake.Compression&version=0.2.2
-#addin "Cake.Incubator&version=3.1.0"
-#addin nuget:?package=Cake.Yarn&version=0.4.5
-#addin "Cake.Powershell"
+#tool "nuget:?package=GitVersion.CommandLine&version=5.0.1"
+#addin nuget:?package=SharpZipLib&version=1.2.0
+#addin nuget:?package=Cake.Compression&version=0.2.3
+#addin "Cake.Incubator&version=5.1.0"
+#addin nuget:?package=Cake.Yarn&version=0.4.6
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -270,16 +269,7 @@ Task("Upload-Test-Results")
     .IsDependentOn("Run-Unit-Tests")
     .ContinueOnError()
     .Does(() => {
-    var script = @"
-        $wc = New-Object 'System.Net.WebClient'
-        foreach ($name in Resolve-Path .\src\**\TestResults\Test*.trx) 
-        {
-            Write-Host ""Uploading File: "" + $name
-            $wc.UploadFile(""https://ci.appveyor.com/api/testresults/mstest/$($env:APPVEYOR_JOB_ID)"", $name)
-        }
-    ";
-    // Upload the results
-     StartPowershellScript(script);
+
     });
 
 Task("Run-Server-Build")

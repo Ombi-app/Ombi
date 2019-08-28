@@ -24,7 +24,7 @@ steps:
 - task: CmdLine@2
   displayName: Run Build Script
   inputs:
-    script: './build.sh --settings_skipverification=true'
+    script: './build.sh'
 
 - task: CopyFiles@2
   displayName: Upload Windows Build
