@@ -29,7 +29,7 @@ steps:
 - task: Yarn@3
   displayName: Build UI
   inputs:
-    projectDirectory: '/src/Ombi/ClientApp/'
+    projectDirectory: '$(Build.SourcesDirectory)/src/Ombi/ClientApp/'
     arguments: 'run build'
 
 - task: PublishTestResults@2
