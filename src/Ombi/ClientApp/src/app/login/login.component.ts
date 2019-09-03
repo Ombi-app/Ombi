@@ -139,8 +139,10 @@ export class LoginComponent implements OnDestroy, OnInit {
         });
     }
 
+    private oAuthWindow: Window;
+
     public oauth() {
-        const oAuthWindow = window.open(window.location.toString(), "_blank", `toolbar=0,
+        this.oAuthWindow = window.open(window.location.toString(), "_blank", `toolbar=0,
         location=0,
         status=0,
         menubar=0,
@@ -151,7 +153,7 @@ export class LoginComponent implements OnDestroy, OnInit {
         this.plexTv.GetPin(this.clientId, this.appName).subscribe((pin: any) => {
 
             this.authService.login({ usePlexOAuth: true, password: "", rememberMe: true, username: "", plexTvPin: pin }).subscribe(x => {
-                oAuthWindow!.location.replace(x.url);
+                this.oAuthWindow!.location.replace(x.url);
 
                 this.pinTimer = setInterval(() => {
                     
@@ -171,6 +173,7 @@ export class LoginComponent implements OnDestroy, OnInit {
   
               if (this.authService.loggedIn()) {
                   this.ngOnDestroy();
+                  this.oAuthWindow.close();
                   this.router.navigate(["search"]);
                   return;
               } 
