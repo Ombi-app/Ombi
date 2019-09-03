@@ -1,7 +1,6 @@
-import { Component, Input, ViewEncapsulation, OnInit, OnChanges, SimpleChanges } from "@angular/core";
+import { Component, Input, ViewEncapsulation, OnChanges, SimpleChanges } from "@angular/core";
 import { IReleaseGroups } from "../../../../../interfaces/IMusicSearchResultV2";
 import { SearchV2Service } from "../../../../../services/searchV2.service";
-import { ActivatedRoute } from "@angular/router";
 
 @Component({
     templateUrl: "./artist-release-panel.component.html",
