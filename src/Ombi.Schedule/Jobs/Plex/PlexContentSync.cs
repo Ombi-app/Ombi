@@ -83,7 +83,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 return;
             }
             var processedContent = new ProcessedContent();
-            Logger.LogInformation("Starting Plex Content Cacher");
+            Logger.LogInformation($"Starting Plex Content Cacher {(recentlyAddedSearch ? "Recently Added Scan" : "")}");
             try
             {
                 if (recentlyAddedSearch)
@@ -109,11 +109,12 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
+                Logger.LogInformation("Starting Metadata refresh");
                 // Just check what we send it
                 await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
             }
 
-            Logger.LogInformation("Finished Plex Content Cacher, with processed content: {0}, episodes: {0}", processedContent?.Content?.Count() ?? 0, processedContent?.Episodes?.Count() ?? 0);
+            Logger.LogInformation("Finished Plex Content Cacher, with processed content: {0}, episodes: {1}. Recently Added Scan: {2}", processedContent?.Content?.Count() ?? 0, processedContent?.Episodes?.Count() ?? 0, recentlyAddedSearch);
         }
 
         private async Task<ProcessedContent> StartTheCache(PlexSettings plexSettings, bool recentlyAddedSearch)
