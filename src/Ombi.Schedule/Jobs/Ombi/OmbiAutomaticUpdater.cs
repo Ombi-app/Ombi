@@ -21,6 +21,7 @@ using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Updater;
 using Quartz;
+using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Readers.Tar;
 
