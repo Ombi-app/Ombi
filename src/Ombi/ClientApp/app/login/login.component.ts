@@ -157,7 +157,9 @@ export class LoginComponent implements OnDestroy, OnInit {
   
               if (this.authService.loggedIn()) {
                   this.ngOnDestroy();
-                  this.oAuthWindow.close();
+                  if(this.oAuthWindow) {
+                    this.oAuthWindow.close();
+                  }
                   this.router.navigate(["search"]);
                   return;
               } 
