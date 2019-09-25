@@ -84,22 +84,6 @@
                     </div>                    
                 </div>
 
-
-                <div class="form-group">
-                    <label for="languageProfileId" class="control-label">Language Profile
-                        
-                        <i *ngIf="form.get('languageProfileId').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="Language Profile is required"></i>
-                    </label>
-                    <div id="languageProfileId">
-                        <select formControlName="languageProfileId" class="form-control form-control-custom col-md-5 form-half"  [ngClass]="{'form-error': form.get('languageProfileId').hasError('required')}">
-                            <option *ngFor="let folder of languageProfiles" value="{{folder.id}}" >{{folder.name}}</option>
-                        </select>
-                        <button (click)="getLanguageProfiles(form)" type="button" class="btn btn-primary-outline col-md-4 col-md-push-1">Get Languages <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
-
-                    </div>                    
-                </div>
-
-
                 <div class="form-group">
                     <label for="metadataProfileId" class="control-label">Metadata Profile
                          
