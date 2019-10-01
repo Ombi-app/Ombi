@@ -226,6 +226,7 @@ namespace Ombi.Controllers
             var isAdmin = await _userManager.IsInRoleAsync(user, OmbiRoles.Admin) || user.IsSystemUser;
             AddIssueNotificationSubstitutes(notificationModel, issue, issue.UserReported.UserAlias);
             notificationModel.Substitutes.Add("NewIssueComment", comment.Comment);
+            notificationModel.Substitutes.Add("IssueId", comment.IssueId.ToString());
             notificationModel.Substitutes.Add("AdminComment", isAdmin.ToString());
 
             if (isAdmin)
