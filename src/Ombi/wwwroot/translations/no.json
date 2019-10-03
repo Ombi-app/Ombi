@@ -86,7 +86,7 @@
     },
     "TvShows": {
       "Popular": "Populært",
-      "Trending": "Trending",
+      "Trending": "På vei opp",
       "MostWatched": "Mest sett",
       "MostAnticipated": "Mest etterlengtede",
       "Results": "Resultater",
@@ -133,16 +133,16 @@
     "SeasonNumberHeading": "Sesong: {seasonNumber}",
     "SortTitleAsc": "Tittel ▲",
     "SortTitleDesc": "Tittel ▼",
-    "SortRequestDateAsc": "Request Date ▲",
-    "SortRequestDateDesc": "Request Date ▼",
+    "SortRequestDateAsc": "Dato for forespørsel ▲",
+    "SortRequestDateDesc": "Dato for forespørsel ▼",
     "SortStatusAsc": "Status ▲",
     "SortStatusDesc": "Status ▼",
     "Remaining": {
       "Quota": "{{remaining}}/{{total}} forespørsler igjen",
-      "NextDays": "En ny foresøprel vil bli lagt til om {{time}} days",
-      "NextHours": "Another request will be added in {{time}} hours",
-      "NextMinutes": "Another request will be added in {{time}} minutes",
-      "NextMinute": "Another request will be added in {{time}} minute"
+      "NextDays": "En ny foresøprel vil bli lagt til om {{time}} dager",
+      "NextHours": "En ny foresøprel vil bli lagt til om {{time}} timer",
+      "NextMinutes": "En ny foresøprel vil bli lagt til om {{time}} minutter",
+      "NextMinute": "En ny foresøprel vil bli lagt til om {{time}} minutt"
     }
   },
   "Issues": {
@@ -181,6 +181,6 @@
   },
   "Votes": {
     "CompletedVotesTab": "Stemt",
-    "VotesTab": "Votes Needed"
+    "VotesTab": "Stemmer som trengs"
   }
 }
