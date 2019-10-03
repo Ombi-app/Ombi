@@ -12,7 +12,7 @@
   "Common": {
     "ContinueButton": "Gå videre",
     "Available": "Tilgjengelig",
-    "PartiallyAvailable": "Partially Available",
+    "PartiallyAvailable": "Delvis tilgjengelig",
     "Monitored": "Overvåket",
     "NotAvailable": "Ikke tilgjengelig",
     "ProcessingRequest": "Behandler forespørsel",
@@ -74,8 +74,8 @@
     "ViewOnEmby": "Spill av på Emby",
     "RequestAdded": "Forespørsel om {{title}} er lagt til",
     "Similar": "Lignende",
-    "Refine": "Refine",
-    "SearchBarPlaceholder": "Type Here to Search",
+    "Refine": "Spesifiser",
+    "SearchBarPlaceholder": "Angi nøkkelord for søk",
     "Movies": {
       "PopularMovies": "Populære filmer",
       "UpcomingMovies": "Kommende filmer",
@@ -111,8 +111,8 @@
     "RequestStatus": "Status for forespørsel:",
     "Denied": " Avslått:",
     "TheatricalRelease": "Kinopremiere: {{date}}",
-    "ReleaseDate": "Released: {{date}}",
-    "TheatricalReleaseSort": "Theatrical Release",
+    "ReleaseDate": "Utgitt: {{date}}",
+    "TheatricalReleaseSort": "Kinopremiere",
     "DigitalRelease": "Digital utgivelse: {{date}}",
     "RequestDate": "Dato for forespørsel:",
     "QualityOverride": "Overstyr kvalitet:",
@@ -138,8 +138,8 @@
     "SortStatusAsc": "Status ▲",
     "SortStatusDesc": "Status ▼",
     "Remaining": {
-      "Quota": "{{remaining}}/{{total}} requests remaining",
-      "NextDays": "Another request will be added in {{time}} days",
+      "Quota": "{{remaining}}/{{total}} forespørsler igjen",
+      "NextDays": "En ny foresøprel vil bli lagt til om {{time}} days",
       "NextHours": "Another request will be added in {{time}} hours",
       "NextMinutes": "Another request will be added in {{time}} minutes",
       "NextMinute": "Another request will be added in {{time}} minute"
