@@ -4,6 +4,8 @@
     "UsernamePlaceholder": "Username",
     "PasswordPlaceholder": "Password",
     "RememberMe": "Remember Me",
+    "SignInWith": "Sign in with {{appName}}",
+    "SignInWithPlex": "Sign in with Plex",
     "ForgottenPassword": "Forgot your password?",
     "Errors": {
       "IncorrectCredentials": "Incorrect username or password"

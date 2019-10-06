@@ -42,6 +42,9 @@ export class LoginComponent implements OnDestroy, OnInit {
         }
     }
 
+    public get appNameTranslate(): object {
+        return { appName: this.appName };
+    }
     private timer: any;
     private clientId: string;
 
