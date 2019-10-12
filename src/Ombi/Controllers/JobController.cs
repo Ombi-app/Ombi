@@ -120,7 +120,7 @@ namespace Ombi.Controllers
         [HttpPost("plexrecentlyadded")]
         public bool StartRecentlyAdded()
         {
-            OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IPlexContentSync), "Plex"), new JobDataMap(new Dictionary<string, string> { { "recentlyAddedSearch", "true" } }));
+            OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IPlexContentSync) + "RecentlyAdded", "Plex"), new JobDataMap(new Dictionary<string, string> { { "recentlyAddedSearch", "true" } }));
             return true;
         }
 

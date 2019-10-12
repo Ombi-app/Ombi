@@ -46,6 +46,17 @@ namespace Ombi.Api.Emby
             return obj;
         }
 
+        public async Task<PublicInfo> GetPublicInformation(string baseUrl)
+        {
+            var request = new Request("emby/System/Info/public", baseUrl, HttpMethod.Get);
+
+            AddHeaders(request, string.Empty);
+
+            var obj = await Api.Request<PublicInfo>(request);
+
+            return obj;
+        }
+
         public async Task<EmbyUser> LogIn(string username, string password, string apiKey, string baseUri)
         {
             var request = new Request("emby/users/authenticatebyname", baseUri, HttpMethod.Post);
@@ -124,6 +135,7 @@ namespace Ombi.Api.Emby
         {
             return await GetInformation<MovieInformation>(mediaId, apiKey, userId, baseUrl);
         }
+
         public async Task<EpisodeInformation> GetEpisodeInformation(string mediaId, string apiKey, string userId, string baseUrl)
         {
             return await GetInformation<EpisodeInformation>(mediaId, apiKey, userId, baseUrl);

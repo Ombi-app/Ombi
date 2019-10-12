@@ -1,4 +1,5 @@
-﻿using System.Security.Principal;
+﻿using System;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Authentication;
@@ -23,8 +24,8 @@ namespace Ombi.Core.Rule.Rules.Request
 
         public async Task<RuleResult> Execute(BaseRequest obj)
         {
-            var user = await _manager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
-            if (await _manager.IsInRoleAsync(user, OmbiRoles.Admin))
+            var user = await _manager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
+            if (await _manager.IsInRoleAsync(user, OmbiRoles.Admin) || user.IsSystemUser)
             {
                 obj.Approved = true;
                 return Success();

@@ -28,6 +28,7 @@ export class EmbyComponent implements OnInit {
         }
         this.embySettings = {
             servers: [],
+            isJellyfin: false,
             id: 0,
             enable: true,
         };

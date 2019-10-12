@@ -12,14 +12,12 @@ import { SettingsService } from "../../services";
 export class LidarrComponent implements OnInit {
 
     public qualities: IRadarrProfile[];
-    public languageProfiles: IProfiles[];
     public metadataProfiles: IProfiles[];
     public rootFolders: IRadarrRootFolder[];
     public minimumAvailabilityOptions: IMinimumAvailability[];
     public profilesRunning: boolean;
     public rootFoldersRunning: boolean;
     public metadataRunning: boolean;
-    public languageRunning: boolean;
     public advanced = false;
     public form: FormGroup;
 
@@ -43,7 +41,6 @@ export class LidarrComponent implements OnInit {
                     ip: [x.ip, [Validators.required]],
                     port: [x.port, [Validators.required]],
                     albumFolder: [x.albumFolder],
-                    languageProfileId: [x.languageProfileId, [Validators.required]],
                     metadataProfileId: [x.metadataProfileId, [Validators.required]],
                     addOnly: [x.addOnly],
                 });
@@ -53,9 +50,6 @@ export class LidarrComponent implements OnInit {
                 }
                 if (x.defaultRootPath) {
                     this.getRootFolders(this.form);
-                }
-                if (x.languageProfileId) {
-                    this.getLanguageProfiles(this.form);
                 }
                 if (x.metadataProfileId) {
                     this.getMetadataProfiles(this.form);
@@ -67,9 +61,6 @@ export class LidarrComponent implements OnInit {
 
         this.rootFolders = [];
         this.rootFolders.push({ path: "Please Select", id: -1 });
-
-        this.languageProfiles = [];
-        this.languageProfiles.push({ name: "Please Select", id: -1 });
 
         this.metadataProfiles = [];
         this.metadataProfiles.push({ name: "Please Select", id: -1 });
@@ -105,17 +96,6 @@ export class LidarrComponent implements OnInit {
 
             this.metadataRunning = false;
             this.notificationService.success("Successfully retrieved the Metadata profiles");
-        });
-    }
-
-    public getLanguageProfiles(form: FormGroup) {
-        this.languageRunning = true;
-        this.lidarrService.getLanguages(form.value).subscribe(x => {
-            this.languageProfiles = x;
-            this.languageProfiles.unshift({ name: "Please Select", id: -1 });
-
-            this.languageRunning = false;
-            this.notificationService.success("Successfully retrieved the Language profiles");
         });
     }
 

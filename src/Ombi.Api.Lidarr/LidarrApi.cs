@@ -158,13 +158,6 @@ namespace Ombi.Api.Lidarr
             return Api.Request<List<AlbumResponse>>(request);
         }
 
-        public Task<List<LanguageProfiles>> GetLanguageProfile(string apiKey, string baseUrl)
-        {
-            var request = new Request($"{ApiVersion}/languageprofile", baseUrl, HttpMethod.Get);
-            AddHeaders(request, apiKey);
-            return Api.Request<List<LanguageProfiles>>(request);
-        }
-
         public Task<List<MetadataProfile>> GetMetadataProfile(string apiKey, string baseUrl)
         {
             var request = new Request($"{ApiVersion}/metadataprofile", baseUrl, HttpMethod.Get);

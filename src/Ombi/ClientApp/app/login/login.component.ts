@@ -22,6 +22,14 @@ import { fadeInOutAnimation } from "../animations/fadeinout";
 })
 export class LoginComponent implements OnDestroy, OnInit {
 
+    public get appName(): string {
+        if (this.customizationSettings.applicationName) {
+            return this.customizationSettings.applicationName;
+        } else {
+            return "Ombi";
+        }
+    }
+
     public form: FormGroup;
     public customizationSettings: ICustomizationSettings;
     public authenticationSettings: IAuthenticationSettings;
@@ -32,19 +40,13 @@ export class LoginComponent implements OnDestroy, OnInit {
     public loginWithOmbi: boolean;
     public pinTimer: any;
 
-    public get appName(): string {
-        if (this.customizationSettings.applicationName) {
-            return this.customizationSettings.applicationName;
-        } else {
-            return "Ombi";
-        }
-    }
-
     private timer: any;
     private clientId: string;
 
     private errorBody: string;
     private errorValidation: string;
+
+    private oAuthWindow: Window|null;
 
     constructor(private authService: AuthService, private router: Router, private notify: NotificationService, private status: StatusService,
                 private fb: FormBuilder, private settingsService: SettingsService, private images: ImageService, private sanitizer: DomSanitizer,
@@ -127,7 +129,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     }
 
     public oauth() {
-        const oAuthWindow = window.open(window.location.toString(), "_blank", `toolbar=0,
+        this.oAuthWindow = window.open(window.location.toString(), "_blank", `toolbar=0,
         location=0,
         status=0,
         menubar=0,
@@ -138,7 +140,7 @@ export class LoginComponent implements OnDestroy, OnInit {
         this.plexTv.GetPin(this.clientId, this.appName).subscribe((pin: any) => {
 
             this.authService.login({ usePlexOAuth: true, password: "", rememberMe: true, username: "", plexTvPin: pin }).subscribe(x => {
-                oAuthWindow!.location.replace(x.url);
+                this.oAuthWindow!.location.replace(x.url);
 
                 this.pinTimer = setInterval(() => {
                     this.notify.info("Authenticating", "Loading... Please Wait");
@@ -155,6 +157,9 @@ export class LoginComponent implements OnDestroy, OnInit {
   
               if (this.authService.loggedIn()) {
                   this.ngOnDestroy();
+                  if(this.oAuthWindow) {
+                    this.oAuthWindow.close();
+                  }
                   this.router.navigate(["search"]);
                   return;
               } 

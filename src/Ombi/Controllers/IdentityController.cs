@@ -233,6 +233,8 @@ namespace Ombi.Controllers
             await CreateRole(OmbiRoles.AutoApproveMovie);
             await CreateRole(OmbiRoles.Admin);
             await CreateRole(OmbiRoles.AutoApproveTv);
+            await CreateRole(OmbiRoles.AutoApproveMusic);
+            await CreateRole(OmbiRoles.RequestMusic);
             await CreateRole(OmbiRoles.PowerUser);
             await CreateRole(OmbiRoles.RequestMovie);
             await CreateRole(OmbiRoles.RequestTv);
@@ -279,7 +281,7 @@ namespace Ombi.Controllers
         [Authorize]
         public async Task<UserViewModel> GetCurrentUser()
         {
-            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
 
             return await GetUserWithRoles(user);
         }
@@ -873,7 +875,7 @@ namespace Ombi.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<string> GetUserAccessToken()
         {
-            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
             if (user == null)
             {
                 return Guid.Empty.ToString("N");
@@ -895,7 +897,7 @@ namespace Ombi.Controllers
         [HttpGet("notificationpreferences")]
         public async Task<List<UserNotificationPreferences>> GetUserPreferences()
         {
-            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
             return await GetPreferences(user);
         }
 
@@ -948,7 +950,7 @@ namespace Ombi.Controllers
                     return NotFound();
                 }
                 // Check if we are editing a different user than ourself, if we are then we need to power user role
-                var me = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+                var me = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
                 if (!me.Id.Equals(user.Id, StringComparison.InvariantCultureIgnoreCase))
                 {
                     var isPowerUser = await UserManager.IsInRoleAsync(me, OmbiRoles.PowerUser);
