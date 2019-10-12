@@ -17,6 +17,7 @@ using Ombi.Api.Lidarr.Models;
 using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
+using Ombi.Core.Helpers;
 using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
@@ -166,7 +167,7 @@ namespace Ombi.Core.Engine
                 Rating = a.ratings?.value ?? 0m,
                 ReleaseDate = a.releaseDate,
                 Title = a.title,
-                Disk = a.images?.FirstOrDefault(x => x.coverType.Equals("disc"))?.url?.Replace("http", "https"),
+                Disk = a.images?.FirstOrDefault(x => x.coverType.Equals("disc"))?.url?.ToHttpsUrl(),
                 Genres = a.genres,
                 AlbumType = a.albumType,
                 ArtistName = a.artist.artistName,
@@ -187,7 +188,7 @@ namespace Ombi.Core.Engine
                 //vm.ArtistName = a.artist?.artistName;
             }
 
-            vm.Cover = a.images?.FirstOrDefault(x => x.coverType.Equals("cover"))?.url?.Replace("http", "https");
+            vm.Cover = a.images?.FirstOrDefault(x => x.coverType.Equals("cover"))?.url?.ToHttpsUrl();
 
             await Rules.StartSpecificRules(vm, SpecificRules.LidarrAlbum);
 
@@ -205,7 +206,7 @@ namespace Ombi.Core.Engine
                 Rating = a.ratings?.value ?? 0m,
                 ReleaseDate = a.releaseDate,
                 Title = a.title,
-                Disk = a.images?.FirstOrDefault(x => x.coverType.Equals("disc"))?.url?.Replace("http", "https"),
+                Disk = a.images?.FirstOrDefault(x => x.coverType.Equals("disc"))?.url?.ToHttpsUrl(),
                 Genres = a.genres
             };
             if (a.artistId > 0)
@@ -223,7 +224,7 @@ namespace Ombi.Core.Engine
                 vm.ArtistName = a.artist?.artistName;
             }
 
-            vm.Cover = a.images?.FirstOrDefault(x => x.coverType.Equals("cover"))?.url?.Replace("http", "https");
+            vm.Cover = a.images?.FirstOrDefault(x => x.coverType.Equals("cover"))?.url?.ToHttpsUrl();
             if (vm.Cover.IsNullOrEmpty())
             {
                 vm.Cover = a.remoteCover;

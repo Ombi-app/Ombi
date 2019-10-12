@@ -128,5 +128,10 @@ namespace Ombi.Helpers
         {
             return string.Concat(str.Where(c => !chars.Contains(c)));
         }
+
+        public static string ToHttpsUrl(this string currentUrl)
+        {
+            return currentUrl.Replace("http://", "https://");
+        }
     }
 }
