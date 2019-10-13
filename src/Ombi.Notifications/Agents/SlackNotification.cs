@@ -79,7 +79,7 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task RequestDeclined(NotificationOptions model, SlackNotificationSettings settings)
         {
-            await Run(model, settings, NotificationType.RequestAvailable);
+            await Run(model, settings, NotificationType.RequestDeclined);
         }
 
         protected override async Task RequestApproved(NotificationOptions model, SlackNotificationSettings settings)
