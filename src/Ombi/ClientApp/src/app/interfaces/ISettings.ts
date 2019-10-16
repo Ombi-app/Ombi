@@ -33,6 +33,7 @@ export interface IUpdateSettings extends ISettings {
 
 export interface IEmbySettings extends ISettings {
   enable: boolean;
+  isJellyfin: boolean;
   servers: IEmbyServer[];
 }
 
@@ -42,6 +43,11 @@ export interface IEmbyServer extends IExternalSettings {
   administratorId: string;
   enableEpisodeSearching: boolean;
   serverHostname: string;
+}
+
+export interface IPublicInfo {
+  serverName: string;
+  isJellyfin: boolean;
 }
 
 export interface IPlexSettings extends ISettings {

@@ -1,3 +1,4 @@
+using System;
 using Ombi.Store.Entities;
 using System.IO;
 using System.Security.Claims;
@@ -25,8 +26,8 @@ namespace Ombi.Core.Rule.Rules.Request
 
         public async Task<RuleResult> Execute(BaseRequest obj)
         {
-            var user = await _manager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
-            if (await _manager.IsInRoleAsync(user, OmbiRoles.Admin))
+            var user = await _manager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
+            if (await _manager.IsInRoleAsync(user, OmbiRoles.Admin) || user.IsSystemUser)
                 return Success();
 
             if (obj.RequestType == RequestType.Movie)

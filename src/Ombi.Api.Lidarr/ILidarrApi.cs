@@ -20,7 +20,6 @@ namespace Ombi.Api.Lidarr
         Task<AlbumResponse> MontiorAlbum(int albumId, string apiKey, string baseUrl);
         Task<List<AlbumResponse>> GetAllAlbumsByArtistId(int artistId, string apiKey, string baseUrl);
         Task<List<MetadataProfile>> GetMetadataProfile(string apiKey, string baseUrl);
-        Task<List<LanguageProfiles>> GetLanguageProfile(string apiKey, string baseUrl);
         Task<LidarrStatus> Status(string apiKey, string baseUrl);
         Task<CommandResult> AlbumSearch(int[] albumIds, string apiKey, string baseUrl);
         Task<AlbumByForeignId> AlbumInformation(string albumId, string apiKey, string baseUrl);

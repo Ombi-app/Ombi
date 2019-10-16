@@ -696,7 +696,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     var banner = info.image?.original;
                     if (!string.IsNullOrEmpty(banner))
                     {
-                        banner = banner.Replace("http", "https"); // Always use the Https banners
+                        banner = banner.ToHttpsUrl(); // Always use the Https banners
                     }
                     
                     var tvInfo = await _movieApi.GetTVInfo(t.TheMovieDbId);
@@ -818,7 +818,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     var banner = info.image?.original;
                     if (!string.IsNullOrEmpty(banner))
                     {
-                        banner = banner.Replace("http", "https"); // Always use the Https banners
+                        banner = banner.ToHttpsUrl(); // Always use the Https banners
                     }
 
                     var tvInfo = await _movieApi.GetTVInfo(t.TheMovieDbId);

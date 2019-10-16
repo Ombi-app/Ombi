@@ -50,7 +50,7 @@ namespace Ombi.Core.Rule.Rules.Specific
                 }
             }
 
-            if (await UserManager.IsInRoleAsync(requestedUser, OmbiRoles.Admin))
+            if (await UserManager.IsInRoleAsync(requestedUser, OmbiRoles.Admin) || requestedUser.IsSystemUser)
             {
                 sendNotification = false; // Don't bother sending a notification if the user is an admin
             }

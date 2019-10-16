@@ -346,6 +346,11 @@ namespace Ombi.Core.Senders
                         existingSeason.monitored = true;
                         seriesChanges = true;
                     }
+                    // Now update the episodes that need updating
+                    foreach (var epToUpdate in episodesToUpdate.Where(x => x.seasonNumber == season.SeasonNumber))
+                    {
+                        await SonarrApi.UpdateEpisode(epToUpdate, s.ApiKey, s.FullUri);
+                    }
                 }
                 else
                 {

@@ -74,19 +74,6 @@
 
           <div>
             <mat-form-field>
-              <mat-label>Language Profile</mat-label>
-              <mat-select formControlName="languageProfileId" required>
-                <mat-option *ngFor="let folder of languageProfiles" [value]="folder.id">
-                  {{folder.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <div><button mat-raised-button (click)="getLanguageProfiles(form)" color="primary">Load Languages <span
-                  *ngIf="languageRunning" class="fa fa-spinner fa-spin"></span></button></div>
-          </div>
-
-          <div>
-            <mat-form-field>
               <mat-label>Metadata Profile</mat-label>
               <mat-select formControlName="metadataProfileId" required>
                 <mat-option *ngFor="let folder of metadataProfiles" [value]="folder.id">

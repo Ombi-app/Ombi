@@ -29,5 +29,6 @@ namespace Ombi.Api.Emby
         Task<SeriesInformation> GetSeriesInformation(string mediaId, string apiKey, string userId, string baseUrl);
         Task<MovieInformation> GetMovieInformation(string mediaId, string apiKey, string userId, string baseUrl);
         Task<EpisodeInformation> GetEpisodeInformation(string mediaId, string apiKey, string userId, string baseUrl);
+        Task<PublicInfo> GetPublicInformation(string baseUrl);
     }
 }

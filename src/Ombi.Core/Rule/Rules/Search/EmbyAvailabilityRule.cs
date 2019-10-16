@@ -70,11 +70,11 @@ namespace Ombi.Core.Rule.Rules.Search
                     var server = s.Servers.FirstOrDefault(x => x.ServerHostname != null);
                     if ((server?.ServerHostname ?? string.Empty).HasValue())
                     {
-                        obj.EmbyUrl = $"{server.ServerHostname}#!/itemdetails.html?id={item.EmbyId}";
+                        obj.EmbyUrl = EmbyHelper.GetEmbyMediaUrl(item.EmbyId, server?.ServerHostname, s.IsJellyfin);
                     }
                     else
                     {
-                        obj.EmbyUrl = $"https://app.emby.media/#!/itemdetails.html?id={item.EmbyId}";
+                        obj.EmbyUrl = EmbyHelper.GetEmbyMediaUrl(item.EmbyId, null, s.IsJellyfin);
                     }
                 }
 

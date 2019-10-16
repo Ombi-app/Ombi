@@ -29,8 +29,5 @@ export class LidarrService extends ServiceHelpers {
 
     public getMetadataProfiles(settings: ILidarrSettings): Observable<IProfiles[]> {
         return this.http.post<IProfiles[]>(`${this.url}/Metadata/`, JSON.stringify(settings), {headers: this.headers});
-    }    
-    public getLanguages(settings: ILidarrSettings): Observable<IProfiles[]> {
-        return this.http.post<IProfiles[]>(`${this.url}/Langauges/`,JSON.stringify(settings), {headers: this.headers});
     }
 }

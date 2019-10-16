@@ -227,7 +227,7 @@ namespace Ombi.Api.Plex
             request.AddQueryString("context[device][environment]", "bundled");
             request.AddQueryString("context[device][layout]", "desktop");
             request.AddQueryString("context[device][platform]", "Web");
-            request.AddQueryString("context[device][device]", "Ombi (Web)");
+            request.AddQueryString("context[device][device]", "Ombi");
 
             var s = await GetSettings();
             await CheckInstallId(s);
@@ -295,7 +295,7 @@ namespace Ombi.Api.Plex
             request.AddHeader("X-Plex-Client-Identifier", s.InstallId.ToString("N"));
             request.AddHeader("X-Plex-Product", ApplicationName);
             request.AddHeader("X-Plex-Version", "3");
-            request.AddHeader("X-Plex-Device", "Ombi (Web)");
+            request.AddHeader("X-Plex-Device", "Ombi");
             request.AddHeader("X-Plex-Platform", "Web");
             request.AddContentHeader("Content-Type", request.ContentType == ContentType.Json ? "application/json" : "application/xml");
             request.AddHeader("Accept", "application/json");

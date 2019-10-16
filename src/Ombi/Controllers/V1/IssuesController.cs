@@ -185,7 +185,7 @@ namespace Ombi.Controllers.V1
                     Comment = c.Comment,
                     Date = c.Date,
                     Username = c.User.UserAlias,
-                    AdminComment = roles.Contains(OmbiRoles.PowerUser) || roles.Contains(OmbiRoles.Admin)
+                    AdminComment = roles.Contains(OmbiRoles.PowerUser) || roles.Contains(OmbiRoles.Admin) || c.User.IsSystemUser
                 });
             }
             return vm;
@@ -221,9 +221,10 @@ namespace Ombi.Controllers.V1
                 UserId = user.Id
             };
 
-            var isAdmin = await _userManager.IsInRoleAsync(user, OmbiRoles.Admin);
+            var isAdmin = await _userManager.IsInRoleAsync(user, OmbiRoles.Admin) || user.IsSystemUser;
             AddIssueNotificationSubstitutes(notificationModel, issue, issue.UserReported.UserAlias);
             notificationModel.Substitutes.Add("NewIssueComment", comment.Comment);
+            notificationModel.Substitutes.Add("IssueId", comment.IssueId.ToString());
             notificationModel.Substitutes.Add("AdminComment", isAdmin.ToString());
 
             if (isAdmin)

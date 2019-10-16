@@ -24,7 +24,7 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(dest => dest.Runtime, opts => opts.MapFrom(src => src.show.runtime.ToString()))
                 .ForMember(dest => dest.SeriesId, opts => opts.MapFrom(src => src.show.id))
                 .ForMember(dest => dest.Title, opts => opts.MapFrom(src => src.show.name))
-                .ForMember(dest => dest.Banner, opts => opts.MapFrom(src => !string.IsNullOrEmpty(src.show.image.medium) ? src.show.image.medium.Replace("http", "https") : string.Empty))
+                .ForMember(dest => dest.Banner, opts => opts.MapFrom(src => !string.IsNullOrEmpty(src.show.image.medium) ? src.show.image.medium.ToHttpsUrl() : string.Empty))
                 .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.show.status));
 
             CreateMap<TvMazeShow, SearchTvShowViewModel>()
@@ -41,7 +41,7 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(dest => dest.Title, opts => opts.MapFrom(src => src.name))
                 .ForMember(dest => dest.Banner,
                     opts => opts.MapFrom(src => !string.IsNullOrEmpty(src.image.medium)
-                        ? src.image.medium.Replace("http", "https")
+                        ? src.image.medium.ToHttpsUrl()
                         : string.Empty))
                 .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.status));
 

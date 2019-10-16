@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Api.Emby;
+using Ombi.Api.Emby.Models;
+using Ombi.Api.Plex;
 using Ombi.Attributes;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
@@ -57,6 +59,13 @@ namespace Ombi.Controllers.V1.External
                 return request;
             }
             return null;
+        }
+
+        [HttpPost("info")]
+        public async Task<PublicInfo> GetServerInfo([FromBody] EmbyServers server)
+        {
+            var result = await EmbyApi.GetPublicInformation(server.FullUri);
+            return result;
         }
 
         /// <summary>

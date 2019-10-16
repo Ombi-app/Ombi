@@ -85,7 +85,6 @@ namespace Ombi.Schedule.Jobs.Ombi
         {
             _log.LogInformation("Starting the Metadata refresh from RecentlyAddedSync");
             var plexSettings = await _plexSettings.GetSettingsAsync();
-            var embySettings = await _embySettings.GetSettingsAsync();
             try
             {
                 if (plexSettings.Enable)
@@ -97,19 +96,6 @@ namespace Ombi.Schedule.Jobs.Ombi
             {
                 _log.LogError(e, "Exception when refreshing the Plex Metadata");
                 throw;
-            }
-            finally
-            {
-                if (plexSettings.Enable)
-                {
-                    await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
-                }
-
-                if (embySettings.Enable)
-                {
-                    await OmbiQuartz.TriggerJob(nameof(IEmbyAvaliabilityChecker), "Emby");
-
-                }
             }
         }
 

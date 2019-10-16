@@ -4,23 +4,128 @@
 
 ### **New Features**
 
+- Added better support for Jellyfin, we will now auto detect if it's a jellyfin server after pressing the discover button. [tidusjar]
+
+- Update aspnetcore.yml. [Jamie]
+
+- Update aspnetcore.yml. [Jamie]
+
+- Update aspnetcore.yml. [Jamie]
+
+- Update aspnetcore.yml. [Jamie]
+
+- Update aspnetcore.yml. [Jamie]
+
+- Update and rename .github/workflows to .github/.github/workflows/test.workflow. [Jamie]
+
+- Update aspnetcore.yml. [Jamie]
+
+- Update aspnetcore.yml. [Jamie]
+
+- Update aspnetcore.yml. [Jamie]
+
+- Added a bit more logging into the recently added scan. [tidusjar]
+
+- Update emby.component.html. [sorano]
+
+- Update EmbyHelper.cs. [sorano]
+
+- Update CHANGELOG.md. [Jamie]
+
+### **Fixes**
+
+- Fixed #3078. [tidusjar]
+
+- Fixes issue #3195 The new string extension method ToHttpsUrl ensures that URLs starting with "https" are no longer turned into "httpss" The commit also replaces all occurances of the error prone .Replace("http", "https") in the whole solution. [msdeibel]
+
+- Create test.workflow. [Jamie]
+
+- Delete test.workflow. [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- Fix for #3183. [tidusjar]
+
+- Fixed an issue where running the recently added sync via the UI was running the full sync. [tidusjar]
+
+- Fixed #3143. [Jamie Rees]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- Fixed the issue when we are logging errors in the logs incorrectly. [Jamie]
+
+- Removed the lanuage profile from the Lidarr integration. [tidusjar]
+
+- Try and clear up the issue #2998. [tidusjar]
+
+- Fixed an issue where shows that have no aired, episodes are not marked as monitored in Sonarr. [tidusjar]
+
+- Fixed an error when finishing the content sync. [tidusjar]
+
+- Fixed issue where using the API to request a movie/tv show would throw an exception when only using the API Key #3091. [tidusjar]
+
+- Put "Ombi" back as the product name for Plex oAuth. [tidusjar]
+
+
+## v3.0.4680 (2019-07-17)
+
+### **New Features**
+
+- Update CHANGELOG.md. [Jamie]
+
+### **Fixes**
+
+- Fix Plex's (intentional) mistake #3073. [Jamie Rees]
+
+- #2994 Fixed the startup issue. [tidusjar]
+
+- #2994 - enable multithreading in the sql config. [Jamie Rees]
+
+
+## v3.0.4659 (2019-07-02)
+
+### **New Features**
+
+- Update appsettings.json. [Jamie]
+
+- Update CHANGELOG.md. [Jamie]
+
+
+## v3.0.4654 (2019-07-02)
+
+### **New Features**
+
 - Added further logging into the API's (debug logging) [tidusjar]
 
 - Added transactions around all of the CUD operations. [Jamie Rees]
 
-- Update stale.yml. [Jamie]
-
-- Update README.md. [Dyson Parkes]
-
-- Added stalebot. [tidusjar]
-
 - Added some validation around the new crons. [Jamie Rees]
 
 - Added some defensive coding around when we create an artist for #2915. [tidusjar]
-
-- Update README.md. [Jamie]
-
-- Update README.md. [Jamie]
 
 - Update JobSetup.cs. [Jamie]
 
@@ -32,9 +137,27 @@
 
 - Update dependancies. [TidusJar]
 
+- Update stale.yml. [Jamie]
+
+- Update README.md. [Dyson Parkes]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
 - Update CHANGELOG.md. [Jamie]
 
+- Added stalebot. [tidusjar]
+
 ### **Fixes**
+
+- Add back in the login time. [tidusjar]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
 
 - New translations en.json (Spanish) [Jamie]
 
@@ -313,6 +436,12 @@
 - Fixed an issue where the Subscribe button was appearing on available movies. [TidusJar]
 
 - Converted the Plex Jobs to use Quartz. [Jamie]
+
+- Remove the need for the schedules.db #2994. [tidusjar]
+
+- Create FUNDING.yml. [Jamie]
+
+- Logging and slight change to the string matching now not dependant on Thread Culture #2866. [tidusjar]
 
 
 ## v3.0.4256 (2019-02-19)

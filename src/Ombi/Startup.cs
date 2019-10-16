@@ -2,6 +2,7 @@
 using AutoMapper.EquivalencyExpression;
 using Hangfire;
 using Hangfire.Dashboard;
+using Hangfire.MemoryStorage;
 using Hangfire.SQLite;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -94,19 +95,14 @@ namespace Ombi
             services.AddSwagger();
             services.AddAppSettingsValues(Configuration);
 
-            var i = StoragePathSingleton.Instance;
-            if (string.IsNullOrEmpty(i.StoragePath))
-            {
-                i.StoragePath = string.Empty;
-            }
-
-            var sqliteStorage = $"Data Source={Path.Combine(i.StoragePath, "Schedules.db")};";
-
             services.AddHangfire(x =>
             {
-                x.UseSQLiteStorage(sqliteStorage);
+                x.UseMemoryStorage();
                 x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
             });
+
+
+            SQLitePCL.raw.sqlite3_config(2);
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {

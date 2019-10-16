@@ -138,9 +138,9 @@ Task("TSLint")
 });
 
 Task("PrePublish")
-    .IsDependentOn("SetVersionInfo")
-	.IsDependentOn("Gulp Publish")
-	.IsDependentOn("TSLint");
+    .IsDependentOn("SetVersionInfo");
+	//.IsDependentOn("Gulp Publish") // these are done in the main csproj
+	//.IsDependentOn("TSLint");
 
 
 Task("Package")

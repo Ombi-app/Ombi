@@ -110,7 +110,6 @@ namespace Ombi.Core.Senders
                     artistName = model.ArtistName,
                     cleanName = model.ArtistName.ToLowerInvariant().RemoveSpaces(),
                     images = new Image[] { },
-                    languageProfileId = settings.LanguageProfileId,
                     links = new Link[] {},
                     metadataProfileId = settings.MetadataProfileId,
                     qualityProfileId = qualityToUse,

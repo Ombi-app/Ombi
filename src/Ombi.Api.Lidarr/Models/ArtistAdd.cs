@@ -17,7 +17,6 @@ namespace Ombi.Api.Lidarr.Models
         public Image[] images { get; set; }
         public string remotePoster { get; set; }
         public int qualityProfileId { get; set; }
-        public int languageProfileId { get; set; }
         public int metadataProfileId { get; set; }
         public bool albumFolder { get; set; }
         public bool monitored { get; set; }

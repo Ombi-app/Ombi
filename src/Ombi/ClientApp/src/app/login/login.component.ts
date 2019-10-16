@@ -24,6 +24,14 @@ import { MatSnackBar } from "@angular/material";
 })
 export class LoginComponent implements OnDestroy, OnInit {
 
+    public get appName(): string {
+        if (this.customizationSettings.applicationName) {
+            return this.customizationSettings.applicationName;
+        } else {
+            return "Ombi";
+        }
+    }
+
     public form: FormGroup;
     public customizationSettings: ICustomizationSettings;
     public authenticationSettings: IAuthenticationSettings;
@@ -51,6 +59,8 @@ export class LoginComponent implements OnDestroy, OnInit {
     private errorBody: string;
     private errorValidation: string;
     private href: string;
+
+    private oAuthWindow: Window|null;
 
     constructor(private authService: AuthService, private router: Router, private status: StatusService,
                 private fb: FormBuilder, private settingsService: SettingsService, private images: ImageService, private sanitizer: DomSanitizer,
@@ -142,8 +152,6 @@ export class LoginComponent implements OnDestroy, OnInit {
         });
     }
 
-    private oAuthWindow: Window;
-
     public oauth() {
         this.oAuthWindow = window.open(window.location.toString(), "_blank", `toolbar=0,
         location=0,
@@ -176,7 +184,10 @@ export class LoginComponent implements OnDestroy, OnInit {
   
               if (this.authService.loggedIn()) {
                   this.ngOnDestroy();
-                  this.oAuthWindow.close();
+
+                  if(this.oAuthWindow) {
+                    this.oAuthWindow.close();
+                  }
                   this.router.navigate(["search"]);
                   return;
               } 
