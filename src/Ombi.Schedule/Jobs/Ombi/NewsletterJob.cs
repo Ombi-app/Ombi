@@ -724,7 +724,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
                         var episodeString = StringHelper.BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
-                        finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString}");
+                        var episodeAirDate= epInformation.SeasonNumber.air_date;
+                        finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString} {episodeAirDate}");
                         finalsb.Append("<br />");
                     }
 
@@ -847,7 +848,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
                         var episodeString = StringHelper.BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
-                        finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString}");
+                        var episodeAirDate = epInformation.SeasonNumber.air_date;
+                        finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString} {episodeAirDate}");                        
                         finalsb.Append("<br />");
                     }
 
