@@ -27,6 +27,7 @@ using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Serilog;
+using SQLitePCL;
 using ILogger = Serilog.ILogger;
 
 namespace Ombi
@@ -97,8 +98,7 @@ namespace Ombi
                 x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
             });
 
-
-            SQLitePCL.raw.sqlite3_config(2);
+            SQLitePCL.raw.sqlite3_config(raw.SQLITE_CONFIG_MULTITHREAD);
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {

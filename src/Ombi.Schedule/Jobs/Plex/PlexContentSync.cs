@@ -49,14 +49,13 @@ namespace Ombi.Schedule.Jobs.Plex
     public class PlexContentSync : IPlexContentSync
     {
         public PlexContentSync(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentSync> logger, IPlexContentRepository repo,
-            IPlexEpisodeSync epsiodeSync, IRefreshMetadata metadataRefresh)
+            IPlexEpisodeSync epsiodeSync)
         {
             Plex = plex;
             PlexApi = plexApi;
             Logger = logger;
             Repo = repo;
             EpisodeSync = epsiodeSync;
-            Metadata = metadataRefresh;
             Plex.ClearCache();
         }
 
@@ -65,12 +64,11 @@ namespace Ombi.Schedule.Jobs.Plex
         private ILogger<PlexContentSync> Logger { get; }
         private IPlexContentRepository Repo { get; }
         private IPlexEpisodeSync EpisodeSync { get; }
-        private IRefreshMetadata Metadata { get; }
 
         public async Task Execute(IJobExecutionContext context)
         {
             JobDataMap dataMap = context.JobDetail.JobDataMap;
-            var recentlyAddedSearch = dataMap.GetBooleanValueFromString("recentlyAddedSearch");
+            var recentlyAddedSearch = dataMap.GetBooleanValueFromString(JobDataKeys.RecentlyAddedSearch);
 
             var plexSettings = await Plex.GetSettingsAsync();
             if (!plexSettings.Enable)
@@ -83,7 +81,9 @@ namespace Ombi.Schedule.Jobs.Plex
                 return;
             }
             var processedContent = new ProcessedContent();
-            Logger.LogInformation($"Starting Plex Content Cacher {(recentlyAddedSearch ? "Recently Added Scan" : "")}");
+            Logger.LogInformation(recentlyAddedSearch
+                ? "Starting Plex Content Cacher Recently Added Scan"
+                : "Starting Plex Content Cacher");
             try
             {
                 if (recentlyAddedSearch)
@@ -103,7 +103,6 @@ namespace Ombi.Schedule.Jobs.Plex
             if (!recentlyAddedSearch)
             {
                 Logger.LogInformation("Starting EP Cacher");
-
                 await OmbiQuartz.TriggerJob(nameof(IPlexEpisodeSync), "Plex");
             }
 

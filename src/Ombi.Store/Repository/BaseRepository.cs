@@ -90,8 +90,8 @@ namespace Ombi.Store.Repository
                 .WaitAndRetryAsync(new[]
                 {
                     TimeSpan.FromSeconds(1),
-                    TimeSpan.FromSeconds(2),
-                    TimeSpan.FromSeconds(3)
+                    TimeSpan.FromSeconds(5),
+                    TimeSpan.FromSeconds(10)
                 });
 
             var result = await policy.ExecuteAndCaptureAsync(async () =>

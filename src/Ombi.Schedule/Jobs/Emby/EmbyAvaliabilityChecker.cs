@@ -34,6 +34,7 @@ using Microsoft.Extensions.Logging;
 using Ombi.Core.Notifications;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
+using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
@@ -63,6 +64,8 @@ namespace Ombi.Schedule.Jobs.Emby
         {
             await ProcessMovies();
             await ProcessTv();
+
+            await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
         }
 
         private async Task ProcessMovies()
