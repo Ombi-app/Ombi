@@ -1,43 +1,43 @@
 {
   "Login": {
-    "SignInButton": "Sign in",
-    "UsernamePlaceholder": "Username",
-    "PasswordPlaceholder": "Password",
-    "RememberMe": "Remember Me",
-    "ForgottenPassword": "Forgot your password?",
+    "SignInButton": "Prihláste sa",
+    "UsernamePlaceholder": "Užívateľské meno",
+    "PasswordPlaceholder": "Heslo",
+    "RememberMe": "Zapamätať prihlásenie",
+    "ForgottenPassword": "Zabudli ste heslo?",
     "Errors": {
-      "IncorrectCredentials": "Incorrect username or password"
+      "IncorrectCredentials": "Nesprávne meno alebo heslo"
     }
   },
   "Common": {
-    "ContinueButton": "Continue",
-    "Available": "Available",
-    "PartiallyAvailable": "Partially Available",
-    "Monitored": "Monitored",
-    "NotAvailable": "Not Available",
-    "ProcessingRequest": "Processing Request",
-    "PendingApproval": "Pending Approval",
-    "RequestDenied": "Request Denied",
-    "NotRequested": "Not Requested",
-    "Requested": "Requested",
-    "Request": "Request",
-    "Denied": "Denied",
-    "Approve": "Approve",
-    "PartlyAvailable": "Partly Available",
+    "ContinueButton": "Pokračovať",
+    "Available": "Dostupné",
+    "PartiallyAvailable": "Čiastočne dostupné",
+    "Monitored": "Sledované",
+    "NotAvailable": "Nie je k dispozícii",
+    "ProcessingRequest": "Spracovávanie požiadavky",
+    "PendingApproval": "Čaká na schválenie",
+    "RequestDenied": "Požiadavka zamietnutá",
+    "NotRequested": "Nepožiadané",
+    "Requested": "Požiadané",
+    "Request": "Požiadavka",
+    "Denied": "Zamietnuté",
+    "Approve": "Schválené",
+    "PartlyAvailable": "Čiastočne dostupné",
     "Errors": {
-      "Validation": "Please check your entered values"
+      "Validation": "Skontrolujte zadaný obsah"
     }
   },
   "PasswordReset": {
-    "EmailAddressPlaceholder": "Email Address",
-    "ResetPasswordButton": "Reset Password"
+    "EmailAddressPlaceholder": "Emailová adresa",
+    "ResetPasswordButton": "Nastaviť nové heslo"
   },
   "LandingPage": {
-    "OnlineHeading": "Currently Online",
-    "OnlineParagraph": "The media server is currently online",
-    "PartiallyOnlineHeading": "Partially Online",
-    "PartiallyOnlineParagraph": "The media server is partially online.",
-    "MultipleServersUnavailable": "There are {{serversUnavailable}} servers offline out of {{totalServers}}.",
+    "OnlineHeading": "Momentálne online",
+    "OnlineParagraph": "Mediálny server je momentálne online",
+    "PartiallyOnlineHeading": "Čiastočne online",
+    "PartiallyOnlineParagraph": "Mediálny server je momentálne online.",
+    "MultipleServersUnavailable": "Momntálne je {{serversUnavailable}} server offline z {{totalServers}}.",
     "SingleServerUnavailable": "There is {{serversUnavailable}} server offline out of {{totalServers}}.",
     "OfflineHeading": "Currently Offline",
     "OfflineParagraph": "The media server is currently offline.",
