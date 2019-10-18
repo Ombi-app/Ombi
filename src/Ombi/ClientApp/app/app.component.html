@@ -127,6 +127,9 @@
                             <li [ngClass]="{'active': 'en' === translate.currentLang}">
                                 <a (click)="translate.use('en')">English</a>
                             </li>
+                            <li [ngClass]="{'active': 'es' === translate.currentLang}">
+                                <a (click)="translate.use('es')">Español</a>
+                            </li>
                             <li [ngClass]="{'active': 'fr' === translate.currentLang}">
                                 <a (click)="translate.use('fr')">Français</a>
                             </li>
@@ -138,9 +141,6 @@
                             </li>
                             <li [ngClass]="{'active': 'it' === translate.currentLang}">
                                 <a (click)="translate.use('it')">Italiano</a>
-                            </li>
-                            <li [ngClass]="{'active': 'es' === translate.currentLang}">
-                                <a (click)="translate.use('es')">Español</a>
                             </li>
                             <li [ngClass]="{'active': 'nl' === translate.currentLang}">
                                 <a (click)="translate.use('nl')">Nederlands</a>
@@ -156,6 +156,9 @@
                             </li>
                             <li [ngClass]="{'active': 'sv' === translate.currentLang}">
                                 <a (click)="translate.use('sv')">Svenska</a>
+                            </li>
+                            <li [ngClass]="{'active': 'sk' === translate.currentLang}">
+                                <a (click)="translate.use('sk')">Slovak</a>
                             </li>
                         </ul>
                     </li>
