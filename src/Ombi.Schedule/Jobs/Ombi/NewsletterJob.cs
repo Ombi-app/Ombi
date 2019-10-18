@@ -714,7 +714,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                         (key, g) => new
                         {
                             SeasonNumber = key,
-                            Episodes = g.ToList()
+                            Episodes = g.ToList(),
+                            EpisodeAirDate =tvInfo.seasons.Where(x=>x.season_number==key).Select(x=>x.air_date)
                         }
                     );
 
@@ -724,7 +725,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
                         var episodeString = StringHelper.BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
-                        var episodeAirDate= epInformation.air_date;
+                        var episodeAirDate= epInformation.EpisodeAirDate;
                         finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString} {episodeAirDate}");
                         finalsb.Append("<br />");
                     }
@@ -838,7 +839,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                         (key, g) => new
                         {
                             SeasonNumber = key,
-                            Episodes = g.ToList()
+                            Episodes = g.ToList(),
+                            EpisodeAirDate = tvInfo.seasons.Where(x => x.season_number == key).Select(x => x.air_date)
                         }
                     );
 
@@ -848,7 +850,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
                         var episodeString = StringHelper.BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
-                        var episodeAirDate = epInformation.air_date;
+                        var episodeAirDate = epInformation.EpisodeAirDate;
                         finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString} {episodeAirDate}");                        
                         finalsb.Append("<br />");
                     }
