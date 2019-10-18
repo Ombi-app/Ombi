@@ -1,0 +1,65 @@
+<div class="row">
+
+    <div class="myBg backdrop" [style.background-image]="result.background"></div>
+    <div class="tint" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.6) 100%);"></div>
+    <div class="col-sm-3 small-padding">
+        <img *ngIf="result.poster" class="img-responsive poster artist-cover" src="{{result.poster}}" alt="poster">
+
+    </div>
+    <div class="col-sm-7 small-padding">
+        <div>
+            <a href="" target="_blank">
+                <h4>{{result.artistName}}</h4>
+            </a>
+            <span class="tags">
+                <!-- <span *ngIf="result.releaseDate" class="label label-info" id="releaseDateLabel" target="_blank">{{ 'Search.TheatricalRelease' | translate: {date: result.releaseDate | date: 'mediumDate'} }}</span>
+        <span *ngIf="result.digitalReleaseDate" class="label label-info" id="releaseDateLabel" target="_blank">{{ 'Search.DigitalDate' | translate: {date: result.digitalReleaseDate | date: 'mediumDate'} }}</span>
+
+        <a *ngIf="result.homepage" href="{{result.homepage}}" id="homePageLabel" target="_blank"><span class="label label-info" [translate]="'Search.Movies.HomePage'"></span></a>
+
+        <a *ngIf="result.trailer" href="{{result.trailer}}" id="trailerLabel" target="_blank"><span class="label label-info" [translate]="'Search.Movies.Trailer'"></span></a> -->
+
+                <ng-template [ngIf]="result.artistType">
+                    <span class="label label-info" id="artistType">{{result.artistType}}</span>
+                </ng-template>
+                <ng-template [ngIf]="result.disambiguation">
+                    <span class="label label-info" id="disambiguation">{{result.disambiguation}}</span>
+                </ng-template>
+                <ng-template [ngIf]="result.monitored">
+                    <span class="label label-info" id="disambiguation">Monitored</span>
+                </ng-template>
+            </span>
+
+            <br/>
+        </div>
+        <p style="font-size: 0.9rem !important">{{result.overview | truncate: 350 }}</p>
+
+        <div class="row">
+            <a id="infoTags" *ngFor="let link of result.links" href="{{link.url}}" target="_blank" class="label label-primary">
+                
+                    {{link.name}}
+                
+            </a>
+        </div>
+    </div>
+
+    <div class="col-sm-2 small-padding">
+        <div class="row" *ngIf="result.requested">
+            <div class="col-md-2 col-md-push-10">
+
+                <!-- <a *ngIf="result.showSubscribe && !result.subscribed" style="color:white" (click)="subscribe(result)" pTooltip="Subscribe for notifications"> <i class="fa fa-rss"></i></a>
+            <a *ngIf="result.showSubscribe && result.subscribed" style="color:red" (click)="unSubscribe(result)" pTooltip="Unsubscribe notification"> <i class="fa fa-rss"></i></a> -->
+            </div>
+        </div>
+        <button style="text-align: right" class="btn btn-info-outline" [disabled]="searchingAlbums" (click)="viewAllAlbums()">
+            <i class="fa fa-eye"></i> View Albums</button>
+
+    </div>
+    <!-- <button style="text-align: right" class="btn btn-sm btn-info-outline" (click)="similarMovies(result.id)"> <i class="fa fa-eye"></i> {{ 'Search.Similar' | translate }}</button> -->
+
+    <br/>
+
+
+
+
+</div>

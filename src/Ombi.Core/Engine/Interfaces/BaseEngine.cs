@@ -7,11 +7,8 @@ using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Entities;
-using Microsoft.AspNetCore.Identity;
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Authentication;
-using Ombi.Helpers;
 
 namespace Ombi.Core.Engine.Interfaces
 {

@@ -2,7 +2,7 @@
 
 import { INewsletterNotificationSettings, NotificationType } from "../../interfaces";
 import { JobService, NotificationService, SettingsService } from "../../services";
-import { TesterService } from "./../../services/applications/tester.service";
+import { TesterService } from "../../services/applications/tester.service";
 
 @Component({
     templateUrl: "./newsletter.component.html",
@@ -49,12 +49,12 @@ export class NewsletterComponent implements OnInit {
         });
 
     }
-    public addEmail() { 
+    public addEmail() {
 
-        if(this.emailToAdd) {
+        if (this.emailToAdd) {
             const emailRegex = "[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}";
             const match = this.emailToAdd.match(emailRegex)!;
-            if(match && match.length > 0) {
+            if (match && match.length > 0) {
                 this.settings.externalEmails.push(this.emailToAdd);
                 this.emailToAdd = "";
             } else {

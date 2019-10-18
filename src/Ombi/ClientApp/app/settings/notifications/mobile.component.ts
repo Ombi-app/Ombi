@@ -32,9 +32,9 @@ export class MobileComponent implements OnInit {
         });
 
         this.mobileService.getUserDeviceList().subscribe(x => {
-            if(x.length <= 0) {
+            if (x.length <= 0) {
                 this.userList = [];
-                this.userList.push({username:"None",devices:0, userId:""});
+                this.userList.push({username: "None", devices: 0, userId: ""});
             } else {
                 this.userList = x;
             }
@@ -47,7 +47,7 @@ export class MobileComponent implements OnInit {
             return;
         }
 
-        const settings = <IMobileNotifcationSettings>form.value;
+        const settings = <IMobileNotifcationSettings> form.value;
         settings.notificationTemplates = this.templates;
 
         this.settingsService.saveMobileNotificationSettings(settings).subscribe(x => {
@@ -65,8 +65,8 @@ export class MobileComponent implements OnInit {
             this.notificationService.error("Please check your entered values");
             return;
         }
-        if(!this.testUserId) {
-            this.notificationService.warning("Warning","Please select a user to send the test notification");
+        if (!this.testUserId) {
+            this.notificationService.warning("Warning", "Please select a user to send the test notification");
             return;
         }
 
@@ -75,6 +75,26 @@ export class MobileComponent implements OnInit {
                 this.notificationService.success("Successfully sent a Mobile message, please check the admin mobile device");
             } else {
                 this.notificationService.error("There was an error when sending the Mobile message. Please check your settings");
+            }
+        });
+
+    }
+
+    public remove() {
+        if (!this.testUserId) {
+            this.notificationService.warning("Warning", "Please select a user to remove");
+            return;
+        }
+
+        this.mobileService.deleteUser(this.testUserId).subscribe(x => {
+            if (x) {
+                this.notificationService.success("Removed users notification");
+                const userToRemove = this.userList.filter(u => {
+                    return u.userId === this.testUserId;
+                })[1];
+                this.userList.splice(this.userList.indexOf(userToRemove),1);
+            } else {
+                this.notificationService.error("There was an error when removing the notification. Please check your logs");
             }
         });
 

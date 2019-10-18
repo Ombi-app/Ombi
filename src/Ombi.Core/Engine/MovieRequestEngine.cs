@@ -19,6 +19,7 @@ using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
+using Ombi.Core.Models;
 
 namespace Ombi.Core.Engine
 {
@@ -50,7 +51,7 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<RequestEngineResult> RequestMovie(MovieRequestViewModel model)
         {
-            var movieInfo = await MovieApi.GetMovieInformationWithExtraInfo(model.TheMovieDbId);
+            var movieInfo = await MovieApi.GetMovieInformationWithExtraInfo(model.TheMovieDbId, model.LanguageCode);
             if (movieInfo == null || movieInfo.Id == 0)
             {
                 return new RequestEngineResult
@@ -81,7 +82,9 @@ namespace Ombi.Core.Engine
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
                 RequestedUserId = userDetails.Id,
-                Background = movieInfo.BackdropPath
+                Background = movieInfo.BackdropPath,
+                LangCode = model.LanguageCode,
+                RequestedByAlias = model.RequestedByAlias
             };
 
             var usDates = movieInfo.ReleaseDates?.Results?.FirstOrDefault(x => x.IsoCode == "US");
@@ -304,7 +307,7 @@ namespace Ombi.Core.Engine
             return await ApproveMovie(request);
         }
 
-        public async Task<RequestEngineResult> DenyMovieById(int modelId)
+        public async Task<RequestEngineResult> DenyMovieById(int modelId, string denyReason)
         {
             var request = await MovieRepository.Find(modelId);
             if (request == null)
@@ -316,12 +319,14 @@ namespace Ombi.Core.Engine
             }
 
             request.Denied = true;
+            request.DeniedReason = denyReason;
             // We are denying a request
             NotificationHelper.Notify(request, NotificationType.RequestDeclined);
             await MovieRepository.Update(request);
 
             return new RequestEngineResult
             {
+                Result = true,
                 Message = "Request successfully deleted",
             };
         }
@@ -336,6 +341,7 @@ namespace Ombi.Core.Engine
                 };
             }
 
+            request.MarkedAsApproved = DateTime.Now;
             request.Approved = true;
             request.Denied = false;
             await MovieRepository.Update(request);
@@ -414,6 +420,12 @@ namespace Ombi.Core.Engine
             await MovieRepository.Delete(request);
         }
 
+        public async Task RemoveAllMovieRequests()
+        {
+            var request = MovieRepository.GetAll();
+            await MovieRepository.DeleteRange(request);
+        }
+
         public async Task<bool> UserHasRequest(string userId)
         {
             return await MovieRepository.GetAll().AnyAsync(x => x.RequestedUserId == userId);
@@ -452,6 +464,7 @@ namespace Ombi.Core.Engine
             }
 
             request.Available = true;
+            request.MarkedAsAvailable = DateTime.Now;
             NotificationHelper.Notify(request, NotificationType.RequestAvailable);
             await MovieRepository.Update(request);
 
@@ -480,7 +493,51 @@ namespace Ombi.Core.Engine
                 RequestType = RequestType.Movie,
             });
 
-            return new RequestEngineResult {Result = true, Message = $"{movieName} has been successfully added!"};
+            return new RequestEngineResult {Result = true, Message = $"{movieName} has been successfully added!", RequestId = model.Id};
+        }
+
+        public async Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user)
+        {
+            if (user == null)
+            {
+                user = await GetUser();
+
+                // If user is still null after attempting to get the logged in user, return null.
+                if (user == null)
+                {
+                    return null;
+                }
+            }
+
+            int limit = user.MovieRequestLimit ?? 0;
+
+            if (limit <= 0)
+            {
+                return new RequestQuotaCountModel()
+                {
+                    HasLimit = false,
+                    Limit = 0,
+                    Remaining = 0,
+                    NextRequest = DateTime.Now,
+                };
+            }
+
+            IQueryable<RequestLog> log = _requestLog.GetAll().Where(x => x.UserId == user.Id && x.RequestType == RequestType.Movie);
+
+            int count = limit - await log.CountAsync(x => x.RequestDate >= DateTime.UtcNow.AddDays(-7));
+
+            DateTime oldestRequestedAt = await log.Where(x => x.RequestDate >= DateTime.UtcNow.AddDays(-7))
+                                            .OrderBy(x => x.RequestDate)
+                                            .Select(x => x.RequestDate)
+                                            .FirstOrDefaultAsync();
+
+            return new RequestQuotaCountModel()
+            {
+                HasLimit = true,    
+                Limit = limit,
+                Remaining = count,
+                NextRequest = DateTime.SpecifyKind(oldestRequestedAt.AddDays(7), DateTimeKind.Utc),
+            };
         }
     }
 }

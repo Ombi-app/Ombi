@@ -6,5 +6,6 @@
         public string Message { get; set; }
         public bool IsError => !string.IsNullOrEmpty(ErrorMessage);
         public string ErrorMessage { get; set; }
+        public int RequestId { get; set; }
     }
 }

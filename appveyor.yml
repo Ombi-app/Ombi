@@ -3,34 +3,46 @@ configuration: Release
 os: Visual Studio 2017
 environment:
   nodejs_version: "9.8.0"
+  typescript_version: "3.0.1"  
+  github_auth_token:
+    secure: H/7uCrjmWHGJxgN3l9fbhhdVjvvWI8VVF4ZzQqeXuJwAf+PgSNBdxv4SS+rMQ+RH
+  sonarrcloudtoken:
+    secure: WGkIog4wuMSx1q5vmSOgIBXMtI/leMpLbZhi9MJnJdBBuDfcv12zwXg3LQwY0WbE
 
 install:
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
+
+  - cmd: set path=%programfiles(x86)%\\Microsoft SDKs\TypeScript\3.0;%path%
+  - cmd: tsc -v
 build_script:
+ # - dotnet tool install --global dotnet-sonarscanner
+ #- ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { dotnet sonarscanner begin /k:"tidusjar_Ombi"  /d:sonar.organization="tidusjar-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$env.sonarrcloud_token" /d:sonar.analysis.mode="preview" /d:sonar.github.pullRequest="$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:sonar.github.repository="https://github.com/tidusjar/ombi" /d:sonar.github.oauth="$env.github_auth_token" }
+ # - ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { dotnet sonarscanner begin /k:"tidusjar_Ombi"  /d:sonar.organization="tidusjar-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$env.SONARRCLOUDTOKEN" }
   - ps: ./build.ps1 --settings_skipverification=true
+ # - dotnet sonarscanner end /d:sonar.login="%sonarrcloudtoken%"
 
 test: off
-  
+
 after_build:
 - cmd: >-
     
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.1\windows.zip"
+    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.2\windows.zip"
     
     
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.1\osx.tar.gz"  
+    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.2\osx.tar.gz"  
     
     
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.1\linux.tar.gz"
+    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.2\linux.tar.gz"
+
+
+    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.2\linux-arm.tar.gz"
+
+
+    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.2\windows-32bit.zip"
 
     
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.1\linux-arm.tar.gz"
-
-    
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.1\windows-32bit.zip"
-
-    
-#   appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.0\linux-arm64.tar.gz"
+    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.2\linux-arm64.tar.gz"
     
     
 

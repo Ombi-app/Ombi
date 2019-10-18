@@ -1,5 +1,8 @@
-﻿using System.Security.Principal;
+﻿using System;
+using System.Security.Principal;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Ombi.Core.Authentication;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Helpers;
@@ -10,26 +13,31 @@ namespace Ombi.Core.Rule.Rules.Request
 {
     public class AutoApproveRule : BaseRequestRule, IRules<BaseRequest>
     {
-        public AutoApproveRule(IPrincipal principal)
+        public AutoApproveRule(IPrincipal principal, OmbiUserManager um)
         {
             User = principal;
+            _manager = um;
         }
 
         private IPrincipal User { get; }
+        private readonly OmbiUserManager _manager;
 
-        public Task<RuleResult> Execute(BaseRequest obj)
+        public async Task<RuleResult> Execute(BaseRequest obj)
         {
-            if (User.IsInRole(OmbiRoles.Admin))
+            var user = await _manager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
+            if (await _manager.IsInRoleAsync(user, OmbiRoles.Admin) || user.IsSystemUser)
             {
                 obj.Approved = true;
-                return Task.FromResult(Success());
+                return Success();
             }
 
-            if (obj.RequestType == RequestType.Movie && User.IsInRole(OmbiRoles.AutoApproveMovie))
+            if (obj.RequestType == RequestType.Movie && await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveMovie))
                 obj.Approved = true;
-            if (obj.RequestType == RequestType.TvShow && User.IsInRole(OmbiRoles.AutoApproveTv))
+            if (obj.RequestType == RequestType.TvShow && await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveTv))
                 obj.Approved = true;
-            return Task.FromResult(Success()); // We don't really care, we just don't set the obj to approve
+            if (obj.RequestType == RequestType.Album && await _manager.IsInRoleAsync(user, OmbiRoles.AutoApproveMusic))
+                obj.Approved = true;
+            return Success(); // We don't really care, we just don't set the obj to approve
         }
     }
 }

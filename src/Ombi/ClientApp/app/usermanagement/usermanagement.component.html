@@ -2,8 +2,10 @@
 
 
 
-<button type="button" class="btn btn-success-outline" [routerLink]="['/usermanagement/add']">Add User</button>
+<button type="button" class="btn btn-success-outline" data-test="adduserbtn" [routerLink]="['/usermanagement/user']">Add User To Ombi</button>
+
 <button type="button" style="float:right;" class="btn btn-primary-outline"(click)="showBulkEdit = !showBulkEdit" [disabled]="!hasChecked()">Bulk Edit</button>
+
 <!-- Table -->
 <table class="table table-striped table-hover table-responsive table-condensed table-usermanagement">
     <thead>
@@ -44,6 +46,12 @@
             <th>
                 Roles
             </th>
+            <th>
+                Requests Remaining
+            </th>
+            <th>
+                Next Request Due
+            </th>
             <th (click)="setOrder('lastLoggedIn', $event)">
                <a> Last Logged In</a>
                <span *ngIf="order === 'lastLoggedIn'">
@@ -81,8 +89,37 @@
                 </div>
 
             </td>
+            <td class="td-labelled" data-label="Requests Remaining">
+                <div *ngIf="u.movieRequestQuota != null && u.movieRequestQuota.hasLimit">
+                    {{'UserManagment.MovieRemaining' | translate: {remaining: u.movieRequestQuota.remaining, total: u.movieRequestLimit} }}
+                </div>
+                <div *ngIf="u.episodeRequestQuota != null && u.episodeRequestQuota.hasLimit">
+                    {{'UserManagment.TvRemaining' | translate: {remaining: u.episodeRequestQuota.remaining, total: u.episodeRequestLimit} }}
+                </div>
+                <div *ngIf="u.musicRequestQuota != null && u.musicRequestQuota.hasLimit">
+                    {{'UserManagment.MusicRemaining' | translate: {remaining: u.musicRequestQuota.remaining, total: u.musicRequestLimit} }}
+                </div>
+            </td>
+            <td class="td-labelled" data-label="Request Due">
+                <div *ngIf="u.movieRequestQuota != null && u.movieRequestQuota.remaining != u.movieRequestLimit">
+                    {{'UserManagment.MovieDue' | translate: {date: (u.movieRequestQuota.nextRequest | amLocal | amDateFormat: 'l LT')} }}
+                </div>
+                <div *ngIf="u.episodeRequestQuota != null && u.episodeRequestQuota.remaining != u.episodeRequestLimit">
+                    {{'UserManagment.TvDue' | translate: {date: (u.episodeRequestQuota.nextRequest  | amLocal | amDateFormat: 'l LT')} }}
+                </div>
+                <div *ngIf="u.musicRequestQuota != null && u.musicRequestQuota.remaining != u.musicRequestLimit">
+                    {{'UserManagment.MusicDue' | translate: {date: (u.musicRequestQuota.nextRequest  | amLocal | amDateFormat: 'l LT')} }}
+                </div>
+            </td>
             <td class="td-labelled" data-label="Last Logged In:">
-                {{u.lastLoggedIn | date: 'short'}}
+                <!-- {{u.lastLoggedIn | date: 'short'}} -->
+                <span *ngIf="u.lastLoggedIn">
+                    {{u.lastLoggedIn  | amLocal | amDateFormat: 'l LT'}}
+                </span>                
+                <span *ngIf="!u.lastLoggedIn">
+                    Not logged in yet!
+                </span>
+
             </td>
             <td class="td-labelled" data-label="User Type:">
                 <span *ngIf="u.userType === 1">Local User</span>
@@ -90,7 +127,7 @@
                 <span *ngIf="u.userType === 3">Emby User</span>
             </td>
             <td>
-                <a [routerLink]="['/usermanagement/edit/' + u.id]" class="btn btn-sm btn-info-outline">Details/Edit</a>
+                <a id="edit{{u.userName}}" [routerLink]="['/usermanagement/user/' + u.id]" class="btn btn-sm btn-info-outline">Details/Edit</a>
             </td>
             <td *ngIf="customizationSettings">
                 <button *ngIf="!u.hasLoggedIn" (click)="welcomeEmail(u)" [disabled]="!customizationSettings.applicationUrl" class="btn btn-sm btn-info-outline">Send Welcome Email</button>
@@ -128,3 +165,4 @@
     
 <button type="button" class="btn btn-success-outline" (click)="bulkUpdate()">Update Users</button>
 </p-sidebar>
+

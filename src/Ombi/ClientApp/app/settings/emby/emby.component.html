@@ -3,7 +3,7 @@
 <div *ngIf="settings">
     <fieldset>
         <legend>
-            Emby Configuration
+            Emby/Jellyfin Configuration
         </legend>
 
         <div class="row">
@@ -63,9 +63,26 @@
                                     <input type="text" class="form-control-custom form-control" id="authToken" [(ngModel)]="server.apiKey" placeholder="Emby Api Key" value="{{server.apiKey}}">
                                 </div>
                             </div>
+
+                            <div class="form-group">
+                                <label for="authToken" class="control-label">Externally Facing Hostname
+                                    <i class="fa fa-question-circle"
+                                    pTooltip="This will be the external address that users will navigate to when they press the 'View On Emby' button"></i>                                    
+                                </label>
+                                <div>
+                                    <input type="text" class="form-control-custom form-control" id="authToken" [(ngModel)]="server.serverHostname" placeholder="e.g. https://jellyfin.server.com/" value="{{server.serverHostname}}">
+                                    <small><span *ngIf="server.serverHostname">Current URL: "{{server.serverHostname}}/#!/{{settings.isJellyfin ? ("itemdetails"): ("item/item")}}.html?id=1"</span>
+                                    <span *ngIf="!server.serverHostname">Current URL: "https://app.emby.media/#!/{{settings.isJellyfin ? ("itemdetails"): ("item/item")}}.html?id=1</span></small>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <div>
                                     <button id="testEmby" type="button" (click)="test(server)" class="btn btn-primary-outline">Test Connectivity <div id="spinner"></div></button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div>
+                                    <button id="discover" type="button" (click)="discoverServerInfo(server)" class="btn btn-primary-outline">Discover Server Information <div id="spinner"></div></button>
                                 </div>
                             </div>
                         </div>
@@ -76,7 +93,7 @@
         <div class="col-md-1">
             <div class="form-group">
                 <div>
-                    <button (click)="save()" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                    <button [disabled]="!hasDiscovered" (click)="save()" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
                 </div>
             </div>
         </div>

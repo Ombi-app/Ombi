@@ -1,13 +1,4 @@
-﻿<style>
-    #bannerimage {
-        width: 758px;
-        height: 140px;
-        background-color: black;
-        background-position: center;
-        padding-bottom:30px;
-    }
-</style>
-<div *ngIf="series">
+﻿<div *ngIf="series" class="content-space">
     <button class="btn btn-sm btn-success pull-right" (click)="submitRequests()" title="Go to top">{{ 'Search.TvShows.SubmitRequest' | translate }}</button>
     
     <ngb-tabset>
@@ -51,8 +42,11 @@
                             <td>
                                 {{ep.title}}
                             </td>
-                            <td>
-                                {{ep.airDate | date: 'dd/MM/yyyy' }}
+                            <td *ngIf="ep.airDateDisplay != 'Unknown'">
+                                {{ep.airDate | amLocal | amDateFormat: 'L' }}
+                            </td>      
+                            <td *ngIf="ep.airDateDisplay == 'Unknown'">
+                                {{ep.airDateDisplay }}
                             </td>
                             <td>
                                 <ng-template [ngIf]="ep.available"><span class="label label-success" id="availableLabel">Available</span></ng-template>

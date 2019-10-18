@@ -36,15 +36,15 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public class PlexServerContentRepository : Repository<PlexServerContent>, IPlexContentRepository
+    public class PlexServerContentRepository : ExternalRepository<PlexServerContent>, IPlexContentRepository
     {
 
-        public PlexServerContentRepository(IOmbiContext db) : base(db)
+        public PlexServerContentRepository(IExternalContext db) : base(db)
         {
             Db = db;
         }
 
-        private IOmbiContext Db { get; }
+        private IExternalContext Db { get; }
 
 
         public async Task<bool> ContentExists(string providerId)
@@ -96,7 +96,7 @@ namespace Ombi.Store.Repository
         public async Task Update(PlexServerContent existingContent)
         {
             Db.PlexServerContent.Update(existingContent);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
         public void UpdateWithoutSave(PlexServerContent existingContent)
         {
@@ -106,7 +106,7 @@ namespace Ombi.Store.Repository
         public async Task UpdateRange(IEnumerable<PlexServerContent> existingContent)
         {
             Db.PlexServerContent.UpdateRange(existingContent);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public IQueryable<PlexEpisode> GetAllEpisodes()
@@ -127,14 +127,14 @@ namespace Ombi.Store.Repository
         public async Task<PlexEpisode> Add(PlexEpisode content)
         {
             await Db.PlexEpisode.AddAsync(content);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
             return content;
         }
 
         public async Task DeleteEpisode(PlexEpisode content)
         {
             Db.PlexEpisode.Remove(content);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public async Task<PlexEpisode> GetEpisodeByKey(int key)
@@ -144,7 +144,7 @@ namespace Ombi.Store.Repository
         public async Task AddRange(IEnumerable<PlexEpisode> content)
         {
             Db.PlexEpisode.AddRange(content);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
     }
 }

@@ -10,10 +10,18 @@ ____
 [![Paypal](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://paypal.me/PlexRequestsNet)
 
 ___
+
+[![Twitter](https://img.shields.io/twitter/follow/tidusjar.svg?style=social)](https://twitter.com/intent/follow?screen_name=tidusjar)
+
+Follow me developing Ombi!
+
+[![Twitch](https://img.shields.io/badge/Twitch-Watch-blue.svg?style=flat-square&logo=twitch)](https://www.twitch.tv/tidusjar)
+
+
+___
 <a href='https://play.google.com/store/apps/details?id=com.tidusjar.Ombi&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img width="150"   alt='Get it on Google Play' src='https://play.google.com/intl/en_gb/badges/images/generic/en_badge_web_generic.png'/></a>
-
-<a href='https://itunes.apple.com/us/app/ombi/id1335260043?ls=1&mt=8'><img width="150"   alt='Get it on App Store' src='https://i.imgur.com/cJFa0M4.png'/></a>
-
+<br>
+_**Note:** There is no longer an iOS app due to complications outside of our control._
 
 ___
 
@@ -32,8 +40,9 @@ ___
 # Features
 Here are some of the features Ombi V3 has:
 * Now working without crashes on Linux.
-* Lets users request Movies and TV Shows (whether it being the entire series, an entire season, or even single episodes.)
+* Lets users request Movies, Music, and TV Shows (whether it being the entire series, an entire season, or even single episodes.)
 * Easily manage your requests
+* Allows you to set specific users to automatically have requests approved and added to the relevant service (Sonarr/Radarr/Lidarr/Couchpotato etc)
 * User management system (supports plex.tv, Emby and local accounts)
 * A landing page that will give you the availability of your Plex/Emby server and also add custom notification text to inform your users of downtime.
 * Allows your users to get custom notifications!
@@ -41,7 +50,7 @@ Here are some of the features Ombi V3 has:
 * Will show if the request is already on plex or even if it's already monitored.
 * Automatically updates the status of requests when they are available on Plex/Emby
 * Slick, responsive and mobile friendly UI
-* Ombi will automatically update itself :)
+* Ombi will automatically update itself :) (YMMV)
 * Very fast!
 
 ### Integration 
@@ -50,6 +59,7 @@ We integrate with the following applications:
 * Emby
 * Sonarr
 * Radarr
+* Lidarr
 * DogNzb
 * Couch Potato
 
@@ -58,6 +68,7 @@ We integrate with the following applications:
 Supported notifications:
 * SMTP Notifications (Email)
 * Discord
+* Gotify
 * Slack
 * Pushbullet
 * Pushover
@@ -87,6 +98,7 @@ We are planning to bring back these features in V3 but for now you can find a li
 | DogNzb | Yes | No |
 | Issues | Yes | Yes |
 | Headphones | No | Yes |
+| Lidarr | Yes | No |
 
 # Feature Requests
 Feature requests are handled on FeatHub.
@@ -115,13 +127,12 @@ Please feel free to submit a pull request!
 # Donation
 If you feel like donating you can donate with the below buttons!
 
-[![Patreon](https://www.ombi.io/img/patreondonate.svg)](https://patreon.com/tidusjar/Ombi) 
-[![Paypal](https://www.ombi.io/img/paypaldonate.svg)](https://paypal.me/PlexRequestsNet)
+
+[![Patreon](https://img.shields.io/badge/patreon-donate-yellow.svg)](https://patreon.com/tidusjar/Ombi)
+[![Paypal](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://paypal.me/PlexRequestsNet)
 
 ### A massive thanks to everyone for all their help!
 
-## Stats
-[![Throughput Graph](https://graphs.waffle.io/tidusjar/PlexRequests.Net/throughput.svg)](https://waffle.io/tidusjar/PlexRequests.Net/metrics/throughput)
 
 ### Sponsors ###
 - [JetBrains](http://www.jetbrains.com/) for providing us with free licenses to their great tools

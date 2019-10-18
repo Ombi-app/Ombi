@@ -2,14 +2,15 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Ombi.Helpers;
 using Ombi.Store.Context;
 using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Store.Repository.Requests
 {
-    public class TvRequestRepository : ITvRequestRepository
+    public class TvRequestRepository : BaseRepository<TvRequests, IOmbiContext>, ITvRequestRepository
     {
-        public TvRequestRepository(IOmbiContext ctx)
+        public TvRequestRepository(IOmbiContext ctx) : base(ctx)
         {
             Db = ctx;
         }
@@ -101,20 +102,20 @@ namespace Ombi.Store.Repository.Requests
 
         public async Task Save()
         {
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public async Task<TvRequests> Add(TvRequests request)
         {
             await Db.TvRequests.AddAsync(request);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
             return request;
         }
 
         public async Task<ChildRequests> AddChild(ChildRequests request)
         {
             await Db.ChildRequests.AddAsync(request);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
 
             return request;
         }
@@ -122,33 +123,33 @@ namespace Ombi.Store.Repository.Requests
         public async Task Delete(TvRequests request)
         {
             Db.TvRequests.Remove(request);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public async Task DeleteChild(ChildRequests request)
         {
             Db.ChildRequests.Remove(request);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public async Task DeleteChildRange(IEnumerable<ChildRequests> request)
         {
             Db.ChildRequests.RemoveRange(request);
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
 
         public async Task Update(TvRequests request)
         {
             Db.Update(request);
             
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
         
         public async Task UpdateChild(ChildRequests request)
         {
             Db.Update(request);
 
-            await Db.SaveChangesAsync();
+            await InternalSaveChanges();
         }
     }
 }

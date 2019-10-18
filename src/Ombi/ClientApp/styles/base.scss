@@ -455,7 +455,7 @@ $border-radius: 10px;
 }
 
 .checkbox input[type=checkbox] {
-    display: none;
+    opacity: 0;
 }
 
 .checkbox input[type=checkbox]:checked + label:before {
@@ -843,6 +843,7 @@ body {
     padding: 10px 15px;
     border-bottom: 1px solid transparent;
     background: $form-color;
+    height: 40px;
 }
 
 .card-header > a {
@@ -883,11 +884,6 @@ textarea {
     display: none;
 }
 
-.ui-treetable-toggler.fa.fa-fw.ui-clickable.fa-caret-right,
-.ui-treetable-toggler.fa.fa-fw.ui-clickable.fa-caret-down {
-    display: none;
-}
-
 .ui-state-highlight {
     background: $primary-colour;
 }
@@ -898,15 +894,6 @@ textarea {
 
 .ui-state-default {
     border: 1px solid $form-color-lighter;
-}
-
-.ui-treetable tfoot td, .ui-treetable th {
-    text-align: left;
-}
-
-.ui-treetable tbody td {
-    white-space: inherit;
-    overflow: visible;
 }
 
 table a:not(.btn) {
@@ -979,4 +966,55 @@ a > h4:hover {
 .subject-category,
 .subject {
     display: inline-block;
+}
+
+.custom-modal-backdrop {
+    opacity: 0.5 !important;
+    filter: alpha(opacity=0.5);
+}
+
+.window {
+    opacity: 1 !important;
+    top: 7%;
+}
+
+.modal.fade .modal-dialog {
+    -webkit-transform: translate(0, 0%);
+    -ms-transform: translate(0, 0%);
+    -o-transform: translate(0, 0%);
+    transform: translate(0, 0%);
+    -webkit-transition: -webkit-transform .3s ease-out;
+    -o-transition: -o-transform .3s ease-out;
+    transition: transform .3s ease-out;
+}
+
+.modal-footer .btn+.btn {
+    margin-left: 5px;
+     margin-bottom: 10px;
+}
+
+.label {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: bold;
+    line-height: 1;
+    color: #ffffff;
+    text-align: center;
+    white-space: normal; 
+    vertical-align: baseline;
+    border-radius: .25em;
+}
+
+.album-cover {
+    width:300px;
+}
+
+
+::ng-deep ngb-accordion > div.card >  div.card-header {
+    padding:0px;
+}
+::ng-deep ngb-accordion > div.card {
+    color:white;
+    padding-top: 0px;
 }

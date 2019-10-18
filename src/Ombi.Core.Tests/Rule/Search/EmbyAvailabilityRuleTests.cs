@@ -16,7 +16,7 @@ namespace Ombi.Core.Tests.Rule.Search
         public void Setup()
         {
             ContextMock = new Mock<IEmbyContentRepository>();
-            Rule = new EmbyAvailabilityRule(ContextMock.Object);
+            Rule = new EmbyAvailabilityRule(ContextMock.Object, null);
         }
 
         private EmbyAvailabilityRule Rule { get; set; }
@@ -29,7 +29,10 @@ namespace Ombi.Core.Tests.Rule.Search
             {
                 ProviderId = "123"
             });
-            var search = new SearchMovieViewModel();
+            var search = new SearchMovieViewModel()
+            {
+                TheMovieDbId = "123",
+            };
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);

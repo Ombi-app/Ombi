@@ -8,16 +8,20 @@ namespace Ombi.Store.Repository
 {
     public class ApplicationConfigRepository : IApplicationConfigRepository
     {
-        public ApplicationConfigRepository(IOmbiContext ctx)
+        public ApplicationConfigRepository(ISettingsContext ctx)
         {
             Ctx = ctx;
         }
 
-        private IOmbiContext Ctx { get; }
+        private ISettingsContext Ctx { get; }
 
-        public async Task<ApplicationConfiguration> Get(ConfigurationTypes type)
+        public Task<ApplicationConfiguration> GetAsync(ConfigurationTypes type)
         {
-            return await Ctx.ApplicationConfigurations.FirstOrDefaultAsync(x => x.Type == type);
+            return Ctx.ApplicationConfigurations.FirstOrDefaultAsync(x => x.Type == type);
+        }
+        public ApplicationConfiguration Get(ConfigurationTypes type)
+        {
+            return Ctx.ApplicationConfigurations.FirstOrDefault(x => x.Type == type);
         }
     }
 }

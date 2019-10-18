@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -14,35 +13,40 @@ using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
 
-namespace Ombi.Notifications.Interfaces
+namespace Ombi.Notifications
 {
     public abstract class BaseNotification<T> : INotification where T : Settings.Settings.Models.Settings, new()
     {
         protected BaseNotification(ISettingsService<T> settings, INotificationTemplatesRepository templateRepo, IMovieRequestRepository movie, ITvRequestRepository tv,
-            ISettingsService<CustomizationSettings> customization, ILogger<BaseNotification<T>> log, IRepository<RequestSubscription> sub)
+            ISettingsService<CustomizationSettings> customization, ILogger<BaseNotification<T>> log, IRepository<RequestSubscription> sub, IMusicRequestRepository album,
+            IRepository<UserNotificationPreferences> notificationUserPreferences)
         {
             Settings = settings;
             TemplateRepository = templateRepo;
             MovieRepository = movie;
             TvRepository = tv;
             CustomizationSettings = customization;
-            Settings.ClearCache();
-            CustomizationSettings.ClearCache();
             RequestSubscription = sub;
             _log = log;
+            AlbumRepository = album;
+            UserNotificationPreferences = notificationUserPreferences;
+            Settings.ClearCache();
         }
 
         protected ISettingsService<T> Settings { get; }
         protected INotificationTemplatesRepository TemplateRepository { get; }
         protected IMovieRequestRepository MovieRepository { get; }
         protected ITvRequestRepository TvRepository { get; }
+        protected IMusicRequestRepository AlbumRepository { get; }
         protected CustomizationSettings Customization { get; set; }
         protected IRepository<RequestSubscription> RequestSubscription { get; set; }
+        protected IRepository<UserNotificationPreferences> UserNotificationPreferences { get; set; }
         private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
         private readonly ILogger<BaseNotification<T>> _log;
 
 
         protected ChildRequests TvRequest { get; set; }
+        protected AlbumRequest AlbumRequest { get; set; }
         protected MovieRequests MovieRequest { get; set; }
         protected IQueryable<OmbiUser> SubsribedUsers { get; private set; }
 
@@ -50,14 +54,12 @@ namespace Ombi.Notifications.Interfaces
 
         public async Task NotifyAsync(NotificationOptions model)
         {
-            Settings.ClearCache();
             var configuration = await GetConfiguration();
             await NotifyAsync(model, configuration);
         }
 
         public async Task NotifyAsync(NotificationOptions model, Settings.Settings.Models.Settings settings)
         {
-            Settings.ClearCache();
             if (settings == null) await NotifyAsync(model);
 
             var notificationSettings = (T)settings;
@@ -130,9 +132,13 @@ namespace Ombi.Notifications.Interfaces
             {
                 MovieRequest = await MovieRepository.GetWithUser().FirstOrDefaultAsync(x => x.Id == requestId);
             }
-            else
+            else if (type == RequestType.TvShow)
             {
                 TvRequest = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId);
+            }
+            else if (type == RequestType.Album)
+            {
+                AlbumRequest = await AlbumRepository.GetWithUser().FirstOrDefaultAsync(x => x.Id == requestId);
             }
         }
 
@@ -160,7 +166,25 @@ namespace Ombi.Notifications.Interfaces
             {
                 return new NotificationMessageContent { Disabled = true };
             }
-            var parsed = Parse(model, template);
+
+            if (model.UserId.IsNullOrEmpty())
+            {
+                if (model.RequestType == RequestType.Movie)
+                {
+                    model.UserId = MovieRequest.RequestedUserId;
+                }
+
+                if (model.RequestType == RequestType.Album)
+                {
+                    model.UserId = AlbumRequest.RequestedUserId;
+                }
+
+                if (model.RequestType == RequestType.TvShow)
+                {
+                    model.UserId = TvRequest.RequestedUserId;
+                }
+            }
+            var parsed = Parse(model, template, agent);
 
             return parsed;
         }
@@ -171,20 +195,32 @@ namespace Ombi.Notifications.Interfaces
             return subs.Select(x => x.User);
         }
 
-        private NotificationMessageContent Parse(NotificationOptions model, NotificationTemplates template)
+        protected UserNotificationPreferences GetUserPreference(string userId, NotificationAgent agent)
+        {
+            return UserNotificationPreferences.GetAll()
+                .FirstOrDefault(x => x.Agent == agent && x.UserId == userId);
+        }
+
+        private NotificationMessageContent Parse(NotificationOptions model, NotificationTemplates template, NotificationAgent agent)
         {
             var resolver = new NotificationMessageResolver();
             var curlys = new NotificationMessageCurlys();
+            var preference = GetUserPreference(model.UserId, agent);
             if (model.RequestType == RequestType.Movie)
             {
                 _log.LogDebug("Notification options: {@model}, Req: {@MovieRequest}, Settings: {@Customization}", model, MovieRequest, Customization);
 
-                curlys.Setup(model, MovieRequest, Customization);
+                curlys.Setup(model, MovieRequest, Customization, preference);
             }
-            else
+            else if (model.RequestType == RequestType.TvShow)
             {
                 _log.LogDebug("Notification options: {@model}, Req: {@TvRequest}, Settings: {@Customization}", model, TvRequest, Customization);
-                curlys.Setup(model, TvRequest, Customization);
+                curlys.Setup(model, TvRequest, Customization, preference);
+            }
+            else if (model.RequestType == RequestType.Album)
+            {
+                _log.LogDebug("Notification options: {@model}, Req: {@AlbumRequest}, Settings: {@Customization}", model, AlbumRequest, Customization);
+                curlys.Setup(model, AlbumRequest, Customization, preference);
             }
             var parsed = resolver.ParseMessage(template, curlys);
 

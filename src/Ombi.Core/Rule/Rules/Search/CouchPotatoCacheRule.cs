@@ -11,12 +11,12 @@ namespace Ombi.Core.Rule.Rules.Search
 {
     public class CouchPotatoCacheRule : BaseSearchRule, IRules<SearchViewModel>
     {
-        public CouchPotatoCacheRule(IRepository<CouchPotatoCache> ctx)
+        public CouchPotatoCacheRule(IExternalRepository<CouchPotatoCache> ctx)
         {
             _ctx = ctx;
         }
 
-        private readonly IRepository<CouchPotatoCache> _ctx;
+        private readonly IExternalRepository<CouchPotatoCache> _ctx;
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {

@@ -10,13 +10,14 @@ using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
+using Quartz;
 using Serilog;
 
 namespace Ombi.Schedule.Jobs.Radarr
 {
     public class RadarrSync : IRadarrSync
     {
-        public RadarrSync(ISettingsService<RadarrSettings> radarr, IRadarrApi radarrApi, ILogger<RadarrSync> log, IOmbiContext ctx)
+        public RadarrSync(ISettingsService<RadarrSettings> radarr, IRadarrApi radarrApi, ILogger<RadarrSync> log, IExternalContext ctx)
         {
             RadarrSettings = radarr;
             RadarrApi = radarrApi;
@@ -28,11 +29,11 @@ namespace Ombi.Schedule.Jobs.Radarr
         private ISettingsService<RadarrSettings> RadarrSettings { get; }
         private IRadarrApi RadarrApi { get; }
         private ILogger<RadarrSync> Logger { get; }
-        private readonly IOmbiContext _ctx;
+        private readonly IExternalContext _ctx;
 
         private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
 
-        public async Task CacheContent()
+        public async Task Execute(IJobExecutionContext job)
         {
             await SemaphoreSlim.WaitAsync();
             try
@@ -46,10 +47,16 @@ namespace Ombi.Schedule.Jobs.Radarr
                         if (movies != null)
                         {
                             // Let's remove the old cached data
-                            await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM RadarrCache");
+                            using (var tran = await _ctx.Database.BeginTransactionAsync())
+                            {
+                                await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM RadarrCache");
+                                tran.Commit();
+                            }
 
                             var movieIds = new List<RadarrCache>();
                             foreach (var m in movies)
+                            {
+                            if(m.monitored)
                             {
                                 if (m.tmdbId > 0)
                                 {
@@ -64,9 +71,15 @@ namespace Ombi.Schedule.Jobs.Radarr
                                    Logger.LogError("TMDBId is not > 0 for movie {0}", m.title);
                                 }
                             }
-                            await _ctx.RadarrCache.AddRangeAsync(movieIds);
+                            }
 
-                            await _ctx.SaveChangesAsync();
+                            using (var tran = await _ctx.Database.BeginTransactionAsync())
+                            {
+                                await _ctx.RadarrCache.AddRangeAsync(movieIds);
+
+                                await _ctx.SaveChangesAsync();
+                                tran.Commit();
+                            }
                         }
                     }
                     catch (System.Exception ex)

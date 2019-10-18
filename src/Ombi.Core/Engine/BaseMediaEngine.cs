@@ -36,6 +36,7 @@ namespace Ombi.Core.Engine
         protected IRequestServiceMain RequestService { get; }
         protected IMovieRequestRepository MovieRepository => RequestService.MovieRequestService;
         protected ITvRequestRepository TvRepository => RequestService.TvRequestService;
+        protected IMusicRequestRepository MusicRepository => RequestService.MusicRequestRepository;
         protected readonly ICacheService Cache;
         protected readonly ISettingsService<OmbiSettings> OmbiSettings;
         protected readonly IRepository<RequestSubscription> _subscriptionRepository;
@@ -154,6 +155,24 @@ namespace Ombi.Core.Engine
             {
                 await _subscriptionRepository.Delete(existingSub);
             }
+        }
+
+        private string defaultLangCode;
+        protected async Task<string> DefaultLanguageCode(string currentCode)
+        {
+            if (currentCode.HasValue())
+            {
+                return currentCode;
+            }
+
+            var s = await GetOmbiSettings();
+            return s.DefaultLanguageCode;
+        }
+
+        private OmbiSettings ombiSettings;
+        protected async Task<OmbiSettings> GetOmbiSettings()
+        {
+            return ombiSettings ?? (ombiSettings = await OmbiSettings.GetSettingsAsync());
         }
 
         public class HideResult

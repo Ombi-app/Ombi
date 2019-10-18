@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
 
 import { ICustomizationSettings } from "../interfaces";
-import { IdentityService, ImageService,NotificationService, SettingsService } from "../services";
+import { IdentityService, ImageService, NotificationService, SettingsService } from "../services";
 
 @Component({
     templateUrl: "./resetpassword.component.html",

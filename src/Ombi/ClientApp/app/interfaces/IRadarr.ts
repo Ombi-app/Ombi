@@ -8,6 +8,11 @@ export interface IRadarrProfile {
     id: number;
 }
 
+export interface IProfiles {
+    name: string;
+    id: number;
+}
+
 export interface IMinimumAvailability {
     value: string;
     name: string;

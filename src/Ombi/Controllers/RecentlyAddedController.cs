@@ -12,7 +12,8 @@ namespace Ombi.Controllers
     [ApiV1]
     [Produces("application/json")]
     [Authorize]
-    public class RecentlyAddedController : Controller
+    [ApiController]
+    public class RecentlyAddedController : ControllerBase
     {
         public RecentlyAddedController(IRecentlyAddedEngine engine)
         {

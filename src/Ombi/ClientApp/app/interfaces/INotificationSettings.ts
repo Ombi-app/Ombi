@@ -59,6 +59,7 @@ export interface INewsletterNotificationSettings extends INotificationSettings {
     notificationTemplate: INotificationTemplates;
     disableMovies: boolean;
     disableTv: boolean;
+    disableMusic: boolean;
     externalEmails: string[];
 }
 
@@ -88,6 +89,16 @@ export interface IPushoverNotificationSettings extends INotificationSettings {
     accessToken: string;
     notificationTemplates: INotificationTemplates[];
     userToken: string;
+    priority: number;
+    sound: string;
+}
+
+export interface IGotifyNotificationSettings extends INotificationSettings {
+    accessToken: string;
+    notificationTemplates: INotificationTemplates[];
+    baseUrl: string;
+    applicationToken: string;
+    priority: number;
 }
 
 export interface IMattermostNotifcationSettings extends INotificationSettings {

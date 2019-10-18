@@ -46,6 +46,17 @@ namespace Ombi.Api.Emby
             return obj;
         }
 
+        public async Task<PublicInfo> GetPublicInformation(string baseUrl)
+        {
+            var request = new Request("emby/System/Info/public", baseUrl, HttpMethod.Get);
+
+            AddHeaders(request, string.Empty);
+
+            var obj = await Api.Request<PublicInfo>(request);
+
+            return obj;
+        }
+
         public async Task<EmbyUser> LogIn(string username, string password, string apiKey, string baseUri)
         {
             var request = new Request("emby/users/authenticatebyname", baseUri, HttpMethod.Post);
@@ -53,8 +64,6 @@ namespace Ombi.Api.Emby
             {
                 username,
                 pw = password,
-                password = password.GetSha1Hash().ToLower(),
-                passwordMd5 = password.CalcuateMd5Hash()
             };
 
             request.AddJsonBody(body);
@@ -98,7 +107,7 @@ namespace Ombi.Api.Emby
 
             request.AddQueryString("Fields", "ProviderIds,Overview");
 
-            request.AddQueryString("VirtualItem", "False");
+            request.AddQueryString("IsVirtualItem", "False");
 
             return await Api.Request<EmbyItemContainer<EmbyMovie>>(request);
         }
@@ -126,6 +135,7 @@ namespace Ombi.Api.Emby
         {
             return await GetInformation<MovieInformation>(mediaId, apiKey, userId, baseUrl);
         }
+
         public async Task<EpisodeInformation> GetEpisodeInformation(string mediaId, string apiKey, string userId, string baseUrl)
         {
             return await GetInformation<EpisodeInformation>(mediaId, apiKey, userId, baseUrl);
@@ -149,7 +159,7 @@ namespace Ombi.Api.Emby
             request.AddQueryString("IncludeItemTypes", type);
             request.AddQueryString("Fields", includeOverview ? "ProviderIds,Overview" : "ProviderIds");
 
-            request.AddQueryString("VirtualItem", "False");
+            request.AddQueryString("IsVirtualItem", "False");
 
             AddHeaders(request, apiKey);
 
@@ -167,7 +177,7 @@ namespace Ombi.Api.Emby
             request.AddQueryString("startIndex", startIndex.ToString());
             request.AddQueryString("limit", count.ToString());
 
-            request.AddQueryString("VirtualItem", "False");
+            request.AddQueryString("IsVirtualItem", "False");
 
             AddHeaders(request, apiKey);
 

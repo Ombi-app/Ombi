@@ -1,9 +1,9 @@
 ﻿
-<img class="landing-header" src="/images/logo.png" width="300" />
+<img class="landing-header" src="{{baseUrl}}/images/logo.png" width="300" />
 <div class="landing-block shadow">
 <div class="media">
 <div id="contentBody" class="media-body">
-<h4 class="media-heading landing-title">Emby Authentication</h4>
+<h4 class="media-heading landing-title">Emby/Jellyfin Authentication</h4>
     <div *ngIf="embySettings">
         <div *ngIf="embySettings.servers">
             <div *ngFor="let server of embySettings.servers">
@@ -24,6 +24,11 @@
                 <div class="form-group">
                     <div class="checkbox">
                         <input type="checkbox" [(ngModel)]="server.ssl" id="Ssl" name="Ssl"><label for="Ssl">SSL</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" [(ngModel)]="embySettings.isJellyfin" id="isJellyfin" name="isJellyfin"><label for="isJellyfin">Jellyfin Install</label>
                     </div>
                 </div>
                 <div class="form-group">

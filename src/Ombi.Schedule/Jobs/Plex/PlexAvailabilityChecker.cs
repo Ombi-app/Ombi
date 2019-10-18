@@ -12,6 +12,7 @@ using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
@@ -35,7 +36,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly IBackgroundJobClient _backgroundJobClient;
         private readonly ILogger _log;
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             try
             {
@@ -44,7 +45,7 @@ namespace Ombi.Schedule.Jobs.Plex
             }
             catch (Exception e)
             {
-                _log.LogError(e, "Exception thrown in Plex availbility checker");
+                _log.LogError(e, "Exception thrown in Plex availability checker");
             }
         }
 
@@ -71,7 +72,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     useTvDb = true;
                 }
-                
+
                 var tvDbId = child.ParentRequest.TvDbId;
                 var imdbId = child.ParentRequest.ImdbId;
                 IQueryable<PlexEpisode> seriesEpisodes = null;
@@ -79,7 +80,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     seriesEpisodes = plexEpisodes.Where(x => x.Series.ImdbId == imdbId.ToString());
                 }
-                if (useTvDb && (seriesEpisodes == null ||  !seriesEpisodes.Any()) )
+                if (useTvDb && (seriesEpisodes == null || !seriesEpisodes.Any()))
                 {
                     seriesEpisodes = plexEpisodes.Where(x => x.Series.TvDbId == tvDbId.ToString());
                 }
@@ -93,8 +94,8 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     // Let's try and match the series by name
                     seriesEpisodes = plexEpisodes.Where(x =>
-                        x.Series.Title.Equals(child.Title, StringComparison.CurrentCultureIgnoreCase) &&
-                        x.Series.ReleaseYear == child.ParentRequest.ReleaseDate.Year.ToString());
+                        x.Series.Title.Equals(child.Title, StringComparison.InvariantCultureIgnoreCase) &&
+                        x.Series.ReleaseYear.Equals(child.ParentRequest.ReleaseDate.Year.ToString(), StringComparison.InvariantCultureIgnoreCase));
 
                 }
 
@@ -121,16 +122,18 @@ namespace Ombi.Schedule.Jobs.Plex
                 var allAvailable = child.SeasonRequests.All(x => x.Episodes.All(c => c.Available));
                 if (allAvailable)
                 {
-                    // We have fulfulled this request!
+                    _log.LogInformation("[PAC] - Child request {0} is now available, sending notification", $"{child.Title} - {child.Id}");
+                    // We have ful-fulled this request!
                     child.Available = true;
-                    _backgroundJobClient.Enqueue(() => _notificationService.Publish(new NotificationOptions
+                    child.MarkedAsAvailable = DateTime.Now;
+                    await _notificationService.Publish(new NotificationOptions
                     {
                         DateTime = DateTime.Now,
                         NotificationType = NotificationType.RequestAvailable,
                         RequestId = child.Id,
                         RequestType = RequestType.TvShow,
                         Recipient = child.RequestedUser.Email
-                    }));
+                    });
                 }
             }
 
@@ -163,20 +166,23 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
 
                 movie.Available = true;
-                if (movie.Available)
+                movie.MarkedAsAvailable = DateTime.Now;
+                item.RequestId = movie.Id;
+
+                _log.LogInformation("[PAC] - Movie request {0} is now available, sending notification", $"{movie.Title} - {movie.Id}");
+                await _notificationService.Publish(new NotificationOptions
                 {
-                    _backgroundJobClient.Enqueue(() => _notificationService.Publish(new NotificationOptions
-                    {
-                        DateTime = DateTime.Now,
-                        NotificationType = NotificationType.RequestAvailable,
-                        RequestId = movie.Id,
-                        RequestType = RequestType.Movie,
-                        Recipient = movie.RequestedUser != null ? movie.RequestedUser.Email : string.Empty
-                    }));
-                }
+                    DateTime = DateTime.Now,
+                    NotificationType = NotificationType.RequestAvailable,
+                    RequestId = movie.Id,
+                    RequestType = RequestType.Movie,
+                    Recipient = movie.RequestedUser != null ? movie.RequestedUser.Email : string.Empty
+                });
+
             }
 
             await _movieRepo.Save();
+            await _repo.SaveChangesAsync();
         }
 
         private bool _disposed;

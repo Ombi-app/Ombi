@@ -1,0 +1,31 @@
+﻿<div *ngIf="form">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <button type="button" *ngIf="isAdmin" class="btn btn-info-outline" (click)="isEditing = !isEditing">Edit</button>
+    <div *ngIf="isEditing">
+            <div class="form-group">
+                    <label for="Ip" class="control-label">Page Title
+                        
+                        <i *ngIf="form.get('title').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="Title is required"></i>
+                    </label>
+
+                        <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" formControlName="title"  [ngClass]="{'form-error': form.get('title').hasError('required')}">
+                </div>
+
+                <div class="form-group">
+                        <label for="Ip" class="control-label">Font Awesome Icon
+                            
+                            <i *ngIf="form.get('fontAwesomeIcon').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="Font Awesome Icon is required"></i>
+                        </label>
+    
+                            <input type="text" class="form-control form-control-custom " id="fontAwesomeIcon" name="fontAwesomeIcon" formControlName="fontAwesomeIcon"  [ngClass]="{'form-error': form.get('fontAwesomeIcon').hasError('required')}">
+                    </div>
+
+        <app-ngx-editor [placeholder]="'Enter text here...'" [minHeight]="100" formControlName="html"></app-ngx-editor>
+        <button type="submit" class="btn btn-primary-outline">Save</button>
+        <hr />
+    </div>
+</form>
+
+
+<div [innerHTML]="form.controls['html'].value"></div>
+</div>

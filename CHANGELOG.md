@@ -4,6 +4,1346 @@
 
 ### **New Features**
 
+- Added better support for Jellyfin, we will now auto detect if it's a jellyfin server after pressing the discover button. [tidusjar]
+
+- Update aspnetcore.yml. [Jamie]
+
+- Update aspnetcore.yml. [Jamie]
+
+- Update aspnetcore.yml. [Jamie]
+
+- Update aspnetcore.yml. [Jamie]
+
+- Update aspnetcore.yml. [Jamie]
+
+- Update and rename .github/workflows to .github/.github/workflows/test.workflow. [Jamie]
+
+- Update aspnetcore.yml. [Jamie]
+
+- Update aspnetcore.yml. [Jamie]
+
+- Update aspnetcore.yml. [Jamie]
+
+- Added a bit more logging into the recently added scan. [tidusjar]
+
+- Update emby.component.html. [sorano]
+
+- Update EmbyHelper.cs. [sorano]
+
+- Update CHANGELOG.md. [Jamie]
+
+### **Fixes**
+
+- Fixed #3078. [tidusjar]
+
+- Fixes issue #3195 The new string extension method ToHttpsUrl ensures that URLs starting with "https" are no longer turned into "httpss" The commit also replaces all occurances of the error prone .Replace("http", "https") in the whole solution. [msdeibel]
+
+- Create test.workflow. [Jamie]
+
+- Delete test.workflow. [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- Fix for #3183. [tidusjar]
+
+- Fixed an issue where running the recently added sync via the UI was running the full sync. [tidusjar]
+
+- Fixed #3143. [Jamie Rees]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- Fixed the issue when we are logging errors in the logs incorrectly. [Jamie]
+
+- Removed the lanuage profile from the Lidarr integration. [tidusjar]
+
+- Try and clear up the issue #2998. [tidusjar]
+
+- Fixed an issue where shows that have no aired, episodes are not marked as monitored in Sonarr. [tidusjar]
+
+- Fixed an error when finishing the content sync. [tidusjar]
+
+- Fixed issue where using the API to request a movie/tv show would throw an exception when only using the API Key #3091. [tidusjar]
+
+- Put "Ombi" back as the product name for Plex oAuth. [tidusjar]
+
+
+## v3.0.4680 (2019-07-17)
+
+### **New Features**
+
+- Update CHANGELOG.md. [Jamie]
+
+### **Fixes**
+
+- Fix Plex's (intentional) mistake #3073. [Jamie Rees]
+
+- #2994 Fixed the startup issue. [tidusjar]
+
+- #2994 - enable multithreading in the sql config. [Jamie Rees]
+
+
+## v3.0.4659 (2019-07-02)
+
+### **New Features**
+
+- Update appsettings.json. [Jamie]
+
+- Update CHANGELOG.md. [Jamie]
+
+
+## v3.0.4654 (2019-07-02)
+
+### **New Features**
+
+- Added further logging into the API's (debug logging) [tidusjar]
+
+- Added transactions around all of the CUD operations. [Jamie Rees]
+
+- Added some validation around the new crons. [Jamie Rees]
+
+- Added some defensive coding around when we create an artist for #2915. [tidusjar]
+
+- Update JobSetup.cs. [Jamie]
+
+- Update JobSetup.cs. [Jamie]
+
+- Added a global mutex (not used yet) and moved around the code for loggin in since I suspect the Get Roles call is using deffered execution on the database causing the lock when attempting to access straight away #2750. [Jamie Rees]
+
+- Added a lock on the database commit level to see if I can improve locked db's. [Jamie Rees]
+
+- Update dependancies. [TidusJar]
+
+- Update stale.yml. [Jamie]
+
+- Update README.md. [Dyson Parkes]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update CHANGELOG.md. [Jamie]
+
+- Added stalebot. [tidusjar]
+
+### **Fixes**
+
+- Add back in the login time. [tidusjar]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (Hungarian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- New translations en.json (Bulgarian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Hungarian) [Jamie]
+
+- New translations en.json (Bulgarian) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Hungarian) [Jamie]
+
+- New translations en.json (Bulgarian) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Hungarian) [Jamie]
+
+- New translations en.json (Hungarian) [Jamie]
+
+- New translations en.json (Hungarian) [Jamie]
+
+- New translations en.json (Hungarian) [Jamie]
+
+- New translations en.json (Hungarian) [Jamie]
+
+- New translations en.json (Russian) [Jamie]
+
+- New translations en.json (Hungarian) [Jamie]
+
+- New translations en.json (Bulgarian) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- Fixed the issue where the recently added scan was actually calling the RefreshMedia which ends up wiping out the Plex cache instead of refreshing the metadata... i'm a dumbass #3023. [tidusjar]
+
+- Fix #3027. [Jamie]
+
+- Log the request. [tidusjar]
+
+- Really fixed #3010 this time. That's embarrassing. [Jamie]
+
+- Renamed "Extensions" for Spelling Mistake. [bdrumm1234]
+
+- #3010 - Make sure we only sync the Monitored Radarr movies... [tidusjar]
+
+- Fixed build. [Jamie Rees]
+
+- Fixed #2995. [Jamie Rees]
+
+- Fixed. [tidusjar]
+
+- Import System.IO. [Patrick Collins]
+
+- Add exception to handle unknown RequestType. [Patrick Collins]
+
+- Add braces to all if statements. [Patrick Collins]
+
+- Fix album-request-permission error message. [Patrick Collins]
+
+- Use string interpolation. [Austin Jackson]
+
+- Swagger index prepends configured baseurl. [Austin Jackson]
+
+- Add a internal retry when we have a locked db. [Jamie Rees]
+
+- Fixed #2374. [tidusjar]
+
+- Fixed #2950. [Jamie Rees]
+
+- Fixed #2967. [Jamie Rees]
+
+- Re-re fix the remove button. [goldenpipes]
+
+- Fixed the other error for #2955. [tidusjar]
+
+- Stuff. [tidusjar]
+
+- Logging. [tidusjar]
+
+- More to debug logging. [tidusjar]
+
+- Start the scheduler after the jobs have been assigned. [tidusjar]
+
+- Fixed some of the issues with the new scheduler not firing correctly. [Jamie Rees]
+
+- Placeholder Text for Search Boxes (#2939) [Kris Klosterman]
+
+- Reset all of the schedules due to Quartz using a different CRON system. Updated the UI code to reflect this. [tidusjar]
+
+- Fixed the scheduler! [tidusjar]
+
+- Attempting to get the new triggers working. [Jamie Rees]
+
+- Swap out the scheduler #2750. [Jamie Rees]
+
+- Moved the jobs to use quartz. [tidusjar]
+
+- Fixed the mixed content warnings and the error when removing a album request #2884. [tidusjar]
+
+- Fixed #2910. [tidusjar]
+
+- Fix for broken twitch url in readme file. [PotatoQuality]
+
+- Reverted the global app lock for the db #2750. [tidusjar]
+
+- #2750 stuff. [Jamie Rees]
+
+- More for #2750. [Jamie Rees]
+
+- Removed the auditing, was not used anyway #2750. [Jamie Rees]
+
+- Fixed #2803 in regards to the Request Button showing up. Still need to investiagte the availability side of things. [Jamie Rees]
+
+- Delete the schedules db on startup, we don't want it trying to recover the jobs. [tidusjar]
+
+- Fixed the issue where it was not picking up roles until the JWT was refreshed. [tidusjar]
+
+- Add Gotify as notification provider. [Guillaume Taquet Gasperini]
+
+- Fix cake build by setting Incubator version. [Guillaume Taquet Gasperini]
+
+- Set the View On Emby Url at runtime so the user can configure and change the URL and it will take effect straight away. [Jamie Rees]
+
+- Made use of the global mutex, this should now hopefully work #2750. [Jamie Rees]
+
+- Fixed #2636. [TidusJar]
+
+- Take out the lastlogindate update for now #2750. [tidusjar]
+
+- Fixed build. [Jamie Rees]
+
+- Fixed #2860 When a future series is unknown it should appear as available when we have the other seasons. [Jamie Rees]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- Fixed a migration issue. [tidusjar]
+
+- Set the CommandTimeout longer to see if EF can get a handle on the SQLite file when it's locked #2750. [tidusjar]
+
+- Prevented #2848 from erroring out causing further issues. [TidusJar]
+
+- Fixed #2847. [TidusJar]
+
+- Fixed a regression issue where TV Shows couldn't be requested. [TidusJar]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- Fix typo. [Jeff]
+
+- Fixed an issue where the Subscribe button was appearing on available movies. [TidusJar]
+
+- Converted the Plex Jobs to use Quartz. [Jamie]
+
+- Remove the need for the schedules.db #2994. [tidusjar]
+
+- Create FUNDING.yml. [Jamie]
+
+- Logging and slight change to the string matching now not dependant on Thread Culture #2866. [tidusjar]
+
+
+## v3.0.4256 (2019-02-19)
+
+### **New Features**
+
+- Update CHANGELOG.md. [Jamie]
+
+### **Fixes**
+
+- Fixed #2826. [tidusjar]
+
+
+## v3.0.4248 (2019-02-18)
+
+### **New Features**
+
+- Update discord link to follow the scheme of other links. [Tom McClellan]
+
+- Update issue templates. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update CHANGELOG.md. [Jamie]
+
+- Added the functionality to remove a user from getting notifications to their mobile device #2780. [tidusjar]
+
+- Added a demo mode, this will only show movies and shows that are in the public domain. Dam that stupid fruit company. [tidusjar]
+
+- Added Actor Searching for Movies! [TidusJar]
+
+- Added the ability to change where the View on Emby link goes to #2730. [TidusJar]
+
+- Added the request queue to the notifications UI so you can turn it off per notification agent #2747. [TidusJar]
+
+- Added new classes to the posters #2732. [TidusJar]
+
+### **Fixes**
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- Fix: src/Ombi/package.json to reduce vulnerabilities. [snyk-bot]
+
+- Fixed #2801 this is when a season is not correctly monitored in sonarr when approved by an admin. [tidusjar]
+
+- Small improvements to try and mitigate #2750. [tidusjar]
+
+- Removed some areas where we clear out the cache. This should help with DB locking #2750. [tidusjar]
+
+- Fixed #2810. [tidusjar]
+
+- Cannot create an issue comment with the API #2811. [tidusjar]
+
+- Set the local domain if the Application URL is set for the HELO or EHLO commands. #2636. [tidusjar]
+
+- New translations en.json (Spanish) [Jamie]
+
+- Delete ISSUE_TEMPLATE.md. [Jamie]
+
+- More minor grammatical edits. [Andrew Metzger]
+
+- Minor grammatical edits. [Andrew Metzger]
+
+- Fixed #2802 the issue where "Issues" were not being deleted correctly. [tidusjar]
+
+- Fixed #2797. [tidusjar]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- Fixed #2786. [tidusjar]
+
+- Fixed #2756. [tidusjar]
+
+- Ignore the UserName header as part of the Api is the value is an empty string. [tidusjar]
+
+- Fixed #2759. [tidusjar]
+
+- Did #2756. [TidusJar]
+
+- Fixed the exception that sometimes makes ombi fallover. [TidusJar]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- Log the error to the ui to figure out what's going on with #2755. [tidusjar]
+
+- Small fix when denying a request with a reason, we wasn't updating the ui. [TidusJar]
+
+- Make sure we can only set the ApiAlias when using the API Key. [tidusjar]
+
+- #2363 Added the ability to pass any username into the API using the ApiAlias header. [tidusjar]
+
+- Removed the Add user to Plex from Ombi. [tidusjar]
+
+
+## v3.0.4119 (2019-01-09)
+
+### **New Features**
+
+- Update CHANGELOG.md. [Jamie]
+
+- Added a page where the admin can write/style/basically do whatever they want with e.g. FAQ for the users #2715 This needs to be enabled in the Customization Settings and then it's all configured on the page. [TidusJar]
+
+- Updated the AspnetCore.App package to remove the CVE-2019-0564 vulnerability. [TidusJar]
+
+- Added a global language flag that now applies to the search by default. [tidusjar]
+
+- Updated the frontend packages (Using Angular 7 now) [TidusJar]
+
+- Added capture of anonymous analytical data. [tidusjar]
+
+- Added {AvailableDate} as a Notification Variable, this is the date the request was marked as available. See here: https://github.com/tidusjar/Ombi/wiki/Notification-Template-Variables. [tidusjar]
+
+- Added the ability to search movies via the movie db with a different language! [tidusjar]
+
+- Added the ability to specify a year when searching for movies. [tidusjar]
+
+- Update NewsletterTemplate.html. [d1slact0r]
+
+- Update NewsletterTemplate.html. [d1slact0r]
+
+- Update NewsletterTemplate.html. [d1slact0r]
+
+- Update HtmlTemplateGenerator.cs. [d1slact0r]
+
+- Update NewsletterTemplate.html. [d1slact0r]
+
+- Update HtmlTemplateGenerator.cs. [d1slact0r]
+
+- Update NewsletterTemplate.html. [d1slact0r]
+
+- Update NewsletterTemplate.html. [d1slact0r]
+
+- Update NewsletterTemplate.html. [d1slact0r]
+
+- Update HtmlTemplateGenerator.cs. [d1slact0r]
+
+- Updated boostrap #2694. [Jamie]
+
+- Added the ability to deny a request with a reason. [TidusJar]
+
+- Update EmbyEpisodeSync.cs. [Jamie]
+
+- Updated to .net core 2.2 and included a linux-arm64 build. [TidusJar]
+
+### **Fixes**
+
+- There is now a new Job in ombi that will clear out the Plex/Emby data and recache. This will prevent the issues going forward that we have when Ombi and the Media server fall out of sync with deletions/updates #2641 #2362 #1566. [TidusJar]
+
+- Potentially fix #2726. [TidusJar]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- Fixed #2725 and #2721. [TidusJar]
+
+- Made the newsletter use the default lanuage code set in the Ombi settings for movie information. [TidusJar]
+
+- Save the language code against the request so we can use it later e.g. Sending to the DVR apps. [tidusjar]
+
+- Fixed #2716. [tidusjar]
+
+- Make the newsletter BCC the users rather than creating a million newsletters (Hopefully will stop SMTP providers from marking as spam). This does mean that the custom user customization in the newsletter will no longer work. [TidusJar]
+
+- If we don't know the Plex agent, then see if it's a ImdbId, if it's not check the string for any episode and season hints #2695. [tidusjar]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- Made the search results the language specified in the search refinement. [tidusjar]
+
+- Fixed #2704. [tidusjar]
+
+- Now it is fixed :) [d1slact0r]
+
+- Android please be nice now. [d1slact0r]
+
+- Fixed title bit better. [d1slact0r]
+
+- Fixed titles. [d1slact0r]
+
+- This should fix the build for sure (stupid quotes) [d1slact0r]
+
+- Fixes build. [d1slact0r]
+
+- Rewritten the whole newsletter template. [d1slact0r]
+
+- Fixed #2697. [tidusjar]
+
+- Add linux-arm runtime identifier. [aptalca]
+
+- Add back arm packages. [aptalca]
+
+- Add arm32 package. [aptalca]
+
+- Fixed #2691. [tidusjar]
+
+- Fixed linting. [TidusJar]
+
+- Fixed the Plex OAuth when going through the wizard. [TidusJar]
+
+- Fixed #2678. [TidusJar]
+
+- Deny reason for movie requests. [TidusJar]
+
+- Set the landing and login pages background refresh to 15 seconds rather than 10 and 7. [TidusJar]
+
+- Fixed a bug with us thinking future dated emby episodes are not available, Consoldated the emby and plex search rules (since they have the same logic) [TidusJar]
+
+- Fixed build. [TidusJar]
+
+
+## v3.0.4036 (2018-12-11)
+
+### **New Features**
+
+- Changelog. [Jamie]
+
+- Added Sonarr v3  #2359. [TidusJar]
+
+### **Fixes**
+
+- !changelog. [Jamie]
+
+- Fixed a missing translation. [Jamie]
+
+- Fixed a potential security vulnerability. [Jamie]
+
+- Sorted out some of the settings pages, trying to make it consistent. [Jamie]
+
+- #2669 Fixed missing translations. [TidusJar]
+
+- Maps alias email variable for welcome emails. [Victor Usoltsev]
+
+- Increased the logo size on the landing page to match the container below it. [Jamie]
+
+- Think the request queue is done! [Jamie]
+
+- Finished off the job. [TidusJar]
+
+
+## v3.0.3988 (2018-11-23)
+
+### **New Features**
+
+- Updated the emby api since we no longer need the extra parameters to send to emby to log in a local user #2546. [Jamie]
+
+- Added the ability to get the ombi user via a Plex Token #2591. [Jamie]
+
+- Update CHANGELOG.md. [Jamie]
+
+### **Fixes**
+
+- !changelog. [Jamie]
+
+- Made the subscribe/unsubscribe button more obvious on the UI #2309. [Jamie]
+
+- Fixed #2603. [Jamie]
+
+- Fixed the issue with the user overrides #2646. [Jamie]
+
+- Fixed the issue where we could sometimes allow the request of a whole series when the user shouldn't be able to. [Jamie]
+
+- Fixed the issue where we were marking episodes as available with the Emby connection when they have not yet aired #2417 #2623. [TidusJar]
+
+- Fixed the issue where we were marking the whole season as wanted in Sonarr rather than the individual episode #2629. [TidusJar]
+
+- Fixed #2623. [Jamie]
+
+- Fixed #2633. [TidusJar]
+
+- Fixed #2639. [Jamie]
+
+- Show the TV show as available when we have all the episodes but future episodes have not aired. #2585. [Jamie]
+
+
+## v3.0.3945 (2018-10-25)
+
+### **New Features**
+
+- Update Readme for Lidarr. [Qstick]
+
+- Update CHANGELOG.md. [Jamie]
+
+### **Fixes**
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- Fixed the issue with mobile notifications. [Jamie]
+
+- Fixed #2514. [Jamie]
+
+
+## v3.0.3923 (2018-10-19)
+
+### **New Features**
+
+- Update CHANGELOG.md. [Jamie]
+
+### **Fixes**
+
+- Fixed #2601. [Jamie]
+
+
+## v3.0.3919 (2018-10-17)
+
+### **New Features**
+
+- Added automation tests for the voting feature. [TidusJar]
+
+- Update LidarrAvailabilityChecker.cs. [Jamie]
+
+- Update CHANGELOG.md. [Jamie]
+
+- Changes language selector to always show native language name. [Victor Usoltsev]
+
+- Updated test dependancies. [TidusJar]
+
+- Added in the external repo so we can rip out external stuff. [TidusJar]
+
+- Added the ability to purge/remove issues. [TidusJar]
+
+### **Fixes**
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- When a users requests content and the voting is enabled, the user who requested is an automatic +1 vote. [TidusJar]
+
+- Revert, no idea how this happened. [TidusJar]
+
+- Fixed the build. Thanks Matt! [TidusJar]
+
+- Fixes untickable mass email checkboxes in Safari. [Victor Usoltsev]
+
+- [ImgBot] optimizes images. [ImgBotApp]
+
+- Revert "Feature/purge issues" [Jamie]
+
+- Fixed the issue where user preferences was not being inported into some notifications. [TidusJar]
+
+- New role to enable users to remove their own requests. [Anojh]
+
+- Users can now remove their own requests. [Anojh]
+
+- New translations en.json (Danish) [Jamie]
+
+- Fixed lidarr newsletter bug. [Jamie]
+
+- Potentially fix the user profiles issue. [Jamie]
+
+- Hides Radarr options on movie requests page if only 1 option available. [Victor Usoltsev]
+
+- Hides Sonarr options on tv requests page if only 1 option available. [Victor Usoltsev]
+
+- Fixed the issue where we could not delete users #2558. [TidusJar]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- Subscribe the user to the request when they vote on it. [TidusJar]
+
+- Fixed #2555. [Jamie]
+
+- Fixed #2549. [Jamie]
+
+- Removed the pinID from the OAuth url #2548. [Jamie]
+
+- Put the issue purge limit on the issues page. [Jamie]
+
+- Date and times are now in the local users date time. [TidusJar]
+
+- Fixed the migration. [TidusJar]
+
+- ExternalContext migrations. [TidusJar]
+
+- The settings have now been split out of the main db. [TidusJar]
+
+- Search for the Lidarr Album when it's a new artist. [TidusJar]
+
+- The album in Lidarr does not need to be marked as monitored for us to pick up it's available. Fixes #2536. [Jamie]
+
+- Truncate the request title. [Jamie]
+
+- Fixed #2535. [Jamie]
+
+
+## v3.0.3795 (2018-09-23)
+
+### **New Features**
+
+- Update CHANGELOG.md. [Jamie]
+
+### **Fixes**
+
+- Fixed the issue with notifications not sending. [Jamie]
+
+- Removes Legacy command result variables. [Qstick]
+
+
+## v3.0.3786 (2018-09-22)
+
+### **New Features**
+
+- Update CHANGELOG.md. [Jamie]
+
+### **Fixes**
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- Fix #2529 - Change data type to long. [Anojh]
+
+- Fix #2527 - Music request not triggering search and failing. [Anojh]
+
+
+## v3.0.3776 (2018-09-21)
+
+### **New Features**
+
+- Update settingsmenu.component.html. [Jamie]
+
+- Added the request limits in the ui for music. [Jamie]
+
+- Added the root folders and qualities per user! [Jamie]
+
+- Updated all the MS packages. [TidusJar]
+
+- Update the .net core packages to fix "CVE-2018-8409: ASP.NET Core Denial Of Service Vulnerability" [TidusJar]
+
+- Change way remainingrequests component is notified. [Kenton Royal]
+
+- Added the music request limits. [TidusJar]
+
+- Added the Notification Preferences to the user. [TidusJar]
+
+- Added the API to add user notification preferences. [TidusJar]
+
+- Added more logging into the updater. [Jamie]
+
+- Update CHANGELOG.md. [Jamie]
+
+### **Fixes**
+
+- Fixed #2518. [TidusJar]
+
+- Fixed #2522. [TidusJar]
+
+- Fixed #2485. [TidusJar]
+
+- Fixed #2516. [TidusJar]
+
+- Fix bug in which requested TV wasn't logging for some users. [Kenton Royal]
+
+- Add to translations. [Kenton Royal]
+
+- Add html for displaying remaining requests on users page. [Kenton Royal]
+
+- Add quota fields to user view model. [Kenton Royal]
+
+- Users can now see the music search tab #2493. [TidusJar]
+
+- Add href to a tags so that a pointer cursor shows on requests page. [Stephen Panzer]
+
+- Allow Lidarr to specify if we should search for the album. [TidusJar]
+
+- Fixed the issue if in Radarr we only want to add and monitor, if the movie already exists we search for it. [TidusJar]
+
+- Fix bug causing wrong time to be displayed for next request. [Kenton Royal]
+
+- Bodge fix test to prevent compile error. [Kenton Royal]
+
+- Fix displaying year in issue dialog. [Stephen Panzer]
+
+- Add clearfix class. Closes #2486. [Stephen Panzer]
+
+- Correct path of lidarr component import for unix systems. [Kenton Royal]
+
+- Refactor code. [Kenton Royal]
+
+- Fix formatting error. [Kenton Royal]
+
+- Revert "Revert request.service.ts to version on upstream/develop" [Kenton Royal]
+
+- Revert request.service.ts to version on upstream/develop. [Kenton Royal]
+
+- Fix lint errors. [Kenton Royal]
+
+- Move logic for notifying when reuqest is complete. [Kenton Royal]
+
+- Remove import. [Kenton Royal]
+
+- Remove unused module. [Kenton Royal]
+
+- Refactor code. [Kenton Royal]
+
+- Add text to translation file. [Kenton Royal]
+
+- Fix query for fetching requested tv shows. [Kenton Royal]
+
+- Add vscode to gitignore. [Kenton Royal]
+
+- Fix lint errors. [Kenton Royal]
+
+- Remove unused methods from SearchController. [Kenton Royal]
+
+- Remove local vscode files. [Kenton Royal]
+
+- Fix bug when submitting requests for multiple episodes accross multiple seasons. [Kenton Royal]
+
+- Fix bug with TV requests in which requesting a seasion would treat request as single episode. [Kenton Royal]
+
+- Fix issues with remaining count updating. [Kenton Royal]
+
+- Trigger update of request limit on new request. [Kenton Royal]
+
+- Add logic for movie request count. [Kenton Royal]
+
+- Add logic for retriving request information. [Kenton Royal]
+
+- Move to seperate component and display for both TV and movies. [Kenton Royal]
+
+- Add dummy for request counter. [Kenton Royal]
+
+- Fix scss import for unix systems. [Kenton Royal]
+
+- Add methods to interface and add model class. [Kenton Royal]
+
+- !fixed lint. [TidusJar]
+
+- Fixed #2481. [TidusJar]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- Fixed #2475. [Jamie]
+
+- Stript out certain characters when sending a pushover message #2385. [TidusJar]
+
+- Add default values for Priority and Sound. [David Pooley]
+
+- Allow for the ability to set Pushover notification sound and priority from within Ombi. [David Pooley]
+
+- It works now when we request an album when we do not have the artist in Lidarr. Waiting on https://github.com/lidarr/Lidarr/issues/459 to do when we have the artist. [Jamie]
+
+- Fix non-Windows builds. Fixes #2453. [Joe Groocock]
+
+
+## v3.0.3587 (2018-08-19)
+
+### **New Features**
+
+- Added the ability to invite Plex Friends from the user management screen. [Jamie]
+
+- Added rich notifications for mobile. [Jamie]
+
+- Updater fixes. [Jamie]
+
+- Added updater test mode. [Jamie Rees]
+
+- Added a new API method to delete issue comments. [TidusJar]
+
+- Updated @ngu/carousel to beta version to remove rxjs-compat dependency. [Matt Jeanes]
+
+- Update to Angular 6/Webpack 4. [Matt Jeanes]
+
+- Update CHANGELOG.md. [Jamie]
+
+- Updated the way we create the wizard user, errors show now be fed back to the user. [Jamie]
+
+- Added Brazillian Portuguese as a language and also Polish. [Jamie]
+
+- Updated swagger. [Jamie]
+
+- Updated to 2.1.1. [Jamie]
+
+### **Fixes**
+
+- Now include the release year in the issue title #2381. [TidusJar]
+
+- Made the OAuth a Popout to work with Org. [Jamie]
+
+- Fixed #2418. [TidusJar]
+
+- #2408 Added the feature to delete comments on issues. [Jamie]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- Fixed #2440. [TidusJar]
+
+- Delete cake.config. [Chris Pritchard]
+
+- Initial attempt at getting anime seriestype working. [Chris Pritchard]
+
+- Add cake.config. [Chris Pritchard]
+
+- Fixed the issue where we wouldn't correctly mark some shows as available when there was no provider id #2429. [Jamie]
+
+- Fixed the 'loop' in the cacher #2429. [Jamie]
+
+- Fixed #2427. [Jamie]
+
+- Fixed #2424. [Jamie]
+
+- Fixed #2409. [Jamie]
+
+- More updater. [Jamie]
+
+- Humanize the request type enum in notifications e.g. TvShow will now appear as "Tv Show" #2416. [TidusJar]
+
+- Made the quality override and root folder override load when we load the show (It will now appear) [Jamie]
+
+- Fixed #2415  where power users could not set the Sonarr Quality Override or Root Folder Override. [Jamie]
+
+- #2371 Fixed the issue where certain actions would not setup the series correctly in Sonarr. [Jamie]
+
+- Tightened up the security from an API perspecitve. [TidusJar]
+
+- Stop the root folder and profile calls from erroring. [TidusJar]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- Fixed all linting. [TidusJar]
+
+- Comment out envparam stuff. [Matt Jeanes]
+
+- Fixed prod build issue. [Matt Jeanes]
+
+- Missed a tiny bit. [Matt Jeanes]
+
+- Fix test. [Matt Jeanes]
+
+- Fix test build. [Matt Jeanes]
+
+- Linting + remove debug. [Matt Jeanes]
+
+- Switch to Yarn and disable auto publish in release mode. [Matt Jeanes]
+
+- Fix for #2409. [TidusJar]
+
+- New translations en.json (Swedish) [Jamie]
+
+- New translations en.json (Spanish) [Jamie]
+
+- New translations en.json (Portuguese, Brazilian) [Jamie]
+
+- New translations en.json (Polish) [Jamie]
+
+- New translations en.json (Norwegian) [Jamie]
+
+- New translations en.json (Italian) [Jamie]
+
+- New translations en.json (German) [Jamie]
+
+- New translations en.json (French) [Jamie]
+
+- New translations en.json (Dutch) [Jamie]
+
+- New translations en.json (Danish) [Jamie]
+
+- Possible fix for #2298. [D34DC3N73R]
+
+- Fixed the text for #2370. [Jamie]
+
+- Fixed where you couldn't bulk edit the limits to 0 #2318. [Jamie]
+
+- Upgraded to .net 2.1.2 (Includes security fixes) [Jamie]
+
+
+## v3.0.3477 (2018-07-18)
+
+### **New Features**
+
 - Updated the Emby availability checker to bring it more in line with what we do with Plex. [TidusJar]
 
 - Added the ability to impersonate a user when using the API Key. This allows people to use the API and request as a certain user. #2363. [Jamie Rees]

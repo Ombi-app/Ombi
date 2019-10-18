@@ -8,11 +8,11 @@ using Microsoft.Extensions.Logging;
 using Ombi.Api.Notifications;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
-using Ombi.Notifications.Interfaces;
 using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
+using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
 
@@ -22,12 +22,14 @@ namespace Ombi.Notifications.Agents
     {
         public MobileNotification(IOneSignalApi api, ISettingsService<MobileNotificationSettings> sn, ILogger<MobileNotification> log, INotificationTemplatesRepository r,
             IMovieRequestRepository m, ITvRequestRepository t, ISettingsService<CustomizationSettings> s, IRepository<NotificationUserId> notification,
-            UserManager<OmbiUser> um, IRepository<RequestSubscription> sub) : base(sn, r, m, t, s,log, sub)
+            UserManager<OmbiUser> um, IRepository<RequestSubscription> sub, IMusicRequestRepository music, IRepository<Issues> issueRepository,
+            IRepository<UserNotificationPreferences> userPref) : base(sn, r, m, t, s, log, sub, music, userPref)
         {
             _api = api;
             _logger = log;
             _notifications = notification;
             _userManager = um;
+            _issueRepository = issueRepository;
         }
 
         public override string NotificationName => "MobileNotification";
@@ -36,6 +38,7 @@ namespace Ombi.Notifications.Agents
         private readonly ILogger<MobileNotification> _logger;
         private readonly IRepository<NotificationUserId> _notifications;
         private readonly UserManager<OmbiUser> _userManager;
+        private readonly IRepository<Issues> _issueRepository;
 
         protected override bool ValidateConfiguration(MobileNotificationSettings settings)
         {
@@ -57,7 +60,7 @@ namespace Ombi.Notifications.Agents
 
             // Get admin devices
             var playerIds = await GetAdmins(NotificationType.NewRequest);
-            await Send(playerIds, notification, settings);
+            await Send(playerIds, notification, settings, model, true);
         }
 
         protected override async Task NewIssue(NotificationOptions model, MobileNotificationSettings settings)
@@ -75,7 +78,7 @@ namespace Ombi.Notifications.Agents
 
             // Get admin devices
             var playerIds = await GetAdmins(NotificationType.Issue);
-            await Send(playerIds, notification, settings);
+            await Send(playerIds, notification, settings, model);
         }
 
         protected override async Task IssueComment(NotificationOptions model, MobileNotificationSettings settings)
@@ -95,15 +98,16 @@ namespace Ombi.Notifications.Agents
                 var isAdmin = bool.Parse(isAdminString);
                 if (isAdmin)
                 {
+                    model.Substitutes.TryGetValue("IssueId", out var issueId);
                     // Send to user
-                    var playerIds = GetUsers(model, NotificationType.IssueComment);
-                    await Send(playerIds, notification, settings);
+                    var playerIds = await GetUsersForIssue(model, int.Parse(issueId), NotificationType.IssueComment);
+                    await Send(playerIds, notification, settings, model);
                 }
                 else
                 {
                     // Send to admin
                     var playerIds = await GetAdmins(NotificationType.IssueComment);
-                    await Send(playerIds, notification, settings);
+                    await Send(playerIds, notification, settings, model);
                 }
             }
         }
@@ -124,32 +128,27 @@ namespace Ombi.Notifications.Agents
             // Send to user
             var playerIds = GetUsers(model, NotificationType.IssueResolved);
 
-            await Send(playerIds, notification, settings);
+            await Send(playerIds, notification, settings, model);
         }
 
 
         protected override async Task AddedToRequestQueue(NotificationOptions model, MobileNotificationSettings settings)
         {
-            string user;
-            string title;
-            if (model.RequestType == RequestType.Movie)
+
+            var parsed = await LoadTemplate(NotificationAgent.Mobile, NotificationType.ItemAddedToFaultQueue, model);
+            if (parsed.Disabled)
             {
-                user = MovieRequest.RequestedUser.UserAlias;
-                title = MovieRequest.Title;
+                _logger.LogInformation($"Template {NotificationType.ItemAddedToFaultQueue} is disabled for {NotificationAgent.Mobile}");
+                return;
             }
-            else
-            {
-                user = TvRequest.RequestedUser.UserAlias;
-                title = TvRequest.ParentRequest.Title;
-            }
-            var message = $"Hello! The user '{user}' has requested {title} but it could not be added. This has been added into the requests queue and will keep retrying";
             var notification = new NotificationMessage
             {
-                Message = message
+                Message = parsed.Message,
             };
+
             // Get admin devices
             var playerIds = await GetAdmins(NotificationType.Test);
-            await Send(playerIds, notification, settings);
+            await Send(playerIds, notification, settings, model);
         }
 
         protected override async Task RequestDeclined(NotificationOptions model, MobileNotificationSettings settings)
@@ -168,7 +167,7 @@ namespace Ombi.Notifications.Agents
             // Send to user
             var playerIds = GetUsers(model, NotificationType.RequestDeclined);
             await AddSubscribedUsers(playerIds);
-            await Send(playerIds, notification, settings);
+            await Send(playerIds, notification, settings, model);
         }
 
         protected override async Task RequestApproved(NotificationOptions model, MobileNotificationSettings settings)
@@ -188,7 +187,7 @@ namespace Ombi.Notifications.Agents
             var playerIds = GetUsers(model, NotificationType.RequestApproved);
 
             await AddSubscribedUsers(playerIds);
-            await Send(playerIds, notification, settings);
+            await Send(playerIds, notification, settings, model);
         }
 
         protected override async Task AvailableRequest(NotificationOptions model, MobileNotificationSettings settings)
@@ -207,20 +206,20 @@ namespace Ombi.Notifications.Agents
             var playerIds = GetUsers(model, NotificationType.RequestAvailable);
 
             await AddSubscribedUsers(playerIds);
-            await Send(playerIds, notification, settings);
+            await Send(playerIds, notification, settings, model);
         }
         protected override Task Send(NotificationMessage model, MobileNotificationSettings settings)
         {
             throw new NotImplementedException();
         }
 
-        protected async Task Send(List<string> playerIds, NotificationMessage model, MobileNotificationSettings settings)
+        protected async Task Send(List<string> playerIds, NotificationMessage model, MobileNotificationSettings settings, NotificationOptions requestModel, bool isAdminNotification = false)
         {
             if (playerIds == null || !playerIds.Any())
             {
                 return;
             }
-            var response = await _api.PushNotification(playerIds, model.Message);
+            var response = await _api.PushNotification(playerIds, model.Message, isAdminNotification, requestModel.RequestId, (int)requestModel.RequestType);
             _logger.LogDebug("Sent message to {0} recipients with message id {1}", response.recipients, response.id);
         }
 
@@ -239,7 +238,7 @@ namespace Ombi.Notifications.Agents
             }
 
             var playerIds = user.NotificationUserIds.Select(x => x.PlayerId).ToList();
-            await Send(playerIds, notification, settings);
+            await Send(playerIds, notification, settings, model);
         }
 
         private async Task<List<string>> GetAdmins(NotificationType type)
@@ -255,6 +254,7 @@ namespace Ombi.Notifications.Agents
             }
             return playerIds;
         }
+
         private List<string> GetUsers(NotificationOptions model, NotificationType type)
         {
             var notificationIds = new List<NotificationUserId>();
@@ -266,14 +266,36 @@ namespace Ombi.Notifications.Agents
             }
             if (model.UserId.HasValue() && (!notificationIds?.Any() ?? true))
             {
-               var user= _userManager.Users.Include(x => x.NotificationUserIds).FirstOrDefault(x => x.Id == model.UserId);
+                var user = _userManager.Users.Include(x => x.NotificationUserIds).FirstOrDefault(x => x.Id == model.UserId);
                 notificationIds = user.NotificationUserIds;
             }
 
             if (!notificationIds?.Any() ?? true)
             {
                 _logger.LogInformation(
-                    $"there are no admins to send a notification for {type}, for agent {NotificationAgent.Mobile}");
+                    $"there are no users to send a notification for {type}, for agent {NotificationAgent.Mobile}");
+                return null;
+            }
+            var playerIds = notificationIds.Select(x => x.PlayerId).ToList();
+            return playerIds;
+        }
+
+        private async Task<List<string>> GetUsersForIssue(NotificationOptions model, int issueId, NotificationType type)
+        {
+            var notificationIds = new List<NotificationUserId>();
+
+            var issue = await _issueRepository.GetAll()
+                .FirstOrDefaultAsync(x => x.Id == issueId);
+
+            // Get the user that raised the issue to send the notification to
+            var userRaised = await _userManager.Users.Include(x => x.NotificationUserIds).FirstOrDefaultAsync(x => x.Id == issue.UserReportedId);
+
+            notificationIds = userRaised.NotificationUserIds;
+
+            if (!notificationIds?.Any() ?? true)
+            {
+                _logger.LogInformation(
+                    $"there are no users to send a notification for {type}, for agent {NotificationAgent.Mobile}");
                 return null;
             }
             var playerIds = notificationIds.Select(x => x.PlayerId).ToList();
@@ -294,6 +316,5 @@ namespace Ombi.Notifications.Agents
                 }
             }
         }
-
     }
 }

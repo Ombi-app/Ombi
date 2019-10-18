@@ -27,6 +27,8 @@ using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Api.Github;
 using Ombi.Core.Engine;
+using Ombi.Schedule;
+using Quartz;
 
 namespace Ombi.Controllers
 {
@@ -37,13 +39,13 @@ namespace Ombi.Controllers
     [Admin]
     [ApiV1]
     [Produces("application/json")]
-    public class SettingsController : Controller
+    [ApiController]
+    public class SettingsController : ControllerBase
     {
         public SettingsController(ISettingsResolver resolver,
             IMapper mapper,
             INotificationTemplatesRepository templateRepo,
             IEmbyApi embyApi,
-            IRadarrSync radarrSync,
             ICacheService memCache,
             IGithubApi githubApi,
             IRecentlyAddedEngine engine)
@@ -52,7 +54,6 @@ namespace Ombi.Controllers
             Mapper = mapper;
             TemplateRepository = templateRepo;
             _embyApi = embyApi;
-            _radarrSync = radarrSync;
             _cache = memCache;
             _githubApi = githubApi;
             _recentlyAdded = engine;
@@ -62,7 +63,6 @@ namespace Ombi.Controllers
         private IMapper Mapper { get; }
         private INotificationTemplatesRepository TemplateRepository { get; }
         private readonly IEmbyApi _embyApi;
-        private readonly IRadarrSync _radarrSync;
         private readonly ICacheService _cache;
         private readonly IGithubApi _githubApi;
         private readonly IRecentlyAddedEngine _recentlyAdded;
@@ -224,6 +224,19 @@ namespace Ombi.Controllers
             return await Get<CustomizationSettings>();
         }
 
+
+        /// <summary>
+        /// Gets the default language set in Ombi
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("defaultlanguage")]
+        [AllowAnonymous]
+        public async Task<string> GetDefaultLanguage()
+        {
+           var s = await Get<OmbiSettings>();
+           return s.DefaultLanguageCode;
+        }
+
         /// <summary>
         /// Save the Customization settings.
         /// </summary>
@@ -275,19 +288,6 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
-        /// Gets the content of the theme available
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        [HttpGet("themecontent")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetThemeContent([FromQuery]string url)
-        {
-            var css = await _githubApi.GetThemesRawContent(url);
-            return Content(css, "text/css");
-        }
-
-        /// <summary>
         /// Gets the Sonarr Settings.
         /// </summary>
         /// <returns></returns>
@@ -316,6 +316,39 @@ namespace Ombi.Controllers
         public async Task<RadarrSettings> RadarrSettings()
         {
             return await Get<RadarrSettings>();
+        }
+
+        /// <summary>
+        /// Gets the Lidarr Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("lidarr")]
+        public async Task<LidarrSettings> LidarrSettings()
+        {
+            return await Get<LidarrSettings>();
+        }
+
+        /// <summary>
+        /// Gets the Lidarr Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("lidarrenabled")]
+        [AllowAnonymous]
+        public async Task<bool> LidarrEnabled()
+        {
+            var settings = await Get<LidarrSettings>();
+            return settings.Enabled;
+        }
+
+        /// <summary>
+        /// Save the Lidarr settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("lidarr")]
+        public async Task<bool> LidarrSettings([FromBody]LidarrSettings settings)
+        {
+            return await Save(settings);
         }
 
         /// <summary>
@@ -353,7 +386,8 @@ namespace Ombi.Controllers
             {
                 _cache.Remove(CacheKeys.RadarrRootProfiles);
                 _cache.Remove(CacheKeys.RadarrQualityProfiles);
-                BackgroundJob.Enqueue(() => _radarrSync.CacheContent());
+
+                await OmbiQuartz.TriggerJob(nameof(IRadarrSync), "DVR");
             }
             return result;
         }
@@ -485,7 +519,11 @@ namespace Ombi.Controllers
             j.RefreshMetadata = j.RefreshMetadata.HasValue() ? j.RefreshMetadata : JobSettingsHelper.RefreshMetadata(j);
             j.PlexRecentlyAddedSync = j.PlexRecentlyAddedSync.HasValue() ? j.PlexRecentlyAddedSync : JobSettingsHelper.PlexRecentlyAdded(j);
             j.Newsletter = j.Newsletter.HasValue() ? j.Newsletter : JobSettingsHelper.Newsletter(j);
- 
+            j.LidarrArtistSync = j.LidarrArtistSync.HasValue() ? j.LidarrArtistSync : JobSettingsHelper.LidarrArtistSync(j);
+            j.IssuesPurge = j.IssuesPurge.HasValue() ? j.IssuesPurge : JobSettingsHelper.IssuePurge(j);
+            j.RetryRequests = j.RetryRequests.HasValue() ? j.RetryRequests : JobSettingsHelper.ResendFailedRequests(j);
+            j.MediaDatabaseRefresh = j.MediaDatabaseRefresh.HasValue() ? j.MediaDatabaseRefresh : JobSettingsHelper.MediaDatabaseRefresh(j);
+
             return j;
         }
 
@@ -509,8 +547,8 @@ namespace Ombi.Controllers
 
                 try
                 {
-                    var r = CrontabSchedule.TryParse(expression);
-                    if (r == null)
+                    var isValid = CronExpression.IsValidExpression(expression);
+                    if (!isValid)
                     {
                         return new JobSettingsViewModel
                         {
@@ -540,14 +578,15 @@ namespace Ombi.Controllers
             var model = new CronTestModel();
             try
             {
-                var time = DateTime.UtcNow;
-                var result = CrontabSchedule.TryParse(body.Expression);
-                for (int i = 0; i < 10; i++)
+                var isValid = CronExpression.IsValidExpression(body.Expression);
+                if (!isValid)
                 {
-                    var next = result.GetNextOccurrence(time);
-                    model.Schedule.Add(next);
-                    time = next;
+                    return new CronTestModel
+                    {
+                        Message = $"CRON Expression {body.Expression} is not valid"
+                    };
                 }
+               
                 model.Success = true;
                 return model;
             }
@@ -558,18 +597,15 @@ namespace Ombi.Controllers
                     Message = $"CRON Expression {body.Expression} is not valid"
                 };
             }
-
-
         }
 
 
         /// <summary>
-        /// Save the Issues settings.
+        /// Save the Vote settings.
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("Issues")]
-        [AllowAnonymous]
         public async Task<bool> IssueSettings([FromBody]IssueSettings settings)
         {
             return await Save(settings);
@@ -592,6 +628,35 @@ namespace Ombi.Controllers
         {
             var issues = await Get<IssueSettings>();
             return issues.Enabled;
+        }
+
+        /// <summary>
+        /// Save the Vote settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("vote")]
+        public async Task<bool> VoteSettings([FromBody]VoteSettings settings)
+        {
+            return await Save(settings);
+        }
+
+        /// <summary>
+        /// Gets the Vote Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("vote")]
+        public async Task<VoteSettings> VoteSettings()
+        {
+            return await Get<VoteSettings>();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("voteenabled")]
+        public async Task<bool> VoteEnabled()
+        {
+            var vote = await Get<VoteSettings>();
+            return vote.Enabled;
         }
 
         /// <summary>
@@ -877,6 +942,40 @@ namespace Ombi.Controllers
 
             // Lookup to see if we have any templates saved
             model.NotificationTemplates = BuildTemplates(NotificationAgent.Mobile);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Saves the gotify notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/gotify")]
+        public async Task<bool> GotifyNotificationSettings([FromBody] GotifyNotificationViewModel model)
+        {
+            // Save the email settings
+            var settings = Mapper.Map<GotifySettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.UpdateRange(model.NotificationTemplates);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the gotify Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/gotify")]
+        public async Task<GotifyNotificationViewModel> GotifyNotificationSettings()
+        {
+            var settings = await Get<GotifySettings>();
+            var model = Mapper.Map<GotifyNotificationViewModel>(settings);
+
+            // Lookup to see if we have any templates saved
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.Gotify);
 
             return model;
         }

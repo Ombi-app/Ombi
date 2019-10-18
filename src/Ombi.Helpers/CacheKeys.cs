@@ -18,6 +18,8 @@ namespace Ombi.Helpers
         public const string NowPlayingMovies = nameof(NowPlayingMovies);
         public const string RadarrRootProfiles = nameof(RadarrRootProfiles);
         public const string RadarrQualityProfiles = nameof(RadarrQualityProfiles);
+        public const string LidarrRootFolders = nameof(LidarrRootFolders);
+        public const string LidarrQualityProfiles = nameof(LidarrQualityProfiles);
         public const string FanartTv = nameof(FanartTv);
     }
 }

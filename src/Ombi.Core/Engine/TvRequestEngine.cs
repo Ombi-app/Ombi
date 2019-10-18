@@ -23,6 +23,7 @@ using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
+using Ombi.Core.Models;
 
 namespace Ombi.Core.Engine
 {
@@ -30,14 +31,13 @@ namespace Ombi.Core.Engine
     {
         public TvRequestEngine(ITvMazeApi tvApi, IMovieDbApi movApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IRuleEvaluator rule, OmbiUserManager manager,
-            ITvSender sender, IAuditRepository audit, IRepository<RequestLog> rl, ISettingsService<OmbiSettings> settings, ICacheService cache,
+            ITvSender sender, IRepository<RequestLog> rl, ISettingsService<OmbiSettings> settings, ICacheService cache,
             IRepository<RequestSubscription> sub) : base(user, requestService, rule, manager, cache, settings, sub)
         {
             TvApi = tvApi;
             MovieDbApi = movApi;
             NotificationHelper = helper;
             TvSender = sender;
-            Audit = audit;
             _requestLog = rl;
         }
 
@@ -45,7 +45,6 @@ namespace Ombi.Core.Engine
         private ITvMazeApi TvApi { get; }
         private IMovieDbApi MovieDbApi { get; }
         private ITvSender TvSender { get; }
-        private IAuditRepository Audit { get; }
         private readonly IRepository<RequestLog> _requestLog;
 
         public async Task<RequestEngineResult> RequestTvShow(TvRequestViewModel tv)
@@ -83,8 +82,6 @@ namespace Ombi.Core.Engine
                 }
             }
 
-            await Audit.Record(AuditType.Added, AuditArea.TvRequest, $"Added Request {tvBuilder.ChildRequest.Title}", Username);
-
             var existingRequest = await TvRepository.Get().FirstOrDefaultAsync(x => x.TvDbId == tv.TvDbId);
             if (existingRequest != null)
             {
@@ -115,6 +112,7 @@ namespace Ombi.Core.Engine
                     }
 
                 // Remove the ID since this is a new child
+                // This was a TVDBID for the request rules to run
                 tvBuilder.ChildRequest.Id = 0;
                 if (!tvBuilder.ChildRequest.SeasonRequests.Any())
                 {
@@ -143,7 +141,7 @@ namespace Ombi.Core.Engine
                     .Include(x => x.ChildRequests)
                     .ThenInclude(x => x.SeasonRequests)
                     .ThenInclude(x => x.Episodes)
-                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
+                    .OrderByDescending(x => x.ChildRequests.Select(y => y.RequestedDate).FirstOrDefault())
                     .Skip(position).Take(count).ToListAsync();
 
                 // Filter out children
@@ -156,8 +154,9 @@ namespace Ombi.Core.Engine
                     .Include(x => x.ChildRequests)
                     .ThenInclude(x => x.SeasonRequests)
                     .ThenInclude(x => x.Episodes)
-                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
+                    .OrderByDescending(x => x.ChildRequests.Select(y => y.RequestedDate).FirstOrDefault())
                     .Skip(position).Take(count).ToListAsync();
+                
             }
 
             allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
@@ -171,24 +170,30 @@ namespace Ombi.Core.Engine
         public async Task<RequestsViewModel<TvRequests>> GetRequestsLite(int count, int position, OrderFilterModel type)
         {
             var shouldHide = await HideFromOtherUsers();
-            List<TvRequests> allRequests;
+            List<TvRequests> allRequests = null;
             if (shouldHide.Hide)
             {
-                allRequests = await TvRepository.GetLite(shouldHide.UserId)
-                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
-                    .Skip(position).Take(count).ToListAsync();
+                var tv = TvRepository.GetLite(shouldHide.UserId);
+                if (tv.Any() && tv.Select(x => x.ChildRequests).Any())
+                {
+                    allRequests = await tv.OrderByDescending(x => x.ChildRequests.Select(y => y.RequestedDate).FirstOrDefault()).Skip(position).Take(count).ToListAsync();
+                }
 
                 // Filter out children
-
                 FilterChildren(allRequests, shouldHide);
             }
             else
             {
-                allRequests = await TvRepository.GetLite()
-                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
-                    .Skip(position).Take(count).ToListAsync();
+                var tv = TvRepository.GetLite();
+                if (tv.Any() && tv.Select(x => x.ChildRequests).Any())
+                {
+                    allRequests = await tv.OrderByDescending(x => x.ChildRequests.Select(y => y.RequestedDate).FirstOrDefault()).Skip(position).Take(count).ToListAsync();
+                }
             }
-
+            if (allRequests == null)
+            {
+                return new RequestsViewModel<TvRequests>();
+            }
             allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
 
             return new RequestsViewModel<TvRequests>
@@ -196,38 +201,6 @@ namespace Ombi.Core.Engine
                 Collection = allRequests
             };
         }
-
-        public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> GetRequestsTreeNode(int count, int position)
-        {
-            var shouldHide = await HideFromOtherUsers();
-            List<TvRequests> allRequests;
-            if (shouldHide.Hide)
-            {
-                allRequests = await TvRepository.Get(shouldHide.UserId)
-                    .Include(x => x.ChildRequests)
-                    .ThenInclude(x => x.SeasonRequests)
-                    .ThenInclude(x => x.Episodes)
-                    .Where(x => x.ChildRequests.Any())
-                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
-                    .Skip(position).Take(count).ToListAsync();
-
-                FilterChildren(allRequests, shouldHide);
-            }
-            else
-            {
-                allRequests = await TvRepository.Get()
-                    .Include(x => x.ChildRequests)
-                    .ThenInclude(x => x.SeasonRequests)
-                    .ThenInclude(x => x.Episodes)
-                    .Where(x => x.ChildRequests.Any())
-                    .OrderByDescending(x => x.ChildRequests.Max(y => y.RequestedDate))
-                    .Skip(position).Take(count).ToListAsync();
-            }
-
-            allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
-            return ParseIntoTreeNode(allRequests);
-        }
-
         public async Task<IEnumerable<TvRequests>> GetRequests()
         {
             var shouldHide = await HideFromOtherUsers();
@@ -288,6 +261,10 @@ namespace Ombi.Core.Engine
 
         private static void FilterChildren(IEnumerable<TvRequests> allRequests, HideResult shouldHide)
         {
+            if (allRequests == null)
+            {
+                return;
+            }
             // Filter out children
             foreach (var t in allRequests)
             {
@@ -350,26 +327,26 @@ namespace Ombi.Core.Engine
             return results;
         }
 
-        public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> SearchTvRequestTree(string search)
+        public async Task UpdateRootPath(int requestId, int rootPath)
         {
-            var shouldHide = await HideFromOtherUsers();
-            IQueryable<TvRequests> allRequests;
-            if (shouldHide.Hide)
-            {
-                allRequests = TvRepository.Get(shouldHide.UserId);
-            }
-            else
-            {
-                allRequests = TvRepository.Get();
-            }
-            var results = await allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToListAsync();
-            results.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
-            return ParseIntoTreeNode(results);
+            var allRequests = TvRepository.Get();
+            var results = await allRequests.FirstOrDefaultAsync(x => x.Id == requestId);
+            results.RootFolder = rootPath;
+
+            await TvRepository.Update(results);
+        }
+
+        public async Task UpdateQualityProfile(int requestId, int profileId)
+        {
+            var allRequests = TvRepository.Get();
+            var results = await allRequests.FirstOrDefaultAsync(x => x.Id == requestId);
+            results.QualityOverride = profileId;
+
+            await TvRepository.Update(results);
         }
 
         public async Task<TvRequests> UpdateTvRequest(TvRequests request)
         {
-            await Audit.Record(AuditType.Updated, AuditArea.TvRequest, $"Updated Request {request.Title}", Username);
             var allRequests = TvRepository.Get();
             var results = await allRequests.FirstOrDefaultAsync(x => x.Id == request.Id);
 
@@ -403,6 +380,7 @@ namespace Ombi.Core.Engine
                 foreach (var ep in s.Episodes)
                 {
                     ep.Approved = true;
+                    ep.Requested = true;
                 }
             }
 
@@ -411,7 +389,6 @@ namespace Ombi.Core.Engine
             if (request.Approved)
             {
                 NotificationHelper.Notify(request, NotificationType.RequestApproved);
-                await Audit.Record(AuditType.Approved, AuditArea.TvRequest, $"Approved Request {request.Title}", Username);
                 // Autosend
                 await TvSender.Send(request);
             }
@@ -421,7 +398,7 @@ namespace Ombi.Core.Engine
             };
         }
 
-        public async Task<RequestEngineResult> DenyChildRequest(int requestId)
+        public async Task<RequestEngineResult> DenyChildRequest(int requestId, string reason)
         {
             var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId);
             if (request == null)
@@ -432,6 +409,7 @@ namespace Ombi.Core.Engine
                 };
             }
             request.Denied = true;
+            request.DeniedReason = reason;
             await TvRepository.UpdateChild(request);
             NotificationHelper.Notify(request, NotificationType.RequestDeclined);
             return new RequestEngineResult
@@ -442,9 +420,7 @@ namespace Ombi.Core.Engine
 
         public async Task<ChildRequests> UpdateChildRequest(ChildRequests request)
         {
-            await Audit.Record(AuditType.Updated, AuditArea.TvRequest, $"Updated Request {request.Title}", Username);
-
-            await TvRepository.UpdateChild(request);
+             await TvRepository.UpdateChild(request);
             return request;
         }
 
@@ -462,16 +438,14 @@ namespace Ombi.Core.Engine
                 // Delete the parent
                 TvRepository.Db.TvRequests.Remove(parent);
             }
-            await Audit.Record(AuditType.Deleted, AuditArea.TvRequest, $"Deleting Request {request.Title}", Username);
-
+            
             await TvRepository.Db.SaveChangesAsync();
         }
 
         public async Task RemoveTvRequest(int requestId)
         {
             var request = await TvRepository.Get().FirstOrDefaultAsync(x => x.Id == requestId);
-            await Audit.Record(AuditType.Deleted, AuditArea.TvRequest, $"Deleting Request {request.Title}", Username);
-            await TvRepository.Delete(request);
+             await TvRepository.Delete(request);
         }
 
         public async Task<bool> UserHasRequest(string userId)
@@ -516,6 +490,7 @@ namespace Ombi.Core.Engine
                 };
             }
             request.Available = true;
+            request.MarkedAsAvailable = DateTime.Now;
             foreach (var season in request.SeasonRequests)
             {
                 foreach (var e in season.Episodes)
@@ -585,29 +560,7 @@ namespace Ombi.Core.Engine
             return await AfterRequest(model.ChildRequests.FirstOrDefault());
         }
 
-        private static List<TreeNode<TvRequests, List<ChildRequests>>> ParseIntoTreeNode(IEnumerable<TvRequests> result)
-        {
-            var node = new List<TreeNode<TvRequests, List<ChildRequests>>>();
-
-            foreach (var value in result)
-            {
-                node.Add(new TreeNode<TvRequests, List<ChildRequests>>
-                {
-                    Data = value,
-                    Children = new List<TreeNode<List<ChildRequests>>>
-                    {
-                        new TreeNode<List<ChildRequests>>
-                        {
-                            Data = SortEpisodes(value.ChildRequests),
-                            Leaf = true
-                        }
-                    }
-                });
-            }
-            return node;
-        }
-
-        private static List<ChildRequests> SortEpisodes(List<ChildRequests> items)
+       private static List<ChildRequests> SortEpisodes(List<ChildRequests> items)
         {
             foreach (var value in items)
             {
@@ -628,6 +581,15 @@ namespace Ombi.Core.Engine
                 NotificationHelper.NewRequest(model);
             }
 
+            await _requestLog.Add(new RequestLog
+            {
+                UserId = (await GetUser()).Id,
+                RequestDate = DateTime.UtcNow,
+                RequestId = model.Id,
+                RequestType = RequestType.TvShow,
+                EpisodeCount = model.SeasonRequests.Select(m => m.Episodes.Count).Sum(),
+            });
+
             if (model.Approved)
             {
                 // Autosend
@@ -635,23 +597,67 @@ namespace Ombi.Core.Engine
                 var result = await TvSender.Send(model);
                 if (result.Success)
                 {
-                    return new RequestEngineResult { Result = true };
+                    return new RequestEngineResult { Result = true, RequestId = model.Id};
                 }
                 return new RequestEngineResult
                 {
-                    ErrorMessage = result.Message
+                    ErrorMessage = result.Message,
+                    RequestId = model.Id
                 };
             }
 
-            await _requestLog.Add(new RequestLog
-            {
-                UserId = (await GetUser()).Id,
-                RequestDate = DateTime.UtcNow,
-                RequestId = model.Id,
-                RequestType = RequestType.TvShow,
-            });
+            return new RequestEngineResult { Result = true, RequestId = model.Id };
+        }
 
-            return new RequestEngineResult { Result = true };
+        public async Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user)
+        {
+            if (user == null)
+            {
+                user = await GetUser();
+
+                // If user is still null after attempting to get the logged in user, return null.
+                if (user == null)
+                {
+                    return null;
+                }
+            }
+
+            int limit = user.EpisodeRequestLimit ?? 0;
+
+            if (limit <= 0)
+            {
+                return new RequestQuotaCountModel()
+                {
+                    HasLimit = false,
+                    Limit = 0,
+                    Remaining = 0,
+                    NextRequest = DateTime.Now,
+                };
+            }
+
+            IQueryable<RequestLog> log = _requestLog.GetAll()
+                                            .Where(x => x.UserId == user.Id
+                                                && x.RequestType == RequestType.TvShow
+                                                && x.RequestDate >= DateTime.UtcNow.AddDays(-7));
+
+            // Needed, due to a bug which would cause all episode counts to be 0
+            int zeroEpisodeCount = await log.Where(x => x.EpisodeCount == 0).Select(x => x.EpisodeCount).CountAsync();
+
+            int episodeCount = await log.Where(x => x.EpisodeCount != 0).Select(x => x.EpisodeCount).SumAsync();
+
+            int count = limit - (zeroEpisodeCount + episodeCount);
+
+            DateTime oldestRequestedAt = await log.OrderBy(x => x.RequestDate)
+                                            .Select(x => x.RequestDate)
+                                            .FirstOrDefaultAsync();
+                        
+            return new RequestQuotaCountModel()
+            {
+                HasLimit = true,    
+                Limit = limit,
+                Remaining = count,
+                NextRequest = DateTime.SpecifyKind(oldestRequestedAt.AddDays(7), DateTimeKind.Utc),
+            };
         }
     }
 }

@@ -6,7 +6,6 @@ using Ombi.Api.Discord;
 using Ombi.Api.Discord.Models;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
-using Ombi.Notifications.Interfaces;
 using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.Notifications;
@@ -20,8 +19,9 @@ namespace Ombi.Notifications.Agents
     {
         public DiscordNotification(IDiscordApi api, ISettingsService<DiscordNotificationSettings> sn,
                                    ILogger<DiscordNotification> log, INotificationTemplatesRepository r,
-                                   IMovieRequestRepository m, ITvRequestRepository t, ISettingsService<CustomizationSettings> s, IRepository<RequestSubscription> sub)
-            : base(sn, r, m, t,s,log, sub)
+                                   IMovieRequestRepository m, ITvRequestRepository t, ISettingsService<CustomizationSettings> s, IRepository<RequestSubscription> sub, IMusicRequestRepository music,
+                                   IRepository<UserNotificationPreferences> userPref)
+            : base(sn, r, m, t, s, log, sub, music, userPref)
         {
             Api = api;
             Logger = log;
@@ -56,142 +56,42 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task NewRequest(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.NewRequest, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.NewRequest} is disabled for {NotificationAgent.Discord}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-
-            notification.Other.Add("image", parsed.Image);
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.NewRequest);
         }
 
         protected override async Task NewIssue(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.Issue, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.Issue} is disabled for {NotificationAgent.Discord}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-            notification.Other.Add("image", parsed.Image);
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.Issue);
         }
 
         protected override async Task IssueComment(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.IssueComment, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.IssueComment} is disabled for {NotificationAgent.Discord}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-            notification.Other.Add("image", parsed.Image);
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.IssueComment);
         }
 
         protected override async Task IssueResolved(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.IssueResolved, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.IssueResolved} is disabled for {NotificationAgent.Discord}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-            notification.Other.Add("image", parsed.Image);
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.IssueResolved);
         }
 
         protected override async Task AddedToRequestQueue(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var user = string.Empty;
-            var title = string.Empty;
-            var image = string.Empty;
-            if (model.RequestType == RequestType.Movie)
-            {
-                user = MovieRequest.RequestedUser.UserAlias;
-                title = MovieRequest.Title;
-                image = MovieRequest.PosterPath;
-            }
-            else
-            {
-                user = TvRequest.RequestedUser.UserAlias;
-                title = TvRequest.ParentRequest.Title;
-                image = TvRequest.ParentRequest.PosterPath;
-            }
-            var message = $"Hello! The user '{user}' has requested {title} but it could not be added. This has been added into the requests queue and will keep retrying";
-            var notification = new NotificationMessage
-            {
-                Message = message
-            };
-            notification.Other.Add("image", image);
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.ItemAddedToFaultQueue);
         }
 
         protected override async Task RequestDeclined(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.RequestDeclined, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.RequestDeclined} is disabled for {NotificationAgent.Discord}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-            notification.Other.Add("image", parsed.Image);
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.RequestDeclined);
         }
 
         protected override async Task RequestApproved(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.RequestApproved, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.RequestApproved} is disabled for {NotificationAgent.Discord}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-
-            notification.Other.Add("image", parsed.Image);
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.RequestApproved);
         }
 
         protected override async Task AvailableRequest(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.RequestAvailable, model);
-            if (parsed.Disabled)
-            {
-                Logger.LogInformation($"Template {NotificationType.RequestAvailable} is disabled for {NotificationAgent.Discord}");
-                return;
-            }
-            var notification = new NotificationMessage
-            {
-                Message = parsed.Message,
-            };
-            notification.Other.Add("image", parsed.Image);
-            await Send(notification, settings);
+            await Run(model, settings, NotificationType.RequestAvailable);
         }
 
         protected override async Task Send(NotificationMessage model, DiscordNotificationSettings settings)
@@ -234,6 +134,22 @@ namespace Ombi.Notifications.Agents
             {
                 Message = message,
             };
+            await Send(notification, settings);
+        }
+
+        private async Task Run(NotificationOptions model, DiscordNotificationSettings settings, NotificationType type)
+        {
+            var parsed = await LoadTemplate(NotificationAgent.Discord, type, model);
+            if (parsed.Disabled)
+            {
+                Logger.LogInformation($"Template {type} is disabled for {NotificationAgent.Discord}");
+                return;
+            }
+            var notification = new NotificationMessage
+            {
+                Message = parsed.Message,
+            };
+            notification.Other.Add("image", parsed.Image);
             await Send(notification, settings);
         }
     }

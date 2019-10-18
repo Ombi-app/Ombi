@@ -1,4 +1,5 @@
-﻿import { ICheckbox } from "./index";
+﻿import { ICheckbox } from ".";
+import { IRemainingRequests } from "./IRemainingRequests";
 
 export interface IUser {
     id: string;
@@ -12,15 +13,35 @@ export interface IUser {
     hasLoggedIn: boolean;
     movieRequestLimit: number;
     episodeRequestLimit: number;
+    musicRequestLimit: number;
     userAccessToken: string;
+    userQualityProfiles: IUserQualityProfiles;
+
     // FOR UI
+    episodeRequestQuota: IRemainingRequests | null;
+    movieRequestQuota: IRemainingRequests | null;
+    musicRequestQuota: IRemainingRequests | null;
     checked: boolean;
+}
+
+export interface IUserQualityProfiles {
+    sonarrQualityProfileAnime: number;
+    sonarrRootPathAnime: number;
+    sonarrRootPath: number;
+    sonarrQualityProfile: number;
+    radarrRootPath: number;
+    radarrQualityProfile: number;   
 }
 
 export interface ICreateWizardUser {
     username: string;
     password: string;
     usePlexAdminAccount: boolean;
+}
+
+export interface IWizardUserResult {
+    result: boolean;
+    errors: string[];
 }
 
 export enum UserType {
@@ -60,4 +81,23 @@ export interface IMassEmailModel {
     subject: string;
     body: string;
     users: IUser[];
+}
+
+export interface INotificationPreferences {
+    id: number;
+    userId: string;
+    agent: INotificationAgent;
+    enabled: boolean;
+    value: string;
+}
+
+export enum INotificationAgent {
+    Email = 0,
+    Discord = 1,
+    Pushbullet = 2,
+    Pushover = 3,
+    Telegram = 4,
+    Slack = 5,
+    Mattermost = 6,
+    Mobile = 7,
 }

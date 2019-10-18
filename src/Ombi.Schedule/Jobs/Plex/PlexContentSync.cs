@@ -42,22 +42,21 @@ using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.Plex.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
     public class PlexContentSync : IPlexContentSync
     {
         public PlexContentSync(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentSync> logger, IPlexContentRepository repo,
-            IPlexEpisodeSync epsiodeSync, IRefreshMetadata metadataRefresh, IPlexAvailabilityChecker checker)
+            IPlexEpisodeSync epsiodeSync)
         {
             Plex = plex;
             PlexApi = plexApi;
             Logger = logger;
             Repo = repo;
             EpisodeSync = epsiodeSync;
-            Metadata = metadataRefresh;
-            Checker = checker;
-            plex.ClearCache();
+            Plex.ClearCache();
         }
 
         private ISettingsService<PlexSettings> Plex { get; }
@@ -65,11 +64,12 @@ namespace Ombi.Schedule.Jobs.Plex
         private ILogger<PlexContentSync> Logger { get; }
         private IPlexContentRepository Repo { get; }
         private IPlexEpisodeSync EpisodeSync { get; }
-        private IRefreshMetadata Metadata { get; }
-        private IPlexAvailabilityChecker Checker { get; }
 
-        public async Task CacheContent(bool recentlyAddedSearch = false)
+        public async Task Execute(IJobExecutionContext context)
         {
+            JobDataMap dataMap = context.JobDetail.JobDataMap;
+            var recentlyAddedSearch = dataMap.GetBooleanValueFromString(JobDataKeys.RecentlyAddedSearch);
+
             var plexSettings = await Plex.GetSettingsAsync();
             if (!plexSettings.Enable)
             {
@@ -81,7 +81,9 @@ namespace Ombi.Schedule.Jobs.Plex
                 return;
             }
             var processedContent = new ProcessedContent();
-            Logger.LogInformation("Starting Plex Content Cacher");
+            Logger.LogInformation(recentlyAddedSearch
+                ? "Starting Plex Content Cacher Recently Added Scan"
+                : "Starting Plex Content Cacher");
             try
             {
                 if (recentlyAddedSearch)
@@ -101,19 +103,17 @@ namespace Ombi.Schedule.Jobs.Plex
             if (!recentlyAddedSearch)
             {
                 Logger.LogInformation("Starting EP Cacher");
-                BackgroundJob.Enqueue(() => EpisodeSync.Start());
+                await OmbiQuartz.TriggerJob(nameof(IPlexEpisodeSync), "Plex");
             }
 
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
+                Logger.LogInformation("Starting Metadata refresh");
                 // Just check what we send it
-                BackgroundJob.Enqueue(() => Metadata.ProcessPlexServerContent(processedContent.Content));
+                await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
             }
 
-            if ((processedContent?.HasProcessedEpisodes ?? false) && recentlyAddedSearch)
-            {
-                BackgroundJob.Enqueue(() => Checker.Start());
-            }
+            Logger.LogInformation("Finished Plex Content Cacher, with processed content: {0}, episodes: {1}. Recently Added Scan: {2}", processedContent?.Content?.Count() ?? 0, processedContent?.Episodes?.Count() ?? 0, recentlyAddedSearch);
         }
 
         private async Task<ProcessedContent> StartTheCache(PlexSettings plexSettings, bool recentlyAddedSearch)
@@ -161,7 +161,8 @@ namespace Ombi.Schedule.Jobs.Plex
 
             foreach (var content in allContent)
             {
-                if (content.viewGroup.Equals(PlexMediaType.Episode.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                Logger.LogDebug($"Got type '{content.viewGroup}' to process");
+                if (content.viewGroup.Equals(PlexMediaType.Episode.ToString(), StringComparison.InvariantCultureIgnoreCase))
                 {
                     Logger.LogDebug("Found some episodes, this must be a recently added sync");
                     var count = 0;
@@ -190,10 +191,10 @@ namespace Ombi.Schedule.Jobs.Plex
                             }
                             contentToAdd.Clear();
                         }
-                        if (count > 200)
+                        if (count > 30)
                         {
                             await Repo.SaveChangesAsync();
-
+                            count = 0;
                         }
                     }
 
@@ -205,7 +206,7 @@ namespace Ombi.Schedule.Jobs.Plex
                         episodesProcessed.AddRange(episodesAdded.Select(x => x.Id));
                     }
                 }
-                if (content.viewGroup.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                if (content.viewGroup.Equals(PlexMediaType.Show.ToString(), StringComparison.InvariantCultureIgnoreCase))
                 {
                     // Process Shows
                     Logger.LogDebug("Processing TV Shows");
@@ -227,7 +228,7 @@ namespace Ombi.Schedule.Jobs.Plex
                             }
                             contentToAdd.Clear();
                         }
-                        if (count > 200)
+                        if (count > 30)
                         {
                             await Repo.SaveChangesAsync();
                         }
@@ -235,7 +236,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
                     await Repo.SaveChangesAsync();
                 }
-                if (content.viewGroup.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                if (content.viewGroup.Equals(PlexMediaType.Movie.ToString(), StringComparison.InvariantCultureIgnoreCase))
                 {
                     Logger.LogDebug("Processing Movies");
                     foreach (var movie in content?.Metadata ?? new Metadata[] { })
@@ -381,6 +382,19 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if (existingContent != null)
             {
+                // Let's make sure that we have some sort of ID e.g. Imdbid for this,
+                // Looks like it's possible to not have an Id for a show
+                // I suspect we cached that show just as it was added to Plex.
+
+                if (!existingContent.HasImdb && !existingContent.HasTheMovieDb && !existingContent.HasTvDb)
+                {
+                    var showMetadata = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
+                        existingContent.Key);
+                    GetProviderIds(showMetadata, existingContent);
+
+                    await Repo.Update(existingContent);
+                }
+
                 // Just check the key
                 if (existingKey != null)
                 {
@@ -478,10 +492,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     // But it does not contain the `guid` property that we need to pull out thetvdb id...
                     var showMetadata = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
                         show.ratingKey);
-                    var providerIds =
-                        PlexHelper.GetProviderIdFromPlexGuid(showMetadata.MediaContainer.Metadata.FirstOrDefault()
-                            .guid);
-
+                  
                     var item = new PlexServerContent
                     {
                         AddedAt = DateTime.Now,
@@ -492,20 +503,7 @@ namespace Ombi.Schedule.Jobs.Plex
                         Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, show.ratingKey),
                         Seasons = new List<PlexSeasonsContent>()
                     };
-                    if (providerIds.Type == ProviderType.ImdbId)
-                    {
-                        item.ImdbId = providerIds.ImdbId;
-                    }
-
-                    if (providerIds.Type == ProviderType.TheMovieDbId)
-                    {
-                        item.TheMovieDbId = providerIds.TheMovieDb;
-                    }
-
-                    if (providerIds.Type == ProviderType.TvDbId)
-                    {
-                        item.TvDbId = providerIds.TheTvDb;
-                    }
+                    GetProviderIds(showMetadata, item);
 
                     // Let's just double check to make sure we do not have it now we have some id's
                     var existingImdb = false;
@@ -544,6 +542,27 @@ namespace Ombi.Schedule.Jobs.Plex
                     Logger.LogError(LoggingEvents.PlexContentCacher, e, "Exception when adding tv show {0}",
                         show.title);
                 }
+            }
+        }
+
+        private static void GetProviderIds(PlexMetadata showMetadata, PlexServerContent existingContent)
+        {
+            var providerIds =
+                PlexHelper.GetProviderIdFromPlexGuid(showMetadata.MediaContainer.Metadata.FirstOrDefault()
+                    .guid);
+            if (providerIds.Type == ProviderType.ImdbId)
+            {
+                existingContent.ImdbId = providerIds.ImdbId;
+            }
+
+            if (providerIds.Type == ProviderType.TheMovieDbId)
+            {
+                existingContent.TheMovieDbId = providerIds.TheMovieDb;
+            }
+
+            if (providerIds.Type == ProviderType.TvDbId)
+            {
+                existingContent.TvDbId = providerIds.TheTvDb;
             }
         }
 

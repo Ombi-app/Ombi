@@ -34,9 +34,11 @@ using Microsoft.Extensions.Logging;
 using Ombi.Core.Notifications;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
+using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Emby
 {
@@ -58,10 +60,12 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly INotificationService _notificationService;
         private readonly ILogger<EmbyAvaliabilityChecker> _log;
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             await ProcessMovies();
             await ProcessTv();
+
+            await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
         }
 
         private async Task ProcessMovies()
@@ -89,6 +93,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 _log.LogInformation("We have found the request {0} on Emby, sending the notification", movie?.Title ?? string.Empty);
 
                 movie.Available = true;
+                movie.MarkedAsAvailable = DateTime.Now;
                 if (movie.Available)
                 {
                     var recipient = movie.RequestedUser.Email.HasValue() ? movie.RequestedUser.Email : string.Empty;
@@ -185,6 +190,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 {
                     // We have fulfulled this request!
                     child.Available = true;
+                    child.MarkedAsAvailable = DateTime.Now;
                     BackgroundJob.Enqueue(() => _notificationService.Publish(new NotificationOptions
                     {
                         DateTime = DateTime.Now,

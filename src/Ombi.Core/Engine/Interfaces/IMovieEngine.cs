@@ -10,14 +10,15 @@ namespace Ombi.Core
 
         Task<IEnumerable<SearchMovieViewModel>> PopularMovies();
 
-        Task<IEnumerable<SearchMovieViewModel>> Search(string search);
+        Task<IEnumerable<SearchMovieViewModel>> Search(string search, int? year, string languageCode);
 
         Task<IEnumerable<SearchMovieViewModel>> TopRatedMovies();
 
         Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies();
         
-        Task<SearchMovieViewModel> LookupImdbInformation(int theMovieDbId);
+        Task<SearchMovieViewModel> LookupImdbInformation(int theMovieDbId, string langCode = null);
 
-        Task<IEnumerable<SearchMovieViewModel>> SimilarMovies(int theMovieDbId);
+        Task<IEnumerable<SearchMovieViewModel>> SimilarMovies(int theMovieDbId, string langCode);
+        Task<IEnumerable<SearchMovieViewModel>> SearchActor(string search, string langaugeCode);
     }
 }

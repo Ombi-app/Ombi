@@ -8,7 +8,7 @@ namespace Ombi.Schedule.Jobs.Plex.Models
         public IEnumerable<int> Content { get; set; }
         public IEnumerable<int> Episodes { get; set; }
 
-        public bool HasProcessedContent => Content.Any();
-        public bool HasProcessedEpisodes => Episodes.Any();
+        public bool HasProcessedContent => Content?.Any() ?? false;
+        public bool HasProcessedEpisodes => Episodes?.Any() ?? false;
     }
 }

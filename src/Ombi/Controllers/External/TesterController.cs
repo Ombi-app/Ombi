@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.CouchPotato;
 using Ombi.Api.Emby;
+using Ombi.Api.Lidarr;
 using Ombi.Api.Plex;
 using Ombi.Api.Radarr;
 using Ombi.Api.SickRage;
@@ -38,7 +39,8 @@ namespace Ombi.Controllers.External
         public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN,
             IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
             IPlexApi plex, IEmbyApi emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider,
-            ICouchPotatoApi cpApi, ITelegramNotification telegram, ISickRageApi srApi, INewsletterJob newsletter, IMobileNotification mobileNotification)
+            ICouchPotatoApi cpApi, ITelegramNotification telegram, ISickRageApi srApi, INewsletterJob newsletter, IMobileNotification mobileNotification,
+            ILidarrApi lidarrApi, IGotifyNotification gotifyNotification)
         {
             Service = service;
             DiscordNotification = notification;
@@ -58,6 +60,8 @@ namespace Ombi.Controllers.External
             SickRageApi = srApi;
             Newsletter = newsletter;
             MobileNotification = mobileNotification;
+            LidarrApi = lidarrApi;
+            GotifyNotification = gotifyNotification;
         }
 
         private INotificationService Service { get; }
@@ -66,6 +70,7 @@ namespace Ombi.Controllers.External
         private IPushbulletNotification PushbulletNotification { get; }
         private ISlackNotification SlackNotification { get; }
         private IPushoverNotification PushoverNotification { get; }
+        private IGotifyNotification GotifyNotification { get; }
         private IMattermostNotification MattermostNotification { get; }
         private IPlexApi PlexApi { get; }
         private IRadarrApi RadarrApi { get; }
@@ -78,6 +83,7 @@ namespace Ombi.Controllers.External
         private ISickRageApi SickRageApi { get; }
         private INewsletterJob Newsletter { get; }
         private IMobileNotification MobileNotification { get; }
+        private ILidarrApi LidarrApi { get; }
 
 
         /// <summary>
@@ -146,6 +152,30 @@ namespace Ombi.Controllers.External
             catch (Exception e)
             {
                 Log.LogError(LoggingEvents.Api, e, "Could not test Pushover");
+                return false;
+            }
+
+        }
+
+        /// <summary>
+        /// Sends a test message to Gotify using the provided settings
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("gotify")]
+        public bool Gotify([FromBody] GotifySettings settings)
+        {
+            try
+            {
+                settings.Enabled = true;
+                GotifyNotification.NotifyAsync(
+                    new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test Gotify");
                 return false;
             }
 
@@ -397,9 +427,31 @@ namespace Ombi.Controllers.External
         {
             try
             {
-                await MobileNotification.NotifyAsync(new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1, UserId = settings.UserId}, settings.Settings);
+                await MobileNotification.NotifyAsync(new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1, UserId = settings.UserId }, settings.Settings);
 
                 return true;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test Mobile Notifications");
+                return false;
+            }
+        }
+
+        [HttpPost("lidarr")]
+        public async Task<bool> LidarrTest([FromBody] LidarrSettings settings)
+        {
+            try
+            {
+                var status = await LidarrApi.Status(settings.ApiKey, settings.FullUri);
+                if (status != null & status?.version.HasValue() ?? false)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             catch (Exception e)
             {

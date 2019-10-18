@@ -1,11 +1,11 @@
-﻿import { PlatformLocation } from "@angular/common";
+import { PlatformLocation } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs/Rx";
+import { Observable } from "rxjs";
 
 import { ServiceHelpers } from "../service.helpers";
 
-import { IEmbySettings, IUsersModel } from "../../interfaces";
+import { IEmbyServer, IEmbySettings, IPublicInfo, IUsersModel } from "../../interfaces";
 
 @Injectable()
 export class EmbyService extends ServiceHelpers {
@@ -16,8 +16,13 @@ export class EmbyService extends ServiceHelpers {
     public logIn(settings: IEmbySettings): Observable<IEmbySettings> {
         return this.http.post<IEmbySettings>(`${this.url}`, JSON.stringify(settings),  {headers: this.headers});
     }
+
     public getUsers(): Observable<IUsersModel[]> {
         return this.http.get<IUsersModel[]>(`${this.url}users`, {headers: this.headers});
+    }
+    
+    public getPublicInfo(server: IEmbyServer): Observable<IPublicInfo> {
+        return this.http.post<IPublicInfo>(`${this.url}info`, JSON.stringify(server), {headers: this.headers});
     }
 
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Ombi.Core.Models;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.UI;
 using Ombi.Store.Entities;
@@ -22,5 +23,6 @@ namespace Ombi.Core.Engine.Interfaces
         Task<int> GetTotal();
         Task UnSubscribeRequest(int requestId, RequestType type);
         Task SubscribeToRequest(int requestId, RequestType type);
+        Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user = null);
     }
 }

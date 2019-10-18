@@ -20,6 +20,7 @@ namespace Ombi.Controllers
     [ApiExplorerSettings(IgnoreApi = true)]
     [ApiV1]
     [AllowAnonymous]
+    [ApiController]
     public class PlexOAuthController : Controller
     {
         public PlexOAuthController(IPlexOAuthManager manager, IPlexApi plexApi, ISettingsService<PlexSettings> plexSettings,

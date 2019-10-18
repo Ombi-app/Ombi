@@ -1,4 +1,4 @@
-import { IIssueCategory, IUser, RequestType } from "./";
+import { IIssueCategory, IUser, RequestType } from ".";
 
 export interface IIssues {
     id?: number;
@@ -46,6 +46,7 @@ export interface IIssueComments {
 }
 
 export interface IIssuesChat {
+    id: number;
     comment: string;
     date: Date;
     username: string;

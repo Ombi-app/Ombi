@@ -7,7 +7,7 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public interface IPlexContentRepository : IRepository<PlexServerContent>
+    public interface IPlexContentRepository : IExternalRepository<PlexServerContent>
     {
         Task<bool> ContentExists(string providerId);
         Task<PlexServerContent> Get(string providerId);

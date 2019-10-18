@@ -20,6 +20,8 @@ namespace Ombi.Helpers
         public static EventId CouchPotatoCacher => new EventId(2007);
         public static EventId PlexContentCacher => new EventId(2008);
         public static EventId SickRageCacher => new EventId(2009);
+        public static EventId LidarrArtistCache => new EventId(2010);
+        public static EventId MediaReferesh => new EventId(2011);
         
         public static EventId MovieSender => new EventId(3000);
 
@@ -30,6 +32,7 @@ namespace Ombi.Helpers
         public static EventId MattermostNotification => new EventId(4004);
         public static EventId PushoverNotification => new EventId(4005);
         public static EventId TelegramNotifcation => new EventId(4006);
+        public static EventId GotifyNotification => new EventId(4007);
 
         public static EventId TvSender => new EventId(5000);
         public static EventId SonarrSender => new EventId(5001);

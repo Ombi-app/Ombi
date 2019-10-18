@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 
-import { IIssueCategory, IIssues, IssueStatus, RequestType } from "./../interfaces";
-import { IssuesService, NotificationService } from "./../services";
+import { IIssueCategory, IIssues, IssueStatus, RequestType } from "../interfaces";
+import { IssuesService, NotificationService } from "../services";
 
 @Component({
     selector: "issue-report",

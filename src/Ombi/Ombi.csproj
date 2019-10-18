@@ -1,39 +1,35 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
+﻿<Project ToolsVersion="15.0" Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RuntimeIdentifiers>win10-x64;win10-x86;osx-x64;ubuntu-x64;debian.8-x64;centos.7-x64;linux-x64;linux-arm;linux-arm64;</RuntimeIdentifiers>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RuntimeIdentifiers>win10-x64;win10-x86;osx-x64;linux-x64;linux-arm;linux-arm64;</RuntimeIdentifiers>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <AssemblyVersion>$(SemVer)</AssemblyVersion>
     <FileVersion>$(SemVer)</FileVersion>
     <Version>$(FullVer)</Version>
     <PackageVersion></PackageVersion>
+    <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ServerGarbageCollection>false</ServerGarbageCollection>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp2.0\Swagger.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netcoreapp2.2\Swagger.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591;</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netcoreapp2.0\Swagger.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\netcoreapp2.2\Swagger.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591;</NoWarn>
     <DefineConstants>TRACE;RELEASE;NETCOREAPP2_0</DefineConstants>
   </PropertyGroup>
-
-  <Target Name="NpmCommandsDebug" Condition="'$(Configuration)'=='Debug'" AfterTargets="Build">
-    <Exec Command="npm run-script vendor" />
-  </Target>
   
   <ItemGroup>
     <!-- Files not to show in IDE -->
     <Compile Remove="Logs\**" />
     <Compile Remove="Styles\**" />
     <Compile Remove="wwwroot\dist\**" />
-
+    
     <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
     <Content Remove="ClientApp\**" />
     <Content Remove="Logs\**" />
@@ -46,7 +42,17 @@
     <None Remove="Styles\**" />
     <None Remove="wwwroot\dist\**" />
   </ItemGroup>
-  
+  <Target Name="NpmCommandsDebug" Condition="'$(Configuration)'=='Debug'" AfterTargets="Build">
+    <Exec Command="npm run vendor" />
+  </Target>
+  <!-- Disabled as run by CI once for many different runtime builds
+  <Target Name="NpmCommandsRelease" Condition="'$(Configuration)'=='Release'" AfterTargets="Build">
+    <Exec Command="npm run publish" />
+  </Target>
+  -->
+  <Target Name="NpmCommandsClean" AfterTargets="Clean">
+    <Exec Command="npm run clean" />
+  </Target>
   <Target Name="RunWebpack" AfterTargets="ComputeFilesToPublish">
     <ItemGroup>
       <DistFiles Include="wwwroot\dist\**" />
@@ -56,28 +62,28 @@
       </ResolvedFileToPublish>
     </ItemGroup>
   </Target>
-
-
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.1" />
     <PackageReference Include="CommandLineParser" Version="2.1.1-beta" />
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.6.19" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.6.22" />
     <PackageReference Include="Hangfire.Console" Version="1.3.10" />
     <PackageReference Include="Hangfire.MemoryStorage.Core" Version="1.4.0" />
     <PackageReference Include="Hangfire.RecurringJobExtensions" Version="1.1.6" />
     <PackageReference Include="Hangfire.SQLite" Version="1.4.2" />
 
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.1.1" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Api.Analyzers" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
     <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.0.0-alpha6-79" />
     <PackageReference Include="ncrontab" Version="3.3.0" />
-    <PackageReference Include="Serilog" Version="2.6.0-dev-00892" />
+    <PackageReference Include="Serilog" Version="2.7.1" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
-    <PackageReference Include="Serilog.Sinks.File" Version="3.2.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.1-dev-00771" />
-    <PackageReference Include="Serilog.Sinks.SQLite" Version="3.8.3" />
+    <PackageReference Include="Serilog.Sinks.SQLite" Version="4.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
     <PackageReference Include="System.Security.Cryptography.Csp" Version="4.3.0" />
   </ItemGroup>
@@ -85,6 +91,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Api.Emby\Ombi.Api.Emby.csproj" />
     <ProjectReference Include="..\Ombi.Api.Github\Ombi.Api.Github.csproj" />
+    <ProjectReference Include="..\Ombi.Api.Lidarr\Ombi.Api.Lidarr.csproj" />
     <ProjectReference Include="..\Ombi.Api.SickRage\Ombi.Api.SickRage.csproj" />
     <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
     <ProjectReference Include="..\Ombi.DependencyInjection\Ombi.DependencyInjection.csproj" />
@@ -94,18 +101,4 @@
     <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj" />
     <ProjectReference Include="..\Ombi.Updater\Ombi.Updater.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\loading.css" />
-    <None Include="wwwroot\translations\*.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="ClientApp\app\animations\fadeinout.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\app\animations\fadeinout.ts" />
-  </ItemGroup>
- 
 </Project>

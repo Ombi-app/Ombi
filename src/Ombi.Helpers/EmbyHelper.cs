@@ -1,17 +1,22 @@
-﻿using System;
-using System.Globalization;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Ombi.Helpers
+﻿namespace Ombi.Helpers
 {
     public class EmbyHelper
     {
-        public static string GetEmbyMediaUrl(string mediaId)
+        public static string GetEmbyMediaUrl(string mediaId, string customerServerUrl = null, bool isJellyfin = false)
         {
-            var url =
-                $"http://app.emby.media/#!/itemdetails.html?id={mediaId}";
-            return url;
+            string path = "item/item";
+            if (isJellyfin)
+            {
+                path = "itemdetails";
+            }
+            if (customerServerUrl.HasValue())
+            {
+                return $"{customerServerUrl}#!/{path}.html?id={mediaId}";
+            }
+            else
+            {
+                return $"https://app.emby.media/#!/{path}.html?id={mediaId}";
+            }
         }
     }
 }

@@ -37,7 +37,7 @@ export class LandingPageComponent implements OnDestroy, OnInit {
         });
         this.timer = setInterval(() => {
             this.cycleBackground();
-        }, 10000);
+        }, 15000);
 
         const base = this.location.getBaseHrefFromDOM();
         if (base.length > 1) {

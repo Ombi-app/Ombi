@@ -37,6 +37,7 @@ using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
+using Quartz;
 
 namespace Ombi.Schedule.Jobs.Emby
 {
@@ -50,8 +51,6 @@ namespace Ombi.Schedule.Jobs.Emby
             _log = log;
             _embySettings = embySettings;
             _userManagementSettings = ums;
-            _userManagementSettings.ClearCache();
-            _embySettings.ClearCache();
         }
 
         private readonly IEmbyApi _api;
@@ -60,7 +59,7 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly ISettingsService<EmbySettings> _embySettings;
         private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
 
-        public async Task Start()
+        public async Task Execute(IJobExecutionContext job)
         {
             var userManagementSettings = await _userManagementSettings.GetSettingsAsync();
             if (!userManagementSettings.ImportEmbyUsers)

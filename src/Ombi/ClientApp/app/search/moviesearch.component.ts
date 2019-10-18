@@ -1,28 +1,36 @@
-﻿import { PlatformLocation } from "@angular/common";
+import { PlatformLocation } from "@angular/common";
 import { Component, Input, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { TranslateService } from "@ngx-translate/core";
-import "rxjs/add/operator/debounceTime";
-import "rxjs/add/operator/distinctUntilChanged";
-import "rxjs/add/operator/map";
-import { Subject } from "rxjs/Subject";
+import { Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 import { AuthService } from "../auth/auth.service";
-import { IIssueCategory, IRequestEngineResult, ISearchMovieResult } from "../interfaces";
-import { NotificationService, RequestService, SearchService } from "../services";
+import { IIssueCategory, ILanguageRefine, IRequestEngineResult, ISearchMovieResult } from "../interfaces";
+import { NotificationService, RequestService, SearchService, SettingsService } from "../services";
+
+import * as languageData from "../../other/iso-lang.json";
 
 @Component({
     selector: "movie-search",
     templateUrl: "./moviesearch.component.html",
+    styleUrls: ["./search.component.scss"],
 })
 export class MovieSearchComponent implements OnInit {
 
     public searchText: string;
     public searchChanged: Subject<string> = new Subject<string>();
+    public movieRequested: Subject<void> = new Subject<void>();
     public movieResults: ISearchMovieResult[];
     public result: IRequestEngineResult;
+
     public searchApplied = false;
-    
+    public refineSearchEnabled = false;
+    public searchYear?: number;
+    public actorSearch: boolean;
+    public selectedLanguage: string;
+    public langauges: ILanguageRefine[];
+
     @Input() public issueCategories: IIssueCategory[];
     @Input() public issuesEnabled: boolean;
     public issuesBarVisible = false;
@@ -31,30 +39,20 @@ export class MovieSearchComponent implements OnInit {
     public issueProviderId: string;
     public issueCategorySelected: IIssueCategory;
     public defaultPoster: string;
-        
-    constructor(private searchService: SearchService, private requestService: RequestService,
-                private notificationService: NotificationService, private authService: AuthService,
-                private readonly translate: TranslateService, private sanitizer: DomSanitizer,
-                private readonly platformLocation: PlatformLocation) {
 
-        this.searchChanged
-            .debounceTime(600) // Wait Xms after the last event before emitting last event
-            .distinctUntilChanged() // only emit if value is different from previous value
-            .subscribe(x => {
-                this.searchText = x as string;
-                if (this.searchText === "") {
-                    this.clearResults();
-                    return;
-                }
-                this.searchService.searchMovie(this.searchText)
-                    .subscribe(x => {
-                        this.movieResults = x;
-                        this.searchApplied = true;
-                        // Now let's load some extra info including IMDB Id
-                        // This way the search is fast at displaying results.
-                        this.getExtraInfo();
-                    });
-            });
+    constructor(
+        private searchService: SearchService, private requestService: RequestService,
+        private notificationService: NotificationService, private authService: AuthService,
+        private readonly translate: TranslateService, private sanitizer: DomSanitizer,
+        private readonly platformLocation: PlatformLocation, private settingsService: SettingsService) {
+        this.langauges = <ILanguageRefine[]><any>languageData;
+        this.searchChanged.pipe(
+            debounceTime(600), // Wait Xms after the last event before emitting last event
+            distinctUntilChanged(), // only emit if value is different from previous value
+        ).subscribe(x => {
+            this.searchText = x as string;
+            this.runSearch();
+        });
         this.defaultPoster = "../../../images/default_movie_poster.png";
         const base = this.platformLocation.getBaseHrefFromDOM();
         if (base) {
@@ -69,7 +67,8 @@ export class MovieSearchComponent implements OnInit {
             message: "",
             result: false,
             errorMessage: "",
-        };      
+        };
+        this.settingsService.getDefaultLanguage().subscribe(x => this.selectedLanguage = x);
         this.popularMovies();
     }
 
@@ -86,11 +85,12 @@ export class MovieSearchComponent implements OnInit {
         }
 
         try {
-            this.requestService.requestMovie({ theMovieDbId: searchResult.id })
+            const language = this.selectedLanguage && this.selectedLanguage.length > 0 ? this.selectedLanguage : "en";
+            this.requestService.requestMovie({ theMovieDbId: searchResult.id, languageCode: language })
                 .subscribe(x => {
                     this.result = x;
-
                     if (this.result.result) {
+                        this.movieRequested.next();
                         this.translate.get("Search.RequestAdded", { title: searchResult.title }).subscribe(x => {
                             this.notificationService.success(x);
                             searchResult.processed = true;
@@ -105,7 +105,7 @@ export class MovieSearchComponent implements OnInit {
                         searchResult.approved = false;
                         searchResult.processed = false;
                         searchResult.requestProcessing = false;
-                        
+
                     }
                 });
         } catch (e) {
@@ -151,7 +151,8 @@ export class MovieSearchComponent implements OnInit {
 
     public reportIssue(catId: IIssueCategory, req: ISearchMovieResult) {
         this.issueRequestId = req.id;
-        this.issueRequestTitle = req.title;
+        const releaseDate = new Date(req.releaseDate);
+        this.issueRequestTitle = req.title + ` (${releaseDate.getFullYear()})`;
         this.issueCategorySelected = catId;
         this.issuesBarVisible = true;
         this.issueProviderId = req.id.toString();
@@ -159,18 +160,19 @@ export class MovieSearchComponent implements OnInit {
 
     public similarMovies(theMovieDbId: number) {
         this.clearResults();
-        this.searchService.similarMovies(theMovieDbId)
-        .subscribe(x => {
-            this.movieResults = x;
-            this.getExtraInfo();
-        });
+        const lang = this.selectedLanguage && this.selectedLanguage.length > 0 ? this.selectedLanguage : "";
+        this.searchService.similarMovies(theMovieDbId, lang)
+            .subscribe(x => {
+                this.movieResults = x;
+                this.getExtraInfo();
+            });
     }
-        
+
     public subscribe(r: ISearchMovieResult) {
         r.subscribed = true;
         this.requestService.subscribeToMovie(r.requestId)
             .subscribe(x => {
-                this.notificationService.success("Subscribed To Movie!");
+                this.notificationService.success(`Subscribed To Movie ${r.title}!`);
             });
     }
 
@@ -182,20 +184,39 @@ export class MovieSearchComponent implements OnInit {
             });
     }
 
-   private getExtraInfo() {
+    public refineOpen() {
+        this.refineSearchEnabled = !this.refineSearchEnabled;
+        if (!this.refineSearchEnabled) {
+            this.searchYear = undefined;
+        }
+    }
 
-       this.movieResults.forEach((val, index) => {
-           if (val.posterPath === null) {
-               val.posterPath = this.defaultPoster;
-           } else {
-               val.posterPath = "https://image.tmdb.org/t/p/w300/" + val.posterPath;
-           }
-           val.background = this.sanitizer.bypassSecurityTrustStyle
-           ("url(" + "https://image.tmdb.org/t/p/w1280" + val.backdropPath + ")");
-           this.searchService.getMovieInformation(val.id)
-                .subscribe(m => {
-                    this.updateItem(val, m);
-                });
+    public applyRefinedSearch() {
+        this.runSearch();
+    }
+
+    private getExtraInfo() {
+
+        this.movieResults.forEach((val, index) => {
+            if (val.posterPath === null) {
+                val.posterPath = this.defaultPoster;
+            } else {
+                val.posterPath = "https://image.tmdb.org/t/p/w300/" + val.posterPath;
+            }
+            val.background = this.sanitizer.bypassSecurityTrustStyle
+                ("url(" + "https://image.tmdb.org/t/p/w1280" + val.backdropPath + ")");
+            
+            if (this.applyRefinedSearch) {
+                this.searchService.getMovieInformationWithRefined(val.id, this.selectedLanguage)
+                    .subscribe(m => {
+                        this.updateItem(val, m);
+                    });
+            } else {
+                this.searchService.getMovieInformation(val.id)
+                    .subscribe(m => {
+                        this.updateItem(val, m);
+                    });
+            }
         });
     }
 
@@ -203,7 +224,7 @@ export class MovieSearchComponent implements OnInit {
         const index = this.movieResults.indexOf(key, 0);
         if (index > -1) {
             const copy = { ...this.movieResults[index] };
-            this.movieResults[index] = updated;  
+            this.movieResults[index] = updated;
             this.movieResults[index].background = copy.background;
             this.movieResults[index].posterPath = copy.posterPath;
         }
@@ -211,5 +232,42 @@ export class MovieSearchComponent implements OnInit {
     private clearResults() {
         this.movieResults = [];
         this.searchApplied = false;
+    }
+
+    private runSearch() {
+        if (this.searchText === "") {
+            this.clearResults();
+            return;
+        }
+        if (this.refineOpen) {
+            if (!this.actorSearch) {
+                this.searchService.searchMovieWithRefined(this.searchText, this.searchYear, this.selectedLanguage)
+                    .subscribe(x => {
+                        this.movieResults = x;
+                        this.searchApplied = true;
+                        // Now let's load some extra info including IMDB Id
+                        // This way the search is fast at displaying results.
+                        this.getExtraInfo();
+                    });
+            } else {
+                this.searchService.searchMovieByActor(this.searchText, this.selectedLanguage)
+                    .subscribe(x => {
+                        this.movieResults = x;
+                        this.searchApplied = true;
+                        // Now let's load some extra info including IMDB Id
+                        // This way the search is fast at displaying results.
+                        this.getExtraInfo();
+                    });
+            }
+        } else {
+            this.searchService.searchMovie(this.searchText)
+                .subscribe(x => {
+                    this.movieResults = x;
+                    this.searchApplied = true;
+                    // Now let's load some extra info including IMDB Id
+                    // This way the search is fast at displaying results.
+                    this.getExtraInfo();
+                });
+        }
     }
 }
