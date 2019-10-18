@@ -50,8 +50,8 @@
     "Issues": "Problémy",
     "Vote": "Hlasovať",
     "Donate": "Prispieť!",
-    "DonateLibraryMaintainer": "Donate to Library Maintainer",
-    "DonateTooltip": "This is how I convince my wife to let me spend my spare time developing Ombi ;)",
+    "DonateLibraryMaintainer": "Darovať správcovi knižnice",
+    "DonateTooltip": "Takto som presvedčil svoju manželku, aby mi umožnila tráviť svoj voľný čas vývojom Ombi ;)",
     "UpdateAvailableTooltip": "K dispozícii je aktualizácia!",
     "Settings": "Nastavenie",
     "Welcome": "Vitaj {{username}}",
@@ -176,11 +176,11 @@
     "MovieRemaining": "Filmy: {{remaining}}/{{total}} zostávajúce",
     "MusicRemaining": "Hudba: {{remaining}}/{{total}} zostávajúce",
     "TvDue": "TV: {{date}}",
-    "MovieDue": "Movie: {{date}}",
-    "MusicDue": "Music: {{date}}"
+    "MovieDue": "Film: {{date}}",
+    "MusicDue": "Hudba: {{date}}"
   },
   "Votes": {
-    "CompletedVotesTab": "Voted",
-    "VotesTab": "Votes Needed"
+    "CompletedVotesTab": "Hlasované",
+    "VotesTab": "Potrebné hlasovanie"
   }
 }
