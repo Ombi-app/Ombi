@@ -36,6 +36,7 @@ import { PushbulletComponent } from "./notifications/pushbullet.component";
 import { PushoverComponent } from "./notifications/pushover.component";
 import { SlackComponent } from "./notifications/slack.component";
 import { TelegramComponent } from "./notifications/telegram.component";
+import { TheMovieDbComponent } from "./themoviedb/themoviedb.component";
 import { OmbiComponent } from "./ombi/ombi.component";
 import { PlexComponent } from "./plex/plex.component";
 import { RadarrComponent } from "./radarr/radarr.component";
@@ -80,6 +81,7 @@ const routes: Routes = [
     { path: "Newsletter", component: NewsletterComponent, canActivate: [AuthGuard] },
     { path: "Lidarr", component: LidarrComponent, canActivate: [AuthGuard] },
     { path: "Vote", component: VoteComponent, canActivate: [AuthGuard] },
+    { path: "TheMovieDb", component: TheMovieDbComponent, canActivate: [AuthGuard] },
     { path: "FailedRequests", component: FailedRequestsComponent, canActivate: [AuthGuard] },
 ];
 
@@ -135,6 +137,7 @@ const routes: Routes = [
         NewsletterComponent,
         LidarrComponent,
         VoteComponent,
+        TheMovieDbComponent,
         FailedRequestsComponent,
     ],
     exports: [
