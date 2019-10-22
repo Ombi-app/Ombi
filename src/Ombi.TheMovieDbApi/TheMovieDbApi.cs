@@ -133,11 +133,15 @@ namespace Ombi.Api.TheMovieDb
             return Mapper.Map<List<MovieSearchResult>>(result.results);
         }
 
+        /// <remarks>
+        /// Maintains filter parity with <a href="https://developers.themoviedb.org/3/movies/get-popular-movies">/movie/popular</a>.
+        /// </remarks>
         public async Task<List<MovieSearchResult>> PopularMovies(string langCode)
         {
             var request = new Request($"discover/movie", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             request.AddQueryString("language", langCode);
+            request.AddQueryString("sort_by", "popularity.desc");
             var settings = await Settings;
             request.AddQueryString("include_adult", settings.ShowAdultMovies.ToString().ToLower());
             request.AddQueryString("without_keywords", settings.ExcludedKeywordIds);
@@ -147,13 +151,21 @@ namespace Ombi.Api.TheMovieDb
             return Mapper.Map<List<MovieSearchResult>>(result.results);
         }
 
+        /// <remarks>
+        /// Maintains filter parity with <a href="https://developers.themoviedb.org/3/movies/get-top-rated-movies">/movie/top_rated</a>.
+        /// </remarks>
         public async Task<List<MovieSearchResult>> TopRated(string langCode)
         {
             var request = new Request($"discover/movie", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             request.AddQueryString("language", langCode);
-            request.AddQueryString("vote_count.gte", "250");
             request.AddQueryString("sort_by", "vote_average.desc");
+
+            // `vote_count` consideration isn't explicitly documented, but using only the `sort_by` filter
+            // does not provide the same results as `/movie/top_rated`. This appears to be adequate enough
+            // to filter out extremely high-rated movies due to very little votes
+            request.AddQueryString("vote_count.gte", "250");
+            
             var settings = await Settings;
             request.AddQueryString("include_adult", settings.ShowAdultMovies.ToString().ToLower());
             request.AddQueryString("without_keywords", settings.ExcludedKeywordIds);
@@ -163,15 +175,24 @@ namespace Ombi.Api.TheMovieDb
             return Mapper.Map<List<MovieSearchResult>>(result.results);
         }
 
+        /// <remarks>
+        /// Maintains filter parity with <a href="https://developers.themoviedb.org/3/movies/get-upcoming">/movie/upcoming</a>.
+        /// </remarks>
         public async Task<List<MovieSearchResult>> Upcoming(string langCode)
         {
             var request = new Request($"discover/movie", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             request.AddQueryString("language", langCode);
+
+            // Release types "2 or 3" explicitly stated as used in docs
             request.AddQueryString("with_release_type", "2|3");
+
+            // The date range being used in `/movie/upcoming` isn't documented, but we infer it is
+            // an offset from today based on the minimum and maximum date they provide in the output
             var startDate = DateTime.Today.AddDays(7);
             request.AddQueryString("release_date.gte", startDate.ToString("yyyy-MM-dd"));
             request.AddQueryString("release_date.lte", startDate.AddDays(17).ToString("yyyy-MM-dd"));
+
             var settings = await Settings;
             request.AddQueryString("include_adult", settings.ShowAdultMovies.ToString().ToLower());
             request.AddQueryString("without_keywords", settings.ExcludedKeywordIds);
@@ -181,15 +202,24 @@ namespace Ombi.Api.TheMovieDb
             return Mapper.Map<List<MovieSearchResult>>(result.results);
         }
 
+        /// <remarks>
+        /// Maintains filter parity with <a href="https://developers.themoviedb.org/3/movies/get-now-playing">/movie/now_playing</a>.
+        /// </remarks>
         public async Task<List<MovieSearchResult>> NowPlaying(string langCode)
         {
             var request = new Request($"discover/movie", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             request.AddQueryString("language", langCode);
+
+            // Release types "2 or 3" explicitly stated as used in docs
             request.AddQueryString("with_release_type", "2|3");
+
+            // The date range being used in `/movie/now_playing` isn't documented, but we infer it is
+            // an offset from today based on the minimum and maximum date they provide in the output
             var today = DateTime.Today;
             request.AddQueryString("release_date.gte", today.AddDays(-42).ToString("yyyy-MM-dd"));
             request.AddQueryString("release_date.lte", today.AddDays(6).ToString("yyyy-MM-dd"));
+
             var settings = await Settings;
             request.AddQueryString("include_adult", settings.ShowAdultMovies.ToString().ToLower());
             request.AddQueryString("without_keywords", settings.ExcludedKeywordIds);
