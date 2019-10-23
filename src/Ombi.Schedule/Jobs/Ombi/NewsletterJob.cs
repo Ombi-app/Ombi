@@ -715,7 +715,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         {
                             SeasonNumber = key,
                             Episodes = g.ToList(),
-                            EpisodeAirDate = tvInfo.seasons.Where(x => x.season_number == key).Select(x => x.air_date)
+                            EpisodeAirDate = tvInfo?.seasons?.Where(x => x.season_number == key)?.Select(x => x.air_date) ?? new List<string>()
                         }
                     );
 
@@ -840,7 +840,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         {
                             SeasonNumber = key,
                             Episodes = g.ToList(),
-                            EpisodeAirDate = tvInfo.seasons.Where(x => x.season_number == key).Select(x => x.air_date)
+                            EpisodeAirDate = tvInfo?.seasons?.Where(x => x.season_number == key)?.Select(x => x.air_date) ?? new List<string>()
                         }
                     );
 
