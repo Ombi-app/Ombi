@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -142,10 +143,7 @@ namespace Ombi.Api.TheMovieDb
             request.AddQueryString("api_key", ApiToken);
             request.AddQueryString("language", langCode);
             request.AddQueryString("sort_by", "popularity.desc");
-            var settings = await Settings;
-            request.AddQueryString("include_adult", settings.ShowAdultMovies.ToString().ToLower());
-            request.AddQueryString("without_keywords", settings.ExcludedKeywordIds);
-
+            await AddDiscoverMovieSettings(request);
             AddRetry(request);
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
             return Mapper.Map<List<MovieSearchResult>>(result.results);
@@ -165,11 +163,8 @@ namespace Ombi.Api.TheMovieDb
             // does not provide the same results as `/movie/top_rated`. This appears to be adequate enough
             // to filter out extremely high-rated movies due to very little votes
             request.AddQueryString("vote_count.gte", "250");
-            
-            var settings = await Settings;
-            request.AddQueryString("include_adult", settings.ShowAdultMovies.ToString().ToLower());
-            request.AddQueryString("without_keywords", settings.ExcludedKeywordIds);
 
+            await AddDiscoverMovieSettings(request);
             AddRetry(request);
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
             return Mapper.Map<List<MovieSearchResult>>(result.results);
@@ -193,10 +188,7 @@ namespace Ombi.Api.TheMovieDb
             request.AddQueryString("release_date.gte", startDate.ToString("yyyy-MM-dd"));
             request.AddQueryString("release_date.lte", startDate.AddDays(17).ToString("yyyy-MM-dd"));
 
-            var settings = await Settings;
-            request.AddQueryString("include_adult", settings.ShowAdultMovies.ToString().ToLower());
-            request.AddQueryString("without_keywords", settings.ExcludedKeywordIds);
-
+            await AddDiscoverMovieSettings(request);
             AddRetry(request);
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
             return Mapper.Map<List<MovieSearchResult>>(result.results);
@@ -220,10 +212,7 @@ namespace Ombi.Api.TheMovieDb
             request.AddQueryString("release_date.gte", today.AddDays(-42).ToString("yyyy-MM-dd"));
             request.AddQueryString("release_date.lte", today.AddDays(6).ToString("yyyy-MM-dd"));
 
-            var settings = await Settings;
-            request.AddQueryString("include_adult", settings.ShowAdultMovies.ToString().ToLower());
-            request.AddQueryString("without_keywords", settings.ExcludedKeywordIds);
-
+            await AddDiscoverMovieSettings(request);
             AddRetry(request);
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
             return Mapper.Map<List<MovieSearchResult>>(result.results);
@@ -237,6 +226,38 @@ namespace Ombi.Api.TheMovieDb
 
             return await Api.Request<TvInfo>(request);
         }
+
+        public async Task<List<Keyword>> SearchKeyword(string searchTerm)
+        {
+            var request = new Request("search/keyword", BaseUri, HttpMethod.Get);
+            request.AddQueryString("api_key", ApiToken);
+            request.AddQueryString("query", searchTerm);
+            AddRetry(request);
+
+            var result = await Api.Request<TheMovieDbContainer<Keyword>>(request);
+            return result.results ?? new List<Keyword>();
+        }
+
+        public async Task<Keyword> GetKeyword(int keywordId)
+        {
+            var request = new Request($"keyword/{keywordId}", BaseUri, HttpMethod.Get);
+            request.AddQueryString("api_key", ApiToken);
+            AddRetry(request);
+
+            var keyword = await Api.Request<Keyword>(request);
+            return keyword == null || keyword.Id == 0 ? null : keyword;
+        }
+
+        private async Task AddDiscoverMovieSettings(Request request)
+        {
+            var settings = await Settings;
+            request.AddQueryString("include_adult", settings.ShowAdultMovies.ToString().ToLower());
+            if (settings.ExcludedKeywordIds?.Any() == true)
+            {
+                request.AddQueryString("without_keywords", string.Join(",", settings.ExcludedKeywordIds));
+            }
+        }
+
         private static void AddRetry(Request request)
         {
             request.Retry = true;

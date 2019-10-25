@@ -11,13 +11,34 @@
         </div>
 
         <div class="form-group">
-            <label for="excludedKeywordIds" class="control-label" pTooltip="Prevent movies with certain keywords from being suggested. May require a restart to take effect.">
+            <label class="control-label" pTooltip="Prevent movies with certain keywords from being suggested. May require a restart to take effect.">
                 Excluded Keyword IDs for Movie Suggestions
             </label>
-            <div>
-                <input type="text" [(ngModel)]="settings.excludedKeywordIds" class="form-control form-control-custom " id="excludedKeywordIds"
-                       name="excludedKeywordIds" placeholder="155477,190370,250773" value="{{settings.excludedKeywordIds}}">
-            </div>
+            <tag-input #input
+                       [(ngModel)]="excludedKeywords"
+                       [identifyBy]="'id'" [displayBy]="'name'"
+                       [placeholder]="'Search by keyword'"
+                       [secondaryPlaceholder]="'Search by keyword'"
+                       [theme]="'dark'"
+                       [onTextChangeDebounce]="500"
+                       [onAdding]="onAddingKeyword"
+                       (onSelect)="onKeywordSelect($event)">
+                <ng-template item-template let-item="item" let-index="index">
+                    <span class="fa fa-cloud-download" *ngIf="item.initial"></span>
+                    <span>{{item.id}}</span>
+                    <span *ngIf="!item.initial">&nbsp;({{item.name}})</span>
+                    <delete-icon aria-label="Remove tag" role="button"
+                                 (click)="input.removeItem(item, index)">
+                    </delete-icon>
+                </ng-template>
+                <tag-input-dropdown [autocompleteObservable]="autocompleteKeyword"
+                                    [identifyBy]="'id'" [displayBy]="'name'"
+                                    [limitItemsTo]="6"
+                                    [minimumTextLength]="1"
+                                    [showDropdownIfEmpty]="false"
+                                    [keepOpen]="false">
+                </tag-input-dropdown>
+            </tag-input>
         </div>
 
         <div class="form-group">
