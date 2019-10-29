@@ -1,0 +1,50 @@
+﻿<settings-menu></settings-menu>
+
+<fieldset *ngIf="settings">
+    <legend>The Movie Database</legend>
+    <div class="col-md-6">
+        <div class="form-group">
+            <div class="checkbox">
+                <input type="checkbox" id="showAdultMovies" name="showAdultMovies" [(ngModel)]="settings.showAdultMovies">
+                <label for="showAdultMovies" tooltipPosition="top" pTooltip="Include adult movies (pornography) in results">Show Adult Movies</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" pTooltip="Prevent movies with certain keywords from being suggested. May require a restart to take effect.">
+                Excluded Keyword IDs for Movie Suggestions
+            </label>
+            <tag-input #input
+                       [(ngModel)]="excludedKeywords"
+                       [identifyBy]="'id'" [displayBy]="'name'"
+                       [placeholder]="'Search by keyword'"
+                       [secondaryPlaceholder]="'Search by keyword'"
+                       [theme]="'dark'"
+                       [onTextChangeDebounce]="500"
+                       [onAdding]="onAddingKeyword"
+                       (onSelect)="onKeywordSelect($event)">
+                <ng-template item-template let-item="item" let-index="index">
+                    <span class="fa fa-cloud-download" *ngIf="item.initial"></span>
+                    <span>{{item.id}}</span>
+                    <span *ngIf="!item.initial">&nbsp;({{item.name}})</span>
+                    <delete-icon aria-label="Remove tag" role="button"
+                                 (click)="input.removeItem(item, index)">
+                    </delete-icon>
+                </ng-template>
+                <tag-input-dropdown [autocompleteObservable]="autocompleteKeyword"
+                                    [identifyBy]="'id'" [displayBy]="'name'"
+                                    [limitItemsTo]="6"
+                                    [minimumTextLength]="1"
+                                    [showDropdownIfEmpty]="false"
+                                    [keepOpen]="false">
+                </tag-input-dropdown>
+            </tag-input>
+        </div>
+
+        <div class="form-group">
+            <div>
+                <button (click)="save()" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+            </div>
+        </div>
+    </div>
+</fieldset>

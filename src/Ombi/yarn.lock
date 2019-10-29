@@ -4183,9 +4183,24 @@ ng2-cookies@^1.0.12:
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/ng2-cookies/-/ng2-cookies-1.0.12.tgz#3f3e613e0137b0649b705c678074b4bd08149ccc"
 
+ng2-material-dropdown@0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/ng2-material-dropdown/-/ng2-material-dropdown-0.11.0.tgz#27a402ef3cbdcaf6791ef4cfd4b257e31db7546f"
+  integrity sha512-wptBo09qKecY0QPTProAThrc4A3ajJTcHE9LTpCG5XZZUhXLBzhnGK8OW33TN8A+K/jqcs7OB74ppYJiqs3nhQ==
+  dependencies:
+    tslib "^1.9.0"
+
 ngx-bootstrap@^3.1.4:
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-3.1.4.tgz#5105c0227da3b51a1972d04efa1504a79474fd57"
+
+ngx-chips@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/ngx-chips/-/ngx-chips-2.1.0.tgz#aa299bcf40dc3e1f6288bf1d29e2fdfe9a132ed3"
+  integrity sha512-OQV4dTfD3nXm5d2mGKUSgwOtJOaMnZ4F+lwXOtd7DWRSUne0JQWwoZNHdOpuS6saBGhqCPDAwq6KxdR5XSgZUQ==
+  dependencies:
+    ng2-material-dropdown "0.11.0"
+    tslib "^1.9.0"
 
 ngx-clipboard@^11.1.1:
   version "11.1.9"

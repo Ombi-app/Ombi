@@ -1031,6 +1031,14 @@ a > h4:hover {
     width:300px;
 }
 
+.ng2-tag-input.dark input {
+    background: transparent;
+    color: white;
+}
+
+.ng2-tag-input .fa-cloud-download {
+    margin-right: 5px;
+}
 
 ::ng-deep ngb-accordion > div.card >  div.card-header {
     padding:0px;
