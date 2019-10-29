@@ -108,6 +108,8 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
+                Logger.LogInformation("Kicking off Plex Availability Checker");
+                await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
                 Logger.LogInformation("Starting Metadata refresh");
                 // Just check what we send it
                 await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
