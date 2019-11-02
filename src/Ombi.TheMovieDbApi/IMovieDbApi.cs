@@ -26,5 +26,7 @@ namespace Ombi.Api.TheMovieDb
         Task<TheMovieDbContainer<DiscoverMovies>> DiscoverMovies(string langCode, int keywordId);
         Task<FullMovieInfo> GetFullMovieInfo(int movieId, CancellationToken cancellationToken, string langCode);
         Task<Collections> GetCollection(string langCode, int collectionId, CancellationToken cancellationToken);
+        Task<List<Keyword>> SearchKeyword(string searchTerm);
+        Task<Keyword> GetKeyword(int keywordId);
     }
 }

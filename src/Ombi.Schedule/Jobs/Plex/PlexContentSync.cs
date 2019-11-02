@@ -72,7 +72,7 @@ namespace Ombi.Schedule.Jobs.Plex
         public async Task Execute(IJobExecutionContext context)
         {
             JobDataMap dataMap = context.JobDetail.JobDataMap;
-            var recentlyAddedSearch = dataMap.GetBooleanValueFromString("recentlyAddedSearch");
+            var recentlyAddedSearch = dataMap.GetBooleanValueFromString(JobDataKeys.RecentlyAddedSearch);
 
             var plexSettings = await Plex.GetSettingsAsync();
             if (!plexSettings.Enable)
@@ -89,7 +89,9 @@ namespace Ombi.Schedule.Jobs.Plex
                 return;
             }
             var processedContent = new ProcessedContent();
-            Logger.LogInformation($"Starting Plex Content Cacher {(recentlyAddedSearch ? "Recently Added Scan" : "")}");
+            Logger.LogInformation(recentlyAddedSearch
+                ? "Starting Plex Content Cacher Recently Added Scan"
+                : "Starting Plex Content Cacher");
             try
             {
                 if (recentlyAddedSearch)
@@ -111,12 +113,13 @@ namespace Ombi.Schedule.Jobs.Plex
             if (!recentlyAddedSearch)
             {
                 Logger.LogInformation("Starting EP Cacher");
-
                 await OmbiQuartz.TriggerJob(nameof(IPlexEpisodeSync), "Plex");
             }
 
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
+                Logger.LogInformation("Kicking off Plex Availability Checker");
+                await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
                 Logger.LogInformation("Starting Metadata refresh");
                 // Just check what we send it
                 await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");

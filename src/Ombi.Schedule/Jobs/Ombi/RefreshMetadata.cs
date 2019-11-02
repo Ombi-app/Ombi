@@ -61,7 +61,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 {
                     await StartPlex();
                 }
-                
+
                 var embySettings = await _embySettings.GetSettingsAsync();
                 if (embySettings.Enable)
                 {
@@ -81,44 +81,16 @@ namespace Ombi.Schedule.Jobs.Ombi
                 .SendAsync(NotificationHub.NotificationEvent, "Metadata Refresh Finished");
         }
 
-        public async Task ProcessPlexServerContent(IEnumerable<int> contentIds)
-        {
-            _log.LogInformation("Starting the Metadata refresh from RecentlyAddedSync");
-            var plexSettings = await _plexSettings.GetSettingsAsync();
-            try
-            {
-                if (plexSettings.Enable)
-                {
-                    await StartPlexWithKnownContent(contentIds);
-                }
-            }
-            catch (Exception e)
-            {
-                _log.LogError(e, "Exception when refreshing the Plex Metadata");
-                throw;
-            }
-        }
-
-        private async Task StartPlexWithKnownContent(IEnumerable<int> contentids)
-        {
-            var everything = _plexRepo.GetAll().Where(x => contentids.Contains(x.Id));
-            var allMovies = everything.Where(x => x.Type == PlexMediaTypeEntity.Movie);
-            await StartPlexMovies(allMovies);
-
-            // Now Tv
-            var allTv = everything.Where(x => x.Type == PlexMediaTypeEntity.Show);
-            await StartPlexTv(allTv);
-        }
-
         private async Task StartPlex()
         {
+            // Ensure we check that we have not linked this item to a request
             var allMovies = _plexRepo.GetAll().Where(x =>
-                x.Type == PlexMediaTypeEntity.Movie && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue()));
+                x.Type == PlexMediaTypeEntity.Movie && !x.RequestId.HasValue && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue()));
             await StartPlexMovies(allMovies);
 
             // Now Tv
             var allTv = _plexRepo.GetAll().Where(x =>
-                x.Type == PlexMediaTypeEntity.Show && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue() || !x.TvDbId.HasValue()));
+                x.Type == PlexMediaTypeEntity.Show && !x.RequestId.HasValue && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue() || !x.TvDbId.HasValue()));
             await StartPlexTv(allTv);
         }
 
@@ -130,9 +102,13 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         private async Task StartPlexTv(IQueryable<PlexServerContent> allTv)
         {
-            var tvCount = 0;
             foreach (var show in allTv)
-            {
+            {   
+                // Just double check there is no associated request id
+                if (show.RequestId.HasValue)
+                {
+                    continue;
+                }
                 var hasImdb = show.ImdbId.HasValue();
                 var hasTheMovieDb = show.TheMovieDbId.HasValue();
                 var hasTvDbId = show.TvDbId.HasValue();
@@ -156,21 +132,15 @@ namespace Ombi.Schedule.Jobs.Ombi
                     show.TvDbId = id;
                     _plexRepo.UpdateWithoutSave(show);
                 }
-                tvCount++;
-                if (tvCount >= 75)
-                {
-                    await _plexRepo.SaveChangesAsync();
-                    tvCount = 0;
-                }
+                await _plexRepo.SaveChangesAsync();
             }
-            await _plexRepo.SaveChangesAsync();
         }
 
         private async Task StartEmbyTv()
         {
             var allTv = _embyRepo.GetAll().Where(x =>
                 x.Type == EmbyMediaType.Series && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue() || !x.TvDbId.HasValue()));
-            var tvCount = 0;
+
             foreach (var show in allTv)
             {
                 var hasImdb = show.ImdbId.HasValue();
@@ -196,21 +166,20 @@ namespace Ombi.Schedule.Jobs.Ombi
                     show.TvDbId = id;
                     _embyRepo.UpdateWithoutSave(show);
                 }
-                tvCount++;
-                if (tvCount >= 75)
-                {
-                    await _embyRepo.SaveChangesAsync();
-                    tvCount = 0;
-                }
+
+                await _embyRepo.SaveChangesAsync();
             }
-            await _embyRepo.SaveChangesAsync();
         }
 
         private async Task StartPlexMovies(IQueryable<PlexServerContent> allMovies)
         {
-            int movieCount = 0;
             foreach (var movie in allMovies)
             {
+                // Just double check there is no associated request id
+                if (movie.RequestId.HasValue)
+                {
+                    continue;
+                }
                 var hasImdb = movie.ImdbId.HasValue();
                 var hasTheMovieDb = movie.TheMovieDbId.HasValue();
                 // Movies don't really use TheTvDb
@@ -227,26 +196,19 @@ namespace Ombi.Schedule.Jobs.Ombi
                     movie.TheMovieDbId = id;
                     _plexRepo.UpdateWithoutSave(movie);
                 }
-                movieCount++;
-                if (movieCount >= 75)
-                {
-                    await _plexRepo.SaveChangesAsync();
-                    movieCount = 0;
-                }
-            }
 
-            await _plexRepo.SaveChangesAsync();
+                await _plexRepo.SaveChangesAsync();
+            }
         }
 
         private async Task StartEmbyMovies(EmbySettings settings)
         {
             var allMovies = _embyRepo.GetAll().Where(x =>
                 x.Type == EmbyMediaType.Movie && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue()));
-            int movieCount = 0;
             foreach (var movie in allMovies)
             {
                 movie.ImdbId.HasValue();
-                 movie.TheMovieDbId.HasValue();
+                movie.TheMovieDbId.HasValue();
                 // Movies don't really use TheTvDb
 
                 // Check if it even has 1 ID
@@ -255,6 +217,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                     // Ok this sucks,
                     // The only think I can think that has happened is that we scanned Emby before Emby has got the metadata
                     // So let's recheck emby to see if they have got the metadata now
+                    //
+                    // Yeah your right that does suck - Future Jamie
                     _log.LogInformation($"Movie {movie.Title} does not have a ImdbId or TheMovieDbId, so rechecking emby");
                     foreach (var server in settings.Servers)
                     {
@@ -286,15 +250,10 @@ namespace Ombi.Schedule.Jobs.Ombi
                     movie.TheMovieDbId = id;
                     _embyRepo.UpdateWithoutSave(movie);
                 }
-                movieCount++;
-                if (movieCount >= 75)
-                {
-                    await _embyRepo.SaveChangesAsync();
-                    movieCount = 0;
-                }
-            }
 
-            await _embyRepo.SaveChangesAsync();
+                await _embyRepo.SaveChangesAsync();
+
+            }
         }
 
         private async Task<string> GetTheMovieDbId(bool hasTvDbId, bool hasImdb, string tvdbID, string imdbId, string title, bool movie)
@@ -377,7 +336,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 {
                     var result = await _movieApi.GetTvExternals(id);
 
-                   return result.tvdb_id.ToString();
+                    return result.tvdb_id.ToString();
                 }
             }
 

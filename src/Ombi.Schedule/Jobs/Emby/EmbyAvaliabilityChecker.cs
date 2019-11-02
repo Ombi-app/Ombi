@@ -36,6 +36,7 @@ using Ombi.Core.Notifications;
 using Ombi.Helpers;
 using Ombi.Hubs;
 using Ombi.Notifications.Models;
+using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
@@ -69,6 +70,8 @@ namespace Ombi.Schedule.Jobs.Emby
                 .SendAsync(NotificationHub.NotificationEvent, "Emby Availability Checker Started");
             await ProcessMovies();
             await ProcessTv();
+
+            await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
 
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Emby Availability Checker Finished");

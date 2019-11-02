@@ -246,3 +246,8 @@ export interface IVoteSettings extends ISettings {
   musicVoteMax: number;
   tvShowVoteMax: number;
 }
+
+export interface ITheMovieDbSettings extends ISettings {
+    showAdultMovies: boolean;
+    excludedKeywordIds: number[];
+}

@@ -684,6 +684,25 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
+        /// Save The Movie DB settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        [HttpPost("themoviedb")]
+        public async Task<bool> TheMovieDbSettings([FromBody]TheMovieDbSettings settings)
+        {
+            return await Save(settings);
+        }
+
+        /// <summary>
+        /// Get The Movie DB settings.
+        /// </summary>
+        [HttpGet("themoviedb")]
+        public async Task<TheMovieDbSettings> TheMovieDbSettings()
+        {
+            return await Get<TheMovieDbSettings>();
+        }
+
+        /// <summary>
         /// Saves the email notification settings.
         /// </summary>
         /// <param name="model">The model.</param>

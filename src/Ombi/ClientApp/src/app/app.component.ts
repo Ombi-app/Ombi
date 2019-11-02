@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
             // __webpack_public_path__ = window['base-href']
       
 
-        this.translate.addLangs(["en", "de", "fr", "da", "es", "it", "nl", "sv", "no", "pl", "pt"]);
+        this.translate.addLangs(["en", "de", "fr", "da", "es", "it", "nl", "sk", "sv", "no", "pl", "pt"]);
 
         const selectedLang = this.storage.get("Language");
 
@@ -70,7 +70,7 @@ export class AppComponent implements OnInit {
         } else {
             // See if we can match the supported langs with the current browser lang
             const browserLang: string = translate.getBrowserLang();
-            this.translate.use(browserLang.match(/en|fr|da|de|es|it|nl|sv|no|pl|pt/) ? browserLang : "en");
+            this.translate.use(browserLang.match(/en|fr|da|de|es|it|nl|sk|sv|no|pl|pt/) ? browserLang : "en");
         }
     }
 

@@ -24,14 +24,6 @@ import { MatSnackBar } from "@angular/material";
 })
 export class LoginComponent implements OnDestroy, OnInit {
 
-    public get appName(): string {
-        if (this.customizationSettings.applicationName) {
-            return this.customizationSettings.applicationName;
-        } else {
-            return "Ombi";
-        }
-    }
-
     public form: FormGroup;
     public customizationSettings: ICustomizationSettings;
     public authenticationSettings: IAuthenticationSettings;
