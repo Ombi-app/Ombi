@@ -135,11 +135,11 @@ namespace Ombi.DependencyInjection
         }
 
         public static void RegisterStore(this IServiceCollection services) { 
-            services.AddDbContext<OmbiContext>();
+            //services.AddDbContext<OmbiContext>();
             services.AddDbContext<SettingsContext>();
             services.AddDbContext<ExternalContext>();
             
-            services.AddScoped<IOmbiContext, OmbiContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
+            //services.AddScoped<OmbiContext, OmbiContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
             services.AddScoped<ISettingsContext, SettingsContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
             services.AddScoped<IExternalContext, ExternalContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
             services.AddScoped<ISettingsRepository, SettingsJsonRepository>();

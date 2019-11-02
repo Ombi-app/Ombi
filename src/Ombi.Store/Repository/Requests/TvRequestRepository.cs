@@ -8,14 +8,14 @@ using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Store.Repository.Requests
 {
-    public class TvRequestRepository : BaseRepository<TvRequests, IOmbiContext>, ITvRequestRepository
+    public class TvRequestRepository : BaseRepository<TvRequests, OmbiContext>, ITvRequestRepository
     {
-        public TvRequestRepository(IOmbiContext ctx) : base(ctx)
+        public TvRequestRepository(OmbiContext ctx) : base(ctx)
         {
             Db = ctx;
         }
 
-        public IOmbiContext Db { get; }
+        public OmbiContext Db { get; }
 
         public async Task<TvRequests> GetRequestAsync(int tvDbId)
         {

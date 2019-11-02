@@ -11,12 +11,12 @@ namespace Ombi.Store.Repository.Requests
 {
     public class MovieRequestRepository : Repository<MovieRequests>, IMovieRequestRepository
     {
-        public MovieRequestRepository(IOmbiContext ctx) : base(ctx)
+        public MovieRequestRepository(OmbiContext ctx) : base(ctx)
         {
             Db = ctx;
         }
 
-        private IOmbiContext Db { get; }
+        private OmbiContext Db { get; }
 
         public async Task<MovieRequests> GetRequestAsync(int theMovieDbId)
         {

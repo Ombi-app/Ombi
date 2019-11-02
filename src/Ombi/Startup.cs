@@ -73,7 +73,7 @@ namespace Ombi
                 options.User.AllowedUserNameCharacters = string.Empty;
             });
 
-
+            services.ConfigureDatabases();
             services.AddHealthChecks();
             services.AddMemoryCache();
 
@@ -122,7 +122,7 @@ namespace Ombi
 
             app.UseQuartz().GetAwaiter().GetResult();
 
-            var ctx = serviceProvider.GetService<IOmbiContext>();
+            var ctx = serviceProvider.GetService<OmbiContext>();
             loggerFactory.AddSerilog();
 
             app.UseHealthChecks("/health");
