@@ -1,14 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Ombi.Store.Context
+namespace Ombi.Store.Context.Sqlite
 {
-    public sealed class OmbiSqliteContext : OmbiContext
+    public sealed class ExternalSqliteContext : ExternalContext
     {
         private static bool _created;
-        public OmbiSqliteContext(DbContextOptions<OmbiSqliteContext> options) : base(options)
+        public ExternalSqliteContext(DbContextOptions<ExternalSqliteContext> options) : base(options)
         {
             if (_created) return;
-
 
             _created = true;
             Database.SetCommandTimeout(60);

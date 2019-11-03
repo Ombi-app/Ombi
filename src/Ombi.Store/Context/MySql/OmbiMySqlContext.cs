@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Ombi.Store.Entities;
 
-namespace Ombi.Store.Context
+namespace Ombi.Store.Context.MySql
 {
     public sealed class OmbiMySqlContext : OmbiContext
     {

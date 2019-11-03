@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Ombi.Store.Context;
+using Ombi.Store.Context.Sqlite;
 
 namespace Ombi.Store.Migrations.OmbiSqlite
 {

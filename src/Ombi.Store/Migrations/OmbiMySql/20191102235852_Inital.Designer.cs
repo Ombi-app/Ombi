@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Ombi.Store.Context;
+using Ombi.Store.Context.MySql;
 
 namespace Ombi.Store.Migrations.OmbiMySql
 {

@@ -50,21 +50,6 @@ namespace Ombi.Store.Context
         public DbSet<UserNotificationPreferences> UserNotificationPreferences { get; set; }
         public DbSet<UserQualityProfiles> UserQualityProfileses { get; set; }
         public DbSet<RequestQueue> RequestQueue { get; set; }
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            builder.Entity<PlexServerContent>().HasMany(x => x.Episodes)
-                .WithOne(x => x.Series)
-                .HasPrincipalKey(x => x.Key)
-                .HasForeignKey(x => x.GrandparentKey);
-
-            builder.Entity<EmbyEpisode>()
-                .HasOne(p => p.Series)
-                .WithMany(b => b.Episodes)
-                .HasPrincipalKey(x => x.EmbyId)
-                .HasForeignKey(p => p.ParentId);
-
-            base.OnModelCreating(builder);
-        }
 
         public void Seed()
         {

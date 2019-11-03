@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Ombi.Helpers;
 using Ombi.Store.Context;
+using Ombi.Store.Context.MySql;
+using Ombi.Store.Context.Sqlite;
 using SQLitePCL;
 
 namespace Ombi.Extensions
@@ -12,8 +14,8 @@ namespace Ombi.Extensions
     public static class DatabaseExtensions
     {
 
-        private const string SqliteDatabase = "Sqlite";
-        private const string MySqlDatabase = "MySQL";
+        public const string SqliteDatabase = "Sqlite";
+        public const string MySqlDatabase = "MySQL";
 
         public static void ConfigureDatabases(this IServiceCollection services)
         {
@@ -36,9 +38,29 @@ namespace Ombi.Extensions
                     services.AddDbContext<OmbiContext, OmbiMySqlContext>(x => ConfigureMySql(x, configuration.OmbiDatabase));
                     break;
             }
+
+            switch (configuration.ExternalDatabase.Type)
+            {
+                case var type when type.Equals(SqliteDatabase, StringComparison.InvariantCultureIgnoreCase):
+                    services.AddDbContext<ExternalContext, ExternalSqliteContext>(x => ConfigureSqlite(x, configuration.ExternalDatabase));
+                    break;
+                case var type when type.Equals(MySqlDatabase, StringComparison.InvariantCultureIgnoreCase):
+                    services.AddDbContext<ExternalContext, ExternalMySqlContext>(x => ConfigureMySql(x, configuration.ExternalDatabase));
+                    break;
+            }
+
+            switch (configuration.SettingsDatabase.Type)
+            {
+                case var type when type.Equals(SqliteDatabase, StringComparison.InvariantCultureIgnoreCase):
+                    services.AddDbContext<SettingsContext, SettingsSqliteContext>(x => ConfigureSqlite(x, configuration.SettingsDatabase));
+                    break;
+                case var type when type.Equals(MySqlDatabase, StringComparison.InvariantCultureIgnoreCase):
+                    services.AddDbContext<SettingsContext, SettingsMySqlContext>(x => ConfigureMySql(x, configuration.SettingsDatabase));
+                    break;
+            }
         }
 
-        private static DatabaseConfiguration GetDatabaseConfiguration(string databaseFileLocation, string storagePath)
+        public static DatabaseConfiguration GetDatabaseConfiguration(string databaseFileLocation, string storagePath)
         {
             var configuration = new DatabaseConfiguration(storagePath);
             if (File.Exists(databaseFileLocation))
@@ -55,7 +77,7 @@ namespace Ombi.Extensions
             return configuration;
         }
 
-        private static void ConfigureSqlite(DbContextOptionsBuilder options, PerDatabaseConfiguration config)
+        public static void ConfigureSqlite(DbContextOptionsBuilder options, PerDatabaseConfiguration config)
         {
             SQLitePCL.Batteries.Init();
             SQLitePCL.raw.sqlite3_config(raw.SQLITE_CONFIG_MULTITHREAD);
@@ -63,12 +85,12 @@ namespace Ombi.Extensions
             options.UseSqlite(config.ConnectionString);
         }
 
-        private static void ConfigureMySql(DbContextOptionsBuilder options, PerDatabaseConfiguration config)
+        public static void ConfigureMySql(DbContextOptionsBuilder options, PerDatabaseConfiguration config)
         {
             options.UseMySql(config.ConnectionString);
         }
 
-        private class DatabaseConfiguration
+        public class DatabaseConfiguration
         {
             public DatabaseConfiguration()
             {
@@ -78,15 +100,15 @@ namespace Ombi.Extensions
             public DatabaseConfiguration(string defaultSqlitePath)
             {
                 OmbiDatabase = new PerDatabaseConfiguration(SqliteDatabase, $"Data Source={Path.Combine(defaultSqlitePath, "Ombi.db")}");
-                SettingsDatabase = new PerDatabaseConfiguration(SqliteDatabase, $"Data Source={Path.Combine(defaultSqlitePath, "Settings.db")}");
-                ExternalDatabase = new PerDatabaseConfiguration(SqliteDatabase, $"Data Source={Path.Combine(defaultSqlitePath, "External.db")}");
+                SettingsDatabase = new PerDatabaseConfiguration(SqliteDatabase, $"Data Source={Path.Combine(defaultSqlitePath, "OmbiSettings.db")}");
+                ExternalDatabase = new PerDatabaseConfiguration(SqliteDatabase, $"Data Source={Path.Combine(defaultSqlitePath, "OmbiExternal.db")}");
             }
             public PerDatabaseConfiguration OmbiDatabase { get; set; }
             public PerDatabaseConfiguration SettingsDatabase { get; set; }
             public PerDatabaseConfiguration ExternalDatabase { get; set; }
         }
 
-        private class PerDatabaseConfiguration
+        public class PerDatabaseConfiguration
         {
             public PerDatabaseConfiguration(string type, string connectionString)
             {
