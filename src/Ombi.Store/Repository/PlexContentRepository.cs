@@ -39,12 +39,12 @@ namespace Ombi.Store.Repository
     public class PlexServerContentRepository : ExternalRepository<PlexServerContent>, IPlexContentRepository
     {
 
-        public PlexServerContentRepository(IExternalContext db) : base(db)
+        public PlexServerContentRepository(ExternalContext db) : base(db)
         {
             Db = db;
         }
 
-        private IExternalContext Db { get; }
+        private ExternalContext Db { get; }
 
 
         public async Task<bool> ContentExists(string providerId)

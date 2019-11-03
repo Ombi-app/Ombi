@@ -38,12 +38,12 @@ namespace Ombi.Store.Repository
     public class EmbyContentRepository : ExternalRepository<EmbyContent>, IEmbyContentRepository
     {
 
-        public EmbyContentRepository(IExternalContext db):base(db)
+        public EmbyContentRepository(ExternalContext db):base(db)
         {
             Db = db;
         }
 
-        private IExternalContext Db { get; }
+        private ExternalContext Db { get; }
 
         
         public async Task<EmbyContent> GetByImdbId(string imdbid)

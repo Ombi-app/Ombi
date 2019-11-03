@@ -11,12 +11,12 @@ namespace Ombi.Store.Repository
 {
     public class NotificationTemplatesRepository : INotificationTemplatesRepository
     {
-        public NotificationTemplatesRepository(IOmbiContext ctx)
+        public NotificationTemplatesRepository(OmbiContext ctx)
         {
             Db = ctx;
         }
 
-        private IOmbiContext Db { get; }
+        private OmbiContext Db { get; }
 
         public IQueryable<NotificationTemplates> All()
         {

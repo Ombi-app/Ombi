@@ -13,7 +13,7 @@ using Polly;
 
 namespace Ombi.Store.Repository
 {
-    public class BaseRepository<T, U> : IRepository<T> where T : Entity where U : IDbContext
+    public class BaseRepository<T, U> : IRepository<T> where T : Entity where U : DbContext
     {
         public BaseRepository(U ctx)
         {

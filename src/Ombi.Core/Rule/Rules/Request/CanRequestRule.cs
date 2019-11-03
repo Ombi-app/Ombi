@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Authentication;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Helpers;
-using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core.Rule.Rules.Request
