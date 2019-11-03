@@ -105,25 +105,12 @@ namespace Ombi.Store.Repository.Requests
             await InternalSaveChanges();
         }
 
-        public async Task<TvRequests> Add(TvRequests request)
-        {
-            await Db.TvRequests.AddAsync(request);
-            await InternalSaveChanges();
-            return request;
-        }
-
         public async Task<ChildRequests> AddChild(ChildRequests request)
         {
             await Db.ChildRequests.AddAsync(request);
             await InternalSaveChanges();
 
             return request;
-        }
-
-        public async Task Delete(TvRequests request)
-        {
-            Db.TvRequests.Remove(request);
-            await InternalSaveChanges();
         }
 
         public async Task DeleteChild(ChildRequests request)

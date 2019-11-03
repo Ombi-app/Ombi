@@ -12,12 +12,9 @@ namespace Ombi.Store.Context
 {
     public abstract class OmbiContext : IdentityDbContext<OmbiUser>
     {
-        private static bool _created;
         protected OmbiContext(DbContextOptions<OmbiContext> options) : base(options)
         {
-            if (_created) return;
 
-            _created = true;
         }
 
         /// <summary>
@@ -33,15 +30,6 @@ namespace Ombi.Store.Context
 
 
         public DbSet<NotificationTemplates> NotificationTemplates { get; set; }
-        public DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
-        public DbSet<PlexServerContent> PlexServerContent { get; set; }
-        public DbSet<PlexSeasonsContent> PlexSeasonsContent { get; set; }
-        public DbSet<PlexEpisode> PlexEpisode { get; set; }
-        public DbSet<GlobalSettings> Settings { get; set; }
-        public DbSet<RadarrCache> RadarrCache { get; set; }
-        public DbSet<CouchPotatoCache> CouchPotatoCache { get; set; }
-        public DbSet<EmbyContent> EmbyContent { get; set; }
-        public DbSet<EmbyEpisode> EmbyEpisode { get; set; }
 
         public DbSet<MovieRequests> MovieRequests { get; set; }
         public DbSet<AlbumRequest> AlbumRequests { get; set; }
@@ -58,16 +46,25 @@ namespace Ombi.Store.Context
 
         public DbSet<Audit> Audit { get; set; }
         public DbSet<Tokens> Tokens { get; set; }
-        public DbSet<SonarrCache> SonarrCache { get; set; }
-        public DbSet<LidarrArtistCache> LidarrArtistCache { get; set; }
-        public DbSet<LidarrAlbumCache> LidarrAlbumCache { get; set; }
-        public DbSet<SonarrEpisodeCache> SonarrEpisodeCache { get; set; }
-        public DbSet<SickRageCache> SickRageCache { get; set; }
-        public DbSet<SickRageEpisodeCache> SickRageEpisodeCache { get; set; }
         public DbSet<RequestSubscription> RequestSubscription { get; set; }
         public DbSet<UserNotificationPreferences> UserNotificationPreferences { get; set; }
         public DbSet<UserQualityProfiles> UserQualityProfileses { get; set; }
         public DbSet<RequestQueue> RequestQueue { get; set; }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<PlexServerContent>().HasMany(x => x.Episodes)
+                .WithOne(x => x.Series)
+                .HasPrincipalKey(x => x.Key)
+                .HasForeignKey(x => x.GrandparentKey);
+
+            builder.Entity<EmbyEpisode>()
+                .HasOne(p => p.Series)
+                .WithMany(b => b.Episodes)
+                .HasPrincipalKey(x => x.EmbyId)
+                .HasForeignKey(p => p.ParentId);
+
+            base.OnModelCreating(builder);
+        }
 
         public void Seed()
         {

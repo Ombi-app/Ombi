@@ -19,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.DependencyInjection;
+using Ombi.Extensions;
 using Ombi.Helpers;
 using Ombi.Mapping;
 using Ombi.Schedule;
@@ -98,7 +99,6 @@ namespace Ombi
                 x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
             });
 
-            SQLitePCL.raw.sqlite3_config(raw.SQLITE_CONFIG_MULTITHREAD);
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
