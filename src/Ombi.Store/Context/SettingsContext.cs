@@ -25,6 +25,8 @@ namespace Ombi.Store.Context
         public DbSet<GlobalSettings> Settings { get; set; }
         public DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
 
+
+
         public void Seed()
         {
             using (var tran = Database.BeginTransaction())
