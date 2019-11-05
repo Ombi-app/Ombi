@@ -39,11 +39,11 @@ namespace Ombi.Schedule
         //        .Build();
         //}
 
-        public static async Task UseQuartz(this IApplicationBuilder app)
+        public static async Task UseQuartz(this IServiceProvider app)
         {
             // Job Factory through IOC container
-            var jobFactory = (IJobFactory)app.ApplicationServices.GetService(typeof(IJobFactory));
-            var service = (ISettingsService<JobSettings>)app.ApplicationServices.GetService(typeof(ISettingsService<JobSettings>));
+            var jobFactory = (IJobFactory)app.GetService(typeof(IJobFactory));
+            var service = (ISettingsService<JobSettings>)app.GetService(typeof(ISettingsService<JobSettings>));
             var s = service.GetSettings();
             // Set job factory
             OmbiQuartz.Instance.UseJobFactory(jobFactory);

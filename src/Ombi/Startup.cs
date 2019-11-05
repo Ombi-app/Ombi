@@ -3,21 +3,17 @@ using AutoMapper.EquivalencyExpression;
 using Hangfire;
 using Hangfire.Dashboard;
 using Hangfire.MemoryStorage;
-using Hangfire.SQLite;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.DependencyInjection;
@@ -33,6 +29,8 @@ using Serilog;
 using SQLitePCL;
 using System;
 using System.IO;
+using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
 
 namespace Ombi
@@ -41,7 +39,7 @@ namespace Ombi
     {
         public static StoragePathSingleton StoragePath => StoragePathSingleton.Instance;
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             Console.WriteLine(env.ContentRootPath);
             var builder = new ConfigurationBuilder()
@@ -62,7 +60,7 @@ namespace Ombi
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddIdentity<OmbiUser, IdentityRole>()
                 .AddEntityFrameworkStores<OmbiContext>()
@@ -86,8 +84,7 @@ namespace Ombi
             services.AddJwtAuthentication(Configuration);
 
             services.AddMvc()
-                .AddJsonOptions(x =>
-                    x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+                .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
             services.AddOmbiMappingProfile();
             services.AddAutoMapper(expression => { expression.AddCollectionMappers(); });
@@ -99,7 +96,9 @@ namespace Ombi
             services.AddHangfire(x =>
             {
                 x.UseMemoryStorage();
+#pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
                 x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
+#pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
             });
 
             SQLitePCL.raw.sqlite3_config(raw.SQLITE_CONFIG_MULTITHREAD);
@@ -112,38 +111,32 @@ namespace Ombi
                     .AllowCredentials();
             }));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
             services.AddSignalR();
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            // Build the intermediate service provider
-            return services.BuildServiceProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
-            IMemoryCache cache, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
 
-            app.UseQuartz().GetAwaiter().GetResult();
+            serviceProvider.UseQuartz().GetAwaiter().GetResult();
 
             var ctx = serviceProvider.GetService<IOmbiContext>();
             loggerFactory.AddSerilog();
-
-            app.UseHealthChecks("/health");
-
+            
             app.UseSpaStaticFiles();
-
-
+            
             var ombiService =
-                app.ApplicationServices.GetService<ISettingsService<OmbiSettings>>();
+                serviceProvider.GetService<ISettingsService<OmbiSettings>>();
             var settings = ombiService.GetSettings();
             if (settings.ApiKey.IsNullOrEmpty())
             {
@@ -180,20 +173,7 @@ namespace Ombi
 
             app.UseHangfireServer(new BackgroundJobServerOptions
                 {WorkerCount = 1, ServerTimeout = TimeSpan.FromDays(1), ShutdownTimeout = TimeSpan.FromDays(1)});
-            if (env.IsDevelopment())
-            {
-                app.UseHangfireDashboard(settings.BaseUrl.HasValue() ? $"{settings.BaseUrl}/hangfire" : "/hangfire",
-                    new DashboardOptions
-                    {
-                        Authorization = new[] {new HangfireAuthorizationFilter()}
-                    });
-            }
 
-            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute {Attempts = 3});
-
-            // Setup the scheduler
-            //var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
-            //jobSetup.Setup();
             ctx.Seed();
             var settingsctx = serviceProvider.GetService<ISettingsContext>();
             var externalctx = serviceProvider.GetService<IExternalContext>();
@@ -207,7 +187,10 @@ namespace Ombi
                 ContentTypeProvider = provider,
             });
 
+            app.UseRouting();
+
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseMiddleware<ApiKeyMiddlewear>();
@@ -226,9 +209,12 @@ namespace Ombi
                 }
             });
 
-            app.UseSignalR(routes => { routes.MapHub<NotificationHub>("/hubs/notification"); });
-
-            app.UseMvcWithDefaultRoute();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHub<NotificationHub>("/hubs/notification");
+                endpoints.MapHealthChecks("/health");
+            });
 
             app.UseSpa(spa =>
             {
@@ -240,24 +226,5 @@ namespace Ombi
             });
             
         }
-
-        private static bool IsSpaRoute(HttpContext context)
-        {
-            var path = context.Request.Path;
-            // This should probably be a compiled regex
-            return path.StartsWithSegments("/static")
-                   || path.StartsWithSegments("/sockjs-node")
-                   || path.StartsWithSegments("/socket.io")
-                   || path.ToString().Contains(".hot-update.");
-        }
-
-        public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
-        {
-            public bool Authorize(DashboardContext context)
-            {
-                return true;
-            }
-        }
-
     }
 }
