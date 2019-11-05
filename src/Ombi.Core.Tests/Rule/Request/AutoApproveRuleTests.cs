@@ -18,7 +18,7 @@ namespace Ombi.Core.Tests.Rule.Request
     {
         private List<OmbiUser> _users = new List<OmbiUser>
         {
-             new OmbiUser { Id = Guid.NewGuid().ToString("N"), UserName="abc" }
+             new OmbiUser { Id = Guid.NewGuid().ToString("N"), UserName="abc",UserType =  UserType.LocalUser}
         };
 
         [SetUp]
