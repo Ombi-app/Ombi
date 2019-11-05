@@ -73,28 +73,7 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     table.PrimaryKey("PK_Audit", x => x.Id);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "EmbyContent",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Title = table.Column<string>(nullable: true),
-                    ProviderId = table.Column<string>(nullable: true),
-                    EmbyId = table.Column<string>(nullable: false),
-                    Type = table.Column<int>(nullable: false),
-                    AddedAt = table.Column<DateTime>(nullable: false),
-                    ImdbId = table.Column<string>(nullable: true),
-                    TheMovieDbId = table.Column<string>(nullable: true),
-                    TvDbId = table.Column<string>(nullable: true),
-                    Url = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EmbyContent", x => x.Id);
-                    table.UniqueConstraint("AK_EmbyContent_EmbyId", x => x.EmbyId);
-                });
-
+           
             migrationBuilder.CreateTable(
                 name: "IssueCategory",
                 columns: table => new
@@ -125,29 +104,6 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     table.PrimaryKey("PK_NotificationTemplates", x => x.Id);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "PlexServerContent",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Title = table.Column<string>(nullable: true),
-                    ReleaseYear = table.Column<string>(nullable: true),
-                    ImdbId = table.Column<string>(nullable: true),
-                    TvDbId = table.Column<string>(nullable: true),
-                    TheMovieDbId = table.Column<string>(nullable: true),
-                    Type = table.Column<int>(nullable: false),
-                    Url = table.Column<string>(nullable: true),
-                    Key = table.Column<int>(nullable: false),
-                    AddedAt = table.Column<DateTime>(nullable: false),
-                    Quality = table.Column<string>(nullable: true),
-                    RequestId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PlexServerContent", x => x.Id);
-                    table.UniqueConstraint("AK_PlexServerContent_Key", x => x.Key);
-                });
 
             migrationBuilder.CreateTable(
                 name: "RecentlyAddedLog",
@@ -551,81 +507,6 @@ namespace Ombi.Store.Migrations.OmbiMySql
                 });
 
             migrationBuilder.CreateTable(
-                name: "EmbyEpisode",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Title = table.Column<string>(nullable: true),
-                    EmbyId = table.Column<string>(nullable: true),
-                    EpisodeNumber = table.Column<int>(nullable: false),
-                    SeasonNumber = table.Column<int>(nullable: false),
-                    ParentId = table.Column<string>(nullable: true),
-                    ProviderId = table.Column<string>(nullable: true),
-                    AddedAt = table.Column<DateTime>(nullable: false),
-                    TvDbId = table.Column<string>(nullable: true),
-                    ImdbId = table.Column<string>(nullable: true),
-                    TheMovieDbId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EmbyEpisode", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EmbyEpisode_EmbyContent_ParentId",
-                        column: x => x.ParentId,
-                        principalTable: "EmbyContent",
-                        principalColumn: "EmbyId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PlexEpisode",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    EpisodeNumber = table.Column<int>(nullable: false),
-                    SeasonNumber = table.Column<int>(nullable: false),
-                    Key = table.Column<int>(nullable: false),
-                    Title = table.Column<string>(nullable: true),
-                    ParentKey = table.Column<int>(nullable: false),
-                    GrandparentKey = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PlexEpisode", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PlexEpisode_PlexServerContent_GrandparentKey",
-                        column: x => x.GrandparentKey,
-                        principalTable: "PlexServerContent",
-                        principalColumn: "Key",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PlexSeasonsContent",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    PlexContentId = table.Column<int>(nullable: false),
-                    SeasonNumber = table.Column<int>(nullable: false),
-                    SeasonKey = table.Column<int>(nullable: false),
-                    ParentKey = table.Column<int>(nullable: false),
-                    PlexServerContentId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PlexSeasonsContent", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PlexSeasonsContent_PlexServerContent_PlexServerContentId",
-                        column: x => x.PlexServerContentId,
-                        principalTable: "PlexServerContent",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ChildRequests",
                 columns: table => new
                 {
@@ -838,11 +719,6 @@ namespace Ombi.Store.Migrations.OmbiMySql
                 column: "RequestedUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EmbyEpisode_ParentId",
-                table: "EmbyEpisode",
-                column: "ParentId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_EpisodeRequests_SeasonId",
                 table: "EpisodeRequests",
                 column: "SeasonId");
@@ -881,16 +757,6 @@ namespace Ombi.Store.Migrations.OmbiMySql
                 name: "IX_NotificationUserId_UserId",
                 table: "NotificationUserId",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PlexEpisode_GrandparentKey",
-                table: "PlexEpisode",
-                column: "GrandparentKey");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PlexSeasonsContent_PlexServerContentId",
-                table: "PlexSeasonsContent",
-                column: "PlexServerContentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RequestLog_UserId",
@@ -952,9 +818,6 @@ namespace Ombi.Store.Migrations.OmbiMySql
                 name: "Audit");
 
             migrationBuilder.DropTable(
-                name: "EmbyEpisode");
-
-            migrationBuilder.DropTable(
                 name: "EpisodeRequests");
 
             migrationBuilder.DropTable(
@@ -966,13 +829,7 @@ namespace Ombi.Store.Migrations.OmbiMySql
             migrationBuilder.DropTable(
                 name: "NotificationUserId");
 
-            migrationBuilder.DropTable(
-                name: "PlexEpisode");
-
-            migrationBuilder.DropTable(
-                name: "PlexSeasonsContent");
-
-            migrationBuilder.DropTable(
+        migrationBuilder.DropTable(
                 name: "RecentlyAddedLog");
 
             migrationBuilder.DropTable(
@@ -998,9 +855,6 @@ namespace Ombi.Store.Migrations.OmbiMySql
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "EmbyContent");
 
             migrationBuilder.DropTable(
                 name: "SeasonRequests");

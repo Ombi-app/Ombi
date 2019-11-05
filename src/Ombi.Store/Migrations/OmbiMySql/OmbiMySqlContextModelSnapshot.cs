@@ -145,67 +145,6 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.ToTable("Audit");
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.EmbyContent", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("AddedAt");
-
-                    b.Property<string>("EmbyId")
-                        .IsRequired();
-
-                    b.Property<string>("ImdbId");
-
-                    b.Property<string>("ProviderId");
-
-                    b.Property<string>("TheMovieDbId");
-
-                    b.Property<string>("Title");
-
-                    b.Property<string>("TvDbId");
-
-                    b.Property<int>("Type");
-
-                    b.Property<string>("Url");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EmbyContent");
-                });
-
-            modelBuilder.Entity("Ombi.Store.Entities.EmbyEpisode", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("AddedAt");
-
-                    b.Property<string>("EmbyId");
-
-                    b.Property<int>("EpisodeNumber");
-
-                    b.Property<string>("ImdbId");
-
-                    b.Property<string>("ParentId");
-
-                    b.Property<string>("ProviderId");
-
-                    b.Property<int>("SeasonNumber");
-
-                    b.Property<string>("TheMovieDbId");
-
-                    b.Property<string>("Title");
-
-                    b.Property<string>("TvDbId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ParentId");
-
-                    b.ToTable("EmbyEpisode");
-                });
-
             modelBuilder.Entity("Ombi.Store.Entities.NotificationTemplates", b =>
                 {
                     b.Property<int>("Id")
@@ -310,84 +249,6 @@ namespace Ombi.Store.Migrations.OmbiMySql
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("Ombi.Store.Entities.PlexEpisode", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("EpisodeNumber");
-
-                    b.Property<int>("GrandparentKey");
-
-                    b.Property<int>("Key");
-
-                    b.Property<int>("ParentKey");
-
-                    b.Property<int>("SeasonNumber");
-
-                    b.Property<string>("Title");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GrandparentKey");
-
-                    b.ToTable("PlexEpisode");
-                });
-
-            modelBuilder.Entity("Ombi.Store.Entities.PlexSeasonsContent", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("ParentKey");
-
-                    b.Property<int>("PlexContentId");
-
-                    b.Property<int?>("PlexServerContentId");
-
-                    b.Property<int>("SeasonKey");
-
-                    b.Property<int>("SeasonNumber");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PlexServerContentId");
-
-                    b.ToTable("PlexSeasonsContent");
-                });
-
-            modelBuilder.Entity("Ombi.Store.Entities.PlexServerContent", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("AddedAt");
-
-                    b.Property<string>("ImdbId");
-
-                    b.Property<int>("Key");
-
-                    b.Property<string>("Quality");
-
-                    b.Property<string>("ReleaseYear");
-
-                    b.Property<int?>("RequestId");
-
-                    b.Property<string>("TheMovieDbId");
-
-                    b.Property<string>("Title");
-
-                    b.Property<string>("TvDbId");
-
-                    b.Property<int>("Type");
-
-                    b.Property<string>("Url");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PlexServerContent");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.RecentlyAddedLog", b =>
@@ -909,35 +770,11 @@ namespace Ombi.Store.Migrations.OmbiMySql
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.EmbyEpisode", b =>
-                {
-                    b.HasOne("Ombi.Store.Entities.EmbyContent", "Series")
-                        .WithMany("Episodes")
-                        .HasForeignKey("ParentId")
-                        .HasPrincipalKey("EmbyId");
-                });
-
             modelBuilder.Entity("Ombi.Store.Entities.NotificationUserId", b =>
                 {
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany("NotificationUserIds")
                         .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Ombi.Store.Entities.PlexEpisode", b =>
-                {
-                    b.HasOne("Ombi.Store.Entities.PlexServerContent", "Series")
-                        .WithMany("Episodes")
-                        .HasForeignKey("GrandparentKey")
-                        .HasPrincipalKey("Key")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Ombi.Store.Entities.PlexSeasonsContent", b =>
-                {
-                    b.HasOne("Ombi.Store.Entities.PlexServerContent")
-                        .WithMany("Seasons")
-                        .HasForeignKey("PlexServerContentId");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
