@@ -19,14 +19,7 @@ namespace Ombi.Extensions
 
         public static void ConfigureDatabases(this IServiceCollection services)
         {
-            var i = StoragePathSingleton.Instance;
-            if (string.IsNullOrEmpty(i.StoragePath))
-            {
-                i.StoragePath = string.Empty;
-            }
-
-            var databaseFileLocation = Path.Combine(i.StoragePath, "database.json");
-            var configuration = GetDatabaseConfiguration(databaseFileLocation, i.StoragePath);
+            var configuration = GetDatabaseConfiguration();
 
             // Ombi db
             switch (configuration.OmbiDatabase.Type)
@@ -60,9 +53,17 @@ namespace Ombi.Extensions
             }
         }
 
-        public static DatabaseConfiguration GetDatabaseConfiguration(string databaseFileLocation, string storagePath)
+        public static DatabaseConfiguration GetDatabaseConfiguration()
         {
-            var configuration = new DatabaseConfiguration(storagePath);
+            var i = StoragePathSingleton.Instance;
+            if (string.IsNullOrEmpty(i.StoragePath))
+            {
+                i.StoragePath = string.Empty;
+            }
+
+            var databaseFileLocation = Path.Combine(i.StoragePath, "database.json");
+            
+            var configuration = new DatabaseConfiguration(i.StoragePath);
             if (File.Exists(databaseFileLocation))
             {
                 var databaseJson = File.ReadAllText(databaseFileLocation);
@@ -94,7 +95,7 @@ namespace Ombi.Extensions
         {
             public DatabaseConfiguration()
             {
-                
+
             }
 
             public DatabaseConfiguration(string defaultSqlitePath)
@@ -119,7 +120,7 @@ namespace Ombi.Extensions
             // Used in Deserialization
             public PerDatabaseConfiguration()
             {
-                
+
             }
             public string Type { get; set; }
             public string ConnectionString { get; set; }
