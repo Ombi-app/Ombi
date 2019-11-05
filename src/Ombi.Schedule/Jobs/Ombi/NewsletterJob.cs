@@ -209,7 +209,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                             continue;
                         }
                         // BCC the messages
-                        message.Bcc.Add(new MailboxAddress(user.Email, user.Email));
+                        message.Bcc.Add(new MailboxAddress(user.Email.Trim(), user.Email.Trim()));
                     }
 
                     // Send the email

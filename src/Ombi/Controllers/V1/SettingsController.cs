@@ -29,6 +29,7 @@ using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Api.Github;
 using Ombi.Core.Engine;
+using Ombi.Extensions;
 using Ombi.Schedule;
 using Quartz;
 
@@ -116,6 +117,8 @@ namespace Ombi.Controllers.V1
         [HttpGet("about")]
         public AboutViewModel About()
         {
+            var dbConfiguration = DatabaseExtensions.GetDatabaseConfiguration();
+            var storage = StoragePathSingleton.Instance;
             var model = new AboutViewModel
             {
                 FrameworkDescription = RuntimeInformation.FrameworkDescription,
@@ -123,9 +126,17 @@ namespace Ombi.Controllers.V1
                 OsDescription = RuntimeInformation.OSDescription,
                 ProcessArchitecture = RuntimeInformation.ProcessArchitecture.ToString(),
                 ApplicationBasePath = Directory.GetCurrentDirectory(),
+                ExternalConnectionString = dbConfiguration.ExternalDatabase.ConnectionString,
+                ExternalDatabaseType = dbConfiguration.ExternalDatabase.Type,
+                OmbiConnectionString = dbConfiguration.OmbiDatabase.ConnectionString,
+                OmbiDatabaseType = dbConfiguration.OmbiDatabase.Type,
+                SettingsConnectionString = dbConfiguration.SettingsDatabase.ConnectionString,
+                SettingsDatabaseType = dbConfiguration.SettingsDatabase.Type,
+                StoragePath = storage.StoragePath.HasValue() ? storage.StoragePath : "None Specified",
                 NotSupported = Directory.GetCurrentDirectory().Contains("qpkg")
             };
-            
+
+
             var version = AssemblyHelper.GetRuntimeVersion();
             var productArray = version.Split('-');
             model.Version = productArray[0];
@@ -257,8 +268,8 @@ namespace Ombi.Controllers.V1
         [AllowAnonymous]
         public async Task<string> GetDefaultLanguage()
         {
-           var s = await Get<OmbiSettings>();
-           return s.DefaultLanguageCode;
+            var s = await Get<OmbiSettings>();
+            return s.DefaultLanguageCode;
         }
 
         /// <summary>
@@ -455,7 +466,7 @@ namespace Ombi.Controllers.V1
         [HttpGet("Update")]
         public async Task<UpdateSettings> UpdateSettings()
         {
-            var settings =  await Get<UpdateSettings>();
+            var settings = await Get<UpdateSettings>();
 
             return Mapper.Map<UpdateSettingsViewModel>(settings);
         }
@@ -610,7 +621,7 @@ namespace Ombi.Controllers.V1
                         Message = $"CRON Expression {body.Expression} is not valid"
                     };
                 }
-               
+
                 model.Success = true;
                 return model;
             }

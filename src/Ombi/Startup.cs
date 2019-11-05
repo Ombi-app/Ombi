@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.DependencyInjection;
+using Ombi.Extensions;
 using Ombi.Helpers;
 using Ombi.Hubs;
 using Ombi.Mapping;
@@ -77,7 +78,7 @@ namespace Ombi
                 options.User.AllowedUserNameCharacters = string.Empty;
             });
 
-
+            services.ConfigureDatabases();
             services.AddHealthChecks();
             services.AddMemoryCache();
 
@@ -101,7 +102,6 @@ namespace Ombi
 #pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
             });
 
-            SQLitePCL.raw.sqlite3_config(raw.SQLITE_CONFIG_MULTITHREAD);
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
@@ -130,7 +130,7 @@ namespace Ombi
 
             serviceProvider.UseQuartz().GetAwaiter().GetResult();
 
-            var ctx = serviceProvider.GetService<IOmbiContext>();
+            var ctx = serviceProvider.GetService<OmbiContext>();
             loggerFactory.AddSerilog();
             
             app.UseSpaStaticFiles();
@@ -175,10 +175,8 @@ namespace Ombi
                 {WorkerCount = 1, ServerTimeout = TimeSpan.FromDays(1), ShutdownTimeout = TimeSpan.FromDays(1)});
 
             ctx.Seed();
-            var settingsctx = serviceProvider.GetService<ISettingsContext>();
-            var externalctx = serviceProvider.GetService<IExternalContext>();
+            var settingsctx = serviceProvider.GetService<SettingsContext>();
             settingsctx.Seed();
-            externalctx.Seed();
 
             var provider = new FileExtensionContentTypeProvider {Mappings = {[".map"] = "application/octet-stream"}};
 

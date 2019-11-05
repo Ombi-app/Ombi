@@ -45,7 +45,7 @@ namespace Ombi.Schedule.Jobs.Couchpotato
     public class CouchPotatoSync : ICouchPotatoSync
     {
         public CouchPotatoSync(ISettingsService<CouchPotatoSettings> cpSettings,
-            ICouchPotatoApi api, ILogger<CouchPotatoSync> log, IExternalContext ctx, IHubContext<NotificationHub> hub)
+            ICouchPotatoApi api, ILogger<CouchPotatoSync> log, ExternalContext ctx, IHubContext<NotificationHub> hub)
         {
             _settings = cpSettings;
             _api = api;
@@ -58,7 +58,7 @@ namespace Ombi.Schedule.Jobs.Couchpotato
         private readonly ISettingsService<CouchPotatoSettings> _settings;
         private readonly ICouchPotatoApi _api;
         private readonly ILogger<CouchPotatoSync> _log;
-        private readonly IExternalContext _ctx;
+        private readonly ExternalContext _ctx;
         private readonly IHubContext<NotificationHub> _notification;
 
         public async Task Execute(IJobExecutionContext job)

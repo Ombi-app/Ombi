@@ -23,6 +23,7 @@ namespace Ombi.Schedule.Tests
 
             scheduleMock.Verify(x => x.TriggerJob(It.Is<JobKey>(j => j.Name == "ABC"), 
                 default(CancellationToken)), Times.Once);
+
         }
     }
     public class QuartzMock : OmbiQuartz

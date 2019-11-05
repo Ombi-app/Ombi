@@ -36,12 +36,12 @@ namespace Ombi.Store.Repository
 {
     //public class UserRepository : IUserRepository
     //{
-    //    public UserRepository(IOmbiContext ctx)
+    //    public UserRepository(OmbiContext ctx)
     //    {
     //        Db = ctx;
     //    }
 
-    //    private IOmbiContext Db { get; }
+    //    private OmbiContext Db { get; }
 
     //    public async Task<User> GetUser(string username)
     //    {
