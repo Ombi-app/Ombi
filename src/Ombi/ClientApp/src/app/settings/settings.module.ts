@@ -3,7 +3,7 @@ import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
 import { NgbAccordionModule, NgbModule } from "@ng-bootstrap/ng-bootstrap";
-import { TagInputModule } from "ngx-chips";
+// import { TagInputModule } from "ngx-chips";
 import { ClipboardModule } from "ngx-clipboard";
 
 import { AuthGuard } from "../auth/auth.guard";
@@ -105,7 +105,7 @@ const routes: Routes = [
         NgbAccordionModule,
         AutoCompleteModule,
         CalendarModule,
-        TagInputModule,
+        // TagInputModule,
         ClipboardModule,
         PipeModule,
         RadioButtonModule,
