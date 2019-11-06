@@ -32,10 +32,10 @@ namespace Ombi.Updater
         private static void ConfigureServices(IServiceCollection serviceCollection)
         {
             // Add logging
-            serviceCollection.AddSingleton(new LoggerFactory()
-                .AddConsole()
-                .AddSerilog()
-                .AddDebug());
+            //serviceCollection.AddSingleton(new LoggerFactory()
+            //    .AddConsole()
+            //    .AddSerilog()
+            //    .AddDebug());
             serviceCollection.AddLogging();
 
             Log.Logger = new LoggerConfiguration()
