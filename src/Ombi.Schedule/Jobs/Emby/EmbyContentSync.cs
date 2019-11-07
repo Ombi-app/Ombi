@@ -206,7 +206,6 @@ namespace Ombi.Schedule.Jobs.Emby
             if (disposing)
             {
                 _settings?.Dispose();
-                _repo?.Dispose();
             }
             _disposed = true;
         }

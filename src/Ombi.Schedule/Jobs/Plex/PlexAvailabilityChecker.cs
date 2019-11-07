@@ -193,8 +193,6 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if (disposing)
             {
-                _movieRepo?.Dispose();
-                _repo?.Dispose();
             }
             _disposed = true;
         }

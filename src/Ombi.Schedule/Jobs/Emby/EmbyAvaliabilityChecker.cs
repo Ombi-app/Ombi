@@ -213,7 +213,6 @@ namespace Ombi.Schedule.Jobs.Emby
 
             if (disposing)
             {
-                _movieRepo?.Dispose();
             }
             _disposed = true;
         }

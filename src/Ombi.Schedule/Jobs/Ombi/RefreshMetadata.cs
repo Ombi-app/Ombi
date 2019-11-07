@@ -352,8 +352,6 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (disposing)
             {
-                _plexRepo?.Dispose();
-                _embyRepo?.Dispose();
                 _plexSettings?.Dispose();
             }
             _disposed = true;

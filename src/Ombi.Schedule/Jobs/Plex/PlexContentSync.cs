@@ -650,7 +650,6 @@ namespace Ombi.Schedule.Jobs.Plex
             if (disposing)
             {
                 Plex?.Dispose();
-                Repo?.Dispose();
                 EpisodeSync?.Dispose();
             }
             _disposed = true;

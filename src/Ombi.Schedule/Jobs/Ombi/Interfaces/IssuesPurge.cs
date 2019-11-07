@@ -49,7 +49,6 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (disposing)
             {
-                _issuesRepository?.Dispose();
                 _settings?.Dispose();
             }
             _disposed = true;
