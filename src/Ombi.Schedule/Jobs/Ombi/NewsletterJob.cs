@@ -37,7 +37,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             IMovieDbApi movieApi, ITvMazeApi tvApi, IEmailProvider email, ISettingsService<CustomizationSettings> custom,
             ISettingsService<EmailNotificationSettings> emailSettings, INotificationTemplatesRepository templateRepo,
             UserManager<OmbiUser> um, ISettingsService<NewsletterSettings> newsletter, ILogger<NewsletterJob> log,
-            ILidarrApi lidarrApi, IRepository<LidarrAlbumCache> albumCache, ISettingsService<LidarrSettings> lidarrSettings,
+            ILidarrApi lidarrApi, IExternalRepository<LidarrAlbumCache> albumCache, ISettingsService<LidarrSettings> lidarrSettings,
             ISettingsService<OmbiSettings> ombiSettings, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmbySettings> embySettings)
         {
             _plex = plex;
@@ -66,7 +66,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         private readonly IPlexContentRepository _plex;
         private readonly IEmbyContentRepository _emby;
-        private readonly IRepository<RecentlyAddedLog> _recentlyAddedLog;
+        private readonly IExternalRepository<RecentlyAddedLog> _recentlyAddedLog;
         private readonly IMovieDbApi _movieApi;
         private readonly ITvMazeApi _tvApi;
         private readonly IEmailProvider _email;
