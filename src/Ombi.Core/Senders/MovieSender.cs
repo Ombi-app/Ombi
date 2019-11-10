@@ -95,7 +95,7 @@ namespace Ombi.Core.Senders
                         Type = RequestType.Movie,
                         RetryCount = 0
                     });
-                    _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
+                    await _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
                 }
             }
 

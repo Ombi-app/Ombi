@@ -34,6 +34,7 @@ using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
+using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Quartz;

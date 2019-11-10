@@ -181,7 +181,8 @@ namespace Ombi.DependencyInjection
 
         public static void RegisterJobs(this IServiceCollection services)
         {
-            services.AddSingleton<IJobFactory, IoCJobFactory>(provider => new IoCJobFactory(provider));
+            services.AddSingleton<QuartzJobRunner>();
+            services.AddSingleton<IJobFactory, IoCJobFactory>();
             services.AddTransient<IBackgroundJobClient, BackgroundJobClient>();
 
             services.AddTransient<IPlexContentSync, PlexContentSync>();

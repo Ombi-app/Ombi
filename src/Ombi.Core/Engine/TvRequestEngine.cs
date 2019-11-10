@@ -159,7 +159,6 @@ namespace Ombi.Core.Engine
 
             }
             await CheckForSubscription(shouldHide, allRequests);
-            allRequests.ForEach(async r => { });
 
             return new RequestsViewModel<TvRequests>
             {
@@ -389,7 +388,7 @@ namespace Ombi.Core.Engine
 
             if (request.Approved)
             {
-                NotificationHelper.Notify(request, NotificationType.RequestApproved);
+                await NotificationHelper.Notify(request, NotificationType.RequestApproved);
                 // Autosend
                 await TvSender.Send(request);
             }
@@ -412,7 +411,7 @@ namespace Ombi.Core.Engine
             request.Denied = true;
             request.DeniedReason = reason;
             await TvRepository.UpdateChild(request);
-            NotificationHelper.Notify(request, NotificationType.RequestDeclined);
+            await NotificationHelper.Notify(request, NotificationType.RequestDeclined);
             return new RequestEngineResult
             {
                 Result = true
@@ -500,7 +499,7 @@ namespace Ombi.Core.Engine
                 }
             }
             await TvRepository.UpdateChild(request);
-            NotificationHelper.Notify(request, NotificationType.RequestAvailable);
+            await NotificationHelper.Notify(request, NotificationType.RequestAvailable);
             return new RequestEngineResult
             {
                 Result = true,
@@ -585,7 +584,7 @@ namespace Ombi.Core.Engine
             var sendRuleResult = await RunSpecificRule(model, SpecificRules.CanSendNotification);
             if (sendRuleResult.Success)
             {
-                NotificationHelper.NewRequest(model);
+                await NotificationHelper.NewRequest(model);
             }
 
             await _requestLog.Add(new RequestLog
@@ -600,7 +599,7 @@ namespace Ombi.Core.Engine
             if (model.Approved)
             {
                 // Autosend
-                NotificationHelper.Notify(model, NotificationType.RequestApproved);
+                await NotificationHelper.Notify(model, NotificationType.RequestApproved);
                 var result = await TvSender.Send(model);
                 if (result.Success)
                 {

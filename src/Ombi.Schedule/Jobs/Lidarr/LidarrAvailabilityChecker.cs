@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Ombi.Core;
 using Ombi.Core.Notifications;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
@@ -18,7 +19,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
     public class LidarrAvailabilityChecker : ILidarrAvailabilityChecker
     {
         public LidarrAvailabilityChecker(IMusicRequestRepository requests, IRepository<LidarrAlbumCache> albums, ILogger<LidarrAvailabilityChecker> log,
-            IBackgroundJobClient job, INotificationService notification)
+            IBackgroundJobClient job, INotificationHelper notification)
         {
             _cachedAlbums = albums;
             _requestRepository = requests;
@@ -31,7 +32,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
         private readonly IRepository<LidarrAlbumCache> _cachedAlbums;
         private readonly ILogger _logger;
         private readonly IBackgroundJobClient _job;
-        private readonly INotificationService _notificationService;
+        private readonly INotificationHelper _notificationService;
 
         public async Task Start()
         {
@@ -59,14 +60,15 @@ namespace Ombi.Schedule.Jobs.Lidarr
 
                 _logger.LogDebug("AlbumId: {0}, RequestUser: {1}", albumRequest.Id, recipient);
 
-                _job.Enqueue(() => _notificationService.Publish(new NotificationOptions
+
+                await _notificationService.Notify(new NotificationOptions
                 {
                     DateTime = DateTime.Now,
                     NotificationType = NotificationType.RequestAvailable,
                     RequestId = albumRequest.Id,
                     RequestType = RequestType.Album,
                     Recipient = recipient,
-                }));
+                });
             }
         }
     }
