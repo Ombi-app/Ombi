@@ -28,11 +28,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core;
-using Ombi.Core.Notifications;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
 using Ombi.Schedule.Jobs.Ombi;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
@@ -19,13 +18,12 @@ namespace Ombi.Schedule.Jobs.Lidarr
     public class LidarrArtistSync : ILidarrArtistSync
     {
         public LidarrArtistSync(ISettingsService<LidarrSettings> lidarr, ILidarrApi lidarrApi, ILogger<LidarrArtistSync> log, ExternalContext ctx,
-            IBackgroundJobClient background, ILidarrAlbumSync album)
+             ILidarrAlbumSync album)
         {
             _lidarrSettings = lidarr;
             _lidarrApi = lidarrApi;
             _logger = log;
             _ctx = ctx;
-            _job = background;
             _albumSync = album;
         }
 
@@ -33,7 +31,6 @@ namespace Ombi.Schedule.Jobs.Lidarr
         private readonly ILidarrApi _lidarrApi;
         private readonly ILogger _logger;
         private readonly ExternalContext _ctx;
-        private readonly IBackgroundJobClient _job;
         private readonly ILidarrAlbumSync _albumSync;
         
         public async Task Execute(IJobExecutionContext job)
@@ -84,7 +81,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
                         _logger.LogError(LoggingEvents.Cacher, ex, "Failed caching queued items from Lidarr");
                     }
 
-                    _job.Enqueue(() => _albumSync.CacheContent());
+                    await _albumSync.CacheContent();
                 }
             }
             catch (Exception)

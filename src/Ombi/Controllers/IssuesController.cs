@@ -6,17 +6,14 @@ using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using System.Collections.Generic;
 using System.Linq;
-using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Attributes;
 using Ombi.Core;
-using Ombi.Core.Notifications;
 using Ombi.Helpers;
 using Ombi.Models;
 using Ombi.Notifications.Models;
 using Ombi.Store.Entities;
-using StackExchange.Profiling.Helpers;
 
 namespace Ombi.Controllers
 {

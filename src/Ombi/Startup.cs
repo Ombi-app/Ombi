@@ -2,10 +2,6 @@
 using System.IO;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
-using Hangfire;
-using Hangfire.Dashboard;
-using Hangfire.MemoryStorage;
-using Hangfire.SQLite;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -93,13 +89,6 @@ namespace Ombi
             services.AddSwagger();
             services.AddAppSettingsValues(Configuration);
 
-            services.AddHangfire(x =>
-            {
-                x.UseMemoryStorage();
-                x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
-            });
-
-
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
@@ -176,19 +165,7 @@ namespace Ombi
                 app.UsePathBase(settings.BaseUrl);
             }
 
-            app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1, ServerTimeout = TimeSpan.FromDays(1), ShutdownTimeout = TimeSpan.FromDays(1)});
-            if (env.IsDevelopment())
-            {
-                app.UseHangfireDashboard(settings.BaseUrl.HasValue() ? $"{settings.BaseUrl}/hangfire" : "/hangfire",
-                    new DashboardOptions
-                    {
-                        Authorization = new[] { new HangfireAuthorizationFilter() }
-                    });
-            }
-
-            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 3 });
-            
-            // Setup the scheduler
+          // Setup the scheduler
             //var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
             //jobSetup.Setup();
             ctx.Seed();
@@ -231,14 +208,6 @@ namespace Ombi
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
             });
-        }
-    }
-
-    public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
-    {
-        public bool Authorize(DashboardContext context)
-        {
-            return true;
         }
     }
 }

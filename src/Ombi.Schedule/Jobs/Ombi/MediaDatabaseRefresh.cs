@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.Plex;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;

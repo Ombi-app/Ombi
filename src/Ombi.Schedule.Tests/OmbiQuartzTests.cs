@@ -3,6 +3,7 @@ using NUnit.Framework;
 using Quartz;
 using System.Threading;
 using System.Threading.Tasks;
+using Ombi.Helpers;
 
 namespace Ombi.Schedule.Tests
 {
