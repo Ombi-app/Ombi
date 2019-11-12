@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
-using Ombi.Api.Service;
 using Ombi.Attributes;
 using Ombi.Helpers;
-using Ombi.Schedule;
 using Ombi.Schedule.Jobs;
 using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Ombi;

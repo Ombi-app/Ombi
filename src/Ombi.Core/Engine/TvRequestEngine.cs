@@ -156,10 +156,9 @@ namespace Ombi.Core.Engine
                     .ThenInclude(x => x.Episodes)
                     .OrderByDescending(x => x.ChildRequests.Select(y => y.RequestedDate).FirstOrDefault())
                     .Skip(position).Take(count).ToListAsync();
-                
-            }
 
-            allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
+            }
+            await CheckForSubscription(shouldHide, allRequests);
 
             return new RequestsViewModel<TvRequests>
             {
@@ -194,7 +193,8 @@ namespace Ombi.Core.Engine
             {
                 return new RequestsViewModel<TvRequests>();
             }
-            allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
+
+            await CheckForSubscription(shouldHide, allRequests);
 
             return new RequestsViewModel<TvRequests>
             {
@@ -216,7 +216,7 @@ namespace Ombi.Core.Engine
                 allRequests = await TvRepository.Get().ToListAsync();
             }
 
-            allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
+            await CheckForSubscription(shouldHide, allRequests);
             return allRequests;
         }
 
@@ -236,7 +236,7 @@ namespace Ombi.Core.Engine
                 allRequests = await TvRepository.GetLite().ToListAsync();
             }
 
-            allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
+            await CheckForSubscription(shouldHide, allRequests);
             return allRequests;
         }
 
@@ -255,7 +255,7 @@ namespace Ombi.Core.Engine
                 request = await TvRepository.Get().Where(x => x.Id == requestId).FirstOrDefaultAsync();
             }
 
-            await CheckForSubscription(shouldHide, request);
+            await CheckForSubscription(shouldHide, new List<TvRequests>{request});
             return request;
         }
 
@@ -304,7 +304,7 @@ namespace Ombi.Core.Engine
                 allRequests = await TvRepository.GetChild().Include(x => x.SeasonRequests).Where(x => x.ParentRequestId == tvId).ToListAsync();
             }
 
-            allRequests.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
+            await CheckForSubscription(shouldHide, allRequests);
 
             return allRequests;
         }
@@ -323,7 +323,7 @@ namespace Ombi.Core.Engine
             }
             var results = await allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToListAsync();
 
-            results.ForEach(async r => { await CheckForSubscription(shouldHide, r); });
+            await CheckForSubscription(shouldHide, results);
             return results;
         }
 
@@ -388,7 +388,7 @@ namespace Ombi.Core.Engine
 
             if (request.Approved)
             {
-                NotificationHelper.Notify(request, NotificationType.RequestApproved);
+                await NotificationHelper.Notify(request, NotificationType.RequestApproved);
                 // Autosend
                 await TvSender.Send(request);
             }
@@ -411,7 +411,7 @@ namespace Ombi.Core.Engine
             request.Denied = true;
             request.DeniedReason = reason;
             await TvRepository.UpdateChild(request);
-            NotificationHelper.Notify(request, NotificationType.RequestDeclined);
+            await NotificationHelper.Notify(request, NotificationType.RequestDeclined);
             return new RequestEngineResult
             {
                 Result = true
@@ -420,7 +420,7 @@ namespace Ombi.Core.Engine
 
         public async Task<ChildRequests> UpdateChildRequest(ChildRequests request)
         {
-             await TvRepository.UpdateChild(request);
+            await TvRepository.UpdateChild(request);
             return request;
         }
 
@@ -438,14 +438,14 @@ namespace Ombi.Core.Engine
                 // Delete the parent
                 TvRepository.Db.TvRequests.Remove(parent);
             }
-            
+
             await TvRepository.Db.SaveChangesAsync();
         }
 
         public async Task RemoveTvRequest(int requestId)
         {
             var request = await TvRepository.Get().FirstOrDefaultAsync(x => x.Id == requestId);
-             await TvRepository.Delete(request);
+            await TvRepository.Delete(request);
         }
 
         public async Task<bool> UserHasRequest(string userId)
@@ -499,7 +499,7 @@ namespace Ombi.Core.Engine
                 }
             }
             await TvRepository.UpdateChild(request);
-            NotificationHelper.Notify(request, NotificationType.RequestAvailable);
+            await NotificationHelper.Notify(request, NotificationType.RequestAvailable);
             return new RequestEngineResult
             {
                 Result = true,
@@ -520,26 +520,32 @@ namespace Ombi.Core.Engine
             }
         }
 
-        private async Task CheckForSubscription(HideResult shouldHide, TvRequests x)
+        private async Task CheckForSubscription(HideResult shouldHide, List<TvRequests> x)
         {
-            foreach (var tv in x.ChildRequests)
+            foreach (var tvRequest in x)
             {
-                await CheckForSubscription(shouldHide, tv);
+                await CheckForSubscription(shouldHide, tvRequest.ChildRequests);
             }
         }
 
-        private async Task CheckForSubscription(HideResult shouldHide, ChildRequests x)
+        private async Task CheckForSubscription(HideResult shouldHide, List<ChildRequests> childRequests)
         {
-            if (shouldHide.UserId == x.RequestedUserId)
+            var sub = _subscriptionRepository.GetAll();
+            var childIds = childRequests.Select(x => x.Id);
+            var relevantSubs = await sub.Where(s =>
+                s.UserId == shouldHide.UserId && childIds.Contains(s.Id) && s.RequestType == RequestType.TvShow).ToListAsync();
+            foreach (var x in childRequests)
             {
-                x.ShowSubscribe = false;
-            }
-            else
-            {
-                x.ShowSubscribe = true;
-                var sub = await _subscriptionRepository.GetAll().FirstOrDefaultAsync(s =>
-                    s.UserId == shouldHide.UserId && s.RequestId == x.Id && s.RequestType == RequestType.TvShow);
-                x.Subscribed = sub != null;
+                if (shouldHide.UserId == x.RequestedUserId)
+                {
+                    x.ShowSubscribe = false;
+                }
+                else
+                {
+                    x.ShowSubscribe = true;
+                    var result = relevantSubs.FirstOrDefault(s => s.RequestId == x.Id);
+                    x.Subscribed = result != null;
+                }
             }
         }
 
@@ -560,7 +566,7 @@ namespace Ombi.Core.Engine
             return await AfterRequest(model.ChildRequests.FirstOrDefault());
         }
 
-       private static List<ChildRequests> SortEpisodes(List<ChildRequests> items)
+        private static List<ChildRequests> SortEpisodes(List<ChildRequests> items)
         {
             foreach (var value in items)
             {
@@ -578,7 +584,7 @@ namespace Ombi.Core.Engine
             var sendRuleResult = await RunSpecificRule(model, SpecificRules.CanSendNotification);
             if (sendRuleResult.Success)
             {
-                NotificationHelper.NewRequest(model);
+                await NotificationHelper.NewRequest(model);
             }
 
             await _requestLog.Add(new RequestLog
@@ -593,11 +599,11 @@ namespace Ombi.Core.Engine
             if (model.Approved)
             {
                 // Autosend
-                NotificationHelper.Notify(model, NotificationType.RequestApproved);
+                await NotificationHelper.Notify(model, NotificationType.RequestApproved);
                 var result = await TvSender.Send(model);
                 if (result.Success)
                 {
-                    return new RequestEngineResult { Result = true, RequestId = model.Id};
+                    return new RequestEngineResult { Result = true, RequestId = model.Id };
                 }
                 return new RequestEngineResult
                 {
@@ -650,10 +656,10 @@ namespace Ombi.Core.Engine
             DateTime oldestRequestedAt = await log.OrderBy(x => x.RequestDate)
                                             .Select(x => x.RequestDate)
                                             .FirstOrDefaultAsync();
-                        
+
             return new RequestQuotaCountModel()
             {
-                HasLimit = true,    
+                HasLimit = true,
                 Limit = limit,
                 Remaining = count,
                 NextRequest = DateTime.SpecifyKind(oldestRequestedAt.AddDays(7), DateTimeKind.Utc),

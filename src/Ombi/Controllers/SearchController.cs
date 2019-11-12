@@ -150,7 +150,7 @@ namespace Ombi.Controllers
         /// <summary>
         /// Returns similar movies to the movie id passed in
         /// </summary>
-        /// <param name="theMovieDbId">ID of the movie</param>
+        /// <param name="model">the movie</param>
         /// <remarks>
         /// We use TheMovieDb as the Movie Provider
         /// </remarks>

@@ -192,6 +192,13 @@ export interface IAbout {
   osDescription: string;
   processArchitecture: string;
   applicationBasePath: string;
+  ombiDatabaseType: string;
+  externalDatabaseType: string;
+  settingsDatabaseType: string;
+  ombiConnectionString: string;
+  externalConnectionString: string;
+  settingsConnectionString: string;
+  storagePath: string;
 }
 
 export interface ICouchPotatoSettings extends IExternalSettings {
@@ -244,4 +251,9 @@ export interface IVoteSettings extends ISettings {
   movieVoteMax: number;
   musicVoteMax: number;
   tvShowVoteMax: number;
+}
+
+export interface ITheMovieDbSettings extends ISettings {
+    showAdultMovies: boolean;
+    excludedKeywordIds: number[];
 }

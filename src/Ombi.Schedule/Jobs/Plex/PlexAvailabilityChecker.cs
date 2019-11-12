@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ombi.Core.Notifications;
+using Ombi.Core;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
 using Ombi.Store.Entities;
@@ -19,21 +17,19 @@ namespace Ombi.Schedule.Jobs.Plex
     public class PlexAvailabilityChecker : IPlexAvailabilityChecker
     {
         public PlexAvailabilityChecker(IPlexContentRepository repo, ITvRequestRepository tvRequest, IMovieRequestRepository movies,
-            INotificationService notification, IBackgroundJobClient background, ILogger<PlexAvailabilityChecker> log)
+            INotificationHelper notification,  ILogger<PlexAvailabilityChecker> log)
         {
             _tvRepo = tvRequest;
             _repo = repo;
             _movieRepo = movies;
             _notificationService = notification;
-            _backgroundJobClient = background;
             _log = log;
         }
 
         private readonly ITvRequestRepository _tvRepo;
         private readonly IMovieRequestRepository _movieRepo;
         private readonly IPlexContentRepository _repo;
-        private readonly INotificationService _notificationService;
-        private readonly IBackgroundJobClient _backgroundJobClient;
+        private readonly INotificationHelper _notificationService;
         private readonly ILogger _log;
 
         public async Task Execute(IJobExecutionContext job)
@@ -45,7 +41,7 @@ namespace Ombi.Schedule.Jobs.Plex
             }
             catch (Exception e)
             {
-                _log.LogError(e, "Exception thrown in Plex availbility checker");
+                _log.LogError(e, "Exception thrown in Plex availability checker");
             }
         }
 
@@ -72,7 +68,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     useTvDb = true;
                 }
-                
+
                 var tvDbId = child.ParentRequest.TvDbId;
                 var imdbId = child.ParentRequest.ImdbId;
                 IQueryable<PlexEpisode> seriesEpisodes = null;
@@ -80,7 +76,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     seriesEpisodes = plexEpisodes.Where(x => x.Series.ImdbId == imdbId.ToString());
                 }
-                if (useTvDb && (seriesEpisodes == null ||  !seriesEpisodes.Any()) )
+                if (useTvDb && (seriesEpisodes == null || !seriesEpisodes.Any()))
                 {
                     seriesEpisodes = plexEpisodes.Where(x => x.Series.TvDbId == tvDbId.ToString());
                 }
@@ -94,8 +90,8 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     // Let's try and match the series by name
                     seriesEpisodes = plexEpisodes.Where(x =>
-                        x.Series.Title.Equals(child.Title, StringComparison.CurrentCultureIgnoreCase) &&
-                        x.Series.ReleaseYear == child.ParentRequest.ReleaseDate.Year.ToString());
+                        x.Series.Title.Equals(child.Title, StringComparison.InvariantCultureIgnoreCase) &&
+                        x.Series.ReleaseYear.Equals(child.ParentRequest.ReleaseDate.Year.ToString(), StringComparison.InvariantCultureIgnoreCase));
 
                 }
 
@@ -122,17 +118,19 @@ namespace Ombi.Schedule.Jobs.Plex
                 var allAvailable = child.SeasonRequests.All(x => x.Episodes.All(c => c.Available));
                 if (allAvailable)
                 {
-                    // We have fulfulled this request!
+                    _log.LogInformation("[PAC] - Child request {0} is now available, sending notification", $"{child.Title} - {child.Id}");
+                    // We have ful-fulled this request!
                     child.Available = true;
                     child.MarkedAsAvailable = DateTime.Now;
-                    _backgroundJobClient.Enqueue(() => _notificationService.Publish(new NotificationOptions
+
+                    await _notificationService.Notify(new NotificationOptions
                     {
                         DateTime = DateTime.Now,
                         NotificationType = NotificationType.RequestAvailable,
                         RequestId = child.Id,
                         RequestType = RequestType.TvShow,
                         Recipient = child.RequestedUser.Email
-                    }));
+                    });
                 }
             }
 
@@ -166,20 +164,22 @@ namespace Ombi.Schedule.Jobs.Plex
 
                 movie.Available = true;
                 movie.MarkedAsAvailable = DateTime.Now;
-                if (movie.Available)
+                item.RequestId = movie.Id;
+
+                _log.LogInformation("[PAC] - Movie request {0} is now available, sending notification", $"{movie.Title} - {movie.Id}");
+                await _notificationService.Notify(new NotificationOptions
                 {
-                    _backgroundJobClient.Enqueue(() => _notificationService.Publish(new NotificationOptions
-                    {
-                        DateTime = DateTime.Now,
-                        NotificationType = NotificationType.RequestAvailable,
-                        RequestId = movie.Id,
-                        RequestType = RequestType.Movie,
-                        Recipient = movie.RequestedUser != null ? movie.RequestedUser.Email : string.Empty
-                    }));
-                }
+                    DateTime = DateTime.Now,
+                    NotificationType = NotificationType.RequestAvailable,
+                    RequestId = movie.Id,
+                    RequestType = RequestType.Movie,
+                    Recipient = movie.RequestedUser != null ? movie.RequestedUser.Email : string.Empty
+                });
+
             }
 
             await _movieRepo.Save();
+            await _repo.SaveChangesAsync();
         }
 
         private bool _disposed;
@@ -190,8 +190,6 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if (disposing)
             {
-                _movieRepo?.Dispose();
-                _repo?.Dispose();
             }
             _disposed = true;
         }

@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ombi.Core.Notifications;
+using Ombi.Core;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
 using Ombi.Store.Entities;
@@ -17,21 +16,18 @@ namespace Ombi.Schedule.Jobs.Lidarr
 {
     public class LidarrAvailabilityChecker : ILidarrAvailabilityChecker
     {
-        public LidarrAvailabilityChecker(IMusicRequestRepository requests, IRepository<LidarrAlbumCache> albums, ILogger<LidarrAvailabilityChecker> log,
-            IBackgroundJobClient job, INotificationService notification)
+        public LidarrAvailabilityChecker(IMusicRequestRepository requests, IRepository<LidarrAlbumCache> albums, ILogger<LidarrAvailabilityChecker> log, INotificationHelper notification)
         {
             _cachedAlbums = albums;
             _requestRepository = requests;
             _logger = log;
-            _job = job;
             _notificationService = notification;
         }
 
         private readonly IMusicRequestRepository _requestRepository;
         private readonly IRepository<LidarrAlbumCache> _cachedAlbums;
         private readonly ILogger _logger;
-        private readonly IBackgroundJobClient _job;
-        private readonly INotificationService _notificationService;
+        private readonly INotificationHelper _notificationService;
 
         public async Task Start()
         {
@@ -43,7 +39,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
                 var cachedAlbum = await _cachedAlbums.FirstOrDefaultAsync(x => x.ForeignAlbumId.Equals(request.ForeignAlbumId));
                 if (cachedAlbum != null)
                 {
-                    if (cachedAlbum.FullyAvailable)
+                    if (cachedAlbum.FullyAvailable) // ensure we have all tracks
                     {
                         request.Available = true;
                         request.MarkedAsAvailable = DateTime.Now;
@@ -59,14 +55,15 @@ namespace Ombi.Schedule.Jobs.Lidarr
 
                 _logger.LogDebug("AlbumId: {0}, RequestUser: {1}", albumRequest.Id, recipient);
 
-                _job.Enqueue(() => _notificationService.Publish(new NotificationOptions
+
+                await _notificationService.Notify(new NotificationOptions
                 {
                     DateTime = DateTime.Now,
                     NotificationType = NotificationType.RequestAvailable,
                     RequestId = albumRequest.Id,
                     RequestType = RequestType.Album,
                     Recipient = recipient,
-                }));
+                });
             }
         }
     }

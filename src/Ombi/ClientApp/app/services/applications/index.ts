@@ -7,3 +7,4 @@ export * from "./tester.service";
 export * from "./plexoauth.service";
 export * from "./plextv.service";
 export * from "./lidarr.service";
+export * from "./themoviedb.service";

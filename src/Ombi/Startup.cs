@@ -2,10 +2,6 @@
 using System.IO;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
-using Hangfire;
-using Hangfire.Dashboard;
-using Hangfire.MemoryStorage;
-using Hangfire.SQLite;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -19,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.DependencyInjection;
+using Ombi.Extensions;
 using Ombi.Helpers;
 using Ombi.Mapping;
 using Ombi.Schedule;
@@ -27,6 +24,7 @@ using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Serilog;
+using SQLitePCL;
 using ILogger = Serilog.ILogger;
 
 namespace Ombi
@@ -72,7 +70,7 @@ namespace Ombi
                 options.User.AllowedUserNameCharacters = string.Empty;
             });
 
-
+            services.ConfigureDatabases();
             services.AddHealthChecks();
             services.AddMemoryCache();
 
@@ -90,15 +88,6 @@ namespace Ombi
             services.RegisterApplicationDependencies(); // Ioc and EF
             services.AddSwagger();
             services.AddAppSettingsValues(Configuration);
-
-            services.AddHangfire(x =>
-            {
-                x.UseMemoryStorage();
-                x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
-            });
-
-
-            SQLitePCL.raw.sqlite3_config(2);
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
@@ -122,7 +111,7 @@ namespace Ombi
 
             app.UseQuartz().GetAwaiter().GetResult();
 
-            var ctx = serviceProvider.GetService<IOmbiContext>();
+            var ctx = serviceProvider.GetService<OmbiContext>();
             loggerFactory.AddSerilog();
 
             app.UseHealthChecks("/health");
@@ -176,26 +165,12 @@ namespace Ombi
                 app.UsePathBase(settings.BaseUrl);
             }
 
-            app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1, ServerTimeout = TimeSpan.FromDays(1), ShutdownTimeout = TimeSpan.FromDays(1)});
-            if (env.IsDevelopment())
-            {
-                app.UseHangfireDashboard(settings.BaseUrl.HasValue() ? $"{settings.BaseUrl}/hangfire" : "/hangfire",
-                    new DashboardOptions
-                    {
-                        Authorization = new[] { new HangfireAuthorizationFilter() }
-                    });
-            }
-
-            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 3 });
-            
-            // Setup the scheduler
+          // Setup the scheduler
             //var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
             //jobSetup.Setup();
             ctx.Seed();
-            var settingsctx = serviceProvider.GetService<ISettingsContext>();
-            var externalctx = serviceProvider.GetService<IExternalContext>();
+            var settingsctx = serviceProvider.GetService<SettingsContext>();
             settingsctx.Seed();
-            externalctx.Seed();
 
             var provider = new FileExtensionContentTypeProvider { Mappings = { [".map"] = "application/octet-stream" } };
 
@@ -233,14 +208,6 @@ namespace Ombi
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
             });
-        }
-    }
-
-    public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
-    {
-        public bool Authorize(DashboardContext context)
-        {
-            return true;
         }
     }
 }

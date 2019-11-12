@@ -8,14 +8,14 @@ using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Store.Repository.Requests
 {
-    public class TvRequestRepository : BaseRepository<TvRequests, IOmbiContext>, ITvRequestRepository
+    public class TvRequestRepository : BaseRepository<TvRequests, OmbiContext>, ITvRequestRepository
     {
-        public TvRequestRepository(IOmbiContext ctx) : base(ctx)
+        public TvRequestRepository(OmbiContext ctx) : base(ctx)
         {
             Db = ctx;
         }
 
-        public IOmbiContext Db { get; }
+        public OmbiContext Db { get; }
 
         public async Task<TvRequests> GetRequestAsync(int tvDbId)
         {
@@ -105,25 +105,12 @@ namespace Ombi.Store.Repository.Requests
             await InternalSaveChanges();
         }
 
-        public async Task<TvRequests> Add(TvRequests request)
-        {
-            await Db.TvRequests.AddAsync(request);
-            await InternalSaveChanges();
-            return request;
-        }
-
         public async Task<ChildRequests> AddChild(ChildRequests request)
         {
             await Db.ChildRequests.AddAsync(request);
             await InternalSaveChanges();
 
             return request;
-        }
-
-        public async Task Delete(TvRequests request)
-        {
-            Db.TvRequests.Remove(request);
-            await InternalSaveChanges();
         }
 
         public async Task DeleteChild(ChildRequests request)

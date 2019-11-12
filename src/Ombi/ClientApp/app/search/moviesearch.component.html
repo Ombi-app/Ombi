@@ -1,30 +1,41 @@
 ﻿<!-- Movie tab -->
 <div role="tabpanel" class="tab-pane active" id="MoviesTab">
 
-    <div class="input-group search-bar-background">
-        <input id="search" type="text" placeholder="{{ 'Search.SearchBarPlaceholder' | translate}}" class="form-control form-control-custom form-control-search form-control-withbuttons"
-            (keyup)="search($event)">
-        <div class="input-group-addon right-radius">
-            <div class="btn-group" role="group">
-                <a href="#" class="btn btn-sm btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    {{ 'Search.Suggestions' | translate }}
-                    <i class="fa fa-chevron-down"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a (click)="popularMovies()" [translate]="'Search.Movies.PopularMovies'"></a></li>
-                    <li><a (click)="upcomingMovies()" [translate]="'Search.Movies.UpcomingMovies'"></a></li>
-                    <li><a (click)="topRatedMovies()" [translate]="'Search.Movies.TopRatedMovies'"></a></li>
-                    <li><a (click)="nowPlayingMovies()" [translate]="'Search.Movies.NowPlayingMovies'"></a></li>
-                </ul>
-                <button class="btn btn-sm btn-primary-outline" (click)="refineOpen()">
-                    {{ 'Search.Refine' | translate }}
-                    <i class="fa" [ngClass]="{'fa-chevron-down': !refineSearchEnabled, 'fa-chevron-up': refineSearchEnabled}"></i>
-                </button>
-            </div>
+    <ng-template #FilterRef>
+        <div class="btn-group" role="group">
+            <a href="#" class="btn btn-sm btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                {{ 'Search.Suggestions' | translate }}
+                <i class="fa fa-chevron-down"></i>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a (click)="popularMovies()" [translate]="'Search.Movies.PopularMovies'"></a></li>
+                <li><a (click)="upcomingMovies()" [translate]="'Search.Movies.UpcomingMovies'"></a></li>
+                <li><a (click)="topRatedMovies()" [translate]="'Search.Movies.TopRatedMovies'"></a></li>
+                <li><a (click)="nowPlayingMovies()" [translate]="'Search.Movies.NowPlayingMovies'"></a></li>
+            </ul>
+            <button class="btn btn-sm btn-primary-outline" (click)="refineOpen()">
+                {{ 'Search.Refine' | translate }}
+                <i class="fa" [ngClass]="{'fa-chevron-down': !refineSearchEnabled, 'fa-chevron-up': refineSearchEnabled}"></i>
+            </button>
+        </div>
+    </ng-template>
 
+    <div class="input-group search-bar-background">
+        <input id="search" type="text" placeholder="{{ 'Search.SearchBarPlaceholder' | translate}}"
+               class="form-control form-control-custom form-control-search form-control-withbuttons"
+               (keyup)="search($event)">
+        <div class="input-group-addon right-radius">
+            <div class="search-button-container-inline">
+                <ng-template [ngTemplateOutlet]="FilterRef"></ng-template>
+            </div>
             <i class="fa fa-search"></i>
         </div>
     </div>
+
+    <div class="row search-button-container">
+        <ng-template [ngTemplateOutlet]="FilterRef"></ng-template>
+    </div>
+
     <!-- Refine search options -->
     <div class="row top-spacing form-group vcenter" *ngIf="refineSearchEnabled">
         <div class="col-md-1">

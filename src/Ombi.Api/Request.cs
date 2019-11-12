@@ -93,24 +93,7 @@ namespace Ombi.Api
         public void AddQueryString(string key, string value)
         {
             if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(value)) return;
-
-            var builder = new UriBuilder(FullUri);
-            var startingTag = string.Empty;
-            var hasQuery = false;
-            if (string.IsNullOrEmpty(builder.Query))
-            {
-                startingTag = "?";
-            }
-            else
-            {
-                hasQuery = true;
-                startingTag = builder.Query.Contains("?") ? "&" : "?";
-            }
-            builder.Query = hasQuery
-                ? $"{builder.Query}{startingTag}{key}={value}"
-                : $"{startingTag}{key}={value}";
-
-            _modified = builder.Uri;
+            _modified = FullUri.AddQueryParameter(key, value);
         }
 
         public void AddJsonBody(object obj)

@@ -1,6 +1,77 @@
 # Changelog
 
-## v3.0.4817  (2019-10-15)
+## (unreleased)
+
+### **New Features**
+
+- Update login.component.ts. [Jamie]
+
+- Update CHANGELOG.md. [Jamie]
+
+- Updated SlackNotification.cs. [Tim]
+
+### **Fixes**
+
+- Fixed the issue where we couldn't always pick up stuff on the sync. [tidusjar]
+
+- Removed hangfire completly from Ombi. [tidusjar]
+
+- Fixed the notifications issue. [tidusjar]
+
+- Fixed the issues where the DB was being disposed too early. [tidusjar]
+
+- Fixed an error with the newsletter with the new db structure. [tidusjar]
+
+- Output some useful stuff to the about window regarding the databases. [tidusjar]
+
+- Fixed the migration for combined databases. [tidusjar]
+
+- Fixed the issue where exisitng databases would now fail due to the DB structure changes. [tidusjar]
+
+- Finished it! [tidusjar]
+
+- Got MySql working. [tidusjar]
+
+- Got the new DB structure in place. [tidusjar]
+
+- Fix for #3219. [tidusjar]
+
+- Fixed the error in the newsletter. [tidusjar]
+
+- Fixed #3208. [tidusjar]
+
+- Use tags and autocomplete for excluded keywords. [Taylor Buchanan]
+
+- Add comments to clarify filter decisions. [Taylor Buchanan]
+
+- Fix TS import order. [Taylor Buchanan]
+
+- Add adult movie filtering. [Taylor Buchanan]
+
+- Fix search bar overlap on mobile. [Taylor Buchanan]
+
+- New translations en.json (Slovak) [Jamie]
+
+- New translations en.json (Slovak) [Jamie]
+
+- New translations en.json (Slovak) [Jamie]
+
+- New translations en.json (Slovak) [Jamie]
+
+- New translations en.json (Slovak) [Jamie]
+
+- New translations en.json (Slovak) [Jamie]
+
+- New translations en.json (Slovak) [Jamie]
+
+- Add SK lang. [Jamie Rees]
+
+- Add the migration to the correct database... #3214. [tidusjar]
+
+- Hopefully provide a fix now for #2998 Theory is that the refresh metadata was using stale data and then overriding the availbility that just happened on that media item. [tidusjar]
+
+
+## v3.0.4817 (2019-10-12)
 
 ### **New Features**
 
@@ -33,6 +104,8 @@
 - Update CHANGELOG.md. [Jamie]
 
 ### **Fixes**
+
+- Gitchangelog. [tidusjar]
 
 - Fixed #3078. [tidusjar]
 

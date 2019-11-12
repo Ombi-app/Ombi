@@ -3,6 +3,7 @@ export * from "./ICouchPotato";
 export * from "./IImages";
 export * from "./IMediaServerStatus";
 export * from "./INotificationSettings";
+export * from "./IMovieDb";
 export * from "./IPlex";
 export * from "./IRadarr";
 export * from "./IRequestEngineResult";

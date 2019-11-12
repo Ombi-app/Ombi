@@ -29,7 +29,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
@@ -49,14 +48,13 @@ namespace Ombi.Schedule.Jobs.Plex
     public class PlexContentSync : IPlexContentSync
     {
         public PlexContentSync(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentSync> logger, IPlexContentRepository repo,
-            IPlexEpisodeSync epsiodeSync, IRefreshMetadata metadataRefresh)
+            IPlexEpisodeSync epsiodeSync)
         {
             Plex = plex;
             PlexApi = plexApi;
             Logger = logger;
             Repo = repo;
             EpisodeSync = epsiodeSync;
-            Metadata = metadataRefresh;
             Plex.ClearCache();
         }
 
@@ -65,12 +63,11 @@ namespace Ombi.Schedule.Jobs.Plex
         private ILogger<PlexContentSync> Logger { get; }
         private IPlexContentRepository Repo { get; }
         private IPlexEpisodeSync EpisodeSync { get; }
-        private IRefreshMetadata Metadata { get; }
 
         public async Task Execute(IJobExecutionContext context)
         {
             JobDataMap dataMap = context.JobDetail.JobDataMap;
-            var recentlyAddedSearch = dataMap.GetBooleanValueFromString("recentlyAddedSearch");
+            var recentlyAddedSearch = dataMap.GetBooleanValueFromString(JobDataKeys.RecentlyAddedSearch);
 
             var plexSettings = await Plex.GetSettingsAsync();
             if (!plexSettings.Enable)
@@ -83,7 +80,9 @@ namespace Ombi.Schedule.Jobs.Plex
                 return;
             }
             var processedContent = new ProcessedContent();
-            Logger.LogInformation($"Starting Plex Content Cacher {(recentlyAddedSearch ? "Recently Added Scan" : "")}");
+            Logger.LogInformation(recentlyAddedSearch
+                ? "Starting Plex Content Cacher Recently Added Scan"
+                : "Starting Plex Content Cacher");
             try
             {
                 if (recentlyAddedSearch)
@@ -103,15 +102,13 @@ namespace Ombi.Schedule.Jobs.Plex
             if (!recentlyAddedSearch)
             {
                 Logger.LogInformation("Starting EP Cacher");
-
                 await OmbiQuartz.TriggerJob(nameof(IPlexEpisodeSync), "Plex");
             }
 
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
-                Logger.LogInformation("Starting Metadata refresh");
-                // Just check what we send it
-                await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
+                Logger.LogInformation("Kicking off Plex Availability Checker");
+                await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
             }
 
             Logger.LogInformation("Finished Plex Content Cacher, with processed content: {0}, episodes: {1}. Recently Added Scan: {2}", processedContent?.Content?.Count() ?? 0, processedContent?.Episodes?.Count() ?? 0, recentlyAddedSearch);
@@ -649,7 +646,6 @@ namespace Ombi.Schedule.Jobs.Plex
             if (disposing)
             {
                 Plex?.Dispose();
-                Repo?.Dispose();
                 EpisodeSync?.Dispose();
             }
             _disposed = true;

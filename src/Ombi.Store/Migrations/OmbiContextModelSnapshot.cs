@@ -14,7 +14,7 @@ namespace Ombi.Store.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.1-servicing-10028");
+                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -454,6 +454,8 @@ namespace Ombi.Store.Migrations
                     b.Property<string>("Quality");
 
                     b.Property<string>("ReleaseYear");
+
+                    b.Property<int?>("RequestId");
 
                     b.Property<string>("TheMovieDbId");
 

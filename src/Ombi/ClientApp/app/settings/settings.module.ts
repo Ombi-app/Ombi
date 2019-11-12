@@ -3,13 +3,14 @@ import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
 import { NgbAccordionModule, NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { TagInputModule } from "ngx-chips";
 import { ClipboardModule } from "ngx-clipboard";
 
 import { AuthGuard } from "../auth/auth.guard";
 import { AuthService } from "../auth/auth.service";
 import {
     CouchPotatoService, EmbyService, IssuesService, JobService, LidarrService, MobileService, NotificationMessageService, PlexService, RadarrService,
-    RequestRetryService, SonarrService, TesterService, ValidationService,
+    RequestRetryService, SonarrService, TesterService, TheMovieDbService, ValidationService,
 } from "../services";
 
 import { PipeModule } from "../pipes/pipe.module";
@@ -41,6 +42,7 @@ import { PlexComponent } from "./plex/plex.component";
 import { RadarrComponent } from "./radarr/radarr.component";
 import { SickRageComponent } from "./sickrage/sickrage.component";
 import { SonarrComponent } from "./sonarr/sonarr.component";
+import { TheMovieDbComponent } from "./themoviedb/themoviedb.component";
 import { UpdateComponent } from "./update/update.component";
 import { UserManagementComponent } from "./usermanagement/usermanagement.component";
 import { VoteComponent } from "./vote/vote.component";
@@ -80,6 +82,7 @@ const routes: Routes = [
     { path: "Newsletter", component: NewsletterComponent, canActivate: [AuthGuard] },
     { path: "Lidarr", component: LidarrComponent, canActivate: [AuthGuard] },
     { path: "Vote", component: VoteComponent, canActivate: [AuthGuard] },
+    { path: "TheMovieDb", component: TheMovieDbComponent, canActivate: [AuthGuard] },
     { path: "FailedRequests", component: FailedRequestsComponent, canActivate: [AuthGuard] },
 ];
 
@@ -97,6 +100,7 @@ const routes: Routes = [
         NgbAccordionModule,
         AutoCompleteModule,
         CalendarModule,
+        TagInputModule,
         ClipboardModule,
         PipeModule,
         RadioButtonModule,
@@ -135,6 +139,7 @@ const routes: Routes = [
         NewsletterComponent,
         LidarrComponent,
         VoteComponent,
+        TheMovieDbComponent,
         FailedRequestsComponent,
     ],
     exports: [
@@ -156,6 +161,7 @@ const routes: Routes = [
         NotificationMessageService,
         LidarrService,
         RequestRetryService,
+        TheMovieDbService,
     ],
 
 })

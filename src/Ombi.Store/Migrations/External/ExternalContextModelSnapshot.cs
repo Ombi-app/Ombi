@@ -14,7 +14,7 @@ namespace Ombi.Store.Migrations.External
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.3-rtm-32065");
+                .HasAnnotation("ProductVersion", "2.2.2-servicing-10034");
 
             modelBuilder.Entity("Ombi.Store.Entities.CouchPotatoCache", b =>
                 {
@@ -193,6 +193,8 @@ namespace Ombi.Store.Migrations.External
                     b.Property<string>("Quality");
 
                     b.Property<string>("ReleaseYear");
+
+                    b.Property<int?>("RequestId");
 
                     b.Property<string>("TheMovieDbId");
 

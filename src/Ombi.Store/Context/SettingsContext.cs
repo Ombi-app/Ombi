@@ -1,39 +1,34 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Ombi.Helpers;
 using Ombi.Store.Entities;
 
 namespace Ombi.Store.Context
 {
-    public sealed class SettingsContext : DbContext, ISettingsContext
+    public abstract class SettingsContext : DbContext
     {
-        private static bool _created;
-        public SettingsContext()
+        protected SettingsContext(DbContextOptions<SettingsContext> options) : base(options)
         {
-            if (_created) return;
 
-            _created = true;
-            Database.SetCommandTimeout(60);
-            Database.Migrate();
         }
-        
+
+        /// <summary>
+        /// This allows a sub class to call the base class 'DbContext' non typed constructor
+        /// This is need because instances of the subclasses will use a specific typed DbContextOptions
+        /// which can not be converted into the parameter in the above constructor
+        /// </summary>
+        /// <param name="options"></param>
+        protected SettingsContext(DbContextOptions options)
+            : base(options)
+        {
+        }
+
         public DbSet<GlobalSettings> Settings { get; set; }
         public DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            var i = StoragePathSingleton.Instance;
-            if (string.IsNullOrEmpty(i.StoragePath))
-            {
-                i.StoragePath = string.Empty;
-            }
-            optionsBuilder.UseSqlite($"Data Source={Path.Combine(i.StoragePath, "OmbiSettings.db")}");
-        }
+
 
         public void Seed()
         {
-
             using (var tran = Database.BeginTransaction())
             {
                 // Add the tokens

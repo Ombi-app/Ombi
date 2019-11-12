@@ -389,6 +389,27 @@ $border-radius: 10px;
     padding-right: 105px;
 }
 
+.search-button-container {
+    margin-top: 10px;
+    text-align: center;
+}
+
+@media (max-width: 450px) {
+    .form-control-search {
+        padding-right: 0 !important;
+    }
+
+    .search-button-container-inline {
+        display: none;
+    }
+}
+
+@media (min-width: 450px) {
+    .search-button-container {
+        display: none;
+    }
+}
+
 .input-group-addon .btn-group {
     position: absolute;
     right: 45px;
@@ -1010,6 +1031,14 @@ a > h4:hover {
     width:300px;
 }
 
+.ng2-tag-input.dark input {
+    background: transparent;
+    color: white;
+}
+
+.ng2-tag-input .fa-cloud-download {
+    margin-right: 5px;
+}
 
 ::ng-deep ngb-accordion > div.card >  div.card-header {
     padding:0px;

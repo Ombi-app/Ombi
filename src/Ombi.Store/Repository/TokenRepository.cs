@@ -8,14 +8,14 @@ using Ombi.Helpers;
 
 namespace Ombi.Store.Repository
 {
-    public class TokenRepository : BaseRepository<Tokens, IOmbiContext>, ITokenRepository
+    public class TokenRepository : BaseRepository<Tokens, OmbiContext>, ITokenRepository
     {
-        public TokenRepository(IOmbiContext db) : base(db)
+        public TokenRepository(OmbiContext db) : base(db)
         {
             Db = db;
         }
 
-        private IOmbiContext Db { get; }
+        private OmbiContext Db { get; }
 
         public async Task CreateToken(Tokens token)
         {

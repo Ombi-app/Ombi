@@ -37,7 +37,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             IMovieDbApi movieApi, ITvMazeApi tvApi, IEmailProvider email, ISettingsService<CustomizationSettings> custom,
             ISettingsService<EmailNotificationSettings> emailSettings, INotificationTemplatesRepository templateRepo,
             UserManager<OmbiUser> um, ISettingsService<NewsletterSettings> newsletter, ILogger<NewsletterJob> log,
-            ILidarrApi lidarrApi, IRepository<LidarrAlbumCache> albumCache, ISettingsService<LidarrSettings> lidarrSettings,
+            ILidarrApi lidarrApi, IExternalRepository<LidarrAlbumCache> albumCache, ISettingsService<LidarrSettings> lidarrSettings,
             ISettingsService<OmbiSettings> ombiSettings, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmbySettings> embySettings)
         {
             _plex = plex;
@@ -78,7 +78,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly UserManager<OmbiUser> _userManager;
         private readonly ILogger _log;
         private readonly ILidarrApi _lidarrApi;
-        private readonly IRepository<LidarrAlbumCache> _lidarrAlbumRepository;
+        private readonly IExternalRepository<LidarrAlbumCache> _lidarrAlbumRepository;
         private readonly ISettingsService<LidarrSettings> _lidarrSettings;
         private readonly ISettingsService<PlexSettings> _plexSettings;
         private readonly ISettingsService<EmbySettings> _embySettings;
@@ -200,7 +200,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                             continue;
                         }
                         // BCC the messages
-                        message.Bcc.Add(new MailboxAddress(user.Email, user.Email));
+                        message.Bcc.Add(new MailboxAddress(user.Email.Trim(), user.Email.Trim()));
                     }
 
                     // Send the email
@@ -714,7 +714,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                         (key, g) => new
                         {
                             SeasonNumber = key,
-                            Episodes = g.ToList()
+                            Episodes = g.ToList(),
+                            EpisodeAirDate = tvInfo?.seasons?.Where(x => x.season_number == key)?.Select(x => x.air_date).FirstOrDefault()
                         }
                     );
 
@@ -724,7 +725,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
                         var episodeString = StringHelper.BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
-                        finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString}");
+                        var episodeAirDate = epInformation.EpisodeAirDate;
+                        finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString} {episodeAirDate}");
                         finalsb.Append("<br />");
                     }
 
@@ -837,7 +839,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                         (key, g) => new
                         {
                             SeasonNumber = key,
-                            Episodes = g.ToList()
+                            Episodes = g.ToList(),
+                            EpisodeAirDate = tvInfo?.seasons?.Where(x => x.season_number == key)?.Select(x => x.air_date).FirstOrDefault()
                         }
                     );
 
@@ -847,7 +850,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
                         var episodeString = StringHelper.BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
-                        finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString}");
+                        var episodeAirDate = epInformation.EpisodeAirDate;
+                        finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString} {episodeAirDate}");
                         finalsb.Append("<br />");
                     }
 
@@ -927,12 +931,9 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (disposing)
             {
-                _plex?.Dispose();
-                _emby?.Dispose();
                 _newsletterSettings?.Dispose();
                 _customizationSettings?.Dispose();
                 _emailSettings.Dispose();
-                _recentlyAddedLog.Dispose();
                 _templateRepo?.Dispose();
                 _userManager?.Dispose();
             }

@@ -28,12 +28,12 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ombi.Core.Notifications;
+using Ombi.Core;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
+using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
@@ -44,7 +44,7 @@ namespace Ombi.Schedule.Jobs.Emby
     public class EmbyAvaliabilityChecker : IEmbyAvaliabilityChecker
     {
         public EmbyAvaliabilityChecker(IEmbyContentRepository repo, ITvRequestRepository t, IMovieRequestRepository m,
-            INotificationService n, ILogger<EmbyAvaliabilityChecker> log)
+            INotificationHelper n, ILogger<EmbyAvaliabilityChecker> log)
         {
             _repo = repo;
             _tvRepo = t;
@@ -56,13 +56,15 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly ITvRequestRepository _tvRepo;
         private readonly IMovieRequestRepository _movieRepo;
         private readonly IEmbyContentRepository _repo;
-        private readonly INotificationService _notificationService;
+        private readonly INotificationHelper _notificationService;
         private readonly ILogger<EmbyAvaliabilityChecker> _log;
 
         public async Task Execute(IJobExecutionContext job)
         {
             await ProcessMovies();
             await ProcessTv();
+
+            await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
         }
 
         private async Task ProcessMovies()
@@ -97,14 +99,14 @@ namespace Ombi.Schedule.Jobs.Emby
 
                     _log.LogDebug("MovieId: {0}, RequestUser: {1}", movie.Id, recipient);
 
-                    BackgroundJob.Enqueue(() => _notificationService.Publish(new NotificationOptions
+                    await _notificationService.Notify(new NotificationOptions
                     {
                         DateTime = DateTime.Now,
                         NotificationType = NotificationType.RequestAvailable,
                         RequestId = movie.Id,
                         RequestType = RequestType.Movie,
                         Recipient = recipient,
-                    }));
+                    });
                 }
             }
             await _movieRepo.Save();
@@ -188,14 +190,14 @@ namespace Ombi.Schedule.Jobs.Emby
                     // We have fulfulled this request!
                     child.Available = true;
                     child.MarkedAsAvailable = DateTime.Now;
-                    BackgroundJob.Enqueue(() => _notificationService.Publish(new NotificationOptions
+                    await _notificationService.Notify(new NotificationOptions
                     {
                         DateTime = DateTime.Now,
                         NotificationType = NotificationType.RequestAvailable,
                         RequestId = child.Id,
                         RequestType = RequestType.TvShow,
                         Recipient = child.RequestedUser.Email
-                    }));
+                    });
                 }
             }
 
@@ -210,7 +212,6 @@ namespace Ombi.Schedule.Jobs.Emby
 
             if (disposing)
             {
-                _movieRepo?.Dispose();
             }
             _disposed = true;
         }

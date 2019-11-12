@@ -32,6 +32,7 @@ import {
     ISlackNotificationSettings,
     ISonarrSettings,
     ITelegramNotifcationSettings,
+    ITheMovieDbSettings,
     IUpdateSettings,
     IUserManagementSettings,
     IVoteSettings,
@@ -299,6 +300,14 @@ export class SettingsService extends ServiceHelpers {
 
     public saveVoteSettings(settings: IVoteSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}/vote`, JSON.stringify(settings), {headers: this.headers});
+    }
+
+    public getTheMovieDbSettings(): Observable<ITheMovieDbSettings> {
+        return this.http.get<ITheMovieDbSettings>(`${this.url}/themoviedb`, {headers: this.headers});
+    }
+
+    public saveTheMovieDbSettings(settings: ITheMovieDbSettings) {
+        return this.http.post<boolean>(`${this.url}/themoviedb`, JSON.stringify(settings), {headers: this.headers});
     }
 
     public getNewsletterSettings(): Observable<INewsletterNotificationSettings> {

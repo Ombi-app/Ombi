@@ -3,6 +3,7 @@ using NUnit.Framework;
 using Quartz;
 using System.Threading;
 using System.Threading.Tasks;
+using Ombi.Helpers;
 
 namespace Ombi.Schedule.Tests
 {
@@ -12,7 +13,7 @@ namespace Ombi.Schedule.Tests
 
         [Test]
         [Ignore("Cannot get this to work")]
-        public async Task Test()
+        public Task Test()
         {
             var scheduleMock = new Mock<IScheduler>();
             scheduleMock.Setup(x => x.TriggerJob(It.IsAny<JobKey>(),
@@ -23,6 +24,8 @@ namespace Ombi.Schedule.Tests
 
             scheduleMock.Verify(x => x.TriggerJob(It.Is<JobKey>(j => j.Name == "ABC"), 
                 default(CancellationToken)), Times.Once);
+
+            return Task.CompletedTask;
         }
     }
     public class QuartzMock : OmbiQuartz
