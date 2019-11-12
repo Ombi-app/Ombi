@@ -9,6 +9,7 @@ using Ombi.Api.Plex.Models;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -54,7 +55,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 _log.LogError(LoggingEvents.Cacher, e, "Caching Episodes Failed");
             }
 
-
+            await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
             await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
         }
 
