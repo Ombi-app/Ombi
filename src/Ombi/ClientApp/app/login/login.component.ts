@@ -145,7 +145,7 @@ export class LoginComponent implements OnDestroy, OnInit {
                 this.pinTimer = setInterval(() => {
                     this.notify.info("Authenticating", "Loading... Please Wait");
                     this.getPinResult(x.pinId);
-                }, 3000);
+                }, 4000);
             });
         });
     }
