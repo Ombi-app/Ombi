@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.0.4887 (2019-11-13)
+
+### **Fixes**
+
+- Fixed issues with the RequestId Migration #3244 #3253 #3249
+
 ## v3.0.4880 (2019-11-13)
 
 ### **New Features**
