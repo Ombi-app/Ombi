@@ -8,10 +8,10 @@ namespace Ombi.Store.Migrations.ExternalSqlite
         protected override void Up(MigrationBuilder migrationBuilder)
         {
 
-            migrationBuilder.AddColumn<int>(
-                name: "RequestId",
-                table: "PlexServerContent",
-                nullable: true);
+            //migrationBuilder.AddColumn<int>(
+            //    name: "RequestId",
+            //    table: "PlexServerContent",
+            //    nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
