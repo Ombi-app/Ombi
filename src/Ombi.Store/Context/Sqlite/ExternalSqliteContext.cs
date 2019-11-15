@@ -14,13 +14,9 @@ namespace Ombi.Store.Context.Sqlite
             _created = true;
             Upgrade();
             Database.SetCommandTimeout(60);
-            try
-            {
-                Database.Migrate();
-            }
-            catch (SqliteException e) when (e.Message.Equals("duplicate column name: RequestId"))
-            {
-            }
+
+            Database.Migrate();
+
         }
 
 
