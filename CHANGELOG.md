@@ -2,6 +2,8 @@
 
 ## v3.0.4892 (2019-11-16)
 
+### **Fixes**
+
 - Fixed an issue where some users couldn't start Ombi
 
 ## v3.0.4887 (2019-11-13)
