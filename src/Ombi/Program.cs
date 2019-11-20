@@ -168,8 +168,9 @@ namespace Ombi
                     File.Delete("Schedules.db");
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _log.LogError(e.ToString());
             }
         }
 
