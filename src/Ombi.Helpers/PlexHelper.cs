@@ -33,14 +33,15 @@ namespace Ombi.Helpers
 {
     public class PlexHelper
     {
-        private  const string ImdbMatchExpression = "tt([0-9]{1,10})";
-        private  const string TvDbIdMatchExpression = "//[0-9]+/([0-9]{1,3})/([0-9]{1,3})";
+        private const string ImdbMatchExpression = "tt([0-9]{1,10})";
+        private const string TvDbIdMatchExpression = "//[0-9]+/?([0-9]{1,3})/?([0-9]{1,3})";
 
         public static ProviderId GetProviderIdFromPlexGuid(string guid)
         {
             //com.plexapp.agents.thetvdb://269586/2/8?lang=en
             //com.plexapp.agents.themoviedb://390043?lang=en
             //com.plexapp.agents.imdb://tt2543164?lang=en
+            // https://github.com/tidusjar/Ombi/issues/3277
             if (string.IsNullOrEmpty(guid))
             {
                 return new ProviderId();
@@ -55,7 +56,7 @@ namespace Ombi.Helpers
                     {
                         TheTvDb = guidSplit[1]
                     };
-                } else
+                }
                 if (guid.Contains("themoviedb", CompareOptions.IgnoreCase))
                 {
                     return new ProviderId
@@ -63,7 +64,6 @@ namespace Ombi.Helpers
                         TheMovieDb = guidSplit[1]
                     };
                 }
-                else
                 if (guid.Contains("imdb", CompareOptions.IgnoreCase))
                 {
                     return new ProviderId
@@ -71,72 +71,29 @@ namespace Ombi.Helpers
                         ImdbId = guidSplit[1]
                     };
                 }
-                else
+
+                var imdbRegex = new Regex(ImdbMatchExpression, RegexOptions.Compiled);
+                var tvdbRegex = new Regex(TvDbIdMatchExpression, RegexOptions.Compiled);
+                var imdbMatch = imdbRegex.IsMatch(guid);
+                if (imdbMatch)
                 {
-                    var imdbRegex = new Regex(ImdbMatchExpression, RegexOptions.Compiled);
-                    var tvdbRegex = new Regex(TvDbIdMatchExpression, RegexOptions.Compiled);
-                    var imdbMatch = imdbRegex.IsMatch(guid);
-                    if (imdbMatch)
+                    return new ProviderId
                     {
-                        return new ProviderId
-                        {
-                            ImdbId = guidSplit[1]
-                        };
-                    }
-                    else
+                        ImdbId = guidSplit[1]
+                    };
+                }
+
+                // Check if it matches the TvDb pattern
+                var tvdbMatch = tvdbRegex.IsMatch(guid);
+                if (tvdbMatch)
+                {
+                    return new ProviderId
                     {
-                        // Check if it matches the TvDb pattern
-                        var tvdbMatch = tvdbRegex.IsMatch(guid);
-                        if (tvdbMatch)
-                        {
-                            return new ProviderId
-                            {
-                                TheTvDb = guidSplit[1]
-                            };
-                        }
-                    }
+                        TheTvDb = guidSplit[1]
+                    };
                 }
             }
             return new ProviderId();
-        }
-
-        public static EpisodeModelHelper GetSeasonsAndEpisodesFromPlexGuid(string guid)
-        {
-            var ep = new EpisodeModelHelper();
-            //com.plexapp.agents.thetvdb://269586/2/8?lang=en
-            //com.plexapp.agents.themoviedb://390043?lang=en
-            //com.plexapp.agents.imdb://tt2543164?lang=en
-            if (string.IsNullOrEmpty(guid))
-                return null;
-            try
-            {
-                var guidSplit = guid.Split(new[] { '/', '?' }, StringSplitOptions.RemoveEmptyEntries);
-                if (guidSplit.Length > 2)
-                {
-                    if (guid.Contains("thetvdb", CompareOptions.IgnoreCase))
-                    {
-                        ep.ProviderId = new ProviderId {TheTvDb = guidSplit[1]};
-                    }
-                    if (guid.Contains("themoviedb", CompareOptions.IgnoreCase))
-                    {
-                        ep.ProviderId = new ProviderId { TheMovieDb = guidSplit[1] };
-
-                    }
-                    if (guid.Contains("imdb", CompareOptions.IgnoreCase))
-                    {
-                        ep.ProviderId = new ProviderId { ImdbId = guidSplit[1] };
-
-                    }
-                    ep.SeasonNumber = int.Parse(guidSplit[2]);
-                    ep.EpisodeNumber = int.Parse(guidSplit[3]);
-                }
-                return ep;
-
-            }
-            catch (Exception)
-            {
-                return ep;
-            }
         }
 
         public static string GetPlexMediaUrl(string machineId, int mediaId)
@@ -145,13 +102,6 @@ namespace Ombi.Helpers
                 $"https://app.plex.tv/web/app#!/server/{machineId}/details?key=library%2Fmetadata%2F{mediaId}";
             return url;
         }
-    }
-
-    public class EpisodeModelHelper
-    {
-        public ProviderId ProviderId { get; set; }
-        public int SeasonNumber { get; set; }
-        public int EpisodeNumber { get; set; }
     }
 
     public class ProviderId
