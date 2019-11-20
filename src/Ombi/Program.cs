@@ -20,6 +20,7 @@ namespace Ombi
     public class Program
     {
         private static string UrlArgs { get; set; }
+        private static StartupLog _log = new StartupLog();
 
         public static void Main(string[] args)
         {
@@ -57,77 +58,104 @@ namespace Ombi
             DeleteSchedules();
             //CheckAndMigrate();
 
+            _log.Config();
             var services = new ServiceCollection();
             services.ConfigureDatabases();
             using (var provider = services.BuildServiceProvider())
             {
-                var settingsDb = provider.GetRequiredService<SettingsContext>();
-
-                var config = settingsDb.ApplicationConfigurations.ToList();
-                var url = config.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
-                var dbBaseUrl = config.FirstOrDefault(x => x.Type == ConfigurationTypes.BaseUrl);
-                if (url == null)
+                try
                 {
-                    url = new ApplicationConfiguration
+                    var settingsDb = provider.GetRequiredService<SettingsContext>();
+                    var config = settingsDb.ApplicationConfigurations.ToList();
+                    var url = config.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
+                    var dbBaseUrl = config.FirstOrDefault(x => x.Type == ConfigurationTypes.BaseUrl);
+                    if (url == null)
                     {
-                        Type = ConfigurationTypes.Url,
-                        Value = "http://*:5000"
-                    };
-                    using (var tran = settingsDb.Database.BeginTransaction())
-                    {
-                        settingsDb.ApplicationConfigurations.Add(url);
-                        settingsDb.SaveChanges();
-                        tran.Commit();
-                    }
-
-                    urlValue = url.Value;
-                }
-
-                if (!url.Value.Equals(host))
-                {
-                    url.Value = UrlArgs;
-
-                    using (var tran = settingsDb.Database.BeginTransaction())
-                    {
-                        settingsDb.SaveChanges();
-                        tran.Commit();
-                    }
-
-                    urlValue = url.Value;
-                }
-
-                if (dbBaseUrl == null)
-                {
-                    if (baseUrl.HasValue() && baseUrl.StartsWith("/"))
-                    {
-                        dbBaseUrl = new ApplicationConfiguration
+                        url = new ApplicationConfiguration
                         {
-                            Type = ConfigurationTypes.BaseUrl,
-                            Value = baseUrl
+                            Type = ConfigurationTypes.Url,
+                            Value = "http://*:5000"
                         };
+                        using (var tran = settingsDb.Database.BeginTransaction())
+                        {
+                            settingsDb.ApplicationConfigurations.Add(url);
+                            settingsDb.SaveChanges();
+                            tran.Commit();
+                        }
+
+                        urlValue = url.Value;
+                    }
+
+                    if (!url.Value.Equals(host))
+                    {
+                        url.Value = UrlArgs;
 
                         using (var tran = settingsDb.Database.BeginTransaction())
                         {
-                            settingsDb.ApplicationConfigurations.Add(dbBaseUrl);
+                            settingsDb.SaveChanges();
+                            tran.Commit();
+                        }
+
+                        urlValue = url.Value;
+                    }
+
+                    if (dbBaseUrl == null)
+                    {
+                        if (baseUrl.HasValue() && baseUrl.StartsWith("/"))
+                        {
+                            dbBaseUrl = new ApplicationConfiguration
+                            {
+                                Type = ConfigurationTypes.BaseUrl,
+                                Value = baseUrl
+                            };
+
+                            using (var tran = settingsDb.Database.BeginTransaction())
+                            {
+                                settingsDb.ApplicationConfigurations.Add(dbBaseUrl);
+                                settingsDb.SaveChanges();
+                                tran.Commit();
+                            }
+                        }
+                    }
+                    else if (baseUrl.HasValue() && !baseUrl.Equals(dbBaseUrl.Value))
+                    {
+                        dbBaseUrl.Value = baseUrl;
+
+                        using (var tran = settingsDb.Database.BeginTransaction())
+                        {
                             settingsDb.SaveChanges();
                             tran.Commit();
                         }
                     }
+
+                    Console.WriteLine($"We are running on {urlValue}");
+
+                    CreateWebHostBuilder(args).Build().Run();
+                
                 }
-                else if (baseUrl.HasValue() && !baseUrl.Equals(dbBaseUrl.Value))
+                catch (MySql.Data.MySqlClient.MySqlException e) when (e.SqlState.Equals("28000") || e.SqlState.Equals("42000"))
                 {
-                    dbBaseUrl.Value = baseUrl;
-
-                    using (var tran = settingsDb.Database.BeginTransaction())
-                    {
-                        settingsDb.SaveChanges();
-                        tran.Commit();
-                    }
+                    // numbre = 1045, sqlstate = 28000, "Access denied for user 'ombi_dev'@'x.x.x.x' (using password: NO)"
+                    // number = 1044, sqlstate = 42000, "Access denied for user 'ombi_dev'@'x.x.x.x' to database 'OmbiDev'"
+                    _log.LogError("MySQL > " + e.Message);
+                    return;
+                }
+                catch (MySql.Data.MySqlClient.MySqlException e)
+                {
+                    _log.LogError(e.ToString());
+                    throw;
+                }
+                catch (System.InvalidOperationException e) when (e.InnerException is MySql.Data.MySqlClient.MySqlException && e.InnerException.Message.Equals("Unable to connect to any of the specified MySQL hosts."))
+                {
+                    _log.LogError("MySQL > " + e.InnerException.Message);
+                    return;
+                }
+                catch (System.Exception e)
+                {
+                    _log.LogError(e.ToString());
+                    throw;
                 }
 
-                Console.WriteLine($"We are running on {urlValue}");
-
-                CreateWebHostBuilder(args).Build().Run();
             }
         }
 
