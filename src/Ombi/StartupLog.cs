@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Serilog;
 using ILogger = Serilog.ILogger;
 using Ombi.Helpers;
-
+using CommandLine;
 
 namespace Ombi
 {
@@ -20,16 +20,24 @@ namespace Ombi
             get { return Path.GetDirectoryName(Assembly.GetEntryAssembly().Location.Substring(0, Assembly.GetEntryAssembly().Location.IndexOf("bin\\"))); }
         }
 
-        public StartupLog()
+        private string ContentLogsPath
         {
-            //this.config();
+            get { return Path.Combine(StoragePath.StoragePath.IsNullOrEmpty() ? this.ContentRootPath : StoragePath.StoragePath, "Logs"); }
+        }
+
+        public StartupLog(bool autoconf = false)
+        {
+            if (autoconf == true)
+            {
+                this.Config();
+            }
         }
 
         public void Config()
         {
             ILogger log_config = new LoggerConfiguration()
                .MinimumLevel.Debug()
-               .WriteTo.RollingFile(Path.Combine(StoragePath.StoragePath.IsNullOrEmpty() ? this.ContentRootPath : StoragePath.StoragePath, "Logs", "startup-{Date}.txt"))
+               .WriteTo.RollingFile(Path.Combine(this.ContentLogsPath, "startup-{Date}.txt"))
                .CreateLogger();
             Log.Logger = log_config;
         }
@@ -40,10 +48,22 @@ namespace Ombi
             Log.Error(str);
         }
 
+        internal void LogError(Error e)
+        {
+            Console.WriteLine(e);
+            Log.Error(e.ToString());
+        }
+
         public void LogInformation(string str)
         {
             Console.WriteLine(str);
             Log.Information(str);
+        }
+
+        public void LogVerbose(string str)
+        {
+            Console.WriteLine(str);
+            Log.Verbose(str);
         }
     }
 }

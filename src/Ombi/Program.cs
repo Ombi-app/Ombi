@@ -20,7 +20,7 @@ namespace Ombi
     public class Program
     {
         private static string UrlArgs { get; set; }
-        private static StartupLog _log = new StartupLog();
+        private static StartupLog _log = new StartupLog(true);
 
         public static void Main(string[] args)
         {
@@ -41,7 +41,7 @@ namespace Ombi
                 {
                     foreach (var e in err)
                     {
-                        Console.WriteLine(e);
+                        _log.LogError(e);
                     }
                 });
 
@@ -58,7 +58,6 @@ namespace Ombi
             DeleteSchedules();
             //CheckAndMigrate();
 
-            _log.Config();
             var services = new ServiceCollection();
             services.ConfigureDatabases();
             using (var provider = services.BuildServiceProvider())
@@ -128,10 +127,8 @@ namespace Ombi
                         }
                     }
 
-                    Console.WriteLine($"We are running on {urlValue}");
-
+                    _log.LogInformation($"We are running on {urlValue}");
                     CreateWebHostBuilder(args).Build().Run();
-                
                 }
                 catch (MySql.Data.MySqlClient.MySqlException e) when (e.SqlState.Equals("28000") || e.SqlState.Equals("42000"))
                 {
