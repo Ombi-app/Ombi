@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Attributes;
+using Ombi.Core;
 using Ombi.Core.Notifications;
 using Ombi.Helpers;
 using Ombi.Models;
@@ -25,7 +25,7 @@ namespace Ombi.Controllers.V1
     public class IssuesController : ControllerBase
     {
         public IssuesController(IRepository<IssueCategory> categories, IRepository<Issues> issues, IRepository<IssueComments> comments,
-            UserManager<OmbiUser> userManager, INotificationService notify)
+            UserManager<OmbiUser> userManager, INotificationHelper notify)
         {
             _categories = categories;
             _issues = issues;
@@ -38,7 +38,7 @@ namespace Ombi.Controllers.V1
         private readonly IRepository<Issues> _issues;
         private readonly IRepository<IssueComments> _issueComments;
         private readonly UserManager<OmbiUser> _userManager;
-        private readonly INotificationService _notification;
+        private readonly INotificationHelper _notification;
 
         /// <summary>
         /// Get's all categories
@@ -150,7 +150,7 @@ namespace Ombi.Controllers.V1
 
             AddIssueNotificationSubstitutes(notificationModel, i, User.Identity.Name);
 
-            BackgroundJob.Enqueue(() => _notification.Publish(notificationModel));
+            await _notification.Notify(notificationModel);
 
             return i.Id;
         }
@@ -237,7 +237,7 @@ namespace Ombi.Controllers.V1
                 notificationModel.Recipient = user.Email;
             }
 
-            BackgroundJob.Enqueue(() => _notification.Publish(notificationModel));
+            await _notification.Notify(notificationModel);
 
             return await _issueComments.Add(newComment);
         }
@@ -290,7 +290,7 @@ namespace Ombi.Controllers.V1
                 };
                 AddIssueNotificationSubstitutes(notificationModel, issue, issue.UserReported?.UserAlias ?? string.Empty);
 
-                BackgroundJob.Enqueue(() => _notification.Publish(notificationModel));
+                await _notification.Notify(notificationModel);
             }
 
 

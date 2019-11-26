@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Security.Principal;
-using Hangfire;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
@@ -197,8 +196,8 @@ namespace Ombi.DependencyInjection
 
         public static void RegisterJobs(this IServiceCollection services)
         {
-            services.AddSingleton<IJobFactory, IoCJobFactory>(provider => new IoCJobFactory(provider));
-            services.AddTransient<IBackgroundJobClient, BackgroundJobClient>();
+            services.AddSingleton<QuartzJobRunner>();
+            services.AddSingleton<IJobFactory, IoCJobFactory>();
 
             services.AddTransient<IPlexContentSync, PlexContentSync>();
             services.AddTransient<IEmbyContentSync, EmbyContentSync>();

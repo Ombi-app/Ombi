@@ -58,8 +58,6 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.1" />
     <PackageReference Include="CommandLineParser" Version="2.6.0" />
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.1" />
-    <PackageReference Include="Hangfire.SQLite" Version="1.4.2" />
 
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />

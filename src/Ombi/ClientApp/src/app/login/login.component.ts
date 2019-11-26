@@ -164,7 +164,7 @@ export class LoginComponent implements OnDestroy, OnInit {
                         duration: 3000
                     });
                     this.getPinResult(x.pinId);
-                }, 10000);
+                }, 4000);
             });
         });
     }

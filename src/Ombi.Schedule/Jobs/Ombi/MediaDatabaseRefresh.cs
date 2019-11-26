@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.Plex;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
@@ -99,7 +97,6 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (disposing)
             {
-                _plexRepo?.Dispose();
                 _settings?.Dispose();
             }
             _disposed = true;

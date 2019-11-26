@@ -7,10 +7,8 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AutoMapper;
-using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NCrontab;
 using Ombi.Api.Emby;
 using Ombi.Api.Github;
 using Ombi.Attributes;
@@ -30,7 +28,6 @@ using Ombi.Store.Repository;
 using Ombi.Api.Github;
 using Ombi.Core.Engine;
 using Ombi.Extensions;
-using Ombi.Schedule;
 using Quartz;
 
 namespace Ombi.Controllers.V1

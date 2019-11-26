@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
@@ -15,7 +14,6 @@ using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Quartz;
-using Serilog;
 using EmbyMediaType = Ombi.Store.Entities.EmbyMediaType;
 
 namespace Ombi.Schedule.Jobs.Emby
@@ -217,7 +215,6 @@ namespace Ombi.Schedule.Jobs.Emby
             if (disposing)
             {
                 _settings?.Dispose();
-                _repo?.Dispose();
             }
             _disposed = true;
         }

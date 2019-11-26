@@ -30,7 +30,7 @@ $warn: mat-color($ombi-app-warn);
 
 // DARK
 
-$background-dark: at-color(mat-palette($mat-grey, 800));;
+$background-dark: mat-color(mat-palette($mat-grey, 800));;
 $backgroundTint-dark:  mat-color(mat-palette($mat-grey, 900));
 $text-dark: white;
 $panel: mat-color(mat-palette($mat-grey, 800));

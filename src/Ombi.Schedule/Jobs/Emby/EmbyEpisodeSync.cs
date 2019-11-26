@@ -29,13 +29,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Hubs;
+using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Quartz;
@@ -165,7 +165,6 @@ namespace Ombi.Schedule.Jobs.Emby
             if (disposing)
             {
                 _settings?.Dispose();
-                _repo?.Dispose();
             }
             _disposed = true;
         }

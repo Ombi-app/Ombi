@@ -39,7 +39,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             IMovieDbApi movieApi, ITvMazeApi tvApi, IEmailProvider email, ISettingsService<CustomizationSettings> custom,
             ISettingsService<EmailNotificationSettings> emailSettings, INotificationTemplatesRepository templateRepo,
             UserManager<OmbiUser> um, ISettingsService<NewsletterSettings> newsletter, ILogger<NewsletterJob> log,
-            ILidarrApi lidarrApi, IRepository<LidarrAlbumCache> albumCache, ISettingsService<LidarrSettings> lidarrSettings,
+            ILidarrApi lidarrApi, IExternalRepository<LidarrAlbumCache> albumCache, ISettingsService<LidarrSettings> lidarrSettings,
             ISettingsService<OmbiSettings> ombiSettings, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmbySettings> embySettings
             , IHubContext<NotificationHub> notification)
         {
@@ -82,7 +82,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly UserManager<OmbiUser> _userManager;
         private readonly ILogger _log;
         private readonly ILidarrApi _lidarrApi;
-        private readonly IRepository<LidarrAlbumCache> _lidarrAlbumRepository;
+        private readonly IExternalRepository<LidarrAlbumCache> _lidarrAlbumRepository;
         private readonly ISettingsService<LidarrSettings> _lidarrSettings;
         private readonly ISettingsService<PlexSettings> _plexSettings;
         private readonly ISettingsService<EmbySettings> _embySettings;
@@ -945,12 +945,9 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (disposing)
             {
-                _plex?.Dispose();
-                _emby?.Dispose();
                 _newsletterSettings?.Dispose();
                 _customizationSettings?.Dispose();
                 _emailSettings.Dispose();
-                _recentlyAddedLog.Dispose();
                 _templateRepo?.Dispose();
                 _userManager?.Dispose();
             }

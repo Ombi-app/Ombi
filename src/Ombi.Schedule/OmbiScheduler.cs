@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Ombi.Core.Notifications;
 using Ombi.Core.Settings;
+using Ombi.Helpers;
 using Ombi.Schedule.Jobs;
 using Ombi.Schedule.Jobs.Couchpotato;
 using Ombi.Schedule.Jobs.Emby;
@@ -53,6 +55,7 @@ namespace Ombi.Schedule
             await AddEmby(s);
             await AddDvrApps(s);
             await AddSystem(s);
+            await AddNotifications(s);
 
             // Run Quartz
             await OmbiQuartz.Start();
@@ -94,6 +97,10 @@ namespace Ombi.Schedule
             await OmbiQuartz.Instance.AddJob<IEmbyEpisodeSync>(nameof(IEmbyEpisodeSync), "Emby", null);
             await OmbiQuartz.Instance.AddJob<IEmbyAvaliabilityChecker>(nameof(IEmbyAvaliabilityChecker), "Emby", null);
             await OmbiQuartz.Instance.AddJob<IEmbyUserImporter>(nameof(IEmbyUserImporter), "Emby", JobSettingsHelper.UserImporter(s));
+        }
+        private static async Task AddNotifications(JobSettings s)
+        {
+            await OmbiQuartz.Instance.AddJob<INotificationService>(nameof(INotificationService), "Notifications", null);
         }
     }
 }

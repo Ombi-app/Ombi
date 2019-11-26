@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ombi.Store.Context.Sqlite
@@ -13,7 +14,9 @@ namespace Ombi.Store.Context.Sqlite
             _created = true;
             Upgrade();
             Database.SetCommandTimeout(60);
+
             Database.Migrate();
+
         }
 
 

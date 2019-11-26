@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
@@ -365,8 +363,6 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (disposing)
             {
-                _plexRepo?.Dispose();
-                _embyRepo?.Dispose();
                 _plexSettings?.Dispose();
             }
             _disposed = true;

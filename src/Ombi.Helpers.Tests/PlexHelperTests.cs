@@ -39,6 +39,8 @@ namespace Ombi.Helpers.Tests
                 yield return new TestCaseData("com.plexapp.agents.agent47://tt2543456?lang=en", ProviderIdType.Imdb).Returns("tt2543456").SetName("Unknown IMDB agent");
                 yield return new TestCaseData("com.plexapp.agents.agent47://456822/1/1?lang=en", ProviderIdType.TvDb).Returns("456822").SetName("Unknown TvDb agent");
                 yield return new TestCaseData("com.plexapp.agents.agent47://456822/999/999?lang=en", ProviderIdType.TvDb).Returns("456822").SetName("Unknown TvDb agent, large episode and season");
+                yield return new TestCaseData("com.plexapp.agents.xbmcnfotv://153021/2/1?lang=xn", ProviderIdType.TvDb).Returns("153021").SetName("xmbc agent, tv episode");
+                yield return new TestCaseData("com.plexapp.agents.xbmcnfotv://153021?lang=xn", ProviderIdType.TvDb).Returns("153021").SetName("xmbc agent, tv show");
             }
         }
 

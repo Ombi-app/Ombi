@@ -12,5 +12,10 @@ namespace Ombi.Store.Context.MySql
 
             Database.Migrate();
         }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
     }
 }

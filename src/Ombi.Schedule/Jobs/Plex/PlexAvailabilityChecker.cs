@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ombi.Core.Notifications;
+using Ombi.Core;
 using Ombi.Helpers;
 using Ombi.Hubs;
 using Ombi.Notifications.Models;
@@ -21,13 +19,12 @@ namespace Ombi.Schedule.Jobs.Plex
     public class PlexAvailabilityChecker : IPlexAvailabilityChecker
     {
         public PlexAvailabilityChecker(IPlexContentRepository repo, ITvRequestRepository tvRequest, IMovieRequestRepository movies,
-            INotificationService notification, IBackgroundJobClient background, ILogger<PlexAvailabilityChecker> log, IHubContext<NotificationHub> hub)
+            INotificationHelper notification, ILogger<PlexAvailabilityChecker> log, IHubContext<NotificationHub> hub)
         {
             _tvRepo = tvRequest;
             _repo = repo;
             _movieRepo = movies;
             _notificationService = notification;
-            _backgroundJobClient = background;
             _log = log;
             _notification = hub;
         }
@@ -35,8 +32,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly ITvRequestRepository _tvRepo;
         private readonly IMovieRequestRepository _movieRepo;
         private readonly IPlexContentRepository _repo;
-        private readonly INotificationService _notificationService;
-        private readonly IBackgroundJobClient _backgroundJobClient;
+        private readonly INotificationHelper _notificationService;
         private readonly ILogger _log;
         private readonly IHubContext<NotificationHub> _notification;
 
@@ -139,7 +135,8 @@ namespace Ombi.Schedule.Jobs.Plex
                     // We have ful-fulled this request!
                     child.Available = true;
                     child.MarkedAsAvailable = DateTime.Now;
-                    await _notificationService.Publish(new NotificationOptions
+
+                    await _notificationService.Notify(new NotificationOptions
                     {
                         DateTime = DateTime.Now,
                         NotificationType = NotificationType.RequestAvailable,
@@ -183,7 +180,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 item.RequestId = movie.Id;
 
                 _log.LogInformation("[PAC] - Movie request {0} is now available, sending notification", $"{movie.Title} - {movie.Id}");
-                await _notificationService.Publish(new NotificationOptions
+                await _notificationService.Notify(new NotificationOptions
                 {
                     DateTime = DateTime.Now,
                     NotificationType = NotificationType.RequestAvailable,
@@ -206,8 +203,6 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if (disposing)
             {
-                _movieRepo?.Dispose();
-                _repo?.Dispose();
             }
             _disposed = true;
         }

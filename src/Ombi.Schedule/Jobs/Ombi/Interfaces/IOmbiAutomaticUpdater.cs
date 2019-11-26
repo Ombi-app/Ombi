@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Hangfire.Server;
 
 namespace Ombi.Schedule.Jobs.Ombi
 {

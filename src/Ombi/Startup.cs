@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
 using AutoMapper.EquivalencyExpression;
-using Hangfire;
-using Hangfire.Dashboard;
-using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -94,15 +91,6 @@ namespace Ombi
             services.AddSwagger();
             services.AddAppSettingsValues(Configuration);
 
-            services.AddHangfire(x =>
-            {
-                x.UseMemoryStorage();
-#pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
-                x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
-#pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
-            });
-
-
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
                 builder.AllowAnyHeader()
@@ -171,9 +159,9 @@ namespace Ombi
                 app.UsePathBase(settings.BaseUrl);
             }
 
-            app.UseHangfireServer(new BackgroundJobServerOptions
-                {WorkerCount = 1, ServerTimeout = TimeSpan.FromDays(1), ShutdownTimeout = TimeSpan.FromDays(1)});
-
+          // Setup the scheduler
+            //var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
+            //jobSetup.Setup();
             ctx.Seed();
             var settingsctx = serviceProvider.GetService<SettingsContext>();
             settingsctx.Seed();

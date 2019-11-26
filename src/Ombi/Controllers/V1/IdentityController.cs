@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
-using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -860,7 +859,7 @@ namespace Ombi.Controllers.V1
 
         [HttpPost("welcomeEmail")]
         [PowerUser]
-        public void SendWelcomeEmail([FromBody] UserViewModel user)
+        public async Task<IActionResult> SendWelcomeEmail([FromBody] UserViewModel user)
         {
             var ombiUser = new OmbiUser
             {
@@ -868,7 +867,8 @@ namespace Ombi.Controllers.V1
                 Email = user.EmailAddress,
                 UserName = user.UserName
             };
-            BackgroundJob.Enqueue(() => WelcomeEmail.SendEmail(ombiUser));
+            await WelcomeEmail.SendEmail(ombiUser);
+            return Ok();
         }
 
         [HttpGet("accesstoken")]
