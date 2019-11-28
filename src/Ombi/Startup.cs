@@ -172,14 +172,14 @@ namespace Ombi
             {
                 ContentTypeProvider = provider,
             });
-
+            
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+            app.UseMiddleware<ApiKeyMiddlewear>();
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseMiddleware<ErrorHandlingMiddleware>();
-            app.UseMiddleware<ApiKeyMiddlewear>();
 
             app.UseCors("MyPolicy");
             app.UseSwagger();
