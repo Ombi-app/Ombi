@@ -15,6 +15,7 @@ import {
     IEmailNotificationSettings,
     IEmbySettings,
     IGotifyNotificationSettings,
+    IWebhookNotificationSettings,
     IIssueSettings,
     IJobSettings,
     IJobSettingsViewModel,
@@ -190,6 +191,14 @@ export class SettingsService extends ServiceHelpers {
     public saveGotifyNotificationSettings(settings: IGotifyNotificationSettings): Observable<boolean> {
         return this.http
             .post<boolean>(`${this.url}/notifications/gotify`, JSON.stringify(settings), { headers: this.headers });
+    }
+
+    public getWebhookNotificationSettings(): Observable<IWebhookNotificationSettings> {
+        return this.http.get<IWebhookNotificationSettings>(`${this.url}/notifications/webhook`, { headers: this.headers });
+    }
+    public saveWebhookNotificationSettings(settings: IWebhookNotificationSettings): Observable<boolean> {
+        return this.http
+            .post<boolean>(`${this.url}/notifications/webhook`, JSON.stringify(settings), { headers: this.headers });
     }
 
     public getSlackNotificationSettings(): Observable<ISlackNotificationSettings> {
