@@ -13,6 +13,7 @@ export class MovieAdminPanelComponent implements OnInit {
 
     @Input() public movie: IMovieRequests;
     @Output() public advancedOptionsChanged = new EventEmitter<IAdvancedData>();
+    @Output() public radarrEnabledChange = new EventEmitter<boolean>();
 
     public radarrEnabled: boolean;
     public radarrProfiles: IRadarrProfile[];
@@ -34,6 +35,8 @@ export class MovieAdminPanelComponent implements OnInit {
                 this.setRootFolderOverrides();
             });
         }
+
+        this.radarrEnabledChange.emit(this.radarrEnabled);
     }
 
     public async openAdvancedOptions() {

@@ -21,6 +21,7 @@ export class MovieDetailsComponent {
     public movieRequest: IMovieRequests;
     public isAdmin: boolean;
     public advancedOptions: IAdvancedData;
+    public showAdvanced: boolean; // Set on the UI
 
     private theMovidDbId: number;
 

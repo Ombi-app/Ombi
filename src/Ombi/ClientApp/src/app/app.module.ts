@@ -84,7 +84,7 @@ const routes: Routes = [
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient, platformLocation: PlatformLocation) {
     // const base = getBaseLocation();
-    const base = platformLocation.getBaseHrefFromDOM();
+    const base = window["baseHref"];
     const version = Math.floor(Math.random() * 999999999);
     if (base !== null && base.length > 1) {
         return new TranslateHttpLoader(http, `${base}/translations/`, `.json?v=${version}`);

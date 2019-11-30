@@ -2,23 +2,46 @@
 <html lang="en">
 
 <head>
-  <script>
+  <script  type='text/javascript'>
 
-var base = "/";
-var locations = window.location.pathname.split('/');
-if(locations[1] !== 'login' && locations[1] !== 'discover') {
-  base = "/" + locations[1];
-}
-document.write("<base href='" + base + "' />");
-window["baseHref"] = base;
-console.log(base);
+function configExists(url) {
+    var req = new XMLHttpRequest();
+    req.open('GET', url, false); 
+    req.send();
+    return req.status==200;
+  }
+
+  debugger;
+  var probePath = 'main.js';
+  var origin = document.location.origin;
+  var pathSegments = document.location.pathname.split('/');
+
+  var basePath = '/'
+  var configFound = false;
+  for (var i = 0; i < pathSegments.length; i++) {
+    var segment = pathSegments[i];
+    if (segment.length > 0) {
+      basePath = basePath + segment + '/';
+    }
+    var fullPath = origin + basePath + probePath;
+    configFound = configExists(fullPath);
+    if (configFound) {
+      break;
+    }
+  }
+  var basePathToUse = basePath.substring(0, basePath.length - 1); // trim off the trailing '/'
+  window["baseHref"] = configFound ? basePathToUse : '/';
+  
+  document.write("<base href='" + (configFound ? basePath : '/') + "' />");
+
+  console.log(window["baseHref"]);
 </script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
-  <link href="/styles/please-wait.css" rel="stylesheet">
-  <link href="/styles/spinkit.css" rel="stylesheet">
-  <link href="/styles/11-folding-cube.css" rel="stylesheet">
-  <script src="/styles/please-wait.js"></script>
+  <link href="styles/please-wait.css" rel="stylesheet">
+  <link href="styles/spinkit.css" rel="stylesheet">
+  <link href="styles/11-folding-cube.css" rel="stylesheet">
+  <script src="styles/please-wait.js"></script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 

@@ -27,6 +27,7 @@ using Serilog;
 using SQLitePCL;
 using System;
 using System.IO;
+using Microsoft.AspNetCore.StaticFiles.Infrastructure;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
@@ -120,12 +121,19 @@ namespace Ombi
 
             var ctx = serviceProvider.GetService<OmbiContext>();
             loggerFactory.AddSerilog();
-            
-            app.UseSpaStaticFiles();
-            
             var ombiService =
                 serviceProvider.GetService<ISettingsService<OmbiSettings>>();
             var settings = ombiService.GetSettings();
+
+            var sharedOptions = new SharedOptions();
+            if (settings.BaseUrl.HasValue())
+            {
+                sharedOptions.RequestPath = settings.BaseUrl;
+            }
+
+            app.UseSpaStaticFiles(new StaticFileOptions(sharedOptions));
+
+
             if (settings.ApiKey.IsNullOrEmpty())
             {
                 // Generate a API Key
@@ -159,20 +167,20 @@ namespace Ombi
                 app.UsePathBase(settings.BaseUrl);
             }
 
-          // Setup the scheduler
+            // Setup the scheduler
             //var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
             //jobSetup.Setup();
             ctx.Seed();
             var settingsctx = serviceProvider.GetService<SettingsContext>();
             settingsctx.Seed();
 
-            var provider = new FileExtensionContentTypeProvider {Mappings = {[".map"] = "application/octet-stream"}};
+            var provider = new FileExtensionContentTypeProvider { Mappings = { [".map"] = "application/octet-stream" } };
 
             app.UseStaticFiles(new StaticFileOptions()
             {
                 ContentTypeProvider = provider,
             });
-            
+
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseMiddleware<ApiKeyMiddlewear>();
             app.UseRouting();
@@ -210,7 +218,7 @@ namespace Ombi
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:3578");
                 }
             });
-            
+
         }
     }
 }
