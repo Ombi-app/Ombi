@@ -23,7 +23,6 @@ namespace Ombi.Api.Webhook
 
             if (!string.IsNullOrWhiteSpace(accessToken))
             {
-                request.AddQueryString("token", accessToken);
                 request.AddHeader("Access-Token", accessToken);
             }
 
