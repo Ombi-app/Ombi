@@ -21,7 +21,7 @@
       }
     },
     "Ombi": {
-      "commandName": "IISExpress",
+      "commandName": "Project",
       "commandLineArgs": "--host http://*:3577",
       "applicationUrl": "http://localhost:3577/"
     }
