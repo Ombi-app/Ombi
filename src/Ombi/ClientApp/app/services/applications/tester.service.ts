@@ -12,7 +12,6 @@ import {
     IEmailNotificationSettings,
     IEmbyServer,
     IGotifyNotificationSettings,
-    IWebhookNotificationSettings,
     ILidarrSettings,
     IMattermostNotifcationSettings,
     IMobileNotificationTestSettings,
@@ -25,6 +24,7 @@ import {
     ISlackNotificationSettings,
     ISonarrSettings,
     ITelegramNotifcationSettings,
+    IWebhookNotificationSettings,
 } from "../../interfaces";
 
 @Injectable()

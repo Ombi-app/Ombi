@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
-import { IWebhookNotificationSettings, INotificationTemplates, NotificationType } from "../../interfaces";
+import { INotificationTemplates, IWebhookNotificationSettings, NotificationType } from "../../interfaces";
 import { TesterService } from "../../services";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";

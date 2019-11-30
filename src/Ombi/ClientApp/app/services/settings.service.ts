@@ -15,7 +15,6 @@ import {
     IEmailNotificationSettings,
     IEmbySettings,
     IGotifyNotificationSettings,
-    IWebhookNotificationSettings,
     IIssueSettings,
     IJobSettings,
     IJobSettingsViewModel,
@@ -37,6 +36,7 @@ import {
     IUpdateSettings,
     IUserManagementSettings,
     IVoteSettings,
+    IWebhookNotificationSettings,
 } from "../interfaces";
 
 import { ServiceHelpers } from "./service.helpers";
