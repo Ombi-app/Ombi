@@ -17,17 +17,22 @@ namespace Ombi.Api.Webhook
 
         private readonly IApi _api;
 
-        public async Task PushAsync(string baseUrl, string accessToken, IReadOnlyDictionary<string, string> parameters)
+        public async Task PushAsync(string baseUrl, string accessToken, IDictionary<string, string> parameters)
         {
             var request = new Request("/", baseUrl, HttpMethod.Post);
-            request.AddHeader("Access-Token", accessToken);
-            request.ApplicationJsonContentType();
+
+            if (!string.IsNullOrWhiteSpace(accessToken))
+            {
+                request.AddQueryString("token", accessToken);
+                request.AddHeader("Access-Token", accessToken);
+            }
 
             var body = parameters.ToDictionary(
                 x => _nameResolver.GetResolvedPropertyName(x.Key),
                 x => x.Value
             );
 
+            request.ApplicationJsonContentType();
             request.AddJsonBody(body);
 
             await _api.Request(request);

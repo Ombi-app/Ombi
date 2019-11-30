@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Webhook;
@@ -105,9 +106,11 @@ namespace Ombi.Notifications.Agents
                 return;
             }
 
+            var notificationData = parsed.Data.ToDictionary(x => x.Key, x => x.Value);
+            notificationData[nameof(NotificationType)] = type.ToString();
             var notification = new NotificationMessage
             {
-                Data = parsed.Data,
+                Data = notificationData,
             };
 
             await Send(notification, settings);
