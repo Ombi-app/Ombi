@@ -89,11 +89,15 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task Test(NotificationOptions model, WebhookSettings settings)
         {
-            var message = $"This is a test from Ombi, if you can see this then we have successfully pushed a notification!";
+            var c = new NotificationMessageCurlys();
+
+            var testData = c.Curlys.ToDictionary(x => x.Key, x => x.Value);
+            testData[nameof(NotificationType)] = NotificationType.Test.ToString();
             var notification = new NotificationMessage
             {
-                Message = message,
+                Data = testData,
             };
+
             await Send(notification, settings);
         }
 
