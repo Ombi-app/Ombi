@@ -74,6 +74,7 @@ Supported notifications:
 * Pushover
 * Mattermost
 * Telegram
+* Webhook
 
 ### The difference between Version 3 and 2
 

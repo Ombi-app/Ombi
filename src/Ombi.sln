@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.87
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi", "Ombi\Ombi.csproj", "{C987AA67-AFE1-468F-ACD3-EAD5A48E1F6A}"
 EndProject
@@ -99,6 +99,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Helpers.Tests", "Ombi.Helpers.Tests\Ombi.Helpers.Tests.csproj", "{CC8CEFCD-0CB6-45BB-845F-508BCAB5BDC3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Gotify", "Ombi.Api.Gotify\Ombi.Api.Gotify.csproj", "{105EA346-766E-45B8-928B-DE6991DCB7EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Webhook", "Ombi.Api.Webhook\Ombi.Api.Webhook.csproj", "{E2186FDA-D827-4781-8663-130AC382F12C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -262,6 +264,10 @@ Global
 		{105EA346-766E-45B8-928B-DE6991DCB7EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{105EA346-766E-45B8-928B-DE6991DCB7EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{105EA346-766E-45B8-928B-DE6991DCB7EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2186FDA-D827-4781-8663-130AC382F12C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2186FDA-D827-4781-8663-130AC382F12C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2186FDA-D827-4781-8663-130AC382F12C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2186FDA-D827-4781-8663-130AC382F12C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -300,6 +306,7 @@ Global
 		{4FA21A20-92F4-462C-B929-2C517A88CC56} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 		{CC8CEFCD-0CB6-45BB-845F-508BCAB5BDC3} = {6F42AB98-9196-44C4-B888-D5E409F415A1}
 		{105EA346-766E-45B8-928B-DE6991DCB7EB} = {9293CA11-360A-4C20-A674-B9E794431BF5}
+		{E2186FDA-D827-4781-8663-130AC382F12C} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {192E9BF8-00B4-45E4-BCCC-4C215725C869}

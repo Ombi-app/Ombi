@@ -47,7 +47,7 @@ namespace Ombi.Notifications
 
             body = ReplaceFields(bodyFields, parameters, body);
             subject = ReplaceFields(subjectFields, parameters, subject);
-            return new NotificationMessageContent { Message = body ?? string.Empty, Subject = subject ?? string.Empty};
+            return new NotificationMessageContent { Message = body ?? string.Empty, Subject = subject ?? string.Empty, Data = parameters };
         }
 
         public IEnumerable<string> ProcessConditions(IEnumerable<string> conditionalFields, IReadOnlyDictionary<string, string> parameters)

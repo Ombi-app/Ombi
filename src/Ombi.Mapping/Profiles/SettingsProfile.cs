@@ -20,6 +20,7 @@ namespace Ombi.Mapping.Profiles
             CreateMap<MobileNotificationsViewModel, MobileNotificationSettings>().ReverseMap();
             CreateMap<NewsletterNotificationViewModel, NewsletterSettings>().ReverseMap();
             CreateMap<GotifyNotificationViewModel, GotifySettings>().ReverseMap();
+            CreateMap<WebhookNotificationViewModel, WebhookSettings>().ReverseMap();
         }
     }
 }

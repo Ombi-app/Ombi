@@ -40,7 +40,7 @@ namespace Ombi.Controllers.External
             IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
             IPlexApi plex, IEmbyApi emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider,
             ICouchPotatoApi cpApi, ITelegramNotification telegram, ISickRageApi srApi, INewsletterJob newsletter, IMobileNotification mobileNotification,
-            ILidarrApi lidarrApi, IGotifyNotification gotifyNotification)
+            ILidarrApi lidarrApi, IGotifyNotification gotifyNotification, IWebhookNotification webhookNotification)
         {
             Service = service;
             DiscordNotification = notification;
@@ -62,6 +62,7 @@ namespace Ombi.Controllers.External
             MobileNotification = mobileNotification;
             LidarrApi = lidarrApi;
             GotifyNotification = gotifyNotification;
+            WebhookNotification = webhookNotification;
         }
 
         private INotificationService Service { get; }
@@ -71,6 +72,7 @@ namespace Ombi.Controllers.External
         private ISlackNotification SlackNotification { get; }
         private IPushoverNotification PushoverNotification { get; }
         private IGotifyNotification GotifyNotification { get; }
+        private IWebhookNotification WebhookNotification { get; }
         private IMattermostNotification MattermostNotification { get; }
         private IPlexApi PlexApi { get; }
         private IRadarrApi RadarrApi { get; }
@@ -176,6 +178,30 @@ namespace Ombi.Controllers.External
             catch (Exception e)
             {
                 Log.LogError(LoggingEvents.Api, e, "Could not test Gotify");
+                return false;
+            }
+
+        }
+
+        /// <summary>
+        /// Sends a test message to configured webhook using the provided settings
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("webhook")]
+        public bool Webhook([FromBody] WebhookSettings settings)
+        {
+            try
+            {
+                settings.Enabled = true;
+                WebhookNotification.NotifyAsync(
+                    new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test your webhook");
                 return false;
             }
 
