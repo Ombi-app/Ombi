@@ -162,38 +162,8 @@ export class DiscoverComponent implements OnInit {
     }
 
     private createInitialModel() {
-        this.movies.forEach(m => {
-            this.discoverResults.push({
-                available: m.available,
-                posterPath: `https://image.tmdb.org/t/p/w300/${m.posterPath}`,
-                requested: m.requested,
-                title: m.title,
-                type: RequestType.movie,
-                id: m.id,
-                url: `http://www.imdb.com/title/${m.imdbId}/`,
-                rating: m.voteAverage,
-                overview: m.overview,
-                approved: m.approved,
-                imdbid: m.imdbId
-            });
-        });
-        this.tvShows.forEach(m => {
-            this.discoverResults.push({
-                available: m.available,
-                posterPath: "../../../images/default_tv_poster.png",
-                requested: m.requested,
-                title: m.title,
-                type: RequestType.tvShow,
-                id: m.id,
-                url: undefined,
-                rating: +m.rating,
-                overview: m.overview,
-                approved: m.approved,
-                imdbid: m.imdbId
-            });
-        });
-        this.shuffle(this.discoverResults);
-        this.finishLoading();
+        this.clear();
+        this.createModel();
     }
 
     private shuffle(discover: IDiscoverCardResult[]): IDiscoverCardResult[] {
