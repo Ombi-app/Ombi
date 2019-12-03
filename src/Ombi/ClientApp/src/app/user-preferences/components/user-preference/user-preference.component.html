@@ -11,5 +11,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    
+  <qrcode *ngIf="qrCodeEnabled" [qrdata]="qrCode" [size]="256" [level]="'L'"></qrcode> 
   </div>
 </div>

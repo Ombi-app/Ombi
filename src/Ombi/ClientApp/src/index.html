@@ -30,6 +30,7 @@ function configExists(url) {
     }
   }
   var basePathToUse = basePath.substring(0, basePath.length - 1); // trim off the trailing '/'
+  basePathToUse == '' ? '/' : basePathToUse; 
   window["baseHref"] = configFound ? basePathToUse : '/';
   
   document.write("<base href='" + (configFound ? basePath : '/') + "' />");

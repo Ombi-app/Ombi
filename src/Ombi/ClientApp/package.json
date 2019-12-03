@@ -35,6 +35,7 @@
     "angular-bootstrap-md": "^7.5.4",
     "angular-router-loader": "^0.8.5",
     "angular2-template-loader": "^0.6.2",
+    "angularx-qrcode": "^1.7.0-beta.5",
     "aspnet-prerendering": "^3.0.1",
     "awesome-typescript-loader": "^5.2.0",
     "bootstrap": "^4.2.1",
