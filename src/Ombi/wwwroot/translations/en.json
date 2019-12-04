@@ -207,6 +207,8 @@
     "VideosTitle": "Videos",
     "AlbumsTitle":"Albums",
     "RequestAllAlbums":"Request All Albums",
+    "ClearSelection":"Clear Selection",
+    "RequestSelectedAlbums":"Request Selected Albums",
     "Casts": {
       "CastTitle": "Cast",
       "Character": "Character",

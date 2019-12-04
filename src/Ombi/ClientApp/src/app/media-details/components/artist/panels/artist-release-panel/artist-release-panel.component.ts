@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation, OnChanges, SimpleChanges } from "@angular/core";
+import { Component, Input, ViewEncapsulation, OnChanges, SimpleChanges, EventEmitter, Output } from "@angular/core";
 import { IReleaseGroups } from "../../../../../interfaces/IMusicSearchResultV2";
 import { SearchV2Service } from "../../../../../services/searchV2.service";
 
@@ -10,6 +10,8 @@ import { SearchV2Service } from "../../../../../services/searchV2.service";
 })
 export class ArtistReleasePanel implements OnChanges {
     @Input() public releases: IReleaseGroups[];
+    @Output() public onAlbumSelect = new EventEmitter<IReleaseGroups>();
+    @Output() public albumLoad = new EventEmitter<IReleaseGroups[]>();
 
     public albums: IReleaseGroups[];
 
@@ -24,6 +26,14 @@ export class ArtistReleasePanel implements OnChanges {
         this.loadAlbums();
     }
 
+    public selectAlbum(album: IReleaseGroups) {
+        if(album.monitored) {
+            return;
+        }
+        album.selected = !album.selected;
+        this.onAlbumSelect.emit(album);
+    }
+
     private loadAlbums(): void {
         if (this.releases) {
             this.albums = this.releases.filter(x => x.releaseType === "Album");
@@ -34,6 +44,7 @@ export class ArtistReleasePanel implements OnChanges {
             this.albums.forEach(a => {
                 this.searchService.getReleaseGroupArt(a.id).subscribe(x => a.image = x.image);
             });
+            this.albumLoad.emit(this.albums);
         }
     }
 

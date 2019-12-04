@@ -28,12 +28,15 @@
 
         <div class="col-12 col-lg-6 col-xl-6 media-row">
 
-          <button mat-raised-button class="btn-spacing" color="primary" (click)="requestAllAlbums()">
-            <i
-               class="fa fa-plus"></i> {{
-            'MediaDetails.RequestAllAlbums' | translate }}</button>
+          <button mat-raised-button *ngIf="selectedAlbums.length === 0" class="btn-spacing" color="primary" (click)="requestAllAlbums()">
+            <i class="fa fa-plus"></i> {{ 'MediaDetails.RequestAllAlbums' | translate }}</button>
+            <button mat-raised-button *ngIf="selectedAlbums.length > 0" class="btn-spacing" color="primary" (click)="requestAllAlbums()">
+              <i class="fa fa-plus"></i> {{ 'MediaDetails.RequestSelectedAlbums' | translate }}</button>
 
-          <!-- <button mat-raised-button class="btn-green btn-spacing" *ngIf="movie.available"> {{
+              <button mat-raised-button *ngIf="selectedAlbums.length > 0" class="btn-spacing" color="accent" (click)="clearSelection()">
+                <i class="fa fa-minus"></i> {{ 'MediaDetails.ClearSelection' | translate }}</button>
+
+          <!-- <button mat-raised-button class="btn-green btn-spacing" *ngIf="movie.available"> {{ 
             'Common.Available' | translate }}</button> -->
           <!-- <span *ngIf="!movie.available">
             <span *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></span>
@@ -107,7 +110,8 @@
 
           <div class="row">
             <div class="col-12">
-             <artist-release-panel *ngIf="artist.releaseGroups.length > 0" [releases]="artist.releaseGroups"></artist-release-panel>
+             <artist-release-panel (onAlbumSelect)="albumSelected($event)"
+             (albumLoad)="albumLoad($event)" *ngIf="artist.releaseGroups.length > 0" [releases]="artist.releaseGroups"></artist-release-panel>
             </div>
           </div>
 
