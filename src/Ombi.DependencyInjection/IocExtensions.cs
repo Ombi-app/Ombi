@@ -101,7 +101,7 @@ namespace Ombi.DependencyInjection
         public static void RegisterHttp(this IServiceCollection services)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped<IPrincipal>(sp => sp.GetService<IHttpContextAccessor>().HttpContext.User);
+            services.AddScoped<IPrincipal>(sp => sp.GetService<IHttpContextAccessor>().HttpContext?.User);
         }
 
         public static void RegisterApi(this IServiceCollection services)

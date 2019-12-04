@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Authentication;
+using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Settings;
 using Ombi.DependencyInjection;
 using Ombi.Extensions;
@@ -24,7 +25,7 @@ using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Serilog;
-using SQLitePCL;
+using Ombi.Api.Telegram;
 using ILogger = Serilog.ILogger;
 
 namespace Ombi
@@ -95,6 +96,18 @@ namespace Ombi
                     .AllowAnyMethod()
                     .AllowAnyHeader();
             }));
+
+            services.AddTelegramCallbacks(
+                provider => provider.GetRequiredService<IMovieRequestEngine>(),
+                async (engine, id) => await engine.ApproveMovieById(id),
+                async (engine, id) => await engine.DenyMovieById(id, string.Empty),
+
+                provider => provider.GetRequiredService<ITvRequestEngine>(),
+                async (engine, id) => await engine.ApproveChildRequest(id),
+                async (engine, id) => await engine.DenyChildRequest(id, string.Empty),
+
+                result => result.Message ?? result.ErrorMessage
+            );
 
             // Build the intermediate service provider
             return services.BuildServiceProvider();

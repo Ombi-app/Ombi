@@ -18,6 +18,7 @@ namespace Ombi.Notifications
         {
             LoadIssues(opts);
 
+            ItemId = req.Id.ToString();
             string title;
             if (req == null)
             {
@@ -68,6 +69,7 @@ namespace Ombi.Notifications
         {
             LoadIssues(opts);
 
+            ItemId = req.Id.ToString();
             string title;
             if (req == null)
             {
@@ -114,6 +116,8 @@ namespace Ombi.Notifications
         public void Setup(NotificationOptions opts, ChildRequests req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
+
+            ItemId = req.Id.ToString();
             string title;
             if (req == null)
             {
@@ -216,6 +220,7 @@ namespace Ombi.Notifications
         }
 
         // User Defined
+        public string ItemId { get; set; }
         public string RequestedUser { get; set; }
         public string UserName { get; set; }
         public string IssueUser => UserName;
@@ -248,6 +253,7 @@ namespace Ombi.Notifications
 
         public Dictionary<string, string> Curlys => new Dictionary<string, string>
         {
+            {nameof(ItemId), ItemId },
             {nameof(RequestedUser), RequestedUser },
             {nameof(Title), Title },
             {nameof(RequestedDate), RequestedDate },

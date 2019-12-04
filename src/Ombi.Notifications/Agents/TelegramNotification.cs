@@ -10,6 +10,8 @@ using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
 using Ombi.Api.Telegram;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Ombi.Notifications.Agents
 {
@@ -83,7 +85,7 @@ namespace Ombi.Notifications.Agents
         {
             try
             {
-                await Api.Send(model.Message, settings.BotApi, settings.ChatId, settings.ParseMode);
+                await Api.Send(model.Message, settings.BotApi, settings.ChatId, settings.ParseMode, model.Data);
             }
             catch (Exception e)
             {
@@ -97,6 +99,13 @@ namespace Ombi.Notifications.Agents
             var notification = new NotificationMessage
             {
                 Message = message,
+                Data = new Dictionary<string, string>
+                {
+                    [nameof(NotificationType)] = NotificationType.NewRequest.ToString(),
+                    [nameof(NotificationMessageCurlys.PosterImage)] = "https://image.tmdb.org/t/p/w300//btTdmkgIvOi0FFip1sPuZI2oQG6.jpg",
+                    [nameof(NotificationMessageCurlys.Type)] = RequestType.Movie.ToString(),
+                    [nameof(NotificationMessageCurlys.ItemId)] = 0.ToString(),
+                }
             };
             await Send(notification, settings);
         }
@@ -109,10 +118,15 @@ namespace Ombi.Notifications.Agents
                 Logger.LogInformation($"Template {type} is disabled for {NotificationAgent.Telegram}");
                 return;
             }
+
+            var notificationData = parsed.Data.ToDictionary(x => x.Key, x => x.Value);
+            notificationData[nameof(NotificationType)] = type.ToString();
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
+                Data = notificationData,
             };
+
             await Send(notification, settings);
         }
     }
