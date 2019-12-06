@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Ombi.Api.FanartTv;
 using Ombi.Config;
+using Ombi.Core;
 using Ombi.Helpers;
 using Ombi.Store.Repository;
 
@@ -16,18 +17,20 @@ namespace Ombi.Controllers.V1
     public class ImagesController : ControllerBase
     {
         public ImagesController(IFanartTvApi fanartTvApi, IApplicationConfigRepository config,
-            IOptions<LandingPageBackground> options, ICacheService c)
+            IOptions<LandingPageBackground> options, ICacheService c, IImageService imageService)
         {
             FanartTvApi = fanartTvApi;
             Config = config;
             Options = options.Value;
             _cache = c;
+            _imageService = imageService;
         }
 
         private IFanartTvApi FanartTvApi { get; }
         private IApplicationConfigRepository Config { get; }
         private LandingPageBackground Options { get; }
         private readonly ICacheService _cache;
+        private readonly IImageService _imageService;
 
         [HttpGet("tv/{tvdbid}")]
         public async Task<string> GetTvBanner(int tvdbid)
@@ -179,26 +182,8 @@ namespace Ombi.Controllers.V1
             {
                 return string.Empty;
             }
-            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.GetAsync(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
 
-            var images = await _cache.GetOrAdd($"{CacheKeys.FanartTv}tv{tvdbid}", async () => await FanartTvApi.GetTvImages(tvdbid, key.Value), DateTime.Now.AddDays(1));
-
-            if (images == null)
-            {
-                return string.Empty;
-            }
-
-            if (images.showbackground?.Any() ?? false)
-            {
-                var enImage = images.showbackground.Where(x => x.lang == "en").OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
-                if (enImage == null)
-                {
-                    return images.showbackground.OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
-                }
-                return enImage;
-            }
-
-            return string.Empty;
+            return await _imageService.GetTvBackground(tvdbid.ToString());
         }
 
         [HttpGet("background")]

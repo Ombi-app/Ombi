@@ -19,8 +19,8 @@ import { trigger, transition, style, animate } from "@angular/animations";
 export class DiscoverComponent implements OnInit {
 
     public discoverResults: IDiscoverCardResult[] = [];
-    public movies: ISearchMovieResult[];
-    public tvShows: ISearchTvResult[];
+    public movies: ISearchMovieResult[] = [];
+    public tvShows: ISearchTvResult[] = [];
 
     public defaultTvPoster: string;
 

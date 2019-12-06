@@ -27,11 +27,14 @@ namespace Ombi.Core.Engine
 {
     public class TvSearchEngine : BaseMediaEngine, ITvSearchEngine
     {
+        private readonly IImageService _imageService;
+
         public TvSearchEngine(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
             ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um,
-            ICacheService memCache, ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub)
+            ICacheService memCache, ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub, IImageService imageService)
             : base(identity, service, r, um, memCache, s, sub)
         {
+            _imageService = imageService;
             TvMazeApi = tvMaze;
             Mapper = mapper;
             TraktApi = trakt;
@@ -54,7 +57,7 @@ namespace Ombi.Core.Engine
                     {
                         continue;
                     }
-                    retVal.Add(await ProcessResult(tvMazeSearch));
+                    retVal.Add(await ProcessResult(tvMazeSearch, false));
                 }
                 return retVal;
             }
@@ -66,7 +69,7 @@ namespace Ombi.Core.Engine
             var show = await Cache.GetOrAdd(nameof(GetShowInformation) + tvdbid,
                 async () => await TvMazeApi.ShowLookupByTheTvDbId(tvdbid), DateTime.Now.AddHours(12));
             if (show == null)
-            { 
+            {
                 // We don't have enough information
                 return null;
             }
@@ -113,7 +116,7 @@ namespace Ombi.Core.Engine
                     });
                 }
             }
-            return await ProcessResult(mapped);
+            return await ProcessResult(mapped, false);
         }
 
         public async Task<IEnumerable<SearchTvShowViewModel>> Popular()
@@ -123,7 +126,7 @@ namespace Ombi.Core.Engine
             return await processed;
         }
 
-        public async Task<IEnumerable<SearchTvShowViewModel>> Popular(int currentlyLoaded, int amountToLoad)
+        public async Task<IEnumerable<SearchTvShowViewModel>> Popular(int currentlyLoaded, int amountToLoad, bool includeImages = false)
         {
             var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
             var results = new List<TraktShow>();
@@ -133,7 +136,8 @@ namespace Ombi.Core.Engine
                     async () => await TraktApi.GetPopularShows(pagesToLoad.Page, ResultLimit), DateTime.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
-            var processed = ProcessResults(results);
+
+            var processed = ProcessResults(results, includeImages);
             return await processed;
         }
 
@@ -150,7 +154,7 @@ namespace Ombi.Core.Engine
             var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
             var results = new List<TraktShow>();
             foreach (var pagesToLoad in pages)
-            { 
+            {
                 var apiResult = await Cache.GetOrAdd(nameof(Anticipated) + pagesToLoad.Page,
                     async () => await TraktApi.GetAnticipatedShows(pagesToLoad.Page, ResultLimit), DateTime.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
@@ -181,26 +185,35 @@ namespace Ombi.Core.Engine
             return await processed;
         }
 
-        protected async Task<IEnumerable<SearchTvShowViewModel>> ProcessResults<T>(IEnumerable<T> items)
+        protected async Task<IEnumerable<SearchTvShowViewModel>> ProcessResults<T>(IEnumerable<T> items, bool includeImages = false)
         {
             var retVal = new List<SearchTvShowViewModel>();
             foreach (var tvMazeSearch in items)
             {
-                retVal.Add(await ProcessResult(tvMazeSearch));
+                retVal.Add(await ProcessResult(tvMazeSearch, includeImages));
             }
             return retVal;
         }
 
-        protected async Task<SearchTvShowViewModel> ProcessResult<T>(T tvMazeSearch)
+        protected async Task<SearchTvShowViewModel> ProcessResult<T>(T tvMazeSearch, bool includeImages)
         {
             var mapped = Mapper.Map<SearchTvShowViewModel>(tvMazeSearch);
-            return await ProcessResult(mapped);
+            return await ProcessResult(mapped, includeImages);
         }
 
-        private async Task<SearchTvShowViewModel> ProcessResult(SearchTvShowViewModel item)
+        private async Task<SearchTvShowViewModel> ProcessResult(SearchTvShowViewModel item, bool includeImages)
         {
             item.TheTvDbId = item.Id.ToString();
-            
+            if (includeImages)
+            {
+
+                    if (item.TheTvDbId.HasValue())
+                    {
+                        item.BackdropPath = await _imageService.GetTvBackground(item.TheTvDbId);
+                    }
+
+            }
+
             await RunSearchRules(item);
 
             return item;

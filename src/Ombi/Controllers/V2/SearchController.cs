@@ -241,6 +241,19 @@ namespace Ombi.Controllers.V2
         }
 
         /// <summary>
+        /// Returns Popular Tv Shows
+        /// </summary>
+        /// <remarks>We use Trakt.tv as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("tv/popular/{currentPosition}/{amountToLoad}/images")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<IEnumerable<SearchTvShowViewModel>> PopularTvWithImages(int currentPosition, int amountToLoad)
+        {
+            return await _tvSearchEngine.Popular(currentPosition, amountToLoad, true);
+        }
+
+        /// <summary>
         /// Returns most Anticipated tv shows.
         /// </summary>
         /// <remarks>We use Trakt.tv as the Provider</remarks>

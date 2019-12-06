@@ -57,5 +57,10 @@ namespace Ombi.Core.Models.Search
         // We only have some episodes
         public bool PartlyAvailable { get; set; }
         public override RequestType Type => RequestType.TvShow;
+
+        /// <summary>
+        /// Only set on the images call
+        /// </summary>
+        public string BackdropPath { get; set; }
     }
 }
