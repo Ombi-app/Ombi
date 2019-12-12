@@ -239,6 +239,7 @@
   },
   "UserPreferences": {
     "Welcome":"Welcome {{username}}!",
-    "OmbiLanguage":"Ombi Language"
+    "OmbiLanguage":"Language",
+    "DarkMode":"Dark Mode"
   }
 }

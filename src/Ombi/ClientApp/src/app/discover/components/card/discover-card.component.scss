@@ -21,12 +21,20 @@ $card-background: #2b2b2b;
 }
 
 $border-width: 3px;
-.movie-image {
-    border-bottom: $border-width orange solid;
+
+.available {
+    border-bottom: $border-width #1DE9B6 solid;
 }
 
-.tv-image {
-    border-bottom: $border-width #1DE9B6 solid;
+.approved {
+    border-bottom: $border-width #ff5722 solid;
+}
+
+.requested {
+    border-bottom: $border-width #ffd740 solid;
+}
+.notrequested {
+    border-bottom: $border-width #303030 solid;
 }
 
 .expand {

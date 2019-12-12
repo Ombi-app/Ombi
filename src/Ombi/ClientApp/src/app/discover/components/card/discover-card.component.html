@@ -1,7 +1,7 @@
 <div class="card-spacing" *ngIf="result">
     <mat-card class="mat-elevation-z8 dark-card grow">
         <a [routerLink]="result.type === RequestType.movie ? '/details/movie/' + result.id : '/details/tv/' + result.id">
-            <img id="cardImage" mat-card-image src="{{result.posterPath}}" class="card-poster" [ngClass]="(result.type === RequestType.movie)?'movie-image':'tv-image'" alt="{{result.title}}">
+            <img id="cardImage" mat-card-image src="{{result.posterPath}}" class="card-poster" [ngClass]="getStatusClass()" alt="{{result.title}}">
         </a>
         <mat-card-content>
 

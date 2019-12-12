@@ -28,7 +28,6 @@ export class UserPreferenceComponent implements OnInit {
         if (user.name) {
             this.username = user.name;
         }
-debugger;
         const customization = await this.settingsService.getCustomization().toPromise();
 
         const accessToken = await this.identityService.getAccessToken().toPromise();

@@ -1,6 +1,8 @@
 ﻿import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router"
-/*import { QRCodeModule } from 'angularx-qrcode';*/
+import { QRCodeModule } from 'angularx-qrcode';
+
+import { MatCheckboxModule } from '@angular/material';
 
 import { SharedModule } from "../shared/shared.module";
 
@@ -11,7 +13,8 @@ import * as fromComponents from './components';
     imports: [
         RouterModule.forChild(fromComponents.routes),
         SharedModule,
-       /* QRCodeModule,*/
+        QRCodeModule,
+        MatCheckboxModule,
     ],
     declarations: [
         ...fromComponents.components
@@ -20,7 +23,7 @@ import * as fromComponents from './components';
         RouterModule,
     ],
     providers: [
-        ],
+    ],
 
 })
 export class UserPreferencesModule { }

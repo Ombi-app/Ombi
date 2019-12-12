@@ -2,8 +2,9 @@
     placeholder="{{'NavigationBar.Search' | translate}}" aria-label="Search" [ngbTypeahead]="searchModel"
     [resultFormatter]="formatter" [inputFormatter]="formatter" [resultTemplate]="template" (selectItem)="selected($event)">
 
-<ng-template #template let-result="result">
 
+    
+<ng-template #template let-result="result">
     <div *ngIf="result.mediaType === 'movie'">
         <i class="fa fa-film"></i> &nbsp;
         <span >{{result.title}}</span>
@@ -26,6 +27,4 @@
 </div>
     <!-- Collection -->
     <!-- <i class="fa fa-file-video-o" aria-hidden="true"></i> -->
-
-
 </ng-template>
