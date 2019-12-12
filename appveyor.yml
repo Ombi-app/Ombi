@@ -17,7 +17,7 @@ install:
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
 
-  - cmd: set path=%programfiles(x86)%\\Microsoft SDKs\TypeScript\3.1;%path%
+  - cmd: set path=%programfiles(x86)%\\Microsoft SDKs\TypeScript\3.6;%path%
   - cmd: tsc -v
 build_script:
   - ps: |
