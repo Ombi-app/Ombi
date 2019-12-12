@@ -3,7 +3,7 @@ configuration: Release
 os: Visual Studio 2019
 
 environment:
-  nodejs_version: "11.5.0"
+  nodejs_version: "12.13.1"
   typescript_version: "3.0.1"  
   github_auth_token:
     secure: H/7uCrjmWHGJxgN3l9fbhhdVjvvWI8VVF4ZzQqeXuJwAf+PgSNBdxv4SS+rMQ+RH
@@ -17,7 +17,7 @@ install:
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
 
-  - cmd: set path=%programfiles(x86)%\\Microsoft SDKs\TypeScript\3.6;%path%
+  - cmd: set path=%programfiles(x86)%\\Microsoft SDKs\TypeScript\3.1;%path%
   - cmd: tsc -v
 build_script:
   - ps: |
