@@ -4,7 +4,8 @@ os: Visual Studio 2019
 
 environment:
   nodejs_version: "12.13.1"
-  typescript_version: "3.0.1"  
+  typescript_version: "3.0.1"
+  APPVEYOR_RDP_PASSWORD: "Password10!"
   github_auth_token:
     secure: H/7uCrjmWHGJxgN3l9fbhhdVjvvWI8VVF4ZzQqeXuJwAf+PgSNBdxv4SS+rMQ+RH
 
@@ -12,6 +13,9 @@ environment:
     
 # Do not build on tags (GitHub and BitBucket)
 skip_tags: true
+
+init:
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 install:
   # Get the latest stable version of Node.js or io.js
