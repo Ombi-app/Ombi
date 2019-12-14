@@ -13,15 +13,12 @@ environment:
 # Do not build on tags (GitHub and BitBucket)
 skip_tags: true
 
-init:
-  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-
 install:
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
 
-  - cmd: set path=%programfiles(x86)%\\Microsoft SDKs\TypeScript\3.6;%path%
-  - cmd: tsc -v
+#  - cmd: set path=%programfiles(x86)%\\Microsoft SDKs\TypeScript\3.6;%path%
+#  - cmd: tsc -v
 build_script:
   - ps: |
       $deployBranches =
@@ -73,6 +70,3 @@ deploy:
   draft: true
   on:
     branch: master
-
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
