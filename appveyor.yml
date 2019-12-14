@@ -5,7 +5,6 @@ os: Visual Studio 2019
 environment:
   nodejs_version: "12.13.1"
   typescript_version: "3.0.1"
-  APPVEYOR_RDP_PASSWORD: "Password10!"
   github_auth_token:
     secure: H/7uCrjmWHGJxgN3l9fbhhdVjvvWI8VVF4ZzQqeXuJwAf+PgSNBdxv4SS+rMQ+RH
 
@@ -74,3 +73,6 @@ deploy:
   draft: true
   on:
     branch: master
+
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
