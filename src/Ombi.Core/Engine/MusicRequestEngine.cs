@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -69,12 +70,6 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            if(album?.artist == null)
-            {
-                // Lookup the artist
-                //album.artist = await _lidarrApi.ArtistLookup(album.artist, s.ApiKey, s.FullUri);
-            }
-
             var userDetails = await GetUser();
 
             var requestModel = new AlbumRequest
@@ -131,7 +126,6 @@ namespace Ombi.Core.Engine
 
             return await AddAlbumRequest(requestModel);
         }
-
 
         /// <summary>
         /// Gets the requests.
