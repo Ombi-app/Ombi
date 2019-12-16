@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Threading;
 using AutoFixture;
 using Hqub.MusicBrainz.API.Entities;
 using Moq;
@@ -172,7 +173,7 @@ namespace Ombi.Core.Tests.Engine.V2
                 ApiKey = "dasdsa",
                 Ip = "192.168.1.7"
             });
-            _lidarrApi.Setup(x => x.GetArtistByForeignId(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+            _lidarrApi.Setup(x => x.GetArtistByForeignId(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None))
                 .ReturnsAsync(new ArtistResult
                 {
                     images = new Image[]

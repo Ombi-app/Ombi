@@ -4,16 +4,19 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-- master
-- feature/v4
-- develop
+  branches:
+    include:
+    - feature/*
+    exclude:
+    - develop
+    - master
 
 variables:
   solution: '**/*.sln'
   testProj: '**/*.Tests.csproj'
   csProj: '**/*.csproj'
   buildConfiguration: 'Release'
-  publishLocation: '$(Build.SourcesDirectory)/src/Ombi/bin/Release/netcoreapp2.2'
+  publishLocation: '$(Build.SourcesDirectory)/src/Ombi/bin/Release/netcoreapp3.0'
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -27,7 +30,7 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      cd src/Ombi/bin/Release/netcoreapp2.2
+      cd src/Ombi/bin/Release/netcoreapp3.0
       
       ls
     workingDirectory: '$(Build.SourcesDirectory)'
