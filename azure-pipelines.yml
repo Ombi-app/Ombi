@@ -1,3 +1,6 @@
+
+
+
 # ASP.NET Core
 # Build and test ASP.NET Core projects targeting .NET Core.
 # Add steps that run tests, create a NuGet package, deploy, and more:
@@ -23,64 +26,15 @@ pool:
 
 
 steps:
-- task: CmdLine@2
-  displayName: Run Build Script
+- task: DotNetCoreCLI@2
+  displayName: Run Unit Tests
   inputs:
-    script: './build.sh'
-- task: CmdLine@2
-  inputs:
-    script: |
-      cd src/Ombi/bin/Release/netcoreapp3.0
-      
-      ls
-    workingDirectory: '$(Build.SourcesDirectory)'
-- task: CopyFiles@2
-  displayName: Upload Windows Build
-  inputs:
-    SourceFolder: '$(publishLocation)/windows.zip'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-    OverWrite: true
+    command: 'test'
+    projects: '**/*Tests.csproj'
 
-- task: CopyFiles@2
-  displayName: Upload OSX Build
+- task: DotNetCoreCLI@2
+  displayName: Publish Win10-x64
   inputs:
-    SourceFolder: '**/osx.tar.gz'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-    OverWrite: true
-
-- task: CopyFiles@2
-  displayName: Upload Linux Build
-  inputs:
-    SourceFolder: '$(publishLocation)/linux.tar.gz'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-    OverWrite: true
-
-- task: CopyFiles@2
-  displayName: Upload Linux-ARM Build
-  inputs:
-    SourceFolder: '$(publishLocation)/linux-arm.tar.gz'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-    OverWrite: true
-
-- task: CopyFiles@2
-  displayName: Upload Windows 32Bit Build
-  inputs:
-    SourceFolder: '$(publishLocation)/windows-32bit.zip'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-    OverWrite: true
-
-- task: CopyFiles@2
-  displayName: Upload Linux-ARM64 Build
-  inputs:
-    SourceFolder: '$(publishLocation)/linux-arm64.tar.gz'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-    OverWrite: true
-
-- task: PublishTestResults@2
-  displayName: Upload Test Results
-  inputs:
-    testResultsFormat: 'VSTest'
-    testResultsFiles: '**/Test.trx'
-    mergeTestResults: true
-    failTaskOnFailedTests: true
-    testRunTitle: 'Unit Tests'
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '-c ${{ buildConfiguration }} -r "win10-x64"'
