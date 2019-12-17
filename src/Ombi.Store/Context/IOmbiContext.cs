@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
+using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Store.Context
 {
@@ -27,6 +28,7 @@ namespace Ombi.Store.Context
         DbSet<AlbumRequest> AlbumRequests { get; set; }
         DbSet<TvRequests> TvRequests { get; set; }
         DbSet<ChildRequests> ChildRequests { get; set; }
+        DbSet<EpisodeRequests> EpisodeRequests { get; set; }
         DbSet<Issues> Issues { get; set; }
         DbSet<IssueCategory> IssueCategories { get; set; }
         DbSet<Tokens> Tokens { get; set; }
