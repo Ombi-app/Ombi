@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Security.Principal;
-using Hangfire;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -33,6 +32,7 @@ using Ombi.Api.DogNzb;
 using Ombi.Api.FanartTv;
 using Ombi.Api.Github;
 using Ombi.Api.Gotify;
+using Ombi.Api.Webhook;
 using Ombi.Api.Lidarr;
 using Ombi.Api.Mattermost;
 using Ombi.Api.Notifications;
@@ -123,6 +123,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IFanartTvApi, FanartTvApi>();
             services.AddTransient<IPushoverApi, PushoverApi>();
             services.AddTransient<IGotifyApi, GotifyApi>();
+            services.AddTransient<IWebhookApi, WebhookApi>();
             services.AddTransient<IMattermostApi, MattermostApi>();
             services.AddTransient<ICouchPotatoApi, CouchPotatoApi>();
             services.AddTransient<IDogNzbApi, DogNzbApi>();
@@ -135,13 +136,13 @@ namespace Ombi.DependencyInjection
         }
 
         public static void RegisterStore(this IServiceCollection services) { 
-            services.AddDbContext<OmbiContext>();
-            services.AddDbContext<SettingsContext>();
-            services.AddDbContext<ExternalContext>();
+            //services.AddDbContext<OmbiContext>();
+            //services.AddDbContext<SettingsContext>();
+            //services.AddDbContext<ExternalContext>();
             
-            services.AddScoped<IOmbiContext, OmbiContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
-            services.AddScoped<ISettingsContext, SettingsContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
-            services.AddScoped<IExternalContext, ExternalContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
+            //services.AddScoped<OmbiContext, OmbiContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
+            //services.AddScoped<ISettingsContext, SettingsContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
+            //services.AddScoped<ExternalContext, ExternalContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
             services.AddScoped<ISettingsRepository, SettingsJsonRepository>();
             services.AddScoped<ISettingsResolver, SettingsResolver>();
             services.AddScoped<IPlexContentRepository, PlexServerContentRepository>();
@@ -174,6 +175,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMattermostNotification, MattermostNotification>();
             services.AddTransient<IPushoverNotification, PushoverNotification>();
             services.AddTransient<IGotifyNotification, GotifyNotification>();
+            services.AddTransient<IWebhookNotification, WebhookNotification>();
             services.AddTransient<ITelegramNotification, TelegramNotification>();
             services.AddTransient<IMobileNotification, MobileNotification>();
             services.AddTransient<IChangeLogProcessor, ChangeLogProcessor>();
@@ -181,8 +183,8 @@ namespace Ombi.DependencyInjection
 
         public static void RegisterJobs(this IServiceCollection services)
         {
-            services.AddSingleton<IJobFactory, IoCJobFactory>(provider => new IoCJobFactory(provider));
-            services.AddTransient<IBackgroundJobClient, BackgroundJobClient>();
+            services.AddSingleton<QuartzJobRunner>();
+            services.AddSingleton<IJobFactory, IoCJobFactory>();
 
             services.AddTransient<IPlexContentSync, PlexContentSync>();
             services.AddTransient<IEmbyContentSync, EmbyContentSync>();

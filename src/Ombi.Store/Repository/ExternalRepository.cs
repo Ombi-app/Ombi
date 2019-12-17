@@ -3,9 +3,9 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public class ExternalRepository<T> : BaseRepository<T, IExternalContext>, IExternalRepository<T> where T : Entity
+    public class ExternalRepository<T> : BaseRepository<T, ExternalContext>, IExternalRepository<T> where T : Entity
     {
-        public ExternalRepository(IExternalContext ctx) : base(ctx)
+        public ExternalRepository(ExternalContext ctx) : base(ctx)
         {
         }
     }

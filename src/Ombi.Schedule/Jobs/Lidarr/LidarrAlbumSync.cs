@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
@@ -17,22 +16,20 @@ namespace Ombi.Schedule.Jobs.Lidarr
 {
     public class LidarrAlbumSync : ILidarrAlbumSync
     {
-        public LidarrAlbumSync(ISettingsService<LidarrSettings> lidarr, ILidarrApi lidarrApi, ILogger<LidarrAlbumSync> log, IExternalContext ctx,
-            IBackgroundJobClient job, ILidarrAvailabilityChecker availability)
+        public LidarrAlbumSync(ISettingsService<LidarrSettings> lidarr, ILidarrApi lidarrApi, ILogger<LidarrAlbumSync> log, ExternalContext ctx,
+             ILidarrAvailabilityChecker availability)
         {
             _lidarrSettings = lidarr;
             _lidarrApi = lidarrApi;
             _logger = log;
             _ctx = ctx;
-            _job = job;
             _availability = availability;
         }
 
         private readonly ISettingsService<LidarrSettings> _lidarrSettings;
         private readonly ILidarrApi _lidarrApi;
         private readonly ILogger _logger;
-        private readonly IExternalContext _ctx;
-        private readonly IBackgroundJobClient _job;
+        private readonly ExternalContext _ctx;
         private readonly ILidarrAvailabilityChecker _availability;
         
         public async Task CacheContent()
@@ -87,7 +84,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
                         _logger.LogError(LoggingEvents.Cacher, ex, "Failed caching queued items from Lidarr Album");
                     }
 
-                    _job.Enqueue(() => _availability.Start());
+                    await _availability.Start();
                 }
             }
             catch (Exception)

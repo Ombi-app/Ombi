@@ -32,9 +32,11 @@ import {
     ISlackNotificationSettings,
     ISonarrSettings,
     ITelegramNotifcationSettings,
+    ITheMovieDbSettings,
     IUpdateSettings,
     IUserManagementSettings,
     IVoteSettings,
+    IWebhookNotificationSettings,
 } from "../interfaces";
 
 import { ServiceHelpers } from "./service.helpers";
@@ -191,6 +193,14 @@ export class SettingsService extends ServiceHelpers {
             .post<boolean>(`${this.url}/notifications/gotify`, JSON.stringify(settings), { headers: this.headers });
     }
 
+    public getWebhookNotificationSettings(): Observable<IWebhookNotificationSettings> {
+        return this.http.get<IWebhookNotificationSettings>(`${this.url}/notifications/webhook`, { headers: this.headers });
+    }
+    public saveWebhookNotificationSettings(settings: IWebhookNotificationSettings): Observable<boolean> {
+        return this.http
+            .post<boolean>(`${this.url}/notifications/webhook`, JSON.stringify(settings), { headers: this.headers });
+    }
+
     public getSlackNotificationSettings(): Observable<ISlackNotificationSettings> {
         return this.http.get<ISlackNotificationSettings>(`${this.url}/notifications/slack`, {headers: this.headers});
     }
@@ -299,6 +309,14 @@ export class SettingsService extends ServiceHelpers {
 
     public saveVoteSettings(settings: IVoteSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}/vote`, JSON.stringify(settings), {headers: this.headers});
+    }
+
+    public getTheMovieDbSettings(): Observable<ITheMovieDbSettings> {
+        return this.http.get<ITheMovieDbSettings>(`${this.url}/themoviedb`, {headers: this.headers});
+    }
+
+    public saveTheMovieDbSettings(settings: ITheMovieDbSettings) {
+        return this.http.post<boolean>(`${this.url}/themoviedb`, JSON.stringify(settings), {headers: this.headers});
     }
 
     public getNewsletterSettings(): Observable<INewsletterNotificationSettings> {

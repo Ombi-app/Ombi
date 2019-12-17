@@ -314,7 +314,7 @@ namespace Ombi.Core.Engine
             request.Denied = true;
             request.DeniedReason = reason;
             // We are denying a request
-            NotificationHelper.Notify(request, NotificationType.RequestDeclined);
+            await NotificationHelper.Notify(request, NotificationType.RequestDeclined);
             await MusicRepository.Update(request);
 
             return new RequestEngineResult
@@ -342,7 +342,7 @@ namespace Ombi.Core.Engine
             var canNotify = await RunSpecificRule(request, SpecificRules.CanSendNotification);
             if (canNotify.Success)
             {
-                NotificationHelper.Notify(request, NotificationType.RequestApproved);
+                await NotificationHelper.Notify(request, NotificationType.RequestApproved);
             }
 
             if (request.Approved)
@@ -469,7 +469,7 @@ namespace Ombi.Core.Engine
 
             request.Available = true;
             request.MarkedAsAvailable = DateTime.Now;
-            NotificationHelper.Notify(request, NotificationType.RequestAvailable);
+            await NotificationHelper.Notify(request, NotificationType.RequestAvailable);
             await MusicRepository.Update(request);
 
             return new RequestEngineResult
@@ -486,7 +486,7 @@ namespace Ombi.Core.Engine
             var result = await RunSpecificRule(model, SpecificRules.CanSendNotification);
             if (result.Success)
             {
-                NotificationHelper.NewRequest(model);
+                await NotificationHelper.NewRequest(model);
             }
 
             await _requestLog.Add(new RequestLog

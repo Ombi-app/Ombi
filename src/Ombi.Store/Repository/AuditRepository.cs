@@ -9,12 +9,12 @@ namespace Ombi.Store.Repository
 {
     public class AuditRepository : IAuditRepository
     {
-        public AuditRepository(IOmbiContext ctx)
+        public AuditRepository(OmbiContext ctx)
         {
             Ctx = ctx;
         }
 
-        private IOmbiContext Ctx { get; }
+        private OmbiContext Ctx { get; }
 
 
         public async Task Record(AuditType type, AuditArea area, string description)

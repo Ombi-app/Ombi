@@ -29,7 +29,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
@@ -108,9 +107,8 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
-                Logger.LogInformation("Starting Metadata refresh");
-                // Just check what we send it
-                await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
+                Logger.LogInformation("Kicking off Plex Availability Checker");
+                await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
             }
 
             Logger.LogInformation("Finished Plex Content Cacher, with processed content: {0}, episodes: {1}. Recently Added Scan: {2}", processedContent?.Content?.Count() ?? 0, processedContent?.Episodes?.Count() ?? 0, recentlyAddedSearch);
@@ -648,7 +646,6 @@ namespace Ombi.Schedule.Jobs.Plex
             if (disposing)
             {
                 Plex?.Dispose();
-                Repo?.Dispose();
                 EpisodeSync?.Dispose();
             }
             _disposed = true;

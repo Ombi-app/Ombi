@@ -7,10 +7,8 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AutoMapper;
-using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NCrontab;
 using Ombi.Api.Emby;
 using Ombi.Attributes;
 using Ombi.Core.Models.UI;
@@ -27,7 +25,7 @@ using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Api.Github;
 using Ombi.Core.Engine;
-using Ombi.Schedule;
+using Ombi.Extensions;
 using Quartz;
 
 namespace Ombi.Controllers
@@ -93,15 +91,25 @@ namespace Ombi.Controllers
         [HttpGet("about")]
         public AboutViewModel About()
         {
+            var dbConfiguration = DatabaseExtensions.GetDatabaseConfiguration();
+            var storage = StoragePathSingleton.Instance;
             var model = new AboutViewModel
             {
                 FrameworkDescription = RuntimeInformation.FrameworkDescription,
                 OsArchitecture = RuntimeInformation.OSArchitecture.ToString(),
                 OsDescription = RuntimeInformation.OSDescription,
                 ProcessArchitecture = RuntimeInformation.ProcessArchitecture.ToString(),
-                ApplicationBasePath =Directory.GetCurrentDirectory()
+                ApplicationBasePath = Directory.GetCurrentDirectory(),
+                ExternalConnectionString = dbConfiguration.ExternalDatabase.ConnectionString,
+                ExternalDatabaseType = dbConfiguration.ExternalDatabase.Type,
+                OmbiConnectionString = dbConfiguration.OmbiDatabase.ConnectionString,
+                OmbiDatabaseType = dbConfiguration.OmbiDatabase.Type,
+                SettingsConnectionString = dbConfiguration.SettingsDatabase.ConnectionString,
+                SettingsDatabaseType = dbConfiguration.SettingsDatabase.Type,
+                StoragePath = storage.StoragePath.HasValue() ? storage.StoragePath : "None Specified"
             };
-            
+
+
             var version = AssemblyHelper.GetRuntimeVersion();
             var productArray = version.Split('-');
             model.Version = productArray[0];
@@ -233,8 +241,8 @@ namespace Ombi.Controllers
         [AllowAnonymous]
         public async Task<string> GetDefaultLanguage()
         {
-           var s = await Get<OmbiSettings>();
-           return s.DefaultLanguageCode;
+            var s = await Get<OmbiSettings>();
+            return s.DefaultLanguageCode;
         }
 
         /// <summary>
@@ -431,7 +439,7 @@ namespace Ombi.Controllers
         [HttpGet("Update")]
         public async Task<UpdateSettings> UpdateSettings()
         {
-            var settings =  await Get<UpdateSettings>();
+            var settings = await Get<UpdateSettings>();
 
             return Mapper.Map<UpdateSettingsViewModel>(settings);
         }
@@ -586,7 +594,7 @@ namespace Ombi.Controllers
                         Message = $"CRON Expression {body.Expression} is not valid"
                     };
                 }
-               
+
                 model.Success = true;
                 return model;
             }
@@ -657,6 +665,25 @@ namespace Ombi.Controllers
         {
             var vote = await Get<VoteSettings>();
             return vote.Enabled;
+        }
+
+        /// <summary>
+        /// Save The Movie DB settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        [HttpPost("themoviedb")]
+        public async Task<bool> TheMovieDbSettings([FromBody]TheMovieDbSettings settings)
+        {
+            return await Save(settings);
+        }
+
+        /// <summary>
+        /// Get The Movie DB settings.
+        /// </summary>
+        [HttpGet("themoviedb")]
+        public async Task<TheMovieDbSettings> TheMovieDbSettings()
+        {
+            return await Get<TheMovieDbSettings>();
         }
 
         /// <summary>
@@ -976,6 +1003,33 @@ namespace Ombi.Controllers
 
             // Lookup to see if we have any templates saved
             model.NotificationTemplates = BuildTemplates(NotificationAgent.Gotify);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Saves the webhook notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/webhook")]
+        public async Task<bool> WebhookNotificationSettings([FromBody] WebhookNotificationViewModel model)
+        {
+            var settings = Mapper.Map<WebhookSettings>(model);
+            var result = await Save(settings);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the webhook notification settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/webhook")]
+        public async Task<WebhookNotificationViewModel> WebhookNotificationSettings()
+        {
+            var settings = await Get<WebhookSettings>();
+            var model = Mapper.Map<WebhookNotificationViewModel>(settings);
 
             return model;
         }

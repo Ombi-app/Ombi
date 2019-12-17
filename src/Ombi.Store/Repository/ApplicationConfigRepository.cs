@@ -8,12 +8,12 @@ namespace Ombi.Store.Repository
 {
     public class ApplicationConfigRepository : IApplicationConfigRepository
     {
-        public ApplicationConfigRepository(ISettingsContext ctx)
+        public ApplicationConfigRepository(SettingsContext ctx)
         {
             Ctx = ctx;
         }
 
-        private ISettingsContext Ctx { get; }
+        private SettingsContext Ctx { get; }
 
         public Task<ApplicationConfiguration> GetAsync(ConfigurationTypes type)
         {

@@ -17,7 +17,7 @@ namespace Ombi.Schedule.Jobs.SickRage
 {
     public class SickRageSync : ISickRageSync
     {
-        public SickRageSync(ISettingsService<SickRageSettings> s, ISickRageApi api, ILogger<SickRageSync> l, IExternalContext ctx)
+        public SickRageSync(ISettingsService<SickRageSettings> s, ISickRageApi api, ILogger<SickRageSync> l, ExternalContext ctx)
         {
             _settings = s;
             _api = api;
@@ -29,7 +29,7 @@ namespace Ombi.Schedule.Jobs.SickRage
         private readonly ISettingsService<SickRageSettings> _settings;
         private readonly ISickRageApi _api;
         private readonly ILogger<SickRageSync> _log;
-        private readonly IExternalContext _ctx;
+        private readonly ExternalContext _ctx;
         
         public async Task Execute(IJobExecutionContext job)
         {

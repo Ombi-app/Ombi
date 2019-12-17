@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Ombi.Helpers;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
 
-namespace Ombi.Schedule
+namespace Ombi.Helpers
 {
     public class OmbiQuartz
     {
@@ -78,7 +77,12 @@ namespace Ombi.Schedule
         {
             await Scheduler.TriggerJob(new JobKey(jobName, group));
         }
-        
+
+        public static async Task TriggerJob(string jobName, string group, IDictionary<string, object> data)
+        {
+            await Scheduler.TriggerJob(new JobKey(jobName, group), new JobDataMap(data));
+        }
+
         public static async Task Start()
         {
             await Scheduler.Start();

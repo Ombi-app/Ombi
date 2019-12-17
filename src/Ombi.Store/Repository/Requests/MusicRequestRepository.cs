@@ -11,12 +11,12 @@ namespace Ombi.Store.Repository.Requests
 {
     public class MusicRequestRepository : Repository<AlbumRequest>, IMusicRequestRepository
     {
-        public MusicRequestRepository(IOmbiContext ctx) : base(ctx)
+        public MusicRequestRepository(OmbiContext ctx) : base(ctx)
         {
             Db = ctx;
         }
 
-        private IOmbiContext Db { get; }
+        private OmbiContext Db { get; }
 
         public Task<AlbumRequest> GetRequestAsync(string foreignAlbumId)
         {

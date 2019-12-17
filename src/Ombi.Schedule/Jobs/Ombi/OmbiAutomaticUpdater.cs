@@ -9,8 +9,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using Hangfire;
-using Hangfire.Server;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Processor;
 using Ombi.Core.Settings;

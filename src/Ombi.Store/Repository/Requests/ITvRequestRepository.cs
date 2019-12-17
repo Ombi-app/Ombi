@@ -8,7 +8,7 @@ namespace Ombi.Store.Repository.Requests
 {
     public interface ITvRequestRepository 
     {
-        IOmbiContext Db { get; }
+        OmbiContext Db { get; }
         Task<TvRequests> Add(TvRequests request);
         Task<ChildRequests> AddChild(ChildRequests request);
         Task Delete(TvRequests request);

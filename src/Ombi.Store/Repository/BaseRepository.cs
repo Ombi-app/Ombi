@@ -13,7 +13,7 @@ using Polly;
 
 namespace Ombi.Store.Repository
 {
-    public class BaseRepository<T, U> : IRepository<T> where T : Entity where U : IDbContext
+    public class BaseRepository<T, U> : IRepository<T> where T : Entity where U : DbContext
     {
         public BaseRepository(U ctx)
         {
@@ -107,25 +107,25 @@ namespace Ombi.Store.Repository
         }
 
 
-        private bool _disposed;
-        // Protected implementation of Dispose pattern.
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_disposed)
-                return;
+        //private bool _disposed;
+        //// Protected implementation of Dispose pattern.
+        //protected virtual void Dispose(bool disposing)
+        //{
+        //    if (_disposed)
+        //        return;
 
-            if (disposing)
-            {
-                _ctx?.Dispose();
-            }
+        //    if (disposing)
+        //    {
+        //        _ctx?.Dispose();
+        //    }
 
-            _disposed = true;
-        }
+        //    _disposed = true;
+        //}
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        //public void Dispose()
+        //{
+        //    Dispose(true);
+        //    GC.SuppressFinalize(this);
+        //}
     }
 }

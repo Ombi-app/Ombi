@@ -12,13 +12,13 @@ namespace Ombi.Store.Repository
 {
     public class SettingsJsonRepository : ISettingsRepository
     {
-        public SettingsJsonRepository(ISettingsContext ctx, ICacheService mem)
+        public SettingsJsonRepository(SettingsContext ctx, ICacheService mem)
         {
             Db = ctx;
             _cache = mem;
         }
 
-        private ISettingsContext Db { get; }
+        private SettingsContext Db { get; }
         private readonly ICacheService _cache;
 
         public GlobalSettings Insert(GlobalSettings entity)

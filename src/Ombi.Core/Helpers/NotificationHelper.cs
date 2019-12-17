@@ -1,5 +1,6 @@
 ﻿using System;
-using Hangfire;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Ombi.Core.Notifications;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
@@ -9,13 +10,7 @@ namespace Ombi.Core
 {
     public class NotificationHelper : INotificationHelper
     {
-        public NotificationHelper(INotificationService service)
-        {
-            NotificationService = service;
-        }
-        private INotificationService NotificationService { get; }
-
-        public void NewRequest(FullBaseRequest model)
+        public async Task NewRequest(FullBaseRequest model)
         {
             var notificationModel = new NotificationOptions
             {
@@ -24,11 +19,13 @@ namespace Ombi.Core
                 NotificationType = NotificationType.NewRequest,
                 RequestType = model.RequestType
             };
-            BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel));
-
+            await OmbiQuartz.TriggerJob(nameof(INotificationService), "Notifications", new Dictionary<string, object>
+            {
+                {JobDataKeys.NotificationOptions, notificationModel}
+            });
         }
 
-        public void NewRequest(ChildRequests model)
+        public async Task NewRequest(ChildRequests model)
         {
             var notificationModel = new NotificationOptions
             {
@@ -36,11 +33,14 @@ namespace Ombi.Core
                 DateTime = DateTime.Now,
                 NotificationType = NotificationType.NewRequest,
                 RequestType = model.RequestType
-            };
-            BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel));
+            }; 
+            await OmbiQuartz.TriggerJob(nameof(INotificationService), "Notifications", new Dictionary<string, object>
+            {
+                {JobDataKeys.NotificationOptions, notificationModel}
+            });
         }
 
-        public void NewRequest(AlbumRequest model)
+        public async Task NewRequest(AlbumRequest model)
         {
             var notificationModel = new NotificationOptions
             {
@@ -48,38 +48,15 @@ namespace Ombi.Core
                 DateTime = DateTime.Now,
                 NotificationType = NotificationType.NewRequest,
                 RequestType = model.RequestType
-            };
-            BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel));
-        }
-
-
-        public void Notify(MovieRequests model, NotificationType type)
-        {
-            var notificationModel = new NotificationOptions
+            }; 
+            await OmbiQuartz.TriggerJob(nameof(INotificationService), "Notifications", new Dictionary<string, object>
             {
-                RequestId = model.Id,
-                DateTime = DateTime.Now,
-                NotificationType = type,
-                RequestType = model.RequestType,
-                Recipient = model.RequestedUser?.Email ?? string.Empty
-            };
-            
-            BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel));
-        }
-        public void Notify(ChildRequests model, NotificationType type)
-        {
-            var notificationModel = new NotificationOptions
-            {
-                RequestId = model.Id,
-                DateTime = DateTime.Now,
-                NotificationType = type,
-                RequestType = model.RequestType,
-                Recipient = model.RequestedUser?.Email ?? string.Empty
-            };
-            BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel));
+                {JobDataKeys.NotificationOptions, notificationModel}
+            });
         }
 
-        public void Notify(AlbumRequest model, NotificationType type)
+
+        public async Task Notify(MovieRequests model, NotificationType type)
         {
             var notificationModel = new NotificationOptions
             {
@@ -90,7 +67,50 @@ namespace Ombi.Core
                 Recipient = model.RequestedUser?.Email ?? string.Empty
             };
 
-            BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel));
+            await OmbiQuartz.TriggerJob(nameof(INotificationService), "Notifications", new Dictionary<string, object>
+            {
+                {JobDataKeys.NotificationOptions, notificationModel}
+            });
+        }
+        public async Task Notify(ChildRequests model, NotificationType type)
+        {
+            var notificationModel = new NotificationOptions
+            {
+                RequestId = model.Id,
+                DateTime = DateTime.Now,
+                NotificationType = type,
+                RequestType = model.RequestType,
+                Recipient = model.RequestedUser?.Email ?? string.Empty
+            };
+            await OmbiQuartz.TriggerJob(nameof(INotificationService), "Notifications", new Dictionary<string, object>
+            {
+                {JobDataKeys.NotificationOptions, notificationModel}
+            });
+        }
+
+        public async Task Notify(AlbumRequest model, NotificationType type)
+        {
+            var notificationModel = new NotificationOptions
+            {
+                RequestId = model.Id,
+                DateTime = DateTime.Now,
+                NotificationType = type,
+                RequestType = model.RequestType,
+                Recipient = model.RequestedUser?.Email ?? string.Empty
+            };
+
+            await OmbiQuartz.TriggerJob(nameof(INotificationService), "Notifications", new Dictionary<string, object>
+            {
+                {JobDataKeys.NotificationOptions, notificationModel}
+            });
+        }
+
+        public async Task Notify(NotificationOptions model)
+        {
+            await OmbiQuartz.TriggerJob(nameof(INotificationService), "Notifications", new Dictionary<string, object>
+            {
+                {JobDataKeys.NotificationOptions, model}
+            });
         }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ombi.Core.Notifications;
+using Ombi.Core;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
 using Ombi.Schedule.Jobs.Plex.Models;
@@ -20,21 +18,19 @@ namespace Ombi.Schedule.Jobs.Plex
     public class PlexAvailabilityChecker : IPlexAvailabilityChecker
     {
         public PlexAvailabilityChecker(IPlexContentRepository repo, ITvRequestRepository tvRequest, IMovieRequestRepository movies,
-            INotificationService notification, IBackgroundJobClient background, ILogger<PlexAvailabilityChecker> log)
+            INotificationHelper notification,  ILogger<PlexAvailabilityChecker> log)
         {
             _tvRepo = tvRequest;
             _repo = repo;
             _movieRepo = movies;
             _notificationService = notification;
-            _backgroundJobClient = background;
             _log = log;
         }
 
         private readonly ITvRequestRepository _tvRepo;
         private readonly IMovieRequestRepository _movieRepo;
         private readonly IPlexContentRepository _repo;
-        private readonly INotificationService _notificationService;
-        private readonly IBackgroundJobClient _backgroundJobClient;
+        private readonly INotificationHelper _notificationService;
         private readonly ILogger _log;
 
         public async Task Execute(IJobExecutionContext job)
@@ -215,8 +211,6 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if (disposing)
             {
-                _movieRepo?.Dispose();
-                _repo?.Dispose();
             }
             _disposed = true;
         }

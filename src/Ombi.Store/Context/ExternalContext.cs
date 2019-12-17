@@ -5,16 +5,22 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Context
 {
-    public sealed class ExternalContext : DbContext, IExternalContext
+    public abstract class ExternalContext : DbContext
     {
-        private static bool _created;
-        public ExternalContext()
+        protected ExternalContext(DbContextOptions<ExternalContext> options) : base(options)
         {
-            if (_created) return;
 
-            _created = true;
-            Database.SetCommandTimeout(60);
-            Database.Migrate();
+        }
+
+        /// <summary>
+        /// This allows a sub class to call the base class 'DbContext' non typed constructor
+        /// This is need because instances of the subclasses will use a specific typed DbContextOptions
+        /// which can not be converted into the parameter in the above constructor
+        /// </summary>
+        /// <param name="options"></param>
+        protected ExternalContext(DbContextOptions options)
+            : base(options)
+        {
         }
 
         public DbSet<PlexServerContent> PlexServerContent { get; set; }
@@ -32,16 +38,6 @@ namespace Ombi.Store.Context
         public DbSet<SickRageCache> SickRageCache { get; set; }
         public DbSet<SickRageEpisodeCache> SickRageEpisodeCache { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            var i = StoragePathSingleton.Instance;
-            if (string.IsNullOrEmpty(i.StoragePath))
-            {
-                i.StoragePath = string.Empty;
-            }
-            optionsBuilder.UseSqlite($"Data Source={Path.Combine(i.StoragePath, "OmbiExternal.db")}");
-        }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<PlexServerContent>().HasMany(x => x.Episodes)
@@ -56,19 +52,6 @@ namespace Ombi.Store.Context
                 .HasForeignKey(p => p.ParentId);
 
             base.OnModelCreating(builder);
-        }
-
-
-        public void Seed()
-        {
-            // VACUUM;
-            Database.ExecuteSqlCommand("VACUUM;");
-
-            using (var tran = Database.BeginTransaction())
-            {
-                SaveChanges();
-                tran.Commit();
-            }
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
 using Ombi.Api.TheMovieDb;
@@ -11,8 +9,6 @@ using Ombi.Api.TvMaze;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
-using Ombi.Schedule.Jobs.Emby;
-using Ombi.Schedule.Jobs.Plex;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Quartz;
@@ -352,8 +348,6 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (disposing)
             {
-                _plexRepo?.Dispose();
-                _embyRepo?.Dispose();
                 _plexSettings?.Dispose();
             }
             _disposed = true;

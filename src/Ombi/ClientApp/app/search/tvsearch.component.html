@@ -1,30 +1,42 @@
 ﻿<!-- Movie tab -->
 <div role="tabpanel" class="tab-pane" id="TvShowTab">
+    <ng-template #FilterRef>
+        <div class="btn-group" role="group">
+            <a href="#" class="btn btn-sm btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                {{ 'Search.Suggestions' | translate }}
+                <i class="fa fa-chevron-down"></i>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a (click)="popularShows()">{{ 'Search.TvShows.Popular' | translate }} </a>
+                </li>
+                <li>
+                    <a (click)="trendingShows()">{{ 'Search.TvShows.Trending' | translate }}</a>
+                </li>
+                <li>
+                    <a (click)="mostWatchedShows()">{{ 'Search.TvShows.MostWatched' | translate }}</a>
+                </li>
+                <li>
+                    <a (click)="anticipatedShows()">{{ 'Search.TvShows.MostAnticipated' | translate }}</a>
+                </li>
+            </ul>
+        </div>
+    </ng-template>
+
     <div class="input-group">
-        <input id="search" type="text" placeholder="{{ 'Search.SearchBarPlaceholder' | translate }}" class="form-control form-control-custom form-control-search form-control-withbuttons" (keyup)="search($event)">
+        <input id="search" type="text" placeholder="{{ 'Search.SearchBarPlaceholder' | translate }}"
+               class="form-control form-control-custom form-control-search form-control-withbuttons"
+               (keyup)="search($event)">
         <div class="input-group-addon right-radius">
-            <div class="btn-group">
-                <a href="#" class="btn btn-sm btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    {{ 'Search.Suggestions' | translate }}
-                    <i class="fa fa-chevron-down"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a (click)="popularShows()">{{ 'Search.TvShows.Popular' | translate }} </a>
-                    </li>
-                    <li>
-                        <a (click)="trendingShows()">{{ 'Search.TvShows.Trending' | translate }}</a>
-                    </li>
-                    <li>
-                        <a (click)="mostWatchedShows()">{{ 'Search.TvShows.MostWatched' | translate }}</a>
-                    </li>
-                    <li>
-                        <a (click)="anticipatedShows()">{{ 'Search.TvShows.MostAnticipated' | translate }}</a>
-                    </li>
-                </ul>
+            <div class="search-button-container-inline">
+                <ng-template [ngTemplateOutlet]="FilterRef"></ng-template>
             </div>
             <i id="tvSearchButton" class="fa fa-search"></i>
         </div>
+    </div>
+
+    <div class="row search-button-container">
+        <ng-template [ngTemplateOutlet]="FilterRef"></ng-template>
     </div>
 
     <remaining-requests [tv]="true" [quotaRefreshEvents]="tvRequested.asObservable()" #remainingTvShows></remaining-requests>
@@ -159,6 +171,7 @@
                 <br/>
                 <br/>
             </div>
+        </div>
     </div>
 </div>
 
