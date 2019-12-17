@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -133,7 +134,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     _log.LogInformation("[PAC] - Child request {0} is now available, sending notification", $"{child.Title} - {child.Id}");
                     // We have ful-fulled this request!
                     await _tvRepo.MarkChildAsAvailable(child.Id);
-                    await _notificationService.Publish(new NotificationOptions
+                    await _notificationService.Notify(new NotificationOptions
                     {
                         DateTime = DateTime.Now,
                         NotificationType = NotificationType.RequestAvailable,
@@ -190,7 +191,7 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 await _movieRepo.MarkAsAvailable(i.Id);
 
-                await _notificationService.Publish(new NotificationOptions
+                await _notificationService.Notify(new NotificationOptions
                 {
                     DateTime = DateTime.Now,
                     NotificationType = NotificationType.RequestAvailable,
