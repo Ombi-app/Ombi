@@ -37,4 +37,4 @@ steps:
   inputs:
     command: 'publish'
     publishWebProjects: true
-    arguments: '-c ${{ buildConfiguration }} -r "win10-x64"'
+    arguments: '-c $(buildConfiguration) -r "win10-x64"'
