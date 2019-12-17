@@ -78,6 +78,12 @@ export class LoginComponent implements OnDestroy, OnInit {
         if (authService.loggedIn()) {
             this.router.navigate(["search"]);
         }
+
+        let pinId = this.route.snapshot.queryParams["pinId"];
+        if (pinId) {
+            this.notify.info("Authenticating", "Loading... Please Wait");
+            this.getPinResult(pinId);
+        }
     }
 
     public ngOnInit() {
@@ -129,23 +135,9 @@ export class LoginComponent implements OnDestroy, OnInit {
     }
 
     public oauth() {
-        this.oAuthWindow = window.open(window.location.toString(), "_blank", `toolbar=0,
-        location=0,
-        status=0,
-        menubar=0,
-        scrollbars=1,
-        resizable=1,
-        width=500,
-        height=500`);
         this.plexTv.GetPin(this.clientId, this.appName).subscribe((pin: any) => {
-
             this.authService.login({ usePlexOAuth: true, password: "", rememberMe: true, username: "", plexTvPin: pin }).subscribe(x => {
-                this.oAuthWindow!.location.replace(x.url);
-
-                this.pinTimer = setInterval(() => {
-                    this.notify.info("Authenticating", "Loading... Please Wait");
-                    this.getPinResult(x.pinId);
-                }, 4000);
+                window.location.replace(x.url + `&forwardUrl=${window.location.toString()}%3FpinId%3D${x.pinId}`);
             });
         });
     }
