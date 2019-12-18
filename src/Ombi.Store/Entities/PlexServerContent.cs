@@ -53,7 +53,7 @@ namespace Ombi.Store.Entities
         public DateTime AddedAt { get; set; }
         public string Quality { get; set; }
 
-        public int? RequestId { get; set; }
+        //public int? RequestId { get; set; }
 
         [NotMapped]
         public bool HasImdb => !string.IsNullOrEmpty(ImdbId);
