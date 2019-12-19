@@ -79,7 +79,7 @@ export class LoginComponent implements OnDestroy, OnInit {
             this.router.navigate(["search"]);
         }
 
-        let pinId = this.route.snapshot.queryParams["pinId"];
+        const pinId = this.route.snapshot.queryParams.pinId;
         if (pinId) {
             this.notify.info("Authenticating", "Loading... Please Wait");
             this.getPinResult(pinId);
@@ -137,7 +137,11 @@ export class LoginComponent implements OnDestroy, OnInit {
     public oauth() {
         this.plexTv.GetPin(this.clientId, this.appName).subscribe((pin: any) => {
             this.authService.login({ usePlexOAuth: true, password: "", rememberMe: true, username: "", plexTvPin: pin }).subscribe(x => {
-                window.location.replace(x.url + `&forwardUrl=${window.location.toString()}%3FpinId%3D${x.pinId}`);
+                let forwardUrl = `${window.location.toString()}?pinId=${x.pinId}`;
+                if (window !== window.top) {
+                    forwardUrl += `&referrer=${document.referrer}`;
+                }
+                window.top.location.replace(x.url + `&forwardUrl=${encodeURIComponent(forwardUrl)}`);
             });
         });
     }
@@ -145,16 +149,21 @@ export class LoginComponent implements OnDestroy, OnInit {
     public getPinResult(pinId: number) {
         this.authService.oAuth(pinId).subscribe(x => {
             if(x.access_token) {
-              localStorage.setItem("id_token", x.access_token);
-  
-              if (this.authService.loggedIn()) {
-                  this.ngOnDestroy();
-                  if(this.oAuthWindow) {
-                    this.oAuthWindow.close();
-                  }
-                  this.router.navigate(["search"]);
-                  return;
-              } 
+                localStorage.setItem("id_token", x.access_token);
+                
+                const referrer = this.route.snapshot.queryParams.referrer;
+                if (referrer) {
+                    window.top.location.replace(referrer);
+                }
+                
+                if (this.authService.loggedIn()) {
+                    this.ngOnDestroy();
+                    if(this.oAuthWindow) {
+                        this.oAuthWindow.close();
+                    }
+                    this.router.navigate(["search"]);
+                    return;
+                } 
           }
   
           }, err => {
