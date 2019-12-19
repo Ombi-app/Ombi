@@ -49,13 +49,13 @@ namespace Ombi.Schedule.Jobs.Plex
 
         private Task ProcessTv()
         {
-            var tv = _tvRepo.GetChild().Where(x => !x.Available);
+            var tv = _tvRepo.GetChild().Where(x => !x.Available).AsNoTracking();
             return ProcessTv(tv);
         }
 
         private async Task ProcessTv(IQueryable<ChildRequests> tv)
         {
-            var plexEpisodes = _repo.GetAllEpisodes().Include(x => x.Series);
+            var plexEpisodes = _repo.GetAllEpisodes().Include(x => x.Series).AsNoTracking();
 
             foreach (var child in tv)
             {
@@ -151,7 +151,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private async Task ProcessMovies()
         {
             // Get all non available
-            var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available);
+            var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available).AsNoTracking();
             var itemsForAvailbility = new List<AvailabilityModel>();
 
             foreach (var movie in movies)
