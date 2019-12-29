@@ -26,6 +26,12 @@ pool:
 
 
 steps:
+- task: Yarn@3
+  displayName: Install UI Dependancies
+  inputs:
+    projectDirectory: '$(Build.SourcesDirectory)/src/Ombi/ClientApp/'
+    arguments: 'install'
+
 - task: DotNetCoreCLI@2
   displayName: Run Unit Tests
   inputs:
