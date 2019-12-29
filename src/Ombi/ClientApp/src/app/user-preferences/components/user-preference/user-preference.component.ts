@@ -14,8 +14,8 @@ export class UserPreferenceComponent implements OnInit {
     public username: string;
     public selectedLang: string;
     public availableLanguages = AvailableLanguages;
-    public qrCode: string;
-    public qrCodeEnabled: boolean;
+    //public qrCode: string;
+    //public qrCodeEnabled: boolean;
 
     constructor(private authService: AuthService,
         private readonly translate: TranslateService,
@@ -31,13 +31,13 @@ export class UserPreferenceComponent implements OnInit {
         const customization = await this.settingsService.getCustomization().toPromise();
 
         const accessToken = await this.identityService.getAccessToken().toPromise();
-        this.qrCode = `${customization.applicationUrl}|${accessToken}`;
+        //this.qrCode = `${customization.applicationUrl}|${accessToken}`;
 
-        if(!customization.applicationUrl) {
-            this.qrCodeEnabled = false;
-        } else {
-            this.qrCodeEnabled = true;
-        }
+        //if(!customization.applicationUrl) {
+        //    this.qrCodeEnabled = false;
+        //} else {
+        //    this.qrCodeEnabled = true;
+        //}
 
         const selectedLang = this.storage.get("Language");
         if (selectedLang) {
