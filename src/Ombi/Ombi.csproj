@@ -104,7 +104,7 @@
 
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <Exec WorkingDirectory="$(SpaRoot)" Command="yarn install" />
-    <Exec WorkingDirectory="$(SpaRoot)" Command="yarn run build --prod" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="yarn run build" />
     <ItemGroup>
     <DistFiles Include="$(SpaRoot)dist\**; $(SpaRoot)dist-server\**" />
     <DistFiles Include="$(SpaRoot)node_modules\**" Condition="'$(BuildServerSideRenderer)' == 'true'" />
