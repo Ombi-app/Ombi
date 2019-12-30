@@ -38,9 +38,108 @@ steps:
     command: 'test'
     projects: '**/*Tests.csproj'
 
+### Publish
+
 - task: DotNetCoreCLI@2
   displayName: Publish Win10-x64
   inputs:
     command: 'publish'
     publishWebProjects: true
-    arguments: '-c $(buildConfiguration) -r "win10-x64"'
+    arguments: '-c $(buildConfiguration) -r "win10-x64"  -o $(Build.ArtifactStagingDirectory)/win-64'
+
+- task: DotNetCoreCLI@2
+  displayName: Publish Win10-x86
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '-c $(buildConfiguration) -r "win10-x86" -o $(Build.ArtifactStagingDirectory)/win-86'
+
+- task: DotNetCoreCLI@2
+  displayName: Publish OSX-x64
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '-c $(buildConfiguration) -r "osx-x64"  -o $(Build.ArtifactStagingDirectory)/osx-64'
+
+- task: DotNetCoreCLI@2
+  displayName: Publish Linux-x64
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '-c $(buildConfiguration) -r "linux-x64"  -o $(Build.ArtifactStagingDirectory)/linux-64'
+
+- task: DotNetCoreCLI@2
+  displayName: Publish Linux-ARM
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '-c $(buildConfiguration) -r "linux-arm" -o $(Build.ArtifactStagingDirectory)/linux-arm'
+
+- task: DotNetCoreCLI@2
+  displayName: Publish Linux-ARM-x64
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '-c $(buildConfiguration) -r "linux-arm64"  -o $(Build.ArtifactStagingDirectory)/linux-arm64'
+
+### Zip them up
+
+- task: ArchiveFiles@2
+  displayName: Zip Win-x64
+  inputs:
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/win-64'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/win-x64-$(Build.BuildId).zip'
+    replaceExistingArchive: true
+
+- task: ArchiveFiles@2
+  displayName: Zip Win-x64
+  inputs:
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/win-86'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/win-x86-$(Build.BuildId).zip'
+    replaceExistingArchive: true
+
+- task: ArchiveFiles@2
+  displayName: Zip OSX-x64
+  inputs:
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/osx-64'
+    includeRootFolder: true
+    archiveType: 'tar'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/osx-x64-$(Build.BuildId).zip'
+    replaceExistingArchive: true
+
+- task: ArchiveFiles@2
+  displayName: Zip Linux-x64
+  inputs:
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/linux-64'
+    includeRootFolder: true
+    archiveType: 'tar'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/linux-x64-$(Build.BuildId).zip'
+    replaceExistingArchive: true
+
+- task: ArchiveFiles@2
+  displayName: Zip Linux-ARM
+  inputs:
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/linux-arm'
+    includeRootFolder: true
+    archiveType: 'tar'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/linux-arm-$(Build.BuildId).zip'
+    replaceExistingArchive: true
+
+- task: ArchiveFiles@2
+  displayName: Zip Linux-ARM-x64
+  inputs:
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/linux-arm64'
+    includeRootFolder: true
+    archiveType: 'tar'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/linux-arm64-$(Build.BuildId).zip'
+    replaceExistingArchive: true
+    
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
