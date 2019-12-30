@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 3578 --configuration hmr",
-    "build": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --prod",
+    "build": "node --max_old_space_size=6144 node_modules/@angular/cli/bin/ng build --prod",
     "lint": "ng lint"
   },
   "private": true,
