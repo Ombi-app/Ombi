@@ -94,7 +94,7 @@ steps:
     replaceExistingArchive: true
 
 - task: ArchiveFiles@2
-  displayName: Zip Win-x64
+  displayName: Zip Win-x86
   inputs:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/win-86'
     includeRootFolder: true
@@ -108,7 +108,7 @@ steps:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/osx-64'
     includeRootFolder: true
     archiveType: 'tar'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/osx-x64-$(Build.BuildId).zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/osx-x64-$(Build.BuildId).tar.gz'
     replaceExistingArchive: true
 
 - task: ArchiveFiles@2
@@ -117,7 +117,7 @@ steps:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/linux-64'
     includeRootFolder: true
     archiveType: 'tar'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/linux-x64-$(Build.BuildId).zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/linux-x64-$(Build.BuildId).tar.gz'
     replaceExistingArchive: true
 
 - task: ArchiveFiles@2
@@ -126,7 +126,7 @@ steps:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/linux-arm'
     includeRootFolder: true
     archiveType: 'tar'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/linux-arm-$(Build.BuildId).zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/linux-arm-$(Build.BuildId).tar.gz'
     replaceExistingArchive: true
 
 - task: ArchiveFiles@2
@@ -135,11 +135,47 @@ steps:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/linux-arm64'
     includeRootFolder: true
     archiveType: 'tar'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/linux-arm64-$(Build.BuildId).zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/linux-arm64-$(Build.BuildId).tar.gz'
     replaceExistingArchive: true
-    
+
 - task: PublishBuildArtifacts@1
+  displayName: Publish Win 64
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/win-x64-$(Build.BuildId).zip'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Win 86
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/win-x86-$(Build.BuildId).zip'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish OSX 64
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/osx-x64-$(Build.BuildId).tar.gz'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Linux 64
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/linux-x64-$(Build.BuildId).tar.gz'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Linux ARM
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/linux-arm-$(Build.BuildId).tar.gz'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish OSX 64
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/linux-arm64-$(Build.BuildId).tar.gz'
     ArtifactName: 'drop'
     publishLocation: 'Container'
