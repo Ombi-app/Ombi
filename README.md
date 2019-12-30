@@ -56,12 +56,13 @@ Here are some of the features Ombi V3 has:
 ### Integration 
 We integrate with the following applications:
 * Plex Media Server
-* Emby
+* Emby/Jellyfin Media Server
 * Sonarr
 * Radarr
 * Lidarr
 * DogNzb
 * Couch Potato
+* SickRage/SickChill
 
 
 ### Notifications
