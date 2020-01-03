@@ -14,17 +14,17 @@
           </div>
 
 
-          <div>
+          <div class="md-form-field">
             <mat-form-field>
               <input matInput placeholder="Hostname or IP" formControlName="ip">
             </mat-form-field>
           </div>
-          <div>
+          <div  class="md-form-field">
             <mat-form-field>
               <input matInput placeholder="Port" formControlName="port">
             </mat-form-field>
           </div>
-          <div>
+          <div  class="md-form-field">
             <mat-form-field>
               <input matInput placeholder="API Key" formControlName="apiKey">
             </mat-form-field>
@@ -38,7 +38,7 @@
           </div>
 
 
-          <div>
+          <div  class="md-form-field">
             <mat-form-field>
               <input matInput placeholder="Base Url" formControlName="subDir">
             </mat-form-field>
@@ -46,7 +46,7 @@
         </div>
         <div class="col">
 
-          <div>
+          <div  class="md-form-field">
             <mat-form-field>
               <mat-label>Quality Profiles</mat-label>
               <mat-select formControlName="defaultQualityProfile" required>
@@ -59,7 +59,7 @@
                   *ngIf="profilesRunning" class="fa fa-spinner fa-spin"></span></button></div>
           </div>
 
-          <div>
+          <div  class="md-form-field">
             <mat-form-field>
               <mat-label>Default Root Folder</mat-label>
               <mat-select formControlName="defaultRootPath" required>
@@ -72,7 +72,7 @@
                   *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button></div>
           </div>
 
-          <div>
+          <div class="md-form-field">
             <mat-form-field>
               <mat-label>Metadata Profile</mat-label>
               <mat-select formControlName="metadataProfileId" required>
@@ -86,20 +86,20 @@
           </div>
 
 
-          <div>
+          <div class="md-form-field">
             <mat-slide-toggle formControlName="albumFolder">
               Album Folder
             </mat-slide-toggle>
           </div>
 
-          <div *ngIf="advanced" style="color:#ff761b">
+          <div class="md-form-field" *ngIf="advanced" style="color:#ff761b">
             <mat-slide-toggle formControlName="addOnly">
               Do not search
             </mat-slide-toggle>
           </div>
 
 
-          <div class="form-group">
+          <div class="md-form-field" >
             <div>
               <button mat-raised-button type="button" [disabled]="form.invalid" (click)="test(form)">Test
                 Connectivity <span id="spinner"></span></button>
@@ -107,7 +107,7 @@
           </div>
 
 
-          <div class="form-group">
+          <div class="md-form-field" >
             <div>
               <button mat-raised-button type="submit" color="primary" [disabled]="form.invalid">Submit</button>
             </div>
