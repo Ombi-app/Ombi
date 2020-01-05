@@ -96,14 +96,14 @@ steps:
 
 ### Zip them up
 
-- task: ArchiveFiles@2
-  displayName: Zip Win-x64
-  inputs:
-    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/win-64'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/win-x64-$(Build.BuildId).zip'
-    replaceExistingArchive: true
+#- task: ArchiveFiles@2
+#  displayName: Zip Win-x64
+#  inputs:
+#    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/win-64'
+#    includeRootFolder: true
+#    archiveType: 'zip'
+#    archiveFile: '$(Build.ArtifactStagingDirectory)/win-x64-$(Build.BuildId).zip'
+#    replaceExistingArchive: true
 
 #- task: ArchiveFiles@2
 #  displayName: Zip Win-x86
@@ -153,7 +153,7 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: Publish Win 64
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/win-x64-$(Build.BuildId).zip'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/win-x64'
     ArtifactName: 'win-x64-$(Build.BuildId).zip'
     publishLocation: 'Container'
 
