@@ -8,7 +8,7 @@ function configExists(url) {
     var req = new XMLHttpRequest();
     req.open('GET', url, false); 
     req.send();
-    return req.status==200;
+    return req.status === 200 && req.responseURL === url;
   }
 
   var probePath = 'styles/please-wait.js';

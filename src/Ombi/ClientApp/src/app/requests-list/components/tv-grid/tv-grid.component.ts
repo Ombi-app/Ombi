@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild } from "@angular/core";
+import { Component, AfterViewInit, ViewChild, Output, EventEmitter } from "@angular/core";
 import {  IRequestsViewModel, IChildRequests } from "../../../interfaces";
 import { MatPaginator, MatSort } from "@angular/material";
 import { merge, of as observableOf, Observable } from 'rxjs';
@@ -18,6 +18,8 @@ export class TvGridComponent implements AfterViewInit {
     public displayedColumns: string[] = ['series',  'requestedBy', 'status', 'requestStatus', 'requestedDate','actions'];
     public gridCount: string = "15";
     public showUnavailableRequests: boolean;
+
+    @Output() public onOpenOptions = new EventEmitter<{request: any, filter: any}>();
 
     @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
     @ViewChild(MatSort, {static: false}) sort: MatSort;
@@ -50,6 +52,14 @@ export class TvGridComponent implements AfterViewInit {
                     return observableOf([]);
                 })
             ).subscribe(data => this.dataSource = data);
+    }
+
+    public openOptions(request: IChildRequests) {
+        const filter = () => { this.dataSource = this.dataSource.filter((req) => {
+            return req.id !== request.id;
+        })};
+
+        this.onOpenOptions.emit({request: request, filter: filter});
     }
 
     private loadData(): Observable<IRequestsViewModel<IChildRequests>> {

@@ -9,6 +9,7 @@ import { AuthGuard } from "../auth/auth.guard";
 
 import * as fromComponents from './components';
 import { RequestsListComponent } from "./components/requests-list.component";
+import { MatBottomSheetModule } from "@angular/material";
 
 const routes: Routes = [
     { path: "", component: RequestsListComponent, canActivate: [AuthGuard] },
@@ -18,6 +19,7 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         SharedModule,
         PipeModule,
+        MatBottomSheetModule
     ],
     declarations: [
         ...fromComponents.components
@@ -26,6 +28,7 @@ const routes: Routes = [
         RouterModule,
     ],
     entryComponents: [
+        ...fromComponents.entryComponents
     ],
     providers: [
         ...fromComponents.providers

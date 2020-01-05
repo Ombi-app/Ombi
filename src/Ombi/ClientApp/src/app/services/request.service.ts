@@ -74,8 +74,12 @@ export class RequestService extends ServiceHelpers {
         return this.http.get<IMovieRequests>(`${this.url}movie/info/${requestId}`, {headers: this.headers}).toPromise();
     }
 
-    public removeMovieRequest(request: IMovieRequests) {
-        this.http.delete(`${this.url}movie/${request.id}`, {headers: this.headers}).subscribe();
+    public removeMovieRequest(requestId: number) {
+        this.http.delete(`${this.url}movie/${requestId}`, {headers: this.headers}).subscribe();
+    }
+
+    public removeMovieRequestAsync(requestId: number) {
+        return this.http.delete(`${this.url}movie/${requestId}`, {headers: this.headers}).toPromise();
     }
 
     public updateMovieRequest(request: IMovieRequests): Observable<IMovieRequests> {
@@ -102,8 +106,8 @@ export class RequestService extends ServiceHelpers {
         return this.http.get<TreeNode[]>(`${this.url}tv/search/${search}/tree`, {headers: this.headers});
     }
 
-    public removeTvRequest(request: ITvRequests) {
-        this.http.delete(`${this.url}tv/${request.id}`, {headers: this.headers}).subscribe();
+    public removeTvRequest(requestId: number) {
+        this.http.delete(`${this.url}tv/${requestId}`, {headers: this.headers}).subscribe();
     }
 
     public markTvAvailable(movie: ITvUpdateModel): Observable<IRequestEngineResult> {
@@ -129,8 +133,8 @@ export class RequestService extends ServiceHelpers {
     public approveChild(child: ITvUpdateModel): Observable<IRequestEngineResult> {
         return this.http.post<IRequestEngineResult>(`${this.url}tv/approve`, JSON.stringify(child), {headers: this.headers});
     }
-    public deleteChild(child: IChildRequests): Observable<boolean> {
-        return this.http.delete<boolean>(`${this.url}tv/child/${child.id}`, {headers: this.headers});
+    public deleteChild(childId: number): Observable<boolean> {
+        return this.http.delete<boolean>(`${this.url}tv/child/${childId}`, {headers: this.headers});
     }
 
     public subscribeToMovie(requestId: number): Observable<boolean> {

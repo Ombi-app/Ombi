@@ -2,12 +2,12 @@
   <mat-tab-group>
     <mat-tab label="Movies">
         <ng-template matTabContent>
-            <movies-grid></movies-grid>
+            <movies-grid (onOpenOptions)="onOpenOptions($event)"></movies-grid>
           </ng-template>
     </mat-tab>
     <mat-tab label="TV Shows">
         <ng-template matTabContent>
-            <tv-grid></tv-grid>
+            <tv-grid (onOpenOptions)="onOpenOptions($event)"></tv-grid>
           </ng-template>
     </mat-tab>
     <mat-tab label="Albums">

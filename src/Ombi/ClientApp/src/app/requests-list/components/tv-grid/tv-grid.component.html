@@ -58,6 +58,7 @@
       <th mat-header-cell *matHeaderCellDef> </th>
       <td mat-cell *matCellDef="let element">
         <button mat-raised-button color="accent" [routerLink]="'/details/tv/' + element.parentRequest.tvDbId">Details</button>
+        <button mat-raised-button color="warn" (click)="openOptions(element)">Options</button>
       </td>
     </ng-container>
 

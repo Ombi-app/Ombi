@@ -98,7 +98,7 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     public removeRequest(request: IMovieRequests) {
-        this.requestService.removeMovieRequest(request);
+        this.requestService.removeMovieRequest(request.id);
         this.removeRequestFromUi(request);
         this.loadRequests(this.amountToLoad, this.currentlyLoaded = 0);
     }

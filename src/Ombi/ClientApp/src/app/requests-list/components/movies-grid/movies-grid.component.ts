@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild } from "@angular/core";
+import { Component, AfterViewInit, ViewChild, EventEmitter, Output } from "@angular/core";
 import { IMovieRequests, IRequestsViewModel } from "../../../interfaces";
 import { MatPaginator, MatSort } from "@angular/material";
 import { merge, Observable, of as observableOf } from 'rxjs';
@@ -18,9 +18,11 @@ export class MoviesGridComponent implements AfterViewInit {
     public displayedColumns: string[] = ['requestedUser.requestedBy', 'title', 'requestedDate', 'status', 'requestStatus', 'actions'];
     public gridCount: string = "15";
     public showUnavailableRequests: boolean;
+    
+    @Output() public onOpenOptions = new EventEmitter<{request: any, filter: any}>();
 
-    @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-    @ViewChild(MatSort, {static: false}) sort: MatSort;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: false }) sort: MatSort;
 
     constructor(private requestService: RequestServiceV2) {
 
@@ -64,5 +66,13 @@ export class MoviesGridComponent implements AfterViewInit {
         } else {
             return this.requestService.getMovieRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
         }
+    }
+
+    public openOptions(request: IMovieRequests) {
+        const filter = () => { this.dataSource = this.dataSource.filter((req) => {
+            return req.id !== request.id;
+        })};
+
+        this.onOpenOptions.emit({request: request, filter: filter});
     }
 }

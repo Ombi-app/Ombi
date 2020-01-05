@@ -22,7 +22,7 @@ export class TvRequestChildrenComponent {
                 private notificationService: NotificationService) { }
 
     public removeRequest(request: IChildRequests) {
-        this.requestService.deleteChild(request)
+        this.requestService.deleteChild(request.id)
             .subscribe(x => {
                 this.removeRequestFromUi(request);
                 this.requestDeleted.emit(request.id);
