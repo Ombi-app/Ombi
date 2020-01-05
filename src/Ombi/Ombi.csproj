@@ -102,7 +102,7 @@
     <Exec WorkingDirectory="$(SpaRoot)" Command="yarn install" />
   </Target>
 
-  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+  <!--<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <Exec WorkingDirectory="$(SpaRoot)" Command="yarn install" />
     <Exec WorkingDirectory="$(SpaRoot)" Command="yarn run build" />
     <ItemGroup>
@@ -113,6 +113,6 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </ResolvedFileToPublish>
   </ItemGroup>
-  </Target>
+  </Target>-->
 
 </Project>
