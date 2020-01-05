@@ -142,21 +142,21 @@ steps:
   displayName: Publish Win 64
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)/win-x64-$(Build.BuildId).zip'
-    ArtifactName: 'drop'
+    ArtifactName: 'win-x64-$(Build.BuildId).zip'
     publishLocation: 'Container'
 
 - task: PublishBuildArtifacts@1
   displayName: Publish Win 86
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)/win-x86-$(Build.BuildId).zip'
-    ArtifactName: 'drop'
+    ArtifactName: 'win-x86-$(Build.BuildId).zip'
     publishLocation: 'Container'
 
 - task: PublishBuildArtifacts@1
   displayName: Publish OSX 64
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)/osx-x64-$(Build.BuildId).tar.gz'
-    ArtifactName: 'drop'
+    ArtifactName: 'osx-x64-$(Build.BuildId).tar.gz'
     publishLocation: 'Container'
 
 - task: PublishBuildArtifacts@1
@@ -170,12 +170,12 @@ steps:
   displayName: Publish Linux ARM
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)/linux-arm-$(Build.BuildId).tar.gz'
-    ArtifactName: 'drop'
+    ArtifactName: 'linux-arm-$(Build.BuildId).tar.gz'
     publishLocation: 'Container'
 
 - task: PublishBuildArtifacts@1
   displayName: Publish OSX 64
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)/linux-arm64-$(Build.BuildId).tar.gz'
-    ArtifactName: 'drop'
+    ArtifactName: 'linux-arm64-$(Build.BuildId).tar.gz'
     publishLocation: 'Container'
