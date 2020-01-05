@@ -138,6 +138,7 @@ steps:
 #    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/linux-arm'
 #    includeRootFolder: true
 #    archiveType: 'tar'
+
 #    archiveFile: '$(Build.ArtifactStagingDirectory)/linux-arm-$(Build.BuildId).tar.gz'
 #    replaceExistingArchive: true
 #
@@ -150,12 +151,26 @@ steps:
 #    archiveFile: '$(Build.ArtifactStagingDirectory)/linux-arm64-$(Build.BuildId).tar.gz'
 #    replaceExistingArchive: true
 
-- task: PublishBuildArtifacts@1
-  displayName: Publish Win 64
+#- task: PublishBuildArtifacts@1
+#  displayName: Publish Win 64
+#  inputs:
+#    PathtoPublish: '$(Build.ArtifactStagingDirectory)/win-x64'
+#    ArtifactName: 'win-x64-$(Build.BuildId).zip'
+#    publishLocation: 'Container'
+
+- task: GitHubRelease@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/win-x64'
-    ArtifactName: 'win-x64-$(Build.BuildId).zip'
-    publishLocation: 'Container'
+    gitHubConnection: 'github.com_tidusjar'
+    repositoryName: 'tidusjar/Ombi.Releases'
+    action: 'create'
+    target: '$(Build.SourceVersion)'
+    tagSource: 'gitTag'
+    tagPattern: 'v4.*'
+    releaseNotesSource: 'inline'
+    releaseNotesInline: 'test'
+    isPreRelease: true
+    changeLogCompareToRelease: 'lastFullRelease'
+    changeLogType: 'commitBased'
 
 #- task: PublishBuildArtifacts@1
 #  displayName: Publish Win 86
