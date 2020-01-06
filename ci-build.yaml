@@ -20,6 +20,7 @@ variables:
   csProj: '**/*.csproj'
   buildConfiguration: 'Release'
   publishLocation: '$(Build.SourcesDirectory)/src/Ombi/bin/Release/netcoreapp3.0'
+  gitTag: 'v4.0.${Build.BuildId}'
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -164,8 +165,8 @@ steps:
     repositoryName: 'tidusjar/Ombi.Releases'
     action: 'create'
     target: '$(Build.SourceVersion)'
-    tagSource: 'gitTag'
-    tagPattern: 'v4.*'
+    tagSource: 'userSpecifiedTag'
+    tag: '${gitTag}'
     releaseNotesSource: 'inline'
     releaseNotesInline: 'test'
     isPreRelease: true
