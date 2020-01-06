@@ -161,9 +161,9 @@ steps:
 - task: GitHubRelease@1
   inputs:
     gitHubConnection: 'github.com_tidusjar'
-    repositoryName: 'tidusjar/Ombi.Releases'
+    repositoryName: 'dotnet-foundation/Home'
     action: 'create'
-    target: '$(Build.SourceVersion)'
+    target: 'c7fcbb77b58aef1076d635a9ef99e4374abc8672'
     tagSource: 'gitTag'
     tagPattern: 'v4.*'
     releaseNotesSource: 'inline'
