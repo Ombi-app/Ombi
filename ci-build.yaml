@@ -199,7 +199,9 @@ steps:
     tag: '$(gitTag)'
     releaseNotesSource: 'inline'
     releaseNotesInline: 'test'
-    assets: '$(Build.ArtifactStagingDirectory)/*.zip'
+    assets: |
+      $(Build.ArtifactStagingDirectory)/*.zip
+      $(Build.ArtifactStagingDirectory)/*.gz
     isPreRelease: true
     changeLogCompareToRelease: 'lastNonDraftRelease'
     changeLogType: 'commitBased'
