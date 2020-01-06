@@ -189,13 +189,6 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/linux-arm64-$(Build.BuildId).tar.gz'
     replaceExistingArchive: true
 
-- task: PublishBuildArtifacts@1
-  displayName: Publish Win 64
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/win-x64'
-    ArtifactName: 'win-x64-$(Build.BuildId).zip'
-    publishLocation: 'Container'
-
 - task: GitHubRelease@1
   inputs:
     gitHubConnection: 'github.com_tidusjar'
