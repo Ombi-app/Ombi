@@ -208,5 +208,5 @@ steps:
     releaseNotesInline: 'test'
     assets: '$(Build.ArtifactStagingDirectory)/*.zip'
     isPreRelease: true
-    changeLogCompareToRelease: 'lastFullRelease'
+    changeLogCompareToRelease: 'lastNonDraftRelease'
     changeLogType: 'commitBased'
