@@ -53,13 +53,14 @@ steps:
     publishWebProjects: true
     arguments: '-c $(buildConfiguration) -r "win10-x64"  -o $(Build.ArtifactStagingDirectory)/win-64'
     zipAfterPublish: false
+    modifyOutputPath: false
 
 - task: CopyFiles@2
   displayName: 'Publish Angular App Win10-x64'
   inputs:
     SourceFolder: '$(Build.SourcesDirectory)/src/Ombi/ClientApp/dist'
     Contents: '**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)/win-64/wwwroot'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/win-64/ClientApp/dist'
 
 #- task: DotNetCoreCLI@2
 #  displayName: Publish Win10-x86
