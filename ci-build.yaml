@@ -52,6 +52,7 @@ steps:
     command: 'publish'
     publishWebProjects: true
     arguments: '-c $(buildConfiguration) -r "win10-x64"  -o $(Build.ArtifactStagingDirectory)/win-64'
+    zipAfterPublish: false
 
 - task: CopyFiles@2
   displayName: 'Publish Angular App Win10-x64'
@@ -101,7 +102,7 @@ steps:
   displayName: Zip Win-x64
   inputs:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/win-64'
-    includeRootFolder: true
+    includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/win-x64-$(Build.BuildId).zip'
     replaceExistingArchive: true
