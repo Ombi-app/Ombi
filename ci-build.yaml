@@ -20,7 +20,7 @@ variables:
   csProj: '**/*.csproj'
   buildConfiguration: 'Release'
   publishLocation: '$(Build.SourcesDirectory)/src/Ombi/bin/Release/netcoreapp3.0'
-  gitTag: 'v4.0.${Build.BuildId}'
+  gitTag: 'v4.0.$(Build.BuildId)'
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -166,7 +166,7 @@ steps:
     action: 'create'
     target: 'c7fcbb77b58aef1076d635a9ef99e4374abc8672'
     tagSource: 'userSpecifiedTag'
-    tag: '${gitTag}'
+    tag: '$(gitTag)'
     releaseNotesSource: 'inline'
     releaseNotesInline: 'test'
     assets: '$(Build.ArtifactStagingDirectory)/*.zip'
