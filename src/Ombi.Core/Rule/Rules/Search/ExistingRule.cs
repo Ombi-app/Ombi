@@ -34,6 +34,8 @@ namespace Ombi.Core.Rule.Rules.Search
                     obj.Requested = true;
                     obj.RequestId = movieRequests.Id;
                     obj.Approved = movieRequests.Approved;
+                    obj.Denied = movieRequests.Denied ?? false;
+                    obj.DeniedReason = movieRequests.DeniedReason;
                     obj.Available = movieRequests.Available;
 
                     return Success();
@@ -60,6 +62,8 @@ namespace Ombi.Core.Rule.Rules.Search
 
                     request.Requested = true;
                     request.Approved = tvRequests.ChildRequests.Any(x => x.Approved);
+                    request.Denied = tvRequests.ChildRequests.Any(x => x.Denied ?? false);
+                    request.DeniedReason = tvRequests.ChildRequests.FirstOrDefault(x => x.DeniedReason != null)?.DeniedReason;
 
                     // Let's modify the seasonsrequested to reflect what we have requested...
                     foreach (var season in request.SeasonRequests)
@@ -108,6 +112,8 @@ namespace Ombi.Core.Rule.Rules.Search
                     obj.Requested = true;
                     obj.RequestId = albumRequest.Id;
                     obj.Approved = albumRequest.Approved;
+                    obj.Denied = albumRequest.Denied;
+                    obj.DeniedReason = albumRequest.DeniedReason;
                     obj.Available = albumRequest.Available;
 
                     return Success();
