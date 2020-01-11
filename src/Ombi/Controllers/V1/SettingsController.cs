@@ -964,6 +964,40 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
+        /// Gets the WhatsApp Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/whatsapp")]
+        public async Task<WhatsAppNotificationsViewModel> WhatsAppNotificationSettings()
+        {
+            var settings = await Get<WhatsAppSettings>();
+            var model = Mapper.Map<WhatsAppNotificationsViewModel>(settings);
+
+            // Lookup to see if we have any templates saved
+            model.NotificationTemplates = BuildTemplates(NotificationAgent.WhatsApp);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Saves the Mattermost notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/whatsapp")]
+        public async Task<bool> WhatsAppNotificationSettings([FromBody] WhatsAppNotificationsViewModel model)
+        {
+            // Save the email settings
+            var settings = Mapper.Map<WhatsAppSettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.UpdateRange(model.NotificationTemplates);
+
+            return result;
+        }
+
+        /// <summary>
         /// Saves the Mobile notification settings.
         /// </summary>
         /// <param name="model">The model.</param>

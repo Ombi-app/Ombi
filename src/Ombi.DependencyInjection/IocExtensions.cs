@@ -64,6 +64,7 @@ using Ombi.Schedule.Processor;
 using Ombi.Store.Entities;
 using Quartz.Spi;
 using Ombi.Api.MusicBrainz;
+using Ombi.Api.Twilio;
 
 namespace Ombi.DependencyInjection
 {
@@ -147,6 +148,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ILidarrApi, LidarrApi>();
             services.AddTransient<IGroupMeApi, GroupMeApi>();
             services.AddTransient<IMusicBrainzApi, MusicBrainzApi>();
+            services.AddTransient<IWhatsAppApi, WhatsAppApi>();
         }
 
         public static void RegisterStore(this IServiceCollection services) { 
