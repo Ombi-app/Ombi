@@ -27,6 +27,13 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $response = Invoke-WebRequest -Uri "https://ombireleasenote.azurewebsites.net/api/ReleaseNotesFunction?buildId=$(Build.BuildId)"
+      Write-Host "##vso[task.setvariable variable=ReleaseNotes;]$response"
+
 - task: Yarn@3
   displayName: 'Install UI Dependancies'
   inputs:
@@ -188,13 +195,6 @@ steps:
     archiveType: 'tar'
     archiveFile: '$(Build.ArtifactStagingDirectory)/linux-arm64-$(Build.BuildId).tar.gz'
     replaceExistingArchive: true
-
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    script: |
-      $response = Invoke-WebRequest -Uri "https://ombireleasenote.azurewebsites.net/api/ReleaseNotesFunction?buildId=$(Build.BuildId)", 
-      Write-Host "##vso[task.setvariable variable=ReleaseNotes;]$response"
 
 - task: GitHubRelease@1
   inputs:
