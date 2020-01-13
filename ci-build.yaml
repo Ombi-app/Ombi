@@ -189,6 +189,13 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/linux-arm64-$(Build.BuildId).tar.gz'
     replaceExistingArchive: true
 
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $response = Invoke-WebRequest -Uri "https://ombireleasenote.azurewebsites.net/api/ReleaseNotesFunction?buildId=$(Build.BuildId)", 
+      Write-Host "##vso[task.setvariable variable=ReleaseNotes;]$response"
+
 - task: GitHubRelease@1
   inputs:
     gitHubConnection: 'github.com_tidusjar'
@@ -198,6 +205,7 @@ steps:
     tagSource: 'userSpecifiedTag'
     tag: '$(gitTag)'
     releaseNotesSource: 'inline'
+    releaseNotesInline: '$(ReleaseNotes)'
     assets: |
       $(Build.ArtifactStagingDirectory)/*.zip
       $(Build.ArtifactStagingDirectory)/*.gz
