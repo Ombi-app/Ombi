@@ -27,6 +27,12 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: DotNetCoreInstaller@1
+  displayName: 'Use .NET Core sdk 2.1.505'
+  inputs:
+    packageType: 'sdk'
+    version: '3.x'
+
 - task: PowerShell@2
   displayName: 'Get Release Notes'
   inputs:
