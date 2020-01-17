@@ -219,3 +219,4 @@ steps:
     isPreRelease: true
     changeLogCompareToRelease: 'lastNonDraftRelease'
     changeLogType: 'commitBased'
+  condition: and(succeeded(), eq(variables['PublishToGithub'], 'true'))
