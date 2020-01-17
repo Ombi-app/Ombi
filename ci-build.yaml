@@ -34,16 +34,12 @@ steps:
       $response = Invoke-WebRequest -Uri "https://ombireleasenote.azurewebsites.net/api/ReleaseNotesFunction?buildId=$(Build.BuildId)"
       Write-Host "##vso[task.setvariable variable=ReleaseNotes;]$response"
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'custom'
-    custom: 'tool install'
-    arguments: '-g dotnet-setversion'
-
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
-    script: 'setversion -r $(gitTag)'
+    script: |
+      dotnet tool install -g dotnet-setversion
+      setversion -r $(gitTag)
 
 - task: Yarn@3
   displayName: 'Install UI Dependancies'
