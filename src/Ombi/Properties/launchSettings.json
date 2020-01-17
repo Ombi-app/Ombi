@@ -23,6 +23,9 @@
     "Ombi": {
       "commandName": "Project",
       "commandLineArgs": "--host http://*:3577",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
       "applicationUrl": "http://localhost:3577/"
     }
   }

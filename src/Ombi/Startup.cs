@@ -212,11 +212,13 @@ namespace Ombi
 
             app.UseSpa(spa =>
             {
-                if (env.IsDevelopment())
-                {
-                    spa.Options.SourcePath = "ClientApp";
-                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3578");
-                }
+#if DEBUG
+                //if (env.IsDevelopment())
+                //{
+                spa.Options.SourcePath = "ClientApp";
+                spa.UseProxyToSpaDevelopmentServer("http://localhost:3578");
+                //}
+#endif
             });
 
         }
