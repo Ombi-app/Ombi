@@ -27,6 +27,13 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $response = Invoke-WebRequest -Uri "https://ombireleasenote.azurewebsites.net/api/ReleaseNotesFunction?buildId=$(Build.BuildId)"
+      Write-Host "##vso[task.setvariable variable=ReleaseNotes;]$response"
+
 - task: Yarn@3
   displayName: 'Install UI Dependancies'
   inputs:
@@ -198,7 +205,7 @@ steps:
     tagSource: 'userSpecifiedTag'
     tag: '$(gitTag)'
     releaseNotesSource: 'inline'
-    releaseNotesInline: 'test'
+    releaseNotesInline: '$(ReleaseNotes)'
     assets: |
       $(Build.ArtifactStagingDirectory)/*.zip
       $(Build.ArtifactStagingDirectory)/*.gz
