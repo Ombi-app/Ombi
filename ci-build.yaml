@@ -27,7 +27,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- task: PowerShell@2#
+- task: PowerShell@2
   displayName: 'Get Release Notes'
   inputs:
     targetType: 'inline'
