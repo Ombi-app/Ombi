@@ -6,10 +6,8 @@ namespace Ombi.Helpers
     {
         public static string GetRuntimeVersion()
         {
-            var version = Assembly.GetEntryAssembly()
-                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                .InformationalVersion;
-            return version.Equals("1.0.0") ? "4.0.0-develop" : version;
+            ApplicationEnvironment app = PlatformServices.Default.Application;
+            return app.ApplicationVersion;
         }
     }
 }
