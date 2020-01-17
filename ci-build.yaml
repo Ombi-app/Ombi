@@ -27,7 +27,8 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- task: PowerShell@2
+- task: PowerShell@2#
+  displayName: 'Get Release Notes'
   inputs:
     targetType: 'inline'
     script: |
@@ -35,11 +36,12 @@ steps:
       Write-Host "##vso[task.setvariable variable=ReleaseNotes;]$response"
 
 - task: PowerShell@2
+  displayName: 'Set Version'
   inputs:
     targetType: 'inline'
     script: |
       dotnet tool install -g dotnet-setversion
-      setversion -r $(gitTag)
+      dotnet setversion -r $(gitTag)
 
 - task: Yarn@3
   displayName: 'Install UI Dependancies'
