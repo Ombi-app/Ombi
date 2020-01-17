@@ -38,7 +38,7 @@ steps:
   displayName: 'Use .NET Core sdk for versioning'
   inputs:
     packageType: 'sdk'
-    version: '2.1.1'
+    version: '2.1.0'
 
 
 - task: PowerShell@2
