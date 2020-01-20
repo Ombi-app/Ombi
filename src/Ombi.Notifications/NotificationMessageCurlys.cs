@@ -119,7 +119,7 @@ namespace Ombi.Notifications
         {
             LoadIssues(opts);
 
-            RequestId = req?.Id.ToString();
+            RequestId = req?.ParentRequestId.ToString();
 
             string title;
             if (req == null)
