@@ -137,7 +137,7 @@ namespace Ombi.Controllers.V1
             var version = AssemblyHelper.GetRuntimeVersion();
             var productArray = version.Split('-');
             model.Version = productArray[0];
-            model.Branch = productArray[1];
+            //model.Branch = productArray[1];
             return model;
         }
 
