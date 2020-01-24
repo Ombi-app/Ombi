@@ -20,7 +20,8 @@ variables:
   csProj: '**/*.csproj'
   buildConfiguration: 'Release'
   publishLocation: '$(Build.SourcesDirectory)/src/Ombi/bin/Release/netcoreapp3.0'
-  gitTag: 'v4.0.$(Build.BuildId)'
+  buildVersion: '4.0.$(Build.BuildId)'
+  gitTag: 'v$(buildVersion)'
   uiLocation: '$(Build.SourcesDirectory)/src/Ombi/ClientApp/'
 
 pool:
@@ -55,7 +56,7 @@ steps:
     targetType: 'inline'
     script: |
       dotnet tool install -g dotnet-setversion
-      setversion -r $(gitTag)
+      setversion -r $(buildVersion)
 
 - task: Yarn@3
   displayName: 'Install UI Dependancies'
