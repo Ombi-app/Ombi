@@ -100,6 +100,8 @@ steps:
     command: 'publish'
     publishWebProjects: true
     arguments: '-c $(buildConfiguration) -r "win10-x86" -o $(Build.ArtifactStagingDirectory)/win-86'
+    zipAfterPublish: false
+    modifyOutputPath: false
 
 - task: CopyFiles@2
   displayName: 'Copy Angular App Win10-x86'
@@ -114,6 +116,8 @@ steps:
     command: 'publish'
     publishWebProjects: true
     arguments: '-c $(buildConfiguration) -r "osx-x64"  -o $(Build.ArtifactStagingDirectory)/osx-64'
+    zipAfterPublish: false
+    modifyOutputPath: false
 
 - task: CopyFiles@2
   displayName: 'Copy Angular App OSX-x64'
@@ -128,6 +132,8 @@ steps:
     command: 'publish'
     publishWebProjects: true
     arguments: '-c $(buildConfiguration) -r "linux-x64"  -o $(Build.ArtifactStagingDirectory)/linux-64'
+    zipAfterPublish: false
+    modifyOutputPath: false
 
 - task: CopyFiles@2
   displayName: 'Copy Angular App Linux-x64'
@@ -142,6 +148,8 @@ steps:
     command: 'publish'
     publishWebProjects: true
     arguments: '-c $(buildConfiguration) -r "linux-arm" -o $(Build.ArtifactStagingDirectory)/linux-arm'
+    zipAfterPublish: false
+    modifyOutputPath: false
 
 - task: CopyFiles@2
   displayName: 'Copy Angular App Linux-ARM'
@@ -156,6 +164,8 @@ steps:
     command: 'publish'
     publishWebProjects: true
     arguments: '-c $(buildConfiguration) -r "linux-arm64"  -o $(Build.ArtifactStagingDirectory)/linux-arm64'
+    zipAfterPublish: false
+    modifyOutputPath: false
 
 - task: CopyFiles@2
   displayName: 'Copy Angular App Linux-ARM64'
