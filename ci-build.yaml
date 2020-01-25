@@ -189,7 +189,7 @@ steps:
   displayName: Zip Win-x86
   inputs:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/win-86'
-    includeRootFolder: true
+    includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/win-x86-$(Build.BuildId).zip'
     replaceExistingArchive: true
@@ -198,7 +198,7 @@ steps:
   displayName: Zip OSX-x64
   inputs:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/osx-64'
-    includeRootFolder: true
+    includeRootFolder: false
     archiveType: 'tar'
     archiveFile: '$(Build.ArtifactStagingDirectory)/osx-x64-$(Build.BuildId).tar.gz'
     replaceExistingArchive: true
@@ -207,7 +207,7 @@ steps:
   displayName: Zip Linux-x64
   inputs:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/linux-64'
-    includeRootFolder: true
+    includeRootFolder: false
     archiveType: 'tar'
     archiveFile: '$(Build.ArtifactStagingDirectory)/linux-x64-$(Build.BuildId).tar.gz'
     replaceExistingArchive: true
@@ -216,7 +216,7 @@ steps:
   displayName: Zip Linux-ARM
   inputs:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/linux-arm'
-    includeRootFolder: true
+    includeRootFolder: false
     archiveType: 'tar'
     archiveFile: '$(Build.ArtifactStagingDirectory)/linux-arm-$(Build.BuildId).tar.gz'
     replaceExistingArchive: true
@@ -225,7 +225,7 @@ steps:
   displayName: Zip Linux-ARM-x64
   inputs:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/linux-arm64'
-    includeRootFolder: true
+    includeRootFolder: false
     archiveType: 'tar'
     archiveFile: '$(Build.ArtifactStagingDirectory)/linux-arm64-$(Build.BuildId).tar.gz'
     replaceExistingArchive: true
