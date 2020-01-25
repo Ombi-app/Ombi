@@ -33,10 +33,10 @@ We also now have merch up on Teespring!
 ___
 
 
-| Service  | Stable         | Develop          |
-|----------|:---------------------------:|:----------------------------:|
-| AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/master?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/develop?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/develop) | 
-| Download |[![Download](http://i.imgur.com/odToka3.png)](https://github.com/tidusjar/Ombi/releases)            |      [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/develop/artifacts)       | 
+| Service  | Stable         | Develop          | V4 |
+|----------|:---------------------------:|:----------------------------:|:----------------------------:|
+| Build Status | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/master?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/develop?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/develop) | [![Build Status](https://dev.azure.com/tidusjar/Ombi/_apis/build/status/Ombi%20CI%20Build?branchName=feature%2Fv4)](https://dev.azure.com/tidusjar/Ombi/_build/latest?definitionId=15&branchName=feature%2Fv4)
+| Download |[![Download](http://i.imgur.com/odToka3.png)](https://github.com/tidusjar/Ombi/releases)            |      [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/develop/artifacts)       | [![Download](http://i.imgur.com/odToka3.png)](https://github.com/tidusjar/ombi.releases/releases)       | 
 # Features
 Here are some of the features Ombi V3 has:
 * Now working without crashes on Linux.
