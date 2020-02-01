@@ -9,7 +9,7 @@
 trigger:
   branches:
     include:
-    - feature/*
+    - feature/v4
     exclude:
     - develop
     - master
