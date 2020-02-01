@@ -91,6 +91,7 @@ export interface INotificationPreferences {
 }
 
 export enum INotificationAgent {
+
     Email = 0,
     Discord = 1,
     Pushbullet = 2,
@@ -99,4 +100,6 @@ export enum INotificationAgent {
     Slack = 5,
     Mattermost = 6,
     Mobile = 7,
+    Gotify = 8,
+    WhatsApp = 9
 }
