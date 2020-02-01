@@ -61,7 +61,7 @@ namespace Ombi.Core.Engine
                     {
                         continue;
                     }
-                    retVal.Add(ProcessResult(tvMazeSearch));
+                    retVal.Add(await ProcessResult(tvMazeSearch));
                 }
                 return retVal;
             }
@@ -123,7 +123,7 @@ namespace Ombi.Core.Engine
         public async Task<IEnumerable<SearchTvShowViewModel>> Popular()
         {
             var result = await Cache.GetOrAdd(CacheKeys.PopularTv, async () => await TraktApi.GetPopularShows(), DateTime.Now.AddHours(12));
-            var processed = ProcessResults(result);
+            var processed = await ProcessResults(result);
             return processed;
         }
 
@@ -131,37 +131,38 @@ namespace Ombi.Core.Engine
         {
 
             var result = await Cache.GetOrAdd(CacheKeys.AnticipatedTv, async () => await TraktApi.GetAnticipatedShows(), DateTime.Now.AddHours(12));
-            var processed = ProcessResults(result);
+            var processed = await ProcessResults(result);
             return processed;
         }
 
         public async Task<IEnumerable<SearchTvShowViewModel>> MostWatches()
         {
             var result = await Cache.GetOrAdd(CacheKeys.MostWatchesTv, async () => await TraktApi.GetMostWatchesShows(), DateTime.Now.AddHours(12));
-            var processed = ProcessResults(result);
+            var processed = await ProcessResults(result);
             return processed;
         }
 
         public async Task<IEnumerable<SearchTvShowViewModel>> Trending()
         {
             var result = await Cache.GetOrAdd(CacheKeys.TrendingTv, async () => await TraktApi.GetTrendingShows(), DateTime.Now.AddHours(12));
-            var processed = ProcessResults(result);
+            var processed = await ProcessResults(result);
             return processed;
         }
 
-        protected IEnumerable<SearchTvShowViewModel> ProcessResults<T>(IEnumerable<T> items)
+        protected async Task<IEnumerable<SearchTvShowViewModel>> ProcessResults<T>(IEnumerable<T> items)
         {
             var retVal = new List<SearchTvShowViewModel>();
             foreach (var tvMazeSearch in items)
             {
-                retVal.Add(ProcessResult(tvMazeSearch));
+                retVal.Add(await ProcessResult(tvMazeSearch));
             }
             return retVal;
         }
 
-        protected SearchTvShowViewModel ProcessResult<T>(T tvMazeSearch)
+        protected async Task<SearchTvShowViewModel> ProcessResult<T>(T tvMazeSearch)
         {
-            return Mapper.Map<SearchTvShowViewModel>(tvMazeSearch);
+            var viewTv = Mapper.Map<SearchTvShowViewModel>(tvMazeSearch);
+            return await ProcessResult(viewTv);
         }
 
         private async Task<SearchTvShowViewModel> ProcessResult(SearchTvShowViewModel item)
