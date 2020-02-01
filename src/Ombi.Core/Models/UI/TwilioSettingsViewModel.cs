@@ -7,8 +7,14 @@ namespace Ombi.Core.Models.UI
     /// <summary>
     /// The view model for the notification settings page
     /// </summary>
-    /// <seealso cref="WhatsAppNotificationsViewModel" />
-    public class WhatsAppNotificationsViewModel : WhatsAppSettings
+    /// <seealso cref="TwilioSettingsViewModel" />
+    public class TwilioSettingsViewModel
+    {
+        public int Id { get; set; }
+        public WhatsAppSettingsViewModel WhatsAppSettings { get; set; } = new WhatsAppSettingsViewModel();
+    }
+
+    public class WhatsAppSettingsViewModel : WhatsAppSettings
     {
         /// <summary>
         /// Gets or sets the notification templates.

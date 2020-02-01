@@ -964,17 +964,21 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
-        /// Gets the WhatsApp Notification Settings.
+        /// Gets the Twilio Notification Settings.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("notifications/whatsapp")]
-        public async Task<WhatsAppNotificationsViewModel> WhatsAppNotificationSettings()
+        [HttpGet("notifications/twilio")]
+        public async Task<TwilioSettingsViewModel> TwilioNotificationSettings()
         {
-            var settings = await Get<WhatsAppSettings>();
-            var model = Mapper.Map<WhatsAppNotificationsViewModel>(settings);
+            var settings = await Get<TwilioSettings>();
+            var model = Mapper.Map<TwilioSettingsViewModel>(settings);
 
             // Lookup to see if we have any templates saved
-            model.NotificationTemplates = BuildTemplates(NotificationAgent.WhatsApp);
+            if(model.WhatsAppSettings == null)
+            {
+                model.WhatsAppSettings = new WhatsAppSettingsViewModel();
+            }
+            model.WhatsAppSettings.NotificationTemplates = BuildTemplates(NotificationAgent.WhatsApp);
 
             return model;
         }
@@ -984,15 +988,15 @@ namespace Ombi.Controllers.V1
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        [HttpPost("notifications/whatsapp")]
-        public async Task<bool> WhatsAppNotificationSettings([FromBody] WhatsAppNotificationsViewModel model)
+        [HttpPost("notifications/twilio")]
+        public async Task<bool> TwilioNotificationSettings([FromBody] TwilioSettingsViewModel model)
         {
             // Save the email settings
-            var settings = Mapper.Map<WhatsAppSettings>(model);
+            var settings = Mapper.Map<TwilioSettings>(model);
             var result = await Save(settings);
 
             // Save the templates
-            await TemplateRepository.UpdateRange(model.NotificationTemplates);
+            await TemplateRepository.UpdateRange(model.WhatsAppSettings.NotificationTemplates);
 
             return result;
         }

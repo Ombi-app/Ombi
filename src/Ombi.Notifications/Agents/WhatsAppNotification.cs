@@ -13,9 +13,9 @@ using Ombi.Api.Twilio;
 
 namespace Ombi.Notifications.Agents
 {
-    public class WhatsAppNotification : BaseNotification<WhatsAppSettings>
+    public class WhatsAppNotification : BaseNotification<TwilioSettings>
     {
-        public WhatsAppNotification(IWhatsAppApi api, ISettingsService<WhatsAppSettings> sn, ILogger<WhatsAppNotification> log, 
+        public WhatsAppNotification(IWhatsAppApi api, ISettingsService<TwilioSettings> sn, ILogger<WhatsAppNotification> log, 
                                     INotificationTemplatesRepository r, IMovieRequestRepository m, 
                                     ITvRequestRepository t, ISettingsService<CustomizationSettings> s
             , IRepository<RequestSubscription> sub, IMusicRequestRepository music,
@@ -30,66 +30,66 @@ namespace Ombi.Notifications.Agents
         private IWhatsAppApi Api { get; }
         private ILogger Logger { get; }
 
-        protected override bool ValidateConfiguration(WhatsAppSettings settings)
+        protected override bool ValidateConfiguration(TwilioSettings settings)
         {
-            if (!settings.Enabled)
+            if (!settings.WhatsAppSettings?.Enabled ?? false)
             {
                 return false;
             }
-            return !settings.AccountSid.IsNullOrEmpty() && !settings.AuthToken.IsNullOrEmpty() && !settings.From.IsNullOrEmpty();
+            return !settings.WhatsAppSettings.AccountSid.IsNullOrEmpty() && !settings.WhatsAppSettings.AuthToken.IsNullOrEmpty() && !settings.WhatsAppSettings.From.IsNullOrEmpty();
         }
 
-        protected override async Task NewRequest(NotificationOptions model, WhatsAppSettings settings)
+        protected override async Task NewRequest(NotificationOptions model, TwilioSettings settings)
         {
             await Run(model, settings, NotificationType.NewRequest);
         }
 
-        protected override async Task NewIssue(NotificationOptions model, WhatsAppSettings settings)
+        protected override async Task NewIssue(NotificationOptions model, TwilioSettings settings)
         {
             await Run(model, settings, NotificationType.Issue);
         }
 
-        protected override async Task IssueComment(NotificationOptions model, WhatsAppSettings settings)
+        protected override async Task IssueComment(NotificationOptions model, TwilioSettings settings)
         {
             await Run(model, settings, NotificationType.IssueComment);
         }
 
-        protected override async Task IssueResolved(NotificationOptions model, WhatsAppSettings settings)
+        protected override async Task IssueResolved(NotificationOptions model, TwilioSettings settings)
         {
             await Run(model, settings, NotificationType.IssueResolved);
         }
 
-        protected override async Task AddedToRequestQueue(NotificationOptions model, WhatsAppSettings settings)
+        protected override async Task AddedToRequestQueue(NotificationOptions model, TwilioSettings settings)
         {
             await Run(model, settings, NotificationType.ItemAddedToFaultQueue);
         }
 
-        protected override async Task RequestDeclined(NotificationOptions model, WhatsAppSettings settings)
+        protected override async Task RequestDeclined(NotificationOptions model, TwilioSettings settings)
         {
             await Run(model, settings, NotificationType.RequestDeclined);
         }
 
-        protected override async Task RequestApproved(NotificationOptions model, WhatsAppSettings settings)
+        protected override async Task RequestApproved(NotificationOptions model, TwilioSettings settings)
         {
             await Run(model, settings, NotificationType.RequestApproved);
         }
 
-        protected override async Task AvailableRequest(NotificationOptions model, WhatsAppSettings settings)
+        protected override async Task AvailableRequest(NotificationOptions model, TwilioSettings settings)
         {
             await Run(model, settings, NotificationType.RequestAvailable);
         }
 
-        protected override async Task Send(NotificationMessage model, WhatsAppSettings settings)
+        protected override async Task Send(NotificationMessage model, TwilioSettings settings)
         {
             try
             {
                 var whatsApp = new WhatsAppModel
                 {
                     Message = model.Message,
-                    From = settings.From,
+                    From = settings.WhatsAppSettings.From,
                     To = ""// TODO
                 };
-                await Api.SendMessage(whatsApp, settings.AccountSid, settings.AuthToken);
+                await Api.SendMessage(whatsApp, settings.WhatsAppSettings.AccountSid, settings.WhatsAppSettings.AuthToken);
             }
             catch (Exception e)
             {
@@ -97,7 +97,7 @@ namespace Ombi.Notifications.Agents
             }
         }
 
-        protected override async Task Test(NotificationOptions model, WhatsAppSettings settings)
+        protected override async Task Test(NotificationOptions model, TwilioSettings settings)
         {
             var message = $"This is a test from Ombi, if you can see this then we have successfully pushed a notification!";
             var notification = new NotificationMessage
@@ -107,7 +107,7 @@ namespace Ombi.Notifications.Agents
             await Send(notification, settings);
         }
 
-        private async Task Run(NotificationOptions model, WhatsAppSettings settings, NotificationType type)
+        private async Task Run(NotificationOptions model, TwilioSettings settings, NotificationType type)
         {
             var parsed = await LoadTemplate(NotificationAgent.WhatsApp, type, model);
             if (parsed.Disabled)
