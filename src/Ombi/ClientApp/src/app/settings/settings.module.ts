@@ -55,6 +55,8 @@ import { MatMenuModule} from "@angular/material";
 import { SharedModule } from "../shared/shared.module";
 import { HubService } from "../services/hub.service";
 import { LogsComponent } from "./logs/logs.component";
+import { TwilioComponent } from "./notifications/twilio/twilio.component";
+import { WhatsAppComponent } from "./notifications/twilio/whatsapp.component";
 
 const routes: Routes = [
     { path: "Ombi", component: OmbiComponent, canActivate: [AuthGuard] },
@@ -72,6 +74,7 @@ const routes: Routes = [
     { path: "Pushbullet", component: PushbulletComponent, canActivate: [AuthGuard] },
     { path: "Gotify", component: GotifyComponent, canActivate: [AuthGuard] },
     { path: "Mattermost", component: MattermostComponent, canActivate: [AuthGuard] },
+    { path: "Twilio", component: TwilioComponent, canActivate: [AuthGuard] },
     { path: "UserManagement", component: UserManagementComponent, canActivate: [AuthGuard] },
     { path: "Update", component: UpdateComponent, canActivate: [AuthGuard] },
     { path: "CouchPotato", component: CouchPotatoComponent, canActivate: [AuthGuard] },
@@ -149,6 +152,8 @@ const routes: Routes = [
         TheMovieDbComponent,
         FailedRequestsComponent,
         LogsComponent,
+        TwilioComponent,
+        WhatsAppComponent
     ],
     exports: [
         RouterModule,

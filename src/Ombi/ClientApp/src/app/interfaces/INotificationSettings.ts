@@ -27,11 +27,16 @@ export interface INotificationTemplates {
 }
 
 export enum NotificationAgent {
-    Email,
-    Discord,
-    Pushbullet,
-    Pushover,
-    Telegram,
+    Email = 0,
+    Discord = 1,
+    Pushbullet = 2,
+    Pushover = 3,
+    Telegram = 4,
+    Slack = 5,
+    Mattermost = 6,
+    Mobile = 7,
+    Gotify = 8,
+    WhatsApp = 9
 }
 
 export enum NotificationType {
@@ -47,6 +52,7 @@ export enum NotificationType {
     IssueResolved = 9,
     IssueComment = 10,
     Newsletter = 11,
+    WhatsApp = 12,
 }
 
 export interface IDiscordNotifcationSettings extends INotificationSettings {
@@ -83,6 +89,18 @@ export interface IPushbulletNotificationSettings extends INotificationSettings {
     accessToken: string;
     notificationTemplates: INotificationTemplates[];
     channelTag: string;
+}
+
+export interface ITwilioSettings extends ISettings {
+    whatsAppSettings: IWhatsAppSettings;
+}
+
+export interface IWhatsAppSettings {
+    enabled: number;
+    from: string;
+    accountSid: string;
+    authToken: string;
+    notificationTemplates: INotificationTemplates[];
 }
 
 export interface IPushoverNotificationSettings extends INotificationSettings {
