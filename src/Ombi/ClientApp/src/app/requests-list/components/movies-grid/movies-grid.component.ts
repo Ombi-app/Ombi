@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, EventEmitter, Output } from "@angular/core";
+import { Component, AfterViewInit, ViewChild, EventEmitter, Output, ChangeDetectorRef } from "@angular/core";
 import { IMovieRequests, IRequestsViewModel } from "../../../interfaces";
 import { MatPaginator, MatSort } from "@angular/material";
 import { merge, Observable, of as observableOf } from 'rxjs';
@@ -19,12 +19,12 @@ export class MoviesGridComponent implements AfterViewInit {
     public gridCount: string = "15";
     public showUnavailableRequests: boolean;
     
-    @Output() public onOpenOptions = new EventEmitter<{request: any, filter: any}>();
+    @Output() public onOpenOptions = new EventEmitter<{request: any, filter: any, onChange: any}>();
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-    constructor(private requestService: RequestServiceV2) {
+    constructor(private requestService: RequestServiceV2, private ref: ChangeDetectorRef) {
 
     }
 
@@ -73,6 +73,10 @@ export class MoviesGridComponent implements AfterViewInit {
             return req.id !== request.id;
         })};
 
-        this.onOpenOptions.emit({request: request, filter: filter});
+        const onChange = () => {
+            this.ref.detectChanges();
+        };
+
+        this.onOpenOptions.emit({request: request, filter: filter, onChange: onChange});
     }
 }

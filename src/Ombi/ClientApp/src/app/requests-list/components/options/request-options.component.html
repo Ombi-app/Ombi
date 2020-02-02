@@ -2,4 +2,7 @@
   <a (click)="delete()" mat-list-item>
     <span mat-line>Delete Request</span>
   </a>
+  <a *ngIf="data.canApprove" (click)="approve()" mat-list-item>
+    <span mat-line>Approve Request</span>
+  </a>
 </mat-nav-list>
