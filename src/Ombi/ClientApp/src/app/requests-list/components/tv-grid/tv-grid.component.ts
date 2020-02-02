@@ -1,10 +1,11 @@
-import { Component, AfterViewInit, ViewChild, Output, EventEmitter } from "@angular/core";
+import { Component, AfterViewInit, ViewChild, Output, EventEmitter, ChangeDetectorRef } from "@angular/core";
 import {  IRequestsViewModel, IChildRequests } from "../../../interfaces";
 import { MatPaginator, MatSort } from "@angular/material";
 import { merge, of as observableOf, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 import { RequestServiceV2 } from "../../../services/requestV2.service";
+import { AuthService } from "../../../auth/auth.service";
 
 @Component({
     templateUrl: "./tv-grid.component.html",
@@ -18,18 +19,21 @@ export class TvGridComponent implements AfterViewInit {
     public displayedColumns: string[] = ['series',  'requestedBy', 'status', 'requestStatus', 'requestedDate','actions'];
     public gridCount: string = "15";
     public showUnavailableRequests: boolean;
+    public isAdmin: boolean;
 
-    @Output() public onOpenOptions = new EventEmitter<{request: any, filter: any}>();
+    @Output() public onOpenOptions = new EventEmitter<{request: any, filter: any, onChange: any}>();
 
     @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
     @ViewChild(MatSort, {static: false}) sort: MatSort;
 
-    constructor(private requestService: RequestServiceV2) {
+    constructor(private requestService: RequestServiceV2, private auth: AuthService,
+                private ref: ChangeDetectorRef) {
 
     }
 
     public async ngAfterViewInit() {
 
+        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
         // If the user changes the sort order, reset back to the first page.
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
@@ -58,8 +62,12 @@ export class TvGridComponent implements AfterViewInit {
         const filter = () => { this.dataSource = this.dataSource.filter((req) => {
             return req.id !== request.id;
         })};
+        
+        const onChange = () => {
+            this.ref.detectChanges();
+        };
 
-        this.onOpenOptions.emit({request: request, filter: filter});
+        this.onOpenOptions.emit({request: request, filter: filter, onChange});
     }
 
     private loadData(): Observable<IRequestsViewModel<IChildRequests>> {

@@ -5,6 +5,7 @@ import { merge, Observable, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 import { RequestServiceV2 } from "../../../services/requestV2.service";
+import { AuthService } from "../../../auth/auth.service";
 
 @Component({
     templateUrl: "./movies-grid.component.html",
@@ -18,13 +19,15 @@ export class MoviesGridComponent implements AfterViewInit {
     public displayedColumns: string[] = ['requestedUser.requestedBy', 'title', 'requestedDate', 'status', 'requestStatus', 'actions'];
     public gridCount: string = "15";
     public showUnavailableRequests: boolean;
-    
-    @Output() public onOpenOptions = new EventEmitter<{request: any, filter: any, onChange: any}>();
+    public isAdmin: boolean;
+
+    @Output() public onOpenOptions = new EventEmitter<{ request: any, filter: any, onChange: any }>();
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-    constructor(private requestService: RequestServiceV2, private ref: ChangeDetectorRef) {
+    constructor(private requestService: RequestServiceV2, private ref: ChangeDetectorRef,
+                private auth: AuthService) {
 
     }
 
@@ -33,6 +36,8 @@ export class MoviesGridComponent implements AfterViewInit {
         //     { availabilityFilter: FilterType.None, statusFilter: FilterType.None }).toPromise();
         // this.dataSource = results.collection;
         // this.resultsLength = results.total;
+
+        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
 
         // If the user changes the sort order, reset back to the first page.
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
@@ -69,14 +74,16 @@ export class MoviesGridComponent implements AfterViewInit {
     }
 
     public openOptions(request: IMovieRequests) {
-        const filter = () => { this.dataSource = this.dataSource.filter((req) => {
+        const filter = () => {
+        this.dataSource = this.dataSource.filter((req) => {
             return req.id !== request.id;
-        })};
+        })
+        };
 
         const onChange = () => {
             this.ref.detectChanges();
         };
 
-        this.onOpenOptions.emit({request: request, filter: filter, onChange: onChange});
+        this.onOpenOptions.emit({ request: request, filter: filter, onChange: onChange });
     }
 }
