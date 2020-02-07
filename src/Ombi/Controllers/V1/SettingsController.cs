@@ -1118,7 +1118,8 @@ namespace Ombi.Controllers.V1
                 // Make sure we do not display the newsletter
                 templates = templates.Where(x => x.NotificationType != NotificationType.Newsletter);
             }
-            return templates.OrderBy(x => x.NotificationType.ToString()).ToList();
+            var tem =  templates.ToList();
+            return tem.OrderBy(x => x.NotificationType.ToString()).ToList();
         }
 
         private async Task<T> Get<T>()

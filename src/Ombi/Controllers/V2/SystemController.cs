@@ -33,18 +33,22 @@ namespace Ombi.Controllers.V2
         public async Task<IActionResult> ReadLogFile(string logFileName, CancellationToken token)
         {
             var logFile = Path.Combine(_hosting.ContentRootPath, "Logs", logFileName);
-            await using var fs = new FileStream(logFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            using StreamReader reader = new StreamReader(fs);
-            return Ok(await reader.ReadToEndAsync());
+            using (var fs = new FileStream(logFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (StreamReader reader = new StreamReader(fs))
+            {
+                return Ok(await reader.ReadToEndAsync());
+            }
         }
-        
+
         [HttpGet("logs/download/{logFileName}")]
         public IActionResult Download(string logFileName, CancellationToken token)
         {
             var logFile = Path.Combine(_hosting.ContentRootPath, "Logs", logFileName);
-            using var fs = new FileStream(logFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            using StreamReader reader = new StreamReader(fs);
-            return File(reader.BaseStream, "application/octet-stream", logFileName);
+            using (var fs = new FileStream(logFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (StreamReader reader = new StreamReader(fs))
+            {
+                return File(reader.BaseStream, "application/octet-stream", logFileName);
+            }
         }
     }
 }

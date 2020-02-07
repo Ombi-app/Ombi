@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
 using Ombi.Core.Notifications;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
@@ -16,7 +15,6 @@ using Ombi.Schedule.Jobs.Radarr;
 using Ombi.Schedule.Jobs.SickRage;
 using Ombi.Schedule.Jobs.Sonarr;
 using Ombi.Settings.Settings.Models;
-using Quartz;
 using Quartz.Spi;
 
 namespace Ombi.Schedule
