@@ -13,3 +13,9 @@ export interface IDiscoverCardResult {
     overview: string;
     imdbid: string;
 }
+
+export enum DiscoverOption {
+    Combined = 1,
+    Movie = 2,
+    Tv = 3
+}

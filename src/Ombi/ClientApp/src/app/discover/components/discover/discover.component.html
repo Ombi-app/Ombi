@@ -1,30 +1,27 @@
 <div class="small-middle-container">
-
-  <div class="row justify-content-md-center top-spacing">
-    <div class="btn-group" role="group" aria-label="Basic example">
-      <button type="button" (click)="popular()" [attr.color]="popularActive ? 'accent' : 'primary'"
-        [ngClass]="popularActive ? 'mat-accent' : 'mat-primary'" mat-raised-button
-        class="btn grow">{{'Discovery.PopularTab' | translate}}</button>
-      <button type="button" (click)="trending()" [attr.color]="trendingActive ? 'accent' : 'primary'"
-        [ngClass]="trendingActive ? 'mat-accent' : 'mat-primary'" mat-raised-button class="btn grow"
-        color="primary">{{'Discovery.TrendingTab' | translate}}</button>
-      <button type="button" (click)="upcoming()" [attr.color]="upcomingActive ? 'accent' : 'primary'"
-        [ngClass]="upcomingActive ? 'mat-accent' : 'mat-primary'" mat-raised-button class="btn grow"
-        color="primary">{{'Discovery.UpcomingTab' | translate}}</button>
+    <div class="row justify-content-md-center top-spacing">
+        <div class="btn-group" role="group">
+            <button type="button" (click)="switchDiscoverMode(DiscoverOption.Movie)" [attr.color]="popularActive ? 'accent' : 'primary'" [ngClass]="discoverOptions === DiscoverOption.Movie ? 'mat-accent' : 'mat-primary'" mat-raised-button class="btn grow">{{'Discovery.Movies' | translate}}</button>
+            <button type="button" (click)="switchDiscoverMode(DiscoverOption.Combined)" [attr.color]="trendingActive ? 'accent' : 'primary'" [ngClass]="discoverOptions === DiscoverOption.Combined ? 'mat-accent' : 'mat-primary'" mat-raised-button class="btn grow"
+                color="primary">{{'Discovery.Combined' | translate}}</button>
+            <button type="button" (click)="switchDiscoverMode(DiscoverOption.Tv)" [attr.color]="upcomingActive ? 'accent' : 'primary'" [ngClass]="discoverOptions === DiscoverOption.Tv ? 'mat-accent' : 'mat-primary'" mat-raised-button class="btn grow" color="primary">{{'Discovery.Tv' | translate}}</button>
+        </div>
     </div>
-  </div>
 
-  <div *ngIf="discoverResults" class="row full-height discoverResults"  
-  infiniteScroll
-  [fromRoot]="false"
-  [infiniteScrollDistance]="0.5"
-  [infiniteScrollDisabled]="scrollDisabled"
-  (scrolled)="onScroll()">
-      <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-4 small-padding" *ngFor="let result of discoverResults">
-        <discover-card [result]="result"></discover-card>
-      </div>
-  </div>
-  <div *ngIf="loadingFlag" class="row justify-content-md-center top-spacing loading-spinner">
-    <mat-spinner [color]="'accent'"></mat-spinner>
-  </div>
+    <div class="row justify-content-md-center small-space">
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <button type="button" (click)="popular()" [attr.color]="popularActive ? 'accent' : 'primary'" [ngClass]="popularActive ? 'mat-accent' : 'mat-primary'" mat-raised-button class="btn grow">{{'Discovery.PopularTab' | translate}}</button>
+            <button type="button" (click)="trending()" [attr.color]="trendingActive ? 'accent' : 'primary'" [ngClass]="trendingActive ? 'mat-accent' : 'mat-primary'" mat-raised-button class="btn grow" color="primary">{{'Discovery.TrendingTab' | translate}}</button>
+            <button type="button" (click)="upcoming()" [attr.color]="upcomingActive ? 'accent' : 'primary'" [ngClass]="upcomingActive ? 'mat-accent' : 'mat-primary'" mat-raised-button class="btn grow" color="primary">{{'Discovery.UpcomingTab' | translate}}</button>
+        </div>
+    </div>
+
+    <div *ngIf="discoverResults" class="row full-height discoverResults" infiniteScroll [fromRoot]="false" [infiniteScrollDistance]="0.5" [infiniteScrollDisabled]="scrollDisabled" (scrolled)="onScroll()">
+        <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-4 small-padding" *ngFor="let result of discoverResults">
+            <discover-card [result]="result"></discover-card>
+        </div>
+    </div>
+    <div *ngIf="loadingFlag" class="row justify-content-md-center top-spacing loading-spinner">
+        <mat-spinner [color]="'accent'"></mat-spinner>
+    </div>
 </div>

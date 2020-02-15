@@ -2,10 +2,9 @@
     height: 100%;
 }
 
-
-.small-middle-container{
-	margin: auto;
-	width: 80%;
+.small-middle-container {
+    margin: auto;
+    width: 80%;
 }
 
 .small-padding {
@@ -17,7 +16,12 @@
 .loading-spinner {
     margin: 10%;
 }
+
 #scroller {
     height: 100vh;
     overflow: scroll;
-  }
+}
+
+.small-space {
+    padding-top: 1%;
+}
