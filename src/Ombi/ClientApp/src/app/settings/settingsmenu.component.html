@@ -2,62 +2,63 @@
 
 <button mat-button [matMenuTriggerFor]="configurationmenu"><i class="fa fa-cogs" aria-hidden="true"></i> Configuration</button>
 <mat-menu #configurationmenu="matMenu">
-  <button mat-menu-item [routerLink]="['/Settings/Customization']">Customization</button>
-  <button mat-menu-item [routerLink]="['/Settings/LandingPage']">Landing Page</button>
-  <button mat-menu-item [routerLink]="['/Settings/Issues']">Issues</button>
-  <button mat-menu-item [routerLink]="['/Settings/UserManagement']">User Management</button>
-  <button mat-menu-item [routerLink]="['/Settings/Authentication']">Authentication</button>
-  <button mat-menu-item [routerLink]="['/Settings/Vote']">Vote</button>
-  <button mat-menu-item [routerLink]="['/Settings/TheMovieDb']">The Movie Database</button>
+    <button mat-menu-item [routerLink]="['/Settings/Customization']">Customization</button>
+    <button mat-menu-item [routerLink]="['/Settings/LandingPage']">Landing Page</button>
+    <button mat-menu-item [routerLink]="['/Settings/Issues']">Issues</button>
+    <button mat-menu-item [routerLink]="['/Settings/UserManagement']">User Management</button>
+    <button mat-menu-item [routerLink]="['/Settings/Authentication']">Authentication</button>
+    <button mat-menu-item [routerLink]="['/Settings/Vote']">Vote</button>
+    <button mat-menu-item [routerLink]="['/Settings/TheMovieDb']">The Movie Database</button>
 </mat-menu>
 
 <button mat-button [matMenuTriggerFor]="mediaservermenu"><i class="fa fa-server" aria-hidden="true"></i> Media Server</button>
 <mat-menu #mediaservermenu="matMenu">
-  <button mat-menu-item [routerLink]="['/Settings/Plex']">Plex</button>
-  <button mat-menu-item [routerLink]="['/Settings/Emby']">Emby/Jellyfin</button>
+    <button mat-menu-item [routerLink]="['/Settings/Plex']">Plex</button>
+    <button mat-menu-item [routerLink]="['/Settings/Emby']">Emby/Jellyfin</button>
 </mat-menu>
 
 <button mat-button [matMenuTriggerFor]="tvmenu"><i class="fa fa-television" aria-hidden="true"></i> TV</button>
 <mat-menu #tvmenu="matMenu">
-  <button mat-menu-item [routerLink]="['/Settings/Sonarr']">Sonarr</button>
-  <button mat-menu-item [routerLink]="['/Settings/DogNzb']">DogNzb</button>
-  <button mat-menu-item [routerLink]="['/Settings/SickRage']">SickRage</button>
+    <button mat-menu-item [routerLink]="['/Settings/Sonarr']">Sonarr</button>
+    <button mat-menu-item [routerLink]="['/Settings/DogNzb']">DogNzb</button>
+    <button mat-menu-item [routerLink]="['/Settings/SickRage']">SickRage</button>
 </mat-menu>
 
 <button mat-button [matMenuTriggerFor]="movieMenu"><i class="fa fa-film" aria-hidden="true"></i> Movies</button>
 <mat-menu #movieMenu="matMenu">
-  <button mat-menu-item [routerLink]="['/Settings/CouchPotato']">CouchPotato</button>
-  <button mat-menu-item [routerLink]="['/Settings/DogNzb']">DogNzb</button>
-  <button mat-menu-item [routerLink]="['/Settings/Radarr']">Radarr</button>
+    <button mat-menu-item [routerLink]="['/Settings/CouchPotato']">CouchPotato</button>
+    <button mat-menu-item [routerLink]="['/Settings/DogNzb']">DogNzb</button>
+    <button mat-menu-item [routerLink]="['/Settings/Radarr']">Radarr</button>
 </mat-menu>
 
 <button mat-button [matMenuTriggerFor]="musicMenu"><i class="fa fa-music" aria-hidden="true"></i> Music</button>
 <mat-menu #musicMenu="matMenu">
-  <button mat-menu-item [routerLink]="['/Settings/Lidarr']">Lidarr</button>
+    <button mat-menu-item [routerLink]="['/Settings/Lidarr']">Lidarr</button>
 </mat-menu>
 
 <button mat-button [matMenuTriggerFor]="notificationMenu"><i class="fa fa-bell-o" aria-hidden="true"></i> Notifications</button>
 <mat-menu #notificationMenu="matMenu">
-        <button mat-menu-item [routerLink]="['/Settings/Mobile']">Mobile</button>
-        <button mat-menu-item [routerLink]="['/Settings/Email']">Email</button>
-        <button mat-menu-item [routerLink]="['/Settings/MassEmail']">MassEmail</button>
-        <button mat-menu-item [routerLink]="['/Settings/Newsletter']">Newsletter</button>
-        <button mat-menu-item [routerLink]="['/Settings/Discord']">Discord</button>
-        <button mat-menu-item [routerLink]="['/Settings/Slack']">Slack</button>
-        <button mat-menu-item [routerLink]="['/Settings/Pushbullet']">Pushbullet</button>
-        <button mat-menu-item [routerLink]="['/Settings/Pushover']">Pushover</button>
-        <button mat-menu-item [routerLink]="['/Settings/Mattermost']">Mattermost</button>
-        <button mat-menu-item [routerLink]="['/Settings/Telegram']">Telegram</button>
-        <button mat-menu-item [routerLink]="['/Settings/Gotify']">Gotify</button>
+    <button mat-menu-item [routerLink]="['/Settings/Mobile']">Mobile</button>
+    <button mat-menu-item [routerLink]="['/Settings/Email']">Email</button>
+    <button mat-menu-item [routerLink]="['/Settings/MassEmail']">MassEmail</button>
+    <button mat-menu-item [routerLink]="['/Settings/Newsletter']">Newsletter</button>
+    <button mat-menu-item [routerLink]="['/Settings/Discord']">Discord</button>
+    <button mat-menu-item [routerLink]="['/Settings/Slack']">Slack</button>
+    <button mat-menu-item [routerLink]="['/Settings/Pushbullet']">Pushbullet</button>
+    <button mat-menu-item [routerLink]="['/Settings/Pushover']">Pushover</button>
+    <button mat-menu-item [routerLink]="['/Settings/Mattermost']">Mattermost</button>
+    <button mat-menu-item [routerLink]="['/Settings/Telegram']">Telegram</button>
+    <button mat-menu-item [routerLink]="['/Settings/Gotify']">Gotify</button>
+    <button mat-menu-item [routerLink]="['/Settings/Twilio']">Twilio</button>
 </mat-menu>
 
 <button mat-button [matMenuTriggerFor]="systemMenu"><i class="fa fa-tachometer" aria-hidden="true"></i> System</button>
 <mat-menu #systemMenu="matMenu">
-        <button mat-menu-item [routerLink]="['/Settings/About']">About</button>
-        <button mat-menu-item [routerLink]="['/Settings/FailedRequests']">Failed Requests</button>
-        <button mat-menu-item [routerLink]="['/Settings/Update']">Update</button>
-        <button mat-menu-item [routerLink]="['/Settings/Jobs']">Scheduled Tasks</button>
-        <button mat-menu-item [routerLink]="['/Settings/Logs']">Logs</button>
+    <button mat-menu-item [routerLink]="['/Settings/About']">About</button>
+    <button mat-menu-item [routerLink]="['/Settings/FailedRequests']">Failed Requests</button>
+    <button mat-menu-item [routerLink]="['/Settings/Update']">Update</button>
+    <button mat-menu-item [routerLink]="['/Settings/Jobs']">Scheduled Tasks</button>
+    <button mat-menu-item [routerLink]="['/Settings/Logs']">Logs</button>
 </mat-menu>
 
 <hr/>

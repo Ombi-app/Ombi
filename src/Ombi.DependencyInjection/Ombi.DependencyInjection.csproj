@@ -37,6 +37,7 @@
     <ProjectReference Include="..\Ombi.Api.Telegram\Ombi.Api.Telegram.csproj" />
     <ProjectReference Include="..\Ombi.Api.Trakt\Ombi.Api.Trakt.csproj" />
     <ProjectReference Include="..\Ombi.Api.TvMaze\Ombi.Api.TvMaze.csproj" />
+    <ProjectReference Include="..\Ombi.Api.Twilio\Ombi.Api.Twilio.csproj" />
     <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
     <ProjectReference Include="..\Ombi.Notifications\Ombi.Notifications.csproj" />
     <ProjectReference Include="..\Ombi.Schedule\Ombi.Schedule.csproj" />

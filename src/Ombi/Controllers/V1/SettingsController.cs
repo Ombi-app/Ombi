@@ -964,6 +964,44 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
+        /// Gets the Twilio Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/twilio")]
+        public async Task<TwilioSettingsViewModel> TwilioNotificationSettings()
+        {
+            var settings = await Get<TwilioSettings>();
+            var model = Mapper.Map<TwilioSettingsViewModel>(settings);
+
+            // Lookup to see if we have any templates saved
+            if(model.WhatsAppSettings == null)
+            {
+                model.WhatsAppSettings = new WhatsAppSettingsViewModel();
+            }
+            model.WhatsAppSettings.NotificationTemplates = BuildTemplates(NotificationAgent.WhatsApp);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Saves the Mattermost notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/twilio")]
+        public async Task<bool> TwilioNotificationSettings([FromBody] TwilioSettingsViewModel model)
+        {
+            // Save the email settings
+            var settings = Mapper.Map<TwilioSettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.UpdateRange(model.WhatsAppSettings.NotificationTemplates);
+
+            return result;
+        }
+
+        /// <summary>
         /// Saves the Mobile notification settings.
         /// </summary>
         /// <param name="model">The model.</param>

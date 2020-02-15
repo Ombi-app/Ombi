@@ -36,6 +36,7 @@ import {
     IUpdateSettings,
     IUserManagementSettings,
     IVoteSettings,
+    ITwilioSettings,
 } from "../interfaces";
 
 import { ServiceHelpers } from "./service.helpers";
@@ -252,6 +253,15 @@ export class SettingsService extends ServiceHelpers {
     public saveTelegramNotificationSettings(settings: ITelegramNotifcationSettings): Observable<boolean> {
         return this.http
             .post<boolean>(`${this.url}/notifications/telegram`, JSON.stringify(settings), {headers: this.headers});
+    }
+
+    public getTwilioSettings(): Observable<ITwilioSettings> {
+        return this.http.get<ITwilioSettings>(`${this.url}/notifications/twilio`, {headers: this.headers});
+    }
+
+    public saveTwilioSettings(settings: ITwilioSettings): Observable<boolean> {
+        return this.http
+            .post<boolean>(`${this.url}/notifications/twilio`, JSON.stringify(settings), {headers: this.headers});
     }
 
     public getJobSettings(): Observable<IJobSettings> {

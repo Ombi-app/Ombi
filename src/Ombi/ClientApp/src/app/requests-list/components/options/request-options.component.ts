@@ -1,7 +1,8 @@
-import {Component, Inject} from '@angular/core';
-import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef} from '@angular/material/bottom-sheet';
+import { Component, Inject } from '@angular/core';
+import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { RequestService } from '../../../services';
 import { RequestType } from '../../../interfaces';
+import { UpdateType } from '../../models/UpdateType';
 
 @Component({
   selector: 'request-options',
@@ -9,17 +10,29 @@ import { RequestType } from '../../../interfaces';
 })
 export class RequestOptionsComponent {
   constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
-            private requestService: RequestService, private bottomSheetRef: MatBottomSheetRef<RequestOptionsComponent>) { }
+    private requestService: RequestService, private bottomSheetRef: MatBottomSheetRef<RequestOptionsComponent>) { }
 
   public async delete() {
     if (this.data.type === RequestType.movie) {
-        await this.requestService.removeMovieRequestAsync(this.data.id);
+      await this.requestService.removeMovieRequestAsync(this.data.id);
     }
-    if(this.data.type === RequestType.tvShow) {
-        await this.requestService.deleteChild(this.data.id).toPromise();
+    if (this.data.type === RequestType.tvShow) {
+      await this.requestService.deleteChild(this.data.id).toPromise();
     }
 
-    this.bottomSheetRef.dismiss(true);
+    this.bottomSheetRef.dismiss({type: UpdateType.Delete});
+    return;
+  }
+
+  public async approve() {
+    if (this.data.type === RequestType.movie) {
+      await this.requestService.approveMovie({id: this.data.id}).toPromise();
+    }
+    if (this.data.type === RequestType.tvShow) {
+      await this.requestService.approveChild({id: this.data.id}).toPromise();
+    }
+
+    this.bottomSheetRef.dismiss({type: UpdateType.Approve});
     return;
   }
 }

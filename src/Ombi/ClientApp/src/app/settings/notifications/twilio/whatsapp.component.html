@@ -1,0 +1,37 @@
+<div class="container" style="padding-top: 3%;">
+    <div [formGroup]="form" class="col">
+        <div formGroupName="whatsAppSettings" class="row">
+            <div class="col">
+                <div>
+                    <mat-slide-toggle formControlName="enabled">Enable</mat-slide-toggle>
+                </div>
+
+                <div class="md-form-field">
+                    <mat-form-field>
+                        <input matInput placeholder="From Number" formControlName="from" matTooltip="The mobile number that the WhatsApp message is from, with the international prefix">
+                    </mat-form-field>
+                </div>
+                <div class="md-form-field">
+                    <mat-form-field>
+                        <input matInput placeholder="Account SID" formControlName="accountSid" matTooltip="The Account SID that you can find from the Programmable SMS Dashboard">
+                    </mat-form-field>
+                </div>
+                <div class="md-form-field">
+                    <mat-form-field>
+                        <input matInput placeholder="Authentication Token" formControlName="authToken" matTooltip="The Auth Token that you can find from the Programmable SMS Dashboard">
+                    </mat-form-field>
+                </div>
+                <div class="md-form-field">
+                    <div>
+                        <button mat-raised-button type="button" color="accent" (click)="test(form)">Test</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <notification-templates [templates]="templates" [showSubject]="false"></notification-templates>
+            </div>
+      
+        </div>
+    </div>
+</div>

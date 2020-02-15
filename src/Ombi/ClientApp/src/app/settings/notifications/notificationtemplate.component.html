@@ -1,36 +1,26 @@
-﻿
-<wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Notification-Template-Variables'" [text]="'Notification Variables'"></wiki>
+﻿<wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Notification-Template-Variables'" [text]="'Notification Variables'">
+</wiki>
 <br><br>
 
+<mat-accordion>
+    <mat-expansion-panel *ngFor="let template of templates">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{NotificationType[template.notificationType] | humanize}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
 
-<ngb-accordion [closeOthers]="true" activeIds="0-header">
-    <ngb-panel *ngFor="let template of templates" id="{{template.notificationType}}" title="{{NotificationType[template.notificationType] | humanize}}">
-        <ng-template ngbPanelContent>
-            <div class="panel panel-default a">
-                <div class="panel-body">
-                    
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <input type="checkbox" id="enabled" [(ngModel)]="template.enabled" ng-checked="template.enabled"><label for="enabled">Enable</label>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group" *ngIf="showSubject">
-                        <label class="control-label">Subject</label>
-                        <div>
-                            <input type="text" class="form-control form-control-custom" [(ngModel)]="template.subject" value="{{template.subject}}">
-                        </div>
-                    </div>
+        <div>
+            <mat-slide-toggle [(ngModel)]="template.enabled">Enable</mat-slide-toggle>
+        </div>
 
-                    <div class="form-group">
-                        <label class="control-label">Message</label>
-                        <div>
-                            <textarea type="text" class="form-control form-control-custom" [(ngModel)]="template.message" value="{{template.message}}"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <mat-form-field *ngIf="showSubject">
+            <input matInput placeholder="Subject" [(ngModel)]="template.subject">
+        </mat-form-field>
 
-        </ng-template>
-    </ngb-panel>
-</ngb-accordion>
+        <mat-form-field>
+            <textarea matInput placeholder="Message" [(ngModel)]="template.message"></textarea>
+        </mat-form-field>
+    </mat-expansion-panel>
+
+</mat-accordion>

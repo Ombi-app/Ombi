@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.CouchPotato;
 using Ombi.Api.Emby;
@@ -10,7 +11,9 @@ using Ombi.Api.Plex;
 using Ombi.Api.Radarr;
 using Ombi.Api.SickRage;
 using Ombi.Api.Sonarr;
+using Ombi.Api.Twilio;
 using Ombi.Attributes;
+using Ombi.Core.Authentication;
 using Ombi.Core.Models.UI;
 using Ombi.Core.Notifications;
 using Ombi.Core.Settings.Models.External;
@@ -22,6 +25,7 @@ using Ombi.Notifications.Models;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Settings.Settings.Models.Notifications;
+using Ombi.Store.Entities;
 
 namespace Ombi.Controllers.V1.External
 {
@@ -40,7 +44,7 @@ namespace Ombi.Controllers.V1.External
             IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
             IPlexApi plex, IEmbyApi emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider,
             ICouchPotatoApi cpApi, ITelegramNotification telegram, ISickRageApi srApi, INewsletterJob newsletter, IMobileNotification mobileNotification,
-            ILidarrApi lidarrApi, IGotifyNotification gotifyNotification)
+            ILidarrApi lidarrApi, IGotifyNotification gotifyNotification, IWhatsAppApi whatsAppApi, OmbiUserManager um)
         {
             Service = service;
             DiscordNotification = notification;
@@ -62,6 +66,8 @@ namespace Ombi.Controllers.V1.External
             MobileNotification = mobileNotification;
             LidarrApi = lidarrApi;
             GotifyNotification = gotifyNotification;
+            WhatsAppApi = whatsAppApi;
+            UserManager = um;
         }
 
         private INotificationService Service { get; }
@@ -84,7 +90,8 @@ namespace Ombi.Controllers.V1.External
         private INewsletterJob Newsletter { get; }
         private IMobileNotification MobileNotification { get; }
         private ILidarrApi LidarrApi { get; }
-
+        private IWhatsAppApi WhatsAppApi { get; }
+        private OmbiUserManager UserManager {get;}
 
         /// <summary>
         /// Sends a test message to discord using the provided settings
@@ -445,6 +452,36 @@ namespace Ombi.Controllers.V1.External
             {
                 var status = await LidarrApi.Status(settings.ApiKey, settings.FullUri);
                 if (status != null & status?.version.HasValue() ?? false)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test Lidarr");
+                return false;
+            }
+        }
+
+        [HttpPost("whatsapp")]
+        public async Task<bool> WhatsAppTest([FromBody] WhatsAppSettingsViewModel settings)
+        {
+            try
+            {
+
+                var user = await UserManager.Users.Include(x => x.UserNotificationPreferences).FirstOrDefaultAsync(x => x.UserName == HttpContext.User.Identity.Name);
+                
+
+                var status = await WhatsAppApi.SendMessage(new WhatsAppModel {
+                    From = settings.From,
+                    Message = "This is a test from Ombi!",
+                    To = user.UserNotificationPreferences.FirstOrDefault(x => x.Agent == NotificationAgent.WhatsApp).Value
+                }, settings.AccountSid, settings.AuthToken);
+                if (status.HasValue())
                 {
                     return true;
                 }

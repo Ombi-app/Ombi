@@ -22,6 +22,7 @@
     <ProjectReference Include="..\Ombi.Api.Pushover\Ombi.Api.Pushover.csproj" />
     <ProjectReference Include="..\Ombi.Api.Slack\Ombi.Api.Slack.csproj" />
     <ProjectReference Include="..\Ombi.Api.Telegram\Ombi.Api.Telegram.csproj" />
+    <ProjectReference Include="..\Ombi.Api.Twilio\Ombi.Api.Twilio.csproj" />
     <ProjectReference Include="..\Ombi.Notifications.Templates\Ombi.Notifications.Templates.csproj" />
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
     <ProjectReference Include="..\Ombi.Store\Ombi.Store.csproj" />

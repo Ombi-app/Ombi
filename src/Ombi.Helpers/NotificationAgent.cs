@@ -11,5 +11,6 @@
         Mattermost = 6,
         Mobile = 7,
         Gotify = 8,
+        WhatsApp = 9
     }
 }

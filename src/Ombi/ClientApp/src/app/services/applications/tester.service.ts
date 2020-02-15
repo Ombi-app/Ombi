@@ -24,6 +24,7 @@ import {
     ISlackNotificationSettings,
     ISonarrSettings,
     ITelegramNotifcationSettings,
+    IWhatsAppSettings,
 } from "../../interfaces";
 
 @Injectable()
@@ -50,6 +51,10 @@ export class TesterService extends ServiceHelpers {
 
     public mattermostTest(settings: IMattermostNotifcationSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}mattermost`, JSON.stringify(settings),  {headers: this.headers});
+    }
+
+    public whatsAppTest(settings: IWhatsAppSettings): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}whatsapp`, JSON.stringify(settings),  {headers: this.headers});
     }
 
     public slackTest(settings: ISlackNotificationSettings): Observable<boolean> {
