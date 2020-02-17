@@ -56,6 +56,10 @@
 
  
   <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="3.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.Sqlite" Version="3.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.0.9" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.0.2" />
     <PackageReference Include="AutoMapper" Version="6.1.1" />
     <PackageReference Include="CommandLineParser" Version="2.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.1" />
@@ -85,6 +89,7 @@
     <ProjectReference Include="..\Ombi.Api.Twilio\Ombi.Api.Twilio.csproj" />
     <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
     <ProjectReference Include="..\Ombi.DependencyInjection\Ombi.DependencyInjection.csproj" />
+    <ProjectReference Include="..\Ombi.HealthChecks\Ombi.HealthChecks.csproj" />
     <ProjectReference Include="..\Ombi.Hubs\Ombi.Hubs.csproj" />
     <ProjectReference Include="..\Ombi.Mapping\Ombi.Mapping.csproj" />
     <ProjectReference Include="..\Ombi.Schedule\Ombi.Schedule.csproj" />

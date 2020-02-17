@@ -28,6 +28,9 @@ using Microsoft.AspNetCore.StaticFiles.Infrastructure;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Ombi.HealthChecks;
 
 namespace Ombi
 {
@@ -73,8 +76,13 @@ namespace Ombi
                 options.User.AllowedUserNameCharacters = string.Empty;
             });
 
-            services.ConfigureDatabases();
-            services.AddHealthChecks();
+            var hcBuilder = services.AddHealthChecks();
+            hcBuilder.AddOmbiHealthChecks();
+            services.ConfigureDatabases(hcBuilder);
+            services.AddHealthChecksUI(setupSettings: setup =>
+            {
+                setup.AddHealthCheckEndpoint("Ombi", "http://localhost:3577/healthz");
+            });
             services.AddMemoryCache();
 
             services.AddJwtAuthentication(Configuration);
@@ -205,17 +213,20 @@ namespace Ombi
                 endpoints.MapControllers();
                 endpoints.MapHub<NotificationHub>("/hubs/notification");
                 endpoints.MapHealthChecks("/health");
+                endpoints.MapHealthChecks("/healthz", new HealthCheckOptions
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecksUI();
             });
 
             app.UseSpa(spa =>
             {
-#if DEBUG
-                //if (env.IsDevelopment())
-                //{
-                spa.Options.SourcePath = "ClientApp";
-                spa.UseProxyToSpaDevelopmentServer("http://localhost:3578");
-                //}
-#endif
+//#if DEBUG
+//                spa.Options.SourcePath = "ClientApp";
+//                spa.UseProxyToSpaDevelopmentServer("http://localhost:3578");
+//#endif
             });
 
         }
