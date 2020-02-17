@@ -117,14 +117,29 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
-                Logger.LogInformation("Kicking off Plex Availability Checker");
-                await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
+                // Ensure it's not already running
+                if (await OmbiQuartz.IsJobRunnung(nameof(IPlexAvailabilityChecker)))
+                {
+                    Logger.LogInformation("Availability checker already running");
+                }
+                else
+                {
+                    Logger.LogInformation("Kicking off Plex Availability Checker");
+                    await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
+                }
             }
 
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
-
-                await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
+                // Ensure it's not already running
+                if (await OmbiQuartz.IsJobRunnung(nameof(IPlexAvailabilityChecker)))
+                {
+                    Logger.LogInformation("Availability checker already running");
+                }
+                else
+                {
+                    await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
+                }
             }
             Logger.LogInformation("Finished Plex Content Cacher, with processed content: {0}, episodes: {1}. Recently Added Scan: {2}", processedContent?.Content?.Count() ?? 0, processedContent?.Episodes?.Count() ?? 0, recentlyAddedSearch);
 
@@ -183,7 +198,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     Logger.LogDebug("Found some episodes, this must be a recently added sync");
                     var count = 0;
-                    foreach (var epInfo in content.Metadata ?? new Metadata[]{})
+                    foreach (var epInfo in content.Metadata ?? new Metadata[] { })
                     {
                         count++;
                         var grandParentKey = epInfo.grandparentRatingKey;
@@ -391,7 +406,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     await Repo.Delete(existingKey);
                     existingKey = null;
                 }
-                else if(existingContent == null)
+                else if (existingContent == null)
                 {
                     existingContent = await Repo.GetFirstContentByCustom(x => x.Key == show.ratingKey);
                 }
@@ -509,7 +524,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     // But it does not contain the `guid` property that we need to pull out thetvdb id...
                     var showMetadata = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
                         show.ratingKey);
-                  
+
                     var item = new PlexServerContent
                     {
                         AddedAt = DateTime.Now,

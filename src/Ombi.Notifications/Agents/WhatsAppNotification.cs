@@ -32,7 +32,7 @@ namespace Ombi.Notifications.Agents
 
         protected override bool ValidateConfiguration(TwilioSettings settings)
         {
-            if (!settings.WhatsAppSettings?.Enabled ?? false)
+            if (!settings?.WhatsAppSettings?.Enabled ?? false)
             {
                 return false;
             }

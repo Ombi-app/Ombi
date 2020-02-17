@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Quartz;
 using Quartz.Impl;
@@ -34,6 +36,12 @@ namespace Ombi.Helpers
         {
             Scheduler.JobFactory = jobFactory;
             return Scheduler;
+        }
+
+        public static async Task<bool> IsJobRunnung(string jobName)
+        {
+            var running = await Scheduler.GetCurrentlyExecutingJobs();
+            return running.Any(x => x.JobDetail.Key.Name.Equals(jobName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public async Task AddJob<T>(string name, string group, string cronExpression, Dictionary<string, string> jobData = null)
