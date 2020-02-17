@@ -98,6 +98,12 @@
     <ProjectReference Include="..\Ombi.Updater\Ombi.Updater.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="HealthCheck.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 
   
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

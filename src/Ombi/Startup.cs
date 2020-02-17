@@ -218,7 +218,10 @@ namespace Ombi
                     Predicate = _ => true,
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
-                endpoints.MapHealthChecksUI();
+                endpoints.MapHealthChecksUI(opts =>
+                {
+                    opts.AddCustomStylesheet("HealthCheck.css");
+                });
             });
 
             app.UseSpa(spa =>
