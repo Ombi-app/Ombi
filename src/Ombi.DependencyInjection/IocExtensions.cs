@@ -34,6 +34,7 @@ using Ombi.Api.FanartTv;
 using Ombi.Api.Github;
 using Ombi.Api.Gotify;
 using Ombi.Api.GroupMe;
+using Ombi.Api.Webhook;
 using Ombi.Api.Lidarr;
 using Ombi.Api.Mattermost;
 using Ombi.Api.Notifications;
@@ -137,6 +138,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IFanartTvApi, FanartTvApi>();
             services.AddTransient<IPushoverApi, PushoverApi>();
             services.AddTransient<IGotifyApi, GotifyApi>();
+            services.AddTransient<IWebhookApi, WebhookApi>();
             services.AddTransient<IMattermostApi, MattermostApi>();
             services.AddTransient<ICouchPotatoApi, CouchPotatoApi>();
             services.AddTransient<IDogNzbApi, DogNzbApi>();
@@ -192,6 +194,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMattermostNotification, MattermostNotification>();
             services.AddTransient<IPushoverNotification, PushoverNotification>();
             services.AddTransient<IGotifyNotification, GotifyNotification>();
+            services.AddTransient<IWebhookNotification, WebhookNotification>();
             services.AddTransient<ITelegramNotification, TelegramNotification>();
             services.AddTransient<IMobileNotification, MobileNotification>();
             services.AddTransient<IChangeLogProcessor, ChangeLogProcessor>();

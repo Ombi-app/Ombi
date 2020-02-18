@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
+using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Store.Context
 {
@@ -35,6 +36,7 @@ namespace Ombi.Store.Context
         public DbSet<AlbumRequest> AlbumRequests { get; set; }
         public DbSet<TvRequests> TvRequests { get; set; }
         public DbSet<ChildRequests> ChildRequests { get; set; }
+        public DbSet<EpisodeRequests> EpisodeRequests { get; set; }
 
         public DbSet<Issues> Issues { get; set; }
         public DbSet<IssueCategory> IssueCategories { get; set; }

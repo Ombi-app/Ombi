@@ -1070,6 +1070,33 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
+        /// Saves the webhook notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/webhook")]
+        public async Task<bool> WebhookNotificationSettings([FromBody] WebhookNotificationViewModel model)
+        {
+            var settings = Mapper.Map<WebhookSettings>(model);
+            var result = await Save(settings);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the webhook notification settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/webhook")]
+        public async Task<WebhookNotificationViewModel> WebhookNotificationSettings()
+        {
+            var settings = await Get<WebhookSettings>();
+            var model = Mapper.Map<WebhookNotificationViewModel>(settings);
+
+            return model;
+        }
+
+        /// <summary>
         /// Saves the Newsletter notification settings.
         /// </summary>
         /// <param name="model">The model.</param>

@@ -119,6 +119,11 @@ export interface IGotifyNotificationSettings extends INotificationSettings {
     priority: number;
 }
 
+export interface IWebhookNotificationSettings extends INotificationSettings {
+    webhookUrl: string;
+    applicationToken: string;
+}
+
 export interface IMattermostNotifcationSettings extends INotificationSettings {
     webhookUrl: string;
     username: string;

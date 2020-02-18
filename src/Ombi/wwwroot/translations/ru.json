@@ -3,7 +3,7 @@
     "SignInButton": "Войти",
     "UsernamePlaceholder": "Имя пользователя",
     "PasswordPlaceholder": "Пароль",
-    "RememberMe": "Запомнить Меня",
+    "RememberMe": "Запомнить меня",
     "ForgottenPassword": "Забыли пароль?",
     "Errors": {
       "IncorrectCredentials": "Неверное имя пользователя или пароль"

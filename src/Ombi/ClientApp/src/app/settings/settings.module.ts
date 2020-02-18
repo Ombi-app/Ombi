@@ -37,6 +37,7 @@ import { PushbulletComponent } from "./notifications/pushbullet.component";
 import { PushoverComponent } from "./notifications/pushover.component";
 import { SlackComponent } from "./notifications/slack.component";
 import { TelegramComponent } from "./notifications/telegram.component";
+import { WebhookComponent } from "./notifications/webhook.component";
 import { OmbiComponent } from "./ombi/ombi.component";
 import { PlexComponent } from "./plex/plex.component";
 import { RadarrComponent } from "./radarr/radarr.component";
@@ -73,6 +74,7 @@ const routes: Routes = [
     { path: "Pushover", component: PushoverComponent, canActivate: [AuthGuard] },
     { path: "Pushbullet", component: PushbulletComponent, canActivate: [AuthGuard] },
     { path: "Gotify", component: GotifyComponent, canActivate: [AuthGuard] },
+    { path: "Webhook", component: WebhookComponent, canActivate: [AuthGuard] },
     { path: "Mattermost", component: MattermostComponent, canActivate: [AuthGuard] },
     { path: "Twilio", component: TwilioComponent, canActivate: [AuthGuard] },
     { path: "UserManagement", component: UserManagementComponent, canActivate: [AuthGuard] },
@@ -134,6 +136,7 @@ const routes: Routes = [
         MattermostComponent,
         PushbulletComponent,
         GotifyComponent,
+        WebhookComponent,
         UserManagementComponent,
         UpdateComponent,
         AboutComponent,

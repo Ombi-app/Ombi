@@ -34,6 +34,7 @@ namespace Ombi.Helpers
         public static EventId TelegramNotifcation => new EventId(4006);
         public static EventId GotifyNotification => new EventId(4007);
         public static EventId WhatsApp => new EventId(4008);
+        public static EventId WebhookNotification => new EventId(4009);
 
         public static EventId TvSender => new EventId(5000);
         public static EventId SonarrSender => new EventId(5001);
