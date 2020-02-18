@@ -19,7 +19,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
 {
     public class LidarrAvailabilityChecker : ILidarrAvailabilityChecker
     {
-        public LidarrAvailabilityChecker(IMusicRequestRepository requests, IRepository<LidarrAlbumCache> albums, ILogger<LidarrAvailabilityChecker> log,
+        public LidarrAvailabilityChecker(IMusicRequestRepository requests, IExternalRepository<LidarrAlbumCache> albums, ILogger<LidarrAvailabilityChecker> log,
             INotificationHelper notification, IHubContext<NotificationHub> notificationHub)
         {
             _cachedAlbums = albums;
@@ -30,7 +30,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
         }
 
         private readonly IMusicRequestRepository _requestRepository;
-        private readonly IRepository<LidarrAlbumCache> _cachedAlbums;
+        private readonly IExternalRepository<LidarrAlbumCache> _cachedAlbums;
         private readonly ILogger _logger;
         private readonly INotificationHelper _notificationService;
         private readonly IHubContext<NotificationHub> _notification;

@@ -67,11 +67,14 @@ namespace Ombi.Controllers.V1
             var val = await _memCache.GetOrAdd(CacheKeys.Update, async () =>
             {
                 var productArray = _updater.GetVersion();
-                var version = productArray[0];
-                var branch = productArray[1];
-                var updateAvailable = await _updater.UpdateAvailable(branch, version);
+                if (productArray.Length > 1)
+                {
+                    var version = productArray[0];
+                    var branch = productArray[1];
+                    var updateAvailable = await _updater.UpdateAvailable(branch, version);
+                }
 
-                return updateAvailable;
+                return true;
             });
             return val;
         }

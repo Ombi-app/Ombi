@@ -28,6 +28,9 @@ using Microsoft.AspNetCore.StaticFiles.Infrastructure;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Ombi.HealthChecks;
 
 namespace Ombi
 {
@@ -73,8 +76,14 @@ namespace Ombi
                 options.User.AllowedUserNameCharacters = string.Empty;
             });
 
-            services.ConfigureDatabases();
-            services.AddHealthChecks();
+            var hcBuilder = services.AddHealthChecks();
+            hcBuilder.AddOmbiHealthChecks();
+            services.ConfigureDatabases(hcBuilder);
+            // Need to wait until https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks/issues/410 is resolved
+            //services.AddHealthChecksUI(setupSettings: setup =>
+            //{
+            //    setup.AddHealthCheckEndpoint("Ombi", "/health");
+            //});
             services.AddMemoryCache();
 
             services.AddJwtAuthentication(Configuration);
@@ -107,7 +116,7 @@ namespace Ombi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
@@ -204,17 +213,25 @@ namespace Ombi
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<NotificationHub>("/hubs/notification");
-                endpoints.MapHealthChecks("/health");
+                if (!settings.DisableHealthChecks)
+                {
+                    endpoints.MapHealthChecks("/health", new HealthCheckOptions
+                    {
+                        Predicate = _ => true,
+                        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                    });
+                    endpoints.MapHealthChecksUI(opts =>
+                    {
+                        opts.AddCustomStylesheet("HealthCheck.css");
+                    });
+                }
             });
 
             app.UseSpa(spa =>
             {
 #if DEBUG
-                //if (env.IsDevelopment())
-                //{
                 spa.Options.SourcePath = "ClientApp";
                 spa.UseProxyToSpaDevelopmentServer("http://localhost:3578");
-                //}
 #endif
             });
 

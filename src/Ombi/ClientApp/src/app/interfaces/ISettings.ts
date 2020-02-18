@@ -16,6 +16,7 @@ export interface IOmbiSettings extends ISettings {
   doNotSendNotificationsForAutoApprove: boolean;
   hideRequestsUsers: boolean;
   defaultLanguageCode: string;
+  disableHealthChecks: boolean;
 }
 
 export interface IUpdateSettings extends ISettings {

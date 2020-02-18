@@ -59,7 +59,7 @@ namespace Ombi
             //CheckAndMigrate();
 
             var services = new ServiceCollection();
-            services.ConfigureDatabases();
+            services.ConfigureDatabases(null);
             using (var provider = services.BuildServiceProvider())
             {
                 var settingsDb = provider.GetRequiredService<SettingsContext>();

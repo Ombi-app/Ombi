@@ -6,11 +6,12 @@
     <FileVersion>3.0.0.0</FileVersion>
     <Version></Version>
     <PackageVersion></PackageVersion>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Ensure.That" Version="7.0.0-pre32" />
-    <PackageReference Include="MailKit" Version="2.1.3" />
+    <PackageReference Include="MailKit" Version="2.5.0" />
   </ItemGroup>
 
   <ItemGroup>

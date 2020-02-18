@@ -83,12 +83,12 @@ namespace Ombi.Schedule.Jobs.Ombi
         {
             // Ensure we check that we have not linked this item to a request
             var allMovies = _plexRepo.GetAll().Where(x =>
-                x.Type == PlexMediaTypeEntity.Movie && !x.RequestId.HasValue && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue()));
+                x.Type == PlexMediaTypeEntity.Movie && x.RequestId == null && (x.TheMovieDbId == null || x.ImdbId == null));
             await StartPlexMovies(allMovies);
 
             // Now Tv
             var allTv = _plexRepo.GetAll().Where(x =>
-                x.Type == PlexMediaTypeEntity.Show && !x.RequestId.HasValue && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue() || !x.TvDbId.HasValue()));
+                x.Type == PlexMediaTypeEntity.Show && x.RequestId == null && (x.TheMovieDbId == null || x.ImdbId == null || x.TvDbId == null));
             await StartPlexTv(allTv);
         }
 

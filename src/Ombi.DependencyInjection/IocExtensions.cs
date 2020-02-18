@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 
 using Ombi.Api.Discord;
@@ -62,7 +61,6 @@ using Ombi.Schedule.Jobs.Lidarr;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.SickRage;
 using Ombi.Schedule.Processor;
-using Ombi.Store.Entities;
 using Quartz.Spi;
 using Ombi.Api.MusicBrainz;
 using Ombi.Api.Twilio;
