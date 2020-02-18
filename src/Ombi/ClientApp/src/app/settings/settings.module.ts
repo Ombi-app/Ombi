@@ -156,7 +156,7 @@ const routes: Routes = [
         FailedRequestsComponent,
         LogsComponent,
         TwilioComponent,
-        WhatsAppComponent
+        WhatsAppComponent,
     ],
     exports: [
         RouterModule,
