@@ -63,6 +63,7 @@ namespace Ombi
         {
             services.AddIdentity<OmbiUser, IdentityRole>()
                 .AddEntityFrameworkStores<OmbiContext>()
+                .AddRoles<IdentityRole>()
                 .AddDefaultTokenProviders()
                 .AddUserManager<OmbiUserManager>();
 

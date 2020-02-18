@@ -18,6 +18,7 @@ namespace Ombi.Store.Context
 
         }
 
+
         /// <summary>
         /// This allows a sub class to call the base class 'DbContext' non typed constructor
         /// This is need because instances of the subclasses will use a specific typed DbContextOptions
@@ -50,6 +51,7 @@ namespace Ombi.Store.Context
         public DbSet<Tokens> Tokens { get; set; }
         public DbSet<RequestSubscription> RequestSubscription { get; set; }
         public DbSet<UserNotificationPreferences> UserNotificationPreferences { get; set; }
+        public DbSet<MobileDevices> MobileDevices { get; set; }
         public DbSet<UserQualityProfiles> UserQualityProfileses { get; set; }
         public DbSet<RequestQueue> RequestQueue { get; set; }
 
