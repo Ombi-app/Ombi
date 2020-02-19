@@ -50,23 +50,25 @@
             </div>
             <div>
                 <mat-checkbox formControlName="disableHealthChecks">
-                    Disable the health checks page <a href="/healthchecks-ui" target="_blank">/healthchecks-ui</href></mat-checkbox>
+                    Disable the health checks page
+                    <a href="/healthchecks-ui" target="_blank"> </a>/healthchecks-ui</href>
+                </mat-checkbox>
+            </div>
+            <div>
+                <mat-form-field *ngIf="langauges">
+                    <mat-select placeholder="Language" formControlName="defaultLanguageCode">
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let lang of langauges" [value]="lang.code">
+                            {{lang.nativeName}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group">
+                <div>
+                    <button mat-raised-button [disabled]="form.invalid" type="submit" id="save" color="accent">Submit</button>
+                </div>
+            </div>
         </div>
-    <div>
-      <mat-form-field  *ngIf="langauges">
-            <mat-select placeholder="Language" formControlName="defaultLanguageCode">
-              <mat-option>--</mat-option>
-              <mat-option *ngFor="let lang of langauges" [value]="lang.code">
-                {{lang.nativeName}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      <div class="form-group">
-        <div>
-          <button mat-raised-button [disabled]="form.invalid" type="submit" id="save" color="accent">Submit</button>
-        </div>
-      </div>
-    </div>
-  </form>
+    </form>
 </fieldset>
