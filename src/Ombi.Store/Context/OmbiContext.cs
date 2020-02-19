@@ -61,7 +61,7 @@ namespace Ombi.Store.Context
             using (var tran = Database.BeginTransaction())
             {
                 // Make sure we have the API User
-                var apiUserExists = Users.Any(x => x.UserName.Equals("Api", StringComparison.CurrentCultureIgnoreCase));
+                var apiUserExists = Users.ToList().Any(x => x.UserName.Equals("Api", StringComparison.CurrentCultureIgnoreCase));
                 if (!apiUserExists)
                 {
                     Users.Add(new OmbiUser
