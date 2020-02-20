@@ -43,7 +43,7 @@ namespace Ombi.Controllers.V1.External
         public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN,
             IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
             IPlexApi plex, IEmbyApi emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider,
-            ICouchPotatoApi cpApi, ITelegramNotification telegram, ISickRageApi srApi, INewsletterJob newsletter, IMobileNotification mobileNotification,
+            ICouchPotatoApi cpApi, ITelegramNotification telegram, ISickRageApi srApi, INewsletterJob newsletter, ILegacyMobileNotification mobileNotification,
             ILidarrApi lidarrApi, IGotifyNotification gotifyNotification, IWhatsAppApi whatsAppApi, OmbiUserManager um, IWebhookNotification webhookNotification)
         {
             Service = service;
@@ -90,7 +90,7 @@ namespace Ombi.Controllers.V1.External
         private ITelegramNotification TelegramNotification { get; }
         private ISickRageApi SickRageApi { get; }
         private INewsletterJob Newsletter { get; }
-        private IMobileNotification MobileNotification { get; }
+        private ILegacyMobileNotification MobileNotification { get; }
         private ILidarrApi LidarrApi { get; }
         private IWhatsAppApi WhatsAppApi { get; }
         private OmbiUserManager UserManager {get;}

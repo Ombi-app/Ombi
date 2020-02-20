@@ -64,6 +64,7 @@ using Ombi.Schedule.Processor;
 using Quartz.Spi;
 using Ombi.Api.MusicBrainz;
 using Ombi.Api.Twilio;
+using Ombi.Api.CloudService;
 
 namespace Ombi.DependencyInjection
 {
@@ -149,6 +150,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IGroupMeApi, GroupMeApi>();
             services.AddTransient<IMusicBrainzApi, MusicBrainzApi>();
             services.AddTransient<IWhatsAppApi, WhatsAppApi>();
+            services.AddTransient<ICloudMobileNotification, CloudMobileNotification>();
         }
 
         public static void RegisterStore(this IServiceCollection services) { 
@@ -194,7 +196,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IGotifyNotification, GotifyNotification>();
             services.AddTransient<IWebhookNotification, WebhookNotification>();
             services.AddTransient<ITelegramNotification, TelegramNotification>();
-            services.AddTransient<IMobileNotification, MobileNotification>();
+            services.AddTransient<ILegacyMobileNotification, LegacyMobileNotification>();
             services.AddTransient<IChangeLogProcessor, ChangeLogProcessor>();
         }
 

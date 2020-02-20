@@ -1,6 +1,8 @@
-﻿namespace Ombi.Notifications.Agents
+﻿
+namespace Ombi.Notifications.Agents
 {
     public interface IMobileNotification : INotification
     {
+
     }
 }

@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Ombi.Api.CloudService\Ombi.Api.CloudService.csproj" />
     <ProjectReference Include="..\Ombi.Api.CouchPotato\Ombi.Api.CouchPotato.csproj" />
     <ProjectReference Include="..\Ombi.Api.Discord\Ombi.Api.Discord.csproj" />
     <ProjectReference Include="..\Ombi.Api.DogNzb\Ombi.Api.DogNzb.csproj" />

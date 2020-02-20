@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ombi.Api.CloudService;
+using Ombi.Api.Notifications;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
@@ -18,10 +18,10 @@ using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Notifications.Agents
 {
-    public class MobileNotification : BaseNotification<MobileNotificationSettings>, IMobileNotification
+    public class LegacyMobileNotification : BaseNotification<MobileNotificationSettings>, ILegacyMobileNotification
     {
-        public MobileNotification(ICloudMobileNotification api, ISettingsService<MobileNotificationSettings> sn, ILogger<MobileNotification> log, INotificationTemplatesRepository r,
-            IMovieRequestRepository m, ITvRequestRepository t, ISettingsService<CustomizationSettings> s, IRepository<MobileDevices> notification,
+        public LegacyMobileNotification(IOneSignalApi api, ISettingsService<MobileNotificationSettings> sn, ILogger<LegacyMobileNotification> log, INotificationTemplatesRepository r,
+            IMovieRequestRepository m, ITvRequestRepository t, ISettingsService<CustomizationSettings> s, IRepository<NotificationUserId> notification,
             UserManager<OmbiUser> um, IRepository<RequestSubscription> sub, IMusicRequestRepository music, IRepository<Issues> issueRepository,
             IRepository<UserNotificationPreferences> userPref) : base(sn, r, m, t, s, log, sub, music, userPref)
         {
@@ -32,11 +32,11 @@ namespace Ombi.Notifications.Agents
             _issueRepository = issueRepository;
         }
 
-        public override string NotificationName => "MobileNotification";
+        public override string NotificationName => "LegacyMobileNotification";
 
-        private readonly ICloudMobileNotification _api;
-        private readonly ILogger _logger;
-        private readonly IRepository<MobileDevices> _notifications;
+        private readonly IOneSignalApi _api;
+        private readonly ILogger<LegacyMobileNotification> _logger;
+        private readonly IRepository<NotificationUserId> _notifications;
         private readonly UserManager<OmbiUser> _userManager;
         private readonly IRepository<Issues> _issueRepository;
 
@@ -219,17 +219,8 @@ namespace Ombi.Notifications.Agents
             {
                 return;
             }
-            foreach (var token in playerIds)
-            {
-                await _api.SendMessage(new MobileNotificationRequest()
-                {
-                    Body = model.Message,
-                    Title = model.Subject,
-                    To = token
-                });
-            }
-
-            _logger.LogDebug("Sent message to {0} recipients", playerIds.Count);
+            var response = await _api.PushNotification(playerIds, model.Message, isAdminNotification, requestModel.RequestId, (int)requestModel.RequestType);
+            _logger.LogDebug("Sent message to {0} recipients with message id {1}", response.recipients, response.id);
         }
 
         protected override async Task Test(NotificationOptions model, MobileNotificationSettings settings)
@@ -254,7 +245,7 @@ namespace Ombi.Notifications.Agents
         {
             var adminUsers = (await _userManager.GetUsersInRoleAsync(OmbiRoles.Admin)).Select(x => x.Id).ToList();
             var notificationUsers = _notifications.GetAll().Include(x => x.User).Where(x => adminUsers.Contains(x.UserId));
-            var playerIds = await notificationUsers.Select(x => x.Token).ToListAsync();
+            var playerIds = await notificationUsers.Select(x => x.PlayerId).ToListAsync();
             if (!playerIds.Any())
             {
                 _logger.LogInformation(
