@@ -22,17 +22,7 @@ namespace Ombi.Store.Migrations.OmbiSqlite
             migrationBuilder.DropTable(
                 name: "PlexServerContent");
 
-            migrationBuilder.AddColumn<int>(
-                name: "EpisodeNumber",
-                table: "Issues",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<int>(
-                name: "SeasonNumber",
-                table: "Issues",
-                nullable: false,
-                defaultValue: 0);
+           
 
             migrationBuilder.CreateTable(
                 name: "MobileDevices",
@@ -66,13 +56,7 @@ namespace Ombi.Store.Migrations.OmbiSqlite
             migrationBuilder.DropTable(
                 name: "MobileDevices");
 
-            migrationBuilder.DropColumn(
-                name: "EpisodeNumber",
-                table: "Issues");
-
-            migrationBuilder.DropColumn(
-                name: "SeasonNumber",
-                table: "Issues");
+       
 
             migrationBuilder.CreateTable(
                 name: "EmbyContent",

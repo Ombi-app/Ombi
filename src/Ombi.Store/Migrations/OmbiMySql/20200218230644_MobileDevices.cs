@@ -8,17 +8,7 @@ namespace Ombi.Store.Migrations.OmbiMySql
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "EpisodeNumber",
-                table: "Issues",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<int>(
-                name: "SeasonNumber",
-                table: "Issues",
-                nullable: false,
-                defaultValue: 0);
+          
 
             migrationBuilder.CreateTable(
                 name: "MobileDevices",
@@ -52,13 +42,7 @@ namespace Ombi.Store.Migrations.OmbiMySql
             migrationBuilder.DropTable(
                 name: "MobileDevices");
 
-            migrationBuilder.DropColumn(
-                name: "EpisodeNumber",
-                table: "Issues");
-
-            migrationBuilder.DropColumn(
-                name: "SeasonNumber",
-                table: "Issues");
+          
         }
     }
 }
