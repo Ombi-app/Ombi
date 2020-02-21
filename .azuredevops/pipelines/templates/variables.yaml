@@ -1,0 +1,27 @@
+variables:
+  - name: "BuildConfiguration"
+    value: "Release"
+
+  - name: "vmImage"
+    value: "ubuntu-latest"
+  
+  - name: "Solution"
+    value: "**/*.sln"
+
+  - name: "TestProject"
+    value: "**/*.Tests.csproj"
+
+  - name: "NetCoreVersion"
+    value: "3.1"
+
+  - name: "PublishLocation"
+    value: "$(Build.SourcesDirectory)/src/Ombi/bin/Release/netcoreapp$(NetCoreVersion)"
+
+  - name: "GitTag"
+    value: "v$(buildVersion)"
+
+  - name: "UiLocation"
+    value: "$(Build.SourcesDirectory)/src/Ombi/ClientApp/"
+
+  - name: "BuildVersion"
+    value: "4.0.$(Build.BuildId)"
