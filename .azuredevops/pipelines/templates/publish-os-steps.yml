@@ -8,7 +8,7 @@ parameters:
   default: ''
 
 jobs:
-- job: Publish ${{ parameters.name }}
+- job: Publish_${{ parameters.name }}
   pool: 
     vmImage: ${vmImage}
   steps:
