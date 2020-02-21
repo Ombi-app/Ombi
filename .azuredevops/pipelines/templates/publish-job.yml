@@ -1,5 +1,14 @@
 
+variables:
+  - template: templates/variables.yml
+  
 jobs:
+- job: Build
+  pool:
+    vmImage: ${{ variables.vmImage }}
+  steps:
+  - template: build-steps.yml
+
 - template: publish-os-steps.yml  
   parameters:
     name: 'Win10-x64'
