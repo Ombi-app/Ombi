@@ -10,7 +10,7 @@ parameters:
 jobs:
 - job: Publish_${{ parameters.name }}
   pool: 
-    vmImage: ${vmImage}
+    vmImage: $(vmImage)
   steps:
 
   - task: DotNetCoreCLI@2
