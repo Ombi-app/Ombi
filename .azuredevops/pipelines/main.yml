@@ -15,4 +15,4 @@ jobs:
   pool:
     vmImage: ${{ variables.vmImage }}
   steps:
-  - template: templates/publish-steps.yml
+  - template: templates/publish-stepsnew.yml
