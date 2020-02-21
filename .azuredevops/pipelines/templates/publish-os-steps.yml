@@ -13,28 +13,28 @@ jobs:
     vmImage: ${vmImage}
   steps:
 
-- task: DotNetCoreCLI@2
-  displayName: publish $(parameters.name)
-  inputs:
-    command: 'publish'
-    publishWebProjects: true
-    arguments: '-c $(BuildConfiguration) -r "$(parameters.Runtime)"  -o $(Build.ArtifactStagingDirectory)/$(parameters.OutputName)'
-    zipAfterPublish: false
-    modifyOutputPath: false
-
-- task: CopyFiles@2
-  displayName: 'Copy Angular App $(parameters.name)'
-  inputs:
-    SourceFolder: '$(UILocation)dist'
-    Contents: '**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)/$(parameters.OutputName)/ClientApp/dist'
-
-    
-- task: ArchiveFiles@2
-  displayName: Zip $(parameters.name)
-  inputs:
-    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/$(parameters.OutputName)'
-    includeRootFolder: false
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(parameters.OutputName)-$(Build.BuildId).zip'
-    replaceExistingArchive: true
+  - task: DotNetCoreCLI@2
+    displayName: publish $(parameters.name)
+    inputs:
+      command: 'publish'
+      publishWebProjects: true
+      arguments: '-c $(BuildConfiguration) -r "$(parameters.Runtime)"  -o $(Build.ArtifactStagingDirectory)/$(parameters.OutputName)'
+      zipAfterPublish: false
+      modifyOutputPath: false
+  
+  - task: CopyFiles@2
+    displayName: 'Copy Angular App $(parameters.name)'
+    inputs:
+      SourceFolder: '$(UILocation)dist'
+      Contents: '**'
+      TargetFolder: '$(Build.ArtifactStagingDirectory)/$(parameters.OutputName)/ClientApp/dist'
+  
+      
+  - task: ArchiveFiles@2
+    displayName: Zip $(parameters.name)
+    inputs:
+      rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/$(parameters.OutputName)'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$(parameters.OutputName)-$(Build.BuildId).zip'
+      replaceExistingArchive: true
