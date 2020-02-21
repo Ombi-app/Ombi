@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Ombi.Controllers.V2
 {
- [ApiV2]
+    [ApiV2]
     [Authorize]
     [Produces("application/json")]
     [ApiController]
@@ -55,6 +55,27 @@ namespace Ombi.Controllers.V2
                 return Ok();
             }
             return BadRequest();
+        }
+
+        [HttpDelete("Notification")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> RemoveNotifications()
+        {
+
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
+            // Check if we already have this notification id
+            var currentDevices = await _mobileDevices.GetAll().Where(x => x.UserId == user.Id).ToListAsync();
+
+            if (currentDevices == null || !currentDevices.Any())
+            {
+                return Ok();
+            }
+
+            await _mobileDevices.DeleteRange(currentDevices);
+            
+            return Ok();
         }
     }
 }
