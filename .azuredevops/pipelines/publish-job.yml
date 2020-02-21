@@ -11,37 +11,37 @@ jobs:
 
 - template: templates/publish-os-steps.yml  
   parameters:
-    name: 'Win10_x64'
+    name: 'Win10x64'
     Runtime: win10-x64
     OutputName: win-64
 
 - template: templates/publish-os-steps.yml  
   parameters:
-    name: 'Win10_x86'
+    name: 'Win10x86'
     Runtime: win10-x86
     OutputName: win-86
 
 - template: templates/publish-os-steps.yml  
   parameters:
-    name: 'OSX_x64'
+    name: 'OSXx64'
     Runtime: osx-x64
     OutputName: osx-64
 
 - template: templates/publish-os-steps.yml 
   parameters:
-    name: 'Linux_x64'
+    name: 'Linuxx64'
     Runtime: linux-x64
     OutputName: linux-64
 
 - template: templates/publish-os-steps.yml  
   parameters:
-    name: 'Linux_ARM'
+    name: 'LinuxARM'
     Runtime: linux-arm
     OutputName: linux-arm
 
 - template: templates/publish-os-steps.yml  
   parameters:
-    name: 'Linux_ARM_x64'
+    name: 'LinuxARMx64'
     Runtime: linux-arm64
     OutputName: linux-arm64
 
