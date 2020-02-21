@@ -7,7 +7,7 @@ jobs:
   pool:
     vmImage: ${{ variables.vmImage }}
   steps:
-  - template: build-steps.yml
+  - template: templates/build-steps.yml
 
 - template: publish-os-steps.yml  
   parameters:
