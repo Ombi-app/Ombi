@@ -135,7 +135,7 @@ namespace Ombi.Controllers.V1
         public async Task<SaveWizardResult> CreateWizardUser([FromBody] CreateUserWizardModel user)
         {
             var users = UserManager.Users;
-            if (users.Any(x => !x.UserName.Equals("api", StringComparison.InvariantCultureIgnoreCase)))
+            if (users.Any(x => x.NormalizedUserName != "API"))
             {
                 // No one should be calling this. Only the wizard
                 return new SaveWizardResult { Result = false, Errors = new List<string> { "Looks like there is an existing user!" } };
