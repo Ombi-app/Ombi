@@ -96,7 +96,7 @@
                 </div>
             </div>
 
-            <div class="row top-spacing">
+            <div class="row top-spacing overview">
                 <div class="col-12">
                     {{data.overview}}
                 </div>
@@ -119,11 +119,11 @@
                         {{ 'Common.Requested' | translate }}</button>
                 </ng-template>
                 <ng-template #notRequestedBtn>
-                    <button mat-raised-button class="btn-spacing  btn-orange" (click)="request()">
-                        <i *ngIf="movie.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> <i
-                            *ngIf="!movie.requestProcessing && !movie.processed" class="fa fa-plus"></i>
-                        <i *ngIf="movie.processed && !movie.requestProcessing" class="fa fa-check"></i> {{
-                'Common.Request' | translate }}</button>
+                    <button mat-raised-button class="btn-spacing" color="primary" (click)="request()">
+            <i *ngIf="movie.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> <i
+              *ngIf="!movie.requestProcessing && !movie.processed" class="fa fa-plus"></i>
+            <i *ngIf="movie.processed && !movie.requestProcessing" class="fa fa-check"></i> {{
+            'Common.Request' | translate }}</button>
                 </ng-template>
             </span>
         </div>
@@ -138,10 +138,11 @@
                 </button>
             </div>
 
-            <button mat-raised-button class="btn-green btn-spacing" *ngIf="tv.available"> {{
-                'Common.Available' | translate }}</button>
-            <button mat-raised-button class="btn-orange btn-spacing" *ngIf="tv.partlyAvailable && !tv.available"> {{
-                    'Common.PartlyAvailable' | translate }}</button>
+            <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent" [disabled]>
+                <i class="fa fa-check"></i> {{'Common.Available' | translate }}</button>
+              <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent"
+                [disabled]>
+                <i class="fa fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
 
             <span *ngIf="tv.available">
                 <a *ngIf="tv.plexUrl" mat-raised-button style="text-align: right" class="btn-spacing btn-greem"

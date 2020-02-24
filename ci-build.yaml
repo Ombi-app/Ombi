@@ -19,7 +19,7 @@ variables:
   testProj: '**/*.Tests.csproj'
   csProj: '**/*.csproj'
   buildConfiguration: 'Release'
-  publishLocation: '$(Build.SourcesDirectory)/src/Ombi/bin/Release/netcoreapp3.0'
+  publishLocation: '$(Build.SourcesDirectory)/src/Ombi/bin/Release/netcoreapp3.1'
   buildVersion: '4.0.$(Build.BuildId)'
   gitTag: 'v$(buildVersion)'
   uiLocation: '$(Build.SourcesDirectory)/src/Ombi/ClientApp/'
