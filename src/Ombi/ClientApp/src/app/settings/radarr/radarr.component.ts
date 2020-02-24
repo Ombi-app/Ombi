@@ -34,7 +34,7 @@ export class RadarrComponent implements OnInit {
                 this.form = this.fb.group({
                     enabled: [x.enabled],
                     apiKey: [x.apiKey, [Validators.required]],
-                    defaultQualityProfile: [x.defaultQualityProfile, [Validators.required]],
+                    defaultQualityProfile: [+x.defaultQualityProfile, [Validators.required]],
                     defaultRootPath: [x.defaultRootPath, [Validators.required]],
                     ssl: [x.ssl],
                     subDir: [x.subDir],

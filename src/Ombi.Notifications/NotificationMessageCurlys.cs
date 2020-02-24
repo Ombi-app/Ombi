@@ -282,7 +282,6 @@ namespace Ombi.Notifications
             {nameof(UserPreference),UserPreference},
             {nameof(DenyReason),DenyReason},
             {nameof(AvailableDate),AvailableDate},
-            {nameof(RequestId),RequestId},
         };
     }
 }

@@ -88,7 +88,7 @@ export interface ISonarrSettings extends IExternalSettings {
 export interface IRadarrSettings extends IExternalSettings {
   enabled: boolean;
   apiKey: string;
-  defaultQualityProfile: string;
+  defaultQualityProfile: number;
   defaultRootPath: string;
   fullRootPath: string;
   addOnly: boolean;
