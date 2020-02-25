@@ -240,6 +240,69 @@ namespace Ombi.Core.Engine
                 Total = total
             };
         }
+
+        public async Task<RequestsViewModel<MovieRequests>> GetRequestsByStatus(int count, int position, string sortProperty, string sortOrder, RequestStatus status)
+        {
+            var shouldHide = await HideFromOtherUsers();
+            IQueryable<MovieRequests> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests =
+                    MovieRepository.GetWithUser(shouldHide
+                        .UserId);
+            }
+            else
+            {
+                allRequests =
+                    MovieRepository
+                        .GetWithUser();
+            }
+
+            switch (status)
+            {
+                case RequestStatus.PendingApproval:
+                    allRequests = allRequests.Where(x => !x.Approved && !x.Available && (!x.Denied.HasValue || !x.Denied.Value));
+                    break;
+                case RequestStatus.ProcessingRequest:
+                    allRequests = allRequests.Where(x => x.Approved && !x.Available && (!x.Denied.HasValue || !x.Denied.Value));
+                    break;
+                case RequestStatus.Available:
+                    allRequests = allRequests.Where(x => x.Available && (!x.Denied.HasValue || !x.Denied.Value));
+                    break;
+                case RequestStatus.Denied:
+                    allRequests = allRequests.Where(x => x.Denied.HasValue  && x.Denied.Value);
+                    break;
+                default:
+                    break;
+            }
+
+            var prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(sortProperty, true);
+
+            if (sortProperty.Contains('.'))
+            {
+                // This is a navigation property currently not supported
+                prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find("RequestedDate", true);
+                //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
+                //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
+                //var propType = firstProp.PropertyType;
+                //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
+            }
+
+            // TODO fix this so we execute this on the server
+            var requests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
+                ? allRequests.ToList().OrderBy(x => x.RequestedDate).ToList()
+                : allRequests.ToList().OrderByDescending(x => prop.GetValue(x)).ToList();
+            var total = requests.Count();
+            requests = requests.Skip(position).Take(count).ToList();
+
+            await CheckForSubscription(shouldHide, requests);
+            return new RequestsViewModel<MovieRequests>
+            {
+                Collection = requests,
+                Total = total
+            };
+        }
+
         public async Task<RequestsViewModel<MovieRequests>> GetUnavailableRequests(int count, int position, string sortProperty, string sortOrder)
         {
             var shouldHide = await HideFromOtherUsers();

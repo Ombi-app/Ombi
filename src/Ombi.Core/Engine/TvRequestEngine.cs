@@ -276,6 +276,79 @@ namespace Ombi.Core.Engine
                 Total = total,
             };
         }
+
+         public async Task<RequestsViewModel<ChildRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder, RequestStatus status)
+        {
+            var shouldHide = await HideFromOtherUsers();
+            List<ChildRequests> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests = await TvRepository.GetChild(shouldHide.UserId).ToListAsync();
+
+                // Filter out children
+
+                FilterChildren(allRequests, shouldHide);
+            }
+            else
+            {
+                allRequests = await TvRepository.GetChild().ToListAsync();
+
+            }
+
+            switch (status)
+            {
+                case RequestStatus.PendingApproval:
+                    allRequests = allRequests.Where(x => !x.Approved && !x.Available && (!x.Denied.HasValue || !x.Denied.Value)).ToList();
+                    break;
+                case RequestStatus.ProcessingRequest:
+                    allRequests = allRequests.Where(x => x.Approved && !x.Available && (!x.Denied.HasValue || !x.Denied.Value)).ToList();
+                    break;
+                case RequestStatus.Available:
+                    allRequests = allRequests.Where(x => x.Available && (!x.Denied.HasValue || !x.Denied.Value)).ToList();
+                    break;
+                case RequestStatus.Denied:
+                    allRequests = allRequests.Where(x => x.Denied.HasValue  && x.Denied.Value).ToList();
+                    break;
+                default:
+                    break;
+            }
+
+            if (allRequests == null)
+            {
+                return new RequestsViewModel<ChildRequests>();
+            }
+
+            var total = allRequests.Count;
+
+
+            var prop = TypeDescriptor.GetProperties(typeof(ChildRequests)).Find(sortProperty, true);
+
+            if (sortProperty.Contains('.'))
+            {
+                // This is a navigation property currently not supported
+                prop = TypeDescriptor.GetProperties(typeof(ChildRequests)).Find("Title", true);
+                //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
+                //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
+                //var propType = firstProp.PropertyType;
+                //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
+            }
+            allRequests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
+                ? allRequests.OrderBy(x => prop.GetValue(x)).ToList()
+                : allRequests.OrderByDescending(x => prop.GetValue(x)).ToList();
+            
+            await CheckForSubscription(shouldHide, allRequests);
+
+            // Make sure we do not show duplicate child requests
+            allRequests = allRequests.DistinctBy(x => x.ParentRequest.Title).ToList();
+
+            allRequests = allRequests.Skip(position).Take(count).ToList();
+
+            return new RequestsViewModel<ChildRequests>
+            {
+                Collection = allRequests,
+                Total = total,
+            };
+        }
         public async Task<RequestsViewModel<ChildRequests>> GetUnavailableRequests(int count, int position, string sortProperty, string sortOrder)
         {
             var shouldHide = await HideFromOtherUsers();

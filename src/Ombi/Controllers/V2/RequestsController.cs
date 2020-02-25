@@ -36,6 +36,30 @@ namespace Ombi.Controllers.V2
             return await _movieRequestEngine.GetRequests(count, position, sort, sortOrder);
         }
 
+        [HttpGet("movie/availble/{count:int}/{position:int}/{sort}/{sortOrder}")]
+        public async Task<RequestsViewModel<MovieRequests>> GetAvailableRequests(int count, int position, string sort, string sortOrder)
+        {
+            return await _movieRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.Available);
+        }
+        
+        [HttpGet("movie/processing/{count:int}/{position:int}/{sort}/{sortOrder}")]
+        public async Task<RequestsViewModel<MovieRequests>> GetProcessingRequests(int count, int position, string sort, string sortOrder)
+        {
+            return await _movieRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.ProcessingRequest);
+        }
+        
+        [HttpGet("movie/pending/{count:int}/{position:int}/{sort}/{sortOrder}")]
+        public async Task<RequestsViewModel<MovieRequests>> GetPendingRequests(int count, int position, string sort, string sortOrder)
+        {
+            return await _movieRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.PendingApproval);
+        }
+        
+        [HttpGet("movie/denied/{count:int}/{position:int}/{sort}/{sortOrder}")]
+        public async Task<RequestsViewModel<MovieRequests>> GetDeniedRequests(int count, int position, string sort, string sortOrder)
+        {
+            return await _movieRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.Denied);
+        }
+
         /// <summary>
         /// Gets the unavailable movie requests.
         /// </summary>
@@ -60,6 +84,30 @@ namespace Ombi.Controllers.V2
         public async Task<RequestsViewModel<ChildRequests>> GetTvRequests(int count, int position, string sort, string sortOrder)
         {
             return await _tvRequestEngine.GetRequests(count, position, sort, sortOrder);
+        }
+
+        [HttpGet("tv/pending/{count:int}/{position:int}/{sort}/{sortOrder}")]
+        public async Task<RequestsViewModel<ChildRequests>> GetPendingTvRequests(int count, int position, string sort, string sortOrder)
+        {
+            return await _tvRequestEngine.GetRequests(count, position, sort, sortOrder, RequestStatus.PendingApproval);
+        }
+
+        [HttpGet("tv/processing/{count:int}/{position:int}/{sort}/{sortOrder}")]
+        public async Task<RequestsViewModel<ChildRequests>> GetProcessingTvRequests(int count, int position, string sort, string sortOrder)
+        {
+            return await _tvRequestEngine.GetRequests(count, position, sort, sortOrder, RequestStatus.ProcessingRequest);
+        }
+
+        [HttpGet("tv/available/{count:int}/{position:int}/{sort}/{sortOrder}")]
+        public async Task<RequestsViewModel<ChildRequests>> GetAvailableTvRequests(int count, int position, string sort, string sortOrder)
+        {
+            return await _tvRequestEngine.GetRequests(count, position, sort, sortOrder, RequestStatus.Available);
+        }
+
+        [HttpGet("tv/denied/{count:int}/{position:int}/{sort}/{sortOrder}")]
+        public async Task<RequestsViewModel<ChildRequests>> GetDeniedTvRequests(int count, int position, string sort, string sortOrder)
+        {
+            return await _tvRequestEngine.GetRequests(count, position, sort, sortOrder, RequestStatus.Denied);
         }
 
         /// <summary>
