@@ -24,7 +24,8 @@ namespace Ombi.Core.Rule.Rules.Request
 
         public async Task<RuleResult> Execute(BaseRequest obj)
         {
-            var user = await _manager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
+            var username = User.Identity.Name.ToUpper();
+            var user = await _manager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
             if (await _manager.IsInRoleAsync(user, OmbiRoles.Admin) || user.IsSystemUser)
             {
                 obj.Approved = true;

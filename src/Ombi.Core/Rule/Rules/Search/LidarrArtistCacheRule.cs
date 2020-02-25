@@ -21,7 +21,7 @@ namespace Ombi.Core.Rule.Rules.Search
         {
             var obj = (SearchArtistViewModel) objec;
             // Check if it's in Lidarr
-            var result = _db.GetAll().FirstOrDefault(x => x.ForeignArtistId.Equals(obj.ForignArtistId, StringComparison.InvariantCultureIgnoreCase));
+            var result = _db.GetAll().FirstOrDefault(x => x.ForeignArtistId == obj.ForignArtistId);
             if (result != null)
             {
                 obj.Monitored = true; // It's in Lidarr so it's monitored

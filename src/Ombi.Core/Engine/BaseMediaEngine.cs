@@ -136,7 +136,7 @@ namespace Ombi.Core.Engine
         {
             var user = await GetUser();
             var existingSub = await _subscriptionRepository.GetAll().FirstOrDefaultAsync(x =>
-                x.UserId.Equals(user.Id) && x.RequestId == requestId && x.RequestType == type);
+                x.UserId == user.Id && x.RequestId == requestId && x.RequestType == type);
             if (existingSub != null)
             {
                 return;
@@ -155,7 +155,7 @@ namespace Ombi.Core.Engine
         {
             var user = await GetUser();
             var existingSub = await _subscriptionRepository.GetAll().FirstOrDefaultAsync(x =>
-                x.UserId.Equals(user.Id) && x.RequestId == requestId && x.RequestType == type);
+                x.UserId == user.Id && x.RequestId == requestId && x.RequestType == type);
             if (existingSub != null)
             {
                 await _subscriptionRepository.Delete(existingSub);

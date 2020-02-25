@@ -41,7 +41,7 @@ namespace Ombi.Core.Rule.Rules.Request
                 {
                    // Let's check imdbid
                    existing = await movieRequests.FirstOrDefaultAsync(x =>
-                       x.ImdbId.Equals(movie.ImdbId, StringComparison.CurrentCultureIgnoreCase));
+                       x.ImdbId == movie.ImdbId);
                    if (existing != null)
                    {
                        found = true;
