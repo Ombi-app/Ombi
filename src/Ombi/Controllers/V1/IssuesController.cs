@@ -130,7 +130,9 @@ namespace Ombi.Controllers.V1
         public async Task<int> CreateIssue([FromBody]Issues i)
         {
             i.IssueCategory = null;
-            i.UserReportedId = (await _userManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase))).Id;
+
+            var username = User.Identity.Name.ToUpper();
+            i.UserReportedId = (await _userManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username)).Id;
             await _issues.Add(i);
             var category = await _categories.GetAll().FirstOrDefaultAsync(x => i.IssueCategoryId == x.Id);
             if (category != null)

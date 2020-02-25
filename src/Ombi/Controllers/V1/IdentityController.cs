@@ -280,7 +280,8 @@ namespace Ombi.Controllers.V1
         [Authorize]
         public async Task<UserViewModel> GetCurrentUser()
         {
-            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
+            var username = User.Identity.Name.ToUpper();
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
 
             return await GetUserWithRoles(user);
         }
@@ -875,7 +876,9 @@ namespace Ombi.Controllers.V1
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<string> GetUserAccessToken()
         {
-            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
+
+            var username = User.Identity.Name.ToUpper();
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
             if (user == null)
             {
                 return Guid.Empty.ToString("N");
@@ -897,7 +900,8 @@ namespace Ombi.Controllers.V1
         [HttpGet("notificationpreferences")]
         public async Task<List<UserNotificationPreferences>> GetUserPreferences()
         {
-            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
+            var username = User.Identity.Name.ToUpper();
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
             return await GetPreferences(user);
         }
 
@@ -950,7 +954,9 @@ namespace Ombi.Controllers.V1
                     return NotFound();
                 }
                 // Check if we are editing a different user than ourself, if we are then we need to power user role
-                var me = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
+
+                var username = User.Identity.Name.ToUpper();
+                var me = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
                 if (!me.Id.Equals(user.Id, StringComparison.InvariantCultureIgnoreCase))
                 {
                     var isPowerUser = await UserManager.IsInRoleAsync(me, OmbiRoles.PowerUser);
