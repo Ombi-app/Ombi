@@ -102,10 +102,16 @@ namespace Ombi
                     if (username.IsNullOrEmpty())
                     {
                         UseApiUser(context);
+                    } 
+                    else
+                    {
+                        username = username.ToUpper();
                     }
+                    
                     var um = context.RequestServices.GetService<OmbiUserManager>();
+
                     var user = await um.Users.FirstOrDefaultAsync(x =>
-                        x.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+                        x.NormalizedUserName == username);
                     if (user == null)
                     {
                         context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;

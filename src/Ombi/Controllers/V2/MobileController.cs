@@ -36,7 +36,9 @@ namespace Ombi.Controllers.V2
         {
             if (!string.IsNullOrEmpty(body?.Token))
             {
-                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
+
+                var username = User.Identity.Name.ToUpper();
+                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
                 // Check if we already have this notification id
                 var alreadyExists = await _mobileDevices.GetAll().AnyAsync(x => x.Token == body.Token && x.UserId == user.Id);
 
@@ -64,7 +66,8 @@ namespace Ombi.Controllers.V2
         public async Task<IActionResult> RemoveNotifications()
         {
 
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
+            var username = User.Identity.Name.ToUpper();
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
             // Check if we already have this notification id
             var currentDevices = await _mobileDevices.GetAll().Where(x => x.UserId == user.Id).ToListAsync();
 
