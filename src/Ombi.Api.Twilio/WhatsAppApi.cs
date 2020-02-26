@@ -12,6 +12,10 @@ namespace Ombi.Api.Twilio
         {
             TwilioClient.Init(accountSid, authToken);
 
+            if(string.IsNullOrEmpty(message.To))
+            {
+                return string.Empty;
+            }
             var response =await  MessageResource.CreateAsync(
                 body: message.Message,
                 from: new PhoneNumber($"whatsapp:{message.From}"),
