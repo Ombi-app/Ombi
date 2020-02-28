@@ -2,7 +2,6 @@ import { CommonModule, PlatformLocation, APP_BASE_HREF } from "@angular/common";
 import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { HttpModule } from "@angular/http";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule, Routes } from "@angular/router";
@@ -106,7 +105,6 @@ export function JwtTokenGetter() {
         BrowserModule,
         HttpClientModule,
         BrowserAnimationsModule,
-        HttpModule,
         GrowlModule,
         ButtonModule,
         FormsModule,
