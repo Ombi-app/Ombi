@@ -13,41 +13,25 @@ stages:
 
 - stage: publish
   jobs:
-  - template: templates/publish-os-steps.yml  
-    parameters:
-      name: 'Win10x64'
-      Runtime: win10-x64
-      OutputName: win-64
-  
-  - template: templates/publish-os-steps.yml  
-    parameters:
-      name: 'Win10x86'
-      Runtime: win10-x86
-      OutputName: win-86
-  
-  - template: templates/publish-os-steps.yml  
-    parameters:
-      name: 'OSXx64'
-      Runtime: osx-x64
-      OutputName: osx-64
-  
-  - template: templates/publish-os-steps.yml 
-    parameters:
-      name: 'Linuxx64'
-      Runtime: linux-x64
-      OutputName: linux-64
-  
-  - template: templates/publish-os-steps.yml  
-    parameters:
-      name: 'LinuxARM'
-      Runtime: linux-arm
-      OutputName: linux-arm
-  
-  - template: templates/publish-os-steps.yml  
-    parameters:
-      name: 'LinuxARMx64'
-      Runtime: linux-arm64
-      OutputName: linux-arm64
+  - job:
+    strategy:
+      matrix:
+        win10-x64:
+          runtime: win10-x64
+        win10-x86:
+          runtime: win10-x86
+        osx-64:
+          runtime: osx-x64
+        linux-64:
+          runtime: linux-64
+        linux-arm:
+          runtime: linux-arm
+        linux-arm64:
+          runtime: linux-arm64
+    pool:
+      vmImage: $(vmImage)
+    steps:
+      - template: templates/publish-os-steps.yml
 
 
 # - task: GitHubRelease@1
