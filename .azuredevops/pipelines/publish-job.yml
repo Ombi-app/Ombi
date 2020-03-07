@@ -3,7 +3,7 @@ variables:
   - template: templates/variables.yml
 
 stages:
-- stage: build_angular
+- stage: build
   jobs:
   - job: Build
     pool:
