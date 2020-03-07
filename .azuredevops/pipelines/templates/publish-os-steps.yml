@@ -19,7 +19,7 @@ steps:
   inputs:
     SourceFolder: '$(Build.ArtifactStagingDirectory)/angular_dist'
     Contents: '**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)/$(runtime)/ClientApp/dist
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/$(runtime)/ClientApp/dist'
     
 - task: ArchiveFiles@2
   displayName: 'Zip $(runtime)'
