@@ -37,15 +37,13 @@ stages:
   jobs:
   - job:
     steps:
-    - task: DownloadBuildArtifacts@0
+    - task: DownloadPipelineArtifact@2
       inputs:
         buildType: 'current'
-        downloadType: 'specific'
-        itemPattern: '**.zip'
-        downloadPath: '$(System.ArtifactsDirectory)'
+        targetPath: '$(System.ArtifactsDirectory)'
         
     - pwsh: |
-        Get-ChildItem ($env:SYSTEM_ARTIFACTSDIRECTORY)
+        Get-ChildItem -Recurse ($env:SYSTEM_ARTIFACTSDIRECTORY)
 
 
 # - task: GitHubRelease@1
