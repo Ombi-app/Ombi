@@ -1,46 +1,37 @@
-
-parameters:
-- name: name
-  default: ''
-- name: Runtime
-  default: ''
-- name: OutputName
-  default: ''
-
-jobs:
-- job: Publish_${{ parameters.name }}
-  pool: 
-    vmImage: $(vmImage)
-  steps:
-
-  - task: DotNetCoreCLI@2
-    displayName: publish ${{ parameters.name }}
-    inputs:
-      command: 'publish'
-      publishWebProjects: true
-      arguments: '-c $(BuildConfiguration) -r "${{ parameters.Runtime }}"  -o $(Build.ArtifactStagingDirectory)/${{ parameters.OutputName }}'
-      zipAfterPublish: false
-      modifyOutputPath: false
-      
-  - task: DownloadPipelineArtifact@2
-    inputs:
-      buildType: 'current'
-      artifactName: 'angular_dist'
-      targetPath: '$(Build.ArtifactStagingDirectory)/angular_dist'
-
-  - task: CopyFiles@2
-    displayName: 'Copy Angular App ${{ parameters.name }}'
-    inputs:
-      SourceFolder: '$(Build.ArtifactStagingDirectory)/angular_dist'
-      Contents: '**'
-      TargetFolder: '$(Build.ArtifactStagingDirectory)/${{ parameters.OutputName }}/ClientApp/dist'
-
-
-  - task: ArchiveFiles@2
-    displayName: Zip ${{ parameters.name }}
-    inputs:
-      rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/${{ parameters.OutputName }}'
-      includeRootFolder: false
-      archiveType: 'zip'
-      archiveFile: '$(Build.ArtifactStagingDirectory)/${{ parameters.OutputName }}-$(Build.BuildId).zip'
-      replaceExistingArchive: true
+steps:
+- task: DotNetCoreCLI@2
+  displayName: publish $(runtime)
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '-c $(BuildConfiguration) -r "$(runtime)"  -o $(Build.ArtifactStagingDirectory)/$(runtime)'
+    zipAfterPublish: false
+    modifyOutputPath: false
+    
+- task: DownloadPipelineArtifact@2
+  inputs:
+    buildType: 'current'
+    artifactName: 'angular_dist'
+    targetPath: '$(Build.ArtifactStagingDirectory)/angular_dist
+    
+- task: CopyFiles@2
+  displayName: Copy Angular App $(runtime)
+  inputs:
+    SourceFolder: '$(Build.ArtifactStagingDirectory)/angular_dist'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/$(runtime)/ClientApp/dist
+    
+- task: ArchiveFiles@2
+  displayName: Zip $(runtime)
+  inputs:
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/$(runtime)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(runtime).zip'
+    replaceExistingArchive: true
+    
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)/$(runtime).zip'
+    artifact: '$(runtime)'
+    publishLocation: 'pipeline'
