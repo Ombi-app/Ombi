@@ -20,10 +20,10 @@ stages:
           runtime: win10-x64
         win10-x86:
           runtime: win10-x86
-        osx-64:
+        osx-x64:
           runtime: osx-x64
-        linux-64:
-          runtime: linux-64
+        linux-x64:
+          runtime: linux-x64
         linux-arm:
           runtime: linux-arm
         linux-arm64:
@@ -32,6 +32,20 @@ stages:
       vmImage: ${{ variables.vmImage }}
     steps:
       - template: templates/publish-os-steps.yml
+
+- stage: deploy
+  jobs:
+  - job:
+    steps:
+    - task: DownloadBuildArtifacts@0
+      inputs:
+        buildType: 'current'
+        downloadType: 'specific'
+        itemPattern: '**.zip'
+        downloadPath: '$(System.ArtifactsDirectory)'
+        
+    - pwsh: |
+        Get-ChildItem ($env:SYSTEM_ARTIFACTSDIRECTORY)
 
 
 # - task: GitHubRelease@1
