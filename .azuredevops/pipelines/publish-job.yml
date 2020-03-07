@@ -29,7 +29,7 @@ stages:
         linux-arm64:
           runtime: linux-arm64
     pool:
-      vmImage: $(vmImage)
+      vmImage: ${{ variables.vmImage }}
     steps:
       - template: templates/publish-os-steps.yml
 
