@@ -1,6 +1,6 @@
 steps:
 - task: DotNetCoreCLI@2
-  displayName: publish $(runtime)
+  displayName: 'publish $(runtime)'
   inputs:
     command: 'publish'
     publishWebProjects: true
@@ -15,14 +15,14 @@ steps:
     targetPath: '$(Build.ArtifactStagingDirectory)/angular_dist
     
 - task: CopyFiles@2
-  displayName: Copy Angular App $(runtime)
+  displayName: 'Copy Angular App $(runtime)'
   inputs:
     SourceFolder: '$(Build.ArtifactStagingDirectory)/angular_dist'
     Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)/$(runtime)/ClientApp/dist
     
 - task: ArchiveFiles@2
-  displayName: Zip $(runtime)
+  displayName: 'Zip $(runtime)'
   inputs:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/$(runtime)'
     includeRootFolder: false
