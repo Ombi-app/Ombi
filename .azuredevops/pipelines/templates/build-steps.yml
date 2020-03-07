@@ -43,7 +43,7 @@ steps:
     
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: '$(UiLocation)/dist'
+    targetPath: '$(UiLocation)dist'
     artifact: 'angular_dist'
     publishLocation: 'pipeline'
 
