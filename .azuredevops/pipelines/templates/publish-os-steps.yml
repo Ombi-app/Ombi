@@ -27,13 +27,13 @@ jobs:
     inputs:
       SourceFolder: '$(UILocation)dist'
       Contents: '**'
-      TargetFolder: '$(Build.ArtifactStagingDirectory)/${{ parameters.OutputName}}/ClientApp/dist'
+      TargetFolder: '$(Build.ArtifactStagingDirectory)/${{ parameters.OutputName }}/ClientApp/dist'
 
 
   - task: ArchiveFiles@2
     displayName: Zip ${{ parameters.name }}
     inputs:
-      rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/$(parameters.OutputName)'
+      rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/${{ parameters.OutputName }}'
       includeRootFolder: false
       archiveType: 'zip'
       archiveFile: '$(Build.ArtifactStagingDirectory)/${{ parameters.OutputName }}-$(Build.BuildId).zip'
