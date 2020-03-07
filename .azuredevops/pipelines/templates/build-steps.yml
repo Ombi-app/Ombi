@@ -40,6 +40,12 @@ steps:
   inputs:
     projectDirectory: '$(UiLocation)'
     arguments: 'run build'
+    
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(UiLocation)/dist'
+    artifact: 'angular_dist'
+    publishLocation: 'pipeline'
 
 - task: DotNetCoreCLI@2
   displayName: Run Unit Tests
