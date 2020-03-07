@@ -21,11 +21,17 @@ jobs:
       arguments: '-c $(BuildConfiguration) -r "${{ parameters.Runtime }}"  -o $(Build.ArtifactStagingDirectory)/${{ parameters.OutputName }}'
       zipAfterPublish: false
       modifyOutputPath: false
+      
+  - task: DownloadPipelineArtifact@2
+    inputs:
+      buildType: 'current'
+      artifactName: 'angular_dist'
+      targetPath: '$(Build.ArtifactStagingDirectory)/angular_dist'
 
   - task: CopyFiles@2
     displayName: 'Copy Angular App ${{ parameters.name }}'
     inputs:
-      SourceFolder: '$(UILocation)dist'
+      SourceFolder: '$(Build.ArtifactStagingDirectory)/angular_dist'
       Contents: '**'
       TargetFolder: '$(Build.ArtifactStagingDirectory)/${{ parameters.OutputName }}/ClientApp/dist'
 
