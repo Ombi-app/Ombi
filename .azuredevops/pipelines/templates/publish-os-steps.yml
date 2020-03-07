@@ -12,7 +12,7 @@ steps:
   inputs:
     buildType: 'current'
     artifactName: 'angular_dist'
-    targetPath: '$(Build.ArtifactStagingDirectory)/angular_dist
+    targetPath: '$(Build.ArtifactStagingDirectory)/angular_dist'
     
 - task: CopyFiles@2
   displayName: 'Copy Angular App $(runtime)'
