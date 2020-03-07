@@ -1,5 +1,7 @@
 
 parameters:
+- name: name
+  default: ''
 - name: Runtime
   default: ''
 - name: OutputName
