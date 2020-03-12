@@ -22,7 +22,7 @@
     },
     "Ombi": {
       "commandName": "Project",
-      "commandLineArgs": "--host http://*:3577",
+      "commandLineArgs": "--host http://localhost:3577",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

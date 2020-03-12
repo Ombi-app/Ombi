@@ -72,7 +72,7 @@ namespace Ombi
                     url = new ApplicationConfiguration
                     {
                         Type = ConfigurationTypes.Url,
-                        Value = "http://*:5000"
+                        Value = "http://localhost:5000"
                     };
                     using (var tran = settingsDb.Database.BeginTransaction())
                     {
@@ -175,8 +175,8 @@ namespace Ombi
     {
         [Option("host", Required = false, HelpText =
             "Set to a semicolon-separated (;) list of URL prefixes to which the server should respond. For example, http://localhost:123." +
-            " Use \"*\" to indicate that the server should listen for requests on any IP address or hostname using the specified port and protocol (for example, http://*:5000). " +
-            "The protocol (http:// or https://) must be included with each URL. Supported formats vary between servers.", Default = "http://*:5000")]
+            " Use \"localhost\" to indicate that the server should listen for requests on any IP address or hostname using the specified port and protocol (for example, http://localhost:5000). " +
+            "The protocol (http:// or https://) must be included with each URL. Supported formats vary between servers.", Default = "http://localhost:5000")]
         public string Host { get; set; }
 
         [Option("storage", Required = false, HelpText = "Storage path, where we save the logs and database")]
