@@ -730,7 +730,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         finalsb.Append("<br />");
                     }
 
-                    var summary = info.summary;
+                    var summary = info?.summary ?? string.Empty;
                     if (summary.Length > 280)
                     {
                         summary = summary.Remove(280);
