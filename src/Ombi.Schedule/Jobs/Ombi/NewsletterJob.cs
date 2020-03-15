@@ -15,7 +15,7 @@ using MimeKit;
 using Ombi.Api.CouchPotato.Models;
 using Ombi.Api.Lidarr;
 using Ombi.Api.Lidarr.Models;
-using Ombi.Api.TheMovieDb;
+using Ombi.Api.TheMovieDb;HasTheMovieDb &&
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Api.TvMaze;
 using Ombi.Core.Settings;
@@ -137,9 +137,11 @@ namespace Ombi.Schedule.Jobs.Ombi
 
 
                 // Filter out the ones that we haven't sent yet
-                var plexContentMoviesToSend = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && x.HasTheMovieDb && !addedPlexMovieLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId))).ToHashSet();
-                var embyContentMoviesToSend = embyContent.Where(x => x.Type == EmbyMediaType.Movie && x.HasTheMovieDb && !addedEmbyMoviesLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId))).ToHashSet();
-                var lidarrContentAlbumsToSend = lidarrContent.Where(x => !addedAlbumLogIds.Contains(x.ForeignAlbumId)).ToHashSet();
+                var plexContentLocalDataset = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && x.HasTheMovieDb).ToHashSet();
+                var embyContentLocalDataset = embyContent.Where(x => x.Type == EmbyMediaType.Movie && x.HasTheMovieDb).ToHashSet();
+                var plexContentMoviesToSend = plexContentLocalDataset.Where(x => !addedPlexMovieLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId))).ToHashSet();
+                var embyContentMoviesToSend = embyContentLocalDataset.Where(x => !addedEmbyMoviesLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId))).ToHashSet();
+                var lidarrContentAlbumsToSend = (await lidarrContent.ToListAsync()).Where(x => !addedAlbumLogIds.Contains(x.ForeignAlbumId)).ToHashSet();
                 _log.LogInformation("Plex Movies to send: {0}", plexContentMoviesToSend.Count());
                 _log.LogInformation("Emby Movies to send: {0}", embyContentMoviesToSend.Count());
                 _log.LogInformation("Albums to send: {0}", lidarrContentAlbumsToSend.Count());
