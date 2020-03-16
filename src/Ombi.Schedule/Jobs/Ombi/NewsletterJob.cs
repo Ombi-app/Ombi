@@ -15,7 +15,8 @@ using MimeKit;
 using Ombi.Api.CouchPotato.Models;
 using Ombi.Api.Lidarr;
 using Ombi.Api.Lidarr.Models;
-using Ombi.Api.TheMovieDb;HasTheMovieDb &&
+using Ombi.Api.TheMovieDb;
+using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Api.TvMaze;
 using Ombi.Core.Settings;
