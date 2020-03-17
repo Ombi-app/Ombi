@@ -80,11 +80,10 @@ namespace Ombi
             var hcBuilder = services.AddHealthChecks();
             hcBuilder.AddOmbiHealthChecks();
             services.ConfigureDatabases(hcBuilder);
-            // Need to wait until https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks/issues/410 is resolved
-            services.AddHealthChecksUI(setupSettings: setup =>
-            {
-                setup.AddHealthCheckEndpoint("Ombi", "/health");
-            });
+            //services.AddHealthChecksUI(setupSettings: setup =>
+            //{
+            //    setup.AddHealthCheckEndpoint("Ombi", "/health");
+            //});
             services.AddMemoryCache();
 
             services.AddJwtAuthentication(Configuration);

@@ -60,7 +60,7 @@
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="3.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.Sqlite" Version="3.0.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.0.9" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.0.11" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.0.2" />
     <PackageReference Include="AutoMapper" Version="6.1.1" />
     <PackageReference Include="CommandLineParser" Version="2.6.0" />
