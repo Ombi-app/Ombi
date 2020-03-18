@@ -37,6 +37,11 @@ stages:
   jobs:
   - job:
     steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        buildType: 'current'
+        targetPath: '$(System.ArtifactsDirectory)'
+
     - task: GitHubRelease@1
       inputs:
         gitHubConnection: 'github.com_tidusjar'
