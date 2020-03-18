@@ -48,8 +48,8 @@ stages:
         releaseNotesSource: 'inline'
         releaseNotesInline: '$(ReleaseNotes)'
         assets: |
-          $(System.ArtifactsDirectory)/**/*.zip
-          $(System.ArtifactsDirectory)/**/*.gz
+          $(System.ArtifactsDirectory)**/*.zip
+          $(System.ArtifactsDirectory)**/*.gz
         isPreRelease: true
         changeLogCompareToRelease: 'lastNonDraftRelease'
         changeLogType: 'commitBased'
