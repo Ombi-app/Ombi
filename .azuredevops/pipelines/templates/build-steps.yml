@@ -50,6 +50,7 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: Run Unit Tests
   inputs:
-    comand: 'test'
+    command: 'custom'
     projects: '$(TestProject)'
-  continueOnError: true  
+    custom: 'test'
+  continueOnError: true 

@@ -25,3 +25,6 @@ variables:
 
   - name: "BuildVersion"
     value: "4.0.$(Build.BuildId)"
+
+  - name: "ReleaseNotes"
+    value: ""S
