@@ -9,7 +9,7 @@
 trigger:
   branches:
     include:
-    - feature/*
+    - feature/v4*
     exclude:
     - develop
     - master
@@ -19,7 +19,7 @@ variables:
   testProj: '**/*.Tests.csproj'
   csProj: '**/*.csproj'
   buildConfiguration: 'Release'
-  publishLocation: '$(Build.SourcesDirectory)/src/Ombi/bin/Release/netcoreapp3.0'
+  publishLocation: '$(Build.SourcesDirectory)/src/Ombi/bin/Release/netcoreapp3.1'
 
 pool:
   vmImage: 'ubuntu-latest'
