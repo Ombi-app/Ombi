@@ -42,6 +42,14 @@ stages:
         buildType: 'current'
         targetPath: '$(System.ArtifactsDirectory)'
 
+    - task: PowerShell@2
+      displayName: 'Get Release Notes'
+      inputs:
+        targetType: 'inline'
+        script: |
+          $response = Invoke-WebRequest -Uri "https://ombireleasenote.azurewebsites.net/api/ReleaseNotesFunction?buildId=$(Build.BuildId)"
+          Write-Host "##vso[task.setvariable variable=ReleaseNotes;]$response"
+
     - task: GitHubRelease@1
       inputs:
         gitHubConnection: 'github.com_tidusjar'

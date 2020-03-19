@@ -12,15 +12,6 @@ steps:
     packageType: 'sdk'
     version: '2.1.x'
 
-
-- task: PowerShell@2
-  displayName: 'Get Release Notes'
-  inputs:
-    targetType: 'inline'
-    script: |
-      $response = Invoke-WebRequest -Uri "https://ombireleasenote.azurewebsites.net/api/ReleaseNotesFunction?buildId=$(Build.BuildId)"
-      Write-Host "##vso[task.setvariable variable=ReleaseNotes;]$response"
-
 - task: PowerShell@2
   displayName: 'Set Version'
   inputs:
