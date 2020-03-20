@@ -16,7 +16,7 @@ export class CookieComponent implements OnInit {
         if (cookie.Auth) {
             const jwtVal = cookie.Auth;
             this.store.save("id_token", jwtVal);
-            this.router.navigate(["search"]);
+            this.router.navigate(["discover"]);
         } else {
             this.router.navigate(["login"]);
         }
