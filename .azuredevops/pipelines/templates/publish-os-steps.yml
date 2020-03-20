@@ -27,7 +27,7 @@ steps:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/$(runtime)'
     includeRootFolder: false
     archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(runtime).zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(runtime).$(format)'
     replaceExistingArchive: true
     
 - task: PublishPipelineArtifact@1
