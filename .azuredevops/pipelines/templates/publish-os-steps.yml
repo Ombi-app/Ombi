@@ -1,4 +1,9 @@
 steps:
+- task: DotNetCoreInstaller@1
+  displayName: 'Use .NET Core sdk '
+  inputs:
+    packageType: 'sdk'
+    version: '3.x'
 
 - task: DotNetCoreInstaller@1
   displayName: 'Use .NET Core sdk for versioning'
