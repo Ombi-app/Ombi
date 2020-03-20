@@ -68,7 +68,7 @@ stages:
         releaseNotesInline: '$(ReleaseNotes)'
         assets: |
           $(System.ArtifactsDirectory)/**/*.zip
-          $(System.ArtifactsDirectory)/S**/*.tar.gz
+          $(System.ArtifactsDirectory)/**/*.tar.gz
         isPreRelease: true
         changeLogCompareToRelease: 'lastNonDraftRelease'
         changeLogType: 'commitBased'
