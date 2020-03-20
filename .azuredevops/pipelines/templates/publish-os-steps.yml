@@ -32,6 +32,6 @@ steps:
     
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/$(runtime).zip'
+    targetPath: '$(Build.ArtifactStagingDirectory)/$(runtime).$(format)'
     artifact: '$(runtime)'
     publishLocation: 'pipeline'
