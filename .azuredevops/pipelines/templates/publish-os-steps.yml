@@ -1,4 +1,19 @@
 steps:
+
+- task: DotNetCoreInstaller@1
+  displayName: 'Use .NET Core sdk for versioning'
+  inputs:
+    packageType: 'sdk'
+    version: '2.1.x'
+
+- task: PowerShell@2
+  displayName: 'Set Version'
+  inputs:
+    targetType: 'inline'
+    script: |
+      dotnet tool install -g dotnet-setversion
+      setversion -r $(BuildVersion)
+
 - task: DotNetCoreCLI@2
   displayName: 'publish $(runtime)'
   inputs:
