@@ -46,7 +46,7 @@ steps:
   inputs:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/$(runtime)'
     includeRootFolder: false
-    archiveType: 'zip'
+    archiveType: $(compression)
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(runtime).$(format)'
     replaceExistingArchive: true
     

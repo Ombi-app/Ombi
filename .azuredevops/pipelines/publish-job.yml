@@ -19,21 +19,27 @@ stages:
         win10-x64:
           runtime: win10-x64
           format: zip
+          compression: zip
         win10-x86:
           runtime: win10-x86
           format: zip
+          compression: zip
         osx-x64:
           runtime: osx-x64
           format: tar.gz
+          compression: tar
         linux-x64:
           runtime: linux-x64
           format: tar.gz
+          compression: tar
         linux-arm:
           runtime: linux-arm
           format: tar.gz
+          compression: tar
         linux-arm64:
           runtime: linux-arm64
           format: tar.gz
+          compression: tar
     pool:
       vmImage: ${{ variables.vmImage }}
     steps:
