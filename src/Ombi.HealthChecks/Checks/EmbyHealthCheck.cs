@@ -25,17 +25,18 @@ namespace Ombi.HealthChecks.Checks
             using (var scope = CreateScope())
             {
                 var settingsProvider = scope.ServiceProvider.GetRequiredService<ISettingsService<EmbySettings>>();
-                var api = scope.ServiceProvider.GetRequiredService<IEmbyApi>();
+                var api = scope.ServiceProvider.GetRequiredService<IEmbyApiFactory>();
                 var settings = await settingsProvider.GetSettingsAsync();
                 if (settings == null)
                 {
                     return HealthCheckResult.Healthy("Emby is not configured.");
                 }
-
+                
+                var client = api.CreateClient(settings);
                 var taskResult = new List<Task<EmbySystemInfo>>();
                 foreach (var server in settings.Servers)
                 {
-                    taskResult.Add(api.GetSystemInformation(server.ApiKey, server.FullUri));
+                    taskResult.Add(client.GetSystemInformation(server.ApiKey, server.FullUri));
                 }
 
                 try

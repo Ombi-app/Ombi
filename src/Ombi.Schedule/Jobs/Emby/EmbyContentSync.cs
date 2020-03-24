@@ -20,28 +20,30 @@ namespace Ombi.Schedule.Jobs.Emby
 {
     public class EmbyContentSync : IEmbyContentSync
     {
-        public EmbyContentSync(ISettingsService<EmbySettings> settings, IEmbyApi api, ILogger<EmbyContentSync> logger,
+        public EmbyContentSync(ISettingsService<EmbySettings> settings, IEmbyApiFactory api, ILogger<EmbyContentSync> logger,
             IEmbyContentRepository repo, IHubContext<NotificationHub> notification)
         {
             _logger = logger;
             _settings = settings;
-            _api = api;
+            _apiFactory = api;
             _repo = repo;
             _notification = notification;
         }
 
         private readonly ILogger<EmbyContentSync> _logger;
         private readonly ISettingsService<EmbySettings> _settings;
-        private readonly IEmbyApi _api;
+        private readonly IEmbyApiFactory _apiFactory;
         private readonly IEmbyContentRepository _repo;
         private readonly IHubContext<NotificationHub> _notification;
+        private IEmbyApi Api { get; set; }
 
         public async Task Execute(IJobExecutionContext job)
         {
             var embySettings = await _settings.GetSettingsAsync();
             if (!embySettings.Enable)
                 return;
-
+            
+            Api = _apiFactory.CreateClient(embySettings);
 
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Emby Content Sync Started");
@@ -76,7 +78,7 @@ namespace Ombi.Schedule.Jobs.Emby
             //await _repo.ExecuteSql("DELETE FROM EmbyEpisode");
             //await _repo.ExecuteSql("DELETE FROM EmbyContent");
 
-            var movies = await _api.GetAllMovies(server.ApiKey, 0, 200, server.AdministratorId, server.FullUri);
+            var movies = await Api.GetAllMovies(server.ApiKey, 0, 200, server.AdministratorId, server.FullUri);
             var totalCount = movies.TotalRecordCount;
             var processed = 1;
 
@@ -89,7 +91,7 @@ namespace Ombi.Schedule.Jobs.Emby
                     if (movie.Type.Equals("boxset", StringComparison.InvariantCultureIgnoreCase))
                     {
                         var movieInfo =
-                            await _api.GetCollection(movie.Id, server.ApiKey, server.AdministratorId, server.FullUri);
+                            await Api.GetCollection(movie.Id, server.ApiKey, server.AdministratorId, server.FullUri);
                         foreach (var item in movieInfo.Items)
                         {
                             await ProcessMovies(item, mediaToAdd, server);
@@ -106,7 +108,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 }
 
                 // Get the next batch
-                movies = await _api.GetAllMovies(server.ApiKey, processed, 200, server.AdministratorId, server.FullUri);
+                movies = await Api.GetAllMovies(server.ApiKey, processed, 200, server.AdministratorId, server.FullUri);
                 await _repo.AddRange(mediaToAdd);
                 mediaToAdd.Clear();
 
@@ -114,7 +116,7 @@ namespace Ombi.Schedule.Jobs.Emby
 
 
             // TV Time
-            var tv = await _api.GetAllShows(server.ApiKey, 0, 200, server.AdministratorId, server.FullUri);
+            var tv = await Api.GetAllShows(server.ApiKey, 0, 200, server.AdministratorId, server.FullUri);
             var totalTv = tv.TotalRecordCount;
             processed = 1;
             while (processed < totalTv)
@@ -160,7 +162,7 @@ namespace Ombi.Schedule.Jobs.Emby
                     }
                 }
                 // Get the next batch
-                tv = await _api.GetAllShows(server.ApiKey, processed, 200, server.AdministratorId, server.FullUri);
+                tv = await Api.GetAllShows(server.ApiKey, processed, 200, server.AdministratorId, server.FullUri);
                 await _repo.AddRange(mediaToAdd);
                 mediaToAdd.Clear();
             }

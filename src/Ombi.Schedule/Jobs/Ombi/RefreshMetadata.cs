@@ -23,7 +23,7 @@ namespace Ombi.Schedule.Jobs.Ombi
     {
         public RefreshMetadata(IPlexContentRepository plexRepo, IEmbyContentRepository embyRepo,
             ILogger<RefreshMetadata> log, ITvMazeApi tvApi, ISettingsService<PlexSettings> plexSettings,
-            IMovieDbApi movieApi, ISettingsService<EmbySettings> embySettings, IEmbyApi embyApi, IHubContext<NotificationHub> notification)
+            IMovieDbApi movieApi, ISettingsService<EmbySettings> embySettings, IEmbyApiFactory embyApi, IHubContext<NotificationHub> notification)
         {
             _plexRepo = plexRepo;
             _embyRepo = embyRepo;
@@ -32,7 +32,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             _tvApi = tvApi;
             _plexSettings = plexSettings;
             _embySettings = embySettings;
-            _embyApi = embyApi;
+            _embyApiFactory = embyApi;
             _notification = notification;
         }
 
@@ -43,8 +43,9 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly ITvMazeApi _tvApi;
         private readonly ISettingsService<PlexSettings> _plexSettings;
         private readonly ISettingsService<EmbySettings> _embySettings;
-        private readonly IEmbyApi _embyApi;
+        private readonly IEmbyApiFactory _embyApiFactory;
         private readonly IHubContext<NotificationHub> _notification;
+        private IEmbyApi EmbyApi { get; set; }
 
         public async Task Execute(IJobExecutionContext job)
         {
@@ -94,6 +95,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         private async Task StartEmby(EmbySettings s)
         {
+            EmbyApi = _embyApiFactory.CreateClient(s);
             await StartEmbyMovies(s);
             await StartEmbyTv();
         }
@@ -221,7 +223,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     foreach (var server in settings.Servers)
                     {
                         _log.LogInformation($"Checking server {server.Name} for upto date metadata");
-                        var movieInfo = await _embyApi.GetMovieInformation(movie.EmbyId, server.ApiKey, server.AdministratorId,
+                        var movieInfo = await EmbyApi.GetMovieInformation(movie.EmbyId, server.ApiKey, server.AdministratorId,
                             server.FullUri);
 
                         if (movieInfo.ProviderIds?.Imdb.HasValue() ?? false)

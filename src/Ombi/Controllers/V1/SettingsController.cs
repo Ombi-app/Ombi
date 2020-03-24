@@ -45,7 +45,7 @@ namespace Ombi.Controllers.V1
         public SettingsController(ISettingsResolver resolver,
             IMapper mapper,
             INotificationTemplatesRepository templateRepo,
-            IEmbyApi embyApi,
+            IEmbyApiFactory embyApi,
             ICacheService memCache,
             IGithubApi githubApi,
             IRecentlyAddedEngine engine)
@@ -62,7 +62,7 @@ namespace Ombi.Controllers.V1
         private ISettingsResolver SettingsResolver { get; }
         private IMapper Mapper { get; }
         private INotificationTemplatesRepository TemplateRepository { get; }
-        private readonly IEmbyApi _embyApi;
+        private readonly IEmbyApiFactory _embyApi;
         private readonly ICacheService _cache;
         private readonly IGithubApi _githubApi;
         private readonly IRecentlyAddedEngine _recentlyAdded;
@@ -212,9 +212,10 @@ namespace Ombi.Controllers.V1
         {
             if (emby.Enable)
             {
+                var client = await _embyApi.CreateClient();
                 foreach (var server in emby.Servers)
                 {
-                    var users = await _embyApi.GetUsers(server.FullUri, server.ApiKey);
+                    var users = await client.GetUsers(server.FullUri, server.ApiKey);
                     var admin = users.FirstOrDefault(x => x.Policy.IsAdministrator);
                     server.AdministratorId = admin?.Id;
                 }

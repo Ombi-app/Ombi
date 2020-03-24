@@ -42,7 +42,7 @@ namespace Ombi.Controllers.V1.External
         /// </summary>
         public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN,
             IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
-            IPlexApi plex, IEmbyApi emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider,
+            IPlexApi plex, IEmbyApiFactory emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider,
             ICouchPotatoApi cpApi, ITelegramNotification telegram, ISickRageApi srApi, INewsletterJob newsletter, ILegacyMobileNotification mobileNotification,
             ILidarrApi lidarrApi, IGotifyNotification gotifyNotification, IWhatsAppApi whatsAppApi, OmbiUserManager um, IWebhookNotification webhookNotification)
         {
@@ -82,7 +82,7 @@ namespace Ombi.Controllers.V1.External
         private IMattermostNotification MattermostNotification { get; }
         private IPlexApi PlexApi { get; }
         private IRadarrApi RadarrApi { get; }
-        private IEmbyApi EmbyApi { get; }
+        private IEmbyApiFactory EmbyApi { get; }
         private ISonarrApi SonarrApi { get; }
         private ICouchPotatoApi CouchPotatoApi { get; }
         private ILogger<TesterController> Log { get; }
@@ -322,8 +322,8 @@ namespace Ombi.Controllers.V1.External
         {
             try
             {
-
-                var result = await EmbyApi.GetUsers(settings.FullUri, settings.ApiKey);
+                var client = await EmbyApi.CreateClient();
+                var result = await client.GetUsers(settings.FullUri, settings.ApiKey);
                 return result.Any();
             }
             catch (Exception e)
