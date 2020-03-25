@@ -11,8 +11,8 @@
     </mat-select>
   </mat-form-field>
 
-  <table mat-table [dataSource]="dataSource" class="table" matSort matSortActive="title" matSortDisableClear
-    matSortDirection="desc">
+  <table mat-table [dataSource]="dataSource" class="table" matSort [matSortActive]="defaultSort" matSortDisableClear
+  [matSortDirection]="defaultOrder">
 
 
     <ng-container matColumnDef="series">
