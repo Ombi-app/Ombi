@@ -28,7 +28,7 @@ export class DiscoverComponent implements OnInit {
 
     public defaultTvPoster: string;
 
-    public popularActive: boolean;
+    public popularActive: boolean = true;
     public trendingActive: boolean;
     public upcomingActive: boolean;
 
