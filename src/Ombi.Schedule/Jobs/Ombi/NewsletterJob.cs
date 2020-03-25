@@ -138,8 +138,8 @@ namespace Ombi.Schedule.Jobs.Ombi
 
 
                 // Filter out the ones that we haven't sent yet
-                var plexContentLocalDataset = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && x.HasTheMovieDb).ToHashSet();
-                var embyContentLocalDataset = embyContent.Where(x => x.Type == EmbyMediaType.Movie && x.HasTheMovieDb).ToHashSet();
+                var plexContentLocalDataset = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
+                var embyContentLocalDataset = embyContent.Where(x => x.Type == EmbyMediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
                 var plexContentMoviesToSend = plexContentLocalDataset.Where(x => !addedPlexMovieLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId))).ToHashSet();
                 var embyContentMoviesToSend = embyContentLocalDataset.Where(x => !addedEmbyMoviesLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId))).ToHashSet();
                 var lidarrContentAlbumsToSend = (await lidarrContent.ToListAsync()).Where(x => !addedAlbumLogIds.Contains(x.ForeignAlbumId)).ToHashSet();
@@ -148,16 +148,16 @@ namespace Ombi.Schedule.Jobs.Ombi
                 _log.LogInformation("Albums to send: {0}", lidarrContentAlbumsToSend.Count());
 
                 // Find the movies that do not yet have MovieDbIds
-                var needsMovieDbPlex = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && !x.HasTheMovieDb).ToHashSet();
-                var needsMovieDbEmby = embyContent.Where(x => x.Type == EmbyMediaType.Movie && !x.HasTheMovieDb).ToHashSet();
+                var needsMovieDbPlex = plexContent.Where(x => x.Type == PlexMediaTypeEntity.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
+                var needsMovieDbEmby = embyContent.Where(x => x.Type == EmbyMediaType.Movie && !string.IsNullOrEmpty(x.TheMovieDbId)).ToHashSet();
                 var newPlexMovies = await GetMoviesWithoutId(addedPlexMovieLogIds, needsMovieDbPlex);
                 var newEmbyMovies = await GetMoviesWithoutId(addedEmbyMoviesLogIds, needsMovieDbEmby);
                 plexContentMoviesToSend = plexContentMoviesToSend.Union(newPlexMovies).ToHashSet();
                 embyContentMoviesToSend = embyContentMoviesToSend.Union(newEmbyMovies).ToHashSet();
 
                 var plexEpisodesToSend =
-                    FilterPlexEpisodes(_plex.GetAllEpisodes().Include(x => x.Series).Where(x => x.Series.HasTvDb).AsNoTracking(), addedPlexEpisodesLogIds);
-                var embyEpisodesToSend = FilterEmbyEpisodes(_emby.GetAllEpisodes().Include(x => x.Series).Where(x => x.Series.HasTvDb).AsNoTracking(),
+                    FilterPlexEpisodes(_plex.GetAllEpisodes().Include(x => x.Series).AsNoTracking(), addedPlexEpisodesLogIds);
+                var embyEpisodesToSend = FilterEmbyEpisodes(_emby.GetAllEpisodes().Include(x => x.Series).AsNoTracking(),
                     addedEmbyEpisodesLogIds);
 
                 _log.LogInformation("Plex Episodes to send: {0}", plexEpisodesToSend.Count());
@@ -386,7 +386,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private HashSet<PlexEpisode> FilterPlexEpisodes(IEnumerable<PlexEpisode> source, IQueryable<RecentlyAddedLog> recentlyAdded)
         {
             var itemsToReturn = new HashSet<PlexEpisode>();
-            foreach (var ep in source)
+            foreach (var ep in source.Where(x => x.Series.HasTvDb))
             {
                 var tvDbId = StringHelper.IntParseLinq(ep.Series.TvDbId);
                 if (recentlyAdded.Any(x => x.ContentId == tvDbId && x.EpisodeNumber == ep.EpisodeNumber && x.SeasonNumber == ep.SeasonNumber))
@@ -403,7 +403,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private HashSet<EmbyEpisode> FilterEmbyEpisodes(IEnumerable<EmbyEpisode> source, IQueryable<RecentlyAddedLog> recentlyAdded)
         {
             var itemsToReturn = new HashSet<EmbyEpisode>();
-            foreach (var ep in source)
+            foreach (var ep in source.Where(x => x.Series.HasTvDb))
             {
                 var tvDbId = StringHelper.IntParseLinq(ep.Series.TvDbId);
                 if (recentlyAdded.Any(x => x.ContentId == tvDbId && x.EpisodeNumber == ep.EpisodeNumber && x.SeasonNumber == ep.SeasonNumber))
