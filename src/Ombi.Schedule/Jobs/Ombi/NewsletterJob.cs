@@ -124,7 +124,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 // Get the Content
                 var plexContent = _plex.GetAll().Include(x => x.Episodes).AsNoTracking();
                 var embyContent = _emby.GetAll().Include(x => x.Episodes).AsNoTracking();
-                var lidarrContent = _lidarrAlbumRepository.GetAll().Where(x => x.FullyAvailable).AsNoTracking();
+                var lidarrContent = _lidarrAlbumRepository.GetAll().AsNoTracking().ToList().Where(x => x.FullyAvailable);
 
                 var addedLog = _recentlyAddedLog.GetAll();
                 var addedPlexMovieLogIds = addedLog.Where(x => x.Type == RecentlyAddedType.Plex && x.ContentType == ContentType.Parent).Select(x => x.ContentId).ToHashSet();
@@ -142,7 +142,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 var embyContentLocalDataset = embyContent.Where(x => x.Type == EmbyMediaType.Movie && x.HasTheMovieDb).ToHashSet();
                 var plexContentMoviesToSend = plexContentLocalDataset.Where(x => !addedPlexMovieLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId))).ToHashSet();
                 var embyContentMoviesToSend = embyContentLocalDataset.Where(x => !addedEmbyMoviesLogIds.Contains(StringHelper.IntParseLinq(x.TheMovieDbId))).ToHashSet();
-                var lidarrContentAlbumsToSend = (await lidarrContent.ToListAsync()).Where(x => !addedAlbumLogIds.Contains(x.ForeignAlbumId)).ToHashSet();
+                var lidarrContentAlbumsToSend = lidarrContent.Where(x => !addedAlbumLogIds.Contains(x.ForeignAlbumId)).ToHashSet();
                 _log.LogInformation("Plex Movies to send: {0}", plexContentMoviesToSend.Count());
                 _log.LogInformation("Emby Movies to send: {0}", embyContentMoviesToSend.Count());
                 _log.LogInformation("Albums to send: {0}", lidarrContentAlbumsToSend.Count());
