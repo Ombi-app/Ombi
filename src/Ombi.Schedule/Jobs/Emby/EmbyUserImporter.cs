@@ -45,10 +45,10 @@ namespace Ombi.Schedule.Jobs.Emby
 {
     public class EmbyUserImporter : IEmbyUserImporter
     {
-        public EmbyUserImporter(IEmbyApi api, UserManager<OmbiUser> um, ILogger<EmbyUserImporter> log,
+        public EmbyUserImporter(IEmbyApiFactory api, UserManager<OmbiUser> um, ILogger<EmbyUserImporter> log,
             ISettingsService<EmbySettings> embySettings, ISettingsService<UserManagementSettings> ums, IHubContext<NotificationHub> notification)
         {
-            _api = api;
+            _apiFactory = api;
             _userManager = um;
             _log = log;
             _embySettings = embySettings;
@@ -56,12 +56,13 @@ namespace Ombi.Schedule.Jobs.Emby
             _notification = notification;
         }
 
-        private readonly IEmbyApi _api;
+        private readonly IEmbyApiFactory _apiFactory;
         private readonly UserManager<OmbiUser> _userManager;
         private readonly ILogger<EmbyUserImporter> _log;
         private readonly ISettingsService<EmbySettings> _embySettings;
         private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
         private readonly IHubContext<NotificationHub> _notification;
+        private IEmbyApi Api { get; set; }
 
         public async Task Execute(IJobExecutionContext job)
         {
@@ -76,6 +77,8 @@ namespace Ombi.Schedule.Jobs.Emby
                 return;
             }
 
+            Api = _apiFactory.CreateClient(settings);
+
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Emby User Importer Started");
             var allUsers = await _userManager.Users.Where(x => x.UserType == UserType.EmbyUser).ToListAsync();
@@ -86,7 +89,7 @@ namespace Ombi.Schedule.Jobs.Emby
                     continue;
                 }
 
-                var embyUsers = await _api.GetUsers(server.FullUri, server.ApiKey);
+                var embyUsers = await Api.GetUsers(server.FullUri, server.ApiKey);
                 foreach (var embyUser in embyUsers)
                 {
                     // Check if we should import this user

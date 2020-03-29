@@ -3,6 +3,7 @@ import { SearchV2Service } from "../../../services";
 import { ISearchMovieResult, ISearchTvResult, RequestType } from "../../../interfaces";
 import { IDiscoverCardResult, DiscoverOption } from "../../interfaces";
 import { trigger, transition, style, animate } from "@angular/animations";
+import { StorageService } from "../../../shared/storage/storage-service";
 
 @Component({
     templateUrl: "./discover.component.html",
@@ -21,7 +22,7 @@ export class DiscoverComponent implements OnInit {
     public discoverResults: IDiscoverCardResult[] = [];
     public movies: ISearchMovieResult[] = [];
     public tvShows: ISearchTvResult[] = [];
-    
+
     public discoverOptions: DiscoverOption = DiscoverOption.Combined;
     public DiscoverOption = DiscoverOption;
 
@@ -36,22 +37,28 @@ export class DiscoverComponent implements OnInit {
 
     private contentLoaded: number;
     private isScrolling: boolean = false;
+    private mediaTypeStorageKey = "DiscoverOptions";
 
-    constructor(private searchService: SearchV2Service) { }
+    constructor(private searchService: SearchV2Service,
+        private storageService: StorageService) { }
 
     public async ngOnInit() {
         this.loading()
+        const localDiscoverOptions = +this.storageService.get(this.mediaTypeStorageKey);
+        if (localDiscoverOptions) {
+            this.discoverOptions = DiscoverOption[DiscoverOption[localDiscoverOptions]];
+        }
         this.scrollDisabled = true;
         switch (this.discoverOptions) {
             case DiscoverOption.Combined:
-                this.movies = await this.searchService.popularMoviesByPage(0,12);
-                this.tvShows = await this.searchService.popularTvByPage(0,12);
+                this.movies = await this.searchService.popularMoviesByPage(0, 12);
+                this.tvShows = await this.searchService.popularTvByPage(0, 12);
                 break;
             case DiscoverOption.Movie:
-                this.movies = await this.searchService.popularMoviesByPage(0,12);
+                this.movies = await this.searchService.popularMoviesByPage(0, 12);
                 break;
             case DiscoverOption.Tv:
-                this.tvShows = await this.searchService.popularTvByPage(0,12);
+                this.tvShows = await this.searchService.popularTvByPage(0, 12);
                 break;
         }
 
@@ -108,7 +115,7 @@ export class DiscoverComponent implements OnInit {
                     case DiscoverOption.Tv:
                         this.tvShows = await this.searchService.anticipatedTvByPage(this.contentLoaded, 12);
                         break;
-                }                
+                }
             }
             this.contentLoaded += 12;
 
@@ -199,7 +206,8 @@ export class DiscoverComponent implements OnInit {
     public async switchDiscoverMode(newMode: DiscoverOption) {
         this.loading();
         this.clear();
-        this.discoverOptions = newMode;
+        this.discoverOptions = newMode;        
+        this.storageService.save(this.mediaTypeStorageKey, newMode.toString());
         await this.ngOnInit();
         this.finishLoading();
     }

@@ -10,8 +10,8 @@
       </mat-select>
     </mat-form-field>
 
-  <table mat-table [dataSource]="dataSource" class="table" matSort matSortActive="requestedDate"
-    matSortDisableClear matSortDirection="desc">
+  <table mat-table [dataSource]="dataSource" class="table" matSort [matSortActive]="defaultSort"
+    matSortDisableClear [matSortDirection]="defaultOrder">
 
 
     <ng-container matColumnDef="requestedUser.requestedBy">

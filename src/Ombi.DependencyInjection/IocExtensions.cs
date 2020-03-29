@@ -151,6 +151,8 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMusicBrainzApi, MusicBrainzApi>();
             services.AddTransient<IWhatsAppApi, WhatsAppApi>();
             services.AddTransient<ICloudMobileNotification, CloudMobileNotification>();
+            services.AddTransient<IBaseEmbyApi, JellyfinApi>();
+            services.AddTransient<IEmbyApiFactory, EmbyApiFactory>();
         }
 
         public static void RegisterStore(this IServiceCollection services) { 

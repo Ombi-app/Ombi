@@ -49,7 +49,7 @@ namespace Ombi.Core.Authentication
             IPasswordHasher<OmbiUser> passwordHasher, IEnumerable<IUserValidator<OmbiUser>> userValidators,
             IEnumerable<IPasswordValidator<OmbiUser>> passwordValidators, ILookupNormalizer keyNormalizer,
             IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<OmbiUser>> logger, IPlexApi plexApi,
-            IEmbyApi embyApi, ISettingsService<EmbySettings> embySettings, ISettingsService<AuthenticationSettings> auth)
+            IEmbyApiFactory embyApi, ISettingsService<EmbySettings> embySettings, ISettingsService<AuthenticationSettings> auth)
             : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
             _plexApi = plexApi;
@@ -59,7 +59,7 @@ namespace Ombi.Core.Authentication
         }
 
         private readonly IPlexApi _plexApi;
-        private readonly IEmbyApi _embyApi;
+        private readonly IEmbyApiFactory _embyApi;
         private readonly ISettingsService<EmbySettings> _embySettings;
         private readonly ISettingsService<AuthenticationSettings> _authSettings;
 
@@ -146,9 +146,12 @@ namespace Ombi.Core.Authentication
         /// <returns></returns>
         private async Task<bool> CheckEmbyPasswordAsync(OmbiUser user, string password)
         {
+            var embySettings = await _embySettings.GetSettingsAsync();
+            var client = _embyApi.CreateClient(embySettings);
+
             if (user.IsEmbyConnect)
             {
-                var result = await _embyApi.LoginConnectUser(user.UserName, password);
+                var result = await client.LoginConnectUser(user.UserName, password);
                 if (result.AccessToken.HasValue())
                 {
                     // We cannot update the email address in the user importer due to there is no way 
@@ -165,12 +168,11 @@ namespace Ombi.Core.Authentication
                 }
             }
 
-            var embySettings = await _embySettings.GetSettingsAsync();
             foreach (var server in embySettings.Servers)
             {
                 try
                 {
-                    var result = await _embyApi.LogIn(user.UserName, password, server.ApiKey, server.FullUri);
+                    var result = await client.LogIn(user.UserName, password, server.ApiKey, server.FullUri);
                     if (result != null)
                     {
                         return true;

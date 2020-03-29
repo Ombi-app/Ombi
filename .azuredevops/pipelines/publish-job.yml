@@ -18,16 +18,28 @@ stages:
       matrix:
         win10-x64:
           runtime: win10-x64
+          format: zip
+          compression: zip
         win10-x86:
           runtime: win10-x86
+          format: zip
+          compression: zip
         osx-x64:
           runtime: osx-x64
+          format: tar.gz
+          compression: tar
         linux-x64:
           runtime: linux-x64
+          format: tar.gz
+          compression: tar
         linux-arm:
           runtime: linux-arm
+          format: tar.gz
+          compression: tar
         linux-arm64:
           runtime: linux-arm64
+          format: tar.gz
+          compression: tar
     pool:
       vmImage: ${{ variables.vmImage }}
     steps:
@@ -42,6 +54,14 @@ stages:
         buildType: 'current'
         targetPath: '$(System.ArtifactsDirectory)'
 
+    - task: PowerShell@2
+      displayName: 'Get Release Notes'
+      inputs:
+        targetType: 'inline'
+        script: |
+          $response = Invoke-WebRequest -Uri "https://ombireleasenote.azurewebsites.net/api/ReleaseNotesFunction?buildId=$(Build.BuildId)"
+          Write-Host "##vso[task.setvariable variable=ReleaseNotes;]$response"
+
     - task: GitHubRelease@1
       inputs:
         gitHubConnection: 'github.com_tidusjar'
@@ -54,7 +74,7 @@ stages:
         releaseNotesInline: '$(ReleaseNotes)'
         assets: |
           $(System.ArtifactsDirectory)/**/*.zip
-          $(System.ArtifactsDirectory)/S**/*.gz
+          $(System.ArtifactsDirectory)/**/*.tar.gz
         isPreRelease: true
         changeLogCompareToRelease: 'lastNonDraftRelease'
         changeLogType: 'commitBased'
