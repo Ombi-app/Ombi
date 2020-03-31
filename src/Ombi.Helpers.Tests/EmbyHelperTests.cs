@@ -25,9 +25,10 @@ namespace Ombi.Helpers.Tests
             get
             {
                 var mediaId = 1;
-                yield return new TestCaseData(mediaId.ToString(), "http://google.com").Returns($"http://google.com/#!/item/item.html?id={mediaId}").SetName("EmbyHelper_GetMediaUrl_WithCustomDomain_WithoutTrailingSlash");
-                yield return new TestCaseData(mediaId.ToString(), "http://google.com/").Returns($"http://google.com/#!/item/item.html?id={mediaId}").SetName("EmbyHelper_GetMediaUrl_WithCustomDomain");
-                yield return new TestCaseData(mediaId.ToString(), "https://google.com/").Returns($"https://google.com/#!/item/item.html?id={mediaId}").SetName("EmbyHelper_GetMediaUrl_WithCustomDomain_Https");
+                yield return new TestCaseData(mediaId.ToString(), "http://google.com").Returns($"http://google.com/#!/item?id={mediaId}").SetName("EmbyHelper_GetMediaUrl_WithCustomDomain_WithoutTrailingSlash");
+                yield return new TestCaseData(mediaId.ToString(), "http://google.com/").Returns($"http://google.com/#!/item?id={mediaId}").SetName("EmbyHelper_GetMediaUrl_WithCustomDomain");
+                yield return new TestCaseData(mediaId.ToString(), "https://google.com/").Returns($"https://google.com/#!/item?id={mediaId}").SetName("EmbyHelper_GetMediaUrl_WithCustomDomain_Https");
+                yield return new TestCaseData(mediaId.ToString(), string.Empty).Returns($"https://app.emby.media/#!/item?id={mediaId}").SetName("EmbyHelper_GetMediaUrl_WithOutCustomDomain");
             }
         }
 
