@@ -1,6 +1,6 @@
 ﻿import { OverlayContainer } from '@angular/cdk/overlay';
 
-import { Component, OnInit, HostBinding } from "@angular/core";
+import { Component, OnInit, HostBinding, Inject } from "@angular/core";
 import { NavigationStart, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { AuthService } from "./auth/auth.service";
@@ -13,6 +13,7 @@ import { ICustomizationSettings, ICustomPage } from "./interfaces";
 import { StorageService } from './shared/storage/storage-service';
 
 import { SignalRNotificationService } from './services/signlarnotification.service';
+import { DOCUMENT } from '@angular/common';
 
 
 @Component({
@@ -53,7 +54,8 @@ export class AppComponent implements OnInit {
         public overlayContainer: OverlayContainer,
         private storage: StorageService,
         private signalrNotification: SignalRNotificationService,
-        private readonly snackBar: MatSnackBar) {      
+        private readonly snackBar: MatSnackBar,
+        @Inject(DOCUMENT) private document: HTMLDocument) {      
 
         this.translate.addLangs(["en", "de", "fr", "da", "es", "it", "nl", "sk", "sv", "no", "pl", "pt"]);
 
@@ -80,6 +82,8 @@ export class AppComponent implements OnInit {
 
             if (this.customizationSettings && this.customizationSettings.applicationName) {
                 this.applicationName = this.customizationSettings.applicationName;
+                debugger;
+                this.document.getElementsByTagName('title')[0].innerText = this.applicationName;
             }
 
             if (this.customizationSettings.useCustomPage) {
