@@ -32,7 +32,7 @@ export class MyNavComponent implements OnInit {
   public ngOnInit(): void {
     this.theme = this.store.get("theme");
     if(!this.theme) {
-      this.store.save("theme","light");
+      this.store.save("theme","dark");
     }
   }
 

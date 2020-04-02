@@ -53,11 +53,7 @@ export class AppComponent implements OnInit {
         public overlayContainer: OverlayContainer,
         private storage: StorageService,
         private signalrNotification: SignalRNotificationService,
-        private readonly snackBar: MatSnackBar) {
-
-        
-            // __webpack_public_path__ = window['base-href']
-      
+        private readonly snackBar: MatSnackBar) {      
 
         this.translate.addLangs(["en", "de", "fr", "da", "es", "it", "nl", "sk", "sv", "no", "pl", "pt"]);
 
