@@ -5,8 +5,8 @@ import { NavigationStart, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { AuthService } from "./auth/auth.service";
 import { ILocalUser } from "./auth/IUserLogin";
-import { IdentityService, NotificationService, CustomPageService } from "./services";
-import { JobService, SettingsService } from "./services";
+import { NotificationService, CustomPageService } from "./services";
+import { SettingsService } from "./services";
 import { MatSnackBar } from '@angular/material';
 
 import { ICustomizationSettings, ICustomPage } from "./interfaces";
@@ -36,10 +36,7 @@ export class AppComponent implements OnInit {
     public isAdmin: boolean;
     public username: string;
 
-    private checkedForUpdate: boolean;
     private hubConnected: boolean;
-
-    
 
     @HostBinding('class') public componentCssClass;
 
@@ -47,9 +44,7 @@ export class AppComponent implements OnInit {
         public authService: AuthService,
         private readonly router: Router,
         private readonly settingsService: SettingsService,
-        private readonly jobService: JobService,
         public readonly translate: TranslateService,
-        private readonly identityService: IdentityService,
         private readonly customPageService: CustomPageService,
         public overlayContainer: OverlayContainer,
         private storage: StorageService,
@@ -82,7 +77,6 @@ export class AppComponent implements OnInit {
 
             if (this.customizationSettings && this.customizationSettings.applicationName) {
                 this.applicationName = this.customizationSettings.applicationName;
-                debugger;
                 this.document.getElementsByTagName('title')[0].innerText = this.applicationName;
             }
 
@@ -110,13 +104,13 @@ export class AppComponent implements OnInit {
                 this.showNav = this.authService.loggedIn();
 
                 // tslint:disable-next-line:no-string-literal
-                if (this.user !== null && this.user.name && !this.checkedForUpdate && this.isAdmin) {
-                    this.checkedForUpdate = true;
-                    this.jobService.getCachedUpdate().subscribe(x => {
-                        this.updateAvailable = x;
-                    },
-                        err => this.checkedForUpdate = true);
-                }
+                // if (this.user !== null && this.user.name && !this.checkedForUpdate && this.isAdmin) {
+                //     this.checkedForUpdate = true;
+                //     this.jobService.getCachedUpdate().subscribe(x => {
+                //         this.updateAvailable = x;
+                //     },
+                //         err => this.checkedForUpdate = true);
+                // }
 
                 if (this.authService.loggedIn() && !this.hubConnected) {
                     this.signalrNotification.initialize();
@@ -129,19 +123,6 @@ export class AppComponent implements OnInit {
                     });
                 }
             }
-        });
-    }
-
-    public openMobileApp(event: any) {
-        event.preventDefault();
-        if (!this.customizationSettings.applicationUrl) {
-            this.notificationService.warning("Mobile", "Please ask your admin to setup the Application URL!");
-            return;
-        }
-
-        this.identityService.getAccessToken().subscribe(x => {
-            const url = `ombi://${this.customizationSettings.applicationUrl}_${x}`;
-            window.location.assign(url);
         });
     }
 
