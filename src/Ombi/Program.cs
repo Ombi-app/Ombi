@@ -72,7 +72,7 @@ namespace Ombi
                     url = new ApplicationConfiguration
                     {
                         Type = ConfigurationTypes.Url,
-                        Value = "http://localhost:5000"
+                        Value = "http://*:5000"
                     };
                     using (var tran = settingsDb.Database.BeginTransaction())
                     {
