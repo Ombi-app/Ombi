@@ -55,7 +55,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 _log.LogError(LoggingEvents.Cacher, e, "Caching Episodes Failed");
             }
 
-            //await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
+            await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
             await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
         }
 

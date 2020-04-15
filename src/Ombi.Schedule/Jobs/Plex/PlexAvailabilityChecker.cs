@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Ombi.Core;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
+using Ombi.Schedule.Jobs.Plex.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
@@ -47,13 +49,13 @@ namespace Ombi.Schedule.Jobs.Plex
 
         private Task ProcessTv()
         {
-            var tv = _tvRepo.GetChild().Where(x => !x.Available);
+            var tv = _tvRepo.GetChild().Where(x => !x.Available).AsNoTracking();
             return ProcessTv(tv);
         }
 
         private async Task ProcessTv(IQueryable<ChildRequests> tv)
         {
-            var plexEpisodes = _repo.GetAllEpisodes().Include(x => x.Series);
+            var plexEpisodes = _repo.GetAllEpisodes().Include(x => x.Series).AsNoTracking();
 
             foreach (var child in tv)
             {
@@ -95,6 +97,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
                 }
 
+                var availableEpisode = new List<AvailabilityModel>();
                 foreach (var season in child.SeasonRequests)
                 {
                     foreach (var episode in season.Episodes)
@@ -109,20 +112,28 @@ namespace Ombi.Schedule.Jobs.Plex
 
                         if (foundEp != null)
                         {
+                            availableEpisode.Add(new AvailabilityModel
+                            {
+                                Id = episode.Id
+                            });
                             episode.Available = true;
                         }
                     }
                 }
 
+                //TODO Partial avilability notifications here
+                foreach(var c in availableEpisode)
+                {
+                    await _tvRepo.MarkEpisodeAsAvailable(c.Id);
+                }
+                
                 // Check to see if all of the episodes in all seasons are available for this request
                 var allAvailable = child.SeasonRequests.All(x => x.Episodes.All(c => c.Available));
                 if (allAvailable)
                 {
                     _log.LogInformation("[PAC] - Child request {0} is now available, sending notification", $"{child.Title} - {child.Id}");
                     // We have ful-fulled this request!
-                    child.Available = true;
-                    child.MarkedAsAvailable = DateTime.Now;
-
+                    await _tvRepo.MarkChildAsAvailable(child.Id);
                     await _notificationService.Notify(new NotificationOptions
                     {
                         DateTime = DateTime.Now,
@@ -140,10 +151,16 @@ namespace Ombi.Schedule.Jobs.Plex
         private async Task ProcessMovies()
         {
             // Get all non available
-            var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available);
+            var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available).AsNoTracking();
+            var itemsForAvailbility = new List<AvailabilityModel>();
 
             foreach (var movie in movies)
             {
+                if (movie.Available)
+                {
+                    return;
+                }
+
                 PlexServerContent item = null;
                 if (movie.ImdbId.HasValue())
                 {
@@ -161,24 +178,29 @@ namespace Ombi.Schedule.Jobs.Plex
                     // We don't yet have this
                     continue;
                 }
-
-                movie.Available = true;
-                movie.MarkedAsAvailable = DateTime.Now;
-                item.RequestId = movie.Id;
-
+                
                 _log.LogInformation("[PAC] - Movie request {0} is now available, sending notification", $"{movie.Title} - {movie.Id}");
+                itemsForAvailbility.Add(new AvailabilityModel
+                {
+                    Id = movie.Id,
+                    RequestedUser = movie.RequestedUser != null ? movie.RequestedUser.Email : string.Empty
+                });
+            }
+
+            foreach (var i in itemsForAvailbility)
+            {
+                await _movieRepo.MarkAsAvailable(i.Id);
+
                 await _notificationService.Notify(new NotificationOptions
                 {
                     DateTime = DateTime.Now,
                     NotificationType = NotificationType.RequestAvailable,
-                    RequestId = movie.Id,
+                    RequestId = i.Id,
                     RequestType = RequestType.Movie,
-                    Recipient = movie.RequestedUser != null ? movie.RequestedUser.Email : string.Empty
+                    Recipient = i.RequestedUser
                 });
-
             }
 
-            await _movieRepo.Save();
             await _repo.SaveChangesAsync();
         }
 

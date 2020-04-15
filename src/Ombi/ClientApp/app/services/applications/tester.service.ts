@@ -24,6 +24,7 @@ import {
     ISlackNotificationSettings,
     ISonarrSettings,
     ITelegramNotifcationSettings,
+    IWebhookNotificationSettings,
 } from "../../interfaces";
 
 @Injectable()
@@ -46,6 +47,10 @@ export class TesterService extends ServiceHelpers {
 
     public gotifyTest(settings: IGotifyNotificationSettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}gotify`, JSON.stringify(settings), { headers: this.headers });
+    }
+
+    public webhookTest(settings: IWebhookNotificationSettings): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}webhook`, JSON.stringify(settings), { headers: this.headers });
     }
 
     public mattermostTest(settings: IMattermostNotifcationSettings): Observable<boolean> {

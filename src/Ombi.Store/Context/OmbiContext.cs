@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
+using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Store.Context
 {
@@ -35,6 +36,7 @@ namespace Ombi.Store.Context
         public DbSet<AlbumRequest> AlbumRequests { get; set; }
         public DbSet<TvRequests> TvRequests { get; set; }
         public DbSet<ChildRequests> ChildRequests { get; set; }
+        public DbSet<EpisodeRequests> EpisodeRequests { get; set; }
 
         public DbSet<Issues> Issues { get; set; }
         public DbSet<IssueCategory> IssueCategories { get; set; }
@@ -116,7 +118,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello! Your request for {Title} on {ApplicationName}! This is now available! :)",
+                                Message = "Hello! Your request for {Title} on {ApplicationName} is now available.",
                                 Subject = "{ApplicationName}: {Title} is now available!",
                                 Agent = agent,
                                 Enabled = true,
@@ -138,7 +140,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello! Your request for {Title} has been declined, Sorry!",
+                                Message = "Hello! Your request for {Title} has been declined.",
                                 Subject = "{ApplicationName}: your request has been declined",
                                 Agent = agent,
                                 Enabled = true,
@@ -148,7 +150,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello! The user '{UserName}' has requested {Title} but it could not be added. This has been added into the requests queue and will keep retrying",
+                                Message = "Hello! The user '{UserName}' has requested {Title} but it could not be added. This has been added into the requests queue and it will keep retrying",
                                 Subject = "Item Added To Retry Queue",
                                 Agent = agent,
                                 Enabled = true,
@@ -158,7 +160,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello! You have been invited to use {ApplicationName}! You can login here: {ApplicationUrl}",
+                                Message = "Hello! You have been invited to use {ApplicationName}. You can login here: {ApplicationUrl}",
                                 Subject = "Invite to {ApplicationName}",
                                 Agent = agent,
                                 Enabled = true,
@@ -168,7 +170,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello {UserName} Your issue for {Title} has now been resolved.",
+                                Message = "Hello {UserName}, your issue for {Title} has now been resolved.",
                                 Subject = "{ApplicationName}: Issue has been resolved for {Title}!",
                                 Agent = agent,
                                 Enabled = true,
@@ -179,7 +181,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello, There is a new comment on your issue {IssueSubject}, The comment is: {NewIssueComment}",
+                                Message = "Hello, There is a new comment on your issue {IssueSubject}. The comment is: {NewIssueComment}",
                                 Subject = "{ApplicationName}: New comment on issue {IssueSubject}!",
                                 Agent = agent,
                                 Enabled = true,
@@ -191,7 +193,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Here is a list of Movies and TV Shows that have recently been added!",
+                                Message = "Here is a list of Movies and TV Shows that have recently been added:",
                                 Subject = "{ApplicationName}: Recently Added Content!",
                                 Agent = agent,
                                 Enabled = true,

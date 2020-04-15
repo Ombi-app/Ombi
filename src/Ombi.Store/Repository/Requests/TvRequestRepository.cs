@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -100,6 +101,23 @@ namespace Ombi.Store.Repository.Requests
                 .AsQueryable();
         }
 
+        public async Task MarkChildAsAvailable(int id)
+        {
+            var request = new ChildRequests { Id = id, Available = true, MarkedAsAvailable = DateTime.UtcNow };
+            var attached = Db.ChildRequests.Attach(request);
+            attached.Property(x => x.Available).IsModified = true;
+            attached.Property(x => x.MarkedAsAvailable).IsModified = true;
+            await Db.SaveChangesAsync();
+        }
+
+        public async Task MarkEpisodeAsAvailable(int id)
+        {
+            var request = new EpisodeRequests { Id = id, Available = true };
+            var attached = Db.EpisodeRequests.Attach(request);
+            attached.Property(x => x.Available).IsModified = true;
+            await Db.SaveChangesAsync();
+        }
+
         public async Task Save()
         {
             await InternalSaveChanges();
@@ -128,10 +146,10 @@ namespace Ombi.Store.Repository.Requests
         public async Task Update(TvRequests request)
         {
             Db.Update(request);
-            
+
             await InternalSaveChanges();
         }
-        
+
         public async Task UpdateChild(ChildRequests request)
         {
             Db.Update(request);

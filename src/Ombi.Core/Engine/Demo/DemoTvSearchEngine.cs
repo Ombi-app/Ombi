@@ -56,7 +56,7 @@ namespace Ombi.Core.Engine.Demo
                     {
                         continue;
                     }
-                    retVal.Add(ProcessResult(tvMazeSearch));
+                    retVal.Add(await ProcessResult(tvMazeSearch));
                 }
                 return retVal;
             }
@@ -78,7 +78,7 @@ namespace Ombi.Core.Engine.Demo
                 }
 
                 var movieResult = await TvMazeApi.ShowLookup(tv);
-                responses.Add(ProcessResult(movieResult));
+                responses.Add(await ProcessResult(movieResult));
             }
 
             return responses;

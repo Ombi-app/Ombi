@@ -7,6 +7,8 @@ namespace Ombi.Core.Models.Search
     {
         public int Id { get; set; }
         public bool Approved { get; set; }
+        public bool? Denied { get; set; }
+        public string DeniedReason { get; set; }
         public bool Requested { get; set; }
         public int RequestId { get; set; }
         public bool Available { get; set; }
