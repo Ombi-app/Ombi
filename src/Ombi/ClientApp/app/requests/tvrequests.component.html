@@ -27,6 +27,15 @@
                         </div>
                         <br />
                         <div>
+                <span [translate]="'Requests.RequestedBy'"></span>
+                <span *ngIf="child.requestedByAlias">{{child.requestedByAlias}}</span>
+                <span *ngIf="!child.requestedByAlias">
+                    <span *ngIf="!isAdmin">{{child.requestedUser.userName}}</span>
+                    <span *ngIf="isAdmin && child.requestedUser.alias">{{child.requestedUser.alias}}</span>
+                    <span *ngIf="isAdmin && !child.requestedUser.alias">{{child.requestedUser.userName}}</span>
+                </span>
+            </div>
+                        <div>
                             <span>Status: </span>
                             <span class="label label-success">{{node.status}}</span>
                         </div>
