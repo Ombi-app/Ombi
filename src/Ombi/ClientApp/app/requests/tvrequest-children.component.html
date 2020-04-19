@@ -2,17 +2,6 @@
     <hr />
     <div *ngFor="let child of childRequests" class="clearfix">
         <div class="col-md-12">
-
-            <div class="col-md-2">
-                <span [translate]="'Requests.RequestedBy'"></span>
-                <span *ngIf="child.requestedByAlias">{{child.requestedByAlias}}</span>
-                <span *ngIf="!child.requestedByAlias">
-                    <span *ngIf="!isAdmin">{{child.requestedUser.userName}}</span>
-                    <span *ngIf="isAdmin && child.requestedUser.alias">{{child.requestedUser.alias}}</span>
-                    <span *ngIf="isAdmin && !child.requestedUser.alias">{{child.requestedUser.userName}}</span>
-                </span>
-            </div>
-
             <div class="col-md-1 col-md-push-9">
                 <button id="subscribeBtn" *ngIf="child.showSubscribe && !child.subscribed" (click)="subscribe(child)"
                     class="btn btn-sm btn-primary-outline" pTooltip="Subscribe for notifications" type="submit"><i
