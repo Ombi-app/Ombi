@@ -68,7 +68,7 @@
                         <div class="col-sm-8 small-padding">
                             <div>
 
-                                <a *ngIf="node.imdbId" href="{{node.imdbId}}" target="_blank">
+                                <a *ngIf="node.imdbId" href="https://www.imdb.com/title/{{node.imdbId}}/" target="_blank">
                                     <h4>{{node.title}} ({{node.firstAired | amLocal | amDateFormat: 'YYYY'}})</h4>
 
                                 </a>
