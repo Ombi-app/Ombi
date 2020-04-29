@@ -1,4 +1,4 @@
-﻿@using Ombi.Core.Settings
+@using Ombi.Core.Settings
 @using Ombi.Helpers
 @using Ombi.Settings.Settings.Models
 @inject ISettingsService<OmbiSettings> Settings
@@ -79,9 +79,18 @@
     <meta name="description" content="Ombi, media request tool">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@appName</title>
-    <meta property="og:title" content=“@appName” />
+    <meta property="og:title" content="@appName" />
     <meta property="og:image" content="~/images/logo.png" />
-    <meta property="og:site_name" content=“@appName” />
+    <meta property="og:image:width" content="991" />
+    <meta property="og:image:height" content="375" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="@appName" />
+    @{
+        if (customization.ApplicationUrl.HasValue())
+        {
+           <meta property="og:url" content="customization.ApplicationUrl" />
+        }
+    }
     <base href="/@baseUrl" />
     <link rel="apple-touch-icon" sizes="180x180" href="~/images/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="~/images/favicon/favicon-32x32.png">
