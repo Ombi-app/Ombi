@@ -39,6 +39,10 @@ namespace Ombi.Controllers.V2
 
                 var username = User.Identity.Name.ToUpper();
                 var user = await _userManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
+                if (user == null)
+                {
+                    return Ok();
+                }
                 // Check if we already have this notification id
                 var alreadyExists = await _mobileDevices.GetAll().AnyAsync(x => x.Token == body.Token && x.UserId == user.Id);
 
@@ -46,8 +50,14 @@ namespace Ombi.Controllers.V2
                 {
                     return Ok();
                 }
+                // Ensure we don't have too many already for this user
+                var tokens = await _mobileDevices.GetAll().Where(x => x.UserId == user.Id).OrderBy(x => x.AddedAt).ToListAsync();
+                if (tokens.Count() > 5)
+                {
+                    var toDelete = tokens.Take(tokens.Count() - 5);
+                    await _mobileDevices.DeleteRange(toDelete);
+                }
 
-                // let's add it
                 await _mobileDevices.Add(new MobileDevices
                 {
                     Token = body.Token,
@@ -77,7 +87,7 @@ namespace Ombi.Controllers.V2
             }
 
             await _mobileDevices.DeleteRange(currentDevices);
-            
+
             return Ok();
         }
     }
