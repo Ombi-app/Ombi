@@ -5,6 +5,7 @@ import { EmbyService, JobService, NotificationService, SettingsService, TesterSe
 
 @Component({
     templateUrl: "./emby.component.html",
+    styleUrls: ["./emby.component.scss"]
 })
 export class EmbyComponent implements OnInit {
 
@@ -33,13 +34,13 @@ export class EmbyComponent implements OnInit {
             this.settings.servers = [];
         }
         this.settings.servers.push({
-            name: "New*",
+            name: " ",
             id: Math.floor(Math.random() * (99999 - 0 + 1) + 1),
             apiKey: "",
             administratorId: "",
             enableEpisodeSearching: false,
             ip: "",
-            port: 0,
+            port: 8097,
             ssl: false,
             subDir: "",
         } as IEmbyServer);

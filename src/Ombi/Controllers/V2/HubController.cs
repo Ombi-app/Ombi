@@ -32,7 +32,7 @@ namespace Ombi.Controllers.V2
             var model = new List<ConnectedUsersViewModel>();
             foreach (var user in users)
             {
-                var ombiUser = await allUsers.FirstOrDefaultAsync(x => x.Id.Equals(user.UserId, StringComparison.InvariantCultureIgnoreCase));
+                var ombiUser = await allUsers.FirstOrDefaultAsync(x => x.Id == user.UserId);
 
                 if (ombiUser == null)
                 {
