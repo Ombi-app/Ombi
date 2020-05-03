@@ -2,11 +2,12 @@
 import { HumanizePipe } from "./HumanizePipe";
 import { ThousandShortPipe } from "./ThousandShortPipe";
 import { SafePipe } from "./SafePipe";
+import { QualityPipe } from "./QualityPipe";
 
 @NgModule({
     imports:        [],
-    declarations:   [HumanizePipe, ThousandShortPipe, SafePipe],
-    exports:        [HumanizePipe, ThousandShortPipe, SafePipe],
+    declarations:   [HumanizePipe, ThousandShortPipe, SafePipe, QualityPipe],
+    exports:        [HumanizePipe, ThousandShortPipe, SafePipe, QualityPipe],
 })
 export class PipeModule {
 

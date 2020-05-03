@@ -159,14 +159,17 @@ namespace Ombi.Store.Context
                             };
                             break;
                         case NotificationType.WelcomeEmail:
-                            notificationToAdd = new NotificationTemplates
+                            if (agent == NotificationAgent.Email)
                             {
-                                NotificationType = notificationType,
-                                Message = "Hello! You have been invited to use {ApplicationName}! You can login here: {ApplicationUrl}",
-                                Subject = "Invite to {ApplicationName}",
-                                Agent = agent,
-                                Enabled = true,
-                            };
+                                notificationToAdd = new NotificationTemplates
+                                {
+                                    NotificationType = notificationType,
+                                    Message = "Hello! You have been invited to use {ApplicationName}! You can login here: {ApplicationUrl}",
+                                    Subject = "Invite to {ApplicationName}",
+                                    Agent = agent,
+                                    Enabled = true,
+                                };
+                            }
                             break;
                         case NotificationType.IssueResolved:
                             notificationToAdd = new NotificationTemplates

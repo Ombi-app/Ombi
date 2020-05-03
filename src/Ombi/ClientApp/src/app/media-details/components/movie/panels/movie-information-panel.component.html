@@ -18,6 +18,10 @@
         <div *ngIf="!movie.requested && !movie.available && !movie.approved">{{'Common.NotRequested' | translate}}
         </div>
     </div>
+    <div *ngIf="movie.quality">
+        <strong>Quality:</strong>
+        <div>{{movie.quality | quality}}</div>
+    </div>
 
     <div *ngIf="advancedOptions">
         <strong>Root Folder Override</strong>
