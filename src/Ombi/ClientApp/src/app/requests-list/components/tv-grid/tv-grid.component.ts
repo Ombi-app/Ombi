@@ -26,6 +26,7 @@ export class TvGridComponent implements OnInit, AfterViewInit {
 
     private storageKey = "Tv_DefaultRequestListSort";
     private storageKeyOrder = "Tv_DefaultRequestListSortOrder";
+    private storageKeyGridCount = "Tv_DefaultGridCount";
 
     @Output() public onOpenOptions = new EventEmitter<{request: any, filter: any, onChange: any}>();
 
@@ -38,6 +39,7 @@ export class TvGridComponent implements OnInit, AfterViewInit {
     }
 
     public ngOnInit() {        
+        const defaultCount = this.storageService.get(this.storageKeyGridCount);
         const defaultSort = this.storageService.get(this.storageKey);
         const defaultOrder = this.storageService.get(this.storageKeyOrder);
         if (defaultSort) {
@@ -46,10 +48,14 @@ export class TvGridComponent implements OnInit, AfterViewInit {
         if (defaultOrder) {
             this.defaultOrder = defaultOrder;
         }
+        if (defaultCount) {
+            this.gridCount = defaultCount;
+        }
     }
 
     public async ngAfterViewInit() {
 
+        this.storageService.save(this.storageKeyGridCount, this.gridCount);
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
         // If the user changes the sort order, reset back to the first page.
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);

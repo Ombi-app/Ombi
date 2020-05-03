@@ -123,11 +123,8 @@ namespace Ombi.Controllers.V1
                 OsDescription = RuntimeInformation.OSDescription,
                 ProcessArchitecture = RuntimeInformation.ProcessArchitecture.ToString(),
                 ApplicationBasePath = Directory.GetCurrentDirectory(),
-                ExternalConnectionString = dbConfiguration.ExternalDatabase.ConnectionString,
                 ExternalDatabaseType = dbConfiguration.ExternalDatabase.Type,
-                OmbiConnectionString = dbConfiguration.OmbiDatabase.ConnectionString,
                 OmbiDatabaseType = dbConfiguration.OmbiDatabase.Type,
-                SettingsConnectionString = dbConfiguration.SettingsDatabase.ConnectionString,
                 SettingsDatabaseType = dbConfiguration.SettingsDatabase.Type,
                 StoragePath = storage.StoragePath.HasValue() ? storage.StoragePath : "None Specified",
                 NotSupported = Directory.GetCurrentDirectory().Contains("qpkg")

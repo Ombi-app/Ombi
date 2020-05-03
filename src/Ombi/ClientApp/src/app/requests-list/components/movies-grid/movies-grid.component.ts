@@ -26,6 +26,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
 
     private storageKey = "Movie_DefaultRequestListSort";
     private storageKeyOrder = "Movie_DefaultRequestListSortOrder";
+    private storageKeyGridCount = "Movie_DefaultGridCount";
 
     @Output() public onOpenOptions = new EventEmitter<{ request: any, filter: any, onChange: any }>();
 
@@ -38,6 +39,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     }
     
     public ngOnInit() {
+        const defaultCount = this.storageService.get(this.storageKeyGridCount);
         const defaultSort = this.storageService.get(this.storageKey);
         const defaultOrder = this.storageService.get(this.storageKeyOrder);
         if (defaultSort) {
@@ -46,6 +48,9 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
         if (defaultOrder) {
             this.defaultOrder = defaultOrder;
         }
+        if(defaultCount) {
+            this.gridCount = defaultCount;
+        }
     }
 
     public async ngAfterViewInit() {
@@ -53,6 +58,8 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
         //     { availabilityFilter: FilterType.None, statusFilter: FilterType.None }).toPromise();
         // this.dataSource = results.collection;
         // this.resultsLength = results.total;
+
+        this.storageService.save(this.storageKeyGridCount, this.gridCount);
 
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
 

@@ -196,9 +196,6 @@ export interface IAbout {
   ombiDatabaseType: string;
   externalDatabaseType: string;
   settingsDatabaseType: string;
-  ombiConnectionString: string;
-  externalConnectionString: string;
-  settingsConnectionString: string;
   storagePath: string;
   notSupported: boolean;
 }
