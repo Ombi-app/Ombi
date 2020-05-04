@@ -32,7 +32,6 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     private storageKeyOrder = "Movie_DefaultRequestListSortOrder";
     private storageKeyGridCount = "Movie_DefaultGridCount";
     private storageKeyCurrentFilter = "Movie_DefaultFilter";
-    private $data: Observable<any>;
 
     @Output() public onOpenOptions = new EventEmitter<{ request: any, filter: any, onChange: any }>();
 
@@ -66,10 +65,6 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     }
 
     public async ngAfterViewInit() {
-        // const results = await this.requestService.getMovieRequests(this.gridCount, 0, OrderType.RequestedDateDesc,
-        //     { availabilityFilter: FilterType.None, statusFilter: FilterType.None }).toPromise();
-        // this.dataSource = results.collection;
-        // this.resultsLength = results.total;
 
         this.storageService.save(this.storageKeyGridCount, this.gridCount);
         this.storageService.save(this.storageKeyCurrentFilter, (+this.currentFilter).toString());

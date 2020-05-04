@@ -7,6 +7,7 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { AuthService } from "../../../auth/auth.service";
 import { StorageService } from "../../../shared/storage/storage-service";
+import { RequestFilterType } from "../../models/RequestFilterType";
 
 @Component({
     templateUrl: "./tv-grid.component.html",
@@ -19,14 +20,18 @@ export class TvGridComponent implements OnInit, AfterViewInit {
     public isLoadingResults = true;
     public displayedColumns: string[] = ['series',  'requestedBy', 'status', 'requestStatus', 'requestedDate','actions'];
     public gridCount: string = "15";
-    public showUnavailableRequests: boolean;
     public isAdmin: boolean;
     public defaultSort: string = "requestedDate";
     public defaultOrder: string = "desc";
 
+    public RequestFilter = RequestFilterType;
+
+    private currentFilter: RequestFilterType = RequestFilterType.All;
+
     private storageKey = "Tv_DefaultRequestListSort";
     private storageKeyOrder = "Tv_DefaultRequestListSortOrder";
     private storageKeyGridCount = "Tv_DefaultGridCount";
+    private storageKeyCurrentFilter = "Tv_DefaultFilter";
 
     @Output() public onOpenOptions = new EventEmitter<{request: any, filter: any, onChange: any}>();
 
@@ -38,10 +43,12 @@ export class TvGridComponent implements OnInit, AfterViewInit {
 
     }
 
-    public ngOnInit() {        
+    public ngOnInit() {       
+        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser"); 
         const defaultCount = this.storageService.get(this.storageKeyGridCount);
         const defaultSort = this.storageService.get(this.storageKey);
         const defaultOrder = this.storageService.get(this.storageKeyOrder);
+        const defaultFilter = +this.storageService.get(this.storageKeyCurrentFilter);
         if (defaultSort) {
             this.defaultSort = defaultSort;
         }
@@ -51,12 +58,16 @@ export class TvGridComponent implements OnInit, AfterViewInit {
         if (defaultCount) {
             this.gridCount = defaultCount;
         }
+        if (defaultFilter) {
+            this.currentFilter = defaultFilter;
+        }
     }
 
     public async ngAfterViewInit() {
 
-        this.storageService.save(this.storageKeyGridCount, this.gridCount);
-        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+        this.storageService.save(this.storageKeyGridCount, this.gridCount);   
+        this.storageService.save(this.storageKeyCurrentFilter, (+this.currentFilter).toString());
+
         // If the user changes the sort order, reset back to the first page.
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
@@ -99,10 +110,22 @@ export class TvGridComponent implements OnInit, AfterViewInit {
     }
 
     private loadData(): Observable<IRequestsViewModel<IChildRequests>> {
-        if(this.showUnavailableRequests) {
-            return this.requestService.getTvUnavailableRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
-        } else {
-            return this.requestService.getTvRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+        switch(RequestFilterType[RequestFilterType[this.currentFilter]]) {
+            case RequestFilterType.All:
+                return this.requestService.getTvRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+            case RequestFilterType.Pending:
+                return this.requestService.getPendingTvRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+            case RequestFilterType.Available:
+                return this.requestService.getAvailableTvRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+            case RequestFilterType.Processing:
+                return this.requestService.getProcessingTvRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+            case RequestFilterType.Denied:
+                return this.requestService.getDeniedTvRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
         }
+    }
+
+    public switchFilter(type: RequestFilterType) {
+        this.currentFilter = type;
+        this.ngAfterViewInit();
     }
 }
