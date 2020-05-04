@@ -93,7 +93,7 @@ namespace Ombi.Store.Context
                     }
 
                     needToSave = true;
-                    NotificationTemplates notificationToAdd;
+                    NotificationTemplates notificationToAdd = null;
                     switch (notificationType)
                     {
                         case NotificationType.NewRequest:
@@ -207,7 +207,10 @@ namespace Ombi.Store.Context
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
-                    NotificationTemplates.Add(notificationToAdd);
+                    if (notificationToAdd != null)
+                    {
+                        NotificationTemplates.Add(notificationToAdd);
+                    }
                 }
             }
 

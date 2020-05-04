@@ -248,3 +248,4 @@ _Pvt_Extensions
 *.vscode
 /src/Ombi/database.json
 /src/Ombi/healthchecksdb
+/src/Ombi/ClientApp/package-lock.json

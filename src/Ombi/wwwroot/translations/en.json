@@ -153,7 +153,12 @@
             "NextHours": "Another request will be added in {{time}} hours",
             "NextMinutes": "Another request will be added in {{time}} minutes",
             "NextMinute": "Another request will be added in {{time}} minute"
-        }
+        },
+        "AllRequests": "All Requests",
+        "PendingRequests": "Pending Requests",
+        "ProcessingRequests": "Processing Requests",
+        "AvailableRequests": "Available Requests",
+        "DeniedRequests": "Denied Requests"
     },
     "Issues": {
         "Title": "Issues",
