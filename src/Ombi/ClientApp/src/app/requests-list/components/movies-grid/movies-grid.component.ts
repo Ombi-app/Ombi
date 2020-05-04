@@ -23,10 +23,10 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     public isAdmin: boolean;
     public defaultSort: string = "requestedDate";
     public defaultOrder: string = "desc";
+    public currentFilter: RequestFilterType = RequestFilterType.All;
 
     public RequestFilter = RequestFilterType;
 
-    private currentFilter: RequestFilterType = RequestFilterType.All;
 
     private storageKey = "Movie_DefaultRequestListSort";
     private storageKeyOrder = "Movie_DefaultRequestListSortOrder";
