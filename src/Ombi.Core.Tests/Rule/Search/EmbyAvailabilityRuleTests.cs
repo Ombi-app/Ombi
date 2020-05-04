@@ -70,7 +70,7 @@ namespace Ombi.Core.Tests.Rule.Search
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);
-            Assert.That(search.EmbyUrl, Is.EqualTo("http://test.com/#!/item/item.html?id=1"));
+            Assert.That(search.EmbyUrl, Is.EqualTo("http://test.com/#!/item.html?id=1"));
         }
 
         [Test]
@@ -99,7 +99,7 @@ namespace Ombi.Core.Tests.Rule.Search
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);
-            Assert.That(search.EmbyUrl, Is.EqualTo("https://app.emby.media/#!/item/item.html?id=1"));
+            Assert.That(search.EmbyUrl, Is.EqualTo("https://app.emby.media/#!/item.html?id=1"));
         }
 
         [Test]
