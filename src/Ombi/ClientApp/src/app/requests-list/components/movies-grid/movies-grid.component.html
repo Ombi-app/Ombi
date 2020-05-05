@@ -31,15 +31,16 @@
     <table mat-table [dataSource]="dataSource" class="table" matSort [matSortActive]="defaultSort" matSortDisableClear [matSortDirection]="defaultOrder">
 
 
+        <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.RequestsTitle' | translate}} </th>
+            <td mat-cell *matCellDef="let element"> {{element.title}} ({{element.releaseDate | amLocal | amDateFormat: 'YYYY'}}) </td>
+        </ng-container>
+
         <ng-container matColumnDef="requestedUser.requestedBy">
             <th mat-header-cell *matHeaderCellDef> {{'Requests.RequestedBy' | translate}} </th>
             <td mat-cell *matCellDef="let element"> {{element.requestedUser?.userAlias}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.RequestsTitle' | translate}} </th>
-            <td mat-cell *matCellDef="let element"> {{element.title}} ({{element.releaseDate | amLocal | amDateFormat: 'YYYY'}}) </td>
-        </ng-container>
 
         <ng-container matColumnDef="requestedDate">
             <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.RequestDate' | translate}} </th>
