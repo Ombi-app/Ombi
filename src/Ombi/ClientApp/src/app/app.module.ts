@@ -18,7 +18,8 @@ import {
 } from "primeng/primeng";
 
 import {
-    MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatAutocompleteModule, MatCheckboxModule, MatSnackBarModule
+    MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatAutocompleteModule, MatCheckboxModule, MatSnackBarModule,
+    MatProgressSpinnerModule
 } from '@angular/material';
 import { MatCardModule, MatInputModule, MatTabsModule, MatSlideToggleModule } from "@angular/material";
 
@@ -129,6 +130,7 @@ export function JwtTokenGetter() {
         CardsFreeModule,
         OverlayModule,
         MatCheckboxModule,
+        MatProgressSpinnerModule,
         MDBBootstrapModule.forRoot(),
         JwtModule.forRoot({
             config: {

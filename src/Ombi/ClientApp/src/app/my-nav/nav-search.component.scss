@@ -1,49 +1,32 @@
 $ombi-primary:#3f3f3f;
 $ombi-primary-darker:#2b2b2b;
 $ombi-accent: #258a6d;
-
 @media (max-width: 767px) {
-  .quater-width {
-    width: 15em !important;
-  }
+    .quater-width {
+        width: 15em !important;
+    }
 }
 
 .quater-width {
-  width: 25em;
+    width: 25em;
 }
 
 .autocomplete-img {
-  vertical-align: middle;
-  height: 63px;
+    vertical-align: middle;
+    height: 63px;
 }
 
 .mat-option {
-  height: 50px;
-  line-height: 50px;
-  padding: 0px 5px;
-}
-
-::ng-deep ngb-typeahead-window.dropdown-menu {
-  background-color: $ombi-primary;
-  overflow: auto;
-  height: 33em;
-}
-
-::ng-deep ngb-typeahead-window button.dropdown-item {
-  color: white;
-}
-
-::ng-deep ngb-typeahead-window .dropdown-item.active,
-.dropdown-item:active {
-  text-decoration: none;
-  background-color: $ombi-accent;
+    height: 50px;
+    line-height: 50px;
+    padding: 0px 5px;
 }
 
 .search-bar {
-  background-color: $ombi-primary-darker;
-  border: solid 1px $ombi-primary-darker;
+    background-color: $ombi-primary-darker;
+    border: solid 1px $ombi-primary-darker;
 }
 
 .search-bar:focus {
-  background-color: white;
+    background-color: white;
 }
