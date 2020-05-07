@@ -6,6 +6,7 @@ import { EmbyService, IdentityService, JobService, NotificationService, PlexServ
 
 @Component({
     templateUrl: "./usermanagement.component.html",
+    styleUrls: ["./usermanagement.component.scss"]
 })
 export class UserManagementComponent implements OnInit {
 

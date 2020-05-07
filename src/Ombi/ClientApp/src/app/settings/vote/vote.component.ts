@@ -5,6 +5,7 @@ import { NotificationService, SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./vote.component.html",
+    styleUrls: ["vote.component.scss"]
 })
 export class VoteComponent implements OnInit {
 

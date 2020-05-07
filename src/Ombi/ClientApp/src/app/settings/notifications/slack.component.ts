@@ -8,6 +8,7 @@ import { SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./slack.component.html",
+    styleUrls: ["./notificationtemplate.component.scss"]
 })
 export class SlackComponent implements OnInit {
     public NotificationType = NotificationType;

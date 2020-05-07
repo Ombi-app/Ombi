@@ -8,6 +8,7 @@ import { SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./pushbullet.component.html",
+    styleUrls: ["./notificationtemplate.component.scss"]
 })
 export class PushbulletComponent implements OnInit {
     public NotificationType = NotificationType;

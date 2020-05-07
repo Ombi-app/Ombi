@@ -1,6 +1,7 @@
-﻿@media (max-width: 978px) {
+﻿@import "~styles/variables.scss";
+@media (max-width: 978px) {
     .top-spacing {
-        padding-top: 10%;
+        padding-top: 2%;
     }
     .modal-panel {
         max-height: 100vh !important;
@@ -11,7 +12,7 @@
 
 @media (min-width: 979px) {
     .top-spacing {
-        padding-top: 4%;
+        padding-top: 2%;
     }
 }
 
@@ -19,6 +20,8 @@ html,
 body {
     min-height: 100vh;
     overflow: auto;
+    scrollbar-color: #616161 #303030; //firefox
+    scrollbar-width: thin; //firefox
 }
 
 .spinner-container {
@@ -33,18 +36,19 @@ body {
 
 /* Scrollbar */
 
-::-webkit-scrollbar {
+::-webkit-scrollbar{
     width: 7px;
-    background: rgba(0, 0, 0, 0);
+    background: #818181;
 }
 
 ::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0);
 }
 
-::-webkit-scrollbar-thumb {
+// Changed color of the scrollbar 
+::-webkit-scrollbar-thumb{
     border-radius: 3px;
-    background: #41927b;
+    background: #303030;
 }
 
 .sidenav ::-webkit-scrollbar-track {
@@ -67,4 +71,33 @@ table {
 .loading-spinner {
     display: flex;
     padding-bottom: 4%;
+}
+
+::ng-deep .dark .form-control{
+	background-color: rgba(0, 0, 0, 0.18);
+	color:#fff;
+	border: 1px solid rgba(0, 0, 0, 0.18);
+}
+
+::ng-deep .dark .nav-link.active{
+	color: #303030;
+	background-color: $accent-dark;
+	border-color: rgba(0, 0, 0, 0.18);
+	font-weight:400;
+}
+
+::ng-deep .dark .nav-link{
+	color: #fff;
+	background-color: rgba(0, 0, 0, 0.18);
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+::ng-deep .dark .ui-autocomplete.ui-autocomplete-multiple .ui-autocomplete-multiple-container .ui-autocomplete-input-token input{
+	color:#fff;
+}
+
+::ng-deep .dark .ui-inputtext{
+    background-color: rgba(0, 0, 0, 0.18);
+	color:#fff;
+	border: 1px solid rgba(0, 0, 0, 0.18);
 }

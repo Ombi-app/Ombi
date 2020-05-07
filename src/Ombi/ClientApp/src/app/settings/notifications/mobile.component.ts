@@ -8,6 +8,7 @@ import { MobileService, SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./mobile.component.html",
+    styleUrls: ["./notificationtemplate.component.scss"]
 })
 export class MobileComponent implements OnInit {
 

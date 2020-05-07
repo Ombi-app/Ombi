@@ -11,7 +11,7 @@ import { StorageService } from "../../../shared/storage/storage-service";
 @Component({
     templateUrl: "./movies-grid.component.html",
     selector: "movies-grid",
-    styleUrls: ["../requests-list.component.scss"]
+    styleUrls: ["./movies-grid.component.scss"]
 })
 export class MoviesGridComponent implements OnInit, AfterViewInit {
     public dataSource: IMovieRequests[] = [];

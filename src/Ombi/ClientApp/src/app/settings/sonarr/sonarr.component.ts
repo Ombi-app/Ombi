@@ -11,6 +11,7 @@ import { SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./sonarr.component.html",
+    styleUrls: ["./sonarr.component.scss"]
 })
 export class SonarrComponent implements OnInit {
 

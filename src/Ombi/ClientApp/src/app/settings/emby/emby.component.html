@@ -1,5 +1,6 @@
 ﻿
 <settings-menu></settings-menu>
+<div class="small-middle-container">
 <div *ngIf="settings">
     <fieldset>
         <legend>
@@ -13,17 +14,10 @@
                     <label for="enable">Enable</label>
                 </div>
             </div>
-            <div class="col-md-2 col-md-push-7">
-                <button type="button" (click)="addTab()" class="btn btn-success-outline">Add Server</button>
-            </div>
         </div>
 
-        <ngb-tabset>
-            <div *ngFor="let server of settings.servers">
-                <ngb-tab [id]="server.id" [title]="server.name">
-                    <ng-template ngbTabContent>
-                        <br />
-                        <br />
+        <mat-tab-group #tabGroup [selectedIndex]="selected.value" (selectedTabChange)="addTab($event)" (selectedIndexChange)="selected.setValue($event)" animationDuration="0ms"> 
+            <mat-tab *ngFor="let server of settings.servers" [label]="server.name">
                         <div class="col-md-2" style="float: right;">
                             <button type="button" (click)="removeServer(server)" class="btn btn-danger-outline">Remove Server</button>
                         </div>
@@ -86,18 +80,19 @@
                                 </div>
                             </div>
                         </div>
-                    </ng-template>
-                </ngb-tab>
-            </div>
-        </ngb-tabset>
-        <div class="col-md-1">
+            </mat-tab>  
+            <mat-tab label="" disabled=true> </mat-tab>
+            <mat-tab label="Add Server" position=100> </mat-tab>
+                  
+        </mat-tab-group>
+        <div class="col-md-2">
             <div class="form-group">
                 <div>
                     <button [disabled]="!hasDiscovered" (click)="save()" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
                 </div>
             </div>
         </div>
-        <div class="col-md-1">
+        <div class="col-md-2">
             <div class="form-group">
                 <div>
                     <button (click)="runCacher()" type="button" id="save" class="btn btn-primary-outline">Manually Run Cacher</button>
@@ -105,4 +100,5 @@
             </div>
         </div>
     </fieldset>
+</div>
 </div>
