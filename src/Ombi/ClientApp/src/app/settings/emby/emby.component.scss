@@ -5,8 +5,8 @@
 	margin-top:10px;
 }
 
-.col-md-4{
-	display: contents;
+.col-md-10{
+	display: grid;
 }
 
 .col-md-2{
@@ -39,9 +39,6 @@
 }
 
 @media (min-width:1440px) {
-	.col-md-4{
-		display: inline-table;
-	}
 	.col-md-2{
 		display: inline-table;
 	}
