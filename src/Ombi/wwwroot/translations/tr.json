@@ -1,36 +1,36 @@
 {
   "Login": {
-    "SignInButton": "Sign in",
-    "UsernamePlaceholder": "Username",
-    "PasswordPlaceholder": "Password",
-    "RememberMe": "Remember Me",
-    "ForgottenPassword": "Forgot your password?",
+    "SignInButton": "Oturum aç",
+    "UsernamePlaceholder": "Kullanıcı Adı",
+    "PasswordPlaceholder": "Şifre",
+    "RememberMe": "Beni hatırla",
+    "ForgottenPassword": "Şifrenizi mi unuttunuz?",
     "Errors": {
-      "IncorrectCredentials": "Incorrect username or password"
+      "IncorrectCredentials": "Yanlış kullanıcı adı ya da şifre"
     }
   },
   "Common": {
-    "ContinueButton": "Continue",
-    "Available": "Available",
-    "PartiallyAvailable": "Partially Available",
-    "Monitored": "Monitored",
-    "NotAvailable": "Not Available",
-    "ProcessingRequest": "Processing Request",
-    "PendingApproval": "Pending Approval",
-    "RequestDenied":"Request Denied",
-    "NotRequested": "Not Requested",
-    "Requested": "Requested",
-    "Request": "Request",
-    "Denied":"Denied",
-    "Approve":"Approve",
-    "PartlyAvailable": "Partly Available",
+    "ContinueButton": "Devam",
+    "Available": "Mevcut",
+    "PartiallyAvailable": "Kısmen Mevcut",
+    "Monitored": "Takipte",
+    "NotAvailable": "Mevcut Değil",
+    "ProcessingRequest": "İşleme Talebi",
+    "PendingApproval": "Onay Bekliyor",
+    "RequestDenied":"Talep Reddedildi",
+    "NotRequested": "Talep Yapılmadı",
+    "Requested": "Talep Yapıldı",
+    "Request": "Talep",
+    "Denied":"Reddedildi",
+    "Approve":"Onayla",
+    "PartlyAvailable": "Kısmen Mevcut",
     "Errors": {
       "Validation": "Please check your entered values"
     }
   },
   "PasswordReset": {
-    "EmailAddressPlaceholder": "Email Address",
-    "ResetPasswordButton": "Reset Password"
+    "EmailAddressPlaceholder": "Email Adresi",
+    "ResetPasswordButton": "Şifreyi yenile"
   },
   "LandingPage": {
     "OnlineHeading": "Currently Online",
