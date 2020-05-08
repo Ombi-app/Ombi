@@ -1,30 +1,42 @@
-<input class="form-control quater-width search-bar" type="text" [(ngModel)]="selectedItem"
-    placeholder="{{'NavigationBar.Search' | translate}}" aria-label="Search" [ngbTypeahead]="searchModel"
-    [resultFormatter]="formatter" [inputFormatter]="formatter" [resultTemplate]="template" (selectItem)="selected($event)">
+<!-- <input class="form-control quater-width search-bar" type="text" [(ngModel)]="selectedItem" placeholder="{{'NavigationBar.Search' | translate}}"
+aria-label="Search" [ngbTypeahead]="searchModel" [resultFormatter]="formatter" [inputFormatter]="formatter" [resultTemplate]="template" (selectItem)="selected($event)">
 
-
-    
 <ng-template #template let-result="result">
-    <div *ngIf="result.mediaType === 'movie'">
-        <i class="fa fa-film"></i> &nbsp;
-        <span >{{result.title}}</span>
-    </div>
-    <div *ngIf="result.mediaType === 'tv'">
-            <i class="fa fa-tv"></i> &nbsp;
-     
-        <span>{{result.title}}</span>
-    </div>
+   
+</ng-template> -->
 
-    <div *ngIf="result.mediaType === 'Artist'">
-            <i class="fa fa-music"></i> &nbsp;
-     
-        <span>{{result.title}}</span>
-    </div>
+<form [formGroup]='searchForm'>
+    <mat-form-field floatLabel="never" style="width: 100%;">
+        <input matInput placeholder="{{'NavigationBar.Search' | translate}}" [matAutocomplete]="auto" formControlName='input'>
+    </mat-form-field>
 
-    <div *ngIf="result.mediaType === 'person'">
-        <i class="fa fa-user"></i> &nbsp;
-    <span >{{result.title}}</span>
-</div>
-    <!-- Collection -->
-    <!-- <i class="fa fa-file-video-o" aria-hidden="true"></i> -->
-</ng-template>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)" [displayWith]="displayFn">
+        <mat-option *ngIf="searching" color="accent">
+            <mat-spinner diameter="50"></mat-spinner>
+        </mat-option>
+        <ng-container *ngIf="!searching">
+            <mat-option *ngFor="let result of results" [value]="result">
+                <div *ngIf="result.mediaType === 'movie'">
+                    <i class="fa fa-film"></i> &nbsp;
+                    <span>{{result.title}}</span>
+                </div>
+                <div *ngIf="result.mediaType === 'tv'">
+                    <i class="fa fa-tv"></i> &nbsp;
+
+                    <span>{{result.title}}</span>
+                </div>
+
+                <div *ngIf="result.mediaType === 'Artist'">
+                    <i class="fa fa-music"></i> &nbsp;
+
+                    <span>{{result.title}}</span>
+                </div>
+
+                <div *ngIf="result.mediaType === 'person'">
+                    <i class="fa fa-user"></i> &nbsp;
+                    <span>{{result.title}}</span>
+                </div>
+            </mat-option>
+        </ng-container>
+    </mat-autocomplete>
+</form>

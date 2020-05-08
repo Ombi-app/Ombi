@@ -267,10 +267,10 @@ namespace Ombi.Core.Engine
                     allRequests = allRequests.Where(x => x.Approved && !x.Available && (!x.Denied.HasValue || !x.Denied.Value));
                     break;
                 case RequestStatus.Available:
-                    allRequests = allRequests.Where(x => x.Available && (!x.Denied.HasValue || !x.Denied.Value));
+                    allRequests = allRequests.Where(x => x.Available);
                     break;
                 case RequestStatus.Denied:
-                    allRequests = allRequests.Where(x => x.Denied.HasValue  && x.Denied.Value);
+                    allRequests = allRequests.Where(x => x.Denied.HasValue  && x.Denied.Value && !x.Available);
                     break;
                 default:
                     break;
@@ -332,12 +332,11 @@ namespace Ombi.Core.Engine
                 //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
             }
 
-            allRequests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
-                ? allRequests.OrderBy(x => prop.GetValue(x))
-                : allRequests.OrderByDescending(x => prop.GetValue(x));
-            var total = await allRequests.CountAsync();
-            var requests = await allRequests.Skip(position).Take(count)
-                .ToListAsync();
+            var requests = (sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
+                ? allRequests.ToList().OrderBy(x => prop.GetValue(x))
+                : allRequests.ToList().OrderByDescending(x => prop.GetValue(x))).ToList();
+            var total = requests.Count();
+            requests = requests.Skip(position).Take(count).ToList();
 
             await CheckForSubscription(shouldHide, requests);
             return new RequestsViewModel<MovieRequests>

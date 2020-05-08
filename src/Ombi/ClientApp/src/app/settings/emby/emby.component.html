@@ -9,10 +9,11 @@
 
         <div class="row">
             <div class="form-group col-md-3">
-                <div class="checkbox">
-                    <input type="checkbox" id="enable" [(ngModel)]="settings.enable" [checked]="settings.enable">
-                    <label for="enable">Enable</label>
+                <div>
+                    <mat-checkbox [(ngModel)]="settings.enable" [checked]="settings.enable">
+                        Enable</mat-checkbox>
                 </div>
+    
             </div>
         </div>
 
@@ -24,59 +25,52 @@
                         <br />
                         <br />
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="name" class="control-label">Server name</label>
-                                <div>
-                                    <input type="text" class="form-control form-control-custom " id="name" name="name" placeholder="Server" [(ngModel)]="server.name" value="{{server.name}}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="Ip" class="control-label">Hostname or IP</label>
-                                <div>
-                                    <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="localhost" [(ngModel)]="server.ip" value="{{server.ip}}">
-                                </div>
-                            </div>
+                            <mat-form-field class="full">
+                                <input matInput placeholder="Server Name" [(ngModel)]="server.name" value="{{server.name}}">
+                            </mat-form-field>
+                           
+                            <mat-form-field class="full">
+                                <input matInput placeholder="Hostname or IP" [(ngModel)]="server.ip" value="{{server.ip}}">
+                            </mat-form-field>
+                   
 
-                            <div class="form-group">
-                                <label for="portNumber" class="control-label">Port</label>
-                                <div>
-                                    <input type="text" [(ngModel)]="server.port" class="form-control form-control-custom " id="portNumber" name="Port" placeholder="Port Number" value="{{server.port}}">
-                                </div>
-                            </div>
+                            <mat-form-field class="full">
+                                <input matInput placeholder="Port" [(ngModel)]="server.port" value="{{server.port}}">
+                            </mat-form-field>
 
-                            <div class="form-group">
-                                <div class="checkbox">
-                                    <input type="checkbox" id="ssl" [(ngModel)]="server.ssl" ng-checked="server.ssl">
-                                    <label for="ssl">SSL</label>
-                                </div>
-                            </div>
+                                <mat-checkbox [(ngModel)]="server.ssl" [checked]="server.ssl">
+                                    SSL</mat-checkbox>
+                   
 
-                            <div class="form-group">
-                                <label for="authToken" class="control-label">Emby Api Key</label>
-                                <div class="">
-                                    <input type="text" class="form-control-custom form-control" id="authToken" [(ngModel)]="server.apiKey" placeholder="Emby Api Key" value="{{server.apiKey}}">
-                                </div>
-                            </div>
+                                    <mat-form-field class="full">
+                                        <input matInput placeholder="Api Key" [(ngModel)]="server.apiKey" value="{{server.apiKey}}">
+                                    </mat-form-field>
+                                    
+                                    <mat-form-field class="full">
+                                        <input matInput placeholder="Base Url" [(ngModel)]="server.subDir" value="{{server.subDir}}">
+                                    </mat-form-field>
 
+                            <label> Externally Facing Hostname
+                                <i class="fa fa-question-circle"
+                                matTooltip="This will be the external address that users will navigate to when they press the 'View On Emby' button"></i>                                    
+                            </label>
+                            <mat-form-field class="full">
+                                <input matInput placeholder="e.g. https://jellyfin.server.com/" [(ngModel)]="server.serverHostname" value="{{server.serverHostname}}">
+                            </mat-form-field>
+                            <small>
+                                <span *ngIf="server.serverHostname">Current URL: "{{server.serverHostname}}/#!/{{settings.isJellyfin ? ("itemdetails"): ("item/item")}}.html?id=1"</span>
+                                <span *ngIf="!server.serverHostname">Current URL: "https://app.emby.media/#!/{{settings.isJellyfin ? ("itemdetails"): ("item/item")}}.html?id=1</span>
+                            </small>
+
+                            
                             <div class="form-group">
-                                <label for="authToken" class="control-label">Externally Facing Hostname
-                                    <i class="fa fa-question-circle"
-                                    pTooltip="This will be the external address that users will navigate to when they press the 'View On Emby' button"></i>                                    
-                                </label>
                                 <div>
-                                    <input type="text" class="form-control-custom form-control" id="authToken" [(ngModel)]="server.serverHostname" placeholder="e.g. https://jellyfin.server.com/" value="{{server.serverHostname}}">
-                                    <small><span *ngIf="server.serverHostname">Current URL: "{{server.serverHostname}}/#!/{{settings.isJellyfin ? ("itemdetails"): ("item/item")}}.html?id=1"</span>
-                                    <span *ngIf="!server.serverHostname">Current URL: "https://app.emby.media/#!/{{settings.isJellyfin ? ("itemdetails"): ("item/item")}}.html?id=1</span></small>
+                                    <button mat-raised-button id="testEmby" type="button" (click)="test(server)" color="primary">Test Connectivity <div id="spinner"></div></button>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div>
-                                    <button id="testEmby" type="button" (click)="test(server)" class="btn btn-primary-outline">Test Connectivity <div id="spinner"></div></button>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div>
-                                    <button id="discover" type="button" (click)="discoverServerInfo(server)" class="btn btn-primary-outline">Discover Server Information <div id="spinner"></div></button>
+                                    <button mat-raised-button id="discover" type="button" (click)="discoverServerInfo(server)" color="accent">Discover Server Information <div id="spinner"></div></button>
                                 </div>
                             </div>
                         </div>
@@ -88,14 +82,14 @@
         <div class="col-md-2">
             <div class="form-group">
                 <div>
-                    <button [disabled]="!hasDiscovered" (click)="save()" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                    <button mat-raised-button [disabled]="!hasDiscovered" (click)="save()" type="submit" id="save" color="accent">Submit</button>
                 </div>
             </div>
         </div>
         <div class="col-md-2">
             <div class="form-group">
                 <div>
-                    <button (click)="runCacher()" type="button" id="save" class="btn btn-primary-outline">Manually Run Cacher</button>
+                    <button mat-raised-button (click)="runCacher()" type="button" id="save"  color="primary">Manually Run Cacher</button>
                 </div>
             </div>
         </div>

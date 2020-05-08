@@ -17,9 +17,41 @@ export class RequestServiceV2 extends ServiceHelpers {
         return this.http.get<IRequestsViewModel<IMovieRequests>>(`${this.url}movie/${count}/${position}/${sortProperty}/${order}`, {headers: this.headers});
     }
 
+    public getMovieAvailableRequests(count: number, position: number, sortProperty: string , order: string): Observable<IRequestsViewModel<IMovieRequests>> {
+        return this.http.get<IRequestsViewModel<IMovieRequests>>(`${this.url}movie/available/${count}/${position}/${sortProperty}/${order}`, {headers: this.headers});
+    }
+
+    public getMovieProcessingRequests(count: number, position: number, sortProperty: string , order: string): Observable<IRequestsViewModel<IMovieRequests>> {
+        return this.http.get<IRequestsViewModel<IMovieRequests>>(`${this.url}movie/processing/${count}/${position}/${sortProperty}/${order}`, {headers: this.headers});
+    }
+    
+    public getMoviePendingRequests(count: number, position: number, sortProperty: string , order: string): Observable<IRequestsViewModel<IMovieRequests>> {
+        return this.http.get<IRequestsViewModel<IMovieRequests>>(`${this.url}movie/pending/${count}/${position}/${sortProperty}/${order}`, {headers: this.headers});
+    }
+
+    public getMovieDeniedRequests(count: number, position: number, sortProperty: string , order: string): Observable<IRequestsViewModel<IMovieRequests>> {
+        return this.http.get<IRequestsViewModel<IMovieRequests>>(`${this.url}movie/denied/${count}/${position}/${sortProperty}/${order}`, {headers: this.headers});
+    }
+
     public getTvRequests(count: number, position: number, sortProperty: string , order: string): Observable<IRequestsViewModel<IChildRequests>> {
         return this.http.get<IRequestsViewModel<IChildRequests>>(`${this.url}tv/${count}/${position}/${sortProperty}/${order}`, {headers: this.headers});
     }    
+
+    public getPendingTvRequests(count: number, position: number, sortProperty: string , order: string): Observable<IRequestsViewModel<IChildRequests>> {
+        return this.http.get<IRequestsViewModel<IChildRequests>>(`${this.url}tv/pending/${count}/${position}/${sortProperty}/${order}`, {headers: this.headers});
+    }     
+
+    public getProcessingTvRequests(count: number, position: number, sortProperty: string , order: string): Observable<IRequestsViewModel<IChildRequests>> {
+        return this.http.get<IRequestsViewModel<IChildRequests>>(`${this.url}tv/processing/${count}/${position}/${sortProperty}/${order}`, {headers: this.headers});
+    }       
+
+    public getAvailableTvRequests(count: number, position: number, sortProperty: string , order: string): Observable<IRequestsViewModel<IChildRequests>> {
+        return this.http.get<IRequestsViewModel<IChildRequests>>(`${this.url}tv/available/${count}/${position}/${sortProperty}/${order}`, {headers: this.headers});
+    }     
+
+    public getDeniedTvRequests(count: number, position: number, sortProperty: string , order: string): Observable<IRequestsViewModel<IChildRequests>> {
+        return this.http.get<IRequestsViewModel<IChildRequests>>(`${this.url}tv/denied/${count}/${position}/${sortProperty}/${order}`, {headers: this.headers});
+    }  
     
     public updateMovieAdvancedOptions(options: IMovieAdvancedOptions): Observable<IRequestEngineResult> {
         return this.http.post<IRequestEngineResult>(`${this.url}movie/advancedoptions`, options, {headers: this.headers});

@@ -1,10 +1,8 @@
 <mat-sidenav-container *ngIf="showNav" class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport="true"
-    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
-    [opened]="!(isHandset$ | async)">
-    <mat-toolbar>{{applicationName}}</mat-toolbar>
-    <mat-nav-list>
-      <span *ngFor="let nav of navItems">
+    <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
+        <mat-toolbar>{{applicationName}}</mat-toolbar>
+        <mat-nav-list>
+            <span *ngFor="let nav of navItems">
         <a *ngIf="nav.requiresAdmin && isAdmin || !nav.requiresAdmin" mat-list-item [routerLink]="nav.link"
           [routerLinkActive]="getTheme()">
           <mat-icon aria-label="Side nav toggle icon">{{nav.icon}}</mat-icon>
@@ -19,19 +17,20 @@
       </a>
 
 
-    </mat-nav-list>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <mat-toolbar color="primary">
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <mat-toolbar color="primary">
+            <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
 
-      <div class="col-md-10 offset-md-1 col-10">
-        <span class="middle justify-content-center align-items-center">
+            <div class="col-md-10 offset-md-1 col-10">
+                <span class="middle justify-content-center align-items-center">
           <!-- Search Bar -->
+          <div style="width: 50%;">
           <app-nav-search></app-nav-search>
+        </div>
         </span>
 
 
@@ -46,17 +45,17 @@
       </div>
     </mat-toolbar>
 
-    <!-- Page -->
-    <ng-container *ngTemplateOutlet="template"></ng-container>
+        <!-- Page -->
+        <ng-container *ngTemplateOutlet="template"></ng-container>
 
 
-  </mat-sidenav-content>
+    </mat-sidenav-content>
 </mat-sidenav-container>
 
 <div *ngIf="!showNav">
-  <ng-container *ngTemplateOutlet="template"></ng-container>
+    <ng-container *ngTemplateOutlet="template"></ng-container>
 </div>
 
 <ng-template #template>
-  <router-outlet> </router-outlet>
+    <router-outlet> </router-outlet>
 </ng-template>

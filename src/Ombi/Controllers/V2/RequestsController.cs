@@ -35,8 +35,9 @@ namespace Ombi.Controllers.V2
         {
             return await _movieRequestEngine.GetRequests(count, position, sort, sortOrder);
         }
-
+        
         [HttpGet("movie/availble/{count:int}/{position:int}/{sort}/{sortOrder}")]
+        [HttpGet("movie/available/{count:int}/{position:int}/{sort}/{sortOrder}")]
         public async Task<RequestsViewModel<MovieRequests>> GetAvailableRequests(int count, int position, string sort, string sortOrder)
         {
             return await _movieRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.Available);

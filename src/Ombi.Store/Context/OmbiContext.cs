@@ -93,7 +93,7 @@ namespace Ombi.Store.Context
                     }
 
                     needToSave = true;
-                    NotificationTemplates notificationToAdd;
+                    NotificationTemplates notificationToAdd = null;
                     switch (notificationType)
                     {
                         case NotificationType.NewRequest:
@@ -159,14 +159,17 @@ namespace Ombi.Store.Context
                             };
                             break;
                         case NotificationType.WelcomeEmail:
-                            notificationToAdd = new NotificationTemplates
+                            if (agent == NotificationAgent.Email)
                             {
-                                NotificationType = notificationType,
-                                Message = "Hello! You have been invited to use {ApplicationName}! You can login here: {ApplicationUrl}",
-                                Subject = "Invite to {ApplicationName}",
-                                Agent = agent,
-                                Enabled = true,
-                            };
+                                notificationToAdd = new NotificationTemplates
+                                {
+                                    NotificationType = notificationType,
+                                    Message = "Hello! You have been invited to use {ApplicationName}! You can login here: {ApplicationUrl}",
+                                    Subject = "Invite to {ApplicationName}",
+                                    Agent = agent,
+                                    Enabled = true,
+                                };
+                            }
                             break;
                         case NotificationType.IssueResolved:
                             notificationToAdd = new NotificationTemplates
@@ -204,7 +207,10 @@ namespace Ombi.Store.Context
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
-                    NotificationTemplates.Add(notificationToAdd);
+                    if (notificationToAdd != null)
+                    {
+                        NotificationTemplates.Add(notificationToAdd);
+                    }
                 }
             }
 
