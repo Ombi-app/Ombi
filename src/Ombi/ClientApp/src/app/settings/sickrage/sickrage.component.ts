@@ -8,6 +8,7 @@ import { SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./sickrage.component.html",
+    styleUrls: ["./sickrage.component.scss"]
 })
 export class SickRageComponent implements OnInit {
 

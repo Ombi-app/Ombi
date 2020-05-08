@@ -1,0 +1,81 @@
+@import "~styles/variables.scss";
+
+.small-middle-container{
+	margin: auto;
+	width: 85%;
+	margin-top:10px;
+}
+
+::ng-deep .dark .content .mat-header-cell {
+	background: rgba(0, 0, 0, 0.381)!important;
+	font-size: 1em;
+	font-weight: 500;
+	color: rgba(255, 255, 255, 0.842) !important;
+}
+
+::ng-deep .dark .mat-header-cell .mat-checkbox-frame {
+    border-color: #FFF;
+}
+
+
+.mat-form-field {
+	float:right;
+}
+
+::ng-deep .mat-form-field-label{
+	font-size: 1.2em;
+}
+
+::ng-deep .mat-form-field-infix {
+	width: 10em;
+	margin-top:1em;
+}
+
+::ng-deep .mat-tab-label{
+	opacity: 1;
+}
+
+.content {
+    margin-top: 2em;
+}
+
+.buttons {
+    margin-top: 2em;
+    transition: 0.5s;
+    & .mat-raised-button {
+        background: $accent;
+        color:#fff;
+    }
+    :disabled {
+        opacity:0.4;
+    }
+    ::ng-deep .dark & button {
+        background: $accent-dark !important;
+        color: #303030 !important;
+        &:hover{
+            box-shadow: 0 1em 1em -0.8em #fff;
+            transform: translateY(-0.50em);
+            transition: 0.5s;
+            background: #fff !important;
+        }
+        &:disabled{
+            opacity: 0.4;
+        }
+        .offset {  
+            box-shadow: 
+              0.3em 0.3em 0 0 #fff,
+              inset 0.3em 0.3em 0 0 #fff;
+            
+            &:hover,
+            &:focus {
+              box-shadow: 
+                0 0 0 0 #fff,
+                inset 6em 3.5em 0 0 #fff;
+        }
+        }   
+    }
+}
+/* .dark .buttons button {
+    background: $accent-dark !important;
+    color: #303030;
+}*/

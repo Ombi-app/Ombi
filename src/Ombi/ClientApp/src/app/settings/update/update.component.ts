@@ -6,6 +6,7 @@ import { JobService, SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./update.component.html",
+    styleUrls: ["./update.component.scss"]
 })
 export class UpdateComponent implements OnInit {
 

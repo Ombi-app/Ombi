@@ -6,6 +6,7 @@ import { SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./landingpage.component.html",
+    styleUrls: ["./landingpage.component.scss"],
 })
 export class LandingPageComponent implements OnInit {
 

@@ -1,19 +1,21 @@
 <div class="small-middle-container">
   <mat-tab-group>
+    <div class="buttons">
     <mat-tab label="Movies">
         <ng-template matTabContent>
-            <movies-grid (onOpenOptions)="onOpenOptions($event)"></movies-grid>
+          <movies-grid (onOpenOptions)="onOpenOptions($event)"></movies-grid>
           </ng-template>
     </mat-tab>
     <mat-tab label="TV Shows">
         <ng-template matTabContent>
-            <tv-grid (onOpenOptions)="onOpenOptions($event)"></tv-grid>
+          <tv-grid (onOpenOptions)="onOpenOptions($event)"></tv-grid>
           </ng-template>
     </mat-tab>
     <mat-tab label="Albums">
       <h1>Coming soon</h1>
       <p>...</p>
     </mat-tab>
+  </div>
   </mat-tab-group>
 
 </div>

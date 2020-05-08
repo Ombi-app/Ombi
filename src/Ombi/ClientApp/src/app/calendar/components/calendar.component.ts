@@ -17,7 +17,6 @@ export class CalendarComponent implements OnInit {
     constructor(private calendarService: CalendarService) { }
 
     public async ngOnInit() {
-        debugger;
         this.loading()
         this.entries = await this.calendarService.getCalendarEntries();
 
@@ -26,10 +25,9 @@ export class CalendarComponent implements OnInit {
             header: {
                 left: 'prev,next',
                 center: 'title',
-                right: 'month,agendaWeek'
+                right: 'agendaWeek,month'
             },
             eventClick: (e: any) => {
-                debugger;
                 e.preventDefault();
             }
         };

@@ -63,8 +63,9 @@ export class MyNavComponent implements OnInit {
     }
   }
 
+  // @TIDUSJAR Don't know if we need this method anymore?
   public getTheme(){
-    return this.theme === 'dark' ? 'active-list-item-dark' : 'active-list-item';
+    return 'active-list-item';
   }
 
 }

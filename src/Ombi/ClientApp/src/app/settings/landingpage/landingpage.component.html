@@ -1,59 +1,59 @@
-﻿
-<settings-menu></settings-menu>
-
+﻿<settings-menu></settings-menu>
+<div class="small-middle-container">
 <wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Landing-Page-Settings'"></wiki>
-<div *ngIf="settings">
-    <fieldset>
+<fieldset *ngIf="settings" class="container">
         <legend>Landing Page Configuration</legend>
-
-        <mat-checkbox [(ngModel)]="settings.enabled"> 
+        
+        <div class="col-12">
+                <mat-checkbox [(ngModel)]="settings.enabled"> 
                 Enable
-              </mat-checkbox>
-        <div class="form-group">
-            <div class="checkbox">
-                <input type="checkbox" id="enable" name="enable" [(ngModel)]="settings.enabled" ng-checked="settings.enabled">
-                <label for="enable">Enable</label>
+                </mat-checkbox>
+            <!--<div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" id="enable" name="enable" [(ngModel)]="settings.enabled" ng-checked="settings.enabled">
+                    <label for="enable">Enable</label>
+                </div>
+            </div>-->
+
+            <p class="form-group">Notice Message</p>
+            <div class="form-group">
+                <div>
+                    <textarea rows="4" type="text" class="form-control-custom form-control " id="NoticeMessage" name="NoticeMessage" placeholder="e.g. The server will be down for maintenance (HTML is allowed)" [(ngModel)]="settings.noticeText">{{settings.noticeText}}</textarea>
+                </div>
+            </div>
+
+            <p class="form-group">Notice Preview:</p>
+            <div class="form-group">
+                <div [innerHTML]="settings.noticeText"></div>
+            </div>
+
+
+            <!--<div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" id="enable" name="enable" [(ngModel)]="settings.timeLimit" ng-checked="settings.timeLimit">
+                    <label for="enable">Only show the notification message between the below times</label>
+                </div>
+            </div>-->
+
+
+
+
+            <!--<p class="form-group">Start Time</p>
+            <div class="form-group">
+                <p-calendar [(ngModel)]="settings.startDateTime" [showTime]="true"></p-calendar>
+            </div>
+            <p class="form-group">End Time</p>
+            <div class="form-group">
+                <p-calendar [(ngModel)]="settings.endDateTime" [showTime]="true"></p-calendar>
+            </div>-->
+
+
+
+            <div class="form-group">
+                <div>
+                    <button (click)="save()" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                </div>
             </div>
         </div>
-
-        <p class="form-group">Notice Message</p>
-        <div class="form-group">
-            <div>
-                <textarea rows="4" type="text" class="form-control-custom form-control " id="NoticeMessage" name="NoticeMessage" placeholder="e.g. The server will be down for maintenance (HTML is allowed)" [(ngModel)]="settings.noticeText">{{settings.noticeText}}</textarea>
-            </div>
-        </div>
-
-        <p class="form-group">Notice Preview:</p>
-        <div class="form-group">
-            <div [innerHTML]="settings.noticeText"></div>
-        </div>
-
-
-        <!--<div class="form-group">
-            <div class="checkbox">
-                <input type="checkbox" id="enable" name="enable" [(ngModel)]="settings.timeLimit" ng-checked="settings.timeLimit">
-                <label for="enable">Only show the notification message between the below times</label>
-            </div>
-        </div>-->
-
-
-
-
-        <!--<p class="form-group">Start Time</p>
-        <div class="form-group">
-            <p-calendar [(ngModel)]="settings.startDateTime" [showTime]="true"></p-calendar>
-        </div>
-        <p class="form-group">End Time</p>
-        <div class="form-group">
-            <p-calendar [(ngModel)]="settings.endDateTime" [showTime]="true"></p-calendar>
-        </div>-->
-
-
-
-        <div class="form-group">
-            <div>
-                <button (click)="save()" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
-            </div>
-        </div>
-    </fieldset>
+</fieldset>
 </div>

@@ -4,7 +4,7 @@
 
 .small-middle-container {
     margin: auto;
-    width: 80%;
+    width: 85%;
 }
 
 .small-padding {
@@ -24,4 +24,153 @@
 
 .small-space {
     padding-top: 1%;
+}
+
+::ng-deep .mat-card-image {
+    height:75%;
+    object-fit:cover;
+    display:block;
+}
+
+.card-spacing {
+    height:100%;
+}
+
+.mat-card-content h6 {
+    overflow:hidden;
+    white-space:nowrap;
+    font-weight:500;
+    font-size:1.1rem;
+}
+
+@media (min-width: 300px) {
+    .col-xl-2 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        min-width: 100%;
+    }
+    .small-middle-container{
+        width:100%;
+    }
+
+    .btn-group {
+        width:100%;
+    }
+
+    mat-button-base {
+        width:100%;
+    }
+
+    .col{
+        padding-right: 10px !important;
+        padding-left:10px !important;
+    }
+
+    .row{
+        margin-left:0px;
+    }
+
+    .small-padding{
+        padding-left: 5px !important;
+        padding-right: 0px !important;
+        height: 40em;
+    }
+
+    ::ng-deep .mat-card-image {
+        height:85% !important;
+    }
+}
+
+@media (min-width: 600px) {
+    .justify-content-md-center {
+    justify-content: center !important;
+    }
+    .small-middle-container{
+        width:auto;
+    }
+
+    .btn-group {
+        width:auto;
+    }
+
+    mat-button-base {
+        width:auto;
+    }
+
+    ::ng-deep .mat-card-image {
+        height:75% !important;
+    }
+}   
+
+@media (min-width: 700px) {
+    .col-xl-2 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        min-width: 50%;
+    }
+
+    .col{
+        padding-right: 15px !important;
+        padding-left: 15px !important;
+    }
+
+    .small-padding{
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+        height:auto;
+    }
+
+    .row{
+        margin-left:0px;
+    }
+
+    .small-middle-container{
+        width:auto;
+    }
+
+    .btn-group {
+        width:auto;
+    }
+
+    mat-button-base {
+        width:auto;
+    }
+}
+    
+@media (min-width: 1000px) {
+    .col-xl-2 {
+        flex: 0 0 33.33333%;
+        max-width: 33.33333%;
+        min-width: 33.33333%;
+    }
+}
+    
+@media (min-width: 1300px) {
+    .col-xl-2 {
+        flex: 0 0 20%;
+        max-width: 25%;
+        min-width: 25%;
+    }
+}
+    
+@media (min-width: 1600px) {  
+    .col-xl-2 {
+        flex: 0 0 20%;
+        max-width: 20%;
+        min-width: 20%;
+    }
+}  
+@media (min-width: 1900px) {
+    .col-xl-2 {
+        flex: 0 0 16.66666667%;
+        max-width: 16.66666667%;
+        min-width: 16.66666667%;
+    }      
+}
+@media (min-width: 2200px) {
+    .col-xl-2 {
+        flex: 0 0 14.285713%;
+        max-width: 14.285713%;
+        min-width: 14.285713%;
+    }      
 }

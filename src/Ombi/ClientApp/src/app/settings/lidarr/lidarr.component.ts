@@ -8,6 +8,7 @@ import { SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./lidarr.component.html",
+    styleUrls: ["./lidarr.component.scss"]
 })
 export class LidarrComponent implements OnInit {
 

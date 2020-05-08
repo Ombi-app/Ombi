@@ -8,6 +8,7 @@ import { SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./mattermost.component.html",
+    styleUrls: ["./notificationtemplate.component.scss"]
 })
 export class MattermostComponent implements OnInit {
 

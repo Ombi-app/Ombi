@@ -8,6 +8,7 @@ import { SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./gotify.component.html",
+    styleUrls: ["./notificationtemplate.component.scss"]
 })
 export class GotifyComponent implements OnInit {
     public NotificationType = NotificationType;

@@ -9,6 +9,7 @@ import { SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./emailnotification.component.html",
+    styleUrls: ["./notificationtemplate.component.scss"]
 })
 export class EmailNotificationComponent implements OnInit {
     public NotificationType = NotificationType;
