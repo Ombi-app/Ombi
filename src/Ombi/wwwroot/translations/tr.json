@@ -25,7 +25,7 @@
     "Approve":"Onayla",
     "PartlyAvailable": "Kısmen Mevcut",
     "Errors": {
-      "Validation": "Please check your entered values"
+      "Validation": "Lütfen girdiğiniz değerleri kontrol edin"
     }
   },
   "PasswordReset": {
