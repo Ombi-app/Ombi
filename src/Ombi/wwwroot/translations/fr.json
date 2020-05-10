@@ -55,9 +55,9 @@
     "UpdateAvailableTooltip": "Mise à jour disponible !",
     "Settings": "Paramètres",
     "Welcome": "Bienvenue {{username}}",
-    "UpdateDetails": "Détails de la mise à jour",
+    "UpdateDetails": "Identifiant et mot de passe",
     "Logout": "Déconnexion",
-    "OpenMobileApp": "Ouvrir l'application mobile",
+    "OpenMobileApp": "Ouvrir l'application",
     "RecentlyAdded": "Ajouts récents"
   },
   "Search": {
