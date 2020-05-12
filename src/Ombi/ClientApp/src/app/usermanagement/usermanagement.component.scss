@@ -52,6 +52,7 @@
     ::ng-deep .dark & button {
         background: $accent-dark !important;
         color: #303030 !important;
+    }/*
         &:hover{
             box-shadow: 0 1em 1em -0.8em #fff;
             transform: translateY(-0.50em);
@@ -73,9 +74,10 @@
                 inset 6em 3.5em 0 0 #fff;
         }
         }   
-    }
+    }*/
 }
-/* .dark .buttons button {
+/*.dark .buttons button {
     background: $accent-dark !important;
     color: #303030;
-}*/
+}
+*/

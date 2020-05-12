@@ -126,6 +126,7 @@
 
     .small-middle-container{
         width:auto;
+        overflow:hidden;
     }
 
     .btn-group {
@@ -155,7 +156,7 @@
     
 @media (min-width: 1600px) {  
     .col-xl-2 {
-        flex: 0 0 20%;
+        flex: 0 0 18%;
         max-width: 20%;
         min-width: 20%;
     }

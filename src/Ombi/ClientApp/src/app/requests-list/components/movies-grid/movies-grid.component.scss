@@ -9,6 +9,7 @@
 
 .mat-form-field {
 	float:right;
+	margin-right:20px;
 }
 
 /*::ng-deep .dark .mat-form-field-label{
@@ -16,7 +17,7 @@
 }*/
 
 ::ng-deep .mat-form-field-infix {
-	width: 10em;
+	width: 8em;
 	margin-top:1em;
 }
 
@@ -28,4 +29,9 @@
 
 ::ng-deep .mat-tab-label{
 	opacity: 1;
+}
+
+::ng-deep .row {
+	margin-right:0;
+	margin-left:0;
 }
