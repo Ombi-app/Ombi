@@ -35,3 +35,15 @@
 	margin-right:0;
 	margin-left:0;
 }
+
+@media (min-width: 500px) {
+	.justify-content-md-center {
+    	justify-content: normal !important;
+	}
+}
+
+@media (min-width: 1170px){
+	.justify-content-md-center {
+    	justify-content: center !important;
+	}
+}
