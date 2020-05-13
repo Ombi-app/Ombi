@@ -58,6 +58,8 @@ import { HubService } from "../services/hub.service";
 import { LogsComponent } from "./logs/logs.component";
 import { TwilioComponent } from "./notifications/twilio/twilio.component";
 import { WhatsAppComponent } from "./notifications/twilio/whatsapp.component";
+import { CloudMobileComponent } from "./notifications/cloudmobile.coponent";
+import { CloudMobileService } from "../services/cloudmobile.service";
 
 const routes: Routes = [
     { path: "Ombi", component: OmbiComponent, canActivate: [AuthGuard] },
@@ -94,6 +96,7 @@ const routes: Routes = [
     { path: "TheMovieDb", component: TheMovieDbComponent, canActivate: [AuthGuard] },
     { path: "FailedRequests", component: FailedRequestsComponent, canActivate: [AuthGuard] },
     { path: "Logs", component: LogsComponent, canActivate: [AuthGuard] },
+    { path: "CloudMobile", component: CloudMobileComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -157,6 +160,7 @@ const routes: Routes = [
         LogsComponent,
         TwilioComponent,
         WhatsAppComponent,
+        CloudMobileComponent,
     ],
     exports: [
         RouterModule,
@@ -181,6 +185,7 @@ const routes: Routes = [
         SystemService,
         FileDownloadService,
         TheMovieDbService,
+        CloudMobileService,
     ],
 
 })

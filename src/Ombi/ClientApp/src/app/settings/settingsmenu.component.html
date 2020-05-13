@@ -38,7 +38,8 @@
 
 <button mat-button [matMenuTriggerFor]="notificationMenu"><i class="fa fa-bell-o" aria-hidden="true"></i> Notifications</button>
 <mat-menu #notificationMenu="matMenu">
-    <button mat-menu-item [routerLink]="['/Settings/Mobile']">Mobile</button>
+    <button mat-menu-item [routerLink]="['/Settings/CloudMobile']">Mobile</button>
+    <button mat-menu-item [routerLink]="['/Settings/Mobile']">Legacy Mobile</button>
     <button mat-menu-item [routerLink]="['/Settings/Email']">Email</button>
     <button mat-menu-item [routerLink]="['/Settings/MassEmail']">MassEmail</button>
     <button mat-menu-item [routerLink]="['/Settings/Newsletter']">Newsletter</button>

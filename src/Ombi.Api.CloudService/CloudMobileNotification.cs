@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Ombi.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -14,17 +16,18 @@ namespace Ombi.Api.CloudService
     {
         private readonly IApi _api;
         private readonly ILogger _logger;
-        private const string BaseUrl = "https://ombinotifications.azurewebsites.net/api/";
+        private readonly string _baseUrl;
 
-        public CloudMobileNotification(IApi api, ILogger<CloudMobileNotification> logger)
+        public CloudMobileNotification(IApi api, ILogger<CloudMobileNotification> logger, IOptions<ApplicationSettings> settings)
         {
             _api = api;
+            _baseUrl = settings.Value.NotificationService;
             _logger = logger;
         }
 
         public async Task<bool> SendMessage(MobileNotificationRequest notification)
         {
-            var request = new Request("MobileNotification", BaseUrl, HttpMethod.Post);
+            var request = new Request("MobileNotification", _baseUrl, HttpMethod.Post);
             request.AddJsonBody(notification);
             var response = await _api.Request(request);
 

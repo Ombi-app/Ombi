@@ -69,7 +69,6 @@ namespace Ombi
         public static void AddAppSettingsValues(this IServiceCollection services, IConfigurationRoot configuration)
         {
             services.Configure<ApplicationSettings>(configuration.GetSection("ApplicationSettings"));
-            services.Configure<UserSettings>(configuration.GetSection("UserSettings"));
             services.Configure<TokenAuthentication>(configuration.GetSection("TokenAuthentication"));
             services.Configure<LandingPageBackground>(configuration.GetSection("LandingPageBackground"));
             services.Configure<DemoLists>(configuration.GetSection("Demo"));

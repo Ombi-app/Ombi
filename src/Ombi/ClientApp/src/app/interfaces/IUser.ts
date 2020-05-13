@@ -71,6 +71,18 @@ export interface IMobileUsersViewModel {
     devices: number;
 }
 
+export interface ICloudMobileModel {
+    userId: string;
+    username: string;
+    devices: ICloudMobileDevices[];
+}
+export interface ICloudMobileDevices {
+    token: string;
+    userId: string;
+    addedAt: Date;
+    user: IUser;
+}
+
 export interface IMassEmailUserModel {
     user: IUser;
     selected: boolean;
