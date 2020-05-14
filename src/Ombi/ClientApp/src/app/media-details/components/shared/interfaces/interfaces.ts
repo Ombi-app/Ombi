@@ -10,4 +10,5 @@ export interface IIssueDialogData {
     requestType: RequestType;
     requestId: number;
     imdbId: string;
+    title: string;
 }

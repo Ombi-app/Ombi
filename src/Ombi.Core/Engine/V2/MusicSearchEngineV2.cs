@@ -118,6 +118,12 @@ namespace Ombi.Core.Engine.V2
 
             return new AlbumArt();
         }
+        
+        public async Task<ArtistInformation> GetArtistInformationByRequestId(int requestId)
+        {
+            var request = await RequestService.MusicRequestRepository.Find(requestId);
+            return await GetArtistInformation(request.ForeignArtistId);
+        }
 
         private List<BandMember> GetBandMembers(Artist artist)
         {

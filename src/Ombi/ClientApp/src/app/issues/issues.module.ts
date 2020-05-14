@@ -21,7 +21,7 @@ import { IssuesListComponent } from "./components/issues-list/issues-list.compon
 import * as fromComponents from "./components";
 
 const routes: Routes = [
-    { path: "", component: IssuesListComponent, canActivate: [AuthGuard] },
+    { path: "", component: IssuesComponent, canActivate: [AuthGuard] },
     { path: ":id", component: IssueDetailsComponent, canActivate: [AuthGuard] },
 ];
 

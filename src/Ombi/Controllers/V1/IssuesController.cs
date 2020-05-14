@@ -246,13 +246,23 @@ namespace Ombi.Controllers.V1
         /// <summary>
         /// Deletes a comment on a issue
         /// </summary>
-        [HttpDelete("comments/{id:int}")]
+        [HttpDelete("comments/{id}")]
         [PowerUser]
         public async Task<bool> DeleteComment(int id)
         {
             var comment = await _issueComments.GetAll().FirstOrDefaultAsync(x => x.Id == id);
 
             await _issueComments.Delete(comment);
+            return true;
+        }
+
+        [HttpDelete("{id}")]
+        [PowerUser]
+        public async Task<bool> DeleteIssue(int id)
+        {
+            var issue = await _issues.GetAll().FirstOrDefaultAsync(x => x.Id == id);
+
+            await _issues.Delete(issue);
             return true;
         }
 

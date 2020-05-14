@@ -31,7 +31,7 @@ export class NewIssueComponent implements OnInit {
                 comments: [],
                 requestId: data.requestId,
                 requestType: data.requestType,
-                title: "",
+                title: data.title,
                 providerId: data.imdbId,
                 userReported: undefined,
             };

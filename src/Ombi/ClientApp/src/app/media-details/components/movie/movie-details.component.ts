@@ -30,14 +30,36 @@ export class MovieDetailsComponent {
         public dialog: MatDialog, private requestService: RequestService,
         public messageService: MessageService, private auth: AuthService) {
         this.route.params.subscribe((params: any) => {
-            this.theMovidDbId = params.movieDbId;
-            this.load();
+
+                this.theMovidDbId = params.movieDbId;
+            if (params.requestId) {
+                this.load(+params.requestId);
+            } else {
+                this.load(undefined);
+            }
+            
         });
     }
 
-    public load() {
+    public async load(requestId: number|undefined) {
 
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+
+        if (requestId) {
+            var result = await this.searchService.getFullMovieDetailsByRequestId(requestId);
+            this.theMovidDbId = result.id
+
+            this.movie = result;
+            if (this.movie.requestId > 0) {
+                // Load up this request
+                this.hasRequest = true;
+                this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
+            }
+            this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
+                this.movie.background = this.sanitizer.bypassSecurityTrustStyle
+                    ("url(" + x + ")");
+            });
+        } else {
         this.searchService.getFullMovieDetails(this.theMovidDbId).subscribe(async x => {
             this.movie = x;
             if (this.movie.requestId > 0) {
@@ -50,7 +72,7 @@ export class MovieDetailsComponent {
                     ("url(" + x + ")");
             });
         });
-
+    }
     }
 
     public async request() {
@@ -87,7 +109,7 @@ export class MovieDetailsComponent {
     public async issue() {
         const dialogRef = this.dialog.open(NewIssueComponent, {
             width: '500px',
-            data: {requestId: this.movieRequest ? this.movieRequest.id : null,  requestType: RequestType.movie, imdbid: this.movie.imdbId}
+            data: {requestId: this.movieRequest ? this.movieRequest.id : null,  requestType: RequestType.movie, imdbid: this.movie.imdbId, title: this.movie.title}
           });
     }
 

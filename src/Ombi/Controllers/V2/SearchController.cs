@@ -62,6 +62,15 @@ namespace Ombi.Controllers.V2
         }
 
         /// <summary>
+        /// Returns details for a single movie
+        /// </summary>
+        [HttpGet("movie/request/{requestId}")]
+        public async Task<MovieFullInfoViewModel> GetMovieByRequest(int requestId)
+        {
+            return await _movieEngineV2.GetMovieInfoByRequestId(requestId, Request.HttpContext.RequestAborted);
+        }
+
+        /// <summary>
         /// Returns basic information about the provided collection
         /// </summary>
         /// <param name="collectionId">The collection id from TheMovieDb</param>
@@ -81,6 +90,17 @@ namespace Ombi.Controllers.V2
         public async Task<SearchFullInfoTvShowViewModel> GetTvInfo(int tvdbid)
         {
             return await _tvEngineV2.GetShowInformation(tvdbid);
+        }
+
+        /// <summary>
+        /// Returns details for a single show
+        /// </summary>
+        /// <remarks>TVMaze is the TV Show Provider</remarks>
+        /// 
+        [HttpGet("tv/request/{requestId}")]
+        public async Task<SearchFullInfoTvShowViewModel> GetTvInfoByRequest(int requestId)
+        {
+            return await _tvEngineV2.GetShowByRequest(requestId);
         }
 
         /// <summary>
@@ -355,6 +375,14 @@ namespace Ombi.Controllers.V2
         public async Task<ArtistInformation> GetArtistInformation(string artistId)
         {
             return await _musicEngine.GetArtistInformation(artistId);
+        }
+
+        [HttpGet("artist/request/{requestId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<ArtistInformation> GetArtistInformationByRequestId(int requestId)
+        {
+            return await _musicEngine.GetArtistInformationByRequestId(requestId);
         }
 
         [HttpGet("releasegroupart/{musicBrainzId}")]

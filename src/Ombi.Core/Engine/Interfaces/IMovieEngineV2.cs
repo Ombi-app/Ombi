@@ -9,6 +9,7 @@ namespace Ombi.Core.Engine.Interfaces
 {
     public interface IMovieEngineV2
     {
+        Task<MovieFullInfoViewModel> GetMovieInfoByRequestId(int requestId, CancellationToken cancellationToken, string langCode = null);
         Task<MovieFullInfoViewModel> GetFullMovieInformation(int theMovieDbId, CancellationToken cancellationToken, string langCode = null);
         Task<IEnumerable<SearchMovieViewModel>> SimilarMovies(int theMovieDbId, string langCode);
         Task<IEnumerable<SearchMovieViewModel>> PopularMovies();

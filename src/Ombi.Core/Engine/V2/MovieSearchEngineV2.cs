@@ -48,6 +48,16 @@ namespace Ombi.Core.Engine.V2
             return await ProcessSingleMovie(movieInfo);
         }
 
+        public async Task<MovieFullInfoViewModel> GetMovieInfoByRequestId(int requestId, CancellationToken cancellationToken, string langCode = null)
+        {
+            langCode = await DefaultLanguageCode(langCode);
+            var request = await RequestService.MovieRequestService.Find(requestId);
+            var movieInfo = await Cache.GetOrAdd(nameof(GetFullMovieInformation) + request.TheMovieDbId + langCode,
+                async () => await MovieApi.GetFullMovieInfo(request.TheMovieDbId, cancellationToken, langCode), DateTime.Now.AddHours(12), cancellationToken);
+
+            return await ProcessSingleMovie(movieInfo);
+        }
+
         public async Task<MovieCollectionsViewModel> GetCollection(int collectionId, CancellationToken cancellationToken, string langCode = null)
         {
             langCode = await DefaultLanguageCode(langCode);

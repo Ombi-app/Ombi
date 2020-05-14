@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { INavBar } from '../interfaces/ICommon';
 import { StorageService } from '../shared/storage/storage-service';
+import { SettingsService } from '../services';
 
 @Component({
   selector: 'app-my-nav',
@@ -24,26 +25,32 @@ export class MyNavComponent implements OnInit {
   @Output() public logoutClick = new EventEmitter();
   @Output() public themeChange = new EventEmitter<string>();
   public theme: string;
+  public issuesEnabled: boolean = false;
+  public navItems: INavBar[];
 
   constructor(private breakpointObserver: BreakpointObserver,
+              private settingsService: SettingsService,
               private store: StorageService) {
   }
 
-  public ngOnInit(): void {
+  public async ngOnInit() {
+    
+    this.issuesEnabled = await this.settingsService.issueEnabled().toPromise();
+    console.log("issues enabled: " + this.issuesEnabled);
     this.theme = this.store.get("theme");
     if(!this.theme) {
       this.store.save("theme","dark");
     }
+    this.navItems = [
+      { name: "NavigationBar.Discover", icon: "find_replace", link: "/discover", requiresAdmin: false, enabled: true },
+      { name: "NavigationBar.Requests", icon: "list", link: "/requests-list", requiresAdmin: false, enabled: true },   
+      { name: "NavigationBar.Issues", icon: "notification_important", link: "/issues", requiresAdmin: false, enabled: this.issuesEnabled },
+      { name: "NavigationBar.UserManagement", icon: "account_circle", link: "/usermanagement", requiresAdmin: true, enabled: true },
+      { name: "NavigationBar.Calendar", icon: "calendar_today", link: "/calendar", requiresAdmin: false, enabled: true },
+      { name: "NavigationBar.Settings", icon: "settings", link: "/Settings/About", requiresAdmin: true, enabled: true },
+      { name: "NavigationBar.UserPreferences", icon: "person", link: "/user-preferences", requiresAdmin: false, enabled: true },
+    ];
   }
-
-  public navItems: INavBar[] = [
-    { name: "NavigationBar.Discover", icon: "find_replace", link: "/discover", requiresAdmin: false },
-    { name: "NavigationBar.Requests", icon: "list", link: "/requests-list", requiresAdmin: false },   
-    { name: "NavigationBar.UserManagement", icon: "account_circle", link: "/usermanagement", requiresAdmin: true },
-    { name: "NavigationBar.Calendar", icon: "calendar_today", link: "/calendar", requiresAdmin: false },
-    { name: "NavigationBar.Settings", icon: "settings", link: "/Settings/About", requiresAdmin: true },
-    { name: "NavigationBar.UserPreferences", icon: "person", link: "/user-preferences", requiresAdmin: false },
-  ]
 
   public logOut() {
     this.logoutClick.emit();

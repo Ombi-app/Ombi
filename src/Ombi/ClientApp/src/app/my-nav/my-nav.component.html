@@ -3,7 +3,7 @@
         <mat-toolbar>{{applicationName}}</mat-toolbar>
         <mat-nav-list>
             <span *ngFor="let nav of navItems">
-        <a *ngIf="nav.requiresAdmin && isAdmin || !nav.requiresAdmin" mat-list-item [routerLink]="nav.link"
+        <a *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled" mat-list-item [routerLink]="nav.link"
           [routerLinkActive]="getTheme()">
           <mat-icon aria-label="Side nav toggle icon">{{nav.icon}}</mat-icon>
           &nbsp;{{nav.name | translate}}

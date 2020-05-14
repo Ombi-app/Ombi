@@ -25,7 +25,6 @@ export class AppComponent implements OnInit {
 
     public customizationSettings: ICustomizationSettings;
     public customPageSettings: ICustomPage;
-    public issuesEnabled = false;
     public user: ILocalUser;
     public showNav: boolean;
     public updateAvailable: boolean;
@@ -90,7 +89,6 @@ export class AppComponent implements OnInit {
                 });
             }
         });
-        this.settingsService.issueEnabled().subscribe(x => this.issuesEnabled = x);
         this.settingsService.voteEnabled().subscribe(x => this.voteEnabled = x);
 
         this.router.events.subscribe((event: NavigationStart) => {

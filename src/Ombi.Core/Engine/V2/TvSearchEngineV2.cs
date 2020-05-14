@@ -21,6 +21,7 @@ using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Store.Repository;
 using TraktSharp.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ombi.Core.Engine.V2
 {
@@ -48,7 +49,12 @@ namespace Ombi.Core.Engine.V2
         private IEmbyContentRepository EmbyContentRepo { get; }
         private ITraktApi TraktApi { get; }
 
-       
+        public async Task<SearchFullInfoTvShowViewModel> GetShowByRequest(int requestId)
+        {
+            var request = await RequestService.TvRequestService.GetChild().Include(x => x.ParentRequest).FirstOrDefaultAsync(x => x.Id == requestId);
+            return await GetShowInformation(request.ParentRequest.TvDbId);
+        }
+
         public async Task<SearchFullInfoTvShowViewModel> GetShowInformation(int tvdbid)
         {
             var tvdbshow = await Cache.GetOrAdd(nameof(GetShowInformation) + tvdbid,
@@ -60,11 +66,11 @@ namespace Ombi.Core.Engine.V2
             var show = await Cache.GetOrAdd("GetTvFullInformation" + tvdbshow.id,
                 async () => await TvMazeApi.GetTvFullInformation(tvdbshow.id), DateTime.Now.AddHours(12));
             if (show == null)
-            { 
+            {
                 // We don't have enough information
                 return null;
             }
-            
+
             // Setup the task so we can get the data later on if we have a IMDBID
             Task<TraktShow> traktInfoTask = new Task<TraktShow>(() => null);
             if (show.externals?.imdb.HasValue() ?? false)
@@ -147,7 +153,7 @@ namespace Ombi.Core.Engine.V2
         private async Task<SearchFullInfoTvShowViewModel> GetExtraInfo(Task<TraktShow> showInfoTask, SearchFullInfoTvShowViewModel model)
         {
             var result = await showInfoTask;
-            if(result == null)
+            if (result == null)
             {
                 return model;
             }
