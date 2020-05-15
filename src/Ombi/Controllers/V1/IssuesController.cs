@@ -168,6 +168,14 @@ namespace Ombi.Controllers.V1
                 .Include(x => x.UserReported)
                 .FirstOrDefaultAsync();
         }
+        
+        [HttpGet("request/{id}")]
+        public async Task<IActionResult> GetIssueByRequestId([FromRoute] int id)
+        {
+            return new OkObjectResult(await _issues.GetAll().Where(x => x.RequestId == id)
+                .Include(x => x.IssueCategory)
+                .Include(x => x.UserReported).ToListAsync());
+        }
 
         /// <summary>
         /// Get's all the issue comments by id

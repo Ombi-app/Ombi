@@ -1,44 +1,40 @@
 <div *ngIf="!artist" class="justify-content-md-center top-spacing loading-spinner">
-  <mat-spinner [color]="'accent'"></mat-spinner>
+    <mat-spinner [color]="'accent'"></mat-spinner>
 </div>
 
 <div *ngIf="artist" class="dark-theme">
 
-  <top-banner [title]="artist.name" [background]="getBackground()" [tagline]="artist.disambiguation"></top-banner>
+    <top-banner [title]="artist.name" [background]="getBackground()" [tagline]="artist.disambiguation"></top-banner>
 
-  <section id="info-wrapper">
-    <div class="small-middle-container">
+    <section id="info-wrapper">
+        <div class="small-middle-container">
 
-      <div class="row">
+            <div class="row">
 
-        <media-poster [posterPath]="artist.poster"></media-poster>
+                <media-poster [posterPath]="artist.poster"></media-poster>
 
-        <!--Next to poster-->
-        <div class="col-12 col-lg-3 col-xl-3 media-row">
+                <!--Next to poster-->
+                <div class="col-12 col-lg-3 col-xl-3 media-row">
 
-          <social-icons 
-          [homepage]="artist.links.homePage"
-            [doNotAppend]="true"
-            [imdbId]="artist.links.imdb"
-            [twitter]="artist.links.twitter" 
-            [facebook]="artist.links.facebook"
-            [instagram]="artist.links.instagram"></social-icons>
+                    <social-icons [homepage]="artist.links.homePage" [doNotAppend]="true" [imdbId]="artist.links.imdb" [twitter]="artist.links.twitter" [facebook]="artist.links.facebook" [instagram]="artist.links.instagram"></social-icons>
 
-        </div>
+                </div>
 
-        <div class="col-12 col-lg-6 col-xl-6 media-row">
+                <div class="col-12 col-lg-6 col-xl-6 media-row">
 
-          <button mat-raised-button *ngIf="selectedAlbums.length === 0" class="btn-spacing" color="primary" (click)="requestAllAlbums()">
+                    <button mat-raised-button *ngIf="selectedAlbums.length === 0" class="btn-spacing" color="primary" (click)="requestAllAlbums()">
             <i class="fa fa-plus"></i> {{ 'MediaDetails.RequestAllAlbums' | translate }}</button>
-            <button mat-raised-button *ngIf="selectedAlbums.length > 0" class="btn-spacing" color="primary" (click)="requestAllAlbums()">
+                    <button mat-raised-button *ngIf="selectedAlbums.length > 0" class="btn-spacing" color="primary" (click)="requestAllAlbums()">
               <i class="fa fa-plus"></i> {{ 'MediaDetails.RequestSelectedAlbums' | translate }}</button>
 
-              <button mat-raised-button *ngIf="selectedAlbums.length > 0" class="btn-spacing" color="accent" (click)="clearSelection()">
+                    <button mat-raised-button *ngIf="selectedAlbums.length > 0" class="btn-spacing" color="accent" (click)="clearSelection()">
                 <i class="fa fa-minus"></i> {{ 'MediaDetails.ClearSelection' | translate }}</button>
 
-          <!-- <button mat-raised-button class="btn-green btn-spacing" *ngIf="movie.available"> {{ 
+
+
+                    <!-- <button mat-raised-button class="btn-green btn-spacing" *ngIf="movie.available"> {{ 
             'Common.Available' | translate }}</button> -->
-          <!-- <span *ngIf="!movie.available">
+                    <!-- <span *ngIf="!movie.available">
             <span *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></span>
 
             <ng-template #requestedBtn>
@@ -54,7 +50,7 @@
                 'Common.Request' | translate }}</button>
             </ng-template>
           </span> -->
-          <!-- <span *ngIf="isAdmin && hasRequest">
+                    <!-- <span *ngIf="isAdmin && hasRequest">
             <button (click)="approve()" mat-raised-button class="btn-spacing" color="accent">
               <i class="fa fa-plus"></i> {{ 'Common.Approve' | translate }}
             </button>
@@ -72,8 +68,8 @@
               <i class="fa fa-times"></i> {{
                             'MediaDetails.Denied' | translate }}</button>
           </span> -->
-          
-          <!-- <button *ngIf="(hasRequest && movieRequest) || movie.available" mat-raised-button class="btn-spacing"
+
+                    <!-- <button *ngIf="(hasRequest && movieRequest) || movie.available" mat-raised-button class="btn-spacing"
             color="danger" (click)="issue()">
             <i class="fa fa-exclamation"></i> {{
                 'Requests.ReportIssue' | translate }}</button> -->
@@ -81,41 +77,50 @@
 
 
 
-        </div>
-      </div>
-
-      <div class="row">
-
-        <div class="col-12 col-md-2">
-         
-          <mat-card class="mat-elevation-z8">
-            <mat-card-content class="medium-font">
-              <artist-information-panel [artist]="artist"></artist-information-panel>
-            </mat-card-content>
-          </mat-card>
-
-
-        </div>
-
-        <div class="col-12 col-md-10">
-          <div class="row">
-            <div class="col-12">
-              <mat-card class=" mat-elevation-z8 spacing-below">
-                <mat-card-content>
-                  {{artist.overview}}
-                </mat-card-content>
-              </mat-card>
+                </div>
             </div>
-          </div>
 
-          <div class="row">
-            <div class="col-12">
-             <artist-release-panel (onAlbumSelect)="albumSelected($event)"
-             (albumLoad)="albumLoad($event)" *ngIf="artist.releaseGroups.length > 0" [releases]="artist.releaseGroups"></artist-release-panel>
-            </div>
-          </div>
+            <div class="row">
 
-          <!-- <div class="row">
+                <div class="col-12 col-md-2">
+
+                    <mat-card class="mat-elevation-z8">
+                        <mat-card-content class="medium-font">
+                            <artist-information-panel [artist]="artist"></artist-information-panel>
+                        </mat-card-content>
+                    </mat-card>
+
+
+                </div>
+
+                <div class="col-12 col-md-10">
+                    <div class="row">
+                        <div class="col-12">
+                            <mat-card class=" mat-elevation-z8 spacing-below">
+                                <mat-card-content>
+                                    {{artist.overview}}
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <artist-release-panel (onAlbumSelect)="albumSelected($event)" (albumLoad)="albumLoad($event)" *ngIf="artist.releaseGroups.length > 0" [releases]="artist.releaseGroups"></artist-release-panel>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="issuesPanel" *ngIf="artist.requestId">
+                                <issues-panel [requestId]="artist.requestId" [isAdmin]="isAdmin"></issues-panel>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- <div class="row">
             <div class="col-12">
               <mat-accordion class="mat-elevation-z8  spacing-below">
                 <mat-expansion-panel>
@@ -186,20 +191,20 @@
 
 
 
+                </div>
+            </div>
+
+
+
+
         </div>
-      </div>
 
 
 
 
-    </div>
-
-
-
-
-    <div class="bottom-page-gap">
-    </div>
-  </section>
+        <div class="bottom-page-gap">
+        </div>
+    </section>
 
 
 

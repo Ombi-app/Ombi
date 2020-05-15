@@ -29,6 +29,10 @@ export class IssuesService extends ServiceHelpers {
         return this.http.get<IIssues[]>(this.url,  {headers: this.headers});
     }
 
+    public getIssuesByRequestId(requestId: number): Promise<IIssues[]> {
+        return this.http.get<IIssues[]>(`${this.url}request/${requestId}`, {headers: this.headers}).toPromise();
+    }
+
     public getIssuesPage(take: number, skip: number, status: IssueStatus): Observable<IIssues[]> {
         return this.http.get<IIssues[]>(`${this.url}${take}/${skip}/${status}`,  {headers: this.headers});
     }
@@ -59,5 +63,9 @@ export class IssuesService extends ServiceHelpers {
 
     public deleteComment(id: number): Observable<boolean> {
         return this.http.delete<boolean>(`${this.url}comments/${id}`, { headers: this.headers });
+    }
+
+    public deleteIssue(id: number): Promise<boolean> {
+        return this.http.delete<boolean>(`${this.url}${id}`, { headers: this.headers }).toPromise();
     }
 }

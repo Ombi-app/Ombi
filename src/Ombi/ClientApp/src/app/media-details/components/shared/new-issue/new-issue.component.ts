@@ -41,7 +41,6 @@ export class NewIssueComponent implements OnInit {
             this.issueCategories = await this.issueService.getCategories().toPromise();
         }   
 
-
         public async createIssue() { 
             const result = await this.issueService.createIssue(this.issue).toPromise();
             if(result) {

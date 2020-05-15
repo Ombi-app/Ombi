@@ -16,8 +16,8 @@
                 <!--Next to poster-->
                 <div class="col-12 col-lg-3 col-xl-3 media-row">
 
-                    <social-icons [homepage]="movie.homepage" [theMoviedbId]="movie.id" [hasTrailer]="movie.videos?.results?.length > 0" (openTrailer)="openDialog()" [imdbId]="movie.imdbId" [twitter]="movie.externalIds.twitterId" [facebook]="movie.externalIds.facebookId" [instagram]="movie.externalIds.instagramId"
-                        [available]="movie.available" [plexUrl]="movie.plexUrl" [embyUrl]="movie.embyUrl"></social-icons>
+                    <social-icons [homepage]="movie.homepage" [theMoviedbId]="movie.id" [hasTrailer]="movie.videos?.results?.length > 0" (openTrailer)="openDialog()" [imdbId]="movie.imdbId" [twitter]="movie.externalIds.twitterId" [facebook]="movie.externalIds.facebookId"
+                        [instagram]="movie.externalIds.instagramId" [available]="movie.available" [plexUrl]="movie.plexUrl" [embyUrl]="movie.embyUrl"></social-icons>
 
                 </div>
 
@@ -109,7 +109,11 @@
 
                     <div class="row">
                         <div class="col-12">
-                            <mat-accordion class="mat-elevation-z8  spacing-below">
+                            <div class="issuesPanel" *ngIf="movie.requestId">
+                                <issues-panel [requestId]="movie.requestId" [isAdmin]="isAdmin"></issues-panel>
+                            </div>
+
+                            <mat-accordion class=" mat-elevation-z8 spacing-below ">
                                 <mat-expansion-panel>
                                     <mat-expansion-panel-header>
                                         <mat-panel-title>
@@ -117,7 +121,7 @@
                                         </mat-panel-title>
                                     </mat-expansion-panel-header>
 
-                                    <div class="row card-spacer" *ngIf="movie.recommendations?.results?.length > 0">
+                                    <div class="row card-spacer " *ngIf="movie.recommendations?.results?.length> 0">
 
                                         <div class="col-md-2" *ngFor="let r of movie.recommendations?.results">
                                             <div class="sidebar affixable affix-top preview-poster">

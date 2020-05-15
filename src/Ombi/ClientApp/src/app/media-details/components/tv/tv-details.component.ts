@@ -6,8 +6,9 @@ import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { MatDialog } from "@angular/material";
 import { YoutubeTrailerComponent } from "../shared/youtube-trailer.component";
 import { EpisodeRequestComponent } from "../../../shared/episode-request/episode-request.component";
-import { IChildRequests } from "../../../interfaces";
+import { IChildRequests, RequestType } from "../../../interfaces";
 import { AuthService } from "../../../auth/auth.service";
+import { NewIssueComponent } from "../shared/new-issue/new-issue.component";
 
 @Component({
     templateUrl: "./tv-details.component.html",
@@ -57,6 +58,13 @@ export class TvDetailsComponent implements OnInit {
 
     public async request() {
         this.dialog.open(EpisodeRequestComponent, { width: "800px", data: this.tv, panelClass: 'modal-panel' })
+    }
+    
+    public async issue() {
+        const dialogRef = this.dialog.open(NewIssueComponent, {
+            width: '500px',
+            data: {requestId: this.tvRequest ? this.tv.requestId : null,  requestType: RequestType.tvShow, imdbid: this.tv.theTvDbId, title: this.tv.title}
+          });
     }
 
     public openDialog() {
