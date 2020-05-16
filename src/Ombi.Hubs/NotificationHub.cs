@@ -43,7 +43,7 @@ namespace Ombi.Hubs
             }
 
             var user = await _userManager.Users.
-                FirstOrDefaultAsync(x => x.Id.Equals(userIdClaim.Value, StringComparison.InvariantCultureIgnoreCase));
+                FirstOrDefaultAsync(x => x.Id == userIdClaim.Value);
             var claims = await _userManager.GetRolesAsync(user);
             UsersOnline.TryAdd(Context.ConnectionId, new HubUsers
             {

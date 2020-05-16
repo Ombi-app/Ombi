@@ -591,11 +591,11 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Description")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("EpisodeNumber")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("IssueCategoryId")
                         .HasColumnType("INTEGER");
@@ -614,9 +614,6 @@ namespace Ombi.Store.Migrations.OmbiSqlite
 
                     b.Property<DateTime?>("ResovledDate")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("SeasonNumber")
-                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");

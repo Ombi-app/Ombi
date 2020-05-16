@@ -130,7 +130,7 @@ namespace Ombi.Controllers.V1
         public async Task<int> CreateIssue([FromBody]Issues i)
         {
             i.IssueCategory = null;
-
+            i.CreatedDate = DateTime.UtcNow;
             var username = User.Identity.Name.ToUpper();
             i.UserReportedId = (await _userManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username)).Id;
             await _issues.Add(i);
@@ -148,6 +148,7 @@ namespace Ombi.Controllers.V1
                 Recipient = string.Empty,
                 AdditionalInformation = $"{i.Subject} | {i.Description}",
                 UserId =  i.UserReportedId,
+                
             };
 
             AddIssueNotificationSubstitutes(notificationModel, i, User.Identity.Name);

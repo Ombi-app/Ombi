@@ -13,13 +13,14 @@ namespace Ombi.Store.Entities.Requests
         public int? RequestId { get; set; }
         public string Subject { get; set; }
         public string Description { get; set; }
-        public int SeasonNumber { get; set; }
-        public int EpisodeNumber { get; set; }
+        //public int SeasonNumber { get; set; }
+        //public int EpisodeNumber { get; set; }
         public int IssueCategoryId { get; set; }
         [ForeignKey(nameof(IssueCategoryId))]
         public IssueCategory IssueCategory { get; set; }
         public IssueStatus Status { get; set; }
         public DateTime? ResovledDate { get; set; }
+        public DateTime CreatedDate { get; set; }
         [ForeignKey(nameof(UserReported))]
         public string UserReportedId { get; set; }
         public OmbiUser UserReported { get; set; }
