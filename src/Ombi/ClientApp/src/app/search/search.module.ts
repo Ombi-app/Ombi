@@ -15,8 +15,6 @@ import { TvSearchComponent } from "./tvsearch.component";
 
 import { CardsFreeModule } from "angular-bootstrap-md";
 
-import { SidebarModule, TooltipModule, TreeTableModule } from "primeng/primeng";
-
 import { RequestService } from "../services";
 import { SearchService } from "../services";
 

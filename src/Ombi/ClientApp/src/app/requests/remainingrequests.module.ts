@@ -2,15 +2,11 @@
 import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 
-import { SidebarModule, TooltipModule, TreeTableModule } from "primeng/primeng";
 import { RequestService } from "../services";
 
 @NgModule({
     imports: [
-        FormsModule,
-        TreeTableModule,
-        SidebarModule,
-        TooltipModule,
+        FormsModule
     ],
     declarations: [
     ],

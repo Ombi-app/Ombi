@@ -51,7 +51,15 @@ import { WikiComponent } from "./wiki.component";
 
 import { SettingsMenuComponent } from "./settingsmenu.component";
 
-import { AutoCompleteModule, CalendarModule, DialogModule, InputSwitchModule, InputTextModule, MenuModule, RadioButtonModule, TooltipModule } from "primeng/primeng";
+import {AutoCompleteModule } from "primeng/autocomplete";
+import {CalendarModule } from "primeng/calendar";
+import {InputSwitchModule } from "primeng/inputswitch";
+import {InputTextModule } from "primeng/inputtext";
+import {DialogModule } from "primeng/dialog";
+import {MenuModule } from "primeng/menu";
+import {RadioButtonModule } from "primeng/radiobutton";
+import {TooltipModule } from "primeng/tooltip";
+
 import { MatMenuModule } from "@angular/material/menu";
 import { SharedModule } from "../shared/shared.module";
 import { HubService } from "../services/hub.service";

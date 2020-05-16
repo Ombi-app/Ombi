@@ -11,11 +11,14 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { CookieService } from "ng2-cookies";
-import { GrowlModule } from "primeng/components/growl/growl";
-import {
-    ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DialogModule, OverlayPanelModule, SharedModule, SidebarModule,
-    TooltipModule
-} from "primeng/primeng";
+
+import { ButtonModule } from "primeng/button";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { DataViewModule } from "primeng/dataview";
+import { DialogModule } from "primeng/dialog";
+import { OverlayPanelModule } from "primeng/overlaypanel";
+import { TooltipModule } from "primeng/tooltip";
+import { SidebarModule } from "primeng/sidebar";
 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -79,7 +82,7 @@ const routes: Routes = [
     { loadChildren: () => import("./settings/settings.module").then(m => m.SettingsModule), path: "Settings" },
     { loadChildren: () => import("./wizard/wizard.module").then(m => m.WizardModule), path: "Wizard" },
     { loadChildren: () => import("./usermanagement/usermanagement.module").then(m => m.UserManagementModule), path: "usermanagement" },
-    { loadChildren: () => import("./requests/requests.module").then(m => m.RequestsModule), path: "requestsOld" },
+    // { loadChildren: () => import("./requests/requests.module").then(m => m.RequestsModule), path: "requestsOld" },
     { loadChildren: () => import("./requests-list/requests-list.module").then(m => m.RequestsListModule), path: "requests-list" },
     { loadChildren: () => import("./vote/vote.module").then(m => m.VoteModule), path: "vote" },
     { loadChildren: () => import("./media-details/media-details.module").then(m => m.MediaDetailsModule), path: "details" },
@@ -114,12 +117,10 @@ export function JwtTokenGetter() {
         BrowserModule,
         HttpClientModule,
         BrowserAnimationsModule,
-        GrowlModule,
         ButtonModule,
         FormsModule,
-        DataTableModule,
+        DataViewModule,
         MatSnackBarModule,
-        SharedModule,
         MatSnackBarModule,
         DialogModule,
         MatButtonModule,
@@ -130,7 +131,6 @@ export function JwtTokenGetter() {
         MatTabsModule,
         ReactiveFormsModule,
         MatAutocompleteModule,
-        CaptchaModule,
         TooltipModule,
         ConfirmDialogModule,
         OverlayPanelModule,
@@ -176,7 +176,6 @@ export function JwtTokenGetter() {
         IdentityService,
         StatusService,
         LandingPageService,
-        ConfirmationService,
         ImageService,
         CustomPageService,
         CookieService,

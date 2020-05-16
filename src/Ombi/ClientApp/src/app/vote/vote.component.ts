@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 
-import { OverlayPanel } from "primeng/primeng";
+import { OverlayPanel } from "primeng/overlaypanel";
 import { NotificationService, VoteService } from "../services";
 
 import { IVoteEngineResult, IVoteViewModel, RequestTypes, VoteType } from "../interfaces";

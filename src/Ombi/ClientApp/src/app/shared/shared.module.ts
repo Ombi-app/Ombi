@@ -7,7 +7,8 @@ import { MomentModule } from "ngx-moment";
 
 import { IssuesReportComponent } from "./issues-report.component";
 
-import { InputSwitchModule, SidebarModule } from "primeng/primeng";
+import { SidebarModule } from "primeng/sidebar";
+import { InputSwitchModule } from "primeng/inputswitch";
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
