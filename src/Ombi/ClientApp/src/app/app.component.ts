@@ -7,7 +7,7 @@ import { AuthService } from "./auth/auth.service";
 import { ILocalUser } from "./auth/IUserLogin";
 import { NotificationService, CustomPageService } from "./services";
 import { SettingsService } from "./services";
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ICustomizationSettings, ICustomPage } from "./interfaces";
 import { StorageService } from './shared/storage/storage-service';

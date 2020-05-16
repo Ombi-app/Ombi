@@ -52,7 +52,7 @@ import { WikiComponent } from "./wiki.component";
 import { SettingsMenuComponent } from "./settingsmenu.component";
 
 import { AutoCompleteModule, CalendarModule, DialogModule, InputSwitchModule, InputTextModule, MenuModule, RadioButtonModule, TooltipModule } from "primeng/primeng";
-import { MatMenuModule} from "@angular/material";
+import { MatMenuModule } from "@angular/material/menu";
 import { SharedModule } from "../shared/shared.module";
 import { HubService } from "../services/hub.service";
 import { LogsComponent } from "./logs/logs.component";

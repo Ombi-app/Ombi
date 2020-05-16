@@ -13,7 +13,7 @@ import { SearchV2Service } from "../services/searchV2.service";
 import { IMultiSearchResult } from "../interfaces";
 import { Router } from "@angular/router";
 import { FormGroup, FormBuilder } from "@angular/forms";
-import { MatAutocompleteSelectedEvent } from "@angular/material";
+import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
 
 @Component({
   selector: "app-nav-search",

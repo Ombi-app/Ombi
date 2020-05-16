@@ -1,6 +1,6 @@
 import { Component, Inject, Output, EventEmitter } from "@angular/core";
 import { IDenyDialogData } from "../interfaces/interfaces";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { RequestService, MessageService } from "../../../../services";
 import { RequestType, IRequestEngineResult } from "../../../../interfaces";
 

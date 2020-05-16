@@ -1,5 +1,5 @@
 import { Component, ViewChild } from "@angular/core";
-import { MatBottomSheet } from "@angular/material";
+import { MatBottomSheet } from "@angular/material/bottom-sheet";
 import { RequestOptionsComponent } from "./options/request-options.component";
 import { UpdateType } from "../models/UpdateType";
 import { MoviesGridComponent } from "./movies-grid/movies-grid.component";

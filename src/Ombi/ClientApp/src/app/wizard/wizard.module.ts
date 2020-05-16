@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
 
 import {ConfirmationService, ConfirmDialogModule } from "primeng/primeng";
-import { MatStepperModule } from "@angular/material";
+import { MatStepperModule } from "@angular/material/stepper";
 
 import { CreateAdminComponent } from "./createadmin/createadmin.component";
 import { EmbyComponent } from "./emby/emby.component";
