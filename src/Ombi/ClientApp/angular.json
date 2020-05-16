@@ -1,113 +1,106 @@
 {
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1,
-  "newProjectRoot": "projects",
-  "projects": {
-    "ombi": {
-      "root": "",
-      "sourceRoot": "src",
-      "projectType": "application",
-      "prefix": "app",
-      "schematics": {},
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "progress": true,
-            "extractCss": true,
-            "outputPath": "dist",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.app.json",
-            "assets": [
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles/_imports.scss",
-              "node_modules/bootstrap/scss/bootstrap.scss",
-              "node_modules/angular-bootstrap-md/scss/mdb-free.scss",
-              "node_modules/pace/themes/orange/pace-theme-flat-top.css",
-              "node_modules/font-awesome/scss/font-awesome.scss",
-              "node_modules/primeng/resources/primeng.min.css",
-              "node_modules/primeng/resources/themes/nova-light/theme.css",
-              "node_modules/primeicons/primeicons.css",
-              "node_modules/please-wait/src/please-wait.scss",
-              "node_modules/@fullcalendar/core/main.min.css",
-              "node_modules/spinkit/scss/spinners/11-folding-cube.scss",
-              "node_modules/spinkit/scss/spinkit.scss"
-            ],
-            "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/chart.js/dist/Chart.js",
-              "node_modules/hammerjs/hammer.min.js",
-              "./node_modules/@fullcalendar/core/main.js",
-              "./node_modules/@fullcalendar/interaction/main.js"
-            ]
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "newProjectRoot": "projects",
+    "projects": {
+        "ombi": {
+            "root": "",
+            "sourceRoot": "src",
+            "projectType": "application",
+            "prefix": "app",
+            "schematics": {},
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "progress": true,
+                        "extractCss": true,
+                        "outputPath": "dist",
+                        "index": "src/index.html",
+                        "main": "src/main.ts",
+                        "polyfills": "src/polyfills.ts",
+                        "tsConfig": "src/tsconfig.app.json",
+                        "assets": [
+                            "src/assets"
+                        ],
+                        "styles": [
+                            "src/styles/_imports.scss",
+                            "node_modules/bootstrap/scss/bootstrap.scss",
+                            "node_modules/font-awesome/scss/font-awesome.scss",
+                            "node_modules/primeng/resources/primeng.min.css",
+                            "node_modules/primeicons/primeicons.css",
+                            "node_modules/please-wait/src/please-wait.scss",
+                            "node_modules/@fullcalendar/core/main.min.css",
+                            "node_modules/spinkit/scss/spinners/11-folding-cube.scss",
+                            "node_modules/spinkit/scss/spinkit.scss"
+                        ],
+                        "scripts": [
+                            "node_modules/jquery/dist/jquery.min.js",
+                            "node_modules/chart.js/dist/Chart.js",
+                            "node_modules/hammerjs/hammer.min.js",
+                            "./node_modules/@fullcalendar/core/main.js",
+                            "./node_modules/@fullcalendar/interaction/main.js"
+                        ]
+                    },
+                    "configurations": {
+                        "production": {
+                            "fileReplacements": [{
+                                "replace": "src/environments/environment.ts",
+                                "with": "src/environments/environment.prod.ts"
+                            }],
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "extractCss": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true
+                        },
+                        "hmr": {
+                            "fileReplacements": [{
+                                "replace": "src/environments/environment.ts",
+                                "with": "src/environments/environment.hmr.ts"
+                            }]
+                        }
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "browserTarget": "ombi:build"
+                    },
+                    "configurations": {
+                        "production": {
+                            "browserTarget": "ombi:build:production"
+                        },
+                        "hmr": {
+                            "hmr": true,
+                            "browserTarget": "ombi:build:hmr",
+                            "hmrWarning": false
+                        }
+                    }
+                },
+                "extract-i18n": {
+                    "builder": "@angular-devkit/build-angular:extract-i18n",
+                    "options": {
+                        "browserTarget": "ombi:build"
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": [
+                            "src/tsconfig.app.json"
+                        ],
+                        "exclude": [
+                            "**/node_modules/**"
+                        ]
+                    }
                 }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
-            },
-            "hmr": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.hmr.ts"
-                }
-              ]
             }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "ombi:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "ombi:build:production"
-            },
-            "hmr": {
-              "hmr": true,
-              "browserTarget": "ombi:build:hmr",
-              "hmrWarning": false
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "ombi:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "src/tsconfig.app.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
         }
-      }
-    }
-  },
-  "defaultProject": "ombi"
+    },
+    "defaultProject": "ombi"
 }
