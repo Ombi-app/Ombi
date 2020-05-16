@@ -51,8 +51,8 @@ namespace Ombi.Core.Engine.V2
 
         public async Task<SearchFullInfoTvShowViewModel> GetShowByRequest(int requestId)
         {
-            var request = await RequestService.TvRequestService.GetChild().Include(x => x.ParentRequest).FirstOrDefaultAsync(x => x.Id == requestId);
-            return await GetShowInformation(request.ParentRequest.TvDbId);
+            var request = await RequestService.TvRequestService.Get().FirstOrDefaultAsync(x => x.Id == requestId);
+            return await GetShowInformation(request.TvDbId);
         }
 
         public async Task<SearchFullInfoTvShowViewModel> GetShowInformation(int tvdbid)

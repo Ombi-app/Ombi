@@ -21,6 +21,7 @@ const routes: Routes = [
     { path: "movie/request/:requestId", component: MovieDetailsComponent, canActivate: [AuthGuard] },
     { path: "tv/:tvdbId/:search", component: TvDetailsComponent, canActivate: [AuthGuard] },
     { path: "tv/:tvdbId", component: TvDetailsComponent, canActivate: [AuthGuard] },
+    { path: "show/request/:requestId", component: TvDetailsComponent, canActivate: [AuthGuard] },
     { path: "artist/:artistId", component: ArtistDetailsComponent, canActivate: [AuthGuard] },
 ];
 @NgModule({

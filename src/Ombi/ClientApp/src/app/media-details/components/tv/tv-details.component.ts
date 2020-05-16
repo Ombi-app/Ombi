@@ -23,6 +23,7 @@ export class TvDetailsComponent implements OnInit {
     public isAdmin: boolean;
 
     private tvdbId: number;
+    private requestIdFromQuery: number;
 
     constructor(private searchService: SearchV2Service, private route: ActivatedRoute,
         private sanitizer: DomSanitizer, private imageService: ImageService,
@@ -31,6 +32,7 @@ export class TvDetailsComponent implements OnInit {
         this.route.params.subscribe((params: any) => {
             this.tvdbId = params.tvdbId;
             this.fromSearch = params.search;
+            this.requestIdFromQuery = +params.requestId; // Coming from the issues page
         });
     }
 
@@ -44,6 +46,9 @@ export class TvDetailsComponent implements OnInit {
         if (this.fromSearch) {
             this.tv = await this.searchService.getTvInfoWithMovieDbId(this.tvdbId);
             this.tvdbId = this.tv.id;
+        } else if (this.requestIdFromQuery) {
+            console.log("REQUESTID" + this.requestIdFromQuery)
+            this.tv = await this.searchService.getTvInfoWithRequestId(this.requestIdFromQuery);
         } else {
             this.tv = await this.searchService.getTvInfo(this.tvdbId);
         }

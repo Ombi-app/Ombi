@@ -92,6 +92,10 @@ export class SearchV2Service extends ServiceHelpers {
     public getTvInfo(tvdbid: number): Promise<ISearchTvResultV2> {
         return this.http.get<ISearchTvResultV2>(`${this.url}/Tv/${tvdbid}`, { headers: this.headers }).toPromise();
     }
+
+    public getTvInfoWithRequestId(requestId: number): Promise<ISearchTvResultV2> {
+        return this.http.get<ISearchTvResultV2>(`${this.url}/Tv/request/${requestId}`, { headers: this.headers }).toPromise();
+    }
     
     public getTvInfoWithMovieDbId(theMovieDbId: number): Promise<ISearchTvResultV2> {
         return this.http.get<ISearchTvResultV2>(`${this.url}/Tv/moviedb/${theMovieDbId}`, { headers: this.headers }).toPromise();

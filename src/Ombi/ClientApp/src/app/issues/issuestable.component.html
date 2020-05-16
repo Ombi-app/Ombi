@@ -52,8 +52,8 @@
         <th mat-header-cell *matHeaderCellDef> </th>
         <td mat-cell *matCellDef="let element">
             <button *ngIf="element.requestType === 1" mat-raised-button color="accent" [routerLink]="'/details/movie/request/' + element.requestId">{{ 'Issues.Details' | translate}}</button>
-            <button *ngIf="element.requestType === 0" mat-raised-button color="accent" [routerLink]="'/details/tv/' + element.requestId">{{ 'Issues.Details' | translate}}</button>
-            <button *ngIf="element.requestType === 2" mat-raised-button color="accent" [routerLink]="'/details/artist/' + element.requestId">{{ 'Issues.Details' | translate}}</button>
+            <button *ngIf="element.requestType === 0" mat-raised-button color="accent" [routerLink]="'/details/show/request/' + element.requestId">{{ 'Issues.Details' | translate}}</button>
+            <button *ngIf="element.requestType === 2" mat-raised-button color="accent" [routerLink]="'/details/artist/request/' + element.requestId">{{ 'Issues.Details' | translate}}</button>
             <!-- <button mat-raised-button color="warn" (click)="openOptions(element)" *ngIf="isAdmin"> {{ 'Requests.Options' | translate}}</button> -->
         </td>
     </ng-container>
