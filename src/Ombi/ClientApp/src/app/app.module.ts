@@ -72,7 +72,6 @@ const routes: Routes = [
     { loadChildren: () => import("./usermanagement/usermanagement.module").then(m => m.UserManagementModule), path: "usermanagement" },
     { loadChildren: () => import("./requests/requests.module").then(m => m.RequestsModule), path: "requestsOld" },
     { loadChildren: () => import("./requests-list/requests-list.module").then(m => m.RequestsListModule), path: "requests-list" },
-    { loadChildren: () => import("./recentlyAdded/recentlyAdded.module").then(m => m.RecentlyAddedModule), path: "recentlyadded" },
     { loadChildren: () => import("./vote/vote.module").then(m => m.VoteModule), path: "vote" },
     { loadChildren: () => import("./media-details/media-details.module").then(m => m.MediaDetailsModule), path: "details" },
     { loadChildren: () => import("./user-preferences/user-preferences.module").then(m => m.UserPreferencesModule), path: "user-preferences" },

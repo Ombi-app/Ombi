@@ -3,7 +3,6 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
 
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { MovieSearchComponent } from "./moviesearch.component";
 import { MovieSearchGridComponent } from "./moviesearchgrid.component";
@@ -35,7 +34,6 @@ const routes: Routes = [
         CommonModule,
         FormsModule,
         RouterModule.forChild(routes),
-        NgbModule.forRoot(),
         TreeTableModule,
         SharedModule,
         SidebarModule,

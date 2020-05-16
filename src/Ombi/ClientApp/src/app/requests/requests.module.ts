@@ -1,7 +1,5 @@
 ﻿import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { OrderModule } from "ngx-order-pipe";
 
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
@@ -28,7 +26,6 @@ const routes: Routes = [
 @NgModule({
     imports: [
         RouterModule.forChild(routes),
-        NgbModule.forRoot(),
         InfiniteScrollModule,
         ButtonModule,
         DialogModule,

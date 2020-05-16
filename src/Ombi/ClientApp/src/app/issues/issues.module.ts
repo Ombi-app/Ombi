@@ -1,7 +1,6 @@
 ﻿import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { OrderModule } from "ngx-order-pipe";
 import { PaginatorModule, SharedModule, TabViewModule } from "primeng/primeng";
 
@@ -28,7 +27,6 @@ const routes: Routes = [
 @NgModule({
     imports: [
         RouterModule.forChild(routes),
-        NgbModule.forRoot(),
         SharedModule,
         OrderModule,
         PipeModule,
