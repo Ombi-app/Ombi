@@ -15,7 +15,7 @@ export class UserManagementComponent implements OnInit {
     public dataSource: MatTableDataSource<IUser>;
 
     public selection = new SelectionModel<IUser>(true, []);
-    @ViewChild(MatSort, {static: false}) public sort: MatSort;
+    @ViewChild(MatSort) public sort: MatSort;
     public users: IUser[];
     public checkAll = false;
     public emailSettings: IEmailNotificationSettings;
