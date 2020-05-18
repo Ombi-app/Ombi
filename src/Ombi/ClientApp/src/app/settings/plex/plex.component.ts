@@ -4,7 +4,7 @@ import { takeUntil } from "rxjs/operators";
 
 import { IPlexLibrariesSettings, IPlexServer, IPlexServerResponse, IPlexServerViewModel, IPlexSettings } from "../../interfaces";
 import { JobService, NotificationService, PlexService, SettingsService, TesterService } from "../../services";
-import { MatTabChangeEvent, MatTabGroup } from "@angular/material";
+import { MatTabChangeEvent, MatTabGroup } from "@angular/material/tabs";
 import {FormControl} from '@angular/forms';
 
 @Component({
