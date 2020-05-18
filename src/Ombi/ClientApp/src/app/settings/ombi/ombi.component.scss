@@ -1,0 +1,21 @@
+.col-12 {
+    display:grid;
+}
+
+textarea {
+    min-height:100px;
+    height: auto;
+    max-height:800px;
+}
+
+.small-middle-container{
+	margin: auto;
+	width: 85%;
+	margin-top:10px;
+}
+
+@media (min-width: 1600px) {
+    .container {
+        max-width: 1500px;
+    }
+}

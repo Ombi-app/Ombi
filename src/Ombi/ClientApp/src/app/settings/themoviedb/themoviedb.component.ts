@@ -14,6 +14,7 @@ interface IKeywordTag {
 
 @Component({
     templateUrl: "./themoviedb.component.html",
+    styleUrls: ["./themoviedb.component.scss"]
 })
 export class TheMovieDbComponent implements OnInit {
 

@@ -10,6 +10,7 @@ import { SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./radarr.component.html",
+    styleUrls: ["./radarr.component.scss"]
 })
 export class RadarrComponent implements OnInit {
 

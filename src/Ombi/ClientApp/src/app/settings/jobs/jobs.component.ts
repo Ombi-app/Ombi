@@ -5,6 +5,7 @@ import { NotificationService, SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./jobs.component.html",
+    styleUrls: ["./jobs.component.scss"]
 })
 export class JobsComponent implements OnInit {
 

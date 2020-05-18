@@ -6,6 +6,7 @@ import { IssuesService, NotificationService, SettingsService } from "../../servi
 
 @Component({
     templateUrl: "./issues.component.html",
+    styleUrls: ["./issues.component.scss"]
 })
 export class IssuesComponent implements OnInit {
 

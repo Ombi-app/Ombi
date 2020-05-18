@@ -1,9 +1,10 @@
 ﻿<settings-menu></settings-menu>
+<div class="small-middle-container">
 <wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Issue-Settings'"></wiki>
 
 <fieldset>
     <legend>Issues</legend>
-    <form *ngIf="form" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:5%;">
+    <form *ngIf="form" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:2%;">
         <div class="col-md-6">
             <div class="form-group">
                 <div class="checkbox">
@@ -61,7 +62,8 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row categoryResults">
+                <legend>Categories:</legend>
                 <div *ngFor="let cat of categories">
                     <div class="col-md-9">
                         {{cat.value}}
@@ -74,3 +76,4 @@
         </div>
     </div>
 </fieldset>
+</div>

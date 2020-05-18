@@ -1,7 +1,7 @@
 ﻿<settings-menu></settings-menu>
-
+<div class="small-middle-container">
 <wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Customization-Settings'"></wiki>
-<fieldset *ngIf="settings" class="container">
+<fieldset *ngIf="settings">
     <legend>Customization</legend>
 
     <div class="col-12">
@@ -14,7 +14,7 @@
         </mat-form-field>
 
         <mat-form-field>
-            <input matInput placeholder="Custom Logo" [(ngModel)]="settings.logo">
+            <input  matInput placeholder="Custom Logo" type="url"[(ngModel)]="settings.logo">
         </mat-form-field>
 
         <div *ngIf="settings.logo" class="form-group">
@@ -42,12 +42,13 @@
         </mat-checkbox>
 
 
-        <div class="form-group">
-            <button mat-raised-button (click)="save()" type="submit" type="submit" id="save" color="accent">Submit</button>
-        </div>
+        
         <mat-form-field>
             <textarea matInput [(ngModel)]="settings.customCss" placeholder="Custom CSS"></textarea>
         </mat-form-field>
+        <div class="form-group">
+            <button mat-raised-button (click)="save()" type="submit" type="submit" id="save" color="accent">Submit</button>
+        </div>
     </div>
     <!-- <div class="col-7"> -->
 
@@ -58,3 +59,4 @@
 
 
 </fieldset>
+</div>

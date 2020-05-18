@@ -8,6 +8,7 @@ import { SelectionModel } from "@angular/cdk/collections";
 
 @Component({
     templateUrl: "./usermanagement.component.html",
+    styleUrls: ["./usermanagement.component.scss"],
 })
 export class UserManagementComponent implements OnInit {
 

@@ -5,6 +5,7 @@ import { NotificationService, SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./dognzb.component.html",
+    styleUrls: ["./dognzb.component.scss"]
 })
 export class DogNzbComponent implements OnInit {
 

@@ -16,6 +16,7 @@
 .details strong {
     font-weight: bold;
 }
+
 .grow {
     transition: all .2s ease-in-out;
 }
@@ -46,5 +47,5 @@ h3 strong {
 
 .overview {
     height:300px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }

@@ -1,4 +1,65 @@
-.small-middle-container {
-    margin: auto;
-    width: 95%;
+@import "~styles/variables.scss";
+
+.small-middle-container{
+	margin: auto;
+	width: 85%;
+	margin-top:10px;
+}
+
+::ng-deep .dark .mat-header-cell {
+	background: rgba(0, 0, 0, 0.381)!important;
+	font-size: 1em;
+	font-weight: 500;
+	color: rgba(255, 255, 255, 0.842) !important;
+}
+
+::ng-deep .dark .mat-header-cell .mat-checkbox-frame {
+    border-color: #FFF;
+}
+
+.mat-form-field {
+	float:right;
+}
+
+::ng-deep .mat-form-field-label{
+	font-size: 1.2em;
+}
+
+::ng-deep .mat-form-field-infix {
+	width: 10em;
+	margin-top:1em;
+}
+
+::ng-deep .dark .mat-tab-label-active{
+	background: $accent-dark !important;
+	color: #303030 !important;
+	font-weight:bold;
+}
+
+::ng-deep .mat-tab-label{
+	opacity: 1;
+}
+
+::ng-deep .mat-tab-header {
+	margin-top: 2em;
+}
+
+::ng-deep .dark .mat-sort-header-arrow{
+	color:#c6c6c6;
+}
+
+::ng-deep .mat-column-actions{
+	text-align:end;
+}
+
+@media (min-width: 500px) {
+	.justify-content-md-center {
+    	justify-content: normal !important;
+	}
+}
+
+@media (min-width: 1170px){
+	.justify-content-md-center {
+    	justify-content: center !important;
+	}
 }

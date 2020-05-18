@@ -1,15 +1,15 @@
 ﻿<settings-menu></settings-menu>
-<div *ngIf="form">
+<div *ngIf="form" class="small-middle-container">
     <fieldset>
         <legend>Sonarr Settings</legend>
         <div style="float: right;">
             <span style="vertical-align: top;">Advanced</span>
             <p-inputSwitch id="customInputSwitch" [(ngModel)]="advanced"></p-inputSwitch>
         </div>
-        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:5%;">
+        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:3%;">
 
-            <div class="col-md-6">
-                <div class="col-md-6">
+            <div class="col-md-6" style="display:block;">
+                <div class="col-md-4">
                     <div class="form-group">
                         <div class="checkbox">
                             <input type="checkbox" id="enable" formControlName="enabled">
@@ -18,7 +18,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <div class="checkbox">
                             <input type="checkbox" id="v3" formControlName="v3">
@@ -27,6 +27,16 @@
                     </div>
                 </div>
 
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <input type="checkbox" id="Ssl" name="Ssl" formControlName="ssl">
+                            <label for="Ssl">SSL</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
                 <div class="form-group">
                     <label for="Ip" class="control-label">Sonarr Hostname or IP 
                         
@@ -58,13 +68,6 @@
                         formControlName="apiKey" id="ApiKey" name="ApiKey">
                 </div>
                 <div class="form-group">
-                    <div class="checkbox">
-
-                        <input type="checkbox" id="Ssl" name="Ssl" formControlName="ssl"><label for="Ssl">SSL</label>
-
-                    </div>
-                </div>
-                <div class="form-group">
                     <label for="SubDir" class="control-label">Sonarr Base Url</label>
                     <div>
                         <input type="text" class="form-control form-control-custom" formControlName="subDir" id="SubDir"
@@ -72,7 +75,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-5">
                 
                 <div class="form-group col-md-12">
                         <label for="profiles" class="control-label">Quality Profiles
@@ -83,7 +86,7 @@
                                 id="select" formControlName="qualityProfile">
                                 <option *ngFor="let quality of qualities" value="{{quality.id}}">{{quality.name}}</option>
                             </select>
-                            <button type="button" (click)="getProfiles(form)"  class="btn btn-primary-outline col-md-4 col-md-push-1">
+                            <button type="button" (click)="getProfiles(form)"  class="btn btn-primary-outline col-md-4 col-md-push-1 load">
                                 Load Qualities <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"></span></button>
                                 
                         </div>
@@ -111,7 +114,7 @@
                             [ngClass]="{'form-error': form.get('rootPath').hasError('required')}">
                             <option *ngFor="let folder of rootFolders" value="{{folder.id}}">{{folder.path}}</option>
                         </select>
-                        <button type="button" (click)="getRootFolders(form)" class="btn btn-primary-outline col-md-4 col-md-push-1">
+                        <button type="button" (click)="getRootFolders(form)" class="btn btn-primary-outline load col-md-4 col-md-push-1">
                             Load Folders <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
                     </div>
                 </div>
@@ -156,20 +159,20 @@
                         <label for="addOnly">Do not search</label>
                     </div>
                 </div>
-
-                <div class="form-group col-md-6">
-                        <div>
-                            <button type="submit" class="btn btn-primary-outline ">Submit</button>
-                        </div>
-                    </div>
-
-                <div class="form-group col-md-6">
+            </div>
+            <div class="col-md-4">
+                <div class="form-group col-md-7">
                     <div>
-                        <button type="button" (click)="test(form)" class="btn btn-primary-outline">Test Connectivity
-                            <span id="spinner"> </span></button>
+                        <button type="submit" class="btn btn-primary-outline ">Submit</button>
                     </div>
                 </div>
-      
+
+                <div class="form-group col-md-7">
+                    <div>
+                        <button type="button" (click)="test(form)" class="btn btn-primary-outline">Test Connectivity
+                        <span id="spinner"> </span></button>
+                    </div>
+                </div>
             </div>
         </form>
     </fieldset>

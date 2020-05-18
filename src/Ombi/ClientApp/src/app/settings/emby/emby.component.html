@@ -1,7 +1,7 @@
 ﻿
 <settings-menu></settings-menu>
-
-<div *ngIf="settings" class="container">
+<div class="small-middle-container">
+<div *ngIf="settings">
     <fieldset>
         <legend>
             Emby/Jellyfin Configuration
@@ -15,23 +15,16 @@
                 </div>
     
             </div>
-
-            <div class="col-md-2 offset-md-7">  
-                <button mat-raised-button type="button" (click)="addTab()" color="accent">Add Server</button>
-            </div>
         </div>
 
-        <ngb-tabset>
-            <div *ngFor="let server of settings.servers">
-                <ngb-tab [id]="server.id" [title]="server.name">
-                    <ng-template ngbTabContent>
-              
+        <mat-tab-group #tabGroup [selectedIndex]="selected.value" (selectedTabChange)="addTab($event)" (selectedIndexChange)="selected.setValue($event)" animationDuration="0ms"> 
+            <mat-tab *ngFor="let server of settings.servers" [label]="server.name">
+                        <div class="col-md-2" style="float: right;">
+                            <button type="button" (click)="removeServer(server)" class="btn btn-danger-outline">Remove Server</button>
+                        </div>
                         <br />
                         <br />
-                        <div class="row">
-                        <br />
-                        <br />
-                        <div class="col-md-6">
+                        <div class="col-md-10">
                             <mat-form-field class="full">
                                 <input matInput placeholder="Server Name" [(ngModel)]="server.name" value="{{server.name}}">
                             </mat-form-field>
@@ -81,23 +74,19 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2 offset-md-4">
-                            <button mat-raised-button type="button" (click)="removeServer(server)" color="warn">Remove Server</button>
-                        </div>
-                    </div>
-                    </ng-template>
-                </ngb-tab>
-            </div>
-        </ngb-tabset>
-        
-        <div class="col-md-1">
+            </mat-tab>  
+            <mat-tab label="" disabled=true> </mat-tab>
+            <mat-tab label="Add Server" position=100> </mat-tab>
+                  
+        </mat-tab-group>
+        <div class="col-md-2">
             <div class="form-group">
                 <div>
                     <button mat-raised-button [disabled]="!hasDiscovered" (click)="save()" type="submit" id="save" color="accent">Submit</button>
                 </div>
             </div>
         </div>
-        <div class="col-md-1">
+        <div class="col-md-2">
             <div class="form-group">
                 <div>
                     <button mat-raised-button (click)="runCacher()" type="button" id="save"  color="primary">Manually Run Cacher</button>
@@ -105,4 +94,5 @@
             </div>
         </div>
     </fieldset>
+</div>
 </div>
