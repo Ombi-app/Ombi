@@ -2,7 +2,6 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
-import { NgbAccordionModule, NgbModule } from "@ng-bootstrap/ng-bootstrap";
 // import { TagInputModule } from "ngx-chips";
 import { ClipboardModule } from "ngx-clipboard";
 
@@ -116,9 +115,7 @@ const routes: Routes = [
         MenuModule,
         InputSwitchModule,
         InputTextModule,
-        NgbModule,
         TooltipModule,
-        NgbAccordionModule,
         AutoCompleteModule,
         CalendarModule,
         // TagInputModule,

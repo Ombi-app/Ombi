@@ -7,7 +7,6 @@ import {  MultiSelectModule } from "primeng/multiselect";
 import { SidebarModule } from "primeng/sidebar";
 import { TooltipModule } from "primeng/tooltip";
 
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { UpdateDetailsComponent } from "./updatedetails.component";
 import { UserManagementUserComponent } from "./usermanagement-user.component";
@@ -35,7 +34,6 @@ const routes: Routes = [
         FormsModule,
         ReactiveFormsModule,
         RouterModule.forChild(routes),
-        NgbModule.forRoot(),
         MultiSelectModule,
         PipeModule,
         ConfirmDialogModule,

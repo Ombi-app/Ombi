@@ -1,7 +1,6 @@
 ﻿import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { OrderModule } from "ngx-order-pipe";
 import { OverlayPanelModule } from "primeng/overlaypanel";
 import { TabViewModule } from "primeng/tabview";
@@ -21,7 +20,6 @@ const routes: Routes = [
 @NgModule({
     imports: [
         RouterModule.forChild(routes),
-        NgbModule.forRoot(),
         OrderModule,
         OmbiShared,
         TabViewModule,

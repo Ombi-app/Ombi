@@ -7,7 +7,6 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule, Routes } from "@angular/router";
 
 import { JwtModule } from "@auth0/angular-jwt";
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { CookieService } from "ng2-cookies";
@@ -125,7 +124,6 @@ export function JwtTokenGetter() {
         DialogModule,
         MatButtonModule,
         NavbarModule,
-        NgbModule.forRoot(),
         MatCardModule,
         MatInputModule,
         MatTabsModule,

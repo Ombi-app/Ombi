@@ -71,6 +71,7 @@ export class DiscoverComponent implements OnInit {
     }
 
     public async onScroll() {
+        console.log("scrolled");
         if (!this.contentLoaded) {
             return;
         }
