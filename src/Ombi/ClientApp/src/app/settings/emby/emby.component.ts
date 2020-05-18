@@ -2,6 +2,8 @@
 
 import { IEmbyServer, IEmbySettings } from "../../interfaces";
 import { EmbyService, JobService, NotificationService, SettingsService, TesterService } from "../../services";
+import { MatTabChangeEvent, MatTabGroup } from "@angular/material";
+import {FormControl} from '@angular/forms';
 
 @Component({
     templateUrl: "./emby.component.html",
@@ -11,6 +13,7 @@ export class EmbyComponent implements OnInit {
 
     public settings: IEmbySettings;
     public hasDiscovered: boolean;
+    selected = new FormControl(0);
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
@@ -29,21 +32,25 @@ export class EmbyComponent implements OnInit {
         this.hasDiscovered = true;
     }
 
-    public addTab() {
-        if (this.settings.servers == null) {
-            this.settings.servers = [];
+    public addTab(event: MatTabChangeEvent) {
+        const tabName = event.tab.textLabel;
+        if (tabName == "Add Server"){ 
+            if (this.settings.servers == null) {
+                this.settings.servers = [];
+            }
+            this.settings.servers.push({
+                name: "New " + this.settings.servers.length + "*",
+                id: Math.floor(Math.random() * (99999 - 0 + 1) + 1),
+                apiKey: "",
+                administratorId: "",
+                enableEpisodeSearching: false,
+                ip: "",
+                port: 0,
+                ssl: false,
+                subDir: "",
+            } as IEmbyServer);
+        this.selected.setValue(this.settings.servers.length - 1);
         }
-        this.settings.servers.push({
-            name: " ",
-            id: Math.floor(Math.random() * (99999 - 0 + 1) + 1),
-            apiKey: "",
-            administratorId: "",
-            enableEpisodeSearching: false,
-            ip: "",
-            port: 8097,
-            ssl: false,
-            subDir: "",
-        } as IEmbyServer);
     }
 
     public test(server: IEmbyServer) {
@@ -60,6 +67,7 @@ export class EmbyComponent implements OnInit {
         const index = this.settings.servers.indexOf(server, 0);
         if (index > -1) {
             this.settings.servers.splice(index, 1);
+            this.selected.setValue(this.settings.servers.length - 1);
         }
     }
 

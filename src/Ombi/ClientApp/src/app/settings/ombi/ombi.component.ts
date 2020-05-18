@@ -9,6 +9,7 @@ import * as languageData from "../../../other/iso-lang.json";
 
 @Component({
     templateUrl: "./ombi.component.html",
+    styleUrls: ["./ombi.component.scss"],
 })
 export class OmbiComponent implements OnInit {
 

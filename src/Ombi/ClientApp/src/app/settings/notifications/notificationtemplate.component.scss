@@ -1,8 +1,15 @@
-﻿::ng-deep ngb-accordion > div.card {
+﻿@import "~styles/shared.scss";
+::ng-deep ngb-accordion > div.card {
     color:white;
     padding-top: 0px;
 }
 
 ::ng-deep ngb-accordion > div.card >  div.card-header {
     padding:0px;
+}
+
+.small-middle-container{
+	margin: auto;
+	width: 95%;
+	margin-top:10px;
 }

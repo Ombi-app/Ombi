@@ -1,0 +1,30 @@
+@import "~styles/shared.scss";
+.small-middle-container{
+	margin: auto;
+	width: 95%;
+	margin-top:10px;
+}
+
+@media (min-width: 1200px){
+    .container {
+        max-width: inherit; 
+    }
+}
+
+@media (min-width: 992px){
+    .container {
+        max-width: inherit; 
+    }
+}
+
+@media (min-width: 768px){
+    .container {
+        max-width: inherit; 
+    }
+}
+
+@media (min-width: 576px){
+    .container {
+        max-width: inherit; 
+    }
+}

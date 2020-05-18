@@ -8,6 +8,7 @@ import { SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./webhook.component.html",
+    styleUrls: ["./notificationtemplate.component.scss"]
 })
 export class WebhookComponent implements OnInit {
     public NotificationType = NotificationType;

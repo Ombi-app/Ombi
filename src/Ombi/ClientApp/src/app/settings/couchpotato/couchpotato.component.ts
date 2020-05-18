@@ -7,6 +7,7 @@ import { ICouchPotatoProfiles } from "../../interfaces";
 
 @Component({
     templateUrl: "./couchpotato.component.html",
+    styleUrls: ["./couchpotato.component.scss"]
 })
 export class CouchPotatoComponent implements OnInit {
 

@@ -8,6 +8,7 @@ import { SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./telegram.component.html",
+    styleUrls: ["./notificationtemplate.component.scss"]
 })
 export class TelegramComponent implements OnInit {
 
