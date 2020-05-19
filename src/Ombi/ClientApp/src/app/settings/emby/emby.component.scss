@@ -1,45 +1,41 @@
 @import "~styles/shared.scss";
-.small-middle-container{
-	margin: auto;
-	width: 95%;
-	margin-top:10px;
+.small-middle-container {
+    margin: auto;
+    width: 95%;
+    margin-top: 10px;
 }
 
-.col-md-10{
-	display: grid;
+.col-md-10 {
+    display: grid;
 }
 
-.col-md-2{
-	display: contents;
-}
-.control-label{
-	font-weight:400;
+.col-md-2 {
+    display: contents;
 }
 
-.row{
-	display:block;
+.control-label {
+    font-weight: 400;
 }
 
-.btn-danger-outline{
-	background-color: #E84C3D;
+.row {
+    display: block;
 }
 
-.btn-success-outline{
-	background-color: #1b9d1b;
+.btn-danger-outline {
+    background-color: #E84C3D;
 }
 
-::ng-deep .dark .small-middle-container{
-	background-color: rgba(0, 0, 0, 0.10);
-	padding: 2em;
+.btn-success-outline {
+    background-color: #1b9d1b;
 }
 
-::ng-deep .dark .btn:hover{
-	box-shadow: 0 5px 11px 0 rgba(255, 255, 255, 0.18), 0 4px 15px 0 rgba(255, 255, 255, 0.15);
-	color: inherit;
+::ng-deep .dark .btn:hover {
+    box-shadow: 0 5px 11px 0 rgba(255, 255, 255, 0.18), 0 4px 15px 0 rgba(255, 255, 255, 0.15);
+    color: inherit;
 }
 
 @media (min-width:1440px) {
-	.col-md-2{
-		display: inline-table;
-	}
+    .col-md-2 {
+        display: inline-table;
+    }
 }
