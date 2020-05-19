@@ -19,7 +19,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     public dataSource: IMovieRequests[] = [];
     public resultsLength: number;
     public isLoadingResults = true;
-    public displayedColumns: string[] = ['requestedUser.requestedBy', 'title', 'requestedDate', 'status', 'requestStatus', 'actions'];
+    public displayedColumns: string[] = ['title', 'requestedUser.requestedBy',  'status', 'requestStatus','requestedDate', 'actions'];
     public gridCount: string = "15";
     public isAdmin: boolean;
     public defaultSort: string = "requestedDate";
