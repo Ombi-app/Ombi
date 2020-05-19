@@ -2,7 +2,8 @@
 
 import { ICheckbox, ICustomizationSettings, IEmailNotificationSettings, IUser } from "../interfaces";
 import { IdentityService, NotificationService, SettingsService } from "../services";
-import { MatSort, MatTableDataSource } from "@angular/material";
+import { MatSort } from "@angular/material/sort";
+import { MatTableDataSource } from "@angular/material/table";
 import { SelectionModel } from "@angular/cdk/collections";
 
 @Component({
@@ -16,7 +17,7 @@ export class UserManagementComponent implements OnInit {
     public dataSource: MatTableDataSource<IUser>;
 
     public selection = new SelectionModel<IUser>(true, []);
-    @ViewChild(MatSort, {static: false}) public sort: MatSort;
+    @ViewChild(MatSort) public sort: MatSort;
     public users: IUser[];
     public checkAll = false;
     public emailSettings: IEmailNotificationSettings;

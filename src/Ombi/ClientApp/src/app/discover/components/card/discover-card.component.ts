@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from "@angular/core";
 import { IDiscoverCardResult } from "../../interfaces";
 import { RequestType, ISearchTvResult, ISearchMovieResult } from "../../../interfaces";
 import { SearchV2Service } from "../../../services";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { DiscoverCardDetailsComponent } from "./discover-card-details.component";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";

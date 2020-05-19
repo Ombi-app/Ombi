@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, EventEmitter, Output } from "@angular/core";
 import { RadarrService } from "../../../../../services";
 import { IRadarrProfile, IRadarrRootFolder, IMovieRequests, IAdvancedData } from "../../../../../interfaces";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { MovieAdvancedOptionsComponent } from "../movie-advanced-options/movie-advanced-options.component";
 import { RequestServiceV2 } from "../../../../../services/requestV2.service";
 

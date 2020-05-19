@@ -2,7 +2,7 @@
 
 import { IEmbyServer, IEmbySettings } from "../../interfaces";
 import { EmbyService, JobService, NotificationService, SettingsService, TesterService } from "../../services";
-import { MatTabChangeEvent, MatTabGroup } from "@angular/material";
+import { MatTabChangeEvent, MatTabGroup } from "@angular/material/tabs";
 import {FormControl} from '@angular/forms';
 
 @Component({

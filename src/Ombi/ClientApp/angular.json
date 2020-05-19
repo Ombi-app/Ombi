@@ -13,6 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "progress": true,
             "extractCss": true,
             "outputPath": "dist",
@@ -24,13 +25,11 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles/_imports.scss",
               "node_modules/bootstrap/scss/bootstrap.scss",
-              "node_modules/angular-bootstrap-md/scss/mdb-free.scss",
-              "node_modules/pace/themes/orange/pace-theme-flat-top.css",
               "node_modules/font-awesome/scss/font-awesome.scss",
               "node_modules/primeng/resources/primeng.min.css",
-              "node_modules/primeng/resources/themes/nova-light/theme.css",
               "node_modules/primeicons/primeicons.css",
               "node_modules/please-wait/src/please-wait.scss",
               "node_modules/@fullcalendar/core/main.min.css",
@@ -40,13 +39,18 @@
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/chart.js/dist/Chart.js",
-              "node_modules/hammerjs/hammer.min.js",
               "./node_modules/@fullcalendar/core/main.js",
               "./node_modules/@fullcalendar/interaction/main.js"
             ]
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -64,6 +68,12 @@
               "buildOptimizer": true
             },
             "hmr": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",

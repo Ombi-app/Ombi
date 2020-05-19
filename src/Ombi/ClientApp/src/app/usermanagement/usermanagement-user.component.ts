@@ -4,8 +4,6 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { ICheckbox, INotificationAgent, INotificationPreferences, IRadarrProfile, IRadarrRootFolder, ISonarrProfile, ISonarrRootFolder, IUser, UserType } from "../interfaces";
 import { IdentityService, NotificationService, RadarrService, SonarrService, MessageService } from "../services";
 
-import { ConfirmationService } from "primeng/primeng";
-
 @Component({
     templateUrl: "./usermanagement-user.component.html",
     styleUrls: ["./usermanagement-user.component.scss"],
@@ -30,7 +28,6 @@ export class UserManagementUserComponent implements OnInit {
                 private notificationService: MessageService,
                 private router: Router,
                 private route: ActivatedRoute,
-                private confirmationService: ConfirmationService,
                 private sonarrService: SonarrService,
                 private radarrService: RadarrService) {
 
@@ -120,28 +117,28 @@ export class UserManagementUserComponent implements OnInit {
     }
 
     public delete() {
+ // TODO
+        // this.confirmationService.confirm({
+        //     message: "Are you sure that you want to delete this user? If this user has any requests they will also be deleted.",
+        //     header: "Are you sure?",
+        //     icon: "fa fa-trash",
+        //     accept: () => {
+        //         this.identityService.deleteUser(this.user).subscribe(x => {
+        //             if (x.successful) {
+        //                 this.notificationService.send(`The user ${this.user.userName} was deleted`);
+        //                 this.router.navigate(["usermanagement"]);
+        //             } else {
+        //                 x.errors.forEach((val) => {
+        //                     this.notificationService.send(val);
+        //                 });
+        //             }
 
-        this.confirmationService.confirm({
-            message: "Are you sure that you want to delete this user? If this user has any requests they will also be deleted.",
-            header: "Are you sure?",
-            icon: "fa fa-trash",
-            accept: () => {
-                this.identityService.deleteUser(this.user).subscribe(x => {
-                    if (x.successful) {
-                        this.notificationService.send(`The user ${this.user.userName} was deleted`);
-                        this.router.navigate(["usermanagement"]);
-                    } else {
-                        x.errors.forEach((val) => {
-                            this.notificationService.send(val);
-                        });
-                    }
-
-                });
-            },
-            reject: () => {
-                return;
-            },
-        });
+        //         });
+        //     },
+        //     reject: () => {
+        //         return;
+        //     },
+        // });
     }
 
     public resetPassword() {

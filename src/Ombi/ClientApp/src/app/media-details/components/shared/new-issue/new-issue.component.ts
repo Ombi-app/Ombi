@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { IDenyDialogData, IIssueDialogData } from "../interfaces/interfaces";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MessageService, IssuesService } from "../../../../services";
 import { IIssues, IIssueCategory, IssueStatus, RequestType } from "../../../../interfaces";
 import { TranslateService } from "@ngx-translate/core";

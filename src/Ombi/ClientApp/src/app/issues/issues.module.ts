@@ -1,9 +1,7 @@
 ﻿import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { OrderModule } from "ngx-order-pipe";
-import { PaginatorModule, SharedModule, TabViewModule } from "primeng/primeng";
 
 import { IdentityService, SearchService } from "../services";
 
@@ -16,7 +14,6 @@ import { IssuesComponent } from "./issues.component";
 import { IssuesTableComponent } from "./issuestable.component";
 
 import { PipeModule } from "../pipes/pipe.module";
-import { IssuesListComponent } from "./components/issues-list/issues-list.component";
 
 import * as fromComponents from "./components";
 
@@ -28,13 +25,9 @@ const routes: Routes = [
 @NgModule({
     imports: [
         RouterModule.forChild(routes),
-        NgbModule.forRoot(),
-        SharedModule,
         OrderModule,
         PipeModule,
         OmbiShared,
-        PaginatorModule,
-        TabViewModule,
     ],
     declarations: [
         IssuesComponent,

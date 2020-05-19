@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { ImageService, SearchV2Service, RequestService, MessageService } from "../../../services";
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { YoutubeTrailerComponent } from "../shared/youtube-trailer.component";
 import { AuthService } from "../../../auth/auth.service";
 import { DenyDialogComponent } from "../shared/deny-dialog/deny-dialog.component";

@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, ViewChild, Output, EventEmitter, ChangeDetectorRef, OnInit } from "@angular/core";
 import {  IRequestsViewModel, IChildRequests } from "../../../interfaces";
-import { MatPaginator, MatSort } from "@angular/material";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
 import { merge, of as observableOf, Observable } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
@@ -34,8 +35,8 @@ export class TvGridComponent implements OnInit, AfterViewInit {
 
     @Output() public onOpenOptions = new EventEmitter<{request: any, filter: any, onChange: any}>();
 
-    @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-    @ViewChild(MatSort, {static: false}) sort: MatSort;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
 
     constructor(private requestService: RequestServiceV2, private auth: AuthService,
                 private ref: ChangeDetectorRef, private storageService: StorageService) {

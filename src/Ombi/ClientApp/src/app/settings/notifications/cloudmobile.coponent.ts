@@ -7,7 +7,7 @@ import { NotificationService } from "../../services";
 import { MobileService, SettingsService } from "../../services";
 import { CloudMobileService } from "../../services/cloudmobile.service";
 import { SelectionModel } from "@angular/cdk/collections";
-import { MatTableDataSource } from "@angular/material";
+import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
     templateUrl: "./cloudmobile.component.html",

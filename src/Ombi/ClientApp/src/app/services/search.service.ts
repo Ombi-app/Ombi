@@ -4,7 +4,7 @@ import { Injectable, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
-import { TreeNode } from "primeng/primeng";
+import { UITreeNode } from "primeng/tree";
 import { ISearchMovieResult } from "../interfaces";
 import { ISearchTvResult } from "../interfaces";
 import { ISearchAlbumResult, ISearchArtistResult } from "../interfaces/ISearchMusicResult";
@@ -58,12 +58,12 @@ export class SearchService extends ServiceHelpers {
         return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/${searchTerm}`, { headers: this.headers });
     }
 
-    public searchTvTreeNode(searchTerm: string): Observable<TreeNode[]> {
-        return this.http.get<TreeNode[]>(`${this.url}/Tv/${searchTerm}/tree`, { headers: this.headers });
+    public searchTvTreeNode(searchTerm: string): Observable<UITreeNode[]> {
+        return this.http.get<UITreeNode[]>(`${this.url}/Tv/${searchTerm}/tree`, { headers: this.headers });
     }
 
-    public getShowInformationTreeNode(theTvDbId: number): Observable<TreeNode> {
-        return this.http.get<TreeNode>(`${this.url}/Tv/info/${theTvDbId}/Tree`, { headers: this.headers });
+    public getShowInformationTreeNode(theTvDbId: number): Observable<UITreeNode> {
+        return this.http.get<UITreeNode>(`${this.url}/Tv/info/${theTvDbId}/Tree`, { headers: this.headers });
     }
 
     public getShowInformation(theTvDbId: number): Observable<ISearchTvResult> {
