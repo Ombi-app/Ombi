@@ -63,7 +63,7 @@
 // changed bottom to 10px so when you overlay a link it won't get blocked by URL
 .bottom-nav-link {
     bottom: 10px;
-    position: absolute;
+    position: absolute !important;
     //background-color:#E84C3D;
 }
 
