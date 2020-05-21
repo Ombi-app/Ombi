@@ -80,7 +80,7 @@ namespace Ombi.Store.Repository
 
         public async Task ExecuteSql(string sql)
         {
-            await _ctx.Database.ExecuteSqlCommandAsync(sql);
+            await _ctx.Database.ExecuteSqlRawAsync(sql);
         }
 
         protected async Task<int> InternalSaveChanges()
@@ -96,10 +96,10 @@ namespace Ombi.Store.Repository
 
             var result = await policy.ExecuteAndCaptureAsync(async () =>
             {
-                using (var tran = await _ctx.Database.BeginTransactionAsync())
+                //using (var tran = await _ctx.Database.BeginTransactionAsync())
                 {
                     var r = await _ctx.SaveChangesAsync();
-                    tran.Commit();      
+                    //tran.Commit();      
                     return r;
                 }
             });
