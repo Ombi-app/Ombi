@@ -208,7 +208,7 @@ namespace Ombi.Controllers.V1
         [HttpPost("comments")]
         public async Task<IssueComments> AddComment([FromBody] NewIssueCommentViewModel comment)
         {
-            var user = await _userManager.Users.Where(x => User.Identity.Name.Equals(x.UserName, StringComparison.InvariantCultureIgnoreCase))
+            var user = await _userManager.Users.Where(x => User.Identity.Name == x.UserName)
                 .FirstOrDefaultAsync();
             var issue = await _issues.GetAll().Include(x => x.UserReported).Include(x => x.IssueCategory).FirstOrDefaultAsync(x => x.Id == comment.IssueId);
             if (issue == null)
@@ -278,7 +278,8 @@ namespace Ombi.Controllers.V1
         [HttpPost("status")]
         public async Task<bool> UpdateStatus([FromBody] IssueStateViewModel model)
         {
-            var user = await _userManager.Users.Where(x => User.Identity.Name.Equals(x.UserName, StringComparison.InvariantCultureIgnoreCase))
+            var username = User.Identity.Name.ToUpper();
+            var user = await _userManager.Users.Where(x => username == x.NormalizedUserName)
                 .FirstOrDefaultAsync();
             var issue = await _issues.GetAll().Include(x => x.UserReported).Include(x => x.IssueCategory).FirstOrDefaultAsync(x => x.Id == model.IssueId);
             if (issue == null)
