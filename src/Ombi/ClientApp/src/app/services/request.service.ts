@@ -4,7 +4,7 @@ import { Injectable, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
-import { TreeNode } from "primeng/primeng";
+import { UITreeNode } from "primeng/tree";
 import { FilterType, IAlbumRequest, IAlbumRequestModel, IAlbumUpdateModel, IChildRequests, IDenyAlbumModel, IDenyMovieModel, IFilter,
       IMovieRequestModel, IMovieRequests, IMovieUpdateModel, IRequestEngineResult, IRequestsViewModel, ITvDenyModel, ITvRequests, ITvUpdateModel, OrderType } from "../interfaces";
 import { ITvRequestViewModel } from "../interfaces";
@@ -90,8 +90,8 @@ export class RequestService extends ServiceHelpers {
         return this.http.get<IRequestsViewModel<ITvRequests>>(`${this.url}tv/${count}/${position}/${order}/${status}/${availability}`, {headers: this.headers});
     }
 
-    public getTvRequestsTree(count: number, position: number): Observable<TreeNode[]> {
-        return this.http.get<TreeNode[]>(`${this.url}tv/${count}/${position}/tree`, {headers: this.headers});
+    public getTvRequestsTree(count: number, position: number): Observable<UITreeNode[]> {
+        return this.http.get<UITreeNode[]>(`${this.url}tv/${count}/${position}/tree`, {headers: this.headers});
     }
 
      public getChildRequests(requestId: number): Observable<IChildRequests[]> {
@@ -102,8 +102,8 @@ export class RequestService extends ServiceHelpers {
         return this.http.get<ITvRequests[]>(`${this.url}tv/search/${search}`, {headers: this.headers});
      }
 
-    public searchTvRequestsTree(search: string): Observable<TreeNode[]> {
-        return this.http.get<TreeNode[]>(`${this.url}tv/search/${search}/tree`, {headers: this.headers});
+    public searchTvRequestsTree(search: string): Observable<UITreeNode[]> {
+        return this.http.get<UITreeNode[]>(`${this.url}tv/search/${search}/tree`, {headers: this.headers});
     }
 
     public removeTvRequest(requestId: number) {

@@ -15,7 +15,7 @@ import { ImageService } from "../services";
 
 import { fadeInOutAnimation } from "../animations/fadeinout";
 import { StorageService } from "../shared/storage/storage-service";
-import { MatSnackBar } from "@angular/material";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
     templateUrl: "./login.component.html",

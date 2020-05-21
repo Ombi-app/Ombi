@@ -3,8 +3,7 @@ import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
 
-import {ConfirmationService, ConfirmDialogModule } from "primeng/primeng";
-import { MatStepperModule } from "@angular/material";
+import { MatStepperModule } from "@angular/material/stepper";
 
 import { CreateAdminComponent } from "./createadmin/createadmin.component";
 import { EmbyComponent } from "./emby/emby.component";
@@ -31,7 +30,6 @@ const routes: Routes = [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        ConfirmDialogModule,
         SharedModule,
         MatStepperModule,
         RouterModule.forChild(routes),
@@ -50,7 +48,6 @@ const routes: Routes = [
         PlexService,
         IdentityService,
         EmbyService,
-        ConfirmationService,
         PlexOAuthService,
     ],
 

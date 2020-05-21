@@ -1,56 +1,49 @@
 @import "~styles/shared.scss";
-.small-middle-container{
-	margin: auto;
-	width: 95%;
-	margin-top:10px;
+.small-middle-container {
+    margin: auto;
+    width: 95%;
+    margin-top: 10px;
 }
 
-.col-md-6{
-	display: contents;
+.col-md-6 {
+    display: contents;
 }
 
-.col-md-5{
-	display: contents;
+.col-md-5 {
+    display: contents;
 }
 
-.col-md-4{
-	display: contents;
+.col-md-4 {
+    display: contents;
 }
 
-.control-label{
-	font-weight:400;
+.control-label {
+    font-weight: 400;
 }
 
-.row{
-	display:block;
+.row {
+    display: block;
 }
 
-::ng-deep .dark .small-middle-container{
-	background-color: rgba(0, 0, 0, 0.10);
-	padding: 2em;
-}
-
-::ng-deep .dark .btn:hover{
-	box-shadow: 0 5px 11px 0 rgba(255, 255, 255, 0.18), 0 4px 15px 0 rgba(255, 255, 255, 0.15);
-	color: inherit;
+::ng-deep .dark .btn:hover {
+    box-shadow: 0 5px 11px 0 rgba(255, 255, 255, 0.18), 0 4px 15px 0 rgba(255, 255, 255, 0.15);
+    color: inherit;
 }
 
 ::ng-deep .load {
-	max-width: fit-content;
-	margin-left:3em;
-	padding: 0.5rem 1.14rem;
+    max-width: fit-content;
+    margin-left: 3em;
+    padding: 0.5rem 1.14rem;
 }
 
 @media (min-width:1440px) {
-	.col-md-6{
-		display: inline-table;
-	}
-
-	.col-md-5{
-		display: inline-table;
-	}
-
-	.col-md-4{
-		display: inline-table;
-	}
+    .col-md-6 {
+        display: inline-table;
+    }
+    .col-md-5 {
+        display: inline-table;
+    }
+    .col-md-4 {
+        display: inline-table;
+    }
 }

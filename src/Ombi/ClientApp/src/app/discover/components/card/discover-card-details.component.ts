@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from "@angular/material";
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from "@angular/material/dialog";
 import { IDiscoverCardResult } from "../../interfaces";
 import { SearchV2Service, RequestService, MessageService } from "../../../services";
 import { RequestType } from "../../../interfaces";

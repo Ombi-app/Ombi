@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from "@angular/core";
-import { MatDialogRef, MAT_DIALOG_DATA, MatCheckboxChange } from "@angular/material";
+import { MatCheckboxChange } from "@angular/material/checkbox";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { ISearchTvResultV2 } from "../../interfaces/ISearchTvResultV2";
 import { RequestService, MessageService } from "../../services";
 import { ITvRequestViewModel, ISeasonsViewModel, IEpisodesRequests, INewSeasonRequests } from "../../interfaces";

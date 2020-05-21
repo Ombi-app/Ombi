@@ -3,7 +3,6 @@ import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
 
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { MovieSearchComponent } from "./moviesearch.component";
 import { MovieSearchGridComponent } from "./moviesearchgrid.component";
@@ -15,8 +14,6 @@ import { SeriesInformationComponent } from "./seriesinformation.component";
 import { TvSearchComponent } from "./tvsearch.component";
 
 import { CardsFreeModule } from "angular-bootstrap-md";
-
-import { SidebarModule, TooltipModule, TreeTableModule } from "primeng/primeng";
 
 import { RequestService } from "../services";
 import { SearchService } from "../services";
@@ -35,7 +32,6 @@ const routes: Routes = [
         CommonModule,
         FormsModule,
         RouterModule.forChild(routes),
-        NgbModule.forRoot(),
         TreeTableModule,
         SharedModule,
         SidebarModule,

@@ -2,12 +2,18 @@
 <div *ngIf="form" class="small-middle-container">
     <fieldset>
         <legend>Radarr Settings</legend>
-        <div style="float: right;">
-            <div class="md-form-field"><mat-slide-toggle formControlName="enabled">Enable</mat-slide-toggle></div>
-            <div class="md-form-field"><mat-slide-toggle [(ngModel)]="advanced">Advanced</mat-slide-toggle></div>
-        </div>
-        <div class="col-md-12">
-            <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:2%;">
+
+        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:2%;">
+            <div style="float: right;">
+                <div class="md-form-field">
+                    <mat-slide-toggle formControlName="enabled">Enable</mat-slide-toggle>
+                </div>
+                <div class="md-form-field">
+                    <mat-slide-toggle [(ngModel)]="advanced" [ngModelOptions]="{standalone: true}">Advanced</mat-slide-toggle>
+                </div>
+                
+            </div>
+            <div class="col-md-12">
                 <div class="col-md-5">
                     <div class="md-form-field">
                         <mat-form-field>
@@ -77,15 +83,16 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-
-                </div>
-                <div class="col">
-
                     <div class="md-form-field" *ngIf="advanced" style="color:#ff761b">
                         <mat-slide-toggle formControlName="addOnly">
                             Do not search
                         </mat-slide-toggle>
                     </div>
+
+                </div>
+                <div class="col">
+
+                 
 
 
                     <div class="md-form-field">
@@ -103,7 +110,7 @@
                     </div>
 
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </fieldset>
 </div>

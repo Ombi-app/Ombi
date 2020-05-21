@@ -2,7 +2,6 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
-import { NgbAccordionModule, NgbModule } from "@ng-bootstrap/ng-bootstrap";
 // import { TagInputModule } from "ngx-chips";
 import { ClipboardModule } from "ngx-clipboard";
 
@@ -51,8 +50,16 @@ import { WikiComponent } from "./wiki.component";
 
 import { SettingsMenuComponent } from "./settingsmenu.component";
 
-import { AutoCompleteModule, CalendarModule, DialogModule, InputSwitchModule, InputTextModule, MenuModule, RadioButtonModule, TooltipModule } from "primeng/primeng";
-import { MatMenuModule} from "@angular/material";
+import {AutoCompleteModule } from "primeng/autocomplete";
+import {CalendarModule } from "primeng/calendar";
+import {InputSwitchModule } from "primeng/inputswitch";
+import {InputTextModule } from "primeng/inputtext";
+import {DialogModule } from "primeng/dialog";
+import {MenuModule } from "primeng/menu";
+import {RadioButtonModule } from "primeng/radiobutton";
+import {TooltipModule } from "primeng/tooltip";
+
+import { MatMenuModule } from "@angular/material/menu";
 import { SharedModule } from "../shared/shared.module";
 import { HubService } from "../services/hub.service";
 import { LogsComponent } from "./logs/logs.component";
@@ -108,9 +115,7 @@ const routes: Routes = [
         MenuModule,
         InputSwitchModule,
         InputTextModule,
-        NgbModule,
         TooltipModule,
-        NgbAccordionModule,
         AutoCompleteModule,
         CalendarModule,
         // TagInputModule,

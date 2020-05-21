@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, ViewChild, EventEmitter, Output, ChangeDetectorRef, OnInit } from "@angular/core";
 import { IMovieRequests, IRequestsViewModel } from "../../../interfaces";
-import { MatPaginator, MatSort } from "@angular/material";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
 import { merge, Observable, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
@@ -18,7 +19,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     public dataSource: IMovieRequests[] = [];
     public resultsLength: number;
     public isLoadingResults = true;
-    public displayedColumns: string[] = ['requestedUser.requestedBy', 'title', 'requestedDate', 'status', 'requestStatus', 'actions'];
+    public displayedColumns: string[] = ['title', 'requestedUser.requestedBy',  'status', 'requestStatus','requestedDate', 'actions'];
     public gridCount: string = "15";
     public isAdmin: boolean;
     public defaultSort: string = "requestedDate";
@@ -35,8 +36,8 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
 
     @Output() public onOpenOptions = new EventEmitter<{ request: any, filter: any, onChange: any }>();
 
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: false }) sort: MatSort;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
 
     constructor(private requestService: RequestServiceV2, private ref: ChangeDetectorRef,
                 private auth: AuthService, private storageService: StorageService) {

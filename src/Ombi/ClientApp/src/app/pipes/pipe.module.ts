@@ -11,7 +11,7 @@ import { QualityPipe } from "./QualityPipe";
 })
 export class PipeModule {
 
-    public static forRoot(): ModuleWithProviders {
+    public static forRoot(): ModuleWithProviders<PipeModule> {
         return {
             ngModule: PipeModule,
             providers: [],

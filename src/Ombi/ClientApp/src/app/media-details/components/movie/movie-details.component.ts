@@ -3,7 +3,7 @@ import { ImageService, SearchV2Service, RequestService, MessageService } from ".
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { YoutubeTrailerComponent } from "../shared/youtube-trailer.component";
 import { AuthService } from "../../../auth/auth.service";
 import { IMovieRequests, RequestType, IAdvancedData } from "../../../interfaces";

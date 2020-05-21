@@ -6,7 +6,7 @@ import { DiscoverCardComponent } from "./card/discover-card.component";
 import { Routes } from "@angular/router";
 import { AuthGuard } from "../../auth/auth.guard";
 import { SearchService, RequestService } from "../../services";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 
 
 export const components: any[] = [

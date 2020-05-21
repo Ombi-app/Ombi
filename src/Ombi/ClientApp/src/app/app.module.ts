@@ -7,21 +7,32 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule, Routes } from "@angular/router";
 
 import { JwtModule } from "@auth0/angular-jwt";
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { CookieService } from "ng2-cookies";
-import { GrowlModule } from "primeng/components/growl/growl";
-import {
-    ButtonModule, CaptchaModule, ConfirmationService, ConfirmDialogModule, DataTableModule, DialogModule, OverlayPanelModule, SharedModule, SidebarModule,
-    TooltipModule
-} from "primeng/primeng";
 
-import {
-    MatButtonModule, MatNativeDateModule, MatIconModule, MatSidenavModule, MatListModule, MatToolbarModule, MatAutocompleteModule, MatCheckboxModule, MatSnackBarModule,
-    MatProgressSpinnerModule
-} from '@angular/material';
-import { MatCardModule, MatInputModule, MatTabsModule, MatSlideToggleModule } from "@angular/material";
+import { ButtonModule } from "primeng/button";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import { DataViewModule } from "primeng/dataview";
+import { DialogModule } from "primeng/dialog";
+import { OverlayPanelModule } from "primeng/overlaypanel";
+import { TooltipModule } from "primeng/tooltip";
+import { SidebarModule } from "primeng/sidebar";
+
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from "@angular/material/card";
+import { MatInputModule } from "@angular/material/input";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatTabsModule } from "@angular/material/tabs";
 
 import { MDBBootstrapModule, CardsFreeModule, NavbarModule } from "angular-bootstrap-md";
 
@@ -70,9 +81,8 @@ const routes: Routes = [
     { loadChildren: () => import("./settings/settings.module").then(m => m.SettingsModule), path: "Settings" },
     { loadChildren: () => import("./wizard/wizard.module").then(m => m.WizardModule), path: "Wizard" },
     { loadChildren: () => import("./usermanagement/usermanagement.module").then(m => m.UserManagementModule), path: "usermanagement" },
-    { loadChildren: () => import("./requests/requests.module").then(m => m.RequestsModule), path: "requestsOld" },
+    // { loadChildren: () => import("./requests/requests.module").then(m => m.RequestsModule), path: "requestsOld" },
     { loadChildren: () => import("./requests-list/requests-list.module").then(m => m.RequestsListModule), path: "requests-list" },
-    { loadChildren: () => import("./recentlyAdded/recentlyAdded.module").then(m => m.RecentlyAddedModule), path: "recentlyadded" },
     { loadChildren: () => import("./vote/vote.module").then(m => m.VoteModule), path: "vote" },
     { loadChildren: () => import("./media-details/media-details.module").then(m => m.MediaDetailsModule), path: "details" },
     { loadChildren: () => import("./user-preferences/user-preferences.module").then(m => m.UserPreferencesModule), path: "user-preferences" },
@@ -106,23 +116,19 @@ export function JwtTokenGetter() {
         BrowserModule,
         HttpClientModule,
         BrowserAnimationsModule,
-        GrowlModule,
         ButtonModule,
         FormsModule,
-        DataTableModule,
+        DataViewModule,
         MatSnackBarModule,
-        SharedModule,
         MatSnackBarModule,
         DialogModule,
         MatButtonModule,
         NavbarModule,
-        NgbModule.forRoot(),
         MatCardModule,
         MatInputModule,
         MatTabsModule,
         ReactiveFormsModule,
         MatAutocompleteModule,
-        CaptchaModule,
         TooltipModule,
         ConfirmDialogModule,
         OverlayPanelModule,
@@ -168,7 +174,6 @@ export function JwtTokenGetter() {
         IdentityService,
         StatusService,
         LandingPageService,
-        ConfirmationService,
         ImageService,
         CustomPageService,
         CookieService,

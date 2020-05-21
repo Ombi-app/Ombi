@@ -9,7 +9,7 @@ import { AuthGuard } from "../auth/auth.guard";
 
 import * as fromComponents from './components';
 import { RequestsListComponent } from "./components/requests-list.component";
-import { MatBottomSheetModule } from "@angular/material";
+import { MatBottomSheetModule } from "@angular/material/bottom-sheet";
 
 const routes: Routes = [
     { path: "", component: RequestsListComponent, canActivate: [AuthGuard] },
