@@ -120,7 +120,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello! Your request for {Title} on {ApplicationName}! This is now available! :)",
+                                Message = "Hello! Your request for {Title} on {ApplicationName} is now available! :)",
                                 Subject = "{ApplicationName}: {Title} is now available!",
                                 Agent = agent,
                                 Enabled = true,
