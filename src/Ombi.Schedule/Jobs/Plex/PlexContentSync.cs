@@ -78,13 +78,11 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 return;
             }
-            await Notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, recentlyAddedSearch ? "Plex Recently Added Sync Started" : "Plex Content Sync Started");
+            await NotifyClient(recentlyAddedSearch ? "Plex Recently Added Sync Started" : "Plex Content Sync Started");
             if (!ValidateSettings(plexSettings))
             {
                 Logger.LogError("Plex Settings are not valid");
-                await Notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                    .SendAsync(NotificationHub.NotificationEvent, recentlyAddedSearch ? "Plex Recently Added Sync, Settings Not Valid" : "Plex Content, Settings Not Valid");
+                await NotifyClient(recentlyAddedSearch ? "Plex Recently Added Sync, Settings Not Valid" : "Plex Content, Settings Not Valid");
                 return;
             }
             var processedContent = new ProcessedContent();
@@ -104,13 +102,13 @@ namespace Ombi.Schedule.Jobs.Plex
             }
             catch (Exception e)
             {
-                await Notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                    .SendAsync(NotificationHub.NotificationEvent, recentlyAddedSearch ? "Plex Recently Added Sync Errored" : "Plex Content Sync Errored");
+                await NotifyClient(recentlyAddedSearch ? "Plex Recently Added Sync Errored" : "Plex Content Sync Errored");
                 Logger.LogWarning(LoggingEvents.PlexContentCacher, e, "Exception thrown when attempting to cache the Plex Content");
             }
 
             if (!recentlyAddedSearch)
             {
+                await NotifyClient("Plex Sync - Starting Episode Sync");
                 Logger.LogInformation("Starting EP Cacher");
                 await OmbiQuartz.TriggerJob(nameof(IPlexEpisodeSync), "Plex");
             }
@@ -124,6 +122,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
                 else
                 {
+                    await NotifyClient("Plex Sync - Checking if any requests are now available");
                     Logger.LogInformation("Kicking off Plex Availability Checker");
                     await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
                 }
@@ -141,10 +140,11 @@ namespace Ombi.Schedule.Jobs.Plex
                     await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
                 }
             }
-            Logger.LogInformation("Finished Plex Content Cacher, with processed content: {0}, episodes: {1}. Recently Added Scan: {2}", processedContent?.Content?.Count() ?? 0, processedContent?.Episodes?.Count() ?? 0, recentlyAddedSearch);
+            var processedCont = processedContent?.Content?.Count() ?? 0;
+            var processedEp = processedContent?.Episodes?.Count() ?? 0;
+            Logger.LogInformation("Finished Plex Content Cacher, with processed content: {0}, episodes: {1}. Recently Added Scan: {2}", processedContent, processedEp, recentlyAddedSearch);
 
-            await Notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, recentlyAddedSearch ? "Plex Recently Added Sync Finished" : "Plex Content Sync Finished");
+            await NotifyClient(recentlyAddedSearch ? $"Plex Recently Added Sync Finished, We processed {processedCont}, and {processedEp} Episodes" : "Plex Content Sync Finished");
 
         }
 
@@ -185,6 +185,7 @@ namespace Ombi.Schedule.Jobs.Plex
             Logger.LogDebug("Getting all content from server {0}", servers.Name);
             var allContent = await GetAllContent(servers, recentlyAddedSearch);
             Logger.LogDebug("We found {0} items", allContent.Count);
+
 
             // Let's now process this.
             var contentToAdd = new HashSet<PlexServerContent>();
@@ -654,7 +655,11 @@ namespace Ombi.Schedule.Jobs.Plex
             return libs;
         }
 
-
+        private async Task NotifyClient(string message)
+        {
+            await Notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, $"Plex Sync - {message}");
+        }
 
         private static bool ValidateSettings(PlexSettings plex)
         {

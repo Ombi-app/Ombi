@@ -5,7 +5,7 @@
         <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:3%;">
             <div style="float: right;">
                 <span style="vertical-align: top;">Advanced</span>
-                <p-inputSwitch id="customInputSwitch" [(ngModel)]="advanced"></p-inputSwitch>
+                <p-inputSwitch id="customInputSwitch" [(ngModel)]="advanced" [ngModelOptions]="{standalone: true}"></p-inputSwitch>
             </div>
 
             <div class="col-md-6" style="display:block;">

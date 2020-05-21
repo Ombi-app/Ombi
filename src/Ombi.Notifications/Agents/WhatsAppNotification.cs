@@ -36,7 +36,9 @@ namespace Ombi.Notifications.Agents
             {
                 return false;
             }
-            return !settings.WhatsAppSettings.AccountSid.IsNullOrEmpty() && !settings.WhatsAppSettings.AuthToken.IsNullOrEmpty() && !settings.WhatsAppSettings.From.IsNullOrEmpty();
+            return (!settings.WhatsAppSettings?.AccountSid?.IsNullOrEmpty() ?? false) 
+                && (!settings.WhatsAppSettings?.AuthToken?.IsNullOrEmpty() ?? false) 
+                && (!settings.WhatsAppSettings?.From?.IsNullOrEmpty() ?? false);
         }
 
         protected override async Task NewRequest(NotificationOptions model, TwilioSettings settings)
