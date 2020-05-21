@@ -172,7 +172,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     {
                         // Ok let's try and match it to a title. TODO (This is experimental)
                         seriesExists = await _repo.GetAll().FirstOrDefaultAsync(x =>
-                            x.Title.Equals(episode.grandparentTitle, StringComparison.CurrentCultureIgnoreCase));
+                            x.Title == episode.grandparentTitle);
                         if (seriesExists == null)
                         {
                             _log.LogWarning(
