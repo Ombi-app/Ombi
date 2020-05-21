@@ -11,7 +11,7 @@ namespace Ombi.Helpers
     public class OmbiQuartz
     {
         protected IScheduler _scheduler { get; set; }
-        
+
         public static IScheduler Scheduler => Instance._scheduler;
 
         // Singleton
@@ -31,14 +31,14 @@ namespace Ombi.Helpers
         {
             _scheduler = await new StdSchedulerFactory().GetScheduler();
         }
-        
+
         public IScheduler UseJobFactory(IJobFactory jobFactory)
         {
             Scheduler.JobFactory = jobFactory;
             return Scheduler;
         }
 
-        public static async Task<bool> IsJobRunnung(string jobName)
+        public static async Task<bool> IsJobRunning(string jobName)
         {
             var running = await Scheduler.GetCurrentlyExecutingJobs();
             return running.Any(x => x.JobDetail.Key.Name.Equals(jobName, StringComparison.InvariantCultureIgnoreCase));
@@ -57,7 +57,7 @@ namespace Ombi.Helpers
                 }
             }
 
-            if(!cronExpression.HasValue())
+            if (!cronExpression.HasValue())
             {
                 jobBuilder.StoreDurably(true);
             }
@@ -67,23 +67,26 @@ namespace Ombi.Helpers
             {
                 ITrigger jobTrigger = TriggerBuilder.Create()
                     .WithIdentity(name + "Trigger", group)
-                    .WithCronSchedule(cronExpression, 
+                    .WithCronSchedule(cronExpression,
                         x => x.WithMisfireHandlingInstructionFireAndProceed())
                     .ForJob(name, group)
                     .StartNow()
                     .Build();
                 await Scheduler.ScheduleJob(job, jobTrigger);
-            } 
+            }
             else
             {
                 await Scheduler.AddJob(job, true);
             }
-            
+
         }
 
         public static async Task TriggerJob(string jobName, string group)
         {
-            await Scheduler.TriggerJob(new JobKey(jobName, group));
+            if (!(await IsJobRunning(jobName)))
+            {
+                await Scheduler.TriggerJob(new JobKey(jobName, group));
+            }
         }
 
         public static async Task TriggerJob(string jobName, string group, IDictionary<string, object> data)

@@ -61,12 +61,16 @@ namespace Ombi.Schedule.Jobs.Ombi
                 if (settings.Enable)
                 {
                     await StartPlex();
+
+                    await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
                 }
 
                 var embySettings = await _embySettings.GetSettingsAsync();
                 if (embySettings.Enable)
                 {
                     await StartEmby(embySettings);
+                    
+                await OmbiQuartz.TriggerJob(nameof(IEmbyAvaliabilityChecker), "Emby");
                 }
             }
             catch (Exception e)
@@ -85,8 +89,8 @@ namespace Ombi.Schedule.Jobs.Ombi
         private async Task StartPlex()
         {
             // Ensure we check that we have not linked this item to a request
-            var allMovies =  await _plexRepo.GetAll().Where(x =>
-                x.Type == PlexMediaTypeEntity.Movie && x.RequestId == null && (x.TheMovieDbId == null || x.ImdbId == null)).ToListAsync();
+            var allMovies = await _plexRepo.GetAll().Where(x =>
+               x.Type == PlexMediaTypeEntity.Movie && x.RequestId == null && (x.TheMovieDbId == null || x.ImdbId == null)).ToListAsync();
             await StartPlexMovies(allMovies);
 
             // Now Tv
@@ -105,7 +109,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private async Task StartPlexTv(List<PlexServerContent> allTv)
         {
             foreach (var show in allTv)
-            {   
+            {
                 // Just double check there is no associated request id
                 if (show.RequestId.HasValue)
                 {

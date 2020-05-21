@@ -116,7 +116,7 @@ namespace Ombi.Schedule.Jobs.Plex
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
                 // Ensure it's not already running
-                if (await OmbiQuartz.IsJobRunnung(nameof(IPlexAvailabilityChecker)))
+                if (await OmbiQuartz.IsJobRunning(nameof(IPlexAvailabilityChecker)))
                 {
                     Logger.LogInformation("Availability checker already running");
                 }
@@ -131,7 +131,7 @@ namespace Ombi.Schedule.Jobs.Plex
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
                 // Ensure it's not already running
-                if (await OmbiQuartz.IsJobRunnung(nameof(IPlexAvailabilityChecker)))
+                if (await OmbiQuartz.IsJobRunning(nameof(IPlexAvailabilityChecker)))
                 {
                     Logger.LogInformation("Availability checker already running");
                 }

@@ -39,6 +39,7 @@ using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Quartz;
+using Ombi.Schedule.Jobs.Ombi;
 
 namespace Ombi.Schedule.Jobs.Emby
 {
@@ -77,7 +78,7 @@ namespace Ombi.Schedule.Jobs.Emby
 
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Emby Episode Sync Finished");
-            await OmbiQuartz.TriggerJob(nameof(IEmbyAvaliabilityChecker), "Emby");
+            await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
         }
 
         private async Task CacheEpisodes(EmbyServers server)

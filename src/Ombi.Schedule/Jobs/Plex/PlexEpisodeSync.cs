@@ -63,16 +63,9 @@ namespace Ombi.Schedule.Jobs.Plex
                 _log.LogError(LoggingEvents.Cacher, e, "Caching Episodes Failed");
             }
 
+            
             await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
-            // Ensure it's not already running
-            if (await OmbiQuartz.IsJobRunnung(nameof(IPlexAvailabilityChecker)))
-            {
-                _log.LogInformation("Availability checker already running");
-            }
-            else
-            {
-                await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
-            }
+
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Plex Episode Sync Finished");
         }
