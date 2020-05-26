@@ -63,16 +63,9 @@ namespace Ombi.Schedule.Jobs.Plex
                 _log.LogError(LoggingEvents.Cacher, e, "Caching Episodes Failed");
             }
 
+            
             await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
-            // Ensure it's not already running
-            if (await OmbiQuartz.IsJobRunnung(nameof(IPlexAvailabilityChecker)))
-            {
-                _log.LogInformation("Availability checker already running");
-            }
-            else
-            {
-                await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
-            }
+
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Plex Episode Sync Finished");
         }
@@ -172,7 +165,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     {
                         // Ok let's try and match it to a title. TODO (This is experimental)
                         seriesExists = await _repo.GetAll().FirstOrDefaultAsync(x =>
-                            x.Title.Equals(episode.grandparentTitle, StringComparison.CurrentCultureIgnoreCase));
+                            x.Title == episode.grandparentTitle);
                         if (seriesExists == null)
                         {
                             _log.LogWarning(

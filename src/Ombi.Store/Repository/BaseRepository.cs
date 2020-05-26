@@ -80,30 +80,13 @@ namespace Ombi.Store.Repository
 
         public async Task ExecuteSql(string sql)
         {
-            await _ctx.Database.ExecuteSqlCommandAsync(sql);
+            await _ctx.Database.ExecuteSqlRawAsync(sql);
         }
 
         protected async Task<int> InternalSaveChanges()
         {
-            var policy = Policy
-                .Handle<SqliteException>()
-                .WaitAndRetryAsync(new[]
-                {
-                    TimeSpan.FromSeconds(1),
-                    TimeSpan.FromSeconds(5),
-                    TimeSpan.FromSeconds(10)
-                });
-
-            var result = await policy.ExecuteAndCaptureAsync(async () =>
-            {
-                using (var tran = await _ctx.Database.BeginTransactionAsync())
-                {
-                    var r = await _ctx.SaveChangesAsync();
-                    tran.Commit();      
-                    return r;
-                }
-            });
-            return result.Result;
+            var r = await _ctx.SaveChangesAsync();
+            return r;
         }
 
 
