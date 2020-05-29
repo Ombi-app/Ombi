@@ -101,3 +101,7 @@ table {
 	color:#fff;
 	border: 1px solid rgba(0, 0, 0, 0.18);
 }
+
+::ng-deep .mat-toolbar.mat-primary{
+    margin-bottom: 0.5em;
+}
