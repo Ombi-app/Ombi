@@ -145,7 +145,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private async Task StartEmbyTv()
         {
             var allTv = await _embyRepo.GetAll().Where(x =>
-                x.Type == EmbyMediaType.Series && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue() || !x.TvDbId.HasValue())).ToListAsync();
+                x.Type == EmbyMediaType.Series && (x.TheMovieDbId == null || x.ImdbId == null || x.TvDbId == null)).ToListAsync();
 
             foreach (var show in allTv)
             {
@@ -210,7 +210,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private async Task StartEmbyMovies(EmbySettings settings)
         {
             var allMovies = await _embyRepo.GetAll().Where(x =>
-                x.Type == EmbyMediaType.Movie && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue())).ToListAsync();
+                x.Type == EmbyMediaType.Movie && (x.TheMovieDbId == null || x.ImdbId == null)).ToListAsync();
             foreach (var movie in allMovies)
             {
                 movie.ImdbId.HasValue();
