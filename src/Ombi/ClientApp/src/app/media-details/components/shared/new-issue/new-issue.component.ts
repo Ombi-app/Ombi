@@ -20,6 +20,7 @@ export class NewIssueComponent implements OnInit {
         private issueService: IssuesService,
         public messageService: MessageService,
         private translate: TranslateService) {
+            debugger;
             this.issue = {
                 subject: "",
                 description: "",
@@ -32,7 +33,7 @@ export class NewIssueComponent implements OnInit {
                 requestId: data.requestId,
                 requestType: data.requestType,
                 title: data.title,
-                providerId: data.imdbId,
+                providerId: data.providerId,
                 userReported: undefined,
             };
         }

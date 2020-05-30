@@ -29,7 +29,7 @@
                     <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent" [disabled]>
             <i class="fa fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
 
-                    <button *ngIf="(tvRequest)" mat-raised-button class="btn-spacing" color="danger" (click)="issue()">
+                    <button mat-raised-button class="btn-spacing" color="danger" (click)="issue()">
               <i class="fa fa-exclamation"></i> {{
                   'Requests.ReportIssue' | translate }}</button>
 
@@ -77,7 +77,7 @@
 
                 <div class="col-12 col-md-10" *ngIf="tvRequest">
                     <div class="issuesPanel">
-                        <issues-panel [requestId]="tv.requestId" [isAdmin]="isAdmin"></issues-panel>
+                        <issues-panel [providerId]="tv.theTvDbId" [isAdmin]="isAdmin"></issues-panel>
                     </div>
                     <mat-accordion>
                         <mat-expansion-panel>

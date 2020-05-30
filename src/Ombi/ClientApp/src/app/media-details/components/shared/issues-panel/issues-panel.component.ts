@@ -10,7 +10,7 @@ import { TranslateService } from "@ngx-translate/core";
 })
 export class IssuesPanelComponent implements OnInit {
     
-    @Input() public requestId: number;
+    @Input() public providerId: string;
     @Input() public isAdmin: boolean;
 
     public issuesCount: number;
@@ -26,7 +26,7 @@ export class IssuesPanelComponent implements OnInit {
     }
 
     public async ngOnInit() {
-        this.issues = await this.issuesService.getIssuesByRequestId(this.requestId);
+        this.issues = await this.issuesService.getIssuesByProviderId(this.providerId);
         this.issuesCount = this.issues.length;
         this.calculateOutstanding();
         this.settings = await this.settingsService.getIssueSettings().toPromise();

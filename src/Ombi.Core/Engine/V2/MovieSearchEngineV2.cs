@@ -352,5 +352,18 @@ namespace Ombi.Core.Engine.V2
                 viewModel.Subscribed = sub != null;
             }
         }
+
+        public async Task<MovieFullInfoViewModel> GetMovieInfoByImdbId(string imdbId, CancellationToken cancellationToken)
+        {            
+            var langCode = await DefaultLanguageCode(null);
+            var findResult = await Cache.GetOrAdd(nameof(GetMovieInfoByImdbId) + imdbId + langCode,
+                async () => await MovieApi.Find(imdbId, ExternalSource.imdb_id), DateTime.Now.AddHours(12), cancellationToken);
+            
+            var movie = findResult.movie_results.FirstOrDefault();
+            var movieInfo = await Cache.GetOrAdd(nameof(GetMovieInfoByImdbId) + movie.id + langCode,
+                async () => await MovieApi.GetFullMovieInfo(movie.id, cancellationToken, langCode), DateTime.Now.AddHours(12), cancellationToken);
+
+            return await ProcessSingleMovie(movieInfo);
+        }
     }
 }

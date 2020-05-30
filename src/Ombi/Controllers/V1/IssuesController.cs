@@ -178,6 +178,15 @@ namespace Ombi.Controllers.V1
                 .Include(x => x.UserReported).ToListAsync());
         }
 
+                
+        [HttpGet("provider/{id}")]
+        public async Task<IActionResult> GetIssueByProviderId([FromRoute] string id)
+        {
+            return new OkObjectResult(await _issues.GetAll().Where(x => x.ProviderId == id)
+                .Include(x => x.IssueCategory)
+                .Include(x => x.UserReported).ToListAsync());
+        }
+
         /// <summary>
         /// Get's all the issue comments by id
         /// </summary>

@@ -24,55 +24,55 @@ export class MovieDetailsComponent {
     public showAdvanced: boolean; // Set on the UI
 
     private theMovidDbId: number;
+    private imdbId: string;
 
     constructor(private searchService: SearchV2Service, private route: ActivatedRoute,
         private sanitizer: DomSanitizer, private imageService: ImageService,
         public dialog: MatDialog, private requestService: RequestService,
         public messageService: MessageService, private auth: AuthService) {
         this.route.params.subscribe((params: any) => {
-
+            debugger;
+                if (typeof params.movieDbId === 'string' || params.movieDbId instanceof String) {
+                    if (params.movieDbId.startsWith("tt")) {
+                        this.imdbId = params.movieDbId;
+                    }
+                }
                 this.theMovidDbId = params.movieDbId;
-            if (params.requestId) {
-                this.load(+params.requestId);
-            } else {
-                this.load(undefined);
-            }
-            
+                this.load();
         });
     }
 
-    public async load(requestId: number|undefined) {
+    public async load() {
 
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
 
-        if (requestId) {
-            var result = await this.searchService.getFullMovieDetailsByRequestId(requestId);
-            this.theMovidDbId = result.id
-
-            this.movie = result;
-            if (this.movie.requestId > 0) {
-                // Load up this request
-                this.hasRequest = true;
-                this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
-            }
-            this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
-                this.movie.background = this.sanitizer.bypassSecurityTrustStyle
-                    ("url(" + x + ")");
+        if (this.imdbId) {
+            this.searchService.getMovieByImdbId(this.imdbId).subscribe(async x => {
+                this.movie = x;
+                if (this.movie.requestId > 0) {
+                    // Load up this request
+                    this.hasRequest = true;
+                    this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
+                }
+                this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
+                    this.movie.background = this.sanitizer.bypassSecurityTrustStyle
+                        ("url(" + x + ")");
+                });
             });
         } else {
-        this.searchService.getFullMovieDetails(this.theMovidDbId).subscribe(async x => {
-            this.movie = x;
-            if (this.movie.requestId > 0) {
-                // Load up this request
-                this.hasRequest = true;
-                this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
-            }
-            this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
-                this.movie.background = this.sanitizer.bypassSecurityTrustStyle
-                    ("url(" + x + ")");
+            this.searchService.getFullMovieDetails(this.theMovidDbId).subscribe(async x => {
+                this.movie = x;
+                if (this.movie.requestId > 0) {
+                    // Load up this request
+                    this.hasRequest = true;
+                    this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
+                }
+                this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
+                    this.movie.background = this.sanitizer.bypassSecurityTrustStyle
+                        ("url(" + x + ")");
+                });
             });
-        });
-    }
+        }
     }
 
     public async request() {
@@ -109,7 +109,7 @@ export class MovieDetailsComponent {
     public async issue() {
         const dialogRef = this.dialog.open(NewIssueComponent, {
             width: '500px',
-            data: {requestId: this.movieRequest ? this.movieRequest.id : null,  requestType: RequestType.movie, imdbid: this.movie.imdbId, title: this.movie.title}
+            data: {requestId: this.movieRequest ? this.movieRequest.id : null,  requestType: RequestType.movie, providerId: this.movie.imdbId ? this.movie.imdbId : this.movie.id, title: this.movie.title}
           });
     }
 

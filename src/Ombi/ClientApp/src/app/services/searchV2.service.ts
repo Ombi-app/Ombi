@@ -23,6 +23,10 @@ export class SearchV2Service extends ServiceHelpers {
     public getFullMovieDetails(theMovieDbId: number): Observable<ISearchMovieResultV2> {
         return this.http.get<ISearchMovieResultV2>(`${this.url}/Movie/${theMovieDbId}`);
     }
+
+    public getMovieByImdbId(imdbId: string): Observable<ISearchMovieResultV2> {
+        return this.http.get<ISearchMovieResultV2>(`${this.url}/Movie/imdb/${imdbId}`);
+    }
     
     public getFullMovieDetailsByRequestId(requestId: number): Promise<ISearchMovieResultV2> {
         return this.http.get<ISearchMovieResultV2>(`${this.url}/Movie/request/${requestId}`).toPromise();

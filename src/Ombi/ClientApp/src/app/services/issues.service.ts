@@ -33,6 +33,10 @@ export class IssuesService extends ServiceHelpers {
         return this.http.get<IIssues[]>(`${this.url}request/${requestId}`, {headers: this.headers}).toPromise();
     }
 
+    public getIssuesByProviderId(providerId: string): Promise<IIssues[]> {
+        return this.http.get<IIssues[]>(`${this.url}provider/${providerId}`, {headers: this.headers}).toPromise();
+    }
+
     public getIssuesPage(take: number, skip: number, status: IssueStatus): Observable<IIssues[]> {
         return this.http.get<IIssues[]>(`${this.url}${take}/${skip}/${status}`,  {headers: this.headers});
     }
