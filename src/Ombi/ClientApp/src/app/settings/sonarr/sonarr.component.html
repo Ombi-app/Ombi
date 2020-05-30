@@ -9,9 +9,6 @@
                         <div class="md-form-field">
                             <mat-slide-toggle formControlName="v3">V3</mat-slide-toggle>
                         </div>
-                        <div class="md-form-field">
-                            <mat-slide-toggle formControlName="ssl">SSL</mat-slide-toggle>
-                        </div>
                     </div>
                     <div style="float: right; text-align: left; margin-left:20px;">
                         <div class="md-form-field">
@@ -25,24 +22,22 @@
             </div>
             <div class="row">
                 <div class="col-md-7 col-8 col-sm-12">
+                    <label for="username" class="control-label"><h3>Sonarr Server Configuration</h3></label>
                     <div class="md-form-field">
-                        <mat-form-field appearance="outline" floatLabel=auto>
+                        <mat-form-field appearance="outline" floatLabel=always>
                             <mat-label>Sonarr Hostname or IP</mat-label>
-                            <input matInput id="Ip" name="Ip" placeholder="Example: localhost" formControlName="ip">
+                            <input matInput id="Ip" name="Ip" placeholder="Example: localhost" formControlName="ip" >
                             <mat-error>The IP/Hostname is required</mat-error>
                         </mat-form-field>
-                    </div>
-
-                    <div class="md-form-field">
-                        <mat-form-field appearance="outline" floatLabel=auto>
+                        <mat-form-field appearance="outline" floatLabel=always>
                             <mat-label>Port</mat-label>
                             <input matInput id="port" name="port" placeholder="Example: 8989" formControlName="port">
                             <mat-error>The Port is required</mat-error>
                         </mat-form-field>
+                        <mat-slide-toggle formControlName="ssl">SSL</mat-slide-toggle>
                     </div>
-
                     <div class="md-form-field">
-                        <mat-form-field appearance="outline" floatLabel=auto>
+                        <mat-form-field appearance="outline" floatLabel=always>
                             <mat-label>Sonarr API Key</mat-label>
                             <input matInput id="apiKey" name="apiKey" placeholder="API Key" formControlName="apiKey">
                             <mat-error>The API Key is required</mat-error>
@@ -50,14 +45,14 @@
                     </div>
 
                     <div class="md-form-field">
-                        <mat-form-field appearance="outline" floatLabel=auto>
+                        <mat-form-field appearance="outline" floatLabel=always>
                             <mat-label>Sonarr Base URL</mat-label>
                             <input matInput id="SubDir" name="SubDir" placeholder="Example: /sonarr" formControlName="subDir">
                         </mat-form-field>
                     </div>
                 </div>
                 <div class="col-md-5 col-4 col-sm-12">
-
+                    <label for="username" class="control-label"><h3>Sonarr Interface</h3></label>
                     <div class="form-group col-md-12">
                         <div id="profiles">
                             <div class="md-form-field" style="display:contents;">
@@ -142,16 +137,14 @@
 
                     <div class="form-group col-md-12">
                         <div class="checkbox">
-                            <input type="checkbox" id="SeasonFolders" name="SeasonFolders" formControlName="seasonFolders">
-                            <label for="SeasonFolders">Enable season folders</label>
+                            <mat-slide-toggle id="SeasonFolders" name="SeasonFolders" formControlName="seasonFolders">Enable season folders</mat-slide-toggle>
                         </div>
                         <label>Enabled Season Folders to organize seasons into individual folders within a show.</label>
                     </div>
 
                     <div class="form-group col-md-12" *ngIf="advanced" style="color:#ff761b">
                         <div class="checkbox">
-                            <input type="checkbox" id="addOnly" formControlName="addOnly">
-                            <label for="addOnly">Do not search</label>
+                            <mat-slide-toggle id="addOnly" formControlName="addOnly">Do not search</mat-slide-toggle>
                         </div>
                     </div>
                 </div>
