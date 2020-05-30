@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 
 import { ILanguageProfiles, ISonarrProfile, ISonarrRootFolder } from "../../interfaces";
 
@@ -28,12 +28,32 @@ export class SonarrComponent implements OnInit {
     public langRunning: boolean;
     public form: FormGroup;
     public advanced = false;
+    formErrors: any;
 
     constructor(private settingsService: SettingsService,
                 private sonarrService: SonarrService,
                 private notificationService: NotificationService,
                 private testerService: TesterService,
-                private fb: FormBuilder) { }
+                private fb: FormBuilder){}
+
+    onFormValuesChanged()
+        {
+            for ( const field in this.formErrors )
+            {
+                if ( !this.formErrors.hasOwnProperty(field) )
+                {
+                    continue;
+                }
+                // Clear previous errors
+                this.formErrors[field] = {};
+                // Get the control
+                const control = this.form.get(field);
+                if ( control && control.dirty && !control.valid && control.value === "Please Select")
+                    {
+                        this.formErrors[field] = control.errors;
+                    }
+            }
+        }
 
     public ngOnInit() {
         this.settingsService.getSonarr()
@@ -41,8 +61,8 @@ export class SonarrComponent implements OnInit {
                 this.form = this.fb.group({
                     enabled: [x.enabled],
                     apiKey: [x.apiKey, [Validators.required]],
-                    qualityProfile: [x.qualityProfile, [Validators.required]],
-                    rootPath: [x.rootPath, [Validators.required]],
+                    qualityProfile: [x.qualityProfile, [Validators.required, validateProfile]],
+                    rootPath: [x.rootPath, [Validators.required, validateProfile]],
                     qualityProfileAnime: [x.qualityProfileAnime],
                     rootPathAnime: [x.rootPathAnime],
                     ssl: [x.ssl],
@@ -67,6 +87,16 @@ export class SonarrComponent implements OnInit {
                 if(x.v3) {
                     this.form.controls.languageProfile.setValidators([Validators.required]);
                 }
+
+                this.formErrors ={
+                    apiKey: {},
+                    qualityProfile: {},
+                    rootPath: {},
+                    ip: {},
+                    port: {},
+                    
+                };
+                this.onFormValuesChanged();
             });
         this.rootFolders = [];
         this.qualities = [];
@@ -81,9 +111,8 @@ export class SonarrComponent implements OnInit {
         this.sonarrService.getQualityProfiles(form.value)
             .subscribe(x => {
                 this.qualities = x;
-                this.qualities.unshift({ name: "Please Select", id: -1 });
                 this.qualitiesAnime = x;
-
+                this.qualities.unshift({ name: "Please Select", id: -1 });
                 this.profilesRunning = false;
                 this.notificationService.success("Successfully retrieved the Quality Profiles");
             });
@@ -154,4 +183,11 @@ export class SonarrComponent implements OnInit {
                 }
             });
     }
+}
+function validateProfile(qualityProfile): { [key: string]:boolean } | null {
+
+    if (qualityProfile.value !== undefined && (isNaN(qualityProfile.value) || qualityProfile.value == -1)) {
+        return { 'profileValidation': true };
+    }
+    return null;
 }

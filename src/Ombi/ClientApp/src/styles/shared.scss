@@ -105,3 +105,11 @@ table {
 ::ng-deep .mat-toolbar.mat-primary{
     margin-bottom: 0.5em;
 }
+
+::ng-deep .dark .mat-form-field.mat-focused .mat-form-field-label{
+    color: $accent-dark;
+}
+
+::ng-deep .mat-form-field.mat-focused .mat-form-field-label{
+    color: $accent;
+}

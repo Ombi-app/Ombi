@@ -2,168 +2,171 @@
 <div *ngIf="form" class="small-middle-container">
     <fieldset>
         <legend>Sonarr Settings</legend>
-        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:3%;">
-            <div style="float: right;">
-                <span style="vertical-align: top;">Advanced</span>
-                <p-inputSwitch id="customInputSwitch" [(ngModel)]="advanced" [ngModelOptions]="{standalone: true}"></p-inputSwitch>
-            </div>
-
-            <div class="col-md-6" style="display:block;">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <input type="checkbox" id="enable" formControlName="enabled">
-                            <label for="enable">Enable</label>
+        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+            <div class="row">
+                <div class="col-md-12 col-12 col-sm-12" style="float: right; width:100%; text-align:right;">
+                    <div style="float:right;text-align:left;">
+                        <div class="md-form-field">
+                            <mat-slide-toggle formControlName="v3">V3</mat-slide-toggle>
+                        </div>
+                        <div class="md-form-field">
+                            <mat-slide-toggle formControlName="ssl">SSL</mat-slide-toggle>
                         </div>
                     </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <input type="checkbox" id="v3" formControlName="v3">
-                            <label for="v3">V3</label>
+                    <div style="float: right; text-align: left; margin-left:20px;">
+                        <div class="md-form-field">
+                            <mat-slide-toggle formControlName="enabled" id="enable">Enable</mat-slide-toggle>
                         </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <input type="checkbox" id="Ssl" name="Ssl" formControlName="ssl">
-                            <label for="Ssl">SSL</label>
+                        <div class="md-form-field">
+                            <mat-slide-toggle [(ngModel)]="advanced" [ngModelOptions]="{standalone: true}">Advanced</mat-slide-toggle>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="Ip" class="control-label">Sonarr Hostname or IP 
-                        
-                        <i *ngIf="form.get('ip').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="The IP/Hostname is required"></i>
-                    </label>
+            <div class="row">
+                <div class="col-md-7 col-8 col-sm-12">
+                    <div class="md-form-field">
+                        <mat-form-field appearance="outline" floatLabel=auto>
+                            <mat-label>Sonarr Hostname or IP</mat-label>
+                            <input matInput id="Ip" name="Ip" placeholder="Example: localhost" formControlName="ip">
+                            <mat-error>The IP/Hostname is required</mat-error>
+                        </mat-form-field>
+                    </div>
 
-                    <input type="text" class="form-control form-control-custom " formControlName="ip" id="Ip" name="Ip" placeholder="localhost" [ngClass]="{'form-error': form.get('ip').hasError('required')}">
-                </div>
+                    <div class="md-form-field">
+                        <mat-form-field appearance="outline" floatLabel=auto>
+                            <mat-label>Port</mat-label>
+                            <input matInput id="port" name="port" placeholder="Example: 8989" formControlName="port">
+                            <mat-error>The Port is required</mat-error>
+                        </mat-form-field>
+                    </div>
 
-                <div class="form-group">
-                    <label for="portNumber" class="control-label">Port
-                        
-                        <i *ngIf="form.get('port').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="The Port is required"></i>
-                    </label>
+                    <div class="md-form-field">
+                        <mat-form-field appearance="outline" floatLabel=auto>
+                            <mat-label>Sonarr API Key</mat-label>
+                            <input matInput id="apiKey" name="apiKey" placeholder="API Key" formControlName="apiKey">
+                            <mat-error>The API Key is required</mat-error>
+                        </mat-form-field>
+                    </div>
 
-                    <input type="text" class="form-control form-control-custom " [ngClass]="{'form-error': form.get('port').hasError('required')}" formControlName="port" id="portNumber" name="Port" placeholder="Port Number">
-                </div>
-
-
-                <div class="form-group">
-                    <label for="ApiKey" class="control-label">Sonarr API Key
-                        
-                        <i *ngIf="form.get('apiKey').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="The API Key is required"></i>
-                    </label>
-
-                    <input type="text" class="form-control form-control-custom " [ngClass]="{'form-error': form.get('apiKey').hasError('required')}" formControlName="apiKey" id="ApiKey" name="ApiKey">
-                </div>
-                <div class="form-group">
-                    <label for="SubDir" class="control-label">Sonarr Base Url</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom" formControlName="subDir" id="SubDir" name="SubDir">
+                    <div class="md-form-field">
+                        <mat-form-field appearance="outline" floatLabel=auto>
+                            <mat-label>Sonarr Base URL</mat-label>
+                            <input matInput id="SubDir" name="SubDir" placeholder="Example: /sonarr" formControlName="subDir">
+                        </mat-form-field>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-5">
+                <div class="col-md-5 col-4 col-sm-12">
 
-                <div class="form-group col-md-12">
-                    <label for="profiles" class="control-label">Quality Profiles
-                            <i *ngIf="form.get('qualityProfile').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="A Default Quality Profile is required"></i>
+                    <div class="form-group col-md-12">
+                        <div id="profiles">
+                            <div class="md-form-field" style="display:contents;">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Quality Profiles</mat-label>
+                                    <mat-select formControlName="qualityProfile">
+                                      <mat-option *ngFor="let quality of qualities" value="{{quality.id}}">{{quality.name}} </mat-option>
+                                    </mat-select>
+                                    <mat-error>A Default Quality Profile is required</mat-error>
+                                  </mat-form-field>
+                            </div>
+                            <div class="md-form-field" style="display:inline;margin-left:20px;">
+                            <button mat-raised-button id="profiles" (click)="getProfiles(form)" class="mat-stroked-button load">
+                                    Load Qualities <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"></span></button>
+                            </div>
+                        </div>
+                        <div id="qualityProfileAnime">
+                            <div class="md-form-field" style="display:contents;">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Quality Profiles (Anime)</mat-label>
+                                    <mat-select formControlName="qualityProfileAnime">
+                                    <mat-option *ngFor="let quality of qualities" value="{{quality.id}}">{{quality.name}} </mat-option>
+                                    </mat-select>
+                                    <mat-error>A Default Quality Profile is required</mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-12">
+                        <div id="rootFolders">
+                            <div class="md-form-field" style="display:contents;">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Default Root Folders</mat-label>
+                                    <mat-select formControlName="rootPath">
+                                      <mat-option *ngFor="let folder of rootFolders" value="{{folder.id}}">{{folder.path}} </mat-option>
+                                    </mat-select>
+                                    <mat-error>A Default Root Folder is required</mat-error>
+                                  </mat-form-field>
+                            </div>
+                            <div class="md-form-field" style="display:inline;margin-left:20px;">
+                            <button mat-raised-button id="rootFolder" (click)="getRootFolders(form)" class="mat-stroked-button load">
+                                Load Folders <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
+                            </div>
+                        </div>
+                        <div id="rootFoldersAnime">
+                            <div class="md-form-field" style="display:contents;">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Default Root Folders (Anime)</mat-label>
+                                    <mat-select formControlName="rootPathAnime">
+                                      <mat-option *ngFor="let folder of rootFoldersAnime" value="{{folder.id}}">{{folder.path}} </mat-option>
+                                    </mat-select>
+                                    <mat-error>A Default Root Folder (Anime) is required</mat-error>
+                                  </mat-form-field>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group  col-md-12" *ngIf="form.controls.v3.value">
+                        <label for="select" class="control-label">Language Profiles 
+                            <i *ngIf="form.get('languageProfile').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="A Language Profile is required"></i>
                         </label>
-                    <div id="profiles">
-                        <select class="form-control form-control-custom  col-md-5 form-half" [ngClass]="{'form-error': form.get('qualityProfile').hasError('required')}" id="select" formControlName="qualityProfile">
-                                <option *ngFor="let quality of qualities" value="{{quality.id}}">{{quality.name}}</option>
-                            </select>
-                        <button type="button" (click)="getProfiles(form)" class="btn btn-primary-outline col-md-4 col-md-push-1 load">
-                                Load Qualities <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"></span></button>
-
+                        <div id="langaugeProfile">
+                            <div class="md-form-field" style="display:contents;">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Language Profiles </mat-label>
+                                    <mat-select formControlName="languageProfile">
+                                      <mat-option *ngFor="let lang of languageProfiles" value="lang.id">{{lang.name}}</mat-option>
+                                    </mat-select>
+                                    <mat-error>A Language Profile is required</mat-error>
+                                  </mat-form-field>
+                            </div>
+                            <div class="md-form-field" style="display:inline;margin-left:20px;">
+                            <button mat-raised-button (click)="getLanguageProfiles(form)" class="mat-stroked-button load">Load
+                                Languages <span *ngIf="langRunning" class="fa fa-spinner fa-spin"> </span></button>
+                            </div>
+                        </div>
                     </div>
 
-                </div>
 
-
-                <div class="form-group col-md-12">
-                    <label for="select" class="control-label">Quality Profiles (Anime)</label>
-                    <div id="qualityProfileAnime">
-                        <select class="form-control form-control-custom  col-md-5 form-half" id="qualityProfileAnime" formControlName="qualityProfileAnime">
-                            <option *ngFor="let quality of qualities" value="{{quality.id}}">{{quality.name}}</option>
-                        </select>
-                    </div>
-                </div>
-
-
-                <div class="form-group col-md-12">
-                    <label for="rootFolders" class="control-label">Default Root Folders
-                         
-                        <i *ngIf="form.get('rootPath').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="A Default Root Path is required"></i>
-                    </label>
-                    <div id="rootFolders">
-                        <select class="form-control form-control-custom  col-md-5 form-half" formControlName="rootPath" [ngClass]="{'form-error': form.get('rootPath').hasError('required')}">
-                            <option *ngFor="let folder of rootFolders" value="{{folder.id}}">{{folder.path}}</option>
-                        </select>
-                        <button type="button" (click)="getRootFolders(form)" class="btn btn-primary-outline load col-md-4 col-md-push-1">
-                            Load Folders <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
-                    </div>
-                </div>
-
-                <div class="form-group col-md-12">
-                    <label for="rootFoldersAnime" class="control-label">Default Root Folders (Anime)</label>
-                    <div id="rootFoldersAnime">
-                        <select class="form-control form-control-custom  col-md-5 form-half" formControlName="rootPathAnime">
-                            <option *ngFor="let folder of rootFoldersAnime" value="{{folder.id}}">{{folder.path}}</option>
-                        </select>
+                    <div class="form-group col-md-12">
+                        <div class="checkbox">
+                            <input type="checkbox" id="SeasonFolders" name="SeasonFolders" formControlName="seasonFolders">
+                            <label for="SeasonFolders">Enable season folders</label>
+                        </div>
+                        <label>Enabled Season Folders to organize seasons into individual folders within a show.</label>
                     </div>
 
-                </div>
-
-                <div class="form-group  col-md-12" *ngIf="form.controls.v3.value">
-                    <label for="select" class="control-label">Language Profiles 
-                        <i *ngIf="form.get('languageProfile').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="A Language Profile is required"></i>
-                    </label>
-                    <div id="langaugeProfile">
-                        <select formControlName="languageProfile" class="form-control form-control-custom  col-md-5 form-half" id="select" [ngClass]="{'form-error': form.get('languageProfile').hasError('required')}">
-                            <option *ngFor="let lang of languageProfiles" [ngValue]="lang.id">{{lang.name}}</option>
-                        </select>
-                        <button (click)="getLanguageProfiles(form)" type="button" class="btn btn-primary-outline col-md-4 col-md-push-1">Load
-                            Languages <span *ngIf="langRunning" class="fa fa-spinner fa-spin"> </span></button>
-
+                    <div class="form-group col-md-12" *ngIf="advanced" style="color:#ff761b">
+                        <div class="checkbox">
+                            <input type="checkbox" id="addOnly" formControlName="addOnly">
+                            <label for="addOnly">Do not search</label>
+                        </div>
                     </div>
                 </div>
-
-
-                <div class="form-group col-md-12">
-                    <div class="checkbox">
-                        <input type="checkbox" id="SeasonFolders" name="SeasonFolders" formControlName="seasonFolders">
-                        <label for="SeasonFolders">Enable season folders</label>
+                <div class="col-md-4">
+                    <div class="form-group col-md-7">
+                        <div>
+                            <button mat-raised-button type="submit" class="mat-stroked-button accent mat-accent">Submit</button>
+                        </div>
                     </div>
-                    <label>Enabled Season Folders to organize seasons into individual folders within a show.</label>
-                </div>
 
-                <div class="form-group col-md-12" *ngIf="advanced" style="color:#ff761b">
-                    <div class="checkbox">
-                        <input type="checkbox" id="addOnly" formControlName="addOnly">
-                        <label for="addOnly">Do not search</label>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group col-md-7">
-                    <div>
-                        <button type="submit" class="btn btn-primary-outline ">Submit</button>
-                    </div>
-                </div>
-
-                <div class="form-group col-md-7">
-                    <div>
-                        <button type="button" (click)="test(form)" class="btn btn-primary-outline">Test Connectivity
-                        <span id="spinner"> </span></button>
+                    <div class="form-group col-md-7">
+                        <div>
+                            <button mat-raised-button type="button" (click)="test(form)" class="mat-stroked-button">Test Connectivity
+                            <span id="spinner"> </span></button>
+                        </div>
                     </div>
                 </div>
             </div>

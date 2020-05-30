@@ -5,45 +5,15 @@
     margin-top: 10px;
 }
 
-.col-md-6 {
-    display: contents;
+.col-8 {
+    display: inline-table;
 }
-
 .col-md-5 {
-    display: contents;
-}
-
-.col-md-4 {
-    display: contents;
-}
-
-.control-label {
-    font-weight: 400;
-}
-
-.row {
-    display: block;
-}
-
-::ng-deep .dark .btn:hover {
-    box-shadow: 0 5px 11px 0 rgba(255, 255, 255, 0.18), 0 4px 15px 0 rgba(255, 255, 255, 0.15);
-    color: inherit;
+    display: inline-table;
 }
 
 ::ng-deep .load {
     max-width: fit-content;
     margin-left: 3em;
     padding: 0.5rem 1.14rem;
-}
-
-@media (min-width:1440px) {
-    .col-md-6 {
-        display: inline-table;
-    }
-    .col-md-5 {
-        display: inline-table;
-    }
-    .col-md-4 {
-        display: inline-table;
-    }
 }
