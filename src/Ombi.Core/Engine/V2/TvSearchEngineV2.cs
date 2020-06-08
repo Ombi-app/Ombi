@@ -146,7 +146,6 @@ namespace Ombi.Core.Engine.V2
             item.Approved = oldModel.Approved;
             item.SeasonRequests = oldModel.SeasonRequests;
             item.RequestId = oldModel.RequestId;
-            item.Banner = item.Banner.Replace("http", "https");
 
             if (!string.IsNullOrEmpty(item.Images?.Medium))
             {

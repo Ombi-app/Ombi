@@ -33,4 +33,8 @@ export interface INavBar {
     link: string;
     requiresAdmin: boolean;
     enabled: boolean;
+    toolTip?: boolean;
+    toolTipMessage?: string;
+    style?: string;
+    donation?: boolean;
 }
