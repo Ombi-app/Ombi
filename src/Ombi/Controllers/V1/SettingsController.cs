@@ -1147,6 +1147,7 @@ namespace Ombi.Controllers.V1
             {
                 templates = templates.Where(x => x.NotificationType != NotificationType.WelcomeEmail);
             }
+
             var tem =  templates.ToList();
             return tem.OrderBy(x => x.NotificationType.ToString()).ToList();
         }
