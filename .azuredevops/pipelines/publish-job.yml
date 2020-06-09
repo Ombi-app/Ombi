@@ -71,7 +71,7 @@ stages:
         tagSource: 'userSpecifiedTag'
         tag: '$(gitTag)'
         isDraft: true
-        changeLogCompareToRelease: 'lastRelease'
+        changeLogCompareToRelease: 'lastNonDraftRelease'
         changeLogType: 'commitBased'
 
     - task: GitHubRelease@1
