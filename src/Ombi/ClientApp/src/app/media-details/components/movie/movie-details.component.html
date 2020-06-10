@@ -59,7 +59,7 @@
                             'MediaDetails.Denied' | translate }}</button>
           </span>
 
-                    <button *ngIf="(hasRequest && movieRequest) || movie.available" mat-raised-button class="btn-spacing" color="danger" (click)="issue()">
+                    <button mat-raised-button class="btn-spacing" color="danger" (click)="issue()">
             <i class="fa fa-exclamation"></i> {{
                 'Requests.ReportIssue' | translate }}</button>
 
@@ -109,8 +109,8 @@
 
                     <div class="row">
                         <div class="col-12">
-                            <div class="issuesPanel" *ngIf="movie.requestId">
-                                <issues-panel [requestId]="movie.requestId" [isAdmin]="isAdmin"></issues-panel>
+                            <div class="issuesPanel">
+                                <issues-panel [providerId]="movie.imdbId" [isAdmin]="isAdmin"></issues-panel>
                             </div>
 
                             <mat-accordion class=" mat-elevation-z8 spacing-below ">

@@ -1143,6 +1143,11 @@ namespace Ombi.Controllers.V1
                 // Make sure we do not display the newsletter
                 templates = templates.Where(x => x.NotificationType != NotificationType.Newsletter);
             }
+            if (agent != NotificationAgent.Email)
+            {
+                templates = templates.Where(x => x.NotificationType != NotificationType.WelcomeEmail);
+            }
+
             var tem =  templates.ToList();
             return tem.OrderBy(x => x.NotificationType.ToString()).ToList();
         }

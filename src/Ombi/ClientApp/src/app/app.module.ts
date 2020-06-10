@@ -33,6 +33,8 @@ import { MatCardModule } from "@angular/material/card";
 import { MatInputModule } from "@angular/material/input";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatTabsModule } from "@angular/material/tabs";
+import { MatTooltipModule } from "@angular/material/tooltip";
+
 
 import { MDBBootstrapModule, CardsFreeModule, NavbarModule } from "angular-bootstrap-md";
 
@@ -60,10 +62,8 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { SearchV2Service } from "./services/searchV2.service";
 import { NavSearchComponent } from "./my-nav/nav-search.component";
 import { OverlayModule } from "@angular/cdk/overlay";
-import { getBaseLocation } from "./shared/functions/common-functions";
 import { StorageService } from "./shared/storage/storage-service";
 import { SignalRNotificationService } from "./services/signlarnotification.service";
-
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
     { path: "", redirectTo: "/discover", pathMatch: "full" },
@@ -125,6 +125,7 @@ export function JwtTokenGetter() {
         MatButtonModule,
         NavbarModule,
         MatCardModule,
+        MatTooltipModule,
         MatInputModule,
         MatTabsModule,
         ReactiveFormsModule,

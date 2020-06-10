@@ -3,18 +3,29 @@
         <mat-toolbar>{{applicationName}}</mat-toolbar>
         <mat-nav-list>
             <span *ngFor="let nav of navItems">
-        <a *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled" mat-list-item [routerLink]="nav.link"
-          [routerLinkActive]="getTheme()">
-          <mat-icon aria-label="Side nav toggle icon">{{nav.icon}}</mat-icon>
-          &nbsp;{{nav.name | translate}}
-        </a> </span>
 
-      <a id="bottom-nav-link" mat-list-item
-        [routerLinkActive]="getTheme()" aria-label="Toggle sidenav"
-        (click)="logOut();">
-        <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
-        {{ 'NavigationBar.Logout' | translate }}
-      </a>
+              <div *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled">
+                
+
+
+              <a *ngIf="nav.donation" mat-list-item [href]="nav.link" target="_blank" matTooltip="{{nav.toolTipMessage | translate}}" matTooltipPosition="right" [routerLinkActive]="getTheme()">
+
+                <mat-icon aria-label="Side nav toggle icon" [style]="nav.style" >{{nav.icon}}</mat-icon>
+                &nbsp;{{nav.name | translate}}
+              </a>
+              <a *ngIf="!nav.donation" mat-list-item [routerLink]="nav.link" [style]="nav.color" [routerLinkActive]="getTheme()">
+
+                <mat-icon aria-label="Side nav toggle icon">{{nav.icon}}</mat-icon>
+                &nbsp;{{nav.name | translate}}
+              </a> 
+              
+            </div>
+            </span>
+
+            <a class="bottom-nav-link" mat-list-item [routerLinkActive]="getTheme()" aria-label="Toggle sidenav" (click)="logOut();">
+                <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
+                {{ 'NavigationBar.Logout' | translate }}
+            </a>
 
 
         </mat-nav-list>
@@ -34,16 +45,16 @@
         </span>
 
 
-      </div>
-      <div class="col-1">
-        <div class="float-right">
-            <a mat-list-item (click)="switchTheme()">
-              <mat-icon *ngIf="theme === 'dark'" aria-label="Side nav toggle icon">wb_incandescent</mat-icon>
-              <mat-icon *ngIf="theme === 'light'" aria-label="Side nav toggle icon">brightness_4</mat-icon>
-            </a>
-      </div>
-      </div>
-    </mat-toolbar>
+            </div>
+            <div class="col-1">
+                <div class="float-right">
+                    <a mat-list-item (click)="switchTheme()">
+                        <mat-icon *ngIf="theme === 'dark'" aria-label="Side nav toggle icon">wb_incandescent</mat-icon>
+                        <mat-icon *ngIf="theme === 'light'" aria-label="Side nav toggle icon">brightness_4</mat-icon>
+                    </a>
+                </div>
+            </div>
+        </mat-toolbar>
 
         <!-- Page -->
         <ng-container *ngTemplateOutlet="template"></ng-container>

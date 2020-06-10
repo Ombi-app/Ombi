@@ -61,6 +61,12 @@ namespace Ombi.Controllers.V2
             return await _movieEngineV2.GetFullMovieInformation(movieDbId, Request.HttpContext.RequestAborted);
         }
 
+        [HttpGet("movie/imdb/{imdbid}")]
+        public async Task<MovieFullInfoViewModel> GetMovieInfoByImdbId(string imdbId)
+        {
+            return await _movieEngineV2.GetMovieInfoByImdbId(imdbId, Request.HttpContext.RequestAborted);
+        }
+
         /// <summary>
         /// Returns details for a single movie
         /// </summary>
@@ -354,7 +360,7 @@ namespace Ombi.Controllers.V2
             return await _tvSearchEngine.Trending(currentPosition, amountToLoad);
         }
 
-        
+
         /// <summary>
         /// Returns all the movies that is by the actor id 
         /// </summary>
@@ -365,7 +371,7 @@ namespace Ombi.Controllers.V2
         [ProducesDefaultResponseType]
         public async Task<ActorCredits> GetMoviesByActor(int actorId)
         {
-           return await _movieEngineV2.GetMoviesByActor(actorId, null);
+            return await _movieEngineV2.GetMoviesByActor(actorId, null);
         }
 
 

@@ -24,5 +24,7 @@ namespace Ombi.Core.Engine.Interfaces
         Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies(int currentlyLoaded, int toLoad);
         Task<ActorCredits> GetMoviesByActor(int actorId, string langCode);
         int ResultLimit { get; set; }
+
+        Task<MovieFullInfoViewModel> GetMovieInfoByImdbId(string imdbId, CancellationToken requestAborted);
     }
 }

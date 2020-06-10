@@ -147,6 +147,12 @@ namespace Ombi.Core.Engine.V2
             item.SeasonRequests = oldModel.SeasonRequests;
             item.RequestId = oldModel.RequestId;
 
+            if (!string.IsNullOrEmpty(item.Images?.Medium))
+            {
+                item.Images.Medium = item.Images.Medium.Replace("http", "https");
+            }
+            
+
             return await GetExtraInfo(showInfoTask, item);
         }
 
