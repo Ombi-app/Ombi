@@ -6,59 +6,45 @@
         <legend>CouchPotato Settings</legend>
         <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
             <div class="row">
-                <div class="col-md-12 col-12 col-sm-12" style="float: right; width:100%; text-align:right;">
+                <div class="col-md-12 col-12 col-sm-12 top-spacing">
                     <div class="md-form-field">
                         <mat-slide-toggle formControlName="enabled" id="enable">Enable</mat-slide-toggle>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-7 col-8 col-sm-12">
+                <div class="col-md-5 col-7 col-sm-12">
                     <label for="username" class="control-label"><h3>Server Configuration</h3></label>
                     <div class="md-form-field">
-                        <mat-form-field appearance="outline" floatLabel=always>
+                        <mat-form-field appearance="outline" >
                             <mat-label>Hostname or IP</mat-label>
-                            <input matInput id="Ip" name="Ip" placeholder="Example: localhost" formControlName="ip" >
+                            <input matInput id="Ip" name="Ip" formControlName="ip" >
                             <mat-error>The IP/Hostname is required</mat-error>
                         </mat-form-field>
-                        <mat-form-field appearance="outline" floatLabel=always>
-                            <mat-label>Port</mat-label>
-                            <input matInput id="port" name="port" placeholder="Example: 8989" formControlName="port">
-                            <mat-error>The Port is required</mat-error>
-                        </mat-form-field>
-                        <mat-slide-toggle formControlName="ssl">SSL</mat-slide-toggle>
                     </div>
                     <div class="md-form-field">
-                        <mat-form-field appearance="outline" floatLabel=always>
+                        <mat-form-field appearance="outline" >
                             <mat-label>API Key</mat-label>
-                            <input matInput id="apiKey" name="apiKey" placeholder="API Key" formControlName="apiKey">
+                            <input matInput id="apiKey" name="apiKey"  formControlName="apiKey">
                             <mat-error>The API Key is required</mat-error>
                         </mat-form-field>
                     </div>
-
                     <div class="md-form-field">
-                        <mat-form-field appearance="outline" floatLabel=always>
-                            <mat-label>Base URL</mat-label>
-                            <input matInput id="SubDir" name="SubDir" placeholder="Example: /sonarr" formControlName="subDir">
+                        <mat-form-field appearance="outline" >
+                            <mat-label>Port</mat-label>
+                            <input matInput id="port" name="port" formControlName="port">
+                            <mat-error>The Port is required</mat-error>
                         </mat-form-field>
                     </div>
                     <div class="md-form-field">
-                        <label for="username" class="control-label"><h3>Plex Credentials</h3></label>
-                        <div>
-                            <mat-form-field appearance="outline" floatLabel=auto>
-                                <mat-label>Username</mat-label>
-                                <input matInput id="username" placeholder="username" formControlName="username" value="{{username}}">
-                            </mat-form-field>
-                        </div>
-                        <div>
-                            <mat-form-field appearance="outline" floatLabel=auto>
-                                <mat-label>Password</mat-label>
-                                <input matInput type="password" id="password" placeholder="Password" formControlName="password" value="{{password}}">
-                            </mat-form-field>
-                        </div>
-                        <div>
-                            <button mat-raised-button class="mat-focus-indicator mat-stroked-button mat-button-base" (click)="requestToken(form)">Request Api Key <i class="fa fa-key"></i></button>
-                        </div>
+                        <mat-slide-toggle formControlName="ssl">SSL</mat-slide-toggle>
+                    </div>
+
+                    <div class="md-form-field">
+                        <mat-form-field appearance="outline" >
+                            <mat-label>Base URL</mat-label>
+                            <input matInput id="SubDir" name="SubDir" formControlName="subDir">
+                        </mat-form-field>
                     </div>
                 </div>
                 <div class="col-md-5 col-4 col-sm-12">
