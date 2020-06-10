@@ -72,7 +72,7 @@ namespace Ombi.Core.Engine.V2
             }
 
             // Setup the task so we can get the data later on if we have a IMDBID
-            Task<TraktShow> traktInfoTask = new Task<TraktShow>(() => null);
+            Task<TraktShow> traktInfoTask = null;
             if (show.externals?.imdb.HasValue() ?? false)
             {
                 traktInfoTask = Cache.GetOrAdd("GetExtendedTvInfoTrakt" + show.externals?.imdb,
@@ -168,16 +168,18 @@ namespace Ombi.Core.Engine.V2
 
         private async Task<SearchFullInfoTvShowViewModel> GetExtraInfo(Task<TraktShow> showInfoTask, SearchFullInfoTvShowViewModel model)
         {
-            var result = await showInfoTask;
-            if (result == null)
+            if (showInfoTask != null)
             {
-                return model;
+                var result = await showInfoTask;
+                if (result == null)
+                {
+                    return model;
+                }
+
+                model.Trailer = result.Trailer?.AbsoluteUri ?? string.Empty;
+                model.Certification = result.Certification;
+                model.Homepage = result.Homepage?.AbsoluteUri ?? string.Empty;
             }
-
-            model.Trailer = result.Trailer?.AbsoluteUri ?? string.Empty;
-            model.Certification = result.Certification;
-            model.Homepage = result.Homepage?.AbsoluteUri ?? string.Empty;
-
             return model;
         }
     }

@@ -287,6 +287,21 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
+        /// Sets the current users language
+        /// </summary>
+        [HttpPost("language")]
+        [Authorize]
+        public async Task<IActionResult> SetCurrentUserLanguage([FromBody] UserLanguage model)
+        {
+            var username = User.Identity.Name.ToUpper();
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
+            user.Language = model.Lang;
+
+            await UserManager.UpdateAsync(user);
+            return Ok();
+        }
+
+        /// <summary>
         /// Gets the user by the user id.
         /// </summary>
         /// <returns>Information about the user</returns>

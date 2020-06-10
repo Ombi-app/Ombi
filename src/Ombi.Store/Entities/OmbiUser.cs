@@ -21,6 +21,8 @@ namespace Ombi.Store.Entities
 
         public string EmbyConnectUserId { get; set; }
 
+        public string Language { get; set; }
+
         public int? MovieRequestLimit { get; set; }
         public int? EpisodeRequestLimit { get; set; }
         public int? MusicRequestLimit { get; set; }

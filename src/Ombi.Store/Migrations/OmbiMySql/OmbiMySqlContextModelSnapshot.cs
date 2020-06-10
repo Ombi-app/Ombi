@@ -269,6 +269,9 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<int?>("EpisodeRequestLimit")
                         .HasColumnType("int");
 
+                    b.Property<string>("Language")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.Property<DateTime?>("LastLoggedIn")
                         .HasColumnType("datetime(6)");
 
@@ -591,6 +594,9 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
