@@ -30,3 +30,7 @@ $ombi-accent: #258a6d;
 .search-bar:focus {
     background-color: white;
 }
+
+::ng-deep .mat-form-field-underline{
+    bottom:0.5em;
+}

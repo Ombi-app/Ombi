@@ -1,5 +1,5 @@
 ﻿@import "~styles/variables.scss";
-@media (max-width: 978px) {
+/*@media (max-width: 978px) {
     .top-spacing {
         padding-top: 2%;
     }
@@ -14,7 +14,7 @@
     .top-spacing {
         padding-top: 2%;
     }
-}
+}*/
 
 html,
 body {
@@ -100,4 +100,20 @@ table {
     background-color: rgba(0, 0, 0, 0.18);
 	color:#fff;
 	border: 1px solid rgba(0, 0, 0, 0.18);
+}
+
+::ng-deep .mat-toolbar.mat-primary{
+    margin-bottom: 0.5em;
+}
+
+::ng-deep .dark .mat-form-field.mat-focused .mat-form-field-label{
+    color: $accent-dark;
+}
+
+::ng-deep .mat-form-field.mat-focused .mat-form-field-label{
+    color: $accent;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-wrapper{
+    margin:0.5em;
 }
