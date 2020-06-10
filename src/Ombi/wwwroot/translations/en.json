@@ -225,6 +225,7 @@
         "RequestAllAlbums": "Request All Albums",
         "ClearSelection": "Clear Selection",
         "RequestSelectedAlbums": "Request Selected Albums",
+        "ViewCollection":"View Collection",
         "Casts": {
             "CastTitle": "Cast",
             "Character": "Character",

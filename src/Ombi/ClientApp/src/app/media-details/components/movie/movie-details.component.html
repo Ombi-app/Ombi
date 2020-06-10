@@ -28,6 +28,8 @@
                     <span *ngIf="!movie.available">
             <span *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></span>
 
+            <button *ngIf="movie.belongsToCollection" [routerLink]="'/discover/collection/' + movie.belongsToCollection.id" mat-raised-button class="btn-spacing"><i class="fa fa-list"></i> {{'MediaDetails.ViewCollection' | translate}}</button>
+
                     <ng-template #requestedBtn>
                         <button mat-raised-button *ngIf="!hasRequest || hasRequest && movieRequest && !movieRequest.denied" class="btn-spacing" color="warn" [disabled]><i class="fa fa-check"></i>
                 {{ 'Common.Requested' | translate }}</button>
@@ -72,9 +74,7 @@
             <div class="row">
 
                 <div class="col-12 col-md-2">
-                    <button *ngIf="movie.belongsToCollection" [routerLink]="'/discover/collection/' + movie.belongsToCollection.id" mat-raised-button class="spacing-below full-width mat-elevation-z8">{{movie.belongsToCollection.name}}</button>
-
-                    <mat-card class="mat-elevation-z8 spacing-below" *ngIf="isAdmin && movieRequest" [ngStyle]="{'display': showAdvanced ? '' : 'none' }">
+                   <mat-card class="mat-elevation-z8 spacing-below" *ngIf="isAdmin && movieRequest" [ngStyle]="{'display': showAdvanced ? '' : 'none' }">
                         <mat-card-content class="medium-font">
                             <movie-admin-panel [movie]="movieRequest" (radarrEnabledChange)="showAdvanced = $event" (advancedOptionsChange)="setAdvancedOptions($event)">
                             </movie-admin-panel>

@@ -149,9 +149,19 @@ namespace Ombi.Core.Engine.V2
 
             if (!string.IsNullOrEmpty(item.Images?.Medium))
             {
-                item.Images.Medium = item.Images.Medium.Replace("http", "https");
+                item.Images.Medium = item.Images.Medium.Replace("http:", "https:");
             }
             
+            if (item.Cast?.Any() ?? false)
+            {
+                foreach (var cast in item.Cast)
+                {
+                    if (!string.IsNullOrEmpty(cast.Character?.Image?.Medium))
+                    {
+                        cast.Character.Image.Medium = cast.Character?.Image?.Medium.Replace("http:", "https:");
+                    }
+                }
+            }
 
             return await GetExtraInfo(showInfoTask, item);
         }
