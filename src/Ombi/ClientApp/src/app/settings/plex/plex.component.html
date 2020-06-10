@@ -1,189 +1,158 @@
 ﻿<settings-menu></settings-menu>
 <div class="small-middle-container">
-<div class="row">
-    <div class="col-md-2 col-md-push-10" style="float:right;">
-        <span style="vertical-align: top;">Advanced</span>
-        <p-inputSwitch id="customInputSwitch" [(ngModel)]="advanced"></p-inputSwitch>
-    </div>
-</div>
-<div *ngIf="settings">
-    <fieldset>
+    <fieldset style="width:100%;">
         <legend>Plex Configuration</legend>
-
-        <div class="row">
-
-            <div class="form-group col-md-3">
-                <div class="checkbox">
-                    <input type="checkbox" id="enable" [(ngModel)]="settings.enable" [checked]="settings.enable">
-                    <label for="enable">Enable</label>
+            <div class="row">
+                <div class="col-md-6 col-6 col-sm-6" style="float: right; width:100%; text-align:right;">
+                    <div style="float:right;text-align:left;">
+                        <div class="md-form-field">
+                            <mat-slide-toggle [(ngModel)]="settings.enable" [checked]="settings.enable">Enable</mat-slide-toggle>
+                        </div>
+                        <div class="md-form-field">
+                            <mat-slide-toggle [(ngModel)]="advanced">Advanced</mat-slide-toggle>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <mat-tab-group #tabGroup [selectedIndex]="selected.value" (selectedTabChange)="addTab($event)" (selectedIndexChange)="selected.setValue($event)" animationDuration="0ms"> 
-            <mat-tab *ngFor="let server of settings.servers" [label]="server.name">
-                    <div class="col-md-2 " style="float: right;">
-                        <button type="button" (click)="removeServer(server)" class="btn btn-danger-outline">Remove Server</button>
-                    </div>
-                    <br />
-                    <br />
-
-                    <div class="col-md-6">
-                        <!-- Main Content -->
-                        <div class="form-group">
-                            <label for="name" class="control-label">Server name</label>
-                            <div>
-                                <input type="text" class="form-control form-control-custom " id="name" name="name" placeholder="Server" [(ngModel)]="server.name"
-                                    value="{{server.name}}">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="Ip" class="control-label">Hostname or IP</label>
-                            <div>
-                                <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="localhost" [(ngModel)]="server.ip"
-                                    value="{{server.ip}}">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="portNumber" class="control-label">Port</label>
-                            <div>
-                                <input type="text" [(ngModel)]="server.port" class="form-control form-control-custom " id="portNumber" name="Port" placeholder="Port Number"
-                                    value="{{server.port}}">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <input type="checkbox" id="ssl" [(ngModel)]="server.ssl" [checked]="server.ssl">
-                                <label for="ssl">SSL</label>
-                            </div>
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="authToken" class="control-label">Plex Authorization Token</label>
-                            <div class="">
-                                <input type="text" class="form-control-custom form-control" id="authToken" [(ngModel)]="server.plexAuthToken" placeholder="Plex Auth Token"
-                                    value="{{server.plexAuthToken}}">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="MachineIdentifier" class="control-label">Machine Identifier</label>
-                            <div class="">
-                                <input type="text" class="form-control-custom form-control" id="MachineIdentifier" name="MachineIdentifier" [(ngModel)]="server.machineIdentifier"
-                                    value="{{server.machineIdentifier}}">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4" style="float:right;">
-                        <div class="form-group">
-                            <label for="username" class="control-label">Username and Password</label>
-                            <div>
-                                <input type="text" class="form-control form-control-custom" id="username" [(ngModel)]="username" placeholder="username">
-                            </div>
-                            <br />
-                            <div>
-                                <input type="password" class="form-control form-control-custom" id="password" [(ngModel)]="password" placeholder="Password">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div>
-                                <button id="requestToken" (click)="requestServers(server)" class="btn btn-primary-outline">Load Servers
-                                    <i class="fa fa-key"></i>
-                                </button>
-                            </div>
+            <div class="row">
+                <mat-tab-group #tabGroup [selectedIndex]="selected.value" (selectedTabChange)="addTab($event)" (selectedIndexChange)="selected.setValue($event)" animationDuration="0ms" style="width:100%;"> 
+                    <mat-tab *ngFor="let server of settings.servers" [label]="server.name">
+                        <div class="col-md-6 col-6 col-sm-6" style="float: right; width:100%; text-align:right;">
+                                <button type="button" (click)="removeServer(server)" class="mat-focus-indicator mat-flat-button mat-button-base mat-warn">Remove Server</button>
                         </div>
                         <br />
                         <br />
-                        <div class="form-group" *ngIf="loadedServers">
-                            <label for="username" class="control-label">Please select the server</label>
-                            <br />
-                            <div class="btn-group">
-                                <div class="btn-group">
-                                    <a [attr.disabled]="!serversButton ? true : null" href="#" class="btn btn-info-outline dropdown-toggle" data-toggle="dropdown"
-                                        aria-expanded="false">
-                                        Servers
-                                        <span class="caret"></span>
-                                    </a>
+                        <div class="col-md-7 col-8 col-sm-12">
+                            <!-- Main Content -->
+                            <label for="username" class="control-label"><h3>Plex Server Configuration</h3></label>
+                            <div class="md-form-field">
+                                <mat-form-field appearance="outline" floatLabel=auto>
+                                    <mat-label>Server Name</mat-label>
+                                    <input matInput id="name" name="name" placeholder="Server Name" [(ngModel)]="server.name" value="{{server.name}}">
+                                </mat-form-field>
+                            </div>
 
-                                    <ul *ngIf="loadedServers" class="dropdown-menu">
-                                        <li *ngFor="let s of loadedServers.servers.server">
-                                            <a (click)="selectServer(s,server)">{{s.name}}</a>
-                                        </li>
-                                    </ul>
+                                <div class="md-form-field">
+                                    <mat-form-field appearance="outline" floatLabel=auto>
+                                        <mat-label>Hostname or IP</mat-label>
+                                        <input matInput id="Ip" name="Ip" placeholder="localhost" [(ngModel)]="server.ip" value="{{server.ip}}">
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" floatLabel=auto>
+                                        <mat-label>Port</mat-label>
+                                        <input matInput id="portNumber" name="Port" placeholder="Port Number" [(ngModel)]="server.port" value="{{server.port}}">
+                                    </mat-form-field>
+
+                                    <mat-slide-toggle id="ssl" [(ngModel)]="server.ssl" [checked]="server.ssl">
+                                        SSL
+                                    </mat-slide-toggle>
                                 </div>
-                            </div>
-                        </div>
-                        <hr/>
-                        <label>Please select the libraries you want Ombi to look in for content</label>
-                        <br />
-                        <small>Note: if nothing is selected, we will monitor all libraries</small>
-                        <div class="form-group">
-                            <div>
-                                <button (click)="loadLibraries(server)" class="btn btn-primary-outline">Load Libraries
-                                    <i class="fa fa-film"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div *ngIf="server.plexSelectedLibraries">
-                            <div *ngFor="let lib of server.plexSelectedLibraries">
-                                <div class="form-group">
-                                    <div class="checkbox">
-                                        <input type="checkbox" id="{{lib.title}}" [(ngModel)]="lib.enabled" [checked]="lib.enabled">
-                                        <label for="{{lib.title}}">{{lib.title}}</label>
+                                <div class="md-form-field">
+                                    <mat-form-field appearance="outline" floatLabel=auto>
+                                        <mat-label>Plex Authorization Token</mat-label>
+                                        <input matInput id="authToken" placeholder="Plex Auth Token" [(ngModel)]="server.plexAuthToken" value="{{server.plexAuthToken}}">
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" floatLabel=auto>
+                                        <mat-label>Machine Identifier</mat-label>
+                                        <input matInput id="MachineIdentifier" name="MachineIdentifier" [(ngModel)]="server.machineIdentifier" value="{{server.machineIdentifier}}">
+                                    </mat-form-field>
+                                </div>
+                                <div class="md-form-field">
+                                    <label for="username" class="control-label"><h3>Plex Credentials</h3></label>
+                                    <div>
+                                        <mat-form-field appearance="outline" floatLabel=auto>
+                                            <mat-label>Username</mat-label>
+                                            <input matInput id="username" placeholder="username" [(ngModel)]="username" value="{{username}}">
+                                        </mat-form-field>
+                                    </div>
+                                    <div>
+                                        <mat-form-field appearance="outline" floatLabel=auto>
+                                            <mat-label>Password</mat-label>
+                                            <input matInput type="password" id="password" placeholder="Password" [(ngModel)]="password" value="{{password}}">
+                                        </mat-form-field>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="form-group" *ngIf="advanced">
-                            <label for="episodeBatchSize" class="control-label">Episode Batch Size</label>
-                            <div>
-                                <input type="number" class="form-control-custom form-small form-control" id="episodeBatchSize" name="episodeBatchSize" [(ngModel)]="server.episodeBatchSize"
-                                    value="{{server.episodeBatchSize}}" tooltipPosition="top" pTooltip="This is used when we cache the episodes, we cache in batches of 50 by default, you can configure how many we do at a time here">
+                            <div class="col-md-5 col-4 col-sm-12">
+                                <label for="username" class="control-label"><h3>Plex Interface</h3></label>
+                                <div class="md-form-field">
+                                    <div>
+                                        <button mat-raised-button id="requestToken" (click)="requestServers(server)" class="mat-stroked-button">Load Servers
+                                            <i class="fa fa-key"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="md-form-field" *ngIf="loadedServers">
+                                    <label for="username" class="control-label">Please select the server</label>
+                                    <br />
+                                    <div class="btn-group">
+                                        <div class="btn-group">
+                                            <mat-form-field appearance="outline">
+                                                <mat-label>Server</mat-label>
+                                                <mat-select>
+                                                  <mat-option (click)="selectServer(s,server)" *ngFor="let s of loadedServers.servers.server" [value]="s.server">{{s.name}}</mat-option>
+                                                </mat-select>
+                                              </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                                <label>Please select the libraries you want Ombi to look in for content</label>
+                                <br />
+                                <small>Note: if nothing is selected, we will monitor all libraries</small>
+                                <div class="md-form-field">
+                                    <div>
+                                        <button mat-raised-button (click)="loadLibraries(server)" class="mat-focus-indicator mat-stroked-button mat-button-base">Load Libraries
+                                            <i class="fa fa-film"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <br />
+                                <div *ngIf="server.plexSelectedLibraries">
+                                    <div *ngFor="let lib of server.plexSelectedLibraries">
+                                        <div class="md-form-field">
+                                            <div class="checkbox">
+                                                <mat-slide-toggle [(ngModel)]="lib.enabled" [checked]="lib.enabled" for="{{lib.title}}">{{lib.title}}</mat-slide-toggle>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="md-form-field" *ngIf="advanced">
+                                    <mat-form-field appearance="outline" floatLabel=auto>
+                                        <mat-label for="episodeBatchSize" class="control-label">Episode Batch Size</mat-label>
+                                        <input matInput type="number" id="episodeBatchSize" name="episodeBatchSize" [(ngModel)]="server.episodeBatchSize"
+                                        value="{{server.episodeBatchSize}}" matTooltip ="This is used when we cache the episodes, we cache in batches of 50 by default, you can configure how many we do at a time here" matTooltipPosition="right">
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <button mat-raised-button id="testPlex" type="button" (click)="testPlex(server)" class="mat-focus-indicator mat-stroked-button mat-button-base">
+                                            Test Connectivity
+                                            <div id="spinner"></div>
+                                        </button>
+                                    </div>
+                                    <div class="form-group">
+                                        <button mat-raised-button (click)="runCacher()" type="button" id="save" class="mat-focus-indicator mat-stroked-button mat-button-base">Manually Run Full Sync</button><br />
+                                    </div>
+                                    <div class="form-group">
+                                        <button mat-raised-button (click)="runRecentlyAddedCacher()" type="button" id="save" class="mat-focus-indicator mat-stroked-button mat-button-base">Manually Run Recently Added Sync</button>
+                                    </div>
+                                </div>
                             </div>
+                    </mat-tab>  
+                    <mat-tab label="" disabled=true> </mat-tab>
+                    <mat-tab label="Add Server" position=100> </mat-tab>
+                
+                </mat-tab-group>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <div>
+                            <button mat-raised-button (click)="save()" type="submit" id="save" class="mat-focus-indicator mat-raised-button mat-button-base mat-accent">Submit</button>
                         </div>
-
-                        <div class="form-group">
-                            <div>
-                                <button id="testPlex" type="button" (click)="testPlex(server)" class="btn btn-primary-outline">
-                                    Test Connectivity
-                                    <div id="spinner"></div>
-                                </button>
-                            </div>
-                        </div>
-
-                    </div>
-            </mat-tab>  
-            <mat-tab label="" disabled=true> </mat-tab>
-            <mat-tab label="Add Server" position=100> </mat-tab>
-          
-        </mat-tab-group>
-        <div class="col-md-2">
-                <div class="form-group">
-                    <div>
-                        <button (click)="save()" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <div>
-                        <button (click)="runCacher()" type="button" id="save" class="btn btn-primary-outline">Manually Run Full Sync</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <div>
-                        <button (click)="runRecentlyAddedCacher()" type="button" id="save" class="btn btn-primary-outline">Manually Run Recently Added Sync</button>
                     </div>
                 </div>
             </div>
     </fieldset>
-</div>
-</div>
+    </div><!--(){{settings|json}}-->

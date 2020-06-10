@@ -1,34 +1,31 @@
 ﻿<settings-menu></settings-menu>
 <div class="small-middle-container">
 <wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Ombi-Settings'"></wiki>
-<fieldset *ngIf="form" class="container">
+<fieldset *ngIf="form">
     <legend>Ombi Configuration</legend>
-
     <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
-
-        <div class="col-12">
-
-            <mat-form-field>
-                <input matInput placeholder="Base Url" formControlName="baseUrl">
-            </mat-form-field>
-
-
-
-            <div class="form-group">
-                <label for="ApiKey" class="control-label">Api Key</label>
-                <div class="input-group">
-                    <input type="text" class="form-control form-control-custom" id="ApiKey" name="ApiKey" formControlName="apiKey" readonly="readonly" #apiKey>
-
-                    <div class="input-group-addon">
-                        <div (click)="refreshApiKey()" id="refreshKey" class="fa fa-refresh" title="Reset API Key" pTooltip="This will invalidate the old API key"></div>
-                    </div>
-
-                    <div class="input-group-addon">
-                        <div ngxClipboard [ngxClipboard]="apiKey" class="fa fa-clipboard" (cbOnSuccess)="successfullyCopied()"></div>
-                    </div>
-                </div>
+        <div class="col-md-12 col-12 col-sm-12">
+            <div class="md-form-field">
+                <mat-form-field appearance="outline" floatLabel=always>
+                    <mat-label>Base URL</mat-label>
+                    <input matInput placeholder="Base Url" formControlName="baseUrl">
+                </mat-form-field>
             </div>
-            <br />
+            <div class="md-form-field">
+                <mat-form-field appearance="outline" floatLabel=always>
+                    <mat-label>Api Key</mat-label>
+                    <input matInput id="ApiKey" name="ApiKey" placeholder="Api Key" formControlName="apiKey" readonly="readonly">
+                    <button type="button" matSuffix (click)="refreshApiKey()" style="display:inline-block;">
+                        <mat-icon class="fa fa-refresh"></mat-icon>
+                    </button>
+                    <!-- THIS IS NOT WORKING
+                    <button type="button" mat-icon-button matSuffix [cdkCopyToClipboard]="apiKey" style="display:inline-block">
+                    
+                        <mat-icon class="fa fa-clipboard"></mat-icon>
+                    </button> -->
+
+                </mat-form-field>
+            </div>
             <div>
                 <mat-checkbox formControlName="doNotSendNotificationsForAutoApprove">
                     Do not send Notifications if a User has the Auto Approve permission</mat-checkbox>
@@ -66,7 +63,7 @@
             </div>
             <div class="form-group">
                 <div>
-                    <button mat-raised-button [disabled]="form.invalid" type="submit" id="save" color="accent">Submit</button>
+                    <button mat-raised-button [disabled]="form.invalid" type="submit" id="save" class="mat-stroked-button accent mat-accent">Submit</button>
                 </div>
             </div>
         </div>
