@@ -2,10 +2,20 @@
 
 namespace Ombi.Api.Radarr.Models
 {
-    public class RadarrAddMovieResponse
+    public class RadarrAddMovieResponse : RadarrAddMovie
+    {
+        public RadarrAddMovieResponse()
+        {
+            images = new List<string>();
+        }
+        public List<string> images { get; set; }
+    }
+
+
+    public class RadarrAddMovie
     {
 
-        public RadarrAddMovieResponse()
+        public RadarrAddMovie()
         {
         }
         public RadarrError Error { get; set; }
