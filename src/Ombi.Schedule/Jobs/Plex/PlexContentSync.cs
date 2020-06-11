@@ -214,11 +214,15 @@ namespace Ombi.Schedule.Jobs.Plex
                         await ProcessTvShow(servers, show, contentToAdd, contentProcessed);
                         if (contentToAdd.Any())
                         {
-                            await Repo.AddRange(contentToAdd, false);
+                            await Repo.AddRange(contentToAdd, recentlyAddedSearch ? true : false);
                             if (recentlyAddedSearch)
                             {
                                 foreach (var plexServerContent in contentToAdd)
                                 {
+                                    if (plexServerContent.Id <= 0)
+                                    {
+                                        Logger.LogInformation($"Item '{plexServerContent.Title}' has an Plex ID of {plexServerContent.Id} and a Plex Key of {plexServerContent.Key}");
+                                    }
                                     contentProcessed.Add(plexServerContent.Id, plexServerContent.Key);
                                 }
                             }
