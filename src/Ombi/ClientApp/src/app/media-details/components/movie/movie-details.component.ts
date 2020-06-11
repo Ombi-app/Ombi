@@ -9,6 +9,7 @@ import { AuthService } from "../../../auth/auth.service";
 import { IMovieRequests, RequestType, IAdvancedData } from "../../../interfaces";
 import { DenyDialogComponent } from "../shared/deny-dialog/deny-dialog.component";
 import { NewIssueComponent } from "../shared/new-issue/new-issue.component";
+import { StorageService } from "../../../shared/storage/storage-service";
 
 @Component({
     templateUrl: "./movie-details.component.html",
@@ -29,7 +30,8 @@ export class MovieDetailsComponent {
     constructor(private searchService: SearchV2Service, private route: ActivatedRoute,
         private sanitizer: DomSanitizer, private imageService: ImageService,
         public dialog: MatDialog, private requestService: RequestService,
-        public messageService: MessageService, private auth: AuthService) {
+        public messageService: MessageService, private auth: AuthService,
+        private storage: StorageService) {
         this.route.params.subscribe((params: any) => {
             debugger;
                 if (typeof params.movieDbId === 'string' || params.movieDbId instanceof String) {

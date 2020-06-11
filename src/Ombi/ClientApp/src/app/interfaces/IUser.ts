@@ -15,6 +15,7 @@ export interface IUser {
     episodeRequestLimit: number;
     musicRequestLimit: number;
     userAccessToken: string;
+    language: string;
     userQualityProfiles: IUserQualityProfiles;
 
     // FOR UI

@@ -8,6 +8,6 @@ namespace Ombi.Core.Engine.V2
 {
     public interface IMultiSearchEngine
     {
-        Task<List<MultiSearchResult>> MultiSearch(string searchTerm, CancellationToken cancellationToken, string lang = "en");
+        Task<List<MultiSearchResult>> MultiSearch(string searchTerm, CancellationToken cancellationToken);
     }
 }

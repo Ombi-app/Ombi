@@ -330,6 +330,7 @@ namespace Ombi.Controllers.V1
                 EpisodeRequestLimit = user.EpisodeRequestLimit ?? 0,
                 MovieRequestLimit = user.MovieRequestLimit ?? 0,
                 MusicRequestLimit = user.MusicRequestLimit ?? 0,
+                Language = user.Language
             };
 
             foreach (var role in userRoles)

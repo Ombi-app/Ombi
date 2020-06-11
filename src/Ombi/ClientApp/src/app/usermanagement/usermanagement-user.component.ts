@@ -71,6 +71,7 @@ export class UserManagementUserComponent implements OnInit {
                 musicRequestLimit: 0,
                 episodeRequestQuota: null,
                 movieRequestQuota: null,
+                language: null,
                 userQualityProfiles: {
                     radarrQualityProfile: 0,
                     radarrRootPath: 0,

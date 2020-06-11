@@ -4,6 +4,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { AvailableLanguages, ILanguage } from "./user-preference.constants";
 import { StorageService } from "../../../shared/storage/storage-service";
 import { IdentityService, SettingsService } from "../../../services";
+import { IUser } from "../../../interfaces";
 
 @Component({
     templateUrl: "./user-preference.component.html",
@@ -16,6 +17,8 @@ export class UserPreferenceComponent implements OnInit {
     public availableLanguages = AvailableLanguages;
     public qrCode: string;
     public qrCodeEnabled: boolean;
+
+    private user: IUser;
 
     constructor(private authService: AuthService,
         private readonly translate: TranslateService,
@@ -39,14 +42,14 @@ export class UserPreferenceComponent implements OnInit {
            this.qrCodeEnabled = true;
         }
 
-        const selectedLang = this.storage.get("Language");
-        if (selectedLang) {
-            this.selectedLang = selectedLang;
+        this.user = await this.identityService.getUser().toPromise();
+        if (this.user.language) {
+            this.selectedLang = this.user.language;
         }
     }
 
     public languageSelected() {
-        this.storage.save("Language", this.selectedLang);
+        this.identityService.updateLanguage(this.selectedLang).subscribe();
         this.translate.use(this.selectedLang);
     }
 

@@ -13,6 +13,7 @@ namespace Ombi.Core.Models.UI
         public string EmailAddress { get; set; }
         public string Password { get; set; }
         public DateTime? LastLoggedIn { get; set; }
+        public string Language { get; set; }
         public bool HasLoggedIn { get; set; }
         public UserType UserType { get; set; }
         public int MovieRequestLimit { get; set; }

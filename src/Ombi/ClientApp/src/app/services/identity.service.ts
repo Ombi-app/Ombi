@@ -75,7 +75,12 @@ export class IdentityService extends ServiceHelpers {
     public getNotificationPreferences(): Observable<INotificationPreferences[]> {
         return this.http.get<INotificationPreferences[]>(`${this.url}notificationpreferences`, {headers: this.headers});
     }
+
     public getNotificationPreferencesForUser(userId: string): Observable<INotificationPreferences[]> {
         return this.http.get<INotificationPreferences[]>(`${this.url}notificationpreferences/${userId}`, {headers: this.headers});
+    }
+    
+    public updateLanguage(lang: string): Observable<null> {
+        return this.http.post<any>(`${this.url}language`, {lang: lang}, {headers: this.headers});
     }
 }

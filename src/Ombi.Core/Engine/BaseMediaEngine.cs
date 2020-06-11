@@ -162,16 +162,21 @@ namespace Ombi.Core.Engine
             }
         }
 
-        private string defaultLangCode;
         protected async Task<string> DefaultLanguageCode(string currentCode)
         {
             if (currentCode.HasValue())
             {
                 return currentCode;
             }
+            var user = await GetUser();
 
-            var s = await GetOmbiSettings();
-            return s.DefaultLanguageCode;
+            if (string.IsNullOrEmpty(user.Language))
+            {
+                var s = await GetOmbiSettings();
+                return s.DefaultLanguageCode;
+            }
+
+            return user.Language;
         }
 
         private OmbiSettings ombiSettings;

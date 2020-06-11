@@ -5,7 +5,7 @@ import { NavigationStart, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { AuthService } from "./auth/auth.service";
 import { ILocalUser } from "./auth/IUserLogin";
-import { NotificationService, CustomPageService } from "./services";
+import { NotificationService, CustomPageService, IdentityService } from "./services";
 import { SettingsService } from "./services";
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -49,21 +49,26 @@ export class AppComponent implements OnInit {
         private storage: StorageService,
         private signalrNotification: SignalRNotificationService,
         private readonly snackBar: MatSnackBar,
-        @Inject(DOCUMENT) private document: HTMLDocument) {      
+        private readonly identity: IdentityService,
+        @Inject(DOCUMENT) private document: HTMLDocument) {
 
         this.translate.addLangs(["en", "de", "fr", "da", "es", "it", "nl", "sk", "sv", "no", "pl", "pt"]);
 
-        const selectedLang = this.storage.get("Language");
+        if (this.authService.loggedIn()) {
+            this.identity.getUser().subscribe(u => {
+                if (u.language) {
+                    this.translate.use(u.language);
+                }
+            });
+        }
 
         // this language will be used as a fallback when a translation isn't found in the current language
         this.translate.setDefaultLang("en");
-        if (selectedLang) {
-            this.translate.use(selectedLang);
-        } else {
-            // See if we can match the supported langs with the current browser lang
-            const browserLang: string = translate.getBrowserLang();
-            this.translate.use(browserLang.match(/en|fr|da|de|es|it|nl|sk|sv|no|pl|pt/) ? browserLang : "en");
-        }
+
+        // See if we can match the supported langs with the current browser lang
+        const browserLang: string = translate.getBrowserLang();
+        this.translate.use(browserLang.match(/en|fr|da|de|es|it|nl|sk|sv|no|pl|pt/) ? browserLang : "en");
+
     }
 
     public ngOnInit() {

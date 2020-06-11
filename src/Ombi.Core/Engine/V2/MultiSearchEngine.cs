@@ -36,8 +36,9 @@ namespace Ombi.Core.Engine.V2
         private readonly IMusicBrainzApi _musicApi;
 
 
-        public async Task<List<MultiSearchResult>> MultiSearch(string searchTerm, CancellationToken cancellationToken, string lang = "en")
+        public async Task<List<MultiSearchResult>> MultiSearch(string searchTerm, CancellationToken cancellationToken)
         {
+            var lang = await DefaultLanguageCode(null);
             var model = new List<MultiSearchResult>();
 
             var movieDbData = (await _movieDbApi.MultiSearch(searchTerm, lang, cancellationToken)).results;
