@@ -12,6 +12,7 @@
     "target": "es5",
     "types": ["node"],
     "resolveJsonModule":true,
+    "allowSyntheticDefaultImports":true,
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -19,7 +20,8 @@
       "es2017",
       "dom"
     ]
-  },
+  }
+,
   "files": [
     "main.ts",
     "polyfills.ts"

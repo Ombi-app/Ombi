@@ -6,15 +6,15 @@
     <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
         <div class="col-md-12 col-12 col-sm-12">
             <div class="md-form-field">
-                <mat-form-field appearance="outline" floatLabel=always>
+                <mat-form-field appearance="outline" >
                     <mat-label>Base URL</mat-label>
-                    <input matInput placeholder="Base Url" formControlName="baseUrl">
+                    <input matInput  formControlName="baseUrl">
                 </mat-form-field>
             </div>
             <div class="md-form-field">
-                <mat-form-field appearance="outline" floatLabel=always>
+                <mat-form-field appearance="outline">
                     <mat-label>Api Key</mat-label>
-                    <input matInput id="ApiKey" name="ApiKey" placeholder="Api Key" formControlName="apiKey" readonly="readonly">
+                    <input matInput id="ApiKey" name="ApiKey"  formControlName="apiKey" readonly="readonly">
                     <button type="button" matSuffix (click)="refreshApiKey()" style="display:inline-block;">
                         <mat-icon class="fa fa-refresh"></mat-icon>
                     </button>
@@ -41,19 +41,19 @@
                 </mat-checkbox>
             </div>
             <div>
-                <mat-checkbox formControlName="collectAnalyticData" matTooltip="This will allow us to have a better understanding of the userbase so we know what we should be supporting">
+                <mat-checkbox formControlName="collectAnalyticData" matTooltip="This will allow us to have a better understanding of the userbase so we know what we should be supporting (Uses Google Analytics)">
                     Allow us to collect anonymous analytical data e.g. browser used
                 </mat-checkbox>
             </div>
-            <div>
+            <!-- <div>
                 <mat-checkbox formControlName="disableHealthChecks">
                     Disable the health checks page
                     <a href="/healthchecks-ui" target="_blank">/healthchecks-ui</a>
                 </mat-checkbox>
-            </div>
+            </div> -->
             <div>
                 <mat-form-field *ngIf="langauges">
-                    <mat-select placeholder="Language" formControlName="defaultLanguageCode">
+                    <mat-select matTooltip="This is the default site language for search results, the user can override this in their preferences page" placeholder="Language" formControlName="defaultLanguageCode">
                         <mat-option>--</mat-option>
                         <mat-option *ngFor="let lang of langauges" [value]="lang.code">
                             {{lang.nativeName}}

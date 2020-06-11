@@ -5,7 +5,7 @@ import { ILanguageRefine, IOmbiSettings } from "../../interfaces";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
 
-import * as languageData from "../../../other/iso-lang.json";
+import languageData from "./../../../other/iso-lang.json";
 
 @Component({
     templateUrl: "./ombi.component.html",
@@ -33,7 +33,8 @@ export class OmbiComponent implements OnInit {
                 disableHealthChecks: [x.disableHealthChecks]
             });
         });
-        this.langauges = <ILanguageRefine[]><any>languageData;
+        debugger;
+        this.langauges = <ILanguageRefine[]>languageData
     }
 
     public refreshApiKey() {
