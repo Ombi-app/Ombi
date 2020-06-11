@@ -25,10 +25,12 @@ using Ombi.Settings.Settings.Models.External;
 using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
-using Ombi.Api.Github;
-using Ombi.Core.Engine;
 using Ombi.Extensions;
 using Quartz;
+using Ombi.Schedule.Jobs;
+using Ombi.Schedule.Jobs.Emby;
+using Ombi.Schedule.Jobs.Sonarr;
+using Ombi.Schedule.Jobs.Lidarr;
 
 namespace Ombi.Controllers.V1
 {
@@ -186,6 +188,13 @@ namespace Ombi.Controllers.V1
                 plex.InstallId = Guid.NewGuid();
             }
             var result = await Save(plex);
+
+            if (result)
+            {
+                // Kick off the plex sync
+                await OmbiQuartz.TriggerJob(nameof(IPlexContentSync), "Plex");
+            }
+
             return result;
         }
 
@@ -218,6 +227,10 @@ namespace Ombi.Controllers.V1
                 }
             }
             var result = await Save(emby);
+            if (result)
+            {
+                await OmbiQuartz.TriggerJob(nameof(IEmbyContentSync), "Emby");
+            }
             return result;
         }
 
@@ -335,7 +348,12 @@ namespace Ombi.Controllers.V1
         [HttpPost("sonarr")]
         public async Task<bool> SonarrSettings([FromBody]SonarrSettings settings)
         {
-            return await Save(settings);
+            var result = await Save(settings);
+            if (result)
+            {
+                await OmbiQuartz.TriggerJob(nameof(ISonarrSync), "DVR");
+            }
+            return result;
         }
 
         /// <summary>
@@ -378,7 +396,12 @@ namespace Ombi.Controllers.V1
         [HttpPost("lidarr")]
         public async Task<bool> LidarrSettings([FromBody]LidarrSettings settings)
         {
-            return await Save(settings);
+            var lidarr = await Save(settings);
+            if (lidarr)
+            {
+                await OmbiQuartz.TriggerJob(nameof(ILidarrArtistSync), "DVR");
+            }
+            return lidarr;
         }
 
         /// <summary>
@@ -972,7 +995,7 @@ namespace Ombi.Controllers.V1
             var model = Mapper.Map<TwilioSettingsViewModel>(settings);
 
             // Lookup to see if we have any templates saved
-            if(model.WhatsAppSettings == null)
+            if (model.WhatsAppSettings == null)
             {
                 model.WhatsAppSettings = new WhatsAppSettingsViewModel();
             }
@@ -1148,7 +1171,7 @@ namespace Ombi.Controllers.V1
                 templates = templates.Where(x => x.NotificationType != NotificationType.WelcomeEmail);
             }
 
-            var tem =  templates.ToList();
+            var tem = templates.ToList();
             return tem.OrderBy(x => x.NotificationType.ToString()).ToList();
         }
 

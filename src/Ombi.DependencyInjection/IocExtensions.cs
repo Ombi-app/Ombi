@@ -214,7 +214,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IPlexEpisodeSync, PlexEpisodeSync>();
             services.AddTransient<IPlexAvailabilityChecker, PlexAvailabilityChecker>();
             services.AddTransient<IRadarrSync, RadarrSync>();
-            services.AddTransient<ISonarrSync, SonarrSync>();
+            services.AddTransient<ILidarrSync, SonarrSync>();
             services.AddTransient<IOmbiAutomaticUpdater, OmbiAutomaticUpdater>();
             services.AddTransient<IPlexUserImporter, PlexUserImporter>();
             services.AddTransient<IEmbyUserImporter, EmbyUserImporter>();

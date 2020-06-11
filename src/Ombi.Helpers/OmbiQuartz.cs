@@ -89,6 +89,7 @@ namespace Ombi.Helpers
             }
         }
 
+
         public static async Task TriggerJob(string jobName, string group, IDictionary<string, object> data)
         {
             await Scheduler.TriggerJob(new JobKey(jobName, group), new JobDataMap(data));
