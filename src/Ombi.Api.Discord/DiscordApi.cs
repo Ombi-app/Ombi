@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Ombi.Api.Discord.Models;
 
 namespace Ombi.Api.Discord
@@ -17,7 +18,7 @@ namespace Ombi.Api.Discord
         public async Task SendMessage(DiscordWebhookBody body, string webhookId, string webhookToken)
         {
             var request = new Request($"webhooks/{webhookId}/{webhookToken}", BaseUrl, HttpMethod.Post);
-          
+
             request.AddJsonBody(body);
 
             request.ApplicationJsonContentType();

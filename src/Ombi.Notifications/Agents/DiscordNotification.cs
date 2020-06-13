@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Discord;
@@ -104,20 +105,64 @@ namespace Ombi.Notifications.Agents
                     username = settings.Username,
                 };
 
+                var fields = new List<DiscordField>();
+
+                if (model.Data.TryGetValue("RequestedUser", out var requestedUser))
+                {
+                    if (requestedUser.HasValue())
+                    {
+                        fields.Add(new DiscordField { name = "Requsted By", value = requestedUser, inline = true });
+                    }
+                }
+                if (model.Data.TryGetValue("DenyReason", out var denyReason))
+                {
+                    if (denyReason.HasValue())
+                    {
+                        fields.Add(new DiscordField { name = "Denied Reason", value = denyReason, inline = true });
+                    }
+                }
+                if (model.Data.TryGetValue("RequestStatus", out var status))
+                {
+                    if (status.HasValue())
+                    {
+                        fields.Add(new DiscordField { name = "Status", value = status, inline = true });
+                    }
+                }
+
+                var author = new DiscordAuthor
+                {
+                };
+
+                if (model.Data.TryGetValue("ApplicationUrl", out var appUrl))
+                {
+                    author.url = appUrl;
+                }
+                if (model.Data.TryGetValue("ApplicationName", out var appName))
+                {
+                    author.name = appName;
+                }
+
+                var embed = new DiscordEmbeds
+                {
+                    fields = fields,
+                    author = author
+                };
+
+                if (model.Data.TryGetValue("Title", out var title))
+                {
+                    embed.title = title;
+                }
+                if (model.Data.TryGetValue("Overview", out var overview))
+                {
+                    embed.description = overview;
+                }
                 string image;
                 if (model.Other.TryGetValue("image", out image))
                 {
-                    discordBody.embeds = new List<DiscordEmbeds>
-                    {
-                        new DiscordEmbeds
-                        {
-                            image = new DiscordImage
-                            {
-                                url = image
-                            }
-                        }
-                    };
+                    embed.thumbnail = new DiscordImage { url = image };
                 }
+
+                discordBody.embeds = new List<DiscordEmbeds> { embed };
 
                 await Api.SendMessage(discordBody, settings.WebHookId, settings.Token);
             }
@@ -148,6 +193,7 @@ namespace Ombi.Notifications.Agents
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
+                Data = parsed.Data.ToDictionary(x => x.Key, x => x.Value)
             };
             notification.Other.Add("image", parsed.Image);
             await Send(notification, settings);

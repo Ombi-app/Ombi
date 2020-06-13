@@ -64,6 +64,8 @@ namespace Ombi.Notifications
             }
 
             AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
+
+            CalculateRequestStatus(req);
         }
 
         public void Setup(NotificationOptions opts, AlbumRequest req, CustomizationSettings s, UserNotificationPreferences pref)
@@ -107,6 +109,7 @@ namespace Ombi.Notifications
             PosterImage = (req?.Cover.HasValue() ?? false) ? req.Cover : req?.Disk ?? string.Empty;
 
             AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
+            CalculateRequestStatus(req);
         }
 
         public void SetupNewsletter(CustomizationSettings s)
@@ -197,6 +200,7 @@ namespace Ombi.Notifications
 
             EpisodesList = epSb.ToString();
             SeasonsList = seasonSb.ToString();
+            CalculateRequestStatus(req);
         }
 
         public void Setup(OmbiUser user, CustomizationSettings s)
@@ -218,6 +222,30 @@ namespace Ombi.Notifications
             NewIssueComment = opts.Substitutes.TryGetValue("NewIssueComment", out val) ? val : string.Empty;
             UserName = opts.Substitutes.TryGetValue("IssueUser", out val) ? val : string.Empty;
             Type = opts.Substitutes.TryGetValue("RequestType", out val) ? val.Humanize() : string.Empty;
+        }
+
+        private void CalculateRequestStatus(BaseRequest req)
+        {
+            RequestStatus = string.Empty;
+            if (req != null)
+            {
+                if (req.Available)
+                {
+                    RequestStatus = "Available";
+                    return;
+                }
+                if (req.Denied ?? false)
+                {
+                    RequestStatus = "Denied";
+                    return;
+                }
+                if (!req.Available && req.Approved)
+                {
+                    RequestStatus = "Processing Request";
+                    return;
+                }
+                RequestStatus = "Pending Approval";
+            }
         }
 
         // User Defined
@@ -245,6 +273,7 @@ namespace Ombi.Notifications
         public string UserPreference { get; set; }
         public string DenyReason { get; set; }
         public string AvailableDate { get; set; }
+        public string RequestStatus { get; set; }
 
         // System Defined
         private string LongDate => DateTime.Now.ToString("D");
@@ -282,6 +311,7 @@ namespace Ombi.Notifications
             {nameof(UserPreference),UserPreference},
             {nameof(DenyReason),DenyReason},
             {nameof(AvailableDate),AvailableDate},
+            {nameof(RequestStatus),RequestStatus},
         };
     }
 }
