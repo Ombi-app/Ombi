@@ -3,14 +3,15 @@
 <div *ngIf="form">
   <fieldset>
     <legend>Lidarr Settings</legend>
-    <div >
-      <div>
-        <div class="md-form-field"><mat-slide-toggle formControlName="enabled">Enable</mat-slide-toggle></div>
-        <div class="md-form-field"><mat-slide-toggle [(ngModel)]="advanced">Advanced</mat-slide-toggle></div>
-    </div>
-    </div>
+
     <div>
       <form novalidate [formGroup]="form" class="row" (ngSubmit)="onSubmit(form)" style="padding-top:2%;">
+
+          <div>
+            <div class="md-form-field"><mat-slide-toggle formControlName="enabled">Enable</mat-slide-toggle></div>
+            <div class="md-form-field"><mat-slide-toggle [(ngModel)]="advanced">Advanced</mat-slide-toggle></div>
+        </div>
+
         <div class="col-md-5">
 
           <div class="md-form-field">
