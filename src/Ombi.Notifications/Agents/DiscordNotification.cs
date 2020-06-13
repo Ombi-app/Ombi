@@ -121,16 +121,27 @@ namespace Ombi.Notifications.Agents
                         fields.Add(new DiscordField { name = "Denied Reason", value = denyReason, inline = true });
                     }
                 }
+
+                var color = string.Empty;
                 if (model.Data.TryGetValue("RequestStatus", out var status))
                 {
                     if (status.HasValue())
                     {
                         fields.Add(new DiscordField { name = "Status", value = status, inline = true });
+
+                        color = status switch
+                        {
+                            "Available" => "51283",
+                            "Denied" => "13959168",
+                            "Processing Request" => "37354",
+                            "Pending Approval" => "16754470"
+                        };
                     }
                 }
 
                 var author = new DiscordAuthor
                 {
+                    iconurl = settings.Icon.HasValue() ? settings.Icon : string.Empty
                 };
 
                 if (model.Data.TryGetValue("ApplicationUrl", out var appUrl))
@@ -142,10 +153,13 @@ namespace Ombi.Notifications.Agents
                     author.name = appName;
                 }
 
+                
+
                 var embed = new DiscordEmbeds
                 {
                     fields = fields,
-                    author = author
+                    author = author,
+                    color = color
                 };
 
                 if (model.Data.TryGetValue("Title", out var title))
@@ -162,8 +176,10 @@ namespace Ombi.Notifications.Agents
                     embed.thumbnail = new DiscordImage { url = image };
                 }
 
-                discordBody.embeds = new List<DiscordEmbeds> { embed };
-
+                if (model.Data.Any())
+                {
+                    discordBody.embeds = new List<DiscordEmbeds> { embed };
+                }
                 await Api.SendMessage(discordBody, settings.WebHookId, settings.Token);
             }
             catch (Exception e)

@@ -9,6 +9,6 @@ namespace Ombi.Notifications.Models
         public string To { get; set; }
 
         public Dictionary<string, string> Other { get; set; } = new Dictionary<string, string>();
-        public IDictionary<string, string> Data { get; set; }
+        public IDictionary<string, string> Data { get; set; } = new Dictionary<string, string>();
     }
 }

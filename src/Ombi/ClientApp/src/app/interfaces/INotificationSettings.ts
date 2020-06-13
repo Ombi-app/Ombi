@@ -58,6 +58,7 @@ export enum NotificationType {
 export interface IDiscordNotifcationSettings extends INotificationSettings {
     webhookUrl: string;
     username: string;
+    icon: string;
     notificationTemplates: INotificationTemplates[];
 }
 

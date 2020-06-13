@@ -29,6 +29,7 @@ export class DiscordComponent implements OnInit {
                 enabled: [x.enabled],
                 username: [x.username],
                 webhookUrl: [x.webhookUrl, [Validators.required]],
+                icon: [x.icon]
 
             });
         });

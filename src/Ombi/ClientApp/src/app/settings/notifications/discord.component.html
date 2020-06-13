@@ -25,8 +25,17 @@
                                 <input matInput formControlName="username">
                             </mat-form-field>
                         </div>
+                        <div class="md-form-field">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Icon</mat-label>
+                                <input matInput formControlName="icon">
+                            </mat-form-field>
+                            <div>
+                                <img [src]="form.value.icon" style="width: 300px" />
+                            </div>
+                        </div>
                     </div>
-                    <div class="row">
+                    <div class="row top-space">
 
                         <div class="form-group">
                             <div>

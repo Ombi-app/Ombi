@@ -8,6 +8,7 @@ namespace Ombi.Settings.Settings.Models.Notifications
         public bool Enabled { get; set; }
         public string WebhookUrl { get; set; }
         public string Username { get; set; }
+        public string Icon { get; set; }
 
         [JsonIgnore]
         public string WebHookId => SplitWebUrl(4);
