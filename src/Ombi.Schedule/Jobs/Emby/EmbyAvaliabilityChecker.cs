@@ -170,7 +170,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 {
                     // Let's try and match the series by name
                     seriesEpisodes = embyEpisodes.Where(x =>
-                        x.Series.Title.Equals(child.Title, StringComparison.CurrentCultureIgnoreCase));
+                        x.Series.Title == child.Title);
                 }
 
                 foreach (var season in child.SeasonRequests)

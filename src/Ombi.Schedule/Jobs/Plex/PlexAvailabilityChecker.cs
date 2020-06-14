@@ -105,8 +105,8 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     // Let's try and match the series by name
                     seriesEpisodes = plexEpisodes.Where(x =>
-                        x.Series.Title.Equals(child.Title, StringComparison.InvariantCultureIgnoreCase) &&
-                        x.Series.ReleaseYear.Equals(child.ParentRequest.ReleaseDate.Year.ToString(), StringComparison.InvariantCultureIgnoreCase));
+                        x.Series.Title == child.Title &&
+                        x.Series.ReleaseYear == child.ParentRequest.ReleaseDate.Year.ToString());
 
                 }
 
