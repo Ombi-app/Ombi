@@ -71,8 +71,6 @@ namespace Ombi.Schedule.Jobs.Emby
             await ProcessMovies();
             await ProcessTv();
 
-            await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
-
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Emby Availability Checker Finished");
         }
