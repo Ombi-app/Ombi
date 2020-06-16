@@ -13,7 +13,6 @@ import { IdentityService, ImageService, NotificationService, SettingsService } f
 export class ResetPasswordComponent implements OnInit {
 
     public form: FormGroup;
-    public customizationSettings: ICustomizationSettings;
     public emailSettingsEnabled: boolean;
     public baseUrl: string;
     public background: any;
@@ -36,7 +35,6 @@ export class ResetPasswordComponent implements OnInit {
         if (base.length > 1) {
             this.baseUrl = base;
         }
-        this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
         this.settingsService.getEmailSettingsEnabled().subscribe(x => this.emailSettingsEnabled = x);
     }
 

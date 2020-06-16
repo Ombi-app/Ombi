@@ -12,22 +12,24 @@
         public bool RecentlyAddedPage { get; set; }
         public bool UseCustomPage { get; set; }
 
-        public void AddToUrl(string part)
+        public string AddToUrl(string part)
         {
-            if (string.IsNullOrEmpty(ApplicationUrl))
+            var appUrl = ApplicationUrl;
+            if (string.IsNullOrEmpty(appUrl))
             {
-                ApplicationUrl = part;
+                return null;
             }
 
-            if (ApplicationUrl.EndsWith("/"))
+            if (appUrl.EndsWith("/"))
             {
-                ApplicationUrl = ApplicationUrl.Remove(ApplicationUrl.Length - 1);
+                appUrl = appUrl.Remove(ApplicationUrl.Length - 1);
             }
             if (!part.StartsWith("/"))
             {
                 part = "/" + part;
             }
-            ApplicationUrl = ApplicationUrl + part;
+            appUrl = appUrl + part;
+            return appUrl;
         }
     }
 }

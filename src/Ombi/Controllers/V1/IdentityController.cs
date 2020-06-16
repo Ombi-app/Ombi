@@ -793,8 +793,10 @@ namespace Ombi.Controllers.V1
 
             var emailSettings = await EmailSettings.GetSettingsAsync();
 
-            customizationSettings.AddToUrl("/token?token=");
-            var url = customizationSettings.ApplicationUrl;
+            var appUrl = customizationSettings.AddToUrl("/token?token=");
+            var url = (string.IsNullOrEmpty(appUrl)
+                ? $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/token?token="
+                : appUrl);
 
             if (user.UserType == UserType.PlexUser)
             {
