@@ -1,120 +1,132 @@
 ﻿<settings-menu></settings-menu>
-<div class="small-middle-container">
-<div *ngIf="form">
-  <fieldset>
-    <legend>Lidarr Settings</legend>
+  <div *ngIf="form" class="small-middle-container">
+    <fieldset>
+      <legend>Lidarr Settings</legend>
 
-    <div>
-      <form novalidate [formGroup]="form" class="row" (ngSubmit)="onSubmit(form)" style="padding-top:2%;">
+      <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
 
-          <div>
-            <div class="md-form-field"><mat-slide-toggle formControlName="enabled">Enable</mat-slide-toggle></div>
-            <div class="md-form-field"><mat-slide-toggle [(ngModel)]="advanced">Advanced</mat-slide-toggle></div>
+        <div class="row">
+          <div class="col-md-12 col-12 col-sm-12"></div>
+          <div class="md-form-field">
+            <mat-slide-toggle formControlName="enabled">Enable</mat-slide-toggle>
+          </div>
+          <div class="md-form-field">
+            <mat-slide-toggle [ngModelOptions]="{standalone: true}" [(ngModel)]="advanced">Advanced</mat-slide-toggle>
+          </div>
         </div>
 
-        <div class="col-md-5">
-
-          <div class="md-form-field">
-            <mat-form-field>
-              <input matInput placeholder="Hostname or IP" formControlName="ip">
-            </mat-form-field>
-          </div>
-          <div  class="md-form-field">
-            <mat-form-field>
-              <input matInput placeholder="Port" formControlName="port">
-            </mat-form-field>
-          </div>
-          <div  class="md-form-field">
-            <mat-form-field>
-              <input matInput placeholder="API Key" formControlName="apiKey">
-            </mat-form-field>
-          </div>
-
-
-          <div>
-            <mat-slide-toggle formControlName="ssl">
-              Enable SSL
-            </mat-slide-toggle>
-          </div>
-
-
-          <div  class="md-form-field">
-            <mat-form-field>
-              <input matInput placeholder="Base Url" formControlName="subDir">
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="col-md-5">
-
-          <div  class="md-form-field">
-            <mat-form-field>
-              <mat-label>Quality Profiles</mat-label>
-              <mat-select formControlName="defaultQualityProfile" required>
-                <mat-option *ngFor="let quality of qualities" [value]="quality.id">
-                  {{quality.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <div><button mat-raised-button (click)="getProfiles(form)" color="primary">Load Profiles <span
-                  *ngIf="profilesRunning" class="fa fa-spinner fa-spin"></span></button></div>
-          </div>
-
-          <div  class="md-form-field">
-            <mat-form-field>
-              <mat-label>Default Root Folder</mat-label>
-              <mat-select formControlName="defaultRootPath" required>
-                <mat-option *ngFor="let folder of rootFolders" [value]="folder.path">
-                  {{folder.path}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <div><button mat-raised-button (click)="getRootFolders(form)" color="primary">Load Root Folders <span
-                  *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button></div>
-          </div>
-
-          <div class="md-form-field">
-            <mat-form-field>
-              <mat-label>Metadata Profile</mat-label>
-              <mat-select formControlName="metadataProfileId" required>
-                <mat-option *ngFor="let folder of metadataProfiles" [value]="folder.id">
-                  {{folder.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          <div><button mat-raised-button (click)="getMetadataProfiles(form)" color="primary">Load Metadata <span
-            *ngIf="metadataRunning" class="fa fa-spinner fa-spin"></span></button></div>
-          </div>
-
-
-          <div class="md-form-field">
-            <mat-slide-toggle formControlName="albumFolder">
-              Album Folder
-            </mat-slide-toggle>
-          </div>
-
-          <div class="md-form-field" *ngIf="advanced" style="color:#ff761b">
-            <mat-slide-toggle formControlName="addOnly">
-              Do not search
-            </mat-slide-toggle>
-          </div>
-
-
-          <div class="md-form-field" >
-            <div>
-              <button mat-raised-button type="button" [disabled]="form.invalid" (click)="test(form)">Test
-                Connectivity <span id="spinner"></span></button>
+        <div class="row">
+          <div class="col-md-7 col-8 col-sm-12">
+            <label for="username" class="control-label">
+              <h3>Server Configuration</h3>
+            </label>
+            <div class="md-form-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Hostname or IP</mat-label>
+                <input matInput formControlName="ip">
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Port</mat-label>
+                <input matInput formControlName="port">
+              </mat-form-field>
+              <mat-slide-toggle formControlName="ssl">
+                SSL
+              </mat-slide-toggle>
+            </div>
+            <div class="md-form-field">
+              <mat-form-field appearance="outline">
+                <mat-label>API key</mat-label>
+                <input matInput formControlName="apiKey">
+              </mat-form-field>
+            </div>
+            <div class="md-form-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Base URL</mat-label>
+                <input matInput formControlName="subDir">
+              </mat-form-field>
             </div>
           </div>
+          <div class="col-md-5 col-4 col-sm-12">
+
+            <label for="username" class="control-label">
+              <h3>Interface</h3>
+            </label>
+            <div class="md-form-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Quality Profiles</mat-label>
+                <mat-select formControlName="defaultQualityProfile" required>
+                  <mat-option *ngFor="let quality of qualities" [value]="quality.id">
+                    {{quality.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div class="md-form-field" style="display:inline;margin-left:20px;">
+                <button mat-raised-button (click)="getProfiles(form)" color="primary">Load Profiles <span
+                    *ngIf="profilesRunning" class="fa fa-spinner fa-spin"></span></button>
+              </div>
+            </div>
+
+            <div class="md-form-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Default Root Folder</mat-label>
+                <mat-select formControlName="defaultRootPath" required>
+                  <mat-option *ngFor="let folder of rootFolders" [value]="folder.path">
+                    {{folder.path}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div class="md-form-field" style="display:inline;margin-left:20px;">
+                <button mat-raised-button (click)="getRootFolders(form)" color="primary">Load Root Folders <span
+                    *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
+              </div>
+            </div>
+
+            <div class="md-form-field">
+              <mat-form-field appearance="outline">
+                <mat-label>Metadata Profile</mat-label>
+                <mat-select formControlName="metadataProfileId" required>
+                  <mat-option *ngFor="let folder of metadataProfiles" [value]="folder.id">
+                    {{folder.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div class="md-form-field" style="display:inline;margin-left:20px;">
+                <button mat-raised-button (click)="getMetadataProfiles(form)" color="primary">Load Metadata <span
+                    *ngIf="metadataRunning" class="fa fa-spinner fa-spin"></span></button></div>
+            </div>
 
 
-          <div class="md-form-field" >
-            <div>
-              <button mat-raised-button type="submit" color="primary" [disabled]="form.invalid">Submit</button>
+            <div class="md-form-field">
+              <mat-slide-toggle formControlName="albumFolder">
+                Album Folder
+              </mat-slide-toggle>
+            </div>
+
+            <div class="md-form-field" *ngIf="advanced" style="color:#ff761b">
+              <mat-slide-toggle formControlName="addOnly">
+                Do not search
+              </mat-slide-toggle>
+            </div>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="md-form-field">
+              <div>
+                <button mat-raised-button type="button" [disabled]="form.invalid" (click)="test(form)">Test
+                  Connectivity <span id="spinner"></span></button>
+              </div>
+            </div>
+
+
+            <div class="md-form-field">
+              <div>
+                <button mat-raised-button type="submit" color="primary" [disabled]="form.invalid">Submit</button>
+              </div>
             </div>
           </div>
         </div>
       </form>
-    </div>
-  </fieldset>
-</div>
-</div>
+    </fieldset>
+  </div>
