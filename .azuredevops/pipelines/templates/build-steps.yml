@@ -31,4 +31,4 @@ steps:
     command: 'custom'
     projects: '$(TestProject)'
     custom: 'test'
-  continueOnError: true 
+  continueOnError: false 

@@ -18,7 +18,8 @@ namespace Ombi.Core.Tests.Rule.Request
     {
         private List<OmbiUser> _users = new List<OmbiUser>
         {
-             new OmbiUser { Id = Guid.NewGuid().ToString("N"), UserName="abc",UserType =  UserType.LocalUser}
+             new OmbiUser { Id = Guid.NewGuid().ToString("N"), UserName="abc", NormalizedUserName = "ABC", UserType =  UserType.LocalUser},
+             new OmbiUser { Id = Guid.NewGuid().ToString("N"), UserName="Sys", NormalizedUserName = "SYS", UserType =  UserType.SystemUser}
         };
 
         [SetUp]
@@ -85,6 +86,18 @@ namespace Ombi.Core.Tests.Rule.Request
         public async Task Should_ReturnSuccess_WhenAutoApproveTVAndRequestTV()
         {
             UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.AutoApproveTv)).ReturnsAsync(true);
+            var request = new BaseRequest() { RequestType = Store.Entities.RequestType.TvShow };
+            var result = await Rule.Execute(request);
+
+            Assert.True(result.Success);
+            Assert.True(request.Approved);
+        }
+
+        [Test]
+        public async Task Should_ReturnSuccess_WhenSystemUserAndRequestTV()
+        {
+            PrincipalMock.Setup(x => x.Identity.Name).Returns("sys");
+            UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.AutoApproveTv)).ReturnsAsync(false);
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.TvShow };
             var result = await Rule.Execute(request);
 

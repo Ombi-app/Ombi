@@ -18,7 +18,8 @@ namespace Ombi.Core.Tests.Rule.Request
     {
         private List<OmbiUser> _users = new List<OmbiUser>
         {
-             new OmbiUser { Id = Guid.NewGuid().ToString("N"), UserName="abc", UserType = UserType.LocalUser}
+             new OmbiUser { Id = Guid.NewGuid().ToString("N"), UserName="abc", NormalizedUserName = "ABC", UserType = UserType.LocalUser},
+             new OmbiUser { Id = Guid.NewGuid().ToString("N"), UserName="sys", NormalizedUserName = "SYS", UserType = UserType.SystemUser}
         };
 
         [SetUp]
@@ -62,6 +63,17 @@ namespace Ombi.Core.Tests.Rule.Request
         public async Task Should_ReturnSuccess_WhenRequestingMovieWithAdminRole()
         {
             UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.Admin)).ReturnsAsync(true);
+            var request = new BaseRequest() { RequestType = Store.Entities.RequestType.Movie };
+            var result = await Rule.Execute(request);
+
+            Assert.True(result.Success);
+        }
+
+        [Test]
+        public async Task Should_ReturnSuccess_WhenRequestingMovieWithSystemRole()
+        {
+            PrincipalMock.Setup(x => x.Identity.Name).Returns("sys");
+            UserManager.Setup(x => x.IsInRoleAsync(It.IsAny<OmbiUser>(), OmbiRoles.Admin)).ReturnsAsync(false);
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.Movie };
             var result = await Rule.Execute(request);
 
