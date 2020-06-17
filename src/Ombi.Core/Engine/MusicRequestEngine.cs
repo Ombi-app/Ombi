@@ -23,6 +23,7 @@ using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
+using System.ComponentModel;
 
 namespace Ombi.Core.Engine
 {
@@ -251,6 +252,28 @@ namespace Ombi.Core.Engine
                 await CheckForSubscription(shouldHide, x);
             });
             return allRequests;
+        }
+
+        
+        private async Task CheckForSubscription(HideResult shouldHide, List<AlbumRequest> albumRequests)
+        {
+            var requestIds = albumRequests.Select(x => x.Id);
+            var sub = await _subscriptionRepository.GetAll().Where(s =>
+                s.UserId == shouldHide.UserId && requestIds.Contains(s.RequestId) && s.RequestType == RequestType.Movie)
+                .ToListAsync();
+            foreach (var x in albumRequests)
+            {
+                if (shouldHide.UserId == x.RequestedUserId)
+                {
+                    x.ShowSubscribe = false;
+                }
+                else
+                {
+                    x.ShowSubscribe = true;
+                    var hasSub = sub.FirstOrDefault(r => r.RequestId == x.Id);
+                    x.Subscribed = hasSub != null;
+                }
+            }
         }
 
         private async Task CheckForSubscription(HideResult shouldHide, AlbumRequest x)
@@ -500,6 +523,110 @@ namespace Ombi.Core.Engine
             return new RequestEngineResult { Result = true, Message = $"{model.Title} has been successfully added!", RequestId = model.Id };
         }
 
-        
+        public async Task<RequestsViewModel<AlbumRequest>> GetRequestsByStatus(int count, int position, string sortProperty, string sortOrder, RequestStatus status)
+        {
+             var shouldHide = await HideFromOtherUsers();
+            IQueryable<AlbumRequest> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests =
+                    MusicRepository.GetWithUser(shouldHide
+                        .UserId);
+            }
+            else
+            {
+                allRequests =
+                    MusicRepository
+                        .GetWithUser();
+            }
+
+            switch (status)
+            {
+                case RequestStatus.PendingApproval:
+                    allRequests = allRequests.Where(x => !x.Approved && !x.Available && (!x.Denied.HasValue || !x.Denied.Value));
+                    break;
+                case RequestStatus.ProcessingRequest:
+                    allRequests = allRequests.Where(x => x.Approved && !x.Available && (!x.Denied.HasValue || !x.Denied.Value));
+                    break;
+                case RequestStatus.Available:
+                    allRequests = allRequests.Where(x => x.Available);
+                    break;
+                case RequestStatus.Denied:
+                    allRequests = allRequests.Where(x => x.Denied.HasValue  && x.Denied.Value && !x.Available);
+                    break;
+                default:
+                    break;
+            }
+
+            var prop = TypeDescriptor.GetProperties(typeof(AlbumRequest)).Find(sortProperty, true);
+
+            if (sortProperty.Contains('.'))
+            {
+                // This is a navigation property currently not supported
+                prop = TypeDescriptor.GetProperties(typeof(AlbumRequest)).Find("RequestedDate", true);
+                //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
+                //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
+                //var propType = firstProp.PropertyType;
+                //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
+            }
+
+            // TODO fix this so we execute this on the server
+            var requests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
+                ? allRequests.ToList().OrderBy(x => x.RequestedDate).ToList()
+                : allRequests.ToList().OrderByDescending(x => prop.GetValue(x)).ToList();
+            var total = requests.Count();
+            requests = requests.Skip(position).Take(count).ToList();
+
+            await CheckForSubscription(shouldHide, requests);
+            return new RequestsViewModel<AlbumRequest>
+            {
+                Collection = requests,
+                Total = total
+            };
+        }
+
+        public async Task<RequestsViewModel<AlbumRequest>> GetRequests(int count, int position, string sortProperty, string sortOrder)
+        { 
+            var shouldHide = await HideFromOtherUsers();
+            IQueryable<AlbumRequest> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests =
+                    MusicRepository.GetWithUser(shouldHide
+                        .UserId);
+            }
+            else
+            {
+                allRequests =
+                    MusicRepository
+                        .GetWithUser();
+            }
+
+            var prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(sortProperty, true);
+
+            if (sortProperty.Contains('.'))
+            {
+                // This is a navigation property currently not supported
+                prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find("RequestedDate", true);
+                //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
+                //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
+                //var propType = firstProp.PropertyType;
+                //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
+            }
+
+            // TODO fix this so we execute this on the server
+            var requests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
+                ? allRequests.ToList().OrderBy(x => x.RequestedDate).ToList()
+                : allRequests.ToList().OrderByDescending(x => prop.GetValue(x)).ToList();
+            var total = requests.Count();
+            requests = requests.Skip(position).Take(count).ToList();
+
+            await CheckForSubscription(shouldHide, requests);
+            return new RequestsViewModel<AlbumRequest>
+            {
+                Collection = requests,
+                Total = total
+            };
+        }
     }
 }

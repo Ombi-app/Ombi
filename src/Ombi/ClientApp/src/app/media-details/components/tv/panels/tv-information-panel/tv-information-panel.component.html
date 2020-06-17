@@ -1,6 +1,6 @@
 <div>
     <div *ngIf="tv.status">
-        <strong>Status:</strong>
+        <strong>{{'MediaDetails.Status' | translate }}:</strong>
         <div>
             {{tv.status}}
         </div>
@@ -13,15 +13,9 @@
 
 
 <div>
-    <strong>Status:</strong>
+    <strong>{{'MediaDetails.Runtime' | translate }}:</strong>
     <div>
-        {{tv.status}}
-    </div>
-</div>
-<div>
-    <strong>Runtime:</strong>
-    <div>
-        {{tv.runtime}} Minutes
+        {{'MediaDetails.Minutes' | translate:{ runtime: tv.runtime} }}
     </div>
 </div>
 <div *ngIf="tv.rating">
@@ -38,7 +32,7 @@
 </div>
 
 <div *ngIf="tv.genre">
-    <strong>Genres:</strong>
+    <strong>{{'MediaDetails.Genres' | translate }}:</strong>
     <div>
         <span *ngFor="let genre of tv.genre">
             {{genre}} |

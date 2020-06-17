@@ -19,6 +19,9 @@ export class RequestOptionsComponent {
     if (this.data.type === RequestType.tvShow) {
       await this.requestService.deleteChild(this.data.id).toPromise();
     }
+    if (this.data.type === RequestType.album) {
+      await this.requestService.removeAlbumRequest(this.data.id).toPromise();
+    }
 
     this.bottomSheetRef.dismiss({type: UpdateType.Delete});
     return;
@@ -30,6 +33,9 @@ export class RequestOptionsComponent {
     }
     if (this.data.type === RequestType.tvShow) {
       await this.requestService.approveChild({id: this.data.id}).toPromise();
+    }
+    if (this.data.type === RequestType.album) {
+      await this.requestService.approveAlbum({id: this.data.id}).toPromise();
     }
 
     this.bottomSheetRef.dismiss({type: UpdateType.Approve});

@@ -7,7 +7,7 @@ export class NotificationService {
 
     private config: MatSnackBarConfig<any> = {
         duration:3000,
-        
+
     }
 
     public success(body: string) {

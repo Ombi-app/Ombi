@@ -12,8 +12,9 @@
           </ng-template>
     </mat-tab>
     <mat-tab label="Albums">
-      <h1>Coming soon</h1>
-      <p>...</p>
+      <ng-template matTabContent>
+        <albums-grid (onOpenOptions)="onOpenOptions($event)"></albums-grid>
+        </ng-template>
     </mat-tab>
   </div>
   </mat-tab-group>

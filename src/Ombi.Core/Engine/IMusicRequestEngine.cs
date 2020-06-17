@@ -23,5 +23,7 @@ namespace Ombi.Core.Engine
         Task<IEnumerable<AlbumRequest>> SearchAlbumRequest(string search);
         Task<bool> UserHasRequest(string userId);
         Task<RequestQuotaCountModel> GetRemainingRequests(OmbiUser user = null);
+        Task<RequestsViewModel<AlbumRequest>> GetRequestsByStatus(int count, int position, string sort, string sortOrder, RequestStatus available);
+        Task<RequestsViewModel<AlbumRequest>> GetRequests(int count, int position, string sort, string sortOrder);
     }
 }

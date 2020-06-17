@@ -14,14 +14,17 @@ namespace Ombi.Controllers.V2
 {
     public class RequestsController : V2Controller
     {
-        public RequestsController(IMovieRequestEngine movieRequestEngine, ITvRequestEngine tvRequestEngine)
-        {
-            _movieRequestEngine = movieRequestEngine;
-            _tvRequestEngine = tvRequestEngine;
-        }
 
         private readonly IMovieRequestEngine _movieRequestEngine;
         private readonly ITvRequestEngine _tvRequestEngine;
+        private readonly IMusicRequestEngine _musicRequestEngine;
+
+        public RequestsController(IMovieRequestEngine movieRequestEngine, ITvRequestEngine tvRequestEngine, IMusicRequestEngine musicRequestEngine)
+        {
+            _movieRequestEngine = movieRequestEngine;
+            _tvRequestEngine = tvRequestEngine;
+            _musicRequestEngine = musicRequestEngine;
+        }
 
         /// <summary>
         /// Gets movie requests.
@@ -128,6 +131,36 @@ namespace Ombi.Controllers.V2
         public async Task<RequestEngineResult> UpdateAdvancedOptions([FromBody] MovieAdvancedOptions options)
         {
             return await _movieRequestEngine.UpdateAdvancedOptions(options);
+        }
+
+        [HttpGet("albums/available/{count:int}/{position:int}/{sort}/{sortOrder}")]
+        public async Task<RequestsViewModel<AlbumRequest>> GetAvailableAlbumRequests(int count, int position, string sort, string sortOrder)
+        {
+            return await _musicRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.Available);
+        }
+        
+        [HttpGet("album/processing/{count:int}/{position:int}/{sort}/{sortOrder}")]
+        public async Task<RequestsViewModel<AlbumRequest>> GetProcessingAlbumRequests(int count, int position, string sort, string sortOrder)
+        {
+            return await _musicRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.ProcessingRequest);
+        }
+        
+        [HttpGet("album/pending/{count:int}/{position:int}/{sort}/{sortOrder}")]
+        public async Task<RequestsViewModel<AlbumRequest>> GetPendingAlbumRequests(int count, int position, string sort, string sortOrder)
+        {
+            return await _musicRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.PendingApproval);
+        }
+        
+        [HttpGet("album/denied/{count:int}/{position:int}/{sort}/{sortOrder}")]
+        public async Task<RequestsViewModel<AlbumRequest>> GetDeniedAlbumRequests(int count, int position, string sort, string sortOrder)
+        {
+            return await _musicRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.Denied);
+        }
+
+        [HttpGet("album/{count:int}/{position:int}/{sort}/{sortOrder}")]
+        public async Task<RequestsViewModel<AlbumRequest>> GetAlbumRequests(int count, int position, string sort, string sortOrder)
+        {
+            return await _musicRequestEngine.GetRequests(count, position, sort, sortOrder);
         }
     }
 }
