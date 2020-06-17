@@ -81,7 +81,7 @@ namespace Ombi.Core.Engine.V2
 
             var mapped = Mapper.Map<SearchFullInfoTvShowViewModel>(show);
 
-            foreach (var e in show._embedded.episodes)
+            foreach (var e in show._embedded?.episodes ?? new Api.TvMaze.Models.V2.Episode[0])
             {
                 var season = mapped.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == e.season);
                 if (season == null)

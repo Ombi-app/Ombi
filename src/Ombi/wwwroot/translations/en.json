@@ -226,6 +226,7 @@
         "ClearSelection": "Clear Selection",
         "RequestSelectedAlbums": "Request Selected Albums",
         "ViewCollection":"View Collection",
+        "NotEnoughInfo": "Unfortunately there is not enough information about this show yet!",
         "Casts": {
             "CastTitle": "Cast",
             "Character": "Character",

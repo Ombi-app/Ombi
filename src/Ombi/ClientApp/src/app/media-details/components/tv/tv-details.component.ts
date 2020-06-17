@@ -59,7 +59,7 @@ export class TvDetailsComponent implements OnInit {
     public async request() {
         this.dialog.open(EpisodeRequestComponent, { width: "800px", data: this.tv, panelClass: 'modal-panel' })
     }
-    
+
     public async issue() {
         const dialogRef = this.dialog.open(NewIssueComponent, {
             width: '500px',
