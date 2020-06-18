@@ -70,7 +70,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 {
                     await StartEmby(embySettings);
                     
-                await OmbiQuartz.TriggerJob(nameof(IEmbyAvaliabilityChecker), "Emby");
+                    await OmbiQuartz.TriggerJob(nameof(IEmbyAvaliabilityChecker), "Emby");
                 }
             }
             catch (Exception e)
