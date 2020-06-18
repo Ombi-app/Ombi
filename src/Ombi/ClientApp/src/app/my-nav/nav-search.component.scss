@@ -17,9 +17,9 @@ $ombi-accent: #258a6d;
 }
 
 .mat-option {
-    height: 50px;
+    height: 75px;
     line-height: 50px;
-    padding: 0px 5px;
+    padding: 0px 0px;
 }
 
 .search-bar {
@@ -34,3 +34,13 @@ $ombi-accent: #258a6d;
 ::ng-deep .mat-form-field-underline{
     bottom:0.5em;
 }
+
+
+.option-img {
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  .options {
+      margin-bottom: 5px;
+  }

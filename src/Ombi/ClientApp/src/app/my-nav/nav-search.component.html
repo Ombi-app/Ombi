@@ -15,27 +15,28 @@ aria-label="Search" [ngbTypeahead]="searchModel" [resultFormatter]="formatter" [
             <mat-spinner diameter="50"></mat-spinner>
         </mat-option>
         <ng-container *ngIf="!searching">
-            <mat-option *ngFor="let result of results" [value]="result">
-                <div *ngIf="result.mediaType === 'movie'">
-                    <i class="fa fa-film"></i> &nbsp;
+            <mat-option class="option" *ngFor="let result of results" [value]="result">
+                <img *ngIf="result.poster" class="option-img" aria-hidden [src]="'https://image.tmdb.org/t/p/w300/'+result.poster" height="75">
+                <span *ngIf="result.mediaType === 'movie'">
+                    <i *ngIf="!result.poster" class="fa fa-film"></i> &nbsp;
                     <span>{{result.title}}</span>
-                </div>
-                <div *ngIf="result.mediaType === 'tv'">
-                    <i class="fa fa-tv"></i> &nbsp;
+                </span>
+                <span *ngIf="result.mediaType === 'tv'">
+                    <i *ngIf="!result.poster" class="fa fa-tv"></i> &nbsp;
 
                     <span>{{result.title}}</span>
-                </div>
+                </span>
 
-                <div *ngIf="result.mediaType === 'Artist'">
-                    <i class="fa fa-music"></i> &nbsp;
+                <span *ngIf="result.mediaType === 'Artist'">
+                    <i *ngIf="!result.poster" class="fa fa-music"></i> &nbsp;
 
                     <span>{{result.title}}</span>
-                </div>
+                </span>
 
-                <div *ngIf="result.mediaType === 'person'">
-                    <i class="fa fa-user"></i> &nbsp;
+                <span *ngIf="result.mediaType === 'person'">
+                    <i *ngIf="!result.poster" class="fa fa-user"></i> &nbsp;
                     <span>{{result.title}}</span>
-                </div>
+                </span>
             </mat-option>
         </ng-container>
     </mat-autocomplete>
