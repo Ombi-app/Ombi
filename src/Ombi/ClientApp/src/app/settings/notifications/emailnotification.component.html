@@ -83,7 +83,7 @@
 
                             <mat-form-field appearance="outline">
                                 <mat-label>Password</mat-label>
-                                <input matInput formControlName="password" matTooltip="The password if authentication is enabled">
+                                <input type="password" matInput formControlName="password" matTooltip="The password if authentication is enabled">
                                 <mat-error *ngIf="emailForm.get('password').hasError('required')">
                                     Password is <strong>required</strong>
                                   </mat-error>
