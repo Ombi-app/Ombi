@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, ViewChild, EventEmitter, Output, ChangeDetectorRef, OnInit } from "@angular/core";
-import { IMovieRequests, IRequestsViewModel } from "../../../interfaces";
+import { IRequestsViewModel, IAlbumRequest } from "../../../interfaces";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { merge, Observable, of as observableOf } from 'rxjs';
@@ -11,15 +11,15 @@ import { StorageService } from "../../../shared/storage/storage-service";
 import { RequestFilterType } from "../../models/RequestFilterType";
 
 @Component({
-    templateUrl: "./movies-grid.component.html",
-    selector: "movies-grid",
-    styleUrls: ["./movies-grid.component.scss"]
+    templateUrl: "./albums-grid.component.html",
+    selector: "albums-grid",
+    styleUrls: ["./albums-grid.component.scss"]
 })
-export class MoviesGridComponent implements OnInit, AfterViewInit {
-    public dataSource: IMovieRequests[] = [];
+export class AlbumsGridComponent implements OnInit, AfterViewInit {
+    public dataSource: IAlbumRequest[] = [];
     public resultsLength: number;
     public isLoadingResults = true;
-    public displayedColumns: string[] = ['title', 'requestedUser.requestedBy',  'status', 'requestStatus','requestedDate', 'actions'];
+    public displayedColumns: string[] = ['artistName', 'title', 'requestedUser.requestedBy', 'requestStatus','requestedDate', 'actions'];
     public gridCount: string = "15";
     public isAdmin: boolean;
     public defaultSort: string = "requestedDate";
@@ -29,10 +29,10 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     public RequestFilter = RequestFilterType;
 
 
-    private storageKey = "Movie_DefaultRequestListSort";
-    private storageKeyOrder = "Movie_DefaultRequestListSortOrder";
-    private storageKeyGridCount = "Movie_DefaultGridCount";
-    private storageKeyCurrentFilter = "Movie_DefaultFilter";
+    private storageKey = "Albums_DefaultRequestListSort";
+    private storageKeyOrder = "Albums_DefaultRequestListSortOrder";
+    private storageKeyGridCount = "Albums_DefaultGridCount";
+    private storageKeyCurrentFilter = "Albums_DefaultFilter";
 
     @Output() public onOpenOptions = new EventEmitter<{ request: any, filter: any, onChange: any }>();
 
@@ -43,8 +43,8 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
                 private auth: AuthService, private storageService: StorageService) {
 
     }
-    
-    public ngOnInit() {        
+
+    public ngOnInit() {
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
 
         const defaultCount = this.storageService.get(this.storageKeyGridCount);
@@ -85,7 +85,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
                     }
                     return this.loadData();
                 }),
-                map((data: IRequestsViewModel<IMovieRequests>) => {
+                map((data: IRequestsViewModel<IAlbumRequest>) => {
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
                     this.resultsLength = data.total;
@@ -99,23 +99,23 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
             ).subscribe(data => this.dataSource = data);
     }
 
-    public loadData(): Observable<IRequestsViewModel<IMovieRequests>> {
+    public loadData(): Observable<IRequestsViewModel<IAlbumRequest>> {
         switch(RequestFilterType[RequestFilterType[this.currentFilter]]) {
             case RequestFilterType.All:
-                return this.requestService.getMovieRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getAlbumRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
             case RequestFilterType.Pending:
-                return this.requestService.getMoviePendingRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getAlbumPendingRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
             case RequestFilterType.Available:
-                return this.requestService.getMovieAvailableRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getAlbumAvailableRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
             case RequestFilterType.Processing:
-                return this.requestService.getMovieProcessingRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getAlbumProcessingRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
             case RequestFilterType.Denied:
-                return this.requestService.getMovieDeniedRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
+                return this.requestService.getAlbumDeniedRequests(+this.gridCount, this.paginator.pageIndex * +this.gridCount, this.sort.active, this.sort.direction);
         }
 
     }
 
-    public openOptions(request: IMovieRequests) {
+    public openOptions(request: IAlbumRequest) {
         const filter = () => {
         this.dataSource = this.dataSource.filter((req) => {
             return req.id !== request.id;

@@ -1,17 +1,17 @@
 <div *ngIf="movie">
     <div>
-        <strong>Status:</strong>
+        <strong>{{'MediaDetails.Status' | translate }}:</strong>
         <div>{{movie.status}}</div>
     </div>
     <div>
-        <strong>Availability</strong>
+        <strong>{{'MediaDetails.Availability' | translate }}</strong>
         <div *ngIf="movie.available">{{'Common.Available' | translate}}</div>
         <div *ngIf="!movie.available">{{'Common.NotAvailable' | translate}}</div>
 
     </div>
 
     <div>
-        <strong>Request Status</strong>
+        <strong>{{'MediaDetails.RequestStatus' | translate }}</strong>
         <div *ngIf="movie.approved && !movie.available">{{'Common.ProcessingRequest' | translate}}</div>
         <div *ngIf="movie.requested && !movie.approved && !movie.available">{{'Common.PendingApproval' | translate}}
         </div>
@@ -19,21 +19,21 @@
         </div>
     </div>
     <div *ngIf="movie.quality">
-        <strong>Quality:</strong>
+        <strong>{{'MediaDetails.Quality' | translate }}:</strong>
         <div>{{movie.quality | quality}}</div>
     </div>
 
     <div *ngIf="advancedOptions">
-        <strong>Root Folder Override</strong>
+        <strong>{{'MediaDetails.RootFolderOverride' | translate }}</strong>
         <div>{{advancedOptions.rootFolder.path}}</div>
     </div>
     <div *ngIf="advancedOptions">
-        <strong>Quality Override</strong>
+        <strong>{{'MediaDetails.QualityOverride' | translate }}</strong>
         <div>{{advancedOptions.profile.name}}</div>
     </div>
     <br />
     <div *ngIf="movie.genres">
-        <strong>Genres:</strong>
+        <strong>{{'MediaDetails.Genres' | translate }}:</strong>
         <div>
             <mat-chip-list>
                 <mat-chip color="accent" selected *ngFor="let genre of movie.genres">
@@ -44,45 +44,45 @@
     </div>
     <br />
 
-    <strong>Theatrical Release:</strong>
+    <strong>{{'MediaDetails.TheatricalRelease' | translate }}:</strong>
     <div>
 
         {{movie.releaseDate | date: 'mediumDate'}}
         <div *ngIf="movie.digitalReleaseDate">
-            <strong>Digital Release:</strong>
+            <strong>{{'MediaDetails.DigitalRelease' | translate }}:</strong>
             <div>
                 {{movie.digitalReleaseDate | date: 'mediumDate'}}
             </div>
         </div>
         <div *ngIf="movie.voteAverage">
-            <strong>User Score:</strong>
+            <strong>{{'MediaDetails.UserScore' | translate }}:</strong>
             <div>
                 {{movie.voteAverage | number:'1.0-1'}} / 10
             </div>
         </div>
         <div *ngIf="movie.voteCount">
-            <strong>Votes:</strong>
+            <strong>{{'MediaDetails.Votes' | translate }}:</strong>
             <div>
                 {{movie.voteCount | thousandShort: 1}}
             </div>
         </div>
         <div>
-            <strong>Runtime:</strong>
-            <div>{{movie.runtime}} Minutes</div>
+            <strong>{{'MediaDetails.Runtime' | translate }}:</strong>
+            <div>{{'MediaDetails.Minutes' | translate:{runtime: movie.runtime} }}</div>
         </div>
         <div *ngIf="movie.revenue">
-            <strong>Revenue:</strong>
+            <strong>{{'MediaDetails.Revenue' | translate }}:</strong>
             <div> {{movie.revenue | currency: 'USD'}}</div>
         </div>
         <div *ngIf="movie.budget">
-            <strong>Budget:</strong>
+            <strong>{{'MediaDetails.Budget' | translate }}:</strong>
             <div> {{movie.budget | currency: 'USD'}}</div>
         </div>
 
 
         <br />
         <div>
-            <strong>Keywords/Tags:</strong>
+            <strong>{{'MediaDetails.Keywords' | translate }}:</strong>
             <mat-chip-list>
                 <mat-chip color="accent" selected  *ngFor="let keyword of movie.keywords.keywordsValue">
                     {{keyword.name}}

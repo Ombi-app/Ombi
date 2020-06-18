@@ -67,6 +67,7 @@ export class TvGridComponent implements OnInit, AfterViewInit {
 
         this.storageService.save(this.storageKeyGridCount, this.gridCount);   
         this.storageService.save(this.storageKeyCurrentFilter, (+this.currentFilter).toString());
+        this.paginator.showFirstLastButtons = true;
 
         // If the user changes the sort order, reset back to the first page.
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
