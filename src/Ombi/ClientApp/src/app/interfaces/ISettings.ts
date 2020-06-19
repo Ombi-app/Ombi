@@ -140,7 +140,6 @@ export interface IJobSettings {
   automaticUpdater: string;
   userImporter: string;
   sickRageSync: string;
-  refreshMetadata: string;
   newsletter: string;
   plexRecentlyAddedSync: string;
   lidarrArtistSync: string;

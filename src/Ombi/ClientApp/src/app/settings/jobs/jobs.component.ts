@@ -28,7 +28,6 @@ export class JobsComponent implements OnInit {
                 sonarrSync:               [x.sonarrSync, Validators.required],
                 radarrSync:               [x.radarrSync, Validators.required],
                 sickRageSync:             [x.sickRageSync, Validators.required],  
-                refreshMetadata:          [x.refreshMetadata, Validators.required],
                 newsletter:               [x.newsletter, Validators.required],
                 plexRecentlyAddedSync:    [x.plexRecentlyAddedSync, Validators.required],
                 lidarrArtistSync:         [x.lidarrArtistSync, Validators.required],

@@ -84,14 +84,6 @@
                         <small *ngIf="form.get('userImporter').hasError('required')" class="error-text">The User Importer is required</small>
                         <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('userImporter')?.value)">Test</button>
                 </div>
-
-                <div class="form-group">
-                        <label for="userImporter" class="control-label">Refresh Metadata</label>              
-                            <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('refreshMetadata').hasError('required')}" id="refreshMetadata" name="refreshMetadata" formControlName="refreshMetadata">
-                            <small *ngIf="form.get('refreshMetadata').hasError('required')" class="error-text">The Refresh Metadata is required</small>
-                            <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('refreshMetadata')?.value)">Test</button>
-                    </div>
-
                     
                     <div class="form-group">
                         <label for="userImporter" class="control-label">Newsletter</label>              

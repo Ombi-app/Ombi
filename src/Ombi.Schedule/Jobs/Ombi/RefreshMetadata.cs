@@ -69,19 +69,19 @@ namespace Ombi.Schedule.Jobs.Ombi
                 if (embySettings.Enable)
                 {
                     await StartEmby(embySettings);
-                    
-                await OmbiQuartz.TriggerJob(nameof(IEmbyAvaliabilityChecker), "Emby");
+                    await OmbiQuartz.TriggerJob(nameof(IEmbyAvaliabilityChecker), "Emby");
                 }
             }
             catch (Exception e)
             {
-                _log.LogError(e, "Exception when refreshing the Plex Metadata");
+                _log.LogError(e, $"Exception when refreshing the Metadata Refresh");
 
                 await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                     .SendAsync(NotificationHub.NotificationEvent, "Metadata Refresh Failed");
-                throw;
+                return;
             }
 
+            _log.LogInformation("Metadata refresh finished");
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Metadata Refresh Finished");
         }
