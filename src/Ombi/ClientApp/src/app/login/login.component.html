@@ -10,14 +10,16 @@
                 <form *ngIf="authenticationSettings" class="form-signin" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
 
 
-                    <mat-form-field class="full-width">
-                        <input type="text" matInput placeholder="{{'Login.UsernamePlaceholder' | translate}}" formControlName="username" />
+                    <mat-form-field class="dark full-width" appearance="outline">
+                        <mat-label>{{'Login.UsernamePlaceholder' | translate}}</mat-label>
+                        <input type="text" matInput formControlName="username" />
                         <mat-error *ngIf="form.get('username').hasError('required')">
                             {{'Login.UsernamePlaceholder' | translate}} is <strong>required</strong></mat-error>
                     </mat-form-field>
 
-                    <mat-form-field class="full-width">
-                        <input color="black" type="password" matInput placeholder="{{'Login.PasswordPlaceholder' | translate}}" formControlName="password" />
+                    <mat-form-field class="full-width" appearance="outline">
+                        <mat-label>{{'Login.PasswordPlaceholder' | translate}}</mat-label>
+                        <input color="black" type="password" matInput formControlName="password" />
                     </mat-form-field>
 
                     <mat-checkbox formControlName="rememberMe">{{'Login.RememberMe' | translate}}</mat-checkbox>

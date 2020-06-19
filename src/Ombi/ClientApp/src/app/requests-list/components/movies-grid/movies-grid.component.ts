@@ -74,7 +74,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
         this.paginator.showFirstLastButtons = true;
 
-        merge(this.sort.sortChange, this.paginator.page, this.currentFilter)
+        merge(this.sort.sortChange, this.paginator.page)
             .pipe(
                 startWith({}),
                 switchMap((value: any) => {

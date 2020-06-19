@@ -63,6 +63,7 @@ namespace Ombi.Core.Engine.V2
                 var result = new MultiSearchResult
                 {
                     MediaType = multiSearch.media_type,
+                    Poster = multiSearch.poster_path
                 };
 
                 if (multiSearch.media_type.Equals("movie", StringComparison.InvariantCultureIgnoreCase))

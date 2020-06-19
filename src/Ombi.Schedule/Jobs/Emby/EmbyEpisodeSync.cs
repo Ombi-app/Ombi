@@ -75,7 +75,6 @@ namespace Ombi.Schedule.Jobs.Emby
                 await CacheEpisodes(server);
             }
 
-
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Emby Episode Sync Finished");
             _logger.LogInformation("Emby Episode Sync Finished - Triggering Metadata refresh");
