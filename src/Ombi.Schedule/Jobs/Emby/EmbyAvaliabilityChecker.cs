@@ -66,11 +66,13 @@ namespace Ombi.Schedule.Jobs.Emby
 
         public async Task Execute(IJobExecutionContext job)
         {
+            _log.LogInformation("Starting Emby Availability Check");
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Emby Availability Checker Started");
             await ProcessMovies();
             await ProcessTv();
 
+            _log.LogInformation("Finished Emby Availability Check");
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Emby Availability Checker Finished");
         }

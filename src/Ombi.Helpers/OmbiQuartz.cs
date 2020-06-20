@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Quartz;
 using Quartz.Impl;
+using Quartz.Impl.Matchers;
 using Quartz.Spi;
 
 namespace Ombi.Helpers

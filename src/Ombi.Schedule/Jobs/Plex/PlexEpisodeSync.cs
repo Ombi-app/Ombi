@@ -63,7 +63,8 @@ namespace Ombi.Schedule.Jobs.Plex
                 _log.LogError(LoggingEvents.Cacher, e, "Caching Episodes Failed");
             }
 
-            
+
+            _log.LogInformation("Plex Episode Sync Finished - Triggering Metadata refresh");
             await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
 
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)

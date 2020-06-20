@@ -56,11 +56,6 @@ namespace Ombi.Settings.Settings.Models
             return ValidateCron(Get(s.SickRageSync, Cron.Hourly(35)));
         }
 
-        public static string RefreshMetadata(JobSettings s)
-        {
-            return ValidateCron(Get(s.RefreshMetadata, Cron.DayInterval(3)));
-        }
-
         public static string LidarrArtistSync(JobSettings s)
         {
             return ValidateCron(Get(s.LidarrArtistSync, Cron.Hourly(40)));
