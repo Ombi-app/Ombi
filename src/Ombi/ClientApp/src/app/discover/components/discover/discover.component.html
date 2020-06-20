@@ -1,5 +1,5 @@
 <div class="small-middle-container">
-    <div class="row justify-content-md-center top-spacing">
+    <div class="row justify-content-md-center top-space">
         <div class="btn-group" role="group">
             <button type="button" (click)="switchDiscoverMode(DiscoverOption.Movie)" [attr.color]="popularActive ? 'accent' : 'primary'" [ngClass]="discoverOptions === DiscoverOption.Movie ? 'mat-accent' : 'mat-primary'" mat-raised-button class="btn grow">{{'Discovery.Movies' | translate}}</button>
             <button type="button" (click)="switchDiscoverMode(DiscoverOption.Combined)" [attr.color]="trendingActive ? 'accent' : 'primary'" [ngClass]="discoverOptions === DiscoverOption.Combined ? 'mat-accent' : 'mat-primary'" mat-raised-button class="btn grow"
