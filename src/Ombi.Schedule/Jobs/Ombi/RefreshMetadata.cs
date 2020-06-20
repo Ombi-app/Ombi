@@ -69,7 +69,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 if (embySettings.Enable)
                 {
                     await StartEmby(embySettings);
-                    
+
                     await OmbiQuartz.TriggerJob(nameof(IEmbyAvaliabilityChecker), "Emby");
                 }
             }

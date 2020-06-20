@@ -34,7 +34,7 @@ namespace Ombi.Core.Tests.Engine
             MovieRequestEngine = new Mock<IMovieRequestEngine>();
             User = new Mock<IPrincipal>();
             User.Setup(x => x.Identity.Name).Returns("abc");
-            UserManager = MockHelper.MockUserManager(new List<OmbiUser> { new OmbiUser { Id = "abc", UserName = "abc" } });
+            UserManager = MockHelper.MockUserManager(new List<OmbiUser> { new OmbiUser { Id = "abc", UserName = "abc", NormalizedUserName = "ABC" } });
             Rule = new Mock<IRuleEvaluator>();
             Engine = new VoteEngine(VoteRepository.Object, User.Object, UserManager.Object, Rule.Object, VoteSettings.Object, MusicRequestEngine.Object,
                 TvRequestEngine.Object, MovieRequestEngine.Object);
