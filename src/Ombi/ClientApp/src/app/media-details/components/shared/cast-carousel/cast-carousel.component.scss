@@ -62,3 +62,22 @@ body .ui-carousel .ui-carousel-content .ui-carousel-next:not(.ui-state-disabled)
 .bottom-space {
     padding-bottom: 10px;
 }
+
+@media (min-width: 979px) {
+
+    .cast-profile-img {
+        border-radius: 100%;
+        width: 200px;
+        max-height: 200px;
+    object-fit: cover;
+    }
+}
+@media (max-width: 978px) {
+
+    .cast-profile-img {
+        border-radius: 100%;
+        width: 100px;
+        max-height: 100px;
+    object-fit: cover;
+    }
+}

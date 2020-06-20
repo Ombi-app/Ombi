@@ -1,10 +1,10 @@
 <mat-card class="mat-elevation-z8  spacing-below">
     <mat-card-header>{{'MediaDetails.Casts.CastTitle' | translate}}</mat-card-header>
     <mat-card-content>
-        <p-carousel [value]="cast" [numVisible]="5" easing="easeOutStrong">
+        <p-carousel [value]="cast" easing="easeOutStrong" [responsiveOptions]="responsiveOptions" [circular]="true"  [numVisible]="5" >
             <ng-template let-item pTemplate="item">
-                <div class="row justify-content-md-center mat-card mat-card-flat col-12 carousel-item">
-                    <div class="col-12 bottom-space">
+                <div class="row justify-content-md-center mat-card mat-card-flat carousel-item">
+                    <div class="bottom-space">
                         <a *ngIf="item.profile_path" [routerLink]="'/discover/actor/' + item.id">
                             <img class="cast-profile-img" src="https://image.tmdb.org/t/p/w300/{{item.profile_path}}">
                         </a>
@@ -15,13 +15,14 @@
 
                     </div>
                     <div class="col-12">
-                        <span *ngIf="!item.character?.name"><strong>{{'MediaDetails.Casts.Character' | translate}}:</strong> {{item.character}}</span>
-                        <span *ngIf="item.character.name"><strong>{{'MediaDetails.Casts.Character' | translate}}:</strong> {{item.character.name}}</span>
+                        <span *ngIf="item.name"><strong>{{item.name}}</strong></span>
+                        <span *ngIf="item.person?.name"><strong>{{item.person.name}}</strong></span>
                     </div>
                     <div class="col-12">
-                        <span *ngIf="item.name"><strong>{{'MediaDetails.Casts.Actor' | translate}}:</strong> {{item.name}}</span>
-                        <span *ngIf="item.person?.name"><strong>{{'MediaDetails.Casts.Actor' | translate}}:</strong> {{item.person.name}}</span>
+                        <span *ngIf="!item.character?.name"><small>{{item.character}}</small></span>
+                        <span *ngIf="item.character.name"><small>{{item.character.name}}</small></span>
                     </div>
+
                 </div>
             </ng-template>
         </p-carousel>

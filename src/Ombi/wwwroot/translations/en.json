@@ -249,9 +249,7 @@
         "Budget":"Budget",
         "Keywords":"Keywords/Tags",
         "Casts": {
-            "CastTitle": "Cast",
-            "Character": "Character",
-            "Actor": "Actor"
+            "CastTitle": "Cast"
         },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "This will request every season for this show",
