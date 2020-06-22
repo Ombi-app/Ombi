@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Quartz;
 using Quartz.Impl;
@@ -14,6 +15,8 @@ namespace Ombi.Helpers
         protected IScheduler _scheduler { get; set; }
 
         public static IScheduler Scheduler => Instance._scheduler;
+
+        private static SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
         // Singleton
         protected static OmbiQuartz _instance;
@@ -84,10 +87,20 @@ namespace Ombi.Helpers
 
         public static async Task TriggerJob(string jobName, string group)
         {
-            if (!(await IsJobRunning(jobName)))
+            await _semaphore.WaitAsync();
+
+            try
             {
-                await Scheduler.TriggerJob(new JobKey(jobName, group));
+                if (!(await IsJobRunning(jobName)))
+                {
+                    await Scheduler.TriggerJob(new JobKey(jobName, group));
+                }
             }
+            finally
+            {
+                _semaphore.Release();
+            }
+
         }
 
 

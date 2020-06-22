@@ -25,11 +25,11 @@
 
     <div *ngIf="advancedOptions">
         <strong>{{'MediaDetails.RootFolderOverride' | translate }}</strong>
-        <div>{{advancedOptions.rootFolder.path}}</div>
+        <div>{{request.rootPathOverrideTitle}}</div>
     </div>
     <div *ngIf="advancedOptions">
         <strong>{{'MediaDetails.QualityOverride' | translate }}</strong>
-        <div>{{advancedOptions.profile.name}}</div>
+        <div>{{request.qualityOverrideTitle}}</div>
     </div>
     <br />
     <div *ngIf="movie.genres">

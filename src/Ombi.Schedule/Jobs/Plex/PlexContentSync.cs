@@ -115,34 +115,13 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
-                // Ensure it's not already running
-                if (await OmbiQuartz.IsJobRunning(nameof(IPlexAvailabilityChecker)))
-                {
-                    Logger.LogInformation("Availability checker already running");
-                }
-                else
-                {
-                    await NotifyClient("Plex Sync - Checking if any requests are now available");
-                    Logger.LogInformation("Kicking off Plex Availability Checker");
-                    await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
-                }
-            }
-
-            if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
-            {
-                // Ensure it's not already running
-                if (await OmbiQuartz.IsJobRunning(nameof(IPlexAvailabilityChecker)))
-                {
-                    Logger.LogInformation("Availability checker already running");
-                }
-                else
-                {
-                    await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
-                }
+                await NotifyClient("Plex Sync - Checking if any requests are now available");
+                Logger.LogInformation("Kicking off Plex Availability Checker");
+                await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
             }
             var processedCont = processedContent?.Content?.Count() ?? 0;
             var processedEp = processedContent?.Episodes?.Count() ?? 0;
-            Logger.LogInformation("Finished Plex Content Cacher, with processed content: {0}, episodes: {1}. Recently Added Scan: {2}", processedContent, processedEp, recentlyAddedSearch);
+            Logger.LogInformation("Finished Plex Content Cacher, with processed content: {0}, episodes: {1}. Recently Added Scan: {2}", processedCont, processedEp, recentlyAddedSearch);
 
             await NotifyClient(recentlyAddedSearch ? $"Plex Recently Added Sync Finished, We processed {processedCont}, and {processedEp} Episodes" : "Plex Content Sync Finished");
 
