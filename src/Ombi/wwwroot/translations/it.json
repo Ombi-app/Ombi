@@ -3,7 +3,7 @@
     "SignInButton": "Accedi",
     "UsernamePlaceholder": "Nome utente",
     "PasswordPlaceholder": "Password",
-    "RememberMe": "Ricordati di me",
+    "RememberMe": "Ricordami",
     "ForgottenPassword": "Hai dimenticato la password?",
     "Errors": {
       "IncorrectCredentials": "Username o password non corretta"
@@ -69,7 +69,7 @@
     "Suggestions": "Suggerimenti",
     "NoResults": "Ci dispiace, non abbiamo trovato alcun risultato!",
     "DigitalDate": "Rilascio digitale {{date}}",
-    "TheatricalRelease": "Theatrical Release: {{date}}",
+    "TheatricalRelease": "Rilascio Teatrale: {{date}}",
     "ViewOnPlex": "Guarda su Plex",
     "ViewOnEmby": "Guarda su Emby",
     "RequestAdded": "La richiesta per {{title}} è stata aggiunta correttamente",
@@ -112,8 +112,8 @@
     "Denied": " Rifiutato:",
     "TheatricalRelease": "Rilascio Teatrale: {{date}}",
     "ReleaseDate": "Rilasciato: {{date}}",
-    "TheatricalReleaseSort": "Theatrical Release",
-    "DigitalRelease": "Digital Release: {{date}}",
+    "TheatricalReleaseSort": "Rilascio Teatrale",
+    "DigitalRelease": "Rilascio digitale {{date}}",
     "RequestDate": "Data della richiesta:",
     "QualityOverride": "Sovrascrivi qualità:",
     "RootFolderOverride": "Sovrascrivi cartella principale:",
@@ -167,20 +167,20 @@
   "Filter": {
     "ClearFilter": "Rimuovi filtro",
     "FilterHeaderAvailability": "Disponibilità",
-    "FilterHeaderRequestStatus": "Status",
-    "Approved": "Approved",
-    "PendingApproval": "Pending Approval"
+    "FilterHeaderRequestStatus": "Stato",
+    "Approved": "Approvato",
+    "PendingApproval": "In attesa di approvazione"
   },
   "UserManagment": {
-    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
-    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
-    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
+    "TvRemaining": "TV: {{remaining}}/{{total}} rimanenti",
+    "MovieRemaining": "Film: {{remaining}}/{{total}} rimanenti",
+    "MusicRemaining": "Musica: {{remaining}}/{{total}} rimanenti",
     "TvDue": "TV: {{date}}",
-    "MovieDue": "Movie: {{date}}",
-    "MusicDue": "Music: {{date}}"
+    "MovieDue": "Film: {{date}}",
+    "MusicDue": "Musica: {{date}}"
   },
   "Votes": {
-    "CompletedVotesTab": "Voted",
-    "VotesTab": "Votes Needed"
+    "CompletedVotesTab": "Votati",
+    "VotesTab": "Voti Necessari"
   }
 }
