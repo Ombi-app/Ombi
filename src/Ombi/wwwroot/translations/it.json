@@ -12,8 +12,8 @@
   "Common": {
     "ContinueButton": "Continua",
     "Available": "Disponibile",
-    "PartiallyAvailable": "Partially Available",
-    "Monitored": "Monitored",
+    "PartiallyAvailable": "Parzialmente Disponibile",
+    "Monitored": "Monitorato",
     "NotAvailable": "Non Disponibile",
     "ProcessingRequest": "Richiesta in elaborazione",
     "PendingApproval": "In attesa di approvazione",
@@ -23,7 +23,7 @@
     "Request": "Richiesta",
     "Denied": "Rifiutato",
     "Approve": "Approva",
-    "PartlyAvailable": "Partly Available",
+    "PartlyAvailable": "Parzialmente Disponibile",
     "Errors": {
       "Validation": "Per favore, controlla i valori che hai inserito"
     }
@@ -51,7 +51,7 @@
     "Vote": "Vota",
     "Donate": "Fai una donazione!",
     "DonateLibraryMaintainer": "Dona al manutentore della libreria",
-    "DonateTooltip": "Questo è come convinco mia moglie a farmi spendere il mio tempo libero nello sviluppo di Ombi ;)",
+    "DonateTooltip": "Questo è come convincere mia moglie a lasciarmi trascorrere il mio tempo libero a sviluppare Ombi ;)",
     "UpdateAvailableTooltip": "Aggiornamento disponibile!",
     "Settings": "Impostazioni",
     "Welcome": "Benvenuto {{username}}",
@@ -68,7 +68,7 @@
     "MusicTab": "Musica",
     "Suggestions": "Suggerimenti",
     "NoResults": "Ci dispiace, non abbiamo trovato alcun risultato!",
-    "DigitalDate": "Digital Release: {{date}}",
+    "DigitalDate": "Rilascio digitale {{date}}",
     "TheatricalRelease": "Theatrical Release: {{date}}",
     "ViewOnPlex": "Guarda su Plex",
     "ViewOnEmby": "Guarda su Emby",
