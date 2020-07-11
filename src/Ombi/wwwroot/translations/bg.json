@@ -18,14 +18,14 @@
     "ProcessingRequest": "Processing Request",
     "PendingApproval": "Чака одобрение",
     "RequestDenied": "Request Denied",
-    "NotRequested": "Not Requested",
+    "NotRequested": "Не е заявено",
     "Requested": "Заявено",
     "Request": "Заявка",
     "Denied": "Отказано",
     "Approve": "Одобряване",
     "PartlyAvailable": "Частично налично",
     "Errors": {
-      "Validation": "Please check your entered values"
+      "Validation": "Проверете си въведените стойности"
     }
   },
   "PasswordReset": {
@@ -34,9 +34,9 @@
   },
   "LandingPage": {
     "OnlineHeading": "В момента на линия",
-    "OnlineParagraph": "The media server is currently online",
+    "OnlineParagraph": "Медийният сървър в момента е на линия",
     "PartiallyOnlineHeading": "Частично в мрежата",
-    "PartiallyOnlineParagraph": "The media server is partially online.",
+    "PartiallyOnlineParagraph": "Медийният сървър е частично на линия.",
     "MultipleServersUnavailable": "There are {{serversUnavailable}} servers offline out of {{totalServers}}.",
     "SingleServerUnavailable": "There is {{serversUnavailable}} server offline out of {{totalServers}}.",
     "OfflineHeading": "В момента извън линия",
@@ -46,9 +46,9 @@
   "NavigationBar": {
     "Search": "Търсене",
     "Requests": "Заявки",
-    "UserManagement": "User Management",
+    "UserManagement": "Управление на потребителите",
     "Issues": "Проблеми",
-    "Vote": "Vote",
+    "Vote": "Гласуване",
     "Donate": "Дарете!",
     "DonateLibraryMaintainer": "Donate to Library Maintainer",
     "DonateTooltip": "This is how I convince my wife to let me spend my spare time developing Ombi ;)",
@@ -108,8 +108,8 @@
     "MusicTab": "Музика",
     "RequestedBy": "Заявено от:",
     "Status": "Състояние:",
-    "RequestStatus": "Request status:",
-    "Denied": " Denied:",
+    "RequestStatus": "Състояние на заявката:",
+    "Denied": " Отказано:",
     "TheatricalRelease": "Theatrical Release: {{date}}",
     "ReleaseDate": "Released: {{date}}",
     "TheatricalReleaseSort": "Theatrical Release",
@@ -133,16 +133,16 @@
     "SeasonNumberHeading": "Сезон: {seasonNumber}",
     "SortTitleAsc": "Заглавие ▲",
     "SortTitleDesc": "Заглавие ▼",
-    "SortRequestDateAsc": "Request Date ▲",
-    "SortRequestDateDesc": "Request Date ▼",
+    "SortRequestDateAsc": "Дата на заявка▲",
+    "SortRequestDateDesc": "Дата на заявка▼",
     "SortStatusAsc": "Състояние ▲",
     "SortStatusDesc": "Състояние ▼",
     "Remaining": {
       "Quota": "{{remaining}}/{{total}} заявки остават",
-      "NextDays": "Another request will be added in {{time}} days",
-      "NextHours": "Another request will be added in {{time}} hours",
-      "NextMinutes": "Another request will be added in {{time}} minutes",
-      "NextMinute": "Another request will be added in {{time}} minute"
+      "NextDays": "Друга заявка ще бъде добавена след {{time}} дни",
+      "NextHours": "Друга заявка ще бъде добавена след {{time}} часа",
+      "NextMinutes": "Друга заявка ще бъде добавена след {{time}} минути",
+      "NextMinute": "Друга заявка ще бъде добавена след {{time}} минута"
     }
   },
   "Issues": {
@@ -181,6 +181,6 @@
   },
   "Votes": {
     "CompletedVotesTab": "Гласувано",
-    "VotesTab": "Votes Needed"
+    "VotesTab": "Трябват гласове"
   }
 }
