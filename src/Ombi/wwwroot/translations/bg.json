@@ -79,9 +79,9 @@
     "Movies": {
       "PopularMovies": "Популярни филми",
       "UpcomingMovies": "Предстоящи филми",
-      "TopRatedMovies": "Top Rated Movies",
-      "NowPlayingMovies": "Now Playing Movies",
-      "HomePage": "Home Page",
+      "TopRatedMovies": "Високо оценени филми",
+      "NowPlayingMovies": "Сега в кината",
+      "HomePage": "Начална страница",
       "Trailer": "Трейлър"
     },
     "TvShows": {
