@@ -147,8 +147,8 @@
   },
   "Issues": {
     "Title": "Проблеми",
-    "PendingTitle": "Pending Issues",
-    "InProgressTitle": "In Progress Issues",
+    "PendingTitle": "Проблеми в очакване",
+    "InProgressTitle": "Проблеми в ход",
     "ResolvedTitle": "Решени проблеми",
     "ColumnTitle": "Заглавие",
     "Category": "Категория",
@@ -156,8 +156,8 @@
     "Details": "Подробности",
     "Description": "Описание",
     "NoComments": "Няма коментари!",
-    "MarkInProgress": "Mark In Progress",
-    "MarkResolved": "Mark Resolved",
+    "MarkInProgress": "Маркиране в ход",
+    "MarkResolved": "Маркиране като решено",
     "SendMessageButton": "Изпращане",
     "Subject": "Тема",
     "Comments": "Коментари",
@@ -180,7 +180,7 @@
     "MusicDue": "Музика: {{date}}"
   },
   "Votes": {
-    "CompletedVotesTab": "Voted",
+    "CompletedVotesTab": "Гласувано",
     "VotesTab": "Votes Needed"
   }
 }
