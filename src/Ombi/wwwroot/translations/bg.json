@@ -3,8 +3,8 @@
     "SignInButton": "Вход",
     "UsernamePlaceholder": "Потребителско име",
     "PasswordPlaceholder": "Парола",
-    "RememberMe": "Remember Me",
-    "ForgottenPassword": "Forgot your password?",
+    "RememberMe": "Запомнете ме",
+    "ForgottenPassword": "Забравили сте паролата си?",
     "Errors": {
       "IncorrectCredentials": "Неправилно потребителско име или парола"
     }
@@ -138,7 +138,7 @@
     "SortStatusAsc": "Състояние ▲",
     "SortStatusDesc": "Състояние ▼",
     "Remaining": {
-      "Quota": "{{remaining}}/{{total}} requests remaining",
+      "Quota": "{{remaining}}/{{total}} заявки остават",
       "NextDays": "Another request will be added in {{time}} days",
       "NextHours": "Another request will be added in {{time}} hours",
       "NextMinutes": "Another request will be added in {{time}} minutes",
@@ -149,7 +149,7 @@
     "Title": "Проблеми",
     "PendingTitle": "Pending Issues",
     "InProgressTitle": "In Progress Issues",
-    "ResolvedTitle": "Resolved Issues",
+    "ResolvedTitle": "Решени проблеми",
     "ColumnTitle": "Заглавие",
     "Category": "Категория",
     "Status": "Състояние",
@@ -169,15 +169,15 @@
     "FilterHeaderAvailability": "Наличност",
     "FilterHeaderRequestStatus": "Състояние",
     "Approved": "Одобрено",
-    "PendingApproval": "Pending Approval"
+    "PendingApproval": "Чака одобрение"
   },
   "UserManagment": {
-    "TvRemaining": "TV: {{remaining}}/{{total}} remaining",
-    "MovieRemaining": "Movies: {{remaining}}/{{total}} remaining",
-    "MusicRemaining": "Music: {{remaining}}/{{total}} remaining",
+    "TvRemaining": "Тв: {{remaining}}/{{total}} остават",
+    "MovieRemaining": "Филми: {{remaining}}/{{total}} остават",
+    "MusicRemaining": "Музика: {{remaining}}/{{total}} остават",
     "TvDue": "ТВ: {{date}}",
-    "MovieDue": "Movie: {{date}}",
-    "MusicDue": "Music: {{date}}"
+    "MovieDue": "Филм: {{date}}",
+    "MusicDue": "Музика: {{date}}"
   },
   "Votes": {
     "CompletedVotesTab": "Voted",
