@@ -51,7 +51,7 @@
     "Vote": "Гласуване",
     "Donate": "Дарете!",
     "DonateLibraryMaintainer": "Donate to Library Maintainer",
-    "DonateTooltip": "This is how I convince my wife to let me spend my spare time developing Ombi ;)",
+    "DonateTooltip": "Ето как убедих жена си да ми позволи да прекарвам свободното си време в разработването на Ombi ;)",
     "UpdateAvailableTooltip": "Има налично обновяване!",
     "Settings": "Настройки",
     "Welcome": "Добре дошли, {{username}}",
@@ -62,7 +62,7 @@
   },
   "Search": {
     "Title": "Търсене",
-    "Paragraph": "Want to watch something that is not currently available? No problem, just search for it below and request it!",
+    "Paragraph": "Искате ли да гледате нещо, което в момента не е налично? Няма проблем, просто го потърсете долу и заявете!",
     "MoviesTab": "Филми",
     "TvTab": "Тв предавания",
     "MusicTab": "Музика",
@@ -102,7 +102,7 @@
   },
   "Requests": {
     "Title": "Заявки",
-    "Paragraph": "Below you can see yours and all other requests, as well as their download and approval status.",
+    "Paragraph": "Долу можете да видите ваши и всички други заявки, както и състоянието им на изтегляне и одобрение.",
     "MoviesTab": "Филми",
     "TvTab": "Тв предавания",
     "MusicTab": "Музика",
