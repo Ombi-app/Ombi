@@ -1,20 +1,20 @@
 {
   "Login": {
-    "SignInButton": "Sign in",
-    "UsernamePlaceholder": "Username",
-    "PasswordPlaceholder": "Password",
+    "SignInButton": "Вход",
+    "UsernamePlaceholder": "Потребителско име",
+    "PasswordPlaceholder": "Парола",
     "RememberMe": "Remember Me",
     "ForgottenPassword": "Forgot your password?",
     "Errors": {
-      "IncorrectCredentials": "Incorrect username or password"
+      "IncorrectCredentials": "Неправилно потребителско име или парола"
     }
   },
   "Common": {
-    "ContinueButton": "Continue",
-    "Available": "Available",
-    "PartiallyAvailable": "Partially Available",
-    "Monitored": "Monitored",
-    "NotAvailable": "Not Available",
+    "ContinueButton": "Продължаване",
+    "Available": "Налично",
+    "PartiallyAvailable": "Частично налично",
+    "Monitored": "Наблюдавано",
+    "NotAvailable": "Не е налично",
     "ProcessingRequest": "Processing Request",
     "PendingApproval": "Pending Approval",
     "RequestDenied": "Request Denied",
@@ -22,15 +22,15 @@
     "Requested": "Requested",
     "Request": "Request",
     "Denied": "Denied",
-    "Approve": "Approve",
+    "Approve": "Одобряване",
     "PartlyAvailable": "Partly Available",
     "Errors": {
       "Validation": "Please check your entered values"
     }
   },
   "PasswordReset": {
-    "EmailAddressPlaceholder": "Email Address",
-    "ResetPasswordButton": "Reset Password"
+    "EmailAddressPlaceholder": "Адрес на имейла",
+    "ResetPasswordButton": "Нулиране на паролата"
   },
   "LandingPage": {
     "OnlineHeading": "Currently Online",
@@ -44,26 +44,26 @@
     "CheckPageForUpdates": "Check this page for continuous site updates."
   },
   "NavigationBar": {
-    "Search": "Search",
-    "Requests": "Requests",
+    "Search": "Търсене",
+    "Requests": "Заявки",
     "UserManagement": "User Management",
-    "Issues": "Issues",
+    "Issues": "Проблеми",
     "Vote": "Vote",
-    "Donate": "Donate!",
+    "Donate": "Дарете!",
     "DonateLibraryMaintainer": "Donate to Library Maintainer",
     "DonateTooltip": "This is how I convince my wife to let me spend my spare time developing Ombi ;)",
-    "UpdateAvailableTooltip": "Update Available!",
-    "Settings": "Settings",
-    "Welcome": "Welcome {{username}}",
-    "UpdateDetails": "Update Details",
-    "Logout": "Logout",
-    "OpenMobileApp": "Open Mobile App",
-    "RecentlyAdded": "Recently Added"
+    "UpdateAvailableTooltip": "Има налично обновяване!",
+    "Settings": "Настройки",
+    "Welcome": "Добре дошли, {{username}}",
+    "UpdateDetails": "Подробности за обновяването",
+    "Logout": "Изход",
+    "OpenMobileApp": "Отваряне на приложение за мобилни",
+    "RecentlyAdded": "Наскоро добавено"
   },
   "Search": {
-    "Title": "Search",
+    "Title": "Търсене",
     "Paragraph": "Want to watch something that is not currently available? No problem, just search for it below and request it!",
-    "MoviesTab": "Movies",
+    "MoviesTab": "Филми",
     "TvTab": "TV Shows",
     "MusicTab": "Music",
     "Suggestions": "Suggestions",
@@ -96,18 +96,18 @@
       "LatestSeason": "Latest Season",
       "Select": "Select ...",
       "SubmitRequest": "Submit Request",
-      "Season": "Season: {{seasonNumber}}",
+      "Season": "Сезон: {{seasonNumber}}",
       "SelectAllInSeason": "Select All in Season {{seasonNumber}}"
     }
   },
   "Requests": {
-    "Title": "Requests",
+    "Title": "Заявки",
     "Paragraph": "Below you can see yours and all other requests, as well as their download and approval status.",
-    "MoviesTab": "Movies",
-    "TvTab": "TV Shows",
-    "MusicTab": "Music",
+    "MoviesTab": "Филми",
+    "TvTab": "Тв предавания",
+    "MusicTab": "Музика",
     "RequestedBy": "Requested By:",
-    "Status": "Status:",
+    "Status": "Състояние:",
     "RequestStatus": "Request status:",
     "Denied": " Denied:",
     "TheatricalRelease": "Theatrical Release: {{date}}",
@@ -121,22 +121,22 @@
     "ChangeQualityProfile": "Quality Profile",
     "MarkUnavailable": "Mark Unavailable",
     "MarkAvailable": "Mark Available",
-    "Remove": "Remove",
+    "Remove": "Премахване",
     "Deny": "Deny",
-    "Season": "Season:",
-    "GridTitle": "Title",
+    "Season": "Сезон:",
+    "GridTitle": "Заглавие",
     "AirDate": "AirDate",
-    "GridStatus": "Status",
+    "GridStatus": "Състояние",
     "ReportIssue": "Report Issue",
-    "Filter": "Filter",
-    "Sort": "Sort",
-    "SeasonNumberHeading": "Season: {seasonNumber}",
-    "SortTitleAsc": "Title ▲",
-    "SortTitleDesc": "Title ▼",
+    "Filter": "Филтър",
+    "Sort": "Подредба",
+    "SeasonNumberHeading": "Сезон: {seasonNumber}",
+    "SortTitleAsc": "Заглавие ▲",
+    "SortTitleDesc": "Заглавие ▼",
     "SortRequestDateAsc": "Request Date ▲",
     "SortRequestDateDesc": "Request Date ▼",
-    "SortStatusAsc": "Status ▲",
-    "SortStatusDesc": "Status ▼",
+    "SortStatusAsc": "Състояние ▲",
+    "SortStatusDesc": "Състояние ▼",
     "Remaining": {
       "Quota": "{{remaining}}/{{total}} requests remaining",
       "NextDays": "Another request will be added in {{time}} days",
@@ -146,7 +146,7 @@
     }
   },
   "Issues": {
-    "Title": "Issues",
+    "Title": "Проблеми",
     "PendingTitle": "Pending Issues",
     "InProgressTitle": "In Progress Issues",
     "ResolvedTitle": "Resolved Issues",
