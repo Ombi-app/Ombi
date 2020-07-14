@@ -53,9 +53,11 @@ namespace Ombi.Notifications.Agents
                 _logger.LogInformation($"Template {NotificationType.NewRequest} is disabled for {NotificationAgent.Mobile}");
                 return;
             }
+
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
+                Data = GetNotificationData(parsed, NotificationType.NewRequest)
             };
 
             // Get admin devices
@@ -74,6 +76,7 @@ namespace Ombi.Notifications.Agents
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
+                Data = GetNotificationData(parsed, NotificationType.Issue)
             };
 
             // Get admin devices
@@ -92,6 +95,7 @@ namespace Ombi.Notifications.Agents
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
+                Data = GetNotificationData(parsed, NotificationType.IssueComment)
             };
             if (model.Substitutes.TryGetValue("AdminComment", out var isAdminString))
             {
@@ -123,6 +127,7 @@ namespace Ombi.Notifications.Agents
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
+                Data = GetNotificationData(parsed, NotificationType.IssueResolved)
             };
 
             // Send to user
@@ -144,6 +149,7 @@ namespace Ombi.Notifications.Agents
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
+                Data = GetNotificationData(parsed, NotificationType.ItemAddedToFaultQueue)
             };
 
             // Get admin devices
@@ -162,6 +168,7 @@ namespace Ombi.Notifications.Agents
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
+                Data = GetNotificationData(parsed, NotificationType.RequestDeclined)
             };
 
             // Send to user
@@ -181,6 +188,7 @@ namespace Ombi.Notifications.Agents
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
+                Data = GetNotificationData(parsed, NotificationType.RequestApproved)
             };
 
             // Send to user
@@ -198,9 +206,13 @@ namespace Ombi.Notifications.Agents
                 _logger.LogInformation($"Template {NotificationType.RequestAvailable} is disabled for {NotificationAgent.Mobile}");
                 return;
             }
+
+            var data = GetNotificationData(parsed, NotificationType.RequestAvailable);
+
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
+                Data = data
             };
             // Send to user
             var playerIds = GetUsers(model, NotificationType.RequestAvailable);
@@ -208,6 +220,14 @@ namespace Ombi.Notifications.Agents
             await AddSubscribedUsers(playerIds);
             await Send(playerIds, notification, settings, model);
         }
+
+        private static Dictionary<string,string> GetNotificationData(NotificationMessageContent parsed, NotificationType type)
+        {
+            var notificationData = parsed.Data.ToDictionary(x => x.Key, x => x.Value);
+            notificationData[nameof(NotificationType)] = type.ToString();
+            return notificationData;
+        }
+
         protected override Task Send(NotificationMessage model, MobileNotificationSettings settings)
         {
             throw new NotImplementedException();
@@ -225,7 +245,8 @@ namespace Ombi.Notifications.Agents
                 {
                     Body = model.Message,
                     Title = model.Subject,
-                    To = token
+                    To = token,
+                    Data = new Dictionary<string, string>(model.Data)
                 });
             }
 
