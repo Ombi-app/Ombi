@@ -23,6 +23,8 @@ namespace Ombi.Store.Repository.Requests
         Task UpdateChild(ChildRequests request);
         IQueryable<ChildRequests> GetChild();
         IQueryable<ChildRequests> GetChild(string userId);
+        Task MarkEpisodeAsAvailable(int id);
+        Task MarkChildAsAvailable(int id);
         Task Save();
         Task DeleteChildRange(IEnumerable<ChildRequests> request);
     }

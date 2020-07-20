@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
 using Ombi.Api.TheMovieDb;
@@ -67,13 +69,13 @@ namespace Ombi.Schedule.Jobs.Ombi
         private async Task StartPlex()
         {
             // Ensure we check that we have not linked this item to a request
-            var allMovies = _plexRepo.GetAll().Where(x =>
-                x.Type == PlexMediaTypeEntity.Movie && !x.RequestId.HasValue && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue()));
+            var allMovies = await _plexRepo.GetAll().Where(x =>
+                x.Type == PlexMediaTypeEntity.Movie && !x.RequestId.HasValue && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue())).ToListAsync();
             await StartPlexMovies(allMovies);
 
             // Now Tv
-            var allTv = _plexRepo.GetAll().Where(x =>
-                x.Type == PlexMediaTypeEntity.Show && !x.RequestId.HasValue && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue() || !x.TvDbId.HasValue()));
+            var allTv = await _plexRepo.GetAll().Where(x =>
+                x.Type == PlexMediaTypeEntity.Show && !x.RequestId.HasValue && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue() || !x.TvDbId.HasValue())).ToListAsync();
             await StartPlexTv(allTv);
         }
 
@@ -83,7 +85,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             await StartEmbyTv();
         }
 
-        private async Task StartPlexTv(IQueryable<PlexServerContent> allTv)
+        private async Task StartPlexTv(List<PlexServerContent> allTv)
         {
             foreach (var show in allTv)
             {   
@@ -121,8 +123,8 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         private async Task StartEmbyTv()
         {
-            var allTv = _embyRepo.GetAll().Where(x =>
-                x.Type == EmbyMediaType.Series && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue() || !x.TvDbId.HasValue()));
+            var allTv = await _embyRepo.GetAll().Where(x =>
+                x.Type == EmbyMediaType.Series && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue() || !x.TvDbId.HasValue())).ToListAsync();;
 
             foreach (var show in allTv)
             {
@@ -154,7 +156,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        private async Task StartPlexMovies(IQueryable<PlexServerContent> allMovies)
+        private async Task StartPlexMovies(List<PlexServerContent> allMovies)
         {
             foreach (var movie in allMovies)
             {
@@ -186,8 +188,8 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         private async Task StartEmbyMovies(EmbySettings settings)
         {
-            var allMovies = _embyRepo.GetAll().Where(x =>
-                x.Type == EmbyMediaType.Movie && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue()));
+            var allMovies = await _embyRepo.GetAll().Where(x =>
+                x.Type == EmbyMediaType.Movie && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue())).ToListAsync();
             foreach (var movie in allMovies)
             {
                 movie.ImdbId.HasValue();

@@ -58,6 +58,13 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="subDir" class="control-label">Base URL</label>
+                                <div>
+                                    <input type="text" class="form-control-custom form-control" id="subDir" [(ngModel)]="server.subDir" value="{{server.subDir}}">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label for="authToken" class="control-label">Emby Api Key</label>
                                 <div class="">
                                     <input type="text" class="form-control-custom form-control" id="authToken" [(ngModel)]="server.apiKey" placeholder="Emby Api Key" value="{{server.apiKey}}">
