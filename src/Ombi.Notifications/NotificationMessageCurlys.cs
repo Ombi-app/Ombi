@@ -14,12 +14,12 @@ namespace Ombi.Notifications
 {
     public class NotificationMessageCurlys
     {
-        public void Setup(NotificationOptions opts, FullBaseRequest req, CustomizationSettings s, UserNotificationPreferences pref)
+        public void Setup(NotificationOptions opts, MovieRequests req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
 
             RequestId = req?.Id.ToString();
-
+            ProviderId = req?.TheMovieDbId.ToString() ?? string.Empty;
             string title;
             if (req == null)
             {
@@ -73,6 +73,7 @@ namespace Ombi.Notifications
             LoadIssues(opts);
 
             RequestId = req?.Id.ToString();
+            ProviderId = req?.ForeignArtistId ?? string.Empty;
 
             string title;
             if (req == null)
@@ -122,6 +123,7 @@ namespace Ombi.Notifications
         {
             LoadIssues(opts);
             RequestId = req.Id.ToString();
+            ProviderId = req?.ParentRequest?.TvDbId.ToString() ?? string.Empty;
             string title;
             if (req == null)
             {
@@ -274,6 +276,7 @@ namespace Ombi.Notifications
         public string DenyReason { get; set; }
         public string AvailableDate { get; set; }
         public string RequestStatus { get; set; }
+        public string ProviderId { get; set; }
 
         // System Defined
         private string LongDate => DateTime.Now.ToString("D");
@@ -312,6 +315,7 @@ namespace Ombi.Notifications
             {nameof(DenyReason),DenyReason},
             {nameof(AvailableDate),AvailableDate},
             {nameof(RequestStatus),RequestStatus},
+            {nameof(ProviderId),ProviderId},
         };
     }
 }

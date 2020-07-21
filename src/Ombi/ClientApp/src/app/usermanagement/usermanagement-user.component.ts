@@ -118,28 +118,18 @@ export class UserManagementUserComponent implements OnInit {
     }
 
     public delete() {
- // TODO
-        // this.confirmationService.confirm({
-        //     message: "Are you sure that you want to delete this user? If this user has any requests they will also be deleted.",
-        //     header: "Are you sure?",
-        //     icon: "fa fa-trash",
-        //     accept: () => {
-        //         this.identityService.deleteUser(this.user).subscribe(x => {
-        //             if (x.successful) {
-        //                 this.notificationService.send(`The user ${this.user.userName} was deleted`);
-        //                 this.router.navigate(["usermanagement"]);
-        //             } else {
-        //                 x.errors.forEach((val) => {
-        //                     this.notificationService.send(val);
-        //                 });
-        //             }
 
-        //         });
-        //     },
-        //     reject: () => {
-        //         return;
-        //     },
-        // });
+        this.identityService.deleteUser(this.user).subscribe(x => {
+            if (x.successful) {
+                this.notificationService.send(`The user ${this.user.userName} was deleted`);
+                this.router.navigate(["usermanagement"]);
+            } else {
+                x.errors.forEach((val) => {
+                    this.notificationService.send(val);
+                });
+            }
+
+        });
     }
 
     public resetPassword() {

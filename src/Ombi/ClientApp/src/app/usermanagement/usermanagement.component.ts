@@ -35,7 +35,7 @@ export class UserManagementComponent implements OnInit {
 
     public async ngOnInit() {
         this.users = await this.identityService.getUsers().toPromise();
-        
+
         this.dataSource = new MatTableDataSource(this.users);
         this.dataSource.sort = this.sort;
 
