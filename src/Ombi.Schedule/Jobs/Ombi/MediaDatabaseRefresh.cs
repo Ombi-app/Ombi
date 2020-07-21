@@ -97,7 +97,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (disposing)
             {
-                _settings?.Dispose();
+                //_settings?.Dispose();
             }
             _disposed = true;
         }

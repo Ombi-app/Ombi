@@ -1021,9 +1021,9 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (disposing)
             {
-                _newsletterSettings?.Dispose();
-                _customizationSettings?.Dispose();
-                _emailSettings.Dispose();
+                //_newsletterSettings?.Dispose();
+                //_customizationSettings?.Dispose();
+                //_emailSettings.Dispose();
                 _templateRepo?.Dispose();
                 _userManager?.Dispose();
             }

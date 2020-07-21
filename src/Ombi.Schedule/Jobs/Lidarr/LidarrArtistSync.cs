@@ -114,7 +114,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
             if (disposing)
             {
                 _ctx?.Dispose();
-                _lidarrSettings?.Dispose();
+                //_lidarrSettings?.Dispose();
             }
             _disposed = true;
         }

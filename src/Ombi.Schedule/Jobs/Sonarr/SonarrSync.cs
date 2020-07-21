@@ -108,7 +108,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
 
             if (disposing)
             {
-                _settings?.Dispose();
+                //_settings?.Dispose();
                 _ctx?.Dispose();
             }
             _disposed = true;

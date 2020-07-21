@@ -372,7 +372,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (disposing)
             {
-                _plexSettings?.Dispose();
+                //_plexSettings?.Dispose();
             }
             _disposed = true;
         }

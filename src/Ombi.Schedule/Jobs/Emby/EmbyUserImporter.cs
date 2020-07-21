@@ -172,8 +172,8 @@ namespace Ombi.Schedule.Jobs.Emby
             if (disposing)
             {
                 _userManager?.Dispose();
-                _embySettings?.Dispose();
-                _userManagementSettings?.Dispose();
+                //_embySettings?.Dispose();
+                //_userManagementSettings?.Dispose();
             }
             _disposed = true;
         }

@@ -70,8 +70,8 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (disposing)
             {
-                _emailSettings?.Dispose();
-                _customizationSettings?.Dispose();
+                //_emailSettings?.Dispose();
+                //_customizationSettings?.Dispose();
             }
             _disposed = true;
         }

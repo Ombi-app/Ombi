@@ -218,7 +218,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if (disposing)
             {
-                _settings?.Dispose();
+                //_settings?.Dispose();
             }
             _disposed = true;
         }

@@ -112,7 +112,7 @@ namespace Ombi.Schedule.Jobs.Radarr
             if (disposing)
             {
                 _ctx?.Dispose();
-                RadarrSettings?.Dispose();
+                //RadarrSettings?.Dispose();
             }
             _disposed = true;
         }

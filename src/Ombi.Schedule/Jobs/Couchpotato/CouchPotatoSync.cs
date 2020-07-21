@@ -132,7 +132,7 @@ namespace Ombi.Schedule.Jobs.Couchpotato
 
             if (disposing)
             {
-                _settings?.Dispose();
+                //_settings?.Dispose();
                 _ctx?.Dispose();
             }
             _disposed = true;

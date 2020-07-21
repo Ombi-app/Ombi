@@ -100,7 +100,7 @@ namespace Ombi.Schedule.Jobs.SickRage
 
             if (disposing)
             {
-                _settings?.Dispose();
+                //_settings?.Dispose();
                 _ctx?.Dispose();
             }
             _disposed = true;
