@@ -122,13 +122,13 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Language Profiles </mat-label>
                                     <mat-select formControlName="languageProfile">
-                                      <mat-option *ngFor="let lang of languageProfiles" value="lang.id">{{lang.name}}</mat-option>
+                                      <mat-option *ngFor="let lang of languageProfiles" [value]="lang.id">{{lang.name}}</mat-option>
                                     </mat-select>
                                     <mat-error>A Language Profile is required</mat-error>
                                   </mat-form-field>
                             </div>
                             <div class="md-form-field" style="display:inline;margin-left:20px;">
-                            <button mat-raised-button (click)="getLanguageProfiles(form)" class="mat-stroked-button load">Load
+                            <button type="button" mat-raised-button (click)="getLanguageProfiles(form)" class="mat-stroked-button load">Load
                                 Languages <span *ngIf="langRunning" class="fa fa-spinner fa-spin"> </span></button>
                             </div>
                         </div>
