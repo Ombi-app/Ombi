@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Feature Requests
+    url: https://ombifeatures.featureupvote.com/
+    about: Share your suggestions or ideas to make Ombi better!
+  - name: Reddit support
+    url: https://www.reddit.com/r/Ombi/
+    about: Ask questions and discuss Ombi
