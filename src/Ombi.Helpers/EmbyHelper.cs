@@ -7,15 +7,21 @@
             string path = "item";
             if (isJellyfin)
             {
-                path = "itemdetails.html";
+                path = "details";
             }
             if (customerServerUrl.HasValue())
             {
-                if (!customerServerUrl.EndsWith("/"))
+                if (isJellyfin)
                 {
-                    return $"{customerServerUrl}/#!/{path}?id={mediaId}";
-                }
                     return $"{customerServerUrl}#!/{path}?id={mediaId}";
+                }
+                else {
+                    if (!customerServerUrl.EndsWith("/"))
+                    {
+                        return $"{customerServerUrl}/#!/{path}?id={mediaId}";
+                    }
+                    return $"{customerServerUrl}#!/{path}?id={mediaId}";
+                }
             }
             else
             {
