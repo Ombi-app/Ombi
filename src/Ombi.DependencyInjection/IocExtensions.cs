@@ -230,6 +230,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IIssuesPurge, IssuesPurge>();
             services.AddTransient<IResendFailedRequests, ResendFailedRequests>();
             services.AddTransient<IMediaDatabaseRefresh, MediaDatabaseRefresh>();
+            services.AddTransient<IArrAvailabilityChecker, ArrAvailabilityChecker>();
         }
     }
 }

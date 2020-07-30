@@ -46,4 +46,8 @@ export class JobService extends ServiceHelpers {
     public runNewsletter(): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}newsletter/`, {headers: this.headers});
     }
+
+    public runArrAvailabilityChecker(): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}arrAvailability/`, {headers: this.headers});
+    }
 }
