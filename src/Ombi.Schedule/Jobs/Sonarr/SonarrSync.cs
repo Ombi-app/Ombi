@@ -33,7 +33,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
         private readonly ISonarrApi _api;
         private readonly ILogger<SonarrSync> _log;
         private readonly ExternalContext _ctx;
-        
+
         public async Task Execute(IJobExecutionContext job)
         {
             try
@@ -50,48 +50,81 @@ namespace Ombi.Schedule.Jobs.Sonarr
                     var ids = sonarrSeries.Select(x => x.tvdbId);
                     using (var tran = await _ctx.Database.BeginTransactionAsync())
                     {
-                        await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM SonarrCache");
+                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrCache");
                         tran.Commit();
                     }
 
+                    var existingSeries = await _ctx.SonarrCache.Select(x => x.TvDbId).ToListAsync();
+                    
+                    //var entites = ids.Except(existingSeries).Select(id => new SonarrCache { TvDbId = id }).ToImmutableHashSet();
                     var entites = ids.Select(id => new SonarrCache { TvDbId = id }).ToImmutableHashSet();
 
                     await _ctx.SonarrCache.AddRangeAsync(entites);
                     entites.Clear();
                     using (var tran = await _ctx.Database.BeginTransactionAsync())
                     {
-                        await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM SonarrEpisodeCache");
+                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrEpisodeCache");
                         tran.Commit();
                     }
 
                     foreach (var s in sonarrSeries)
                     {
-                        if (!s.monitored)
+                        if (!s.monitored || s.episodeFileCount > 0) // We have files
                         {
                             continue;
                         }
+
                         _log.LogDebug("Syncing series: {0}", s.title);
                         var episodes = await _api.GetEpisodes(s.id, settings.ApiKey, settings.FullUri);
                         var monitoredEpisodes = episodes.Where(x => x.monitored || x.hasFile);
-                        
+
+                        var allExistingEpisodes = await _ctx.SonarrEpisodeCache.Where(x => x.TvDbId == s.tvdbId).ToListAsync();
                         // Add to DB
                         _log.LogDebug("We have the episodes, adding to db transaction");
-                        using (var tran = await _ctx.Database.BeginTransactionAsync())
-                        {
-                            await _ctx.SonarrEpisodeCache.AddRangeAsync(monitoredEpisodes.Select(episode =>
+                        var episodesToAdd = monitoredEpisodes.Select(episode =>
                                 new SonarrEpisodeCache
                                 {
                                     EpisodeNumber = episode.episodeNumber,
                                     SeasonNumber = episode.seasonNumber,
                                     TvDbId = s.tvdbId,
                                     HasFile = episode.hasFile
-                                }));
+                                });
+                        //var episodesToAdd = new List<SonarrEpisodeCache>();
+
+                        //foreach (var monitored in monitoredEpisodes)
+                        //{
+                        //    var existing = allExistingEpisodes.FirstOrDefault(x => x.SeasonNumber == monitored.seasonNumber && x.EpisodeNumber == monitored.episodeNumber);
+                        //    if (existing == null)
+                        //    {
+                        //        // Just add a new one
+                        //        episodesToAdd.Add(new SonarrEpisodeCache
+                        //        {
+                        //            EpisodeNumber = monitored.episodeNumber,
+                        //            SeasonNumber = monitored.seasonNumber,
+                        //            TvDbId = s.tvdbId,
+                        //            HasFile = monitored.hasFile
+                        //        });
+                        //    } 
+                        //    else
+                        //    {
+                        //        // Do we need to update the availability?
+                        //        if (monitored.hasFile != existing.HasFile)
+                        //        {
+                        //            existing.HasFile = monitored.hasFile;
+                        //        }
+                        //    }
+
+                        //}
+
+                        using (var tran = await _ctx.Database.BeginTransactionAsync())
+                        {
+                            await _ctx.SonarrEpisodeCache.AddRangeAsync(episodesToAdd);
                             _log.LogDebug("Commiting the transaction");
                             await _ctx.SaveChangesAsync();
                             tran.Commit();
                         }
                     }
-                    
+
                 }
             }
             catch (Exception e)
