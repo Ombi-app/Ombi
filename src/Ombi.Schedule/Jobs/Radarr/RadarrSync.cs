@@ -81,6 +81,8 @@ namespace Ombi.Schedule.Jobs.Radarr
                                 tran.Commit();
                             }
                         }
+
+                        await OmbiQuartz.TriggerJob(nameof(IArrAvailabilityChecker), "DVR");
                     }
                     catch (System.Exception ex)
                     {

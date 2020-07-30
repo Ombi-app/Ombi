@@ -11,6 +11,7 @@ using Ombi.Api.Sonarr;
 using Ombi.Api.Sonarr.Models;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
+using Ombi.Schedule.Jobs.Radarr;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
@@ -69,7 +70,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
 
                     foreach (var s in sonarrSeries)
                     {
-                        if (!s.monitored || s.episodeFileCount > 0) // We have files
+                        if (!s.monitored || s.episodeFileCount == 0) // We have files
                         {
                             continue;
                         }
@@ -78,7 +79,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
                         var episodes = await _api.GetEpisodes(s.id, settings.ApiKey, settings.FullUri);
                         var monitoredEpisodes = episodes.Where(x => x.monitored || x.hasFile);
 
-                        var allExistingEpisodes = await _ctx.SonarrEpisodeCache.Where(x => x.TvDbId == s.tvdbId).ToListAsync();
+                        //var allExistingEpisodes = await _ctx.SonarrEpisodeCache.Where(x => x.TvDbId == s.tvdbId).ToListAsync();
                         // Add to DB
                         _log.LogDebug("We have the episodes, adding to db transaction");
                         var episodesToAdd = monitoredEpisodes.Select(episode =>
@@ -126,6 +127,8 @@ namespace Ombi.Schedule.Jobs.Sonarr
                     }
 
                 }
+
+                await OmbiQuartz.TriggerJob(nameof(IArrAvailabilityChecker), "DVR");
             }
             catch (Exception e)
             {
