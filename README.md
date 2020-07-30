@@ -102,12 +102,12 @@ We are planning to bring back these features in V3 but for now you can find a li
 | Lidarr | Yes | No |
 
 # Feature Requests
-Feature requests are handled on FeatHub.
+Feature requests are handled on Feature Upvote.
 
 Search the existing requests to see if your suggestion has already been submitted.
-(If a similar request exists, give it a thumbs up (+1), or add additional comments to the request)
+(If a similar request exists, please vote, or add additional comments to the request)
 
-#### [![Feature Requests](https://cloud.githubusercontent.com/assets/390379/10127973/045b3a96-6560-11e5-9b20-31a2032956b2.png)](http://feathub.com/tidusjar/Ombi)
+#### [![Feature Requests](https://cloud.githubusercontent.com/assets/390379/10127973/045b3a96-6560-11e5-9b20-31a2032956b2.png)](https://features.ombi.io)
 
 # Preview
 

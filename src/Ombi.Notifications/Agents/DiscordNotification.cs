@@ -111,7 +111,7 @@ namespace Ombi.Notifications.Agents
                 {
                     if (requestedUser.HasValue())
                     {
-                        fields.Add(new DiscordField { name = "Requsted By", value = requestedUser, inline = true });
+                        fields.Add(new DiscordField { name = "Requested By", value = requestedUser, inline = true });
                     }
                 }
                 if (model.Data.TryGetValue("DenyReason", out var denyReason))
