@@ -67,6 +67,7 @@ namespace Ombi.Schedule
             await OmbiQuartz.Instance.AddJob<INewsletterJob>(nameof(INewsletterJob), "System", JobSettingsHelper.Newsletter(s));
             await OmbiQuartz.Instance.AddJob<IResendFailedRequests>(nameof(IResendFailedRequests), "System", JobSettingsHelper.ResendFailedRequests(s));
             await OmbiQuartz.Instance.AddJob<IMediaDatabaseRefresh>(nameof(IMediaDatabaseRefresh), "System", JobSettingsHelper.MediaDatabaseRefresh(s));
+            await OmbiQuartz.Instance.AddJob<IAutoDeleteRequests>(nameof(IAutoDeleteRequests), "System", JobSettingsHelper.AutoDeleteRequests(s));
         }
 
         private static async Task AddDvrApps(JobSettings s)

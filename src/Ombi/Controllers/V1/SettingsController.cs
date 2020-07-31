@@ -575,6 +575,7 @@ namespace Ombi.Controllers.V1
             j.IssuesPurge = j.IssuesPurge.HasValue() ? j.IssuesPurge : JobSettingsHelper.IssuePurge(j);
             j.RetryRequests = j.RetryRequests.HasValue() ? j.RetryRequests : JobSettingsHelper.ResendFailedRequests(j);
             j.MediaDatabaseRefresh = j.MediaDatabaseRefresh.HasValue() ? j.MediaDatabaseRefresh : JobSettingsHelper.MediaDatabaseRefresh(j);
+            j.AutoDeleteRequests = j.AutoDeleteRequests.HasValue() ? j.AutoDeleteRequests : JobSettingsHelper.AutoDeleteRequests(j);
 
             return j;
         }

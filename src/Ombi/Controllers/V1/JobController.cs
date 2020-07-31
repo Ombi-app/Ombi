@@ -146,6 +146,14 @@ namespace Ombi.Controllers.V1
             return true;
         }
 
+
+        [HttpPost("autodeleterequests")]
+        public async Task<bool> StartAutoDeleteRequests()
+        {
+            await OmbiQuartz.TriggerJob(nameof(IAutoDeleteRequests), "System");
+            return true;
+        }
+
         /// <summary>
         /// Runs the newsletter
         /// </summary>

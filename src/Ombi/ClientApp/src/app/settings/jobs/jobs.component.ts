@@ -34,7 +34,8 @@ export class JobsComponent implements OnInit {
                 lidarrArtistSync:         [x.lidarrArtistSync, Validators.required],
                 issuesPurge:              [x.issuesPurge, Validators.required],
                 retryRequests:            [x.retryRequests, Validators.required],
-                mediaDatabaseRefresh:     [x.mediaDatabaseRefresh, Validators.required]
+                mediaDatabaseRefresh:     [x.mediaDatabaseRefresh, Validators.required],
+                autoDeleteRequests:     [x.autoDeleteRequests, Validators.required]
             });
         });
     }

@@ -36,6 +36,17 @@
                 </mat-checkbox>
             </div>
             <div>
+                <mat-checkbox formControlName="autoDeleteAvailableRequests">
+                    Auto Delete Available Requests
+                </mat-checkbox>
+            </div>
+            <div *ngIf="form.get('autoDeleteAvailableRequests').value">
+                <mat-form-field appearance="outline" >
+                    <mat-label>Delete After Days of Availbility</mat-label>
+                    <input matInput formControlName="autoDeleteAfterDays">
+                </mat-form-field>
+            </div>
+            <div>
                 <mat-checkbox formControlName="ignoreCertificateErrors" matTooltip="Enable if you are having connectivity problems over SSL">
                     Ignore any certificate errors (Please restart after changing)
                 </mat-checkbox>

@@ -76,6 +76,11 @@ namespace Ombi.Settings.Settings.Models
             return ValidateCron(Get(s.MediaDatabaseRefresh, Cron.DayInterval(5)));
         }
 
+        public static string AutoDeleteRequests(JobSettings s)
+        {
+            return ValidateCron(Get(s.AutoDeleteRequests, Cron.Daily()));
+        }
+
         private static string Get(string settings, string defaultCron)
         {
             return settings.HasValue() ? settings : defaultCron;

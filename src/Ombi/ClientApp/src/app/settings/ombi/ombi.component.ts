@@ -30,10 +30,11 @@ export class OmbiComponent implements OnInit {
                 doNotSendNotificationsForAutoApprove: [x.doNotSendNotificationsForAutoApprove],
                 hideRequestsUsers: [x.hideRequestsUsers],
                 defaultLanguageCode: [x.defaultLanguageCode],
-                disableHealthChecks: [x.disableHealthChecks]
+                disableHealthChecks: [x.disableHealthChecks],
+                autoDeleteAvailableRequests: [x.autoDeleteAvailableRequests],
+                autoDeleteAfterDays: [x.autoDeleteAfterDays]
             });
         });
-        debugger;
         this.langauges = <ILanguageRefine[]>languageData
     }
 

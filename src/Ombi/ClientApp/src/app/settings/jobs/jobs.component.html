@@ -105,6 +105,13 @@
                             <small *ngIf="form.get('mediaDatabaseRefresh').hasError('required')" class="error-text">The Media Database Refresh is required</small>
                             <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('mediaDatabaseRefresh')?.value)">Test</button>
                     </div>
+
+                    <div class="form-group">
+                        <label for="userImporter" class="control-label">Auto Available Request Deletion</label>
+                            <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('autoDeleteRequests').hasError('required')}" id="autoDeleteRequests" name="autoDeleteRequests" formControlName="autoDeleteRequests">
+                            <small *ngIf="form.get('autoDeleteRequests').hasError('required')" class="error-text">Auto Available Request Deletion is required</small>
+                            <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('autoDeleteRequests')?.value)">Test</button>
+                    </div>
             </div>
             <div class="form-group">
                     <div>

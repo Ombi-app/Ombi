@@ -17,6 +17,8 @@ export interface IOmbiSettings extends ISettings {
   hideRequestsUsers: boolean;
   defaultLanguageCode: string;
   disableHealthChecks: boolean;
+  autoDeleteAvailableRequests: boolean;
+  autoDeleteAfterDays: number;
 }
 
 export interface IUpdateSettings extends ISettings {
@@ -146,6 +148,7 @@ export interface IJobSettings {
   issuesPurge: string;
   retryRequests: string;
   mediaDatabaseRefresh: string;
+  autoDeleteRequests: string;
 }
 
 export interface IIssueSettings extends ISettings {
