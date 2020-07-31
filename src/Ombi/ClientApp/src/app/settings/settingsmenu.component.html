@@ -1,7 +1,7 @@
-﻿<button mat-button [routerLink]="['/Settings/Ombi']">Ombi</button>
-
+﻿
 <button mat-button [matMenuTriggerFor]="configurationmenu"><i class="fa fa-cogs" aria-hidden="true"></i> Configuration</button>
 <mat-menu #configurationmenu="matMenu">
+    <button mat-menu-item [routerLink]="['/Settings/Ombi']">General</button>
     <button mat-menu-item [routerLink]="['/Settings/Customization']">Customization</button>
     <button mat-menu-item [routerLink]="['/Settings/LandingPage']">Landing Page</button>
     <button mat-menu-item [routerLink]="['/Settings/Issues']">Issues</button>

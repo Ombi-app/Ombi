@@ -62,17 +62,17 @@ stages:
           $response = Invoke-WebRequest -Uri "https://ombireleasenote.azurewebsites.net/api/ReleaseNotesFunction?buildId=$(Build.BuildId)"
           Write-Host "##vso[task.setvariable variable=ReleaseNotes;]$response"
 
-    - task: GitHubRelease@1
-      inputs:
-        gitHubConnection: 'github.com_tidusjar'
-        repositoryName: 'tidusjar/Ombi'
-        action: 'create'
-        target: '$(Build.SourceVersion)'
-        tagSource: 'userSpecifiedTag'
-        tag: '$(gitTag)'
-        isDraft: true
-        changeLogCompareToRelease: 'lastNonDraftRelease'
-        changeLogType: 'commitBased'
+    # - task: GitHubRelease@1
+    #   inputs:
+    #     gitHubConnection: 'github.com_tidusjar'
+    #     repositoryName: 'tidusjar/Ombi'
+    #     action: 'create'
+    #     target: '$(Build.SourceVersion)'
+    #     tagSource: 'userSpecifiedTag'
+    #     tag: '$(gitTag)'
+    #     isDraft: true
+    #     changeLogCompareToRelease: 'lastNonDraftRelease'
+    #     changeLogType: 'commitBased'
 
     - task: GitHubRelease@1
       inputs:
@@ -90,4 +90,4 @@ stages:
         isPreRelease: true
         changeLogCompareToRelease: 'lastNonDraftRelease'
         changeLogType: 'commitBased'
-        condition: and(succeeded(), eq(variables['PublishToGithub'], 'true'))
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/feature/v4'))

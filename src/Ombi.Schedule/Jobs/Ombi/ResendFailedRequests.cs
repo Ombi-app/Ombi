@@ -36,7 +36,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         public async Task Execute(IJobExecutionContext job)
         {
             // Get all the failed ones!
-            var failedRequests = _requestQueue.GetAll().Where(x => !x.Completed.HasValue);
+            var failedRequests = _requestQueue.GetAll().Where(x => x.Completed == null);
 
             foreach (var request in failedRequests)
             {
