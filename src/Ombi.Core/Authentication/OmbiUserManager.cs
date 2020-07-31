@@ -79,7 +79,7 @@ namespace Ombi.Core.Authentication
             {
                 return await CheckPlexPasswordAsync(user, password);
             }
-            if (user.UserType == UserType.EmbyUser)
+            if (user.UserType == UserType.EmbyUser || user.UserType == UserType.EmbyConnectUser)
             {
                 return await CheckEmbyPasswordAsync(user, password);
             }

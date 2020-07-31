@@ -34,7 +34,6 @@ namespace Ombi.Api.Emby.Models
         public string Name { get; set; }
         public string ServerId { get; set; }
         public string ConnectUserName { get; set; }
-        public string ConnectUserId { get; set; }
         public string ConnectLinkType { get; set; }
         public string Id { get; set; }
         public bool HasPassword { get; set; }

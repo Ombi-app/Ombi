@@ -263,9 +263,6 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("EmbyConnectUserId")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
                     b.Property<int?>("EpisodeRequestLimit")
                         .HasColumnType("int");
 

@@ -19,8 +19,6 @@ namespace Ombi.Store.Entities
 
         public DateTime? LastLoggedIn { get; set; }
 
-        public string EmbyConnectUserId { get; set; }
-
         public string Language { get; set; }
 
         public int? MovieRequestLimit { get; set; }
@@ -33,7 +31,7 @@ namespace Ombi.Store.Entities
         public List<UserNotificationPreferences> UserNotificationPreferences { get; set; }
 
         [NotMapped]
-        public bool IsEmbyConnect => UserType == UserType.EmbyUser && EmbyConnectUserId.HasValue();
+        public bool IsEmbyConnect => UserType == UserType.EmbyConnectUser;
 
         [NotMapped]
         public virtual string UserAlias => string.IsNullOrEmpty(Alias) ? UserName : Alias;
