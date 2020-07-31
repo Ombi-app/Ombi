@@ -8,6 +8,7 @@ using Ombi.Schedule.Jobs;
 using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
+using Ombi.Schedule.Jobs.Radarr;
 using Quartz;
 
 namespace Ombi.Controllers.V1
@@ -131,6 +132,17 @@ namespace Ombi.Controllers.V1
         public async Task<bool> StartEmbyContentCacher()
         {
             await OmbiQuartz.TriggerJob(nameof(IEmbyContentSync), "Emby");
+            return true;
+        }
+
+        /// <summary>
+        /// Runs the Arr Availability Checker
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("arrAvailability")]
+        public async Task<bool> StartArrAvailabiltityChecker()
+        {
+            await OmbiQuartz.TriggerJob(nameof(IArrAvailabilityChecker), "DVR");
             return true;
         }
 

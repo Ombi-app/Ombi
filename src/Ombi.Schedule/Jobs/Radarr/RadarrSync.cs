@@ -49,28 +49,28 @@ namespace Ombi.Schedule.Jobs.Radarr
                             // Let's remove the old cached data
                             using (var tran = await _ctx.Database.BeginTransactionAsync())
                             {
-                                await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM RadarrCache");
+                                await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM RadarrCache");
                                 tran.Commit();
                             }
 
                             var movieIds = new List<RadarrCache>();
                             foreach (var m in movies)
                             {
-                            if(m.monitored)
-                            {
-                                if (m.tmdbId > 0)
+                                if (m.monitored || m.hasFile)
                                 {
-                                    movieIds.Add(new RadarrCache
+                                    if (m.tmdbId > 0)
                                     {
-                                        TheMovieDbId = m.tmdbId,
-                                        HasFile = m.hasFile
-                                    });
+                                        movieIds.Add(new RadarrCache
+                                        {
+                                            TheMovieDbId = m.tmdbId,
+                                            HasFile = m.hasFile
+                                        });
+                                    }
+                                    else
+                                    {
+                                        Logger.LogError("TMDBId is not > 0 for movie {0}", m.title);
+                                    }
                                 }
-                                else
-                                {
-                                   Logger.LogError("TMDBId is not > 0 for movie {0}", m.title);
-                                }
-                            }
                             }
 
                             using (var tran = await _ctx.Database.BeginTransactionAsync())
@@ -81,6 +81,8 @@ namespace Ombi.Schedule.Jobs.Radarr
                                 tran.Commit();
                             }
                         }
+
+                        await OmbiQuartz.TriggerJob(nameof(IArrAvailabilityChecker), "DVR");
                     }
                     catch (System.Exception ex)
                     {

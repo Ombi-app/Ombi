@@ -5,20 +5,19 @@
             <span *ngFor="let nav of navItems">
 
               <div *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled">
-                
 
 
-              <a *ngIf="nav.donation" mat-list-item [href]="nav.link" target="_blank" matTooltip="{{nav.toolTipMessage | translate}}" matTooltipPosition="right" [routerLinkActive]="getTheme()">
+              <a *ngIf="nav.externalLink" mat-list-item [href]="nav.link" target="_blank" matTooltip="{{nav.toolTipMessage | translate}}" matTooltipPosition="right" [routerLinkActive]="getTheme()">
 
-                <mat-icon aria-label="Side nav toggle icon" [style]="nav.style" >{{nav.icon}}</mat-icon>
+                <mat-icon *ngIf="nav.icon" aria-label="Side nav toggle icon" [style]="nav.style" >{{nav.icon}}</mat-icon>
+                <i *ngIf="nav.faIcon" class="fa fa-lg {{nav.faIcon}}" style="padding-left: 5px; padding-right: 5px;" aria-hidden="true"></i>
                 &nbsp;{{nav.name | translate}}
               </a>
-              <a *ngIf="!nav.donation" mat-list-item [routerLink]="nav.link" [style]="nav.color" [routerLinkActive]="getTheme()">
+              <a *ngIf="!nav.externalLink" mat-list-item [routerLink]="nav.link" [style]="nav.color" [routerLinkActive]="getTheme()">
 
                 <mat-icon aria-label="Side nav toggle icon">{{nav.icon}}</mat-icon>
                 &nbsp;{{nav.name | translate}}
-              </a> 
-              
+              </a>
             </div>
             </span>
 

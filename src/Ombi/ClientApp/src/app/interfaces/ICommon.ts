@@ -29,6 +29,7 @@ export interface IUsersModel {
 
 export interface INavBar {
     icon: string;
+    faIcon: string;
     name: string;
     link: string;
     requiresAdmin: boolean;
@@ -36,5 +37,5 @@ export interface INavBar {
     toolTip?: boolean;
     toolTipMessage?: string;
     style?: string;
-    donation?: boolean;
+    externalLink?: boolean;
 }

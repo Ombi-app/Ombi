@@ -67,7 +67,9 @@
         "RecentlyAdded": "Recently Added",
         "ChangeTheme": "Change Theme",
         "Calendar": "Calendar",
-        "UserPreferences": "Preferences"
+        "UserPreferences": "Preferences",
+        "FeatureSuggestion":"Feature Suggestion",
+        "FeatureSuggestionTooltip":"Have a great new idea? Suggest it here!"
     },
     "Search": {
         "Title": "Search",
