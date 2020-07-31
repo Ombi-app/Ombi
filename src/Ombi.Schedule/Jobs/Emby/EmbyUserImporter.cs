@@ -81,7 +81,7 @@ namespace Ombi.Schedule.Jobs.Emby
 
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, $"{(settings.IsJellyfin ? "Jellyfin" : "Emby")}  User Importer Started");
-            var allUsers = await _userManager.Users.Where(x => x.UserType == UserType.EmbyUser).ToListAsync();
+            var allUsers = await _userManager.Users.Where(x => x.UserType == UserType.EmbyUser || x.UserType == UserType.EmbyConnectUser).ToListAsync();
             foreach (var server in settings.Servers)
             {
                 if (string.IsNullOrEmpty(server.ApiKey))
