@@ -146,7 +146,6 @@ export interface IJobSettings {
   issuesPurge: string;
   retryRequests: string;
   mediaDatabaseRefresh: string;
-  arrAvailabilityChecker: string;
 }
 
 export interface IIssueSettings extends ISettings {
