@@ -9,6 +9,7 @@ namespace Ombi.Store.Migrations.OmbiMySql
             migrationBuilder.DropColumn(
                 name: "EmbyConnectUserId",
                 table: "AspNetUsers");
+            migrationBuilder.Sql("UPDATE AspNetUsers SET UserType = 4 WHERE EmbyConnectUserId IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
