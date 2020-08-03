@@ -83,6 +83,12 @@ export class AppComponent implements OnInit {
                 this.applicationName = this.customizationSettings.applicationName;
                 this.document.getElementsByTagName('title')[0].innerText = this.applicationName;
             }
+            if (this.customizationSettings && this.customizationSettings.customCss) {
+                var dom = this.document.getElementsByTagName('head')[0];
+                var css = document.createElement("style");
+                css.innerHTML = this.customizationSettings.customCss;
+                dom.appendChild(css);
+            }
 
             if (this.customizationSettings.useCustomPage) {
                 this.customPageService.getCustomPage().subscribe(c => {
