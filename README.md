@@ -9,7 +9,15 @@ ____
 [![Patreon](https://img.shields.io/badge/patreon-donate-yellow.svg)](https://patreon.com/tidusjar/Ombi)
 [![Paypal](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://paypal.me/PlexRequestsNet)
 
+# Feature Requests
+Feature requests are handled on Feature Upvote.
+
+Search the existing requests to see if your suggestion has already been submitted.
+(If a similar request exists, please vote, or add additional comments to the request)
+
+#### [![Feature Requests](https://cloud.githubusercontent.com/assets/390379/10127973/045b3a96-6560-11e5-9b20-31a2032956b2.png)](https://features.ombi.io)
 ___
+
 
 [![Twitter](https://img.shields.io/twitter/follow/tidusjar.svg?style=social)](https://twitter.com/intent/follow?screen_name=tidusjar)
 
@@ -57,8 +65,9 @@ Here are some of the features Ombi V3 has:
 We integrate with the following applications:
 * Plex Media Server
 * Emby
-* Sonarr
-* Radarr
+* Jellyfin
+* Sonarr V2 and V3
+* Radarr V2
 * Lidarr
 * DogNzb
 * Couch Potato
@@ -66,14 +75,16 @@ We integrate with the following applications:
 
 ### Notifications
 Supported notifications:
+* Mobile
 * SMTP Notifications (Email)
 * Discord
-* Gotify
 * Slack
 * Pushbullet
 * Pushover
 * Mattermost
 * Telegram
+* Gotify
+* Twilio
 * Webhook
 
 ### The difference between Version 3 and 2
@@ -83,31 +94,26 @@ We have already done most of the work, but some features are still be missing in
 We are planning to bring back these features in V3 but for now you can find a list below with a quick comparison of features between v2 and v3.
 
 
-| Service  | Version 3 | Version 2 |
+| Service  | Version 4 (Beta) | Version 3 (Stable)|
 |----------|:----------:|:----------:|
-| Multiple Plex/Emby Servers| Yes | No |
-| Emby & Plex support | Yes | Yes |
-| Mono dependency | No | Yes |
-| Notifications support | Yes| Yes |
-| Landing page | Yes (brand new) | Yes |
+| Multiple Plex/Emby/Jellyfin Servers | Yes | Yes |
+| Emby/Jellyfin & Plex support | Yes | Yes |
+| Mono dependency | No | No |
+| Plex OAuth support | Yes | Yes |
 | Login page | Yes (brand new) | Yes |
-| Custom Notification Messages | Yes | No |
+| Discovery page | Yes (brand new) | No |
+| Request a movie collection | Yes (brand new) | No |
+| Auto Delete Available Requests | Yes (brand new) | No |
+| Report issues | Yes | Yes |
+| Notifications support | Yes | Yes |
+| Custom Notification Messages | Yes | Yes |
 | Sending newsletters | Yes | Yes |
 | Send a Mass Email | Yes | Yes |
 | SickRage | Yes | Yes |
 | CouchPotato | Yes | Yes |
-| DogNzb | Yes | No |
-| Issues | Yes | Yes |
+| DogNzb | Yes | Yes |
 | Headphones | No | Yes |
-| Lidarr | Yes | No |
-
-# Feature Requests
-Feature requests are handled on Feature Upvote.
-
-Search the existing requests to see if your suggestion has already been submitted.
-(If a similar request exists, please vote, or add additional comments to the request)
-
-#### [![Feature Requests](https://cloud.githubusercontent.com/assets/390379/10127973/045b3a96-6560-11e5-9b20-31a2032956b2.png)](https://features.ombi.io)
+| Lidarr | Yes | Yes |
 
 # Preview
 
