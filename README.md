@@ -75,7 +75,7 @@ We integrate with the following applications:
 
 ### Notifications
 Supported notifications:
-* Mobile and legacy mobile
+* Mobile
 * SMTP Notifications (Email)
 * Discord
 * Slack
@@ -101,7 +101,6 @@ We are planning to bring back these features in V3 but for now you can find a li
 | Mono dependency | No | No |
 | Plex OAuth support | Yes | Yes |
 | Login page | Yes (brand new) | Yes |
-| Landing page | Yes (brand new) | Yes |
 | Discovery page | Yes (brand new) | No |
 | Request a movie collection | Yes (brand new) | No |
 | Auto Delete Available Requests | Yes (brand new) | No |
@@ -113,7 +112,7 @@ We are planning to bring back these features in V3 but for now you can find a li
 | SickRage | Yes | Yes |
 | CouchPotato | Yes | Yes |
 | DogNzb | Yes | Yes |
-| Headphones | Not yet | Yes |
+| Headphones | No | Yes |
 | Lidarr | Yes | Yes |
 
 # Preview
