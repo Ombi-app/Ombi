@@ -87,7 +87,7 @@ Supported notifications:
 * Twilio
 * Webhook
 
-### The difference between Version 3 and 2
+### The difference between Version 4 and 3
 
 Over the last year, we focused on the main functions on Ombi, a complete rewrite while making it better, faster and more stable.
 We have already done most of the work, but some features are still be missing in this first version.
