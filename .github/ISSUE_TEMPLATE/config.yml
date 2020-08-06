@@ -1,11 +1,11 @@
 blank_issues_enabled: false
 contact_links:
-  - name: 📗 Wiki
+  - name: Wiki
     url: https://github.com/tidusjar/Ombi/wiki
-    about: The Ombi wiki should help guide you through installation and setup as well as help resolve common problems and answer frequently asked questions.
-   - name: 🌐 Reddit support
-    url: https://www.reddit.com/r/Ombi/
+    about: The Ombi wiki should help guide you through installation and setup as well as help resolve common problems and answer frequently asked questions
+  - name: Reddit support
+    url: https://www.reddit.com/r/Ombi
     about: Ask questions about Ombi
- - name: 🚀 Feature suggestions
-    url: https://ombifeatures.featureupvote.com/
+  - name: Feature suggestions
+    url: https://ombifeatures.featureupvote.com
     about: Share your suggestions or ideas to make Ombi better!
