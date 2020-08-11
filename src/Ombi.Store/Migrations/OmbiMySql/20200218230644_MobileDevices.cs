@@ -11,7 +11,7 @@ namespace Ombi.Store.Migrations.OmbiMySql
             migrationBuilder.Sql(@"CREATE TABLE `MobileDevices` (
     `Id` int NOT NULL AUTO_INCREMENT,
     `Token` longtext CHARACTER SET utf8mb4 NULL,
-    `UserId` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+    `UserId` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
     `AddedAt` datetime(6) NOT NULL,
     CONSTRAINT `PK_MobileDevices` PRIMARY KEY (`Id`),
     CONSTRAINT `FK_MobileDevices_AspNetUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `AspNetUsers` (`Id`) ON DELETE RESTRICT
