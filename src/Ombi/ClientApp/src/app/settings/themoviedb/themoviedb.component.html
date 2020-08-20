@@ -6,14 +6,37 @@
         <div class="form-group">
             <div class="checkbox">
                 <input type="checkbox" id="showAdultMovies" name="showAdultMovies" [(ngModel)]="settings.showAdultMovies">
-                <label for="showAdultMovies" tooltipPosition="top" pTooltip="Include adult movies (pornography) in results">Show Adult Movies</label>
+                <label for="showAdultMovies" matTooltip="Include adult movies (pornography) in results">Show Adult Movies</label>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="control-label" pTooltip="Prevent movies with certain keywords from being suggested. May require a restart to take effect.">
+            <label class="control-label" matTooltip="Prevent movies with certain keywords from being suggested. May require a restart to take effect.">
                 Excluded Keyword IDs for Movie Suggestions
             </label>
+<form [formGroup]='tagForm'>
+    <mat-form-field class="example-chip-list">
+            <mat-chip-list #chipList>
+                <mat-chip *ngFor="let fruit of excludedKeywords" [selectable]="false"
+                         [removable]="true" (removed)="remove(fruit)">
+                  {{fruit.name}}
+                  <mat-icon matChipRemove >cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="New Keyword"
+                #fruitInput
+                formControlName='input'
+                       [matChipInputFor]="chipList"
+                       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                       [matChipInputAddOnBlur]="true"
+                       >
+              </mat-chip-list>
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                <mat-option *ngFor="let fruit of filteredTags" [value]="fruit">
+                  {{fruit.name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            </form>
             <!-- <tag-input #input
                        [(ngModel)]="excludedKeywords"
                        [identifyBy]="'id'" [displayBy]="'name'"
