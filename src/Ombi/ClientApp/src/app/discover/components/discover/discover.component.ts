@@ -1,9 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Inject } from "@angular/core";
 import { SearchV2Service } from "../../../services";
 import { ISearchMovieResult, ISearchTvResult, RequestType } from "../../../interfaces";
 import { IDiscoverCardResult, DiscoverOption } from "../../interfaces";
 import { trigger, transition, style, animate } from "@angular/animations";
 import { StorageService } from "../../../shared/storage/storage-service";
+import { DOCUMENT } from "@angular/common";
 
 @Component({
     templateUrl: "./discover.component.html",
@@ -42,7 +43,9 @@ export class DiscoverComponent implements OnInit {
     private mediaTypeStorageKey = "DiscoverOptions";
 
     constructor(private searchService: SearchV2Service,
-        private storageService: StorageService) { }
+        private storageService: StorageService,
+        @Inject(DOCUMENT) private container: Document) { }
+
 
     public async ngOnInit() {
         this.loading()
@@ -68,6 +71,9 @@ export class DiscoverComponent implements OnInit {
 
         this.createInitialModel();
         this.scrollDisabled = false;
+        if (!this.containerHasScrollBar()) {
+            await this.onScroll();
+        }
     }
 
     public async onScroll() {
@@ -209,7 +215,7 @@ export class DiscoverComponent implements OnInit {
     public async switchDiscoverMode(newMode: DiscoverOption) {
         this.loading();
         this.clear();
-        this.discoverOptions = newMode;        
+        this.discoverOptions = newMode;
         this.storageService.save(this.mediaTypeStorageKey, newMode.toString());
         await this.ngOnInit();
         this.finishLoading();
@@ -242,7 +248,7 @@ export class DiscoverComponent implements OnInit {
         this.movies.forEach(m => {
             tempResults.push({
                 available: m.available,
-                posterPath: m.posterPath ? `https://image.tmdb.org/t/p/w300/${m.posterPath}` : "../../../images/default_movie_poster.png",
+                posterPath: m.posterPath ? `https://image.tmdb.org/t/p/w500/${m.posterPath}` : "../../../images/default_movie_poster.png",
                 requested: m.requested,
                 title: m.title,
                 type: RequestType.movie,
@@ -300,5 +306,12 @@ export class DiscoverComponent implements OnInit {
 
     private finishLoading() {
         this.loadingFlag = false;
+    }
+
+    private containerHasScrollBar(): boolean {
+        return
+        // div.scrollHeight > div.clientHeight;
+        this.container.documentElement.scrollHeight > this.container.documentElement.clientHeight;
+        // this.container.documentElement.scrollHeight > (window.innerHeight + window.pageYOffset);
     }
 }
