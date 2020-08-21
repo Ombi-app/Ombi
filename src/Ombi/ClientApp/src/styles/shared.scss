@@ -20,6 +20,7 @@
     .top-space {
         padding-top: 2%;
     }
+
     .modal-panel {
         max-height: 100vh !important;
         max-width: 100vw !important;
@@ -54,7 +55,7 @@ body {
 
 /* Scrollbar */
 
-::-webkit-scrollbar{
+::-webkit-scrollbar {
     width: 7px;
     background: #818181;
 }
@@ -64,7 +65,7 @@ body {
 }
 
 // Changed color of the scrollbar 
-::-webkit-scrollbar-thumb{
+::-webkit-scrollbar-thumb {
     border-radius: 3px;
     background: #303030;
 }
@@ -73,13 +74,15 @@ body {
     display: none;
 }
 
-.grow {
-    transition: all .2s ease-in-out;
-}
+@media (min-width: 1025px) {
+    .grow {
+        transition: all .2s ease-in-out;
+    }
 
-.grow:hover {
-    transform: scale(1.1);
-    color: black;
+    .grow:hover {
+        transform: scale(1.1);
+        color: black;
+    }
 }
 
 table {
@@ -91,47 +94,47 @@ table {
     padding-bottom: 4%;
 }
 
-::ng-deep .dark .form-control{
-	background-color: rgba(0, 0, 0, 0.18);
-	color:#fff;
-	border: 1px solid rgba(0, 0, 0, 0.18);
-}
-
-::ng-deep .dark .nav-link.active{
-	color: #303030;
-	background-color: $accent-dark;
-	border-color: rgba(0, 0, 0, 0.18);
-	font-weight:400;
-}
-
-::ng-deep .dark .nav-link{
-	color: #fff;
-	background-color: rgba(0, 0, 0, 0.18);
-	border-color: rgba(0, 0, 0, 0.18);
-}
-
-::ng-deep .dark .ui-autocomplete.ui-autocomplete-multiple .ui-autocomplete-multiple-container .ui-autocomplete-input-token input{
-	color:#fff;
-}
-
-::ng-deep .dark .ui-inputtext{
+::ng-deep .dark .form-control {
     background-color: rgba(0, 0, 0, 0.18);
-	color:#fff;
-	border: 1px solid rgba(0, 0, 0, 0.18);
+    color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.18);
 }
 
-::ng-deep .mat-toolbar.mat-primary{
+::ng-deep .dark .nav-link.active {
+    color: #303030;
+    background-color: $accent-dark;
+    border-color: rgba(0, 0, 0, 0.18);
+    font-weight: 400;
+}
+
+::ng-deep .dark .nav-link {
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.18);
+    border-color: rgba(0, 0, 0, 0.18);
+}
+
+::ng-deep .dark .ui-autocomplete.ui-autocomplete-multiple .ui-autocomplete-multiple-container .ui-autocomplete-input-token input {
+    color: #fff;
+}
+
+::ng-deep .dark .ui-inputtext {
+    background-color: rgba(0, 0, 0, 0.18);
+    color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+}
+
+::ng-deep .mat-toolbar.mat-primary {
     margin-bottom: 0.5em;
 }
 
-::ng-deep .dark .mat-form-field.mat-focused .mat-form-field-label{
+::ng-deep .dark .mat-form-field.mat-focused .mat-form-field-label {
     color: $accent-dark;
 }
 
-::ng-deep .mat-form-field.mat-focused .mat-form-field-label{
+::ng-deep .mat-form-field.mat-focused .mat-form-field-label {
     color: $accent;
 }
 
-::ng-deep .mat-form-field-appearance-outline .mat-form-field-wrapper{
-    margin:0.5em;
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-wrapper {
+    margin: 0.5em;
 }
