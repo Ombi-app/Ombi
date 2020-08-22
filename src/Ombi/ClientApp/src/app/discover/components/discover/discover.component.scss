@@ -27,23 +27,28 @@
 }
 
 ::ng-deep .mat-card-image {
-    height:75%;
-    object-fit:cover;
-    display:block;
+    height: 75%;
+    object-fit: cover;
+    display: block;
 }
 
 .card-spacing {
-    height:100%;
+    height: 100%;
 }
 
 .mat-card-content h6 {
-    overflow:hidden;
-    white-space:nowrap;
-    font-weight:500;
-    font-size:1.1rem;
+    overflow: hidden;
+    white-space: nowrap;
+    font-weight: 500;
+    font-size: 1.1rem;
 }
 
 @media (min-width: 300px) {
+
+    .small-middle-container {
+        margin: inherit;
+    }
+
     .col-xl-2 {
         flex: 0 0 100%;
         max-width: 100%;
@@ -51,20 +56,20 @@
     }
 
     .btn-group {
-        width:100%;
+        width: 100%;
     }
 
     mat-button-base {
-        width:100%;
+        width: 100%;
     }
 
     .col {
         padding-right: 10px !important;
-        padding-left:10px !important;
+        padding-left: 10px !important;
     }
 
     .row {
-        margin-left:0px;
+        margin-left: 0px;
     }
 
     .small-padding {
@@ -74,28 +79,29 @@
     }
 
     ::ng-deep .mat-card-image {
-        height:85% !important;
+        height: 85% !important;
     }
 }
 
 @media (min-width: 600px) {
     .justify-content-md-center {
-    justify-content: center !important;
+        justify-content: center !important;
     }
-    .small-middle-container{
-        width:auto;
+
+    .small-middle-container {
+        width: auto;
     }
 
     .btn-group {
-        width:auto;
+        width: auto;
     }
 
     mat-button-base {
-        width:auto;
+        width: auto;
     }
 
     ::ng-deep .mat-card-image {
-        height:75% !important;
+        height: 75% !important;
     }
 }
 
@@ -106,32 +112,32 @@
         min-width: 50%;
     }
 
-    .col{
+    .col {
         padding-right: 15px !important;
         padding-left: 15px !important;
     }
 
-    .small-padding{
+    .small-padding {
         padding-left: 20px !important;
         padding-right: 20px !important;
-        height:auto;
+        height: auto;
     }
 
-    .row{
-        margin-left:0px;
+    .row {
+        margin-left: 0px;
     }
 
-    .small-middle-container{
-        width:auto;
-        overflow:hidden;
+    .small-middle-container {
+        width: auto;
+        overflow: hidden;
     }
 
     .btn-group {
-        width:auto;
+        width: auto;
     }
 
     mat-button-base {
-        width:auto;
+        width: auto;
     }
 }
 
@@ -166,6 +172,7 @@
         min-width: 16.66666667%;
     }
 }
+
 @media (min-width: 1900px) {
     .col-xl-2 {
         flex: 0 0 14.285713%;

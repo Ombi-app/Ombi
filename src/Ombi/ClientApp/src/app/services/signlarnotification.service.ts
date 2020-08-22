@@ -3,6 +3,7 @@ import { AuthService } from '../auth/auth.service';
 
 import { HubConnection } from '@aspnet/signalr';
 import * as signalR from '@aspnet/signalr';
+
 @Injectable()
 export class SignalRNotificationService {
 
@@ -28,12 +29,16 @@ export class SignalRNotificationService {
             this.Notification.emit(data);
         });
 
+        let retryCount = 0;
 
         this.hubConnection.start().then((data: any) => {
             console.log('Now connected');
         }).catch((error: any) => {
+            retryCount++;
             console.log('Could not connect ' + error);
-            setTimeout(() => this.initialize(), 3000);
+            if (retryCount <= 3) {
+                setTimeout(() => this.initialize(), 3000);
+            }
         });
     }
 

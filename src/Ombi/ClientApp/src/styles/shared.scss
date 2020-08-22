@@ -38,11 +38,19 @@
 html,
 body {
     min-height: 100vh;
-    overflow: auto;
+    overflow: hidden;
     scrollbar-color: #616161 #303030; //firefox
     scrollbar-width: thin; //firefox
+    -webkit-overflow-scrolling: touch;
 }
-
+#main-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: auto;
+}
 .spinner-container {
     position: relative;
     margin-left: 50%;

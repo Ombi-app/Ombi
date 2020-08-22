@@ -1,6 +1,8 @@
 @import "~styles/variables.scss";
 .sidenav-container {
     min-height: 100vh;
+    -webkit-overflow-scrolling:touch;
+    overflow:auto;
 }
 
 .sidenav {
