@@ -1,4 +1,7 @@
 ![](http://i.imgur.com/qQsN78U.png)   
+
+**Please note: The new plex movie agent in version 1.20.1.3252 and higher isn't supported yet by Ombi. A Change is planned, but for now we can't sync the availability. **
+
 ____ 
 [![Discord](https://img.shields.io/discord/270828201473736705.svg)](https://discord.gg/Sa7wNWb)
 [![Docker Pulls](https://img.shields.io/docker/pulls/linuxserver/ombi.svg)](https://hub.docker.com/r/linuxserver/ombi/)
