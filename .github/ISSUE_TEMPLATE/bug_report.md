@@ -29,6 +29,7 @@ If applicable, a snippet of the logs that seems relevant to the bug if present.
 **Ombi Version (please complete the following information):**
  - Version [e.g. 3.0.1158]
 - Media Server [e.g. Plex]
+- Database Type: SQLite (Please change if using MySQL)
 
 **Additional context**
 Add any other context about the problem here.
