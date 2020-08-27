@@ -44,7 +44,13 @@ namespace Ombi.Api.Plex.Models
         public string grandparentTheme { get; set; }
         public string chapterSource { get; set; }
         public Medium[] Media { get; set; }
+        public PlexGuids[] Guid { get; set; }
         //    public Director[] Director { get; set; }
         //    public Writer[] Writer { get; set; }
+    }
+
+    public class PlexGuids
+    {
+        public string Id { get; set; }
     }
 }

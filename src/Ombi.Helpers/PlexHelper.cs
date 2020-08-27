@@ -41,6 +41,7 @@ namespace Ombi.Helpers
             //com.plexapp.agents.thetvdb://269586/2/8?lang=en
             //com.plexapp.agents.themoviedb://390043?lang=en
             //com.plexapp.agents.imdb://tt2543164?lang=en
+            //plex://movie/5e1632df2d4d84003e48e54e
             // https://github.com/tidusjar/Ombi/issues/3277
             if (string.IsNullOrEmpty(guid))
             {
@@ -57,7 +58,7 @@ namespace Ombi.Helpers
                         TheTvDb = guidSplit[1]
                     };
                 }
-                if (guid.Contains("themoviedb", CompareOptions.IgnoreCase))
+                if (guid.Contains("themoviedb", CompareOptions.IgnoreCase) || guid.Contains("tmdb", CompareOptions.IgnoreCase))
                 {
                     return new ProviderId
                     {
@@ -69,6 +70,13 @@ namespace Ombi.Helpers
                     return new ProviderId
                     {
                         ImdbId = guidSplit[1]
+                    };
+                }
+                if (guid.Contains("plex://", CompareOptions.IgnoreCase))
+                {
+                    return new ProviderId
+                    {
+                        Plex = true
                     };
                 }
 
@@ -102,6 +110,37 @@ namespace Ombi.Helpers
                 $"https://app.plex.tv/web/app#!/server/{machineId}/details?key=library%2Fmetadata%2F{mediaId}";
             return url;
         }
+
+        public static ProviderId GetProviderIdsFromMetadata(params string[] guids)
+        {
+            var providerIds = new ProviderId();
+            foreach (var guid in guids)
+            {
+                var provider = GetProviderIdFromPlexGuid(guid);
+                if (provider.Type == ProviderType.Plex)
+                {
+                    // There are more guids!
+                    continue;
+                }
+
+                switch (provider.Type)
+                {
+                    case ProviderType.ImdbId:
+                        providerIds.ImdbId = provider.ImdbId;
+                        break;
+                    case ProviderType.TheMovieDbId:
+                        providerIds.TheMovieDb = provider.TheMovieDb;
+                        break;
+                    case ProviderType.TvDbId:
+                        providerIds.TheTvDb = provider.TheTvDb;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(provider.Type));
+                }
+            }
+
+            return providerIds;
+        }
     }
 
     public class ProviderId
@@ -109,6 +148,7 @@ namespace Ombi.Helpers
         public string TheTvDb { get; set; }
         public string TheMovieDb { get; set; }
         public string ImdbId { get; set; }
+        public bool Plex { get; set; }
 
         public ProviderType Type
         {
@@ -126,6 +166,10 @@ namespace Ombi.Helpers
                 {
                     return ProviderType.TvDbId;
                 }
+                if (Plex)
+                {
+                    return ProviderType.Plex;
+                }
                 return ProviderType.ImdbId;
             }
         }
@@ -135,6 +179,7 @@ namespace Ombi.Helpers
     {
         ImdbId,
         TheMovieDbId,
-        TvDbId
+        TvDbId,
+        Plex
     }
 }
