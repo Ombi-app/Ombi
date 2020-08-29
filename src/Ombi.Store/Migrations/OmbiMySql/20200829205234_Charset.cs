@@ -6,6 +6,7 @@ namespace Ombi.Store.Migrations.OmbiMySql
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql("SET FOREIGN_KEY_CHECKS=0;");
             migrationBuilder.AlterColumn<string>(
                 name: "UserId",
                 table: "Votes",
@@ -1448,6 +1449,9 @@ namespace Ombi.Store.Migrations.OmbiMySql
                 nullable: true,
                 oldClrType: typeof(string),
                 oldNullable: true);
+
+
+            migrationBuilder.Sql("SET FOREIGN_KEY_CHECKS=1;");
         }
     }
 }
