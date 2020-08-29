@@ -1,7 +1,6 @@
 
 variables:
   - template: templates/variables.yml
-  - isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/feature/v4')]
 
 stages:
 - stage: build
