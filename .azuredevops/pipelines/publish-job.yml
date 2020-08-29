@@ -1,6 +1,7 @@
 
 variables:
   - template: templates/variables.yml
+  - isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/feature/v4')]
 
 stages:
 - stage: build
@@ -90,4 +91,4 @@ stages:
         isPreRelease: true
         changeLogCompareToRelease: 'lastNonDraftRelease'
         changeLogType: 'commitBased'
-        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/feature/v4'))
+        condition: and(succeeded(), eq(variables.isMain, true))
