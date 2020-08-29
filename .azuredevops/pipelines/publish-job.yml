@@ -48,6 +48,7 @@ stages:
 - stage: deploy
   jobs:
   - job:
+    condition: and(succeeded(), eq(variables.isMain, true))
     steps:
     - task: DownloadPipelineArtifact@2
       inputs:
@@ -90,4 +91,3 @@ stages:
         isPreRelease: true
         changeLogCompareToRelease: 'lastNonDraftRelease'
         changeLogType: 'commitBased'
-        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/feature/v4'))

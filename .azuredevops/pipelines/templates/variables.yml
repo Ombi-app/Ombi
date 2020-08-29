@@ -4,7 +4,7 @@ variables:
 
   - name: "vmImage"
     value: "ubuntu-latest"
-  
+
   - name: "Solution"
     value: "**/*.sln"
 
@@ -25,3 +25,6 @@ variables:
 
   - name: "BuildVersion"
     value: "4.0.$(Build.BuildId)"
+
+  - name: isMain
+    value: $[eq(variables['Build.SourceBranch'], 'refs/heads/feature/v4')]
