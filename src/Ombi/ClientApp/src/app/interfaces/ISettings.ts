@@ -85,6 +85,7 @@ export interface ISonarrSettings extends IExternalSettings {
   addOnly: boolean;
   v3: boolean;
   languageProfile: number;
+  scanForAvailability: boolean;
 }
 
 export interface IRadarrSettings extends IExternalSettings {
@@ -95,6 +96,7 @@ export interface IRadarrSettings extends IExternalSettings {
   fullRootPath: string;
   addOnly: boolean;
   minimumAvailability: string;
+  scanForAvailability: boolean;
 }
 
 export interface ILidarrSettings extends IExternalSettings {
