@@ -73,6 +73,7 @@ export class SonarrComponent implements OnInit {
                     seasonFolders: [x.seasonFolders],
                     v3: [x.v3],
                     languageProfile: [x.languageProfile],
+                    scanForAvailability: [x.scanForAvailability]
                 });
 
                 if (x.qualityProfile) {

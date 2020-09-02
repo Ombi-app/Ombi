@@ -43,6 +43,7 @@ export class RadarrComponent implements OnInit {
                     port: [x.port, [Validators.required]],
                     addOnly: [x.addOnly],
                     minimumAvailability: [x.minimumAvailability, [Validators.required]],
+                    scanForAvailability: [x.scanForAvailability]
                 });
 
                 if (x.defaultQualityProfile) {

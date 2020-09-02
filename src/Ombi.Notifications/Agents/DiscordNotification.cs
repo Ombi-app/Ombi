@@ -107,11 +107,20 @@ namespace Ombi.Notifications.Agents
 
                 var fields = new List<DiscordField>();
 
-                if (model.Data.TryGetValue("RequestedUser", out var requestedUser))
+                if (model.Data.TryGetValue("Alias", out var alias))
                 {
-                    if (requestedUser.HasValue())
+                    if (alias.HasValue())
                     {
-                        fields.Add(new DiscordField { name = "Requested By", value = requestedUser, inline = true });
+                        fields.Add(new DiscordField { name = "Requested By", value = alias, inline = true });
+                    }
+                } else
+                {
+                    if (model.Data.TryGetValue("RequestedUser", out var requestedUser))
+                    {
+                        if (requestedUser.HasValue())
+                        {
+                            fields.Add(new DiscordField { name = "Requested By", value = requestedUser, inline = true });
+                        }
                     }
                 }
                 if (model.Data.TryGetValue("DenyReason", out var denyReason))

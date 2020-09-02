@@ -10,5 +10,6 @@ namespace Ombi.Settings.Settings.Models.External
         public string DefaultRootPath { get; set; }
         public bool AddOnly { get; set; }
         public string MinimumAvailability { get; set; }
+        public bool ScanForAvailability { get; set; }
     }
 }

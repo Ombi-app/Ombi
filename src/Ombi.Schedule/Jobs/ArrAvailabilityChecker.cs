@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core;
+using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Hubs;
 using Ombi.Notifications.Models;
 using Ombi.Schedule.Jobs.Plex.Models;
+using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
@@ -20,13 +22,26 @@ namespace Ombi.Schedule.Jobs.Radarr
 {
     public class ArrAvailabilityChecker : IArrAvailabilityChecker
     {
+        private readonly IExternalRepository<RadarrCache> _radarrRepo;
+        private readonly IExternalRepository<SonarrCache> _sonarrRepo;
+        private readonly ILogger<ArrAvailabilityChecker> _logger;
+        private readonly ISettingsService<RadarrSettings> _radarrSettings;
+        private readonly ISettingsService<SonarrSettings> _sonarrSettings;
+        private readonly IExternalRepository<SonarrEpisodeCache> _sonarrEpisodeRepo;
+        private readonly INotificationHelper _notification;
+        private readonly IHubContext<NotificationHub> _hub;
+        private readonly ITvRequestRepository _tvRequest;
+        private readonly IMovieRequestRepository _movies;
+
         public ArrAvailabilityChecker(
             IExternalRepository<RadarrCache> radarrRepo,
             IExternalRepository<SonarrCache> sonarrRepo,
             IExternalRepository<SonarrEpisodeCache> sonarrEpisodeRepo,
             INotificationHelper notification, IHubContext<NotificationHub> hub,
             ITvRequestRepository tvRequest, IMovieRequestRepository movies,
-            ILogger<ArrAvailabilityChecker> log)
+            ILogger<ArrAvailabilityChecker> log,
+            ISettingsService<RadarrSettings> radarrSettings,
+            ISettingsService<SonarrSettings> sonarrSettings)
         {
             _radarrRepo = radarrRepo;
             _sonarrRepo = sonarrRepo;
@@ -36,21 +51,23 @@ namespace Ombi.Schedule.Jobs.Radarr
             _tvRequest = tvRequest;
             _movies = movies;
             _logger = log;
+            _radarrSettings = radarrSettings;
+            _sonarrSettings = sonarrSettings;
         }
-
-        private readonly IExternalRepository<RadarrCache> _radarrRepo;
-        private readonly IExternalRepository<SonarrCache> _sonarrRepo;
-        private readonly ILogger<ArrAvailabilityChecker> _logger;
-        private readonly IExternalRepository<SonarrEpisodeCache> _sonarrEpisodeRepo;
-        private readonly INotificationHelper _notification;
-        private readonly IHubContext<NotificationHub> _hub;
-        private readonly ITvRequestRepository _tvRequest;
-        private readonly IMovieRequestRepository _movies;
-
         public async Task Execute(IJobExecutionContext job)
         {
-            await ProcessMovies();
-            await ProcessTvShows();
+            var radarrSettings = await _radarrSettings.GetSettingsAsync();
+            var sonarrSettings = await _sonarrSettings.GetSettingsAsync();
+
+            if (radarrSettings.ScanForAvailability)
+            {
+                await ProcessMovies();
+            }
+
+            if (sonarrSettings.ScanForAvailability)
+            {
+                await ProcessTvShows();
+            }
         }
 
         private async Task ProcessMovies()

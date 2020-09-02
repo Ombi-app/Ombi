@@ -45,7 +45,7 @@
         <div class="md-form-field">
             <mat-form-field *ngIf="settings.enableCustomDonations" appearance="outline" floatLabel=always>
                 <mat-label>Custom Donation URL</mat-label>
-                <input matInput placeholder="Custom Donation URL" [(ngModel)]="settings.enableCustomDonations" matTooltip="Set a custom message to be displayed in the navigation bar.">
+                <input matInput placeholder="Custom Donation URL" [(ngModel)]="settings.customDonationMessage" matTooltip="Set a custom message to be displayed in the navigation bar.">
             </mat-form-field>
         </div>
         <div class="md-form-field">

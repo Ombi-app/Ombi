@@ -281,9 +281,21 @@ namespace Ombi.Schedule.Jobs.Plex
                             Logger.LogDebug("Adding movie {0}", movie.title);
                             var metaData = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
                                 movie.ratingKey);
-                            var providerIds = PlexHelper.GetProviderIdFromPlexGuid(metaData.MediaContainer.Metadata
-                                .FirstOrDefault()
-                                .guid);
+
+                            var meta = metaData.MediaContainer.Metadata.FirstOrDefault();
+                            var guids = new List<string>
+                            {
+                                meta.guid
+                            };
+                            if (meta.Guid != null)
+                            {
+                                foreach (var g in meta.Guid)
+                                {
+                                    guids.Add(g.Id);
+                                }
+                            }
+
+                            var providerIds = PlexHelper.GetProviderIdsFromMetadata(guids.ToArray());
 
                             var item = new PlexServerContent
                             {
@@ -296,15 +308,15 @@ namespace Ombi.Schedule.Jobs.Plex
                                 Seasons = new List<PlexSeasonsContent>(),
                                 Quality = movie.Media?.FirstOrDefault()?.videoResolution ?? string.Empty
                             };
-                            if (providerIds.Type == ProviderType.ImdbId)
+                            if (providerIds.ImdbId.HasValue())
                             {
                                 item.ImdbId = providerIds.ImdbId;
                             }
-                            if (providerIds.Type == ProviderType.TheMovieDbId)
+                            if (providerIds.TheMovieDb.HasValue())
                             {
                                 item.TheMovieDbId = providerIds.TheMovieDb;
                             }
-                            if (providerIds.Type == ProviderType.TvDbId)
+                            if (providerIds.TheTvDb.HasValue())
                             {
                                 item.TvDbId = providerIds.TheTvDb;
                             }
@@ -563,20 +575,31 @@ namespace Ombi.Schedule.Jobs.Plex
 
         private static void GetProviderIds(PlexMetadata showMetadata, PlexServerContent existingContent)
         {
+            var metadata = showMetadata.MediaContainer.Metadata.FirstOrDefault();
+            var guids = new List<string>
+            {
+                metadata.guid
+            };
+            if (metadata.Guid != null)
+            {
+                foreach (var g in metadata.Guid)
+                {
+                    guids.Add(g.Id);
+                }
+            }
             var providerIds =
-                PlexHelper.GetProviderIdFromPlexGuid(showMetadata.MediaContainer.Metadata.FirstOrDefault()
-                    .guid);
-            if (providerIds.Type == ProviderType.ImdbId)
+                PlexHelper.GetProviderIdsFromMetadata(guids.ToArray());
+            if (providerIds.ImdbId.HasValue())
             {
                 existingContent.ImdbId = providerIds.ImdbId;
             }
 
-            if (providerIds.Type == ProviderType.TheMovieDbId)
+            if (providerIds.TheMovieDb.HasValue())
             {
                 existingContent.TheMovieDbId = providerIds.TheMovieDb;
             }
 
-            if (providerIds.Type == ProviderType.TvDbId)
+            if (providerIds.TheTvDb.HasValue())
             {
                 existingContent.TvDbId = providerIds.TheTvDb;
             }
