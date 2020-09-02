@@ -33,6 +33,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     public baseUrl: string;
     public loginWithOmbi: boolean;
     public pinTimer: any;
+    public oauthLoading: boolean;
 
     public get appName(): string {
         if (this.customizationSettings.applicationName) {
@@ -97,7 +98,7 @@ export class LoginComponent implements OnDestroy, OnInit {
         });
         this.timer = setInterval(() => {
             this.cycleBackground();
-        }, 15000);
+        }, 30000);
 
         const base = this.href;
         if (base.length > 1) {
@@ -159,10 +160,8 @@ export class LoginComponent implements OnDestroy, OnInit {
                 this.oAuthWindow!.location.replace(x.url);
 
                 this.pinTimer = setInterval(() => {
-                    
-                    this.notify.open("Authenticating. Loading... Please Wait", "OK", {
-                        duration: 3000
-                    });
+
+                    this.oauthLoading = true;
                     this.getPinResult(x.pinId);
                 }, 4000);
             });
@@ -173,24 +172,25 @@ export class LoginComponent implements OnDestroy, OnInit {
         this.authService.oAuth(pinId).subscribe(x => {
             if(x.access_token) {
               this.store.save("id_token", x.access_token);
-  
+
               if (this.authService.loggedIn()) {
                   this.ngOnDestroy();
 
                   if(this.oAuthWindow) {
                     this.oAuthWindow.close();
                   }
+                  this.oauthLoading = false;
                   this.router.navigate(["search"]);
                   return;
-              } 
+              }
           }
-  
+
           }, err => {
               console.log(err);
               this.notify.open(err.body, "OK", {
                 duration: 3000
             });
-              
+
               this.router.navigate(["login"]);
           });
     }
