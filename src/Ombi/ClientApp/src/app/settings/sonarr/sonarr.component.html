@@ -56,8 +56,6 @@
                 </div>
                 <div class="col-md-5 col-4 col-sm-12">
                     <label for="username" class="control-label"><h3>Sonarr Interface</h3></label>
-                    <div class="form-group col-md-12">
-                        <div id="profiles">
                             <div class="md-form-field" style="display:contents;">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Quality Profiles</mat-label>
@@ -67,12 +65,7 @@
                                     <mat-error>A Default Quality Profile is required</mat-error>
                                   </mat-form-field>
                             </div>
-                            <div class="md-form-field" style="display:inline;margin-left:20px;">
-                            <button mat-raised-button id="profiles" (click)="getProfiles(form)" class="mat-stroked-button load">
-                                    Load Qualities <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"></span></button>
-                            </div>
-                        </div>
-                        <div id="qualityProfileAnime">
+                        <div class="md-form-field" id="qualityProfileAnime">
                             <div class="md-form-field" style="display:contents;">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Quality Profiles (Anime)</mat-label>
@@ -81,12 +74,17 @@
                                     </mat-select>
                                     <mat-error>A Default Quality Profile is required</mat-error>
                                 </mat-form-field>
+                                <div class="md-form-field" style="display:inline;">
+                                    <button mat-raised-button id="profiles" (click)="getProfiles(form)" class="mat-stroked-button load">
+                                            Load Qualities <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"></span></button>
+                                    </div>
+                                    </div>
                             </div>
                         </div>
                     </div>
 
 
-                    <div class="form-group col-md-12">
+                    <div class="md-form-field">
                         <div id="rootFolders">
                             <div class="md-form-field" style="display:contents;">
                                 <mat-form-field appearance="outline">
@@ -97,7 +95,7 @@
                                     <mat-error>A Default Root Folder is required</mat-error>
                                   </mat-form-field>
                             </div>
-                            <div class="md-form-field" style="display:inline;margin-left:20px;">
+                            <div class="md-form-field" style="display:inline;">
                             <button mat-raised-button id="rootFolder" (click)="getRootFolders(form)" class="mat-stroked-button load">
                                 Load Folders <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
                             </div>
@@ -116,7 +114,7 @@
 
                     </div>
 
-                    <div class="form-group  col-md-12" *ngIf="form.controls.v3.value">
+                    <div class="md-form-field" *ngIf="form.controls.v3.value">
                         <label for="select" class="control-label">Language Profiles 
                             <i *ngIf="form.get('languageProfile').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="A Language Profile is required"></i>
                         </label>
@@ -130,7 +128,7 @@
                                     <mat-error>A Language Profile is required</mat-error>
                                   </mat-form-field>
                             </div>
-                            <div class="md-form-field" style="display:inline;margin-left:20px;">
+                            <div class="md-form-field" style="display:inline;">
                             <button type="button" mat-raised-button (click)="getLanguageProfiles(form)" class="mat-stroked-button load">Load
                                 Languages <span *ngIf="langRunning" class="fa fa-spinner fa-spin"> </span></button>
                             </div>
@@ -138,34 +136,29 @@
                     </div>
 
 
-                    <div class="form-group col-md-12">
+                    <div class="md-form-field">
                         <div class="checkbox">
                             <mat-slide-toggle id="SeasonFolders" name="SeasonFolders" formControlName="seasonFolders">Enable season folders</mat-slide-toggle>
                         </div>
                         <label>Enabled Season Folders to organize seasons into individual folders within a show.</label>
                     </div>
 
-                    <div class="form-group col-md-12" *ngIf="advanced" style="color:#ff761b">
+                    <div class="md-form-field" *ngIf="advanced" style="color:#ff761b">
                         <div class="checkbox">
                             <mat-slide-toggle id="addOnly" formControlName="addOnly">Do not search</mat-slide-toggle>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group col-md-7">
-                        <div>
-                            <button mat-raised-button type="submit" class="mat-stroked-button accent mat-accent">Submit</button>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div div class="md-form-field">
+                            <button mat-raised-button type="button" [disabled]="form.invalid" (click)="test(form)">Test Connectivity <span id="spinner"></span></button>
                         </div>
-                    </div>
-
-                    <div class="form-group col-md-7">
-                        <div>
-                            <button mat-raised-button type="button" (click)="test(form)" class="mat-stroked-button">Test Connectivity
-                            <span id="spinner"> </span></button>
+                        <div class="md-form-field" style="margin-top:1em;">
+                            <button mat-raised-button type="submit" color="primary" [disabled]="form.invalid" class="mat-focus-indicator mat-stroked-button accent mat-accent mat-raised-button mat-button-base" ng-reflect-disabled="false"><span class="mat-button-wrapper">Submit</span><div matripple="" class="mat-ripple mat-button-ripple" ng-reflect-disabled="false" ng-reflect-centered="false" ng-reflect-trigger="[object HTMLButtonElement]"></div><div class="mat-button-focus-overlay"></div></button>
                         </div>
                     </div>
                 </div>
-            </div>
         </form>
     </fieldset>
 </div>

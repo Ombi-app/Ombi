@@ -1,4 +1,4 @@
-<settings-menu></settings-menu>
+﻿<settings-menu></settings-menu>
   <div *ngIf="form" class="small-middle-container">
     <fieldset>
       <legend>Lidarr Settings</legend>
@@ -6,7 +6,7 @@
       <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
 
         <div class="row">
-          <div class="col-md-12 col-12 col-sm-12"></div>
+          <div class="col-md-12 col-12 col-sm-12">
           <div class="md-form-field">
             <mat-slide-toggle formControlName="enabled">Enable</mat-slide-toggle>
           </div>
@@ -14,18 +14,18 @@
             <mat-slide-toggle [ngModelOptions]="{standalone: true}" [(ngModel)]="advanced">Advanced</mat-slide-toggle>
           </div>
         </div>
-
+        </div>
         <div class="row">
           <div class="col-md-7 col-8 col-sm-12">
             <label for="username" class="control-label">
               <h3>Server Configuration</h3>
             </label>
             <div class="md-form-field">
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" floatLabel=always>
                 <mat-label>Hostname or IP</mat-label>
                 <input matInput formControlName="ip">
               </mat-form-field>
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" floatLabel=always>
                 <mat-label>Port</mat-label>
                 <input matInput formControlName="port">
               </mat-form-field>
@@ -34,13 +34,13 @@
               </mat-slide-toggle>
             </div>
             <div class="md-form-field">
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" floatLabel=always>
                 <mat-label>API key</mat-label>
                 <input matInput formControlName="apiKey">
               </mat-form-field>
             </div>
             <div class="md-form-field">
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" floatLabel=always>
                 <mat-label>Base URL</mat-label>
                 <input matInput formControlName="subDir">
               </mat-form-field>
@@ -52,7 +52,7 @@
               <h3>Interface</h3>
             </label>
             <div class="md-form-field">
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" floatLabel=always>
                 <mat-label>Quality Profiles</mat-label>
                 <mat-select formControlName="defaultQualityProfile" required>
                   <mat-option *ngFor="let quality of qualities" [value]="quality.id">
@@ -60,14 +60,14 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-              <div class="md-form-field" style="display:inline;margin-left:20px;">
+              <div class="md-form-field" style="display:inline;">
                 <button mat-raised-button (click)="getProfiles(form)" color="primary">Load Profiles <span
                     *ngIf="profilesRunning" class="fa fa-spinner fa-spin"></span></button>
               </div>
             </div>
 
             <div class="md-form-field">
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" floatLabel=always>
                 <mat-label>Default Root Folder</mat-label>
                 <mat-select formControlName="defaultRootPath" required>
                   <mat-option *ngFor="let folder of rootFolders" [value]="folder.path">
@@ -75,14 +75,14 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-              <div class="md-form-field" style="display:inline;margin-left:20px;">
+              <div class="md-form-field" style="display:inline;">
                 <button mat-raised-button (click)="getRootFolders(form)" color="primary">Load Root Folders <span
                     *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
               </div>
             </div>
 
             <div class="md-form-field">
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" floatLabel=always>
                 <mat-label>Metadata Profile</mat-label>
                 <mat-select formControlName="metadataProfileId" required>
                   <mat-option *ngFor="let folder of metadataProfiles" [value]="folder.id">
@@ -90,7 +90,7 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-              <div class="md-form-field" style="display:inline;margin-left:20px;">
+              <div class="md-form-field" style="display:inline;">
                 <button mat-raised-button (click)="getMetadataProfiles(form)" color="primary">Load Metadata <span
                     *ngIf="metadataRunning" class="fa fa-spinner fa-spin"></span></button></div>
             </div>
@@ -112,19 +112,18 @@
         </div>
         <div class="row">
           <div class="col-12">
-            <div class="md-form-field">
-              <div>
-                <button mat-raised-button type="button" [disabled]="form.invalid" (click)="test(form)">Test
-                  Connectivity <span id="spinner"></span></button>
+              <div class="md-form-field">
+                  <div>
+                      <button mat-raised-button type="button" [disabled]="form.invalid" (click)="test(form)">Test Connectivity <span id="spinner"></span></button>
+                  </div>
+                  </div>
+                  <div class="md-form-field" style="margin-top:1em;">
+                  <div>
+                      <button mat-raised-button type="submit" color="primary" [disabled]="form.invalid" class="mat-focus-indicator mat-stroked-button accent mat-accent mat-raised-button mat-button-base" ng-reflect-disabled="false"><span class="mat-button-wrapper">Submit</span><div matripple="" class="mat-ripple mat-button-ripple" ng-reflect-disabled="false" ng-reflect-centered="false" ng-reflect-trigger="[object HTMLButtonElement]"></div><div class="mat-button-focus-overlay"></div></button>
+                  </div>
               </div>
-            </div>
-            <div class="md-form-field">
-              <div>
-                <button mat-raised-button type="submit" color="primary" [disabled]="form.invalid">Submit</button>
-              </div>
-            </div>
           </div>
-        </div>
-      </form>
-    </fieldset>
-  </div>
+      </div>
+  </form>
+</fieldset>
+</div>
