@@ -2,11 +2,11 @@
 <div class="small-middle-container">
 <fieldset *ngIf="settings">
     <legend>The Movie Database</legend>
-    <div class="col-md-6">
+    <div class="md-form-field" style="margin-top:1em;">
         <div class="form-group">
             <div class="checkbox">
-                <input type="checkbox" id="showAdultMovies" name="showAdultMovies" [(ngModel)]="settings.showAdultMovies">
-                <label for="showAdultMovies" matTooltip="Include adult movies (pornography) in results">Show Adult Movies</label>
+                <mat-checkbox id="showAdultMovies" name="showAdultMovies" [(ngModel)]="settings.showAdultMovies" matTooltip="Include adult movies (pornography) in results">
+                Show Adult Movies</mat-checkbox>
             </div>
         </div>
 
@@ -66,7 +66,9 @@
 
         <div class="form-group">
             <div>
-                <button (click)="save()" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                <button mat-raised-button (click)="save()" type="submit" id="save" class="mat-focus-indicator mat-stroked-button accent mat-accent mat-raised-button mat-button-base" ng-reflect-disabled="false">                
+                    <span class="mat-button-wrapper">Submit</span><div matripple="" class="mat-ripple mat-button-ripple" ng-reflect-disabled="false" ng-reflect-centered="false" ng-reflect-trigger="[object HTMLButtonElement]"></div>
+                    <div class="mat-button-focus-overlay"></div></button><div class="md-form-field" style="margin-top:1em;"></div>
             </div>
         </div>
     </div>

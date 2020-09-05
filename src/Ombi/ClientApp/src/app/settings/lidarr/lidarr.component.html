@@ -2,7 +2,7 @@
   <div *ngIf="form" class="small-middle-container">
     <fieldset>
       <legend>Lidarr Settings</legend>
-
+      <div class="md-form-field" style="margin-top:1em;"></div>
       <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
 
         <div class="row">
@@ -13,6 +13,7 @@
           <div class="md-form-field">
             <mat-slide-toggle [ngModelOptions]="{standalone: true}" [(ngModel)]="advanced">Advanced</mat-slide-toggle>
           </div>
+          <div class="md-form-field" style="margin-top:1em;"></div>
         </div>
         </div>
         <div class="row">
@@ -32,6 +33,7 @@
               <mat-slide-toggle formControlName="ssl">
                 SSL
               </mat-slide-toggle>
+              <div class="md-form-field" style="margin-top:1em;"></div>
             </div>
             <div class="md-form-field">
               <mat-form-field appearance="outline" floatLabel=always>
@@ -52,6 +54,11 @@
               <h3>Interface</h3>
             </label>
             <div class="md-form-field">
+              <div class="md-form-field" style="display:inline;">
+                <button mat-raised-button (click)="getProfiles(form)" color="primary">Load Profiles <span
+                    *ngIf="profilesRunning" class="fa fa-spinner fa-spin"></span></button>
+              </div>
+              <div class="md-form-field" style="margin-top:1em;"></div>
               <mat-form-field appearance="outline" floatLabel=always>
                 <mat-label>Quality Profiles</mat-label>
                 <mat-select formControlName="defaultQualityProfile" required>
@@ -60,13 +67,16 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-              <div class="md-form-field" style="display:inline;">
-                <button mat-raised-button (click)="getProfiles(form)" color="primary">Load Profiles <span
-                    *ngIf="profilesRunning" class="fa fa-spinner fa-spin"></span></button>
-              </div>
             </div>
 
             <div class="md-form-field">
+              <div class="md-form-field" style="display:inline;">
+                <button mat-raised-button (click)="getRootFolders(form)" color="primary">Load Root Folders <span
+                    *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
+              </div>
+
+              <div class="md-form-field" style="margin-top:1em;"></div>
+
               <mat-form-field appearance="outline" floatLabel=always>
                 <mat-label>Default Root Folder</mat-label>
                 <mat-select formControlName="defaultRootPath" required>
@@ -75,13 +85,14 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-              <div class="md-form-field" style="display:inline;">
-                <button mat-raised-button (click)="getRootFolders(form)" color="primary">Load Root Folders <span
-                    *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
-              </div>
             </div>
 
             <div class="md-form-field">
+              <div class="md-form-field" style="display:inline;">
+                <button mat-raised-button (click)="getMetadataProfiles(form)" color="primary">Load Metadata <span
+                    *ngIf="metadataRunning" class="fa fa-spinner fa-spin"></span></button></div>
+                    <div class="md-form-field" style="margin-top:1em;"></div>
+            </div>
               <mat-form-field appearance="outline" floatLabel=always>
                 <mat-label>Metadata Profile</mat-label>
                 <mat-select formControlName="metadataProfileId" required>
@@ -90,16 +101,13 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-              <div class="md-form-field" style="display:inline;">
-                <button mat-raised-button (click)="getMetadataProfiles(form)" color="primary">Load Metadata <span
-                    *ngIf="metadataRunning" class="fa fa-spinner fa-spin"></span></button></div>
-            </div>
 
 
             <div class="md-form-field">
               <mat-slide-toggle formControlName="albumFolder">
                 Album Folder
               </mat-slide-toggle>
+              <div class="md-form-field" style="margin-top:1em;"></div>
             </div>
 
             <div class="md-form-field" *ngIf="advanced" style="color:#ff761b">

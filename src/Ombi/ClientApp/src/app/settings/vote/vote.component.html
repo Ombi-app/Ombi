@@ -4,12 +4,11 @@
 
 <fieldset>
     <legend>Vote</legend>
-    <form *ngIf="form" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:2%;">
-        <div class="col-md-12">
+    <form *ngIf="form" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+        <div class="md-form-field" style="margin-top:1em;"></div>
             <div class="form-group">
                 <div class="checkbox">
-                    <input type="checkbox" id="enable" formControlName="enabled" ng-checked="form.enabled">
-                    <label for="enable">Enable</label>
+                    <mat-checkbox id="enable" formControlName="enabled" ng-checked="form.enabled">Enable</mat-checkbox>
                 </div>
             </div>
 
@@ -37,10 +36,12 @@
 
             <div class="form-group">
                 <div>
-                    <button type="submit" [disabled]="form.invalid" class="btn btn-primary-outline ">Submit</button>
+                    <button mat-raised-button type="submit" color="primary" [disabled]="form.invalid" class="mat-focus-indicator mat-stroked-button accent mat-accent mat-raised-button mat-button-base" ng-reflect-disabled="false">
+                        <span class="mat-button-wrapper">Submit</span><div matripple="" class="mat-ripple mat-button-ripple" ng-reflect-disabled="false" ng-reflect-centered="false" ng-reflect-trigger="[object HTMLButtonElement]"></div>
+                        <div class="mat-button-focus-overlay"></div></button><div class="md-form-field" style="margin-top:1em;"></div>
                 </div>
             </div>
-        </div>
+     
 
     </form>
 </fieldset>
