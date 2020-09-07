@@ -2,11 +2,11 @@
   "Login": {
     "SignInButton": "Iniciar sessão",
     "UsernamePlaceholder": "Nome de usuário",
-    "PasswordPlaceholder": "Palavra-passe",
-    "RememberMe": "Guardar a minha autênticação",
-    "ForgottenPassword": "Esqueceu-se da sua palavra-passe?",
+    "PasswordPlaceholder": "Senha",
+    "RememberMe": "Lembrar-me",
+    "ForgottenPassword": "Esqueceu sua senha?",
     "Errors": {
-      "IncorrectCredentials": "Nome de usuário ou palavra-passe incorretos"
+      "IncorrectCredentials": "Nome de usuário ou senha incorretos"
     }
   },
   "Common": {
