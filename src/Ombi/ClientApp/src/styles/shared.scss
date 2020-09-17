@@ -43,13 +43,7 @@ body {
     scrollbar-width: thin; //firefox
     -webkit-overflow-scrolling: touch;
 }
-#main-container {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
+
 .spinner-container {
     position: relative;
     margin-left: 50%;

@@ -36,6 +36,7 @@ export class MyNavComponent implements OnInit {
   public async ngOnInit() {
 
     this.issuesEnabled = await this.settingsService.issueEnabled().toPromise();
+    const customizationSettings = await this.settingsService.getCustomization().toPromise();
     console.log("issues enabled: " + this.issuesEnabled);
     this.theme = this.store.get("theme");
     if(!this.theme) {
@@ -48,6 +49,7 @@ export class MyNavComponent implements OnInit {
       { name: "NavigationBar.UserManagement", icon: "account_circle", link: "/usermanagement", requiresAdmin: true, enabled: true, faIcon: null },
       // { name: "NavigationBar.Calendar", icon: "calendar_today", link: "/calendar", requiresAdmin: false, enabled: true },
       { name: "NavigationBar.Donate", icon: "attach_money", link: "https://www.paypal.me/PlexRequestsNet", externalLink: true, requiresAdmin: true, enabled: true, toolTip: true, style: "color:red;", toolTipMessage: 'NavigationBar.DonateTooltip', faIcon: null },
+      { name: "NavigationBar.Donate", icon: "attach_money", link: customizationSettings.customDonationUrl, externalLink: true, requiresAdmin: false, enabled: customizationSettings.enableCustomDonations, toolTip: true, toolTipMessage: customizationSettings.customDonationMessage, faIcon: null },
       { name: "NavigationBar.FeatureSuggestion", icon: null, link: "https://features.ombi.io/", externalLink: true, requiresAdmin: false, enabled: true, toolTip: true, toolTipMessage: 'NavigationBar.FeatureSuggestionTooltip', faIcon: "fa-lightbulb-o" },
       { name: "NavigationBar.Settings", icon: "settings", link: "/Settings/About", requiresAdmin: true, enabled: true, faIcon: null },
       { name: "NavigationBar.UserPreferences", icon: "person", link: "/user-preferences", requiresAdmin: false, enabled: true, faIcon: null },
@@ -71,10 +73,4 @@ export class MyNavComponent implements OnInit {
       this.themeChange.emit(newTheme);
     }
   }
-
-  // @TIDUSJAR Don't know if we need this method anymore?
-  public getTheme(){
-    return 'active-list-item';
-  }
-
 }

@@ -6,21 +6,21 @@
 
     <div class="col-md-12 col-12 col-sm-12">
         <div class="md-form-field">
-            <mat-form-field appearance="outline" floatLabel=always>
+            <mat-form-field appearance="outline">
                 <mat-label>Application Name</mat-label>
-                <input matInput placeholder="Application Name" [(ngModel)]="settings.applicationName">
+                <input matInput [(ngModel)]="settings.applicationName">
             </mat-form-field>
         </div>
         <div class="md-form-field">
-            <mat-form-field appearance="outline" floatLabel=always>
+            <mat-form-field appearance="outline">
                 <mat-label>Application URL</mat-label>
-                <input matInput placeholder="Application URL" [(ngModel)]="settings.applicationUrl">
+                <input matInput [(ngModel)]="settings.applicationUrl">
             </mat-form-field>
         </div>
         <div class="md-form-field">
-            <mat-form-field appearance="outline" floatLabel=always>
+            <mat-form-field appearance="outline" >
                 <mat-label>Custom Logo</mat-label>
-                <input  matInput placeholder="Custom Logo" type="url"[(ngModel)]="settings.logo">
+                <input  matInput  type="url"[(ngModel)]="settings.logo">
             </mat-form-field>
         </div>
         <div class="md-form-field">
@@ -37,15 +37,15 @@
             </mat-checkbox>
         </div>
         <div class="md-form-field">
-            <mat-form-field *ngIf="settings.enableCustomDonations" appearance="outline" floatLabel=always>
+            <mat-form-field *ngIf="settings.enableCustomDonations" appearance="outline">
                 <mat-label>Custom Donation URL</mat-label>
-                <input matInput placeholder="Custom Donation URL" [(ngModel)]="settings.customDonationUrl" matTooltip="A link to a Paypal address, or your custom donation url.">
+                <input matInput [(ngModel)]="settings.customDonationUrl" matTooltip="A link to a Paypal address, or your custom donation url.">
             </mat-form-field>
         </div>
         <div class="md-form-field">
-            <mat-form-field *ngIf="settings.enableCustomDonations" appearance="outline" floatLabel=always>
-                <mat-label>Custom Donation URL</mat-label>
-                <input matInput placeholder="Custom Donation URL" [(ngModel)]="settings.customDonationMessage" matTooltip="Set a custom message to be displayed in the navigation bar.">
+            <mat-form-field *ngIf="settings.enableCustomDonations" appearance="outline">
+                <mat-label>Custom Donation Message</mat-label>
+                <input matInput  [(ngModel)]="settings.customDonationMessage" matTooltip="Set a custom message to be displayed in the navigation bar.">
             </mat-form-field>
         </div>
         <div class="md-form-field">
@@ -53,10 +53,10 @@
                 Enable Custom Page
             </mat-checkbox>
         </div>
-        <div class="md-form-field">        
-            <mat-form-field appearance="outline" floatLabel=always> 
+        <div class="md-form-field">
+            <mat-form-field appearance="outline"> 
                 <mat-label>Custom CSS</mat-label>
-                <textarea matInput [(ngModel)]="settings.customCss" placeholder="Custom CSS"></textarea>
+                <textarea matInput [(ngModel)]="settings.customCss"></textarea>
             </mat-form-field>
         </div>
         <div class="form-group">

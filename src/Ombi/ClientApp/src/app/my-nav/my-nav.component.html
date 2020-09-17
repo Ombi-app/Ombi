@@ -1,29 +1,42 @@
 <mat-sidenav-container *ngIf="showNav" class="sidenav-container">
-    <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
+    <mat-sidenav #drawer class="sidenav" fixedInViewport="true"
+        [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
+        [opened]="!(isHandset$ | async)">
         <mat-toolbar>{{applicationName}}</mat-toolbar>
         <mat-nav-list>
             <span *ngFor="let nav of navItems">
 
-              <div *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled">
+                <div *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled">
 
 
-              <a *ngIf="nav.externalLink" mat-list-item [href]="nav.link" target="_blank" matTooltip="{{nav.toolTipMessage | translate}}" matTooltipPosition="right" [routerLinkActive]="getTheme()">
+                    <a *ngIf="nav.externalLink" mat-list-item [href]="nav.link" target="_blank"
+                        matTooltip="{{nav.toolTipMessage | translate}}" matTooltipPosition="right"
+                        [routerLinkActive]="'active-list-item'">
 
-                <mat-icon *ngIf="nav.icon" aria-label="Side nav toggle icon" [style]="nav.style" >{{nav.icon}}</mat-icon>
-                <i *ngIf="nav.faIcon" class="fa fa-lg {{nav.faIcon}}" style="padding-left: 5px; padding-right: 5px;" aria-hidden="true"></i>
-                &nbsp;{{nav.name | translate}}
-              </a>
-              <a *ngIf="!nav.externalLink" mat-list-item [routerLink]="nav.link" [style]="nav.color" [routerLinkActive]="getTheme()">
+                        <mat-icon *ngIf="nav.icon" aria-label="Side nav toggle icon" [style]="nav.style">{{nav.icon}}
+                        </mat-icon>
+                        <i *ngIf="nav.faIcon" class="fa fa-lg {{nav.faIcon}}"
+                            style="padding-left: 5px; padding-right: 5px;" aria-hidden="true"></i>
+                        &nbsp;{{nav.name | translate}}
+                    </a>
+                    <a *ngIf="!nav.externalLink" mat-list-item [routerLink]="nav.link" [style]="nav.color"
+                        [routerLinkActive]="'active-list-item'">
 
-                <mat-icon aria-label="Side nav toggle icon">{{nav.icon}}</mat-icon>
-                &nbsp;{{nav.name | translate}}
-              </a>
-            </div>
+                        <mat-icon aria-label="Side nav toggle icon">{{nav.icon}}</mat-icon>
+                        &nbsp;{{nav.name | translate}}
+                    </a>
+                </div>
             </span>
 
-            <a id="nav-logout" class="bottom-nav-link" mat-list-item [routerLinkActive]="getTheme()" aria-label="Toggle sidenav" (click)="logOut();">
+            <a id="nav-theme" mat-list-item (click)="switchTheme()">
+                <mat-icon *ngIf="theme === 'dark'" aria-label="Side nav toggle icon">wb_incandescent</mat-icon>
+                <mat-icon *ngIf="theme === 'light'" aria-label="Side nav toggle icon">brightness_4</mat-icon>
+                &nbsp;{{ 'NavigationBar.ChangeTheme' | translate }}
+            </a>
+            <a id="nav-logout" class="bottom-nav-link" mat-list-item [routerLinkActive]="'active-list-item'"
+                aria-label="Toggle sidenav" (click)="logOut();">
                 <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
-                {{ 'NavigationBar.Logout' | translate }}
+                &nbsp;{{ 'NavigationBar.Logout' | translate }}
             </a>
 
 
@@ -31,28 +44,20 @@
     </mat-sidenav>
     <mat-sidenav-content>
         <mat-toolbar color="primary">
-            <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-      </button>
+            <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
+                *ngIf="isHandset$ | async">
+                <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+            </button>
 
-            <div class="col-md-10 offset-md-1 col-8">
-                <span class="middle justify-content-center align-items-center">
-          <!-- Search Bar -->
-          <div style="width: 50%;">
-          <app-nav-search></app-nav-search>
-        </div>
-        </span>
-
-
+            <div class="col-10">
+                <span class="justify-content-center align-items-center">
+                    <!-- Search Bar -->
+                    <div>
+                        <app-nav-search></app-nav-search>
+                    </div>
+                </span>
             </div>
-            <div class="col-1">
-                <div class="float-right">
-                    <a mat-list-item (click)="switchTheme()">
-                        <mat-icon *ngIf="theme === 'dark'" aria-label="Side nav toggle icon">wb_incandescent</mat-icon>
-                        <mat-icon *ngIf="theme === 'light'" aria-label="Side nav toggle icon">brightness_4</mat-icon>
-                    </a>
-                </div>
-            </div>
+
         </mat-toolbar>
 
         <!-- Page -->

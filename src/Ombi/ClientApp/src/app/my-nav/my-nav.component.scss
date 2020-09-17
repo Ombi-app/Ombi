@@ -55,6 +55,15 @@
     font-weight:500;
 }
 
+
+.mat-drawer-content {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    display: block;
+    height: 100%;
+    /* overflow: auto; */
+}
 // Changed color with !important and changed the font weight
 /*.active-list-item-dark {
     background: $accent-dark !important;
