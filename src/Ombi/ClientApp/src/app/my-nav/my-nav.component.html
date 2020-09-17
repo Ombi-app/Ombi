@@ -21,7 +21,7 @@
             </div>
             </span>
 
-            <a class="bottom-nav-link" mat-list-item [routerLinkActive]="getTheme()" aria-label="Toggle sidenav" (click)="logOut();">
+            <a id="nav-logout" class="bottom-nav-link" mat-list-item [routerLinkActive]="getTheme()" aria-label="Toggle sidenav" (click)="logOut();">
                 <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
                 {{ 'NavigationBar.Logout' | translate }}
             </a>

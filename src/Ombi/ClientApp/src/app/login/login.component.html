@@ -12,14 +12,14 @@
 
                     <mat-form-field class="dark full-width" appearance="outline">
                         <mat-label>{{'Login.UsernamePlaceholder' | translate}}</mat-label>
-                        <input type="text" matInput formControlName="username" />
-                        <mat-error *ngIf="form.get('username').hasError('required')">
+                        <input id="username-field" type="text" matInput formControlName="username" />
+                        <mat-error id="username-error" *ngIf="form.get('username').hasError('required')">
                             {{'Login.UsernamePlaceholder' | translate}} is <strong>required</strong></mat-error>
                     </mat-form-field>
 
                     <mat-form-field class="full-width" appearance="outline">
                         <mat-label>{{'Login.PasswordPlaceholder' | translate}}</mat-label>
-                        <input color="black" type="password" matInput formControlName="password" />
+                        <input id="password-field" color="black" type="password" matInput formControlName="password" />
                     </mat-form-field>
 
                     <mat-checkbox formControlName="rememberMe">{{'Login.RememberMe' | translate}}</mat-checkbox>
