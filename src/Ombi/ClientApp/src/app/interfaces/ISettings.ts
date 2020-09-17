@@ -133,6 +133,7 @@ export interface ICustomizationSettings extends ISettings {
   customDonationMessage: string;
   recentlyAddedPage: boolean;
   useCustomPage: boolean;
+  hideAvailableFromDiscover: boolean;
 }
 
 export interface IJobSettings {

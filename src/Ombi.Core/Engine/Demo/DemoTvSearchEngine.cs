@@ -26,8 +26,9 @@ namespace Ombi.Core.Engine.Demo
 
         public DemoTvSearchEngine(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
              ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um, ICacheService memCache,
-            ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub, IOptions<DemoLists> lists, IImageService imageService)
-            : base(identity, service, tvMaze, mapper, trakt, r, um, memCache, s, sub, imageService)
+            ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub, IOptions<DemoLists> lists, IImageService imageService,
+            ISettingsService<CustomizationSettings> custom)
+            : base(identity, service, tvMaze, mapper, trakt, r, um, custom, memCache, s, sub, imageService)
         {
             _demoLists = lists.Value;
         }

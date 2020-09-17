@@ -19,11 +19,14 @@ export class AboutComponent implements OnInit {
 
     public async ngOnInit() {
         this.settingsService.about().subscribe(x => this.about = x);
-        this.jobService.getCachedUpdate().subscribe(x => {
-            if (x === true) {
-                this.newUpdate = true;
-            }
-        });
+
+
+        // TODO
+        // this.jobService.getCachedUpdate().subscribe(x => {
+        //     if (x === true) {
+        //         // this.newUpdate = true; // TODO
+        //     }
+        // });
 
         this.connectedUsers = await this.hubService.getConnectedUsers();
     }

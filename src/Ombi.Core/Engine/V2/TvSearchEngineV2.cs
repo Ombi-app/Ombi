@@ -18,7 +18,6 @@ using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Models.Search.V2;
 using Ombi.Core.Settings;
-using Ombi.Core.Settings.Models.External;
 using Ombi.Store.Repository;
 using TraktSharp.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -27,27 +26,20 @@ namespace Ombi.Core.Engine.V2
 {
     public class TvSearchEngineV2 : BaseMediaEngine, ITVSearchEngineV2
     {
-        public TvSearchEngineV2(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper, ISettingsService<PlexSettings> plexSettings,
-            ISettingsService<EmbySettings> embySettings, IPlexContentRepository repo, IEmbyContentRepository embyRepo, ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um,
-            ICacheService memCache, ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub)
+        private readonly ITvMazeApi _tvMaze;
+        private readonly IMapper _mapper;
+        private readonly ITraktApi _traktApi;
+
+        public TvSearchEngineV2(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
+            ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um, ICacheService memCache, ISettingsService<OmbiSettings> s,
+            IRepository<RequestSubscription> sub)
             : base(identity, service, r, um, memCache, s, sub)
         {
-            TvMazeApi = tvMaze;
-            Mapper = mapper;
-            PlexSettings = plexSettings;
-            EmbySettings = embySettings;
-            PlexContentRepo = repo;
-            TraktApi = trakt;
-            EmbyContentRepo = embyRepo;
+            _tvMaze = tvMaze;
+            _mapper = mapper;
+            _traktApi = trakt;
         }
 
-        private ITvMazeApi TvMazeApi { get; }
-        private IMapper Mapper { get; }
-        private ISettingsService<PlexSettings> PlexSettings { get; }
-        private ISettingsService<EmbySettings> EmbySettings { get; }
-        private IPlexContentRepository PlexContentRepo { get; }
-        private IEmbyContentRepository EmbyContentRepo { get; }
-        private ITraktApi TraktApi { get; }
 
         public async Task<SearchFullInfoTvShowViewModel> GetShowByRequest(int requestId)
         {
@@ -58,13 +50,13 @@ namespace Ombi.Core.Engine.V2
         public async Task<SearchFullInfoTvShowViewModel> GetShowInformation(int tvdbid)
         {
             var tvdbshow = await Cache.GetOrAdd(nameof(GetShowInformation) + tvdbid,
-                async () => await TvMazeApi.ShowLookupByTheTvDbId(tvdbid), DateTime.Now.AddHours(12));
+                async () => await _tvMaze.ShowLookupByTheTvDbId(tvdbid), DateTime.Now.AddHours(12));
             if (tvdbshow == null)
             {
                 return null;
             }
             var show = await Cache.GetOrAdd("GetTvFullInformation" + tvdbshow.id,
-                async () => await TvMazeApi.GetTvFullInformation(tvdbshow.id), DateTime.Now.AddHours(12));
+                async () => await _tvMaze.GetTvFullInformation(tvdbshow.id), DateTime.Now.AddHours(12));
             if (show == null)
             {
                 // We don't have enough information
@@ -76,10 +68,10 @@ namespace Ombi.Core.Engine.V2
             if (show.externals?.imdb.HasValue() ?? false)
             {
                 traktInfoTask = Cache.GetOrAdd("GetExtendedTvInfoTrakt" + show.externals?.imdb,
-                    () => TraktApi.GetTvExtendedInfo(show.externals?.imdb), DateTime.Now.AddHours(12));
+                    () => _traktApi.GetTvExtendedInfo(show.externals?.imdb), DateTime.Now.AddHours(12));
             }
 
-            var mapped = Mapper.Map<SearchFullInfoTvShowViewModel>(show);
+            var mapped = _mapper.Map<SearchFullInfoTvShowViewModel>(show);
 
             foreach (var e in show._embedded?.episodes ?? new Api.TvMaze.Models.V2.Episode[0])
             {
@@ -128,14 +120,14 @@ namespace Ombi.Core.Engine.V2
 
         private SearchTvShowViewModel ProcessResult<T>(T tvMazeSearch)
         {
-            return Mapper.Map<SearchTvShowViewModel>(tvMazeSearch);
+            return _mapper.Map<SearchTvShowViewModel>(tvMazeSearch);
         }
 
         private async Task<SearchFullInfoTvShowViewModel> ProcessResult(SearchFullInfoTvShowViewModel item, Task<TraktShow> showInfoTask)
         {
             item.TheTvDbId = item.Id.ToString();
 
-            var oldModel = Mapper.Map<SearchTvShowViewModel>(item);
+            var oldModel = _mapper.Map<SearchTvShowViewModel>(item);
             await RunSearchRules(oldModel);
 
             item.Available = oldModel.Available;

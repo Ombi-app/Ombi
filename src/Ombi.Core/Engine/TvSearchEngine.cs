@@ -27,10 +27,11 @@ namespace Ombi.Core.Engine
 {
     public class TvSearchEngine : BaseMediaEngine, ITvSearchEngine
     {
+        private readonly ISettingsService<CustomizationSettings> _customizationSettings;
         private readonly IImageService _imageService;
 
         public TvSearchEngine(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
-            ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um,
+            ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um, ISettingsService<CustomizationSettings> customizationSettings,
             ICacheService memCache, ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub, IImageService imageService)
             : base(identity, service, r, um, memCache, s, sub)
         {
@@ -38,6 +39,7 @@ namespace Ombi.Core.Engine
             TvMazeApi = tvMaze;
             Mapper = mapper;
             TraktApi = trakt;
+            _customizationSettings = customizationSettings;
         }
 
         protected ITvMazeApi TvMazeApi { get; }
@@ -188,9 +190,15 @@ namespace Ombi.Core.Engine
         protected async Task<IEnumerable<SearchTvShowViewModel>> ProcessResults<T>(IEnumerable<T> items, bool includeImages = false)
         {
             var retVal = new List<SearchTvShowViewModel>();
+            var settings = await _customizationSettings.GetSettingsAsync();
             foreach (var tvMazeSearch in items)
             {
-                retVal.Add(await ProcessResult(tvMazeSearch, includeImages));
+                var result = await ProcessResult(tvMazeSearch, includeImages);
+                if(settings.HideAvailableFromDiscover && result.Available)
+                {
+                    continue;
+                }
+                retVal.Add(result);
             }
             return retVal;
         }

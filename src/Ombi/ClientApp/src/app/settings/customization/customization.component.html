@@ -32,6 +32,11 @@
             </div>
         </div>
         <div class="md-form-field">
+            <mat-checkbox [(ngModel)]="settings.hideAvailableFromDiscover" matTooltip="Any media content that is available will now be hidden on the discover page, the user still can search for it">
+                Hide Available Content On The Discover Page
+            </mat-checkbox>
+        </div>
+        <div class="md-form-field">
             <mat-checkbox [(ngModel)]="settings.enableCustomDonations" matTooltip="Enable to show a custom donation link in the navigation bar">
                 Enable Custom Donation Link
             </mat-checkbox>
