@@ -3,21 +3,18 @@
 <wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Authentication-Settings'"></wiki>
 <fieldset *ngIf="form">
     <legend>Authentication</legend>
+    <div class="md-form-field" style="margin-top:1em;"></div>
     <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
-
-        <div class="col-md-6">
-
             <div class="form-group">
                 <div class="checkbox">
-                    <input type="checkbox" id="allowNoPassword" name="allowNoPassword" formControlName="allowNoPassword">
-                    <label for="allowNoPassword" tooltipPosition="top" pTooltip="Allow users to login with out a password">Allow users to login without a password</label>
+                    <mat-checkbox id="allowNoPassword" name="allowNoPassword" formControlName="allowNoPassword">
+                    Allow users to login without a password</mat-checkbox>
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="checkbox">
-                    <input type="checkbox" id="enableOAuth" name="enableOAuth" formControlName="enableOAuth">
-                    <label for="enableOAuth" >Enable Plex OAuth</label>
+                    <mat-checkbox id="enableOAuth" name="enableOAuth" formControlName="enableOAuth">Enable Plex OAuth</mat-checkbox>
                 </div>
             </div>
 
@@ -59,10 +56,11 @@
 
             <div class="form-group">
                 <div>
-                    <button [disabled]="form.invalid" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                    <button mat-raised-button type="submit" color="primary" [disabled]="form.invalid" class="mat-focus-indicator mat-stroked-button accent mat-accent mat-raised-button mat-button-base" ng-reflect-disabled="false">
+                        <span class="mat-button-wrapper">Submit</span><div matripple="" class="mat-ripple mat-button-ripple" ng-reflect-disabled="false" ng-reflect-centered="false" ng-reflect-trigger="[object HTMLButtonElement]"></div>
+                        <div class="mat-button-focus-overlay"></div></button><div class="md-form-field" style="margin-top:1em;"></div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
 </fieldset>
 </div>

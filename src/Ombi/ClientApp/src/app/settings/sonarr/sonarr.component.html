@@ -1,7 +1,8 @@
-﻿<settings-menu></settings-menu>
+﻿﻿<settings-menu></settings-menu>
 <div *ngIf="form" class="small-middle-container">
     <fieldset>
         <legend>Sonarr Settings</legend>
+        <div class="md-form-field" style="margin-top:1em;"></div>
         <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
             <div class="row top-spacing">
                 <div class="col-md-12 col-12 col-sm-12" >
@@ -20,6 +21,7 @@
                         <div class="md-form-field">
                             <mat-slide-toggle formControlName="scanForAvailability">Scan for Availability</mat-slide-toggle>
                         </div>
+                        <div class="md-form-field" style="margin-top:1em;"></div>
                     </div>
                 </div>
             </div>
@@ -38,6 +40,7 @@
                             <mat-error>The Port is required</mat-error>
                         </mat-form-field>
                         <mat-slide-toggle formControlName="ssl">SSL</mat-slide-toggle>
+                        <div class="md-form-field" style="margin-top:1em;"></div>
                     </div>
                     <div class="md-form-field">
                         <mat-form-field appearance="outline" floatLabel=always>
@@ -58,6 +61,11 @@
                     <label for="username" class="control-label"><h3>Sonarr Interface</h3></label>
                     <div class="form-group col-md-12">
                         <div id="profiles">
+                            <div class="md-form-field" style="display:inline;">
+                                <button mat-raised-button id="profiles" (click)="getProfiles(form)" class="mat-stroked-button load">
+                                        Load Qualities <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"></span></button>
+                                        <div class="md-form-field" style="margin-top:1em;"></div>
+                                </div>
                             <div class="md-form-field" style="display:contents;">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Quality Profiles</mat-label>
@@ -67,11 +75,8 @@
                                     <mat-error>A Default Quality Profile is required</mat-error>
                                   </mat-form-field>
                             </div>
-                            <div class="md-form-field" style="display:inline;margin-left:20px;">
-                            <button mat-raised-button id="profiles" (click)="getProfiles(form)" class="mat-stroked-button load">
-                                    Load Qualities <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"></span></button>
+
                             </div>
-                        </div>
                         <div id="qualityProfileAnime">
                             <div class="md-form-field" style="display:contents;">
                                 <mat-form-field appearance="outline">
@@ -88,6 +93,10 @@
 
                     <div class="form-group col-md-12">
                         <div id="rootFolders">
+                            <div class="md-form-field" style="display:inline">
+                                <button mat-raised-button id="rootFolder" (click)="getRootFolders(form)" class="mat-stroked-button load">
+                                    Load Folders <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button><div class="md-form-field" style="margin-top:1em;"></div>
+                                </div>
                             <div class="md-form-field" style="display:contents;">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Default Root Folders</mat-label>
@@ -97,10 +106,7 @@
                                     <mat-error>A Default Root Folder is required</mat-error>
                                   </mat-form-field>
                             </div>
-                            <div class="md-form-field" style="display:inline;margin-left:20px;">
-                            <button mat-raised-button id="rootFolder" (click)="getRootFolders(form)" class="mat-stroked-button load">
-                                Load Folders <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
-                            </div>
+
                         </div>
                         <div id="rootFoldersAnime">
                             <div class="md-form-field" style="display:contents;">
@@ -121,6 +127,10 @@
                             <i *ngIf="form.get('languageProfile').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="A Language Profile is required"></i>
                         </label>
                         <div id="langaugeProfile">
+                            <div class="md-form-field" style="display:inline">
+                                <button type="button" mat-raised-button (click)="getLanguageProfiles(form)" class="mat-stroked-button load">Load
+                                    Languages <span *ngIf="langRunning" class="fa fa-spinner fa-spin"> </span></button><div class="md-form-field" style="margin-top:1em;"></div>
+                                </div>
                             <div class="md-form-field" style="display:contents;">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Language Profiles </mat-label>
@@ -130,10 +140,7 @@
                                     <mat-error>A Language Profile is required</mat-error>
                                   </mat-form-field>
                             </div>
-                            <div class="md-form-field" style="display:inline;margin-left:20px;">
-                            <button type="button" mat-raised-button (click)="getLanguageProfiles(form)" class="mat-stroked-button load">Load
-                                Languages <span *ngIf="langRunning" class="fa fa-spinner fa-spin"> </span></button>
-                            </div>
+
                         </div>
                     </div>
 
@@ -141,8 +148,8 @@
                     <div class="form-group col-md-12">
                         <div class="checkbox">
                             <mat-slide-toggle id="SeasonFolders" name="SeasonFolders" formControlName="seasonFolders">Enable season folders</mat-slide-toggle>
-                        </div>
-                        <label>Enabled Season Folders to organize seasons into individual folders within a show.</label>
+                        </div><div class="md-form-field" style="margin-top:1em;"></div>
+                        <label>If enabled Sonarr will organize seasons into separate folders within a show.</label>
                     </div>
 
                     <div class="form-group col-md-12" *ngIf="advanced" style="color:#ff761b">
