@@ -67,7 +67,7 @@ export class DiscoverComponent implements OnInit {
                 break;
         }
 
-        this.contentLoaded = 12;
+        this.contentLoaded = this.amountToLoad;
 
         this.createInitialModel();
         this.scrollDisabled = false;
@@ -309,9 +309,8 @@ export class DiscoverComponent implements OnInit {
     }
 
     private containerHasScrollBar(): boolean {
-        return
+        return this.container.documentElement.scrollHeight > this.container.documentElement.clientHeight;
         // div.scrollHeight > div.clientHeight;
-        this.container.documentElement.scrollHeight > this.container.documentElement.clientHeight;
         // this.container.documentElement.scrollHeight > (window.innerHeight + window.pageYOffset);
     }
 }
