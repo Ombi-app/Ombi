@@ -12,7 +12,7 @@ import {FormControl} from '@angular/forms';
 export class EmbyComponent implements OnInit {
 
     public settings: IEmbySettings;
-    public hasDiscovered: boolean;
+    public hasDiscoveredOrDirty: boolean;
     selected = new FormControl(0);
 
     constructor(private settingsService: SettingsService,
@@ -29,12 +29,12 @@ export class EmbyComponent implements OnInit {
         const result = await this.embyService.getPublicInfo(server).toPromise();
         this.settings.isJellyfin = result.isJellyfin;
         server.name = result.serverName;
-        this.hasDiscovered = true;
+        this.hasDiscoveredOrDirty = true;
     }
 
     public addTab(event: MatTabChangeEvent) {
         const tabName = event.tab.textLabel;
-        if (tabName == "Add Server"){ 
+        if (tabName == "Add Server"){
             if (this.settings.servers == null) {
                 this.settings.servers = [];
             }
@@ -51,6 +51,10 @@ export class EmbyComponent implements OnInit {
             } as IEmbyServer);
         this.selected.setValue(this.settings.servers.length - 1);
         }
+    }
+
+    public toggle() {
+     this.hasDiscoveredOrDirty = true;
     }
 
     public test(server: IEmbyServer) {

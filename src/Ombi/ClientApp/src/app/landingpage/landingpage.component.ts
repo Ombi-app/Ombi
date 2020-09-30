@@ -39,7 +39,7 @@ export class LandingPageComponent implements OnDestroy, OnInit {
         });
         this.timer = setInterval(() => {
             this.cycleBackground();
-        }, 15000);
+        }, 30000);
 
         const base = this.href;
         if (base.length > 1) {
