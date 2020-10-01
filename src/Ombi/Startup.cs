@@ -28,7 +28,6 @@ using Microsoft.AspNetCore.StaticFiles.Infrastructure;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
-using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Ombi.HealthChecks;
 
@@ -218,12 +217,12 @@ namespace Ombi
                     endpoints.MapHealthChecks("/health", new HealthCheckOptions
                     {
                         Predicate = _ => true,
-                        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                        //ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                     });
-                    endpoints.MapHealthChecksUI(opts =>
-                    {
-                        opts.AddCustomStylesheet("HealthCheck.css");
-                    });
+                    //endpoints.MapHealthChecksUI(opts =>
+                    //{
+                    //    opts.AddCustomStylesheet("HealthCheck.css");
+                    //});
                 }
             });
 
