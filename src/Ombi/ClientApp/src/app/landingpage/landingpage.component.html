@@ -1,7 +1,7 @@
 ﻿<div *ngIf="landingPageSettings && customizationSettings">
     <div *ngIf="background" @fadeInOut class="bg" [style.background-image]="background"></div>
 
-    <div class="centered col-md-12">
+    <div class="small-middle-container">
         <div class="row">
             <div class="col-md-push-3 col-md-6">
                 <div *ngIf="customizationSettings.logo">
@@ -11,12 +11,14 @@
                     <img src="{{baseUrl}}/images/logo.png" style="width:100%" />
                 </div>
             </div>
-        </div>
-        <div class="row">
             <div class="col-md-4 col-md-push-3 vcenter">
                 <div *ngIf="landingPageSettings.noticeEnabled">
-                    <h3><i class="fa fa-bell-o"></i> <b>Notice</b></h3>
+                    <h3><i class="fa fa-bell-o"></i>&nbsp;<b>Notice</b></h3>
                     <span [innerHtml]="landingPageSettings.noticeText"></span>
+                </div>
+                <br>
+                <div *ngIf="!mediaServerStatus">
+                    <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
                 </div>
                 <div *ngIf="mediaServerStatus">
                     <div *ngIf="mediaServerStatus.fullyAvailable">
@@ -24,7 +26,6 @@
                         <span [translate]="'LandingPage.OnlineParagraph'"></span>
                         <p [translate]="'LandingPage.CheckPageForUpdates'"></p>
                     </div>
-                    
                     <div *ngIf="mediaServerStatus.partiallyDown">
                         <h3 class="partial"><i class="fa fa-exclamation-triangle "></i> {{ 'LandingPage.PartiallyOnlineHeading' | translate }}</h3>
                         <span [translate]="'LandingPage.PartiallyOnlineParagraph'"></span>
@@ -40,8 +41,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-md-push-4 vcenter">
-                <button [routerLink]="['/login', 'true']" class="btn btn-lg btn-success-outline" [translate]="'Common.ContinueButton'"></button>
+            <div class="col-md-3 offset-md-6 vcenter">
+                <button id="continue" mat-raised-button [routerLink]="['/login', 'true']" color="accent" type="submit">{{ 'Common.ContinueButton' | translate }}</button>
             </div>
         </div>
     </div>

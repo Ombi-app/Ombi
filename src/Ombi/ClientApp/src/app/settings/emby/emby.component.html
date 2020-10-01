@@ -11,7 +11,7 @@
             <div class="col-md-6 col-6 col-sm-6">
                 <div style="float:right;text-align:left;">
                     <div class="md-form-field">
-                        <mat-slide-toggle [(ngModel)]="settings.enable" [checked]="settings.enable">Enable</mat-slide-toggle>
+                        <mat-slide-toggle [(ngModel)]="settings.enable" (change)="toggle()" [checked]="settings.enable">Enable</mat-slide-toggle>
                     </div>
                 </div>
             </div>
@@ -90,7 +90,7 @@
         <div class="col-md-2">
             <div class="form-group">
                 <div>
-                    <button mat-raised-button [disabled]="!hasDiscovered" (click)="save()" type="submit" id="save" class="mat-focus-indicator mat-raised-button mat-button-base mat-accent">Submit</button>
+                    <button mat-raised-button [disabled]="!hasDiscoveredOrDirty" (click)="save()" type="submit" id="save" class="mat-focus-indicator mat-raised-button mat-button-base mat-accent">Submit</button>
                 </div>
             </div>
         </div>
