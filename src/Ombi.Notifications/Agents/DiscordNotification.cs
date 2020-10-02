@@ -113,7 +113,8 @@ namespace Ombi.Notifications.Agents
                     {
                         fields.Add(new DiscordField { name = "Requested By", value = alias, inline = true });
                     }
-                } else
+                }
+                else
                 {
                     if (model.Data.TryGetValue("RequestedUser", out var requestedUser))
                     {
@@ -131,7 +132,7 @@ namespace Ombi.Notifications.Agents
                     }
                 }
 
-                var color = string.Empty;
+                string color = null;
                 if (model.Data.TryGetValue("RequestStatus", out var status))
                 {
                     if (status.HasValue())
