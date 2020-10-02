@@ -133,6 +133,10 @@ namespace Ombi
             var sharedOptions = new SharedOptions();
             if (settings.BaseUrl.HasValue())
             {
+                if (settings.BaseUrl.EndsWith("/"))
+                {
+                    settings.BaseUrl = settings.BaseUrl.Remove(settings.BaseUrl.Length - 1, 1);
+                }
                 sharedOptions.RequestPath = settings.BaseUrl;
             }
 
