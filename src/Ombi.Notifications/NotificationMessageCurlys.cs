@@ -122,7 +122,7 @@ namespace Ombi.Notifications
         public void Setup(NotificationOptions opts, ChildRequests req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
-            RequestId = req.Id.ToString();
+            RequestId = req?.Id.ToString();
             ProviderId = req?.ParentRequest?.TvDbId.ToString() ?? string.Empty;
             string title;
             if (req == null)
