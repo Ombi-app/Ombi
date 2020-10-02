@@ -114,5 +114,6 @@ export enum INotificationAgent {
     Mattermost = 6,
     Mobile = 7,
     Gotify = 8,
-    WhatsApp = 9
+    Webhook = 9,
+    WhatsApp = 10
 }
