@@ -933,7 +933,8 @@ namespace Ombi.Controllers.V1
         private readonly List<NotificationAgent> _excludedAgents = new List<NotificationAgent>
         {
             NotificationAgent.Email,
-            NotificationAgent.Mobile
+            NotificationAgent.Mobile,
+            NotificationAgent.Webhook
         };
         private async Task<List<UserNotificationPreferences>> GetPreferences(OmbiUser user)
         {

@@ -1,175 +1,160 @@
-﻿
-<div class="small-middle-container" *ngIf="!edit || edit && user">
-
-  <mat-horizontal-stepper #stepper>
-    <mat-step>
-      <ng-template matStepLabel>User Details</ng-template>
-      <div>
-        <mat-form-field>
-          <input matInput placeholder="Username" [(ngModel)]="user.userName" required>
-        </mat-form-field>
-      </div>
-      <div>
-        <mat-form-field>
-          <input matInput placeholder="Alias" [(ngModel)]="user.alias" matTooltip="This is used as a display value instead of the users username, so think of it as a more friendly username">
-        </mat-form-field>
-      </div>
-      <div>
-        <mat-form-field>
-          <input matInput placeholder="Email Address" type="email" [(ngModel)]="user.emailAddress" required>
-        </mat-form-field>
-      </div>
-      <div>
-        <mat-form-field>
-          <input matInput placeholder="Password" type="password" [(ngModel)]="user.password" required>
-        </mat-form-field>
-      </div>
-      <div>
-        <mat-form-field>
-          <input matInput placeholder="Confirm Password" type="password" [(ngModel)]="confirmPass" required>
-        </mat-form-field>
-      </div>
-      <div>
-        <button mat-button matStepperNext>Next</button>
-      </div>
-    </mat-step>
-
-
-
-
-    <mat-step>
-      <ng-template matStepLabel>Choose the Roles</ng-template>
-      <div *ngIf="!edit">
-        <div *ngFor="let c of availableClaims">
-          <mat-checkbox [(ngModel)]="c.enabled">{{c.value | humanize}}</mat-checkbox>
-        </div>
-      </div>
-
-      <div *ngIf="edit">
-        <div *ngFor="let c of user.claims">
-          <mat-checkbox [(ngModel)]="c.enabled">{{c.value | humanize}}</mat-checkbox>
-        </div>
-      </div>
-      <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
-      </div>
-    </mat-step>
-    <mat-step>
-      <ng-template matStepLabel>Set Request Limits</ng-template>
-
-      <div>
-        <mat-form-field>
-          <input matInput placeholder="Movie Request Limit" [(ngModel)]="user.movieRequestLimit">
-        </mat-form-field>
-      </div>
-      <div>
-        <mat-form-field>
-          <input matInput placeholder="Episode Request Limit" [(ngModel)]="user.episodeRequestLimit">
-        </mat-form-field>
-      </div>
-      <div>
-        <mat-form-field>
-          <input matInput placeholder="Music Request Limit" [(ngModel)]="user.musicRequestLimit">
-        </mat-form-field>
-      </div>
-
-      <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
-      </div>
-    </mat-step>
-    <mat-step>
-      <ng-template matStepLabel>Notification Preferences</ng-template>
-      <div *ngFor="let pref of notificationPreferences">
-        <div>
-          <mat-form-field>
-            <input matInput placeholder="{{NotificationAgent[pref.agent] | humanize}}" [(ngModel)]="pref.value">
-          </mat-form-field>
-        </div>
-      </div>
-      <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
-      </div>
-    </mat-step>
-
-    <mat-step *ngIf="user.userQualityProfiles && (sonarrQualities || sonarrRootFolders || radarrQualities || radarrRootFolders)">
-      <ng-template matStepLabel>Quality & Root Path Preferences</ng-template>
-
-
-      <mat-form-field *ngIf="sonarrQualities">
-        <mat-label>Sonarr Quality Profile</mat-label>
-        <mat-select [(ngModel)]="user.userQualityProfiles.sonarrQualityProfile">
-          <mat-option *ngFor="let folder of sonarrQualities" [value]="folder.id">
-            {{folder.name}}
-          </mat-option>
-        </mat-select>
+﻿<div class="small-middle-container" *ngIf="!edit || edit && user">
+  <div class="row">
+    <div class="col-md-3 col-sm-12">
+      <label class="control-label"><h3>User Details</h3></label>
+    <div>
+      <mat-form-field>
+        <input matInput placeholder="Username" [(ngModel)]="user.userName" required>
       </mat-form-field>
-
-      <mat-form-field *ngIf="sonarrQualities">
-        <mat-label>Sonarr Quality Profile (Anime)</mat-label>
-        <mat-select [(ngModel)]="user.userQualityProfiles.sonarrQualityProfileAnime">
-          <mat-option *ngFor="let folder of sonarrQualities" [value]="folder.id">
-            {{folder.name}}
-          </mat-option>
-        </mat-select>
+    </div>
+    <div>
+      <mat-form-field>
+        <input matInput placeholder="Alias" [(ngModel)]="user.alias"
+          matTooltip="This is used as a display value instead of the users username, so think of it as a more friendly username">
       </mat-form-field>
-
-      <mat-form-field *ngIf="sonarrRootFolders">
-        <mat-label>Sonarr Root Folder</mat-label>
-        <mat-select [(ngModel)]="user.userQualityProfiles.sonarrRootPath">
-          <mat-option *ngFor="let folder of sonarrRootFolders" [value]="folder.id">
-            {{folder.path}}
-          </mat-option>
-        </mat-select>
+    </div>
+    <div>
+      <mat-form-field>
+        <input matInput placeholder="Email Address" type="email" [(ngModel)]="user.emailAddress">
       </mat-form-field>
-
-      <mat-form-field *ngIf="sonarrRootFolders">
-        <mat-label>Sonarr Root Folder (Anime)</mat-label>
-        <mat-select [(ngModel)]="user.userQualityProfiles.sonarrRootPathAnime">
-          <mat-option *ngFor="let folder of sonarrRootFolders" [value]="folder.id">
-            {{folder.path}}
-          </mat-option>
-        </mat-select>
+    </div>
+    <div>
+      <mat-form-field>
+        <input matInput placeholder="Password" type="password" [(ngModel)]="user.password" required>
       </mat-form-field>
-
-      <mat-form-field *ngIf="radarrQualities">
-        <mat-label>Radarr Quality Profiles</mat-label>
-        <mat-select [(ngModel)]="user.userQualityProfiles.radarrQualityProfile">
-          <mat-option *ngFor="let folder of radarrQualities" [value]="folder.id">
-            {{folder.name}}
-          </mat-option>
-        </mat-select>
+    </div>
+    <div>
+      <mat-form-field>
+        <input matInput placeholder="Confirm Password" type="password" [(ngModel)]="confirmPass" required>
       </mat-form-field>
+    </div>
 
-      <mat-form-field *ngIf="radarrRootFolders">
-        <mat-label>Radarr Root Folder</mat-label>
-        <mat-select [(ngModel)]="user.userQualityProfiles.radarrRootPath">
-          <mat-option *ngFor="let folder of radarrRootFolders" [value]="folder.id">
-            {{folder.path}}
-          </mat-option>
-        </mat-select>
+
+  </div>
+
+  <div class="col-md-3 col-sm-12">
+    <label class="control-label"><h3>Request Limits</h3></label>
+    <div>
+      <mat-form-field>
+        <input matInput placeholder="Movie Request Limit" [(ngModel)]="user.movieRequestLimit">
       </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <input matInput placeholder="Episode Request Limit" [(ngModel)]="user.episodeRequestLimit">
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <input matInput placeholder="Music Request Limit" [(ngModel)]="user.musicRequestLimit">
+      </mat-form-field>
+    </div>
+    <label class="control-label"><h3>Quality & Root Path Preferences</h3></label>
+    <mat-form-field *ngIf="sonarrQualities">
+      <mat-label>Sonarr Quality Profile</mat-label>
+      <mat-select [(ngModel)]="user.userQualityProfiles.sonarrQualityProfile">
+        <mat-option *ngFor="let folder of sonarrQualities" [value]="folder.id">
+          {{folder.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
+    <mat-form-field *ngIf="sonarrQualities">
+      <mat-label>Sonarr Quality Profile (Anime)</mat-label>
+      <mat-select [(ngModel)]="user.userQualityProfiles.sonarrQualityProfileAnime">
+        <mat-option *ngFor="let folder of sonarrQualities" [value]="folder.id">
+          {{folder.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="sonarrRootFolders">
+      <mat-label>Sonarr Root Folder</mat-label>
+      <mat-select [(ngModel)]="user.userQualityProfiles.sonarrRootPath">
+        <mat-option *ngFor="let folder of sonarrRootFolders" [value]="folder.id">
+          {{folder.path}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="sonarrRootFolders">
+      <mat-label>Sonarr Root Folder (Anime)</mat-label>
+      <mat-select [(ngModel)]="user.userQualityProfiles.sonarrRootPathAnime">
+        <mat-option *ngFor="let folder of sonarrRootFolders" [value]="folder.id">
+          {{folder.path}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="radarrQualities">
+      <mat-label>Radarr Quality Profiles</mat-label>
+      <mat-select [(ngModel)]="user.userQualityProfiles.radarrQualityProfile">
+        <mat-option *ngFor="let folder of radarrQualities" [value]="folder.id">
+          {{folder.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="radarrRootFolders">
+      <mat-label>Radarr Root Folder</mat-label>
+      <mat-select [(ngModel)]="user.userQualityProfiles.radarrRootPath">
+        <mat-option *ngFor="let folder of radarrRootFolders" [value]="folder.id">
+          {{folder.path}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="col-md-2 col-sm-12">
+    <label class="control-label"><h3>Roles</h3></label>
+    <div *ngIf="!edit">
+      <div *ngFor="let c of availableClaims">
+        <mat-slide-toggle [(ngModel)]="c.enabled">{{c.value | humanize}}</mat-slide-toggle>
+      </div>
+    </div>
+
+    <div *ngIf="edit">
+      <div *ngFor="let c of user.claims">
+        <mat-slide-toggle [(ngModel)]="c.enabled">{{c.value | humanize}}</mat-slide-toggle>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-3 col-sm-12">
+    <label class="control-label"><h3>Notification Preferences</h3></label>
+    <div *ngFor="let pref of notificationPreferences">
       <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
+        <mat-form-field>
+          <input matInput placeholder="{{NotificationAgent[pref.agent] | humanize}}" [(ngModel)]="pref.value">
+        </mat-form-field>
       </div>
-    </mat-step>
-    <mat-step>
-      <ng-template matStepLabel>Actions</ng-template>
+    </div>
+  </div>
 
-      <button *ngIf="!edit" type="button" mat-raised-button color="accent" data-test="createuserbtn"  (click)="create()">Create</button>
-      <div *ngIf="edit">
-        <button type="button" data-test="updatebtn" mat-raised-button color="warn" class="btn btn-primary-outline" (click)="update()">Update</button>
-        <button type="button" data-test="deletebtn" mat-raised-button color="warn" class="btn btn-danger-outline" (click)="delete()">Delete</button>
-        <button type="button" style="float:right;" mat-raised-button color="primary" class="btn btn-info-outline" (click)="resetPassword()" pTooltip="You need your SMTP settings setup">Send
-          Reset Password Link</button>
+  </div>
 
-      </div>
-    </mat-step>
-  </mat-horizontal-stepper>
+
+  <div class="row">
+
+<div class="col-md-3 col-sm-12">
+    <button *ngIf="!edit" type="button" mat-raised-button color="accent" data-test="createuserbtn"  (click)="create()">Create</button>
+    <div *ngIf="edit">
+      <button type="button" data-test="updatebtn" mat-raised-button color="accent" class="btn btn-primary-outline" (click)="update()">Update</button>
+      <button type="button" data-test="deletebtn" mat-raised-button color="warn" class="btn btn-danger-outline" (click)="delete()">Delete</button>
+      <button type="button" style="float:right;" mat-raised-button color="primary" class="btn btn-info-outline" (click)="resetPassword()" pTooltip="You need your SMTP settings setup">Send
+        Reset Password Link</button>
+
+    </div>
+
+</div>
+<div class="col-md-1 offset-md-8 col-sm-12">
+  <button type="button" mat-raised-button color="warn" (click)="back()">Back</button>
+</div>
+</div>
+
+
+
 
 
 </div>
