@@ -1,8 +1,9 @@
-﻿import { Component, OnInit } from "@angular/core";
+﻿import { Location } from "@angular/common";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
 import { ICheckbox, INotificationAgent, INotificationPreferences, IRadarrProfile, IRadarrRootFolder, ISonarrProfile, ISonarrRootFolder, IUser, UserType } from "../interfaces";
-import { IdentityService, NotificationService, RadarrService, SonarrService, MessageService } from "../services";
+import { IdentityService, RadarrService, SonarrService, MessageService } from "../services";
 
 @Component({
     templateUrl: "./usermanagement-user.component.html",
@@ -15,7 +16,7 @@ export class UserManagementUserComponent implements OnInit {
     public availableClaims: ICheckbox[];
     public confirmPass: "";
     public notificationPreferences: INotificationPreferences[];
-    
+
     public sonarrQualities: ISonarrProfile[];
     public sonarrRootFolders: ISonarrRootFolder[];
     public radarrQualities: IRadarrProfile[];
@@ -29,7 +30,8 @@ export class UserManagementUserComponent implements OnInit {
                 private router: Router,
                 private route: ActivatedRoute,
                 private sonarrService: SonarrService,
-                private radarrService: RadarrService) {
+                private radarrService: RadarrService,
+                private location: Location) {
 
                     this.route.params.subscribe((params: any) => {
                         if(params.id) {
@@ -38,7 +40,7 @@ export class UserManagementUserComponent implements OnInit {
                             this.identityService.getUserById(this.userId).subscribe(x => {
                                 this.user = x;
                                });
-                        }   
+                        }
                     });
                  }
 
@@ -169,6 +171,10 @@ export class UserManagementUserComponent implements OnInit {
                 });
             }
         });
+    }
+
+    public back() {
+        this.location.back();
     }
 
 }
