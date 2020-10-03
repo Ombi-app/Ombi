@@ -1,0 +1,53 @@
+<!-- <div class="card-spacing" *ngIf="result">
+    <mat-card class="mat-elevation-z8 dark-card grow">
+        <a [routerLink]="result.type === RequestType.movie ? '/details/movie/' + result.id : '/details/tv/' + result.id">
+            <img id="cardImage" mat-card-image src="{{result.posterPath}}" class="card-poster" [ngClass]="getStatusClass()" alt="{{result.title}}">
+        </a>
+        <mat-card-content>
+            <h6 *ngIf="result.title.length <= 20">{{result.title}}</h6>
+            <h6 *ngIf="result.title.length > 20" matTooltip="{{result.title}}">{{result.title | truncate:20}}</h6>
+            <div class="fade-text">
+            <small class="overview-text">{{result.overview | truncate: 75}}</small>
+        </div>
+        </mat-card-content>
+    </mat-card>
+</div> -->
+
+
+<div class="top-spacing" *ngIf="result">
+    <mat-card class="mat-elevation-z8 dark-card">
+        <div class="row">
+            <div class="col-2">
+                <img src="{{result.posterPath}}" class="card-poster" alt="{{result.title}}">
+            </div>
+            <div class="col-6">
+                <div class="row">
+                    <h1>{{result.title}}</h1>
+                </div>
+                <div class="row">
+                    <mat-chip-list>
+                        <mat-chip *ngIf="result.available" class="available">
+                            {{'Common.Available' | translate}}
+                        </mat-chip>
+
+                        <mat-chip *ngIf="result.approved && !result.available" class="approved">
+                            {{'Common.ProcessingRequest' | translate}}
+                        </mat-chip>
+
+                        <mat-chip *ngIf="result.denied" class="denied">
+                            {{'Common.RequestDenied' | translate}}
+                        </mat-chip>
+
+                        <mat-chip *ngIf="!result.approved && !result.availble && !result.denied" class="requested">
+                            {{'Common.PendingApproval' | translate}}
+                        </mat-chip>
+
+                    </mat-chip-list>
+                </div>
+                <div class="row">
+                    <p class="overview top-spacing">{{result.overview}}</p>
+                </div>
+            </div>
+        </div>
+    </mat-card>
+</div>

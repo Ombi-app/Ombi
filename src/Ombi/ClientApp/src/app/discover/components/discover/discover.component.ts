@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from "@angular/core";
 import { SearchV2Service } from "../../../services";
 import { ISearchMovieResult, ISearchTvResult, RequestType } from "../../../interfaces";
-import { IDiscoverCardResult, DiscoverOption } from "../../interfaces";
+import { IDiscoverCardResult, DiscoverOption, DisplayOption } from "../../interfaces";
 import { trigger, transition, style, animate } from "@angular/animations";
 import { StorageService } from "../../../shared/storage/storage-service";
 import { DOCUMENT } from "@angular/common";
@@ -26,6 +26,8 @@ export class DiscoverComponent implements OnInit {
 
     public discoverOptions: DiscoverOption = DiscoverOption.Combined;
     public DiscoverOption = DiscoverOption;
+    public displayOption: DisplayOption = DisplayOption.List;
+    public DisplayOption = DisplayOption;
 
     public defaultTvPoster: string;
 
@@ -219,6 +221,10 @@ export class DiscoverComponent implements OnInit {
         this.storageService.save(this.mediaTypeStorageKey, newMode.toString());
         await this.ngOnInit();
         this.finishLoading();
+    }
+
+    public changeView(view: DisplayOption) {
+        this.displayOption = view;
     }
 
     private createModel() {

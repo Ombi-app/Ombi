@@ -19,3 +19,8 @@ export enum DiscoverOption {
     Movie = 2,
     Tv = 3
 }
+
+export enum DisplayOption {
+    Card = 1,
+    List = 2
+}
