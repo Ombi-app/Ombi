@@ -7,6 +7,7 @@ import { Routes } from "@angular/router";
 import { AuthGuard } from "../../auth/auth.guard";
 import { SearchService, RequestService } from "../../services";
 import { MatDialog } from "@angular/material/dialog";
+import { DiscoverGridComponent } from "./grid/discover-grid.component";
 
 
 export const components: any[] = [
@@ -15,6 +16,7 @@ export const components: any[] = [
     DiscoverCardDetailsComponent,
     DiscoverCollectionsComponent,
     DiscoverActorComponent,
+    DiscoverGridComponent,
 ];
 
 

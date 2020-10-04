@@ -76,24 +76,24 @@
                                 [translate]="'Common.NotRequested'"></span></ng-template>
                     </small>
                 </div>
-                <div class="col-6">
-                    <strong *ngIf="movie">{{'Discovery.CardDetails.Director' | translate}}: </strong>
-                    <small *ngIf="movie">{{movie.credits.crew[0].name}}</small>
-                    <strong *ngIf="tvCreator">Director: </strong>
-                    <small *ngIf="tvCreator">{{tvCreator}}</small>
-                </div>
-                <div class="col-6">
-                    <strong *ngIf="movie">{{'Discovery.CardDetails.InCinemas' | translate}}: </strong>
-                    <small *ngIf="movie">{{movie.releaseDate | amLocal | amDateFormat: 'LL'}}</small>
-                    <strong *ngIf="tv">{{'Discovery.CardDetails.FirstAired' | translate}}: </strong>
-                    <small *ngIf="tv">{{tv.firstAired | amLocal | amDateFormat: 'LL'}}</small>
-                </div>
-                <div class="col-6">
-                    <strong *ngIf="movie">{{'Discovery.CardDetails.Writer' | translate}}: </strong>
-                    <small *ngIf="movie">{{movie.credits.crew[1].name}}</small>
-                    <strong *ngIf="tv">{{'Discovery.CardDetails.ExecProducer' | translate}}: </strong>
-                    <small *ngIf="tv">{{tvProducer}}</small>
-                </div>
+                    <div class="col-6">
+                        <strong *ngIf="movie">{{'Discovery.CardDetails.Director' | translate}}: </strong>
+                        <small *ngIf="movie">{{movie.credits.crew[0].name}}</small>
+                        <strong *ngIf="tvCreator">Director: </strong>
+                        <small *ngIf="tvCreator">{{tvCreator}}</small>
+                    </div>
+                    <div class="col-6">
+                        <strong *ngIf="movie">{{'Discovery.CardDetails.InCinemas' | translate}}: </strong>
+                        <small *ngIf="movie">{{movie.releaseDate | amLocal | amDateFormat: 'LL'}}</small>
+                        <strong *ngIf="tv">{{'Discovery.CardDetails.FirstAired' | translate}}: </strong>
+                        <small *ngIf="tv">{{tv.firstAired | amLocal | amDateFormat: 'LL'}}</small>
+                    </div>
+                    <div class="col-6">
+                        <strong *ngIf="movie">{{'Discovery.CardDetails.Writer' | translate}}: </strong>
+                        <small *ngIf="movie">{{movie.credits.crew[1].name}}</small>
+                        <strong *ngIf="tv">{{'Discovery.CardDetails.ExecProducer' | translate}}: </strong>
+                        <small *ngIf="tv">{{tvProducer}}</small>
+                    </div>
             </div>
 
             <div class="row top-spacing overview">
