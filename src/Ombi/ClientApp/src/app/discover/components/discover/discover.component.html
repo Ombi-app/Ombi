@@ -1,7 +1,7 @@
 <div class="small-middle-container">
     <div class="row justify-content-end">
         <div class="btn-group col-1 small-space" role="group">
-            <mat-button-toggle-group>
+            <mat-button-toggle-group *ngIf="displayOption">
                 <mat-button-toggle [ngClass]="displayOption === DisplayOption.Card ? 'mat-button-toggle-checked' : ''" (click)="changeView(DisplayOption.Card)"><mat-icon>dashboard</mat-icon></mat-button-toggle>
                 <mat-button-toggle [ngClass]="displayOption === DisplayOption.List ? 'mat-button-toggle-checked' : ''" (click)="changeView(DisplayOption.List)"><mat-icon>calendar_view_day</mat-icon></mat-button-toggle>
               </mat-button-toggle-group>
@@ -31,7 +31,7 @@
             <discover-card [result]="result"></discover-card>
         </div>
     </div>
-    <div *ngIf="discoverResults && displayOption == DisplayOption.List" class="row full-height discoverResults col" infiniteScroll [fromRoot]="false" [infiniteScrollDistance]="0.5" [infiniteScrollDisabled]="scrollDisabled" (scrolled)="onScroll()">
+    <div *ngIf="discoverResults && displayOption == DisplayOption.List" class="row full-height discoverResults col" infiniteScroll [fromRoot]="true" [infiniteScrollDistance]="1" [infiniteScrollDisabled]="scrollDisabled" (scrolled)="onScroll()">
         <div class="col-12 small-padding" *ngFor="let result of discoverResults">
             <discover-grid [result]="result"></discover-grid>
         </div>

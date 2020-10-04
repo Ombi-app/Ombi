@@ -54,10 +54,11 @@ export class DiscoverCollectionsComponent implements OnInit {
                 overview: m.overview,
                 approved: m.approved,
                 imdbid: m.imdbId,
+                denied:false
             });
         });
     }
-    
+
     private loading() {
         this.loadingFlag = true;
     }

@@ -8,6 +8,7 @@ export interface IDiscoverCardResult {
     type: RequestType;
     available: boolean;
     approved: boolean;
+    denied: boolean;
     requested: boolean;
     rating: number;
     overview: string;

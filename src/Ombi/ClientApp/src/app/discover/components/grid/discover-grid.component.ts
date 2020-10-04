@@ -1,10 +1,13 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { IDiscoverCardResult } from "../../interfaces";
-import { RequestType, ISearchTvResult, ISearchMovieResult } from "../../../interfaces";
-import { SearchV2Service } from "../../../services";
+import { RequestType, ISearchTvResult, ISearchMovieResult, ISearchMovieResultContainer } from "../../../interfaces";
+import { RequestService, SearchV2Service } from "../../../services";
 import { MatDialog } from "@angular/material/dialog";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
+import { EpisodeRequestComponent } from "../../../shared/episode-request/episode-request.component";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { Router } from "@angular/router";
 
 @Component({
     selector: "discover-grid",
@@ -15,8 +18,16 @@ export class DiscoverGridComponent implements OnInit {
 
     @Input() public result: IDiscoverCardResult;
     public RequestType = RequestType;
+    public requesting: boolean;
 
-    constructor(private searchService: SearchV2Service, private dialog: MatDialog) { }
+    public tv: ISearchTvResultV2;
+    public tvCreator: string;
+    public tvProducer: string;
+    public movie: ISearchMovieResultV2;
+
+    constructor(private searchService: SearchV2Service, private dialog: MatDialog,
+                private requestService: RequestService, private notification: MatSnackBar,
+                private router: Router) { }
 
     public ngOnInit() {
         if (this.result.type == RequestType.tvShow) {
@@ -28,10 +39,30 @@ export class DiscoverGridComponent implements OnInit {
     }
 
     public async getExtraTvInfo() {
-        var result = await this.searchService.getTvInfo(this.result.id);
-        this.setTvDefaults(result);
-        this.updateTvItem(result);
+        this.tv = await this.searchService.getTvInfo(this.result.id);
+        this.setTvDefaults(this.tv);
+        this.updateTvItem(this.tv);
+        const creator = this.tv.crew.filter(tv => {
+            return tv.type === "Creator";
+        })[0];
+        if (creator && creator.person) {
+            this.tvCreator = creator.person.name;
+        }
+        const crewResult = this.tv.crew.filter(tv => {
+            return tv.type === "Executive Producer";
+        })[0]
+        if (crewResult && crewResult.person) {
+            this.tvProducer = crewResult.person.name;
+        }
 
+    }
+
+    public openDetails() {
+        if (this.result.type === RequestType.movie) {
+            this.router.navigate(['/details/movie/', this.result.id]);
+        } else if (this.result.type === RequestType.tvShow) {
+            this.router.navigate(['/details/tv/', this.result.id]);
+        }
     }
 
     public getStatusClass(): string {
@@ -48,12 +79,13 @@ export class DiscoverGridComponent implements OnInit {
     }
 
     private getExtraMovieInfo() {
-        if (!this.result.imdbid) {
+        // if (!this.result.imdbid) {
             this.searchService.getFullMovieDetails(this.result.id)
                 .subscribe(m => {
+                    this.movie = m;
                     this.updateMovieItem(m);
                 });
-        }
+        // }
     }
 
     private updateMovieItem(updated: ISearchMovieResultV2) {
@@ -80,6 +112,23 @@ export class DiscoverGridComponent implements OnInit {
         this.result.posterPath = updated.banner;
         this.result.requested = updated.requested;
         this.result.url = updated.imdbId;
+    }
+
+    public async request() {
+        this.requesting = true;
+        if (this.result.type === RequestType.movie) {
+            const result = await this.requestService.requestMovie({ theMovieDbId: this.result.id, languageCode: "" }).toPromise();
+
+            if (result.result) {
+                this.result.requested = true;
+                this.notification.open(result.message, "Ok");
+            } else {
+                this.notification.open(result.errorMessage, "Ok");
+            }
+        } else if (this.result.type === RequestType.tvShow) {
+            this.dialog.open(EpisodeRequestComponent, { width: "700px", data: this.tv,  panelClass: 'modal-panel' })
+        }
+        this.requesting = false;
     }
 
 }
