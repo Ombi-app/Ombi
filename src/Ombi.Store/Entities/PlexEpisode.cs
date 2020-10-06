@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ombi.Store.Entities
 {
@@ -26,5 +27,6 @@ namespace Ombi.Store.Entities
 
 
         public PlexServerContent Series { get; set; }
+        public DateTime? Aired { get; set; }
     }
 }

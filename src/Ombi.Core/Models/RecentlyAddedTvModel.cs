@@ -15,5 +15,6 @@ namespace Ombi.Core.Models
         public string Quality { get; set; }
         public int SeasonNumber { get; set; }
         public int EpisodeNumber { get; set; }
+        public DateTime Aired { get; set; }
     }
 }

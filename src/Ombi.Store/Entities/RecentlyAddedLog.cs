@@ -13,6 +13,7 @@ namespace Ombi.Store.Entities
         public int? SeasonNumber { get; set; }
         public string AlbumId { get; set; }
         public DateTime AddedAt { get; set; }
+        public DateTime? Aired { get; set; }
     }
 
     public enum RecentlyAddedType

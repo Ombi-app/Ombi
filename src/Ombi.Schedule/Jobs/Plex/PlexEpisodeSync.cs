@@ -186,7 +186,8 @@ namespace Ombi.Schedule.Jobs.Plex
                         GrandparentKey = episode.grandparentRatingKey,
                         ParentKey = episode.parentRatingKey,
                         Key = episode.ratingKey,
-                        Title = episode.title
+                        Title = episode.title,
+                        Aired = DateTime.TryParse(episode.originallyAvailableAt, out var parseDate) ? parseDate : (DateTime?)null,
                     });
                 }
 

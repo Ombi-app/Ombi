@@ -93,7 +93,8 @@ namespace Ombi.Core.Engine
                             ContentId = int.Parse(ep.Series.TvDbId),
                             ContentType = ContentType.Episode,
                             EpisodeNumber = ep.EpisodeNumber,
-                            SeasonNumber = ep.SeasonNumber
+                            SeasonNumber = ep.SeasonNumber,
+                            Aired = ep.Aired
                         });
                     }
                 }
@@ -131,7 +132,8 @@ namespace Ombi.Core.Engine
                             ContentId = int.Parse(ep.Series.TvDbId),
                             ContentType = ContentType.Episode,
                             EpisodeNumber = ep.EpisodeNumber,
-                            SeasonNumber = ep.SeasonNumber
+                            SeasonNumber = ep.SeasonNumber,
+                            Aired = ep.Aired
                         });
                     }
                 }
@@ -217,7 +219,8 @@ namespace Ombi.Core.Engine
                             ReleaseYear = plex.ReleaseYear,
                             TvDbId = plex.TvDbId,
                             EpisodeNumber = episode.EpisodeNumber,
-                            SeasonNumber = season.SeasonNumber
+                            SeasonNumber = season.SeasonNumber,
+                            Aired = plex.Aired
                         });
                     }
                 }

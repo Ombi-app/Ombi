@@ -49,5 +49,6 @@ namespace Ombi.Store.Entities
         public string TheMovieDbId { get; set; }
 
         public EmbyContent Series { get; set; }
+        public DateTime Aired { get; set; }
     }
 }
