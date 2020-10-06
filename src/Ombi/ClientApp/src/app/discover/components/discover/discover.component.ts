@@ -270,7 +270,8 @@ export class DiscoverComponent implements OnInit {
                 overview: m.overview,
                 approved: m.approved,
                 imdbid: m.imdbId,
-                denied: false
+                denied: false,
+                background: m.backdropPath
             });
         });
         return tempResults;
@@ -291,7 +292,8 @@ export class DiscoverComponent implements OnInit {
                 overview: m.overview,
                 approved: m.approved,
                 imdbid: m.imdbId,
-                denied: false
+                denied: false,
+                background: m.background
             });
         });
         return tempResults;

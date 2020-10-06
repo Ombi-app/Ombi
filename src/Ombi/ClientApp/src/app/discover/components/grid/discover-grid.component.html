@@ -15,12 +15,12 @@
 
 
 <div class="top-spacing">
-    <mat-card class="mat-elevation-z8 dark-card">
+    <mat-card class="mat-elevation-z8 dark-card backdrop" [style.background-image]="result.background">
         <div class="row main-container">
-            <div class="col-2">
+            <div class="col-md-2 col-12">
                 <img src="{{result.posterPath}}" class="card-poster" alt="{{result.title}}">
             </div>
-            <div class="col-8">
+            <div class="col-md-8 col-12">
                 <div class="row">
                     <h1>{{result.title}}</h1>
                 </div>
@@ -38,40 +38,57 @@
                             {{'Common.RequestDenied' | translate}}
                         </mat-chip>
 
-                        <mat-chip *ngIf="result.requested && !result.approved && !result.available && !result.denied" class="requested">
+                        <mat-chip *ngIf="result.requested && !result.approved && !result.available && !result.denied"
+                            class="requested">
                             {{'Common.PendingApproval' | translate}}
                         </mat-chip>
-                        <mat-chip *ngIf="movie && movie.plexUrl">  <a href="{{movie.plexUrl}}" target="_blank"><mat-icon style="color:white" matTooltip=" {{'Search.ViewOnPlex' | translate}}"
-                            >play_circle_outline</mat-icon></a></mat-chip>
-                            <mat-chip *ngIf="movie && movie.embyUrl"> <a href="{{movie.embyUrl}}" target="_blank"><mat-icon style="color:white" matTooltip=" {{'Search.ViewOnEmby' | translate}}"
-                                >play_circle_outline</mat-icon></a></mat-chip>
+                        <mat-chip *ngIf="movie && movie.plexUrl"> <a href="{{movie.plexUrl}}" target="_blank">
+                                <mat-icon style="color:white" matTooltip=" {{'Search.ViewOnPlex' | translate}}">
+                                    play_circle_outline</mat-icon>
+                            </a></mat-chip>
+                        <mat-chip *ngIf="movie && movie.embyUrl"> <a href="{{movie.embyUrl}}" target="_blank">
+                                <mat-icon style="color:white" matTooltip=" {{'Search.ViewOnEmby' | translate}}">
+                                    play_circle_outline</mat-icon>
+                            </a></mat-chip>
 
-                                <mat-chip *ngIf="tv && tv.plexUrl"> <a href="{{tv.plexUrl}}" target="_blank"><mat-icon style="color:white" matTooltip=" {{'Search.ViewOnPlex' | translate}}"
-                                    >play_circle_outline</mat-icon></a></mat-chip>
-                                    <mat-chip *ngIf="tv &&tv.embyUrl"> <a href="{{movie.embyUrl}}" target="_blank"><mat-icon style="color:white" matTooltip=" {{'Search.ViewOnEmby' | translate}}"
-                                        >play_circle_outline</mat-icon></a></mat-chip>
+                        <mat-chip *ngIf="tv && tv.plexUrl"> <a href="{{tv.plexUrl}}" target="_blank">
+                                <mat-icon style="color:white" matTooltip=" {{'Search.ViewOnPlex' | translate}}">
+                                    play_circle_outline</mat-icon>
+                            </a></mat-chip>
+                        <mat-chip *ngIf="tv &&tv.embyUrl"> <a href="{{movie.embyUrl}}" target="_blank">
+                                <mat-icon style="color:white" matTooltip=" {{'Search.ViewOnEmby' | translate}}">
+                                    play_circle_outline</mat-icon>
+                            </a></mat-chip>
                     </mat-chip-list>
                 </div>
                 <div class="row">
 
-<mat-chip-list class="top-spacing">
-        <mat-chip *ngIf="movie && movie.productionCompanies[0]?.name">{{'Discovery.CardDetails.Studio' | translate}}: {{movie.productionCompanies[0].name}}</mat-chip>
+                    <mat-chip-list class="top-spacing">
+                        <mat-chip *ngIf="movie && movie.productionCompanies[0]?.name">
+                            {{'Discovery.CardDetails.Studio' | translate}}: {{movie.productionCompanies[0].name}}
+                        </mat-chip>
 
-        <mat-chip *ngIf="tv && tv.network?.name">{{'Discovery.CardDetails.Network' | translate}}: {{tv.network.name}}</mat-chip>
+                        <mat-chip *ngIf="tv && tv.network?.name">{{'Discovery.CardDetails.Network' | translate}}:
+                            {{tv.network.name}}</mat-chip>
 
-        <mat-chip *ngIf="movie && movie.credits?.crew[0]?.name">{{'Discovery.CardDetails.Director' | translate}}: {{movie.credits.crew[0].name}}</mat-chip>
+                        <mat-chip *ngIf="movie && movie.credits?.crew[0]?.name">
+                            {{'Discovery.CardDetails.Director' | translate}}: {{movie.credits.crew[0].name}}</mat-chip>
 
-        <mat-chip *ngIf="tvCreator">Director: {{tvCreator}}</mat-chip>
+                        <mat-chip *ngIf="tvCreator">Director: {{tvCreator}}</mat-chip>
 
-        <mat-chip *ngIf="movie">{{'Discovery.CardDetails.InCinemas' | translate}}: {{movie.releaseDate | amLocal | amDateFormat: 'LL'}}</mat-chip>
+                        <mat-chip *ngIf="movie">{{'Discovery.CardDetails.InCinemas' | translate}}:
+                            {{movie.releaseDate | amLocal | amDateFormat: 'LL'}}</mat-chip>
 
-        <mat-chip *ngIf="tv">{{'Discovery.CardDetails.FirstAired' | translate}}: {{tv.firstAired | amLocal | amDateFormat: 'LL'}}</mat-chip>
+                        <mat-chip *ngIf="tv">{{'Discovery.CardDetails.FirstAired' | translate}}:
+                            {{tv.firstAired | amLocal | amDateFormat: 'LL'}}</mat-chip>
 
-        <mat-chip *ngIf="movie && movie.credits?.crew[1]?.name">{{'Discovery.CardDetails.Writer' | translate}}: {{movie.credits.crew[1].name}}</mat-chip>
+                        <mat-chip *ngIf="movie && movie.credits?.crew[1]?.name">
+                            {{'Discovery.CardDetails.Writer' | translate}}: {{movie.credits.crew[1].name}}</mat-chip>
 
-        <mat-chip *ngIf="tv">{{'Discovery.CardDetails.ExecProducer' | translate}}: {{tvProducer}}</mat-chip>
+                        <mat-chip *ngIf="tv">{{'Discovery.CardDetails.ExecProducer' | translate}}: {{tvProducer}}
+                        </mat-chip>
 
-</mat-chip-list>
+                    </mat-chip-list>
 
 
 
@@ -81,24 +98,26 @@
                 </div>
             </div>
 
-            <div class="col-2" >
-                <div  style="float:right;">
-                <button mat-raised-button class="btn-green btn-spacing" (click)="openDetails()"> {{
+            <div class="col-md-2 col-12">
+                <div style="float:right;">
+                    <button mat-raised-button class="btn-green btn-spacing" (click)="openDetails()"> {{
                     'Common.ViewDetails' | translate }}</button>
                     <div *ngIf="movie">
                         <button mat-raised-button class="btn-green btn-spacing" *ngIf="movie.available"> {{
                         'Common.Available' | translate }}</button>
                         <span *ngIf="!movie.available">
-                            <span *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></span>
+                            <span
+                                *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></span>
                             <ng-template #requestedBtn>
-                                <button mat-raised-button class="btn-spacing btn-orange" [disabled]><i class="fa fa-check"></i>
+                                <button mat-raised-button class="btn-spacing btn-orange" [disabled]><i
+                                        class="fa fa-check"></i>
                                     {{ 'Common.Requested' | translate }}</button>
                             </ng-template>
                             <ng-template #notRequestedBtn>
                                 <button mat-raised-button class="btn-spacing" color="primary" (click)="request()">
-                        <i *ngIf="movie.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> <i
-                          *ngIf="!movie.requestProcessing && !movie.processed" class="fa fa-plus"></i>
-                        <i *ngIf="movie.processed && !movie.requestProcessing" class="fa fa-check"></i> {{
+                                    <i *ngIf="movie.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+                                    <i *ngIf="!movie.requestProcessing && !movie.processed" class="fa fa-plus"></i>
+                                    <i *ngIf="movie.processed && !movie.requestProcessing" class="fa fa-check"></i> {{
                         'Common.Request' | translate }}</button>
                             </ng-template>
                         </span>
@@ -113,24 +132,26 @@
                                 <span class="caret"></span>
                             </button>
                         </div>
-            
-                        <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent" [disabled]>
-                            <i class="fa fa-check"></i> {{'Common.Available' | translate }}</button>
-                          <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent"
+
+                        <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent"
                             [disabled]>
+                            <i class="fa fa-check"></i> {{'Common.Available' | translate }}</button>
+                        <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" mat-raised-button class="btn-spacing"
+                            color="accent" [disabled]>
                             <i class="fa fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
-            
+
                         <span *ngIf="tv.available">
-                            <a *ngIf="tv.plexUrl" mat-raised-button style="text-align: right" class="btn-spacing btn-greem"
-                                href="{{tv.plexUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnPlex' |
+                            <a *ngIf="tv.plexUrl" mat-raised-button style="text-align: right"
+                                class="btn-spacing btn-greem" href="{{tv.plexUrl}}" target="_blank"><i
+                                    class="fa fa-eye"></i> {{'Search.ViewOnPlex' |
                                 translate}}</a>
                             <a *ngIf="tv.embyUrl" mat-raised-button class="btn-green btn-spacing" href="{{tv.embyUrl}}"
                                 target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
                                 translate}}</a>
                         </span>
                     </div>
+                </div>
             </div>
-        </div>
         </div>
     </mat-card>
 </div>

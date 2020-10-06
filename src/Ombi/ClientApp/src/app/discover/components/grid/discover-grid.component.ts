@@ -1,13 +1,14 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { IDiscoverCardResult } from "../../interfaces";
 import { RequestType, ISearchTvResult, ISearchMovieResult, ISearchMovieResultContainer } from "../../../interfaces";
-import { RequestService, SearchV2Service } from "../../../services";
+import { ImageService, RequestService, SearchV2Service } from "../../../services";
 import { MatDialog } from "@angular/material/dialog";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
 import { EpisodeRequestComponent } from "../../../shared/episode-request/episode-request.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
     selector: "discover-grid",
@@ -27,7 +28,7 @@ export class DiscoverGridComponent implements OnInit {
 
     constructor(private searchService: SearchV2Service, private dialog: MatDialog,
                 private requestService: RequestService, private notification: MatSnackBar,
-                private router: Router) { }
+                private router: Router, private sanitizer: DomSanitizer, private imageService: ImageService) { }
 
     public ngOnInit() {
         if (this.result.type == RequestType.tvShow) {
@@ -54,7 +55,7 @@ export class DiscoverGridComponent implements OnInit {
         if (crewResult && crewResult.person) {
             this.tvProducer = crewResult.person.name;
         }
-
+        this.setTvBackground();
     }
 
     public openDetails() {
@@ -85,8 +86,29 @@ export class DiscoverGridComponent implements OnInit {
                     this.movie = m;
                     this.updateMovieItem(m);
                 });
+
+                this.setMovieBackground()
         // }
     }
+
+    private setMovieBackground(): void {
+                this.result.background = this.sanitizer.bypassSecurityTrustStyle
+                    ("linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(" + "https://image.tmdb.org/t/p/original" + this.result.background + ")");
+            }
+
+            private setTvBackground(): void {
+                        if (this.result.background != null) {
+                            this.result.background = this.sanitizer.bypassSecurityTrustStyle
+                                ("linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(https://image.tmdb.org/t/p/original" + this.result.background + ")");
+                        } else {
+                            this.imageService.getTvBanner(this.result.id).subscribe(x => {
+                                if (x) {
+                                    this.result.background = this.sanitizer.bypassSecurityTrustStyle
+                                        ("linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(" + x + ")");
+                                }
+                            });
+                        }
+                    }
 
     private updateMovieItem(updated: ISearchMovieResultV2) {
         this.result.url = "http://www.imdb.com/title/" + updated.imdbId + "/";

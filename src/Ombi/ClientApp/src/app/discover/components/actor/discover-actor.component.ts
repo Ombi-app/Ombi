@@ -56,7 +56,8 @@ export class DiscoverActorComponent implements AfterViewInit {
                 overview: m.overview,
                 approved: false,
                 imdbid: "",
-                denied: false
+                denied: false,
+                background: ""
             });
         });
     }

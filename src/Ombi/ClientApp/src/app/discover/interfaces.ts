@@ -13,6 +13,7 @@ export interface IDiscoverCardResult {
     rating: number;
     overview: string;
     imdbid: string;
+    background: string|any;
 }
 
 export enum DiscoverOption {

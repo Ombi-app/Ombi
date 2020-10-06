@@ -54,7 +54,8 @@ export class DiscoverCollectionsComponent implements OnInit {
                 overview: m.overview,
                 approved: m.approved,
                 imdbid: m.imdbId,
-                denied:false
+                denied:false,
+                background: ""
             });
         });
     }
