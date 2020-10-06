@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from "@angular/core";
 import { SearchV2Service } from "../../../services";
 import { ISearchMovieResult, ISearchTvResult, RequestType } from "../../../interfaces";
-import { IDiscoverCardResult, DiscoverOption } from "../../interfaces";
+import { IDiscoverCardResult, DiscoverOption, DisplayOption } from "../../interfaces";
 import { trigger, transition, style, animate } from "@angular/animations";
 import { StorageService } from "../../../shared/storage/storage-service";
 import { DOCUMENT } from "@angular/common";
@@ -26,6 +26,8 @@ export class DiscoverComponent implements OnInit {
 
     public discoverOptions: DiscoverOption = DiscoverOption.Combined;
     public DiscoverOption = DiscoverOption;
+    public displayOption: DisplayOption = DisplayOption.Card;
+    public DisplayOption = DisplayOption;
 
     public defaultTvPoster: string;
 
@@ -41,6 +43,7 @@ export class DiscoverComponent implements OnInit {
     private contentLoaded: number;
     private isScrolling: boolean = false;
     private mediaTypeStorageKey = "DiscoverOptions";
+    private displayOptionsKey = "DiscoverDisplayOptions";
 
     constructor(private searchService: SearchV2Service,
         private storageService: StorageService,
@@ -52,6 +55,10 @@ export class DiscoverComponent implements OnInit {
         const localDiscoverOptions = +this.storageService.get(this.mediaTypeStorageKey);
         if (localDiscoverOptions) {
             this.discoverOptions = DiscoverOption[DiscoverOption[localDiscoverOptions]];
+        }
+        const localDisplayOptions = +this.storageService.get(this.displayOptionsKey);
+        if (localDisplayOptions) {
+            this.displayOption = DisplayOption[DisplayOption[localDisplayOptions]];
         }
         this.scrollDisabled = true;
         switch (this.discoverOptions) {
@@ -221,6 +228,11 @@ export class DiscoverComponent implements OnInit {
         this.finishLoading();
     }
 
+    public changeView(view: DisplayOption) {
+        this.displayOption = view;
+        this.storageService.save(this.displayOptionsKey, view.toString());
+    }
+
     private createModel() {
         const tempResults = <IDiscoverCardResult[]>[];
 
@@ -257,7 +269,8 @@ export class DiscoverComponent implements OnInit {
                 rating: m.voteAverage,
                 overview: m.overview,
                 approved: m.approved,
-                imdbid: m.imdbId
+                imdbid: m.imdbId,
+                denied: false
             });
         });
         return tempResults;
@@ -277,7 +290,8 @@ export class DiscoverComponent implements OnInit {
                 rating: +m.rating,
                 overview: m.overview,
                 approved: m.approved,
-                imdbid: m.imdbId
+                imdbid: m.imdbId,
+                denied: false
             });
         });
         return tempResults;
