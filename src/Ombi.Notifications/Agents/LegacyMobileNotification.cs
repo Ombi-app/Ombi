@@ -306,7 +306,7 @@ namespace Ombi.Notifications.Agents
         {
             if (await SubsribedUsers.AnyAsync())
             {
-                foreach (var user in SubsribedUsers.Include(x => x.NotificationUserIds))
+                foreach (var user in SubsribedUsers)
                 {
                     var notificationId = user.NotificationUserIds;
                     if (notificationId.Any())
