@@ -38,7 +38,7 @@
                             {{'Common.RequestDenied' | translate}}
                         </mat-chip>
 
-                        <mat-chip *ngIf="!result.approved && !result.available && !result.denied" class="requested">
+                        <mat-chip *ngIf="result.requested && !result.approved && !result.available && !result.denied" class="requested">
                             {{'Common.PendingApproval' | translate}}
                         </mat-chip>
                         <mat-chip *ngIf="movie && movie.plexUrl">  <a href="{{movie.plexUrl}}" target="_blank"><mat-icon style="color:white" matTooltip=" {{'Search.ViewOnPlex' | translate}}"
