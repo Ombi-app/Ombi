@@ -69,7 +69,13 @@
         "Calendar": "Calendar",
         "UserPreferences": "Preferences",
         "FeatureSuggestion":"Feature Suggestion",
-        "FeatureSuggestionTooltip":"Have a great new idea? Suggest it here!"
+        "FeatureSuggestionTooltip":"Have a great new idea? Suggest it here!",
+        "Filter": {
+            "Movies":"Movies",
+            "TvShows":"TV Shows",
+            "Music":"Music",
+            "People":"People"
+        }
     },
     "Search": {
         "Title": "Search",

@@ -55,6 +55,13 @@
     font-weight:500;
 }
 
+.slide-menu {
+    width: 100%;
+}
+
+::ng-deep .smaller-panel {
+    max-width: 170px !important;
+}
 
 .mat-drawer-content {
     position: relative;

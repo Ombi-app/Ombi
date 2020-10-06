@@ -21,6 +21,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
+import {MatMenuModule} from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
@@ -56,9 +57,10 @@ import { EpisodeRequestComponent } from "./episode-request/episode-request.compo
     MatButtonModule,
     MatNativeDateModule,
     MatChipsModule,
-    MatIconModule, 
-    MatSidenavModule, 
-    MatListModule, 
+    MatIconModule,
+    MatMenuModule,
+    MatSidenavModule,
+    MatListModule,
     MatToolbarModule,
     MatCheckboxModule,
     TranslateModule,
@@ -71,7 +73,6 @@ import { EpisodeRequestComponent } from "./episode-request/episode-request.compo
     MatTreeModule,
     MatStepperModule,
     MatSnackBarModule,
-    MatSlideToggleModule,
   ],
   entryComponents: [
     EpisodeRequestComponent
@@ -94,11 +95,12 @@ import { EpisodeRequestComponent } from "./episode-request/episode-request.compo
       MatChipsModule,
       MatButtonModule,
       MatNativeDateModule,
-      MatIconModule, 
+      MatIconModule,
+      MatMenuModule,
       MatSnackBarModule,
-      MatSidenavModule, 
+      MatSidenavModule,
       MatSelectModule,
-      MatListModule, 
+      MatListModule,
       MatToolbarModule,
       MatTooltipModule,
       MatAutocompleteModule,

@@ -49,16 +49,27 @@
                 <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
             </button>
 
-            <div class="col-10">
+            <div class="col-8 col-lg-10">
                 <span class="justify-content-center align-items-center">
                     <!-- Search Bar -->
                     <div>
-                        <app-nav-search></app-nav-search>
+                        <app-nav-search [filter]="searchFilter"></app-nav-search>
                     </div>
                 </span>
             </div>
+            <div class="col-2">
+                <button mat-icon-button [matMenuTriggerFor]="filterMenu"><mat-icon>filter_alt</mat-icon></button>
+                <mat-menu #filterMenu="matMenu"  yPosition="below" class="smaller-panel">
+                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.movies" (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Movie)">{{ 'NavigationBar.Filter.Movies' | translate}}</mat-slide-toggle>
+                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.tvShows" (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.TvShow)">{{ 'NavigationBar.Filter.TvShows' | translate}}</mat-slide-toggle>
+                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.music" (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Music)">{{ 'NavigationBar.Filter.Music' | translate}}</mat-slide-toggle>
+                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.people" (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.People)">{{ 'NavigationBar.Filter.People' | translate}}</mat-slide-toggle>
+                  </mat-menu>
+            </div>
 
         </mat-toolbar>
+
+
 
         <!-- Page -->
         <ng-container *ngTemplateOutlet="template"></ng-container>

@@ -64,6 +64,7 @@ import { NavSearchComponent } from "./my-nav/nav-search.component";
 import { OverlayModule } from "@angular/cdk/overlay";
 import { StorageService } from "./shared/storage/storage-service";
 import { SignalRNotificationService } from "./services/signlarnotification.service";
+import { MatMenuModule } from "@angular/material/menu";
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
     { path: "", redirectTo: "/discover", pathMatch: "full" },
@@ -126,6 +127,7 @@ export function JwtTokenGetter() {
         NavbarModule,
         MatCardModule,
         MatTooltipModule,
+        MatMenuModule,
         MatInputModule,
         MatTabsModule,
         ReactiveFormsModule,

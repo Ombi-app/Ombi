@@ -44,11 +44,12 @@ namespace Ombi.Controllers.V2
         ///  Show information using the MovieDbId.</remarks>
         /// <param name="searchTerm">The search you want, this can be for a movie or TV show e.g. Star Wars will return
         ///  all Star Wars movies and Star Wars Rebels the TV Sho</param>
+        /// <param name="filter">Filter for the search</param>
         /// <returns></returns>
-        [HttpGet("multi/{searchTerm}")]
-        public async Task<List<MultiSearchResult>> MultiSearch(string searchTerm)
+        [HttpPost("multi/{searchTerm}")]
+        public async Task<List<MultiSearchResult>> MultiSearch(string searchTerm, [FromBody] MultiSearchFilter filter)
         {
-            return await _multiSearchEngine.MultiSearch(searchTerm, Request.HttpContext.RequestAborted);
+            return await _multiSearchEngine.MultiSearch(searchTerm, filter, Request.HttpContext.RequestAborted);
         }
 
         /// <summary>

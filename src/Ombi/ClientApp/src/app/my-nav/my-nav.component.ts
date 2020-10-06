@@ -5,6 +5,15 @@ import { map } from 'rxjs/operators';
 import { INavBar } from '../interfaces/ICommon';
 import { StorageService } from '../shared/storage/storage-service';
 import { SettingsService } from '../services';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { SearchFilter } from './SearchFilter';
+
+export enum SearchFilterType {
+  Movie = 1,
+  TvShow = 2,
+  Music = 3,
+  People = 4
+}
 
 @Component({
   selector: 'app-my-nav',
@@ -27,20 +36,33 @@ export class MyNavComponent implements OnInit {
   public theme: string;
   public issuesEnabled: boolean = false;
   public navItems: INavBar[];
+  public searchFilter: SearchFilter;
+  public SearchFilterType = SearchFilterType;
 
   constructor(private breakpointObserver: BreakpointObserver,
-              private settingsService: SettingsService,
-              private store: StorageService) {
+    private settingsService: SettingsService,
+    private store: StorageService) {
   }
 
   public async ngOnInit() {
+
+    this.searchFilter = {
+      movies: true,
+      music: false,
+      people: false,
+      tvShows: true
+    }
 
     this.issuesEnabled = await this.settingsService.issueEnabled().toPromise();
     const customizationSettings = await this.settingsService.getCustomization().toPromise();
     console.log("issues enabled: " + this.issuesEnabled);
     this.theme = this.store.get("theme");
-    if(!this.theme) {
-      this.store.save("theme","dark");
+    if (!this.theme) {
+      this.store.save("theme", "dark");
+    }
+    var filter = this.store.get("searchFilter");
+    if (filter) {
+      this.searchFilter = Object.assign(new SearchFilter(), JSON.parse(filter));
     }
     this.navItems = [
       { name: "NavigationBar.Discover", icon: "find_replace", link: "/discover", requiresAdmin: false, enabled: true, faIcon: null },
@@ -72,5 +94,23 @@ export class MyNavComponent implements OnInit {
       this.theme = newTheme;
       this.themeChange.emit(newTheme);
     }
+  }
+
+  public changeFilter(event: MatSlideToggleChange, searchFilterType: SearchFilterType) {
+    switch (searchFilterType) {
+      case SearchFilterType.Movie:
+        this.searchFilter.movies = event.checked;
+        break;
+      case SearchFilterType.TvShow:
+        this.searchFilter.tvShows = event.checked;
+        break;
+      case SearchFilterType.Music:
+        this.searchFilter.music = event.checked;
+        break;
+      case SearchFilterType.People:
+        this.searchFilter.people = event.checked;
+        break;
+    }
+    this.store.save("searchFilter", JSON.stringify(this.searchFilter));
   }
 }
