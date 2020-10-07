@@ -24,7 +24,7 @@ namespace Ombi.Store.Context.Sqlite
         {
             try
             {
-                Database.ExecuteSqlCommand(@"INSERT INTO __EFMigrationsHistory (MigrationId,ProductVersion)
+                Database.ExecuteSqlRaw(@"INSERT OR IGNORE INTO __EFMigrationsHistory (MigrationId,ProductVersion)
                 VALUES('20191103205133_Inital', '2.2.6-servicing-10079'); ");
             }
             catch (Exception)
