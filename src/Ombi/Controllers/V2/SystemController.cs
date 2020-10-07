@@ -24,7 +24,8 @@ namespace Ombi.Controllers.V2
             var logsFolder = Path.Combine(_hosting.ContentRootPath, "Logs");
             var files = Directory
                 .EnumerateFiles(logsFolder, "*.txt", SearchOption.TopDirectoryOnly)
-                .Select(Path.GetFileName);
+                .Select(Path.GetFileName)
+                .OrderByDescending(name => name);
 
             return Ok(files);
         }
