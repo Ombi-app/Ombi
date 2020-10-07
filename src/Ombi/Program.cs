@@ -96,6 +96,10 @@ namespace Ombi
 
                     urlValue = url.Value;
                 }
+                else if (string.IsNullOrEmpty(urlValue))
+                {
+                    urlValue = host;
+                }
 
                 if (dbBaseUrl == null)
                 {
