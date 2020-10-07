@@ -84,7 +84,6 @@ namespace Ombi.Controllers.V1
                 var url = await _plexOAuthManager.GetOAuthUrl(model.PlexTvPin.code, websiteAddress);
                 if (url == null)
                 {
-                    _log.LogWarning(string.Format("Failed login attempt by IP: {0}", GetRequestIP()));
                     return new JsonResult(new
                     {
                         error = "Application URL has not been set"
