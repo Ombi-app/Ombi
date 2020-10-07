@@ -110,9 +110,8 @@ namespace Ombi.Controllers.V1.External
         /// <summary>
         /// Gets the Radarr tags
         /// </summary>
-        /// <param name="settings">The settings.</param>
         /// <returns></returns>
-        [HttpPost("tags")]
+        [HttpGet("tags")]
         [PowerUser]
         public async Task<IEnumerable<Tag>> GetTags()
         {
