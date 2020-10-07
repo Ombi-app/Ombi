@@ -98,7 +98,7 @@ namespace Ombi.Core.Engine
                     };
                     newSeason.Episodes.Add(new EpisodeRequests
                     {
-                        Url = e.url,
+                        Url = e.url.ToHttpsUrl(),
                         Title = e.name,
                         AirDate = e.airstamp.HasValue() ? DateTime.Parse(e.airstamp) : DateTime.MinValue,
                         EpisodeNumber = e.number,
@@ -111,7 +111,7 @@ namespace Ombi.Core.Engine
                     // We already have the season, so just add the episode
                     season.Episodes.Add(new EpisodeRequests
                     {
-                        Url = e.url,
+                        Url = e.url.ToHttpsUrl(),
                         Title = e.name,
                         AirDate = e.airstamp.HasValue() ? DateTime.Parse(e.airstamp) : DateTime.MinValue,
                         EpisodeNumber = e.number,

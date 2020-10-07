@@ -1,11 +1,9 @@
 ﻿using System;
 using AutoMapper;
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Repository.Requests;
 using Ombi.Core.Authentication;
@@ -85,7 +83,7 @@ namespace Ombi.Core.Engine.V2
                     };
                     newSeason.Episodes.Add(new EpisodeRequests
                     {
-                        Url = e.url,
+                        Url = e.url.ToHttpsUrl(),
                         Title = e.name,
                         AirDate = e.airstamp,
                         EpisodeNumber = e.number,
@@ -98,7 +96,7 @@ namespace Ombi.Core.Engine.V2
                     // We already have the season, so just add the episode
                     season.Episodes.Add(new EpisodeRequests
                     {
-                        Url = e.url,
+                        Url = e.url.ToHttpsUrl(),
                         Title = e.name,
                         AirDate = e.airstamp,
                         EpisodeNumber = e.number,
@@ -141,7 +139,7 @@ namespace Ombi.Core.Engine.V2
 
             if (!string.IsNullOrEmpty(item.Images?.Medium))
             {
-                item.Images.Medium = item.Images.Medium.Replace("http:", "https:");
+                item.Images.Medium = item.Images.Medium.ToHttpsUrl();
             }
             
             if (item.Cast?.Any() ?? false)
@@ -150,7 +148,7 @@ namespace Ombi.Core.Engine.V2
                 {
                     if (!string.IsNullOrEmpty(cast.Character?.Image?.Medium))
                     {
-                        cast.Character.Image.Medium = cast.Character?.Image?.Medium.Replace("http:", "https:");
+                        cast.Character.Image.Medium = cast.Character?.Image?.Medium.ToHttpsUrl();
                     }
                 }
             }
@@ -168,9 +166,9 @@ namespace Ombi.Core.Engine.V2
                     return model;
                 }
 
-                model.Trailer = result.Trailer?.AbsoluteUri ?? string.Empty;
+                model.Trailer = result.Trailer?.AbsoluteUri.ToHttpsUrl() ?? string.Empty;
                 model.Certification = result.Certification;
-                model.Homepage = result.Homepage?.AbsoluteUri ?? string.Empty;
+                model.Homepage = result.Homepage?.AbsoluteUri.ToHttpsUrl() ?? string.Empty;
             }
             return model;
         }
