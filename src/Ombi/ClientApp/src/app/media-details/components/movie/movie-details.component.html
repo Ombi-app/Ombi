@@ -51,7 +51,7 @@
               <i class="fa fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
             </button>
 
-            <button *ngIf="movieRequest && !movieRequest.denied" mat-raised-button class="btn-spacing" color="warn"
+            <button *ngIf="movieRequest && !movieRequest.denied && !movie.available" mat-raised-button class="btn-spacing" color="warn"
               (click)="deny()">
               <i class="fa fa-times"></i> {{
                     'Requests.Deny' | translate }}</button>
