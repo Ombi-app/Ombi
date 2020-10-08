@@ -97,12 +97,12 @@ namespace Ombi.Helpers
                         (int EpisodeNumber, DateTime? Aired) first = previousEpisodes.First();
                         (int EpisodeNumber, DateTime? Aired) last = previousEpisodes.Last();
                         
-                        epSb.Append($"{first.EpisodeNumber}-{last.EpisodeNumber}{(last.Aired.HasValue ? $" {last.Aired.Value:MM-yyyy}" : string.Empty)}, ");
+                        epSb.Append($"{first.EpisodeNumber}-{last.EpisodeNumber}{(last.Aired.HasValue ? $" {last.Aired.Value:MM/yyyy}" : string.Empty)}, ");
                     }
                     else if (previousEpisodes.Count == 1)
                     {
                         (int EpisodeNumber, DateTime? Aired) = previousEpisodes.FirstOrDefault();
-                        epSb.Append($"{EpisodeNumber}{(Aired.HasValue ? $" {Aired.Value:MM-yyyy}" : string.Empty)}, ");
+                        epSb.Append($"{EpisodeNumber}{(Aired.HasValue ? $" {Aired.Value:MM/yyyy}" : string.Empty)}, ");
                     }
                     // New one
                     previousEpisodes.Clear();
@@ -116,7 +116,7 @@ namespace Ombi.Helpers
                 // Got some left over
                 (int EpisodeNumber, DateTime? Aired) first = previousEpisodes.First();
                 (int EpisodeNumber, DateTime? Aired) last = previousEpisodes.Last();
-                epSb.Append($"{first.EpisodeNumber}-{last.EpisodeNumber}{(last.Aired.HasValue ? $" {last.Aired.Value:MM-yyyy}" : string.Empty)}");
+                epSb.Append($"{first.EpisodeNumber}-{last.EpisodeNumber}{(last.Aired.HasValue ? $" {last.Aired.Value:MM/yyyy}" : string.Empty)}");
             }
             else if (previousEpisodes.Count == 1)
             {
