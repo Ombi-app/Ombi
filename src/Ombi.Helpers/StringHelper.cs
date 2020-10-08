@@ -77,6 +77,57 @@ namespace Ombi.Helpers
             return -1;
         }
 
+        public static string BuildEpisodeList(IEnumerable<(int EpisodeNumber, DateTime? Aired)> orderedEpisodes)
+        {
+            var epSb = new StringBuilder();
+            var previousEpisodes = new List<(int EpisodeNumber, DateTime? Aired)>();
+            var previousEpisode = -1;
+            foreach (var ep in orderedEpisodes)
+            {
+                if (ep.EpisodeNumber - 1 == previousEpisode)
+                {
+                    // This is the next one
+                    previousEpisodes.Add(ep);
+                }
+                else
+                {
+                    if (previousEpisodes.Count > 1)
+                    {
+                        // End it
+                        (int EpisodeNumber, DateTime? Aired) first = previousEpisodes.First();
+                        (int EpisodeNumber, DateTime? Aired) last = previousEpisodes.Last();
+                        
+                        epSb.Append($"{first.EpisodeNumber}-{last.EpisodeNumber}{(last.Aired.HasValue ? $" {last.Aired.Value:yyyy-MM}" : string.Empty)}, ");
+                    }
+                    else if (previousEpisodes.Count == 1)
+                    {
+                        (int EpisodeNumber, DateTime? Aired) = previousEpisodes.FirstOrDefault();
+                        epSb.Append($"{EpisodeNumber}{(Aired.HasValue ? $" {Aired.Value:yyyy-MM}" : string.Empty)}, ");
+                    }
+                    // New one
+                    previousEpisodes.Clear();
+                    previousEpisodes.Add(ep);
+                }
+                previousEpisode = ep.EpisodeNumber;
+            }
+
+            if (previousEpisodes.Count > 1)
+            {
+                // Got some left over
+                (int EpisodeNumber, DateTime? Aired) first = previousEpisodes.First();
+                (int EpisodeNumber, DateTime? Aired) last = previousEpisodes.Last();
+                epSb.Append($"{first.EpisodeNumber}-{last.EpisodeNumber}{(last.Aired.HasValue ? $" {last.Aired.Value:yyyy-MM}" : string.Empty)}");
+            }
+            else if (previousEpisodes.Count == 1)
+            {
+                (int EpisodeNumber, DateTime? Aired) = previousEpisodes.FirstOrDefault();
+                // string.Empty used instead of "" as extra space was being added at the end
+                epSb.Append($"{EpisodeNumber}{(Aired.HasValue ? $" {Aired.Value:yyyy-MM-dd}" : string.Empty)}");
+            }
+
+            return epSb.ToString();
+        }
+
         public static string BuildEpisodeList(IEnumerable<int> orderedEpisodes)
         {
             var epSb = new StringBuilder();
@@ -133,5 +184,7 @@ namespace Ombi.Helpers
         {
             return currentUrl.Replace("http://", "https://");
         }
+
+
     }
 }

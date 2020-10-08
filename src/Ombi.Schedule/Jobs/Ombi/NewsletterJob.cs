@@ -813,7 +813,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     foreach (var epInformation in results.OrderBy(x => x.SeasonNumber))
                     {
                         var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
-                        var episodeString = StringHelper.BuildEpisodeList(orderedEpisodes.Select(x => x.EpisodeNumber));
+                        var episodeString = StringHelper.BuildEpisodeList(orderedEpisodes.Select(x => (x.EpisodeNumber, x.Aired)));
                         var seasonAirDate = epInformation.SeasonAirDate;
                         finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString} {seasonAirDate}");
                         finalsb.Append("<br />");
