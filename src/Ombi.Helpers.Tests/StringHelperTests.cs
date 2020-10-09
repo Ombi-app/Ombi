@@ -40,5 +40,14 @@ namespace Ombi.Helpers.Tests
 
             Assert.AreEqual(expectedUrl, sourceUrl.ToHttpsUrl(), "Should return the unchanged invalid URL");
         }
+
+        [Test]
+        public void ToHttpsUrl_ShouldReturnNull_NullUrl()
+        {
+            const string sourceUrl = null;
+            const string expectedUrl = null;
+
+            Assert.AreEqual(expectedUrl, sourceUrl.ToHttpsUrl(), "Should return null for null URL");
+        }
     }
 }

@@ -55,7 +55,7 @@ namespace Ombi.Core.Helpers
             FirstAir = dt;
 
             // For some reason the poster path is always http
-            PosterPath = ShowInfo.image?.medium.Replace("http:", "https:");
+            PosterPath = ShowInfo.image?.medium.ToHttpsUrl();
 
             return this;
         }
@@ -113,7 +113,7 @@ namespace Ombi.Core.Helpers
                                     EpisodeNumber = ep.number,
                                     AirDate = FormatDate(ep.airdate),
                                     Title = ep.name,
-                                    Url = ep.url
+                                    Url = ep.url.ToHttpsUrl()
                                 }
                             },
                             SeasonNumber = ep.season,
@@ -126,7 +126,7 @@ namespace Ombi.Core.Helpers
                             EpisodeNumber = ep.number,
                             AirDate = FormatDate(ep.airdate),
                             Title = ep.name,
-                            Url = ep.url
+                            Url = ep.url.ToHttpsUrl()
                         });
                     }
                 }
@@ -146,7 +146,7 @@ namespace Ombi.Core.Helpers
                             EpisodeNumber = ep.number,
                             AirDate = FormatDate(ep.airdate),
                             Title = ep.name,
-                            Url = ep.url
+                            Url = ep.url.ToHttpsUrl()
                         });
                     }
                 }
@@ -170,7 +170,7 @@ namespace Ombi.Core.Helpers
                             EpisodeNumber = ep.number,
                             AirDate = FormatDate(ep.airdate),
                             Title = ep.name,
-                            Url = ep.url
+                            Url = ep.url.ToHttpsUrl()
                         });
                     }
                 }
@@ -200,7 +200,7 @@ namespace Ombi.Core.Helpers
                                 EpisodeNumber = ep.number,
                                 AirDate = FormatDate(ep.airdate),
                                 Title = ep.name,
-                                Url = ep.url,
+                                Url = ep.url.ToHttpsUrl()
                             });
                         }
                     }
@@ -216,7 +216,7 @@ namespace Ombi.Core.Helpers
                                 EpisodeNumber = ep.number,
                                 AirDate = FormatDate(ep.airdate),
                                 Title = ep.name,
-                                Url = ep.url,
+                                Url = ep.url.ToHttpsUrl()
                             });
                             seasonRequests.Add(newRequest);
                         }

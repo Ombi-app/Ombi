@@ -56,8 +56,10 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(dest => dest.Runtime, opts => opts.MapFrom(src => src.Runtime.ToString()))
                 .ForMember(dest => dest.Title, opts => opts.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Status, opts => opts.MapFrom(src => TraktEnumHelper.GetDescription(src.Status)))
-                .ForMember(dest => dest.Trailer, opts => opts.MapFrom(src => src.Trailer))
-                .ForMember(dest => dest.Homepage, opts => opts.MapFrom(src => src.Homepage));
+                .ForMember(dest => dest.Trailer, 
+                    opts => opts.MapFrom(src => src.Trailer.ToString().ToHttpsUrl()))
+                .ForMember(dest => dest.Homepage, 
+                    opts => opts.MapFrom(src => src.Homepage.ToString().ToHttpsUrl()));
         }
     }
 }
