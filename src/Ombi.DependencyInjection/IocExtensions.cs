@@ -101,6 +101,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IVoteEngine, VoteEngine>();
             services.AddTransient<IDemoMovieSearchEngine, DemoMovieSearchEngine>();
             services.AddTransient<IDemoTvSearchEngine, DemoTvSearchEngine>();
+            services.AddTransient<IUserDeletionEngine, UserDeletionEngine>();
         }
 
         public static void RegisterEnginesV2(this IServiceCollection services)
