@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Ombi.Core.Authentication;
 using Ombi.Helpers;
@@ -24,18 +25,20 @@ namespace Ombi.Controllers.V1
     public class TokenController : ControllerBase
     {
         public TokenController(OmbiUserManager um, IOptions<TokenAuthentication> ta, ITokenRepository token,
-            IPlexOAuthManager oAuthManager)
+            IPlexOAuthManager oAuthManager, ILogger<TokenController> logger)
         {
             _userManager = um;
             _tokenAuthenticationOptions = ta.Value;
             _token = token;
             _plexOAuthManager = oAuthManager;
+            _log = logger;
         }
 
         private readonly TokenAuthentication _tokenAuthenticationOptions;
         private readonly ITokenRepository _token;
         private readonly OmbiUserManager _userManager;
         private readonly IPlexOAuthManager _plexOAuthManager;
+        private readonly ILogger<TokenController> _log;
 
         /// <summary>
         /// Gets the token.
@@ -57,6 +60,7 @@ namespace Ombi.Controllers.V1
 
                     if (user == null)
                     {
+                        _log.LogWarning(string.Format("Failed login attempt by IP: {0}", GetRequestIP()));
                         return new UnauthorizedResult();
                     }
 
@@ -88,6 +92,7 @@ namespace Ombi.Controllers.V1
                 return new JsonResult(new { url = url.ToString(), pinId = model.PlexTvPin.id });
             }
 
+            _log.LogWarning(string.Format("Failed login attempt by IP: {0}", GetRequestIP()));
             return new UnauthorizedResult();
         }
 
@@ -248,5 +253,26 @@ namespace Ombi.Controllers.V1
             public string Userename { get; set; }
         }
 
+        private string GetRequestIP()
+        {
+            string ip = null;
+
+            if (Request.HttpContext?.Request?.Headers != null && Request.HttpContext.Request.Headers.ContainsKey("X-Forwarded-For"))
+            {
+                var forwardedip = Request.HttpContext.Request.Headers["X-Forwarded-For"].ToString();
+                ip = forwardedip.TrimEnd(',').Split(",").Select(s => s.Trim()).FirstOrDefault();
+            }
+
+            if (string.IsNullOrWhiteSpace(ip) && Request.HttpContext?.Connection?.RemoteIpAddress != null)
+                ip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+
+            if (string.IsNullOrWhiteSpace(ip) && Request.HttpContext?.Request?.Headers != null && Request.HttpContext.Request.Headers.ContainsKey("REMOTE_ADDR"))
+            {
+                var remoteip = Request.HttpContext.Request.Headers["REMOTE_ADDR"].ToString();
+                ip = remoteip.TrimEnd(',').Split(",").Select(s => s.Trim()).FirstOrDefault();
+            }
+
+            return ip;
+        }
     }
 }
