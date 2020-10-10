@@ -1,4 +1,4 @@
-﻿#region Copyright
+#region Copyright
 // /************************************************************************
 //    Copyright (c) 2017 Jamie Rees
 //    File: Users.cs
@@ -35,5 +35,6 @@ namespace Ombi.Store.Entities
         EmbyUser = 3,
         EmbyConnectUser = 4,
         JellyfinUser = 5,
+        LdapUser = 6,
     }
 }

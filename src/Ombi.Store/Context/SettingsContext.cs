@@ -29,48 +29,44 @@ namespace Ombi.Store.Context
 
         public void Seed()
         {
-            var strat = Database.CreateExecutionStrategy();
-            strat.Execute(() =>
+            using (var tran = Database.BeginTransaction())
             {
-                using (var tran = Database.BeginTransaction())
+                // Add the tokens
+                var fanArt = ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.FanartTv);
+                if (fanArt == null)
                 {
-                    // Add the tokens
-                    var fanArt = ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.FanartTv);
-                    if (fanArt == null)
+                    ApplicationConfigurations.Add(new ApplicationConfiguration
                     {
-                        ApplicationConfigurations.Add(new ApplicationConfiguration
-                        {
-                            Type = ConfigurationTypes.FanartTv,
-                            Value = "4b6d983efa54d8f45c68432521335f15"
-                        });
-                        SaveChanges();
-                    }
-
-                    var movieDb = ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.FanartTv);
-                    if (movieDb == null)
-                    {
-                        ApplicationConfigurations.Add(new ApplicationConfiguration
-                        {
-                            Type = ConfigurationTypes.TheMovieDb,
-                            Value = "b8eabaf5608b88d0298aa189dd90bf00"
-                        });
-                        SaveChanges();
-                    }
-
-                    var notification =
-                        ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.Notification);
-                    if (notification == null)
-                    {
-                        ApplicationConfigurations.Add(new ApplicationConfiguration
-                        {
-                            Type = ConfigurationTypes.Notification,
-                            Value = "4f0260c4-9c3d-41ab-8d68-27cb5a593f0e"
-                        });
-                        SaveChanges();
-                    }
-                    tran.Commit();
+                        Type = ConfigurationTypes.FanartTv,
+                        Value = "4b6d983efa54d8f45c68432521335f15"
+                    });
+                    SaveChanges();
                 }
-            });
+
+                var movieDb = ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.FanartTv);
+                if (movieDb == null)
+                {
+                    ApplicationConfigurations.Add(new ApplicationConfiguration
+                    {
+                        Type = ConfigurationTypes.TheMovieDb,
+                        Value = "b8eabaf5608b88d0298aa189dd90bf00"
+                    });
+                    SaveChanges();
+                }
+
+                var notification =
+                    ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.Notification);
+                if (notification == null)
+                {
+                    ApplicationConfigurations.Add(new ApplicationConfiguration
+                    {
+                        Type = ConfigurationTypes.Notification,
+                        Value = "4f0260c4-9c3d-41ab-8d68-27cb5a593f0e"
+                    });
+                    SaveChanges();
+                }
+                tran.Commit();
+            }
         }
     }
 }

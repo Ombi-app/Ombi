@@ -5,7 +5,6 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Ombi.Api.Lidarr;
 using Ombi.Api.Lidarr.Models;
 using Ombi.Api.MusicBrainz;
@@ -40,21 +39,6 @@ namespace Ombi.Core.Engine.V2
             _musicBrainzApi = musicBrainzApi;
             _lidarrSettings = lidarrSettings;
             _lidarrApi = lidarrApi;
-        }
-
-        public async Task<ReleaseGroup> GetAlbum(string albumId)
-        {
-            var g = await _musicBrainzApi.GetAlbumInformation(albumId);
-            var release = new ReleaseGroup
-            {
-                ReleaseType = g.ReleaseGroup.PrimaryType,
-                Id = g.Id,
-                Title = g.Title,
-                ReleaseDate = g.ReleaseGroup.FirstReleaseDate,
-            };
-
-            await RunSearchRules(release);
-            return release;
         }
 
         public async Task<ArtistInformation> GetArtistInformation(string artistId)
@@ -100,19 +84,12 @@ namespace Ombi.Core.Engine.V2
 
             if (lidarrArtistTask != null)
             {
-                try
-                {
-                    var artistResult = await lidarrArtistTask;
-                    info.Banner = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("banner", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
-                    info.Logo = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("logo", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
-                    info.Poster = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("poster", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
-                    info.FanArt = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("fanart", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
-                    info.Overview = artistResult.overview;
-                }
-                catch (JsonSerializationException)
-                {
-                    // swallow, Lidarr probably doesn't have this artist
-                }
+                var artistResult = await lidarrArtistTask;
+                info.Banner = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("banner", StringComparison.InvariantCultureIgnoreCase))?.url.Replace("http", "https");
+                info.Logo = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("logo", StringComparison.InvariantCultureIgnoreCase))?.url.Replace("http", "https");
+                info.Poster = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("poster", StringComparison.InvariantCultureIgnoreCase))?.url.Replace("http", "https");
+                info.FanArt = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("fanart", StringComparison.InvariantCultureIgnoreCase))?.url.Replace("http", "https");
+                info.Overview = artistResult.overview;
             }
 
             return info;
@@ -131,17 +108,17 @@ namespace Ombi.Core.Engine.V2
             {
                 if ((cover.thumbnails?.small ?? string.Empty).HasValue())
                 {
-                    return new AlbumArt(cover.thumbnails.small.ToHttpsUrl());
+                    return new AlbumArt(cover.thumbnails.small);
                 }
                 if ((cover.thumbnails?.large ?? string.Empty).HasValue())
                 {
-                    return new AlbumArt(cover.thumbnails.large.ToHttpsUrl());
+                    return new AlbumArt(cover.thumbnails.large);
                 }
             }
 
             return new AlbumArt();
         }
-
+        
         public async Task<ArtistInformation> GetArtistInformationByRequestId(int requestId)
         {
             var request = await RequestService.MusicRequestRepository.Find(requestId);
@@ -175,69 +152,69 @@ namespace Ombi.Core.Engine.V2
                 switch (relation.TypeId)
                 {
                     case RelationLinks.AllMusic:
-                        links.AllMusic = relation.Url?.Resource.ToHttpsUrl();
+                        links.AllMusic = relation.Url?.Resource;
                         break;
                     case RelationLinks.BbcMusic:
-                        links.BbcMusic = relation.Url?.Resource.ToHttpsUrl();
+                        links.BbcMusic = relation.Url?.Resource;
                         break;
                     case RelationLinks.Discogs:
-                        links.Discogs = relation.Url?.Resource.ToHttpsUrl();
+                        links.Discogs = relation.Url?.Resource;
                         break;
                     case RelationLinks.Homepage:
-                        links.HomePage = relation.Url?.Resource.ToHttpsUrl();
+                        links.HomePage = relation.Url?.Resource;
                         break;
                     case RelationLinks.Imdb:
-                        links.Imdb = relation.Url?.Resource.ToHttpsUrl();
+                        links.Imdb = relation.Url?.Resource;
                         break;
                     case RelationLinks.LastFm:
-                        links.LastFm = relation.Url?.Resource.ToHttpsUrl();
+                        links.LastFm = relation.Url?.Resource;
                         break;
                     case RelationLinks.MySpace:
-                        links.MySpace = relation.Url?.Resource.ToHttpsUrl();
+                        links.MySpace = relation.Url?.Resource;
                         break;
                     case RelationLinks.OnlineCommunity:
-                        links.OnlineCommunity = relation.Url?.Resource.ToHttpsUrl();
+                        links.OnlineCommunity = relation.Url?.Resource;
                         break;
                     case RelationLinks.SocialNetwork:
                         if ((relation.Url?.Resource ?? string.Empty).Contains("twitter", CompareOptions.IgnoreCase))
                         {
-                            links.Twitter = relation.Url?.Resource.ToHttpsUrl();
+                            links.Twitter = relation.Url?.Resource;
                         }
                         if ((relation.Url?.Resource ?? string.Empty).Contains("facebook", CompareOptions.IgnoreCase))
                         {
-                            links.Facebook = relation.Url?.Resource.ToHttpsUrl();
+                            links.Facebook = relation.Url?.Resource;
                         }
                         if ((relation.Url?.Resource ?? string.Empty).Contains("instagram", CompareOptions.IgnoreCase))
                         {
-                            links.Instagram = relation.Url?.Resource.ToHttpsUrl();
+                            links.Instagram = relation.Url?.Resource;
                         }
                         if ((relation.Url?.Resource ?? string.Empty).Contains("vk", CompareOptions.IgnoreCase))
                         {
-                            links.Vk = relation.Url?.Resource.ToHttpsUrl();
+                            links.Vk = relation.Url?.Resource;
                         }
                         break;
                     case RelationLinks.Streams:
                         if ((relation.Url?.Resource ?? string.Empty).Contains("spotify", CompareOptions.IgnoreCase))
                         {
-                            links.Spotify = relation.Url?.Resource.ToHttpsUrl();
+                            links.Spotify = relation.Url?.Resource;
                         }
                         if ((relation.Url?.Resource ?? string.Empty).Contains("deezer", CompareOptions.IgnoreCase))
                         {
-                            links.Deezer = relation.Url?.Resource.ToHttpsUrl();
+                            links.Deezer = relation.Url?.Resource;
                         }
 
                         break;
                     case RelationLinks.YouTube:
-                        links.YouTube = relation.Url?.Resource.ToHttpsUrl();
+                        links.YouTube = relation.Url?.Resource;
                         break;
                     case RelationLinks.Download:
                         if ((relation.Url?.Resource ?? string.Empty).Contains("google", CompareOptions.IgnoreCase))
                         {
-                            links.Google = relation.Url?.Resource.ToHttpsUrl();
+                            links.Google = relation.Url?.Resource;
                         }
                         if ((relation.Url?.Resource ?? string.Empty).Contains("apple", CompareOptions.IgnoreCase))
                         {
-                            links.Apple = relation.Url?.Resource.ToHttpsUrl();
+                            links.Apple = relation.Url?.Resource;
                         }
 
                         break;

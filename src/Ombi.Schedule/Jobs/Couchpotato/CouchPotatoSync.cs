@@ -77,16 +77,12 @@ namespace Ombi.Schedule.Jobs.Couchpotato
                 var movies = await _api.GetMovies(settings.FullUri, settings.ApiKey, new[] {"active"});
                 if (movies != null)
                 {
-                    var strat = _ctx.Database.CreateExecutionStrategy();
-                    await strat.ExecuteAsync(async () =>
+                    // Let's remove the old cached data
+                    using (var tran = await _ctx.Database.BeginTransactionAsync())
                     {
-                        // Let's remove the old cached data
-                        using (var tran = await _ctx.Database.BeginTransactionAsync())
-                        {
-                            await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM CouchPotatoCache");
-                            tran.Commit();
-                        }
-                    });
+                        await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM CouchPotatoCache");
+                        tran.Commit();
+                    }
 
                     // Save
                     var movieIds = new List<CouchPotatoCache>();
@@ -106,17 +102,14 @@ namespace Ombi.Schedule.Jobs.Couchpotato
                             _log.LogError("TMDBId is not > 0 for movie {0}", m.title);
                         }
                     }
-                    strat = _ctx.Database.CreateExecutionStrategy();
-                    await strat.ExecuteAsync(async () =>
-                    {
-                        using (var tran = await _ctx.Database.BeginTransactionAsync())
-                        {
-                            await _ctx.CouchPotatoCache.AddRangeAsync(movieIds);
 
-                            await _ctx.SaveChangesAsync();
-                            tran.Commit();
-                        }
-                    });
+                    using (var tran = await _ctx.Database.BeginTransactionAsync())
+                    {
+                        await _ctx.CouchPotatoCache.AddRangeAsync(movieIds);
+
+                        await _ctx.SaveChangesAsync();
+                        tran.Commit();
+                    }
 
                     await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                         .SendAsync(NotificationHub.NotificationEvent, "Couch Potato Sync Finished");

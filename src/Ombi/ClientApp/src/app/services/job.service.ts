@@ -31,8 +31,8 @@ export class JobService extends ServiceHelpers {
         return this.http.post<boolean>(`${this.url}embyUserImporter/`, {headers: this.headers});
     }
 
-    public runJellyfinImporter(): Observable<boolean> {
-        return this.http.post<boolean>(`${this.url}jellyfinUserImporter/`, {headers: this.headers});
+    public runLdapImporter(): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}ldapUserImporter/`, {headers: this.headers});
     }
 
     public runPlexCacher(): Observable<boolean> {
@@ -43,20 +43,8 @@ export class JobService extends ServiceHelpers {
         return this.http.post<boolean>(`${this.url}plexrecentlyadded/`, {headers: this.headers});
     }
 
-    public runEmbyRecentlyAddedCacher(): Observable<boolean> {
-        return this.http.post<boolean>(`${this.url}embyrecentlyadded/`, {headers: this.headers});
-    }
-
-    public clearMediaserverData(): Observable<boolean> {
-        return this.http.post<boolean>(`${this.url}clearmediaserverdata/`, {headers: this.headers});
-    }
-
     public runEmbyCacher(): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}embycontentcacher/`, {headers: this.headers});
-    }
-
-    public runJellyfinCacher(): Observable<boolean> {
-        return this.http.post<boolean>(`${this.url}jellyfincontentcacher/`, {headers: this.headers});
     }
 
     public runNewsletter(): Observable<boolean> {

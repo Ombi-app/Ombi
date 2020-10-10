@@ -62,7 +62,7 @@ namespace Ombi.Helpers.Tests
                     var expected = (string)d.ExpectedResult;
                     var args = d.Arguments.ToList();
                     args.Add(true);
-                    var newExpected = expected.ToHttpsUrl();
+                    var newExpected = expected.Replace("http://", "https://");
                     if (args.Contains(80))
                     {
                         newExpected = expected;
@@ -99,7 +99,7 @@ namespace Ombi.Helpers.Tests
                         }
                     }
                     args.Add(true);
-                    var newExpected = expected.ToHttpsUrl();
+                    var newExpected = expected.Replace("http://", "https://");
                     if (args.Contains(80))
                     {
                         newExpected = expected;

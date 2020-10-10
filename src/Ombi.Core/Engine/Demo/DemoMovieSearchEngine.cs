@@ -50,7 +50,7 @@ namespace Ombi.Core.Engine.Demo
             return null;
         }
 
-        new public async Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies()
+        public async Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies()
         {
             var rand = new Random();
             var responses = new List<SearchMovieViewModel>();
@@ -72,18 +72,18 @@ namespace Ombi.Core.Engine.Demo
             return responses;
         }
 
-        new public async Task<IEnumerable<SearchMovieViewModel>> PopularMovies()
+        public async Task<IEnumerable<SearchMovieViewModel>> PopularMovies()
         {
             return await NowPlayingMovies();
         }
 
 
-        new public async Task<IEnumerable<SearchMovieViewModel>> TopRatedMovies()
+        public async Task<IEnumerable<SearchMovieViewModel>> TopRatedMovies()
         {
             return await NowPlayingMovies();
         }
 
-        new public async Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies()
+        public async Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies()
         {
 
             return await NowPlayingMovies();

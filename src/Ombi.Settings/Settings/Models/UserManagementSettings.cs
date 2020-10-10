@@ -1,4 +1,4 @@
-﻿using Ombi.Store.Entities;
+using Ombi.Store.Entities;
 using System.Collections.Generic;
 
 namespace Ombi.Settings.Settings.Models
@@ -9,6 +9,7 @@ namespace Ombi.Settings.Settings.Models
         public bool ImportPlexUsers { get; set; }
         public bool ImportEmbyUsers { get; set; }
         public bool ImportJellyfinUsers { get; set; }
+        public bool ImportLdapUsers { get; set; }
         public int MovieRequestLimit { get; set; }
         public RequestLimitType MovieRequestLimitType { get; set; } = RequestLimitType.Week;
         public int EpisodeRequestLimit { get; set; }

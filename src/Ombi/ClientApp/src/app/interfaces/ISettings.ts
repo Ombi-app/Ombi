@@ -1,5 +1,4 @@
-import { ISettings } from "./ICommon";
-import { RequestLimitType } from ".";
+﻿import { ISettings } from "./ICommon";
 
 export interface IExternalSettings extends ISettings {
   ssl: boolean;
@@ -13,18 +12,13 @@ export interface IOmbiSettings extends ISettings {
   collectAnalyticData: boolean;
   wizard: boolean;
   apiKey: string;
+  ignoreCertificateErrors: boolean;
   doNotSendNotificationsForAutoApprove: boolean;
   hideRequestsUsers: boolean;
   defaultLanguageCode: string;
   disableHealthChecks: boolean;
   autoDeleteAvailableRequests: boolean;
   autoDeleteAfterDays: number;
-  branch: Branch;
-}
-
-export enum Branch {
-  Stable = 1,
-  Develop = 0
 }
 
 export interface IUpdateSettings extends ISettings {
@@ -42,72 +36,21 @@ export interface IUpdateSettings extends ISettings {
 
 export interface IEmbySettings extends ISettings {
   enable: boolean;
+  isJellyfin: boolean;
   servers: IEmbyServer[];
 }
 
 export interface IEmbyServer extends IExternalSettings {
-  serverId: string;
   name: string;
   apiKey: string;
   administratorId: string;
   enableEpisodeSearching: boolean;
   serverHostname: string;
-  embySelectedLibraries: IEmbyLibrariesSettings[];
 }
 
 export interface IPublicInfo {
-  id: string;
   serverName: string;
-}
-
-export interface IJellyfinSettings extends ISettings {
-  enable: boolean;
-  servers: IJellyfinServer[];
-}
-
-export interface IJellyfinServer extends IExternalSettings {
-  serverId: string;
-  name: string;
-  apiKey: string;
-  administratorId: string;
-  enableEpisodeSearching: boolean;
-  serverHostname: string;
-  jellyfinSelectedLibraries: IJellyfinLibrariesSettings[];
-}
-export interface IJellyfinLibrariesSettings {
-  key: string;
-  title: string;
-  enabled: boolean;
-  collectionType: string;
-}
-export interface IEmbyLibrariesSettings {
-  key: string;
-  title: string;
-  enabled: boolean;
-  collectionType: string;
-}
-
-export interface IMediaServerMediaContainer<T> {
-  items: T[];
-  totalRecordCount: number;
-}
-
-export interface IJellyfinLibrary {
-  name: string;
-  serverId: string;
-  id: string;
-  collectionType: string;
-}
-export interface IEmbyLibrary {
-  name: string;
-  serverId: string;
-  id: string;
-  collectionType: string;
-}
-
-export interface IPublicInfo {
-  id: string;
-  serverName: string;
+  isJellyfin: boolean;
 }
 
 export interface IPlexSettings extends ISettings {
@@ -122,7 +65,6 @@ export interface IPlexServer extends IExternalSettings {
   machineIdentifier: string;
   episodeBatchSize: number;
   plexSelectedLibraries: IPlexLibrariesSettings[];
-  serverHostname: string;
 }
 
 export interface IPlexLibrariesSettings {
@@ -143,7 +85,6 @@ export interface ISonarrSettings extends IExternalSettings {
   addOnly: boolean;
   v3: boolean;
   languageProfile: number;
-  languageProfileAnime: number;
   scanForAvailability: boolean;
 }
 
@@ -193,12 +134,10 @@ export interface ICustomizationSettings extends ISettings {
   recentlyAddedPage: boolean;
   useCustomPage: boolean;
   hideAvailableFromDiscover: boolean;
-  favicon: string;
 }
 
 export interface IJobSettings {
   embyContentSync: string;
-  jellyfinContentSync: string;
   sonarrSync: string;
   radarrSync: string;
   plexContentSync: string;
@@ -213,7 +152,6 @@ export interface IJobSettings {
   retryRequests: string;
   mediaDatabaseRefresh: string;
   autoDeleteRequests: string;
-  embyRecentlyAddedSync: string;
 }
 
 export interface IIssueSettings extends ISettings {
@@ -235,6 +173,21 @@ export interface IAuthenticationSettings extends ISettings {
   enableOAuth: boolean;
 }
 
+export interface ILdapSettings extends ISettings {
+  isEnabled: boolean;
+  hostname: string;
+  port: number;
+  baseDn: string;
+  useSsl: boolean;
+  useStartTls: boolean;
+  skipSslVerify: boolean;
+  bindUserDn: string;
+  bindUserPassword: string;
+  usernameAttribute: string;
+  searchFilter: string;
+  createUsersAtLogin: boolean;
+}
+
 export interface ICustomPage extends ISettings {
   enabled: boolean;
   fontAwesomeIcon: string;
@@ -246,18 +199,12 @@ export interface IUserManagementSettings extends ISettings {
   importPlexUsers: boolean;
   importPlexAdmin: boolean;
   importEmbyUsers: boolean;
-  importJellyfinUsers: boolean;
+  importLdapUsers: boolean;
   defaultRoles: string[];
   movieRequestLimit: number;
   episodeRequestLimit: number;
-  musicRequestLimit: number;
   bannedPlexUserIds: string[];
   bannedEmbyUserIds: string[];
-  bannedJellyfinUserIds: string[];
-  defaultStreamingCountry: string;
-  movieRequestLimitType: RequestLimitType;
-  episodeRequestLimitType: RequestLimitType;
-  musicRequestLimitType: RequestLimitType;
 }
 
 export interface IAbout {
@@ -329,22 +276,4 @@ export interface IVoteSettings extends ISettings {
 export interface ITheMovieDbSettings extends ISettings {
     showAdultMovies: boolean;
     excludedKeywordIds: number[];
-    excludedMovieGenreIds: number[];
-    excludedTvGenreIds: number[]
-}
-
-export interface IUpdateModel
-{
-  updateVersionString: string;
-  updateVersion: number;
-  updateDate: Date,
-  updateAvailable: boolean;
-  changeLogs: string;
-  downloads: IUpdateDonloads[];
-}
-
-export interface  IUpdateDonloads
-{
-    name: string;
-    url: string
 }
