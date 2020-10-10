@@ -132,6 +132,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ITvMazeApi, TvMazeApi>();
             services.AddTransient<ITraktApi, TraktApi>();
             services.AddTransient<IRadarrApi, RadarrApi>();
+            services.AddTransient<IRadarrV3Api, RadarrV3Api>();
             services.AddTransient<IDiscordApi, DiscordApi>();
             services.AddTransient<IPushbulletApi, PushbulletApi>();
             services.AddTransient<IOmbiService, OmbiService>();

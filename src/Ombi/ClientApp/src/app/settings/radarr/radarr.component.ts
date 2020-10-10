@@ -19,7 +19,6 @@ export class RadarrComponent implements OnInit {
     public minimumAvailabilityOptions: IMinimumAvailability[];
     public profilesRunning: boolean;
     public rootFoldersRunning: boolean;
-    public advanced = false;
     public form: FormGroup;
 
     constructor(private settingsService: SettingsService,
@@ -43,7 +42,8 @@ export class RadarrComponent implements OnInit {
                     port: [x.port, [Validators.required]],
                     addOnly: [x.addOnly],
                     minimumAvailability: [x.minimumAvailability, [Validators.required]],
-                    scanForAvailability: [x.scanForAvailability]
+                    scanForAvailability: [x.scanForAvailability],
+                    v3: [x.v3]
                 });
 
                 if (x.defaultQualityProfile) {
