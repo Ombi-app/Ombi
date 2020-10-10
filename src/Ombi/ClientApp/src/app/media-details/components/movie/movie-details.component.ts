@@ -115,11 +115,12 @@ export class MovieDetailsComponent {
     }
 
     public async approve() {
+        this.movie.approved = true;
         const result = await this.requestService.approveMovie({ id: this.movieRequest.id }).toPromise();
         if (result.result) {
-            this.movie.approved = false;
             this.messageService.send("Successfully Approved", "Ok");
         } else {
+            this.movie.approved = false;
             this.messageService.send(result.errorMessage, "Ok");
         }
     }
