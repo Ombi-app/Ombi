@@ -164,7 +164,7 @@ namespace Ombi
             var baseUrl = appConfig.Get(ConfigurationTypes.BaseUrl);
             if (baseUrl != null)
             {
-                if (baseUrl.Value.HasValue())
+                if (baseUrl.Value.HasValue() && settings.BaseUrl != baseUrl.Value)
                 {
                     settings.BaseUrl = baseUrl.Value;
                     ombiService.SaveSettings(settings);

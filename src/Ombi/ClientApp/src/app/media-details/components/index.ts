@@ -11,13 +11,14 @@ import { DenyDialogComponent } from "./shared/deny-dialog/deny-dialog.component"
 import { TvRequestsPanelComponent } from "./tv/panels/tv-requests/tv-requests-panel.component";
 import { MovieAdminPanelComponent } from "./movie/panels/movie-admin-panel/movie-admin-panel.component";
 import { MovieAdvancedOptionsComponent } from "./movie/panels/movie-advanced-options/movie-advanced-options.component";
-import { SearchService, RequestService, RadarrService, IssuesService } from "../../services";
+import { SearchService, RequestService, RadarrService, IssuesService, SonarrService } from "../../services";
 import { RequestServiceV2 } from "../../services/requestV2.service";
 import { NewIssueComponent } from "./shared/new-issue/new-issue.component";
 import { ArtistDetailsComponent } from "./artist/artist-details.component";
 import { ArtistInformationPanel } from "./artist/panels/artist-information-panel/artist-information-panel.component";
 import { ArtistReleasePanel } from "./artist/panels/artist-release-panel/artist-release-panel.component";
 import { IssuesPanelComponent } from "./shared/issues-panel/issues-panel.component";
+import { TvAdminPanelComponent } from "./tv/panels/tv-admin-panel/tv-admin-panel.component";
 
 export const components: any[] = [
     MovieDetailsComponent,
@@ -38,6 +39,7 @@ export const components: any[] = [
     ArtistInformationPanel,
     ArtistReleasePanel,
     IssuesPanelComponent,
+    TvAdminPanelComponent,
 ];
 
 export const entryComponents: any[] = [
@@ -53,4 +55,5 @@ export const providers: any[] = [
     RadarrService,
     RequestServiceV2,
     IssuesService,
+    SonarrService,
 ];

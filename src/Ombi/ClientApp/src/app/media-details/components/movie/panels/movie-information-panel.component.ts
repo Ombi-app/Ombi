@@ -11,4 +11,5 @@ import { IAdvancedData, IMovieRequests } from "../../../../interfaces";
 export class MovieInformationPanelComponent {
     @Input() public movie: ISearchMovieResultV2;
     @Input() public request: IMovieRequests;
+    @Input() public advancedOptions: boolean;
 }

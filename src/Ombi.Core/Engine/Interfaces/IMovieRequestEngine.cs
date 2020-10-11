@@ -24,6 +24,6 @@ namespace Ombi.Core.Engine.Interfaces
         Task<RequestsViewModel<MovieRequests>> GetUnavailableRequests(int count, int position, string sortProperty,
             string sortOrder);
         Task<RequestsViewModel<MovieRequests>> GetRequestsByStatus(int count, int position, string sortProperty, string sortOrder, RequestStatus status);
-        Task<RequestEngineResult> UpdateAdvancedOptions(MovieAdvancedOptions options);
+        Task<RequestEngineResult> UpdateAdvancedOptions(MediaAdvancedOptions options);
     }
 }

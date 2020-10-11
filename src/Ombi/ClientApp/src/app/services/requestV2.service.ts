@@ -4,7 +4,7 @@ import { Injectable, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ServiceHelpers } from "./service.helpers";
-import { IRequestsViewModel, IMovieRequests, IChildRequests, IMovieAdvancedOptions, IRequestEngineResult, IAlbumRequest } from "../interfaces";
+import { IRequestsViewModel, IMovieRequests, IChildRequests, IMovieAdvancedOptions as IMediaAdvancedOptions, IRequestEngineResult, IAlbumRequest } from "../interfaces";
 
 
 @Injectable()
@@ -53,8 +53,12 @@ export class RequestServiceV2 extends ServiceHelpers {
         return this.http.get<IRequestsViewModel<IChildRequests>>(`${this.url}tv/denied/${count}/${position}/${sortProperty}/${order}`, {headers: this.headers});
     }
 
-    public updateMovieAdvancedOptions(options: IMovieAdvancedOptions): Observable<IRequestEngineResult> {
+    public updateMovieAdvancedOptions(options: IMediaAdvancedOptions): Observable<IRequestEngineResult> {
         return this.http.post<IRequestEngineResult>(`${this.url}movie/advancedoptions`, options, {headers: this.headers});
+    }
+
+    public updateTvAdvancedOptions(options: IMediaAdvancedOptions): Observable<IRequestEngineResult> {
+        return this.http.post<IRequestEngineResult>(`${this.url}tv/advancedoptions`, options, {headers: this.headers});
     }
 
     public getMovieUnavailableRequests(count: number, position: number, sortProperty: string , order: string): Observable<IRequestsViewModel<IMovieRequests>> {

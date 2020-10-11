@@ -852,5 +852,28 @@ namespace Ombi.Core.Engine
                 NextRequest = DateTime.SpecifyKind(oldestRequestedAt.AddDays(7), DateTimeKind.Utc),
             };
         }
+
+        public async Task<RequestEngineResult> UpdateAdvancedOptions(MediaAdvancedOptions options)
+        {
+            var request = await TvRepository.Find(options.RequestId);
+            if (request == null)
+            {
+                return new RequestEngineResult
+                {
+                    Result = false,
+                    ErrorMessage = "Request does not exist"
+                };
+            }
+
+            request.QualityOverride = options.QualityOverride;
+            request.RootFolder = options.RootPathOverride;
+
+            await TvRepository.Update(request);
+
+            return new RequestEngineResult
+            {
+                Result = true
+            };
+        }
     }
 }

@@ -347,7 +347,7 @@ namespace Ombi.Core.Engine
         }
 
 
-        public async Task<RequestEngineResult> UpdateAdvancedOptions(MovieAdvancedOptions options)
+        public async Task<RequestEngineResult> UpdateAdvancedOptions(MediaAdvancedOptions options)
         {
             var request = await MovieRepository.Find(options.RequestId);
             if (request == null)

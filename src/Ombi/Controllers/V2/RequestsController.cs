@@ -128,9 +128,15 @@ namespace Ombi.Controllers.V2
         }
 
         [HttpPost("movie/advancedoptions")]
-        public async Task<RequestEngineResult> UpdateAdvancedOptions([FromBody] MovieAdvancedOptions options)
+        public async Task<RequestEngineResult> UpdateAdvancedOptions([FromBody] MediaAdvancedOptions options)
         {
             return await _movieRequestEngine.UpdateAdvancedOptions(options);
+        }
+
+        [HttpPost("tv/advancedoptions")]
+        public async Task<RequestEngineResult> UpdateTvAdvancedOptions([FromBody] MediaAdvancedOptions options)
+        {
+            return await _tvRequestEngine.UpdateAdvancedOptions(options);
         }
 
         [HttpGet("albums/available/{count:int}/{position:int}/{sort}/{sortOrder}")]

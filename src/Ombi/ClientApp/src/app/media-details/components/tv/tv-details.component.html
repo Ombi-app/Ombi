@@ -48,10 +48,16 @@
 
             <div class="row">
                 <div class="col-12 col-md-2">
+                    <mat-card class="mat-elevation-z8 spacing-below" *ngIf="isAdmin && showRequest" [ngStyle]="{'display': showAdvanced ? '' : 'none' }">
+                        <mat-card-content class="medium-font">
+                            <tv-admin-panel [tv]="showRequest" (sonarrEnabledChange)="showAdvanced = $event" (advancedOptionsChanged)="setAdvancedOptions($event)">
+                            </tv-admin-panel>
+                        </mat-card-content>
+                    </mat-card>
 
                     <mat-card class="mat-elevation-z8">
                         <mat-card-content class="medium-font">
-                            <tv-information-panel [tv]="tv"></tv-information-panel>
+                            <tv-information-panel [tv]="tv" [request]="showRequest" [advancedOptions]="showAdvanced"></tv-information-panel>
                         </mat-card-content>
                     </mat-card>
 

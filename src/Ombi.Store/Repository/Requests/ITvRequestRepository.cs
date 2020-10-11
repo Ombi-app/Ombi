@@ -6,7 +6,7 @@ using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Store.Repository.Requests
 {
-    public interface ITvRequestRepository 
+    public interface ITvRequestRepository : IRepository<TvRequests>
     {
         OmbiContext Db { get; }
         Task<TvRequests> Add(TvRequests request);

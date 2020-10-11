@@ -143,5 +143,13 @@ namespace Ombi.Controllers.V1.External
             return await SonarrV3Api.LanguageProfiles(settings.ApiKey, settings.FullUri);
         }
 
+        [HttpGet("enabled")]
+        [PowerUser]
+        public async Task<bool> Enabled()
+        {
+            var settings = await SonarrSettings.GetSettingsAsync();
+            return settings.Enabled;
+        }
+
     }
 }
