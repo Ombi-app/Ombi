@@ -6,7 +6,7 @@
         <mat-card class="mat-elevation-z8 top-margin">
             <img mat-card-image *ngIf="!customizationSettings.logo" src="{{baseUrl}}/images/logo.png">
             <img mat-card-image *ngIf="customizationSettings.logo" [src]="customizationSettings.logo">
-            <mat-card-content *ngIf="!authenticationSettings.enableOAuth || loginWithOmbi">
+            <mat-card-content id="login-box" *ngIf="!authenticationSettings.enableOAuth || loginWithOmbi">
                 <form *ngIf="authenticationSettings" class="form-signin" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
 
 
@@ -35,8 +35,8 @@
             <mat-card-content *ngIf="authenticationSettings.enableOAuth && !loginWithOmbi" class="login-buttons">
                 <div>
 
-                    <button mat-raised-button color="primary" type="submit" (click)="loginWithOmbi = true">{{'Login.SignInWith' | translate:appNameTranslate}}</button>
-                    <button mat-raised-button color="accent" type="button" (click)="oauth()">
+                    <button id="sign-in" mat-raised-button color="primary" type="submit" (click)="loginWithOmbi = true">{{'Login.SignInWith' | translate:appNameTranslate}}</button>
+                    <button id="sign-plex" mat-raised-button color="accent" type="button" (click)="oauth()">
                         <span *ngIf="!oauthLoading">{{'Login.SignInWithPlex' | translate}}</span>
                         <span *ngIf="oauthLoading"><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></span>
                     </button>
