@@ -278,6 +278,16 @@ namespace Ombi.Api.TheMovieDb
             return await Api.Request<TvInfo>(request);
         }
 
+        public async Task<TvSeason> GetTVSeasonInfo(string themoviedbid, int seasonNumber)
+        {
+            var request = new Request($"/tv/{themoviedbid}/season/{seasonNumber}", BaseUri, HttpMethod.Get);
+            request.AddQueryString("api_key", ApiToken);
+            request.AddQueryString("append_to_response", "external_ids");
+            AddRetry(request);
+
+            return await Api.Request<TvSeason>(request);
+        }
+
         public async Task<List<Keyword>> SearchKeyword(string searchTerm)
         {
             var request = new Request("search/keyword", BaseUri, HttpMethod.Get);

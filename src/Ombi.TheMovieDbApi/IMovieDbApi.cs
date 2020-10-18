@@ -28,5 +28,6 @@ namespace Ombi.Api.TheMovieDb
         Task<Collections> GetCollection(string langCode, int collectionId, CancellationToken cancellationToken);
         Task<List<Keyword>> SearchKeyword(string searchTerm);
         Task<Keyword> GetKeyword(int keywordId);
+        Task<TvSeason> GetTVSeasonInfo(string themoviedbid, int seasonNumber);
     }
 }
