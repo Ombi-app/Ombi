@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using Ombi.Helpers;
+using Ombi.Schedule.Jobs.Ombi;
 using static Ombi.Schedule.Jobs.Ombi.NewsletterJob;
 
 namespace Ombi.Schedule.Tests
@@ -40,7 +41,7 @@ namespace Ombi.Schedule.Tests
             {
                 ep.Add(i);
             }
-            var result = StringHelper.BuildEpisodeList(ep);
+            var result = BuildEpisodeList(ep);
             return result;
         }
 
