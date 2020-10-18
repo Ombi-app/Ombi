@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MimeKit;
+using Nito.AsyncEx;
 using Ombi.Api.CouchPotato.Models;
 using Ombi.Api.Lidarr;
 using Ombi.Api.Lidarr.Models;
@@ -808,12 +809,14 @@ namespace Ombi.Schedule.Jobs.Ombi
                         }
                     );
 
+                    var allSeasonInfo = await results.Select(x => _movieApi.GetTVSeasonInfo(t.TheMovieDbId, x.SeasonNumber)).WhenAll();
+
                     // Group the episodes
                     var finalsb = new StringBuilder();
                     foreach (var epInformation in results.OrderBy(x => x.SeasonNumber))
                     {
                         var orderedEpisodes = epInformation.Episodes.OrderBy(x => x.EpisodeNumber).ToList();
-                        var episodeString = BuildEpisodeList(orderedEpisodes.Select(x => (x.EpisodeNumber, x.Aired)));
+                        var episodeString = BuildEpisodeList(orderedEpisodes.Select(x => (x.EpisodeNumber, GetDateAired(x, allSeasonInfo))));
                         var seasonAirDate = epInformation.SeasonAirDate;
                         finalsb.Append($"Season: {epInformation.SeasonNumber} - Episodes: {episodeString} {seasonAirDate}");
                         finalsb.Append("<br />");
@@ -850,6 +853,14 @@ namespace Ombi.Schedule.Jobs.Ombi
                     sb.Append("<tr>");
                 }
             }
+        }
+
+        private static DateTime? GetDateAired(PlexEpisode episode, TvSeason[] allSeasonInfo)
+        {
+            return DateTime.TryParse(allSeasonInfo.FirstOrDefault(_ => _.season_number == episode.SeasonNumber)?.episodes
+                .FirstOrDefault(e => e.episode_number == episode.EpisodeNumber)?.air_date, out var airedDate)
+                ? airedDate
+                : (DateTime?)null;
         }
 
         public static string BuildEpisodeList(IEnumerable<(int EpisodeNumber, DateTime? Aired)> orderedEpisodes)
