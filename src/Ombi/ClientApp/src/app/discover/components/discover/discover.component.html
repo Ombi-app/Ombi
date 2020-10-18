@@ -18,7 +18,7 @@
     </div>
 
 
-    <div class="row justify-content-md-center">
+    <div class="row justify-content-md-center small-space">
         <div class="btn-group" role="group" aria-label="Basic example">
             <button type="button" (click)="popular()" [attr.color]="popularActive ? 'accent' : 'primary'" [ngClass]="popularActive ? 'mat-accent' : 'mat-primary'" mat-raised-button class="btn grow">{{'Discovery.PopularTab' | translate}}</button>
             <button type="button" (click)="trending()" [attr.color]="trendingActive ? 'accent' : 'primary'" [ngClass]="trendingActive ? 'mat-accent' : 'mat-primary'" mat-raised-button class="btn grow" color="primary">{{'Discovery.TrendingTab' | translate}}</button>
