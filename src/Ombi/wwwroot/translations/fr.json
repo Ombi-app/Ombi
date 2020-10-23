@@ -29,7 +29,7 @@
     }
   },
   "PasswordReset": {
-    "EmailAddressPlaceholder": "Courriel",
+    "EmailAddressPlaceholder": "Adresse e-mail",
     "ResetPasswordButton": "Réinitialiser le mot de passe"
   },
   "LandingPage": {
@@ -55,7 +55,7 @@
     "UpdateAvailableTooltip": "Mise à jour disponible !",
     "Settings": "Paramètres",
     "Welcome": "Bienvenue {{username}}",
-    "UpdateDetails": "Identifiant et mot de passe",
+    "UpdateDetails": "Mettre à jour les informations",
     "Logout": "Déconnexion",
     "OpenMobileApp": "Ouvrir l'application",
     "RecentlyAdded": "Ajouts récents"
