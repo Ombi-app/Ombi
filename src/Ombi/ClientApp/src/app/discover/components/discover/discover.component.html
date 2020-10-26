@@ -1,13 +1,13 @@
 <div class="small-middle-container">
     <div class="row justify-content-end">
-        <div class="btn-group col-12 col-md-3 small-space" style="float:left;" role="group">
+        <div class="btn-group col-12 col-md-3 small-space discover-layout"role="group">
             <mat-button-toggle-group *ngIf="displayOption">
                 <mat-button-toggle [ngClass]="displayOption === DisplayOption.Card ? 'mat-button-toggle-checked' : ''" (click)="changeView(DisplayOption.Card)"><mat-icon>dashboard</mat-icon></mat-button-toggle>
                 <mat-button-toggle [ngClass]="displayOption === DisplayOption.List ? 'mat-button-toggle-checked' : ''" (click)="changeView(DisplayOption.List)"><mat-icon>calendar_view_day</mat-icon></mat-button-toggle>
               </mat-button-toggle-group>
         </div>
     </div>
-    <div class="row justify-content-md-center">
+    <div class="row justify-content-md-center small-space">
         <div class="btn-group" role="group">
             <button type="button" (click)="switchDiscoverMode(DiscoverOption.Movie)" [attr.color]="popularActive ? 'accent' : 'primary'" [ngClass]="discoverOptions === DiscoverOption.Movie ? 'mat-accent' : 'mat-primary'" mat-raised-button class="btn grow">{{'Discovery.Movies' | translate}}</button>
             <button type="button" (click)="switchDiscoverMode(DiscoverOption.Combined)" [attr.color]="trendingActive ? 'accent' : 'primary'" [ngClass]="discoverOptions === DiscoverOption.Combined ? 'mat-accent' : 'mat-primary'" mat-raised-button class="btn grow"

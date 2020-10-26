@@ -26,6 +26,13 @@
     padding-top: 1%;
 }
 
+.discover-layout {
+    position: absolute;
+    float: right;
+    margin-right: 36px;
+    z-index: 1;
+}
+
 ::ng-deep .mat-card-image {
     height: 75%;
     object-fit: cover;
@@ -194,5 +201,10 @@
         flex: 0 0 11.111111%;
         max-width: 11.111111%;
         min-width: 11.111111%;
+    }
+}
+@media (max-width: 420px) {
+    .discover-layout{
+        display: none;
     }
 }
