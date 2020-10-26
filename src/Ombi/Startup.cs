@@ -84,6 +84,7 @@ namespace Ombi
             //    setup.AddHealthCheckEndpoint("Ombi", "/health");
             //});
             services.AddMemoryCache();
+            services.AddHttpClient();
 
             services.AddJwtAuthentication(Configuration);
 
