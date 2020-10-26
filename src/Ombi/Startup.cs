@@ -35,7 +35,7 @@ namespace Ombi
 {
     public class Startup
     {
-        public static StoragePathSingleton StoragePath => StoragePathSingleton.Instance;
+        public static StartupSingleton StoragePath => StartupSingleton.Instance;
 
         public Startup(IWebHostEnvironment env)
         {
@@ -164,7 +164,7 @@ namespace Ombi
             var baseUrl = appConfig.Get(ConfigurationTypes.BaseUrl);
             if (baseUrl != null)
             {
-                if (baseUrl.Value.HasValue() && settings.BaseUrl != baseUrl.Value)
+                if (baseUrl.Value.HasValue())
                 {
                     settings.BaseUrl = baseUrl.Value;
                     ombiService.SaveSettings(settings);

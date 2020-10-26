@@ -18,7 +18,7 @@ using Ombi.Store.Context.Sqlite;
 
 namespace Ombi
 {
-    public class Program
+    public static class Program
     {
         private static string UrlArgs { get; set; }
 
@@ -50,13 +50,11 @@ namespace Ombi
             UrlArgs = host;
 
             var urlValue = string.Empty;
-            var instance = StoragePathSingleton.Instance;
+            var instance = StartupSingleton.Instance;
             var demoInstance = DemoSingleton.Instance;
             demoInstance.Demo = demo;
             instance.StoragePath = storagePath ?? string.Empty;
-            // Check if we need to migrate the settings
-            DeleteSchedules();
-            //CheckAndMigrate();
+
 
             var services = new ServiceCollection();
             services.ConfigureDatabases(null);
@@ -67,6 +65,8 @@ namespace Ombi
                 var config = settingsDb.ApplicationConfigurations.ToList();
                 var url = config.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
                 var dbBaseUrl = config.FirstOrDefault(x => x.Type == ConfigurationTypes.BaseUrl);
+                var securityToken = config.FirstOrDefault(x => x.Type == ConfigurationTypes.SecurityToken);
+                CheckSecurityToken(securityToken, settingsDb, instance);
                 if (url == null)
                 {
                     url = new ApplicationConfiguration
@@ -136,18 +136,25 @@ namespace Ombi
             }
         }
 
-        private static void DeleteSchedules()
+        private static void CheckSecurityToken(ApplicationConfiguration securityToken, SettingsContext ctx, StartupSingleton instance)
         {
-            try
+            if (securityToken == null || string.IsNullOrEmpty(securityToken.Value))
             {
-                if (File.Exists("Schedules.db"))
+                securityToken = new ApplicationConfiguration
                 {
-                    File.Delete("Schedules.db");
+                    Type = ConfigurationTypes.SecurityToken,
+                    Value = Guid.NewGuid().ToString("N")
+                };
+
+                using (var tran = ctx.Database.BeginTransaction())
+                {
+                    ctx.ApplicationConfigurations.Add(securityToken);
+                    ctx.SaveChanges();
+                    tran.Commit();
                 }
             }
-            catch (Exception)
-            {
-            }
+
+            instance.SecurityKey = securityToken.Value;
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
