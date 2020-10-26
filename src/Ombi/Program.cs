@@ -66,6 +66,8 @@ namespace Ombi
                 var config = settingsDb.ApplicationConfigurations.ToList();
                 var url = config.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
                 var dbBaseUrl = config.FirstOrDefault(x => x.Type == ConfigurationTypes.BaseUrl);
+                var securityToken = config.FirstOrDefault(x => x.Type == ConfigurationTypes.SecurityToken);
+                CheckSecurityToken(securityToken, settingsDb, instance);
                 if (url == null)
                 {
                     url = new ApplicationConfiguration
@@ -160,6 +162,28 @@ namespace Ombi
             result.AppendLine(HelpText.AutoBuild(args, null, null));
 
             return result.ToString();
+        }
+
+        
+        private static void CheckSecurityToken(ApplicationConfiguration securityToken, SettingsContext ctx, StoragePathSingleton instance)
+        {
+            if (securityToken == null || string.IsNullOrEmpty(securityToken.Value))
+            {
+                securityToken = new ApplicationConfiguration
+                {
+                    Type = ConfigurationTypes.SecurityToken,
+                    Value = Guid.NewGuid().ToString("N")
+                };
+
+                using (var tran = ctx.Database.BeginTransaction())
+                {
+                    ctx.ApplicationConfigurations.Add(securityToken);
+                    ctx.SaveChanges();
+                    tran.Commit();
+                }
+            }
+
+            instance.SecurityToken = securityToken.Value;
         }
     }
 

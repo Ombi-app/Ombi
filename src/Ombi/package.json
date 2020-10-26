@@ -9,7 +9,8 @@
     "publish": "gulp publish",
     "restore": "dotnet restore && yarn install",
     "clean": "gulp clean",
-    "cypress": "cypress open"
+    "cypress": "cypress open",
+    "preinstall": "npx npm-force-resolutions"
   },
   "dependencies": {
     "@angular/animations": "^7.1.4",
@@ -69,7 +70,7 @@
     "ngx-infinite-scroll": "^6.0.1",
     "ngx-moment": "^3.0.1",
     "ngx-order-pipe": "^2.0.1",
-    "node-sass": "^4.9.0",
+    "node-sass": "^4.14.1",
     "pace-progress": "^1.0.2",
     "primeng": "^7.0.3",
     "raw-loader": "^0.5.1",
@@ -96,7 +97,8 @@
   },
   "resolutions": {
     "@types/tapable": "1.0.0",
-    "cypress/**/@types/sinon": "4.3.3"
+    "cypress/**/@types/sinon": "4.3.3",
+    "graceful-fs": "^4.2.4"
   },
   "devDependencies": {
     "cypress": "^3.1.0"
