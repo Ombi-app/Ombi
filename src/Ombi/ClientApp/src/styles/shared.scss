@@ -38,7 +38,7 @@
 html,
 body {
     min-height: 100vh;
-    overflow: auto;
+    overflow: initial;
     scrollbar-color: #616161 #303030; //firefox
     scrollbar-width: thin; //firefox
     -webkit-overflow-scrolling: touch;
