@@ -2,7 +2,7 @@ version: 3.0.{build}
 configuration: Release
 os: Visual Studio 2017
 environment:
-  nodejs_version: "10.22.1"
+  nodejs_version: "10.13.0"
   typescript_version: "3.0.1"  
   github_auth_token:
     secure: H/7uCrjmWHGJxgN3l9fbhhdVjvvWI8VVF4ZzQqeXuJwAf+PgSNBdxv4SS+rMQ+RH
