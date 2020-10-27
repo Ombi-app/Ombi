@@ -9,8 +9,7 @@
     "publish": "gulp publish",
     "restore": "dotnet restore && yarn install",
     "clean": "gulp clean",
-    "cypress": "cypress open",
-    "preinstall": "npx npm-force-resolutions"
+    "cypress": "cypress open"
   },
   "dependencies": {
     "@angular/animations": "^7.1.4",
@@ -97,8 +96,7 @@
   },
   "resolutions": {
     "@types/tapable": "1.0.0",
-    "cypress/**/@types/sinon": "4.3.3",
-    "graceful-fs": "^4.2.4"
+    "cypress/**/@types/sinon": "4.3.3"
   },
   "devDependencies": {
     "cypress": "^3.1.0"
