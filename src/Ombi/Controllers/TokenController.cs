@@ -132,7 +132,7 @@ namespace Ombi.Controllers
             };
             claims.AddRange(roles.Select(role => new Claim("role", role)));
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenAuthenticationOptions.SecretKey));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(StoragePathSingleton.Instance.SecurityToken));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
 
