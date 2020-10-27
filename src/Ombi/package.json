@@ -69,7 +69,7 @@
     "ngx-infinite-scroll": "^6.0.1",
     "ngx-moment": "^3.0.1",
     "ngx-order-pipe": "^2.0.1",
-    "node-sass": "^4.9.0",
+    "node-sass": "^4.14.1",
     "pace-progress": "^1.0.2",
     "primeng": "^7.0.3",
     "raw-loader": "^0.5.1",

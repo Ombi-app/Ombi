@@ -9,5 +9,6 @@
         public static StoragePathSingleton Instance => instance ?? (instance = new StoragePathSingleton());
 
         public string StoragePath { get; set; }
+        public string SecurityToken { get; set; }
     }
 }
