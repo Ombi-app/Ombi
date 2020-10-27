@@ -18,4 +18,7 @@ export class SystemService extends ServiceHelpers {
     public getLog(logName: string): Observable<string> {
         return this.http.get(`${this.url}logs/${logName}`, {responseType: 'text'});
     }
+    public getNews(): Observable<string> {
+        return this.http.get(`${this.url}news`, {responseType: 'text'});
+    }
 }

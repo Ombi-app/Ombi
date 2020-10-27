@@ -17,6 +17,7 @@ namespace Ombi.Store.Entities
         TheMovieDb = 4,
         StoragePath = 5,
         Notification = 6,
-        BaseUrl=7,
+        BaseUrl = 7,
+        SecurityToken = 8
     }
 }

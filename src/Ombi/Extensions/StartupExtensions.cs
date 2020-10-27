@@ -83,7 +83,7 @@ namespace Ombi
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.GetValue("SecretKey", string.Empty))),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(StartupSingleton.Instance.SecurityKey)),
 
                 RequireExpirationTime = true,
                 ValidateLifetime = true,

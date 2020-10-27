@@ -117,7 +117,7 @@ namespace Ombi.Controllers.V1
         public AboutViewModel About()
         {
             var dbConfiguration = DatabaseExtensions.GetDatabaseConfiguration();
-            var storage = StoragePathSingleton.Instance;
+            var storage = StartupSingleton.Instance;
             var model = new AboutViewModel
             {
                 FrameworkDescription = RuntimeInformation.FrameworkDescription,

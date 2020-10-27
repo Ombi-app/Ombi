@@ -62,7 +62,7 @@ namespace Ombi.Extensions
 
         public static DatabaseConfiguration GetDatabaseConfiguration()
         {
-            var i = StoragePathSingleton.Instance;
+            var i = StartupSingleton.Instance;
             if (string.IsNullOrEmpty(i.StoragePath))
             {
                 i.StoragePath = string.Empty;

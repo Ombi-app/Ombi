@@ -1,7 +1,8 @@
 ﻿<settings-menu></settings-menu>
 <div *ngIf="about" class="small-middle-container">
   <legend>About</legend>
-
+<div class="row">
+  <div class="col-md-8">
   <div class="mat-table">
       <div class="mat-row" style="background:red;" *ngIf="notSupported">
           <div class="mat-cell" style="text-align: center;"><b>NOT SUPPORTED OS. Please use the docker image available on the Container Station (It's free)</b></div>
@@ -91,6 +92,11 @@
     </div>
 
 
-
+  </div>
+  </div>
+  <div class="col-md-4">
+    <h2>News</h2>
+    <div [innerHTML]="newsHtml"></div>
+  </div>
   </div>
 </div>
