@@ -121,9 +121,9 @@ namespace Ombi.Schedule.Jobs.Plex
             }
             var processedCont = processedContent?.Content?.Count() ?? 0;
             var processedEp = processedContent?.Episodes?.Count() ?? 0;
-            Logger.LogInformation("Finished Plex Content Cacher, with processed content: {0}, episodes: {1}. Recently Added Scan: {2}", processedCont, processedEp, recentlyAddedSearch);
+            Logger.LogInformation("Finished Plex Content Cacher, with processed content: movies: {0}, episodes: {1}. Recently Added Scan: {2}", processedCont, processedEp, recentlyAddedSearch);
 
-            await NotifyClient(recentlyAddedSearch ? $"Plex Recently Added Sync Finished, We processed {processedCont}, and {processedEp} Episodes" : "Plex Content Sync Finished");
+            await NotifyClient(recentlyAddedSearch ? $"Plex Recently Added Sync Finished, We processed {processedCont} Movies, and {processedEp} Episodes" : "Plex Content Sync Finished");
 
         }
 
