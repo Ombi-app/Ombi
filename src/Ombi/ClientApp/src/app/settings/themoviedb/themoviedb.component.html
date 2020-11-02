@@ -15,7 +15,7 @@
                 Excluded Keyword IDs for Movie Suggestions
             </label>
 <form [formGroup]='tagForm'>
-    <mat-form-field class="example-chip-list">
+    <!-- <mat-form-field class="example-chip-list">
             <mat-chip-list #chipList>
                 <mat-chip *ngFor="let fruit of excludedKeywords" [selectable]="false"
                          [removable]="true" (removed)="remove(fruit)">
@@ -35,7 +35,25 @@
                   {{fruit.name}}
                 </mat-option>
               </mat-autocomplete>
-            </mat-form-field>
+            </mat-form-field> -->
+
+
+
+<hr>
+<mat-form-field class="example-full-width">
+    <input type="text"
+           placeholder="Pick one"
+           aria-label="Number"
+           matInput
+           formControlName="input"
+           [matAutocomplete]="auto">
+    <mat-autocomplete (optionSelected)="optionSelected($event.option.value)" autoActiveFirstOption #auto="matAutocomplete">
+      <mat-option *ngFor="let option of filteredTags" [value]="option">
+        {{option.name}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
             </form>
             <!-- <tag-input #input
                        [(ngModel)]="excludedKeywords"

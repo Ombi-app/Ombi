@@ -137,4 +137,13 @@ export class TheMovieDbComponent implements OnInit {
             }
         });
     }
+
+    public async optionSelected(item: IMovieDbKeyword) {
+
+        if ((item.name || '').trim()) {
+            this.excludedKeywords.push({ id: item.id, name: item.name, initial: false });
+        }
+
+        this.tagForm.controls.input.setValue(null);
+    }
 }
