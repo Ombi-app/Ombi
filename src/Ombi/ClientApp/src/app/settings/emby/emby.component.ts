@@ -2,7 +2,7 @@
 
 import { IEmbyServer, IEmbySettings } from "../../interfaces";
 import { EmbyService, JobService, NotificationService, SettingsService, TesterService } from "../../services";
-import { MatTabChangeEvent, MatTabGroup } from "@angular/material/tabs";
+import { MatTabChangeEvent } from "@angular/material/tabs";
 import {FormControl} from '@angular/forms';
 
 @Component({
@@ -29,6 +29,7 @@ export class EmbyComponent implements OnInit {
         const result = await this.embyService.getPublicInfo(server).toPromise();
         this.settings.isJellyfin = result.isJellyfin;
         server.name = result.serverName;
+        server.serverId = result.id;
         this.hasDiscoveredOrDirty = true;
     }
 

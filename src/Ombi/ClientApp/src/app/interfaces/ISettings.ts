@@ -41,6 +41,7 @@ export interface IEmbySettings extends ISettings {
 }
 
 export interface IEmbyServer extends IExternalSettings {
+  serverId: string;
   name: string;
   apiKey: string;
   administratorId: string;
@@ -49,6 +50,7 @@ export interface IEmbyServer extends IExternalSettings {
 }
 
 export interface IPublicInfo {
+  id: string;
   serverName: string;
   isJellyfin: boolean;
 }
