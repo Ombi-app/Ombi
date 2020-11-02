@@ -145,7 +145,7 @@ namespace Ombi.Schedule.Jobs.Emby
                                 Title = tvShow.Name,
                                 Type = EmbyMediaType.Series,
                                 EmbyId = tvShow.Id,
-                                Url = EmbyHelper.GetEmbyMediaUrl(tvShow.Id, server.ServerHostname, settings.IsJellyfin),
+                                Url = EmbyHelper.GetEmbyMediaUrl(tvShow.Id, server?.ServerId, server.ServerHostname, settings.IsJellyfin),
                                 AddedAt = DateTime.UtcNow
                             });
                         }
@@ -186,7 +186,7 @@ namespace Ombi.Schedule.Jobs.Emby
                     Title = movieInfo.Name,
                     Type = EmbyMediaType.Movie,
                     EmbyId = movieInfo.Id,
-                    Url = EmbyHelper.GetEmbyMediaUrl(movieInfo.Id, server.ServerHostname),
+                    Url = EmbyHelper.GetEmbyMediaUrl(movieInfo.Id, server?.ServerId, server.ServerHostname),
                     AddedAt = DateTime.UtcNow,
                 });
             }

@@ -30,19 +30,24 @@
                                     <input matInput placeholder="Server Name" [(ngModel)]="server.name" value="{{server.name}}">
                                 </mat-form-field>
                             </div>
-                           
+                            <div class="md-form-field">
+                                <mat-form-field appearance="outline" floatLabel=auto>
+                                    <mat-label>Server ID</mat-label>
+                                    <input matInput placeholder="Server Id" [(ngModel)]="server.serverId" value="{{server.serverId}}">
+                                </mat-form-field>
+                            </div>
+
                             <div class="md-form-field">
                                 <mat-form-field appearance="outline" floatLabel=auto>
                                     <mat-label>Hostname / IP</mat-label>
                                     <input matInput placeholder="Hostname or IP" [(ngModel)]="server.ip" value="{{server.ip}}">
                                 </mat-form-field>
-                                
-                    
+
                                 <mat-form-field appearance="outline" floatLabel=auto>
                                     <mat-label>Port</mat-label>
                                     <input matInput placeholder="Port" [(ngModel)]="server.port" value="{{server.port}}">
                                 </mat-form-field>
-                            
+
                                 <mat-slide-toggle id="ssl" [(ngModel)]="server.ssl" [checked]="server.ssl">
                                     SSL
                                 </mat-slide-toggle>

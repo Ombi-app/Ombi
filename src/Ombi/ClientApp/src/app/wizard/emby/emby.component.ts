@@ -35,7 +35,7 @@ export class EmbyComponent implements OnInit {
             ssl: false,
             subDir: "",
             serverHostname: "",
-
+            serverId: undefined
         });
     }
 
