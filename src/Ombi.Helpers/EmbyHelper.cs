@@ -4,22 +4,23 @@
     {
         public static string GetEmbyMediaUrl(string mediaId, string serverId, string customerServerUrl = null, bool isJellyfin = false)
         {
+            //web/index.html#!/details|item
             string path = "item";
             if (isJellyfin)
             {
-                path = "itemdetails.html";
+                path = "details";
             }
             if (customerServerUrl.HasValue())
             {
                 if (!customerServerUrl.EndsWith("/"))
                 {
-                    return $"{customerServerUrl}/#!/{path}?id={mediaId}&serverId={serverId}";
+                    return $"{customerServerUrl}/web/index.html#!/{path}?id={mediaId}&serverId={serverId}";
                 }
-                    return $"{customerServerUrl}#!/{path}?id={mediaId}&serverId={serverId}";
+                    return $"{customerServerUrl}web/index.html#!/{path}?id={mediaId}&serverId={serverId}";
             }
             else
             {
-                return $"https://app.emby.media/#!/{path}?id={mediaId}&serverId={serverId}";
+                return $"https://app.emby.media/web/index.html#!/{path}?id={mediaId}&serverId={serverId}";
             }
         }
     }
