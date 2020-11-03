@@ -71,9 +71,9 @@
         "FeatureSuggestion": "Feature Suggestion",
         "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
         "Filter": {
-            "Movies": "Movies",
-            "TvShows": "TV Shows",
-            "Music": "Music",
+            "Movies": "Фильмы",
+            "TvShows": "Сериалы",
+            "Music": "Музыка",
             "People": "People"
         }
     },
@@ -170,8 +170,8 @@
         "AvailableRequests": "Available Requests",
         "DeniedRequests": "Denied Requests",
         "RequestsToDisplay": "Requests to display",
-        "RequestsTitle": "Title",
-        "Details": "Details",
+        "RequestsTitle": "Название",
+        "Details": "Подробная информация",
         "Options": "Options"
     },
     "Issues": {
@@ -227,9 +227,9 @@
         "VotesTab": "Необходимы голоса"
     },
     "MediaDetails": {
-        "Denied": "Denied",
+        "Denied": "Отказано",
         "RecommendationsTitle": "Recommendations",
-        "SimilarTitle": "Similar",
+        "SimilarTitle": "Похожие",
         "VideosTitle": "Videos",
         "AlbumsTitle": "Albums",
         "RequestAllAlbums": "Request All Albums",
@@ -240,14 +240,14 @@
         "AdvancedOptions": "Advanced Options",
         "QualityProfilesSelect": "Select A Quality Profile",
         "RootFolderSelect": "Select A Root Folder",
-        "Status": "Status",
-        "Availability": "Availability",
+        "Status": "Статус",
+        "Availability": "Доступность",
         "RequestStatus": "Request Status",
         "Quality": "Quality",
-        "RootFolderOverride": "Root Folder Override",
-        "QualityOverride": "Quality Override",
+        "RootFolderOverride": "Переопределение корневой папки",
+        "QualityOverride": "Переопределение качества",
         "Genres": "Genres",
-        "TheatricalRelease": "Theatrical Release",
+        "TheatricalRelease": "Релиз в кинотеатрах",
         "DigitalRelease": "Digital Release",
         "UserScore": "User Score",
         "Votes": "Votes",
@@ -266,14 +266,14 @@
         }
     },
     "Discovery": {
-        "PopularTab": "Popular",
-        "TrendingTab": "Trending",
+        "PopularTab": "Популярное",
+        "TrendingTab": "Сейчас смотрят",
         "UpcomingTab": "Upcoming",
-        "Movies": "Movies",
+        "Movies": "Фильмы",
         "Combined": "Combined",
         "Tv": "TV",
         "CardDetails": {
-            "Availability": "Availability",
+            "Availability": "Доступность",
             "Studio": "Studio",
             "Network": "Network",
             "UnknownNetwork": "Unknown",
@@ -286,7 +286,7 @@
         }
     },
     "UserPreferences": {
-        "Welcome": "Welcome {{username}}!",
+        "Welcome": "Добро пожаловать, {{username}}!",
         "OmbiLanguage": "Language",
         "DarkMode": "Dark Mode"
     }
