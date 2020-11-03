@@ -54,14 +54,15 @@ namespace Ombi.Core.Tests.Rule.Search
                 {
                     new EmbyServers
                     {
-                        ServerHostname = "http://test.com/"
+                        ServerHostname = "http://test.com/",
+                        ServerId = "8"
                     }
                 }
             });
             ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new EmbyContent
             {
                 ProviderId = "123",
-                EmbyId = 1.ToString()
+                EmbyId = 1.ToString(),
             });
             var search = new SearchMovieViewModel()
             {
@@ -70,7 +71,7 @@ namespace Ombi.Core.Tests.Rule.Search
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);
-            Assert.That(search.EmbyUrl, Is.EqualTo("http://test.com/#!/item?id=1"));
+            Assert.That(search.EmbyUrl, Is.EqualTo("http://test.com/web/index.html#!/item?id=1&serverId=8"));
         }
 
         [Test]
@@ -83,7 +84,8 @@ namespace Ombi.Core.Tests.Rule.Search
                 {
                     new EmbyServers
                     {
-                        ServerHostname = string.Empty
+                        ServerHostname = string.Empty,
+                        ServerId = "8"
                     }
                 }
             });
@@ -99,7 +101,7 @@ namespace Ombi.Core.Tests.Rule.Search
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);
-            Assert.That(search.EmbyUrl, Is.EqualTo("https://app.emby.media/#!/item?id=1"));
+            Assert.That(search.EmbyUrl, Is.EqualTo("https://app.emby.media/web/index.html#!/item?id=1&serverId=8"));
         }
 
         [Test]

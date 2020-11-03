@@ -1,76 +1,55 @@
 ﻿<settings-menu></settings-menu>
 <div class="small-middle-container">
-<fieldset *ngIf="settings">
-    <legend>The Movie Database</legend>
-    <div class="md-form-field" style="margin-top:1em;">
-        <div class="form-group">
-            <div class="checkbox">
-                <mat-checkbox id="showAdultMovies" name="showAdultMovies" [(ngModel)]="settings.showAdultMovies" matTooltip="Include adult movies (pornography) in results">
-                Show Adult Movies</mat-checkbox>
+Upgraded    <fieldset *ngIf="settings">
+        <legend>The Movie Database</legend>
+        <div class="md-form-field" style="margin-top:1em;">
+            <div class="form-group">
+                <div class="checkbox">
+                    <mat-slide-toggle id="showAdultMovies" name="showAdultMovies" [(ngModel)]="settings.showAdultMovies"
+                        matTooltip="Include adult movies (pornography) in results">
+                        Show Adult Movies</mat-slide-toggle>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <form [formGroup]='tagForm'>
+
+                    <mat-form-field class="example-full-width">
+                        <input type="text" placeholder="Excluded Keyword IDs for Movie Suggestions" matInput
+                            formControlName="input" [matAutocomplete]="auto"
+                            matTooltip="Prevent movies with certain keywords from being suggested. May require a restart to take effect.">
+                        <mat-autocomplete (optionSelected)="optionSelected($event.option.value)" autoActiveFirstOption
+                            #auto="matAutocomplete">
+                            <mat-option *ngFor="let option of filteredTags" [value]="option">
+                                {{option.name}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+
+                    <mat-chip-list #chipList>
+                        <mat-chip *ngFor="let key of excludedKeywords" [selectable]="false" [removable]="true"
+                            (removed)="remove(key)">
+                            {{key.name}}
+                            <mat-icon matChipRemove>cancel</mat-icon>
+                        </mat-chip>
+                    </mat-chip-list>
+
+                </form>
+            </div>
+
+            <div class="form-group">
+                <div>
+                    <button mat-raised-button (click)="save()" type="submit" id="save"
+                        class="mat-focus-indicator mat-stroked-button accent mat-accent mat-raised-button mat-button-base"
+                        ng-reflect-disabled="false">
+                        <span class="mat-button-wrapper">Submit</span>
+                        <div matripple="" class="mat-ripple mat-button-ripple" ng-reflect-disabled="false"
+                            ng-reflect-centered="false" ng-reflect-trigger="[object HTMLButtonElement]"></div>
+                        <div class="mat-button-focus-overlay"></div>
+                    </button>
+                    <div class="md-form-field" style="margin-top:1em;"></div>
+                </div>
             </div>
         </div>
-
-        <div class="form-group">
-            <label class="control-label" matTooltip="Prevent movies with certain keywords from being suggested. May require a restart to take effect.">
-                Excluded Keyword IDs for Movie Suggestions
-            </label>
-<form [formGroup]='tagForm'>
-    <mat-form-field class="example-chip-list">
-            <mat-chip-list #chipList>
-                <mat-chip *ngFor="let fruit of excludedKeywords" [selectable]="false"
-                         [removable]="true" (removed)="remove(fruit)">
-                  {{fruit.name}}
-                  <mat-icon matChipRemove >cancel</mat-icon>
-                </mat-chip>
-                <input placeholder="New Keyword"
-                #fruitInput
-                formControlName='input'
-                       [matChipInputFor]="chipList"
-                       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                       [matChipInputAddOnBlur]="true"
-                       >
-              </mat-chip-list>
-              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-                <mat-option *ngFor="let fruit of filteredTags" [value]="fruit">
-                  {{fruit.name}}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-            </form>
-            <!-- <tag-input #input
-                       [(ngModel)]="excludedKeywords"
-                       [identifyBy]="'id'" [displayBy]="'name'"
-                       [placeholder]="'Search by keyword'"
-                       [secondaryPlaceholder]="'Search by keyword'"
-                       [theme]="'dark'"
-                       [onTextChangeDebounce]="500"
-                       [onAdding]="onAddingKeyword"
-                       (onSelect)="onKeywordSelect($event)">
-                <ng-template item-template let-item="item" let-index="index">
-                    <span class="fa fa-cloud-download" *ngIf="item.initial"></span>
-                    <span>{{item.id}}</span>
-                    <span *ngIf="!item.initial">&nbsp;({{item.name}})</span>
-                    <delete-icon aria-label="Remove tag" role="button"
-                                 (click)="input.removeItem(item, index)">
-                    </delete-icon>
-                </ng-template>
-                <tag-input-dropdown [autocompleteObservable]="autocompleteKeyword"
-                                    [identifyBy]="'id'" [displayBy]="'name'"
-                                    [limitItemsTo]="6"
-                                    [minimumTextLength]="1"
-                                    [showDropdownIfEmpty]="false"
-                                    [keepOpen]="false">
-                </tag-input-dropdown>
-            </tag-input> -->
-        </div>
-
-        <div class="form-group">
-            <div>
-                <button mat-raised-button (click)="save()" type="submit" id="save" class="mat-focus-indicator mat-stroked-button accent mat-accent mat-raised-button mat-button-base" ng-reflect-disabled="false">                
-                    <span class="mat-button-wrapper">Submit</span><div matripple="" class="mat-ripple mat-button-ripple" ng-reflect-disabled="false" ng-reflect-centered="false" ng-reflect-trigger="[object HTMLButtonElement]"></div>
-                    <div class="mat-button-focus-overlay"></div></button><div class="md-form-field" style="margin-top:1em;"></div>
-            </div>
-        </div>
-    </div>
-</fieldset>
+    </fieldset>
 </div>

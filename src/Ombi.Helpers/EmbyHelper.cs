@@ -1,6 +1,6 @@
 ﻿namespace Ombi.Helpers
 {
-    public class EmbyHelper
+    public static class EmbyHelper
     {
         public static string GetEmbyMediaUrl(string mediaId, string serverId, string customerServerUrl = null, bool isJellyfin = false)
         {
