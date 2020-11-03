@@ -12,4 +12,5 @@ export interface ILocalUser {
     roles: string[];
     name: string;
     username:string;
+    email: string;
 }

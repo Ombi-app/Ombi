@@ -8,7 +8,7 @@
 
   </div>
   <div class="content">
-      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+      <table mat-table *ngIf="dataSource" [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
         <ng-container matColumnDef="select">
                 <th mat-header-cell *matHeaderCellDef>

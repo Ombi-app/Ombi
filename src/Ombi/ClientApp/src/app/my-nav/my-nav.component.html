@@ -3,6 +3,9 @@
         [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
         [opened]="!(isHandset$ | async)">
         <mat-toolbar>{{applicationName}}</mat-toolbar>
+        <div class="profile-img-container">
+            <img class="profile-img" src="https://www.gravatar.com/avatar/{{emailHash}}?d=https://raw.githubusercontent.com/tidusjar/Ombi/gh-pages/img/android-chrome-512x512.png" />
+        </div>
         <mat-nav-list>
             <span *ngFor="let nav of navItems">
 

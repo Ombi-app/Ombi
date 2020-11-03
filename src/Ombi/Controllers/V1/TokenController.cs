@@ -135,6 +135,10 @@ namespace Ombi.Controllers.V1
                 new Claim("Id", user.Id)
             };
             claims.AddRange(roles.Select(role => new Claim("role", role)));
+            if(user.Email.HasValue())
+            {
+                claims.Add(new Claim("Email", user.Email));
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(StartupSingleton.Instance.SecurityKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

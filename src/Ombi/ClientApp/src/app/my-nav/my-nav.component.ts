@@ -7,6 +7,7 @@ import { StorageService } from '../shared/storage/storage-service';
 import { SettingsService } from '../services';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { SearchFilter } from './SearchFilter';
+import {Md5} from 'ts-md5/dist/md5';
 
 export enum SearchFilterType {
   Movie = 1,
@@ -31,6 +32,7 @@ export class MyNavComponent implements OnInit {
   @Input() public applicationName: string;
   @Input() public username: string;
   @Input() public isAdmin: string;
+  @Input() public email: string;
   @Output() public logoutClick = new EventEmitter();
   @Output() public themeChange = new EventEmitter<string>();
   public theme: string;
@@ -38,6 +40,7 @@ export class MyNavComponent implements OnInit {
   public navItems: INavBar[];
   public searchFilter: SearchFilter;
   public SearchFilterType = SearchFilterType;
+  public emailHash: string|Int32Array;
 
   constructor(private breakpointObserver: BreakpointObserver,
     private settingsService: SettingsService,
@@ -52,6 +55,10 @@ export class MyNavComponent implements OnInit {
       people: false,
       tvShows: true
     }
+
+
+    const md5 = new Md5();
+    this.emailHash = md5.appendStr(this.email).end();
 
     this.issuesEnabled = await this.settingsService.issueEnabled().toPromise();
     const customizationSettings = await this.settingsService.getCustomization().toPromise();
