@@ -26,7 +26,7 @@
         "Denied": "Refusé",
         "Approve": "Approuver",
         "PartlyAvailable": "Partiellement disponible",
-        "ViewDetails": "View Details",
+        "ViewDetails": "Voir les détails",
         "Errors": {
             "Validation": "Veuillez vérifier les valeurs entrées"
         },
@@ -49,7 +49,7 @@
         "CheckPageForUpdates": "Consultez cette page pour voir les mises à jour du site."
     },
     "NavigationBar": {
-        "Discover": "Discover",
+        "Discover": "Découvrir",
         "Search": "Rechercher",
         "Requests": "En attente",
         "UserManagement": "Gestion des utilisateurs",
@@ -65,15 +65,15 @@
         "Logout": "Déconnexion",
         "OpenMobileApp": "Ouvrir l'application mobile",
         "RecentlyAdded": "Ajouts récents",
-        "ChangeTheme": "Change Theme",
-        "Calendar": "Calendar",
-        "UserPreferences": "Preferences",
+        "ChangeTheme": "Changer de thème",
+        "Calendar": "Calendrier",
+        "UserPreferences": "Paramètres",
         "FeatureSuggestion": "Feature Suggestion",
         "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
         "Filter": {
-            "Movies": "Movies",
-            "TvShows": "TV Shows",
-            "Music": "Music",
+            "Movies": "Films",
+            "TvShows": "Séries",
+            "Music": "Musique",
             "People": "People"
         }
     },
@@ -142,7 +142,7 @@
         "MarkAvailable": "Marquer comme disponible",
         "Remove": "Supprimer",
         "Deny": "Refuser",
-        "DenyReason": "Deny Reason",
+        "DenyReason": "Raison de refus",
         "Season": "Saison :",
         "GridTitle": "Titre",
         "AirDate": "Date de diffusion",
@@ -170,8 +170,8 @@
         "AvailableRequests": "Available Requests",
         "DeniedRequests": "Denied Requests",
         "RequestsToDisplay": "Requests to display",
-        "RequestsTitle": "Title",
-        "Details": "Details",
+        "RequestsTitle": "Titre",
+        "Details": "Détails",
         "Options": "Options"
     },
     "Issues": {
@@ -227,10 +227,10 @@
         "VotesTab": "Votes nécessaires"
     },
     "MediaDetails": {
-        "Denied": "Denied",
-        "RecommendationsTitle": "Recommendations",
-        "SimilarTitle": "Similar",
-        "VideosTitle": "Videos",
+        "Denied": "Refusé",
+        "RecommendationsTitle": "Suggestions",
+        "SimilarTitle": "Similaires",
+        "VideosTitle": "Vidéos",
         "AlbumsTitle": "Albums",
         "RequestAllAlbums": "Request All Albums",
         "ClearSelection": "Clear Selection",
@@ -240,14 +240,14 @@
         "AdvancedOptions": "Advanced Options",
         "QualityProfilesSelect": "Select A Quality Profile",
         "RootFolderSelect": "Select A Root Folder",
-        "Status": "Status",
-        "Availability": "Availability",
+        "Status": "Statut",
+        "Availability": "Disponibilité",
         "RequestStatus": "Request Status",
         "Quality": "Quality",
         "RootFolderOverride": "Root Folder Override",
         "QualityOverride": "Quality Override",
         "Genres": "Genres",
-        "TheatricalRelease": "Theatrical Release",
+        "TheatricalRelease": "Sortie en salle",
         "DigitalRelease": "Digital Release",
         "UserScore": "User Score",
         "Votes": "Votes",
@@ -266,14 +266,14 @@
         }
     },
     "Discovery": {
-        "PopularTab": "Popular",
-        "TrendingTab": "Trending",
+        "PopularTab": "Populaire",
+        "TrendingTab": "Tendances",
         "UpcomingTab": "Upcoming",
-        "Movies": "Movies",
+        "Movies": "Films",
         "Combined": "Combined",
         "Tv": "TV",
         "CardDetails": {
-            "Availability": "Availability",
+            "Availability": "Disponibilité",
             "Studio": "Studio",
             "Network": "Network",
             "UnknownNetwork": "Unknown",
@@ -286,7 +286,7 @@
         }
     },
     "UserPreferences": {
-        "Welcome": "Welcome {{username}}!",
+        "Welcome": "Bienvenue {{username}}!",
         "OmbiLanguage": "Language",
         "DarkMode": "Dark Mode"
     }
