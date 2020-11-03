@@ -4,6 +4,8 @@
         "UsernamePlaceholder": "Brugernavn",
         "PasswordPlaceholder": "Adgangskode",
         "RememberMe": "Husk mig",
+        "SignInWith": "Sign in with {{appName}}",
+        "SignInWithPlex": "Sign in with Plex",
         "ForgottenPassword": "Glemt adgangskode?",
         "Errors": {
             "IncorrectCredentials": "Forkert brugernavn eller adgangskode"
@@ -24,9 +26,12 @@
         "Denied": "Afvist",
         "Approve": "Godkendt",
         "PartlyAvailable": "Delvist tilgængelig",
+        "ViewDetails": "View Details",
         "Errors": {
             "Validation": "Tjek venligst dine indtastede værdier"
-        }
+        },
+        "Cancel": "Cancel",
+        "Submit": "Submit"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "E-mail-adresse",
@@ -44,6 +49,7 @@
         "CheckPageForUpdates": "Tjek denne side for løbende opdateringer."
     },
     "NavigationBar": {
+        "Discover": "Discover",
         "Search": "Søg",
         "Requests": "Anmodninger",
         "UserManagement": "Brugeradministration",
@@ -58,7 +64,18 @@
         "UpdateDetails": "Opdater loginoplysninger",
         "Logout": "Log af",
         "OpenMobileApp": "Åbn mobilapp",
-        "RecentlyAdded": "Senest tilføjet"
+        "RecentlyAdded": "Senest tilføjet",
+        "ChangeTheme": "Change Theme",
+        "Calendar": "Calendar",
+        "UserPreferences": "Preferences",
+        "FeatureSuggestion": "Feature Suggestion",
+        "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
+        "Filter": {
+            "Movies": "Movies",
+            "TvShows": "TV Shows",
+            "Music": "Music",
+            "People": "People"
+        }
     },
     "Search": {
         "Title": "Søg",
@@ -104,6 +121,8 @@
         "Title": "Anmodninger",
         "Paragraph": "Herunder kan du se dine og alle andre anmodninger, samt status for download og godkendelse.",
         "MoviesTab": "Film",
+        "ArtistName": "Artist",
+        "AlbumName": "Album Name",
         "TvTab": "Tv-serier",
         "MusicTab": "Musik",
         "RequestedBy": "Anmodet af",
@@ -123,6 +142,7 @@
         "MarkAvailable": "Markér som tilgængelig",
         "Remove": "Fjern",
         "Deny": "Afvis",
+        "DenyReason": "Deny Reason",
         "Season": "Sæson:",
         "GridTitle": "Titel",
         "AirDate": "Sendt",
@@ -143,7 +163,16 @@
             "NextHours": "En anden anmodning vil blive tilføjet i {{time}} Timer",
             "NextMinutes": "En anden anmodning vil blive tilføjet i {{time}} Minutter",
             "NextMinute": "En anden anmodning vil blive tilføjet i {{time}} Minut"
-        }
+        },
+        "AllRequests": "All Requests",
+        "PendingRequests": "Pending Requests",
+        "ProcessingRequests": "Processing Requests",
+        "AvailableRequests": "Available Requests",
+        "DeniedRequests": "Denied Requests",
+        "RequestsToDisplay": "Requests to display",
+        "RequestsTitle": "Title",
+        "Details": "Details",
+        "Options": "Options"
     },
     "Issues": {
         "Title": "Problemer",
@@ -162,7 +191,21 @@
         "Subject": "Emne",
         "Comments": "Kommentarer",
         "WriteMessagePlaceholder": "Indtast din besked her...",
-        "ReportedBy": "Anmeldt af"
+        "ReportedBy": "Anmeldt af",
+        "IssueDialog": {
+            "Title": "Report an issue",
+            "DescriptionPlaceholder": "Please describe the issue",
+            "TitlePlaceholder": "Short title of your issue",
+            "SelectCategory": "Select Category",
+            "IssueCreated": "Issue has been created"
+        },
+        "Outstanding": "There are outstanding issues",
+        "ResolvedDate": "Resolved date",
+        "CreatedDate": "Raised on",
+        "MarkedAsResolved": "This issue has now been marked as resolved!",
+        "MarkedAsInProgress": "This issue has now been marked as in progress!",
+        "Delete": "Delete issue",
+        "DeletedIssue": "Issue has been deleted"
     },
     "Filter": {
         "ClearFilter": "Nulstil filter",
@@ -182,5 +225,69 @@
     "Votes": {
         "CompletedVotesTab": "Stemt",
         "VotesTab": "Nødvendige stemmer"
+    },
+    "MediaDetails": {
+        "Denied": "Denied",
+        "RecommendationsTitle": "Recommendations",
+        "SimilarTitle": "Similar",
+        "VideosTitle": "Videos",
+        "AlbumsTitle": "Albums",
+        "RequestAllAlbums": "Request All Albums",
+        "ClearSelection": "Clear Selection",
+        "RequestSelectedAlbums": "Request Selected Albums",
+        "ViewCollection": "View Collection",
+        "NotEnoughInfo": "Unfortunately there is not enough information about this show yet!",
+        "AdvancedOptions": "Advanced Options",
+        "QualityProfilesSelect": "Select A Quality Profile",
+        "RootFolderSelect": "Select A Root Folder",
+        "Status": "Status",
+        "Availability": "Availability",
+        "RequestStatus": "Request Status",
+        "Quality": "Quality",
+        "RootFolderOverride": "Root Folder Override",
+        "QualityOverride": "Quality Override",
+        "Genres": "Genres",
+        "TheatricalRelease": "Theatrical Release",
+        "DigitalRelease": "Digital Release",
+        "UserScore": "User Score",
+        "Votes": "Votes",
+        "Runtime": "Runtime",
+        "Minutes": "{{runtime}} Minutes",
+        "Revenue": "Revenue",
+        "Budget": "Budget",
+        "Keywords": "Keywords/Tags",
+        "Casts": {
+            "CastTitle": "Cast"
+        },
+        "EpisodeSelector": {
+            "AllSeasonsTooltip": "This will request every season for this show",
+            "FirstSeasonTooltip": "This will only request the First Season for this show",
+            "LatestSeasonTooltip": "This will only request the Latest Season for this show"
+        }
+    },
+    "Discovery": {
+        "PopularTab": "Popular",
+        "TrendingTab": "Trending",
+        "UpcomingTab": "Upcoming",
+        "Movies": "Movies",
+        "Combined": "Combined",
+        "Tv": "TV",
+        "CardDetails": {
+            "Availability": "Availability",
+            "Studio": "Studio",
+            "Network": "Network",
+            "UnknownNetwork": "Unknown",
+            "RequestStatus": "Request Status",
+            "Director": "Director",
+            "InCinemas": "In Cinemas",
+            "FirstAired": "First Aired",
+            "Writer": "Writer",
+            "ExecProducer": "Exec Producer"
+        }
+    },
+    "UserPreferences": {
+        "Welcome": "Welcome {{username}}!",
+        "OmbiLanguage": "Language",
+        "DarkMode": "Dark Mode"
     }
 }

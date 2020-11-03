@@ -4,6 +4,8 @@
         "UsernamePlaceholder": "Felhasználónév",
         "PasswordPlaceholder": "Jelszó",
         "RememberMe": "Emlékezz rám",
+        "SignInWith": "Sign in with {{appName}}",
+        "SignInWithPlex": "Sign in with Plex",
         "ForgottenPassword": "Elfelejtetted a jelszavad?",
         "Errors": {
             "IncorrectCredentials": "Helytelen felhasználónév vagy jelszó"
@@ -24,9 +26,12 @@
         "Denied": "Megtagadva",
         "Approve": "Jóváhagyva",
         "PartlyAvailable": "Részlegesen elérhető",
+        "ViewDetails": "View Details",
         "Errors": {
             "Validation": "Kérjük, ellenőrizze a beírt értékeket"
-        }
+        },
+        "Cancel": "Cancel",
+        "Submit": "Submit"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "E-mail cím",
@@ -44,6 +49,7 @@
         "CheckPageForUpdates": "Látogasd meg ezt az oldalt a frissítésekhez."
     },
     "NavigationBar": {
+        "Discover": "Discover",
         "Search": "Keresés",
         "Requests": "Kérések",
         "UserManagement": "Felhasználók kezelése",
@@ -58,7 +64,18 @@
         "UpdateDetails": "Fiók beállításai",
         "Logout": "Kilépés",
         "OpenMobileApp": "Mobil app megnyitása",
-        "RecentlyAdded": "Nemrég hozzáadott"
+        "RecentlyAdded": "Nemrég hozzáadott",
+        "ChangeTheme": "Change Theme",
+        "Calendar": "Calendar",
+        "UserPreferences": "Preferences",
+        "FeatureSuggestion": "Feature Suggestion",
+        "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
+        "Filter": {
+            "Movies": "Movies",
+            "TvShows": "TV Shows",
+            "Music": "Music",
+            "People": "People"
+        }
     },
     "Search": {
         "Title": "Keresés",
@@ -104,6 +121,8 @@
         "Title": "Kérések",
         "Paragraph": "Lentebb láthatod a saját és egyéb kéréseket, valamint a letöltési és jóváhagyási állapotukat.",
         "MoviesTab": "Filmek",
+        "ArtistName": "Artist",
+        "AlbumName": "Album Name",
         "TvTab": "Sorozatok",
         "MusicTab": "Zene",
         "RequestedBy": "Kérte",
@@ -123,6 +142,7 @@
         "MarkAvailable": "Megjelölés elérhetőnek",
         "Remove": "Törlés",
         "Deny": "Elutasítás",
+        "DenyReason": "Deny Reason",
         "Season": "Évad:",
         "GridTitle": "Cím",
         "AirDate": "Bemutató",
@@ -143,7 +163,16 @@
             "NextHours": "Újabb kérés lesz hozzáadva {{time}} óra múlva",
             "NextMinutes": "Újabb kérés lesz hozzáadva {{time}} perc múlva",
             "NextMinute": "Újabb kérés lesz hozzáadva {{time}} perc múlva"
-        }
+        },
+        "AllRequests": "All Requests",
+        "PendingRequests": "Pending Requests",
+        "ProcessingRequests": "Processing Requests",
+        "AvailableRequests": "Available Requests",
+        "DeniedRequests": "Denied Requests",
+        "RequestsToDisplay": "Requests to display",
+        "RequestsTitle": "Title",
+        "Details": "Details",
+        "Options": "Options"
     },
     "Issues": {
         "Title": "Problémák",
@@ -162,7 +191,21 @@
         "Subject": "Tárgy",
         "Comments": "Hozzászólások",
         "WriteMessagePlaceholder": "Írd ide az üzeneted...",
-        "ReportedBy": "Jelentette"
+        "ReportedBy": "Jelentette",
+        "IssueDialog": {
+            "Title": "Report an issue",
+            "DescriptionPlaceholder": "Please describe the issue",
+            "TitlePlaceholder": "Short title of your issue",
+            "SelectCategory": "Select Category",
+            "IssueCreated": "Issue has been created"
+        },
+        "Outstanding": "There are outstanding issues",
+        "ResolvedDate": "Resolved date",
+        "CreatedDate": "Raised on",
+        "MarkedAsResolved": "This issue has now been marked as resolved!",
+        "MarkedAsInProgress": "This issue has now been marked as in progress!",
+        "Delete": "Delete issue",
+        "DeletedIssue": "Issue has been deleted"
     },
     "Filter": {
         "ClearFilter": "Szűrő törlése",
@@ -182,5 +225,69 @@
     "Votes": {
         "CompletedVotesTab": "Szavazott",
         "VotesTab": "Szavazat szükséges"
+    },
+    "MediaDetails": {
+        "Denied": "Denied",
+        "RecommendationsTitle": "Recommendations",
+        "SimilarTitle": "Similar",
+        "VideosTitle": "Videos",
+        "AlbumsTitle": "Albums",
+        "RequestAllAlbums": "Request All Albums",
+        "ClearSelection": "Clear Selection",
+        "RequestSelectedAlbums": "Request Selected Albums",
+        "ViewCollection": "View Collection",
+        "NotEnoughInfo": "Unfortunately there is not enough information about this show yet!",
+        "AdvancedOptions": "Advanced Options",
+        "QualityProfilesSelect": "Select A Quality Profile",
+        "RootFolderSelect": "Select A Root Folder",
+        "Status": "Status",
+        "Availability": "Availability",
+        "RequestStatus": "Request Status",
+        "Quality": "Quality",
+        "RootFolderOverride": "Root Folder Override",
+        "QualityOverride": "Quality Override",
+        "Genres": "Genres",
+        "TheatricalRelease": "Theatrical Release",
+        "DigitalRelease": "Digital Release",
+        "UserScore": "User Score",
+        "Votes": "Votes",
+        "Runtime": "Runtime",
+        "Minutes": "{{runtime}} Minutes",
+        "Revenue": "Revenue",
+        "Budget": "Budget",
+        "Keywords": "Keywords/Tags",
+        "Casts": {
+            "CastTitle": "Cast"
+        },
+        "EpisodeSelector": {
+            "AllSeasonsTooltip": "This will request every season for this show",
+            "FirstSeasonTooltip": "This will only request the First Season for this show",
+            "LatestSeasonTooltip": "This will only request the Latest Season for this show"
+        }
+    },
+    "Discovery": {
+        "PopularTab": "Popular",
+        "TrendingTab": "Trending",
+        "UpcomingTab": "Upcoming",
+        "Movies": "Movies",
+        "Combined": "Combined",
+        "Tv": "TV",
+        "CardDetails": {
+            "Availability": "Availability",
+            "Studio": "Studio",
+            "Network": "Network",
+            "UnknownNetwork": "Unknown",
+            "RequestStatus": "Request Status",
+            "Director": "Director",
+            "InCinemas": "In Cinemas",
+            "FirstAired": "First Aired",
+            "Writer": "Writer",
+            "ExecProducer": "Exec Producer"
+        }
+    },
+    "UserPreferences": {
+        "Welcome": "Welcome {{username}}!",
+        "OmbiLanguage": "Language",
+        "DarkMode": "Dark Mode"
     }
 }
