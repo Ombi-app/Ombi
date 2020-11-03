@@ -71,9 +71,9 @@
         "FeatureSuggestion": "Feature Suggestion",
         "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
         "Filter": {
-            "Movies": "Movies",
-            "TvShows": "TV Shows",
-            "Music": "Music",
+            "Movies": "Film",
+            "TvShows": "Tv-serier",
+            "Music": "Musik",
             "People": "People"
         }
     },
@@ -170,8 +170,8 @@
         "AvailableRequests": "Available Requests",
         "DeniedRequests": "Denied Requests",
         "RequestsToDisplay": "Requests to display",
-        "RequestsTitle": "Title",
-        "Details": "Details",
+        "RequestsTitle": "Titel",
+        "Details": "Detaljer",
         "Options": "Options"
     },
     "Issues": {
@@ -227,9 +227,9 @@
         "VotesTab": "Nødvendige stemmer"
     },
     "MediaDetails": {
-        "Denied": "Denied",
+        "Denied": "Afvist",
         "RecommendationsTitle": "Recommendations",
-        "SimilarTitle": "Similar",
+        "SimilarTitle": "Lignende",
         "VideosTitle": "Videos",
         "AlbumsTitle": "Albums",
         "RequestAllAlbums": "Request All Albums",
@@ -241,13 +241,13 @@
         "QualityProfilesSelect": "Select A Quality Profile",
         "RootFolderSelect": "Select A Root Folder",
         "Status": "Status",
-        "Availability": "Availability",
+        "Availability": "Tilgængelighed",
         "RequestStatus": "Request Status",
         "Quality": "Quality",
-        "RootFolderOverride": "Root Folder Override",
-        "QualityOverride": "Quality Override",
+        "RootFolderOverride": "Tilsidesæt rodmappe",
+        "QualityOverride": "Tilsidesæt kvalitet",
         "Genres": "Genres",
-        "TheatricalRelease": "Theatrical Release",
+        "TheatricalRelease": "Biografudgivelse",
         "DigitalRelease": "Digital Release",
         "UserScore": "User Score",
         "Votes": "Votes",
@@ -266,14 +266,14 @@
         }
     },
     "Discovery": {
-        "PopularTab": "Popular",
-        "TrendingTab": "Trending",
+        "PopularTab": "Populære",
+        "TrendingTab": "Aktuelle",
         "UpcomingTab": "Upcoming",
-        "Movies": "Movies",
+        "Movies": "Film",
         "Combined": "Combined",
         "Tv": "TV",
         "CardDetails": {
-            "Availability": "Availability",
+            "Availability": "Tilgængelighed",
             "Studio": "Studio",
             "Network": "Network",
             "UnknownNetwork": "Unknown",
@@ -286,7 +286,7 @@
         }
     },
     "UserPreferences": {
-        "Welcome": "Welcome {{username}}!",
+        "Welcome": "Velkommen til {{username}}!",
         "OmbiLanguage": "Language",
         "DarkMode": "Dark Mode"
     }
