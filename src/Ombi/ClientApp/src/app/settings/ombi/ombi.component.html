@@ -18,27 +18,22 @@
                     <button type="button" matSuffix (click)="refreshApiKey()" style="display:inline-block;">
                         <mat-icon class="fa fa-refresh"></mat-icon>
                     </button>
-                    <!-- THIS IS NOT WORKING
-                    <button type="button" mat-icon-button matSuffix [cdkCopyToClipboard]="apiKey" style="display:inline-block">
-                    
-                        <mat-icon class="fa fa-clipboard"></mat-icon>
-                    </button> -->
 
                 </mat-form-field>
             </div>
             <div>
-                <mat-checkbox formControlName="doNotSendNotificationsForAutoApprove">
-                    Do not send Notifications if a User has the Auto Approve permission</mat-checkbox>
+                <mat-slide-toggle formControlName="doNotSendNotificationsForAutoApprove">
+                    Do not send Notifications if a User has the Auto Approve permission</mat-slide-toggle>
             </div>
             <div>
-                <mat-checkbox formControlName="hideRequestsUsers">
+                <mat-slide-toggle formControlName="hideRequestsUsers">
                     Hide requests from other users
-                </mat-checkbox>
+                </mat-slide-toggle>
             </div>
             <div>
-                <mat-checkbox formControlName="autoDeleteAvailableRequests">
+                <mat-slide-toggle formControlName="autoDeleteAvailableRequests">
                     Auto Delete Available Requests
-                </mat-checkbox>
+                </mat-slide-toggle>
             </div>
             <div *ngIf="form.get('autoDeleteAvailableRequests').value">
                 <mat-form-field appearance="outline" >
@@ -47,20 +42,20 @@
                 </mat-form-field>
             </div>
             <div>
-                <mat-checkbox formControlName="ignoreCertificateErrors" matTooltip="Enable if you are having connectivity problems over SSL">
+                <mat-slide-toggle formControlName="ignoreCertificateErrors" matTooltip="Enable if you are having connectivity problems over SSL">
                     Ignore any certificate errors (Please restart after changing)
-                </mat-checkbox>
+                </mat-slide-toggle>
             </div>
             <div>
-                <mat-checkbox formControlName="collectAnalyticData" matTooltip="This will allow us to have a better understanding of the userbase so we know what we should be supporting (Uses Google Analytics)">
+                <mat-slide-toggle formControlName="collectAnalyticData" matTooltip="This will allow us to have a better understanding of the userbase so we know what we should be supporting (Uses Google Analytics)">
                     Allow us to collect anonymous analytical data e.g. browser used
-                </mat-checkbox>
+                </mat-slide-toggle>
             </div>
             <!-- <div>
-                <mat-checkbox formControlName="disableHealthChecks">
+                <mat-slide-toggle formControlName="disableHealthChecks">
                     Disable the health checks page
                     <a href="/healthchecks-ui" target="_blank">/healthchecks-ui</a>
-                </mat-checkbox>
+                </mat-slide-toggle>
             </div> -->
             <div>
                 <mat-form-field *ngIf="langauges">

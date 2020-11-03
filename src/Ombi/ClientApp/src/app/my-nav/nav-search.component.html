@@ -10,7 +10,7 @@ aria-label="Search" [ngbTypeahead]="searchModel" [resultFormatter]="formatter" [
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)" [displayWith]="displayFn">
-        <mat-option *ngIf="searching" color="accent">
+        <mat-option *ngIf="searching" color="warn">
             <mat-spinner diameter="50"></mat-spinner>
         </mat-option>
         <ng-container *ngIf="!searching">

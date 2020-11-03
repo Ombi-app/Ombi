@@ -5,9 +5,9 @@
         <legend>Landing Page Configuration</legend>
         <div class="md-form-field" style="margin-top:1em;"></div>
         <div class="col-12">
-                <mat-checkbox [(ngModel)]="settings.enabled"> 
+                <mat-slide-toggle [(ngModel)]="settings.enabled"> 
                 Enable
-                </mat-checkbox>
+                </mat-slide-toggle>
             <!--<div class="form-group">
                 <div class="checkbox">
                     <input type="checkbox" id="enable" name="enable" [(ngModel)]="settings.enabled" ng-checked="settings.enabled">
@@ -15,11 +15,13 @@
                 </div>
             </div>-->
 
-            <p class="form-group">Notice Message</p>
             <div class="form-group">
                 <div>
-                    <textarea rows="4" type="text" class="form-control-custom form-control " id="NoticeMessage" name="NoticeMessage" placeholder="e.g. The server will be down for maintenance (HTML is allowed)" [(ngModel)]="settings.noticeText">{{settings.noticeText}}</textarea>
-                </div>
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Notice Message</mat-label>
+                        <textarea matInput  rows="4" type="text" id="NoticeMessage" name="NoticeMessage" placeholder="e.g. The server will be down for maintenance (HTML is allowed)" [(ngModel)]="settings.noticeText">{{settings.noticeText}}</textarea>
+                      </mat-form-field>
+                    </div>
             </div>
 
             <p class="form-group">Notice Preview:</p>

@@ -58,6 +58,7 @@ export class NavSearchComponent implements OnInit {
   }
 
   public selected(event: MatAutocompleteSelectedEvent) {
+    this.searchForm.controls.input.setValue(null);
       const val = event.option.value as IMultiSearchResult;
     if (val.mediaType == "movie") {
       this.router.navigate([`details/movie/${val.id}`]);
