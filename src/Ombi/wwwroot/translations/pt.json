@@ -26,7 +26,7 @@
         "Denied": "Negado",
         "Approve": "Aprovar",
         "PartlyAvailable": "Parcialmente Disponível",
-        "ViewDetails": "View Details",
+        "ViewDetails": "Ver detalhes",
         "Errors": {
             "Validation": "Por favor, verifique os dados inseridos"
         },
@@ -49,7 +49,7 @@
         "CheckPageForUpdates": "Verifique esta página para acompanhar as atualizações do site."
     },
     "NavigationBar": {
-        "Discover": "Discover",
+        "Discover": "Descobrir",
         "Search": "Pesquisar",
         "Requests": "Pedidos",
         "UserManagement": "Gestor de utilizadores",
@@ -65,15 +65,15 @@
         "Logout": "Sair",
         "OpenMobileApp": "Abrir app móvel",
         "RecentlyAdded": "Recentemente adicionado",
-        "ChangeTheme": "Change Theme",
-        "Calendar": "Calendar",
-        "UserPreferences": "Preferences",
+        "ChangeTheme": "Alterar tema",
+        "Calendar": "Calendário",
+        "UserPreferences": "Preferências",
         "FeatureSuggestion": "Feature Suggestion",
         "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
         "Filter": {
-            "Movies": "Movies",
-            "TvShows": "TV Shows",
-            "Music": "Music",
+            "Movies": "Filmes",
+            "TvShows": "Séries",
+            "Music": "Músicas",
             "People": "People"
         }
     },
@@ -98,7 +98,7 @@
             "UpcomingMovies": "Próximos filmes",
             "TopRatedMovies": "Filmes mais votados",
             "NowPlayingMovies": "Filmes em cartazes",
-            "HomePage": "Home Page",
+            "HomePage": "Página inicial",
             "Trailer": "Trailer"
         },
         "TvShows": {
@@ -142,7 +142,7 @@
         "MarkAvailable": "Marcar como Disponível",
         "Remove": "Remover",
         "Deny": "Negar",
-        "DenyReason": "Deny Reason",
+        "DenyReason": "Qual a razão da rejeição",
         "Season": "Temporada:",
         "GridTitle": "Título",
         "AirDate": "Data de exibição",
@@ -170,8 +170,8 @@
         "AvailableRequests": "Available Requests",
         "DeniedRequests": "Denied Requests",
         "RequestsToDisplay": "Requests to display",
-        "RequestsTitle": "Title",
-        "Details": "Details",
+        "RequestsTitle": "Título",
+        "Details": "Detalhes",
         "Options": "Options"
     },
     "Issues": {
@@ -227,10 +227,10 @@
         "VotesTab": "Votos necessários"
     },
     "MediaDetails": {
-        "Denied": "Denied",
-        "RecommendationsTitle": "Recommendations",
-        "SimilarTitle": "Similar",
-        "VideosTitle": "Videos",
+        "Denied": "Rejeitado",
+        "RecommendationsTitle": "Recomendações",
+        "SimilarTitle": "Semelhante",
+        "VideosTitle": "Vídeos",
         "AlbumsTitle": "Albums",
         "RequestAllAlbums": "Request All Albums",
         "ClearSelection": "Clear Selection",
@@ -241,13 +241,13 @@
         "QualityProfilesSelect": "Select A Quality Profile",
         "RootFolderSelect": "Select A Root Folder",
         "Status": "Status",
-        "Availability": "Availability",
-        "RequestStatus": "Request Status",
+        "Availability": "Disponibilidade",
+        "RequestStatus": "Estado da solicitação",
         "Quality": "Quality",
-        "RootFolderOverride": "Root Folder Override",
-        "QualityOverride": "Quality Override",
+        "RootFolderOverride": "Substituição da pasta raiz",
+        "QualityOverride": "Substituição de qualidade",
         "Genres": "Genres",
-        "TheatricalRelease": "Theatrical Release",
+        "TheatricalRelease": "Lançamento nos Cinemas",
         "DigitalRelease": "Digital Release",
         "UserScore": "User Score",
         "Votes": "Votes",
@@ -257,36 +257,36 @@
         "Budget": "Budget",
         "Keywords": "Keywords/Tags",
         "Casts": {
-            "CastTitle": "Cast"
+            "CastTitle": "Projectar"
         },
         "EpisodeSelector": {
-            "AllSeasonsTooltip": "This will request every season for this show",
-            "FirstSeasonTooltip": "This will only request the First Season for this show",
-            "LatestSeasonTooltip": "This will only request the Latest Season for this show"
+            "AllSeasonsTooltip": "Isto irá pedir todas as temporadas da série",
+            "FirstSeasonTooltip": "Isto irá pedir a 1ª temporada da série",
+            "LatestSeasonTooltip": "Isto irá pedir a última temporada da série"
         }
     },
     "Discovery": {
         "PopularTab": "Popular",
-        "TrendingTab": "Trending",
-        "UpcomingTab": "Upcoming",
-        "Movies": "Movies",
+        "TrendingTab": "Tendências",
+        "UpcomingTab": "Próximo",
+        "Movies": "Filmes",
         "Combined": "Combined",
         "Tv": "TV",
         "CardDetails": {
-            "Availability": "Availability",
-            "Studio": "Studio",
-            "Network": "Network",
-            "UnknownNetwork": "Unknown",
-            "RequestStatus": "Request Status",
-            "Director": "Director",
-            "InCinemas": "In Cinemas",
-            "FirstAired": "First Aired",
-            "Writer": "Writer",
-            "ExecProducer": "Exec Producer"
+            "Availability": "Disponibilidade",
+            "Studio": "Estúdio",
+            "Network": "Rede",
+            "UnknownNetwork": "Desconhecido",
+            "RequestStatus": "Estado da solicitação",
+            "Director": "Realizador",
+            "InCinemas": "No cinema",
+            "FirstAired": "Primeira Exibição",
+            "Writer": "Escritor",
+            "ExecProducer": "Produtor Executivo"
         }
     },
     "UserPreferences": {
-        "Welcome": "Welcome {{username}}!",
+        "Welcome": "Bem-vindo, {{username}}!",
         "OmbiLanguage": "Language",
         "DarkMode": "Dark Mode"
     }
