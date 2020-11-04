@@ -4,8 +4,8 @@
         "UsernamePlaceholder": "Nom d’utilisateur",
         "PasswordPlaceholder": "Mot de passe",
         "RememberMe": "Se souvenir de moi",
-        "SignInWith": "Sign in with {{appName}}",
-        "SignInWithPlex": "Sign in with Plex",
+        "SignInWith": "Se connecter avec {{appName}}",
+        "SignInWithPlex": "Se connecter avec Plex",
         "ForgottenPassword": "Mot de passe oublié ?",
         "Errors": {
             "IncorrectCredentials": "Nom d'utilisateur ou mot de passe incorrect"
@@ -30,8 +30,8 @@
         "Errors": {
             "Validation": "Veuillez vérifier les valeurs entrées"
         },
-        "Cancel": "Cancel",
-        "Submit": "Submit"
+        "Cancel": "Annuler",
+        "Submit": "Envoyer"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "Courriel",
@@ -68,8 +68,8 @@
         "ChangeTheme": "Changer de thème",
         "Calendar": "Calendrier",
         "UserPreferences": "Paramètres",
-        "FeatureSuggestion": "Feature Suggestion",
-        "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
+        "FeatureSuggestion": "Suggérer une fonctionnalité",
+        "FeatureSuggestionTooltip": "Vous avez une bonne idée ? Suggérez-la ici !",
         "Filter": {
             "Movies": "Films",
             "TvShows": "Séries",
