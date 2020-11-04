@@ -75,7 +75,10 @@
             "TvShows": "Seriály",
             "Music": "Hudba",
             "People": "People"
-        }
+        },
+        "MorningWelcome": "Good morning!",
+        "AfternoonWelcome": "Good afternoon!",
+        "EveningWelcome": "Good evening!"
     },
     "Search": {
         "Title": "Hľadať",
