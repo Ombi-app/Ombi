@@ -31,7 +31,7 @@
             "Validation": "Por favor, comprueba los datos introducidos"
         },
         "Cancel": "Cancelar",
-        "Submit": "Submit"
+        "Submit": "Enviar"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "Correo electrónico",
@@ -68,13 +68,13 @@
         "ChangeTheme": "Cambiar Tema",
         "Calendar": "Calendario",
         "UserPreferences": "Configuración",
-        "FeatureSuggestion": "Feature Suggestion",
+        "FeatureSuggestion": "Sugerencia de Características",
         "FeatureSuggestionTooltip": "¿Tienes una idea nueva genial? ¡Sugiérala aquí!",
         "Filter": {
             "Movies": "Películas",
             "TvShows": "Series",
             "Music": "Música",
-            "People": "People"
+            "People": "Personas"
         },
         "MorningWelcome": "¡Buenos días!",
         "AfternoonWelcome": "¡Buenas tardes!",
@@ -124,8 +124,8 @@
         "Title": "Solicitudes",
         "Paragraph": "A continuación puedes ver tanto las tuyas como las demás solicitudes, así como su estado de descarga y aprobación.",
         "MoviesTab": "Películas",
-        "ArtistName": "Artist",
-        "AlbumName": "Album Name",
+        "ArtistName": "Artista",
+        "AlbumName": "Nombre del Álbum",
         "TvTab": "Series",
         "MusicTab": "Música",
         "RequestedBy": "Solicitado por",
@@ -167,15 +167,15 @@
             "NextMinutes": "Se añadirá otra solicitud en {{time}} minutos",
             "NextMinute": "Se añadirá otra solicitud en {{time}} minuto"
         },
-        "AllRequests": "All Requests",
-        "PendingRequests": "Pending Requests",
-        "ProcessingRequests": "Processing Requests",
-        "AvailableRequests": "Available Requests",
-        "DeniedRequests": "Denied Requests",
-        "RequestsToDisplay": "Requests to display",
+        "AllRequests": "Todas las Solicitudes",
+        "PendingRequests": "Solicitudes Pendientes",
+        "ProcessingRequests": "Procesándose Solicitudes",
+        "AvailableRequests": "Solicitudes Disponibles",
+        "DeniedRequests": "Solicitudes Denegadas",
+        "RequestsToDisplay": "Solicitudes a Mostrar",
         "RequestsTitle": "Título",
         "Details": "Detalles",
-        "Options": "Options"
+        "Options": "Opciones"
     },
     "Issues": {
         "Title": "Problemas",
@@ -196,19 +196,19 @@
         "WriteMessagePlaceholder": "Escribe tu mensaje aquí...",
         "ReportedBy": "Reportado por",
         "IssueDialog": {
-            "Title": "Report an issue",
-            "DescriptionPlaceholder": "Please describe the issue",
-            "TitlePlaceholder": "Short title of your issue",
-            "SelectCategory": "Select Category",
-            "IssueCreated": "Issue has been created"
+            "Title": "Reportar problema",
+            "DescriptionPlaceholder": "Por favor, describe el problema",
+            "TitlePlaceholder": "Título corto de tu problema",
+            "SelectCategory": "Seleccionar Categoría",
+            "IssueCreated": "El problema ha sido creado"
         },
-        "Outstanding": "There are outstanding issues",
-        "ResolvedDate": "Resolved date",
-        "CreatedDate": "Raised on",
-        "MarkedAsResolved": "This issue has now been marked as resolved!",
-        "MarkedAsInProgress": "This issue has now been marked as in progress!",
-        "Delete": "Delete issue",
-        "DeletedIssue": "Issue has been deleted"
+        "Outstanding": "Hay problemas pendientes",
+        "ResolvedDate": "Fecha de resolución",
+        "CreatedDate": "Creado",
+        "MarkedAsResolved": "¡Este problema ha sido marcado como resuelto!",
+        "MarkedAsInProgress": "¡Este problema se ha marcado como en progreso!",
+        "Delete": "Borrar problema",
+        "DeletedIssue": "El problema ha sido borrado"
     },
     "Filter": {
         "ClearFilter": "Reiniciar filtro",
@@ -234,31 +234,31 @@
         "RecommendationsTitle": "Recomendaciones",
         "SimilarTitle": "Similar",
         "VideosTitle": "Vídeos",
-        "AlbumsTitle": "Albums",
-        "RequestAllAlbums": "Request All Albums",
+        "AlbumsTitle": "Álbumes",
+        "RequestAllAlbums": "Solicitar Todos los Álbumes",
         "ClearSelection": "Clear Selection",
-        "RequestSelectedAlbums": "Request Selected Albums",
-        "ViewCollection": "View Collection",
-        "NotEnoughInfo": "Unfortunately there is not enough information about this show yet!",
-        "AdvancedOptions": "Advanced Options",
-        "QualityProfilesSelect": "Select A Quality Profile",
-        "RootFolderSelect": "Select A Root Folder",
+        "RequestSelectedAlbums": "Solicitar Álbumes Seleccionados",
+        "ViewCollection": "Ver Colección",
+        "NotEnoughInfo": "Desafortunadamente todavía no hay suficiente información sobre este programa!",
+        "AdvancedOptions": "Opciones Avanzadas",
+        "QualityProfilesSelect": "Seleccione un Perfil de Calidad",
+        "RootFolderSelect": "Seleccione una Carpeta Raíz",
         "Status": "Estado",
         "Availability": "Disponibilidad",
         "RequestStatus": "Estado de solicitud",
-        "Quality": "Quality",
+        "Quality": "Calidad",
         "RootFolderOverride": "Sobreescribir carpeta raíz",
         "QualityOverride": "Sobreescribir calidad",
-        "Genres": "Genres",
+        "Genres": "Géneros",
         "TheatricalRelease": "En cines",
-        "DigitalRelease": "Digital Release",
-        "UserScore": "User Score",
-        "Votes": "Votes",
-        "Runtime": "Runtime",
-        "Minutes": "{{runtime}} Minutes",
-        "Revenue": "Revenue",
-        "Budget": "Budget",
-        "Keywords": "Keywords/Tags",
+        "DigitalRelease": "Estreno Digital",
+        "UserScore": "Puntuación de Usuarios",
+        "Votes": "Votos",
+        "Runtime": "Duración",
+        "Minutes": "{{runtime}} Minutos",
+        "Revenue": "Ingresos",
+        "Budget": "Presupuesto",
+        "Keywords": "Palabras Clave/Etiquetas",
         "Casts": {
             "CastTitle": "Enviar pantalla"
         },
@@ -273,7 +273,7 @@
         "TrendingTab": "Tendencias",
         "UpcomingTab": "Próximamente",
         "Movies": "Películas",
-        "Combined": "Combined",
+        "Combined": "Combinado",
         "Tv": "TV",
         "CardDetails": {
             "Availability": "Disponibilidad",
@@ -290,7 +290,7 @@
     },
     "UserPreferences": {
         "Welcome": "Bienvenido {{username}}!",
-        "OmbiLanguage": "Language",
-        "DarkMode": "Dark Mode"
+        "OmbiLanguage": "Idioma",
+        "DarkMode": "Modo Oscuro"
     }
 }
