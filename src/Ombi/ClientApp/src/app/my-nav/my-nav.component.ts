@@ -57,8 +57,10 @@ export class MyNavComponent implements OnInit {
     }
 
 
-    const md5 = new Md5();
-    this.emailHash = md5.appendStr(this.email).end();
+    if(this.email) {
+      const md5 = new Md5();
+      this.emailHash = md5.appendStr(this.email).end();
+    }
 
     this.issuesEnabled = await this.settingsService.issueEnabled().toPromise();
     const customizationSettings = await this.settingsService.getCustomization().toPromise();
