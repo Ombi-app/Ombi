@@ -4,8 +4,8 @@
         "UsernamePlaceholder": "Usuario",
         "PasswordPlaceholder": "Contraseña",
         "RememberMe": "Recuérdame",
-        "SignInWith": "Sign in with {{appName}}",
-        "SignInWithPlex": "Sign in with Plex",
+        "SignInWith": "Iniciar sesión con {{appName}}",
+        "SignInWithPlex": "Inicia sesión con Plex",
         "ForgottenPassword": "¿Has olvidado tu contraseña?",
         "Errors": {
             "IncorrectCredentials": "Nombre de usuario o contraseña\nincorrectos"
@@ -30,7 +30,7 @@
         "Errors": {
             "Validation": "Por favor, comprueba los datos introducidos"
         },
-        "Cancel": "Cancel",
+        "Cancel": "Cancelar",
         "Submit": "Submit"
     },
     "PasswordReset": {
@@ -69,16 +69,16 @@
         "Calendar": "Calendario",
         "UserPreferences": "Configuración",
         "FeatureSuggestion": "Feature Suggestion",
-        "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
+        "FeatureSuggestionTooltip": "¿Tienes una idea nueva genial? ¡Sugiérala aquí!",
         "Filter": {
             "Movies": "Películas",
             "TvShows": "Series",
             "Music": "Música",
             "People": "People"
         },
-        "MorningWelcome": "Good morning!",
-        "AfternoonWelcome": "Good afternoon!",
-        "EveningWelcome": "Good evening!"
+        "MorningWelcome": "¡Buenos días!",
+        "AfternoonWelcome": "¡Buenas tardes!",
+        "EveningWelcome": "¡Buenas noches!"
     },
     "Search": {
         "Title": "Buscar",
