@@ -75,7 +75,10 @@
             "TvShows": "TV Series",
             "Music": "Muziek",
             "People": "People"
-        }
+        },
+        "MorningWelcome": "Good morning!",
+        "AfternoonWelcome": "Good afternoon!",
+        "EveningWelcome": "Good evening!"
     },
     "Search": {
         "Title": "Zoeken",
