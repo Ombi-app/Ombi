@@ -26,7 +26,7 @@
         "Denied": "Odrzucone",
         "Approve": "Zatwierdź",
         "PartlyAvailable": "Częściowo dostępne",
-        "ViewDetails": "View Details",
+        "ViewDetails": "Pokaż szczegóły",
         "Errors": {
             "Validation": "Proszę sprawdzić wprowadzone wartości"
         },
@@ -49,7 +49,7 @@
         "CheckPageForUpdates": "Tutaj znajdziesz aktualizacje dotyczące tej strony."
     },
     "NavigationBar": {
-        "Discover": "Discover",
+        "Discover": "Odkryj",
         "Search": "Szukaj",
         "Requests": "Zgłoszenia",
         "UserManagement": "Zarządzanie użytkownikami",
@@ -65,17 +65,20 @@
         "Logout": "Wyloguj",
         "OpenMobileApp": "Otwórz aplikację mobilną",
         "RecentlyAdded": "Ostatnio dodane",
-        "ChangeTheme": "Change Theme",
-        "Calendar": "Calendar",
-        "UserPreferences": "Preferences",
+        "ChangeTheme": "Zmień motyw",
+        "Calendar": "Kalendarz",
+        "UserPreferences": "Preferencje",
         "FeatureSuggestion": "Feature Suggestion",
         "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
         "Filter": {
-            "Movies": "Movies",
-            "TvShows": "TV Shows",
-            "Music": "Music",
+            "Movies": "Filmy",
+            "TvShows": "Programy TV",
+            "Music": "Muzyka",
             "People": "People"
-        }
+        },
+        "MorningWelcome": "Good morning!",
+        "AfternoonWelcome": "Good afternoon!",
+        "EveningWelcome": "Good evening!"
     },
     "Search": {
         "Title": "Szukaj",
@@ -126,7 +129,7 @@
         "TvTab": "Seriale",
         "MusicTab": "Muzyka",
         "RequestedBy": "Zgłoszone przez",
-        "Status": "Status",
+        "Status": "Stan",
         "RequestStatus": "Status zgłoszenia",
         "Denied": "Odrzucono:",
         "TheatricalRelease": "Premiera kinowa: {{date}}",
@@ -142,7 +145,7 @@
         "MarkAvailable": "Oznacz jako dostępne",
         "Remove": "Usuń",
         "Deny": "Odrzuć",
-        "DenyReason": "Deny Reason",
+        "DenyReason": "Powód odrzucenia",
         "Season": "Sezon:",
         "GridTitle": "Tytuł",
         "AirDate": "Data emisji",
@@ -170,8 +173,8 @@
         "AvailableRequests": "Available Requests",
         "DeniedRequests": "Denied Requests",
         "RequestsToDisplay": "Requests to display",
-        "RequestsTitle": "Title",
-        "Details": "Details",
+        "RequestsTitle": "Tytuł",
+        "Details": "Szczegóły",
         "Options": "Options"
     },
     "Issues": {
@@ -181,7 +184,7 @@
         "ResolvedTitle": "Problemy rozwiązane",
         "ColumnTitle": "Tytuł",
         "Category": "Kategoria",
-        "Status": "Status",
+        "Status": "Stan",
         "Details": "Szczegóły",
         "Description": "Opis",
         "NoComments": "Brak komentarzy!",
@@ -210,7 +213,7 @@
     "Filter": {
         "ClearFilter": "Wyczyść filtr",
         "FilterHeaderAvailability": "Dostępność",
-        "FilterHeaderRequestStatus": "Status",
+        "FilterHeaderRequestStatus": "Stan",
         "Approved": "Zatwierdzone",
         "PendingApproval": "Oczekujące na zatwierdzenie"
     },
@@ -227,10 +230,10 @@
         "VotesTab": "Potrzebne głosy"
     },
     "MediaDetails": {
-        "Denied": "Denied",
-        "RecommendationsTitle": "Recommendations",
-        "SimilarTitle": "Similar",
-        "VideosTitle": "Videos",
+        "Denied": "Odrzucone",
+        "RecommendationsTitle": "Rekomendacje",
+        "SimilarTitle": "Podobne",
+        "VideosTitle": "Wideo",
         "AlbumsTitle": "Albums",
         "RequestAllAlbums": "Request All Albums",
         "ClearSelection": "Clear Selection",
@@ -240,14 +243,14 @@
         "AdvancedOptions": "Advanced Options",
         "QualityProfilesSelect": "Select A Quality Profile",
         "RootFolderSelect": "Select A Root Folder",
-        "Status": "Status",
-        "Availability": "Availability",
-        "RequestStatus": "Request Status",
+        "Status": "Stan",
+        "Availability": "Dostępność",
+        "RequestStatus": "Status zgłoszenia",
         "Quality": "Quality",
-        "RootFolderOverride": "Root Folder Override",
-        "QualityOverride": "Quality Override",
+        "RootFolderOverride": "Wymuszenie folderu głównego",
+        "QualityOverride": "Wymuszenie jakości",
         "Genres": "Genres",
-        "TheatricalRelease": "Theatrical Release",
+        "TheatricalRelease": "Premiera kinowa",
         "DigitalRelease": "Digital Release",
         "UserScore": "User Score",
         "Votes": "Votes",
@@ -257,36 +260,36 @@
         "Budget": "Budget",
         "Keywords": "Keywords/Tags",
         "Casts": {
-            "CastTitle": "Cast"
+            "CastTitle": "Obsada"
         },
         "EpisodeSelector": {
-            "AllSeasonsTooltip": "This will request every season for this show",
-            "FirstSeasonTooltip": "This will only request the First Season for this show",
-            "LatestSeasonTooltip": "This will only request the Latest Season for this show"
+            "AllSeasonsTooltip": "Zgłoszenie obejmie wszystkie sezony tego serialu",
+            "FirstSeasonTooltip": "Zgłoszenie obejmie pierwszy sezon tego serialu",
+            "LatestSeasonTooltip": "Zgłoszenie obejmie najnowszy sezon tego serialu"
         }
     },
     "Discovery": {
-        "PopularTab": "Popular",
-        "TrendingTab": "Trending",
-        "UpcomingTab": "Upcoming",
-        "Movies": "Movies",
+        "PopularTab": "Popularne",
+        "TrendingTab": "Zyskujące popularność",
+        "UpcomingTab": "Nadchodzące",
+        "Movies": "Filmy",
         "Combined": "Combined",
         "Tv": "TV",
         "CardDetails": {
-            "Availability": "Availability",
+            "Availability": "Dostępność",
             "Studio": "Studio",
-            "Network": "Network",
-            "UnknownNetwork": "Unknown",
-            "RequestStatus": "Request Status",
-            "Director": "Director",
-            "InCinemas": "In Cinemas",
-            "FirstAired": "First Aired",
-            "Writer": "Writer",
-            "ExecProducer": "Exec Producer"
+            "Network": "Stacja",
+            "UnknownNetwork": "Nieznane",
+            "RequestStatus": "Status zgłoszenia",
+            "Director": "Reżyser",
+            "InCinemas": "W kinach",
+            "FirstAired": "Pierwsza emisja",
+            "Writer": "Scenarzysta",
+            "ExecProducer": "Producent wykonawczy"
         }
     },
     "UserPreferences": {
-        "Welcome": "Welcome {{username}}!",
+        "Welcome": "Witaj {{username}}!",
         "OmbiLanguage": "Language",
         "DarkMode": "Dark Mode"
     }

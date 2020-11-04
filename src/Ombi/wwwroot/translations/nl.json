@@ -26,7 +26,7 @@
         "Denied": "Afgewezen",
         "Approve": "Accepteer",
         "PartlyAvailable": "Deels Beschikbaar",
-        "ViewDetails": "View Details",
+        "ViewDetails": "Eigenschappen bekijken",
         "Errors": {
             "Validation": "Controleer de ingevulde waardes"
         },
@@ -49,7 +49,7 @@
         "CheckPageForUpdates": "Controleer deze pagina voor updates."
     },
     "NavigationBar": {
-        "Discover": "Discover",
+        "Discover": "Ontdekken",
         "Search": "Zoeken",
         "Requests": "Verzoeken",
         "UserManagement": "Gebruikersmanagement",
@@ -65,17 +65,20 @@
         "Logout": "Afmelden",
         "OpenMobileApp": "Mobiele App Openen",
         "RecentlyAdded": "Onlangs Toegevoegd",
-        "ChangeTheme": "Change Theme",
-        "Calendar": "Calendar",
-        "UserPreferences": "Preferences",
+        "ChangeTheme": "Thema wijzigen",
+        "Calendar": "Agenda",
+        "UserPreferences": "Instellingen",
         "FeatureSuggestion": "Feature Suggestion",
         "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
         "Filter": {
-            "Movies": "Movies",
-            "TvShows": "TV Shows",
-            "Music": "Music",
+            "Movies": "Films",
+            "TvShows": "TV Series",
+            "Music": "Muziek",
             "People": "People"
-        }
+        },
+        "MorningWelcome": "Good morning!",
+        "AfternoonWelcome": "Good afternoon!",
+        "EveningWelcome": "Good evening!"
     },
     "Search": {
         "Title": "Zoeken",
@@ -142,7 +145,7 @@
         "MarkAvailable": "Markeren als beschikbaar",
         "Remove": "Verwijderen",
         "Deny": "Weigeren",
-        "DenyReason": "Deny Reason",
+        "DenyReason": "Reden van afwijzing",
         "Season": "Seizoen:",
         "GridTitle": "Titel",
         "AirDate": "Uitzenddatum",
@@ -170,7 +173,7 @@
         "AvailableRequests": "Available Requests",
         "DeniedRequests": "Denied Requests",
         "RequestsToDisplay": "Requests to display",
-        "RequestsTitle": "Title",
+        "RequestsTitle": "Titel",
         "Details": "Details",
         "Options": "Options"
     },
@@ -227,10 +230,10 @@
         "VotesTab": "Stemmen nodig"
     },
     "MediaDetails": {
-        "Denied": "Denied",
-        "RecommendationsTitle": "Recommendations",
-        "SimilarTitle": "Similar",
-        "VideosTitle": "Videos",
+        "Denied": "Afgewezen",
+        "RecommendationsTitle": "Aanbevelingen",
+        "SimilarTitle": "Vergelijkbaar",
+        "VideosTitle": "Video's",
         "AlbumsTitle": "Albums",
         "RequestAllAlbums": "Request All Albums",
         "ClearSelection": "Clear Selection",
@@ -241,13 +244,13 @@
         "QualityProfilesSelect": "Select A Quality Profile",
         "RootFolderSelect": "Select A Root Folder",
         "Status": "Status",
-        "Availability": "Availability",
-        "RequestStatus": "Request Status",
+        "Availability": "Beschikbaarheid",
+        "RequestStatus": "Aanvraagstatus",
         "Quality": "Quality",
-        "RootFolderOverride": "Root Folder Override",
-        "QualityOverride": "Quality Override",
+        "RootFolderOverride": "Hoofdmap overschrijven",
+        "QualityOverride": "Kwaliteit overschrijven",
         "Genres": "Genres",
-        "TheatricalRelease": "Theatrical Release",
+        "TheatricalRelease": "Bioscoop Uitgave",
         "DigitalRelease": "Digital Release",
         "UserScore": "User Score",
         "Votes": "Votes",
@@ -257,36 +260,36 @@
         "Budget": "Budget",
         "Keywords": "Keywords/Tags",
         "Casts": {
-            "CastTitle": "Cast"
+            "CastTitle": "Acteurs"
         },
         "EpisodeSelector": {
-            "AllSeasonsTooltip": "This will request every season for this show",
-            "FirstSeasonTooltip": "This will only request the First Season for this show",
-            "LatestSeasonTooltip": "This will only request the Latest Season for this show"
+            "AllSeasonsTooltip": "Dit verzoekt ieder seizoen van deze serie",
+            "FirstSeasonTooltip": "Dit verzoekt alleen het eerste seizoen van deze serie",
+            "LatestSeasonTooltip": "Dit verzoekt alleen het laatste seizoen van deze show"
         }
     },
     "Discovery": {
-        "PopularTab": "Popular",
-        "TrendingTab": "Trending",
-        "UpcomingTab": "Upcoming",
-        "Movies": "Movies",
+        "PopularTab": "Populair",
+        "TrendingTab": "Populair",
+        "UpcomingTab": "Aankomend",
+        "Movies": "Films",
         "Combined": "Combined",
         "Tv": "TV",
         "CardDetails": {
-            "Availability": "Availability",
+            "Availability": "Beschikbaarheid",
             "Studio": "Studio",
-            "Network": "Network",
-            "UnknownNetwork": "Unknown",
-            "RequestStatus": "Request Status",
-            "Director": "Director",
-            "InCinemas": "In Cinemas",
-            "FirstAired": "First Aired",
-            "Writer": "Writer",
-            "ExecProducer": "Exec Producer"
+            "Network": "Netwerk",
+            "UnknownNetwork": "Niet bekend",
+            "RequestStatus": "Aanvraagstatus",
+            "Director": "Regisseur",
+            "InCinemas": "In de bioscoop",
+            "FirstAired": "Eerste uitzending",
+            "Writer": "Schrijver",
+            "ExecProducer": "Uitvoerende producent"
         }
     },
     "UserPreferences": {
-        "Welcome": "Welcome {{username}}!",
+        "Welcome": "Welkom {{username}}!",
         "OmbiLanguage": "Language",
         "DarkMode": "Dark Mode"
     }

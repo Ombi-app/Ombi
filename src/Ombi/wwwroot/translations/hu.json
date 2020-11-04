@@ -71,11 +71,14 @@
         "FeatureSuggestion": "Feature Suggestion",
         "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
         "Filter": {
-            "Movies": "Movies",
-            "TvShows": "TV Shows",
-            "Music": "Music",
+            "Movies": "Filmek",
+            "TvShows": "Sorozatok",
+            "Music": "Zene",
             "People": "People"
-        }
+        },
+        "MorningWelcome": "Good morning!",
+        "AfternoonWelcome": "Good afternoon!",
+        "EveningWelcome": "Good evening!"
     },
     "Search": {
         "Title": "Keresés",
@@ -170,8 +173,8 @@
         "AvailableRequests": "Available Requests",
         "DeniedRequests": "Denied Requests",
         "RequestsToDisplay": "Requests to display",
-        "RequestsTitle": "Title",
-        "Details": "Details",
+        "RequestsTitle": "Cím",
+        "Details": "Részletek",
         "Options": "Options"
     },
     "Issues": {
@@ -227,9 +230,9 @@
         "VotesTab": "Szavazat szükséges"
     },
     "MediaDetails": {
-        "Denied": "Denied",
+        "Denied": "Megtagadva",
         "RecommendationsTitle": "Recommendations",
-        "SimilarTitle": "Similar",
+        "SimilarTitle": "Hasonló",
         "VideosTitle": "Videos",
         "AlbumsTitle": "Albums",
         "RequestAllAlbums": "Request All Albums",
@@ -240,14 +243,14 @@
         "AdvancedOptions": "Advanced Options",
         "QualityProfilesSelect": "Select A Quality Profile",
         "RootFolderSelect": "Select A Root Folder",
-        "Status": "Status",
-        "Availability": "Availability",
+        "Status": "Állapot",
+        "Availability": "Elérhetőség",
         "RequestStatus": "Request Status",
         "Quality": "Quality",
-        "RootFolderOverride": "Root Folder Override",
-        "QualityOverride": "Quality Override",
+        "RootFolderOverride": "Gyökér mappa felülírása",
+        "QualityOverride": "Minőség felülírása",
         "Genres": "Genres",
-        "TheatricalRelease": "Theatrical Release",
+        "TheatricalRelease": "Mozis kiadás",
         "DigitalRelease": "Digital Release",
         "UserScore": "User Score",
         "Votes": "Votes",
@@ -266,14 +269,14 @@
         }
     },
     "Discovery": {
-        "PopularTab": "Popular",
-        "TrendingTab": "Trending",
+        "PopularTab": "Népszerű",
+        "TrendingTab": "Felkapott",
         "UpcomingTab": "Upcoming",
-        "Movies": "Movies",
+        "Movies": "Filmek",
         "Combined": "Combined",
         "Tv": "TV",
         "CardDetails": {
-            "Availability": "Availability",
+            "Availability": "Elérhetőség",
             "Studio": "Studio",
             "Network": "Network",
             "UnknownNetwork": "Unknown",
@@ -286,7 +289,7 @@
         }
     },
     "UserPreferences": {
-        "Welcome": "Welcome {{username}}!",
+        "Welcome": "Üdv {{username}}!",
         "OmbiLanguage": "Language",
         "DarkMode": "Dark Mode"
     }

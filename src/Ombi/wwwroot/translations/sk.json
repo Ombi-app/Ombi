@@ -71,11 +71,14 @@
         "FeatureSuggestion": "Feature Suggestion",
         "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
         "Filter": {
-            "Movies": "Movies",
-            "TvShows": "TV Shows",
-            "Music": "Music",
+            "Movies": "Filmy",
+            "TvShows": "Seriály",
+            "Music": "Hudba",
             "People": "People"
-        }
+        },
+        "MorningWelcome": "Good morning!",
+        "AfternoonWelcome": "Good afternoon!",
+        "EveningWelcome": "Good evening!"
     },
     "Search": {
         "Title": "Hľadať",
@@ -170,8 +173,8 @@
         "AvailableRequests": "Available Requests",
         "DeniedRequests": "Denied Requests",
         "RequestsToDisplay": "Requests to display",
-        "RequestsTitle": "Title",
-        "Details": "Details",
+        "RequestsTitle": "Názov",
+        "Details": "Podrobnosti",
         "Options": "Options"
     },
     "Issues": {
@@ -227,9 +230,9 @@
         "VotesTab": "Potrebné hlasovanie"
     },
     "MediaDetails": {
-        "Denied": "Denied",
+        "Denied": "Zamietnuté",
         "RecommendationsTitle": "Recommendations",
-        "SimilarTitle": "Similar",
+        "SimilarTitle": "Podobné",
         "VideosTitle": "Videos",
         "AlbumsTitle": "Albums",
         "RequestAllAlbums": "Request All Albums",
@@ -240,14 +243,14 @@
         "AdvancedOptions": "Advanced Options",
         "QualityProfilesSelect": "Select A Quality Profile",
         "RootFolderSelect": "Select A Root Folder",
-        "Status": "Status",
-        "Availability": "Availability",
+        "Status": "Stav",
+        "Availability": "Dostupnosť",
         "RequestStatus": "Request Status",
         "Quality": "Quality",
-        "RootFolderOverride": "Root Folder Override",
-        "QualityOverride": "Quality Override",
+        "RootFolderOverride": "Prepísanie Root priečinku",
+        "QualityOverride": "Prepísanie kvality",
         "Genres": "Genres",
-        "TheatricalRelease": "Theatrical Release",
+        "TheatricalRelease": "Kino vydanie",
         "DigitalRelease": "Digital Release",
         "UserScore": "User Score",
         "Votes": "Votes",
@@ -266,14 +269,14 @@
         }
     },
     "Discovery": {
-        "PopularTab": "Popular",
-        "TrendingTab": "Trending",
+        "PopularTab": "Populárne",
+        "TrendingTab": "Trendy",
         "UpcomingTab": "Upcoming",
-        "Movies": "Movies",
+        "Movies": "Filmy",
         "Combined": "Combined",
         "Tv": "TV",
         "CardDetails": {
-            "Availability": "Availability",
+            "Availability": "Dostupnosť",
             "Studio": "Studio",
             "Network": "Network",
             "UnknownNetwork": "Unknown",
@@ -286,7 +289,7 @@
         }
     },
     "UserPreferences": {
-        "Welcome": "Welcome {{username}}!",
+        "Welcome": "Vitaj {{username}}!",
         "OmbiLanguage": "Language",
         "DarkMode": "Dark Mode"
     }
