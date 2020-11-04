@@ -75,7 +75,10 @@
             "TvShows": "Séries",
             "Music": "Musique",
             "People": "People"
-        }
+        },
+        "MorningWelcome": "Good morning!",
+        "AfternoonWelcome": "Good afternoon!",
+        "EveningWelcome": "Good evening!"
     },
     "Search": {
         "Title": "Rechercher",
