@@ -56,6 +56,7 @@ export class AppComponent implements OnInit {
 
         if (this.authService.loggedIn()) {
             this.identity.getUser().subscribe(u => {
+                this.username = u.userName;
                 if (u.language) {
                     this.translate.use(u.language);
                 }
@@ -106,9 +107,7 @@ export class AppComponent implements OnInit {
             this.currentUrl = event.url;
             if (event instanceof NavigationStart) {
                 this.user = this.authService.claims();
-                if (this.user && this.user.username) {
-                    this.username = this.user.username;
-                }
+
                 this.isAdmin = this.authService.hasRole("admin");
                 this.showNav = this.authService.loggedIn();
 

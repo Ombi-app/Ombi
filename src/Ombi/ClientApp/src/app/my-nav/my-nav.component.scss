@@ -90,9 +90,34 @@
 }*/
 
 .profile-img-container {
-    text-align: center;padding-bottom: 15px;
+    margin: 20px auto 10px;
+    overflow: hidden;
+    text-align: center;
+    width: 80%;
 }
 .profile-img {
-    width: 100px;
-    border-radius: 100%;
+    float: left;
+    height: 40px;
+    margin-right: 15px;
+}
+.profile-info {
+    overflow: hidden;
+    text-align: left;
+}
+.profile-info > h3 {
+    font-size: 15px;
+    text-transform: capitalize;
+    // color: #333;
+    margin-bottom: 2px;
+}
+.profile-info > p {
+    // color: #333;
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+.profile-img img {
+    border-radius: 6px;
+    box-shadow: 4px 3px 6px 0 rgba(0,0,0,.2);
+    width: 45px;
 }

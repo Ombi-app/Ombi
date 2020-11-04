@@ -7,7 +7,8 @@ import { StorageService } from '../shared/storage/storage-service';
 import { SettingsService } from '../services';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { SearchFilter } from './SearchFilter';
-import {Md5} from 'ts-md5/dist/md5';
+import { Md5 } from 'ts-md5/dist/md5';
+import { TranslateService } from '@ngx-translate/core';
 
 export enum SearchFilterType {
   Movie = 1,
@@ -40,11 +41,13 @@ export class MyNavComponent implements OnInit {
   public navItems: INavBar[];
   public searchFilter: SearchFilter;
   public SearchFilterType = SearchFilterType;
-  public emailHash: string|Int32Array;
+  public emailHash: string | Int32Array;
+  public welcomeText: string;
 
   constructor(private breakpointObserver: BreakpointObserver,
     private settingsService: SettingsService,
-    private store: StorageService) {
+    private store: StorageService,
+    private translate: TranslateService) {
   }
 
   public async ngOnInit() {
@@ -56,8 +59,8 @@ export class MyNavComponent implements OnInit {
       tvShows: true
     }
 
-
-    if(this.email) {
+    this.setWelcomeText();
+    if (this.email) {
       const md5 = new Md5();
       this.emailHash = md5.appendStr(this.email).end();
     }
@@ -121,5 +124,20 @@ export class MyNavComponent implements OnInit {
         break;
     }
     this.store.save("searchFilter", JSON.stringify(this.searchFilter));
+  }
+
+  private setWelcomeText() {
+    var d = new Date();
+    var hour = d.getHours();
+
+    if (hour >= 0 && hour < 12) {
+      this.welcomeText = 'NavigationBar.MorningWelcome';
+    }
+    if (hour >= 12 && hour < 18) {
+      this.welcomeText = 'NavigationBar.AfternoonWelcome';
+    }
+    if (hour >= 18 && hour < 23) {
+      this.welcomeText = 'NavigationBar.EveningWelcome';
+    }
   }
 }
