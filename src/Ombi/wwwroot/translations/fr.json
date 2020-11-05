@@ -175,7 +175,12 @@
         "RequestsToDisplay": "Requêtes à afficher",
         "RequestsTitle": "Titre",
         "Details": "Détails",
-        "Options": "Options"
+        "Options": "Options",
+        "RequestPanel": {
+            "Delete": "Delete Request",
+            "Approve": "Approve Request",
+            "ChangeAvailability": "Mark Available"
+        }
     },
     "Issues": {
         "Title": "Problèmes",
