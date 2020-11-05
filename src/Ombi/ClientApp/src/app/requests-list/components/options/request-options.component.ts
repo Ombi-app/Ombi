@@ -9,6 +9,9 @@ import { UpdateType } from '../../models/UpdateType';
   templateUrl: './request-options.component.html',
 })
 export class RequestOptionsComponent {
+
+  public RequestType = RequestType;
+
   constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: any,
     private requestService: RequestService, private bottomSheetRef: MatBottomSheetRef<RequestOptionsComponent>) { }
 
@@ -39,6 +42,18 @@ export class RequestOptionsComponent {
     }
 
     this.bottomSheetRef.dismiss({type: UpdateType.Approve});
+    return;
+  }
+
+  public async changeAvailability() {
+    if (this.data.type === RequestType.movie) {
+      await this.requestService.markMovieAvailable({id: this.data.id}).toPromise();
+    }
+    if (this.data.type === RequestType.album) {
+      await this.requestService.markAlbumAvailable({id: this.data.id}).toPromise();
+    }
+
+    this.bottomSheetRef.dismiss({type: UpdateType.Availability});
     return;
   }
 }

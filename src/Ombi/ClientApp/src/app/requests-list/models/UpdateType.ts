@@ -1,4 +1,5 @@
 export enum UpdateType {
-    Delete,
-    Approve
+  Delete,
+  Approve,
+  Availability
 }

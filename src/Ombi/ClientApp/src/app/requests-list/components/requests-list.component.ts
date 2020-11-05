@@ -29,6 +29,12 @@ export class RequestsListComponent {
                 event.onChange();
                 return;
             }
+            if (result.type == UpdateType.Availability) {
+                // Need to do this here, as the status is calculated on the server
+                event.request.requestStatus = 'Common.Available';
+                event.onChange();
+                return;
+            }
         });
     }
 }
