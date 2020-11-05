@@ -34,7 +34,7 @@
         "Submit": "Envoyer"
     },
     "PasswordReset": {
-        "EmailAddressPlaceholder": "Courriel",
+        "EmailAddressPlaceholder": "Adresse Email",
         "ResetPasswordButton": "Réinitialiser le mot de passe"
     },
     "LandingPage": {
@@ -177,9 +177,9 @@
         "Details": "Détails",
         "Options": "Options",
         "RequestPanel": {
-            "Delete": "Delete Request",
-            "Approve": "Approve Request",
-            "ChangeAvailability": "Mark Available"
+            "Delete": "Supprimer la demande",
+            "Approve": "Autoriser la demande",
+            "ChangeAvailability": "Marquer comme Disponible"
         }
     },
     "Issues": {
