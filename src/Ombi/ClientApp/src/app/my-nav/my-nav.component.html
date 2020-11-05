@@ -3,14 +3,17 @@
         [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
         [opened]="!(isHandset$ | async)">
         <mat-toolbar>{{applicationName}}</mat-toolbar>
-        <div class="profile-img-container">
-            <div class="profile-img">
-            <img src="https://www.gravatar.com/avatar/{{emailHash}}?d=https://raw.githubusercontent.com/tidusjar/Ombi/gh-pages/img/android-chrome-512x512.png" />
-        </div>
-        <div class="profile-info">
-            <h3>{{username}}</h3>
-            <p>{{welcomeText | translate}}</p>
-        </div>
+        <div class="outer-profile">
+            <div class="profile-img-container">
+                <div class="profile-img">
+                    <img
+                        src="https://www.gravatar.com/avatar/{{emailHash}}?d=https://raw.githubusercontent.com/tidusjar/Ombi/gh-pages/img/android-chrome-512x512.png" />
+                </div>
+                <div class="profile-info">
+                    <h3>{{username}}</h3>
+                    <p>{{welcomeText | translate}}</p>
+                </div>
+            </div>
         </div>
         <mat-nav-list>
             <span *ngFor="let nav of navItems">
@@ -67,13 +70,23 @@
                 </span>
             </div>
             <div class="col-2">
-                <button mat-icon-button [matMenuTriggerFor]="filterMenu"><mat-icon>filter_alt</mat-icon></button>
-                <mat-menu #filterMenu="matMenu"  yPosition="below" class="smaller-panel">
-                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.movies" (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Movie)">{{ 'NavigationBar.Filter.Movies' | translate}}</mat-slide-toggle>
-                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.tvShows" (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.TvShow)">{{ 'NavigationBar.Filter.TvShows' | translate}}</mat-slide-toggle>
-                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.music" (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Music)">{{ 'NavigationBar.Filter.Music' | translate}}</mat-slide-toggle>
-                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.people" (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.People)">{{ 'NavigationBar.Filter.People' | translate}}</mat-slide-toggle>
-                  </mat-menu>
+                <button mat-icon-button [matMenuTriggerFor]="filterMenu">
+                    <mat-icon>filter_alt</mat-icon>
+                </button>
+                <mat-menu #filterMenu="matMenu" yPosition="below" class="smaller-panel">
+                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.movies"
+                        (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Movie)">
+                        {{ 'NavigationBar.Filter.Movies' | translate}}</mat-slide-toggle>
+                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.tvShows"
+                        (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.TvShow)">
+                        {{ 'NavigationBar.Filter.TvShows' | translate}}</mat-slide-toggle>
+                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.music"
+                        (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Music)">
+                        {{ 'NavigationBar.Filter.Music' | translate}}</mat-slide-toggle>
+                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.people"
+                        (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.People)">
+                        {{ 'NavigationBar.Filter.People' | translate}}</mat-slide-toggle>
+                </mat-menu>
             </div>
 
         </mat-toolbar>
