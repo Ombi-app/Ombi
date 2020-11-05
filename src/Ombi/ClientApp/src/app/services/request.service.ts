@@ -189,8 +189,8 @@ export class RequestService extends ServiceHelpers {
         return this.http.get<IAlbumRequest[]>(`${this.url}music/search/${search}`, {headers: this.headers});
     }
 
-    public removeAlbumRequest(request: IAlbumRequest): any {
-        return this.http.delete(`${this.url}music/${request.id}`, {headers: this.headers});
+    public removeAlbumRequest(request: number): any {
+        return this.http.delete(`${this.url}music/${request}`, {headers: this.headers});
     }
 
 }
