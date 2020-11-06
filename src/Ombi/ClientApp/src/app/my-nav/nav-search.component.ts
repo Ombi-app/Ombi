@@ -1,14 +1,12 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { Observable } from "rxjs";
 import {
   debounceTime,
-  distinctUntilChanged,
   switchMap,
   tap,
   finalize,
 } from "rxjs/operators";
 
-import { empty, of } from "rxjs";
+import { empty} from "rxjs";
 import { SearchV2Service } from "../services/searchV2.service";
 import { IMultiSearchResult } from "../interfaces";
 import { Router } from "@angular/router";

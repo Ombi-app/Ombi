@@ -8,7 +8,7 @@ import { SettingsService } from '../services';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { SearchFilter } from './SearchFilter';
 import { Md5 } from 'ts-md5/dist/md5';
-import { TranslateService } from '@ngx-translate/core';
+import { RequestType } from '../interfaces';
 
 export enum SearchFilterType {
   Movie = 1,
@@ -43,11 +43,11 @@ export class MyNavComponent implements OnInit {
   public SearchFilterType = SearchFilterType;
   public emailHash: string | Int32Array;
   public welcomeText: string;
+  public RequestType = RequestType;
 
   constructor(private breakpointObserver: BreakpointObserver,
     private settingsService: SettingsService,
-    private store: StorageService,
-    private translate: TranslateService) {
+    private store: StorageService) {
   }
 
   public async ngOnInit() {

@@ -53,7 +53,7 @@ import { TokenResetPasswordComponent } from "./login/tokenresetpassword.componen
 // Services
 import { AuthGuard } from "./auth/auth.guard";
 import { AuthService } from "./auth/auth.service";
-import { ImageService, SettingsService, CustomPageService } from "./services";
+import { ImageService, SettingsService, CustomPageService, RequestService } from "./services";
 import { LandingPageService } from "./services";
 import { NotificationService } from "./services";
 import { IssuesService, JobService, PlexTvService, StatusService, SearchService, IdentityService, MessageService } from "./services";
@@ -65,6 +65,8 @@ import { OverlayModule } from "@angular/cdk/overlay";
 import { StorageService } from "./shared/storage/storage-service";
 import { SignalRNotificationService } from "./services/signlarnotification.service";
 import { MatMenuModule } from "@angular/material/menu";
+import { RemainingRequestsComponent } from "./shared/remaining-requests/remaining-requests.component";
+
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
     { path: "", redirectTo: "/discover", pathMatch: "full" },
@@ -168,7 +170,9 @@ export function JwtTokenGetter() {
         LoginOAuthComponent,
         MyNavComponent,
         NavSearchComponent,
+        RemainingRequestsComponent,
     ],
+
     providers: [
         NotificationService,
         AuthService,
@@ -187,6 +191,7 @@ export function JwtTokenGetter() {
         SearchV2Service,
         MessageService,
         StorageService,
+        RequestService,
         SignalRNotificationService,
         {
             provide: APP_BASE_HREF,

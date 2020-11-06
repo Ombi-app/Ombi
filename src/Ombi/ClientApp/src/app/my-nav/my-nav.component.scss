@@ -71,23 +71,6 @@
     height: 100%;
     /* overflow: auto; */
 }
-// Changed color with !important and changed the font weight
-/*.active-list-item-dark {
-    background: $accent-dark !important;
-    color:black !important;
-    font-weight:500;
-}*/
-
-// changed bottom to 10px so when you overlay a link it won't get blocked by URL
-#bottom-nav-link {
-    bottom: 10px;
-    position: absolute !important;
-    //background-color:#E84C3D;
-}
-
-/*bottom-nav-link:hover{
-    background-color:rgb(226, 52, 36) !important;
-}*/
 
 .profile-img-container {
     margin: 20px auto 10px;
@@ -126,4 +109,14 @@
     background-color: #303030;
     box-shadow: inset 0 0 3px #000000;
     padding: 1px;
+}
+
+.full {
+    width: 100%;
+}
+.bottom-nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    text-align: center;
 }

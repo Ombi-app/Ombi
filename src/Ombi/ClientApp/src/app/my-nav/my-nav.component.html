@@ -2,7 +2,9 @@
     <mat-sidenav #drawer class="sidenav" fixedInViewport="true"
         [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
         [opened]="!(isHandset$ | async)">
+
         <mat-toolbar>{{applicationName}}</mat-toolbar>
+
         <div class="outer-profile">
             <div class="profile-img-container">
                 <div class="profile-img">
@@ -45,7 +47,7 @@
                 <mat-icon *ngIf="theme === 'light'" aria-label="Side nav toggle icon">brightness_4</mat-icon>
                 &nbsp;{{ 'NavigationBar.ChangeTheme' | translate }}
             </a>
-            <a id="nav-logout" class="bottom-nav-link" mat-list-item [routerLinkActive]="'active-list-item'"
+            <a id="nav-logout" mat-list-item [routerLinkActive]="'active-list-item'"
                 aria-label="Toggle sidenav" (click)="logOut();">
                 <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
                 &nbsp;{{ 'NavigationBar.Logout' | translate }}
@@ -53,7 +55,16 @@
 
 
         </mat-nav-list>
+
+        <div class="bottom-nav full">
+            <div class="outer-profile">
+                <app-remaining-requests [type]="RequestType.movie"></app-remaining-requests>
+                <app-remaining-requests [type]="RequestType.tvShow"></app-remaining-requests>
+                <app-remaining-requests [type]="RequestType.album"></app-remaining-requests>
+        </div>
+        </div>
     </mat-sidenav>
+
     <mat-sidenav-content>
         <mat-toolbar color="primary">
             <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
