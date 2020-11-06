@@ -121,33 +121,35 @@
 
 
 
-<p-sidebar [(visible)]="showBulkEdit" position="right" styleClass="ui-sidebar-md side-back">
+<p-sidebar [(visible)]="showBulkEdit" position="right" [modal]="false">
 <h3>Bulk Edit</h3>
 <hr/>
 <div *ngFor="let c of availableClaims">
+
         <div class="form-group">
-            <div class="checkbox">
-                <input type="checkbox" [(ngModel)]="c.enabled" [value]="c.value" id="create{{c.value}}" [attr.name]="'create' + c.value" ng-checked="c.enabled">
-                <label for="create{{c.value}}">{{c.value | humanize}}</label>
+                <div class="checkbox">
+                    <mat-slide-toggle  id="create{{c.value}}"  [(ngModel)]="c.enabled" [attr.name]="'create' + c.value">
+                        {{c.value | humanize}}</mat-slide-toggle>
+                </div>
             </div>
-        </div>
+
     </div>
 
-    <div class="form-group">
-            <label for="movieRequestLimit" class="control-label">Movie Request Limit</label>
-            <div>
-                <input type="text" [(ngModel)]="bulkMovieLimit" class="form-control form-small form-control-custom " id="movieRequestLimit" name="movieRequestLimit" value="{{bulkMovieLimit}}">
-            </div>
-        </div>
+    <mat-form-field appearance="outline" class="full">
+        <mat-label>Movie Request Limit</mat-label>
+        <input matInput id="movieRequestLimit" name="movieRequestLimit"  [(ngModel)]="bulkMovieLimit">
+    </mat-form-field>
+    <mat-form-field appearance="outline"  class="full">
+        <mat-label>Episode Request Limit</mat-label>
+        <input matInput id="episodeRequestLimit" name="episodeRequestLimit"  [(ngModel)]="bulkEpisodeLimit">
+    </mat-form-field>
+    <mat-form-field appearance="outline"  class="full">
+        <mat-label>Music Request Limit</mat-label>
+        <input matInput id="musicRequestLimit" name="musicRequestLimit"  [(ngModel)]="bulkMusicLimit">
+    </mat-form-field>
 
-        <div class="form-group">
-            <label for="episodeRequestLimit" class="control-label">Episode Request Limit</label>
-            <div>
-                <input type="text" [(ngModel)]="bulkEpisodeLimit" class="form-control form-small form-control-custom " id="episodeRequestLimit" name="episodeRequestLimit" value="{{bulkEpisodeLimit}}">
-            </div>
-        </div>
-    
-<button type="button" class="btn btn-success-outline" (click)="bulkUpdate()">Update Users</button>
+
+<button type="button" mat-raised-button (click)="bulkUpdate()">Update Users</button>
 </p-sidebar>
 </div>
 </div>

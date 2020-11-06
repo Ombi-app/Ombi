@@ -170,7 +170,7 @@
 
 
 <div>
-    <app-my-nav id="main-container" [showNav]="showNav" [isAdmin]="isAdmin" [applicationName]="applicationName" [username]="username" [email]="user.email" (logoutClick)="logOut();" (themeChange)="onSetTheme($event)">
+    <app-my-nav id="main-container" [showNav]="showNav" [isAdmin]="isAdmin" [applicationName]="applicationName" [username]="username" [email]="user?.email" (logoutClick)="logOut();" (themeChange)="onSetTheme($event)">
     </app-my-nav>
 
 

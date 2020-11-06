@@ -56,7 +56,6 @@ export class AppComponent implements OnInit {
 
         if (this.authService.loggedIn()) {
             this.identity.getUser().subscribe(u => {
-                this.username = u.userName;
                 if (u.language) {
                     this.translate.use(u.language);
                 }
@@ -107,28 +106,27 @@ export class AppComponent implements OnInit {
             this.currentUrl = event.url;
             if (event instanceof NavigationStart) {
                 this.user = this.authService.claims();
+                this.username = this.user.name;
 
                 this.isAdmin = this.authService.hasRole("admin");
                 this.showNav = this.authService.loggedIn();
 
-                // tslint:disable-next-line:no-string-literal
-                // if (this.user !== null && this.user.name && !this.checkedForUpdate && this.isAdmin) {
-                //     this.checkedForUpdate = true;
-                //     this.jobService.getCachedUpdate().subscribe(x => {
-                //         this.updateAvailable = x;
-                //     },
-                //         err => this.checkedForUpdate = true);
-                // }
+                if (this.authService.loggedIn()) {
 
-                if (this.authService.loggedIn() && !this.hubConnected) {
-                    this.signalrNotification.initialize();
-                    this.hubConnected = true;
+                    if (!this.isAdmin) {
+                        // let's get the remaining requests etc
+                    }
 
-                    this.signalrNotification.Notification.subscribe(data => {
-                        this.snackBar.open(data, "OK", {
-                            duration: 3000
+                    if (!this.hubConnected) {
+                        this.signalrNotification.initialize();
+                        this.hubConnected = true;
+
+                        this.signalrNotification.Notification.subscribe(data => {
+                            this.snackBar.open(data, "OK", {
+                                duration: 3000
+                            });
                         });
-                    });
+                    }
                 }
             }
         });

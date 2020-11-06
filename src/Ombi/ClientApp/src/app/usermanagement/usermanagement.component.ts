@@ -26,6 +26,7 @@ export class UserManagementComponent implements OnInit, AfterViewInit {
     public availableClaims: ICheckbox[];
     public bulkMovieLimit?: number;
     public bulkEpisodeLimit?: number;
+    public bulkMusicLimit?: number;
     public plexEnabled: boolean;
 
     constructor(private identityService: IdentityService,
@@ -84,6 +85,9 @@ export class UserManagementComponent implements OnInit, AfterViewInit {
             if (this.bulkMovieLimit) {
                 x.movieRequestLimit = this.bulkMovieLimit;
             }
+            if (this.bulkMusicLimit) {
+                x.musicRequestLimit = this.bulkMusicLimit;
+            }
             this.identityService.updateUser(x).subscribe(y => {
                 if (!y.successful) {
                     this.notificationService.error(`Could not update user ${x.userName}. Reason ${y.errors[0]}`);
@@ -95,6 +99,7 @@ export class UserManagementComponent implements OnInit, AfterViewInit {
         this.showBulkEdit = false;
         this.bulkMovieLimit = undefined;
         this.bulkEpisodeLimit = undefined;
+        this.bulkMusicLimit = undefined;
     }
 
     public isAllSelected() {
