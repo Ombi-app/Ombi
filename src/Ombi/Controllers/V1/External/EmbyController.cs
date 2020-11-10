@@ -19,11 +19,7 @@ namespace Ombi.Controllers.V1.External
     [Produces("application/json")]
     public class EmbyController : Controller
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="emby"></param>
-        /// <param name="embySettings"></param>
+
         public EmbyController(IEmbyApiFactory emby, ISettingsService<EmbySettings> embySettings)
         {
             EmbyApi = emby;

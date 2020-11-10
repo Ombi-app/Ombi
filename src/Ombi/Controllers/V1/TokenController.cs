@@ -135,7 +135,7 @@ namespace Ombi.Controllers.V1
                 new Claim("Id", user.Id)
             };
             claims.AddRange(roles.Select(role => new Claim("role", role)));
-            if(user.Email.HasValue())
+            if (user.Email.HasValue())
             {
                 claims.Add(new Claim("Email", user.Email));
             }
@@ -158,14 +158,8 @@ namespace Ombi.Controllers.V1
             }
 
             user.LastLoggedIn = DateTime.UtcNow;
-            try
-            {
-                await _userManager.UpdateAsync(user);
-            }
-            catch (Exception)
-            {
-                
-            }
+
+            await _userManager.UpdateAsync(user);
 
             return new JsonResult(new
             {

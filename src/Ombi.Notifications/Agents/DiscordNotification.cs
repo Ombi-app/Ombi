@@ -144,7 +144,8 @@ namespace Ombi.Notifications.Agents
                             "Available" => "51283",
                             "Denied" => "13959168",
                             "Processing Request" => "37354",
-                            "Pending Approval" => "16754470"
+                            "Pending Approval" => "16754470",
+                            _ => throw new ArgumentOutOfRangeException(nameof(color))
                         };
                     }
                 }

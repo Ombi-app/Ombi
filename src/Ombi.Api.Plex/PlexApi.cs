@@ -135,16 +135,15 @@ namespace Ombi.Api.Plex
         }
 
         /// <summary>
-        // 192.168.1.69:32400/library/metadata/3662/allLeaves
-        // The metadata ratingkey should be in the Cache
-        // Search for it and then call the above with the Directory.RatingKey
-        // THEN! We need the episode metadata using result.Vide.Key ("/library/metadata/3664")
-        // We then have the GUID which contains the TVDB ID plus the season and episode number: guid="com.plexapp.agents.thetvdb://269586/2/8?lang=en"
+        /// 192.168.1.69:32400/library/metadata/3662/allLeaves
+        /// The metadata ratingkey should be in the Cache
+        /// Search for it and then call the above with the Directory.RatingKey
+        /// THEN! We need the episode metadata using result.Vide.Key ("/library/metadata/3664")
+        /// We then have the GUID which contains the TVDB ID plus the season and episode number: guid="com.plexapp.agents.thetvdb://269586/2/8?lang=en"
         /// </summary>
         /// <param name="authToken"></param>
         /// <param name="plexFullHost"></param>
         /// <param name="ratingKey"></param>
-        /// <returns></returns>
         public async Task<PlexMetadata> GetEpisodeMetaData(string authToken, string plexFullHost, int ratingKey)
         {
             var request = new Request($"/library/metadata/{ratingKey}", plexFullHost, HttpMethod.Get);
@@ -308,7 +307,7 @@ namespace Ombi.Api.Plex
         }
         private async Task CheckInstallId(PlexSettings s)
         {
-            if (s.InstallId == null || s.InstallId == Guid.Empty)
+            if (s?.InstallId == Guid.Empty || s.InstallId == Guid.Empty)
             {
                 s.InstallId = Guid.NewGuid();
                 await _plexSettings.SaveSettingsAsync(s);

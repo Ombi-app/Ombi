@@ -9,10 +9,7 @@ namespace Ombi.Store.Repository.Requests
     public interface ITvRequestRepository : IRepository<TvRequests>
     {
         OmbiContext Db { get; }
-        Task<TvRequests> Add(TvRequests request);
         Task<ChildRequests> AddChild(ChildRequests request);
-        Task Delete(TvRequests request);
-        Task DeleteRange(IEnumerable<TvRequests> request);
         Task DeleteChild(ChildRequests request);
         IQueryable<TvRequests> Get();
         IQueryable<TvRequests> GetLite();

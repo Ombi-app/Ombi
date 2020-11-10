@@ -27,7 +27,7 @@ namespace Ombi.Core.Engine.V2
         private readonly IMovieRequestRepository _movieRepo;
         private readonly ITvRequestRepository _tvRepo;
 
-        public async Task<List<CalendarViewModel>> GetCalendarData()
+        public Task<List<CalendarViewModel>> GetCalendarData()
         {
             var viewModel = new List<CalendarViewModel>();
             var movies = _movieRepo.GetAll().Where(x =>
@@ -78,7 +78,7 @@ namespace Ombi.Core.Engine.V2
                 });
             }
 
-            return viewModel;
+            return Task.FromResult(viewModel);
         }
 
         private string GetBackgroundColor(BaseRequest req)
