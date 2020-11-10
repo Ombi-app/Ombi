@@ -48,7 +48,7 @@ namespace Ombi.Schedule.Jobs.SickRage
                     var ids = srShows.Select(x => x.tvdbid);
                     using (var tran = await _ctx.Database.BeginTransactionAsync())
                     {
-                        await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM SickRageCache");
+                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SickRageCache");
                         tran.Commit();
                     }
 
@@ -57,7 +57,7 @@ namespace Ombi.Schedule.Jobs.SickRage
                     await _ctx.SickRageCache.AddRangeAsync(entites);
 
                     var episodesToAdd = new List<SickRageEpisodeCache>();
-                    await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM SickRageEpisodeCache");
+                    await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SickRageEpisodeCache");
                     foreach (var s in srShows)
                     {
                         var seasons = await _api.GetSeasonList(s.tvdbid, settings.ApiKey, settings.FullUri);
