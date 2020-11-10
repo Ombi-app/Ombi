@@ -24,7 +24,7 @@ steps:
   inputs:
     command: 'publish'
     publishWebProjects: true
-    arguments: '-c $(BuildConfiguration) -r "$(runtime)" -o $(Build.ArtifactStagingDirectory)/$(runtime)' --self-contained  true -p:PublishSingleFile=true
+    arguments: '-c $(BuildConfiguration) -r "$(runtime)" -o $(Build.ArtifactStagingDirectory)/$(runtime) --self-contained  true -p:PublishSingleFile=true'
     zipAfterPublish: false
     modifyOutputPath: false
 
