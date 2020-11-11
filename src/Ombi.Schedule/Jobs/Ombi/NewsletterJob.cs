@@ -16,7 +16,6 @@ using Ombi.Api.CouchPotato.Models;
 using Ombi.Api.Lidarr;
 using Ombi.Api.Lidarr.Models;
 using Ombi.Api.TheMovieDb;
-using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Api.TvMaze;
 using Ombi.Core.Settings;
@@ -649,7 +648,9 @@ namespace Ombi.Schedule.Jobs.Ombi
             {
                 releaseDate = $"({DateTime.Parse(info.ReleaseDate).Year})";
             }
+#pragma warning disable RCS1075 // Avoid empty catch clause that catches System.Exception.
             catch (Exception)
+#pragma warning restore RCS1075 // Avoid empty catch clause that catches System.Exception.
             {
                 // Swallow, couldn't parse the date
             }

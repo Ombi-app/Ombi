@@ -5,7 +5,7 @@ steps:
   displayName: 'Use .NET Core sdk '
   inputs:
     packageType: 'sdk'
-    version: '3.x'
+    version: '5.x'
 
 - task: Yarn@3
   displayName: 'Install UI Dependancies'
@@ -18,7 +18,7 @@ steps:
   inputs:
     projectDirectory: '$(UiLocation)'
     arguments: 'run build'
-    
+
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(UiLocation)dist'
@@ -31,4 +31,4 @@ steps:
     command: 'custom'
     projects: '$(TestProject)'
     custom: 'test'
-  continueOnError: false 
+  continueOnError: false

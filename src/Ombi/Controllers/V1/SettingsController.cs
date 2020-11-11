@@ -183,7 +183,7 @@ namespace Ombi.Controllers.V1
         [HttpPost("plex")]
         public async Task<bool> PlexSettings([FromBody]PlexSettings plex)
         {
-            if (plex.InstallId == null || plex.InstallId == Guid.Empty)
+            if (plex?.InstallId == Guid.Empty || plex.InstallId == Guid.Empty)
             {
                 plex.InstallId = Guid.NewGuid();
             }

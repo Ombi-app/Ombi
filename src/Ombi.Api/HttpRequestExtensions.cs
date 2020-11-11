@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Ombi.Api
 {
-    public static class HttpRequestExtnesions
+    public static class HttpRequestExtensions
     {
         public static async Task<HttpRequestMessage> Clone(this HttpRequestMessage request)
         {
@@ -14,9 +14,9 @@ namespace Ombi.Api
                 Content = await request.Content.Clone(),
                 Version = request.Version
             };
-            foreach (KeyValuePair<string, object> prop in request.Properties)
+            foreach (KeyValuePair<string, object> prop in request.Options)
             {
-                clone.Properties.Add(prop);
+                clone.Options.TryAdd(prop.Key, prop.Value);
             }
             foreach (KeyValuePair<string, IEnumerable<string>> header in request.Headers)
             {

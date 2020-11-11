@@ -48,7 +48,7 @@ namespace Ombi
                     Type = SecuritySchemeType.ApiKey
                 });
                 c.CustomSchemaIds(x => x.FullName);
-                var basePath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                var basePath = Path.GetDirectoryName(AppContext.BaseDirectory);
                 var xmlPath = Path.Combine(basePath, "Swagger.xml");
                 try
                 {

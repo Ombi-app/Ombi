@@ -136,7 +136,7 @@ export class MyNavComponent implements OnInit {
     if (hour >= 12 && hour < 18) {
       this.welcomeText = 'NavigationBar.AfternoonWelcome';
     }
-    if (hour >= 18 && hour < 23) {
+    if (hour >= 18 && hour < 24) {
       this.welcomeText = 'NavigationBar.EveningWelcome';
     }
   }
