@@ -12,6 +12,7 @@
     <PackageReference Include="Nunit" Version="3.11.0" />
     <PackageReference Include="Hangfire" Version="1.7.1" />
     <PackageReference Include="NUnit.ConsoleRunner" Version="3.9.0" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
     <packagereference Include="Microsoft.NET.Test.Sdk" Version="16.8.0"></packagereference>
   </ItemGroup>
