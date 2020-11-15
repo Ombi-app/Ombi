@@ -30,7 +30,7 @@
         "Errors": {
             "Validation": "Vänligen kontrollera din angivna värden"
         },
-        "Cancel": "Cancel",
+        "Cancel": "Avbryt",
         "Submit": "Submit"
     },
     "PasswordReset": {
@@ -66,7 +66,7 @@
         "OpenMobileApp": "Öppna Mobil App",
         "RecentlyAdded": "Nyligen tillagda",
         "ChangeTheme": "Change Theme",
-        "Calendar": "Calendar",
+        "Calendar": "Kalender",
         "UserPreferences": "Preferences",
         "FeatureSuggestion": "Feature Suggestion",
         "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
@@ -239,7 +239,7 @@
         "RecommendationsTitle": "Recommendations",
         "SimilarTitle": "Liknande",
         "VideosTitle": "Videos",
-        "AlbumsTitle": "Albums",
+        "AlbumsTitle": "Album",
         "RequestAllAlbums": "Request All Albums",
         "ClearSelection": "Clear Selection",
         "RequestSelectedAlbums": "Request Selected Albums",
@@ -265,7 +265,7 @@
         "Budget": "Budget",
         "Keywords": "Keywords/Tags",
         "Casts": {
-            "CastTitle": "Cast"
+            "CastTitle": "Rollista"
         },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "This will request every season for this show",
