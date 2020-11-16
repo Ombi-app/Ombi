@@ -67,7 +67,7 @@
         "RecentlyAdded": "Nyligen tillagda",
         "ChangeTheme": "Ändra tema",
         "Calendar": "Kalender",
-        "UserPreferences": "Preferences",
+        "UserPreferences": "Preferens",
         "FeatureSuggestion": "Föreslå nya funktioner",
         "FeatureSuggestionTooltip": "Har du en bra ny idé? Föreslå det här!",
         "Filter": {
@@ -178,7 +178,7 @@
         "Options": "Alternativ",
         "RequestPanel": {
             "Delete": "Ta bort förfrågan",
-            "Approve": "Approve Request",
+            "Approve": "Godkänn begäran",
             "ChangeAvailability": "Markera Tillgänglig"
         }
     },
@@ -205,14 +205,14 @@
             "DescriptionPlaceholder": "Vänligen beskriv ditt problem",
             "TitlePlaceholder": "Short title of your issue",
             "SelectCategory": "Välj kategori",
-            "IssueCreated": "Issue has been created"
+            "IssueCreated": "Ärendet har skapats"
         },
-        "Outstanding": "There are outstanding issues",
+        "Outstanding": "Det finns kvarstående problem",
         "ResolvedDate": "Resolved date",
         "CreatedDate": "Raised on",
         "MarkedAsResolved": "This issue has now been marked as resolved!",
         "MarkedAsInProgress": "This issue has now been marked as in progress!",
-        "Delete": "Delete issue",
+        "Delete": "Ta bort ärende",
         "DeletedIssue": "Ärendet har tagits bort"
     },
     "Filter": {
@@ -238,7 +238,7 @@
         "Denied": "Nekad",
         "RecommendationsTitle": "Rekommendationer",
         "SimilarTitle": "Liknande",
-        "VideosTitle": "Videos",
+        "VideosTitle": "Videor",
         "AlbumsTitle": "Album",
         "RequestAllAlbums": "Begär alla album",
         "ClearSelection": "Rensa markering",
@@ -268,9 +268,9 @@
             "CastTitle": "Rollista"
         },
         "EpisodeSelector": {
-            "AllSeasonsTooltip": "This will request every season for this show",
-            "FirstSeasonTooltip": "This will only request the First Season for this show",
-            "LatestSeasonTooltip": "This will only request the Latest Season for this show"
+            "AllSeasonsTooltip": "Detta kommer att begära varje säsong för denna serie",
+            "FirstSeasonTooltip": "Detta kommer endast att begära den första säsongen för denna serie",
+            "LatestSeasonTooltip": "Detta kommer endast att begära den senaste säsongen för denna serie"
         }
     },
     "Discovery": {
@@ -285,9 +285,9 @@
             "Studio": "Studio",
             "Network": "Network",
             "UnknownNetwork": "Okänd",
-            "RequestStatus": "Request Status",
+            "RequestStatus": "Status för begäran",
             "Director": "Regissör",
-            "InCinemas": "In Cinemas",
+            "InCinemas": "På bio",
             "FirstAired": "Sändes första gången",
             "Writer": "Författare",
             "ExecProducer": "Exec Producer"
