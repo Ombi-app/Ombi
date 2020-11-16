@@ -31,7 +31,7 @@
             "Validation": "Vänligen kontrollera din angivna värden"
         },
         "Cancel": "Avbryt",
-        "Submit": "Submit"
+        "Submit": "Skicka in"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "E-postadress",
@@ -202,7 +202,7 @@
         "ReportedBy": "Rapporterad av",
         "IssueDialog": {
             "Title": "Rapportera ett problem",
-            "DescriptionPlaceholder": "Please describe the issue",
+            "DescriptionPlaceholder": "Vänligen beskriv ditt problem",
             "TitlePlaceholder": "Short title of your issue",
             "SelectCategory": "Välj kategori",
             "IssueCreated": "Issue has been created"
@@ -213,7 +213,7 @@
         "MarkedAsResolved": "This issue has now been marked as resolved!",
         "MarkedAsInProgress": "This issue has now been marked as in progress!",
         "Delete": "Delete issue",
-        "DeletedIssue": "Issue has been deleted"
+        "DeletedIssue": "Ärendet har tagits bort"
     },
     "Filter": {
         "ClearFilter": "Rensa filter",
@@ -240,9 +240,9 @@
         "SimilarTitle": "Liknande",
         "VideosTitle": "Videos",
         "AlbumsTitle": "Album",
-        "RequestAllAlbums": "Request All Albums",
+        "RequestAllAlbums": "Begär alla album",
         "ClearSelection": "Rensa markering",
-        "RequestSelectedAlbums": "Request Selected Albums",
+        "RequestSelectedAlbums": "Begär markerade album",
         "ViewCollection": "Visa samling",
         "NotEnoughInfo": "Unfortunately there is not enough information about this show yet!",
         "AdvancedOptions": "Avancerade inställningar",
