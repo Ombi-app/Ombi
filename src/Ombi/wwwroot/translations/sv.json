@@ -68,8 +68,8 @@
         "ChangeTheme": "Ändra tema",
         "Calendar": "Kalender",
         "UserPreferences": "Preferences",
-        "FeatureSuggestion": "Feature Suggestion",
-        "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
+        "FeatureSuggestion": "Föreslå nya funktioner",
+        "FeatureSuggestionTooltip": "Har du en bra ny idé? Föreslå det här!",
         "Filter": {
             "Movies": "Filmer",
             "TvShows": "TV-serier",
@@ -77,7 +77,7 @@
             "People": "Personer"
         },
         "MorningWelcome": "God morgon!",
-        "AfternoonWelcome": "Good afternoon!",
+        "AfternoonWelcome": "God eftermiddag!",
         "EveningWelcome": "God kväll!"
     },
     "Search": {
