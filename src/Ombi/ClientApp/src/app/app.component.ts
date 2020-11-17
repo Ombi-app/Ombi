@@ -55,6 +55,18 @@ export class AppComponent implements OnInit {
         this.translate.addLangs(["en", "de", "fr", "da", "es", "it", "nl", "sk", "sv", "no", "pl", "pt"]);
 
         if (this.authService.loggedIn()) {
+            this.user = this.authService.claims();
+            this.username = this.user.name;
+            if (!this.hubConnected) {
+                this.signalrNotification.initialize();
+                this.hubConnected = true;
+
+                this.signalrNotification.Notification.subscribe(data => {
+                    this.snackBar.open(data, "OK", {
+                        duration: 3000
+                    });
+                });
+            }
             this.identity.getUser().subscribe(u => {
                 if (u.language) {
                     this.translate.use(u.language);
@@ -105,28 +117,11 @@ export class AppComponent implements OnInit {
         this.router.events.subscribe((event: NavigationStart) => {
             this.currentUrl = event.url;
             if (event instanceof NavigationStart) {
-                this.user = this.authService.claims();
-                this.username = this.user.name;
-
                 this.isAdmin = this.authService.hasRole("admin");
                 this.showNav = this.authService.loggedIn();
-
-                if (this.authService.loggedIn()) {
-
-                    if (!this.isAdmin) {
-                        // let's get the remaining requests etc
-                    }
-
-                    if (!this.hubConnected) {
-                        this.signalrNotification.initialize();
-                        this.hubConnected = true;
-
-                        this.signalrNotification.Notification.subscribe(data => {
-                            this.snackBar.open(data, "OK", {
-                                duration: 3000
-                            });
-                        });
-                    }
+                if (this.showNav) {
+                    this.user = this.authService.claims();
+                    this.username = this.user.name;
                 }
             }
         });

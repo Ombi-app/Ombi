@@ -31,6 +31,7 @@ export class MyNavComponent implements OnInit {
 
   @Input() public showNav: boolean;
   @Input() public applicationName: string;
+  @Input() public applicationLogo: string;
   @Input() public username: string;
   @Input() public isAdmin: string;
   @Input() public email: string;
