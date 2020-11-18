@@ -145,7 +145,7 @@
         "MarkAvailable": "Markera Tillgänglig",
         "Remove": "Ta bort",
         "Deny": "Neka",
-        "DenyReason": "Deny Reason",
+        "DenyReason": "Anledning för nekande",
         "Season": "Säsong:",
         "GridTitle": "Titel",
         "AirDate": "Releasedatum",
@@ -205,15 +205,15 @@
             "DescriptionPlaceholder": "Vänligen beskriv ditt problem",
             "TitlePlaceholder": "Kort titel på ditt ärende",
             "SelectCategory": "Välj kategori",
-            "IssueCreated": "Ärendet har skapats"
+            "IssueCreated": "Problemet har skapats"
         },
         "Outstanding": "Det finns kvarstående problem",
-        "ResolvedDate": "Resolved date",
-        "CreatedDate": "Raised on",
-        "MarkedAsResolved": "This issue has now been marked as resolved!",
-        "MarkedAsInProgress": "This issue has now been marked as in progress!",
-        "Delete": "Ta bort ärende",
-        "DeletedIssue": "Ärendet har tagits bort"
+        "ResolvedDate": "Löst den",
+        "CreatedDate": "Skapad den",
+        "MarkedAsResolved": "Detta problem har nu markerats som löst!",
+        "MarkedAsInProgress": "Detta problem har nu markerats som på pågående!",
+        "Delete": "Ta bort problem",
+        "DeletedIssue": "Problemet har tagits bort"
     },
     "Filter": {
         "ClearFilter": "Rensa filter",
@@ -283,7 +283,7 @@
         "CardDetails": {
             "Availability": "Tillgänglighet",
             "Studio": "Filmstudio",
-            "Network": "Network",
+            "Network": "Tv-nätverk",
             "UnknownNetwork": "Okänd",
             "RequestStatus": "Status för begäran",
             "Director": "Regissör",
