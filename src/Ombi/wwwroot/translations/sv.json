@@ -203,7 +203,7 @@
         "IssueDialog": {
             "Title": "Rapportera ett problem",
             "DescriptionPlaceholder": "Vänligen beskriv ditt problem",
-            "TitlePlaceholder": "Short title of your issue",
+            "TitlePlaceholder": "Kort titel på ditt ärende",
             "SelectCategory": "Välj kategori",
             "IssueCreated": "Ärendet har skapats"
         },
@@ -244,7 +244,7 @@
         "ClearSelection": "Rensa markering",
         "RequestSelectedAlbums": "Begär markerade album",
         "ViewCollection": "Visa samling",
-        "NotEnoughInfo": "Unfortunately there is not enough information about this show yet!",
+        "NotEnoughInfo": "Tyvärr finns det inte tillräckligt med information om denna serie ännu!",
         "AdvancedOptions": "Avancerade inställningar",
         "QualityProfilesSelect": "Välj en kvalitetsprofil",
         "RootFolderSelect": "Välj en rotmapp",
@@ -282,7 +282,7 @@
         "Tv": "TV",
         "CardDetails": {
             "Availability": "Tillgänglighet",
-            "Studio": "Studio",
+            "Studio": "Filmstudio",
             "Network": "Network",
             "UnknownNetwork": "Okänd",
             "RequestStatus": "Status för begäran",
@@ -290,7 +290,7 @@
             "InCinemas": "På bio",
             "FirstAired": "Sändes första gången",
             "Writer": "Författare",
-            "ExecProducer": "Exec Producer"
+            "ExecProducer": "Exekutiv producent"
         }
     },
     "UserPreferences": {
