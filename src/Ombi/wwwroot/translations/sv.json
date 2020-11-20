@@ -4,8 +4,8 @@
         "UsernamePlaceholder": "Användarnamn",
         "PasswordPlaceholder": "Lösenord",
         "RememberMe": "Kom ihåg mig",
-        "SignInWith": "Sign in with {{appName}}",
-        "SignInWithPlex": "Sign in with Plex",
+        "SignInWith": "Logga in med {{appName}}",
+        "SignInWithPlex": "Logga in med Plex",
         "ForgottenPassword": "Glömt ditt lösenord?",
         "Errors": {
             "IncorrectCredentials": "Felaktigt användarnamn eller lösenord"
@@ -26,12 +26,12 @@
         "Denied": "Nekad",
         "Approve": "Godkänn",
         "PartlyAvailable": "Delvis tillgänglig",
-        "ViewDetails": "View Details",
+        "ViewDetails": "Visa detaljer",
         "Errors": {
             "Validation": "Vänligen kontrollera din angivna värden"
         },
-        "Cancel": "Cancel",
-        "Submit": "Submit"
+        "Cancel": "Avbryt",
+        "Submit": "Skicka in"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "E-postadress",
@@ -49,7 +49,7 @@
         "CheckPageForUpdates": "Håll utkik här för uppdateringar på denna sida."
     },
     "NavigationBar": {
-        "Discover": "Discover",
+        "Discover": "Upptäck",
         "Search": "Sök",
         "Requests": "Förfrågningar",
         "UserManagement": "Användarhantering",
@@ -65,20 +65,20 @@
         "Logout": "Logga ut",
         "OpenMobileApp": "Öppna Mobil App",
         "RecentlyAdded": "Nyligen tillagda",
-        "ChangeTheme": "Change Theme",
-        "Calendar": "Calendar",
-        "UserPreferences": "Preferences",
-        "FeatureSuggestion": "Feature Suggestion",
-        "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
+        "ChangeTheme": "Ändra tema",
+        "Calendar": "Kalender",
+        "UserPreferences": "Preferens",
+        "FeatureSuggestion": "Föreslå nya funktioner",
+        "FeatureSuggestionTooltip": "Har du en bra ny idé? Föreslå det här!",
         "Filter": {
             "Movies": "Filmer",
             "TvShows": "TV-serier",
             "Music": "Musik",
-            "People": "People"
+            "People": "Personer"
         },
-        "MorningWelcome": "Good morning!",
-        "AfternoonWelcome": "Good afternoon!",
-        "EveningWelcome": "Good evening!"
+        "MorningWelcome": "God morgon!",
+        "AfternoonWelcome": "God eftermiddag!",
+        "EveningWelcome": "God kväll!"
     },
     "Search": {
         "Title": "Sök",
@@ -125,7 +125,7 @@
         "Paragraph": "Nedan kan du se dina och alla andras förfrågningar, samt deras nedladdnings-och godkännandestatus.",
         "MoviesTab": "Filmer",
         "ArtistName": "Artist",
-        "AlbumName": "Album Name",
+        "AlbumName": "Albumnamn",
         "TvTab": "TV-serier",
         "MusicTab": "Musik",
         "RequestedBy": "Efterfrågats av",
@@ -145,7 +145,7 @@
         "MarkAvailable": "Markera Tillgänglig",
         "Remove": "Ta bort",
         "Deny": "Neka",
-        "DenyReason": "Deny Reason",
+        "DenyReason": "Anledning för nekande",
         "Season": "Säsong:",
         "GridTitle": "Titel",
         "AirDate": "Releasedatum",
@@ -167,19 +167,19 @@
             "NextMinutes": "En ny begäran kommer att läggas till om {{time}} Minuter",
             "NextMinute": "En ny begäran kommer att läggas till om {{time}} Minut"
         },
-        "AllRequests": "All Requests",
-        "PendingRequests": "Pending Requests",
-        "ProcessingRequests": "Processing Requests",
-        "AvailableRequests": "Available Requests",
-        "DeniedRequests": "Denied Requests",
-        "RequestsToDisplay": "Requests to display",
+        "AllRequests": "Alla förfrågningar",
+        "PendingRequests": "Väntande förfrågningar",
+        "ProcessingRequests": "Bearbetar förfrågningar",
+        "AvailableRequests": "Tillgängliga förfrågningar",
+        "DeniedRequests": "Nekade förfrågningar",
+        "RequestsToDisplay": "Förfrågningar att visa",
         "RequestsTitle": "Titel",
         "Details": "Detaljer",
-        "Options": "Options",
+        "Options": "Alternativ",
         "RequestPanel": {
-            "Delete": "Delete Request",
-            "Approve": "Approve Request",
-            "ChangeAvailability": "Mark Available"
+            "Delete": "Ta bort förfrågan",
+            "Approve": "Godkänn begäran",
+            "ChangeAvailability": "Markera Tillgänglig"
         }
     },
     "Issues": {
@@ -201,19 +201,19 @@
         "WriteMessagePlaceholder": "Skriv ditt meddelande här...",
         "ReportedBy": "Rapporterad av",
         "IssueDialog": {
-            "Title": "Report an issue",
-            "DescriptionPlaceholder": "Please describe the issue",
-            "TitlePlaceholder": "Short title of your issue",
-            "SelectCategory": "Select Category",
-            "IssueCreated": "Issue has been created"
+            "Title": "Rapportera ett problem",
+            "DescriptionPlaceholder": "Vänligen beskriv ditt problem",
+            "TitlePlaceholder": "Kort titel på ditt ärende",
+            "SelectCategory": "Välj kategori",
+            "IssueCreated": "Problemet har skapats"
         },
-        "Outstanding": "There are outstanding issues",
-        "ResolvedDate": "Resolved date",
-        "CreatedDate": "Raised on",
-        "MarkedAsResolved": "This issue has now been marked as resolved!",
-        "MarkedAsInProgress": "This issue has now been marked as in progress!",
-        "Delete": "Delete issue",
-        "DeletedIssue": "Issue has been deleted"
+        "Outstanding": "Det finns kvarstående problem",
+        "ResolvedDate": "Löst den",
+        "CreatedDate": "Skapad den",
+        "MarkedAsResolved": "Detta problem har nu markerats som löst!",
+        "MarkedAsInProgress": "Detta problem har nu markerats som på pågående!",
+        "Delete": "Ta bort problem",
+        "DeletedIssue": "Problemet har tagits bort"
     },
     "Filter": {
         "ClearFilter": "Rensa filter",
@@ -236,66 +236,66 @@
     },
     "MediaDetails": {
         "Denied": "Nekad",
-        "RecommendationsTitle": "Recommendations",
+        "RecommendationsTitle": "Rekommendationer",
         "SimilarTitle": "Liknande",
-        "VideosTitle": "Videos",
-        "AlbumsTitle": "Albums",
-        "RequestAllAlbums": "Request All Albums",
-        "ClearSelection": "Clear Selection",
-        "RequestSelectedAlbums": "Request Selected Albums",
-        "ViewCollection": "View Collection",
-        "NotEnoughInfo": "Unfortunately there is not enough information about this show yet!",
-        "AdvancedOptions": "Advanced Options",
-        "QualityProfilesSelect": "Select A Quality Profile",
-        "RootFolderSelect": "Select A Root Folder",
+        "VideosTitle": "Videor",
+        "AlbumsTitle": "Album",
+        "RequestAllAlbums": "Begär alla album",
+        "ClearSelection": "Rensa markering",
+        "RequestSelectedAlbums": "Begär markerade album",
+        "ViewCollection": "Visa samling",
+        "NotEnoughInfo": "Tyvärr finns det inte tillräckligt med information om denna serie ännu!",
+        "AdvancedOptions": "Avancerade inställningar",
+        "QualityProfilesSelect": "Välj en kvalitetsprofil",
+        "RootFolderSelect": "Välj en rotmapp",
         "Status": "Status",
         "Availability": "Tillgänglighet",
-        "RequestStatus": "Request Status",
-        "Quality": "Quality",
+        "RequestStatus": "Status för begäran",
+        "Quality": "Kvalitet",
         "RootFolderOverride": "Rotmappsöverskridande",
         "QualityOverride": "Kvalitétsöverskridande",
-        "Genres": "Genres",
+        "Genres": "Genrer",
         "TheatricalRelease": "Biopremiär",
-        "DigitalRelease": "Digital Release",
-        "UserScore": "User Score",
-        "Votes": "Votes",
-        "Runtime": "Runtime",
-        "Minutes": "{{runtime}} Minutes",
-        "Revenue": "Revenue",
+        "DigitalRelease": "Digital release",
+        "UserScore": "Användarbetyg",
+        "Votes": "Röster",
+        "Runtime": "Speltid",
+        "Minutes": "{{runtime}} minuter",
+        "Revenue": "Intäkter",
         "Budget": "Budget",
-        "Keywords": "Keywords/Tags",
+        "Keywords": "Nyckelord/Taggar",
         "Casts": {
-            "CastTitle": "Cast"
+            "CastTitle": "Rollista"
         },
         "EpisodeSelector": {
-            "AllSeasonsTooltip": "This will request every season for this show",
-            "FirstSeasonTooltip": "This will only request the First Season for this show",
-            "LatestSeasonTooltip": "This will only request the Latest Season for this show"
+            "AllSeasonsTooltip": "Detta kommer att begära varje säsong för denna serie",
+            "FirstSeasonTooltip": "Detta kommer endast att begära den första säsongen för denna serie",
+            "LatestSeasonTooltip": "Detta kommer endast att begära den senaste säsongen för denna serie"
         }
     },
     "Discovery": {
         "PopularTab": "Populära",
         "TrendingTab": "Hetast just nu",
-        "UpcomingTab": "Upcoming",
+        "UpcomingTab": "Kommande",
         "Movies": "Filmer",
-        "Combined": "Combined",
+        "Combined": "Kombinerad",
         "Tv": "TV",
         "CardDetails": {
             "Availability": "Tillgänglighet",
-            "Studio": "Studio",
-            "Network": "Network",
-            "UnknownNetwork": "Unknown",
-            "RequestStatus": "Request Status",
-            "Director": "Director",
-            "InCinemas": "In Cinemas",
-            "FirstAired": "First Aired",
-            "Writer": "Writer",
-            "ExecProducer": "Exec Producer"
+            "Studio": "Filmstudio",
+            "Network": "Tv-nätverk",
+            "UnknownNetwork": "Okänd",
+            "RequestStatus": "Status för begäran",
+            "Director": "Regissör",
+            "InCinemas": "På bio",
+            "FirstAired": "Sändes första gången",
+            "Writer": "Författare",
+            "ExecProducer": "Exekutiv producent"
         }
     },
     "UserPreferences": {
         "Welcome": "Välkommen {{username}}!",
-        "OmbiLanguage": "Language",
-        "DarkMode": "Dark Mode"
+        "OmbiLanguage": "Språk",
+        "DarkMode": "Mörkt läge"
     }
 }
