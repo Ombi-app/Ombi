@@ -15,7 +15,7 @@
     "@angular/compiler": "^9.1.7",
     "@angular/core": "^9.1.7",
     "@angular/forms": "^9.1.7",
-    "@angular/localize": "^9.1.7",
+    "@angular/localize": "^11.0.2",
     "@angular/material": "^9.2.3",
     "@angular/platform-browser": "^9.1.7",
     "@angular/platform-browser-dynamic": "^9.1.7",
