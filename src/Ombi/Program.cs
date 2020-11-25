@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
@@ -7,14 +6,13 @@ using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using CommandLine;
 using CommandLine.Text;
-using Microsoft.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Ombi.Extensions;
 using Ombi.Helpers;
-using Ombi.Store.Context.MySql;
-using Ombi.Store.Context.Sqlite;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Ombi
 {
@@ -22,7 +20,7 @@ namespace Ombi
     {
         private static string UrlArgs { get; set; }
 
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             Console.Title = "Ombi";
 
@@ -30,6 +28,7 @@ namespace Ombi
             var storagePath = string.Empty;
             var baseUrl = string.Empty;
             var demo = false;
+            var migrate = false;
             var result = Parser.Default.ParseArguments<Options>(args)
                 .WithParsed(o =>
                 {
@@ -37,6 +36,7 @@ namespace Ombi
                     storagePath = o.StoragePath;
                     baseUrl = o.BaseUrl;
                     demo = o.Demo;
+                    migrate = o.Migrate;
                 }).WithNotParsed(err =>
                 {
                     foreach (var e in err)
@@ -62,11 +62,25 @@ namespace Ombi
             {
                 var settingsDb = provider.GetRequiredService<SettingsContext>();
 
-                var config = settingsDb.ApplicationConfigurations.ToList();
+                if (migrate)
+                {
+                    var migrationTasks = new List<Task>();
+                    var externalDb = provider.GetRequiredService<ExternalContext>();
+                    var ombiDb = provider.GetRequiredService<OmbiContext>();
+                    migrationTasks.Add(settingsDb.Database.MigrateAsync());
+                    migrationTasks.Add(ombiDb.Database.MigrateAsync());
+                    migrationTasks.Add(externalDb.Database.MigrateAsync());
+
+                    Task.WaitAll(migrationTasks.ToArray());
+
+                    Environment.Exit(0);
+                }
+
+                var config = await settingsDb.ApplicationConfigurations.ToListAsync();
                 var url = config.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
                 var dbBaseUrl = config.FirstOrDefault(x => x.Type == ConfigurationTypes.BaseUrl);
                 var securityToken = config.FirstOrDefault(x => x.Type == ConfigurationTypes.SecurityToken);
-                CheckSecurityToken(securityToken, settingsDb, instance);
+                await CheckSecurityToken(securityToken, settingsDb, instance);
                 if (url == null)
                 {
                     url = new ApplicationConfiguration
@@ -74,11 +88,11 @@ namespace Ombi
                         Type = ConfigurationTypes.Url,
                         Value = "http://*:5000"
                     };
-                    using (var tran = settingsDb.Database.BeginTransaction())
+                    using (var tran = await settingsDb.Database.BeginTransactionAsync())
                     {
                         settingsDb.ApplicationConfigurations.Add(url);
-                        settingsDb.SaveChanges();
-                        tran.Commit();
+                        await settingsDb.SaveChangesAsync();
+                        await tran.CommitAsync();
                     }
 
                     urlValue = url.Value;
@@ -88,10 +102,10 @@ namespace Ombi
                 {
                     url.Value = UrlArgs;
 
-                    using (var tran = settingsDb.Database.BeginTransaction())
+                    using (var tran = await settingsDb.Database.BeginTransactionAsync())
                     {
-                        settingsDb.SaveChanges();
-                        tran.Commit();
+                        await settingsDb.SaveChangesAsync();
+                        await tran.CommitAsync();
                     }
 
                     urlValue = url.Value;
@@ -111,11 +125,11 @@ namespace Ombi
                             Value = baseUrl
                         };
 
-                        using (var tran = settingsDb.Database.BeginTransaction())
+                        using (var tran = await settingsDb.Database.BeginTransactionAsync())
                         {
                             settingsDb.ApplicationConfigurations.Add(dbBaseUrl);
-                            settingsDb.SaveChanges();
-                            tran.Commit();
+                            await settingsDb.SaveChangesAsync();
+                            await tran.CommitAsync();
                         }
                     }
                 }
@@ -123,10 +137,10 @@ namespace Ombi
                 {
                     dbBaseUrl.Value = baseUrl;
 
-                    using (var tran = settingsDb.Database.BeginTransaction())
+                    using (var tran = await settingsDb.Database.BeginTransactionAsync())
                     {
-                        settingsDb.SaveChanges();
-                        tran.Commit();
+                        await settingsDb.SaveChangesAsync();
+                        await tran.CommitAsync();
                     }
                 }
 
@@ -136,7 +150,7 @@ namespace Ombi
             }
         }
 
-        private static void CheckSecurityToken(ApplicationConfiguration securityToken, SettingsContext ctx, StartupSingleton instance)
+        private static async Task CheckSecurityToken(ApplicationConfiguration securityToken, SettingsContext ctx, StartupSingleton instance)
         {
             if (securityToken == null || string.IsNullOrEmpty(securityToken.Value))
             {
@@ -146,11 +160,11 @@ namespace Ombi
                     Value = Guid.NewGuid().ToString("N")
                 };
 
-                using (var tran = ctx.Database.BeginTransaction())
+                using (var tran = await ctx.Database.BeginTransactionAsync())
                 {
                     ctx.ApplicationConfigurations.Add(securityToken);
-                    ctx.SaveChanges();
-                    tran.Commit();
+                    await ctx.SaveChangesAsync();
+                    await tran.CommitAsync();
                 }
             }
 
@@ -198,6 +212,9 @@ namespace Ombi
 
         [Option("demo", Required = false, HelpText = "Demo mode, you will never need to use this, fuck that fruit company...")]
         public bool Demo { get; set; }
+
+        [Option("migrate", Required = false, HelpText = "Will run the migrations then exit the application")]
+        public bool Migrate { get; set; }
 
     }
 }
