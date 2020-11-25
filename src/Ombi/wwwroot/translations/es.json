@@ -177,9 +177,9 @@
         "Details": "Detalles",
         "Options": "Opciones",
         "RequestPanel": {
-            "Delete": "Delete Request",
-            "Approve": "Approve Request",
-            "ChangeAvailability": "Mark Available"
+            "Delete": "Eliminar solicitud",
+            "Approve": "Aprobar solicitud",
+            "ChangeAvailability": "Marcar como disponible"
         }
     },
     "Issues": {
