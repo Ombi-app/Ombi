@@ -154,6 +154,9 @@ namespace Ombi.Schedule.Jobs.Ombi
                 plexContentMoviesToSend = plexContentMoviesToSend.Union(newPlexMovies).ToHashSet();
                 embyContentMoviesToSend = embyContentMoviesToSend.Union(newEmbyMovies).ToHashSet();
 
+                plexContentMoviesToSend = plexContentMoviesToSend.DistinctBy(x => x.Id).ToHashSet();
+                embyContentMoviesToSend = embyContentMoviesToSend.DistinctBy(x => x.Id).ToHashSet();
+
                 var plexEpisodesToSend =
                     FilterPlexEpisodes(_plex.GetAllEpisodes().Include(x => x.Series).AsNoTracking(), addedPlexEpisodesLogIds);
                 var embyEpisodesToSend = FilterEmbyEpisodes(_emby.GetAllEpisodes().Include(x => x.Series).AsNoTracking(),
