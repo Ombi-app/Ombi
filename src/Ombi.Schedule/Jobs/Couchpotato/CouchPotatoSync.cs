@@ -80,7 +80,7 @@ namespace Ombi.Schedule.Jobs.Couchpotato
                     // Let's remove the old cached data
                     using (var tran = await _ctx.Database.BeginTransactionAsync())
                     {
-                        await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM CouchPotatoCache");
+                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM CouchPotatoCache");
                         tran.Commit();
                     }
 
@@ -132,7 +132,7 @@ namespace Ombi.Schedule.Jobs.Couchpotato
 
             if (disposing)
             {
-                _settings?.Dispose();
+                //_settings?.Dispose();
                 _ctx?.Dispose();
             }
             _disposed = true;

@@ -6,5 +6,6 @@ namespace Ombi.Core
     public interface ITVSearchEngineV2
     {
         Task<SearchFullInfoTvShowViewModel> GetShowInformation(int tvdbid);
+        Task<SearchFullInfoTvShowViewModel> GetShowByRequest(int requestId);
     }
 }

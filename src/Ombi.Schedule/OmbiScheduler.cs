@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+using Ombi.Core.Notifications;
 using Ombi.Core.Settings;
+using Ombi.Helpers;
 using Ombi.Schedule.Jobs;
 using Ombi.Schedule.Jobs.Couchpotato;
 using Ombi.Schedule.Jobs.Emby;
@@ -14,7 +15,6 @@ using Ombi.Schedule.Jobs.Radarr;
 using Ombi.Schedule.Jobs.SickRage;
 using Ombi.Schedule.Jobs.Sonarr;
 using Ombi.Settings.Settings.Models;
-using Quartz;
 using Quartz.Spi;
 
 namespace Ombi.Schedule
@@ -53,6 +53,7 @@ namespace Ombi.Schedule
             await AddEmby(s);
             await AddDvrApps(s);
             await AddSystem(s);
+            await AddNotifications(s);
 
             // Run Quartz
             await OmbiQuartz.Start();
@@ -66,12 +67,14 @@ namespace Ombi.Schedule
             await OmbiQuartz.Instance.AddJob<INewsletterJob>(nameof(INewsletterJob), "System", JobSettingsHelper.Newsletter(s));
             await OmbiQuartz.Instance.AddJob<IResendFailedRequests>(nameof(IResendFailedRequests), "System", JobSettingsHelper.ResendFailedRequests(s));
             await OmbiQuartz.Instance.AddJob<IMediaDatabaseRefresh>(nameof(IMediaDatabaseRefresh), "System", JobSettingsHelper.MediaDatabaseRefresh(s));
+            await OmbiQuartz.Instance.AddJob<IAutoDeleteRequests>(nameof(IAutoDeleteRequests), "System", JobSettingsHelper.AutoDeleteRequests(s));
         }
 
         private static async Task AddDvrApps(JobSettings s)
         {
             await OmbiQuartz.Instance.AddJob<ISonarrSync>(nameof(ISonarrSync), "DVR", JobSettingsHelper.Sonarr(s));
             await OmbiQuartz.Instance.AddJob<IRadarrSync>(nameof(IRadarrSync), "DVR", JobSettingsHelper.Radarr(s));
+            await OmbiQuartz.Instance.AddJob<IArrAvailabilityChecker>(nameof(IArrAvailabilityChecker), "DVR", null);
             await OmbiQuartz.Instance.AddJob<ICouchPotatoSync>(nameof(ICouchPotatoSync), "DVR", JobSettingsHelper.CouchPotato(s));
             await OmbiQuartz.Instance.AddJob<ISickRageSync>(nameof(ISickRageSync), "DVR", JobSettingsHelper.SickRageSync(s));
             await OmbiQuartz.Instance.AddJob<ILidarrArtistSync>(nameof(ILidarrArtistSync), "DVR", JobSettingsHelper.LidarrArtistSync(s));
@@ -94,6 +97,10 @@ namespace Ombi.Schedule
             await OmbiQuartz.Instance.AddJob<IEmbyEpisodeSync>(nameof(IEmbyEpisodeSync), "Emby", null);
             await OmbiQuartz.Instance.AddJob<IEmbyAvaliabilityChecker>(nameof(IEmbyAvaliabilityChecker), "Emby", null);
             await OmbiQuartz.Instance.AddJob<IEmbyUserImporter>(nameof(IEmbyUserImporter), "Emby", JobSettingsHelper.UserImporter(s));
+        }
+        private static async Task AddNotifications(JobSettings s)
+        {
+            await OmbiQuartz.Instance.AddJob<INotificationService>(nameof(INotificationService), "Notifications", null);
         }
     }
 }

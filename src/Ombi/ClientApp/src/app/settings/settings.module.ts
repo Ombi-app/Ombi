@@ -2,7 +2,6 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
-import { NgbAccordionModule, NgbModule } from "@ng-bootstrap/ng-bootstrap";
 // import { TagInputModule } from "ngx-chips";
 import { ClipboardModule } from "ngx-clipboard";
 
@@ -37,6 +36,7 @@ import { PushbulletComponent } from "./notifications/pushbullet.component";
 import { PushoverComponent } from "./notifications/pushover.component";
 import { SlackComponent } from "./notifications/slack.component";
 import { TelegramComponent } from "./notifications/telegram.component";
+import { WebhookComponent } from "./notifications/webhook.component";
 import { OmbiComponent } from "./ombi/ombi.component";
 import { PlexComponent } from "./plex/plex.component";
 import { RadarrComponent } from "./radarr/radarr.component";
@@ -50,11 +50,23 @@ import { WikiComponent } from "./wiki.component";
 
 import { SettingsMenuComponent } from "./settingsmenu.component";
 
-import { AutoCompleteModule, CalendarModule, DialogModule, InputSwitchModule, InputTextModule, MenuModule, RadioButtonModule, TooltipModule } from "primeng/primeng";
-import { MatMenuModule} from "@angular/material";
+import {AutoCompleteModule } from "primeng/autocomplete";
+import {CalendarModule } from "primeng/calendar";
+import {InputSwitchModule } from "primeng/inputswitch";
+import {InputTextModule } from "primeng/inputtext";
+import {DialogModule } from "primeng/dialog";
+import {MenuModule } from "primeng/menu";
+import {RadioButtonModule } from "primeng/radiobutton";
+import {TooltipModule } from "primeng/tooltip";
+
+import { MatMenuModule } from "@angular/material/menu";
 import { SharedModule } from "../shared/shared.module";
 import { HubService } from "../services/hub.service";
 import { LogsComponent } from "./logs/logs.component";
+import { TwilioComponent } from "./notifications/twilio/twilio.component";
+import { WhatsAppComponent } from "./notifications/twilio/whatsapp.component";
+import { CloudMobileComponent } from "./notifications/cloudmobile.coponent";
+import { CloudMobileService } from "../services/cloudmobile.service";
 
 const routes: Routes = [
     { path: "Ombi", component: OmbiComponent, canActivate: [AuthGuard] },
@@ -71,7 +83,9 @@ const routes: Routes = [
     { path: "Pushover", component: PushoverComponent, canActivate: [AuthGuard] },
     { path: "Pushbullet", component: PushbulletComponent, canActivate: [AuthGuard] },
     { path: "Gotify", component: GotifyComponent, canActivate: [AuthGuard] },
+    { path: "Webhook", component: WebhookComponent, canActivate: [AuthGuard] },
     { path: "Mattermost", component: MattermostComponent, canActivate: [AuthGuard] },
+    { path: "Twilio", component: TwilioComponent, canActivate: [AuthGuard] },
     { path: "UserManagement", component: UserManagementComponent, canActivate: [AuthGuard] },
     { path: "Update", component: UpdateComponent, canActivate: [AuthGuard] },
     { path: "CouchPotato", component: CouchPotatoComponent, canActivate: [AuthGuard] },
@@ -89,6 +103,7 @@ const routes: Routes = [
     { path: "TheMovieDb", component: TheMovieDbComponent, canActivate: [AuthGuard] },
     { path: "FailedRequests", component: FailedRequestsComponent, canActivate: [AuthGuard] },
     { path: "Logs", component: LogsComponent, canActivate: [AuthGuard] },
+    { path: "CloudMobile", component: CloudMobileComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -100,9 +115,7 @@ const routes: Routes = [
         MenuModule,
         InputSwitchModule,
         InputTextModule,
-        NgbModule,
         TooltipModule,
-        NgbAccordionModule,
         AutoCompleteModule,
         CalendarModule,
         // TagInputModule,
@@ -131,6 +144,7 @@ const routes: Routes = [
         MattermostComponent,
         PushbulletComponent,
         GotifyComponent,
+        WebhookComponent,
         UserManagementComponent,
         UpdateComponent,
         AboutComponent,
@@ -149,6 +163,9 @@ const routes: Routes = [
         TheMovieDbComponent,
         FailedRequestsComponent,
         LogsComponent,
+        TwilioComponent,
+        WhatsAppComponent,
+        CloudMobileComponent,
     ],
     exports: [
         RouterModule,
@@ -173,6 +190,7 @@ const routes: Routes = [
         SystemService,
         FileDownloadService,
         TheMovieDbService,
+        CloudMobileService,
     ],
 
 })

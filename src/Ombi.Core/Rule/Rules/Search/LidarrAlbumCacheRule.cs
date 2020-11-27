@@ -24,7 +24,7 @@ namespace Ombi.Core.Rule.Rules.Search
             {
                 // Check if it's in Lidarr
                 var result = _db.GetAll().FirstOrDefault(x =>
-                    x.ForeignAlbumId.Equals(obj.ForeignAlbumId, StringComparison.InvariantCultureIgnoreCase));
+                    x.ForeignAlbumId == obj.ForeignAlbumId);
                 if (result != null)
                 {
                     obj.PercentOfTracks = result.PercentOfTracks;
@@ -36,7 +36,7 @@ namespace Ombi.Core.Rule.Rules.Search
             {
                 // Check if it's in Lidarr
                 var result = _db.GetAll().FirstOrDefault(x =>
-                    x.ForeignAlbumId.Equals(release.Id, StringComparison.InvariantCultureIgnoreCase));
+                    x.ForeignAlbumId == release.Id);
                 if (result != null)
                 {
                     release.PercentOfTracks = result.PercentOfTracks;

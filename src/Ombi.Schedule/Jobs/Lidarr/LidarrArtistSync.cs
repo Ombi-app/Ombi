@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Lidarr;
 using Ombi.Core.Settings;
@@ -54,7 +53,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
                             // Let's remove the old cached data
                             using (var tran = await _ctx.Database.BeginTransactionAsync())
                             {
-                                await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM LidarrArtistCache");
+                                await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM LidarrArtistCache");
                                 tran.Commit();
                             }
 
@@ -115,7 +114,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
             if (disposing)
             {
                 _ctx?.Dispose();
-                _lidarrSettings?.Dispose();
+                //_lidarrSettings?.Dispose();
             }
             _disposed = true;
         }

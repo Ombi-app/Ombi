@@ -21,8 +21,11 @@
       }
     },
     "Ombi": {
-      "commandName": "IISExpress",
-      "commandLineArgs": "--host http://*:3577",
+      "commandName": "Project",
+      "commandLineArgs": "--host http://localhost:3577 ",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
       "applicationUrl": "http://localhost:3577/"
     }
   }

@@ -1,27 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <FileVersion>3.0.0.0</FileVersion>
     <Version></Version>
     <PackageVersion></PackageVersion>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Ensure.That" Version="7.0.0-pre32" />
-    <PackageReference Include="MailKit" Version="2.1.3" />
+    <PackageReference Include="MailKit" Version="2.5.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Ombi.Api.CloudService\Ombi.Api.CloudService.csproj" />
     <ProjectReference Include="..\Ombi.Api.Discord\Ombi.Api.Discord.csproj" />
     <ProjectReference Include="..\Ombi.Api.Gotify\Ombi.Api.Gotify.csproj" />
+    <ProjectReference Include="..\Ombi.Api.Webhook\Ombi.Api.Webhook.csproj" />
     <ProjectReference Include="..\Ombi.Api.Mattermost\Ombi.Api.Mattermost.csproj" />
     <ProjectReference Include="..\Ombi.Api.Notifications\Ombi.Api.Notifications.csproj" />
     <ProjectReference Include="..\Ombi.Api.Pushbullet\Ombi.Api.Pushbullet.csproj" />
     <ProjectReference Include="..\Ombi.Api.Pushover\Ombi.Api.Pushover.csproj" />
     <ProjectReference Include="..\Ombi.Api.Slack\Ombi.Api.Slack.csproj" />
     <ProjectReference Include="..\Ombi.Api.Telegram\Ombi.Api.Telegram.csproj" />
+    <ProjectReference Include="..\Ombi.Api.Twilio\Ombi.Api.Twilio.csproj" />
     <ProjectReference Include="..\Ombi.Notifications.Templates\Ombi.Notifications.Templates.csproj" />
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
     <ProjectReference Include="..\Ombi.Store\Ombi.Store.csproj" />

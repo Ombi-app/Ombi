@@ -13,7 +13,6 @@ namespace Ombi.Core.Models.Search.V2
 
     public class MovieCollection : SearchViewModel
     {
-        public int Id { get; set; }
         public string Overview { get; set; }
         public string PosterPath { get; set; }
         public string Title { get; set; }

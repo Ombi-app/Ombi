@@ -1,56 +1,64 @@
-﻿
-<settings-menu></settings-menu>
-<div *ngIf="form">
-    <fieldset>
+﻿<settings-menu></settings-menu>
+<div *ngIf="form" class="small-middle-container">
+    <fieldset class="top-space">
         <legend>Discord Notifications</legend>
-        <div class="col-md-6">
-            <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
-
-                <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" id="enable" formControlName="enabled">
-                        <label for="enable">Enabled</label>
+        <div class="row">
+            <div class="col-md-8">
+                <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+                    <div class="row">
+                        <div class="col-md-12 col-12 col-sm-12">
+                            <div>
+                                <div class="md-form-field">
+                                    <mat-slide-toggle formControlName="enabled" id="enable">Enable</mat-slide-toggle>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="webhookUrl" class="control-label">Webhook Url</label>
-                        <input type="text" class="form-control form-control-custom " id="webhookUrl" name="webhookUrl" formControlName="webhookUrl"  [ngClass]="{'form-error': form.get('webhookUrl').hasError('required')}">
-                        <small *ngIf="form.get('webhookUrl').hasError('required')" class="error-text">The Webhook Url is required</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="username" class="control-label">Username</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom " id="username" name="username" formControlName="username" pTooltip="Optional, this will override the username you used for the Webhook">
+                    <div class="row">
+                        <div class="md-form-field">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Webhook Url</mat-label>
+                                <input matInput formControlName="webhookUrl">
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Username</mat-label>
+                                <input matInput formControlName="username">
+                            </mat-form-field>
+                        </div>
+                        <div class="md-form-field">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Icon</mat-label>
+                                <input matInput formControlName="icon">
+                            </mat-form-field>
+                            <div>
+                                <img [src]="form.value.icon" style="width: 300px" />
+                            </div>
+                        </div>
                     </div>
-                </div>
+                    <div class="row top-space">
 
-               
+                        <div class="form-group">
+                            <div>
+                                <button mat-raised-button type="button" class="btn-spacing" color="accent"
+                                    (click)="test(form)" [disabled]="form.invalid">Test <div id="spinner"></div>
+                                    </button>
+                            </div>
+                        </div>
 
-                <div class="form-group">
-                    <div>
-                        <button [disabled]="form.invalid" type="button" (click)="test(form)" class="btn btn-primary-outline">
-                            Test
-                            <div id="spinner"></div>
-                        </button>
+                        <div class="form-group">
+                            <div>
+                                <button mat-raised-button type="submit" class="btn-spacing" color="primary"
+                                    [disabled]="form.invalid">Submit</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </form>
+            </div>
 
 
-
-                <div class="form-group">
-                    <div>
-                        <button [disabled]="form.invalid" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-
-        <div class="col-md-6">
-            <notification-templates [templates]="templates" [showSubject]="false"></notification-templates>
+            <div class="col-md-4">
+                <notification-templates [templates]="templates" [showSubject]="false"></notification-templates>
+            </div>
         </div>
     </fieldset>
 </div>

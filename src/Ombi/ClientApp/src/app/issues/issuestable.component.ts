@@ -13,6 +13,7 @@ export class IssuesTableComponent  {
 
     @Output() public changePage = new EventEmitter<IPagenator>();
 
+    public displayedColumns = ["title", "category", "subject", "status", "reportedBy", "actions"]
     public IssueStatus = IssueStatus;
 
     public order: string = "id";

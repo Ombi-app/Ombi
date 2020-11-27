@@ -26,17 +26,20 @@ namespace Ombi.Core.Engine.V2
     public class MovieSearchEngineV2 : BaseMediaEngine, IMovieEngineV2
     {
         public MovieSearchEngineV2(IPrincipal identity, IRequestServiceMain service, IMovieDbApi movApi, IMapper mapper,
-            ILogger<MovieSearchEngineV2> logger, IRuleEvaluator r, OmbiUserManager um, ICacheService mem, ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub)
+            ILogger<MovieSearchEngineV2> logger, IRuleEvaluator r, OmbiUserManager um, ICacheService mem, ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub,
+            ISettingsService<CustomizationSettings> customizationSettings)
             : base(identity, service, r, um, mem, s, sub)
         {
             MovieApi = movApi;
             Mapper = mapper;
             Logger = logger;
+            _customizationSettings = customizationSettings;
         }
 
         private IMovieDbApi MovieApi { get; }
         private IMapper Mapper { get; }
         private ILogger Logger { get; }
+        private readonly ISettingsService<CustomizationSettings> _customizationSettings;
 
 
         public async Task<MovieFullInfoViewModel> GetFullMovieInformation(int theMovieDbId, CancellationToken cancellationToken, string langCode = null)
@@ -44,6 +47,16 @@ namespace Ombi.Core.Engine.V2
             langCode = await DefaultLanguageCode(langCode);
             var movieInfo = await Cache.GetOrAdd(nameof(GetFullMovieInformation) + theMovieDbId + langCode,
                 async () => await MovieApi.GetFullMovieInfo(theMovieDbId, cancellationToken, langCode), DateTime.Now.AddHours(12), cancellationToken);
+
+            return await ProcessSingleMovie(movieInfo);
+        }
+
+        public async Task<MovieFullInfoViewModel> GetMovieInfoByRequestId(int requestId, CancellationToken cancellationToken, string langCode = null)
+        {
+            langCode = await DefaultLanguageCode(langCode);
+            var request = await RequestService.MovieRequestService.Find(requestId);
+            var movieInfo = await Cache.GetOrAdd(nameof(GetFullMovieInformation) + request.TheMovieDbId + langCode,
+                async () => await MovieApi.GetFullMovieInfo(request.TheMovieDbId, cancellationToken, langCode), DateTime.Now.AddHours(12), cancellationToken);
 
             return await ProcessSingleMovie(movieInfo);
         }
@@ -111,7 +124,7 @@ namespace Ombi.Core.Engine.V2
         public async Task<IEnumerable<SearchMovieViewModel>> PopularMovies(int currentlyLoaded, int toLoad, CancellationToken cancellationToken)
         {
             var langCode = await DefaultLanguageCode(null);
-            
+
             var pages = PaginationHelper.GetNextPages(currentlyLoaded, toLoad, _theMovieDbMaxPageItems);
 
             var results = new List<MovieSearchResult>();
@@ -239,10 +252,16 @@ namespace Ombi.Core.Engine.V2
         protected async Task<List<SearchMovieViewModel>> TransformMovieResultsToResponse(
             IEnumerable<MovieSearchResult> movies)
         {
+            var settings = await _customizationSettings.GetSettingsAsync();
             var viewMovies = new List<SearchMovieViewModel>();
             foreach (var movie in movies)
             {
-                viewMovies.Add(await ProcessSingleMovie(movie));
+                var result = await ProcessSingleMovie(movie);
+                if (settings.HideAvailableFromDiscover && result.Available)
+                {
+                    continue;
+                }
+                viewMovies.Add(result);
             }
             return viewMovies;
         }
@@ -341,6 +360,19 @@ namespace Ombi.Core.Engine.V2
                                                                                           && s.RequestId == viewModel.RequestId && s.RequestType == RequestType.Movie);
                 viewModel.Subscribed = sub != null;
             }
+        }
+
+        public async Task<MovieFullInfoViewModel> GetMovieInfoByImdbId(string imdbId, CancellationToken cancellationToken)
+        {
+            var langCode = await DefaultLanguageCode(null);
+            var findResult = await Cache.GetOrAdd(nameof(GetMovieInfoByImdbId) + imdbId + langCode,
+                async () => await MovieApi.Find(imdbId, ExternalSource.imdb_id), DateTime.Now.AddHours(12), cancellationToken);
+
+            var movie = findResult.movie_results.FirstOrDefault();
+            var movieInfo = await Cache.GetOrAdd(nameof(GetMovieInfoByImdbId) + movie.id + langCode,
+                async () => await MovieApi.GetFullMovieInfo(movie.id, cancellationToken, langCode), DateTime.Now.AddHours(12), cancellationToken);
+
+            return await ProcessSingleMovie(movieInfo);
         }
     }
 }

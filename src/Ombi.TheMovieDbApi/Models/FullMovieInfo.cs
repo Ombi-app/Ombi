@@ -70,6 +70,23 @@ namespace Ombi.Api.TheMovieDb.Models
         public ExternalIds ExternalIds { get; set; }
         [JsonProperty("keywords")]
         public Keywords Keywords { get; set; }
+        
+        //[JsonProperty("images")]
+        //public List<Images> Images { get; set; } // add images to append_to_response
+    }
+
+    public class Images
+    {
+        [JsonProperty("backdrops")]
+        public List<ImageContent> Backdrops { get; set; }
+        [JsonProperty("posters")]
+        public List<ImageContent> Posters { get; set; }
+    }
+
+    public class ImageContent
+    {
+        [JsonProperty("file_path")]
+        public string FilePath { get; set; }
     }
 
     public class Keywords

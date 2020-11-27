@@ -2,7 +2,7 @@ import { Component, Input } from "@angular/core";
 import { IChildRequests, RequestType } from "../../../../../interfaces";
 import { RequestService } from "../../../../../services/request.service";
 import { MessageService } from "../../../../../services";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { DenyDialogComponent } from "../../../shared/deny-dialog/deny-dialog.component";
 
 @Component({

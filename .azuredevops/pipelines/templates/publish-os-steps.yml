@@ -1,0 +1,57 @@
+steps:
+- task: DotNetCoreInstaller@1
+  displayName: 'Use .NET Core sdk '
+  inputs:
+    packageType: 'sdk'
+    version: '5.x'
+
+- task: DotNetCoreInstaller@1
+  displayName: 'Use .NET Core sdk for versioning'
+  inputs:
+    packageType: 'sdk'
+    version: '3.1.x'
+
+- task: PowerShell@2
+  displayName: 'Set Version'
+  inputs:
+    targetType: 'inline'
+    script: |
+      dotnet tool install -g dotnet-setversion
+      setversion -r $(BuildVersion)
+
+- task: DotNetCoreCLI@2
+  displayName: 'publish $(runtime)'
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '-c $(BuildConfiguration) -r "$(runtime)" -o $(Build.ArtifactStagingDirectory)/$(runtime) --self-contained  true -p:PublishSingleFile=true'
+    zipAfterPublish: false
+    modifyOutputPath: false
+
+- task: DownloadPipelineArtifact@2
+  inputs:
+    buildType: 'current'
+    artifactName: 'angular_dist'
+    targetPath: '$(Build.ArtifactStagingDirectory)/angular_dist'
+
+- task: CopyFiles@2
+  displayName: 'Copy Angular App $(runtime)'
+  inputs:
+    SourceFolder: '$(Build.ArtifactStagingDirectory)/angular_dist'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/$(runtime)/ClientApp/dist'
+
+- task: ArchiveFiles@2
+  displayName: 'Zip $(runtime)'
+  inputs:
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/$(runtime)'
+    includeRootFolder: false
+    archiveType: $(compression)
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(runtime).$(format)'
+    replaceExistingArchive: true
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)/$(runtime).$(format)'
+    artifact: '$(runtime)'
+    publishLocation: 'pipeline'

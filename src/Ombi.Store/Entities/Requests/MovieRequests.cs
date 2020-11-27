@@ -43,6 +43,11 @@ namespace Ombi.Store.Entities.Requests
                     return "Common.Available";
                 }
 
+                if (Denied ?? false)
+                {
+                    return "Common.Denied";
+                }
+
                 if (Approved & !Available)
                 {
                     return "Common.ProcessingRequest";

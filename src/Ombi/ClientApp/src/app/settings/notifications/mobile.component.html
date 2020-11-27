@@ -1,8 +1,8 @@
 ﻿<settings-menu>
 </settings-menu>
-<div *ngIf="form">
+<div *ngIf="form" class="small-middle-container">
     <fieldset>
-        <legend>Mobile Notifications</legend>
+        <legend>Legacy Mobile Notifications</legend>
         <div class="col-md-6">
             <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
                 <div class="row">
@@ -35,7 +35,7 @@
 
                 <div class="row">
                     <div class="form-group">
-                        <label  for="select" class="control-label">Users</label>
+                        <label for="select" class="control-label">Users</label>
                         <div>
                             <select class="form-control form-control-custom" id="select" [(ngModel)]="testUserId" [ngModelOptions]="{standalone: true}">
                                 <option value="">Please select</option>    

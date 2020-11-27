@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Ombi.Core.Settings
 {
-    public interface ISettingsService<T> : IDisposable
+    public interface ISettingsService<T>
     {
         T GetSettings();
         Task<T> GetSettingsAsync();

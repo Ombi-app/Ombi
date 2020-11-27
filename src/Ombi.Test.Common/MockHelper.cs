@@ -3,7 +3,6 @@ using MockQueryable.Moq;
 using Moq;
 using Ombi.Core.Authentication;
 using Ombi.Store.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 

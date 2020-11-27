@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
+using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Store.Context
 {
@@ -16,6 +17,7 @@ namespace Ombi.Store.Context
         {
 
         }
+
 
         /// <summary>
         /// This allows a sub class to call the base class 'DbContext' non typed constructor
@@ -35,6 +37,7 @@ namespace Ombi.Store.Context
         public DbSet<AlbumRequest> AlbumRequests { get; set; }
         public DbSet<TvRequests> TvRequests { get; set; }
         public DbSet<ChildRequests> ChildRequests { get; set; }
+        public DbSet<EpisodeRequests> EpisodeRequests { get; set; }
 
         public DbSet<Issues> Issues { get; set; }
         public DbSet<IssueCategory> IssueCategories { get; set; }
@@ -48,6 +51,7 @@ namespace Ombi.Store.Context
         public DbSet<Tokens> Tokens { get; set; }
         public DbSet<RequestSubscription> RequestSubscription { get; set; }
         public DbSet<UserNotificationPreferences> UserNotificationPreferences { get; set; }
+        public DbSet<MobileDevices> MobileDevices { get; set; }
         public DbSet<UserQualityProfiles> UserQualityProfileses { get; set; }
         public DbSet<RequestQueue> RequestQueue { get; set; }
 
@@ -57,7 +61,7 @@ namespace Ombi.Store.Context
             using (var tran = Database.BeginTransaction())
             {
                 // Make sure we have the API User
-                var apiUserExists = Users.Any(x => x.UserName.Equals("Api", StringComparison.CurrentCultureIgnoreCase));
+                var apiUserExists = Users.ToList().Any(x => x.NormalizedUserName == "API");
                 if (!apiUserExists)
                 {
                     Users.Add(new OmbiUser
@@ -89,7 +93,7 @@ namespace Ombi.Store.Context
                     }
 
                     needToSave = true;
-                    NotificationTemplates notificationToAdd;
+                    NotificationTemplates notificationToAdd = null;
                     switch (notificationType)
                     {
                         case NotificationType.NewRequest:
@@ -116,7 +120,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello! Your request for {Title} on {ApplicationName}! This is now available! :)",
+                                Message = "Hello! Your request for {Title} on {ApplicationName} is now available! :)",
                                 Subject = "{ApplicationName}: {Title} is now available!",
                                 Agent = agent,
                                 Enabled = true,
@@ -155,14 +159,17 @@ namespace Ombi.Store.Context
                             };
                             break;
                         case NotificationType.WelcomeEmail:
-                            notificationToAdd = new NotificationTemplates
+                            if (agent == NotificationAgent.Email)
                             {
-                                NotificationType = notificationType,
-                                Message = "Hello! You have been invited to use {ApplicationName}! You can login here: {ApplicationUrl}",
-                                Subject = "Invite to {ApplicationName}",
-                                Agent = agent,
-                                Enabled = true,
-                            };
+                                notificationToAdd = new NotificationTemplates
+                                {
+                                    NotificationType = notificationType,
+                                    Message = "Hello! You have been invited to use {ApplicationName}! You can login here: {ApplicationUrl}",
+                                    Subject = "Invite to {ApplicationName}",
+                                    Agent = agent,
+                                    Enabled = true,
+                                };
+                            }
                             break;
                         case NotificationType.IssueResolved:
                             notificationToAdd = new NotificationTemplates
@@ -200,7 +207,10 @@ namespace Ombi.Store.Context
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
-                    NotificationTemplates.Add(notificationToAdd);
+                    if (notificationToAdd != null)
+                    {
+                        NotificationTemplates.Add(notificationToAdd);
+                    }
                 }
             }
 

@@ -8,6 +8,7 @@ import { SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./lidarr.component.html",
+    styleUrls: ["./lidarr.component.scss"]
 })
 export class LidarrComponent implements OnInit {
 
@@ -34,7 +35,7 @@ export class LidarrComponent implements OnInit {
                 this.form = this.fb.group({
                     enabled: [x.enabled],
                     apiKey: [x.apiKey, [Validators.required]],
-                    defaultQualityProfile: [x.defaultQualityProfile, [Validators.required]],
+                    defaultQualityProfile: [+x.defaultQualityProfile, [Validators.required]],
                     defaultRootPath: [x.defaultRootPath, [Validators.required]],
                     ssl: [x.ssl],
                     subDir: [x.subDir],
@@ -44,6 +45,15 @@ export class LidarrComponent implements OnInit {
                     metadataProfileId: [x.metadataProfileId, [Validators.required]],
                     addOnly: [x.addOnly],
                 });
+                
+                this.qualities = [];
+                this.qualities.push({ name: "Please Select", id: -1 });
+
+                this.rootFolders = [];
+                this.rootFolders.push({ path: "Please Select", id: -1 });
+
+                this.metadataProfiles = [];
+                this.metadataProfiles.push({ name: "Please Select", id: -1 });
 
                 if (x.defaultQualityProfile) {
                     this.getProfiles(this.form);
@@ -55,15 +65,6 @@ export class LidarrComponent implements OnInit {
                     this.getMetadataProfiles(this.form);
                 }
             });
-
-        this.qualities = [];
-        this.qualities.push({ name: "Please Select", id: -1 });
-
-        this.rootFolders = [];
-        this.rootFolders.push({ path: "Please Select", id: -1 });
-
-        this.metadataProfiles = [];
-        this.metadataProfiles.push({ name: "Please Select", id: -1 });
     }
 
     public getProfiles(form: FormGroup) {

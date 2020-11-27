@@ -1,0 +1,55 @@
+﻿<settings-menu>
+</settings-menu>
+<div *ngIf="form" class="container">
+    <fieldset>
+        <legend>Mobile Notifications</legend>
+
+        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+            <div class="row">
+                <div class="col">
+
+                    <table *ngIf="devices" mat-table [dataSource]="devices" class="mat-elevation-z8">
+
+                        <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef>
+
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                <mat-slide-toggle (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                                </mat-slide-toggle>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="username">
+                            <th mat-header-cell *matHeaderCellDef> Username </th>
+                            <td mat-cell *matCellDef="let element"> {{element.username}} </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+
+
+                    <div class="md-form-field">
+                        <mat-form-field>
+                            <mat-label>Message</mat-label>
+                            <textarea matInput [(ngModel)]="message" [ngModelOptions]="{standalone: true}"></textarea>
+                        </mat-form-field>
+                    </div>
+                    <div class="md-form-field">
+                        <button mat-raised-button type="button" color="primary" (click)="sendMessage(form)" [disabled]="selection.selected.length === 0">Send Notification</button>
+                    </div>
+                </div>
+                <div class="col">
+                    <notification-templates [templates]="templates" [showSubject]="false"></notification-templates>
+                </div>
+
+            </div>
+
+            <div class="md-form-field ">
+                <div>
+                    <button mat-raised-button type="submit " color="primary" [disabled]="form.invalid ">Submit</button>
+                </div>
+            </div>
+        </form>
+    </fieldset>
+</div>

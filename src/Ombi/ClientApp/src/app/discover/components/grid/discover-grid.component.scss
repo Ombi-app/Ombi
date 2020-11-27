@@ -1,0 +1,137 @@
+$ombi-primary:#3f3f3f;
+$card-background: #2b2b2b;
+
+$blue: #1976D2;
+$pink: #C2185B;
+$green:#1DE9B6;
+$orange:#F57C00;
+
+.btn-blue {
+    background-color: $blue;
+}
+
+.btn-pink {
+    background-color: $pink;
+}
+
+.btn-green {
+    background-color: $green;
+}
+
+.btn-orange {
+    background-color: $orange;
+}
+
+.btn-spacing {
+    margin-top:10%;
+}
+
+#cardImage {
+    border-radius: 5px 5px 0px 0px;
+    height: 75%;
+}
+
+.dark-card {
+    border-radius: 8px;
+}
+
+// Changed height to 100% to make all cards the same height
+.top-spacing {
+    margin-top: 1%;
+}
+
+.card-poster {
+    width: 100%;
+    border-radius: 8px 0px 0px 8px;
+    margin-top: -6.5%;
+    margin-bottom: -6.6%;
+}
+
+.main-container {
+    margin-left: -2%;
+}
+
+
+.rating {
+    position: absolute;
+    font-weight: bold;
+}
+
+$border-width: 3px;
+
+.available {
+    background-color: #1DE9B6 !important;
+    color: black !important;
+}
+
+.approved {
+    background-color: #ff5722 !important;
+}
+
+.requested {
+    background-color: #ffd740 !important;
+    color: black !important;
+}
+
+.denied {
+    background-color: #C2185B !important;
+}
+
+.notrequested {
+    background-color: #303030 !important;
+}
+
+.expand {
+    text-align: center;
+}
+
+@media (min-width: 1025px) {
+
+    // Changed height to 100% to make all cards the same height
+    .grow {
+        transition: all .2s ease-in-out;
+        height: 100%;
+    }
+
+    .grow:hover {
+        transform: scale(1.1);
+    }
+}
+
+::ng-deep mat-dialog-container.mat-dialog-container {
+    // background-color: $ombi-primary;
+    // color: white;
+    border-radius: 2%
+}
+
+
+/* Title adjust for the Discover page */
+.mat-card-content h6 {
+    overflow: hidden;
+    white-space: nowrap;
+    font-weight: 400;
+    font-size: 1.1rem;
+}
+
+/* Summary adjust for Discover page */
+.small,
+small {
+    font-size: 0.8rem;
+}
+
+@media (min-width: 2000px) {
+    #cardImage {
+        height: 80%;
+        object-fit: cover;
+        display: block;
+    }
+}
+
+.overview {
+    font-size: 1.2em;
+}
+
+.backdrop {
+    background-position: 50% 33%;
+    background-size: cover;
+}

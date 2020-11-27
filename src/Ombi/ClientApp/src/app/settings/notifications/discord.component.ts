@@ -8,6 +8,7 @@ import { SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./discord.component.html",
+    styleUrls: ["./notificationtemplate.component.scss"]
 })
 export class DiscordComponent implements OnInit {
 
@@ -28,6 +29,7 @@ export class DiscordComponent implements OnInit {
                 enabled: [x.enabled],
                 username: [x.username],
                 webhookUrl: [x.webhookUrl, [Validators.required]],
+                icon: [x.icon]
 
             });
         });

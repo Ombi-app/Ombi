@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Security.Principal;
-using Hangfire;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 
 using Ombi.Api.Discord;
@@ -35,6 +33,7 @@ using Ombi.Api.FanartTv;
 using Ombi.Api.Github;
 using Ombi.Api.Gotify;
 using Ombi.Api.GroupMe;
+using Ombi.Api.Webhook;
 using Ombi.Api.Lidarr;
 using Ombi.Api.Mattermost;
 using Ombi.Api.Notifications;
@@ -62,9 +61,10 @@ using Ombi.Schedule.Jobs.Lidarr;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.SickRage;
 using Ombi.Schedule.Processor;
-using Ombi.Store.Entities;
 using Quartz.Spi;
 using Ombi.Api.MusicBrainz;
+using Ombi.Api.Twilio;
+using Ombi.Api.CloudService;
 
 namespace Ombi.DependencyInjection
 {
@@ -101,6 +101,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IVoteEngine, VoteEngine>();
             services.AddTransient<IDemoMovieSearchEngine, DemoMovieSearchEngine>();
             services.AddTransient<IDemoTvSearchEngine, DemoTvSearchEngine>();
+            services.AddTransient<IUserDeletionEngine, UserDeletionEngine>();
         }
 
         public static void RegisterEnginesV2(this IServiceCollection services)
@@ -131,12 +132,14 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ITvMazeApi, TvMazeApi>();
             services.AddTransient<ITraktApi, TraktApi>();
             services.AddTransient<IRadarrApi, RadarrApi>();
+            services.AddTransient<IRadarrV3Api, RadarrV3Api>();
             services.AddTransient<IDiscordApi, DiscordApi>();
             services.AddTransient<IPushbulletApi, PushbulletApi>();
             services.AddTransient<IOmbiService, OmbiService>();
             services.AddTransient<IFanartTvApi, FanartTvApi>();
             services.AddTransient<IPushoverApi, PushoverApi>();
             services.AddTransient<IGotifyApi, GotifyApi>();
+            services.AddTransient<IWebhookApi, WebhookApi>();
             services.AddTransient<IMattermostApi, MattermostApi>();
             services.AddTransient<ICouchPotatoApi, CouchPotatoApi>();
             services.AddTransient<IDogNzbApi, DogNzbApi>();
@@ -148,6 +151,10 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ILidarrApi, LidarrApi>();
             services.AddTransient<IGroupMeApi, GroupMeApi>();
             services.AddTransient<IMusicBrainzApi, MusicBrainzApi>();
+            services.AddTransient<IWhatsAppApi, WhatsAppApi>();
+            services.AddTransient<ICloudMobileNotification, CloudMobileNotification>();
+            services.AddTransient<IBaseEmbyApi, JellyfinApi>();
+            services.AddTransient<IEmbyApiFactory, EmbyApiFactory>();
         }
 
         public static void RegisterStore(this IServiceCollection services) { 
@@ -181,6 +188,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IEmailProvider, GenericEmailProvider>();
             services.AddTransient<INotificationHelper, NotificationHelper>();
             services.AddSingleton<ICacheService, CacheService>();
+            services.AddScoped<IImageService, ImageService>();
 
             services.AddTransient<IDiscordNotification, DiscordNotification>();
             services.AddTransient<IEmailNotification, EmailNotification>();
@@ -190,15 +198,16 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMattermostNotification, MattermostNotification>();
             services.AddTransient<IPushoverNotification, PushoverNotification>();
             services.AddTransient<IGotifyNotification, GotifyNotification>();
+            services.AddTransient<IWebhookNotification, WebhookNotification>();
             services.AddTransient<ITelegramNotification, TelegramNotification>();
-            services.AddTransient<IMobileNotification, MobileNotification>();
+            services.AddTransient<ILegacyMobileNotification, LegacyMobileNotification>();
             services.AddTransient<IChangeLogProcessor, ChangeLogProcessor>();
         }
 
         public static void RegisterJobs(this IServiceCollection services)
         {
-            services.AddSingleton<IJobFactory, IoCJobFactory>(provider => new IoCJobFactory(provider));
-            services.AddTransient<IBackgroundJobClient, BackgroundJobClient>();
+            services.AddSingleton<QuartzJobRunner>();
+            services.AddSingleton<IJobFactory, IoCJobFactory>();
 
             services.AddTransient<IPlexContentSync, PlexContentSync>();
             services.AddTransient<IEmbyContentSync, EmbyContentSync>();
@@ -223,6 +232,8 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IIssuesPurge, IssuesPurge>();
             services.AddTransient<IResendFailedRequests, ResendFailedRequests>();
             services.AddTransient<IMediaDatabaseRefresh, MediaDatabaseRefresh>();
+            services.AddTransient<IArrAvailabilityChecker, ArrAvailabilityChecker>();
+            services.AddTransient<IAutoDeleteRequests, AutoDeleteRequests>();
         }
     }
 }

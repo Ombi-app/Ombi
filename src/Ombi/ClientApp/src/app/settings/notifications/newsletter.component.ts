@@ -6,6 +6,7 @@ import { TesterService } from "../../services/applications/tester.service";
 
 @Component({
     templateUrl: "./newsletter.component.html",
+    styleUrls: ["./notificationtemplate.component.scss"]
 })
 export class NewsletterComponent implements OnInit {
 

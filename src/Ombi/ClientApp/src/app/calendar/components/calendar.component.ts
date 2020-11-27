@@ -3,6 +3,9 @@ import { Component, OnInit } from "@angular/core";
 import { CalendarService } from "../../services/calendar.service";
 import { ICalendarModel } from "../../interfaces/ICalendar";
 
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+
 @Component({
     templateUrl: "./calendar.component.html",
     styleUrls: ["./calendar.component.scss"],
@@ -17,22 +20,21 @@ export class CalendarComponent implements OnInit {
     constructor(private calendarService: CalendarService) { }
 
     public async ngOnInit() {
-        debugger;
         this.loading()
-        this.entries = await this.calendarService.getCalendarEntries();
-
         this.options = {
+            plugins: [dayGridPlugin, interactionPlugin],
             defaultDate: new Date(),
             header: {
                 left: 'prev,next',
                 center: 'title',
-                right: 'month,agendaWeek'
+                right: 'agendaWeek,month'
             },
             eventClick: (e: any) => {
-                debugger;
                 e.preventDefault();
             }
         };
+
+        this.entries = await this.calendarService.getCalendarEntries();
         this.finishLoading();
     }
 

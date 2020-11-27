@@ -7,10 +7,8 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AutoMapper;
-using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NCrontab;
 using Ombi.Api.Emby;
 using Ombi.Api.Github;
 using Ombi.Attributes;
@@ -27,11 +25,12 @@ using Ombi.Settings.Settings.Models.External;
 using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
-using Ombi.Api.Github;
-using Ombi.Core.Engine;
 using Ombi.Extensions;
-using Ombi.Schedule;
 using Quartz;
+using Ombi.Schedule.Jobs;
+using Ombi.Schedule.Jobs.Emby;
+using Ombi.Schedule.Jobs.Sonarr;
+using Ombi.Schedule.Jobs.Lidarr;
 
 namespace Ombi.Controllers.V1
 {
@@ -48,7 +47,7 @@ namespace Ombi.Controllers.V1
         public SettingsController(ISettingsResolver resolver,
             IMapper mapper,
             INotificationTemplatesRepository templateRepo,
-            IEmbyApi embyApi,
+            IEmbyApiFactory embyApi,
             ICacheService memCache,
             IGithubApi githubApi,
             IRecentlyAddedEngine engine)
@@ -65,7 +64,7 @@ namespace Ombi.Controllers.V1
         private ISettingsResolver SettingsResolver { get; }
         private IMapper Mapper { get; }
         private INotificationTemplatesRepository TemplateRepository { get; }
-        private readonly IEmbyApi _embyApi;
+        private readonly IEmbyApiFactory _embyApi;
         private readonly ICacheService _cache;
         private readonly IGithubApi _githubApi;
         private readonly IRecentlyAddedEngine _recentlyAdded;
@@ -118,7 +117,7 @@ namespace Ombi.Controllers.V1
         public AboutViewModel About()
         {
             var dbConfiguration = DatabaseExtensions.GetDatabaseConfiguration();
-            var storage = StoragePathSingleton.Instance;
+            var storage = StartupSingleton.Instance;
             var model = new AboutViewModel
             {
                 FrameworkDescription = RuntimeInformation.FrameworkDescription,
@@ -126,11 +125,8 @@ namespace Ombi.Controllers.V1
                 OsDescription = RuntimeInformation.OSDescription,
                 ProcessArchitecture = RuntimeInformation.ProcessArchitecture.ToString(),
                 ApplicationBasePath = Directory.GetCurrentDirectory(),
-                ExternalConnectionString = dbConfiguration.ExternalDatabase.ConnectionString,
                 ExternalDatabaseType = dbConfiguration.ExternalDatabase.Type,
-                OmbiConnectionString = dbConfiguration.OmbiDatabase.ConnectionString,
                 OmbiDatabaseType = dbConfiguration.OmbiDatabase.Type,
-                SettingsConnectionString = dbConfiguration.SettingsDatabase.ConnectionString,
                 SettingsDatabaseType = dbConfiguration.SettingsDatabase.Type,
                 StoragePath = storage.StoragePath.HasValue() ? storage.StoragePath : "None Specified",
                 NotSupported = Directory.GetCurrentDirectory().Contains("qpkg")
@@ -140,7 +136,7 @@ namespace Ombi.Controllers.V1
             var version = AssemblyHelper.GetRuntimeVersion();
             var productArray = version.Split('-');
             model.Version = productArray[0];
-            model.Branch = productArray[1];
+            //model.Branch = productArray[1];
             return model;
         }
 
@@ -187,11 +183,18 @@ namespace Ombi.Controllers.V1
         [HttpPost("plex")]
         public async Task<bool> PlexSettings([FromBody]PlexSettings plex)
         {
-            if (plex.InstallId == null || plex.InstallId == Guid.Empty)
+            if (plex?.InstallId == Guid.Empty || plex.InstallId == Guid.Empty)
             {
                 plex.InstallId = Guid.NewGuid();
             }
             var result = await Save(plex);
+
+            if (result)
+            {
+                // Kick off the plex sync
+                await OmbiQuartz.TriggerJob(nameof(IPlexContentSync), "Plex");
+            }
+
             return result;
         }
 
@@ -215,14 +218,19 @@ namespace Ombi.Controllers.V1
         {
             if (emby.Enable)
             {
+                var client = await _embyApi.CreateClient();
                 foreach (var server in emby.Servers)
                 {
-                    var users = await _embyApi.GetUsers(server.FullUri, server.ApiKey);
+                    var users = await client.GetUsers(server.FullUri, server.ApiKey);
                     var admin = users.FirstOrDefault(x => x.Policy.IsAdministrator);
                     server.AdministratorId = admin?.Id;
                 }
             }
             var result = await Save(emby);
+            if (result)
+            {
+                await OmbiQuartz.TriggerJob(nameof(IEmbyContentSync), "Emby");
+            }
             return result;
         }
 
@@ -340,7 +348,12 @@ namespace Ombi.Controllers.V1
         [HttpPost("sonarr")]
         public async Task<bool> SonarrSettings([FromBody]SonarrSettings settings)
         {
-            return await Save(settings);
+            var result = await Save(settings);
+            if (result)
+            {
+                await OmbiQuartz.TriggerJob(nameof(ISonarrSync), "DVR");
+            }
+            return result;
         }
 
         /// <summary>
@@ -383,7 +396,12 @@ namespace Ombi.Controllers.V1
         [HttpPost("lidarr")]
         public async Task<bool> LidarrSettings([FromBody]LidarrSettings settings)
         {
-            return await Save(settings);
+            var lidarr = await Save(settings);
+            if (lidarr)
+            {
+                await OmbiQuartz.TriggerJob(nameof(ILidarrArtistSync), "DVR");
+            }
+            return lidarr;
         }
 
         /// <summary>
@@ -551,13 +569,13 @@ namespace Ombi.Controllers.V1
             j.PlexContentSync = j.PlexContentSync.HasValue() ? j.PlexContentSync : JobSettingsHelper.PlexContent(j);
             j.UserImporter = j.UserImporter.HasValue() ? j.UserImporter : JobSettingsHelper.UserImporter(j);
             j.SickRageSync = j.SickRageSync.HasValue() ? j.SickRageSync : JobSettingsHelper.SickRageSync(j);
-            j.RefreshMetadata = j.RefreshMetadata.HasValue() ? j.RefreshMetadata : JobSettingsHelper.RefreshMetadata(j);
             j.PlexRecentlyAddedSync = j.PlexRecentlyAddedSync.HasValue() ? j.PlexRecentlyAddedSync : JobSettingsHelper.PlexRecentlyAdded(j);
             j.Newsletter = j.Newsletter.HasValue() ? j.Newsletter : JobSettingsHelper.Newsletter(j);
             j.LidarrArtistSync = j.LidarrArtistSync.HasValue() ? j.LidarrArtistSync : JobSettingsHelper.LidarrArtistSync(j);
             j.IssuesPurge = j.IssuesPurge.HasValue() ? j.IssuesPurge : JobSettingsHelper.IssuePurge(j);
             j.RetryRequests = j.RetryRequests.HasValue() ? j.RetryRequests : JobSettingsHelper.ResendFailedRequests(j);
             j.MediaDatabaseRefresh = j.MediaDatabaseRefresh.HasValue() ? j.MediaDatabaseRefresh : JobSettingsHelper.MediaDatabaseRefresh(j);
+            j.AutoDeleteRequests = j.AutoDeleteRequests.HasValue() ? j.AutoDeleteRequests : JobSettingsHelper.AutoDeleteRequests(j);
 
             return j;
         }
@@ -967,6 +985,44 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
+        /// Gets the Twilio Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/twilio")]
+        public async Task<TwilioSettingsViewModel> TwilioNotificationSettings()
+        {
+            var settings = await Get<TwilioSettings>();
+            var model = Mapper.Map<TwilioSettingsViewModel>(settings);
+
+            // Lookup to see if we have any templates saved
+            if (model.WhatsAppSettings == null)
+            {
+                model.WhatsAppSettings = new WhatsAppSettingsViewModel();
+            }
+            model.WhatsAppSettings.NotificationTemplates = BuildTemplates(NotificationAgent.WhatsApp);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Saves the Mattermost notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/twilio")]
+        public async Task<bool> TwilioNotificationSettings([FromBody] TwilioSettingsViewModel model)
+        {
+            // Save the email settings
+            var settings = Mapper.Map<TwilioSettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.UpdateRange(model.WhatsAppSettings.NotificationTemplates);
+
+            return result;
+        }
+
+        /// <summary>
         /// Saves the Mobile notification settings.
         /// </summary>
         /// <param name="model">The model.</param>
@@ -1035,6 +1091,33 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
+        /// Saves the webhook notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/webhook")]
+        public async Task<bool> WebhookNotificationSettings([FromBody] WebhookNotificationViewModel model)
+        {
+            var settings = Mapper.Map<WebhookSettings>(model);
+            var result = await Save(settings);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the webhook notification settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/webhook")]
+        public async Task<WebhookNotificationViewModel> WebhookNotificationSettings()
+        {
+            var settings = await Get<WebhookSettings>();
+            var model = Mapper.Map<WebhookNotificationViewModel>(settings);
+
+            return model;
+        }
+
+        /// <summary>
         /// Saves the Newsletter notification settings.
         /// </summary>
         /// <param name="model">The model.</param>
@@ -1083,7 +1166,13 @@ namespace Ombi.Controllers.V1
                 // Make sure we do not display the newsletter
                 templates = templates.Where(x => x.NotificationType != NotificationType.Newsletter);
             }
-            return templates.OrderBy(x => x.NotificationType.ToString()).ToList();
+            if (agent != NotificationAgent.Email)
+            {
+                templates = templates.Where(x => x.NotificationType != NotificationType.WelcomeEmail);
+            }
+
+            var tem = templates.ToList();
+            return tem.OrderBy(x => x.NotificationType.ToString()).ToList();
         }
 
         private async Task<T> Get<T>()

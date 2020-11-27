@@ -45,10 +45,10 @@ namespace Ombi.Schedule.Jobs.Emby
 {
     public class EmbyUserImporter : IEmbyUserImporter
     {
-        public EmbyUserImporter(IEmbyApi api, UserManager<OmbiUser> um, ILogger<EmbyUserImporter> log,
+        public EmbyUserImporter(IEmbyApiFactory api, UserManager<OmbiUser> um, ILogger<EmbyUserImporter> log,
             ISettingsService<EmbySettings> embySettings, ISettingsService<UserManagementSettings> ums, IHubContext<NotificationHub> notification)
         {
-            _api = api;
+            _apiFactory = api;
             _userManager = um;
             _log = log;
             _embySettings = embySettings;
@@ -56,12 +56,13 @@ namespace Ombi.Schedule.Jobs.Emby
             _notification = notification;
         }
 
-        private readonly IEmbyApi _api;
+        private readonly IEmbyApiFactory _apiFactory;
         private readonly UserManager<OmbiUser> _userManager;
         private readonly ILogger<EmbyUserImporter> _log;
         private readonly ISettingsService<EmbySettings> _embySettings;
         private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
         private readonly IHubContext<NotificationHub> _notification;
+        private IEmbyApi Api { get; set; }
 
         public async Task Execute(IJobExecutionContext job)
         {
@@ -76,9 +77,11 @@ namespace Ombi.Schedule.Jobs.Emby
                 return;
             }
 
+            Api = _apiFactory.CreateClient(settings);
+
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, "Emby User Importer Started");
-            var allUsers = await _userManager.Users.Where(x => x.UserType == UserType.EmbyUser).ToListAsync();
+                .SendAsync(NotificationHub.NotificationEvent, $"{(settings.IsJellyfin ? "Jellyfin" : "Emby")}  User Importer Started");
+            var allUsers = await _userManager.Users.Where(x => x.UserType == UserType.EmbyUser || x.UserType == UserType.EmbyConnectUser).ToListAsync();
             foreach (var server in settings.Servers)
             {
                 if (string.IsNullOrEmpty(server.ApiKey))
@@ -86,7 +89,7 @@ namespace Ombi.Schedule.Jobs.Emby
                     continue;
                 }
 
-                var embyUsers = await _api.GetUsers(server.FullUri, server.ApiKey);
+                var embyUsers = await Api.GetUsers(server.FullUri, server.ApiKey);
                 foreach (var embyUser in embyUsers)
                 {
                     // Check if we should import this user
@@ -95,8 +98,7 @@ namespace Ombi.Schedule.Jobs.Emby
                         // Do not import these, they are not allowed into the country.
                         continue;
                     }
-                    // Check if this Plex User already exists
-                    // We are using the Plex USERNAME and Not the TITLE, the Title is for HOME USERS
+                    // Check if this Emby User already exists
                     var existingEmbyUser = allUsers.FirstOrDefault(x => x.ProviderUserId == embyUser.Id);
                     if (existingEmbyUser == null)
                     {
@@ -106,16 +108,14 @@ namespace Ombi.Schedule.Jobs.Emby
                             _log.LogInformation("Could not create Emby user since the have no username, PlexUserId: {0}", embyUser.Id);
                             continue;
                         }
-
+                        var isConnectUser = embyUser.ConnectUserName.HasValue();
                         // Create this users
-                        // We do not store a password against the user since they will authenticate via Plex
                         var newUser = new OmbiUser
                         {
-                            UserType = UserType.EmbyUser,
-                            UserName = embyUser.ConnectUserName.HasValue() ? embyUser.ConnectUserName : embyUser.Name,
+                            UserType = isConnectUser ? UserType.EmbyConnectUser : UserType.EmbyUser,
+                            UserName = isConnectUser ? embyUser.ConnectUserName : embyUser.Name,
                             ProviderUserId = embyUser.Id,
-                            Alias = string.Empty,
-                            EmbyConnectUserId = embyUser.ConnectUserId.HasValue() ? embyUser.ConnectUserId : string.Empty,
+                            Alias = isConnectUser ? embyUser.Name : string.Empty,
                             MovieRequestLimit = userManagementSettings.MovieRequestLimit,
                             EpisodeRequestLimit = userManagementSettings.EpisodeRequestLimit
                         };
@@ -140,8 +140,6 @@ namespace Ombi.Schedule.Jobs.Emby
                     {
                         // Do we need to update this user?
                         existingEmbyUser.UserName = embyUser.Name;
-                        existingEmbyUser.EmbyConnectUserId =
-                            embyUser.ConnectUserId.HasValue() ? embyUser.ConnectUserId : string.Empty;
 
                         if (existingEmbyUser.IsEmbyConnect)
                         {
@@ -149,6 +147,7 @@ namespace Ombi.Schedule.Jobs.Emby
                             // Since we need the username and password to connect to emby connect, 
                             // We update the email address in the OmbiUserManager when the emby connect user logs in
                             existingEmbyUser.UserName = embyUser.ConnectUserName;
+                            existingEmbyUser.Alias = embyUser.Name;
                         }
 
                         await _userManager.UpdateAsync(existingEmbyUser);
@@ -169,8 +168,8 @@ namespace Ombi.Schedule.Jobs.Emby
             if (disposing)
             {
                 _userManager?.Dispose();
-                _embySettings?.Dispose();
-                _userManagementSettings?.Dispose();
+                //_embySettings?.Dispose();
+                //_userManagementSettings?.Dispose();
             }
             _disposed = true;
         }

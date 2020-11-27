@@ -12,6 +12,7 @@ namespace Ombi.Core.Settings.Models.External
 
     public class EmbyServers : ExternalSettings
     {
+        public string ServerId { get; set; }
         public string Name { get; set; }
         public string ApiKey { get; set; }
         public string AdministratorId { get; set; }

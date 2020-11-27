@@ -5,6 +5,7 @@ import { IdentityService, NotificationMessageService, NotificationService, Setti
 
 @Component({
     templateUrl: "./massemail.component.html",
+    styleUrls: ["./massemail.component.scss"]
 })
 export class MassEmailComponent implements OnInit {
 

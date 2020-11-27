@@ -191,7 +191,7 @@ namespace Ombi.Notifications
 
         protected IQueryable<OmbiUser> GetSubscriptions(int requestId, RequestType type)
         {
-            var subs = RequestSubscription.GetAll().Include(x => x.User).Where(x => x.RequestId == requestId && type == x.RequestType);
+            var subs = RequestSubscription.GetAll().Include(x => x.User).ThenInclude(x => x.NotificationUserIds).Where(x => x.RequestId == requestId && type == x.RequestType);
             return subs.Select(x => x.User);
         }
 

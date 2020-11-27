@@ -29,16 +29,16 @@ namespace Ombi.Core.Rule.Rules.Request
             if (obj.RequestType == RequestType.TvShow)
             {
                 var tvRequest = (ChildRequests) obj;
-
-                var tvContent = _plexContent.GetAll().Where(x => x.Type == PlexMediaTypeEntity.Show);
+                
+                var tvContent = _plexContent.GetAll().Include(x => x.Episodes).Where(x => x.Type == PlexMediaTypeEntity.Show);
                 // We need to do a check on the TVDBId
-                var anyTvDbMatches = await tvContent.Include(x => x.Episodes).FirstOrDefaultAsync(x => x.HasTvDb && x.TvDbId.Equals(tvRequest.Id.ToString(), StringComparison.InvariantCultureIgnoreCase)); // the Id on the child is the tvdbid at this point
+                var anyTvDbMatches = await tvContent.FirstOrDefaultAsync(x => x.TvDbId.Length > 0 && x.TvDbId == tvRequest.Id.ToString()); // the Id on the child is the tvdbid at this point
                 if (anyTvDbMatches == null)
                 {
                     // So we do not have a TVDB Id, that really sucks.
                     // Let's try and match on the title and year of the show
-                    var titleAndYearMatch = await tvContent.Include(x=> x.Episodes).FirstOrDefaultAsync(x =>
-                        x.Title.Equals(tvRequest.Title, StringComparison.InvariantCultureIgnoreCase)
+                    var titleAndYearMatch = await tvContent.FirstOrDefaultAsync(x =>
+                        x.Title == tvRequest.Title
                         && x.ReleaseYear == tvRequest.ReleaseYear.Year.ToString());
                     if (titleAndYearMatch != null)
                     {

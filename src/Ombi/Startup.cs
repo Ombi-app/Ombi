@@ -1,16 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.EquivalencyExpression;
-using Hangfire;
-using Hangfire.Dashboard;
-using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -27,25 +22,27 @@ using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Serilog;
-using SQLitePCL;
 using System;
 using System.IO;
+using Microsoft.AspNetCore.StaticFiles.Infrastructure;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Ombi.HealthChecks;
 
 namespace Ombi
 {
     public class Startup
     {
-        public static StoragePathSingleton StoragePath => StoragePathSingleton.Instance;
+        public static StartupSingleton StoragePath => StartupSingleton.Instance;
 
         public Startup(IWebHostEnvironment env)
         {
             Console.WriteLine(env.ContentRootPath);
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", false, false)
+                .AddJsonFile("appsettings.json", false, true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
@@ -65,6 +62,7 @@ namespace Ombi
         {
             services.AddIdentity<OmbiUser, IdentityRole>()
                 .AddEntityFrameworkStores<OmbiContext>()
+                .AddRoles<IdentityRole>()
                 .AddDefaultTokenProviders()
                 .AddUserManager<OmbiUserManager>();
 
@@ -78,9 +76,15 @@ namespace Ombi
                 options.User.AllowedUserNameCharacters = string.Empty;
             });
 
-            services.ConfigureDatabases();
-            services.AddHealthChecks();
+            var hcBuilder = services.AddHealthChecks();
+            hcBuilder.AddOmbiHealthChecks();
+            services.ConfigureDatabases(hcBuilder);
+            //services.AddHealthChecksUI(setupSettings: setup =>
+            //{
+            //    setup.AddHealthCheckEndpoint("Ombi", "/health");
+            //});
             services.AddMemoryCache();
+            services.AddHttpClient();
 
             services.AddJwtAuthentication(Configuration);
 
@@ -93,15 +97,6 @@ namespace Ombi
             services.RegisterApplicationDependencies(); // Ioc and EF
             services.AddSwagger();
             services.AddAppSettingsValues(Configuration);
-
-            services.AddHangfire(x =>
-            {
-                x.UseMemoryStorage();
-#pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
-                x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
-#pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
-            });
-
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
@@ -121,7 +116,7 @@ namespace Ombi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
@@ -132,12 +127,23 @@ namespace Ombi
 
             var ctx = serviceProvider.GetService<OmbiContext>();
             loggerFactory.AddSerilog();
-            
-            app.UseSpaStaticFiles();
-            
             var ombiService =
                 serviceProvider.GetService<ISettingsService<OmbiSettings>>();
             var settings = ombiService.GetSettings();
+
+            var sharedOptions = new SharedOptions();
+            if (settings.BaseUrl.HasValue())
+            {
+                if (settings.BaseUrl.EndsWith("/"))
+                {
+                    settings.BaseUrl = settings.BaseUrl.Remove(settings.BaseUrl.Length - 1, 1);
+                }
+                sharedOptions.RequestPath = settings.BaseUrl;
+            }
+
+            app.UseSpaStaticFiles(new StaticFileOptions(sharedOptions));
+
+
             if (settings.ApiKey.IsNullOrEmpty())
             {
                 // Generate a API Key
@@ -171,27 +177,27 @@ namespace Ombi
                 app.UsePathBase(settings.BaseUrl);
             }
 
-            app.UseHangfireServer(new BackgroundJobServerOptions
-                {WorkerCount = 1, ServerTimeout = TimeSpan.FromDays(1), ShutdownTimeout = TimeSpan.FromDays(1)});
-
+            // Setup the scheduler
+            //var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
+            //jobSetup.Setup();
             ctx.Seed();
             var settingsctx = serviceProvider.GetService<SettingsContext>();
             settingsctx.Seed();
 
-            var provider = new FileExtensionContentTypeProvider {Mappings = {[".map"] = "application/octet-stream"}};
+            var provider = new FileExtensionContentTypeProvider { Mappings = { [".map"] = "application/octet-stream" } };
 
             app.UseStaticFiles(new StaticFileOptions()
             {
                 ContentTypeProvider = provider,
             });
 
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+            app.UseMiddleware<ApiKeyMiddlewear>();
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseMiddleware<ErrorHandlingMiddleware>();
-            app.UseMiddleware<ApiKeyMiddlewear>();
 
             app.UseCors("MyPolicy");
             app.UseSwagger();
@@ -211,18 +217,28 @@ namespace Ombi
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<NotificationHub>("/hubs/notification");
-                endpoints.MapHealthChecks("/health");
+                if (!settings.DisableHealthChecks)
+                {
+                    endpoints.MapHealthChecks("/health", new HealthCheckOptions
+                    {
+                        Predicate = _ => true,
+                        //ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                    });
+                    //endpoints.MapHealthChecksUI(opts =>
+                    //{
+                    //    opts.AddCustomStylesheet("HealthCheck.css");
+                    //});
+                }
             });
 
             app.UseSpa(spa =>
             {
-                if (env.IsDevelopment())
-                {
-                    spa.Options.SourcePath = "ClientApp";
-                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3578");
-                }
+#if DEBUG
+                spa.Options.SourcePath = "ClientApp";
+                spa.UseProxyToSpaDevelopmentServer("http://localhost:3578");
+#endif
             });
-            
+
         }
     }
 }

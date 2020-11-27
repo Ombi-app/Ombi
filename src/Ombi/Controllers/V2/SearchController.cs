@@ -44,11 +44,12 @@ namespace Ombi.Controllers.V2
         ///  Show information using the MovieDbId.</remarks>
         /// <param name="searchTerm">The search you want, this can be for a movie or TV show e.g. Star Wars will return
         ///  all Star Wars movies and Star Wars Rebels the TV Sho</param>
+        /// <param name="filter">Filter for the search</param>
         /// <returns></returns>
-        [HttpGet("multi/{searchTerm}")]
-        public async Task<List<MultiSearchResult>> MultiSearch(string searchTerm)
+        [HttpPost("multi/{searchTerm}")]
+        public async Task<List<MultiSearchResult>> MultiSearch(string searchTerm, [FromBody] MultiSearchFilter filter)
         {
-            return await _multiSearchEngine.MultiSearch(searchTerm, Request.HttpContext.RequestAborted);
+            return await _multiSearchEngine.MultiSearch(searchTerm, filter, Request.HttpContext.RequestAborted);
         }
 
         /// <summary>
@@ -59,6 +60,21 @@ namespace Ombi.Controllers.V2
         public async Task<MovieFullInfoViewModel> GetMovieInfo(int movieDbId)
         {
             return await _movieEngineV2.GetFullMovieInformation(movieDbId, Request.HttpContext.RequestAborted);
+        }
+
+        [HttpGet("movie/imdb/{imdbid}")]
+        public async Task<MovieFullInfoViewModel> GetMovieInfoByImdbId(string imdbId)
+        {
+            return await _movieEngineV2.GetMovieInfoByImdbId(imdbId, Request.HttpContext.RequestAborted);
+        }
+
+        /// <summary>
+        /// Returns details for a single movie
+        /// </summary>
+        [HttpGet("movie/request/{requestId}")]
+        public async Task<MovieFullInfoViewModel> GetMovieByRequest(int requestId)
+        {
+            return await _movieEngineV2.GetMovieInfoByRequestId(requestId, Request.HttpContext.RequestAborted);
         }
 
         /// <summary>
@@ -81,6 +97,17 @@ namespace Ombi.Controllers.V2
         public async Task<SearchFullInfoTvShowViewModel> GetTvInfo(int tvdbid)
         {
             return await _tvEngineV2.GetShowInformation(tvdbid);
+        }
+
+        /// <summary>
+        /// Returns details for a single show
+        /// </summary>
+        /// <remarks>TVMaze is the TV Show Provider</remarks>
+        /// 
+        [HttpGet("tv/request/{requestId}")]
+        public async Task<SearchFullInfoTvShowViewModel> GetTvInfoByRequest(int requestId)
+        {
+            return await _tvEngineV2.GetShowByRequest(requestId);
         }
 
         /// <summary>
@@ -241,6 +268,19 @@ namespace Ombi.Controllers.V2
         }
 
         /// <summary>
+        /// Returns Popular Tv Shows
+        /// </summary>
+        /// <remarks>We use Trakt.tv as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("tv/popular/{currentPosition}/{amountToLoad}/images")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<IEnumerable<SearchTvShowViewModel>> PopularTvWithImages(int currentPosition, int amountToLoad)
+        {
+            return await _tvSearchEngine.Popular(currentPosition, amountToLoad, true);
+        }
+
+        /// <summary>
         /// Returns most Anticipated tv shows.
         /// </summary>
         /// <remarks>We use Trakt.tv as the Provider</remarks>
@@ -321,7 +361,7 @@ namespace Ombi.Controllers.V2
             return await _tvSearchEngine.Trending(currentPosition, amountToLoad);
         }
 
-        
+
         /// <summary>
         /// Returns all the movies that is by the actor id 
         /// </summary>
@@ -332,7 +372,7 @@ namespace Ombi.Controllers.V2
         [ProducesDefaultResponseType]
         public async Task<ActorCredits> GetMoviesByActor(int actorId)
         {
-           return await _movieEngineV2.GetMoviesByActor(actorId, null);
+            return await _movieEngineV2.GetMoviesByActor(actorId, null);
         }
 
 
@@ -342,6 +382,14 @@ namespace Ombi.Controllers.V2
         public async Task<ArtistInformation> GetArtistInformation(string artistId)
         {
             return await _musicEngine.GetArtistInformation(artistId);
+        }
+
+        [HttpGet("artist/request/{requestId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<ArtistInformation> GetArtistInformationByRequestId(int requestId)
+        {
+            return await _musicEngine.GetArtistInformationByRequestId(requestId);
         }
 
         [HttpGet("releasegroupart/{musicBrainzId}")]

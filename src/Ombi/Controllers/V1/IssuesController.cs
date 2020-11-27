@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Attributes;
+using Ombi.Core;
 using Ombi.Core.Notifications;
 using Ombi.Helpers;
 using Ombi.Models;
@@ -25,7 +25,7 @@ namespace Ombi.Controllers.V1
     public class IssuesController : ControllerBase
     {
         public IssuesController(IRepository<IssueCategory> categories, IRepository<Issues> issues, IRepository<IssueComments> comments,
-            UserManager<OmbiUser> userManager, INotificationService notify)
+            UserManager<OmbiUser> userManager, INotificationHelper notify)
         {
             _categories = categories;
             _issues = issues;
@@ -38,7 +38,7 @@ namespace Ombi.Controllers.V1
         private readonly IRepository<Issues> _issues;
         private readonly IRepository<IssueComments> _issueComments;
         private readonly UserManager<OmbiUser> _userManager;
-        private readonly INotificationService _notification;
+        private readonly INotificationHelper _notification;
 
         /// <summary>
         /// Get's all categories
@@ -130,7 +130,9 @@ namespace Ombi.Controllers.V1
         public async Task<int> CreateIssue([FromBody]Issues i)
         {
             i.IssueCategory = null;
-            i.UserReportedId = (await _userManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase))).Id;
+            i.CreatedDate = DateTime.UtcNow;
+            var username = User.Identity.Name.ToUpper();
+            i.UserReportedId = (await _userManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username)).Id;
             await _issues.Add(i);
             var category = await _categories.GetAll().FirstOrDefaultAsync(x => i.IssueCategoryId == x.Id);
             if (category != null)
@@ -146,11 +148,12 @@ namespace Ombi.Controllers.V1
                 Recipient = string.Empty,
                 AdditionalInformation = $"{i.Subject} | {i.Description}",
                 UserId =  i.UserReportedId,
+                
             };
 
             AddIssueNotificationSubstitutes(notificationModel, i, User.Identity.Name);
 
-            BackgroundJob.Enqueue(() => _notification.Publish(notificationModel));
+            await _notification.Notify(notificationModel);
 
             return i.Id;
         }
@@ -165,6 +168,23 @@ namespace Ombi.Controllers.V1
                 .Include(x => x.IssueCategory)
                 .Include(x => x.UserReported)
                 .FirstOrDefaultAsync();
+        }
+        
+        [HttpGet("request/{id}")]
+        public async Task<IActionResult> GetIssueByRequestId([FromRoute] int id)
+        {
+            return new OkObjectResult(await _issues.GetAll().Where(x => x.RequestId == id)
+                .Include(x => x.IssueCategory)
+                .Include(x => x.UserReported).ToListAsync());
+        }
+
+                
+        [HttpGet("provider/{id}")]
+        public async Task<IActionResult> GetIssueByProviderId([FromRoute] string id)
+        {
+            return new OkObjectResult(await _issues.GetAll().Where(x => x.ProviderId == id)
+                .Include(x => x.IssueCategory)
+                .Include(x => x.UserReported).ToListAsync());
         }
 
         /// <summary>
@@ -197,7 +217,7 @@ namespace Ombi.Controllers.V1
         [HttpPost("comments")]
         public async Task<IssueComments> AddComment([FromBody] NewIssueCommentViewModel comment)
         {
-            var user = await _userManager.Users.Where(x => User.Identity.Name.Equals(x.UserName, StringComparison.InvariantCultureIgnoreCase))
+            var user = await _userManager.Users.Where(x => User.Identity.Name == x.UserName)
                 .FirstOrDefaultAsync();
             var issue = await _issues.GetAll().Include(x => x.UserReported).Include(x => x.IssueCategory).FirstOrDefaultAsync(x => x.Id == comment.IssueId);
             if (issue == null)
@@ -237,14 +257,14 @@ namespace Ombi.Controllers.V1
                 notificationModel.Recipient = user.Email;
             }
 
-            BackgroundJob.Enqueue(() => _notification.Publish(notificationModel));
+            await _notification.Notify(notificationModel);
 
             return await _issueComments.Add(newComment);
         }
         /// <summary>
         /// Deletes a comment on a issue
         /// </summary>
-        [HttpDelete("comments/{id:int}")]
+        [HttpDelete("comments/{id}")]
         [PowerUser]
         public async Task<bool> DeleteComment(int id)
         {
@@ -254,10 +274,21 @@ namespace Ombi.Controllers.V1
             return true;
         }
 
+        [HttpDelete("{id}")]
+        [PowerUser]
+        public async Task<bool> DeleteIssue(int id)
+        {
+            var issue = await _issues.GetAll().FirstOrDefaultAsync(x => x.Id == id);
+
+            await _issues.Delete(issue);
+            return true;
+        }
+
         [HttpPost("status")]
         public async Task<bool> UpdateStatus([FromBody] IssueStateViewModel model)
         {
-            var user = await _userManager.Users.Where(x => User.Identity.Name.Equals(x.UserName, StringComparison.InvariantCultureIgnoreCase))
+            var username = User.Identity.Name.ToUpper();
+            var user = await _userManager.Users.Where(x => username == x.NormalizedUserName)
                 .FirstOrDefaultAsync();
             var issue = await _issues.GetAll().Include(x => x.UserReported).Include(x => x.IssueCategory).FirstOrDefaultAsync(x => x.Id == model.IssueId);
             if (issue == null)
@@ -290,7 +321,7 @@ namespace Ombi.Controllers.V1
                 };
                 AddIssueNotificationSubstitutes(notificationModel, issue, issue.UserReported?.UserAlias ?? string.Empty);
 
-                BackgroundJob.Enqueue(() => _notification.Publish(notificationModel));
+                await _notification.Notify(notificationModel);
             }
 
 

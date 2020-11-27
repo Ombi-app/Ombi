@@ -113,7 +113,7 @@ namespace Ombi.Core.Tests.Rule.Search
                     PercentOfTracks = 100
                 }
             }.AsQueryable());
-            var request = new SearchAlbumViewModel { ForeignAlbumId = "ABC" };
+            var request = new SearchAlbumViewModel { ForeignAlbumId = "abc" };
             var result = await Rule.Execute(request);
 
             Assert.True(result.Success);

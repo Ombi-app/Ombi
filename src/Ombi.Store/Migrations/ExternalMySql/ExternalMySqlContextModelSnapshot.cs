@@ -14,15 +14,17 @@ namespace Ombi.Store.Migrations.ExternalMySql
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
+                .HasAnnotation("ProductVersion", "3.1.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Ombi.Store.Entities.CouchPotatoCache", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<int>("TheMovieDbId");
+                    b.Property<int>("TheMovieDbId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -32,26 +34,36 @@ namespace Ombi.Store.Migrations.ExternalMySql
             modelBuilder.Entity("Ombi.Store.Entities.EmbyContent", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("AddedAt");
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("EmbyId")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
-                    b.Property<string>("ImdbId");
+                    b.Property<string>("ImdbId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("ProviderId");
+                    b.Property<string>("ProviderId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("TheMovieDbId");
+                    b.Property<string>("TheMovieDbId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("TvDbId");
+                    b.Property<string>("TvDbId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int>("Type");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Url");
+                    b.Property<string>("Url")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
 
@@ -61,27 +73,38 @@ namespace Ombi.Store.Migrations.ExternalMySql
             modelBuilder.Entity("Ombi.Store.Entities.EmbyEpisode", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("AddedAt");
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<string>("EmbyId");
+                    b.Property<string>("EmbyId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int>("EpisodeNumber");
+                    b.Property<int>("EpisodeNumber")
+                        .HasColumnType("int");
 
-                    b.Property<string>("ImdbId");
+                    b.Property<string>("ImdbId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("ParentId");
+                    b.Property<string>("ParentId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
-                    b.Property<string>("ProviderId");
+                    b.Property<string>("ProviderId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int>("SeasonNumber");
+                    b.Property<int>("SeasonNumber")
+                        .HasColumnType("int");
 
-                    b.Property<string>("TheMovieDbId");
+                    b.Property<string>("TheMovieDbId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("TvDbId");
+                    b.Property<string>("TvDbId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
 
@@ -93,23 +116,32 @@ namespace Ombi.Store.Migrations.ExternalMySql
             modelBuilder.Entity("Ombi.Store.Entities.LidarrAlbumCache", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("AddedAt");
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<int>("ArtistId");
+                    b.Property<int>("ArtistId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("ForeignAlbumId");
+                    b.Property<string>("ForeignAlbumId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<bool>("Monitored");
+                    b.Property<bool>("Monitored")
+                        .HasColumnType("tinyint(1)");
 
-                    b.Property<decimal>("PercentOfTracks");
+                    b.Property<decimal>("PercentOfTracks")
+                        .HasColumnType("decimal(65,30)");
 
-                    b.Property<DateTime>("ReleaseDate");
+                    b.Property<DateTime>("ReleaseDate")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int>("TrackCount");
+                    b.Property<int>("TrackCount")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -119,15 +151,20 @@ namespace Ombi.Store.Migrations.ExternalMySql
             modelBuilder.Entity("Ombi.Store.Entities.LidarrArtistCache", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<int>("ArtistId");
+                    b.Property<int>("ArtistId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("ArtistName");
+                    b.Property<string>("ArtistName")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("ForeignArtistId");
+                    b.Property<string>("ForeignArtistId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<bool>("Monitored");
+                    b.Property<bool>("Monitored")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 
@@ -137,19 +174,26 @@ namespace Ombi.Store.Migrations.ExternalMySql
             modelBuilder.Entity("Ombi.Store.Entities.PlexEpisode", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<int>("EpisodeNumber");
+                    b.Property<int>("EpisodeNumber")
+                        .HasColumnType("int");
 
-                    b.Property<int>("GrandparentKey");
+                    b.Property<int>("GrandparentKey")
+                        .HasColumnType("int");
 
-                    b.Property<int>("Key");
+                    b.Property<int>("Key")
+                        .HasColumnType("int");
 
-                    b.Property<int>("ParentKey");
+                    b.Property<int>("ParentKey")
+                        .HasColumnType("int");
 
-                    b.Property<int>("SeasonNumber");
+                    b.Property<int>("SeasonNumber")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
 
@@ -161,17 +205,23 @@ namespace Ombi.Store.Migrations.ExternalMySql
             modelBuilder.Entity("Ombi.Store.Entities.PlexSeasonsContent", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<int>("ParentKey");
+                    b.Property<int>("ParentKey")
+                        .HasColumnType("int");
 
-                    b.Property<int>("PlexContentId");
+                    b.Property<int>("PlexContentId")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("PlexServerContentId");
+                    b.Property<int?>("PlexServerContentId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("SeasonKey");
+                    b.Property<int>("SeasonKey")
+                        .HasColumnType("int");
 
-                    b.Property<int>("SeasonNumber");
+                    b.Property<int>("SeasonNumber")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -183,29 +233,41 @@ namespace Ombi.Store.Migrations.ExternalMySql
             modelBuilder.Entity("Ombi.Store.Entities.PlexServerContent", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("AddedAt");
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<string>("ImdbId");
+                    b.Property<string>("ImdbId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int>("Key");
+                    b.Property<int>("Key")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Quality");
+                    b.Property<string>("Quality")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("ReleaseYear");
+                    b.Property<string>("ReleaseYear")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int?>("RequestId");
+                    b.Property<int?>("RequestId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("TheMovieDbId");
+                    b.Property<string>("TheMovieDbId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("TvDbId");
+                    b.Property<string>("TvDbId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int>("Type");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Url");
+                    b.Property<string>("Url")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
 
@@ -215,11 +277,14 @@ namespace Ombi.Store.Migrations.ExternalMySql
             modelBuilder.Entity("Ombi.Store.Entities.RadarrCache", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<bool>("HasFile");
+                    b.Property<bool>("HasFile")
+                        .HasColumnType("tinyint(1)");
 
-                    b.Property<int>("TheMovieDbId");
+                    b.Property<int>("TheMovieDbId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -229,9 +294,11 @@ namespace Ombi.Store.Migrations.ExternalMySql
             modelBuilder.Entity("Ombi.Store.Entities.SickRageCache", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<int>("TvDbId");
+                    b.Property<int>("TvDbId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -241,13 +308,17 @@ namespace Ombi.Store.Migrations.ExternalMySql
             modelBuilder.Entity("Ombi.Store.Entities.SickRageEpisodeCache", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<int>("EpisodeNumber");
+                    b.Property<int>("EpisodeNumber")
+                        .HasColumnType("int");
 
-                    b.Property<int>("SeasonNumber");
+                    b.Property<int>("SeasonNumber")
+                        .HasColumnType("int");
 
-                    b.Property<int>("TvDbId");
+                    b.Property<int>("TvDbId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -257,9 +328,11 @@ namespace Ombi.Store.Migrations.ExternalMySql
             modelBuilder.Entity("Ombi.Store.Entities.SonarrCache", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<int>("TvDbId");
+                    b.Property<int>("TvDbId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -269,15 +342,20 @@ namespace Ombi.Store.Migrations.ExternalMySql
             modelBuilder.Entity("Ombi.Store.Entities.SonarrEpisodeCache", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<int>("EpisodeNumber");
+                    b.Property<int>("EpisodeNumber")
+                        .HasColumnType("int");
 
-                    b.Property<bool>("HasFile");
+                    b.Property<bool>("HasFile")
+                        .HasColumnType("tinyint(1)");
 
-                    b.Property<int>("SeasonNumber");
+                    b.Property<int>("SeasonNumber")
+                        .HasColumnType("int");
 
-                    b.Property<int>("TvDbId");
+                    b.Property<int>("TvDbId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -298,12 +376,13 @@ namespace Ombi.Store.Migrations.ExternalMySql
                         .WithMany("Episodes")
                         .HasForeignKey("GrandparentKey")
                         .HasPrincipalKey("Key")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.PlexSeasonsContent", b =>
                 {
-                    b.HasOne("Ombi.Store.Entities.PlexServerContent")
+                    b.HasOne("Ombi.Store.Entities.PlexServerContent", null)
                         .WithMany("Seasons")
                         .HasForeignKey("PlexServerContentId");
                 });

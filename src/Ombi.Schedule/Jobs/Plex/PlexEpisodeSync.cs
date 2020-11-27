@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -12,6 +11,7 @@ using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Hubs;
+using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -64,7 +64,9 @@ namespace Ombi.Schedule.Jobs.Plex
             }
 
 
-            await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
+            _log.LogInformation("Plex Episode Sync Finished - Triggering Metadata refresh");
+            await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
+
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Plex Episode Sync Finished");
         }
@@ -164,7 +166,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     {
                         // Ok let's try and match it to a title. TODO (This is experimental)
                         seriesExists = await _repo.GetAll().FirstOrDefaultAsync(x =>
-                            x.Title.Equals(episode.grandparentTitle, StringComparison.CurrentCultureIgnoreCase));
+                            x.Title == episode.grandparentTitle);
                         if (seriesExists == null)
                         {
                             _log.LogWarning(
@@ -216,8 +218,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if (disposing)
             {
-                _repo?.Dispose();
-                _settings?.Dispose();
+                //_settings?.Dispose();
             }
             _disposed = true;
         }

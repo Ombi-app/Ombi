@@ -28,10 +28,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Ombi.Core;
 using Ombi.Core.Notifications;
 using Ombi.Helpers;
 using Ombi.Hubs;
@@ -47,7 +47,7 @@ namespace Ombi.Schedule.Jobs.Emby
     public class EmbyAvaliabilityChecker : IEmbyAvaliabilityChecker
     {
         public EmbyAvaliabilityChecker(IEmbyContentRepository repo, ITvRequestRepository t, IMovieRequestRepository m,
-            INotificationService n, ILogger<EmbyAvaliabilityChecker> log, IHubContext<NotificationHub> notification)
+            INotificationHelper n, ILogger<EmbyAvaliabilityChecker> log, IHubContext<NotificationHub> notification)
         {
             _repo = repo;
             _tvRepo = t;
@@ -60,19 +60,19 @@ namespace Ombi.Schedule.Jobs.Emby
         private readonly ITvRequestRepository _tvRepo;
         private readonly IMovieRequestRepository _movieRepo;
         private readonly IEmbyContentRepository _repo;
-        private readonly INotificationService _notificationService;
+        private readonly INotificationHelper _notificationService;
         private readonly ILogger<EmbyAvaliabilityChecker> _log;
         private readonly IHubContext<NotificationHub> _notification;
 
         public async Task Execute(IJobExecutionContext job)
         {
+            _log.LogInformation("Starting Emby Availability Check");
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Emby Availability Checker Started");
             await ProcessMovies();
             await ProcessTv();
 
-            await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
-
+            _log.LogInformation("Finished Emby Availability Check");
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Emby Availability Checker Finished");
         }
@@ -109,14 +109,14 @@ namespace Ombi.Schedule.Jobs.Emby
 
                     _log.LogDebug("MovieId: {0}, RequestUser: {1}", movie.Id, recipient);
 
-                    BackgroundJob.Enqueue(() => _notificationService.Publish(new NotificationOptions
+                    await _notificationService.Notify(new NotificationOptions
                     {
                         DateTime = DateTime.Now,
                         NotificationType = NotificationType.RequestAvailable,
                         RequestId = movie.Id,
                         RequestType = RequestType.Movie,
                         Recipient = recipient,
-                    }));
+                    });
                 }
             }
             await _movieRepo.Save();
@@ -170,7 +170,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 {
                     // Let's try and match the series by name
                     seriesEpisodes = embyEpisodes.Where(x =>
-                        x.Series.Title.Equals(child.Title, StringComparison.CurrentCultureIgnoreCase));
+                        x.Series.Title == child.Title);
                 }
 
                 foreach (var season in child.SeasonRequests)
@@ -200,14 +200,14 @@ namespace Ombi.Schedule.Jobs.Emby
                     // We have fulfulled this request!
                     child.Available = true;
                     child.MarkedAsAvailable = DateTime.Now;
-                    BackgroundJob.Enqueue(() => _notificationService.Publish(new NotificationOptions
+                    await _notificationService.Notify(new NotificationOptions
                     {
                         DateTime = DateTime.Now,
                         NotificationType = NotificationType.RequestAvailable,
                         RequestId = child.Id,
                         RequestType = RequestType.TvShow,
                         Recipient = child.RequestedUser.Email
-                    }));
+                    });
                 }
             }
 
@@ -222,7 +222,6 @@ namespace Ombi.Schedule.Jobs.Emby
 
             if (disposing)
             {
-                _movieRepo?.Dispose();
             }
             _disposed = true;
         }

@@ -10,6 +10,7 @@ import { ServiceHelpers } from "./service.helpers";
 import { ISearchMovieResultV2 } from "../interfaces/ISearchMovieResultV2";
 import { ISearchTvResultV2, IMovieCollectionsViewModel, IActorCredits } from "../interfaces/ISearchTvResultV2";
 import { IArtistSearchResult, IAlbumArt } from "../interfaces/IMusicSearchResultV2";
+import { SearchFilter } from "../my-nav/SearchFilter";
 
 @Injectable()
 export class SearchV2Service extends ServiceHelpers {
@@ -17,16 +18,25 @@ export class SearchV2Service extends ServiceHelpers {
         super(http, "/api/v2/search", href);
     }
 
-    public multiSearch(searchTerm: string): Observable<IMultiSearchResult[]> {
-        return this.http.get<IMultiSearchResult[]>(`${this.url}/multi/${searchTerm}`);
+    public multiSearch(searchTerm: string, filter: SearchFilter): Observable<IMultiSearchResult[]> {
+        return this.http.post<IMultiSearchResult[]>(`${this.url}/multi/${searchTerm}`, filter);
     }
     public getFullMovieDetails(theMovieDbId: number): Observable<ISearchMovieResultV2> {
         return this.http.get<ISearchMovieResultV2>(`${this.url}/Movie/${theMovieDbId}`);
     }
+
+    public getMovieByImdbId(imdbId: string): Observable<ISearchMovieResultV2> {
+        return this.http.get<ISearchMovieResultV2>(`${this.url}/Movie/imdb/${imdbId}`);
+    }
+
+    public getFullMovieDetailsByRequestId(requestId: number): Promise<ISearchMovieResultV2> {
+        return this.http.get<ISearchMovieResultV2>(`${this.url}/Movie/request/${requestId}`).toPromise();
+    }
+
     public getFullMovieDetailsPromise(theMovieDbId: number): Promise<ISearchMovieResultV2> {
         return this.http.get<ISearchMovieResultV2>(`${this.url}/Movie/${theMovieDbId}`).toPromise();
     }
-    
+
     public similarMovies(theMovieDbId: number, langCode: string): Observable<ISearchMovieResult[]> {
         return this.http.post<ISearchMovieResult[]>(`${this.url}/Movie/similar`, {theMovieDbId, languageCode: langCode});
     }
@@ -53,11 +63,11 @@ export class SearchV2Service extends ServiceHelpers {
     public nowPlayingMoviesByPage(currentlyLoaded: number, toLoad: number): Promise<ISearchMovieResult[]> {
         return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/nowplaying/${currentlyLoaded}/${toLoad}`).toPromise();
     }
-    
+
     public topRatedMovies(): Observable<ISearchMovieResult[]> {
         return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/toprated`);
     }
-    
+
     public popularTv(): Observable<ISearchTvResult[]> {
         return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/popular`, { headers: this.headers });
     }
@@ -75,7 +85,7 @@ export class SearchV2Service extends ServiceHelpers {
     public anticipatedTvByPage(currentlyLoaded: number, toLoad: number): Promise<ISearchTvResult[]> {
         return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/anticipated/${currentlyLoaded}/${toLoad}`, { headers: this.headers }).toPromise();
     }
-    
+
     public trendingTv(): Observable<ISearchTvResult[]> {
         return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/trending`, { headers: this.headers });
     }
@@ -83,15 +93,19 @@ export class SearchV2Service extends ServiceHelpers {
     public trendingTvByPage(currentlyLoaded: number, toLoad: number): Promise<ISearchTvResult[]> {
         return this.http.get<ISearchTvResult[]>(`${this.url}/Tv/trending/${currentlyLoaded}/${toLoad}`, { headers: this.headers }).toPromise();
     }
-    
+
     public getTvInfo(tvdbid: number): Promise<ISearchTvResultV2> {
         return this.http.get<ISearchTvResultV2>(`${this.url}/Tv/${tvdbid}`, { headers: this.headers }).toPromise();
     }
-    
+
+    public getTvInfoWithRequestId(requestId: number): Promise<ISearchTvResultV2> {
+        return this.http.get<ISearchTvResultV2>(`${this.url}/Tv/request/${requestId}`, { headers: this.headers }).toPromise();
+    }
+
     public getTvInfoWithMovieDbId(theMovieDbId: number): Promise<ISearchTvResultV2> {
         return this.http.get<ISearchTvResultV2>(`${this.url}/Tv/moviedb/${theMovieDbId}`, { headers: this.headers }).toPromise();
     }
-        
+
     public getMovieCollections(collectionId: number): Promise<IMovieCollectionsViewModel> {
         return this.http.get<IMovieCollectionsViewModel>(`${this.url}/movie/collection/${collectionId}`, { headers: this.headers }).toPromise();
     }

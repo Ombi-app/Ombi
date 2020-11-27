@@ -1,21 +1,23 @@
 ﻿import { Component, OnInit } from "@angular/core";
 
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { NotificationService, SettingsService } from "../../services";
+import { NotificationService, SettingsService, JobService } from "../../services";
 
 @Component({
     templateUrl: "./jobs.component.html",
+    styleUrls: ["./jobs.component.scss"]
 })
 export class JobsComponent implements OnInit {
 
     public form: FormGroup;
-    
+
     public profilesRunning: boolean;
-    
+
     constructor(private readonly settingsService: SettingsService,
                 private readonly fb: FormBuilder,
-                private readonly notificationService: NotificationService) { }
-    
+                private readonly notificationService: NotificationService,
+                private readonly jobsService: JobService) { }
+
     public ngOnInit() {
         this.settingsService.getJobSettings().subscribe(x => {
             this.form = this.fb.group({
@@ -26,28 +28,28 @@ export class JobsComponent implements OnInit {
                 userImporter:             [x.userImporter, Validators.required],
                 sonarrSync:               [x.sonarrSync, Validators.required],
                 radarrSync:               [x.radarrSync, Validators.required],
-                sickRageSync:             [x.sickRageSync, Validators.required],  
-                refreshMetadata:          [x.refreshMetadata, Validators.required],
+                sickRageSync:             [x.sickRageSync, Validators.required],
                 newsletter:               [x.newsletter, Validators.required],
                 plexRecentlyAddedSync:    [x.plexRecentlyAddedSync, Validators.required],
                 lidarrArtistSync:         [x.lidarrArtistSync, Validators.required],
                 issuesPurge:              [x.issuesPurge, Validators.required],
                 retryRequests:            [x.retryRequests, Validators.required],
                 mediaDatabaseRefresh:     [x.mediaDatabaseRefresh, Validators.required],
-            });  
+                autoDeleteRequests:     [x.autoDeleteRequests, Validators.required]
+            });
         });
     }
 
     public testCron(expression: string) {
         this.settingsService.testCron({ expression }).subscribe(x => {
-            if(x.success) {    
-                this.notificationService.success("Cron is Valid");    
+            if(x.success) {
+                this.notificationService.success("Cron is Valid");
             } else {
                 this.notificationService.error(x.message);
             }
         });
     }
-    
+
     public onSubmit(form: FormGroup) {
         if (form.invalid) {
             this.notificationService.error("Please check your entered values");
@@ -61,5 +63,9 @@ export class JobsComponent implements OnInit {
                 this.notificationService.error("There was an error when saving the job settings. " + x.message);
             }
         });
+    }
+
+    public runArrAvailabilityChecker() {
+        this.jobsService.runArrAvailabilityChecker().subscribe();
     }
 }

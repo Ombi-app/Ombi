@@ -2,14 +2,18 @@
 
 import { IEmbyServer, IEmbySettings } from "../../interfaces";
 import { EmbyService, JobService, NotificationService, SettingsService, TesterService } from "../../services";
+import { MatTabChangeEvent } from "@angular/material/tabs";
+import {FormControl} from '@angular/forms';
 
 @Component({
     templateUrl: "./emby.component.html",
+    styleUrls: ["./emby.component.scss"]
 })
 export class EmbyComponent implements OnInit {
 
     public settings: IEmbySettings;
-    public hasDiscovered: boolean;
+    public hasDiscoveredOrDirty: boolean;
+    selected = new FormControl(0);
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
@@ -25,24 +29,33 @@ export class EmbyComponent implements OnInit {
         const result = await this.embyService.getPublicInfo(server).toPromise();
         this.settings.isJellyfin = result.isJellyfin;
         server.name = result.serverName;
-        this.hasDiscovered = true;
+        server.serverId = result.id;
+        this.hasDiscoveredOrDirty = true;
     }
 
-    public addTab() {
-        if (this.settings.servers == null) {
-            this.settings.servers = [];
+    public addTab(event: MatTabChangeEvent) {
+        const tabName = event.tab.textLabel;
+        if (tabName == "Add Server"){
+            if (this.settings.servers == null) {
+                this.settings.servers = [];
+            }
+            this.settings.servers.push({
+                name: "New " + this.settings.servers.length + "*",
+                id: Math.floor(Math.random() * (99999 - 0 + 1) + 1),
+                apiKey: "",
+                administratorId: "",
+                enableEpisodeSearching: false,
+                ip: "",
+                port: 0,
+                ssl: false,
+                subDir: "",
+            } as IEmbyServer);
+        this.selected.setValue(this.settings.servers.length - 1);
         }
-        this.settings.servers.push({
-            name: "New*",
-            id: Math.floor(Math.random() * (99999 - 0 + 1) + 1),
-            apiKey: "",
-            administratorId: "",
-            enableEpisodeSearching: false,
-            ip: "",
-            port: 0,
-            ssl: false,
-            subDir: "",
-        } as IEmbyServer);
+    }
+
+    public toggle() {
+     this.hasDiscoveredOrDirty = true;
     }
 
     public test(server: IEmbyServer) {
@@ -59,6 +72,7 @@ export class EmbyComponent implements OnInit {
         const index = this.settings.servers.indexOf(server, 0);
         if (index > -1) {
             this.settings.servers.splice(index, 1);
+            this.selected.setValue(this.settings.servers.length - 1);
         }
     }
 

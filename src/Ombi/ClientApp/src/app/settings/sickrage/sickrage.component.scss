@@ -1,0 +1,10 @@
+.small-middle-container {
+    margin: auto;
+    width: 95%;
+    margin-top: 10px;
+}
+
+::ng-deep .dark .btn:hover {
+    box-shadow: 0 5px 11px 0 rgba(255, 255, 255, 0.18), 0 4px 15px 0 rgba(255, 255, 255, 0.15);
+    color: inherit;
+}

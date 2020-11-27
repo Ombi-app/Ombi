@@ -117,9 +117,8 @@ namespace Ombi.Controllers.V1.External
         /// <summary>
         /// Gets the Sonarr tags
         /// </summary>
-        /// <param name="settings">The settings.</param>
         /// <returns></returns>
-        [HttpPost("tags")]
+        [HttpGet("tags")]
         [PowerUser]
         public async Task<IEnumerable<Tag>> GetTags()
         {
@@ -142,6 +141,14 @@ namespace Ombi.Controllers.V1.External
         public async Task<IEnumerable<LanguageProfiles>> GetLanguageProfiles([FromBody] SonarrSettings settings)
         {
             return await SonarrV3Api.LanguageProfiles(settings.ApiKey, settings.FullUri);
+        }
+
+        [HttpGet("enabled")]
+        [PowerUser]
+        public async Task<bool> Enabled()
+        {
+            var settings = await SonarrSettings.GetSettingsAsync();
+            return settings.Enabled;
         }
 
     }

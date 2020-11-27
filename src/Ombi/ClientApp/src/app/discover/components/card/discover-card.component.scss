@@ -1,17 +1,19 @@
 $ombi-primary:#3f3f3f;
 $card-background: #2b2b2b;
+
 #cardImage {
-    max-height: 68%;
     border-radius: 5px 5px 0px 0px;
+    height: 75%;
 }
 
 .dark-card {
     border-radius: 8px;
-    height: 435px;
 }
 
+// Changed height to 100% to make all cards the same height
 .card-spacing {
     margin-top: 10%;
+    height: 100%;
 }
 
 
@@ -21,28 +23,65 @@ $card-background: #2b2b2b;
 }
 
 $border-width: 3px;
-.movie-image {
-    border-bottom: $border-width orange solid;
+
+.available {
+    border-bottom: $border-width #1DE9B6 solid;
 }
 
-.tv-image {
-    border-bottom: $border-width #1DE9B6 solid;
+.approved {
+    border-bottom: $border-width #ff5722 solid;
+}
+
+.requested {
+    border-bottom: $border-width #ffd740 solid;
+}
+
+.notrequested {
+    border-bottom: $border-width #303030 solid;
 }
 
 .expand {
     text-align: center;
 }
 
-.grow {
-    transition: all .2s ease-in-out;
-}
+@media (min-width: 1025px) {
 
-.grow:hover {
-    transform: scale(1.1);
+    // Changed height to 100% to make all cards the same height
+    .grow {
+        transition: all .2s ease-in-out;
+        height: 100%;
+    }
+
+    .grow:hover {
+        transform: scale(1.1);
+    }
 }
 
 ::ng-deep mat-dialog-container.mat-dialog-container {
     // background-color: $ombi-primary;
     // color: white;
     border-radius: 2%
+}
+
+
+/* Title adjust for the Discover page */
+.mat-card-content h6 {
+    overflow: hidden;
+    white-space: nowrap;
+    font-weight: 400;
+    font-size: 1.1rem;
+}
+
+/* Summary adjust for Discover page */
+.small,
+small {
+    font-size: 0.8rem;
+}
+
+@media (min-width: 2000px) {
+    #cardImage {
+        height: 80%;
+        object-fit: cover;
+        display: block;
+    }
 }

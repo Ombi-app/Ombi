@@ -8,6 +8,7 @@ import { SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./pushover.component.html",
+    styleUrls: ["./notificationtemplate.component.scss"]
 })
 export class PushoverComponent implements OnInit {
     public NotificationType = NotificationType;

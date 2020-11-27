@@ -20,10 +20,12 @@ namespace Ombi.Store.Context.Sqlite
         {
             try
             {
-                Database.ExecuteSqlCommand(@"INSERT INTO __EFMigrationsHistory (MigrationId,ProductVersion)
+                Database.ExecuteSqlRaw(@"INSERT OR IGNORE INTO __EFMigrationsHistory (MigrationId,ProductVersion)
                 VALUES('20191103205204_Inital', '2.2.6-servicing-10079'); ");
             }
-            catch (Exception) 
+#pragma warning disable RCS1075 // Avoid empty catch clause that catches System.Exception.
+            catch (Exception)
+#pragma warning restore RCS1075 // Avoid empty catch clause that catches System.Exception.
             {
                 // ignored
             }

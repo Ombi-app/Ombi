@@ -1,20 +1,15 @@
 <div class="card-spacing" *ngIf="result">
     <mat-card class="mat-elevation-z8 dark-card grow">
         <a [routerLink]="result.type === RequestType.movie ? '/details/movie/' + result.id : '/details/tv/' + result.id">
-            <img id="cardImage" mat-card-image src="{{result.posterPath}}" class="card-poster" [ngClass]="(result.type === RequestType.movie)?'movie-image':'tv-image'" alt="{{result.title}}">
+            <img id="cardImage" mat-card-image src="{{result.posterPath}}" class="card-poster" [ngClass]="getStatusClass()" alt="{{result.title}}">
         </a>
-        <mat-card-content>
+        <mat-card-content  (click)="openDetails(result);">
 
-            <h6 *ngIf="result.title.length <= 13">{{result.title}}</h6>
-            <h6 *ngIf="result.title.length > 13" matTooltip="{{result.title}}">{{result.title | truncate:13}}</h6>
+            <h6 *ngIf="result.title.length <= 20">{{result.title}}</h6>
+            <h6 *ngIf="result.title.length > 20" matTooltip="{{result.title}}">{{result.title | truncate:20}}</h6>
             <div class="fade-text">
-            <small class="overview-text">{{result.overview | truncate: 50}}</small>
+            <small class="overview-text">{{result.overview | truncate: 75}}</small>
         </div>
         </mat-card-content>
-        <mat-card-actions class="expand">
-            <button mat-icon-button (click)="openDetails(result);">
-                <mat-icon>expand_more</mat-icon>
-            </button>
-        </mat-card-actions>
     </mat-card>
 </div>

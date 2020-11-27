@@ -10,6 +10,7 @@ namespace Ombi.Store.Repository.Requests
         MovieRequests GetRequest(int theMovieDbId);
         Task Update(MovieRequests request);
         Task Save();
+        Task MarkAsAvailable(int id);
         IQueryable<MovieRequests> GetWithUser();
         IQueryable<MovieRequests> GetWithUser(string userId);
         IQueryable<MovieRequests> GetAll(string userId);

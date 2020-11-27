@@ -1,21 +1,23 @@
-﻿import { Component, OnInit, ViewChild } from "@angular/core";
+﻿import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 
 import { ICheckbox, ICustomizationSettings, IEmailNotificationSettings, IUser } from "../interfaces";
 import { IdentityService, NotificationService, SettingsService } from "../services";
-import { MatSort, MatTableDataSource } from "@angular/material";
+import { MatSort } from "@angular/material/sort";
+import { MatTableDataSource } from "@angular/material/table";
 import { SelectionModel } from "@angular/cdk/collections";
 
 @Component({
     templateUrl: "./usermanagement.component.html",
+    styleUrls: ["./usermanagement.component.scss"],
 })
-export class UserManagementComponent implements OnInit {
+export class UserManagementComponent implements OnInit, AfterViewInit {
 
     public displayedColumns: string[] = ['select', 'username', 'alias', 'email', 'roles', 'remainingRequests',
         'nextRequestDue', 'lastLoggedIn', 'userType', 'actions', 'welcome'];
     public dataSource: MatTableDataSource<IUser>;
 
     public selection = new SelectionModel<IUser>(true, []);
-    @ViewChild(MatSort, {static: false}) public sort: MatSort;
+    @ViewChild(MatSort) public sort: MatSort;
     public users: IUser[];
     public checkAll = false;
     public emailSettings: IEmailNotificationSettings;
@@ -24,6 +26,7 @@ export class UserManagementComponent implements OnInit {
     public availableClaims: ICheckbox[];
     public bulkMovieLimit?: number;
     public bulkEpisodeLimit?: number;
+    public bulkMusicLimit?: number;
     public plexEnabled: boolean;
 
     constructor(private identityService: IdentityService,
@@ -31,17 +34,21 @@ export class UserManagementComponent implements OnInit {
         private notificationService: NotificationService,
         private plexSettings: SettingsService) { }
 
+
     public async ngOnInit() {
         this.users = await this.identityService.getUsers().toPromise();
-        
+
         this.dataSource = new MatTableDataSource(this.users);
-        this.dataSource.sort = this.sort;
 
         this.plexSettings.getPlex().subscribe(x => this.plexEnabled = x.enable);
 
         this.identityService.getAllAvailableClaims().subscribe(x => this.availableClaims = x);
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
         this.settingsService.getEmailNotificationSettings().subscribe(x => this.emailSettings = x);
+    }
+
+    public ngAfterViewInit(): void {
+        this.dataSource.sort = this.sort;
     }
 
     public welcomeEmail(user: IUser) {
@@ -78,6 +85,9 @@ export class UserManagementComponent implements OnInit {
             if (this.bulkMovieLimit) {
                 x.movieRequestLimit = this.bulkMovieLimit;
             }
+            if (this.bulkMusicLimit) {
+                x.musicRequestLimit = this.bulkMusicLimit;
+            }
             this.identityService.updateUser(x).subscribe(y => {
                 if (!y.successful) {
                     this.notificationService.error(`Could not update user ${x.userName}. Reason ${y.errors[0]}`);
@@ -89,6 +99,7 @@ export class UserManagementComponent implements OnInit {
         this.showBulkEdit = false;
         this.bulkMovieLimit = undefined;
         this.bulkEpisodeLimit = undefined;
+        this.bulkMusicLimit = undefined;
     }
 
     public isAllSelected() {

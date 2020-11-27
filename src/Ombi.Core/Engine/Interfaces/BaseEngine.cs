@@ -29,7 +29,8 @@ namespace Ombi.Core.Engine.Interfaces
         private OmbiUser _user;
         protected async Task<OmbiUser> GetUser()
         {
-            return _user ?? (_user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(Username, StringComparison.CurrentCultureIgnoreCase)));
+            var username = Username.ToUpper();
+            return _user ?? (_user = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username));
         }
 
         protected async Task<string> UserAlias()

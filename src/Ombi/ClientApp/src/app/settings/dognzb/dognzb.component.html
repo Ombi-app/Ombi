@@ -1,54 +1,47 @@
 ﻿<settings-menu>
 </settings-menu>
-
+<div>
 <wiki [url]="'https://github.com/tidusjar/Ombi/wiki/DogNzb-Settings'"></wiki>
-<div *ngIf="form">
+<div *ngIf="form" class="small-middle-container">
     <fieldset>
         <legend>DogNzb Settings</legend>
-        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:5%;">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" id="enable" formControlName="enabled" ng-checked="form.enabled">
-                        <label for="enable">Enable</label>
+        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:2%;">
+            <div class="row">
+                <div class="col-md-12 col-12 col-sm-12">
+                        <div class="md-form-field">
+                            <mat-slide-toggle formControlName="enabled">Enabled</mat-slide-toggle>
+                        </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-7 col-8 col-sm-12">
+                    <div class="md-form-field">
+                        <mat-form-field appearance="outline" floatLabel=always>
+                            <mat-label>DogNzb API Key</mat-label>
+                            <input matInput id="apiKey" name="apiKey" placeholder="API Key" formControlName="apiKey">
+                            <mat-error>The API Key is required</mat-error>
+                        </mat-form-field>
                     </div>
-                </div>
 
-
-               
-                <div class="form-group">
-                    <label for="ApiKey" class="control-label">API Key</label>
-                 
-                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('apiKey').hasError('required')}" id="ApiKey" name="ApiKey" formControlName="apiKey">
-
-                        <small *ngIf="form.get('apiKey').hasError('required')" class="error-text">The API Key is required</small>
-                </div>
-                
-
-
-
-                <div class="form-group">
-                    <div>
-                        <button type="submit" [disabled]="form.invalid" class="btn btn-primary-outline ">Submit</button>
+                    <div class="md-form-field">
+                        <mat-slide-toggle id="movies" formControlName="movies">Movies</mat-slide-toggle>
+                    </div>
+                    <div class="md-form-field">
+                        <mat-slide-toggle id="tvShows" formControlName="tvShows">TV Shows</mat-slide-toggle>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" id="movies" formControlName="movies" ng-checked="form.movies">
-                        <label for="movies">Enable for Movies</label>
+            <div class="row">
+                <div class="col-md-7 col-8 col-sm-12">
+                    <div class="md-form-field">
+                        <div>
+                            <br />
+                            <button mat-raised-button type="submit" [disabled]="form.invalid" class="mat-stroked-button accent mat-accent" placeholder="API key">Submit</button>
+                        </div>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" id="tvShows" formControlName="tvShows" ng-checked="form.tvShows">
-                        <label for="tvShows">Enable for Tv Shows</label>
-                    </div>
-                </div>
-
             </div>
         </form>
     </fieldset>
+</div>
 </div>

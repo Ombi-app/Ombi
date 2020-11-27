@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,7 +49,18 @@ namespace Ombi.Api.Trakt
 
         public async Task<TraktShow> GetTvExtendedInfo(string imdbId)
         {
-            return await Client.Shows.GetShowAsync(imdbId, TraktExtendedOption.Full);
+            try
+            {
+                return await Client.Shows.GetShowAsync(imdbId, TraktExtendedOption.Full);
+            }
+            catch (Exception e)
+            {
+                // Ignore the exception since the information returned from this API is optional.
+                Console.WriteLine($"Failed to retrieve extended tv information from Trakt. IMDbId: '{imdbId}'.");
+                Console.WriteLine(e);
+            }
+
+            return null;
         }
     }
 }

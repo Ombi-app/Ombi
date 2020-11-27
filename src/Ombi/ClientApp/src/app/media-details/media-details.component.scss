@@ -1,30 +1,26 @@
 @import "~@angular/material/theming";
 @import "~styles/variables.scss";
-
 //MINE
 @media (max-width: 570px) {
-  h1 {
-    font-size: 1.5rem;
-  }
-
-  .mobile-poster {
-    display: block;
-    position: absolute;
-    width: 70px;
-    left: 12px;
-    bottom: 2px;
-  }
-
-
-  #info-wrapper .sidebar-poster {
-    margin-top: -126px !important;
-  }
+    h1 {
+        font-size: 1.5rem;
+    }
+    .mobile-poster {
+        display: block;
+        position: absolute;
+        width: 70px;
+        left: 12px;
+        bottom: 2px;
+    }
+    #info-wrapper .sidebar-poster {
+        margin-top: -126px !important;
+    }
 }
 
 @media (max-width: 767px) {
-  #summary-wrapper {
-    height: 350px !important;
-  }
+    #summary-wrapper {
+        height: 350px !important;
+    }
 }
 
 #summary-wrapper .full-screenshot,
@@ -32,190 +28,198 @@
 #watching-wrapper .full-screenshot,
 .hero-wrapper .full-screenshot,
 #statics-top-wrapper .full-screenshot {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  background-position: 50% 10%;
-  opacity: 0;
-  transition: all 1s;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-position: 50% 10%;
+    opacity: 0;
+    transition: all 1s;
 }
 
 #summary-wrapper,
 .summary-wrapper {
-  background-color: #000;
-  background-size: cover;
-  background-position: 50% 10%;
-  transition: all .5s;
-  height: 450px;
-  color: #fff;
-  position: relative;
+    background-color: #000;
+    background-size: cover;
+    background-position: 50% 10%;
+    transition: all .5s;
+    height: 450px;
+    color: #fff;
+    position: relative;
 }
-
 
 #summary-wrapper .full-screenshot.enabled,
 .summary-wrapper .full-screenshot.enabled,
 #watching-wrapper .full-screenshot.enabled,
 .hero-wrapper .full-screenshot.enabled,
 #statics-top-wrapper .full-screenshot.enabled {
-  opacity: 1;
+    opacity: 1;
 }
 
 #summary-wrapper .shadow-base,
 .summary-wrapper .shadow-base {
-  bottom: 0;
-  background-image: -webkit-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
-  background-image: -o-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
-  background-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
-  background-repeat: repeat-x;
+    bottom: 0;
+    background-image: -webkit-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
+    background-image: -o-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
+    background-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
+    background-repeat: repeat-x;
 }
 
 .shadow-base {
-  height: 75px;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  background-image: -webkit-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
-  background-image: -o-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
-  background-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#4D000000', GradientType=0);
+    height: 75px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-image: -webkit-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+    background-image: -o-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+    background-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+    background-repeat: repeat-x;
+    // filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#4D000000', GradientType=0);
 }
 
 .available-bottom-border {
-  border-bottom: solid 8px #1DE9B6;
+    border-bottom: solid 8px #1DE9B6;
 }
 
 #summary-wrapper .summary .container,
 .summary-wrapper .summary .container {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 #summary-wrapper,
 .summary-wrapper {
-  background-color: #000;
-  background-size: cover;
-  background-position: 50% 10%;
-  transition: all .5s;
-  height: 550px;
-  color: #fff;
-  position: relative;
+    background-color: #000;
+    background-size: cover;
+    background-position: 50% 10%;
+    transition: all .5s;
+    height: 550px;
+    color: #fff;
+    position: relative;
 }
-
 
 .grey-text {
-  color: #999;
+    color: #999;
 }
-
-
 
 #summary-wrapper .summary .container h1,
 .summary-wrapper .summary .container h1 {
-  margin: 0;
-  text-shadow: 1px 1px 5px #000;
-  line-height: 1.2;
+    margin: 0;
+    text-shadow: 1px 1px 5px #000;
+    line-height: 1.2;
 }
 
 #info-wrapper {
-  min-height: 600px;
+    min-height: 600px;
 }
 
-
 #info-wrapper .sidebar.affixable.affix-top {
-  position: relative !important;
+    position: relative !important;
 }
 
 #info-wrapper .sidebar-poster {
-  margin-top: -280px;
-  width: 250px;
+    margin-top: -280px;
+    width: 250px;
 }
 
 #info-wrapper .sidebar .poster {
-  border: solid 3px #fff;
-  position: relative;
-  -webkit-box-shadow: 0 0 20px 0 #666;
-  box-shadow: 0 0 20px 0 #666;
+    border: solid 3px #fff;
+    position: relative;
+    -webkit-box-shadow: 0 0 20px 0 #666;
+    box-shadow: 0 0 20px 0 #666;
 }
 
 #info-wrapper .sidebar .poster img {
-  width: 100%;
+    width: 100%;
 }
 
 .full-width {
-  width: 100%;
+    width: 100%;
 }
 
 #info-wrapper .sidebar .poster .real {
-  height: 100%;
-  top: 0;
-  left: 0;
+    height: 100%;
+    top: 0;
+    left: 0;
 }
 
 .card-spacer {
-  padding-top: 1%;
+    padding-top: 1%;
 }
 
 .card-full {
-  height: 100%;
+    height: 100%;
 }
 
 .imdb-color {
-  color: black;
-  background-color: #f5de50;
+    color: black;
+    background-color: #f5de50;
 }
 
 .btn-spacing {
-  margin-right: 10px !important;
+    margin-right: 10px !important;
 }
 
 .spacing-below {
-  margin-bottom: 15px !important;
+    margin-bottom: 15px !important;
 }
 
 .left-seperator {
-  margin-left: 40px;
+    margin-left: 40px;
 }
 
 .tagline {
-  margin-top: 10px;
-  margin-left: 10px;
-  text-shadow: 1px 1px 5px #000;
+    margin-top: 10px;
+    margin-left: 10px;
+    text-shadow: 1px 1px 5px #000;
 }
 
 .preview-poster {
-  width: 173px;
+    width: 173px;
 }
 
 .media-icons {
-  color: mat-color($ombi-app-primary) !important;
-  padding: 1%;
+    color: mat-color($ombi-app-primary) !important;
+    padding: 1%;
 }
 
 .media-row {
-  padding-top: 2%;
+    padding-top: 2%;
 }
 
 .cast-profile-img {
-  border-radius: 10%;
-  width: 170px;
+    border-radius: 100%;
+    width: 170px;
 }
 
+
+
+
 .small-middle-container {
-  margin: auto;
-  width: 95%;
+    margin: auto;
+    width: 95%;
 }
 
 .keywords-panel {
-  margin-top: 8%;
+    margin-top: 8%;
 }
 
 .medium-font {
-  font-size: 16px;
+    font-size: 16px;
+}
+
+.issuesPanel {
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
+
+.no-info {
+    text-align: center;
+    padding-top: 15%;
 }

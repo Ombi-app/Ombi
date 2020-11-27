@@ -63,7 +63,7 @@ namespace Ombi.Core.Tests.Rule.Search
                     ForeignArtistId = "abc",
                 }
             }.AsQueryable());
-            var request = new SearchArtistViewModel { ForignArtistId = "ABC" };
+            var request = new SearchArtistViewModel { ForignArtistId = "abc" };
             var result = await Rule.Execute(request);
 
             Assert.True(result.Success);

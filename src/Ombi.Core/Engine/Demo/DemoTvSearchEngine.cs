@@ -26,15 +26,16 @@ namespace Ombi.Core.Engine.Demo
 
         public DemoTvSearchEngine(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
              ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um, ICacheService memCache,
-            ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub, IOptions<DemoLists> lists)
-            : base(identity, service, tvMaze, mapper, trakt, r, um, memCache, s, sub)
+            ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub, IOptions<DemoLists> lists, IImageService imageService,
+            ISettingsService<CustomizationSettings> custom)
+            : base(identity, service, tvMaze, mapper, trakt, r, um, custom, memCache, s, sub, imageService)
         {
             _demoLists = lists.Value;
         }
 
         private readonly DemoLists _demoLists;
 
-        public async Task<IEnumerable<SearchTvShowViewModel>> Search(string search)
+        new public async Task<IEnumerable<SearchTvShowViewModel>> Search(string search)
         {
             var searchResult = await TvMazeApi.Search(search);
 
@@ -55,7 +56,7 @@ namespace Ombi.Core.Engine.Demo
                     {
                         continue;
                     }
-                    retVal.Add(await ProcessResult(tvMazeSearch));
+                    retVal.Add(await ProcessResult(tvMazeSearch, false));
                 }
                 return retVal;
             }
@@ -77,7 +78,7 @@ namespace Ombi.Core.Engine.Demo
                 }
 
                 var movieResult = await TvMazeApi.ShowLookup(tv);
-                responses.Add(await ProcessResult(movieResult));
+                responses.Add(await ProcessResult(movieResult, false));
             }
 
             return responses;

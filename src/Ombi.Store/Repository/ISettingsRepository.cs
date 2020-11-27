@@ -5,7 +5,7 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public interface ISettingsRepository : IDisposable
+    public interface ISettingsRepository
     {
         /// <summary>
         /// Inserts the specified entity.

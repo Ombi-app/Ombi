@@ -1,0 +1,7 @@
+<div *ngIf="remaining?.hasLimit">
+  <small id="remainingRequests" class="text-center">
+      <mat-icon [matTooltip]="getTooltipContent()">{{matIcon}}</mat-icon> {{'Requests.Remaining.Quota' | translate: {remaining: remaining.remaining, total: remaining.limit} }}
+  </small>
+</div>
+
+

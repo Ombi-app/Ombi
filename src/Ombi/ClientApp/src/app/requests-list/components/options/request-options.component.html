@@ -1,0 +1,11 @@
+<mat-nav-list>
+  <a (click)="delete()" mat-list-item>
+    <span mat-line>{{'Requests.RequestPanel.Delete' | translate}}</span>
+  </a>
+  <a *ngIf="data.canApprove" (click)="approve()" mat-list-item>
+    <span mat-line>{{'Requests.RequestPanel.Approve' | translate}}</span>
+  </a>
+  <a *ngIf="data.type !== RequestType.tvShow" (click)="changeAvailability()" mat-list-item>
+    <span mat-line>{{'Requests.RequestPanel.ChangeAvailability' | translate}}</span>
+  </a>
+</mat-nav-list>

@@ -29,7 +29,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -79,13 +78,11 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 return;
             }
-            await Notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, recentlyAddedSearch ? "Plex Recently Added Sync Started" : "Plex Content Sync Started");
+            await NotifyClient(recentlyAddedSearch ? "Plex Recently Added Sync Started" : "Plex Content Sync Started");
             if (!ValidateSettings(plexSettings))
             {
                 Logger.LogError("Plex Settings are not valid");
-                await Notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                    .SendAsync(NotificationHub.NotificationEvent, recentlyAddedSearch ? "Plex Recently Added Sync, Settings Not Valid" : "Plex Content, Settings Not Valid");
+                await NotifyClient(recentlyAddedSearch ? "Plex Recently Added Sync, Settings Not Valid" : "Plex Content, Settings Not Valid");
                 return;
             }
             var processedContent = new ProcessedContent();
@@ -105,35 +102,28 @@ namespace Ombi.Schedule.Jobs.Plex
             }
             catch (Exception e)
             {
-                await Notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                    .SendAsync(NotificationHub.NotificationEvent, recentlyAddedSearch ? "Plex Recently Added Sync Errored" : "Plex Content Sync Errored");
+                await NotifyClient(recentlyAddedSearch ? "Plex Recently Added Sync Errored" : "Plex Content Sync Errored");
                 Logger.LogWarning(LoggingEvents.PlexContentCacher, e, "Exception thrown when attempting to cache the Plex Content");
             }
 
             if (!recentlyAddedSearch)
             {
+                await NotifyClient("Plex Sync - Starting Episode Sync");
                 Logger.LogInformation("Starting EP Cacher");
                 await OmbiQuartz.TriggerJob(nameof(IPlexEpisodeSync), "Plex");
             }
 
             if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
             {
+                await NotifyClient("Plex Sync - Checking if any requests are now available");
                 Logger.LogInformation("Kicking off Plex Availability Checker");
                 await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
-                Logger.LogInformation("Starting Metadata refresh");
-                // Just check what we send it
-                await OmbiQuartz.TriggerJob(nameof(IRefreshMetadata), "System");
             }
+            var processedCont = processedContent?.Content?.Count() ?? 0;
+            var processedEp = processedContent?.Episodes?.Count() ?? 0;
+            Logger.LogInformation("Finished Plex Content Cacher, with processed content: {0}, episodes: {1}. Recently Added Scan: {2}", processedCont, processedEp, recentlyAddedSearch);
 
-            if ((processedContent?.HasProcessedContent ?? false) && recentlyAddedSearch)
-            {
-
-                await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
-            }
-            Logger.LogInformation("Finished Plex Content Cacher, with processed content: {0}, episodes: {1}. Recently Added Scan: {2}", processedContent?.Content?.Count() ?? 0, processedContent?.Episodes?.Count() ?? 0, recentlyAddedSearch);
-
-            await Notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, recentlyAddedSearch ? "Plex Recently Added Sync Finished" : "Plex Content Sync Finished");
+            await NotifyClient(recentlyAddedSearch ? $"Plex Recently Added Sync Finished, We processed {processedCont}, and {processedEp} Episodes" : "Plex Content Sync Finished");
 
         }
 
@@ -175,6 +165,7 @@ namespace Ombi.Schedule.Jobs.Plex
             var allContent = await GetAllContent(servers, recentlyAddedSearch);
             Logger.LogDebug("We found {0} items", allContent.Count);
 
+
             // Let's now process this.
             var contentToAdd = new HashSet<PlexServerContent>();
 
@@ -187,7 +178,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     Logger.LogDebug("Found some episodes, this must be a recently added sync");
                     var count = 0;
-                    foreach (var epInfo in content.Metadata ?? new Metadata[]{})
+                    foreach (var epInfo in content.Metadata ?? new Metadata[] { })
                     {
                         count++;
                         var grandParentKey = epInfo.grandparentRatingKey;
@@ -202,11 +193,15 @@ namespace Ombi.Schedule.Jobs.Plex
                         await ProcessTvShow(servers, show, contentToAdd, contentProcessed);
                         if (contentToAdd.Any())
                         {
-                            await Repo.AddRange(contentToAdd, false);
+                            await Repo.AddRange(contentToAdd, recentlyAddedSearch ? true : false);
                             if (recentlyAddedSearch)
                             {
                                 foreach (var plexServerContent in contentToAdd)
                                 {
+                                    if (plexServerContent.Id <= 0)
+                                    {
+                                        Logger.LogInformation($"Item '{plexServerContent.Title}' has an Plex ID of {plexServerContent.Id} and a Plex Key of {plexServerContent.Key}");
+                                    }
                                     contentProcessed.Add(plexServerContent.Id, plexServerContent.Key);
                                 }
                             }
@@ -286,9 +281,21 @@ namespace Ombi.Schedule.Jobs.Plex
                             Logger.LogDebug("Adding movie {0}", movie.title);
                             var metaData = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
                                 movie.ratingKey);
-                            var providerIds = PlexHelper.GetProviderIdFromPlexGuid(metaData.MediaContainer.Metadata
-                                .FirstOrDefault()
-                                .guid);
+
+                            var meta = metaData.MediaContainer.Metadata.FirstOrDefault();
+                            var guids = new List<string>
+                            {
+                                meta.guid
+                            };
+                            if (meta.Guid != null)
+                            {
+                                foreach (var g in meta.Guid)
+                                {
+                                    guids.Add(g.Id);
+                                }
+                            }
+
+                            var providerIds = PlexHelper.GetProviderIdsFromMetadata(guids.ToArray());
 
                             var item = new PlexServerContent
                             {
@@ -301,15 +308,15 @@ namespace Ombi.Schedule.Jobs.Plex
                                 Seasons = new List<PlexSeasonsContent>(),
                                 Quality = movie.Media?.FirstOrDefault()?.videoResolution ?? string.Empty
                             };
-                            if (providerIds.Type == ProviderType.ImdbId)
+                            if (providerIds.ImdbId.HasValue())
                             {
                                 item.ImdbId = providerIds.ImdbId;
                             }
-                            if (providerIds.Type == ProviderType.TheMovieDbId)
+                            if (providerIds.TheMovieDb.HasValue())
                             {
                                 item.TheMovieDbId = providerIds.TheMovieDb;
                             }
-                            if (providerIds.Type == ProviderType.TvDbId)
+                            if (providerIds.TheTvDb.HasValue())
                             {
                                 item.TvDbId = providerIds.TheTvDb;
                             }
@@ -395,7 +402,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     await Repo.Delete(existingKey);
                     existingKey = null;
                 }
-                else if(existingContent == null)
+                else if (existingContent == null)
                 {
                     existingContent = await Repo.GetFirstContentByCustom(x => x.Key == show.ratingKey);
                 }
@@ -513,7 +520,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     // But it does not contain the `guid` property that we need to pull out thetvdb id...
                     var showMetadata = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
                         show.ratingKey);
-                  
+
                     var item = new PlexServerContent
                     {
                         AddedAt = DateTime.Now,
@@ -568,20 +575,31 @@ namespace Ombi.Schedule.Jobs.Plex
 
         private static void GetProviderIds(PlexMetadata showMetadata, PlexServerContent existingContent)
         {
+            var metadata = showMetadata.MediaContainer.Metadata.FirstOrDefault();
+            var guids = new List<string>
+            {
+                metadata.guid
+            };
+            if (metadata.Guid != null)
+            {
+                foreach (var g in metadata.Guid)
+                {
+                    guids.Add(g.Id);
+                }
+            }
             var providerIds =
-                PlexHelper.GetProviderIdFromPlexGuid(showMetadata.MediaContainer.Metadata.FirstOrDefault()
-                    .guid);
-            if (providerIds.Type == ProviderType.ImdbId)
+                PlexHelper.GetProviderIdsFromMetadata(guids.ToArray());
+            if (providerIds.ImdbId.HasValue())
             {
                 existingContent.ImdbId = providerIds.ImdbId;
             }
 
-            if (providerIds.Type == ProviderType.TheMovieDbId)
+            if (providerIds.TheMovieDb.HasValue())
             {
                 existingContent.TheMovieDbId = providerIds.TheMovieDb;
             }
 
-            if (providerIds.Type == ProviderType.TvDbId)
+            if (providerIds.TheTvDb.HasValue())
             {
                 existingContent.TvDbId = providerIds.TheTvDb;
             }
@@ -643,7 +661,11 @@ namespace Ombi.Schedule.Jobs.Plex
             return libs;
         }
 
-
+        private async Task NotifyClient(string message)
+        {
+            await Notification.Clients.Clients(NotificationHub.AdminConnectionIds)
+                .SendAsync(NotificationHub.NotificationEvent, $"Plex Sync - {message}");
+        }
 
         private static bool ValidateSettings(PlexSettings plex)
         {
@@ -668,8 +690,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if (disposing)
             {
-                Plex?.Dispose();
-                Repo?.Dispose();
+                //Plex?.Dispose();
                 EpisodeSync?.Dispose();
             }
             _disposed = true;

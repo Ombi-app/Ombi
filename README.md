@@ -9,7 +9,15 @@ ____
 [![Patreon](https://img.shields.io/badge/patreon-donate-yellow.svg)](https://patreon.com/tidusjar/Ombi)
 [![Paypal](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://paypal.me/PlexRequestsNet)
 
+# Feature Requests
+Feature requests are handled on Feature Upvote.
+
+Search the existing requests to see if your suggestion has already been submitted.
+(If a similar request exists, please vote, or add additional comments to the request)
+
+#### [![Feature Requests](https://cloud.githubusercontent.com/assets/390379/10127973/045b3a96-6560-11e5-9b20-31a2032956b2.png)](https://features.ombi.io)
 ___
+
 
 [![Twitter](https://img.shields.io/twitter/follow/tidusjar.svg?style=social)](https://twitter.com/intent/follow?screen_name=tidusjar)
 
@@ -33,10 +41,10 @@ We also now have merch up on Teespring!
 ___
 
 
-| Service  | Stable         | Develop          |
-|----------|:---------------------------:|:----------------------------:|
-| AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/master?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/develop?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/develop) | 
-| Download |[![Download](http://i.imgur.com/odToka3.png)](https://github.com/tidusjar/Ombi/releases)            |      [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/develop/artifacts)       | 
+| Service  | Stable         | Develop          | V4 |
+|----------|:---------------------------:|:----------------------------:|:----------------------------:|
+| Build Status | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/master?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/develop?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/develop) | [![Build Status](https://dev.azure.com/tidusjar/Ombi/_apis/build/status/Ombi%20CI?branchName=feature%2Fv4)](https://dev.azure.com/tidusjar/Ombi/_build/latest?definitionId=18&branchName=feature%2Fv4)
+| Download |[![Download](http://i.imgur.com/odToka3.png)](https://github.com/tidusjar/Ombi/releases)            |      [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/develop/artifacts)       | [![Download](http://i.imgur.com/odToka3.png)](https://github.com/tidusjar/ombi.releases/releases)       | 
 # Features
 Here are some of the features Ombi V3 has:
 * Now working without crashes on Linux.
@@ -57,8 +65,9 @@ Here are some of the features Ombi V3 has:
 We integrate with the following applications:
 * Plex Media Server
 * Emby
-* Sonarr
-* Radarr
+* Jellyfin
+* Sonarr V2 and V3
+* Radarr V2
 * Lidarr
 * DogNzb
 * Couch Potato
@@ -66,47 +75,45 @@ We integrate with the following applications:
 
 ### Notifications
 Supported notifications:
+* Mobile
 * SMTP Notifications (Email)
 * Discord
-* Gotify
 * Slack
 * Pushbullet
 * Pushover
 * Mattermost
 * Telegram
+* Gotify
+* Twilio
+* Webhook
 
-### The difference between Version 3 and 2
+### The difference between Version 4 and 3
 
 Over the last year, we focused on the main functions on Ombi, a complete rewrite while making it better, faster and more stable.
 We have already done most of the work, but some features are still be missing in this first version.
-We are planning to bring back these features in V3 but for now you can find a list below with a quick comparison of features between v2 and v3.
+We are planning to bring back these features in V3 but for now you can find a list below with a quick comparison of features between v4 and v3.
 
 
-| Service  | Version 3 | Version 2 |
+| Service  | Version 4 (Beta) | Version 3 (Stable)|
 |----------|:----------:|:----------:|
-| Multiple Plex/Emby Servers| Yes | No |
-| Emby & Plex support | Yes | Yes |
-| Mono dependency | No | Yes |
-| Notifications support | Yes| Yes |
-| Landing page | Yes (brand new) | Yes |
+| Multiple Plex/Emby/Jellyfin Servers | Yes | Yes |
+| Emby/Jellyfin & Plex support | Yes | Yes |
+| Mono dependency | No | No |
+| Plex OAuth support | Yes | Yes |
 | Login page | Yes (brand new) | Yes |
-| Custom Notification Messages | Yes | No |
+| Discovery page | Yes (brand new) | No |
+| Request a movie collection | Yes (brand new) | No |
+| Auto Delete Available Requests | Yes (brand new) | No |
+| Report issues | Yes | Yes |
+| Notifications support | Yes | Yes |
+| Custom Notification Messages | Yes | Yes |
 | Sending newsletters | Yes | Yes |
 | Send a Mass Email | Yes | Yes |
 | SickRage | Yes | Yes |
 | CouchPotato | Yes | Yes |
-| DogNzb | Yes | No |
-| Issues | Yes | Yes |
+| DogNzb | Yes | Yes |
 | Headphones | No | Yes |
-| Lidarr | Yes | No |
-
-# Feature Requests
-Feature requests are handled on FeatHub.
-
-Search the existing requests to see if your suggestion has already been submitted.
-(If a similar request exists, give it a thumbs up (+1), or add additional comments to the request)
-
-#### [![Feature Requests](https://cloud.githubusercontent.com/assets/390379/10127973/045b3a96-6560-11e5-9b20-31a2032956b2.png)](http://feathub.com/tidusjar/Ombi)
+| Lidarr | Yes | Yes |
 
 # Preview
 

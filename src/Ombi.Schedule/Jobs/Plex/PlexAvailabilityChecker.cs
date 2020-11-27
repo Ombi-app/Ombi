@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Ombi.Core.Notifications;
+using Ombi.Core;
 using Ombi.Helpers;
 using Ombi.Hubs;
 using Ombi.Notifications.Models;
+using Ombi.Schedule.Jobs.Plex.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
@@ -21,13 +21,12 @@ namespace Ombi.Schedule.Jobs.Plex
     public class PlexAvailabilityChecker : IPlexAvailabilityChecker
     {
         public PlexAvailabilityChecker(IPlexContentRepository repo, ITvRequestRepository tvRequest, IMovieRequestRepository movies,
-            INotificationService notification, IBackgroundJobClient background, ILogger<PlexAvailabilityChecker> log, IHubContext<NotificationHub> hub)
+            INotificationHelper notification, ILogger<PlexAvailabilityChecker> log, IHubContext<NotificationHub> hub)
         {
             _tvRepo = tvRequest;
             _repo = repo;
             _movieRepo = movies;
             _notificationService = notification;
-            _backgroundJobClient = background;
             _log = log;
             _notification = hub;
         }
@@ -35,8 +34,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private readonly ITvRequestRepository _tvRepo;
         private readonly IMovieRequestRepository _movieRepo;
         private readonly IPlexContentRepository _repo;
-        private readonly INotificationService _notificationService;
-        private readonly IBackgroundJobClient _backgroundJobClient;
+        private readonly INotificationHelper _notificationService;
         private readonly ILogger _log;
         private readonly IHubContext<NotificationHub> _notification;
 
@@ -62,13 +60,13 @@ namespace Ombi.Schedule.Jobs.Plex
                 .SendAsync(NotificationHub.NotificationEvent, "Plex Availability Check Finished");
         }
 
-        private Task ProcessTv()
+        private async Task ProcessTv()
         {
-            var tv = _tvRepo.GetChild().Where(x => !x.Available);
-            return ProcessTv(tv);
+            var tv = await _tvRepo.GetChild().Where(x => !x.Available).ToListAsync();
+            await ProcessTv(tv);
         }
 
-        private async Task ProcessTv(IQueryable<ChildRequests> tv)
+        private async Task ProcessTv(List<ChildRequests> tv)
         {
             var plexEpisodes = _repo.GetAllEpisodes().Include(x => x.Series);
 
@@ -107,11 +105,12 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     // Let's try and match the series by name
                     seriesEpisodes = plexEpisodes.Where(x =>
-                        x.Series.Title.Equals(child.Title, StringComparison.InvariantCultureIgnoreCase) &&
-                        x.Series.ReleaseYear.Equals(child.ParentRequest.ReleaseDate.Year.ToString(), StringComparison.InvariantCultureIgnoreCase));
+                        x.Series.Title == child.Title &&
+                        x.Series.ReleaseYear == child.ParentRequest.ReleaseDate.Year.ToString());
 
                 }
 
+                var availableEpisode = new List<AvailabilityModel>();
                 foreach (var season in child.SeasonRequests)
                 {
                     foreach (var episode in season.Episodes)
@@ -120,26 +119,41 @@ namespace Ombi.Schedule.Jobs.Plex
                         {
                             continue;
                         }
-                        var foundEp = await seriesEpisodes.FirstOrDefaultAsync(
+                        var foundEp = await seriesEpisodes.AnyAsync(
                             x => x.EpisodeNumber == episode.EpisodeNumber &&
                                  x.SeasonNumber == episode.Season.SeasonNumber);
 
-                        if (foundEp != null)
+                        if (foundEp)
                         {
+                            availableEpisode.Add(new AvailabilityModel
+                            {
+                                Id = episode.Id
+                            });
                             episode.Available = true;
                         }
                     }
                 }
 
+                //TODO Partial avilability notifications here
+                if (availableEpisode.Any())
+                {
+                    await _tvRepo.Save();
+                }
+                //foreach(var c in availableEpisode)
+                //{
+                //    await _tvRepo.MarkEpisodeAsAvailable(c.Id);
+                //}
+
                 // Check to see if all of the episodes in all seasons are available for this request
                 var allAvailable = child.SeasonRequests.All(x => x.Episodes.All(c => c.Available));
                 if (allAvailable)
                 {
+                    child.Available = true;
+                    child.MarkedAsAvailable = DateTime.UtcNow;
                     _log.LogInformation("[PAC] - Child request {0} is now available, sending notification", $"{child.Title} - {child.Id}");
                     // We have ful-fulled this request!
-                    child.Available = true;
-                    child.MarkedAsAvailable = DateTime.Now;
-                    await _notificationService.Publish(new NotificationOptions
+                    await _tvRepo.Save();
+                    await _notificationService.Notify(new NotificationOptions
                     {
                         DateTime = DateTime.Now,
                         NotificationType = NotificationType.RequestAvailable,
@@ -157,9 +171,15 @@ namespace Ombi.Schedule.Jobs.Plex
         {
             // Get all non available
             var movies = _movieRepo.GetAll().Include(x => x.RequestedUser).Where(x => !x.Available);
+            var itemsForAvailbility = new List<AvailabilityModel>();
 
             foreach (var movie in movies)
             {
+                if (movie.Available)
+                {
+                    return;
+                }
+
                 PlexServerContent item = null;
                 if (movie.ImdbId.HasValue())
                 {
@@ -178,24 +198,34 @@ namespace Ombi.Schedule.Jobs.Plex
                     continue;
                 }
 
-                movie.Available = true;
-                movie.MarkedAsAvailable = DateTime.Now;
-                item.RequestId = movie.Id;
-
                 _log.LogInformation("[PAC] - Movie request {0} is now available, sending notification", $"{movie.Title} - {movie.Id}");
-                await _notificationService.Publish(new NotificationOptions
+                movie.Available = true;
+                movie.MarkedAsAvailable = DateTime.UtcNow;
+                itemsForAvailbility.Add(new AvailabilityModel
+                {
+                    Id = movie.Id,
+                    RequestedUser = movie.RequestedUser != null ? movie.RequestedUser.Email : string.Empty
+                });
+            }
+
+            if (itemsForAvailbility.Any())
+            {
+                await _movieRepo.SaveChangesAsync();
+            }
+            foreach (var i in itemsForAvailbility)
+            {
+
+                await _notificationService.Notify(new NotificationOptions
                 {
                     DateTime = DateTime.Now,
                     NotificationType = NotificationType.RequestAvailable,
-                    RequestId = movie.Id,
+                    RequestId = i.Id,
                     RequestType = RequestType.Movie,
-                    Recipient = movie.RequestedUser != null ? movie.RequestedUser.Email : string.Empty
+                    Recipient = i.RequestedUser
                 });
-
             }
 
-            await _movieRepo.Save();
-            await _repo.SaveChangesAsync();
+            //await _repo.SaveChangesAsync();
         }
 
         private bool _disposed;
@@ -206,8 +236,6 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if (disposing)
             {
-                _movieRepo?.Dispose();
-                _repo?.Dispose();
             }
             _disposed = true;
         }

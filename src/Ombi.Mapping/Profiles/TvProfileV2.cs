@@ -30,7 +30,7 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(dest => dest.Banner,
                     opts => opts.MapFrom(src =>
                         !string.IsNullOrEmpty(src.image.medium)
-                            ? src.image.medium.Replace("http", "https")
+                            ? src.image.medium.ToHttpsUrl()
                             : string.Empty))
                 .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.status));
 
@@ -45,8 +45,8 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(dest => dest.Timezone, opts => opts.MapFrom(src => src.timezone));
 
             CreateMap<Api.TvMaze.Models.V2.Image, Images>()
-                .ForMember(dest => dest.Medium, opts => opts.MapFrom(src => src.medium))
-                .ForMember(dest => dest.Original, opts => opts.MapFrom(src => src.original));
+                .ForMember(dest => dest.Medium, opts => opts.MapFrom(src => src.medium.ToHttpsUrl()))
+                .ForMember(dest => dest.Original, opts => opts.MapFrom(src => src.original.ToHttpsUrl()));
 
             CreateMap<Api.TvMaze.Models.V2.Cast, CastViewModel>()
                 .ForMember(dest => dest.Character, opts => opts.MapFrom(src => src.character))
@@ -58,7 +58,7 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.id))
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.name))
                 .ForMember(dest => dest.Image, opts => opts.MapFrom(src => src.image))
-                .ForMember(dest => dest.Url, opts => opts.MapFrom(src => src.url));
+                .ForMember(dest => dest.Url, opts => opts.MapFrom(src => src.url.ToHttpsUrl()));
 
             CreateMap<Api.TvMaze.Models.V2.Crew, CrewViewModel>()
                 .ForMember(dest => dest.Person, opts => opts.MapFrom(src => src.person))
@@ -73,7 +73,7 @@ namespace Ombi.Mapping.Profiles
             CreateMap<Api.TvMaze.Models.V2.Character, CharacterViewModel>()
                 .ForMember(dest => dest.Name, opts => opts.MapFrom(src => src.name))
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.id))
-                .ForMember(dest => dest.Url, opts => opts.MapFrom(src => src.url))
+                .ForMember(dest => dest.Url, opts => opts.MapFrom(src => src.url.ToHttpsUrl()))
                 .ForMember(dest => dest.Image, opts => opts.MapFrom(src => src.image));
 
             CreateMap<SearchTvShowViewModel, SearchFullInfoTvShowViewModel>().ReverseMap();

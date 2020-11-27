@@ -1,0 +1,63 @@
+<mat-accordion *ngIf="issuesCount > 0">
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{'Issues.Title' | translate}}
+            </mat-panel-title>
+            <mat-panel-description>
+                <span *ngIf="isOutstanding">{{issuesCount}} </span><span><mat-icon *ngIf="isOutstanding" matTooltip="{{'Issues.Outstanding' | translate}}">error_outline</mat-icon></span>
+                <span *ngIf="!isOutstanding">{{issuesCount}}</span>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <!-- content start -->
+
+        <mat-accordion class="mat-elevation-z8">
+            <mat-expansion-panel *ngFor="let issue of issues">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{ 'Issues.Subject' | translate}}: {{issue.subject}}
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        {{ 'Issues.ReportedBy' | translate}}: {{issue.userReported.userAlias}}
+                    </mat-panel-description>
+                    <mat-panel-description>
+                        {{'Issues.Category' | translate}}: {{issue.issueCategory.value}}
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <div class="row">
+
+                    <div class="col">
+                        {{'Issues.Description' | translate}}: {{issue.description}}
+                    </div>
+                    <div class="col">
+                        {{'Issues.Status' | translate}}: {{IssueStatus[issue.status] | humanize}}
+                    </div>
+                    <div class="col" *ngIf="issue.resolvedDate">
+                        {{'Issues.ResolvedDate' | translate}}: {{issue.resolvedDate}}
+                    </div>
+                    <div class="col" *ngIf="issue.createdDate">
+                        {{'Issues.CreatedDate' | translate}}: {{issue.createdDate | date}}
+                    </div>
+
+
+                </div>
+                <div *ngIf="isAdmin" class="row action-buttons">
+                    <div class="button-padding">
+                        <button *ngIf="issue.status === IssueStatus.Pending && !settings.enableInProgress || issue.status == IssueStatus.InProgress" mat-raised-button color="accent" (click)="resolve(issue)"> {{ 'Issues.MarkResolved' | translate }}</button>
+                    </div>
+                    <div class="button-padding">
+                        <button *ngIf="issue.status === IssueStatus.Pending && settings.enableInProgress" mat-raised-button color="accent" (click)="inProgress(issue)"> {{ 'Issues.MarkInProgress' | translate }}</button>
+                    </div>
+                    <div class="button-padding">
+                        <button mat-raised-button color="warn" (click)="delete(issue)"> {{ 'Issues.Delete' | translate }}</button>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <!-- content end -->
+    </mat-expansion-panel>
+
+</mat-accordion>

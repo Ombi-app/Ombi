@@ -5,10 +5,11 @@ import { ILanguageRefine, IOmbiSettings } from "../../interfaces";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
 
-import * as languageData from "../../../other/iso-lang.json";
+import languageData from "./../../../other/iso-lang.json";
 
 @Component({
     templateUrl: "./ombi.component.html",
+    styleUrls: ["./ombi.component.scss"],
 })
 export class OmbiComponent implements OnInit {
 
@@ -29,9 +30,12 @@ export class OmbiComponent implements OnInit {
                 doNotSendNotificationsForAutoApprove: [x.doNotSendNotificationsForAutoApprove],
                 hideRequestsUsers: [x.hideRequestsUsers],
                 defaultLanguageCode: [x.defaultLanguageCode],
+                disableHealthChecks: [x.disableHealthChecks],
+                autoDeleteAvailableRequests: [x.autoDeleteAvailableRequests],
+                autoDeleteAfterDays: [x.autoDeleteAfterDays]
             });
         });
-        this.langauges = <ILanguageRefine[]><any>languageData;
+        this.langauges = <ILanguageRefine[]>languageData
     }
 
     public refreshApiKey() {

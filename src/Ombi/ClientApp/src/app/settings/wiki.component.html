@@ -1,5 +1,5 @@
-﻿<div class="col-md-12">
-    <div *ngIf="!text" class="col-md-1 offset-md-11">
+﻿<div class="col" style="text-align: -webkit-right;">
+    <div *ngIf="!text" class="col-md-4 ml-auto ">
         <a href="{{url}}" target="_blank">
         <button mat-raised-button color="accent">
             <span>Wiki</span>
@@ -7,7 +7,7 @@
     </a>
     </div>
 
-    <div  *ngIf="text" class="col-md-1 offset-md-9">
+    <div *ngIf="text" class="col-md-4 ml-auto ">
             <a href="{{url}}" target="_blank">
             <button mat-raised-button color="accent">
                 <span>{{text}}</span>

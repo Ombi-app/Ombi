@@ -16,7 +16,6 @@ using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
-using Remotion.Linq.Parsing.Structure.IntermediateModel;
 
 namespace Ombi.Core.Senders
 {
@@ -128,7 +127,7 @@ namespace Ombi.Core.Senders
                         Type = RequestType.TvShow,
                         RetryCount = 0
                     });
-                    _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
+                    await _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
                 }
             }
 

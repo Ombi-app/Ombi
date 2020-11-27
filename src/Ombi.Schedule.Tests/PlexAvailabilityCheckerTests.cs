@@ -5,11 +5,11 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Castle.Components.DictionaryAdapter;
-using Hangfire;
 using Microsoft.AspNetCore.SignalR;
 using Moq;
 using MockQueryable.Moq;
 using NUnit.Framework;
+using Ombi.Core;
 using Ombi.Core.Notifications;
 using Ombi.Hubs;
 using Ombi.Schedule.Jobs.Plex;
@@ -30,19 +30,19 @@ namespace Ombi.Schedule.Tests
             _repo = new Mock<IPlexContentRepository>();
             _tv = new Mock<ITvRequestRepository>();
             _movie = new Mock<IMovieRequestRepository>();
-            _notify = new Mock<INotificationService>();
+            _notify = new Mock<INotificationHelper>();
             var hub = new Mock<IHubContext<NotificationHub>>();
             hub.Setup(x =>
                 x.Clients.Clients(It.IsAny<IReadOnlyList<string>>()).SendCoreAsync(It.IsAny<string>(), It.IsAny<object[]>(), It.IsAny<CancellationToken>()));
             NotificationHub.UsersOnline.TryAdd("A", new HubUsers());
-            Checker = new PlexAvailabilityChecker(_repo.Object, _tv.Object, _movie.Object, _notify.Object, new Mock<IBackgroundJobClient>().Object, null, hub.Object);
+            Checker = new PlexAvailabilityChecker(_repo.Object, _tv.Object, _movie.Object, _notify.Object, null, hub.Object);
         }
 
 
         private Mock<IPlexContentRepository> _repo;
         private Mock<ITvRequestRepository> _tv;
         private Mock<IMovieRequestRepository> _movie;
-        private Mock<INotificationService> _notify;
+        private Mock<INotificationHelper> _notify;
         private PlexAvailabilityChecker Checker;
 
         [Test]

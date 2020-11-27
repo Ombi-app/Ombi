@@ -5,6 +5,6 @@
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()"  [mat-dialog-close]="data.denied">Cancel</button>
-  <button mat-button (click)="deny()"  [mat-dialog-close]="data.denied" cdkFocusInitial>Deny</button>
+  <button mat-raised-button (click)="onNoClick()"  [mat-dialog-close]="data.denied">Cancel</button>
+  <button mat-raised-button (click)="deny()" color="danger"  [mat-dialog-close]="data.denied" cdkFocusInitial>Deny</button>
 </div>

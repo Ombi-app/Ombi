@@ -1,0 +1,50 @@
+@import "~styles/shared.scss";
+.small-middle-container {
+    margin: auto;
+    width: 95%;
+    margin-top: 10px;
+}
+
+.control-label {
+    font-weight: 400;
+}
+
+.col-md-6 {
+    display: contents;
+}
+
+.col-md-9 {
+    display: inline-table;
+}
+
+.col-md-3 {
+    display: inline-table;
+}
+
+.row {
+    display: block;
+}
+
+.btn-danger-outline {
+    background-color: #E84C3D;
+}
+
+.btn-success-outline {
+    background-color: #1b9d1b;
+}
+
+::ng-deep .dark .categoryResults {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 1em;
+}
+
+::ng-deep .dark .btn:hover {
+    box-shadow: 0 5px 11px 0 rgba(255, 255, 255, 0.18), 0 4px 15px 0 rgba(255, 255, 255, 0.15);
+    color: inherit;
+}
+
+@media (min-width:1440px) {
+    .col-md-6 {
+        display: inline-table;
+    }
+}

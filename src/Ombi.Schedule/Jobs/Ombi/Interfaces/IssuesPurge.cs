@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities.Requests;
@@ -31,7 +32,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             var today = DateTime.UtcNow.Date;
             
-            var resolved = _issuesRepository.GetAll().Where(x => x.Status == IssueStatus.Resolved);
+            var resolved = await _issuesRepository.GetAll().Where(x => x.Status == IssueStatus.Resolved).ToListAsync();
             var toDelete = resolved.Where(x => x.ResovledDate.HasValue && (today - x.ResovledDate.Value.Date).TotalDays >= settings.DaysAfterResolvedToDelete);
 
             foreach (var d in toDelete)
@@ -50,8 +51,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (disposing)
             {
-                _issuesRepository?.Dispose();
-                _settings?.Dispose();
+                //_settings?.Dispose();
             }
             _disposed = true;
         }

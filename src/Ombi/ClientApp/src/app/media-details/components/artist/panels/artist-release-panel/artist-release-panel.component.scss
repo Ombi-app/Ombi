@@ -2,9 +2,17 @@
 
     // border: solid 3px #fff;
     .monitored {
-        border: solid 3px $orange !important;
+        border: solid 3px $pink !important;
     }
 
     .available {
         border: solid 3px $green !important;
+    }
+
+    .selected {
+        border: solid 3px $orange !important;
+    }
+
+    .album-poster {
+        margin-bottom: 5%;;
     }

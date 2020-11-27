@@ -6,12 +6,10 @@ using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Store.Repository.Requests
 {
-    public interface ITvRequestRepository 
+    public interface ITvRequestRepository : IRepository<TvRequests>
     {
         OmbiContext Db { get; }
-        Task<TvRequests> Add(TvRequests request);
         Task<ChildRequests> AddChild(ChildRequests request);
-        Task Delete(TvRequests request);
         Task DeleteChild(ChildRequests request);
         IQueryable<TvRequests> Get();
         IQueryable<TvRequests> GetLite();
@@ -23,6 +21,8 @@ namespace Ombi.Store.Repository.Requests
         Task UpdateChild(ChildRequests request);
         IQueryable<ChildRequests> GetChild();
         IQueryable<ChildRequests> GetChild(string userId);
+        Task MarkEpisodeAsAvailable(int id);
+        Task MarkChildAsAvailable(int id);
         Task Save();
         Task DeleteChildRange(IEnumerable<ChildRequests> request);
     }

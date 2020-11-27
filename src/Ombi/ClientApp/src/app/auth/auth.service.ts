@@ -52,8 +52,9 @@ export class AuthService extends ServiceHelpers {
             const json = this.jwtHelperService.decodeToken(token);
             const roles = json.role;
             const name = json.sub;
+            const email = json.Email;
 
-            const u = { name, roles: [] as string[] };
+            const u = { name, roles: [] as string[], email };
             if (roles instanceof Array) {
                 u.roles = roles;
             } else {
@@ -67,8 +68,8 @@ export class AuthService extends ServiceHelpers {
     public hasRole(role: string): boolean {
         const claims = this.claims();
 
-        if (claims && claims.roles && role) {
-            return claims.roles.some(r => r.toUpperCase() === role.toUpperCase());
+        if (claims && claims.roles && role && claims.roles.length > 0) {
+            return claims.roles.some(r => r != undefined && r.toUpperCase() === role.toUpperCase());
         }
         return false;
     }

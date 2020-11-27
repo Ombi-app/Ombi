@@ -16,18 +16,21 @@ namespace Ombi.Controllers.V1.External
     [ApiController]
     [Produces("application/json")]
     public class RadarrController : ControllerBase
-    { 
+    {
+
         public RadarrController(IRadarrApi radarr, ISettingsService<RadarrSettings> settings,
-            ICacheService mem)
+            ICacheService mem, IRadarrV3Api radarrV3Api)
         {
-            RadarrApi = radarr;
-            RadarrSettings = settings;
-            Cache = mem;
+            _radarrApi = radarr;
+            _radarrSettings = settings;
+            _cache = mem;
+            _radarrV3Api = radarrV3Api;
         }
 
-        private IRadarrApi RadarrApi { get; }
-        private ISettingsService<RadarrSettings> RadarrSettings { get; }
-        private ICacheService Cache { get; }
+        private readonly IRadarrApi _radarrApi;
+        private readonly ISettingsService<RadarrSettings> _radarrSettings;
+        private readonly ICacheService _cache;
+        private readonly IRadarrV3Api _radarrV3Api;
         /// <summary>
         /// Gets the Radarr profiles.
         /// </summary>
@@ -35,16 +38,20 @@ namespace Ombi.Controllers.V1.External
         /// <returns></returns>
         [HttpPost("Profiles")]
         [PowerUser]
-        public async Task<IEnumerable<RadarrProfile>> GetProfiles([FromBody] RadarrSettings settings)
+        public async Task<IActionResult> GetProfiles([FromBody] RadarrSettings settings)
         {
-            return await RadarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
+            if (settings.V3)
+            {
+                return Ok(await _radarrV3Api.GetProfiles(settings.ApiKey, settings.FullUri));
+            }
+            return Ok(await _radarrApi.GetProfiles(settings.ApiKey, settings.FullUri));
         }
 
         [HttpGet("enabled")]
         [PowerUser]
         public async Task<bool> Enabled()
         {
-            var settings = await RadarrSettings.GetSettingsAsync();
+            var settings = await _radarrSettings.GetSettingsAsync();
             return settings.Enabled;
         }
 
@@ -57,7 +64,11 @@ namespace Ombi.Controllers.V1.External
         [PowerUser]
         public async Task<IEnumerable<RadarrRootFolder>> GetRootFolders([FromBody] RadarrSettings settings)
         {
-            return await RadarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+            if (settings.V3)
+            {
+                return await _radarrV3Api.GetRootFolders(settings.ApiKey, settings.FullUri);
+            }
+            return await _radarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
         }
 
         /// <summary>
@@ -67,12 +78,16 @@ namespace Ombi.Controllers.V1.External
         /// <returns></returns>
         [HttpGet("Profiles")]
         [PowerUser]
-        public async Task<IEnumerable<RadarrProfile>> GetProfiles()
+        public async Task<IActionResult> GetProfiles()
         {
-            var settings = await RadarrSettings.GetSettingsAsync();
+            var settings = await _radarrSettings.GetSettingsAsync();
             if (settings.Enabled)
             {
-                return await RadarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
+                if (settings.V3)
+                {
+                    return Ok(await _radarrV3Api.GetProfiles(settings.ApiKey, settings.FullUri));
+                }
+                return Ok(await _radarrApi.GetProfiles(settings.ApiKey, settings.FullUri));
             }
             return null;
         }
@@ -86,14 +101,18 @@ namespace Ombi.Controllers.V1.External
         [PowerUser]
         public async Task<IEnumerable<RadarrRootFolder>> GetRootFolders()
         {
-            var settings = await RadarrSettings.GetSettingsAsync();
+            var settings = await _radarrSettings.GetSettingsAsync();
             if (settings.Enabled)
             {
-                return await RadarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+                if (settings.V3)
+                {
+                    return await _radarrV3Api.GetRootFolders(settings.ApiKey, settings.FullUri);
+                }
+                return await _radarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
             }
             return null;
         }
-        
+
         /// <summary>
         /// Gets the Radarr tags
         /// </summary>
@@ -103,23 +122,22 @@ namespace Ombi.Controllers.V1.External
         [PowerUser]
         public async Task<IEnumerable<Tag>> GetTags([FromBody] SonarrSettings settings)
         {
-            return await RadarrApi.GetTags(settings.ApiKey, settings.FullUri);
+            return await _radarrV3Api.GetTags(settings.ApiKey, settings.FullUri);
         }
 
-                
+
         /// <summary>
         /// Gets the Radarr tags
         /// </summary>
-        /// <param name="settings">The settings.</param>
         /// <returns></returns>
-        [HttpPost("tags")]
+        [HttpGet("tags")]
         [PowerUser]
         public async Task<IEnumerable<Tag>> GetTags()
         {
-            var settings = await RadarrSettings.GetSettingsAsync();
+            var settings = await _radarrSettings.GetSettingsAsync();
             if (settings.Enabled)
             {
-                return await RadarrApi.GetTags(settings.ApiKey, settings.FullUri);
+                return await _radarrV3Api.GetTags(settings.ApiKey, settings.FullUri);
             }
 
             return null;

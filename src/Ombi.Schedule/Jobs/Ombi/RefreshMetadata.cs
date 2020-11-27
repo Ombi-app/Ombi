@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
 using Ombi.Api.TheMovieDb;
@@ -25,7 +25,7 @@ namespace Ombi.Schedule.Jobs.Ombi
     {
         public RefreshMetadata(IPlexContentRepository plexRepo, IEmbyContentRepository embyRepo,
             ILogger<RefreshMetadata> log, ITvMazeApi tvApi, ISettingsService<PlexSettings> plexSettings,
-            IMovieDbApi movieApi, ISettingsService<EmbySettings> embySettings, IEmbyApi embyApi, IHubContext<NotificationHub> notification)
+            IMovieDbApi movieApi, ISettingsService<EmbySettings> embySettings, IEmbyApiFactory embyApi, IHubContext<NotificationHub> notification)
         {
             _plexRepo = plexRepo;
             _embyRepo = embyRepo;
@@ -34,7 +34,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             _tvApi = tvApi;
             _plexSettings = plexSettings;
             _embySettings = embySettings;
-            _embyApi = embyApi;
+            _embyApiFactory = embyApi;
             _notification = notification;
         }
 
@@ -45,8 +45,9 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly ITvMazeApi _tvApi;
         private readonly ISettingsService<PlexSettings> _plexSettings;
         private readonly ISettingsService<EmbySettings> _embySettings;
-        private readonly IEmbyApi _embyApi;
+        private readonly IEmbyApiFactory _embyApiFactory;
         private readonly IHubContext<NotificationHub> _notification;
+        private IEmbyApi EmbyApi { get; set; }
 
         public async Task Execute(IJobExecutionContext job)
         {
@@ -60,23 +61,28 @@ namespace Ombi.Schedule.Jobs.Ombi
                 if (settings.Enable)
                 {
                     await StartPlex();
+
+                    await OmbiQuartz.TriggerJob(nameof(IPlexAvailabilityChecker), "Plex");
                 }
 
                 var embySettings = await _embySettings.GetSettingsAsync();
                 if (embySettings.Enable)
                 {
                     await StartEmby(embySettings);
+
+                    await OmbiQuartz.TriggerJob(nameof(IEmbyAvaliabilityChecker), "Emby");
                 }
             }
             catch (Exception e)
             {
-                _log.LogError(e, "Exception when refreshing the Plex Metadata");
+                _log.LogError(e, $"Exception when refreshing the Metadata Refresh");
 
                 await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                     .SendAsync(NotificationHub.NotificationEvent, "Metadata Refresh Failed");
-                throw;
+                return;
             }
 
+            _log.LogInformation("Metadata refresh finished");
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                 .SendAsync(NotificationHub.NotificationEvent, "Metadata Refresh Finished");
         }
@@ -84,26 +90,27 @@ namespace Ombi.Schedule.Jobs.Ombi
         private async Task StartPlex()
         {
             // Ensure we check that we have not linked this item to a request
-            var allMovies = _plexRepo.GetAll().Where(x =>
-                x.Type == PlexMediaTypeEntity.Movie && !x.RequestId.HasValue && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue()));
+            var allMovies = await _plexRepo.GetAll().Where(x =>
+               x.Type == PlexMediaTypeEntity.Movie && x.RequestId == null && (x.TheMovieDbId == null || x.ImdbId == null)).ToListAsync();
             await StartPlexMovies(allMovies);
 
             // Now Tv
-            var allTv = _plexRepo.GetAll().Where(x =>
-                x.Type == PlexMediaTypeEntity.Show && !x.RequestId.HasValue && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue() || !x.TvDbId.HasValue()));
+            var allTv = await _plexRepo.GetAll().Where(x =>
+                x.Type == PlexMediaTypeEntity.Show && x.RequestId == null && (x.TheMovieDbId == null || x.ImdbId == null || x.TvDbId == null)).ToListAsync();
             await StartPlexTv(allTv);
         }
 
         private async Task StartEmby(EmbySettings s)
         {
+            EmbyApi = _embyApiFactory.CreateClient(s);
             await StartEmbyMovies(s);
             await StartEmbyTv();
         }
 
-        private async Task StartPlexTv(IQueryable<PlexServerContent> allTv)
+        private async Task StartPlexTv(List<PlexServerContent> allTv)
         {
             foreach (var show in allTv)
-            {   
+            {
                 // Just double check there is no associated request id
                 if (show.RequestId.HasValue)
                 {
@@ -138,8 +145,8 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         private async Task StartEmbyTv()
         {
-            var allTv = _embyRepo.GetAll().Where(x =>
-                x.Type == EmbyMediaType.Series && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue() || !x.TvDbId.HasValue()));
+            var allTv = await _embyRepo.GetAll().Where(x =>
+                x.Type == EmbyMediaType.Series && (x.TheMovieDbId == null || x.ImdbId == null || x.TvDbId == null)).ToListAsync();
 
             foreach (var show in allTv)
             {
@@ -171,7 +178,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        private async Task StartPlexMovies(IQueryable<PlexServerContent> allMovies)
+        private async Task StartPlexMovies(List<PlexServerContent> allMovies)
         {
             foreach (var movie in allMovies)
             {
@@ -203,8 +210,8 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         private async Task StartEmbyMovies(EmbySettings settings)
         {
-            var allMovies = _embyRepo.GetAll().Where(x =>
-                x.Type == EmbyMediaType.Movie && (!x.TheMovieDbId.HasValue() || !x.ImdbId.HasValue()));
+            var allMovies = await _embyRepo.GetAll().Where(x =>
+                x.Type == EmbyMediaType.Movie && (x.TheMovieDbId == null || x.ImdbId == null)).ToListAsync();
             foreach (var movie in allMovies)
             {
                 movie.ImdbId.HasValue();
@@ -223,7 +230,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     foreach (var server in settings.Servers)
                     {
                         _log.LogInformation($"Checking server {server.Name} for upto date metadata");
-                        var movieInfo = await _embyApi.GetMovieInformation(movie.EmbyId, server.ApiKey, server.AdministratorId,
+                        var movieInfo = await EmbyApi.GetMovieInformation(movie.EmbyId, server.ApiKey, server.AdministratorId,
                             server.FullUri);
 
                         if (movieInfo.ProviderIds?.Imdb.HasValue() ?? false)
@@ -256,7 +263,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        private async Task<string> GetTheMovieDbId(bool hasTvDbId, bool hasImdb, string tvdbID, string imdbId, string title, bool movie)
+        public async Task<string> GetTheMovieDbId(bool hasTvDbId, bool hasImdb, string tvdbID, string imdbId, string title, bool movie)
         {
             _log.LogInformation("The Media item {0} does not have a TheMovieDbId, searching for TheMovieDbId", title);
             FindResult result = null;
@@ -365,9 +372,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             if (disposing)
             {
-                _plexRepo?.Dispose();
-                _embyRepo?.Dispose();
-                _plexSettings?.Dispose();
+                //_plexSettings?.Dispose();
             }
             _disposed = true;
         }

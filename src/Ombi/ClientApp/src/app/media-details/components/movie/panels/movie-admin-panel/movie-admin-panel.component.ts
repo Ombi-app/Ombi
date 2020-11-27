@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, EventEmitter, Output } from "@angular/core";
 import { RadarrService } from "../../../../../services";
 import { IRadarrProfile, IRadarrRootFolder, IMovieRequests, IAdvancedData } from "../../../../../interfaces";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { MovieAdvancedOptionsComponent } from "../movie-advanced-options/movie-advanced-options.component";
 import { RequestServiceV2 } from "../../../../../services/requestV2.service";
 
@@ -13,6 +13,7 @@ export class MovieAdminPanelComponent implements OnInit {
 
     @Input() public movie: IMovieRequests;
     @Output() public advancedOptionsChanged = new EventEmitter<IAdvancedData>();
+    @Output() public radarrEnabledChange = new EventEmitter<boolean>();
 
     public radarrEnabled: boolean;
     public radarrProfiles: IRadarrProfile[];
@@ -34,6 +35,8 @@ export class MovieAdminPanelComponent implements OnInit {
                 this.setRootFolderOverrides();
             });
         }
+
+        this.radarrEnabledChange.emit(this.radarrEnabled);
     }
 
     public async openAdvancedOptions() {

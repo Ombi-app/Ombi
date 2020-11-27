@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { IDenyDialogData, IIssueDialogData } from "../interfaces/interfaces";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MessageService, IssuesService } from "../../../../services";
 import { IIssues, IIssueCategory, IssueStatus, RequestType } from "../../../../interfaces";
 import { TranslateService } from "@ngx-translate/core";
@@ -20,6 +20,7 @@ export class NewIssueComponent implements OnInit {
         private issueService: IssuesService,
         public messageService: MessageService,
         private translate: TranslateService) {
+            debugger;
             this.issue = {
                 subject: "",
                 description: "",
@@ -31,8 +32,8 @@ export class NewIssueComponent implements OnInit {
                 comments: [],
                 requestId: data.requestId,
                 requestType: data.requestType,
-                title: "",
-                providerId: data.imdbId,
+                title: data.title,
+                providerId: data.providerId,
                 userReported: undefined,
             };
         }
@@ -40,7 +41,6 @@ export class NewIssueComponent implements OnInit {
         public async ngOnInit(): Promise<void> {
             this.issueCategories = await this.issueService.getCategories().toPromise();
         }   
-
 
         public async createIssue() { 
             const result = await this.issueService.createIssue(this.issue).toPromise();

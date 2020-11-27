@@ -1,44 +1,35 @@
 ﻿<settings-menu></settings-menu>
-
+<div class="small-middle-container">
 <wiki [url]="'https://github.com/tidusjar/Ombi/wiki/User-Importer-Settings'"></wiki>
 <fieldset *ngIf="settings">
     <legend>User Importer Settings</legend>
-
+    <div class="md-form-field" style="margin-top:1em;"></div>
     <div class="col-md-6">
         <div *ngIf="plexEnabled">
 
             <div class="form-group">
-                <div class="checkbox">
-                    <input type="checkbox" id="importPlex" [(ngModel)]="settings.importPlexUsers">
-                    <label for="importPlex">Import Plex Users</label>
+                <div>
+                    <mat-slide-toggle id="importPlex" [(ngModel)]="settings.importPlexUsers">
+                    Import Plex Users</mat-slide-toggle>
                 </div>
             </div>
             
             <div class="form-group">
-                <div class="checkbox">
-                    <input type="checkbox" id="importAdmin" [(ngModel)]="settings.importPlexAdmin">
-                    <label for="importAdmin">Import Plex Admin</label>
+                <mat-slide-toggle id="importAdmin" [(ngModel)]="settings.importPlexAdmin">Import Plex Admin</mat-slide-toggle>
                 </div>
-            </div>
             <div *ngIf="plexUsers">
-                <p>Plex Users exclude from Import</p>
+                <p>Plex Users excluded from Import</p>
                 
                 <p-autoComplete [(ngModel)]="bannedPlexUsers" [suggestions]="filteredPlexUsers" [multiple]="true" field="username" (completeMethod)="filterPlexList($event)"></p-autoComplete>
             </div>
         </div>
-
         <div *ngIf="embyEnabled">
-
-
             <div class="form-group">
-                <div class="checkbox">
-                    <input type="checkbox" id="importEmbyUsers" [(ngModel)]="settings.importEmbyUsers">
-                    <label for="importEmbyUsers">Import Emby Users</label>
-                </div>
+                <mat-slide-toggle id="importEmbyUsers" [(ngModel)]="settings.importEmbyUsers">Import Emby Users</mat-slide-toggle>
             </div>
             
             <div *ngIf="embyUsers">
-                <p>Emby Users exclude from Import</p>
+                <p>Emby Users excluded from Import</p>
                 
                 <p-autoComplete [(ngModel)]="bannedEmbyUsers" [suggestions]="filteredEmbyUsers" [multiple]="true" field="username" (completeMethod)="filterEmbyList($event)"></p-autoComplete>
             </div>
@@ -50,9 +41,9 @@
 
         <div *ngFor="let c of claims">
             <div class="form-group">
-                <div class="checkbox">
-                    <input type="checkbox" [(ngModel)]="c.enabled" [value]="c.value" id="create{{c.value}}" [attr.name]="'create' + c.value" ng-checked="c.enabled">
-                    <label for="create{{c.value}}">{{c.value | humanize}}</label>
+                <div>
+                    <mat-slide-toggle [(ngModel)]="c.enabled" [value]="c.value" id="create{{c.value}}" [attr.name]="'create' + c.value" ng-checked="c.enabled">
+                    {{c.value | humanize}}</mat-slide-toggle>
                 </div>
             </div>
         </div>
@@ -61,24 +52,26 @@
         <div class="form-group">
             <label for="movieRequestLimit" class="control-label">Movie Request Limit</label>
             <div>
-                <input type="text" [(ngModel)]="settings.movieRequestLimit" class="form-control form-small form-control-custom " id="movieRequestLimit" name="movieRequestLimit" value="{{settings?.movieRequestLimit}}">
+                <input type="text" [(ngModel)]="settings.movieRequestLimit" class="form-control form-small form-control-custom" id="movieRequestLimit" name="movieRequestLimit" value="{{settings?.movieRequestLimit}}">
             </div>
         </div>
 
         <div class="form-group">
             <label for="episodeRequestLimit" class="control-label">Episode Request Limit</label>
             <div>
-                <input type="text" [(ngModel)]="settings.episodeRequestLimit" class="form-control form-small form-control-custom " id="episodeRequestLimit" name="episodeRequestLimit" value="{{settings?.episodeRequestLimit}}">
+                <input type="text" [(ngModel)]="settings.episodeRequestLimit" class="form-control form-small form-control-custom" id="episodeRequestLimit" name="episodeRequestLimit" value="{{settings?.episodeRequestLimit}}">
             </div>
         </div>
 
     </div>
-    <div class="col-md-6">
         <div class="form-group">
-            <button type="submit" id="save" (click)="submit()" class="btn btn-primary-outline">Submit</button>
-            <button type="button" [disabled]="!enableImportButton" (click)="runImporter()" class="btn btn-info-outline">Run Importer</button>
-        </div>     
-        <div class="form-group">
+            <button (click)="submit()" mat-raised-button type="submit" id="save" class="mat-focus-indicator mat-stroked-button accent mat-accent mat-raised-button mat-button-base" ng-reflect-disabled="false">
+            <span class="mat-button-wrapper">Submit</span><div matripple="" class="mat-ripple mat-button-ripple" ng-reflect-disabled="false" ng-reflect-centered="false" ng-reflect-trigger="[object HTMLButtonElement]"></div>
+            <div class="mat-button-focus-overlay"></div></button>
         </div>
-    </div>
+        <div><button type="button" [disabled]="!enableImportButton" (click)="runImporter()" class="mat-focus-indicator mat-stroked-button mat-raised-button mat-button-base">
+            Run Importer<div matripple class="mat-ripple mat-button-ripple" ng-reflect-disabled="false" ng-reflect-centered="false" ng-reflect-trigger="[object HTMLButtonElement]"></div><div class="mat-button-focus-overlay"></div></button>
+        </div>     
+        <div class="md-form-field" style="margin-top:1em;"></div>
 </fieldset>
+</div>

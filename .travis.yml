@@ -1,7 +1,0 @@
-language: csharp
-solution: src/Ombi.sln
-install:
- - mono Tools/nuget.exe restore Ombi.sln
- - nuget install NUnit.Runners -OutputDirectory testrunner  
-script:
- - xbuild /p:Configuration=Release Ombi.sln /p:TargetFrameworkVersion="v4.5"

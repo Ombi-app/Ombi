@@ -1,12 +1,15 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 
 import { IPlexLibrariesSettings, IPlexServer, IPlexServerResponse, IPlexServerViewModel, IPlexSettings } from "../../interfaces";
 import { JobService, NotificationService, PlexService, SettingsService, TesterService } from "../../services";
+import { MatTabChangeEvent, MatTabGroup } from "@angular/material/tabs";
+import {FormControl} from '@angular/forms';
 
 @Component({
     templateUrl: "./plex.component.html",
+    styleUrls: ["./plex.component.scss"]
 })
 export class PlexComponent implements OnInit, OnDestroy {
     public settings: IPlexSettings;
@@ -14,6 +17,8 @@ export class PlexComponent implements OnInit, OnDestroy {
     public username: string;
     public password: string;
     public serversButton = false;
+    selected = new FormControl(0);
+    @ViewChild("tabGroup", {static: false}) public tagGroup: MatTabGroup;
 
     public advanced = false;
 
@@ -67,18 +72,26 @@ export class PlexComponent implements OnInit, OnDestroy {
         });
     }
 
-    public addTab() {
-        if (this.settings.servers == null) {
+    public addTab(event: MatTabChangeEvent) {
+        
+        const tabName = event.tab.textLabel;
+        if (tabName == "Add Server"){ 
+            
+            if (this.settings.servers == null) {
             this.settings.servers = [];
-        }
-        this.settings.servers.push(<IPlexServer> { name: "New*", id: Math.floor(Math.random() * (99999 - 0 + 1) + 1) });
+            }
+            this.settings.servers.push(<IPlexServer> { name: "New" + this.settings.servers.length + "*", id: Math.floor(Math.random() * (99999 - 0 + 1) + 1) });
 
+            //this.tagGroup.selectedIndex = (0);
+            this.selected.setValue(this.settings.servers.length - 1);
+            }
     }
 
     public removeServer(server: IPlexServer) {
         const index = this.settings.servers.indexOf(server, 0);
         if (index > -1) {
             this.settings.servers.splice(index, 1);
+            this.selected.setValue(this.settings.servers.length - 1);
         }
     }
 

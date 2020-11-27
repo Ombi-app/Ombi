@@ -18,3 +18,23 @@
     overflow: hidden;
     word-wrap: break-word;
   }
+
+  .small-middle-container{
+    margin: auto;
+    width: 85%;
+    margin-top:10px;
+  }
+
+  :host ::ng-deep strong {
+    color: #fff;
+    background-color: #007bff;
+    display: inline-block;
+      padding: 0.25em 0.4em;
+      font-size: 75%;
+      font-weight: 700;
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: baseline;
+      border-radius: 0.25rem;
+  }

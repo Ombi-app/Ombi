@@ -1,5 +1,4 @@
-﻿
-    <!-- <p-growl [value]="notificationService.messages" [life]="3000"></p-growl>
+﻿<!-- <p-growl [value]="notificationService.messages" [life]="3000"></p-growl>
     <nav *ngIf="showNav" class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -169,10 +168,10 @@
 
 
 
-    
+
 <div>
-    <app-my-nav [showNav]="showNav" [isAdmin]="isAdmin" [applicationName]="applicationName" [username]="username" (logoutClick)="logOut();"
-    (themeChange)="onSetTheme($event)"></app-my-nav>
+    <app-my-nav id="main-container" [showNav]="showNav" [isAdmin]="isAdmin" [applicationName]="applicationName" [applicationLogo]="customizationSettings?.logo" [username]="username" [email]="user?.email " (logoutClick)="logOut();" (themeChange)="onSetTheme($event)">
+    </app-my-nav>
 
 
 </div>

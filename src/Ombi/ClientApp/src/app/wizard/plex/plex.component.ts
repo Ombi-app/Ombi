@@ -1,7 +1,6 @@
 ﻿import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { PlatformLocation } from "@angular/common";
 import { AuthService } from "../../auth/auth.service";
 import { PlexOAuthService, PlexService, PlexTvService, SettingsService } from "../../services";
 import { IdentityService, NotificationService } from "../../services";
@@ -15,7 +14,6 @@ export class PlexComponent implements OnInit, OnDestroy {
 
     public login: string;
     public password: string;
-    public baseUrl: string;
     public pinTimer: any;
 
     private clientId: string;
@@ -24,14 +22,10 @@ export class PlexComponent implements OnInit, OnDestroy {
                 private notificationService: NotificationService,
                 private identityService: IdentityService, private plexTv: PlexTvService,
                 private settingsService: SettingsService,
-                private location: PlatformLocation, private authService: AuthService,
+                private authService: AuthService,
                 private plexOauth: PlexOAuthService, private store: StorageService) { }
 
     public ngOnInit(): void {
-        const base = this.location.getBaseHrefFromDOM();
-        if (base.length > 1) {
-            this.baseUrl = base;
-        }
         this.settingsService.getClientId().subscribe(x => this.clientId = x);
     }
 

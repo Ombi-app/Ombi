@@ -25,5 +25,7 @@ namespace Ombi.Core.Engine.Interfaces
         Task UpdateQualityProfile(int requestId, int profileId);
         Task UpdateRootPath(int requestId, int rootPath);
         Task<RequestsViewModel<ChildRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder);
+         Task<RequestsViewModel<ChildRequests>> GetRequests(int count, int position, string sortProperty, string sortOrder, RequestStatus status);
+        Task<RequestEngineResult> UpdateAdvancedOptions(MediaAdvancedOptions options);
     }
 }

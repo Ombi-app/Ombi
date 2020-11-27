@@ -36,6 +36,8 @@ import {
     IUpdateSettings,
     IUserManagementSettings,
     IVoteSettings,
+    ITwilioSettings,
+    IWebhookNotificationSettings,
 } from "../interfaces";
 
 import { ServiceHelpers } from "./service.helpers";
@@ -192,6 +194,14 @@ export class SettingsService extends ServiceHelpers {
             .post<boolean>(`${this.url}/notifications/gotify`, JSON.stringify(settings), { headers: this.headers });
     }
 
+    public getWebhookNotificationSettings(): Observable<IWebhookNotificationSettings> {
+        return this.http.get<IWebhookNotificationSettings>(`${this.url}/notifications/webhook`, { headers: this.headers });
+    }
+    public saveWebhookNotificationSettings(settings: IWebhookNotificationSettings): Observable<boolean> {
+        return this.http
+            .post<boolean>(`${this.url}/notifications/webhook`, JSON.stringify(settings), { headers: this.headers });
+    }
+
     public getSlackNotificationSettings(): Observable<ISlackNotificationSettings> {
         return this.http.get<ISlackNotificationSettings>(`${this.url}/notifications/slack`, {headers: this.headers});
     }
@@ -252,6 +262,15 @@ export class SettingsService extends ServiceHelpers {
     public saveTelegramNotificationSettings(settings: ITelegramNotifcationSettings): Observable<boolean> {
         return this.http
             .post<boolean>(`${this.url}/notifications/telegram`, JSON.stringify(settings), {headers: this.headers});
+    }
+
+    public getTwilioSettings(): Observable<ITwilioSettings> {
+        return this.http.get<ITwilioSettings>(`${this.url}/notifications/twilio`, {headers: this.headers});
+    }
+
+    public saveTwilioSettings(settings: ITwilioSettings): Observable<boolean> {
+        return this.http
+            .post<boolean>(`${this.url}/notifications/twilio`, JSON.stringify(settings), {headers: this.headers});
     }
 
     public getJobSettings(): Observable<IJobSettings> {

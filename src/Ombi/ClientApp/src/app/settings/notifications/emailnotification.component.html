@@ -1,105 +1,119 @@
-﻿
-<settings-menu></settings-menu>
-<div *ngIf="emailForm">
+﻿<settings-menu></settings-menu>
+<div *ngIf="emailForm" class="small-middle-container">
     <fieldset>
         <legend>Email Notifications</legend>
-        <div class="col-md-6">
-            <form novalidate [formGroup]="emailForm" (ngSubmit)="onSubmit(emailForm)">
-
-                <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" id="enable" formControlName="enabled">
-                        <label for="enable">Enabled</label>
+        <div class="row">
+            <div class="col-md-8">
+                <form novalidate [formGroup]="emailForm" style="padding-top:2%;" (ngSubmit)="onSubmit(emailForm)">
+                    <div class="row">
+                        <div>
+                            <div class="md-form-field">
+                                <mat-slide-toggle formControlName="enabled">Enable</mat-slide-toggle>
+                            </div>
+                            <div class="md-form-field">
+                                <mat-slide-toggle formControlName="authentication">Enable SMTP Authentication
+                                </mat-slide-toggle>
+                            </div>
+                            <div class="md-form-field">
+                                <mat-slide-toggle formControlName="disableTLS">Disable TLS/SSL</mat-slide-toggle>
+                            </div>
+                            <div class="md-form-field">
+                                <mat-slide-toggle formControlName="disableCertificateChecking">Disable Certificate
+                                    Checking</mat-slide-toggle>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" id="Authentication" formControlName="authentication"><label for="Authentication">Enable SMTP Authentication</label>
-                    </div>
-                </div>
+                    <div class="row">
+                        <div class="md-form-field">
+                            <mat-form-field appearance="outline">
+                                <mat-label>SMTP Host</mat-label>
+                                <input matInput formControlName="host">
+                                <mat-error *ngIf="emailForm.get('host').hasError('required')">
+                                    Host is <strong>required</strong>
+                                  </mat-error>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                                <mat-label>SMTP Port</mat-label>
+                                <input matInput formControlName="port">
+                                <mat-error *ngIf="emailForm.get('port').hasError('required')">
+                                    Port is <strong>required</strong>
+                                  </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="md-form-field">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Email Sender</mat-label>
+                                <input matInput formControlName="senderAddress" matTooltip="The email address that the emails will be sent from">
+                                <mat-error *ngIf="emailForm.get('senderAddress').hasError('required')">
+                                    Email Sender Address is <strong>required</strong>
+                                  </mat-error>
+                                  <mat-error *ngIf="emailForm.get('senderAddress').hasError('email')">
+                                    Email Sender Address needs to be a valid email address
+                                  </mat-error>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Sender Name</mat-label>
+                                <input matInput formControlName="senderName" matTooltip="The 'Friendly' name that will appear in the 'FROM:' part of the email">
+                            </mat-form-field>
+                        </div>
 
-                <div class="form-group">
-                    <div class="checkbox">
-                            <input type="checkbox" id="disableTLS" formControlName="disableTLS"><label for="disableTLS">Disable TLS/SSL</label>
-                    </div>
-                </div>
+                        <div class="md-form-field">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Admin Email</mat-label>
+                                <input matInput formControlName="adminEmail" matTooltip="The administrator email will be used to send emails for admin only notifications (e.g. New Requests that require approvals)">
+                                <mat-error *ngIf="emailForm.get('adminEmail').hasError('required')">
+                                    Admin Email is <strong>required</strong>
+                                  </mat-error>
+                                  <mat-error *ngIf="emailForm.get('adminEmail').hasError('email')">
+                                    Admin Email needs to be a valid email address
+                                  </mat-error>
+                            </mat-form-field>
+                        </div>
 
-                <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" id="disableCertificateChecking" formControlName="disableCertificateChecking"><label for="disableCertificateChecking">Disable Certificate Checking</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="host" class="control-label">SMTP Host</label>
-                  
-                        <input type="text" class="form-control form-control-custom " id="host" name="host" placeholder="localhost" formControlName="host"  [ngClass]="{'form-error': emailForm.get('host').hasError('required')}">
-                        <small *ngIf="emailForm.get('host').hasError('required')" class="error-text">The Host is required</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="portNumber" class="control-label">SMTP Port</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom " [ngClass]="{'form-error': emailForm.get('port').hasError('required')}" id="portNumber" name="Port" placeholder="Port Number" formControlName="port">
-                        <small *ngIf="emailForm.get('port').hasError('required')" class="error-text">The Port is required</small>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label style="padding-left: 0"  for="senderAddress" class="control-label col-md-12">Email Sender</label>
-                    <div style="padding-left: 0" class="col-md-6">
-                        <input type="text" class="form-control form-control-custom " id="senderAddress" [ngClass]="{'form-error': emailForm.get('senderAddress').hasError('required'), 'form-error': emailForm.get('senderAddress').hasError('incorrectMailFormat')}" name="senderAddress" formControlName="senderAddress" tooltipPosition="top" placeholder="Sender Address" pTooltip="The email address that the emails will be sent from">
-                        <small *ngIf="emailForm.get('senderAddress').hasError('required')" class="error-text">The Email Sender Address is required</small>
-                        <small *ngIf="emailForm.get('senderAddress').hasError('email') && !emailForm.get('senderAddress').hasError('required')" class="error-text">The Email Sender Address needs to be a valid email address</small>
-                    </div>
-                    <div style="padding-left: 0" class="col-md-6">
-                        <input type="text" class="form-control form-control-custom " id="senderName" name="senderName" formControlName="senderName" tooltipPosition="top" placeholder="Sender Name" pTooltip="The 'Friendly' name that will appear in the 'FROM:' part of the email">
-                    </div>
-                    <br/>
-                    <br/>
-                    <br/>
-                </div>
-
-                <div class="form-group">
-                    <label for="adminEmail" class="control-label">Admin Email</label>
-                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': emailForm.get('adminEmail').hasError('required'), 'form-error': emailForm.get('adminEmail').hasError('email')}"  id="adminEmail" name="adminEmail" formControlName="adminEmail" tooltipPosition="top" pTooltip="The administrator email will be used to send emails for admin only notifications (e.g. New Requests that require approvals)">
-                        <small *ngIf="emailForm.get('adminEmail').hasError('required')" class="error-text">The Admin Email Address is required</small>
-                        <small *ngIf="emailForm.get('adminEmail').hasError('email')  && !emailForm.get('adminEmail').hasError('required')" class="error-text">The Admin Email needs to be a valid email address</small>
-
-                </div>
-
-
-                <div class="form-group" *ngIf="emailForm.controls['username'].validator">
-                    <label for="username" class="control-label">Username</label>
-                    
-                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': emailForm.get('username').hasError('required')}" id="username" name="username" formControlName="username" pTooltip="The username if authentication is enabled" tooltipPosition="top">
-                        <small *ngIf="emailForm.get('username').hasError('required')" class="error-text">The Username is required</small>
                         
+                        <div class="md-form-field" *ngIf="emailForm.controls['username'].validator">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Username</mat-label>
+                                <input matInput formControlName="username" matTooltip="The username if authentication is enabled">
+                                <mat-error *ngIf="emailForm.get('username').hasError('required')">
+                                    Username is <strong>required</strong>
+                                  </mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                                <mat-label>Password</mat-label>
+                                <input type="password" matInput formControlName="password" matTooltip="The password if authentication is enabled">
+                                <mat-error *ngIf="emailForm.get('password').hasError('required')">
+                                    Password is <strong>required</strong>
+                                  </mat-error>
+                            </mat-form-field>
+                        </div>
+
                 </div>
-
-                <div class="form-group" *ngIf="emailForm.get('password').validator">
-                    <label for="password" class="control-label">Password</label>
-                    
-                        <input type="password" class="form-control form-control-custom"  [ngClass]="{'form-error': emailForm.get('password').hasError('required')}" id="password" name="password" formControlName="password" pTooltip="The password if authentication is enabled" tooltipPosition="top">
-                        <small *ngIf="emailForm.get('password').hasError('required')" class="error-text">The Password is required</small>
-                </div>
-
-                <div class="form-group">
-                    <div>
-                        <button [disabled]="emailForm.invalid" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
-                        <button [disabled]="emailForm.invalid" type="submit" (click)="test(emailForm)" class="btn btn-primary-outline">
-                            Test
-                            <div id="spinner"></div>
-                        </button>
-
+                <div class="row top-space">
+                    <div class="form-group">
+                        <div>
+                            <button mat-raised-button type="button" class="btn-spacing" color="accent"
+                            (click)="test(emailForm)" [disabled]="emailForm.invalid">Test <div id="spinner"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div>
+                            <button mat-raised-button type="submit" class="btn-spacing" color="primary"
+                                [disabled]="emailForm.invalid">Submit</button>
+                        </div>
                     </div>
                 </div>
-            </form>
-        </div>
+                </form>
+            </div>
 
 
-        <div class="col-md-6">
+        <div class="col-md-4">
             <notification-templates [templates]="templates"></notification-templates>
         </div>
+        
+    </div>
     </fieldset>
 </div>

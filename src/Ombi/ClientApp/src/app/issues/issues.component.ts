@@ -6,6 +6,7 @@ import { IIssueCount, IIssues, IPagenator, IssueStatus } from "../interfaces";
 
 @Component({
     templateUrl: "issues.component.html",
+    styleUrls: ['issues.component.scss']
 })
 export class IssuesComponent implements OnInit {
 

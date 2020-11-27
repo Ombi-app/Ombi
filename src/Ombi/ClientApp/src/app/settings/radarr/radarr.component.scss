@@ -1,0 +1,17 @@
+@import "~styles/shared.scss";
+.small-middle-container {
+    margin: auto;
+    width: 95%;
+    margin-top: 10px;
+}
+
+.col-8 {
+    display: inline-table;
+}
+.col-md-5 {
+    display: inline-table;
+}
+
+.row {
+    display: block;
+}

@@ -1,0 +1,16 @@
+@import "~styles/shared.scss";
+.small-middle-container {
+    margin: auto;
+    width: 95%;
+    margin-top: 10px;
+}
+
+textarea {
+    min-height: 100px;
+    height: auto;
+    max-height: 800px;
+}
+
+.row {
+    display: block;
+}

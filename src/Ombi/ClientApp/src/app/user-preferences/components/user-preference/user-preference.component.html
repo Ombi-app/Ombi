@@ -1,15 +1,26 @@
 <div class="small-middle-container" *ngIf="username">
   <h3 [translate]="'UserPreferences.Welcome'" [translateParams]="{username: username}"></h3>
 
+
   <hr>
-  <div>
-    <mat-form-field>
-      <mat-label [translate]="'UserPreferences.OmbiLanguage'"></mat-label>
-      <mat-select [(value)]="selectedLang" (selectionChange)="languageSelected();">
-        <mat-option *ngFor="let lang of availableLanguages" [value]="lang.value">
-          {{lang.display}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+  <div class="row justify-content-md-center top-spacing">
+    <div class="col-md">
+      <div>
+                <mat-form-field>
+            <mat-label [translate]="'UserPreferences.OmbiLanguage'"></mat-label>
+            <mat-select [(value)]="selectedLang" (selectionChange)="languageSelected();">
+              <mat-option *ngFor="let lang of availableLanguages" [value]="lang.value">
+                {{lang.display}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div>
+
+        </div>
+    </div>
+    <div class="col-md">
+      <qrcode *ngIf="qrCodeEnabled" [qrdata]="qrCode" [size]="256" [level]="'L'"></qrcode>
+    </div>
   </div>
 </div>

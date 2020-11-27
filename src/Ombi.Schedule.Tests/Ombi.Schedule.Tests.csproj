@@ -1,27 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
-    <PackageReference Include="MockQueryable.Moq" Version="1.1.0" />
+    <PackageReference Include="MockQueryable.Moq" Version="5.0.0-preview.7" />
     <PackageReference Include="Moq" Version="4.10.0" />
     <PackageReference Include="Nunit" Version="3.11.0" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
     <PackageReference Include="NUnit.ConsoleRunner" Version="3.9.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
-    <packagereference Include="Microsoft.NET.Test.Sdk" Version="16.0.1"></packagereference>
+    <packagereference Include="Microsoft.NET.Test.Sdk" Version="16.8.0"></packagereference>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Schedule\Ombi.Schedule.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Microsoft.AspNetCore.SignalR.Core">
-      <HintPath>..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.signalr.core\1.1.0\lib\netstandard2.0\Microsoft.AspNetCore.SignalR.Core.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

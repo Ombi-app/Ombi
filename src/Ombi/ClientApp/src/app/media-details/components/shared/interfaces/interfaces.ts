@@ -9,5 +9,6 @@ export interface IDenyDialogData {
 export interface IIssueDialogData {
     requestType: RequestType;
     requestId: number;
-    imdbId: string;
+    providerId: string;
+    title: string;
 }

@@ -1,28 +1,25 @@
-<h1 id="issuesTitle" [translate]="'Issues.Title'"></h1>
-
-<ngb-tabset *ngIf="count">
-    <ngb-tab *ngIf="count.pending > 0">
-       <ng-template ngbTabTitle>{{'Issues.PendingTitle' | translate}} <span class="badge">{{count.pending}}</span></ng-template>
-        <ng-template ngbTabContent>
-            <div *ngIf="pendingIssues">
-                <issues-table [issues]="pendingIssues"  (changePage)="changePagePending($event)" [totalRecords]="count.pending"></issues-table>
-            </div>
-        </ng-template>
-    </ngb-tab>
-    <ngb-tab *ngIf="count.inProgress > 0">
-       <ng-template ngbTabTitle>{{'Issues.InProgressTitle' | translate}} <span class="badge">{{count.inProgress}}</span></ng-template>
-        <ng-template ngbTabContent>
-            <div *ngIf="inProgressIssues">
-                <issues-table [issues]="inProgressIssues" (changePage)="changePageInProg($event)" [totalRecords]="count.inProgress"></issues-table>
-            </div>
-        </ng-template>
-    </ngb-tab>
-    <ngb-tab *ngIf="count.resolved > 0">
-            <ng-template ngbTabTitle>{{'Issues.ResolvedTitle' | translate}} <span class="badge">{{count.resolved}}</span></ng-template>
-        <ng-template ngbTabContent>
-            <div *ngIf="resolvedIssues">
-                <issues-table [issues]="resolvedIssues" (changePage)="changePageResolved($event)" [totalRecords]="count.resolved"></issues-table>
-            </div>
-        </ng-template>
-    </ngb-tab>
-</ngb-tabset>
+<div class="small-middle-container">
+    <mat-tab-group>
+        <mat-tab label="{{'Issues.PendingTitle' | translate}}">
+            <ng-template matTabContent>
+                <div *ngIf="pendingIssues">
+                    <issues-table [issues]="pendingIssues" (changePage)="changePagePending($event)" [totalRecords]="count.pending"></issues-table>
+                </div>
+            </ng-template>
+        </mat-tab>
+        <mat-tab *ngIf="inProgressIssues.length > 0" label="{{'Issues.InProgressTitle' | translate}}">
+            <ng-template matTabContent>
+                <div *ngIf="inProgressIssues">
+                    <issues-table [issues]="inProgressIssues" (changePage)="changePageInProg($event)" [totalRecords]="count.inProgress"></issues-table>
+                </div>
+            </ng-template>
+        </mat-tab>
+        <mat-tab label="{{'Issues.ResolvedTitle' | translate}}">
+            <ng-template matTabContent>
+                <div *ngIf="resolvedIssues">
+                    <issues-table [issues]="resolvedIssues" (changePage)="changePageResolved($event)" [totalRecords]="count.resolved"></issues-table>
+                </div>
+            </ng-template>
+        </mat-tab>
+    </mat-tab-group>
+</div>

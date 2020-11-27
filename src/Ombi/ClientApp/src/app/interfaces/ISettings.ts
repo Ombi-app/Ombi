@@ -16,6 +16,9 @@ export interface IOmbiSettings extends ISettings {
   doNotSendNotificationsForAutoApprove: boolean;
   hideRequestsUsers: boolean;
   defaultLanguageCode: string;
+  disableHealthChecks: boolean;
+  autoDeleteAvailableRequests: boolean;
+  autoDeleteAfterDays: number;
 }
 
 export interface IUpdateSettings extends ISettings {
@@ -38,6 +41,7 @@ export interface IEmbySettings extends ISettings {
 }
 
 export interface IEmbyServer extends IExternalSettings {
+  serverId: string;
   name: string;
   apiKey: string;
   administratorId: string;
@@ -46,6 +50,7 @@ export interface IEmbyServer extends IExternalSettings {
 }
 
 export interface IPublicInfo {
+  id: string;
   serverName: string;
   isJellyfin: boolean;
 }
@@ -82,16 +87,19 @@ export interface ISonarrSettings extends IExternalSettings {
   addOnly: boolean;
   v3: boolean;
   languageProfile: number;
+  scanForAvailability: boolean;
 }
 
 export interface IRadarrSettings extends IExternalSettings {
   enabled: boolean;
   apiKey: string;
-  defaultQualityProfile: string;
+  defaultQualityProfile: number;
   defaultRootPath: string;
   fullRootPath: string;
   addOnly: boolean;
   minimumAvailability: string;
+  scanForAvailability: boolean;
+  v3: boolean;
 }
 
 export interface ILidarrSettings extends IExternalSettings {
@@ -128,6 +136,7 @@ export interface ICustomizationSettings extends ISettings {
   customDonationMessage: string;
   recentlyAddedPage: boolean;
   useCustomPage: boolean;
+  hideAvailableFromDiscover: boolean;
 }
 
 export interface IJobSettings {
@@ -139,13 +148,13 @@ export interface IJobSettings {
   automaticUpdater: string;
   userImporter: string;
   sickRageSync: string;
-  refreshMetadata: string;
   newsletter: string;
   plexRecentlyAddedSync: string;
   lidarrArtistSync: string;
   issuesPurge: string;
   retryRequests: string;
   mediaDatabaseRefresh: string;
+  autoDeleteRequests: string;
 }
 
 export interface IIssueSettings extends ISettings {
@@ -195,9 +204,6 @@ export interface IAbout {
   ombiDatabaseType: string;
   externalDatabaseType: string;
   settingsDatabaseType: string;
-  ombiConnectionString: string;
-  externalConnectionString: string;
-  settingsConnectionString: string;
   storagePath: string;
   notSupported: boolean;
 }

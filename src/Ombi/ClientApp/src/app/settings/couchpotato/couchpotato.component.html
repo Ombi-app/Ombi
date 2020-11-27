@@ -1,100 +1,88 @@
 ﻿<settings-menu>
 </settings-menu>
+<div class="small-middle-container">
 <div *ngIf="form">
     <fieldset>
         <legend>CouchPotato Settings</legend>
-        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:5%;">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" id="enable" formControlName="enabled" ng-checked="form.enabled">
-                        <label for="enable">Enable</label>
-                    </div>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="Ip" class="control-label">Hostname or IP</label>
-                    <div class="">
-                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('ip').hasError('required')}"
-                            id="Ip" name="Ip" placeholder="localhost" formControlName="ip">
-                        <small *ngIf="form.get('ip').hasError('required')" class="error-text">The IP/Hostname is required</small>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="portNumber" class="control-label">Port</label>
-                    <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('port').hasError('required')}" formControlName="port" id="portNumber" name="Port" placeholder="Port Number">
-
-                    <small *ngIf="form.get('port').hasError('required')" class="error-text">The Port is required</small>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="ApiKey" class="control-label">API Key</label>
-                 
-                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('apiKey').hasError('required')}" id="ApiKey" name="ApiKey" formControlName="apiKey">
-
-                        <small *ngIf="form.get('apiKey').hasError('required')" class="error-text">The API Key is required</small>
-                </div>
-                <div class="form-group">
-                    <div class="checkbox">
-
-                        <input type="checkbox" id="Ssl" name="Ssl" formControlName="ssl"><label for="Ssl">SSL</label>
-
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="SubDir" class="control-label">Base Url</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom" formControlName="subDir" id="SubDir" name="SubDir">
+        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+            <div class="row">
+                <div class="col-md-12 col-12 col-sm-12 top-spacing">
+                    <div class="md-form-field">
+                        <mat-slide-toggle formControlName="enabled" id="enable">Enable</mat-slide-toggle>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="username" class="control-label">Username</label>
-                    <input type="text" class="form-control form-control-custom " formControlName="username" name="username">
-                </div>
-                <div class="form-group">
-                    <label for="password" class="control-label">Password</label>
-                    <input type="password" class="form-control form-control-custom " formControlName="password" name="password">
-                </div>
-                <div class="form-group">
-                    <button type="button" class="btn btn-primary-outline" (click)="requestToken(form)">Request Api Key <i class="fa fa-key"></i></button>
-                </div>
+            <div class="row">
+                <div class="col-md-5 col-7 col-sm-12">
+                    <label for="username" class="control-label"><h3>Server Configuration</h3></label>
+                    <div class="md-form-field">
+                        <mat-form-field appearance="outline" >
+                            <mat-label>Hostname or IP</mat-label>
+                            <input matInput id="Ip" name="Ip" formControlName="ip" >
+                            <mat-error>The IP/Hostname is required</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="md-form-field">
+                        <mat-form-field appearance="outline" >
+                            <mat-label>API Key</mat-label>
+                            <input matInput id="apiKey" name="apiKey"  formControlName="apiKey">
+                            <mat-error>The API Key is required</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="md-form-field">
+                        <mat-form-field appearance="outline" >
+                            <mat-label>Port</mat-label>
+                            <input matInput id="port" name="port" formControlName="port">
+                            <mat-error>The Port is required</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="md-form-field">
+                        <mat-slide-toggle formControlName="ssl">SSL</mat-slide-toggle>
+                    </div>
 
-
-                <div class="form-group">
-                    <div>
-                        <button type="submit" (click)="getProfiles(form)" class="btn btn-primary-outline">Get Quality Profiles <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"> </span></button>
+                    <div class="md-form-field">
+                        <mat-form-field appearance="outline" >
+                            <mat-label>Base URL</mat-label>
+                            <input matInput id="SubDir" name="SubDir" formControlName="subDir">
+                        </mat-form-field>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="select" class="control-label">Quality Profiles</label>
-                    <div id="profiles">
-                        <select formControlName="defaultProfileId" class="form-control form-control-custom" id="select">
-                            <option *ngFor="let profile of profiles?.list" value="{{profile._id}}">{{profile.label}}</option>
-                        </select>
+                <div class="col-md-5 col-4 col-sm-12">
+                    <label for="username" class="control-label"><h3>Interface</h3></label>
+                    <div class="form-group col-md-12">
+                        <div id="profiles">
+                            <div class="md-form-field" style="display:contents;">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Quality Profiles</mat-label>
+                                    <mat-select formControlName="defaultProfileId">
+                                      <mat-option *ngFor="let profile of profiles" value="{{profile._id}}">{{profile.label}}</mat-option>
+                                    </mat-select>
+                                    <mat-error>A Default Quality Profile is required</mat-error>
+                                  </mat-form-field>
+                            </div>
+                            <div class="md-form-field" style="display:inline;margin-left:20px;">
+                            <button mat-raised-button id="profiles" (click)="getProfiles(form)" class="mat-stroked-button load">
+                                    Load Quality Profiles <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"></span></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-
-
-
-                <div class="form-group">
-                    <div>
-                        <button [disabled]="form.invalid" (click)="test(form)" class="btn btn-primary-outline">Test Connectivity <span id="spinner"></span></button>
+                <div class="col-md-12" style="margin-top:2em;">
+                    <div class="form-group">
+                        <div>
+                            <button mat-raised-button [disabled]="form.invalid" (click)="test(form)" class="mat-focus-indicator mat-stroked-button mat-button-base">Test Connectivity <span id="spinner"></span></button>
+                        </div>
                     </div>
-                </div>
 
 
-                <div class="form-group">
-                    <div>
-                        <button type="submit" [disabled]="form.invalid" class="btn btn-primary-outline ">Submit</button>
+                    <div class="form-group">
+                        <div>
+                            <button mat-raised-button [disabled]="form.invalid" class="mat-focus-indicator mat-stroked-button mat-button-base mat-accent">Submit</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </form>
     </fieldset>
+</div>
 </div>

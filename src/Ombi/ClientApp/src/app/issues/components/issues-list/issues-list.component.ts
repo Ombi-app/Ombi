@@ -6,6 +6,7 @@ import { IIssueCount, IIssues, IPagenator, IssueStatus } from "../../../interfac
 import { COLUMNS } from "./issues-list.constants";
 
 @Component({
+    selector: "issues-list",
     templateUrl: "issues-list.component.html",
 })
 export class IssuesListComponent implements OnInit {

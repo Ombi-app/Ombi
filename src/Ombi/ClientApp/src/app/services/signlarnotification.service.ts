@@ -3,8 +3,6 @@ import { AuthService } from '../auth/auth.service';
 
 import { HubConnection } from '@aspnet/signalr';
 import * as signalR from '@aspnet/signalr';
-import { PlatformLocation } from '@angular/common';
-import { platformBrowser } from '@angular/platform-browser';
 
 @Injectable()
 export class SignalRNotificationService {
@@ -12,18 +10,14 @@ export class SignalRNotificationService {
     private hubConnection: HubConnection | undefined;
     public Notification: EventEmitter<any>;
 
-    constructor(private authService: AuthService, private platform: PlatformLocation) {
+    constructor(private authService: AuthService) {
         this.Notification = new EventEmitter<any>();
     }
 
     public initialize(): void {
 
         this.stopConnection();
-        let url = "/hubs/notification";
-        const baseUrl = this.platform.getBaseHrefFromDOM();
-        if(baseUrl !== null && baseUrl.length > 1) {
-            url = baseUrl + url;
-        } 
+        let url = "hubs/notification";
         this.hubConnection = new signalR.HubConnectionBuilder().withUrl(url, {
             accessTokenFactory: () => {
                 return this.authService.getToken();
@@ -35,12 +29,16 @@ export class SignalRNotificationService {
             this.Notification.emit(data);
         });
 
+        let retryCount = 0;
 
         this.hubConnection.start().then((data: any) => {
             console.log('Now connected');
         }).catch((error: any) => {
+            retryCount++;
             console.log('Could not connect ' + error);
-            setTimeout(() => this.initialize(), 3000);
+            if (retryCount <= 3) {
+                setTimeout(() => this.initialize(), 3000);
+            }
         });
     }
 

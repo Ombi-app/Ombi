@@ -189,11 +189,7 @@ namespace Ombi.Core.Engine
             var requests = await (OrderMovies(allRequests, orderFilter.OrderType)).Skip(position).Take(count)
                 .ToListAsync();
 
-            requests.ForEach(async x =>
-            {
-                x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
-                await CheckForSubscription(shouldHide, x);
-            });
+            await CheckForSubscription(shouldHide, requests);
             return new RequestsViewModel<MovieRequests>
             {
                 Collection = requests,
@@ -230,23 +226,83 @@ namespace Ombi.Core.Engine
                 //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
             }
 
-            allRequests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
-                ? allRequests.OrderBy(x => prop.GetValue(x))
-                : allRequests.OrderByDescending(x => prop.GetValue(x));
-            var total = await allRequests.CountAsync();
-            var requests = await allRequests.Skip(position).Take(count)
-                .ToListAsync();
-            requests.ForEach(async x =>
-            {
-                x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
-                await CheckForSubscription(shouldHide, x);
-            });
+            // TODO fix this so we execute this on the server
+            var requests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
+                ? allRequests.ToList().OrderBy(x => prop.GetValue(x)).ToList()
+                : allRequests.ToList().OrderByDescending(x => prop.GetValue(x)).ToList();
+            var total = requests.Count();
+            requests = requests.Skip(position).Take(count).ToList();
+
+            await CheckForSubscription(shouldHide, requests);
             return new RequestsViewModel<MovieRequests>
             {
                 Collection = requests,
                 Total = total
             };
         }
+
+        public async Task<RequestsViewModel<MovieRequests>> GetRequestsByStatus(int count, int position, string sortProperty, string sortOrder, RequestStatus status)
+        {
+            var shouldHide = await HideFromOtherUsers();
+            IQueryable<MovieRequests> allRequests;
+            if (shouldHide.Hide)
+            {
+                allRequests =
+                    MovieRepository.GetWithUser(shouldHide
+                        .UserId);
+            }
+            else
+            {
+                allRequests =
+                    MovieRepository
+                        .GetWithUser();
+            }
+
+            switch (status)
+            {
+                case RequestStatus.PendingApproval:
+                    allRequests = allRequests.Where(x => !x.Approved && !x.Available && (!x.Denied.HasValue || !x.Denied.Value));
+                    break;
+                case RequestStatus.ProcessingRequest:
+                    allRequests = allRequests.Where(x => x.Approved && !x.Available && (!x.Denied.HasValue || !x.Denied.Value));
+                    break;
+                case RequestStatus.Available:
+                    allRequests = allRequests.Where(x => x.Available);
+                    break;
+                case RequestStatus.Denied:
+                    allRequests = allRequests.Where(x => x.Denied.HasValue  && x.Denied.Value && !x.Available);
+                    break;
+                default:
+                    break;
+            }
+
+            var prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(sortProperty, true);
+
+            if (sortProperty.Contains('.'))
+            {
+                // This is a navigation property currently not supported
+                prop = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find("RequestedDate", true);
+                //var properties = sortProperty.Split(new []{'.'}, StringSplitOptions.RemoveEmptyEntries);
+                //var firstProp = TypeDescriptor.GetProperties(typeof(MovieRequests)).Find(properties[0], true);
+                //var propType = firstProp.PropertyType;
+                //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
+            }
+
+            // TODO fix this so we execute this on the server
+            var requests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
+                ? allRequests.ToList().OrderBy(x => x.RequestedDate).ToList()
+                : allRequests.ToList().OrderByDescending(x => prop.GetValue(x)).ToList();
+            var total = requests.Count();
+            requests = requests.Skip(position).Take(count).ToList();
+
+            await CheckForSubscription(shouldHide, requests);
+            return new RequestsViewModel<MovieRequests>
+            {
+                Collection = requests,
+                Total = total
+            };
+        }
+
         public async Task<RequestsViewModel<MovieRequests>> GetUnavailableRequests(int count, int position, string sortProperty, string sortOrder)
         {
             var shouldHide = await HideFromOtherUsers();
@@ -276,17 +332,13 @@ namespace Ombi.Core.Engine
                 //var secondProp = TypeDescriptor.GetProperties(propType).Find(properties[1], true);
             }
 
-            allRequests = sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
-                ? allRequests.OrderBy(x => prop.GetValue(x))
-                : allRequests.OrderByDescending(x => prop.GetValue(x));
-            var total = await allRequests.CountAsync();
-            var requests = await allRequests.Skip(position).Take(count)
-                .ToListAsync();
-            requests.ForEach(async x =>
-            {
-                x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
-                await CheckForSubscription(shouldHide, x);
-            });
+            var requests = (sortOrder.Equals("asc", StringComparison.InvariantCultureIgnoreCase)
+                ? allRequests.ToList().OrderBy(x => prop.GetValue(x))
+                : allRequests.ToList().OrderByDescending(x => prop.GetValue(x))).ToList();
+            var total = requests.Count();
+            requests = requests.Skip(position).Take(count).ToList();
+
+            await CheckForSubscription(shouldHide, requests);
             return new RequestsViewModel<MovieRequests>
             {
                 Collection = requests,
@@ -295,7 +347,7 @@ namespace Ombi.Core.Engine
         }
 
 
-        public async Task<RequestEngineResult> UpdateAdvancedOptions(MovieAdvancedOptions options)
+        public async Task<RequestEngineResult> UpdateAdvancedOptions(MediaAdvancedOptions options)
         {
             var request = await MovieRepository.Find(options.RequestId);
             if (request == null)
@@ -369,35 +421,38 @@ namespace Ombi.Core.Engine
                 allRequests = await MovieRepository.GetWithUser().ToListAsync();
             }
 
-            allRequests.ForEach(async x =>
-            {
-                x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
-                await CheckForSubscription(shouldHide, x);
-            });
+            await CheckForSubscription(shouldHide, allRequests);
+
             return allRequests;
         }
 
         public async Task<MovieRequests> GetRequest(int requestId)
         {
             var request = await MovieRepository.GetWithUser().Where(x => x.Id == requestId).FirstOrDefaultAsync();
-            request.PosterPath = PosterPathHelper.FixPosterPath(request.PosterPath);
-            await CheckForSubscription(new HideResult(), request);
+            await CheckForSubscription(new HideResult(), new List<MovieRequests>{request });
 
             return request;
         }
 
-        private async Task CheckForSubscription(HideResult shouldHide, MovieRequests x)
+        private async Task CheckForSubscription(HideResult shouldHide, List<MovieRequests> movieRequests)
         {
-            if (shouldHide.UserId == x.RequestedUserId)
+            var requestIds = movieRequests.Select(x => x.Id);
+            var sub = await _subscriptionRepository.GetAll().Where(s =>
+                s.UserId == shouldHide.UserId && requestIds.Contains(s.RequestId) && s.RequestType == RequestType.Movie)
+                .ToListAsync();
+            foreach (var x in movieRequests)
             {
-                x.ShowSubscribe = false;
-            }
-            else
-            {
-                x.ShowSubscribe = true;
-                var sub = await _subscriptionRepository.GetAll().FirstOrDefaultAsync(s =>
-                    s.UserId == shouldHide.UserId && s.RequestId == x.Id && s.RequestType == RequestType.Movie);
-                x.Subscribed = sub != null;
+                x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
+                if (shouldHide.UserId == x.RequestedUserId)
+                {
+                    x.ShowSubscribe = false;
+                }
+                else
+                {
+                    x.ShowSubscribe = true;
+                    var hasSub = sub.FirstOrDefault(r => r.RequestId == x.Id);
+                    x.Subscribed = hasSub != null;
+                }
             }
         }
 
@@ -420,11 +475,8 @@ namespace Ombi.Core.Engine
             }
 
             var results = allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToList();
-            results.ForEach(async x =>
-            {
-                x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
-                await CheckForSubscription(shouldHide, x);
-            });
+            await CheckForSubscription(shouldHide, results);
+
             return results;
         }
 
@@ -448,7 +500,7 @@ namespace Ombi.Core.Engine
             request.Denied = true;
             request.DeniedReason = denyReason;
             // We are denying a request
-            NotificationHelper.Notify(request, NotificationType.RequestDeclined);
+            await NotificationHelper.Notify(request, NotificationType.RequestDeclined);
             await MovieRepository.Update(request);
 
             return new RequestEngineResult
@@ -476,7 +528,7 @@ namespace Ombi.Core.Engine
             var canNotify = await RunSpecificRule(request, SpecificRules.CanSendNotification);
             if (canNotify.Success)
             {
-                NotificationHelper.Notify(request, NotificationType.RequestApproved);
+                await NotificationHelper.Notify(request, NotificationType.RequestApproved);
             }
 
             if (request.Approved)
@@ -592,7 +644,7 @@ namespace Ombi.Core.Engine
 
             request.Available = true;
             request.MarkedAsAvailable = DateTime.Now;
-            NotificationHelper.Notify(request, NotificationType.RequestAvailable);
+            await NotificationHelper.Notify(request, NotificationType.RequestAvailable);
             await MovieRepository.Update(request);
 
             return new RequestEngineResult
@@ -608,8 +660,8 @@ namespace Ombi.Core.Engine
 
             var result = await RunSpecificRule(model, SpecificRules.CanSendNotification);
             if (result.Success)
-            {
-                NotificationHelper.NewRequest(model);
+            { 
+                await NotificationHelper.NewRequest(model);
             }
 
             await _requestLog.Add(new RequestLog

@@ -19,18 +19,14 @@ namespace Ombi.Controllers.V1.External
     [Produces("application/json")]
     public class EmbyController : Controller
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="emby"></param>
-        /// <param name="embySettings"></param>
-        public EmbyController(IEmbyApi emby, ISettingsService<EmbySettings> embySettings)
+
+        public EmbyController(IEmbyApiFactory emby, ISettingsService<EmbySettings> embySettings)
         {
             EmbyApi = emby;
             EmbySettings = embySettings;
         }
 
-        private IEmbyApi EmbyApi { get; }
+        private IEmbyApiFactory EmbyApi { get; }
         private ISettingsService<EmbySettings> EmbySettings { get; }
 
         /// <summary>
@@ -46,10 +42,11 @@ namespace Ombi.Controllers.V1.External
             var settings = await EmbySettings.GetSettingsAsync();
             if (settings?.Servers?.Any() ?? false) return null;
 
+            var client = await EmbyApi.CreateClient();
             request.Enable = true;
             var firstServer = request.Servers.FirstOrDefault();
             // Test that we can connect
-            var result = await EmbyApi.GetUsers(firstServer.FullUri, firstServer.ApiKey);
+            var result = await client.GetUsers(firstServer.FullUri, firstServer.ApiKey);
 
             if (result != null && result.Any())
             {
@@ -64,7 +61,8 @@ namespace Ombi.Controllers.V1.External
         [HttpPost("info")]
         public async Task<PublicInfo> GetServerInfo([FromBody] EmbyServers server)
         {
-            var result = await EmbyApi.GetPublicInformation(server.FullUri);
+            var client = await EmbyApi.CreateClient();
+            var result = await client.GetPublicInformation(server.FullUri);
             return result;
         }
 
@@ -77,9 +75,10 @@ namespace Ombi.Controllers.V1.External
         {
             var vm = new List<UsersViewModel>();
             var s = await EmbySettings.GetSettingsAsync();
+            var client = EmbyApi.CreateClient(s);
             foreach (var server in s?.Servers ?? new List<EmbyServers>())
             {
-                var users = await EmbyApi.GetUsers(server.FullUri, server.ApiKey);
+                var users = await client.GetUsers(server.FullUri, server.ApiKey);
                 if (users != null && users.Any())
                 {
                     vm.AddRange(users.Select(u => new UsersViewModel

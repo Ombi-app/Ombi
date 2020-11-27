@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from "@angular/core";
 import { IDiscoverCardResult } from "../../interfaces";
 import { RequestType, ISearchTvResult, ISearchMovieResult } from "../../../interfaces";
 import { SearchV2Service } from "../../../services";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { DiscoverCardDetailsComponent } from "./discover-card-details.component";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
@@ -27,23 +27,33 @@ export class DiscoverCardComponent implements OnInit {
             this.getExtraMovieInfo();
         }
     }
-    
-    public openDetails(details: IDiscoverCardResult) {
-        const ref = this.dialog.open(DiscoverCardDetailsComponent, { width:"700px", data: details,  panelClass: 'modal-panel' })
 
-        ref.afterClosed().subscribe(result => {
-            console.log('The dialog was closed');
-          });
+    public openDetails(details: IDiscoverCardResult) {
+        this.dialog.open(DiscoverCardDetailsComponent, { width: "700px", data: details, panelClass: 'modal-panel' })
     }
 
     public async getExtraTvInfo() {
         var result = await this.searchService.getTvInfo(this.result.id);
         this.setTvDefaults(result);
         this.updateTvItem(result);
-           
+
     }
+
+    public getStatusClass(): string {
+        if (this.result.available) {
+            return "available";
+        }
+        if (this.result.approved) {
+            return "approved";
+        }
+        if (this.result.requested) {
+            return "requested";
+        }
+        return "notrequested";
+    }
+
     private getExtraMovieInfo() {
-        if(!this.result.imdbid) {
+        if (!this.result.imdbid) {
             this.searchService.getFullMovieDetails(this.result.id)
                 .subscribe(m => {
                     this.updateMovieItem(m);
@@ -52,7 +62,7 @@ export class DiscoverCardComponent implements OnInit {
     }
 
     private updateMovieItem(updated: ISearchMovieResultV2) {
-        this.result.url = "http://www.imdb.com/title/" + updated.imdbId + "/";  
+        this.result.url = "http://www.imdb.com/title/" + updated.imdbId + "/";
         this.result.available = updated.available;
         this.result.requested = updated.requested;
         this.result.requested = updated.requestProcessing;

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
-using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -66,7 +65,8 @@ namespace Ombi.Controllers.V1
             IMusicRequestRepository musicRepo,
             IMovieRequestEngine movieRequestEngine,
             ITvRequestEngine tvRequestEngine,
-            IMusicRequestEngine musicEngine)
+            IMusicRequestEngine musicEngine,
+            IUserDeletionEngine deletionEngine)
         {
             UserManager = user;
             Mapper = mapper;
@@ -93,9 +93,11 @@ namespace Ombi.Controllers.V1
             _userNotificationPreferences = notificationPreferences;
             _userQualityProfiles = userProfiles;
             MusicRequestEngine = musicEngine;
+            _deletionEngine = deletionEngine;
         }
 
         private OmbiUserManager UserManager { get; }
+        private readonly IUserDeletionEngine _deletionEngine;
         private RoleManager<IdentityRole> RoleManager { get; }
         private IMapper Mapper { get; }
         private IEmailProvider EmailProvider { get; }
@@ -136,7 +138,7 @@ namespace Ombi.Controllers.V1
         public async Task<SaveWizardResult> CreateWizardUser([FromBody] CreateUserWizardModel user)
         {
             var users = UserManager.Users;
-            if (users.Any(x => !x.UserName.Equals("api", StringComparison.InvariantCultureIgnoreCase)))
+            if (users.Any(x => x.NormalizedUserName != "API"))
             {
                 // No one should be calling this. Only the wizard
                 return new SaveWizardResult { Result = false, Errors = new List<string> { "Looks like there is an existing user!" } };
@@ -281,9 +283,25 @@ namespace Ombi.Controllers.V1
         [Authorize]
         public async Task<UserViewModel> GetCurrentUser()
         {
-            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
+            var username = User.Identity.Name.ToUpper();
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
 
             return await GetUserWithRoles(user);
+        }
+
+        /// <summary>
+        /// Sets the current users language
+        /// </summary>
+        [HttpPost("language")]
+        [Authorize]
+        public async Task<IActionResult> SetCurrentUserLanguage([FromBody] UserLanguage model)
+        {
+            var username = User.Identity.Name.ToUpper();
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
+            user.Language = model.Lang;
+
+            await UserManager.UpdateAsync(user);
+            return Ok();
         }
 
         /// <summary>
@@ -315,6 +333,7 @@ namespace Ombi.Controllers.V1
                 EpisodeRequestLimit = user.EpisodeRequestLimit ?? 0,
                 MovieRequestLimit = user.MovieRequestLimit ?? 0,
                 MusicRequestLimit = user.MusicRequestLimit ?? 0,
+                Language = user.Language
             };
 
             foreach (var role in userRoles)
@@ -639,7 +658,6 @@ namespace Ombi.Controllers.V1
             var userToDelete = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
             if (userToDelete != null)
             {
-
                 // Can we delete this user?
                 var userRoles = await UserManager.GetRolesAsync(userToDelete);
                 if (!CanModifyUser(userRoles))
@@ -647,65 +665,8 @@ namespace Ombi.Controllers.V1
                     return Error("You do not have the correct permissions to delete this user");
                 }
 
-                // We need to delete all the requests first
-                var moviesUserRequested = MovieRepo.GetAll().Where(x => x.RequestedUserId == userId);
-                var tvUserRequested = TvRepo.GetChild().Where(x => x.RequestedUserId == userId);
-                var musicRequested = MusicRepo.GetAll().Where(x => x.RequestedUserId == userId);
-                var notificationPreferences = _userNotificationPreferences.GetAll().Where(x => x.UserId == userId);
-                var userQuality = await _userQualityProfiles.GetAll().FirstOrDefaultAsync(x => x.UserId == userId);
+                var result = await _deletionEngine.DeleteUser(userToDelete);
 
-                if (moviesUserRequested.Any())
-                {
-                    await MovieRepo.DeleteRange(moviesUserRequested);
-                }
-                if (tvUserRequested.Any())
-                {
-                    await TvRepo.DeleteChildRange(tvUserRequested);
-                }
-                if (musicRequested.Any())
-                {
-                    await MusicRepo.DeleteRange(musicRequested);
-                }
-                if (notificationPreferences.Any())
-                {
-                    await _userNotificationPreferences.DeleteRange(notificationPreferences);
-                }
-                if (userQuality != null)
-                {
-                    await _userQualityProfiles.Delete(userQuality);
-                }
-
-                // Delete any issues and request logs
-                var issues = _issuesRepository.GetAll().Where(x => x.UserReportedId == userId);
-                var issueComments = _issueCommentsRepository.GetAll().Where(x => x.UserId == userId);
-                var requestLog = _requestLogRepository.GetAll().Where(x => x.UserId == userId);
-                if (issues.Any())
-                {
-                    await _issuesRepository.DeleteRange(issues);
-                }
-                if (requestLog.Any())
-                {
-                    await _requestLogRepository.DeleteRange(requestLog);
-                }
-                if (issueComments.Any())
-                {
-                    await _issueCommentsRepository.DeleteRange(issueComments);
-                }
-
-                // Delete the Subscriptions and mobile notification ids
-                var subs = _requestSubscriptionRepository.GetAll().Where(x => x.UserId == userId);
-                var mobileIds = _notificationRepository.GetAll().Where(x => x.UserId == userId);
-                if (subs.Any())
-                {
-                    await _requestSubscriptionRepository.DeleteRange(subs);
-                }
-
-                if (mobileIds.Any())
-                {
-                    await _notificationRepository.DeleteRange(mobileIds);
-                }
-
-                var result = await UserManager.DeleteAsync(userToDelete);
                 if (result.Succeeded)
                 {
                     return new OmbiIdentityResult
@@ -777,8 +738,10 @@ namespace Ombi.Controllers.V1
 
             var emailSettings = await EmailSettings.GetSettingsAsync();
 
-            customizationSettings.AddToUrl("/token?token=");
-            var url = customizationSettings.ApplicationUrl;
+            var appUrl = customizationSettings.AddToUrl("/token?token=");
+            var url = (string.IsNullOrEmpty(appUrl)
+                ? $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/token?token="
+                : appUrl);
 
             if (user.UserType == UserType.PlexUser)
             {
@@ -860,7 +823,7 @@ namespace Ombi.Controllers.V1
 
         [HttpPost("welcomeEmail")]
         [PowerUser]
-        public void SendWelcomeEmail([FromBody] UserViewModel user)
+        public async Task<IActionResult> SendWelcomeEmail([FromBody] UserViewModel user)
         {
             var ombiUser = new OmbiUser
             {
@@ -868,14 +831,17 @@ namespace Ombi.Controllers.V1
                 Email = user.EmailAddress,
                 UserName = user.UserName
             };
-            BackgroundJob.Enqueue(() => WelcomeEmail.SendEmail(ombiUser));
+            await WelcomeEmail.SendEmail(ombiUser);
+            return Ok();
         }
 
         [HttpGet("accesstoken")]
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<string> GetUserAccessToken()
         {
-            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
+
+            var username = User.Identity.Name.ToUpper();
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
             if (user == null)
             {
                 return Guid.Empty.ToString("N");
@@ -897,7 +863,8 @@ namespace Ombi.Controllers.V1
         [HttpGet("notificationpreferences")]
         public async Task<List<UserNotificationPreferences>> GetUserPreferences()
         {
-            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
+            var username = User.Identity.Name.ToUpper();
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
             return await GetPreferences(user);
         }
 
@@ -911,8 +878,10 @@ namespace Ombi.Controllers.V1
         private readonly List<NotificationAgent> _excludedAgents = new List<NotificationAgent>
         {
             NotificationAgent.Email,
-            NotificationAgent.Mobile
+            NotificationAgent.Mobile,
+            NotificationAgent.Webhook
         };
+
         private async Task<List<UserNotificationPreferences>> GetPreferences(OmbiUser user)
         {
             var userPreferences = await _userNotificationPreferences.GetAll().Where(x => x.UserId == user.Id).ToListAsync();
@@ -950,7 +919,9 @@ namespace Ombi.Controllers.V1
                     return NotFound();
                 }
                 // Check if we are editing a different user than ourself, if we are then we need to power user role
-                var me = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(User.Identity.Name, StringComparison.InvariantCultureIgnoreCase));
+
+                var username = User.Identity.Name.ToUpper();
+                var me = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
                 if (!me.Id.Equals(user.Id, StringComparison.InvariantCultureIgnoreCase))
                 {
                     var isPowerUser = await UserManager.IsInRoleAsync(me, OmbiRoles.PowerUser);

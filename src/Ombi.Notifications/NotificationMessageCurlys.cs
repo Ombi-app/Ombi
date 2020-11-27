@@ -14,10 +14,12 @@ namespace Ombi.Notifications
 {
     public class NotificationMessageCurlys
     {
-        public void Setup(NotificationOptions opts, FullBaseRequest req, CustomizationSettings s, UserNotificationPreferences pref)
+        public void Setup(NotificationOptions opts, MovieRequests req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
-            RequestId = req.Id.ToString();
+
+            RequestId = req?.Id.ToString();
+            ProviderId = req?.TheMovieDbId.ToString() ?? string.Empty;
             string title;
             if (req == null)
             {
@@ -62,13 +64,17 @@ namespace Ombi.Notifications
             }
 
             AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
+
+            CalculateRequestStatus(req);
         }
 
         public void Setup(NotificationOptions opts, AlbumRequest req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
 
-            RequestId = req.Id.ToString();
+            RequestId = req?.Id.ToString();
+            ProviderId = req?.ForeignArtistId ?? string.Empty;
+
             string title;
             if (req == null)
             {
@@ -104,6 +110,7 @@ namespace Ombi.Notifications
             PosterImage = (req?.Cover.HasValue() ?? false) ? req.Cover : req?.Disk ?? string.Empty;
 
             AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
+            CalculateRequestStatus(req);
         }
 
         public void SetupNewsletter(CustomizationSettings s)
@@ -115,7 +122,8 @@ namespace Ombi.Notifications
         public void Setup(NotificationOptions opts, ChildRequests req, CustomizationSettings s, UserNotificationPreferences pref)
         {
             LoadIssues(opts);
-            RequestId = req.Id.ToString();
+            RequestId = req?.Id.ToString();
+            ProviderId = req?.ParentRequest?.TvDbId.ToString() ?? string.Empty;
             string title;
             if (req == null)
             {
@@ -194,6 +202,7 @@ namespace Ombi.Notifications
 
             EpisodesList = epSb.ToString();
             SeasonsList = seasonSb.ToString();
+            CalculateRequestStatus(req);
         }
 
         public void Setup(OmbiUser user, CustomizationSettings s)
@@ -217,7 +226,32 @@ namespace Ombi.Notifications
             Type = opts.Substitutes.TryGetValue("RequestType", out val) ? val.Humanize() : string.Empty;
         }
 
+        private void CalculateRequestStatus(BaseRequest req)
+        {
+            RequestStatus = string.Empty;
+            if (req != null)
+            {
+                if (req.Available)
+                {
+                    RequestStatus = "Available";
+                    return;
+                }
+                if (req.Denied ?? false)
+                {
+                    RequestStatus = "Denied";
+                    return;
+                }
+                if (!req.Available && req.Approved)
+                {
+                    RequestStatus = "Processing Request";
+                    return;
+                }
+                RequestStatus = "Pending Approval";
+            }
+        }
+
         // User Defined
+        public string RequestId { get; set; }
         public string RequestedUser { get; set; }
         public string UserName { get; set; }
         public string IssueUser => UserName;
@@ -241,7 +275,8 @@ namespace Ombi.Notifications
         public string UserPreference { get; set; }
         public string DenyReason { get; set; }
         public string AvailableDate { get; set; }
-        public string RequestId { get; set; }
+        public string RequestStatus { get; set; }
+        public string ProviderId { get; set; }
 
         // System Defined
         private string LongDate => DateTime.Now.ToString("D");
@@ -251,6 +286,7 @@ namespace Ombi.Notifications
 
         public Dictionary<string, string> Curlys => new Dictionary<string, string>
         {
+            {nameof(RequestId), RequestId },
             {nameof(RequestedUser), RequestedUser },
             {nameof(Title), Title },
             {nameof(RequestedDate), RequestedDate },
@@ -278,7 +314,8 @@ namespace Ombi.Notifications
             {nameof(UserPreference),UserPreference},
             {nameof(DenyReason),DenyReason},
             {nameof(AvailableDate),AvailableDate},
-            {nameof(RequestId),RequestId},
+            {nameof(RequestStatus),RequestStatus},
+            {nameof(ProviderId),ProviderId},
         };
     }
 }

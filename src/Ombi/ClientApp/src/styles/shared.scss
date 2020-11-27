@@ -1,24 +1,51 @@
-﻿@media (max-width: 978px) {
+﻿@import "~styles/variables.scss";
+/*@media (max-width: 978px) {
     .top-spacing {
-        padding-top: 10%;
+        padding-top: 2%;
     }
-    .modal-panel {    
-      max-height: 100vh !important;
-      max-width: 100vw !important;
-      height: 100%;
+    .modal-panel {
+        max-height: 100vh !important;
+        max-width: 100vw !important;
+        height: 100%;
     }
 }
 
 @media (min-width: 979px) {
     .top-spacing {
-        padding-top: 4%;
+        padding-top: 2%;
+    }
+}*/
+
+@media (max-width: 978px) {
+    .top-space {
+        padding-top: 2%;
+    }
+
+    .modal-panel {
+        max-height: 100vh !important;
+        max-width: 100vw !important;
+        height: 100%;
     }
 }
+
+@media (min-width: 979px) {
+    .top-space {
+        padding-top: 2%;
+    }
+}
+
 
 html,
 body {
     min-height: 100vh;
-    overflow: auto;
+    overflow: initial;
+    scrollbar-color: #616161 #303030; //firefox
+    scrollbar-width: thin; //firefox
+    -webkit-overflow-scrolling: touch;
+}
+
+.custom-background {
+    background-color: $background-dark !important;
 }
 
 .spinner-container {
@@ -30,40 +57,85 @@ body {
     height: 50px;
 }
 
+
 /* Scrollbar */
 
 ::-webkit-scrollbar {
     width: 7px;
-    background: rgba(0, 0, 0, 0);
+    background: #818181;
 }
 
 ::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0);
 }
 
+// Changed color of the scrollbar 
 ::-webkit-scrollbar-thumb {
     border-radius: 3px;
-    background: #41927b;
+    background: #303030;
 }
 
 .sidenav ::-webkit-scrollbar-track {
     display: none;
 }
 
-.grow {
-    transition: all .2s ease-in-out;
-}
+@media (min-width: 1025px) {
+    .grow {
+        transition: all .2s ease-in-out;
+    }
 
-.grow:hover {
-    transform: scale(1.1);
-    color: black;
+    .grow:hover {
+        transform: scale(1.1);
+        color: black;
+    }
 }
 
 table {
-  width: 100%;
+    width: 100%;
 }
 
 .loading-spinner {
     display: flex;
     padding-bottom: 4%;
+}
+
+::ng-deep .dark .form-control {
+    background-color: rgba(0, 0, 0, 0.18);
+    color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+}
+
+::ng-deep .dark .nav-link.active {
+    color: #303030;
+    background-color: $accent-dark;
+    border-color: rgba(0, 0, 0, 0.18);
+    font-weight: 400;
+}
+
+::ng-deep .dark .nav-link {
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.18);
+    border-color: rgba(0, 0, 0, 0.18);
+}
+
+::ng-deep .dark .ui-autocomplete.ui-autocomplete-multiple .ui-autocomplete-multiple-container .ui-autocomplete-input-token input {
+    color: #fff;
+}
+
+::ng-deep .dark .ui-inputtext {
+    background-color: rgba(0, 0, 0, 0.18);
+    color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+}
+
+::ng-deep .mat-toolbar.mat-primary {
+    margin-bottom: 0.5em;
+}
+
+::ng-deep .dark .mat-form-field.mat-focused .mat-form-field-label {
+    color: $accent-dark;
+}
+
+::ng-deep .mat-form-field.mat-focused .mat-form-field-label {
+    color: $accent;
 }

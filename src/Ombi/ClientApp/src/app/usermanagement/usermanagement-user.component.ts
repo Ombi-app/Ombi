@@ -1,10 +1,9 @@
-﻿import { Component, OnInit } from "@angular/core";
+﻿import { Location } from "@angular/common";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
 import { ICheckbox, INotificationAgent, INotificationPreferences, IRadarrProfile, IRadarrRootFolder, ISonarrProfile, ISonarrRootFolder, IUser, UserType } from "../interfaces";
-import { IdentityService, NotificationService, RadarrService, SonarrService, MessageService } from "../services";
-
-import { ConfirmationService } from "primeng/primeng";
+import { IdentityService, RadarrService, SonarrService, MessageService } from "../services";
 
 @Component({
     templateUrl: "./usermanagement-user.component.html",
@@ -17,7 +16,7 @@ export class UserManagementUserComponent implements OnInit {
     public availableClaims: ICheckbox[];
     public confirmPass: "";
     public notificationPreferences: INotificationPreferences[];
-    
+
     public sonarrQualities: ISonarrProfile[];
     public sonarrRootFolders: ISonarrRootFolder[];
     public radarrQualities: IRadarrProfile[];
@@ -30,9 +29,9 @@ export class UserManagementUserComponent implements OnInit {
                 private notificationService: MessageService,
                 private router: Router,
                 private route: ActivatedRoute,
-                private confirmationService: ConfirmationService,
                 private sonarrService: SonarrService,
-                private radarrService: RadarrService) {
+                private radarrService: RadarrService,
+                private location: Location) {
 
                     this.route.params.subscribe((params: any) => {
                         if(params.id) {
@@ -41,7 +40,7 @@ export class UserManagementUserComponent implements OnInit {
                             this.identityService.getUserById(this.userId).subscribe(x => {
                                 this.user = x;
                                });
-                        }   
+                        }
                     });
                  }
 
@@ -74,6 +73,7 @@ export class UserManagementUserComponent implements OnInit {
                 musicRequestLimit: 0,
                 episodeRequestQuota: null,
                 movieRequestQuota: null,
+                language: null,
                 userQualityProfiles: {
                     radarrQualityProfile: 0,
                     radarrRootPath: 0,
@@ -121,26 +121,16 @@ export class UserManagementUserComponent implements OnInit {
 
     public delete() {
 
-        this.confirmationService.confirm({
-            message: "Are you sure that you want to delete this user? If this user has any requests they will also be deleted.",
-            header: "Are you sure?",
-            icon: "fa fa-trash",
-            accept: () => {
-                this.identityService.deleteUser(this.user).subscribe(x => {
-                    if (x.successful) {
-                        this.notificationService.send(`The user ${this.user.userName} was deleted`);
-                        this.router.navigate(["usermanagement"]);
-                    } else {
-                        x.errors.forEach((val) => {
-                            this.notificationService.send(val);
-                        });
-                    }
-
+        this.identityService.deleteUser(this.user).subscribe(x => {
+            if (x.successful) {
+                this.notificationService.send(`The user ${this.user.userName} was deleted`);
+                this.router.navigate(["usermanagement"]);
+            } else {
+                x.errors.forEach((val) => {
+                    this.notificationService.send(val);
                 });
-            },
-            reject: () => {
-                return;
-            },
+            }
+
         });
     }
 
@@ -181,6 +171,10 @@ export class UserManagementUserComponent implements OnInit {
                 });
             }
         });
+    }
+
+    public back() {
+        this.location.back();
     }
 
 }

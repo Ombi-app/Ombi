@@ -80,52 +80,35 @@ namespace Ombi.Store.Repository
 
         public async Task ExecuteSql(string sql)
         {
-            await _ctx.Database.ExecuteSqlCommandAsync(sql);
+            await _ctx.Database.ExecuteSqlRawAsync(sql);
         }
 
         protected async Task<int> InternalSaveChanges()
         {
-            var policy = Policy
-                .Handle<SqliteException>()
-                .WaitAndRetryAsync(new[]
-                {
-                    TimeSpan.FromSeconds(1),
-                    TimeSpan.FromSeconds(5),
-                    TimeSpan.FromSeconds(10)
-                });
-
-            var result = await policy.ExecuteAndCaptureAsync(async () =>
-            {
-                using (var tran = await _ctx.Database.BeginTransactionAsync())
-                {
-                    var r = await _ctx.SaveChangesAsync();
-                    tran.Commit();      
-                    return r;
-                }
-            });
-            return result.Result;
+            var r = await _ctx.SaveChangesAsync();
+            return r;
         }
 
 
-        private bool _disposed;
-        // Protected implementation of Dispose pattern.
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_disposed)
-                return;
+        //private bool _disposed;
+        //// Protected implementation of Dispose pattern.
+        //protected virtual void Dispose(bool disposing)
+        //{
+        //    if (_disposed)
+        //        return;
 
-            if (disposing)
-            {
-                _ctx?.Dispose();
-            }
+        //    if (disposing)
+        //    {
+        //        _ctx?.Dispose();
+        //    }
 
-            _disposed = true;
-        }
+        //    _disposed = true;
+        //}
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        //public void Dispose()
+        //{
+        //    Dispose(true);
+        //    GC.SuppressFinalize(this);
+        //}
     }
 }

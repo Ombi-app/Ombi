@@ -195,8 +195,8 @@ namespace Ombi.Schedule.Jobs.Plex
             if (disposing)
             {
                 _userManager?.Dispose();
-                _plexSettings?.Dispose();
-                _userManagementSettings?.Dispose();
+                //_plexSettings?.Dispose();
+                //_userManagementSettings?.Dispose();
             }
             _disposed = true;
         }

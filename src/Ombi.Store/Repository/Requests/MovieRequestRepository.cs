@@ -54,6 +54,14 @@ namespace Ombi.Store.Repository.Requests
                 .AsQueryable();
         }
 
+        public async Task MarkAsAvailable(int id)
+        {
+            var movieRequest = new MovieRequests{ Id = id, Available = true, MarkedAsAvailable = DateTime.UtcNow};
+            var attached = Db.MovieRequests.Attach(movieRequest);
+            attached.Property(x => x.Available).IsModified = true;
+            attached.Property(x => x.MarkedAsAvailable).IsModified = true;
+            await Db.SaveChangesAsync();
+        }
 
         public IQueryable<MovieRequests> GetWithUser(string userId)
         {

@@ -1,4 +1,12 @@
-﻿@media only screen and (max-width: 992px) {
+﻿
+    .small-middle-container{
+        margin: auto;
+        width: 75%;
+        padding-top: 15%;
+    }
+
+
+@media only screen and (max-width: 992px) {
     div.centered {
         max-height: 100%;
         overflow-y: auto;
@@ -45,4 +53,12 @@ div.bg {
 
 p {
     font-size: 14px !important;
+}
+
+span, b, i, p {
+    color:white !important;
+}
+
+::ng-deep body {
+    background-color:#303030 !important;
 }

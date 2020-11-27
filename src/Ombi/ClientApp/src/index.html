@@ -2,39 +2,70 @@
 <html lang="en">
 
 <head>
-  <script>
+    <script type='text/javascript'>
+        function configExists(url) {
+            var req = new XMLHttpRequest();
+            req.open('GET', url, false);
+            req.send();
+            return req.status === 200 && req.responseURL === url;
+        }
 
-var base = "/";
-var locations = window.location.pathname.split('/');
-if(locations[1] !== 'login' && locations[1] !== 'discover') {
-  base = "/" + locations[1];
-}
-document.write("<base href='" + base + "' />");
-window["baseHref"] = base;
-console.log(base);
-</script>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
-  <link href="/styles/please-wait.css" rel="stylesheet">
-  <link href="/styles/spinkit.css" rel="stylesheet">
-  <link href="/styles/11-folding-cube.css" rel="stylesheet">
-  <script src="/styles/please-wait.js"></script>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        var probePath = 'styles/please-wait.js';
+        var origin = document.location.origin;
+        var pathSegments = document.location.pathname.split('/');
 
-  <title>Ombi</title>
+        var basePath = '/'
+        var configFound = false;
+        for (var i = 0; i < pathSegments.length; i++) {
+            var segment = pathSegments[i];
+            if (segment.length > 0) {
+                basePath = basePath + segment + '/';
+            }
+            var fullPath = origin + basePath + probePath;
+            configFound = configExists(fullPath);
+            if (configFound) {
+                break;
+            }
+        }
+        var basePathToUse = basePath.substring(0, basePath.length - 1); // trim off the trailing '/'
+        basePathToUse == '' ? '/' : basePathToUse;
+        window["baseHref"] = configFound ? basePathToUse : '/';
 
+        document.write("<base href='" + (configFound ? basePath : '/') + "' />");
+
+        console.log(window["baseHref"]);
+    </script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+    <link href="styles/please-wait.css" rel="stylesheet">
+    <link href="styles/spinkit.css" rel="stylesheet">
+    <link href="styles/11-folding-cube.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="images/favicon/favicon.ico"/>
+    <script src="styles/please-wait.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:image:height" content="375" />
+    <meta property="og:image:width" content="991" />
+    <meta property="og:image" content="~/images/logo.png" />
+    <meta property="og:site_name" content="Ombi" />
+    <meta property="og:title" content="Ombi" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="Ombi, media request tool">
+
+    <title>Ombi</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body class="mat-typography custom-background">
 
-  <app-ombi>
-      <script type="text/javascript">
-      var colors = ["#f44336","#f44336","#9c27b0","#673ab7","#3f51b5","#2196f3","#03a9f4","#00bcd4","#009688","#4caf50","#cddc39","#ffeb3b","#ffc107","#ff9800","#ff5722","#9e9e9e","#607d8b"];
-      var bgColor = colors[Math.floor(Math.random() * colors.length)];
-        window.loading_screen = window.pleaseWait({
-          // logo: "assets/images/logo.png",
-          template: `<div class='pg-loading-inner'>
+    <app-ombi>
+        <script type="text/javascript">
+            var colors = ["#f44336", "#f44336", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", "#ff5722", "#9e9e9e", "#607d8b"];
+            var bgColor = colors[Math.floor(Math.random() * colors.length)];
+            window.loading_screen = window.pleaseWait({
+                // logo: "assets/images/logo.png",
+                template: `<div class='pg-loading-inner'>
   <div class='pg-loading-center-outer'>
     <div class='pg-loading-center-middle'>
       <h1 class='pg-loading-logo-header'>
@@ -45,11 +76,11 @@ console.log(base);
     </div>
   </div>
 </div>`,
-          backgroundColor: bgColor,
-          loadingHtml: "<div class='sk-folding-cube'><div class='sk-cube1 sk-cube'></div><div class='sk-cube2 sk-cube'></div><div class='sk-cube4 sk-cube'></div><div class='sk-cube3 sk-cube'></div></div>"
-        });
-      </script>
-  </app-ombi>
+                backgroundColor: bgColor,
+                loadingHtml: "<div class='sk-folding-cube'><div class='sk-cube1 sk-cube'></div><div class='sk-cube2 sk-cube'></div><div class='sk-cube4 sk-cube'></div><div class='sk-cube3 sk-cube'></div></div>"
+            });
+        </script>
+    </app-ombi>
 </body>
 
 </html>

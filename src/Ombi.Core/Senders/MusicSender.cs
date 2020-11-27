@@ -65,7 +65,7 @@ namespace Ombi.Core.Senders
                         Type = RequestType.Album,
                         RetryCount = 0
                     });
-                    _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
+                    await _notificationHelper.Notify(model, NotificationType.ItemAddedToFaultQueue);
                 }
             }
 
@@ -100,8 +100,8 @@ namespace Ombi.Core.Senders
                     addOptions = new Addoptions
                     {
                         monitored = true,
+                        monitor = MonitorTypes.None,
                         searchForMissingAlbums = false,
-                        selectedOption = 6, // None
                         AlbumsToMonitor = new[] {model.ForeignAlbumId}
                     },
                     added = DateTime.Now,
@@ -126,7 +126,7 @@ namespace Ombi.Core.Senders
                         var album = await _lidarrApi.GetAllAlbumsByArtistId(result.id, settings.ApiKey, settings.FullUri);
 
                         var albumToSearch = album.FirstOrDefault(x =>
-                            x.foreignAlbumId.Equals(model.ForeignAlbumId, StringComparison.InvariantCultureIgnoreCase));
+                            x.foreignAlbumId == model.ForeignAlbumId);
                         var maxRetryCount = 10; // 5 seconds
                         var currentRetry = 0;
                         while (albumToSearch != null)
@@ -139,7 +139,7 @@ namespace Ombi.Core.Senders
                             await Task.Delay(500);
                             album = await _lidarrApi.GetAllAlbumsByArtistId(result.id, settings.ApiKey, settings.FullUri);
                             albumToSearch = album.FirstOrDefault(x =>
-                                x.foreignAlbumId.Equals(model.ForeignAlbumId, StringComparison.InvariantCultureIgnoreCase));
+                                x.foreignAlbumId == model.ForeignAlbumId);
                         }
 
 
@@ -165,7 +165,7 @@ namespace Ombi.Core.Senders
             // Get the album id
             var albums = await _lidarrApi.GetAllAlbumsByArtistId(artist.id, settings.ApiKey, settings.FullUri);
             var album = albums.FirstOrDefault(x =>
-                x.foreignAlbumId.Equals(model.ForeignAlbumId, StringComparison.InvariantCultureIgnoreCase));
+                x.foreignAlbumId == model.ForeignAlbumId);
             var maxRetryCount = 10; // 5 seconds
             var currentRetry = 0;
             while (!albums.Any() || album == null)
@@ -178,7 +178,7 @@ namespace Ombi.Core.Senders
                 await Task.Delay(500);
                 albums = await _lidarrApi.GetAllAlbumsByArtistId(artist.id, settings.ApiKey, settings.FullUri);
                 album = albums.FirstOrDefault(x =>
-                    x.foreignAlbumId.Equals(model.ForeignAlbumId, StringComparison.InvariantCultureIgnoreCase));
+                    x.foreignAlbumId == model.ForeignAlbumId);
             }
             // Get the album we want.
 

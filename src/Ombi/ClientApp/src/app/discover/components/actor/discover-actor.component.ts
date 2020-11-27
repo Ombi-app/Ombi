@@ -45,9 +45,9 @@ export class DiscoverActorComponent implements AfterViewInit {
         this.discoverResults = [];
         this.actorCredits.cast.forEach(m => {
             this.discoverResults.push({
-                available: false, 
+                available: false,
                 posterPath: m.poster_path ? `https://image.tmdb.org/t/p/w300/${m.poster_path}` : "../../../images/default_movie_poster.png",
-                requested: false, 
+                requested: false,
                 title: m.title,
                 type: RequestType.movie,
                 id: m.id,
@@ -56,6 +56,8 @@ export class DiscoverActorComponent implements AfterViewInit {
                 overview: m.overview,
                 approved: false,
                 imdbid: "",
+                denied: false,
+                background: ""
             });
         });
     }

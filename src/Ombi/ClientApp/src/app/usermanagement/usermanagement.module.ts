@@ -2,9 +2,11 @@
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
-import { ConfirmationService, ConfirmDialogModule, MultiSelectModule, SidebarModule, TooltipModule } from "primeng/primeng";
+import { ConfirmDialogModule } from "primeng/confirmdialog";
+import {  MultiSelectModule } from "primeng/multiselect";
+import { SidebarModule } from "primeng/sidebar";
+import { TooltipModule } from "primeng/tooltip";
 
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { UpdateDetailsComponent } from "./updatedetails.component";
 import { UserManagementUserComponent } from "./usermanagement-user.component";
@@ -32,7 +34,6 @@ const routes: Routes = [
         FormsModule,
         ReactiveFormsModule,
         RouterModule.forChild(routes),
-        NgbModule.forRoot(),
         MultiSelectModule,
         PipeModule,
         ConfirmDialogModule,
@@ -51,7 +52,6 @@ const routes: Routes = [
     ],
     providers: [
         IdentityService,
-        ConfirmationService,
         PlexService,
         RadarrService,
         SonarrService,

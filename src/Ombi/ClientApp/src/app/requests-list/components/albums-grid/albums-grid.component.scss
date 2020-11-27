@@ -1,0 +1,49 @@
+@import "~styles/variables.scss";
+
+.dark .mat-header-cell {
+	background: $accent-dark !important;
+	font-size: 1em;
+	font-weight: bold;
+	color: #303030;
+}
+
+.mat-form-field {
+	float:right;
+	margin-right:20px;
+}
+
+/*::ng-deep .dark .mat-form-field-label{
+	font-size: 1.2em;
+}*/
+
+::ng-deep .mat-form-field-infix {
+	width: 8em;
+	margin-top:1em;
+}
+
+::ng-deep .dark .mat-tab-label-active{
+	background: $accent-dark !important;
+	color: #303030 !important;
+	font-weight:bold;
+}
+
+::ng-deep .mat-tab-label{
+	opacity: 1;
+}
+
+::ng-deep .row {
+	margin-right:0;
+	margin-left:0;
+}
+
+@media (min-width: 500px) {
+	.justify-content-md-center {
+    	justify-content: normal !important;
+	}
+}
+
+@media (min-width: 1170px){
+	.justify-content-md-center {
+    	justify-content: center !important;
+	}
+}

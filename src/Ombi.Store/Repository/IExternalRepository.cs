@@ -9,7 +9,7 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public interface IExternalRepository<T> : IDisposable where T : Entity
+    public interface IExternalRepository<T> where T : Entity
     {
         Task<T> Find(object key);
         IQueryable<T> GetAll();

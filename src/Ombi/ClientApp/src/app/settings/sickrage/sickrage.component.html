@@ -1,75 +1,83 @@
 ﻿
 <settings-menu></settings-menu>
-<div *ngIf="form">
+<div *ngIf="form" class="small-middle-container">
     <fieldset>
         <legend>SickRage Settings</legend>
-        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:5%;">
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" id="enable" formControlName="enabled">
-                        <label for="enable">Enable</label>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="Ip" class="control-label">Hostname or IP</label>
-                    
-                        <input type="text" class="form-control form-control-custom " formControlName="ip" id="Ip" name="Ip" placeholder="localhost" [ngClass]="{'form-error': form.get('ip').hasError('required')}">
-                        <small *ngIf="form.get('ip').hasError('required')" class="error-text">The IP/Hostname is required</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="portNumber" class="control-label">Port</label>
-
-                        <input type="text" class="form-control form-control-custom " [ngClass]="{'form-error': form.get('port').hasError('required')}" formControlName="port" id="portNumber" name="Port" placeholder="Port Number">
-                        <small *ngIf="form.get('port').hasError('required')" class="error-text">The Port is required</small>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="ApiKey" class="control-label">API Key</label>
-                    
-                        <input type="text" class="form-control form-control-custom " [ngClass]="{'form-error': form.get('apiKey').hasError('required')}" formControlName="apiKey" id="ApiKey" name="ApiKey">
-                        <small *ngIf="form.get('apiKey').hasError('required')" class="error-text">The API Key is required</small>
-                </div>
-                <div class="form-group">
-                    <div class="checkbox">
-
-                        <input type="checkbox" id="Ssl" name="Ssl" formControlName="ssl"><label for="Ssl">SSL</label>
-
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="SubDir" class="control-label">Base Url</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom" formControlName="subDir" id="SubDir" name="SubDir">
+        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+            <div class="row">
+                <div class="col-md-12 col-12 col-sm-12">
+                    <div style="float:right;text-align:left;">
+                        <div class="md-form-field">
+                            <mat-slide-toggle id="enable" formControlName="enabled">Enable</mat-slide-toggle>
+                        </div>
+                        <div class="md-form-field">
+                            <mat-slide-toggle formControlName="ssl">SSL</mat-slide-toggle>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="select" class="control-label">Quality Profiles</label>
-                    <div id="profiles">
-                        <select class="form-control form-control-custom"  [ngClass]="{'form-error': form.get('qualityProfile').hasError('required')}" id="select" formControlName="qualityProfile">
-                            <option *ngFor="let quality of qualities" value="{{quality.value}}" >{{quality.display}}</option>
-                        </select>
+            <div class="row">
+                <div class="col-md-7 col-8 col-sm-12">
+                    <label for="select" class="control-label"><h3>SickRage Server Configuration</h3></label>
+                    <div class="md-form-field">
+                        <mat-form-field appearance="outline" floatLabel=always>
+                            <mat-label>SickRage Hostname or IP</mat-label>
+                            <input matInput id="Ip" name="Ip" placeholder="Example: localhost" formControlName="ip">
+                            <mat-error>The IP/Hostname is required</mat-error>
+                        </mat-form-field>
                     </div>
-                    <small *ngIf="form.get('qualityProfile').hasError('required')" class="error-text">A Default Quality Profile is required</small>
-                    
-                </div>
 
-                <div class="form-group">
-                    <div>
-                        <button type="button" (click)="test(form)" class="btn btn-primary-outline">Test Connectivity <span id="spinner"> </span></button>
+                    <div class="md-form-field">
+                        <mat-form-field appearance="outline" floatLabel=always>
+                            <mat-label>Port</mat-label>
+                            <input matInput id="port" name="port" placeholder="Example: 8081" formControlName="port">
+                            <mat-error>The Port is required</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="md-form-field">
+                        <mat-form-field appearance="outline" floatLabel=always>
+                            <mat-label>SickRage API Key</mat-label>
+                            <input matInput id="apiKey" name="apiKey" placeholder="API Key" formControlName="apiKey">
+                            <mat-error>The API Key is required</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="md-form-field">
+                        <mat-form-field appearance="outline" floatLabel=always>
+                            <mat-label>SickRage Base URL</mat-label>
+                            <input matInput id="SubDir" name="SubDir" placeholder="Example: /sickrage" formControlName="subDir">
+                        </mat-form-field>
                     </div>
                 </div>
+                <div class="col-md-5 col-4 col-sm-12">
+                    <div class="form-group">
+                        <label for="select" class="control-label"><h3>SickRage Quality Profiles</h3></label>
+                        <div id="profiles">
+                            <div class="md-form-field" style="display:contents;">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Quality Profiles</mat-label>
+                                    <mat-select formControlName="qualityProfile">
+                                      <mat-option *ngFor="let quality of qualities" value="{{quality.value}}">{{quality.display}} </mat-option>
+                                    </mat-select>
+                                    <mat-error>A Default Quality Profile is required</mat-error>
+                                  </mat-form-field>
+                            </div>
+                        </div>                      
+                    </div>
+
+                    <div class="form-group">
+                        <div>
+                            <button mat-raised-button type="button" (click)="test(form)" class="mat-stroked-button">Test Connectivity
+                            <span id="spinner"> </span></button>
+                        </div>
+                    </div>
 
 
-                <div class="form-group">
-                    <div>
-                        <button type="submit" class="btn btn-primary-outline ">Submit</button>
+                    <div class="form-group">
+                        <div>
+                            <button mat-raised-button type="submit" class="mat-stroked-button accent mat-accent">Submit</button>
+                        </div>
                     </div>
                 </div>
             </div>

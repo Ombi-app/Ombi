@@ -35,6 +35,8 @@ export interface IReleaseGroups {
     fullyAvailable: boolean;
 
     image: string; // Set by another api call
+
+    selected: boolean; // Set via UI
 }
 
 export interface IArtistLinks {

@@ -1,5 +1,6 @@
 ﻿
 <settings-menu></settings-menu>
+<div class="small-middle-container">
 <div *ngIf="settings">
     <fieldset>
         <legend>
@@ -7,102 +8,104 @@
         </legend>
 
         <div class="row">
-            <div class="form-group col-md-3">
-                <div class="checkbox">
-                    <input type="checkbox" id="enable" [(ngModel)]="settings.enable" [checked]="settings.enable">
-                    <label for="enable">Enable</label>
-                </div>
-            </div>
-            <div class="col-md-2 col-md-push-7">
-                <button type="button" (click)="addTab()" class="btn btn-success-outline">Add Server</button>
-            </div>
-        </div>
-
-        <ngb-tabset>
-            <div *ngFor="let server of settings.servers">
-                <ngb-tab [id]="server.id" [title]="server.name">
-                    <ng-template ngbTabContent>
-                        <br />
-                        <br />
-                        <div class="col-md-2" style="float: right;">
-                            <button type="button" (click)="removeServer(server)" class="btn btn-danger-outline">Remove Server</button>
-                        </div>
-                        <br />
-                        <br />
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="name" class="control-label">Server name</label>
-                                <div>
-                                    <input type="text" class="form-control form-control-custom " id="name" name="name" placeholder="Server" [(ngModel)]="server.name" value="{{server.name}}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="Ip" class="control-label">Hostname or IP</label>
-                                <div>
-                                    <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="localhost" [(ngModel)]="server.ip" value="{{server.ip}}">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="portNumber" class="control-label">Port</label>
-                                <div>
-                                    <input type="text" [(ngModel)]="server.port" class="form-control form-control-custom " id="portNumber" name="Port" placeholder="Port Number" value="{{server.port}}">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="checkbox">
-                                    <input type="checkbox" id="ssl" [(ngModel)]="server.ssl" ng-checked="server.ssl">
-                                    <label for="ssl">SSL</label>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="authToken" class="control-label">Emby Api Key</label>
-                                <div class="">
-                                    <input type="text" class="form-control-custom form-control" id="authToken" [(ngModel)]="server.apiKey" placeholder="Emby Api Key" value="{{server.apiKey}}">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="authToken" class="control-label">Externally Facing Hostname
-                                    <i class="fa fa-question-circle"
-                                    pTooltip="This will be the external address that users will navigate to when they press the 'View On Emby' button"></i>                                    
-                                </label>
-                                <div>
-                                    <input type="text" class="form-control-custom form-control" id="authToken" [(ngModel)]="server.serverHostname" placeholder="e.g. https://jellyfin.server.com/" value="{{server.serverHostname}}">
-                                    <small><span *ngIf="server.serverHostname">Current URL: "{{server.serverHostname}}/#!/{{settings.isJellyfin ? ("itemdetails"): ("item/item")}}.html?id=1"</span>
-                                    <span *ngIf="!server.serverHostname">Current URL: "https://app.emby.media/#!/{{settings.isJellyfin ? ("itemdetails"): ("item/item")}}.html?id=1</span></small>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div>
-                                    <button id="testEmby" type="button" (click)="test(server)" class="btn btn-primary-outline">Test Connectivity <div id="spinner"></div></button>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div>
-                                    <button id="discover" type="button" (click)="discoverServerInfo(server)" class="btn btn-primary-outline">Discover Server Information <div id="spinner"></div></button>
-                                </div>
-                            </div>
-                        </div>
-                    </ng-template>
-                </ngb-tab>
-            </div>
-        </ngb-tabset>
-        <div class="col-md-1">
-            <div class="form-group">
-                <div>
-                    <button [disabled]="!hasDiscovered" (click)="save()" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+            <div class="col-md-6 col-6 col-sm-6">
+                <div style="float:right;text-align:left;">
+                    <div class="md-form-field">
+                        <mat-slide-toggle [(ngModel)]="settings.enable" (change)="toggle()" [checked]="settings.enable">Enable</mat-slide-toggle>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-1">
+        <mat-tab-group #tabGroup [selectedIndex]="selected.value" (selectedTabChange)="addTab($event)" (selectedIndexChange)="selected.setValue($event)" animationDuration="0ms" style="display:block;"> 
+            <mat-tab *ngFor="let server of settings.servers" [label]="server.name">
+                    <div class="col-md-6 col-6 col-sm-6" style="float: right; width:100%; text-align:right;">
+                        <button type="button" (click)="removeServer(server)" class="mat-focus-indicator mat-flat-button mat-button-base mat-warn">Remove Server</button>
+                    </div>
+                    <br />
+                    <br />
+                        <div class="col-md-10 col-10 col-sm-12">
+                            <div class="md-form-field">
+                                <mat-form-field appearance="outline" floatLabel=auto>
+                                    <mat-label>Server Name</mat-label>
+                                    <input matInput placeholder="Server Name" [(ngModel)]="server.name" value="{{server.name}}">
+                                </mat-form-field>
+                            </div>
+
+                            <div class="md-form-field">
+                                <mat-form-field appearance="outline" floatLabel=auto>
+                                    <mat-label>Hostname / IP</mat-label>
+                                    <input matInput placeholder="Hostname or IP" [(ngModel)]="server.ip" value="{{server.ip}}">
+                                </mat-form-field>
+
+                                <div class="md-form-field">
+                                    <mat-form-field appearance="outline" floatLabel=auto>
+                                        <mat-label>Server ID</mat-label>
+                                        <input disabled matInput placeholder="Server Id" [(ngModel)]="server.serverId" value="{{server.serverId}}">
+                                    </mat-form-field>
+                                </div>
+                                <mat-form-field appearance="outline" floatLabel=auto>
+                                    <mat-label>Port</mat-label>
+                                    <input matInput placeholder="Port" [(ngModel)]="server.port" value="{{server.port}}">
+                                </mat-form-field>
+
+                                <mat-slide-toggle id="ssl" [(ngModel)]="server.ssl" [checked]="server.ssl">
+                                    SSL
+                                </mat-slide-toggle>
+                            </div>
+                            <div class="md-form-field">
+                                <mat-form-field appearance="outline" floatLabel=auto>
+                                    <mat-label>API Key</mat-label>
+                                    <input matInput placeholder="Api Key" [(ngModel)]="server.apiKey" value="{{server.apiKey}}">
+                                </mat-form-field>
+                            </div>
+                            <div class="md-form-field">        
+                                <mat-form-field appearance="outline" floatLabel=auto>
+                                    <mat-label>Base URL</mat-label>
+                                    <input matInput placeholder="Base Url" [(ngModel)]="server.subDir" value="{{server.subDir}}">
+                                </mat-form-field>
+                            </div>
+                            <div class="md-form-field">
+                                <mat-form-field appearance="outline" floatLabel=auto>
+                                    <mat-label>Externally Facing Hostname</mat-label>
+                                    <input matInput placeholder="e.g. https://jellyfin.server.com/" [(ngModel)]="server.serverHostname" value="{{server.serverHostname}}" matTooltip="This will be the external address that users will navigate to when they press the 'View On Emby' button">
+                                </mat-form-field>
+                                <small>
+                                    <span *ngIf="server.serverHostname">Current URL: "{{server.serverHostname}}/#!/{{settings.isJellyfin ? ("itemdetails"): ("item/item")}}.html?id=1"</span>
+                                    <span *ngIf="!server.serverHostname">Current URL: "https://app.emby.media/#!/{{settings.isJellyfin ? ("itemdetails"): ("item/item")}}.html?id=1</span>
+                                </small>
+                            </div>
+
+                            
+                            <div class="form-group">
+                                <div>
+                                    <button mat-raised-button id="testEmby" type="button" (click)="test(server)" class="mat-focus-indicator mat-stroked-button mat-button-base">Test Connectivity <div id="spinner"></div></button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div>
+                                    <button mat-raised-button id="discover" type="button" (click)="discoverServerInfo(server)" class="mat-focus-indicator mat-stroked-button mat-button-base">Discover Server Information <div id="spinner"></div></button>
+                                </div>
+                            </div>
+                        </div>
+            </mat-tab>  
+            <mat-tab label="" disabled=true> </mat-tab>
+            <mat-tab label="Add Server" position=100> </mat-tab>
+                  
+        </mat-tab-group>
+        <div class="col-md-2">
             <div class="form-group">
                 <div>
-                    <button (click)="runCacher()" type="button" id="save" class="btn btn-primary-outline">Manually Run Cacher</button>
+                    <button mat-raised-button [disabled]="!hasDiscoveredOrDirty" (click)="save()" type="submit" id="save" class="mat-focus-indicator mat-raised-button mat-button-base mat-accent">Submit</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <div>
+                    <button mat-raised-button (click)="runCacher()" type="button" id="save" class="mat-focus-indicator mat-stroked-button mat-button-base">Manually Run Cacher</button>
                 </div>
             </div>
         </div>
     </fieldset>
+</div>
 </div>

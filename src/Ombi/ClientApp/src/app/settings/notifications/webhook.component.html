@@ -1,0 +1,49 @@
+﻿
+<settings-menu></settings-menu>
+<div *ngIf="form" class="small-middle-container">
+    <fieldset>
+        <legend>Webhook Notifications</legend>
+        <div class="col-md-6">
+            <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="enable" formControlName="enabled">
+                        <label for="enable">Enabled</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="baseUrl" class="control-label">Base URL</label>
+
+                    <input type="text" class="form-control form-control-custom " id="webhookUrl" name="webhookUrl" [ngClass]="{'form-error': form.get('webhookUrl').hasError('required')}" formControlName="webhookUrl" pTooltip="Enter the URL of your webhook server.">
+                    <small *ngIf="form.get('webhookUrl').hasError('required')" class="error-text">The Webhook URL is required</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="applicationToken" class="control-label">Application Token
+                        <i class="fa fa-question-circle" pTooltip="Optional authentication token. Will be sent as 'Access-Token' header."></i>
+                    </label>
+
+                    <input type="text" class="form-control form-control-custom " id="applicationToken" name="applicationToken" [ngClass]="{'form-error': form.get('applicationToken').hasError('required')}" formControlName="applicationToken" pTooltip="Enter your Application token from Webhook.">
+                    <small *ngIf="form.get('applicationToken').hasError('required')" class="error-text">The Application Token is required</small>
+                </div>
+
+                <div class="form-group">
+                    <div>
+                        <button [disabled]="form.invalid" type="button" (click)="test(form)" class="btn btn-primary-outline">
+                            Test
+                            <div id="spinner"></div>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div>
+                        <button [disabled]="form.invalid" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </fieldset>
+</div>

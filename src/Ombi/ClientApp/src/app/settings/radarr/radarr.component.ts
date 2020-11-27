@@ -10,6 +10,7 @@ import { SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./radarr.component.html",
+    styleUrls: ["./radarr.component.scss"]
 })
 export class RadarrComponent implements OnInit {
 
@@ -18,7 +19,6 @@ export class RadarrComponent implements OnInit {
     public minimumAvailabilityOptions: IMinimumAvailability[];
     public profilesRunning: boolean;
     public rootFoldersRunning: boolean;
-    public advanced = false;
     public form: FormGroup;
 
     constructor(private settingsService: SettingsService,
@@ -34,7 +34,7 @@ export class RadarrComponent implements OnInit {
                 this.form = this.fb.group({
                     enabled: [x.enabled],
                     apiKey: [x.apiKey, [Validators.required]],
-                    defaultQualityProfile: [x.defaultQualityProfile, [Validators.required]],
+                    defaultQualityProfile: [+x.defaultQualityProfile, [Validators.required]],
                     defaultRootPath: [x.defaultRootPath, [Validators.required]],
                     ssl: [x.ssl],
                     subDir: [x.subDir],
@@ -42,6 +42,8 @@ export class RadarrComponent implements OnInit {
                     port: [x.port, [Validators.required]],
                     addOnly: [x.addOnly],
                     minimumAvailability: [x.minimumAvailability, [Validators.required]],
+                    scanForAvailability: [x.scanForAvailability],
+                    v3: [x.v3]
                 });
 
                 if (x.defaultQualityProfile) {

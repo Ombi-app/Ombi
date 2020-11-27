@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Hangfire;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -21,14 +21,12 @@ namespace Ombi.Schedule.Jobs.Lidarr
     public class LidarrAlbumSync : ILidarrAlbumSync
     {
         public LidarrAlbumSync(ISettingsService<LidarrSettings> lidarr, ILidarrApi lidarrApi, ILogger<LidarrAlbumSync> log, ExternalContext ctx,
-            IBackgroundJobClient job, ILidarrAvailabilityChecker availability, IHubContext<NotificationHub> notification)
+             IHubContext<NotificationHub> notification)
         {
             _lidarrSettings = lidarr;
             _lidarrApi = lidarrApi;
             _logger = log;
             _ctx = ctx;
-            _job = job;
-            _availability = availability;
             _notification = notification;
         }
 
@@ -36,8 +34,6 @@ namespace Ombi.Schedule.Jobs.Lidarr
         private readonly ILidarrApi _lidarrApi;
         private readonly ILogger _logger;
         private readonly ExternalContext _ctx;
-        private readonly IBackgroundJobClient _job;
-        private readonly ILidarrAvailabilityChecker _availability;
         private readonly IHubContext<NotificationHub> _notification;
 
         public async Task Execute(IJobExecutionContext ctx)
@@ -58,7 +54,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
                             // Let's remove the old cached data
                             using (var tran = await _ctx.Database.BeginTransactionAsync())
                             {
-                                await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM LidarrAlbumCache");
+                                await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM LidarrAlbumCache");
                                 tran.Commit();
                             }
 
@@ -123,7 +119,7 @@ namespace Ombi.Schedule.Jobs.Lidarr
             if (disposing)
             {
                 _ctx?.Dispose();
-                _lidarrSettings?.Dispose();
+                //_lidarrSettings?.Dispose();
             }
             _disposed = true;
         }

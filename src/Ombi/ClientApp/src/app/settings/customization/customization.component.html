@@ -1,62 +1,80 @@
 ﻿<settings-menu></settings-menu>
-
+<div class="small-middle-container">
 <wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Customization-Settings'"></wiki>
-<fieldset *ngIf="settings" class="container">
+<fieldset *ngIf="settings">
     <legend>Customization</legend>
 
-    <div class="col-12">
-            <mat-form-field>
-                    <input matInput placeholder="Application Name" [(ngModel)]="settings.applicationName">
+    <div class="col-md-12 col-12 col-sm-12">
+        <div class="md-form-field">
+            <mat-form-field appearance="outline">
+                <mat-label>Application Name</mat-label>
+                <input matInput [(ngModel)]="settings.applicationName">
             </mat-form-field>
-
-            <mat-form-field>
-                    <input matInput placeholder="Application URL" [(ngModel)]="settings.applicationurl">
+        </div>
+        <div class="md-form-field">
+            <mat-form-field appearance="outline">
+                <mat-label>Application URL</mat-label>
+                <input matInput [(ngModel)]="settings.applicationUrl">
             </mat-form-field>
-
-            <mat-form-field>
-                    <input matInput placeholder="Custom Logo" [(ngModel)]="settings.logo">
+        </div>
+        <div class="md-form-field">
+            <mat-form-field appearance="outline" >
+                <mat-label>Custom Logo</mat-label>
+                <input  matInput  type="url"[(ngModel)]="settings.logo">
             </mat-form-field>
-
-        <div *ngIf="settings.logo" class="form-group">
-            <label for="logo" class="control-label">Logo Preview:</label>
-            <div>
-                <img [src]="settings.logo" style="width: 300px" />
+        </div>
+        <div class="md-form-field">
+            <div *ngIf="settings.logo" class="form-group">
+                <label for="logo" class="control-label">Logo Preview:</label>
+                <div>
+                    <img [src]="settings.logo" style="width: 300px" />
+                </div>
             </div>
         </div>
-
-        <mat-checkbox [(ngModel)]="settings.enableCustomDonations" matTooltip="Enable to show a custom donation link in the navigation bar"> 
-               Enable Custom Donation Link
-              </mat-checkbox>
-
-              
-              <mat-form-field  *ngIf="settings.enableCustomDonations">
-                    <input matInput placeholder="Custom Donation URL" [(ngModel)]="settings.customDonationUrl"
-                    matTooltip="A link to a Paypal address, or your custom donation url.">
-            </mat-form-field>
-            <mat-form-field  *ngIf="settings.enableCustomDonations">
-                    <input matInput placeholder="Custom Donation URL" [(ngModel)]="settings.enableCustomDonations"
-                    matTooltip="Set a custom message to be displayed in the navigation bar.">
-            </mat-form-field>
-
-            
-        <mat-checkbox [(ngModel)]="settings.useCustomPage" matTooltip="Enabled a custom page where you can fully edit. You will need the Edit Custom Page role."> 
-                Enable Custom Page
-               </mat-checkbox>
- 
-
-        <div class="form-group">
-                <button mat-raised-button (click)="save()" type="submit" type="submit" id="save" color="accent">Submit</button>
+        <div class="md-form-field">
+            <mat-slide-toggle [(ngModel)]="settings.hideAvailableFromDiscover" matTooltip="Any media content that is available will now be hidden on the discover page, the user still can search for it">
+                Hide Available Content On The Discover Page
+            </mat-slide-toggle>
         </div>
-        <mat-form-field>
-                <textarea matInput  [(ngModel)]="settings.customCss" placeholder="Custom CSS"></textarea>
-              </mat-form-field>
+        <div class="md-form-field">
+            <mat-slide-toggle [(ngModel)]="settings.enableCustomDonations" matTooltip="Enable to show a custom donation link in the navigation bar">
+                Enable Custom Donation Link
+            </mat-slide-toggle>
+        </div>
+        <div class="md-form-field">
+            <mat-form-field *ngIf="settings.enableCustomDonations" appearance="outline">
+                <mat-label>Custom Donation URL</mat-label>
+                <input matInput [(ngModel)]="settings.customDonationUrl" matTooltip="A link to a Paypal address, or your custom donation url.">
+            </mat-form-field>
+        </div>
+        <div class="md-form-field">
+            <mat-form-field *ngIf="settings.enableCustomDonations" appearance="outline">
+                <mat-label>Custom Donation Message</mat-label>
+                <input matInput  [(ngModel)]="settings.customDonationMessage" matTooltip="Set a custom message to be displayed in the navigation bar.">
+            </mat-form-field>
+        </div>
+        <div class="md-form-field">
+            <mat-slide-toggle [(ngModel)]="settings.useCustomPage" matTooltip="Enabled a custom page where you can fully edit. You will need the Edit Custom Page role.">
+                Enable Custom Page
+            </mat-slide-toggle>
+        </div>
+        <div class="md-form-field">
+            <mat-form-field appearance="outline"> 
+                <mat-label>Custom CSS</mat-label>
+                <textarea matInput [(ngModel)]="settings.customCss"></textarea>
+            </mat-form-field>
+        </div>
+        <div class="form-group">
+            <button mat-raised-button (click)="save()" type="submit" type="submit" id="save" color="accent">Submit</button>
+        </div>
     </div>
     <!-- <div class="col-7"> -->
 
 
     <!-- </div> -->
- 
+
 
 
 
 </fieldset>
+</div>

@@ -32,17 +32,21 @@ namespace Ombi.Api.Lidarr.Models
 
     public class Addoptions
     {
-        /// <summary>
-        /// Future = 1
-        /// Missing = 2
-        /// Existing = 3
-        /// First = 5
-        /// Latest = 4
-        /// None = 6
-        /// </summary>
-        public int selectedOption { get; set; }
+        public MonitorTypes monitor { get; set; }
         public bool monitored { get; set; }
-        public bool searchForMissingAlbums { get; set; }
+        public bool searchForMissingAlbums { get; set; } // Only for Artists add
         public string[] AlbumsToMonitor { get; set; } // Uses the MusicBrainzAlbumId!
+    }
+
+    public enum MonitorTypes
+    {
+        All,
+        Future,
+        Missing,
+        Existing,
+        Latest,
+        First,
+        None,
+        Unknown
     }
 }

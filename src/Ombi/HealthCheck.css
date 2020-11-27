@@ -1,0 +1,14 @@
+﻿:root {
+    --primaryColor: #424242;
+    --secondaryColor: #f9dc43;
+    --bgMenuActive: #f9dc43;
+    --bgButton: #f9dc43;
+    --logoImageUrl: url('https://ombi.io/img/logo-orange-small.png');
+    --bgAside: var(--primaryColor);
+
+}
+
+#outer-container > aside > nav > a:nth-child(2) {
+    display: none;
+}
+

@@ -29,7 +29,13 @@ export interface IUsersModel {
 
 export interface INavBar {
     icon: string;
+    faIcon: string;
     name: string;
     link: string;
     requiresAdmin: boolean;
+    enabled: boolean;
+    toolTip?: boolean;
+    toolTipMessage?: string;
+    style?: string;
+    externalLink?: boolean;
 }

@@ -2,14 +2,17 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
+    "module": "esnext",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es5",
+    "target": "es2015",
+    "types": ["node"],
     "resolveJsonModule":true,
+    "allowSyntheticDefaultImports":true,
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -18,4 +21,12 @@
       "dom"
     ]
   }
+,
+  "files": [
+    "main.ts",
+    "polyfills.ts"
+  ],
+  "include": [
+    "src/**/*.d.ts"
+  ]
 }

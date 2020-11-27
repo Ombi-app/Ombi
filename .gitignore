@@ -247,3 +247,5 @@ _Pvt_Extensions
 # Ignore local vscode config
 *.vscode
 /src/Ombi/database.json
+/src/Ombi/healthchecksdb
+/src/Ombi/ClientApp/package-lock.json

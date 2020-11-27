@@ -1,10 +1,12 @@
 @import "~styles/variables.scss";
 .sidenav-container {
     min-height: 100vh;
+    -webkit-overflow-scrolling:touch;
+    overflow:auto;
 }
 
 .sidenav {
-    width: 200px;
+    width: 220px;
 }
 
 .sidenav .mat-toolbar {
@@ -47,12 +49,74 @@
     color:white;
 }
 
-.active-list-item-dark {
+::ng-deep .dark .active-list-item {
     background: $accent-dark !important;
-    color:black;
+    color:black !important;
+    font-weight:500;
 }
 
-.bottom-nav-link {
-    bottom: 0;
+.slide-menu {
+    width: 100%;
+}
+
+::ng-deep .smaller-panel {
+    max-width: 170px !important;
+}
+
+.mat-drawer-content {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    display: block;
+    height: 100%;
+    /* overflow: auto; */
+}
+
+.profile-img-container {
+    margin: 20px auto 10px;
+    overflow: hidden;
+    text-align: center;
+    width: 80%;
+}
+.profile-img {
+    float: left;
+    height: 40px;
+    margin-right: 15px;
+}
+.profile-info {
+    overflow: hidden;
+    text-align: left;
+}
+.profile-info > h3 {
+    font-size: 15px;
+    text-transform: capitalize;
+    // color: #333;
+    margin-bottom: 2px;
+}
+.profile-info > p {
+    // color: #333;
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+.profile-img img {
+    border-radius: 6px;
+    box-shadow: 4px 3px 6px 0 rgba(0,0,0,.2);
+    width: 45px;
+}
+
+.outer-profile {
+    background-color: #303030;
+    box-shadow: inset 0 0 3px #000000;
+    padding: 1px;
+}
+
+.full {
+    width: 100%;
+}
+.bottom-nav {
     position: absolute;
+    bottom: 0;
+    left: 0;
+    text-align: center;
 }

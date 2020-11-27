@@ -131,7 +131,7 @@ namespace Ombi.Helpers
 
         public static string ToHttpsUrl(this string currentUrl)
         {
-            return currentUrl.Replace("http://", "https://");
+            return currentUrl?.Replace("http://", "https://");
         }
     }
 }

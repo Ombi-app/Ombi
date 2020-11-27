@@ -1,0 +1,22 @@
+﻿<settings-menu>
+</settings-menu>
+<div *ngIf="form" class="container">
+    <fieldset>
+        <legend>Twilio</legend>
+        <span>Below are the supported integrations with Twilio</span>
+        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+
+            <mat-tab-group>
+                <mat-tab label="WhatsApp">
+                    <app-whatsapp [form]="form" [templates]="templates"></app-whatsapp>
+                </mat-tab>
+            </mat-tab-group>
+
+            <div class=" md-form-field ">
+                <div>
+                    <button mat-raised-button type="submit " color="primary" [disabled]="form.invalid ">Submit</button>
+                </div>
+            </div>
+        </form>
+    </fieldset>
+</div>

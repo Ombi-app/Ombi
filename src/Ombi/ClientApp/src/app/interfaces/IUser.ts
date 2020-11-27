@@ -15,6 +15,7 @@ export interface IUser {
     episodeRequestLimit: number;
     musicRequestLimit: number;
     userAccessToken: string;
+    language: string;
     userQualityProfiles: IUserQualityProfiles;
 
     // FOR UI
@@ -71,6 +72,18 @@ export interface IMobileUsersViewModel {
     devices: number;
 }
 
+export interface ICloudMobileModel {
+    userId: string;
+    username: string;
+    devices: ICloudMobileDevices[];
+}
+export interface ICloudMobileDevices {
+    token: string;
+    userId: string;
+    addedAt: Date;
+    user: IUser;
+}
+
 export interface IMassEmailUserModel {
     user: IUser;
     selected: boolean;
@@ -91,6 +104,7 @@ export interface INotificationPreferences {
 }
 
 export enum INotificationAgent {
+
     Email = 0,
     Discord = 1,
     Pushbullet = 2,
@@ -99,4 +113,7 @@ export enum INotificationAgent {
     Slack = 5,
     Mattermost = 6,
     Mobile = 7,
+    Gotify = 8,
+    Webhook = 9,
+    WhatsApp = 10
 }

@@ -7,9 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi", "Ombi\Ombi.csproj", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9D30CCF8-A115-4EB7-A34D-07780D752789}"
 	ProjectSection(SolutionItems) = preProject
-		..\appveyor.yml = ..\appveyor.yml
+		..\.azuredevops\pipelines\templates\build-steps.yml = ..\.azuredevops\pipelines\templates\build-steps.yml
 		..\build.cake = ..\build.cake
 		..\CHANGELOG.md = ..\CHANGELOG.md
+		..\.azuredevops\pipelines\publish-job.yml = ..\.azuredevops\pipelines\publish-job.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Core", "Ombi.Core\Ombi.Core.csproj", "{F56E79C7-791D-4668-A0EC-29E3BBC8D24B}"
@@ -108,7 +109,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Hubs", "Ombi.Hubs\Ombi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.GroupMe", "Ombi.Api.GroupMe\Ombi.Api.GroupMe.csproj", "{9266403C-B04D-4C0F-AC39-82F12C781949}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.MusicBrainz", "Ombi.Api.MusicBrainz\Ombi.Api.MusicBrainz.csproj", "{C5C1769B-4197-4410-A160-0EEF39EDDC98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.MusicBrainz", "Ombi.Api.MusicBrainz\Ombi.Api.MusicBrainz.csproj", "{C5C1769B-4197-4410-A160-0EEF39EDDC98}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Twilio", "Ombi.Api.Twilio\Ombi.Api.Twilio.csproj", "{34E5DD1A-6A90-448B-9E71-64D1ACD6C1A3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.HealthChecks", "Ombi.HealthChecks\Ombi.HealthChecks.csproj", "{59D19538-0496-44EE-936E-EBBC22CF7B27}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Webhook", "Ombi.Api.Webhook\Ombi.Api.Webhook.csproj", "{E2186FDA-D827-4781-8663-130AC382F12C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.CloudService", "Ombi.Api.CloudService\Ombi.Api.CloudService.csproj", "{5DE40A66-B369-469E-8626-ECE23D9D8034}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -292,6 +301,22 @@ Global
 		{C5C1769B-4197-4410-A160-0EEF39EDDC98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5C1769B-4197-4410-A160-0EEF39EDDC98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5C1769B-4197-4410-A160-0EEF39EDDC98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34E5DD1A-6A90-448B-9E71-64D1ACD6C1A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34E5DD1A-6A90-448B-9E71-64D1ACD6C1A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34E5DD1A-6A90-448B-9E71-64D1ACD6C1A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34E5DD1A-6A90-448B-9E71-64D1ACD6C1A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59D19538-0496-44EE-936E-EBBC22CF7B27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59D19538-0496-44EE-936E-EBBC22CF7B27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59D19538-0496-44EE-936E-EBBC22CF7B27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59D19538-0496-44EE-936E-EBBC22CF7B27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2186FDA-D827-4781-8663-130AC382F12C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2186FDA-D827-4781-8663-130AC382F12C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2186FDA-D827-4781-8663-130AC382F12C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2186FDA-D827-4781-8663-130AC382F12C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DE40A66-B369-469E-8626-ECE23D9D8034}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DE40A66-B369-469E-8626-ECE23D9D8034}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DE40A66-B369-469E-8626-ECE23D9D8034}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DE40A66-B369-469E-8626-ECE23D9D8034}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -334,6 +359,10 @@ Global
 		{27111E7C-748E-4996-BD71-2117027C6460} = {6F42AB98-9196-44C4-B888-D5E409F415A1}
 		{9266403C-B04D-4C0F-AC39-82F12C781949} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 		{C5C1769B-4197-4410-A160-0EEF39EDDC98} = {9293CA11-360A-4C20-A674-B9E794431BF5}
+		{34E5DD1A-6A90-448B-9E71-64D1ACD6C1A3} = {9293CA11-360A-4C20-A674-B9E794431BF5}
+		{59D19538-0496-44EE-936E-EBBC22CF7B27} = {410F36CF-9C60-428A-B191-6FD90610991A}
+		{E2186FDA-D827-4781-8663-130AC382F12C} = {9293CA11-360A-4C20-A674-B9E794431BF5}
+		{5DE40A66-B369-469E-8626-ECE23D9D8034} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {192E9BF8-00B4-45E4-BCCC-4C215725C869}

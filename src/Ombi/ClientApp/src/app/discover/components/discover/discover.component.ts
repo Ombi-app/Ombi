@@ -1,8 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Inject } from "@angular/core";
 import { SearchV2Service } from "../../../services";
 import { ISearchMovieResult, ISearchTvResult, RequestType } from "../../../interfaces";
-import { IDiscoverCardResult } from "../../interfaces";
+import { IDiscoverCardResult, DiscoverOption, DisplayOption } from "../../interfaces";
 import { trigger, transition, style, animate } from "@angular/animations";
+import { StorageService } from "../../../shared/storage/storage-service";
+import { DOCUMENT } from "@angular/common";
 
 @Component({
     templateUrl: "./discover.component.html",
@@ -19,8 +21,13 @@ import { trigger, transition, style, animate } from "@angular/animations";
 export class DiscoverComponent implements OnInit {
 
     public discoverResults: IDiscoverCardResult[] = [];
-    public movies: ISearchMovieResult[];
-    public tvShows: ISearchTvResult[];
+    public movies: ISearchMovieResult[] = [];
+    public tvShows: ISearchTvResult[] = [];
+
+    public discoverOptions: DiscoverOption = DiscoverOption.Combined;
+    public DiscoverOption = DiscoverOption;
+    public displayOption: DisplayOption = DisplayOption.Card;
+    public DisplayOption = DisplayOption;
 
     public defaultTvPoster: string;
 
@@ -31,24 +38,53 @@ export class DiscoverComponent implements OnInit {
     public loadingFlag: boolean;
     public scrollDisabled: boolean;
 
+    private amountToLoad = 14;
+
     private contentLoaded: number;
     private isScrolling: boolean = false;
+    private mediaTypeStorageKey = "DiscoverOptions";
+    private displayOptionsKey = "DiscoverDisplayOptions";
 
-    constructor(private searchService: SearchV2Service) { }
+    constructor(private searchService: SearchV2Service,
+        private storageService: StorageService,
+        @Inject(DOCUMENT) private container: Document) { }
+
 
     public async ngOnInit() {
         this.loading()
+        const localDiscoverOptions = +this.storageService.get(this.mediaTypeStorageKey);
+        if (localDiscoverOptions) {
+            this.discoverOptions = DiscoverOption[DiscoverOption[localDiscoverOptions]];
+        }
+        const localDisplayOptions = +this.storageService.get(this.displayOptionsKey);
+        if (localDisplayOptions) {
+            this.displayOption = DisplayOption[DisplayOption[localDisplayOptions]];
+        }
         this.scrollDisabled = true;
-        this.movies = await this.searchService.popularMoviesByPage(0,12);
-        this.tvShows = await this.searchService.popularTvByPage(0,12);
+        switch (this.discoverOptions) {
+            case DiscoverOption.Combined:
+                this.movies = await this.searchService.popularMoviesByPage(0, this.amountToLoad);
+                this.tvShows = await this.searchService.popularTvByPage(0, this.amountToLoad);
+                break;
+            case DiscoverOption.Movie:
+                this.movies = await this.searchService.popularMoviesByPage(0, this.amountToLoad);
+                break;
+            case DiscoverOption.Tv:
+                this.tvShows = await this.searchService.popularTvByPage(0, this.amountToLoad);
+                break;
+        }
 
-        this.contentLoaded = 12;
+        this.contentLoaded = this.amountToLoad;
 
         this.createInitialModel();
         this.scrollDisabled = false;
+        if (!this.containerHasScrollBar()) {
+            await this.onScroll();
+        }
     }
 
     public async onScroll() {
+        console.log("scrolled");
         if (!this.contentLoaded) {
             return;
         }
@@ -56,16 +92,46 @@ export class DiscoverComponent implements OnInit {
             this.isScrolling = true;
             this.loading();
             if (this.popularActive) {
-                this.movies = await this.searchService.popularMoviesByPage(this.contentLoaded, 12);
-                this.tvShows = await this.searchService.popularTvByPage(this.contentLoaded, 12);
+                switch (this.discoverOptions) {
+                    case DiscoverOption.Combined:
+                        this.movies = await this.searchService.popularMoviesByPage(this.contentLoaded, this.amountToLoad);
+                        this.tvShows = await this.searchService.popularTvByPage(this.contentLoaded, this.amountToLoad);
+                        break;
+                    case DiscoverOption.Movie:
+                        this.movies = await this.searchService.popularMoviesByPage(this.contentLoaded, this.amountToLoad);
+                        break;
+                    case DiscoverOption.Tv:
+                        this.tvShows = await this.searchService.popularTvByPage(this.contentLoaded, this.amountToLoad);
+                        break;
+                }
             }
-            if(this.trendingActive) {
-                this.movies = await this.searchService.nowPlayingMoviesByPage(this.contentLoaded, 12);
-                this.tvShows = await this.searchService.trendingTvByPage(this.contentLoaded, 12);
+            if (this.trendingActive) {
+                switch (this.discoverOptions) {
+                    case DiscoverOption.Combined:
+                        this.movies = await this.searchService.nowPlayingMoviesByPage(this.contentLoaded, this.amountToLoad);
+                        this.tvShows = await this.searchService.trendingTvByPage(this.contentLoaded, this.amountToLoad);
+                        break;
+                    case DiscoverOption.Movie:
+                        this.movies = await this.searchService.nowPlayingMoviesByPage(this.contentLoaded, this.amountToLoad);
+                        break;
+                    case DiscoverOption.Tv:
+                        this.tvShows = await this.searchService.trendingTvByPage(this.contentLoaded, this.amountToLoad);
+                        break;
+                }
             }
-            if(this.upcomingActive) {
-                this.movies = await this.searchService.upcomingMoviesByPage(this.contentLoaded, 12);
-                this.tvShows = await this.searchService.anticipatedTvByPage(this.contentLoaded, 12);                
+            if (this.upcomingActive) {
+                switch (this.discoverOptions) {
+                    case DiscoverOption.Combined:
+                        this.movies = await this.searchService.upcomingMoviesByPage(this.contentLoaded, this.amountToLoad);
+                        this.tvShows = await this.searchService.anticipatedTvByPage(this.contentLoaded, this.amountToLoad);
+                        break;
+                    case DiscoverOption.Movie:
+                        this.movies = await this.searchService.upcomingMoviesByPage(this.contentLoaded, this.amountToLoad);
+                        break;
+                    case DiscoverOption.Tv:
+                        this.tvShows = await this.searchService.anticipatedTvByPage(this.contentLoaded, this.amountToLoad);
+                        break;
+                }
             }
             this.contentLoaded += 12;
 
@@ -83,8 +149,18 @@ export class DiscoverComponent implements OnInit {
         this.popularActive = true;
         this.trendingActive = false;
         this.upcomingActive = false;
-        this.movies = await this.searchService.popularMoviesByPage(0, 12);
-        this.tvShows = await this.searchService.popularTvByPage(0, 12);
+        switch (this.discoverOptions) {
+            case DiscoverOption.Combined:
+                this.movies = await this.searchService.popularMoviesByPage(0, this.amountToLoad);
+                this.tvShows = await this.searchService.popularTvByPage(0, this.amountToLoad);
+                break;
+            case DiscoverOption.Movie:
+                this.movies = await this.searchService.popularMoviesByPage(0, this.amountToLoad);
+                break;
+            case DiscoverOption.Tv:
+                this.tvShows = await this.searchService.popularTvByPage(0, this.amountToLoad);
+                break;
+        }
 
         this.createModel();
         this.scrollDisabled = false;
@@ -100,8 +176,18 @@ export class DiscoverComponent implements OnInit {
         this.popularActive = false;
         this.trendingActive = true;
         this.upcomingActive = false;
-        this.movies = await this.searchService.nowPlayingMoviesByPage(0, 12);
-        this.tvShows = await this.searchService.trendingTvByPage(0, 12);
+        switch (this.discoverOptions) {
+            case DiscoverOption.Combined:
+                this.movies = await this.searchService.nowPlayingMoviesByPage(0, this.amountToLoad);
+                this.tvShows = await this.searchService.trendingTvByPage(0, this.amountToLoad);
+                break;
+            case DiscoverOption.Movie:
+                this.movies = await this.searchService.nowPlayingMoviesByPage(0, this.amountToLoad);
+                break;
+            case DiscoverOption.Tv:
+                this.tvShows = await this.searchService.trendingTvByPage(0, this.amountToLoad);
+                break;
+        }
 
         this.createModel();
         this.scrollDisabled = false;
@@ -116,56 +202,65 @@ export class DiscoverComponent implements OnInit {
         this.popularActive = false;
         this.trendingActive = false;
         this.upcomingActive = true;
-        this.movies = await this.searchService.upcomingMoviesByPage(0, 12);
-        this.tvShows = await this.searchService.anticipatedTvByPage(0, 12);
+        switch (this.discoverOptions) {
+            case DiscoverOption.Combined:
+                this.movies = await this.searchService.upcomingMoviesByPage(0, this.amountToLoad);
+                this.tvShows = await this.searchService.anticipatedTvByPage(0, this.amountToLoad);
+                break;
+            case DiscoverOption.Movie:
+                this.movies = await this.searchService.upcomingMoviesByPage(0, this.amountToLoad);
+                break;
+            case DiscoverOption.Tv:
+                this.tvShows = await this.searchService.anticipatedTvByPage(0, this.amountToLoad);
+                break;
+        }
 
         this.createModel();
         this.scrollDisabled = false;
     }
 
+    public async switchDiscoverMode(newMode: DiscoverOption) {
+        this.loading();
+        this.clear();
+        this.discoverOptions = newMode;
+        this.storageService.save(this.mediaTypeStorageKey, newMode.toString());
+        await this.ngOnInit();
+        this.finishLoading();
+    }
+
+    public changeView(view: DisplayOption) {
+        this.displayOption = view;
+        this.storageService.save(this.displayOptionsKey, view.toString());
+    }
+
     private createModel() {
         const tempResults = <IDiscoverCardResult[]>[];
-        this.movies.forEach(m => {
-            tempResults.push({
-                available: m.available,
-                posterPath: m.posterPath ? `https://image.tmdb.org/t/p/w300/${m.posterPath}` : "../../../images/default_movie_poster.png",
-                requested: m.requested,
-                title: m.title,
-                type: RequestType.movie,
-                id: m.id,
-                url: `http://www.imdb.com/title/${m.imdbId}/`,
-                rating: m.voteAverage,
-                overview: m.overview,
-                approved: m.approved,
-                imdbid: m.imdbId
-            });
-        });
-        this.tvShows.forEach(m => {
-            tempResults.push({
-                available: m.available,
-                posterPath: "../../../images/default_tv_poster.png",
-                requested: m.requested,
-                title: m.title,
-                type: RequestType.tvShow,
-                id: m.id,
-                url: undefined,
-                rating: +m.rating,
-                overview: m.overview,
-                approved: m.approved,
-                imdbid: m.imdbId
-            });
-        });
+
+        switch (this.discoverOptions) {
+            case DiscoverOption.Combined:
+                tempResults.push(...this.mapMovieModel());
+                tempResults.push(...this.mapTvModel());
+                break;
+            case DiscoverOption.Movie:
+                tempResults.push(...this.mapMovieModel());
+                break;
+            case DiscoverOption.Tv:
+                tempResults.push(...this.mapTvModel());
+                break;
+        }
+
         this.shuffle(tempResults);
         this.discoverResults.push(...tempResults);
 
         this.finishLoading();
     }
 
-    private createInitialModel() {
+    private mapMovieModel(): IDiscoverCardResult[] {
+        const tempResults = <IDiscoverCardResult[]>[];
         this.movies.forEach(m => {
-            this.discoverResults.push({
+            tempResults.push({
                 available: m.available,
-                posterPath: `https://image.tmdb.org/t/p/w300/${m.posterPath}`,
+                posterPath: m.posterPath ? `https://image.tmdb.org/t/p/w500/${m.posterPath}` : "../../../images/default_movie_poster.png",
                 requested: m.requested,
                 title: m.title,
                 type: RequestType.movie,
@@ -174,11 +269,18 @@ export class DiscoverComponent implements OnInit {
                 rating: m.voteAverage,
                 overview: m.overview,
                 approved: m.approved,
-                imdbid: m.imdbId
+                imdbid: m.imdbId,
+                denied: false,
+                background: m.backdropPath
             });
         });
+        return tempResults;
+    }
+
+    private mapTvModel(): IDiscoverCardResult[] {
+        const tempResults = <IDiscoverCardResult[]>[];
         this.tvShows.forEach(m => {
-            this.discoverResults.push({
+            tempResults.push({
                 available: m.available,
                 posterPath: "../../../images/default_tv_poster.png",
                 requested: m.requested,
@@ -189,11 +291,17 @@ export class DiscoverComponent implements OnInit {
                 rating: +m.rating,
                 overview: m.overview,
                 approved: m.approved,
-                imdbid: m.imdbId
+                imdbid: m.imdbId,
+                denied: false,
+                background: m.background
             });
         });
-        this.shuffle(this.discoverResults);
-        this.finishLoading();
+        return tempResults;
+    }
+
+    private createInitialModel() {
+        this.clear();
+        this.createModel();
     }
 
     private shuffle(discover: IDiscoverCardResult[]): IDiscoverCardResult[] {
@@ -214,5 +322,11 @@ export class DiscoverComponent implements OnInit {
 
     private finishLoading() {
         this.loadingFlag = false;
+    }
+
+    private containerHasScrollBar(): boolean {
+        return this.container.documentElement.scrollHeight > this.container.documentElement.clientHeight;
+        // div.scrollHeight > div.clientHeight;
+        // this.container.documentElement.scrollHeight > (window.innerHeight + window.pageYOffset);
     }
 }

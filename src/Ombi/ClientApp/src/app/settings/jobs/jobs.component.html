@@ -72,27 +72,19 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="embyContentSync" class="control-label">Emby Sync</label>              
+                    <label for="embyContentSync" class="control-label">Emby Sync</label>
                         <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('embyContentSync').hasError('required')}" id="embyContentSync" name="embyContentSync" formControlName="embyContentSync">
                         <small *ngIf="form.get('embyContentSync').hasError('required')" class="error-text">The Emby Sync is required</small>
                         <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('embyContentSync')?.value)">Test</button>
                 </div>
 
                 <div class="form-group">
-                    <label for="userImporter" class="control-label">User Importer</label>              
+                    <label for="userImporter" class="control-label">User Importer</label>
                         <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('userImporter').hasError('required')}" id="userImporter" name="userImporter" formControlName="userImporter">
                         <small *ngIf="form.get('userImporter').hasError('required')" class="error-text">The User Importer is required</small>
                         <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('userImporter')?.value)">Test</button>
                 </div>
 
-                <div class="form-group">
-                        <label for="userImporter" class="control-label">Refresh Metadata</label>              
-                            <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('refreshMetadata').hasError('required')}" id="refreshMetadata" name="refreshMetadata" formControlName="refreshMetadata">
-                            <small *ngIf="form.get('refreshMetadata').hasError('required')" class="error-text">The Refresh Metadata is required</small>
-                            <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('refreshMetadata')?.value)">Test</button>
-                    </div>
-
-                    
                     <div class="form-group">
                         <label for="userImporter" class="control-label">Newsletter</label>              
                             <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('newsletter').hasError('required')}" id="newsletter" name="newsletter" formControlName="newsletter">
@@ -112,6 +104,13 @@
                             <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('mediaDatabaseRefresh').hasError('required')}" id="mediaDatabaseRefresh" name="mediaDatabaseRefresh" formControlName="mediaDatabaseRefresh">
                             <small *ngIf="form.get('mediaDatabaseRefresh').hasError('required')" class="error-text">The Media Database Refresh is required</small>
                             <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('mediaDatabaseRefresh')?.value)">Test</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="userImporter" class="control-label">Auto Available Request Deletion</label>
+                            <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('autoDeleteRequests').hasError('required')}" id="autoDeleteRequests" name="autoDeleteRequests" formControlName="autoDeleteRequests">
+                            <small *ngIf="form.get('autoDeleteRequests').hasError('required')" class="error-text">Auto Available Request Deletion is required</small>
+                            <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('autoDeleteRequests')?.value)">Test</button>
                     </div>
             </div>
             <div class="form-group">

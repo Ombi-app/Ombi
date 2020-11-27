@@ -18,7 +18,7 @@ namespace Ombi.Controllers.V1
     public class LandingPageController : ControllerBase
     {
         public LandingPageController(ISettingsService<PlexSettings> plex, ISettingsService<EmbySettings> emby,
-            IPlexApi plexApi, IEmbyApi embyApi)
+            IPlexApi plexApi, IEmbyApiFactory embyApi)
         {
             _plexSettings = plex;
             _embySettings = emby;
@@ -27,7 +27,7 @@ namespace Ombi.Controllers.V1
         }
 
         private readonly IPlexApi _plexApi;
-        private readonly IEmbyApi _embyApi;
+        private readonly IEmbyApiFactory _embyApi;
         private readonly ISettingsService<PlexSettings> _plexSettings;
         private readonly ISettingsService<EmbySettings> _embySettings;
 
@@ -65,11 +65,12 @@ namespace Ombi.Controllers.V1
             var emby = await _embySettings.GetSettingsAsync();
             if (emby.Enable)
             {
+                var client = _embyApi.CreateClient(emby);
                 foreach (var server in emby.Servers)
                 {
                     try
                     {
-                        var result = await _embyApi.GetUsers(server.FullUri, server.ApiKey);
+                        var result = await client.GetUsers(server.FullUri, server.ApiKey);
                         if (result.Any())
                         {
                             model.ServersAvailable++;

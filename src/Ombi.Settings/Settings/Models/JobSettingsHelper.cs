@@ -56,11 +56,6 @@ namespace Ombi.Settings.Settings.Models
             return ValidateCron(Get(s.SickRageSync, Cron.Hourly(35)));
         }
 
-        public static string RefreshMetadata(JobSettings s)
-        {
-            return ValidateCron(Get(s.RefreshMetadata, Cron.DayInterval(3)));
-        }
-
         public static string LidarrArtistSync(JobSettings s)
         {
             return ValidateCron(Get(s.LidarrArtistSync, Cron.Hourly(40)));
@@ -79,6 +74,11 @@ namespace Ombi.Settings.Settings.Models
         public static string MediaDatabaseRefresh(JobSettings s)
         {
             return ValidateCron(Get(s.MediaDatabaseRefresh, Cron.DayInterval(5)));
+        }
+
+        public static string AutoDeleteRequests(JobSettings s)
+        {
+            return ValidateCron(Get(s.AutoDeleteRequests, Cron.Daily()));
         }
 
         private static string Get(string settings, string defaultCron)

@@ -1,7 +1,8 @@
 ﻿<settings-menu></settings-menu>
-<div *ngIf="about" class="container">
+<div *ngIf="about" class="small-middle-container">
   <legend>About</legend>
-
+<div class="row">
+  <div class="col-md-8">
   <div class="mat-table">
       <div class="mat-row" style="background:red;" *ngIf="notSupported">
           <div class="mat-cell" style="text-align: center;"><b>NOT SUPPORTED OS. Please use the docker image available on the Container Station (It's free)</b></div>
@@ -16,10 +17,10 @@
           style="color:#df691a"><b>(New Update Available)</b></a></div>
     </div>
 
-    <div class="mat-row">
+    <!-- <div class="mat-row">
       <div class="mat-cell">Branch</div>
       <div class="mat-cell">{{about.branch}}</div>
-    </div>
+    </div> -->
 
     <div class="mat-row">
       <div class="mat-cell">Github</div>
@@ -77,20 +78,25 @@
     
     <div class="mat-row">
       <div class="mat-cell">Ombi Database</div>
-      <div class="mat-cell">{{about.ombiDatabaseType}} - {{about.ombiConnectionString}}</div>
+      <div class="mat-cell">{{about.ombiDatabaseType}}</div>
     </div> 
     
     <div class="mat-row">
       <div class="mat-cell">External Database</div>
-      <div class="mat-cell">{{about.externalDatabaseType}} - {{about.externalConnectionString}}</div>
+      <div class="mat-cell">{{about.externalDatabaseType}}</div>
     </div> 
     
     <div class="mat-row">
       <div class="mat-cell">Settings Database</div>
-      <div class="mat-cell">{{about.settingsDatabaseType}} - {{about.settingsConnectionString}}</div>
+      <div class="mat-cell">{{about.settingsDatabaseType}}</div>
     </div>
 
 
-
+  </div>
+  </div>
+  <div class="col-md-4">
+    <h2>News</h2>
+    <div [innerHTML]="newsHtml"></div>
+  </div>
   </div>
 </div>
