@@ -4,8 +4,8 @@
         "UsernamePlaceholder": "Brukernavn",
         "PasswordPlaceholder": "Passord",
         "RememberMe": "Husk meg",
-        "SignInWith": "Sign in with {{appName}}",
-        "SignInWithPlex": "Sign in with Plex",
+        "SignInWith": "Logg inn med {{appName}}",
+        "SignInWithPlex": "Logg inn med Plex",
         "ForgottenPassword": "Glemt passord?",
         "Errors": {
             "IncorrectCredentials": "Ugyldig brukernavn eller passord"
@@ -26,11 +26,11 @@
         "Denied": "Avslått",
         "Approve": "Godkjenn",
         "PartlyAvailable": "Delvis tilgjengelig",
-        "ViewDetails": "View Details",
+        "ViewDetails": "Vis detaljer",
         "Errors": {
             "Validation": "Kontroller de angitte verdiene"
         },
-        "Cancel": "Cancel",
+        "Cancel": "Avbryt",
         "Submit": "Submit"
     },
     "PasswordReset": {
