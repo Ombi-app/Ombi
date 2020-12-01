@@ -4,8 +4,8 @@
         "UsernamePlaceholder": "Nazwa użytkownika",
         "PasswordPlaceholder": "Hasło",
         "RememberMe": "Zapamiętaj mnie",
-        "SignInWith": "Sign in with {{appName}}",
-        "SignInWithPlex": "Sign in with Plex",
+        "SignInWith": "Zaloguj się z {{appName}}",
+        "SignInWithPlex": "Zaloguj się z Plex",
         "ForgottenPassword": "Nie pamiętasz hasła?",
         "Errors": {
             "IncorrectCredentials": "Nieprawidłowa nazwa użytkownika lub hasło"
@@ -30,8 +30,8 @@
         "Errors": {
             "Validation": "Proszę sprawdzić wprowadzone wartości"
         },
-        "Cancel": "Cancel",
-        "Submit": "Submit"
+        "Cancel": "Anuluj",
+        "Submit": "Wyślij"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "Adres e-mail",
@@ -68,17 +68,17 @@
         "ChangeTheme": "Zmień motyw",
         "Calendar": "Kalendarz",
         "UserPreferences": "Preferencje",
-        "FeatureSuggestion": "Feature Suggestion",
-        "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
+        "FeatureSuggestion": "Propozycja funkcjonalności",
+        "FeatureSuggestionTooltip": "Masz świetny nowy pomysł? Zaproponuj go tutaj!",
         "Filter": {
             "Movies": "Filmy",
             "TvShows": "Programy TV",
             "Music": "Muzyka",
-            "People": "People"
+            "People": "Osoby"
         },
-        "MorningWelcome": "Good morning!",
-        "AfternoonWelcome": "Good afternoon!",
-        "EveningWelcome": "Good evening!"
+        "MorningWelcome": "Dzień dobry!",
+        "AfternoonWelcome": "Dzień dobry!",
+        "EveningWelcome": "Dobry wieczór!"
     },
     "Search": {
         "Title": "Szukaj",
@@ -124,8 +124,8 @@
         "Title": "Zgłoszenia",
         "Paragraph": "Poniżej znajdują się Twoje i wszystkie inne zgłoszenia, a także ich status akceptacji i pobierania.",
         "MoviesTab": "Filmy",
-        "ArtistName": "Artist",
-        "AlbumName": "Album Name",
+        "ArtistName": "Wykonawca",
+        "AlbumName": "Nazwa albumu",
         "TvTab": "Seriale",
         "MusicTab": "Muzyka",
         "RequestedBy": "Zgłoszone przez",
