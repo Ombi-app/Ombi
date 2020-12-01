@@ -64,6 +64,8 @@ namespace Ombi
 
                 if (migrate)
                 {
+                    Console.WriteLine("Migrate in progress...");
+                    
                     var migrationTasks = new List<Task>();
                     var externalDb = provider.GetRequiredService<ExternalContext>();
                     var ombiDb = provider.GetRequiredService<OmbiContext>();
@@ -73,6 +75,7 @@ namespace Ombi
 
                     Task.WaitAll(migrationTasks.ToArray());
 
+                    Console.WriteLine("Migrate complete.");
                     Environment.Exit(0);
                 }
 
