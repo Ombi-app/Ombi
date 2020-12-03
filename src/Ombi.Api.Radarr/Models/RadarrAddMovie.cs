@@ -7,7 +7,7 @@ namespace Ombi.Api.Radarr.Models
 
         public RadarrAddMovieResponse()
         {
-            images = new List<string>();
+            images = new List<Image>();
         }
         public RadarrError Error { get; set; }
         public RadarrAddOptions addOptions { get; set; }
@@ -16,7 +16,7 @@ namespace Ombi.Api.Radarr.Models
         public int qualityProfileId { get; set; }
         public bool monitored { get; set; }
         public int tmdbId { get; set; }
-        public List<string> images { get; set; }
+        public List<Image> images { get; set; }
         public string titleSlug { get; set; }
         public int year { get; set; }
         public string minimumAvailability { get; set; }
