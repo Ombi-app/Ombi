@@ -52,23 +52,23 @@
         "Discover": "Descobrir",
         "Search": "Pesquisar",
         "Requests": "Solicitações",
-        "UserManagement": "Gerenciamento de usuários",
+        "UserManagement": "Gerenciamento de Usuários",
         "Issues": "Problemas",
         "Vote": "Votar",
         "Donate": "Fazer uma doação!",
         "DonateLibraryMaintainer": "Doar para o Dono da Biblioteca",
-        "DonateTooltip": "É assim que eu convenço a minha mulher a deixar-me passar o meu tempo livre a desenvolver o Ombi ;)",
+        "DonateTooltip": "É assim que convenço minha esposa a me deixar passar o meu tempo livre desenvolvendo o Ombi ;)",
         "UpdateAvailableTooltip": "Atualização Disponível!",
         "Settings": "Configurações",
-        "Welcome": "Bem-vindo, {{username}}",
-        "UpdateDetails": "Detalhes da Actualização",
+        "Welcome": "Bem-vindo(a), {{username}}",
+        "UpdateDetails": "Detalhes sobre a atualização",
         "Logout": "Sair",
-        "OpenMobileApp": "Abrir app móvel",
-        "RecentlyAdded": "Recentemente adicionado",
-        "ChangeTheme": "Alterar tema",
+        "OpenMobileApp": "Abrir no app do celular",
+        "RecentlyAdded": "Adicionados recentemente",
+        "ChangeTheme": "Trocar Tema",
         "Calendar": "Calendário",
         "UserPreferences": "Preferências",
-        "FeatureSuggestion": "Sugerir recurso",
+        "FeatureSuggestion": "Sugerir Recurso",
         "FeatureSuggestionTooltip": "Teve uma ótima idéia? Sugira aqui!",
         "Filter": {
             "Movies": "Filmes",
@@ -82,7 +82,7 @@
     },
     "Search": {
         "Title": "Pesquisar",
-        "Paragraph": "Quer assistir a algo que não está disponível? Não há problema, basta procurar abaixo e solicitar!",
+        "Paragraph": "Quer assistir a algo que não está disponível? Sem problemas, basta pesquisar abaixo e solicitar!",
         "MoviesTab": "Filmes",
         "TvTab": "Séries",
         "MusicTab": "Músicas",
@@ -92,7 +92,7 @@
         "TheatricalRelease": "Lançamento nos Cinemas: {{date}}",
         "ViewOnPlex": "Assistir no Plex",
         "ViewOnEmby": "Assistir no Emby",
-        "RequestAdded": "Pedido de {{title}} foi adicionado com sucesso",
+        "RequestAdded": "Solicitação de {{title}} foi adicionada com sucesso",
         "Similar": "Semelhante",
         "Refine": "Filtro",
         "SearchBarPlaceholder": "Digite aqui para pesquisar",
@@ -122,7 +122,7 @@
     },
     "Requests": {
         "Title": "Solicitações",
-        "Paragraph": "Abaixo, você pode ver o seu e todos os outros pedidos, bem como o seu download e status de aprovação.",
+        "Paragraph": "Abaixo, você pode ver todas solicitações, bem como seu download e status de aprovação.",
         "MoviesTab": "Filmes",
         "ArtistName": "Artista",
         "AlbumName": "Nome do álbum",
@@ -162,10 +162,10 @@
         "SortStatusDesc": "Status ▼",
         "Remaining": {
             "Quota": "{{remaining}}/{{total}} solicitações restantes",
-            "NextDays": "Outro pedido será adicionado em {{time}} dias",
-            "NextHours": "Outro pedido será adicionado em {{time}} horas",
-            "NextMinutes": "Outro pedido será adicionado em {{time}} minutos",
-            "NextMinute": "Outro pedido será adicionado em {{time}} minuto"
+            "NextDays": "Outra solicitação será adicionada em {{time}} dias",
+            "NextHours": "Outra solicitação será adicionada em {{time}} horas",
+            "NextMinutes": "Outra solicitação será adicionada em {{time}} minutos",
+            "NextMinute": "Outra solicitação será adicionada em {{time}} minuto"
         },
         "AllRequests": "Todas solicitações",
         "PendingRequests": "Solicitações pendentes",
@@ -223,7 +223,7 @@
         "PendingApproval": "Aprovação Pendente"
     },
     "UserManagment": {
-        "TvRemaining": "Tv: {{remaining}}/{{total}} restantes",
+        "TvRemaining": "Séries: {{remaining}}/{{total}} restantes",
         "MovieRemaining": "Filmes: {{remaining}}/{{total}} restantes",
         "MusicRemaining": "Música: {{remaining}}/{{total}} restantes",
         "TvDue": "TV: {{date}}",
@@ -265,7 +265,7 @@
         "Budget": "Orçamento",
         "Keywords": "Palavras/Tags",
         "Casts": {
-            "CastTitle": "Projectar"
+            "CastTitle": "Elenco"
         },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Isto irá pedir todas as temporadas da série",
