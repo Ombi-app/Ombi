@@ -2,13 +2,13 @@
     "Login": {
         "SignInButton": "Iniciar sessão",
         "UsernamePlaceholder": "Nome de usuário",
-        "PasswordPlaceholder": "Palavra-passe",
-        "RememberMe": "Guardar a minha autênticação",
+        "PasswordPlaceholder": "Senha",
+        "RememberMe": "Lembrar de Mim",
         "SignInWith": "Entre com {{appName}}",
         "SignInWithPlex": "Entre com Plex",
-        "ForgottenPassword": "Esqueceu-se da sua palavra-passe?",
+        "ForgottenPassword": "Esqueceu sua senha?",
         "Errors": {
-            "IncorrectCredentials": "Nome de usuário ou palavra-passe incorretos"
+            "IncorrectCredentials": "Nome de usuário ou senha incorretos"
         }
     },
     "Common": {
@@ -17,16 +17,16 @@
         "PartiallyAvailable": "Parcialmente Disponível",
         "Monitored": "Monitorado",
         "NotAvailable": "Não Disponível",
-        "ProcessingRequest": "A processar o pedido",
+        "ProcessingRequest": "Solicitações em andamento",
         "PendingApproval": "Aprovação Pendente",
-        "RequestDenied": "Pedido negado",
-        "NotRequested": "Não pedido",
-        "Requested": "Pedido",
-        "Request": "Pedir",
+        "RequestDenied": "Solicitação Negada",
+        "NotRequested": "Não Solicitado",
+        "Requested": "Solicitado",
+        "Request": "Solicitar",
         "Denied": "Negado",
         "Approve": "Aprovar",
         "PartlyAvailable": "Parcialmente Disponível",
-        "ViewDetails": "Ver detalhes",
+        "ViewDetails": "Ver Detalhes",
         "Errors": {
             "Validation": "Por favor, verifique os dados inseridos"
         },
@@ -35,25 +35,25 @@
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "Endereço de e-mail",
-        "ResetPasswordButton": "Redefinir palavra-passe"
+        "ResetPasswordButton": "Redefinir Senha"
     },
     "LandingPage": {
         "OnlineHeading": "Online Agora",
-        "OnlineParagraph": "O servidor de media está actualmente online",
+        "OnlineParagraph": "O servidor de mídia está atualmente online",
         "PartiallyOnlineHeading": "Parcialmente Online",
-        "PartiallyOnlineParagraph": "O servidor de media está parcialmente online.",
+        "PartiallyOnlineParagraph": "O servidor de mídia está parcialmente online.",
         "MultipleServersUnavailable": "Existem {{serversUnavailable}} servidores offline de um total de {{totalServers}}.",
         "SingleServerUnavailable": "Existe {{serversUnavailable}} servidor offline de um total de {{totalServers}}.",
-        "OfflineHeading": "Actualmente Offline",
-        "OfflineParagraph": "O servidor de media está actualmente offline.",
-        "CheckPageForUpdates": "Verifique esta página para acompanhar as atualizações do site."
+        "OfflineHeading": "Atualmente offline",
+        "OfflineParagraph": "O servidor de mídia está atualmente offline.",
+        "CheckPageForUpdates": "Acesse esta página para acompanhar as atualizações do site."
     },
     "NavigationBar": {
         "Discover": "Descobrir",
         "Search": "Pesquisar",
-        "Requests": "Pedidos",
-        "UserManagement": "Gestor de utilizadores",
-        "Issues": "Incidentes",
+        "Requests": "Solicitações",
+        "UserManagement": "Gerenciamento de usuários",
+        "Issues": "Problemas",
         "Vote": "Votar",
         "Donate": "Fazer uma doação!",
         "DonateLibraryMaintainer": "Doar para o Dono da Biblioteca",
@@ -172,14 +172,14 @@
         "ProcessingRequests": "Solicitações em andamento",
         "AvailableRequests": "Solicitação Disponíveis",
         "DeniedRequests": "Solicitações Negadas",
-        "RequestsToDisplay": "Requests to display",
+        "RequestsToDisplay": "Itens por página",
         "RequestsTitle": "Título",
         "Details": "Detalhes",
-        "Options": "Options",
+        "Options": "Opções",
         "RequestPanel": {
-            "Delete": "Delete Request",
-            "Approve": "Approve Request",
-            "ChangeAvailability": "Mark Available"
+            "Delete": "Apagar Solicitação",
+            "Approve": "Aprovar Solicitação",
+            "ChangeAvailability": "Marcar Como Disponível"
         }
     },
     "Issues": {
@@ -201,19 +201,19 @@
         "WriteMessagePlaceholder": "Escreva sua mensagem aqui...",
         "ReportedBy": "Reportado por",
         "IssueDialog": {
-            "Title": "Report an issue",
-            "DescriptionPlaceholder": "Please describe the issue",
-            "TitlePlaceholder": "Short title of your issue",
-            "SelectCategory": "Select Category",
-            "IssueCreated": "Issue has been created"
+            "Title": "Reportar um problema",
+            "DescriptionPlaceholder": "Por favor, descreva o problema",
+            "TitlePlaceholder": "Título curto para o problema",
+            "SelectCategory": "Selecione Uma Categoria",
+            "IssueCreated": "Um registro de problema foi criado"
         },
-        "Outstanding": "There are outstanding issues",
-        "ResolvedDate": "Resolved date",
-        "CreatedDate": "Raised on",
-        "MarkedAsResolved": "This issue has now been marked as resolved!",
-        "MarkedAsInProgress": "This issue has now been marked as in progress!",
-        "Delete": "Delete issue",
-        "DeletedIssue": "Issue has been deleted"
+        "Outstanding": "Existem problemas pendentes",
+        "ResolvedDate": "Data da resolução",
+        "CreatedDate": "Notificado em",
+        "MarkedAsResolved": "Esse problema foi marcado como resolvido!",
+        "MarkedAsInProgress": "Esse problema foi marcado como em andamento!",
+        "Delete": "Apagar problema",
+        "DeletedIssue": "O problema foi apagado"
     },
     "Filter": {
         "ClearFilter": "Limpar Filtro",
@@ -239,31 +239,31 @@
         "RecommendationsTitle": "Recomendações",
         "SimilarTitle": "Semelhante",
         "VideosTitle": "Vídeos",
-        "AlbumsTitle": "Albums",
-        "RequestAllAlbums": "Request All Albums",
-        "ClearSelection": "Clear Selection",
-        "RequestSelectedAlbums": "Request Selected Albums",
-        "ViewCollection": "View Collection",
-        "NotEnoughInfo": "Unfortunately there is not enough information about this show yet!",
-        "AdvancedOptions": "Advanced Options",
-        "QualityProfilesSelect": "Select A Quality Profile",
-        "RootFolderSelect": "Select A Root Folder",
+        "AlbumsTitle": "Álbuns",
+        "RequestAllAlbums": "Solicitar Todos Álbuns",
+        "ClearSelection": "Limpar Seleção",
+        "RequestSelectedAlbums": "Solicitar Álbuns Selecionados",
+        "ViewCollection": "Ver Coleção",
+        "NotEnoughInfo": "Infelizmente ainda não há informação sobre essa série!",
+        "AdvancedOptions": "Opções Avançadas",
+        "QualityProfilesSelect": "Selecione um perfil de qualidade",
+        "RootFolderSelect": "Selecione o diretório raiz",
         "Status": "Status",
         "Availability": "Disponibilidade",
         "RequestStatus": "Estado da solicitação",
-        "Quality": "Quality",
+        "Quality": "Qualidade",
         "RootFolderOverride": "Substituição da pasta raiz",
         "QualityOverride": "Substituição de qualidade",
-        "Genres": "Genres",
+        "Genres": "Gêneros",
         "TheatricalRelease": "Lançamento nos Cinemas",
-        "DigitalRelease": "Digital Release",
-        "UserScore": "User Score",
-        "Votes": "Votes",
-        "Runtime": "Runtime",
-        "Minutes": "{{runtime}} Minutes",
-        "Revenue": "Revenue",
-        "Budget": "Budget",
-        "Keywords": "Keywords/Tags",
+        "DigitalRelease": "Lançamento Digital",
+        "UserScore": "Pontuação do Usuário",
+        "Votes": "Votos",
+        "Runtime": "Tempo de execução",
+        "Minutes": "{{runtime}} Minutos",
+        "Revenue": "Receita",
+        "Budget": "Orçamento",
+        "Keywords": "Palavras/Tags",
         "Casts": {
             "CastTitle": "Projectar"
         },
@@ -278,7 +278,7 @@
         "TrendingTab": "Tendências",
         "UpcomingTab": "Próximo",
         "Movies": "Filmes",
-        "Combined": "Combined",
+        "Combined": "Combinados",
         "Tv": "TV",
         "CardDetails": {
             "Availability": "Disponibilidade",
@@ -295,7 +295,7 @@
     },
     "UserPreferences": {
         "Welcome": "Bem-vindo, {{username}}!",
-        "OmbiLanguage": "Language",
-        "DarkMode": "Dark Mode"
+        "OmbiLanguage": "Idioma",
+        "DarkMode": "Modo Escuro"
     }
 }
