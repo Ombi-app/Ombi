@@ -67,7 +67,7 @@ namespace Ombi.Api.Jellyfin
 
             request.AddJsonBody(body);
 
-            request.AddHeader("X-Jellyfin-Authorization",
+            request.AddHeader("X-Emby-Authorization",
                 $"MediaBrowser Client=\"Ombi\", Device=\"Ombi\", DeviceId=\"v3\", Version=\"v3\"");
             AddHeaders(request, apiKey);
 
