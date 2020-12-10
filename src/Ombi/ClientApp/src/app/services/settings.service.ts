@@ -14,6 +14,7 @@ import {
     IDogNzbSettings,
     IEmailNotificationSettings,
     IEmbySettings,
+    IJellyfinSettings,
     IGotifyNotificationSettings,
     IIssueSettings,
     IJobSettings,
@@ -74,6 +75,14 @@ export class SettingsService extends ServiceHelpers {
 
     public saveEmby(settings: IEmbySettings): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}/Emby/`, JSON.stringify(settings), {headers: this.headers});
+    }
+
+    public getJellyfin(): Observable<IJellyfinSettings> {
+        return this.http.get<IJellyfinSettings>(`${this.url}/Jellyfin/`);
+    }
+
+    public saveJellyfin(settings: IJellyfinSettings): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}/Jellyfin/`, JSON.stringify(settings), {headers: this.headers});
     }
 
     public getPlex(): Observable<IPlexSettings> {

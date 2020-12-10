@@ -10,6 +10,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Api.Emby;
+using Ombi.Api.Jellyfin;
 using Ombi.Api.Github;
 using Ombi.Attributes;
 using Ombi.Core.Engine;
@@ -29,6 +30,7 @@ using Ombi.Extensions;
 using Quartz;
 using Ombi.Schedule.Jobs;
 using Ombi.Schedule.Jobs.Emby;
+using Ombi.Schedule.Jobs.Jellyfin;
 using Ombi.Schedule.Jobs.Sonarr;
 using Ombi.Schedule.Jobs.Lidarr;
 
@@ -48,6 +50,7 @@ namespace Ombi.Controllers.V1
             IMapper mapper,
             INotificationTemplatesRepository templateRepo,
             IEmbyApiFactory embyApi,
+            IJellyfinApiFactory jellyfinApi,
             ICacheService memCache,
             IGithubApi githubApi,
             IRecentlyAddedEngine engine)
@@ -56,6 +59,7 @@ namespace Ombi.Controllers.V1
             Mapper = mapper;
             TemplateRepository = templateRepo;
             _embyApi = embyApi;
+            _jellyfinApi = jellyfinApi;
             _cache = memCache;
             _githubApi = githubApi;
             _recentlyAdded = engine;
@@ -65,6 +69,7 @@ namespace Ombi.Controllers.V1
         private IMapper Mapper { get; }
         private INotificationTemplatesRepository TemplateRepository { get; }
         private readonly IEmbyApiFactory _embyApi;
+        private readonly IJellyfinApiFactory _jellyfinApi;
         private readonly ICacheService _cache;
         private readonly IGithubApi _githubApi;
         private readonly IRecentlyAddedEngine _recentlyAdded;
@@ -230,6 +235,42 @@ namespace Ombi.Controllers.V1
             if (result)
             {
                 await OmbiQuartz.TriggerJob(nameof(IEmbyContentSync), "Emby");
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the Jellyfin Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("jellyfin")]
+        public async Task<JellyfinSettings> JellyfinSettings()
+        {
+            return await Get<JellyfinSettings>();
+        }
+
+        /// <summary>
+        /// Save the Jellyfin settings.
+        /// </summary>
+        /// <param name="jellyfin">The jellyfin.</param>
+        /// <returns></returns>
+        [HttpPost("jellyfin")]
+        public async Task<bool> JellyfinSettings([FromBody]JellyfinSettings jellyfin)
+        {
+            if (jellyfin.Enable)
+            {
+                var client = await _jellyfinApi.CreateClient();
+                foreach (var server in jellyfin.Servers)
+                {
+                    var users = await client.GetUsers(server.FullUri, server.ApiKey);
+                    var admin = users.FirstOrDefault(x => x.Policy.IsAdministrator);
+                    server.AdministratorId = admin?.Id;
+                }
+            }
+            var result = await Save(jellyfin);
+            if (result)
+            {
+                await OmbiQuartz.TriggerJob(nameof(IJellyfinContentSync), "Jellyfin");
             }
             return result;
         }
@@ -566,6 +607,7 @@ namespace Ombi.Controllers.V1
             j.AutomaticUpdater = j.AutomaticUpdater.HasValue() ? j.AutomaticUpdater : JobSettingsHelper.Updater(j);
             j.CouchPotatoSync = j.CouchPotatoSync.HasValue() ? j.CouchPotatoSync : JobSettingsHelper.CouchPotato(j);
             j.EmbyContentSync = j.EmbyContentSync.HasValue() ? j.EmbyContentSync : JobSettingsHelper.EmbyContent(j);
+            j.JellyfinContentSync = j.JellyfinContentSync.HasValue() ? j.JellyfinContentSync : JobSettingsHelper.JellyfinContent(j);
             j.PlexContentSync = j.PlexContentSync.HasValue() ? j.PlexContentSync : JobSettingsHelper.PlexContent(j);
             j.UserImporter = j.UserImporter.HasValue() ? j.UserImporter : JobSettingsHelper.UserImporter(j);
             j.SickRageSync = j.SickRageSync.HasValue() ? j.SickRageSync : JobSettingsHelper.SickRageSync(j);

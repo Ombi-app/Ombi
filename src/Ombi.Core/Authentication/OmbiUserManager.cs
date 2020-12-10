@@ -33,6 +33,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Ombi.Api.Emby;
+using Ombi.Api.Jellyfin;
 using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
 using Ombi.Core.Settings;
@@ -49,18 +50,24 @@ namespace Ombi.Core.Authentication
             IPasswordHasher<OmbiUser> passwordHasher, IEnumerable<IUserValidator<OmbiUser>> userValidators,
             IEnumerable<IPasswordValidator<OmbiUser>> passwordValidators, ILookupNormalizer keyNormalizer,
             IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<OmbiUser>> logger, IPlexApi plexApi,
-            IEmbyApiFactory embyApi, ISettingsService<EmbySettings> embySettings, ISettingsService<AuthenticationSettings> auth)
+            IEmbyApiFactory embyApi, ISettingsService<EmbySettings> embySettings,
+            IJellyfinApiFactory jellyfinApi, ISettingsService<JellyfinSettings> jellyfinSettings,
+            ISettingsService<AuthenticationSettings> auth)
             : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
             _plexApi = plexApi;
             _embyApi = embyApi;
+            _jellyfinApi = jellyfinApi;
             _embySettings = embySettings;
+            _jellyfinSettings = jellyfinSettings;
             _authSettings = auth;
         }
 
         private readonly IPlexApi _plexApi;
         private readonly IEmbyApiFactory _embyApi;
+        private readonly IJellyfinApiFactory _jellyfinApi;
         private readonly ISettingsService<EmbySettings> _embySettings;
+        private readonly ISettingsService<JellyfinSettings> _jellyfinSettings;
         private readonly ISettingsService<AuthenticationSettings> _authSettings;
 
         public override async Task<bool> CheckPasswordAsync(OmbiUser user, string password)
@@ -82,6 +89,10 @@ namespace Ombi.Core.Authentication
             if (user.UserType == UserType.EmbyUser || user.UserType == UserType.EmbyConnectUser)
             {
                 return await CheckEmbyPasswordAsync(user, password);
+            }
+            if (user.UserType == UserType.JellyfinUser)
+            {
+                return await CheckJellyfinPasswordAsync(user, password);
             }
             return false;
         }
@@ -181,6 +192,37 @@ namespace Ombi.Core.Authentication
                 catch (Exception e)
                 {
                     Logger.LogError(e, "Emby Login Failed");
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Sign the user into Jellyfin
+        /// <remarks>We do not check if the user is in the owners "friends" since they must have a local user account to get this far.
+        /// We also have to try and authenticate them with every server, the first server that work we just say it was a success</remarks>
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        private async Task<bool> CheckJellyfinPasswordAsync(OmbiUser user, string password)
+        {
+            var jellyfinSettings = await _jellyfinSettings.GetSettingsAsync();
+            var client = _jellyfinApi.CreateClient(jellyfinSettings);
+
+            foreach (var server in jellyfinSettings.Servers)
+            {
+                try
+                {
+                    var result = await client.LogIn(user.UserName, password, server.ApiKey, server.FullUri);
+                    if (result != null)
+                    {
+                        return true;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e, "Jellyfin Login Failed");
                 }
             }
             return false;

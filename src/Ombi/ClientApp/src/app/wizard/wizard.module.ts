@@ -7,11 +7,13 @@ import { MatStepperModule } from "@angular/material/stepper";
 
 import { CreateAdminComponent } from "./createadmin/createadmin.component";
 import { EmbyComponent } from "./emby/emby.component";
+import { JellyfinComponent } from "./jellyfin/jellyfin.component";
 import { MediaServerComponent } from "./mediaserver/mediaserver.component";
 import { PlexComponent } from "./plex/plex.component";
 import { WelcomeComponent } from "./welcome/welcome.component";
 
 import { EmbyService } from "../services";
+import { JellyfinService } from "../services";
 import { PlexService } from "../services";
 import { IdentityService } from "../services";
 import { PlexOAuthService } from "../services";
@@ -23,6 +25,7 @@ const routes: Routes = [
     { path: "MediaServer", component: MediaServerComponent},
     { path: "Plex", component: PlexComponent},
     { path: "Emby", component: EmbyComponent},
+    { path: "Jellyfin", component: JellyfinComponent},
     { path: "CreateAdmin", component: CreateAdminComponent},
 ];
 @NgModule({
@@ -40,6 +43,7 @@ const routes: Routes = [
         PlexComponent,
         CreateAdminComponent,
         EmbyComponent,
+        JellyfinComponent,
     ],
     exports: [
         RouterModule,
@@ -48,6 +52,7 @@ const routes: Routes = [
         PlexService,
         IdentityService,
         EmbyService,
+        JellyfinService,
         PlexOAuthService,
     ],
 

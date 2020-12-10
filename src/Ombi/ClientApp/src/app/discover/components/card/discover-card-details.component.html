@@ -22,6 +22,10 @@
                             <i matTooltip=" {{'Search.ViewOnEmby' | translate}}"
                                 class="fa fa-play-circle fa-2x grow"></i>
                         </a>
+                        <a *ngIf="movie.jellyfinUrl" class="media-icons" href="{{movie.jellyfinUrl}}" target="_blank">
+                            <i matTooltip=" {{'Search.ViewOnJellyfin' | translate}}"
+                                class="fa fa-play-circle fa-2x grow"></i>
+                        </a>
                     </span>
 
                     <span *ngIf="tv">
@@ -31,6 +35,10 @@
                         </a>
                         <a *ngIf="tv.embyUrl" class="media-icons" href="{{tv.embyUrl}}" target="_blank">
                             <i matTooltip=" {{'Search.ViewOnEmby' | translate}}"
+                                class="fa fa-play-circle fa-2x grow"></i>
+                        </a>
+                        <a *ngIf="tv.jellyfinUrl" class="media-icons" href="{{tv.jellyfinUrl}}" target="_blank">
+                            <i matTooltip=" {{'Search.ViewOnJellyfin' | translate}}"
                                 class="fa fa-play-circle fa-2x grow"></i>
                         </a>
                     </span>
@@ -150,6 +158,9 @@
                     translate}}</a>
                 <a *ngIf="tv.embyUrl" mat-raised-button class="btn-green btn-spacing" href="{{tv.embyUrl}}"
                     target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
+                    translate}}</a>
+                <a *ngIf="tv.jellyfinUrl" mat-raised-button class="btn-green btn-spacing" href="{{tv.jellyfinUrl}}"
+                    target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnJellyfin' |
                     translate}}</a>
             </span>
             <button mat-raised-button class="btn-green btn-spacing" (click)="openDetails()"> {{

@@ -3,14 +3,14 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
-using Ombi.Api.Emby.Models;
-using Ombi.Api.Emby.Models.Media.Tv;
-using Ombi.Api.Emby.Models.Movie;
+using Ombi.Api.Jellyfin.Models;
+using Ombi.Api.Jellyfin.Models.Media.Tv;
+using Ombi.Api.Jellyfin.Models.Movie;
 using Ombi.Helpers;
 
-namespace Ombi.Api.Emby
+namespace Ombi.Api.Jellyfin
 {
-    public class JellyfinApi : IEmbyApi
+    public class JellyfinApi : IJellyfinApi
     {
         public JellyfinApi(IApi api)
         {
@@ -20,27 +20,27 @@ namespace Ombi.Api.Emby
         private IApi Api { get; }
 
         /// <summary>
-        /// Returns all users from the Emby Instance
+        /// Returns all users from the Jellyfin Instance
         /// </summary>
         /// <param name="baseUri"></param>
         /// <param name="apiKey"></param>
-        public async Task<List<EmbyUser>> GetUsers(string baseUri, string apiKey)
+        public async Task<List<JellyfinUser>> GetUsers(string baseUri, string apiKey)
         {
             var request = new Request("users", baseUri, HttpMethod.Get);
 
             AddHeaders(request, apiKey);
-            var obj = await Api.Request<List<EmbyUser>>(request);
+            var obj = await Api.Request<List<JellyfinUser>>(request);
 
             return obj;
         }
 
-        public async Task<EmbySystemInfo> GetSystemInformation(string apiKey, string baseUrl)
+        public async Task<JellyfinSystemInfo> GetSystemInformation(string apiKey, string baseUrl)
         {
             var request = new Request("System/Info", baseUrl, HttpMethod.Get);
 
             AddHeaders(request, apiKey);
 
-            var obj = await Api.Request<EmbySystemInfo>(request);
+            var obj = await Api.Request<JellyfinSystemInfo>(request);
 
             return obj;
         }
@@ -56,7 +56,7 @@ namespace Ombi.Api.Emby
             return obj;
         }
 
-        public async Task<EmbyUser> LogIn(string username, string password, string apiKey, string baseUri)
+        public async Task<JellyfinUser> LogIn(string username, string password, string apiKey, string baseUri)
         {
             var request = new Request("users/authenticatebyname", baseUri, HttpMethod.Post);
             var body = new
@@ -67,15 +67,15 @@ namespace Ombi.Api.Emby
 
             request.AddJsonBody(body);
 
-            request.AddHeader("X-Emby-Authorization",
+            request.AddHeader("X-Jellyfin-Authorization",
                 $"MediaBrowser Client=\"Ombi\", Device=\"Ombi\", DeviceId=\"v3\", Version=\"v3\"");
             AddHeaders(request, apiKey);
 
-            var obj = await Api.Request<EmbyUser>(request);
+            var obj = await Api.Request<JellyfinUser>(request);
             return obj;
         }
 
-        public async Task<EmbyItemContainer<EmbyMovie>> GetCollection(string mediaId, string apiKey, string userId, string baseUrl)
+        public async Task<JellyfinItemContainer<JellyfinMovie>> GetCollection(string mediaId, string apiKey, string userId, string baseUrl)
         {
             var request = new Request($"users/{userId}/items?parentId={mediaId}", baseUrl, HttpMethod.Get);
             AddHeaders(request, apiKey);
@@ -84,22 +84,22 @@ namespace Ombi.Api.Emby
 
             request.AddQueryString("IsVirtualItem", "False");
 
-            return await Api.Request<EmbyItemContainer<EmbyMovie>>(request);
+            return await Api.Request<JellyfinItemContainer<JellyfinMovie>>(request);
         }
 
-        public async Task<EmbyItemContainer<EmbyMovie>> GetAllMovies(string apiKey, int startIndex, int count, string userId, string baseUri)
+        public async Task<JellyfinItemContainer<JellyfinMovie>> GetAllMovies(string apiKey, int startIndex, int count, string userId, string baseUri)
         {
-            return await GetAll<EmbyMovie>("Movie", apiKey, userId, baseUri, true, startIndex, count);
+            return await GetAll<JellyfinMovie>("Movie", apiKey, userId, baseUri, true, startIndex, count);
         }
 
-        public async Task<EmbyItemContainer<EmbyEpisodes>> GetAllEpisodes(string apiKey, int startIndex, int count, string userId, string baseUri)
+        public async Task<JellyfinItemContainer<JellyfinEpisodes>> GetAllEpisodes(string apiKey, int startIndex, int count, string userId, string baseUri)
         {
-            return await GetAll<EmbyEpisodes>("Episode", apiKey, userId, baseUri, false, startIndex, count);
+            return await GetAll<JellyfinEpisodes>("Episode", apiKey, userId, baseUri, false, startIndex, count);
         }
 
-        public async Task<EmbyItemContainer<EmbySeries>> GetAllShows(string apiKey, int startIndex, int count, string userId, string baseUri)
+        public async Task<JellyfinItemContainer<JellyfinSeries>> GetAllShows(string apiKey, int startIndex, int count, string userId, string baseUri)
         {
-            return await GetAll<EmbySeries>("Series", apiKey, userId, baseUri, false, startIndex, count);
+            return await GetAll<JellyfinSeries>("Series", apiKey, userId, baseUri, false, startIndex, count);
         }
 
         public async Task<SeriesInformation> GetSeriesInformation(string mediaId, string apiKey, string userId, string baseUrl)
@@ -126,7 +126,7 @@ namespace Ombi.Api.Emby
             return JsonConvert.DeserializeObject<T>(response);
         }
 
-        private async Task<EmbyItemContainer<T>> GetAll<T>(string type, string apiKey, string userId, string baseUri, bool includeOverview = false)
+        private async Task<JellyfinItemContainer<T>> GetAll<T>(string type, string apiKey, string userId, string baseUri, bool includeOverview = false)
         {
             var request = new Request($"users/{userId}/items", baseUri, HttpMethod.Get);
 
@@ -139,10 +139,10 @@ namespace Ombi.Api.Emby
             AddHeaders(request, apiKey);
 
 
-            var obj = await Api.Request<EmbyItemContainer<T>>(request);
+            var obj = await Api.Request<JellyfinItemContainer<T>>(request);
             return obj;
         }
-        private async Task<EmbyItemContainer<T>> GetAll<T>(string type, string apiKey, string userId, string baseUri, bool includeOverview, int startIndex, int count)
+        private async Task<JellyfinItemContainer<T>> GetAll<T>(string type, string apiKey, string userId, string baseUri, bool includeOverview, int startIndex, int count)
         {
             var request = new Request($"users/{userId}/items", baseUri, HttpMethod.Get);
 
@@ -157,7 +157,7 @@ namespace Ombi.Api.Emby
             AddHeaders(request, apiKey);
 
 
-            var obj = await Api.Request<EmbyItemContainer<T>>(request);
+            var obj = await Api.Request<JellyfinItemContainer<T>>(request);
             return obj;
         }
 
@@ -172,7 +172,7 @@ namespace Ombi.Api.Emby
             req.AddHeader("Device", "Ombi");
         }
 
-        public Task<EmbyConnectUser> LoginConnectUser(string username, string password)
+        public Task<JellyfinConnectUser> LoginConnectUser(string username, string password)
         {
             throw new System.NotImplementedException();
         }

@@ -39,6 +39,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Schedule", "Ombi.Sched
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Emby", "Ombi.Api.Emby\Ombi.Api.Emby.csproj", "{08FF107D-31E1-470D-AF86-E09B015CEE06}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Jellyfin", "Ombi.Api.Jellyfin\Ombi.Api.Jellyfin.csproj", "{08FF107D-31E1-470D-AF86-E09B015CEE06}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Sonarr", "Ombi.Api.Sonarr\Ombi.Api.Sonarr.csproj", "{CFB5E008-D0D0-43C0-AA06-89E49D17F384}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6F42AB98-9196-44C4-B888-D5E409F415A1}"

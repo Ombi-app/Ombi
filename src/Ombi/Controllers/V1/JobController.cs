@@ -6,6 +6,7 @@ using Ombi.Attributes;
 using Ombi.Helpers;
 using Ombi.Schedule.Jobs;
 using Ombi.Schedule.Jobs.Emby;
+using Ombi.Schedule.Jobs.Jellyfin;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Jobs.Radarr;
@@ -92,13 +93,13 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
-        /// Runs the Emby User importer
+        /// Runs the Jellyfin User importer
         /// </summary>
         /// <returns></returns>
         [HttpPost("embyuserimporter")]
-        public async Task<bool> EmbyUserImporter()
+        public async Task<bool> JellyfinUserImporter()
         {
-            await OmbiQuartz.TriggerJob(nameof(IEmbyUserImporter), "Emby");
+            await OmbiQuartz.TriggerJob(nameof(IJellyfinUserImporter), "Jellyfin");
             return true;
         }
 
@@ -132,6 +133,17 @@ namespace Ombi.Controllers.V1
         public async Task<bool> StartEmbyContentCacher()
         {
             await OmbiQuartz.TriggerJob(nameof(IEmbyContentSync), "Emby");
+            return true;
+        }
+
+        /// <summary>
+        /// Runs the Jellyfin Content Cacher
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("jellyfincontentcacher")]
+        public async Task<bool> StartJellyfinContentCacher()
+        {
+            await OmbiQuartz.TriggerJob(nameof(IJellyfinContentSync), "Jellyfin");
             return true;
         }
 

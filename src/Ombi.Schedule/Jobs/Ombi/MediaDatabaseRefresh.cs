@@ -5,6 +5,7 @@ using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Schedule.Jobs.Emby;
+using Ombi.Schedule.Jobs.Jellyfin;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Store.Repository;
 using Quartz;
@@ -14,12 +15,13 @@ namespace Ombi.Schedule.Jobs.Ombi
     public class MediaDatabaseRefresh : IMediaDatabaseRefresh
     {
         public MediaDatabaseRefresh(ISettingsService<PlexSettings> s, ILogger<MediaDatabaseRefresh> log,
-            IPlexContentRepository plexRepo, IEmbyContentRepository embyRepo)
+            IPlexContentRepository plexRepo, IEmbyContentRepository embyRepo, IJellyfinContentRepository jellyfinRepo)
         {
             _settings = s;
             _log = log;
             _plexRepo = plexRepo;
             _embyRepo = embyRepo;
+            _jellyfinRepo = jellyfinRepo;
             _settings.ClearCache();
         }
 
@@ -27,6 +29,7 @@ namespace Ombi.Schedule.Jobs.Ombi
         private readonly ILogger _log;
         private readonly IPlexContentRepository _plexRepo;
         private readonly IEmbyContentRepository _embyRepo;
+        private readonly IJellyfinContentRepository _jellyfinRepo;
 
         public async Task Execute(IJobExecutionContext job)
         {
@@ -34,6 +37,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             {
                 await RemovePlexData();
                 await RemoveEmbyData();
+                await RemoveJellyfinData();
             }
             catch (Exception e)
             {
@@ -61,6 +65,28 @@ namespace Ombi.Schedule.Jobs.Ombi
             catch (Exception e)
             {
                 _log.LogError(LoggingEvents.MediaReferesh, e, "Refreshing Emby Data Failed");
+            }
+        }
+
+        private async Task RemoveJellyfinData()
+        {
+            try
+            {
+                var s = await _settings.GetSettingsAsync();
+                if (!s.Enable)
+                {
+                    return;
+                }
+                const string episodeSQL = "DELETE FROM JellyfinEpisode";
+                const string mainSql = "DELETE FROM JellyfinContent";
+                await _jellyfinRepo.ExecuteSql(episodeSQL);
+                await _jellyfinRepo.ExecuteSql(mainSql);
+
+                await OmbiQuartz.TriggerJob(nameof(IJellyfinContentSync), "Jellyfin");
+            }
+            catch (Exception e)
+            {
+                _log.LogError(LoggingEvents.MediaReferesh, e, "Refreshing Jellyfin Data Failed");
             }
         }
 

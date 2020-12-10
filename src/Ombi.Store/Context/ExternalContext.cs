@@ -30,6 +30,8 @@ namespace Ombi.Store.Context
         public DbSet<CouchPotatoCache> CouchPotatoCache { get; set; }
         public DbSet<EmbyContent> EmbyContent { get; set; }
         public DbSet<EmbyEpisode> EmbyEpisode { get; set; }
+        public DbSet<JellyfinEpisode> JellyfinEpisode { get; set; }
+        public DbSet<JellyfinContent> JellyfinContent { get; set; }
         
         public DbSet<SonarrCache> SonarrCache { get; set; }
         public DbSet<LidarrArtistCache> LidarrArtistCache { get; set; }
@@ -49,6 +51,12 @@ namespace Ombi.Store.Context
                 .HasOne(p => p.Series)
                 .WithMany(b => b.Episodes)
                 .HasPrincipalKey(x => x.EmbyId)
+                .HasForeignKey(p => p.ParentId);
+
+            builder.Entity<JellyfinEpisode>()
+                .HasOne(p => p.Series)
+                .WithMany(b => b.Episodes)
+                .HasPrincipalKey(x => x.JellyfinId)
                 .HasForeignKey(p => p.ParentId);
 
             base.OnModelCreating(builder);

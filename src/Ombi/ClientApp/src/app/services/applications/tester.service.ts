@@ -11,6 +11,7 @@ import {
     IDiscordNotifcationSettings,
     IEmailNotificationSettings,
     IEmbyServer,
+    IJellyfinServer,
     IGotifyNotificationSettings,
     ILidarrSettings,
     IMattermostNotifcationSettings,
@@ -76,6 +77,10 @@ export class TesterService extends ServiceHelpers {
 
     public embyTest(settings: IEmbyServer): Observable<boolean> {
         return this.http.post<boolean>(`${this.url}emby`, JSON.stringify(settings),  {headers: this.headers});
+    }
+
+    public jellyfinTest(settings: IJellyfinServer): Observable<boolean> {
+        return this.http.post<boolean>(`${this.url}jellyfin`, JSON.stringify(settings),  {headers: this.headers});
     }
 
     public radarrTest(settings: IRadarrSettings): Observable<boolean> {

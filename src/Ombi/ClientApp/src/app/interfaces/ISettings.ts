@@ -52,7 +52,26 @@ export interface IEmbyServer extends IExternalSettings {
 export interface IPublicInfo {
   id: string;
   serverName: string;
+}
+
+export interface IJellyfinSettings extends ISettings {
+  enable: boolean;
   isJellyfin: boolean;
+  servers: IJellyfinServer[];
+}
+
+export interface IJellyfinServer extends IExternalSettings {
+  serverId: string;
+  name: string;
+  apiKey: string;
+  administratorId: string;
+  enableEpisodeSearching: boolean;
+  serverHostname: string;
+}
+
+export interface IPublicInfo {
+  id: string;
+  serverName: string;
 }
 
 export interface IPlexSettings extends ISettings {
@@ -141,6 +160,7 @@ export interface ICustomizationSettings extends ISettings {
 
 export interface IJobSettings {
   embyContentSync: string;
+  jellyfinContentSync: string;
   sonarrSync: string;
   radarrSync: string;
   plexContentSync: string;
@@ -187,11 +207,13 @@ export interface IUserManagementSettings extends ISettings {
   importPlexUsers: boolean;
   importPlexAdmin: boolean;
   importEmbyUsers: boolean;
+  importJellyfinUsers: boolean;
   defaultRoles: string[];
   movieRequestLimit: number;
   episodeRequestLimit: number;
   bannedPlexUserIds: string[];
   bannedEmbyUserIds: string[];
+  bannedJellyfinUserIds: string[];
 }
 
 export interface IAbout {

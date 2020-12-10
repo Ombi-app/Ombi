@@ -79,6 +79,13 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="jellyfinContentSync" class="control-label">Jellyfin Sync</label>
+                        <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('jellyfinContentSync').hasError('required')}" id="jellyfinContentSync" name="jellyfinContentSync" formControlName="jellyfinContentSync">
+                        <small *ngIf="form.get('jellyfinContentSync').hasError('required')" class="error-text">The Jellyfin Sync is required</small>
+                        <button type="button" class="btn btn-sm btn-primary-outline" (click)="testCron(form.get('jellyfinContentSync')?.value)">Test</button>
+                </div>
+
+                <div class="form-group">
                     <label for="userImporter" class="control-label">User Importer</label>
                         <input type="text" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('userImporter').hasError('required')}" id="userImporter" name="userImporter" formControlName="userImporter">
                         <small *ngIf="form.get('userImporter').hasError('required')" class="error-text">The User Importer is required</small>
