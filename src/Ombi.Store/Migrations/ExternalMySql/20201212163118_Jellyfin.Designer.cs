@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Ombi.Store.Context.Sqlite;
+using Ombi.Store.Context.MySql;
 
-namespace Ombi.Store.Migrations.ExternalSqlite
+namespace Ombi.Store.Migrations.ExternalMySql
 {
-    [DbContext(typeof(ExternalSqliteContext))]
+    [DbContext(typeof(ExternalMySqlContext))]
     [Migration("20201212014227_Jellyfin")]
     partial class Jellyfin
     {

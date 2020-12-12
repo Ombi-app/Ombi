@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Ombi.Store.Migrations.ExternalSqlite
+namespace Ombi.Store.Migrations.ExternalMySql
 {
     public partial class Jellyfin : Migration
     {
