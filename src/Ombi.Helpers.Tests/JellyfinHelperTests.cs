@@ -6,7 +6,7 @@ using System.Text;
 namespace Ombi.Helpers.Tests
 {
     [TestFixture]
-    public class EmbyHelperTests
+    public class JellyfinHelperTests
     {
         [TestCaseSource(nameof(UrlData))]
         public string TestUrl(string mediaId, string url, string serverId)
@@ -20,9 +20,9 @@ namespace Ombi.Helpers.Tests
             get
             {
                 var mediaId = 1;
-                yield return new TestCaseData(mediaId.ToString(), "http://google.com", "1").Returns($"http://google.com/web/index.html#!/item?id={mediaId}&serverId=1").SetName("JellyfinHelper_GetMediaUrl_WithCustomDomain_WithoutTrailingSlash");
-                yield return new TestCaseData(mediaId.ToString(), "http://google.com/", "1").Returns($"http://google.com/web/index.html#!/item?id={mediaId}&serverId=1").SetName("JellyfinHelper_GetMediaUrl_WithCustomDomain");
-                yield return new TestCaseData(mediaId.ToString(), "https://google.com/", "1").Returns($"https://google.com/web/index.html#!/item?id={mediaId}&serverId=1").SetName("JellyfinHelper_GetMediaUrl_WithCustomDomain_Https");
+                yield return new TestCaseData(mediaId.ToString(), "http://google.com", "1").Returns($"http://google.com/web/index.html#!/details?id={mediaId}&serverId=1").SetName("JellyfinHelper_GetMediaUrl_WithCustomDomain_WithoutTrailingSlash");
+                yield return new TestCaseData(mediaId.ToString(), "http://google.com/", "1").Returns($"http://google.com/web/index.html#!/details?id={mediaId}&serverId=1").SetName("JellyfinHelper_GetMediaUrl_WithCustomDomain");
+                yield return new TestCaseData(mediaId.ToString(), "https://google.com/", "1").Returns($"https://google.com/web/index.html#!/details?id={mediaId}&serverId=1").SetName("JellyfinHelper_GetMediaUrl_WithCustomDomain_Https");
             }
         }
     }

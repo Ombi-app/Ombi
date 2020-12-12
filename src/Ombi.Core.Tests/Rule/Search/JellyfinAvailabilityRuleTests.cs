@@ -12,25 +12,25 @@ using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Core.Tests.Rule.Search
 {
-    public class EmbyAvailabilityRuleTests
+    public class JellyfinAvailabilityRuleTests
     {
         [SetUp]
         public void Setup()
         {
-            ContextMock = new Mock<IEmbyContentRepository>();
-            SettingsMock = new Mock<ISettingsService<EmbySettings>>();
-            Rule = new EmbyAvailabilityRule(ContextMock.Object, SettingsMock.Object);
+            ContextMock = new Mock<IJellyfinContentRepository>();
+            SettingsMock = new Mock<ISettingsService<JellyfinSettings>>();
+            Rule = new JellyfinAvailabilityRule(ContextMock.Object, SettingsMock.Object);
         }
 
-        private EmbyAvailabilityRule Rule { get; set; }
-        private Mock<IEmbyContentRepository> ContextMock { get; set; }
-        private Mock<ISettingsService<EmbySettings>> SettingsMock { get; set; }
+        private JellyfinAvailabilityRule Rule { get; set; }
+        private Mock<IJellyfinContentRepository> ContextMock { get; set; }
+        private Mock<ISettingsService<JellyfinSettings>> SettingsMock { get; set; }
 
         [Test]
-        public async Task Movie_ShouldBe_Available_WhenFoundInEmby()
+        public async Task Movie_ShouldBe_Available_WhenFoundInJellyfin()
         {
-            SettingsMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new EmbySettings());
-            ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new EmbyContent
+            SettingsMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new JellyfinSettings());
+            ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new JellyfinContent
             {
                 ProviderId = "123"
             });
@@ -47,22 +47,22 @@ namespace Ombi.Core.Tests.Rule.Search
         [Test]
         public async Task Movie_Has_Custom_Url_When_Specified_In_Settings()
         {
-            SettingsMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new EmbySettings
+            SettingsMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new JellyfinSettings
             {
                 Enable = true,
-                Servers = new List<EmbyServers>
+                Servers = new List<JellyfinServers>
                 {
-                    new EmbyServers
+                    new JellyfinServers
                     {
                         ServerHostname = "http://test.com/",
                         ServerId = "8"
                     }
                 }
             });
-            ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new EmbyContent
+            ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new JellyfinContent
             {
                 ProviderId = "123",
-                EmbyId = 1.ToString(),
+                JellyfinId = 1.ToString(),
             });
             var search = new SearchMovieViewModel()
             {
@@ -71,28 +71,28 @@ namespace Ombi.Core.Tests.Rule.Search
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);
-            Assert.That(search.EmbyUrl, Is.EqualTo("http://test.com/web/index.html#!/item?id=1&serverId=8"));
+            Assert.That(search.JellyfinUrl, Is.EqualTo("http://test.com/web/index.html#!/details?id=1&serverId=8"));
         }
 
         [Test]
         public async Task Movie_Uses_Default_Url_When()
         {
-            SettingsMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new EmbySettings
+            SettingsMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new JellyfinSettings
             {
                 Enable = true,
-                Servers = new List<EmbyServers>
+                Servers = new List<JellyfinServers>
                 {
-                    new EmbyServers
+                    new JellyfinServers
                     {
                         ServerHostname = string.Empty,
                         ServerId = "8"
                     }
                 }
             });
-            ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new EmbyContent
+            ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).ReturnsAsync(new JellyfinContent
             {
                 ProviderId = "123",
-                EmbyId = 1.ToString()
+                JellyfinId = 1.ToString()
             });
             var search = new SearchMovieViewModel()
             {
@@ -101,13 +101,12 @@ namespace Ombi.Core.Tests.Rule.Search
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);
-            Assert.That(search.EmbyUrl, Is.EqualTo("https://app.emby.media/web/index.html#!/item?id=1&serverId=8"));
         }
 
         [Test]
-        public async Task Movie_ShouldBe_NotAvailable_WhenNotFoundInEmby()
+        public async Task Movie_ShouldBe_NotAvailable_WhenNotFoundInJellyfin()
         {
-            ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).Returns(Task.FromResult(default(EmbyContent)));
+            ContextMock.Setup(x => x.GetByTheMovieDbId(It.IsAny<string>())).Returns(Task.FromResult(default(JellyfinContent)));
             var search = new SearchMovieViewModel();
             var result = await Rule.Execute(search);
 
