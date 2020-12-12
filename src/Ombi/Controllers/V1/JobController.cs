@@ -93,10 +93,21 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
-        /// Runs the Jellyfin User importer
+        /// Runs the Emby User importer
         /// </summary>
         /// <returns></returns>
         [HttpPost("embyuserimporter")]
+        public async Task<bool> EmbyUserImporter()
+        {
+            await OmbiQuartz.TriggerJob(nameof(IEmbyUserImporter), "Emby");
+            return true;
+        }
+
+        /// <summary>
+        /// Runs the Jellyfin User importer
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("jellyfinuserimporter")]
         public async Task<bool> JellyfinUserImporter()
         {
             await OmbiQuartz.TriggerJob(nameof(IJellyfinUserImporter), "Jellyfin");
