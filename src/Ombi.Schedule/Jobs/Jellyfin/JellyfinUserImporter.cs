@@ -103,20 +103,21 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                     if (existingJellyfinUser == null)
                     {
 
-                        if (!jellyfinUser.ConnectUserName.HasValue() && !jellyfinUser.Name.HasValue())
+                        if (!jellyfinUser.Name.HasValue())
                         {
                             _log.LogInformation("Could not create Jellyfin user since the have no username, JellyfinUserId: {0}", jellyfinUser.Id);
                             continue;
                         }
-                        var isConnectUser = jellyfinUser.ConnectUserName.HasValue();
                         // Create this users
                         var newUser = new OmbiUser
                         {
                             UserName = jellyfinUser.Name,
+                            UserType = UserType.JellyfinUser,
                             ProviderUserId = jellyfinUser.Id,
                             MovieRequestLimit = userManagementSettings.MovieRequestLimit,
                             EpisodeRequestLimit = userManagementSettings.EpisodeRequestLimit
                         };
+                        _log.LogInformation("Creating Jellyfin user {0}", newUser.UserName);
                         var result = await _userManager.CreateAsync(newUser);
                         if (!result.Succeeded)
                         {
