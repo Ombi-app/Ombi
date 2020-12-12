@@ -35,6 +35,8 @@ If running migrations for any db provider other than Sqlite, then ensure the dat
                      ValidAudience = "Ombi",
     ```
 
+    *WARNING*: Don't forget to undo this before building Ombi, or things will be broken!
+
 1. List the available `dbcontext`s, and select the one that matches the database your fields will go in:
 
     ```
