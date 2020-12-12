@@ -21,7 +21,7 @@ If running migrations for any db provider other than Sqlite, then ensure the dat
     dotnet add package Microsoft.EntityFrameworkCore.Design
     ```
 
-1. For some reason, the `StartupSingleton.Instance.SecurityKey` in `src/Ombi/Extensions/StartupExtensions.cs` is invalid when running `otnet ef migrations add` so we must fix it; apply this patch which seems to do the job:
+1. For some reason, the `StartupSingleton.Instance.SecurityKey` in `src/Ombi/Extensions/StartupExtensions.cs` is invalid when running `dotnet ef migrations add` so we must fix it; apply this patch which seems to do the job:
 
     ```
     @@ -79,7 +79,7 @@ namespace Ombi

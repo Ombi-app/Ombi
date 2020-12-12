@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Ombi.Store.Migrations.OmbiSqlite
+namespace Ombi.Store.Migrations.ExternalSqlite
 {
     public partial class Jellyfin : Migration
     {
