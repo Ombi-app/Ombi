@@ -14,11 +14,15 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    AddedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    JellyfinId = table.Column<string>(type: "TEXT", nullable: false),
-                    ProviderId = table.Column<string>(type: "TEXT", nullable: true),
                     Title = table.Column<string>(type: "TEXT", nullable: true),
-                    Type = table.Column<int>(type: "INTEGER", nullable: false)
+                    ProviderId = table.Column<string>(type: "TEXT", nullable: true),
+                    JellyfinId = table.Column<string>(type: "TEXT", nullable: false),
+                    Type = table.Column<int>(type: "INTEGER", nullable: false),
+                    AddedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ImdbId = table.Column<string>(type: "TEXT", nullable: true),
+                    TheMovieDbId = table.Column<string>(type: "TEXT", nullable: true),
+                    TvDbId = table.Column<string>(type: "TEXT", nullable: true),
+                    Url = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -32,13 +36,16 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    AddedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", nullable: true),
                     JellyfinId = table.Column<string>(type: "TEXT", nullable: true),
                     EpisodeNumber = table.Column<int>(type: "INTEGER", nullable: false),
+                    SeasonNumber = table.Column<int>(type: "INTEGER", nullable: false),
                     ParentId = table.Column<string>(type: "TEXT", nullable: true),
                     ProviderId = table.Column<string>(type: "TEXT", nullable: true),
-                    SeasonNumber = table.Column<int>(type: "INTEGER", nullable: false),
-                    Title = table.Column<string>(type: "TEXT", nullable: true)
+                    AddedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    TvDbId = table.Column<string>(type: "TEXT", nullable: true),
+                    ImdbId = table.Column<string>(type: "TEXT", nullable: true),
+                    TheMovieDbId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
