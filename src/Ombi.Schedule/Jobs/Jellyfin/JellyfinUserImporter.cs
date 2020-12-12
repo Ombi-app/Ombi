@@ -105,7 +105,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
 
                         if (!jellyfinUser.ConnectUserName.HasValue() && !jellyfinUser.Name.HasValue())
                         {
-                            _log.LogInformation("Could not create Jellyfin user since the have no username, PlexUserId: {0}", jellyfinUser.Id);
+                            _log.LogInformation("Could not create Jellyfin user since the have no username, JellyfinUserId: {0}", jellyfinUser.Id);
                             continue;
                         }
                         var isConnectUser = jellyfinUser.ConnectUserName.HasValue();
@@ -114,7 +114,6 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                         {
                             UserName = jellyfinUser.Name,
                             ProviderUserId = jellyfinUser.Id,
-                            Alias = isConnectUser ? jellyfinUser.Name : string.Empty,
                             MovieRequestLimit = userManagementSettings.MovieRequestLimit,
                             EpisodeRequestLimit = userManagementSettings.EpisodeRequestLimit
                         };
