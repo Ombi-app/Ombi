@@ -20,7 +20,6 @@ export class JellyfinComponent implements OnInit {
     public ngOnInit() {
         this.jellyfinSettings = {
             servers: [],
-            isJellyfin: false,
             id: 0,
             enable: true,
         };

@@ -80,7 +80,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
             Api = _apiFactory.CreateClient(settings);
 
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, $"{(settings.IsJellyfin ? "Jellyfin" : "Jellyfin")}  User Importer Started");
+                .SendAsync(NotificationHub.NotificationEvent, $"Jellyfin User Importer Started");
             var allUsers = await _userManager.Users.Where(x => x.UserType == UserType.JellyfinUser).ToListAsync();
             foreach (var server in settings.Servers)
             {

@@ -58,7 +58,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                 {
                     await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                         .SendAsync(NotificationHub.NotificationEvent, "Jellyfin Content Sync Failed");
-                    _logger.LogError(e, "Exception when caching {1} for server {0}", server.Name, jellyfinSettings.IsJellyfin ? "Jellyfin" : "Jellyfin");
+                    _logger.LogError(e, "Exception when caching Jellyfin for server {0}", server.Name);
                 }
             }
 
@@ -145,7 +145,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                                 Title = tvShow.Name,
                                 Type = JellyfinMediaType.Series,
                                 JellyfinId = tvShow.Id,
-                                Url = JellyfinHelper.GetJellyfinMediaUrl(tvShow.Id, server?.ServerId, server.ServerHostname, settings.IsJellyfin),
+                                Url = JellyfinHelper.GetJellyfinMediaUrl(tvShow.Id, server?.ServerId, server.ServerHostname),
                                 AddedAt = DateTime.UtcNow
                             });
                         }

@@ -36,7 +36,6 @@ export interface IUpdateSettings extends ISettings {
 
 export interface IEmbySettings extends ISettings {
   enable: boolean;
-  isJellyfin: boolean;
   servers: IEmbyServer[];
 }
 
@@ -56,7 +55,6 @@ export interface IPublicInfo {
 
 export interface IJellyfinSettings extends ISettings {
   enable: boolean;
-  isJellyfin: boolean;
   servers: IJellyfinServer[];
 }
 

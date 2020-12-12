@@ -70,11 +70,11 @@ namespace Ombi.Core.Rule.Rules.Search
                     var server = s.Servers.FirstOrDefault(x => x.ServerHostname != null);
                     if ((server?.ServerHostname ?? string.Empty).HasValue())
                     {
-                        obj.JellyfinUrl = JellyfinHelper.GetJellyfinMediaUrl(item.JellyfinId, server?.ServerId, server?.ServerHostname, s.IsJellyfin);
+                        obj.JellyfinUrl = JellyfinHelper.GetJellyfinMediaUrl(item.JellyfinId, server?.ServerId, server?.ServerHostname);
                     }
                     else
                     {
-                        obj.JellyfinUrl = JellyfinHelper.GetJellyfinMediaUrl(item.JellyfinId, server?.ServerId, null, s.IsJellyfin);
+                        obj.JellyfinUrl = JellyfinHelper.GetJellyfinMediaUrl(item.JellyfinId, server?.ServerId, null);
                     }
                 }
 

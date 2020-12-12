@@ -70,8 +70,8 @@
                                     <input matInput placeholder="e.g. https://jellyfin.server.com/" [(ngModel)]="server.serverHostname" value="{{server.serverHostname}}" matTooltip="This will be the external address that users will navigate to when they press the 'View On Jellyfin' button">
                                 </mat-form-field>
                                 <small>
-                                    <span *ngIf="server.serverHostname">Current URL: "{{server.serverHostname}}/#!/{{settings.isJellyfin ? ("itemdetails"): ("item/item")}}.html?id=1"</span>
-                                    <span *ngIf="!server.serverHostname">Current URL: "https://app.jellyfin.media/#!/{{settings.isJellyfin ? ("itemdetails"): ("item/item")}}.html?id=1</span>
+                                    <span *ngIf="server.serverHostname">Current URL: "{{server.serverHostname}}/#!/itemdetails.html?id=1"</span>
+                                    <span *ngIf="!server.serverHostname">Current URL: "https://app.jellyfin.media/#!/itemdetails.html?id=1</span>
                                 </small>
                             </div>
 

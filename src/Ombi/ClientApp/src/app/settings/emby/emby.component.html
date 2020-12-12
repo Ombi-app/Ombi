@@ -70,8 +70,8 @@
                                     <input matInput placeholder="e.g. https://jellyfin.server.com/" [(ngModel)]="server.serverHostname" value="{{server.serverHostname}}" matTooltip="This will be the external address that users will navigate to when they press the 'View On Emby' button">
                                 </mat-form-field>
                                 <small>
-                                    <span *ngIf="server.serverHostname">Current URL: "{{server.serverHostname}}/#!/{{settings.isJellyfin ? ("itemdetails"): ("item/item")}}.html?id=1"</span>
-                                    <span *ngIf="!server.serverHostname">Current URL: "https://app.emby.media/#!/{{settings.isJellyfin ? ("itemdetails"): ("item/item")}}.html?id=1</span>
+                                    <span *ngIf="server.serverHostname">Current URL: "{{server.serverHostname}}/#!/item/item.html?id=1"</span>
+                                    <span *ngIf="!server.serverHostname">Current URL: "https://app.emby.media/#!/item/item.html?id=1</span>
                                 </small>
                             </div>
 

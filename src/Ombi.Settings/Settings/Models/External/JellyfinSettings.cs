@@ -6,7 +6,6 @@ namespace Ombi.Core.Settings.Models.External
     public sealed class JellyfinSettings : Ombi.Settings.Settings.Models.Settings
     {
         public bool Enable { get; set; }
-        public bool IsJellyfin { get; set; }
         public List<JellyfinServers> Servers { get; set; } = new List<JellyfinServers>();
     }
 
