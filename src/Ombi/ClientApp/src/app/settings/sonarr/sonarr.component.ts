@@ -140,7 +140,7 @@ export class SonarrComponent implements OnInit {
                 this.languageProfiles.unshift({ name: "Please Select", id: -1 });
 
                 this.langRunning = false;
-                this.notificationService.success("Successfully retrieved the Languge Profiles");
+                this.notificationService.success("Successfully retrieved the Language Profiles");
             });
     }
 
