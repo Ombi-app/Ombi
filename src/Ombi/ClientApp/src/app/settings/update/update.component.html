@@ -4,85 +4,87 @@
 <div *ngIf="form" class="small-middle-container">
     <fieldset>
         <legend>Update Settings</legend>
-        <div class="form-group"  style="float: right">
-            <div *ngIf="updateAvailable">
-                <button (click)="update()" [disabled]="!enableUpdateButton" class="btn btn-success-outline">Update</button>
-            </div>
-            <div *ngIf="!updateAvailable">
-                <button (click)="checkForUpdate()" class="btn btn-primary-outline">Check For Update</button>
-            </div>
+        <div class="md-form-field" style="margin-top:1em">
+            <div *ngIf="updateAvailable"><button mat-raised-button (click)="update()" [disabled]="!enableUpdateButton" class="btn btn-success-outline">Update</button></div>
+            <div *ngIf="!updateAvailable"><button mat-raised-button (click)="checkForUpdate()" class="btn btn-primary-outline">Check For Update</button></div>
         </div>
-        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:5%;">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" id="autoUpdateEnabled" formControlName="autoUpdateEnabled">
-                        <label for="autoUpdateEnabled">Enable Automatic Update</label>
-                    </div>
+        <div class="md-form-field" style="margin-top:1em"></div>
+        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
+            <div class="md-form-field">
+                    <mat-slide-toggle id="autoUpdateEnabled" formControlName="autoUpdateEnabled">
+                        <mat-mat-label for="autoUpdateEnabled">Enable Automatic Update</mat-mat-label>
+                    </mat-slide-toggle>
                 </div>                
-                <!-- <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" id="testMode" formControlName="testMode">
-                        <label for="testMode">Test Mode</label>
+                <!-- <div class="md-form-field">
+                    <mat-slide-toggle id="testMode" formControlName="testMode">
+                        <mat-label for="testMode">Test Mode</mat-label>
                     </div>
                 </div> -->
-                <div class="form-group" *ngIf="isWindows">
-                    <div class="checkbox">
-                        <input type="checkbox" id="windowsService" formControlName="windowsService">
-                        <label for="windowsService">Running as a Windows Service</label>
-                    </div>
+                <div class="md-form-field" *ngIf="isWindows">
+                    <mat-slide-toggle id="windowsService" formControlName="windowsService">
+                        <mat-label for="windowsService">Running as a Windows Service</mat-label>
+                    </mat-slide-toggle>
                 </div>
                 
-                <div class="form-group" *ngIf="!form.value.windowsService">
-                    <div class="checkbox">
-                        <input type="checkbox" id="useScript" formControlName="useScript">
-                        <label for="useScript">Use your own updater script</label>
-                    </div>
+                <div class="md-form-field" *ngIf="!form.value.windowsService">
+                    <mat-slide-toggle id="useScript" formControlName="useScript">
+                        <mat-label for="useScript">Use your own updater script</mat-label>
+                    </mat-slide-toggle>
                 </div>
-                
+                <div class="md-form-field" style="margin-top:1em"></div>
                 
                 <div *ngIf="form.value.windowsService">
-                    <div class="form-group">
-                        <label for="windowsServiceName" class="control-label">Windows Service Name</label>
-                        <input type="text" class="form-control form-control-custom " id="windowsServiceName" name="windowsServiceName" formControlName="windowsServiceName">
+                    <div class="md-form-field textEntry">
+                        <mat-form-field appearance="outline" floatLabel=always><mat-label for="windowsServiceName" class="control-mat-label">Windows Service Name</mat-label>
+                        <input matInput id="windowsServiceName" name="windowsServiceName" formControlName="windowsServiceName">
+                    </mat-form-field>
                     </div>
                 </div>
 
 
                 <div [hidden]="!useScript || form.value.windowsService">
                     <small>For information how to use this, please press the wiki button at the top of the page</small>
-                    <div class="form-group">
-                        <label for="scriptLocation" class="control-label">Script Path</label>
-                        <input type="text" class="form-control form-control-custom " id="scriptLocation" name="scriptLocation" formControlName="scriptLocation">
+                    <div class="md-form-field textEntry">
+                        <mat-form-field appearance="outline" floatLabel=always>
+                        <mat-label for="scriptLocation" class="control-mat-label">Script Path</mat-label>
+                        <input matInput id="scriptLocation" name="scriptLocation" formControlName="scriptLocation">
+                        </mat-form-field>
                     </div>
                 </div>
 
                 
                 <div [hidden]="useScript || form.value.windowsService">
                 <small >By default the process name is Ombi, but this could be different for your system. We need to know the process name so we can kill that process to update the files.</small>
-                    <div class="form-group">
-                        <label for="processName">Ombi Process Name</label>
-                        <input type="text" id="processName" class="form-control form-control-custom" placeholder="Ombi" formControlName="processName">
+                    <div class="md-form-field textEntry">
+                        <mat-form-field appearance="outline" floatLabel=always>
+                        <mat-label for="processName">Ombi Process Name</mat-label>
+                        <input matInput id="processName" placeholder="Ombi" formControlName="processName">
+                        </mat-form-field>
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <div>
-                        <button type="submit" class="btn btn-primary-outline ">Submit</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6" [hidden]="useScript" *ngIf="isWindows">
+
+            
+            <div class="md-form-field" [hidden]="useScript" *ngIf="isWindows">
                 <small>If you are getting any permissions issues, you can specify a user for the update process to run under.</small>
 
-                <div class="form-group">
-                    <label for="username" class="control-label">Username</label>
-                    <input type="text" class="form-control form-control-custom " id="username" name="username" formControlName="username">
+                <div class="md-form-field textEntry">
+                    <mat-form-field appearance="outline" floatLabel=always>
+                    <mat-label for="username" class="control-mat-label">Username</mat-label>
+                    <input matInput id="username" name="username" formControlName="username">
+                    </mat-form-field>
                 </div>
 
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" class="form-control form-control-custom" formControlName="password">
+                <div class="md-form-field textEntry">
+                    <mat-form-field appearance="outline" floatLabel=always>
+                    <mat-label for="password">Password</mat-label>
+                    <input matInput type="password" id="password" formControlName="password">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="md-form-field" style="margin-top:1em;">
+                <div>
+                    <button mat-raised-button type="submit" color="primary" [disabled]="form.invalid" class="mat-focus-indicator mat-stroked-button accent mat-accent mat-raised-button mat-button-base" ng-reflect-disabled="false"><span class="mat-button-wrapper">Submit</span><div matripple="" class="mat-ripple mat-button-ripple" ng-reflect-disabled="false" ng-reflect-centered="false" ng-reflect-trigger="[object HTMLButtonElement]"></div><div class="mat-button-focus-overlay"></div></button>
                 </div>
             </div>
         </form>
