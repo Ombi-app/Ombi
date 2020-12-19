@@ -7,7 +7,7 @@
     <button type="button" style="float:right;" mat-raised-button color="primary" (click)="showBulkEdit = !showBulkEdit" [disabled]="this.selection.selected.length <= 0">Bulk Edit</button>
 
   </div>
-  <div class="content">
+  <div class="content" >
       <table mat-table *ngIf="dataSource" [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
         <ng-container matColumnDef="select">

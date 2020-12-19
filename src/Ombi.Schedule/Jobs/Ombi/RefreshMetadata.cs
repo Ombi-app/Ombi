@@ -155,7 +155,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 if (!hasImdb)
                 {
-                    var id = await GetImdbId(hasTheMovieDb, hasTvDbId, show.Title, show.TheMovieDbId, show.TvDbId);
+                    var id = await GetImdbId(hasTheMovieDb, hasTvDbId, show.Title, show.TheMovieDbId, show.TvDbId, RequestType.TvShow);
                     show.ImdbId = id;
                     _plexRepo.UpdateWithoutSave(show);
                 }
@@ -189,7 +189,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 if (!hasImdb)
                 {
-                    var id = await GetImdbId(hasTheMovieDb, hasTvDbId, show.Title, show.TheMovieDbId, show.TvDbId);
+                    var id = await GetImdbId(hasTheMovieDb, hasTvDbId, show.Title, show.TheMovieDbId, show.TvDbId, RequestType.TvShow);
                     show.ImdbId = id;
                     _embyRepo.UpdateWithoutSave(show);
                 }
@@ -255,7 +255,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 if (!hasImdb)
                 {
-                    var imdbId = await GetImdbId(hasTheMovieDb, false, movie.Title, movie.TheMovieDbId, string.Empty);
+                    var imdbId = await GetImdbId(hasTheMovieDb, false, movie.Title, movie.TheMovieDbId, string.Empty, RequestType.Movie);
                     movie.ImdbId = imdbId;
                     _plexRepo.UpdateWithoutSave(movie);
                 }
@@ -309,7 +309,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 if (!movie.HasImdb)
                 {
-                    var imdbId = await GetImdbId(movie.HasTheMovieDb, false, movie.Title, movie.TheMovieDbId, string.Empty);
+                    var imdbId = await GetImdbId(movie.HasTheMovieDb, false, movie.Title, movie.TheMovieDbId, string.Empty, RequestType.Movie);
                     movie.ImdbId = imdbId;
                     _embyRepo.UpdateWithoutSave(movie);
                 }
@@ -422,7 +422,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             return string.Empty;
         }
 
-        private async Task<string> GetImdbId(bool hasTheMovieDb, bool hasTvDbId, string title, string theMovieDbId, string tvDbId)
+        private async Task<string> GetImdbId(bool hasTheMovieDb, bool hasTvDbId, string title, string theMovieDbId, string tvDbId, RequestType type)
         {
             _log.LogInformation("The media item {0} does not have a ImdbId, searching for ImdbId", title);
             // Looks like TV Maze does not provide the moviedb id, neither does the TV endpoint on TheMovieDb
@@ -431,13 +431,22 @@ namespace Ombi.Schedule.Jobs.Ombi
                 _log.LogInformation("The show {0} has TheMovieDbId but not ImdbId, searching for ImdbId", title);
                 if (int.TryParse(theMovieDbId, out var id))
                 {
-                    var result = await _movieApi.GetTvExternals(id);
-
-                    return result.imdb_id;
+                    switch (type)
+                    {
+                        case RequestType.TvShow:
+                            var result = await _movieApi.GetTvExternals(id);
+                            return result.imdb_id;
+                        case RequestType.Movie:
+                            var r = await _movieApi.GetMovieInformationWithExtraInfo(id);
+                            return r.ImdbId;
+                        default:
+                            break;
+                    }
+                    
                 }
             }
 
-            if (hasTvDbId)
+            if (hasTvDbId && type == RequestType.TvShow)
             {
                 _log.LogInformation("The show {0} has tvdbid but not ImdbId, searching for ImdbId", title);
                 if (int.TryParse(tvDbId, out var id))

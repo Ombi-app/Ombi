@@ -10,7 +10,7 @@ import { SelectionModel } from "@angular/cdk/collections";
     templateUrl: "./usermanagement.component.html",
     styleUrls: ["./usermanagement.component.scss"],
 })
-export class UserManagementComponent implements OnInit, AfterViewInit {
+export class UserManagementComponent implements OnInit {
 
     public displayedColumns: string[] = ['select', 'username', 'alias', 'email', 'roles', 'remainingRequests',
         'nextRequestDue', 'lastLoggedIn', 'userType', 'actions', 'welcome'];
@@ -32,23 +32,21 @@ export class UserManagementComponent implements OnInit, AfterViewInit {
     constructor(private identityService: IdentityService,
         private settingsService: SettingsService,
         private notificationService: NotificationService,
-        private plexSettings: SettingsService) { }
+        private plexSettings: SettingsService) {
+            this.dataSource = new MatTableDataSource();
+         }
 
 
     public async ngOnInit() {
         this.users = await this.identityService.getUsers().toPromise();
-
         this.dataSource = new MatTableDataSource(this.users);
+        this.dataSource.sort = this.sort;
 
         this.plexSettings.getPlex().subscribe(x => this.plexEnabled = x.enable);
 
         this.identityService.getAllAvailableClaims().subscribe(x => this.availableClaims = x);
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
         this.settingsService.getEmailNotificationSettings().subscribe(x => this.emailSettings = x);
-    }
-
-    public ngAfterViewInit(): void {
-        this.dataSource.sort = this.sort;
     }
 
     public welcomeEmail(user: IUser) {
@@ -103,6 +101,9 @@ export class UserManagementComponent implements OnInit, AfterViewInit {
     }
 
     public isAllSelected() {
+        if (!this.dataSource) {
+            return;
+        }
         const numSelected = this.selection.selected.length;
         const numRows = this.dataSource.data.length;
         return numSelected === numRows;
@@ -110,6 +111,9 @@ export class UserManagementComponent implements OnInit, AfterViewInit {
 
 
     public masterToggle() {
+        if (!this.dataSource) {
+            return;
+        }
         this.isAllSelected() ?
             this.selection.clear() :
             this.dataSource.data.forEach(row => this.selection.select(row));
