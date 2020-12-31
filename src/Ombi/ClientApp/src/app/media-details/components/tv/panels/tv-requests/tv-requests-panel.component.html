@@ -50,7 +50,7 @@
               <span *ngIf="request.denied" id="deniedLabel" [translate]="'Common.Denied'">
               </span>
               <span *ngIf="!request.denied && ep.available" id="availableLabel" [translate]="'Common.Available'"></span>
-              <span *ngIf="!request.denied &&ep.approved && !ep.available" class="label label-info" id="processingRequestLabel"
+              <span *ngIf="!request.denied && ep.approved && !ep.available" class="label label-info" id="processingRequestLabel"
                 [translate]="'Common.ProcessingRequest'"></span>
               <div *ngIf="!request.denied && !ep.approved">
                 <div *ngIf="!ep.available"><span class="label label-warning" id="pendingApprovalLabel" [translate]="'Common.PendingApproval'"></span></div>

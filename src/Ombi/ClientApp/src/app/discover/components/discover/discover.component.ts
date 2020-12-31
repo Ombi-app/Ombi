@@ -20,6 +20,10 @@ import { DOCUMENT } from "@angular/common";
 })
 export class DiscoverComponent implements OnInit {
 
+    public upcomingMovies: IDiscoverCardResult[] = [];
+    public trendingMovies: IDiscoverCardResult[] = [];
+
+
     public discoverResults: IDiscoverCardResult[] = [];
     public movies: ISearchMovieResult[] = [];
     public tvShows: ISearchTvResult[] = [];
@@ -45,6 +49,8 @@ export class DiscoverComponent implements OnInit {
     private mediaTypeStorageKey = "DiscoverOptions";
     private displayOptionsKey = "DiscoverDisplayOptions";
 
+
+
     constructor(private searchService: SearchV2Service,
         private storageService: StorageService,
         @Inject(DOCUMENT) private container: Document) { }
@@ -52,35 +58,38 @@ export class DiscoverComponent implements OnInit {
 
     public async ngOnInit() {
         this.loading()
-        const localDiscoverOptions = +this.storageService.get(this.mediaTypeStorageKey);
-        if (localDiscoverOptions) {
-            this.discoverOptions = DiscoverOption[DiscoverOption[localDiscoverOptions]];
-        }
-        const localDisplayOptions = +this.storageService.get(this.displayOptionsKey);
-        if (localDisplayOptions) {
-            this.displayOption = DisplayOption[DisplayOption[localDisplayOptions]];
-        }
-        this.scrollDisabled = true;
-        switch (this.discoverOptions) {
-            case DiscoverOption.Combined:
-                this.movies = await this.searchService.popularMoviesByPage(0, this.amountToLoad);
-                this.tvShows = await this.searchService.popularTvByPage(0, this.amountToLoad);
-                break;
-            case DiscoverOption.Movie:
-                this.movies = await this.searchService.popularMoviesByPage(0, this.amountToLoad);
-                break;
-            case DiscoverOption.Tv:
-                this.tvShows = await this.searchService.popularTvByPage(0, this.amountToLoad);
-                break;
-        }
+        this.upcomingMovies = this.mapMovieModel(await this.searchService.upcomingMoviesByPage(0, 14));
+        this.trendingMovies = this.mapMovieModel(await this.searchService.popularMoviesByPage(0, 14));
+this.finishLoading();
+        // const localDiscoverOptions = +this.storageService.get(this.mediaTypeStorageKey);
+        // if (localDiscoverOptions) {
+        //     this.discoverOptions = DiscoverOption[DiscoverOption[localDiscoverOptions]];
+        // }
+        // const localDisplayOptions = +this.storageService.get(this.displayOptionsKey);
+        // if (localDisplayOptions) {
+        //     this.displayOption = DisplayOption[DisplayOption[localDisplayOptions]];
+        // }
+        // this.scrollDisabled = true;
+        // switch (this.discoverOptions) {
+        //     case DiscoverOption.Combined:
+        //         this.movies = await this.searchService.popularMoviesByPage(0, this.amountToLoad);
+        //         this.tvShows = await this.searchService.popularTvByPage(0, this.amountToLoad);
+        //         break;
+        //     case DiscoverOption.Movie:
+        //         this.movies = await this.searchService.popularMoviesByPage(0, this.amountToLoad);
+        //         break;
+        //     case DiscoverOption.Tv:
+        //         this.tvShows = await this.searchService.popularTvByPage(0, this.amountToLoad);
+        //         break;
+        // }
 
-        this.contentLoaded = this.amountToLoad;
+        // this.contentLoaded = this.amountToLoad;
 
-        this.createInitialModel();
-        this.scrollDisabled = false;
-        if (!this.containerHasScrollBar()) {
-            await this.onScroll();
-        }
+        // this.createInitialModel();
+        // this.scrollDisabled = false;
+        // if (!this.containerHasScrollBar()) {
+        //     await this.onScroll();
+        // }
     }
 
     public async onScroll() {
@@ -236,18 +245,18 @@ export class DiscoverComponent implements OnInit {
     private createModel() {
         const tempResults = <IDiscoverCardResult[]>[];
 
-        switch (this.discoverOptions) {
-            case DiscoverOption.Combined:
-                tempResults.push(...this.mapMovieModel());
-                tempResults.push(...this.mapTvModel());
-                break;
-            case DiscoverOption.Movie:
-                tempResults.push(...this.mapMovieModel());
-                break;
-            case DiscoverOption.Tv:
-                tempResults.push(...this.mapTvModel());
-                break;
-        }
+        // switch (this.discoverOptions) {
+        //     case DiscoverOption.Combined:
+        //         tempResults.push(...this.mapMovieModel());
+        //         tempResults.push(...this.mapTvModel());
+        //         break;
+        //     case DiscoverOption.Movie:
+        //         tempResults.push(...this.mapMovieModel());
+        //         break;
+        //     case DiscoverOption.Tv:
+        //         tempResults.push(...this.mapTvModel());
+        //         break;
+        // }
 
         this.shuffle(tempResults);
         this.discoverResults.push(...tempResults);
@@ -255,9 +264,9 @@ export class DiscoverComponent implements OnInit {
         this.finishLoading();
     }
 
-    private mapMovieModel(): IDiscoverCardResult[] {
+    private mapMovieModel(movies: ISearchMovieResult[]): IDiscoverCardResult[] {
         const tempResults = <IDiscoverCardResult[]>[];
-        this.movies.forEach(m => {
+        movies.forEach(m => {
             tempResults.push({
                 available: m.available,
                 posterPath: m.posterPath ? `https://image.tmdb.org/t/p/w500/${m.posterPath}` : "../../../images/default_movie_poster.png",

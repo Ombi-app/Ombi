@@ -1,0 +1,23 @@
+<p-carousel [numVisible]="7" [numScroll]="7" [page]="0" [value]="result">
+    <ng-template let-result pTemplate="item">
+        <div class="ombi-card dark-card c">
+            <div [routerLink]="result.type === 1 ? '/details/movie/' + result.id : '/details/tv/' + result.id">
+                <img id="cardImage" src="{{result.posterPath}}" class="image"
+                    alt="{{result.title}}">
+                    <div class="top-left">{{RequestType[result.type] | humanize}}</div>
+                <div class="middle">
+                    <div class="title">{{result.title}}</div>
+                    <div class="small-text">{{result.overview | truncate: 80}}</div>
+                    <div class="row">
+                        <div class="col-6">
+                            <button mat-raised-button class="btn-blue"><mat-icon>remove_red_eye</mat-icon></button>
+                        </div>
+                        <div class="col-6">
+                            <button mat-raised-button class="btn-green"><mat-icon>cloud_download</mat-icon></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</p-carousel>

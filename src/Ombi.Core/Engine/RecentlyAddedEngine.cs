@@ -24,6 +24,8 @@ namespace Ombi.Core.Engine
         private readonly IEmbyContentRepository _emby;
         private readonly IRepository<RecentlyAddedLog> _recentlyAddedLog;
 
+        
+
         public IEnumerable<RecentlyAddedMovieModel> GetRecentlyAddedMovies(DateTime from, DateTime to)
         {
             var plexMovies = _plex.GetAll().Where(x => x.Type == PlexMediaTypeEntity.Movie && x.AddedAt > from && x.AddedAt < to);

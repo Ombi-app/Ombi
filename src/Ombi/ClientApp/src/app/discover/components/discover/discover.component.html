@@ -1,5 +1,5 @@
 <div class="small-middle-container">
-    <div class="row justify-content-end">
+    <!-- <div class="row justify-content-end">
         <div class="btn-group col-12 col-md-3 small-space discover-layout"role="group">
             <mat-button-toggle-group *ngIf="displayOption">
                 <mat-button-toggle [ngClass]="displayOption === DisplayOption.Card ? 'mat-button-toggle-checked' : ''" (click)="changeView(DisplayOption.Card)"><mat-icon>dashboard</mat-icon></mat-button-toggle>
@@ -24,9 +24,9 @@
             <button type="button" (click)="trending()" [attr.color]="trendingActive ? 'accent' : 'primary'" [ngClass]="trendingActive ? 'mat-accent' : 'mat-primary'" mat-raised-button class="btn grow" color="primary">{{'Discovery.TrendingTab' | translate}}</button>
             <button type="button" (click)="upcoming()" [attr.color]="upcomingActive ? 'accent' : 'primary'" [ngClass]="upcomingActive ? 'mat-accent' : 'mat-primary'" mat-raised-button class="btn grow" color="primary">{{'Discovery.UpcomingTab' | translate}}</button>
         </div>
-    </div>
+    </div> -->
 
-    <div *ngIf="discoverResults && displayOption === DisplayOption.Card" class="row full-height discoverResults col" infiniteScroll [fromRoot]="false" [infiniteScrollDistance]="0.5" [infiniteScrollDisabled]="scrollDisabled" (scrolled)="onScroll()">
+    <!-- <div *ngIf="discoverResults && displayOption === DisplayOption.Card" class="row full-height discoverResults col" infiniteScroll [fromRoot]="false" [infiniteScrollDistance]="0.5" [infiniteScrollDisabled]="scrollDisabled" (scrolled)="onScroll()">
         <div class="col-xl-2 col-lg-3 col-md-4 col-12 col-sm-6 small-padding" *ngFor="let result of discoverResults">
             <discover-card [result]="result"></discover-card>
         </div>
@@ -38,5 +38,15 @@
     </div>
     <div *ngIf="loadingFlag" class="row justify-content-md-center top-spacing loading-spinner">
         <mat-spinner [color]="'accent'"></mat-spinner>
+    </div> -->
+
+    <h2>Upcoming Movies <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></h2>
+    <div *ngIf="!loadingFlag">
+        <movie-list [result]="upcomingMovies"></movie-list>
+    </div>
+
+    <h2>Trending Movies <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></h2>
+    <div *ngIf="!loadingFlag">
+        <movie-list [result]="trendingMovies"></movie-list>
     </div>
 </div>

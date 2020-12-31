@@ -1,0 +1,58 @@
+
+
+.ombi-card {
+    padding: 5px;
+}
+::ng-deep .p-carousel-indicators {
+    display: none !important;
+    }
+
+    
+.image {
+    border-radius: 10px;
+    opacity: 1;
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: .5s ease;
+    backface-visibility: hidden;
+  }
+
+  
+.middle {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 75%;
+    width: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+  }
+
+  
+  .c {
+    position: relative;
+  }
+  
+.c:hover .image {
+    opacity: 0.3;
+  }
+  
+  .c:hover .middle {
+    opacity: 1;
+  }
+  
+.small-text {
+    font-size: 11px;
+  }
+  .title {
+      font-size: 16px;
+    }
+    .top-left {
+        font-size: 14px;
+        position: absolute;
+        top: 8px;
+        left: 16px;
+        
+      }

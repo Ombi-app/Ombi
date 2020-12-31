@@ -5,6 +5,7 @@
 .small-middle-container {
     margin: auto;
     width: 85%;
+    padding-left:2%;
 }
 
 .small-padding {
@@ -35,6 +36,8 @@
 
 ::ng-deep .mat-card-image {
     height: 75%;
+    border-radius: 10px;
+    width: 100%;
     object-fit: cover;
     display: block;
 }
