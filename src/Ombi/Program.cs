@@ -13,6 +13,10 @@ using Ombi.Extensions;
 using Ombi.Helpers;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using Ombi.Settings.Settings.Models;
+using System.Diagnostics;
+using System.IO;
 
 namespace Ombi
 {
@@ -46,7 +50,10 @@ namespace Ombi
                 });
 
             Console.WriteLine(HelpOutput(result));
-
+            if (baseUrl.HasValue())
+            {
+                Console.WriteLine($"Base Url: {baseUrl}");
+            }
             UrlArgs = host;
 
             var urlValue = string.Empty;
@@ -61,14 +68,14 @@ namespace Ombi
             using (var provider = services.BuildServiceProvider())
             {
                 var settingsDb = provider.GetRequiredService<SettingsContext>();
+                var ombiDb = provider.GetRequiredService<OmbiContext>();
 
                 if (migrate)
                 {
                     Console.WriteLine("Migrate in progress...");
-                    
+
                     var migrationTasks = new List<Task>();
                     var externalDb = provider.GetRequiredService<ExternalContext>();
-                    var ombiDb = provider.GetRequiredService<OmbiContext>();
                     migrationTasks.Add(settingsDb.Database.MigrateAsync());
                     migrationTasks.Add(ombiDb.Database.MigrateAsync());
                     migrationTasks.Add(externalDb.Database.MigrateAsync());
@@ -81,7 +88,7 @@ namespace Ombi
 
                 var config = await settingsDb.ApplicationConfigurations.ToListAsync();
                 var url = config.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
-                var dbBaseUrl = config.FirstOrDefault(x => x.Type == ConfigurationTypes.BaseUrl);
+                var ombiSettingsContent = await settingsDb.Settings.FirstOrDefaultAsync(x => x.SettingsName == "OmbiSettings");
                 var securityToken = config.FirstOrDefault(x => x.Type == ConfigurationTypes.SecurityToken);
                 await CheckSecurityToken(securityToken, settingsDb, instance);
                 if (url == null)
@@ -118,34 +125,7 @@ namespace Ombi
                     urlValue = host;
                 }
 
-                if (dbBaseUrl == null)
-                {
-                    if (baseUrl.HasValue() && baseUrl.StartsWith("/"))
-                    {
-                        dbBaseUrl = new ApplicationConfiguration
-                        {
-                            Type = ConfigurationTypes.BaseUrl,
-                            Value = baseUrl
-                        };
-
-                        using (var tran = await settingsDb.Database.BeginTransactionAsync())
-                        {
-                            settingsDb.ApplicationConfigurations.Add(dbBaseUrl);
-                            await settingsDb.SaveChangesAsync();
-                            await tran.CommitAsync();
-                        }
-                    }
-                }
-                else if (baseUrl.HasValue() && !baseUrl.Equals(dbBaseUrl.Value))
-                {
-                    dbBaseUrl.Value = baseUrl;
-
-                    using (var tran = await settingsDb.Database.BeginTransactionAsync())
-                    {
-                        await settingsDb.SaveChangesAsync();
-                        await tran.CommitAsync();
-                    }
-                }
+                await SortOutBaseUrl(baseUrl, settingsDb, ombiSettingsContent);
 
                 Console.WriteLine($"We are running on {urlValue}");
 
@@ -196,6 +176,80 @@ namespace Ombi
             result.AppendLine(HelpText.AutoBuild(args, null, null));
 
             return result.ToString();
+        }
+
+        private static async Task SortOutBaseUrl(string baseUrl, SettingsContext settingsDb, GlobalSettings ombiSettingsContent)
+        {
+            var setBaseUrl = false;
+            if (ombiSettingsContent == null)
+            {
+                Console.WriteLine("Creating new Settings entity");
+                ombiSettingsContent = new GlobalSettings
+                {
+                    SettingsName = "OmbiSettings",
+                    Content = JsonConvert.SerializeObject(new OmbiSettings())
+                };
+                using (var tran = await settingsDb.Database.BeginTransactionAsync())
+                {
+                    settingsDb.Add(ombiSettingsContent);
+                    await settingsDb.SaveChangesAsync();
+                    await tran.CommitAsync();
+                }
+            }
+            var ombiSettings = JsonConvert.DeserializeObject<OmbiSettings>(ombiSettingsContent.Content);
+            if (ombiSettings == null)
+            {
+                if (baseUrl.HasValue() && baseUrl.StartsWith("/"))
+                {
+                    setBaseUrl = true;
+                    ombiSettings = new OmbiSettings
+                    {
+                        BaseUrl = baseUrl
+                    };
+
+                    ombiSettingsContent.Content = JsonConvert.SerializeObject(ombiSettings);
+                    using (var tran = await settingsDb.Database.BeginTransactionAsync())
+                    {
+                        settingsDb.Update(ombiSettingsContent);
+                        await settingsDb.SaveChangesAsync();
+                        await tran.CommitAsync();
+                    }
+                }
+            }
+            else if (baseUrl.HasValue() && !baseUrl.Equals(ombiSettings.BaseUrl))
+            {
+                setBaseUrl = true;
+                ombiSettings.BaseUrl = baseUrl;
+
+                ombiSettingsContent.Content = JsonConvert.SerializeObject(ombiSettings);
+                using (var tran = await settingsDb.Database.BeginTransactionAsync())
+                {
+                    settingsDb.Update(ombiSettingsContent);
+                    await settingsDb.SaveChangesAsync();
+                    await tran.CommitAsync();
+                }
+            }
+
+
+            if (setBaseUrl)
+            {
+                var process = Process.GetCurrentProcess().MainModule.FileName;
+                var ombiInstalledDir = Path.GetDirectoryName(process);
+                var indexPath = Path.Combine(ombiInstalledDir, "ClientApp", "dist", "index.html");
+                if (!File.Exists(indexPath))
+                {
+                    var error = $"Can't set the base URL because we cannot find the file at {indexPath}, if you are trying to set a base url please report this on Github!";
+                    Console.WriteLine(error);
+                    throw new Exception(error);
+                }
+                var indexHtml = await File.ReadAllTextAsync(indexPath);
+                indexHtml = indexHtml.Replace("<script type='text/javascript'>window[\"baseHref\"] = '/';</script>"
+                   , $"<script type='text/javascript'>window[\"baseHref\"] = '{baseUrl}';</script><base href=\"{baseUrl}/\">", StringComparison.InvariantCultureIgnoreCase);
+
+                await File.WriteAllTextAsync(indexPath, indexHtml);
+
+                Console.WriteLine($"Wrote new baseurl at {indexPath}");
+            }
         }
     }
 

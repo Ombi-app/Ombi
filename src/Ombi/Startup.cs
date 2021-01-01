@@ -153,25 +153,6 @@ namespace Ombi
                 ombiService.SaveSettings(settings);
             }
 
-            if (!settings.Set)
-            {
-                settings.Set = true;
-                settings.CollectAnalyticData = true;
-                ombiService.SaveSettings(settings);
-            }
-
-            // Check if it's in the startup args
-            var appConfig = serviceProvider.GetService<IApplicationConfigRepository>();
-            var baseUrl = appConfig.Get(ConfigurationTypes.BaseUrl);
-            if (baseUrl != null)
-            {
-                if (baseUrl.Value.HasValue())
-                {
-                    settings.BaseUrl = baseUrl.Value;
-                    ombiService.SaveSettings(settings);
-                }
-            }
-
             if (settings.BaseUrl.HasValue())
             {
                 app.UsePathBase(settings.BaseUrl);
@@ -233,8 +214,8 @@ namespace Ombi
 
             app.UseSpa(spa =>
             {
-#if DEBUG
                 spa.Options.SourcePath = "ClientApp";
+#if DEBUG
                 spa.UseProxyToSpaDevelopmentServer("http://localhost:3578");
 #endif
             });

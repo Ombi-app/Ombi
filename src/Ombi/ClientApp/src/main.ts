@@ -15,9 +15,7 @@ import { AppModule } from "./app/app.module";
 
 import { hmrBootstrap } from "./hmr";
 declare var module: any;
-// declare var __webpack_require__: any;
-// __webpack_require__.p = '/ombi';
-// __webpack_require__ = '/ombi';
+
 if (environment.production) {
     enableProdMode();
   }
