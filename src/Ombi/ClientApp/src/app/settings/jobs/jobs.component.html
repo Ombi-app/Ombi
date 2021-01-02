@@ -88,6 +88,14 @@
 
                 <div class="form-group cronBox">
                     <mat-form-field appearance="outline" floatLabel=always>
+                    <mat-label for="jellyfinContentSync" class="control-label">Jellyfin Sync</mat-label>
+                        <input type="text" matInput [ngClass]="{'form-error': form.get('jellyfinContentSync').hasError('required')}" id="jellyfinContentSync" name="jellyfinContentSync" formControlName="jellyfinContentSync">
+                        <small *ngIf="form.get('jellyfinContentSync').hasError('required')" class="error-text">The Jellyfin Sync is required</small></mat-form-field>
+                        <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('jellyfinContentSync')?.value)">Test</button>
+                </div>
+
+                <div class="form-group cronBox">
+                    <mat-form-field appearance="outline" floatLabel=always>
                     <mat-label for="userImporter" class="control-mat-label">User Importer</mat-label>
                         <input type="text" matInput [ngClass]="{'form-error': form.get('userImporter').hasError('required')}" id="userImporter" name="userImporter" formControlName="userImporter">
                         <small *ngIf="form.get('userImporter').hasError('required')" class="error-text">The User Importer is required</small></mat-form-field>

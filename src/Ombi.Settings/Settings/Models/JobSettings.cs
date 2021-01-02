@@ -3,6 +3,7 @@
     public class JobSettings : Settings
     {
         public string EmbyContentSync { get; set; }
+        public string JellyfinContentSync { get; set; }
         public string SonarrSync { get; set; }
         public string RadarrSync { get; set; }
         public string PlexContentSync { get; set; }

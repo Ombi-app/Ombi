@@ -14,7 +14,8 @@
 <button mat-button [matMenuTriggerFor]="mediaservermenu"><i class="fa fa-server" aria-hidden="true"></i> Media Server</button>
 <mat-menu #mediaservermenu="matMenu">
     <button mat-menu-item [routerLink]="['/Settings/Plex']">Plex</button>
-    <button mat-menu-item [routerLink]="['/Settings/Emby']">Emby/Jellyfin</button>
+    <button mat-menu-item [routerLink]="['/Settings/Emby']">Emby</button>
+    <button mat-menu-item [routerLink]="['/Settings/Jellyfin']">Jellyfin</button>
 </mat-menu>
 
 <button mat-button [matMenuTriggerFor]="tvmenu"><i class="fa fa-television" aria-hidden="true"></i> TV</button>

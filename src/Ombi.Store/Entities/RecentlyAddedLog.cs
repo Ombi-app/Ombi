@@ -19,7 +19,8 @@ namespace Ombi.Store.Entities
     {
         Plex = 0,
         Emby = 1,
-        Lidarr = 2
+        Lidarr = 2,
+        Jellyfin = 3
     }
 
     public enum ContentType

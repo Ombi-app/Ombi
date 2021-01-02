@@ -29,6 +29,7 @@ export interface ISearchTvResultV2 {
     available: boolean;
     plexUrl: string;
     embyUrl: string;
+    jellyfinUrl: string;
     quality: string;
     firstSeason: boolean;
     latestSeason: boolean;
@@ -62,6 +63,7 @@ export interface IMovieCollection {
     available: boolean;
     plexUrl: string;
     embyUrl: string; 
+    jellyfinUrl: string; 
     imdbId: string;
 }
 

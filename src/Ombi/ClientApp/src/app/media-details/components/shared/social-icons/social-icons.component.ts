@@ -18,6 +18,7 @@ export class SocialIconsComponent {
     @Input() available: boolean;
     @Input() plexUrl: string;
     @Input() embyUrl: string;
+    @Input() jellyfinUrl: string;
     @Input() doNotAppend: boolean;
     
     @Output() openTrailer: EventEmitter<any> = new EventEmitter();

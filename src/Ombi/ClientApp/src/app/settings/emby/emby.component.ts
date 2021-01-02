@@ -27,7 +27,6 @@ export class EmbyComponent implements OnInit {
 
     public async discoverServerInfo(server: IEmbyServer) {
         const result = await this.embyService.getPublicInfo(server).toPromise();
-        this.settings.isJellyfin = result.isJellyfin;
         server.name = result.serverName;
         server.serverId = result.id;
         this.hasDiscoveredOrDirty = true;

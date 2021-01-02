@@ -1,3 +1,0 @@
-dotnet ef migrations add Inital --context OmbiSqliteContext --startup-project ../Ombi/Ombi.csproj
-
-If running migrations for any db provider other than Sqlite, then ensure the database.json is pointing at the correct DB type

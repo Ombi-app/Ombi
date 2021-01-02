@@ -113,6 +113,88 @@ namespace Ombi.Store.Migrations.ExternalMySql
                     b.ToTable("EmbyEpisode");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.JellyfinContent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ImdbId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("JellyfinId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("ProviderId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("TheMovieDbId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("TvDbId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JellyfinContent");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.JellyfinEpisode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("dateime(6)");
+
+                    b.Property<int>("EpisodeNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImdbId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("JellyfinId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("ParentId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("ProviderId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("SeasonNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TheMovieDbId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("TvDbId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("JellyfinEpisode");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.LidarrAlbumCache", b =>
                 {
                     b.Property<int>("Id")
@@ -368,6 +450,18 @@ namespace Ombi.Store.Migrations.ExternalMySql
                         .WithMany("Episodes")
                         .HasForeignKey("ParentId")
                         .HasPrincipalKey("EmbyId");
+
+                    b.Navigation("Series");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.JellyfinEpisode", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.JellyfinContent", "Series")
+                        .WithMany("Episodes")
+                        .HasForeignKey("ParentId")
+                        .HasPrincipalKey("JellyfinId");
+
+                    b.Navigation("Series");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.PlexEpisode", b =>
@@ -378,6 +472,8 @@ namespace Ombi.Store.Migrations.ExternalMySql
                         .HasPrincipalKey("Key")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Series");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.PlexSeasonsContent", b =>
@@ -385,6 +481,23 @@ namespace Ombi.Store.Migrations.ExternalMySql
                     b.HasOne("Ombi.Store.Entities.PlexServerContent", null)
                         .WithMany("Seasons")
                         .HasForeignKey("PlexServerContentId");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.EmbyContent", b =>
+                {
+                    b.Navigation("Episodes");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.JellyfinContent", b =>
+                {
+                    b.Navigation("Episodes");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.PlexServerContent", b =>
+                {
+                    b.Navigation("Episodes");
+
+                    b.Navigation("Seasons");
                 });
 #pragma warning restore 612, 618
         }
