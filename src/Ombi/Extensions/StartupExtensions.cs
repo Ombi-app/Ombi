@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Ombi.Config;
+using Ombi.Core.Authentication;
 using Ombi.Helpers;
 using Ombi.Models.Identity;
 
@@ -102,7 +104,6 @@ namespace Ombi
                         OnMessageReceived = context =>
                         {
                             var accessToken = context.Request.Query["access_token"];
-
                             // If the request is for our hub...
                             var path = context.HttpContext.Request.Path;
                             if (!string.IsNullOrEmpty(accessToken) &&
@@ -111,8 +112,17 @@ namespace Ombi
                                 // Read the token out of the query string
                                 context.Token = accessToken;
                             }
-
                             return Task.CompletedTask;
+                        },
+                        OnTokenValidated = async context =>
+                        {
+                            var userid = context.Principal?.Claims?.Where(x => x.Type.Equals("id", StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault()?.Value ?? default;
+                            var um = context.HttpContext.RequestServices.GetRequiredService<OmbiUserManager>();
+                            var user = await um.FindByIdAsync(userid);
+                            if (user == null)
+                            {
+                                context.Fail("invaild token");
+                            }
                         }
                     };
                 });

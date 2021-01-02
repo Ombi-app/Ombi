@@ -1,5 +1,5 @@
 import { CommonModule, PlatformLocation, APP_BASE_HREF } from "@angular/common";
-import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
@@ -66,6 +66,7 @@ import { StorageService } from "./shared/storage/storage-service";
 import { SignalRNotificationService } from "./services/signlarnotification.service";
 import { MatMenuModule } from "@angular/material/menu";
 import { RemainingRequestsComponent } from "./shared/remaining-requests/remaining-requests.component";
+import { UnauthorizedInterceptor } from "./auth/unauthorized.interceptor";
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
@@ -196,6 +197,11 @@ export function JwtTokenGetter() {
         {
             provide: APP_BASE_HREF,
             useValue: window["baseHref"]
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: UnauthorizedInterceptor,
+            multi: true
         }
        ],
     bootstrap: [AppComponent],
