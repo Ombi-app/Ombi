@@ -74,7 +74,8 @@ namespace Ombi.Core.Rule.Rules.Search
                     }
                     else
                     {
-                        obj.JellyfinUrl = JellyfinHelper.GetJellyfinMediaUrl(item.JellyfinId, server?.ServerId, null);
+                        var firstServer = s.Servers?.FirstOrDefault();
+                        obj.JellyfinUrl = JellyfinHelper.GetJellyfinMediaUrl(item.JellyfinId, firstServer.ServerId, firstServer.FullUri);
                     }
                 }
 

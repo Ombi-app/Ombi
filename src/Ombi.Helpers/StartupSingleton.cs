@@ -11,5 +11,8 @@
         public string StoragePath { get; set; }
 
         public string SecurityKey { get; set; }
+#if DEBUG
+        = "test";
+#endif
     }
 }

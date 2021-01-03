@@ -92,6 +92,7 @@
         "TheatricalRelease": "Theatrical Release: {{date}}",
         "ViewOnPlex": "View On Plex",
         "ViewOnEmby": "View On Emby",
+        "ViewOnJellyfin": "View On Jellyfin",
         "RequestAdded": "Request for {{title}} has been added successfully",
         "Similar": "Similar",
         "Refine": "Refine",

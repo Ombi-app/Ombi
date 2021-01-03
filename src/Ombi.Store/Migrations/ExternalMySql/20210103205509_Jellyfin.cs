@@ -12,17 +12,17 @@ namespace Ombi.Store.Migrations.ExternalMySql
                 name: "JellyfinContent",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Title = table.Column<string>(nullable: true),
-                    ProviderId = table.Column<string>(nullable: true),
-                    JellyfinId = table.Column<string>(nullable: false),
-                    Type = table.Column<int>(nullable: false),
-                    AddedAt = table.Column<DateTime>(nullable: false),
-                    ImdbId = table.Column<string>(nullable: true),
-                    TheMovieDbId = table.Column<string>(nullable: true),
-                    TvDbId = table.Column<string>(nullable: true),
-                    Url = table.Column<string>(nullable: true)
+                    Title = table.Column<string>(type: "longtext", nullable: true),
+                    ProviderId = table.Column<string>(type: "longtext", nullable: true),
+                    JellyfinId = table.Column<string>(type: "varchar(255)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    AddedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ImdbId = table.Column<string>(type: "longtext", nullable: true),
+                    TheMovieDbId = table.Column<string>(type: "longtext", nullable: true),
+                    TvDbId = table.Column<string>(type: "longtext", nullable: true),
+                    Url = table.Column<string>(type: "longtext", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -34,18 +34,18 @@ namespace Ombi.Store.Migrations.ExternalMySql
                 name: "JellyfinEpisode",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Title = table.Column<string>(nullable: true),
-                    JellyfinId = table.Column<string>(nullable: true),
-                    EpisodeNumber = table.Column<int>(nullable: false),
-                    SeasonNumber = table.Column<int>(nullable: false),
-                    ParentId = table.Column<string>(nullable: true),
-                    ProviderId = table.Column<string>(nullable: true),
-                    AddedAt = table.Column<DateTime>(nullable: false),
-                    TvDbId = table.Column<string>(nullable: true),
-                    ImdbId = table.Column<string>(nullable: true),
-                    TheMovieDbId = table.Column<string>(nullable: true)
+                    Title = table.Column<string>(type: "longtext", nullable: true),
+                    JellyfinId = table.Column<string>(type: "longtext", nullable: true),
+                    EpisodeNumber = table.Column<int>(type: "int", nullable: false),
+                    SeasonNumber = table.Column<int>(type: "int", nullable: false),
+                    ParentId = table.Column<string>(type: "varchar(255)", nullable: true),
+                    ProviderId = table.Column<string>(type: "longtext", nullable: true),
+                    AddedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    TvDbId = table.Column<string>(type: "longtext", nullable: true),
+                    ImdbId = table.Column<string>(type: "longtext", nullable: true),
+                    TheMovieDbId = table.Column<string>(type: "longtext", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -67,10 +67,10 @@ namespace Ombi.Store.Migrations.ExternalMySql
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "JellyfinContent");
+                name: "JellyfinEpisode");
 
             migrationBuilder.DropTable(
-                name: "JellyfinEpisode");
+                name: "JellyfinContent");
         }
     }
 }

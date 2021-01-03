@@ -224,7 +224,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 if (!hasImdb)
                 {
-                    var id = await GetImdbId(hasTheMovieDb, hasTvDbId, show.Title, show.TheMovieDbId, show.TvDbId);
+                    var id = await GetImdbId(hasTheMovieDb, hasTvDbId, show.Title, show.TheMovieDbId, show.TvDbId, RequestType.TvShow);
                     show.ImdbId = id;
                     _jellyfinRepo.UpdateWithoutSave(show);
                 }
@@ -364,7 +364,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 if (!movie.HasImdb)
                 {
-                    var imdbId = await GetImdbId(movie.HasTheMovieDb, false, movie.Title, movie.TheMovieDbId, string.Empty);
+                    var imdbId = await GetImdbId(movie.HasTheMovieDb, false, movie.Title, movie.TheMovieDbId, string.Empty, RequestType.Movie);
                     movie.ImdbId = imdbId;
                     _jellyfinRepo.UpdateWithoutSave(movie);
                 }
