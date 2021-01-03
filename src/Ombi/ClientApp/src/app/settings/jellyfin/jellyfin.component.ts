@@ -15,6 +15,7 @@ export class JellyfinComponent implements OnInit {
     public hasDiscoveredOrDirty: boolean;
     selected = new FormControl(0);
 
+
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
                 private testerService: TesterService,

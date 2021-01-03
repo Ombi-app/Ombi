@@ -58,7 +58,7 @@
                                     <input matInput placeholder="Api Key" [(ngModel)]="server.apiKey" value="{{server.apiKey}}">
                                 </mat-form-field>
                             </div>
-                            <div class="md-form-field">        
+                            <div class="md-form-field">
                                 <mat-form-field appearance="outline" floatLabel=auto>
                                     <mat-label>Base URL</mat-label>
                                     <input matInput placeholder="Base Url" [(ngModel)]="server.subDir" value="{{server.subDir}}">
@@ -71,7 +71,7 @@
                                 </mat-form-field>
                                 <small>
                                     <span *ngIf="server.serverHostname">Current URL: "{{server.serverHostname}}/#!/itemdetails.html?id=1"</span>
-                                    <span *ngIf="!server.serverHostname">Current URL: "https://app.jellyfin.media/#!/itemdetails.html?id=1</span>
+                                    <span *ngIf="!server.serverHostname">Current URL: "{{server.ssl ? "https://" : "http://"}}{{server.ip}}:{{server.port}}/"</span>
                                 </small>
                             </div>
 
