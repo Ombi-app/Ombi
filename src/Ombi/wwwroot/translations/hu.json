@@ -271,7 +271,11 @@
             "AllSeasonsTooltip": "Ezzel kérni fogja a sorozat összes évadát",
             "FirstSeasonTooltip": "Ezzel kérni fogja a sorozat első évadát",
             "LatestSeasonTooltip": "Ezzel kérni fogja a sorozat legutóbbi évadát"
-        }
+        },
+        "SonarrConfiguration": "Sonarr Configuration",
+        "RadarrConfiguration": "Radarr Configuration",
+        "RequestOnBehalf": "Request on behalf of",
+        "PleaseSelectUser": "Please select a user"
     },
     "Discovery": {
         "PopularTab": "Népszerű",
