@@ -30,4 +30,10 @@ namespace Ombi.Core.Models.UI
         public string Value { get; set; }
         public bool Enabled { get; set; }
     }
+
+    public class UserViewModelDropdown
+    {
+        public string Id { get; set; }
+        public string Username { get; set; }
+    }
 }

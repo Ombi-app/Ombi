@@ -67,7 +67,7 @@ export class DiscoverCardDetailsComponent implements OnInit {
     public async request() {
         this.loading = true;
         if (this.data.type === RequestType.movie) {
-            const result = await this.requestService.requestMovie({ theMovieDbId: this.data.id, languageCode: "" }).toPromise();
+            const result = await this.requestService.requestMovie({ theMovieDbId: this.data.id, languageCode: "", requestOnBehalf: null }).toPromise();
             this.loading = false;
 
             if (result.result) {

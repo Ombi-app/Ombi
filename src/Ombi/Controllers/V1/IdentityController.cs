@@ -276,6 +276,31 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
+        /// Gets all users for dropdown purposes.
+        /// </summary>
+        /// <returns>Basic Information about all users</returns>
+        [HttpGet("dropdown/Users")]
+        [PowerUser]
+        public async Task<IEnumerable<UserViewModelDropdown>> GetAllUsersDropdown()
+        {
+            var users = await UserManager.Users.Where(x => x.UserType != UserType.SystemUser)
+                .ToListAsync();
+
+            var model = new List<UserViewModelDropdown>();
+
+            foreach (var user in users)
+            {
+                model.Add(new UserViewModelDropdown
+                {
+                    Id = user.Id,
+                    Username = user.UserName
+                });
+            }
+
+            return model.OrderBy(x => x.Username);
+        }
+
+        /// <summary>
         /// Gets the current logged in user.
         /// </summary>
         /// <returns>Information about all users</returns>

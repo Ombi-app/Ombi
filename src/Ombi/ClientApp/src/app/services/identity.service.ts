@@ -4,7 +4,7 @@ import { Injectable, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
-import { ICheckbox, ICreateWizardUser, IIdentityResult, INotificationPreferences, IResetPasswordToken, IUpdateLocalUser, IUser, IWizardUserResult } from "../interfaces";
+import { ICheckbox, ICreateWizardUser, IIdentityResult, INotificationPreferences, IResetPasswordToken, IUpdateLocalUser, IUser, IUserDropdown, IWizardUserResult } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()
@@ -30,6 +30,10 @@ export class IdentityService extends ServiceHelpers {
 
     public getUsers(): Observable<IUser[]> {
         return this.http.get<IUser[]>(`${this.url}Users`,  {headers: this.headers});
+    }
+
+    public getUsersDropdown(): Observable<IUserDropdown[]> {
+        return this.http.get<IUserDropdown[]>(`${this.url}dropdown/Users`,  {headers: this.headers});
     }
 
     public getAllAvailableClaims(): Observable<ICheckbox[]> {

@@ -24,6 +24,11 @@ export interface IUser {
     musicRequestQuota: IRemainingRequests | null;
 }
 
+export interface IUserDropdown {
+    username: string;
+    id: string;
+}
+
 export interface IUserQualityProfiles {
     sonarrQualityProfileAnime: number;
     sonarrRootPathAnime: number;

@@ -5,7 +5,7 @@ import { ImageService, RequestService, SearchV2Service } from "../../../services
 import { MatDialog } from "@angular/material/dialog";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
-import { EpisodeRequestComponent } from "../../../shared/episode-request/episode-request.component";
+import { EpisodeRequestComponent, EpisodeRequestData } from "../../../shared/episode-request/episode-request.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -139,7 +139,7 @@ export class DiscoverGridComponent implements OnInit {
     public async request() {
         this.requesting = true;
         if (this.result.type === RequestType.movie) {
-            const result = await this.requestService.requestMovie({ theMovieDbId: this.result.id, languageCode: "" }).toPromise();
+            const result = await this.requestService.requestMovie({ theMovieDbId: this.result.id, languageCode: "", requestOnBehalf: null }).toPromise();
 
             if (result.result) {
                 this.result.requested = true;
@@ -148,7 +148,7 @@ export class DiscoverGridComponent implements OnInit {
                 this.notification.open(result.errorMessage, "Ok");
             }
         } else if (this.result.type === RequestType.tvShow) {
-            this.dialog.open(EpisodeRequestComponent, { width: "700px", data: this.tv,  panelClass: 'modal-panel' })
+            this.dialog.open(EpisodeRequestComponent, { width: "700px", data: <EpisodeRequestData> { series: this.tv, requestOnBehalf: null },  panelClass: 'modal-panel' })
         }
         this.requesting = false;
     }

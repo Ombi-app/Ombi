@@ -2,127 +2,145 @@
     <mat-spinner [color]="'accent'"></mat-spinner>
 </div>
 <div *ngIf="tv">
-<div *ngIf="tv.id === 0; else main">
-    <div class="small-middle-container no-info">
-        <h1><i class="fa fa-frown-o" aria-hidden="true"></i></h1><h3> {{ 'MediaDetails.NotEnoughInfo' | translate }}</h3>
+    <div *ngIf="tv.id === 0; else main">
+        <div class="small-middle-container no-info">
+            <h1><i class="fa fa-frown-o" aria-hidden="true"></i></h1>
+            <h3> {{ 'MediaDetails.NotEnoughInfo' | translate }}</h3>
+        </div>
     </div>
-</div>
 
 
-<ng-template #main>
+    <ng-template #main>
 
-<div>
+        <div>
 
-    <top-banner [background]="tv.background" [available]="tv.available" [title]="tv.title" [releaseDate]="tv.firstAired" [tagline]="tv.certification"></top-banner>
+            <top-banner [background]="tv.background" [available]="tv.available" [title]="tv.title"
+                [releaseDate]="tv.firstAired" [tagline]="tv.certification"></top-banner>
 
-    <section id="info-wrapper">
-        <div class="small-middle-container">
-            <div class="row">
-
-                <media-poster [posterPath]="tv.images?.medium"></media-poster>
-
-                <!--Next to poster-->
-                <div class="col-12 col-lg-3 col-xl-3 media-row">
-
-                    <social-icons [homepage]="tv.homepage" [tvdbId]="tv.id" [hasTrailer]="tv.trailer" (openTrailer)="openDialog()" [imdbId]="tv.imdbId" [available]="tv.available" [plexUrl]="tv.plexUrl" [embyUrl]="tv.embyUrl">
-                    </social-icons>
-
-                </div>
-
-                <div class="col-12 col-lg-6 col-xl-6 media-row">
-
-                    <button *ngIf="!tv.fullyAvailable" mat-raised-button class="btn-spacing" color="primary" (click)="request()"><i class="fa fa-plus"></i>
-            {{ 'Common.Request' | translate }}</button>
-
-                    <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent" [disabled]>
-            <i class="fa fa-check"></i> {{'Common.Available' | translate }}</button>
-                    <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent" [disabled]>
-            <i class="fa fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
-
-                    <button mat-raised-button class="btn-spacing" color="danger" (click)="issue()">
-              <i class="fa fa-exclamation"></i> {{
-                  'Requests.ReportIssue' | translate }}</button>
-
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-12 col-md-2">
-                    <mat-card class="mat-elevation-z8 spacing-below" *ngIf="isAdmin && showRequest" [ngStyle]="{'display': showAdvanced ? '' : 'none' }">
-                        <mat-card-content class="medium-font">
-                            <tv-admin-panel [tv]="showRequest" (sonarrEnabledChange)="showAdvanced = $event" (advancedOptionsChanged)="setAdvancedOptions($event)">
-                            </tv-admin-panel>
-                        </mat-card-content>
-                    </mat-card>
-
-                    <mat-card class="mat-elevation-z8">
-                        <mat-card-content class="medium-font">
-                            <tv-information-panel [tv]="tv" [request]="showRequest" [advancedOptions]="showAdvanced"></tv-information-panel>
-                        </mat-card-content>
-                    </mat-card>
-
-                </div>
-
-
-                <div class="col-12 col-md-10">
+            <section id="info-wrapper">
+                <div class="small-middle-container">
                     <div class="row">
-                        <div class="col-12">
-                            <mat-card class="mat-elevation-z8 spacing-below">
-                                <mat-card-content>
-                                    {{tv.overview}}
+
+                        <media-poster [posterPath]="tv.images?.medium"></media-poster>
+
+                        <!--Next to poster-->
+                        <div class="col-12 col-lg-3 col-xl-3 media-row">
+
+                            <social-icons [homepage]="tv.homepage" [tvdbId]="tv.id" [hasTrailer]="tv.trailer"
+                                (openTrailer)="openDialog()" [imdbId]="tv.imdbId" [available]="tv.available"
+                                [plexUrl]="tv.plexUrl" [embyUrl]="tv.embyUrl">
+                            </social-icons>
+
+                        </div>
+
+                        <div class="col-12 col-lg-5 col-xl-5 media-row">
+
+                            <button *ngIf="!tv.fullyAvailable" mat-raised-button class="btn-spacing" color="primary"
+                                (click)="request()"><i class="fa fa-plus"></i>
+                                {{ 'Common.Request' | translate }}</button>
+
+                            <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent"
+                                [disabled]>
+                                <i class="fa fa-check"></i> {{'Common.Available' | translate }}</button>
+                            <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" mat-raised-button
+                                class="btn-spacing" color="accent" [disabled]>
+                                <i class="fa fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
+
+                            <button mat-raised-button class="btn-spacing" color="danger" (click)="issue()">
+                                <i class="fa fa-exclamation"></i> {{
+                                'Requests.ReportIssue' | translate }}</button>
+
+                        </div>
+                        <!-- Setting/Configuration admin area -->
+                        <div class="col-12 col-lg-1 col-xl-1 media-row content-end">
+                            <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="menu">
+                                <mat-icon>settings</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu">
+                                <button mat-menu-item (click)="openRequestOnBehalf()" [disabled]="fullyAvailable">
+                                    <mat-icon>supervised_user_circle</mat-icon>
+                                    <span>{{'MediaDetails.RequestOnBehalf' | translate}}</span>
+                                </button>
+                                <button mat-menu-item [disabled]="!showAdvanced || !showRequest"
+                                    (click)="openAdvancedOptions()">
+                                    <mat-icon>movie_filter</mat-icon>
+                                    <span>{{'MediaDetails.SonarrConfiguration' | translate}}</span>
+                                </button>
+                            </mat-menu>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-md-2">
+                            <mat-card class="mat-elevation-z8">
+                                <mat-card-content class="medium-font">
+                                    <tv-information-panel [tv]="tv" [request]="showRequest"
+                                        [advancedOptions]="showAdvanced"></tv-information-panel>
                                 </mat-card-content>
                             </mat-card>
-                        </div>
-                        <div class="col-12">
-                            <cast-carousel [cast]="tv.cast"></cast-carousel>
+
                         </div>
 
+
+                        <div class="col-12 col-md-10">
+                            <div class="row">
+                                <div class="col-12">
+                                    <mat-card class="mat-elevation-z8 spacing-below">
+                                        <mat-card-content>
+                                            {{tv.overview}}
+                                        </mat-card-content>
+                                    </mat-card>
+                                </div>
+                                <div class="col-12">
+                                    <cast-carousel [cast]="tv.cast"></cast-carousel>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
 
-            <div class="row">
-                <div class="col-12 col-md-2">
+                    <div class="row">
+                        <div class="col-12 col-md-2">
 
-                    <!--Just some space yo-->
-
-
-                </div>
+                            <!--Just some space yo-->
 
 
-                <div class="col-12 col-md-10">
-                    <div class="issuesPanel">
-                        <issues-panel [providerId]="tv.theTvDbId" [isAdmin]="isAdmin"></issues-panel>
+                        </div>
+
+
+                        <div class="col-12 col-md-10">
+                            <div class="issuesPanel">
+                                <issues-panel [providerId]="tv.theTvDbId" [isAdmin]="isAdmin"></issues-panel>
+                            </div>
+                            <mat-accordion>
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            Requests
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <tv-requests-panel [tvRequest]="tvRequest" [isAdmin]="isAdmin"></tv-requests-panel>
+                                </mat-expansion-panel>
+
+                            </mat-accordion>
+
+                        </div>
+
+
                     </div>
-                    <mat-accordion>
-                        <mat-expansion-panel>
-                            <mat-expansion-panel-header>
-                                <mat-panel-title>
-                                    Requests
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
-                            <tv-requests-panel [tvRequest]="tvRequest" [isAdmin]="isAdmin"></tv-requests-panel>
-                        </mat-expansion-panel>
 
-                    </mat-accordion>
+
 
                 </div>
 
 
-            </div>
 
 
+                <div class="bottom-page-gap">
+                </div>
+            </section>
 
         </div>
-
-
-
-
-        <div class="bottom-page-gap">
-        </div>
-    </section>
-
-</div>
-</ng-template>
+    </ng-template>
 </div>

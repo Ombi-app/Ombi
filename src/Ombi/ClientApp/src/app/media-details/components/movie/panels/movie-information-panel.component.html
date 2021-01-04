@@ -9,7 +9,7 @@
         <div *ngIf="!movie.available">{{'Common.NotAvailable' | translate}}</div>
 
     </div>
-
+<br>
     <div>
         <strong>{{'MediaDetails.RequestStatus' | translate }}</strong>
         <div *ngIf="movie.approved && !movie.available">{{'Common.ProcessingRequest' | translate}}</div>
@@ -18,16 +18,28 @@
         <div *ngIf="!movie.requested && !movie.available && !movie.approved">{{'Common.NotRequested' | translate}}
         </div>
     </div>
+
+    <div *ngIf="request">
+        <strong>{{'Requests.RequestedBy' | translate }}</strong>
+        <div>{{request.requestedUser.userAlias}}</div>
+    </div>
+
+    <div *ngIf="request">
+        <strong>{{'Requests.RequestDate' | translate }}</strong>
+        <div>{{request.requestedDate | date}}</div>
+    </div>
+
+
     <div *ngIf="movie.quality">
         <strong>{{'MediaDetails.Quality' | translate }}:</strong>
         <div>{{movie.quality | quality}}</div>
     </div>
 
-    <div *ngIf="advancedOptions">
+    <div *ngIf="advancedOptions && request && request.rootPathOverrideTitle">
         <strong>{{'MediaDetails.RootFolderOverride' | translate }}</strong>
         <div>{{request.rootPathOverrideTitle}}</div>
     </div>
-    <div *ngIf="advancedOptions">
+    <div *ngIf="advancedOptions && request && request.qualityOverrideTitle">
         <strong>{{'MediaDetails.QualityOverride' | translate }}</strong>
         <div>{{request.qualityOverrideTitle}}</div>
     </div>
@@ -81,7 +93,7 @@
 
 
         <br />
-        <div>
+        <div *ngIf="movie?.keywords?.keywordsValue?.length > 0">
             <strong>{{'MediaDetails.Keywords' | translate }}:</strong>
             <mat-chip-list>
                 <mat-chip color="accent" selected  *ngFor="let keyword of movie.keywords.keywordsValue">

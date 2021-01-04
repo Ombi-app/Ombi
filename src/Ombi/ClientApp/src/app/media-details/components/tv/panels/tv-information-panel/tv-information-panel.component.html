@@ -11,11 +11,11 @@
     </div>
 </div>
 
-<div *ngIf="advancedOptions && request.rootPathOverrideTitle">
+<div *ngIf="advancedOptions && request?.rootPathOverrideTitle">
     <strong>{{'MediaDetails.RootFolderOverride' | translate }}</strong>
     <div>{{request.rootPathOverrideTitle}}</div>
 </div>
-<div *ngIf="advancedOptions && request.qualityOverrideTitle">
+<div *ngIf="advancedOptions && request?.qualityOverrideTitle">
     <strong>{{'MediaDetails.QualityOverride' | translate }}</strong>
     <div>{{request.qualityOverrideTitle}}</div>
 </div>

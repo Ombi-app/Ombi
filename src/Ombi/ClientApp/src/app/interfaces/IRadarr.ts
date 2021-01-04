@@ -1,4 +1,7 @@
-﻿export interface IRadarrRootFolder {
+﻿import { IChildRequests, IMovieRequests } from ".";
+import { ITvRequests } from "./IRequestModel";
+
+export interface IRadarrRootFolder {
     id: number;
     path: string;
 }
@@ -24,4 +27,6 @@ export interface IAdvancedData {
     rootFolder: IRadarrRootFolder;
     rootFolders: IRadarrRootFolder[];
     rootFolderId: number;
+    movieRequest: IMovieRequests;
+    tvRequest: ITvRequests;
 }

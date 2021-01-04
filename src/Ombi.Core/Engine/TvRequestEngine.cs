@@ -51,12 +51,28 @@ namespace Ombi.Core.Engine
         public async Task<RequestEngineResult> RequestTvShow(TvRequestViewModel tv)
         {
             var user = await GetUser();
+            var canRequestOnBehalf = false;
+
+            if (tv.RequestOnBehalf.HasValue())
+            {
+                canRequestOnBehalf = await UserManager.IsInRoleAsync(user, OmbiRoles.PowerUser) || await UserManager.IsInRoleAsync(user, OmbiRoles.Admin);
+
+                if (!canRequestOnBehalf)
+                {
+                    return new RequestEngineResult
+                    {
+                        Result = false,
+                        Message = "You do not have the correct permissions to request on behalf of users!",
+                        ErrorMessage = $"You do not have the correct permissions to request on behalf of users!"
+                    };
+                }
+            }
 
             var tvBuilder = new TvShowRequestBuilder(TvApi, MovieDbApi);
             (await tvBuilder
                 .GetShowInfo(tv.TvDbId))
                 .CreateTvList(tv)
-                .CreateChild(tv, user.Id);
+                .CreateChild(tv, canRequestOnBehalf ? tv.RequestOnBehalf : user.Id);
 
             await tvBuilder.BuildEpisodes(tv);
 
@@ -124,12 +140,12 @@ namespace Ombi.Core.Engine
                         ErrorMessage = "This has already been requested"
                     };
                 }
-                return await AddExistingRequest(tvBuilder.ChildRequest, existingRequest);
+                return await AddExistingRequest(tvBuilder.ChildRequest, existingRequest, tv.RequestOnBehalf);
             }
 
             // This is a new request
             var newRequest = tvBuilder.CreateNewRequest(tv);
-            return await AddRequest(newRequest.NewRequest);
+            return await AddRequest(newRequest.NewRequest, tv.RequestOnBehalf);
         }
 
         public async Task<RequestsViewModel<TvRequests>> GetRequests(int count, int position, OrderFilterModel type)
@@ -736,21 +752,21 @@ namespace Ombi.Core.Engine
             }
         }
 
-        private async Task<RequestEngineResult> AddExistingRequest(ChildRequests newRequest, TvRequests existingRequest)
+        private async Task<RequestEngineResult> AddExistingRequest(ChildRequests newRequest, TvRequests existingRequest, string requestOnBehalf)
         {
             // Add the child
             existingRequest.ChildRequests.Add(newRequest);
 
             await TvRepository.Update(existingRequest);
 
-            return await AfterRequest(newRequest);
+            return await AfterRequest(newRequest, requestOnBehalf);
         }
 
-        private async Task<RequestEngineResult> AddRequest(TvRequests model)
+        private async Task<RequestEngineResult> AddRequest(TvRequests model, string requestOnBehalf)
         {
             await TvRepository.Add(model);
             // This is a new request so we should only have 1 child
-            return await AfterRequest(model.ChildRequests.FirstOrDefault());
+            return await AfterRequest(model.ChildRequests.FirstOrDefault(), requestOnBehalf);
         }
 
         private static List<ChildRequests> SortEpisodes(List<ChildRequests> items)
@@ -766,7 +782,7 @@ namespace Ombi.Core.Engine
         }
 
 
-        private async Task<RequestEngineResult> AfterRequest(ChildRequests model)
+        private async Task<RequestEngineResult> AfterRequest(ChildRequests model, string requestOnBehalf)
         {
             var sendRuleResult = await RunSpecificRule(model, SpecificRules.CanSendNotification);
             if (sendRuleResult.Success)
@@ -776,7 +792,7 @@ namespace Ombi.Core.Engine
 
             await _requestLog.Add(new RequestLog
             {
-                UserId = (await GetUser()).Id,
+                UserId = requestOnBehalf.HasValue() ? requestOnBehalf : (await GetUser()).Id,
                 RequestDate = DateTime.UtcNow,
                 RequestId = model.Id,
                 RequestType = RequestType.TvShow,
