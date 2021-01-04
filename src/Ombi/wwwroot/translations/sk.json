@@ -92,6 +92,7 @@
         "TheatricalRelease": "Kino vydanie: {{date}}",
         "ViewOnPlex": "Zobraziť na Plex",
         "ViewOnEmby": "Zobraziť na Emby",
+        "ViewOnJellyfin": "View On Jellyfin",
         "RequestAdded": "Žiadosť o {{title}} bola úspešne pridaná",
         "Similar": "Podobné",
         "Refine": "Filtrovať",
