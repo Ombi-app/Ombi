@@ -271,7 +271,11 @@
             "AllSeasonsTooltip": "Questo richiederà ogni stagione per questo show",
             "FirstSeasonTooltip": "Questo richiederà solo la Prima Stagione per questo show",
             "LatestSeasonTooltip": "Questo richiederà solo l'Ultima Stagione per questo show"
-        }
+        },
+        "SonarrConfiguration": "Sonarr Configuration",
+        "RadarrConfiguration": "Radarr Configuration",
+        "RequestOnBehalf": "Request on behalf of",
+        "PleaseSelectUser": "Please select a user"
     },
     "Discovery": {
         "PopularTab": "Popolare",
