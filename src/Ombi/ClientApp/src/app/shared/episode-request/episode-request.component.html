@@ -16,7 +16,7 @@
   </div>
 
   <div class="row">
-    <div class="col-12" *ngFor="let season of series.seasonRequests">
+    <div class="col-12" *ngFor="let season of data.series.seasonRequests">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -24,9 +24,9 @@
               Season {{season.seasonNumber}}</mat-checkbox>
             <span *ngIf="season.seasonAvailable">Season {{season.seasonNumber}}</span>
           </mat-panel-title>
-          <!-- <mat-panel-description>
-            Description
-          </mat-panel-description> -->
+          <mat-panel-description>
+            <!-- Description -->
+          </mat-panel-description>
         </mat-expansion-panel-header>
 
         <div class="row" *ngFor="let ep of season.episodes">

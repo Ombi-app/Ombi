@@ -128,9 +128,9 @@ table {
     border: 1px solid rgba(0, 0, 0, 0.18);
 }
 
-::ng-deep .mat-toolbar.mat-primary {
-    margin-bottom: 0.5em;
-}
+// ::ng-deep .mat-toolbar.mat-primary {
+//     margin-bottom: 0.5em;
+// }
 
 ::ng-deep .dark .mat-form-field.mat-focused .mat-form-field-label {
     color: $accent-dark;

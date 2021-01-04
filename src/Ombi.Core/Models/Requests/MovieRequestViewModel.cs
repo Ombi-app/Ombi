@@ -33,6 +33,7 @@ namespace Ombi.Core.Models.Requests
     {
         public int TheMovieDbId { get; set; }
         public string LanguageCode { get; set; } = "en";
+        public string RequestOnBehalf { get; set; }
 
         /// <summary>
         /// This is only set from a HTTP Header

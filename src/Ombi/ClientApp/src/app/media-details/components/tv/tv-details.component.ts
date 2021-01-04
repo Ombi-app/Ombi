@@ -5,10 +5,13 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { MatDialog } from "@angular/material/dialog";
 import { YoutubeTrailerComponent } from "../shared/youtube-trailer.component";
-import { EpisodeRequestComponent } from "../../../shared/episode-request/episode-request.component";
-import { IAdvancedData, IChildRequests, ISonarrProfile, ISonarrRootFolder, ITvRequests, RequestType } from "../../../interfaces";
+import { EpisodeRequestComponent, EpisodeRequestData } from "../../../shared/episode-request/episode-request.component";
+import { IAdvancedData, IChildRequests, ITvRequests, RequestType } from "../../../interfaces";
 import { AuthService } from "../../../auth/auth.service";
 import { NewIssueComponent } from "../shared/new-issue/new-issue.component";
+import { TvAdvancedOptionsComponent } from "./panels/tv-advanced-options/tv-advanced-options.component";
+import { RequestServiceV2 } from "../../../services/requestV2.service";
+import { RequestBehalfComponent } from "../shared/request-behalf/request-behalf.component";
 
 @Component({
     templateUrl: "./tv-details.component.html",
@@ -30,6 +33,7 @@ export class TvDetailsComponent implements OnInit {
     constructor(private searchService: SearchV2Service, private route: ActivatedRoute,
         private sanitizer: DomSanitizer, private imageService: ImageService,
         public dialog: MatDialog, public messageService: MessageService, private requestService: RequestService,
+        private requestService2: RequestServiceV2,
         private auth: AuthService, private sonarrService: SonarrService) {
         this.route.params.subscribe((params: any) => {
             this.tvdbId = params.tvdbId;
@@ -44,6 +48,11 @@ export class TvDetailsComponent implements OnInit {
     public async load() {
 
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+
+        if (this.isAdmin) {
+            this.showAdvanced = await this.sonarrService.isEnabled();
+        }
+
         if (this.fromSearch) {
             this.tv = await this.searchService.getTvInfoWithMovieDbId(this.tvdbId);
             this.tvdbId = this.tv.id;
@@ -60,8 +69,8 @@ export class TvDetailsComponent implements OnInit {
         this.tv.background = this.sanitizer.bypassSecurityTrustStyle("url(" + tvBanner + ")");
     }
 
-    public async request() {
-        this.dialog.open(EpisodeRequestComponent, { width: "800px", data: this.tv, panelClass: 'modal-panel' })
+    public async request(userId: string) {
+        this.dialog.open(EpisodeRequestComponent, { width: "800px", data: <EpisodeRequestData> { series: this.tv, requestOnBehalf: userId }, panelClass: 'modal-panel' })
     }
 
     public async issue() {
@@ -78,6 +87,28 @@ export class TvDetailsComponent implements OnInit {
         this.dialog.open(YoutubeTrailerComponent, {
             width: '560px',
             data: trailerLink
+        });
+    }
+
+    public async openAdvancedOptions() {
+        const dialog = this.dialog.open(TvAdvancedOptionsComponent, { width: "700px", data: <IAdvancedData>{ tvRequest: this.showRequest }, panelClass: 'modal-panel' })
+        await dialog.afterClosed().subscribe(async result => {
+            if (result) {
+                // get the name and ids
+                result.rootFolder = result.rootFolders.filter(f => f.id === +result.rootFolderId)[0];
+                result.profile = result.profiles.filter(f => f.id === +result.profileId)[0];
+                await this.requestService2.updateTvAdvancedOptions({ qualityOverride: result.profileId, rootPathOverride: result.rootFolderId, requestId: this.tv.id }).toPromise();
+                this.setAdvancedOptions(result);
+            }
+        });
+    }
+
+    public async openRequestOnBehalf() {
+        const dialog = this.dialog.open(RequestBehalfComponent, { width: "700px", panelClass: 'modal-panel' })
+        await dialog.afterClosed().subscribe(async result => {
+            if (result) {
+                await this.request(result.id);
+            }
         });
     }
 

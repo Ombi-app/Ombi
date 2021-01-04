@@ -21,7 +21,7 @@
 
                 </div>
 
-                <div class="col-12 col-lg-6 col-xl-6 media-row">
+                <div class="col-12 col-lg-5 col-xl-5 media-row">
 
                     <button mat-raised-button class="btn-green btn-spacing" *ngIf="movie.available"> {{
             'Common.Available' | translate }}</button>
@@ -64,23 +64,28 @@
                     <button mat-raised-button class="btn-spacing" color="danger" (click)="issue()">
             <i class="fa fa-exclamation"></i> {{
                 'Requests.ReportIssue' | translate }}</button>
+                </div>
 
-
-
-
+                <!-- Setting/Configuration admin area -->
+                <div class="col-12 col-lg-1 col-xl-1 media-row content-end">
+                    <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="menu">
+                        <mat-icon>settings</mat-icon>
+                      </button>
+                      <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="openRequestOnBehalf()" [disabled]="hasRequest || movie.available">
+                          <mat-icon>supervised_user_circle</mat-icon>
+                          <span>{{'MediaDetails.RequestOnBehalf' | translate}}</span>
+                        </button>
+                        <button mat-menu-item [disabled]="!showAdvanced || !movieRequest" (click)="openAdvancedOptions()">
+                          <mat-icon>movie_filter</mat-icon>
+                          <span>{{'MediaDetails.RadarrConfiguration' | translate}}</span>
+                        </button>
+                      </mat-menu>
                 </div>
             </div>
 
             <div class="row">
-
                 <div class="col-12 col-md-2">
-                   <mat-card class="mat-elevation-z8 spacing-below" *ngIf="isAdmin && movieRequest" [ngStyle]="{'display': showAdvanced ? '' : 'none' }">
-                        <mat-card-content class="medium-font">
-                            <movie-admin-panel [movie]="movieRequest" (radarrEnabledChange)="showAdvanced = $event" (advancedOptionsChanged)="setAdvancedOptions($event)">
-                            </movie-admin-panel>
-                        </mat-card-content>
-                    </mat-card>
-
                     <mat-card class="mat-elevation-z8">
                         <mat-card-content class="medium-font">
                             <movie-information-panel [movie]="movie" [request]="movieRequest" [advancedOptions]="showAdvanced"></movie-information-panel>

@@ -47,6 +47,7 @@ export interface ITvRequestViewModel {
     latestSeason: boolean;
     tvDbId: number;
     seasons: ISeasonsViewModel[];
+    requestOnBehalf: string | undefined;
 }
 
 export interface ISeasonsViewModel {
