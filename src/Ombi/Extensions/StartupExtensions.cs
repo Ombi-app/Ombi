@@ -76,7 +76,7 @@ namespace Ombi
             DemoSingleton.Instance.Demo = enabledDemo;
         }
 
-        public static void AddJwtAuthentication(this IServiceCollection services, IConfigurationRoot configuration)
+        public static void AddJwtAuthentication(this IServiceCollection services)
         {
             var tokenValidationParameters = new TokenValidationParameters
             {
@@ -117,12 +117,17 @@ namespace Ombi
                         OnTokenValidated = async context =>
                         {
                             var userid = context.Principal?.Claims?.Where(x => x.Type.Equals("id", StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault()?.Value ?? default;
-                            var um = context.HttpContext.RequestServices.GetRequiredService<OmbiUserManager>();
-                            var user = await um.FindByIdAsync(userid);
+                            var cache = context.HttpContext.RequestServices.GetRequiredService<ICacheService>();
+                            var user = await cache.GetOrAdd(userid + "token", async () =>
+                            {
+                                var um = context.HttpContext.RequestServices.GetRequiredService<OmbiUserManager>();
+                                return await um.FindByIdAsync(userid);
+                            }, DateTime.UtcNow.AddMinutes(10));
                             if (user == null)
                             {
                                 context.Fail("invaild token");
                             }
+
                         }
                     };
                 });
