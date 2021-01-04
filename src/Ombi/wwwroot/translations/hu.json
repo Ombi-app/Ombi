@@ -92,6 +92,7 @@
         "TheatricalRelease": "Mozis kiadás: {{date}}",
         "ViewOnPlex": "Megnézés Plexen",
         "ViewOnEmby": "Megnézés Emby-n",
+        "ViewOnJellyfin": "View On Jellyfin",
         "RequestAdded": "Kérés sikeresen leadva erre: {{title}}",
         "Similar": "Hasonló",
         "Refine": "Finomítás",
