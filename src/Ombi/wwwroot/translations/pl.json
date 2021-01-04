@@ -271,7 +271,11 @@
             "AllSeasonsTooltip": "Zgłoszenie obejmie wszystkie sezony tego serialu",
             "FirstSeasonTooltip": "Zgłoszenie obejmie pierwszy sezon tego serialu",
             "LatestSeasonTooltip": "Zgłoszenie obejmie najnowszy sezon tego serialu"
-        }
+        },
+        "SonarrConfiguration": "Sonarr Configuration",
+        "RadarrConfiguration": "Radarr Configuration",
+        "RequestOnBehalf": "Request on behalf of",
+        "PleaseSelectUser": "Please select a user"
     },
     "Discovery": {
         "PopularTab": "Popularne",
