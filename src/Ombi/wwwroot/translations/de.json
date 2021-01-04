@@ -92,6 +92,7 @@
         "TheatricalRelease": "Kinostart: {{date}}",
         "ViewOnPlex": "In Plex anschauen",
         "ViewOnEmby": "In Emby anschauen",
+        "ViewOnJellyfin": "View On Jellyfin",
         "RequestAdded": "Anfrage für {{title}} wurde erfolgreich hinzugefügt",
         "Similar": "Ähnliche",
         "Refine": "Auswahl verfeinern",
