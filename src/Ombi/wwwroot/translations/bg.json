@@ -92,6 +92,7 @@
         "TheatricalRelease": "Кинопремиера: {{date}}",
         "ViewOnPlex": "Преглед в Plex",
         "ViewOnEmby": "Преглед в Emby",
+        "ViewOnJellyfin": "View On Jellyfin",
         "RequestAdded": "Заявката за {{title}} е успешно добавена",
         "Similar": "Подобно",
         "Refine": "Уточнете",
