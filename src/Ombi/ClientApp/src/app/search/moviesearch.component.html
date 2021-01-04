@@ -168,6 +168,9 @@
                         <a *ngIf="result.embyUrl" style="text-align: right" id="embybtn" class="btn btn-sm btn-success-outline"
                             href="{{result.embyUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
                             translate}}</a>
+                        <a *ngIf="result.jellyfinUrl" style="text-align: right" id="jellyfinbtn" class="btn btn-sm btn-success-outline"
+                            href="{{result.jellyfinUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnJellyfin' |
+                            translate}}</a>
                     </div>
                     <div class="dropdown" *ngIf="result.available && issueCategories && issuesEnabled">
                         <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown"

@@ -87,7 +87,9 @@
                 <td mat-cell *matCellDef="let u">
                         <span *ngIf="u.userType === 1">Local User</span>
                         <span *ngIf="u.userType === 2">Plex User</span>
-                        <span *ngIf="u.userType === 3">Emby User</span> </td>
+                        <span *ngIf="u.userType === 3">Emby User</span>
+                        <span *ngIf="u.userType === 4">Jellyfin User</span>
+                </td>
           </ng-container>
   
           <ng-container matColumnDef="roles">

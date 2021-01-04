@@ -19,6 +19,7 @@ namespace Ombi.Core.Models
     {
         LocalUser = 1,
         PlexUser = 2,
-        EmbyUser = 3
+        EmbyUser = 3,
+        JellyfinUser = 5
     }
 }

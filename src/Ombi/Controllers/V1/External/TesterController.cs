@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.CouchPotato;
 using Ombi.Api.Emby;
+using Ombi.Api.Jellyfin;
 using Ombi.Api.Lidarr;
 using Ombi.Api.Plex;
 using Ombi.Api.Radarr;
@@ -37,6 +38,7 @@ namespace Ombi.Controllers.V1.External
     [Produces("application/json")]
     public class TesterController : Controller
     {
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TesterController" /> class.
         /// </summary>
@@ -44,7 +46,8 @@ namespace Ombi.Controllers.V1.External
             IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
             IPlexApi plex, IEmbyApiFactory emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider,
             ICouchPotatoApi cpApi, ITelegramNotification telegram, ISickRageApi srApi, INewsletterJob newsletter, ILegacyMobileNotification mobileNotification,
-            ILidarrApi lidarrApi, IGotifyNotification gotifyNotification, IWhatsAppApi whatsAppApi, OmbiUserManager um, IWebhookNotification webhookNotification)
+            ILidarrApi lidarrApi, IGotifyNotification gotifyNotification, IWhatsAppApi whatsAppApi, OmbiUserManager um, IWebhookNotification webhookNotification,
+            IJellyfinApi jellyfinApi)
         {
             Service = service;
             DiscordNotification = notification;
@@ -69,6 +72,7 @@ namespace Ombi.Controllers.V1.External
             WhatsAppApi = whatsAppApi;
             UserManager = um;
             WebhookNotification = webhookNotification;
+            _jellyfinApi = jellyfinApi;
         }
 
         private INotificationService Service { get; }
@@ -93,7 +97,8 @@ namespace Ombi.Controllers.V1.External
         private ILegacyMobileNotification MobileNotification { get; }
         private ILidarrApi LidarrApi { get; }
         private IWhatsAppApi WhatsAppApi { get; }
-        private OmbiUserManager UserManager {get;}
+        private OmbiUserManager UserManager {get; }
+        private readonly IJellyfinApi _jellyfinApi;
 
         /// <summary>
         /// Sends a test message to discord using the provided settings
@@ -329,6 +334,26 @@ namespace Ombi.Controllers.V1.External
             catch (Exception e)
             {
                 Log.LogError(LoggingEvents.Api, e, "Could not test Emby");
+                return false;
+            }
+        }
+
+        /// <summary>
+        ///  Checks if we can connect to Jellyfin with the provided settings
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        [HttpPost("jellyfin")]
+        public async Task<bool> Jellyfin([FromBody] JellyfinServers settings)
+        {
+            try
+            {
+                var result = await _jellyfinApi.GetUsers(settings.FullUri, settings.ApiKey);
+                return result.Any();
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test Jellyfin");
                 return false;
             }
         }

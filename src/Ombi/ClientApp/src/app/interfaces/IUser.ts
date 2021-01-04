@@ -53,6 +53,7 @@ export enum UserType {
     LocalUser = 1,
     PlexUser = 2,
     EmbyUser = 3,
+    JellyfinUser = 5,
 }
 
 export interface IIdentityResult {

@@ -35,6 +35,18 @@
             </div>
 
         </div>
+        <div *ngIf="jellyfinEnabled">
+            <div class="form-group">
+                <mat-slide-toggle id="importJellyfinUsers" [(ngModel)]="settings.importJellyfinUsers">Import Jellyfin Users</mat-slide-toggle>
+            </div>
+            
+            <div *ngIf="jellyfinUsers">
+                <p>Jellyfin Users excluded from Import</p>
+                
+                <p-autoComplete [(ngModel)]="bannedJellyfinUsers" [suggestions]="filteredJellyfinUsers" [multiple]="true" field="username" (completeMethod)="filterJellyfinList($event)"></p-autoComplete>
+            </div>
+
+        </div>
     </div>
     <div class="col-md-6">
         <h4>Default Roles</h4>

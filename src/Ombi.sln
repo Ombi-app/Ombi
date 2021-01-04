@@ -39,6 +39,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Schedule", "Ombi.Sched
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Emby", "Ombi.Api.Emby\Ombi.Api.Emby.csproj", "{08FF107D-31E1-470D-AF86-E09B015CEE06}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Jellyfin", "Ombi.Api.Jellyfin\Ombi.Api.Jellyfin.csproj", "{F03757C7-5145-45C9-AFFF-B4E946755779}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Sonarr", "Ombi.Api.Sonarr\Ombi.Api.Sonarr.csproj", "{CFB5E008-D0D0-43C0-AA06-89E49D17F384}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6F42AB98-9196-44C4-B888-D5E409F415A1}"
@@ -169,6 +171,10 @@ Global
 		{08FF107D-31E1-470D-AF86-E09B015CEE06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08FF107D-31E1-470D-AF86-E09B015CEE06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08FF107D-31E1-470D-AF86-E09B015CEE06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F03757C7-5145-45C9-AFFF-B4E946755779}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F03757C7-5145-45C9-AFFF-B4E946755779}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F03757C7-5145-45C9-AFFF-B4E946755779}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F03757C7-5145-45C9-AFFF-B4E946755779}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CFB5E008-D0D0-43C0-AA06-89E49D17F384}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CFB5E008-D0D0-43C0-AA06-89E49D17F384}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFB5E008-D0D0-43C0-AA06-89E49D17F384}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -3,6 +3,8 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Ombi.Api.CouchPotato;
 using Ombi.Api.Emby;
 using Ombi.Api.Emby.Models;
+using Ombi.Api.Jellyfin;
+using Ombi.Api.Jellyfin.Models;
 using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models.Status;
 using Ombi.Core.Settings;

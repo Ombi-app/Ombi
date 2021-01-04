@@ -28,6 +28,7 @@ export interface ISearchTvResult {
     available: boolean;
     plexUrl: string;
     embyUrl: string;
+    jellyfinUrl: string;
     quality: string;
     firstSeason: boolean;
     latestSeason: boolean;

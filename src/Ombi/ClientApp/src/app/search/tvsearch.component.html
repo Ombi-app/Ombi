@@ -142,6 +142,11 @@
                                     <i class="fa fa-eye"></i> {{ 'Search.ViewOnEmby' | translate }}
                                 </a>
                             </div>
+                            <div *ngIf="node.jellyfinUrl && node.available">
+                                <a style="text-align: right" id="jellyfinbtn" class="btn btn-sm btn-success-outline" href="{{node.jellyfinUrl}}" target="_blank">
+                                    <i class="fa fa-eye"></i> {{ 'Search.ViewOnJellyfin' | translate }}
+                                </a>
+                            </div>
                             <div class="dropdown" *ngIf="issueCategories && issuesEnabled">
                                 <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="true">

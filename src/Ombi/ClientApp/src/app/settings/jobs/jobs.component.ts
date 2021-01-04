@@ -24,6 +24,7 @@ export class JobsComponent implements OnInit {
                 automaticUpdater:         [x.automaticUpdater, Validators.required],
                 couchPotatoSync:          [x.couchPotatoSync, Validators.required],
                 embyContentSync:          [x.embyContentSync, Validators.required],
+                jellyfinContentSync:      [x.jellyfinContentSync, Validators.required],
                 plexContentSync:          [x.plexContentSync, Validators.required],
                 userImporter:             [x.userImporter, Validators.required],
                 sonarrSync:               [x.sonarrSync, Validators.required],
