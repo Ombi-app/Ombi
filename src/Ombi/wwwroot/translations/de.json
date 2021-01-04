@@ -271,7 +271,11 @@
             "AllSeasonsTooltip": "Dies wird jede Saison für diese Show anfordern",
             "FirstSeasonTooltip": "Dies wird nur die erste Saison für diese Show anfordern",
             "LatestSeasonTooltip": "Dies wird nur die letzte Saison für diese Show anfordern"
-        }
+        },
+        "SonarrConfiguration": "Sonarr Configuration",
+        "RadarrConfiguration": "Radarr Configuration",
+        "RequestOnBehalf": "Request on behalf of",
+        "PleaseSelectUser": "Please select a user"
     },
     "Discovery": {
         "PopularTab": "Beliebt",
