@@ -92,6 +92,7 @@
         "TheatricalRelease": "Bioscoop Uitgave: {{date}}",
         "ViewOnPlex": "Bekijk op Plex",
         "ViewOnEmby": "Bekijk op Emby",
+        "ViewOnJellyfin": "View On Jellyfin",
         "RequestAdded": "Aanvraag voor {{title}} is succesvol toegevoegd",
         "Similar": "Vergelijkbaar",
         "Refine": "Verfijn",
