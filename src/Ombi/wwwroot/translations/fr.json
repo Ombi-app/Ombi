@@ -257,7 +257,6 @@
         "Genres": "Genres",
         "TheatricalRelease": "Sortie en salle",
         "DigitalRelease": "Sorti en Numérique",
-        "UserScore": "Note des Spectateurs",
         "Votes": "Votes",
         "Runtime": "Durée de visionnage",
         "Minutes": "{{runtime}} Minutes",

@@ -257,7 +257,6 @@
         "Genres": "Genres",
         "TheatricalRelease": "Premiera kinowa",
         "DigitalRelease": "Digital Release",
-        "UserScore": "User Score",
         "Votes": "Votes",
         "Runtime": "Runtime",
         "Minutes": "{{runtime}} Minutes",

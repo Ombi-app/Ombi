@@ -1,42 +1,46 @@
 <div>
+    <span *ngIf="tv.rating">
+        <img style="width: 4em;" src="{{baseUrl}}/images/tvm-logo.png"> {{tv.rating}}/10
+    </span>
+    <span *ngIf="ratings?.score && ratings?.class">
+        <img class="rating-small" src="{{baseUrl}}/images/{{ratings.class === 'rotten' ? 'rotten-rotten.svg' : 'rotten-fresh.svg'}}"> {{ratings.score}}%
+    </span>
+ 
+    <hr>
     <div *ngIf="tv.status">
         <strong>{{'MediaDetails.Status' | translate }}:</strong>
-        <div>
             {{tv.status}}
-        </div>
     </div>
     <strong>First Aired:</strong>
-    <div>
         {{tv.firstAired | date: 'mediumDate'}}
-    </div>
+</div>
+
+<div *ngIf="seasonCount">
+    <strong>Seasons:</strong>
+        {{seasonCount}}
+</div>
+<div *ngIf="totalEpisodes">
+    <strong>Episodes:</strong>
+        {{totalEpisodes}}
 </div>
 
 <div *ngIf="advancedOptions && request?.rootPathOverrideTitle">
-    <strong>{{'MediaDetails.RootFolderOverride' | translate }}</strong>
+    <strong>{{'MediaDetails.RootFolderOverride' | translate }}:</strong>
     <div>{{request.rootPathOverrideTitle}}</div>
 </div>
 <div *ngIf="advancedOptions && request?.qualityOverrideTitle">
-    <strong>{{'MediaDetails.QualityOverride' | translate }}</strong>
+    <strong>{{'MediaDetails.QualityOverride' | translate }}:</strong>
     <div>{{request.qualityOverrideTitle}}</div>
 </div>
 
 <div>
     <strong>{{'MediaDetails.Runtime' | translate }}:</strong>
-    <div>
         {{'MediaDetails.Minutes' | translate:{ runtime: tv.runtime} }}
-    </div>
 </div>
-<div *ngIf="tv.rating">
-        <strong>Rating:</strong>
-        <div>
-            {{tv.rating}} / 10
-        </div>
-    </div>
+
 <div *ngIf="tv.network">
     <strong>Network:</strong>
-    <div>
         {{tv.network.name}}
-    </div>
 </div>
 
 <div *ngIf="tv.genre">
@@ -48,16 +52,3 @@
     </div>
 </div>
 
-<br />
-<div *ngIf="seasonCount">
-    <strong>Seasons:</strong>
-    <div>
-        {{seasonCount}}
-    </div>
-</div>
-<div *ngIf="totalEpisodes">
-    <strong>Episodes:</strong>
-    <div>
-        {{totalEpisodes}}
-    </div>
-</div>

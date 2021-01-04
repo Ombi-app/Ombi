@@ -10,10 +10,10 @@
         <i matTooltip="The TV DB" class="fa fa-tv fa-2x grow-social"></i>
     </a>
 
-    <a *ngIf="hasTrailer" class="media-icons" (click)="openDialog()"><i
+    <a *ngIf="hasTrailer" class="media-icons youtube" (click)="openDialog()"><i
             matTooltip="Trailer" class="fa fa-youtube-play fa-2x grow-social"></i></a>
 
-    <a *ngIf="imdbId" class="media-icons" [href]="doNotAppend ? imdbid : 'https://imdb.com/title/' + imdbId"
+    <a *ngIf="imdbId" class="media-icons imdb" [href]="doNotAppend ? imdbid : 'https://imdb.com/title/' + imdbId"
         target="_blank">
         <i matTooltip="Imdb" class="fa fa-imdb fa-2x grow-social"></i>
     </a>

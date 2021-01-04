@@ -11,6 +11,7 @@ import { ISearchMovieResultV2 } from "../interfaces/ISearchMovieResultV2";
 import { ISearchTvResultV2, IMovieCollectionsViewModel, IActorCredits } from "../interfaces/ISearchTvResultV2";
 import { IArtistSearchResult, IAlbumArt } from "../interfaces/IMusicSearchResultV2";
 import { SearchFilter } from "../my-nav/SearchFilter";
+import { IMovieRatings, ITvRatings } from "../interfaces/IRatings";
 
 @Injectable()
 export class SearchV2Service extends ServiceHelpers {
@@ -121,4 +122,13 @@ export class SearchV2Service extends ServiceHelpers {
     public getReleaseGroupArt(mbid: string): Observable<IAlbumArt> {
         return this.http.get<IAlbumArt>(`${this.url}/releasegroupart/${mbid}`);
     }
+
+    public getRottenMovieRatings(name: string, year: number): Observable<IMovieRatings> {
+        return this.http.get<IMovieRatings>(`${this.url}/ratings/movie/${name}/${year}`);
+    }
+
+    public getRottenTvRatings(name: string, year: number): Observable<ITvRatings> {
+        return this.http.get<ITvRatings>(`${this.url}/ratings/tv/${name}/${year}`);
+    }
+
 }

@@ -257,7 +257,6 @@
         "Genres": "Genrer",
         "TheatricalRelease": "Biopremiär",
         "DigitalRelease": "Digital release",
-        "UserScore": "Användarbetyg",
         "Votes": "Röster",
         "Runtime": "Speltid",
         "Minutes": "{{runtime}} minuter",

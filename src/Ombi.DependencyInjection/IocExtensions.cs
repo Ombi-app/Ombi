@@ -67,6 +67,7 @@ using Quartz.Spi;
 using Ombi.Api.MusicBrainz;
 using Ombi.Api.Twilio;
 using Ombi.Api.CloudService;
+using Ombi.Api.RottenTomatoes;
 
 namespace Ombi.DependencyInjection
 {
@@ -158,6 +159,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ICloudMobileNotification, CloudMobileNotification>();
             services.AddTransient<IEmbyApiFactory, EmbyApiFactory>();
             services.AddTransient<IJellyfinApiFactory, JellyfinApiFactory>();
+            services.AddTransient<IRottenTomatoesApi, RottenTomatoesApi>();
         }
 
         public static void RegisterStore(this IServiceCollection services) { 
