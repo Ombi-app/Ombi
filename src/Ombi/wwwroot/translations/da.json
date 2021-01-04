@@ -92,6 +92,7 @@
         "TheatricalRelease": "Biografudgivelse: {{date}}",
         "ViewOnPlex": "Se på Plex",
         "ViewOnEmby": "Se på Emby",
+        "ViewOnJellyfin": "View On Jellyfin",
         "RequestAdded": "{{title}} er anmodet med succes",
         "Similar": "Lignende",
         "Refine": "Refine",
