@@ -271,7 +271,11 @@
             "AllSeasonsTooltip": "Detta kommer att begära varje säsong för denna serie",
             "FirstSeasonTooltip": "Detta kommer endast att begära den första säsongen för denna serie",
             "LatestSeasonTooltip": "Detta kommer endast att begära den senaste säsongen för denna serie"
-        }
+        },
+        "SonarrConfiguration": "Sonarr Configuration",
+        "RadarrConfiguration": "Radarr Configuration",
+        "RequestOnBehalf": "Request on behalf of",
+        "PleaseSelectUser": "Please select a user"
     },
     "Discovery": {
         "PopularTab": "Populära",
