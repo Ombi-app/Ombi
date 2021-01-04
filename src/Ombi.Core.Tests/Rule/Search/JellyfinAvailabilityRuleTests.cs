@@ -84,6 +84,8 @@ namespace Ombi.Core.Tests.Rule.Search
                 {
                     new JellyfinServers
                     {
+                        Ip = "8080",
+                        Port = 9090,
                         ServerHostname = string.Empty,
                         ServerId = "8"
                     }
