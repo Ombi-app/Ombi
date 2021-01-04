@@ -92,6 +92,7 @@
         "TheatricalRelease": "Kinopremiere: {{date}}",
         "ViewOnPlex": "Spill av på Plex",
         "ViewOnEmby": "Spill av på Emby",
+        "ViewOnJellyfin": "View On Jellyfin",
         "RequestAdded": "Forespørsel om {{title}} er lagt til",
         "Similar": "Lignende",
         "Refine": "Spesifiser",
