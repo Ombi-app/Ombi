@@ -92,7 +92,7 @@
         "TheatricalRelease": "Lançamento nos Cinemas: {{date}}",
         "ViewOnPlex": "Assistir no Plex",
         "ViewOnEmby": "Assistir no Emby",
-        "ViewOnJellyfin": "View On Jellyfin",
+        "ViewOnJellyfin": "Ver no Jellyfin",
         "RequestAdded": "Solicitação de {{title}} foi adicionada com sucesso",
         "Similar": "Semelhante",
         "Refine": "Filtro",
@@ -256,7 +256,7 @@
         "RootFolderOverride": "Substituição da pasta raiz",
         "QualityOverride": "Substituição de qualidade",
         "Genres": "Gêneros",
-        "TheatricalRelease": "Release",
+        "TheatricalRelease": "Lançamento",
         "DigitalRelease": "Lançamento Digital",
         "Votes": "Votos",
         "Runtime": "Tempo de execução",
@@ -272,10 +272,10 @@
             "FirstSeasonTooltip": "Isto irá pedir a 1ª temporada da série",
             "LatestSeasonTooltip": "Isto irá pedir a última temporada da série"
         },
-        "SonarrConfiguration": "Sonarr Configuration",
-        "RadarrConfiguration": "Radarr Configuration",
-        "RequestOnBehalf": "Request on behalf of",
-        "PleaseSelectUser": "Please select a user"
+        "SonarrConfiguration": "Configuração do Sonarr",
+        "RadarrConfiguration": "Configuração do Radarr",
+        "RequestOnBehalf": "Pedido em nome de",
+        "PleaseSelectUser": "Por favor, selecione um usuário"
     },
     "Discovery": {
         "PopularTab": "Popular",
