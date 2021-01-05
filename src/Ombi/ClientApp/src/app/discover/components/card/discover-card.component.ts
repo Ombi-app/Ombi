@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { IDiscoverCardResult } from "../../interfaces";
-import { RequestType, ISearchTvResult, ISearchMovieResult } from "../../../interfaces";
+import { RequestType } from "../../../interfaces";
 import { SearchV2Service } from "../../../services";
 import { MatDialog } from "@angular/material/dialog";
 import { DiscoverCardDetailsComponent } from "./discover-card-details.component";
@@ -49,7 +49,33 @@ export class DiscoverCardComponent implements OnInit {
         if (this.result.requested) {
             return "requested";
         }
-        return "notrequested";
+        return "";
+    }
+
+    public getAvailbility(): string {
+        if (this.result.available) {
+            return "fa-check-circle";
+        }
+        if (this.result.approved) {
+            return "fa-check-circle";
+        }
+        if (this.result.requested) {
+            return "fa-question-circle";
+        }
+        return "";
+    }
+
+    public getAvailbilityStatus(): string {
+        if (this.result.available) {
+            return "Available";
+        }
+        if (this.result.approved) {
+            return "Approved";
+        }
+        if (this.result.requested) {
+            return "Pending";
+        }
+        return "";
     }
 
     private getExtraMovieInfo() {
