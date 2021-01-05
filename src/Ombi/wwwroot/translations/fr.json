@@ -92,7 +92,7 @@
         "TheatricalRelease": "Sortie en salle: {{date}}",
         "ViewOnPlex": "Regarder sur Plex",
         "ViewOnEmby": "Regarder sur Emby",
-        "ViewOnJellyfin": "View On Jellyfin",
+        "ViewOnJellyfin": "Voir sur Jellyfin",
         "RequestAdded": "La demande pour {{title}} a été ajoutée avec succès",
         "Similar": "Similaires",
         "Refine": "Affiner",
@@ -256,7 +256,7 @@
         "RootFolderOverride": "Remplacer le Dossier Racine",
         "QualityOverride": "Remplacer la Qualité",
         "Genres": "Genres",
-        "TheatricalRelease": "Release",
+        "TheatricalRelease": "Version",
         "DigitalRelease": "Sorti en Numérique",
         "Votes": "Votes",
         "Runtime": "Durée de visionnage",
@@ -274,8 +274,8 @@
         },
         "SonarrConfiguration": "Sonarr Configuration",
         "RadarrConfiguration": "Radarr Configuration",
-        "RequestOnBehalf": "Request on behalf of",
-        "PleaseSelectUser": "Please select a user"
+        "RequestOnBehalf": "Demander au nom de : ",
+        "PleaseSelectUser": "Veuillez sélectionner un utilisateur"
     },
     "Discovery": {
         "PopularTab": "Populaire",
