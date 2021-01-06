@@ -14,29 +14,6 @@ If running migrations for any db provider other than Sqlite, then ensure the dat
     export PATH="$HOME/.dotnet/tools:$PATH"
     ```
 
-1. In `src/Ombi`, install the `Microsoft.EntityFrameworkCore.Design` package:
-
-    ```
-    cd src/Ombi
-    dotnet add package Microsoft.EntityFrameworkCore.Design
-    ```
-
-1. For some reason, the `StartupSingleton.Instance.SecurityKey` in `src/Ombi/Extensions/StartupExtensions.cs` is invalid when running `dotnet ef migrations add` so we must fix it; apply this patch which seems to do the job:
-
-    ```
-    @@ -79,7 +79,7 @@ namespace Ombi
-                 var tokenValidationParameters = new TokenValidationParameters
-                 {
-                     ValidateIssuerSigningKey = true,
-    -                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(StartupSingleton.Instance.SecurityKey)),
-    +                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(StartupSingleton.Instance.SecurityKey + "s")),
-                     RequireExpirationTime = true,
-                     ValidateLifetime = true,
-                     ValidAudience = "Ombi",
-    ```
-
-    *WARNING*: Don't forget to undo this before building Ombi, or things will be broken!
-
 1. List the available `dbcontext`s, and select the one that matches the database your fields will go in:
 
     ```

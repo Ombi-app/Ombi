@@ -249,6 +249,26 @@ namespace Ombi.Core.Engine.V2
             return result;
         }
 
+        public async Task<IEnumerable<StreamingData>> GetStreamInformation(int movieDbId, CancellationToken cancellationToken)
+        {
+            var providers = await MovieApi.GetMovieWatchProviders(movieDbId, cancellationToken);
+            var results = await GetUserWatchProvider(providers);
+
+            var data = new List<StreamingData>();
+
+            foreach (var result in results)
+            {
+                data.Add(new StreamingData
+                {
+                    Logo = result.logo_path,
+                    Order = result.display_priority,
+                    StreamingProvider = result.provider_name
+                });
+            }
+
+            return data;
+        }
+
         protected async Task<List<SearchMovieViewModel>> TransformMovieResultsToResponse(
             IEnumerable<MovieSearchResult> movies)
         {

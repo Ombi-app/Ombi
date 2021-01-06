@@ -4,7 +4,7 @@ import { Injectable, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 
-import { ICheckbox, ICreateWizardUser, IIdentityResult, INotificationPreferences, IResetPasswordToken, IUpdateLocalUser, IUser, IUserDropdown, IWizardUserResult } from "../interfaces";
+import { ICheckbox, ICreateWizardUser, IIdentityResult, INotificationPreferences, IResetPasswordToken, IStreamingCountries, IUpdateLocalUser, IUser, IUserDropdown, IWizardUserResult } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
 @Injectable()
@@ -83,8 +83,16 @@ export class IdentityService extends ServiceHelpers {
     public getNotificationPreferencesForUser(userId: string): Observable<INotificationPreferences[]> {
         return this.http.get<INotificationPreferences[]>(`${this.url}notificationpreferences/${userId}`, {headers: this.headers});
     }
-    
+
     public updateLanguage(lang: string): Observable<null> {
         return this.http.post<any>(`${this.url}language`, {lang: lang}, {headers: this.headers});
+    }
+
+    public getSupportedStreamingCountries(): Observable<string[]> {
+        return this.http.get<string[]>(`${this.url}streamingcountry`,  {headers: this.headers});
+    }
+
+    public updateStreamingCountry(code: string): Observable<null> {
+        return this.http.post<any>(`${this.url}streamingcountry`, {code: code}, {headers: this.headers});
     }
 }

@@ -420,5 +420,20 @@ namespace Ombi.Controllers.V2
             return _rottenTomatoesApi.GetTvRatings(name, year);
         }
 
+        [HttpGet("stream/movie/{movieDbId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public Task<IEnumerable<StreamingData>> GetMovieStreams(int movieDBId)
+        {
+            return _movieEngineV2.GetStreamInformation(movieDBId, HttpContext.RequestAborted);
+        }
+
+        [HttpGet("stream/tv/{tvdbId}/{tvMaze}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public Task<IEnumerable<StreamingData>> GetTvStreams(int tvdbId, int tvMaze)
+        {
+            return _tvEngineV2.GetStreamInformation(tvdbId, tvMaze, HttpContext.RequestAborted);
+        }
     }
 }

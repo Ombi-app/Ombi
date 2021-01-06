@@ -17,6 +17,7 @@ export interface IUser {
     userAccessToken: string;
     language: string;
     userQualityProfiles: IUserQualityProfiles;
+    streamingCountry: string;
 
     // FOR UI
     episodeRequestQuota: IRemainingRequests | null;
@@ -35,7 +36,7 @@ export interface IUserQualityProfiles {
     sonarrRootPath: number;
     sonarrQualityProfile: number;
     radarrRootPath: number;
-    radarrQualityProfile: number;   
+    radarrQualityProfile: number;
 }
 
 export interface ICreateWizardUser {
@@ -47,6 +48,10 @@ export interface ICreateWizardUser {
 export interface IWizardUserResult {
     result: boolean;
     errors: string[];
+}
+
+export interface IStreamingCountries {
+    code: string;
 }
 
 export enum UserType {

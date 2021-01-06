@@ -18,6 +18,7 @@ namespace Ombi.Core.Models.UI
         public UserType UserType { get; set; }
         public int MovieRequestLimit { get; set; }
         public int EpisodeRequestLimit { get; set; }
+        public string StreamingCountry { get; set; }
         public RequestQuotaCountModel EpisodeRequestQuota { get; set; }
         public RequestQuotaCountModel MovieRequestQuota { get; set; }
         public RequestQuotaCountModel MusicRequestQuota { get; set; }

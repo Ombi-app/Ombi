@@ -5,7 +5,16 @@
     <span *ngIf="ratings?.score && ratings?.class">
         <img class="rating-small" src="{{baseUrl}}/images/{{ratings.class === 'rotten' ? 'rotten-rotten.svg' : 'rotten-fresh.svg'}}"> {{ratings.score}}%
     </span>
- 
+
+    <div *ngIf="streams?.length > 0">
+        <hr>
+        <strong>{{'MediaDetails.StreamingOn' | translate }}:</strong>
+        <div>
+        <span *ngFor="let stream of streams">
+            <img class="stream-small" [matTooltip]="stream.streamingProvider" src="https://image.tmdb.org/t/p/original{{stream.logo}}">
+        </span>
+        </div>
+    </div>
     <hr>
     <div *ngIf="tv.status">
         <strong>{{'MediaDetails.Status' | translate }}:</strong>

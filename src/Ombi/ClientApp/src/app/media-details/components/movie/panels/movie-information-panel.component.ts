@@ -4,6 +4,7 @@ import { IMovieRequests } from "../../../../interfaces";
 import { SearchV2Service } from "../../../../services/searchV2.service";
 import { IMovieRatings } from "../../../../interfaces/IRatings";
 import { APP_BASE_HREF } from "@angular/common";
+import { IStreamingData } from "../../../../interfaces/IStreams";
 @Component({
     templateUrl: "./movie-information-panel.component.html",
     styleUrls: ["../../../media-details.component.scss"],
@@ -19,9 +20,12 @@ export class MovieInformationPanelComponent implements OnInit {
     @Input() public advancedOptions: boolean;
 
     public ratings: IMovieRatings;
+    public streams: IStreamingData[];
 
     public ngOnInit() {
         this.searchService.getRottenMovieRatings(this.movie.title, +this.movie.releaseDate.toString().substring(0,4))
             .subscribe(x => this.ratings = x);
+
+            this.searchService.getMovieStreams(this.movie.id).subscribe(x => this.streams = x);
     }
 }

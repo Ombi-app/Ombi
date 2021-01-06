@@ -10,6 +10,7 @@ using Nito.AsyncEx;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
+using Ombi.Helpers;
 using Ombi.TheMovieDbApi.Models;
 
 namespace Ombi.Api.TheMovieDb
@@ -24,7 +25,7 @@ namespace Ombi.Api.TheMovieDb
         }
 
         private const string ApiToken = "b8eabaf5608b88d0298aa189dd90bf00";
-        private const string BaseUri ="http://api.themoviedb.org/3/";
+        private const string BaseUri = "http://api.themoviedb.org/3/";
         private IMapper Mapper { get; }
         private IApi Api { get; }
         private AsyncLazy<TheMovieDbSettings> Settings { get; }
@@ -107,11 +108,15 @@ namespace Ombi.Api.TheMovieDb
             return result;
         }
 
-        public async Task<List<TvSearchResult>> SearchTv(string searchTerm)
+        public async Task<List<TvSearchResult>> SearchTv(string searchTerm, string year = default)
         {
             var request = new Request($"search/tv", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             request.AddQueryString("query", searchTerm);
+            if (year.HasValue())
+            {
+                request.AddQueryString("first_air_date_year", year);
+            }
             AddRetry(request);
 
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
@@ -126,7 +131,7 @@ namespace Ombi.Api.TheMovieDb
 
             return await Api.Request<TvExternals>(request);
         }
-        
+
         public async Task<List<MovieSearchResult>> SimilarMovies(int movieId, string langCode)
         {
             var request = new Request($"movie/{movieId}/similar", BaseUri, HttpMethod.Get);
@@ -165,7 +170,7 @@ namespace Ombi.Api.TheMovieDb
 
             AddRetry(request);
 
-            var result =  await Api.Request<TheMovieDbContainer<SearchResult>>(request);
+            var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
             return Mapper.Map<List<MovieSearchResult>>(result.results);
         }
 
@@ -299,6 +304,32 @@ namespace Ombi.Api.TheMovieDb
             return keyword == null || keyword.Id == 0 ? null : keyword;
         }
 
+        public Task<TheMovieDbContainer<MultiSearch>> MultiSearch(string searchTerm, string languageCode, CancellationToken cancellationToken)
+        {
+            var request = new Request("search/multi", BaseUri, HttpMethod.Get);
+            request.AddQueryString("api_key", ApiToken);
+            request.AddQueryString("language", languageCode);
+            request.AddQueryString("query", searchTerm);
+            var result = Api.Request<TheMovieDbContainer<MultiSearch>>(request, cancellationToken);
+            return result;
+        }
+
+        public Task<WatchProviders> GetMovieWatchProviders(int theMoviedbId, CancellationToken token)
+        {
+            var request = new Request($"movie/{theMoviedbId}/watch/providers", BaseUri, HttpMethod.Get);
+            request.AddQueryString("api_key", ApiToken);
+
+            return Api.Request<WatchProviders>(request, token);
+        }
+
+        public Task<WatchProviders> GetTvWatchProviders(int theMoviedbId, CancellationToken token)
+        {
+            var request = new Request($"tv/{theMoviedbId}/watch/providers", BaseUri, HttpMethod.Get);
+            request.AddQueryString("api_key", ApiToken);
+
+            return Api.Request<WatchProviders>(request, token);
+        }
+
         private async Task AddDiscoverMovieSettings(Request request)
         {
             var settings = await Settings;
@@ -307,17 +338,6 @@ namespace Ombi.Api.TheMovieDb
             {
                 request.AddQueryString("without_keywords", string.Join(",", settings.ExcludedKeywordIds));
             }
-        }
-
-
-        public async Task<TheMovieDbContainer<MultiSearch>> MultiSearch(string searchTerm, string languageCode, CancellationToken cancellationToken)
-        {
-            var request = new Request("search/multi", BaseUri, HttpMethod.Get);
-            request.AddQueryString("api_key", ApiToken);
-            request.AddQueryString("language", languageCode);
-            request.AddQueryString("query", searchTerm);
-            var result = await Api.Request<TheMovieDbContainer<MultiSearch>>(request, cancellationToken);
-            return result;
         }
 
         private static void AddRetry(Request request)

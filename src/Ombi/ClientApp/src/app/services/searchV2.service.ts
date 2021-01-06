@@ -12,6 +12,7 @@ import { ISearchTvResultV2, IMovieCollectionsViewModel, IActorCredits } from "..
 import { IArtistSearchResult, IAlbumArt } from "../interfaces/IMusicSearchResultV2";
 import { SearchFilter } from "../my-nav/SearchFilter";
 import { IMovieRatings, ITvRatings } from "../interfaces/IRatings";
+import { IStreamingData } from "../interfaces/IStreams";
 
 @Injectable()
 export class SearchV2Service extends ServiceHelpers {
@@ -129,6 +130,14 @@ export class SearchV2Service extends ServiceHelpers {
 
     public getRottenTvRatings(name: string, year: number): Observable<ITvRatings> {
         return this.http.get<ITvRatings>(`${this.url}/ratings/tv/${name}/${year}`);
+    }
+
+    public getMovieStreams(theMovieDbId: number): Observable<IStreamingData[]> {
+        return this.http.get<IStreamingData[]>(`${this.url}/stream/movie/${theMovieDbId}`);
+    }
+
+    public getTvStreams(theTvDbId: number, tvMaze: number): Observable<IStreamingData[]> {
+        return this.http.get<IStreamingData[]>(`${this.url}/stream/tv/${theTvDbId}/${tvMaze}`);
     }
 
 }

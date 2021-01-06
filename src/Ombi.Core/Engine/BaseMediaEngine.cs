@@ -15,6 +15,8 @@ using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Ombi.Api.TheMovieDb.Models;
+using Ombi.Core.Helpers;
 
 namespace Ombi.Core.Engine
 {
@@ -177,6 +179,12 @@ namespace Ombi.Core.Engine
             }
 
             return user.Language;
+        }
+
+        protected async Task<List<StreamData>> GetUserWatchProvider(WatchProviders providers)
+        {
+            var user = await GetUser();
+            return WatchProviderParser.GetUserWatchProviders(providers, user);
         }
 
         private OmbiSettings ombiSettings;

@@ -14,7 +14,7 @@ namespace Ombi.Store.Migrations.OmbiSqlite
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.1");
+                .HasAnnotation("ProductVersion", "5.0.1");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -26,18 +26,18 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex");
+                        .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
                 });
@@ -256,8 +256,8 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
@@ -284,12 +284,12 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("TEXT");
@@ -306,6 +306,10 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("StreamingCountry")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("INTEGER");
 
@@ -313,8 +317,8 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("UserType")
                         .HasColumnType("INTEGER");
@@ -322,11 +326,11 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
+                        .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex");
+                        .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -1016,6 +1020,8 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.NotificationUserId", b =>
@@ -1023,6 +1029,8 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany("NotificationUserIds")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.RequestSubscription", b =>
@@ -1030,6 +1038,8 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.AlbumRequest", b =>
@@ -1037,6 +1047,8 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "RequestedUser")
                         .WithMany()
                         .HasForeignKey("RequestedUserId");
+
+                    b.Navigation("RequestedUser");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.ChildRequests", b =>
@@ -1050,6 +1062,10 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "RequestedUser")
                         .WithMany()
                         .HasForeignKey("RequestedUserId");
+
+                    b.Navigation("ParentRequest");
+
+                    b.Navigation("RequestedUser");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.IssueComments", b =>
@@ -1061,6 +1077,10 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("Issues");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.Issues", b =>
@@ -1082,6 +1102,10 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "UserReported")
                         .WithMany()
                         .HasForeignKey("UserReportedId");
+
+                    b.Navigation("IssueCategory");
+
+                    b.Navigation("UserReported");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.MovieRequests", b =>
@@ -1089,6 +1113,8 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "RequestedUser")
                         .WithMany()
                         .HasForeignKey("RequestedUserId");
+
+                    b.Navigation("RequestedUser");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.RequestLog", b =>
@@ -1096,6 +1122,8 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Tokens", b =>
@@ -1103,6 +1131,8 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.UserNotificationPreferences", b =>
@@ -1110,6 +1140,8 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany("UserNotificationPreferences")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.UserQualityProfiles", b =>
@@ -1117,6 +1149,8 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Votes", b =>
@@ -1124,6 +1158,8 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Ombi.Store.Repository.Requests.EpisodeRequests", b =>
@@ -1133,6 +1169,8 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                         .HasForeignKey("SeasonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Season");
                 });
 
             modelBuilder.Entity("Ombi.Store.Repository.Requests.SeasonRequests", b =>
@@ -1142,6 +1180,42 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                         .HasForeignKey("ChildRequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ChildRequest");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.OmbiUser", b =>
+                {
+                    b.Navigation("NotificationUserIds");
+
+                    b.Navigation("UserNotificationPreferences");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.Requests.ChildRequests", b =>
+                {
+                    b.Navigation("Issues");
+
+                    b.Navigation("SeasonRequests");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.Requests.Issues", b =>
+                {
+                    b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.Requests.MovieRequests", b =>
+                {
+                    b.Navigation("Issues");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.Requests.TvRequests", b =>
+                {
+                    b.Navigation("ChildRequests");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Repository.Requests.SeasonRequests", b =>
+                {
+                    b.Navigation("Episodes");
                 });
 #pragma warning restore 612, 618
         }
