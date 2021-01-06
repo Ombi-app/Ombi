@@ -275,7 +275,8 @@
         "SonarrConfiguration": "Sonarr Configuration",
         "RadarrConfiguration": "Radarr Configuration",
         "RequestOnBehalf": "Request on behalf of",
-        "PleaseSelectUser": "Please select a user"
+        "PleaseSelectUser": "Please select a user",
+        "StreamingOn": "Streaming On"
     },
     "Discovery": {
         "PopularTab": "Popolare",
@@ -300,6 +301,11 @@
     "UserPreferences": {
         "Welcome": "Benvenuto {{username}}!",
         "OmbiLanguage": "Lingua",
-        "DarkMode": "Modalità Scura"
+        "DarkMode": "Modalità Scura",
+        "Updated": "Successfully Updated",
+        "StreamingCountry": "Streaming Country",
+        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
+        "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
+        "MobileQRCode": "Mobile QR Code"
     }
 }
