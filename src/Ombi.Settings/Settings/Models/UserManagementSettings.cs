@@ -10,6 +10,7 @@ namespace Ombi.Settings.Settings.Models
         public bool ImportJellyfinUsers { get; set; }
         public int MovieRequestLimit { get; set; }
         public int EpisodeRequestLimit { get; set; }
+        public string DefaultStreamingCountry { get; set; } = "US";
         public List<string> DefaultRoles { get; set; } = new List<string>();
         public List<string> BannedPlexUserIds { get; set; } = new List<string>();
         public List<string> BannedEmbyUserIds { get; set; } = new List<string>();

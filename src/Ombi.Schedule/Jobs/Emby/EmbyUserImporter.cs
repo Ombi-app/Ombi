@@ -117,7 +117,8 @@ namespace Ombi.Schedule.Jobs.Emby
                             ProviderUserId = embyUser.Id,
                             Alias = isConnectUser ? embyUser.Name : string.Empty,
                             MovieRequestLimit = userManagementSettings.MovieRequestLimit,
-                            EpisodeRequestLimit = userManagementSettings.EpisodeRequestLimit
+                            EpisodeRequestLimit = userManagementSettings.EpisodeRequestLimit,
+                            StreamingCountry = userManagementSettings.DefaultStreamingCountry
                         };
                         var result = await _userManager.CreateAsync(newUser);
                         if (!result.Succeeded)

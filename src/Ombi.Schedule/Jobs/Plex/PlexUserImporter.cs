@@ -98,7 +98,8 @@ namespace Ombi.Schedule.Jobs.Plex
                             Email = plexUser?.Email ?? string.Empty,
                             Alias = string.Empty,
                             MovieRequestLimit = userManagementSettings.MovieRequestLimit,
-                            EpisodeRequestLimit = userManagementSettings.EpisodeRequestLimit
+                            EpisodeRequestLimit = userManagementSettings.EpisodeRequestLimit,
+                            StreamingCountry = userManagementSettings.DefaultStreamingCountry
                         };
                         _log.LogInformation("Creating Plex user {0}", newUser.UserName);
                         var result = await _userManager.CreateAsync(newUser);
@@ -161,7 +162,8 @@ namespace Ombi.Schedule.Jobs.Plex
                 UserName = plexAdmin.username ?? plexAdmin.id,
                 ProviderUserId = plexAdmin.id,
                 Email = plexAdmin.email ?? string.Empty,
-                Alias = string.Empty
+                Alias = string.Empty,
+                StreamingCountry = settings.DefaultStreamingCountry;
             };
 
             var result = await _userManager.CreateAsync(newUser);

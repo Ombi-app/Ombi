@@ -69,6 +69,7 @@ namespace Ombi.Store.Context
                         UserName = "Api",
                         UserType = UserType.SystemUser,
                         NormalizedUserName = "API",
+                        StreamingCountry = "US"
                     });
                     SaveChanges();
                     tran.Commit();
