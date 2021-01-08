@@ -420,6 +420,10 @@ namespace Ombi.Schedule.Jobs.Ombi
                     continue;
                 }
                 var entity = await _plex.Find(movie.Id);
+                if (entity == null)
+                {
+                    return;
+                }
                 entity.TheMovieDbId = movie.TheMovieDbId;
                 _plex.UpdateWithoutSave(entity);
             }
