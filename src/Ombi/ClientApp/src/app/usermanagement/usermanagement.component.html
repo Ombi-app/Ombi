@@ -125,17 +125,15 @@
 
 
 <p-sidebar [(visible)]="showBulkEdit" position="right" [modal]="false">
-<h3>Bulk Edit</h3>
-<hr/>
+        <div>
 <div *ngFor="let c of availableClaims">
-
         <div class="form-group">
                 <div class="checkbox">
                     <mat-slide-toggle  id="create{{c.value}}"  [(ngModel)]="c.enabled" [attr.name]="'create' + c.value">
-                        {{c.value | humanize}}</mat-slide-toggle>
+                        <small>{{c.value | humanize}}</small></mat-slide-toggle>
                 </div>
             </div>
-
+        </div>
     </div>
 
     <mat-form-field appearance="outline" class="full">
@@ -150,6 +148,14 @@
         <mat-label>Music Request Limit</mat-label>
         <input matInput id="musicRequestLimit" name="musicRequestLimit"  [(ngModel)]="bulkMusicLimit">
     </mat-form-field>
+    <mat-form-field  appearance="outline"  class="full">
+        <mat-label [translate]="'UserPreferences.StreamingCountry'"></mat-label>
+        <mat-select [(value)]="bulkStreaming">
+          <mat-option *ngFor="let value of countries" [value]="value">
+            {{value}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
 
 <button type="button" mat-raised-button (click)="bulkUpdate()">Update Users</button>

@@ -27,7 +27,10 @@ export class UserManagementComponent implements OnInit {
     public bulkMovieLimit?: number;
     public bulkEpisodeLimit?: number;
     public bulkMusicLimit?: number;
+    public bulkStreaming?: string;
     public plexEnabled: boolean;
+
+    public countries: string[];
 
     constructor(private identityService: IdentityService,
         private settingsService: SettingsService,
@@ -38,6 +41,7 @@ export class UserManagementComponent implements OnInit {
 
 
     public async ngOnInit() {
+        this.identityService.getSupportedStreamingCountries().subscribe(x => this.countries = x);
         this.users = await this.identityService.getUsers().toPromise();
         this.dataSource = new MatTableDataSource(this.users);
         this.dataSource.sort = this.sort;
