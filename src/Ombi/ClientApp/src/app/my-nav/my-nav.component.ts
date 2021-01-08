@@ -24,7 +24,7 @@ export enum SearchFilterType {
 })
 export class MyNavComponent implements OnInit {
 
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
+  isHandset$: Observable<boolean> = this.breakpointObserver.observe([Breakpoints.Small, Breakpoints.Handset, Breakpoints.XSmall])
     .pipe(
       map(result => result.matches)
     );

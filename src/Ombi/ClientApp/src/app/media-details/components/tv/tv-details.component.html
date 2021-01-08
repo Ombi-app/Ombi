@@ -19,13 +19,13 @@
 
             <section id="info-wrapper">
                 <div class="small-middle-container">
-                    <div class="row">
+                    <div class="row justify-content-center justify-content-sm-start">
 
                         <media-poster [posterPath]="tv.images?.medium"></media-poster>
 
 
                         <!--Next to poster-->
-                        <div class="col-12 col-lg-3 col-xl-3 media-row">
+                        <div class="col-12 col-lg-2 col-xl-3 media-row">
 
                             <social-icons [homepage]="tv.homepage" [tvdbId]="tv.id" [hasTrailer]="tv.trailer"
                                 (openTrailer)="openDialog()" [imdbId]="tv.imdbId" [available]="tv.available || tv.partlyAvailable"
