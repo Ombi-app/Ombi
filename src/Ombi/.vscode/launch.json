@@ -13,6 +13,18 @@
         "console": "internalConsole"
       },
       {
+        "name": "Launch Frontend",
+        "type": "pwa-node",
+        "request": "launch",
+        "runtimeExecutable": "yarn",
+        "cwd": "${workspaceFolder}/ClientApp",
+        "runtimeArgs": ["start"],
+        "resolveSourceMapLocations": [
+          "${workspaceFolder}/**",
+          "!**/node_modules/**"
+      ],
+      },
+      {
         "name": "ng serve",
         "type": "chrome",
         "request": "launch",
