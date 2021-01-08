@@ -29,6 +29,7 @@ export class UserManagementComponent implements OnInit {
     public bannedJellyfinUsers: IUsersModel[] = [];
 
     public enableImportButton = false;
+    public countries: string[];
 
     constructor(private readonly settingsService: SettingsService,
                 private readonly notificationService: NotificationService,
@@ -40,6 +41,7 @@ export class UserManagementComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.identityService.getSupportedStreamingCountries().subscribe(x => this.countries = x);
         this.settingsService.getUserManagementSettings().subscribe(x => {
             this.settings = x;
 

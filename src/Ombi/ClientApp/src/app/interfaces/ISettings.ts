@@ -212,6 +212,7 @@ export interface IUserManagementSettings extends ISettings {
   bannedPlexUserIds: string[];
   bannedEmbyUserIds: string[];
   bannedJellyfinUserIds: string[];
+  defaultStreamingCountry: string;
 }
 
 export interface IAbout {
