@@ -116,7 +116,7 @@ namespace Ombi.Schedule.Jobs.Jellyfin
                             ProviderUserId = jellyfinUser.Id,
                             MovieRequestLimit = userManagementSettings.MovieRequestLimit,
                             EpisodeRequestLimit = userManagementSettings.EpisodeRequestLimit,
-                            StreamingCountry = userManagementSettings.DefaultStreamingCountry;
+                            StreamingCountry = userManagementSettings.DefaultStreamingCountry
                         };
                         _log.LogInformation("Creating Jellyfin user {0}", newUser.UserName);
                         var result = await _userManager.CreateAsync(newUser);

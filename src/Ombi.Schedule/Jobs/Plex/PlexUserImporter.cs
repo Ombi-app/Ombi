@@ -163,7 +163,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 ProviderUserId = plexAdmin.id,
                 Email = plexAdmin.email ?? string.Empty,
                 Alias = string.Empty,
-                StreamingCountry = settings.DefaultStreamingCountry;
+                StreamingCountry = settings.DefaultStreamingCountry
             };
 
             var result = await _userManager.CreateAsync(newUser);
