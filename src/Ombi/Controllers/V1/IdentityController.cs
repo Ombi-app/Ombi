@@ -457,6 +457,10 @@ namespace Ombi.Controllers.V1
             {
                 return Error("You do not have the correct permissions to create this user");
             }
+            if(user.EmailAddress.HasValue() && await UserManager.FindByEmailAsync(user.EmailAddress) != null)
+            {
+                return Error("This email has already been taken");
+            }
             var ombiUser = new OmbiUser
             {
                 Alias = user.Alias,

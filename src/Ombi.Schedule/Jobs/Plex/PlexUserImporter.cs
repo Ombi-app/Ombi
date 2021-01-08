@@ -88,6 +88,12 @@ namespace Ombi.Schedule.Jobs.Plex
                             _log.LogInformation("Could not create Plex user since the have no username, PlexUserId: {0}", plexUser.Id);
                             continue;
                         }
+
+                        if ((plexUser.Email.HasValue()) && await _userManager.FindByEmailAsync(plexUser.Email) != null)
+                        {
+                            _log.LogWarning($"Cannot add user {plexUser.Username} because their email address is already in Ombi, skipping this user");
+                            continue;
+                        }
                         // Create this users
                         // We do not store a password against the user since they will authenticate via Plex
                         var newUser = new OmbiUser
