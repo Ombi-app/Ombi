@@ -1,7 +1,6 @@
 <div class="card-spacing box" *ngIf="result">
     <mat-card class="mat-elevation-z8 dark-card grow">
         <div class="ribbon {{getStatusClass()}} ribbon-top-right"><span>
-            <!-- <i class="ribbon-icon fa {{getAvailbility()}}"></i> -->
             {{getAvailbilityStatus()}}
         </span></div>
         <a [routerLink]="result.type === RequestType.movie ? '/details/movie/' + result.id : '/details/tv/' + result.id">

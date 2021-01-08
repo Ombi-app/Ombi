@@ -2,6 +2,17 @@
     "version": "0.2.0",
     "configurations": [
       {
+        "name": "Launch Backend",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${workspaceFolder}/bin/Debug/net5.0/ombi.dll",
+        "args": ["--host", "http://localhost:3577"],
+        "cwd": "${workspaceFolder}",
+        "stopAtEntry": false,
+        "console": "internalConsole"
+      },
+      {
         "name": "ng serve",
         "type": "chrome",
         "request": "launch",

@@ -28,7 +28,7 @@
                         <div class="col-12 col-lg-3 col-xl-3 media-row">
 
                             <social-icons [homepage]="tv.homepage" [tvdbId]="tv.id" [hasTrailer]="tv.trailer"
-                                (openTrailer)="openDialog()" [imdbId]="tv.imdbId" [available]="tv.available"
+                                (openTrailer)="openDialog()" [imdbId]="tv.imdbId" [available]="tv.available || tv.partlyAvailable"
                                 [plexUrl]="tv.plexUrl" [embyUrl]="tv.embyUrl" [jellyfinUrl]="tv.jellyfinUrl">
                             </social-icons>
 

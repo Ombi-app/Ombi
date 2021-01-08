@@ -52,19 +52,6 @@ export class DiscoverCardComponent implements OnInit {
         return "";
     }
 
-    public getAvailbility(): string {
-        if (this.result.available) {
-            return "fa-check-circle";
-        }
-        if (this.result.approved) {
-            return "fa-check-circle";
-        }
-        if (this.result.requested) {
-            return "fa-question-circle";
-        }
-        return "";
-    }
-
     public getAvailbilityStatus(): string {
         if (this.result.available) {
             return "Available";
@@ -107,7 +94,7 @@ export class DiscoverCardComponent implements OnInit {
     private updateTvItem(updated: ISearchTvResultV2) {
         this.result.title = updated.title;
         this.result.id = updated.id;
-        this.result.available = updated.fullyAvailable;
+        this.result.available = updated.fullyAvailable || updated.partlyAvailable;
         this.result.posterPath = updated.banner;
         this.result.requested = updated.requested;
         this.result.url = updated.imdbId;
