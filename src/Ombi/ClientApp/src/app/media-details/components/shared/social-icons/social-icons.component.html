@@ -30,19 +30,22 @@
     </a>
 
     <span class="left-seperator" *ngIf="available">
-        <a *ngIf="plexUrl" class="media-icons plex" href="{{plexUrl}}" target="_blank">
-            <i matTooltip=" {{'Search.ViewOnPlex' | translate}}"
-                class="fa fa-play-circle fa-2x grow-social"></i>
+
+        <a *ngIf="plexUrl" href="{{plexUrl}}" mat-raised-button  target="_blank" class="btn-spacing viewon-btn plex">
+            {{'Search.ViewOnPlex' | translate}} 
+            <i
+            class="fa fa-play-circle fa-2x"></i>
         </a>
 
-        <a *ngIf="embyUrl" class="media-icons emby" href="{{embyUrl}}" target="_blank">
-            <i matTooltip=" {{'Search.ViewOnEmby' | translate}}"
-                class="fa fa-play-circle fa-2x grow-social"></i>
+        <a *ngIf="embyUrl" href="{{embyUrl}}" mat-raised-button  target="_blank" class="btn-spacing viewon-btn emby">
+            {{'Search.ViewOnEmby' | translate}} 
+            <i
+            class="fa fa-play-circle fa-2x"></i>
         </a>
 
-        <a *ngIf="jellyfinUrl" class="media-icons jellyfin" href="{{jellyfinUrl}}" target="_blank">
-            <i matTooltip=" {{'Search.ViewOnJellyfin' | translate}}"
-                class="fa fa-play-circle fa-2x grow-social"></i>
+        <a *ngIf="jellyfinUrl" href="{{jellyfinUrl}}" mat-raised-button  target="_blank" class="btn-spacing viewon-btn jellyfinUrl">
+            {{'Search.ViewOnJellyfin' | translate}} 
+            <i
+            class="fa fa-play-circle fa-2x"></i>
         </a>
-
     </span>

@@ -1,13 +1,19 @@
 
-
-.media-icons.plex {
-    color: #feb801 !important;
+.viewon-btn {
+    background-color: transparent;
+    margin-top: 7px;
+    text-decoration: none;
 }
 
-.media-icons.emby {
-    color: #52b54a !important;
+.viewon-btn.plex {
+    border: 1px solid #ffd740;
+    color: #ffd740;
 }
-
-.media-icons.jellyfin {
-    color: #00a4dc !important;
+.viewon-btn.emby {
+    border: 1px solid #52b54a;
+    color: #52b54a;
+}
+.viewon-btn.jellyfin {
+    border: 1px solid #00a4dc;
+    color: #00a4dc;
 }
