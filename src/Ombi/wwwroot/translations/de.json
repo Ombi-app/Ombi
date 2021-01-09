@@ -90,9 +90,9 @@
         "NoResults": "Es tut uns leid, wir haben keine Ergebnisse gefunden!",
         "DigitalDate": "Veröffentlichung der digitalen Version: {{date}}",
         "TheatricalRelease": "Kinostart: {{date}}",
-        "ViewOnPlex": "Auf Plex spielen",
-        "ViewOnEmby": "Auf Emby spielen",
-        "ViewOnJellyfin": "Play On Jellyfin",
+        "ViewOnPlex": "Auf Plex ansehen",
+        "ViewOnEmby": "Auf Emby ansehen",
+        "ViewOnJellyfin": "Auf Jellyfin ansehen",
         "RequestAdded": "Anfrage für {{title}} wurde erfolgreich hinzugefügt",
         "Similar": "Ähnliche",
         "Refine": "Auswahl verfeinern",
@@ -256,14 +256,14 @@
         "RootFolderOverride": "Stammverzeichnis Überschreiben",
         "QualityOverride": "Qualitäts Überschreiben",
         "Genres": "Genres",
-        "TheatricalRelease": "Release",
+        "TheatricalRelease": "Kinostart",
         "DigitalRelease": "Digitale Veröffentlichung",
         "Votes": "Abstimmungen",
         "Runtime": "Laufzeit",
         "Minutes": "{{runtime}} Minuten",
-        "Revenue": "Revenue",
+        "Revenue": "Einspielergebnis",
         "Budget": "Budget",
-        "Keywords": "Keywords/Tags",
+        "Keywords": "Schlagwörter/Tags",
         "Casts": {
             "CastTitle": "Besetzung"
         },
@@ -272,18 +272,18 @@
             "FirstSeasonTooltip": "Dies wird nur die erste Saison für diese Show anfordern",
             "LatestSeasonTooltip": "Dies wird nur die letzte Saison für diese Show anfordern"
         },
-        "SonarrConfiguration": "Sonarr Configuration",
-        "RadarrConfiguration": "Radarr Configuration",
-        "RequestOnBehalf": "Request on behalf of",
-        "PleaseSelectUser": "Please select a user",
-        "StreamingOn": "Streaming On"
+        "SonarrConfiguration": "Sonarr Konfiguration",
+        "RadarrConfiguration": "Radarr Konfiguration",
+        "RequestOnBehalf": "Anfange im Namen von",
+        "PleaseSelectUser": "Bitte Benutzer auswählen",
+        "StreamingOn": "Wird gestreamt auf"
     },
     "Discovery": {
         "PopularTab": "Beliebt",
         "TrendingTab": "Angesagt",
         "UpcomingTab": "Demnächst",
         "Movies": "Filme",
-        "Combined": "Combined",
+        "Combined": "Kombiniert",
         "Tv": "TV",
         "CardDetails": {
             "Availability": "Verfügbarkeit",
@@ -300,12 +300,12 @@
     },
     "UserPreferences": {
         "Welcome": "Willkommen {{username}}!",
-        "OmbiLanguage": "Language",
-        "DarkMode": "Dark Mode",
-        "Updated": "Successfully Updated",
-        "StreamingCountry": "Streaming Country",
-        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
-        "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
-        "MobileQRCode": "Mobile QR Code"
+        "OmbiLanguage": "Sprache",
+        "DarkMode": "Dunkler Modus",
+        "Updated": "Erfolgreich aktualisiert",
+        "StreamingCountry": "Streaming Land",
+        "StreamingCountryDescription": "Dies ist der Ländercode, für den wir Streaming Informationen anzeigen werden. Wenn Du in den USA bist, wähle bitte US. Sie werden dann US relevante Streaming Informationen erhalten.",
+        "LanguageDescription": "Dies ist die Sprache, in der Ombi angezeigt werden soll.",
+        "MobileQRCode": "Mobiler QR Code"
     }
 }
