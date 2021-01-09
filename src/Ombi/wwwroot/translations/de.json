@@ -306,6 +306,7 @@
         "StreamingCountry": "Streaming Land",
         "StreamingCountryDescription": "Dies ist der Ländercode, für den wir Streaming Informationen anzeigen werden. Wenn Du in den USA bist, wähle bitte US. Sie werden dann US relevante Streaming Informationen erhalten.",
         "LanguageDescription": "Dies ist die Sprache, in der Ombi angezeigt werden soll.",
-        "MobileQRCode": "Mobiler QR Code"
+        "MobileQRCode": "Mobiler QR Code",
+        "LegacyApp": "Launch Legacy App"
     }
 }
