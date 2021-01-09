@@ -4,7 +4,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { AvailableLanguages, ILanguage } from "./user-preference.constants";
 import { StorageService } from "../../../shared/storage/storage-service";
 import { IdentityService, NotificationService, SettingsService } from "../../../services";
-import { IUser } from "../../../interfaces";
+import { ICustomizationSettings, IUser } from "../../../interfaces";
 
 @Component({
     templateUrl: "./user-preference.component.html",
@@ -19,6 +19,7 @@ export class UserPreferenceComponent implements OnInit {
     public qrCodeEnabled: boolean;
     public countries: string[];
     public selectedCountry: string;
+    public customizationSettings: ICustomizationSettings;
 
     private user: IUser;
 
@@ -33,14 +34,14 @@ export class UserPreferenceComponent implements OnInit {
         if (user.name) {
             this.username = user.name;
         }
-        const customization = await this.settingsService.getCustomization().toPromise();
+        this.customizationSettings = await this.settingsService.getCustomization().toPromise();
 
         this.selectedLang = this.translate.currentLang;
 
         const accessToken = await this.identityService.getAccessToken().toPromise();
-        this.qrCode = `${customization.applicationUrl}|${accessToken}`;
+        this.qrCode = `${this.customizationSettings.applicationUrl}|${accessToken}`;
 
-        if(!customization.applicationUrl) {
+        if(!this.customizationSettings.applicationUrl) {
            this.qrCodeEnabled = false;
         } else {
            this.qrCodeEnabled = true;
@@ -49,6 +50,7 @@ export class UserPreferenceComponent implements OnInit {
         this.user = await this.identityService.getUser().toPromise();
         this.selectedCountry = this.user.streamingCountry;
         this.identityService.getSupportedStreamingCountries().subscribe(x => this.countries = x);
+        this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
 
     }
 
@@ -61,4 +63,12 @@ export class UserPreferenceComponent implements OnInit {
         this.identityService.updateStreamingCountry(this.selectedCountry).subscribe(x => this.notification.success(this.translate.instant("UserPreferences.Updated")));
     }
 
+    public openMobileApp(event: any) {
+        event.preventDefault();
+
+        this.identityService.getAccessToken().subscribe(x => {
+            const url = `ombi://${this.customizationSettings.applicationUrl}_${x}`;
+            window.location.assign(url);
+        });
+    }
 }

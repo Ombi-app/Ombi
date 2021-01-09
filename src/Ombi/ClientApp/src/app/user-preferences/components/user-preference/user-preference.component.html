@@ -25,7 +25,8 @@
     <div class="col-7">
       <mat-label [translate]="'UserPreferences.MobileQRCode'"></mat-label>
       <qrcode *ngIf="qrCodeEnabled" [qrdata]="qrCode" [size]="256" [level]="'L'"></qrcode>
-
+      <button mat-raised-button (click)="openMobileApp($event)" *ngIf="customizationSettings.applicationUrl"> {{
+        'UserPreferences.LegacyApp' | translate }}</button>
     </div>
 
     <div class="col-4">
