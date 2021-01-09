@@ -7,12 +7,12 @@ import {
 } from "rxjs/operators";
 
 import { empty} from "rxjs";
-import { SearchV2Service } from "../services/searchV2.service";
 import { IMultiSearchResult } from "../interfaces";
 import { Router } from "@angular/router";
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
 import { SearchFilter } from "./SearchFilter";
+import { FilterService } from "../discover/services/filter-service";
 
 @Component({
   selector: "app-nav-search",
@@ -20,7 +20,6 @@ import { SearchFilter } from "./SearchFilter";
   styleUrls: ["./nav-search.component.scss"],
 })
 export class NavSearchComponent implements OnInit {
-  @Input() public filter: SearchFilter;
   public selectedItem: string;
   public results: IMultiSearchResult[];
   public searching = false;
@@ -28,7 +27,6 @@ export class NavSearchComponent implements OnInit {
   public searchForm: FormGroup;
 
   constructor(
-    private searchService: SearchV2Service,
     private router: Router,
     private fb: FormBuilder
   ) {}
@@ -41,13 +39,14 @@ export class NavSearchComponent implements OnInit {
     this.searchForm
       .get("input")
       .valueChanges.pipe(
-        debounceTime(600),
+        debounceTime(1300),
         tap(() => (this.searching = true)),
         switchMap((value: string) => {
           if (value) {
-            return this.searchService
-              .multiSearch(value, this.filter)
-              .pipe(finalize(() => (this.searching = false)));
+            this.router.navigate([`discover`, value]);
+            // return this.searchService
+            //   .multiSearch(value, this.filter)
+            //   .pipe(finalize(() => (this.searching = false)));
           }
           return empty().pipe(finalize(() => (this.searching = false)));
         })

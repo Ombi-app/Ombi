@@ -1,5 +1,5 @@
-<div class="card-spacing box" *ngIf="result">
-    <mat-card class="mat-elevation-z8 dark-card grow">
+<div class="card-spacing box" *ngIf="result" [style.display]="hide ? 'none' : 'block'">
+    <mat-card class="mat-elevation-z8 dark-card">
         <div class="ribbon {{getStatusClass()}} ribbon-top-right"><span>
             {{getAvailbilityStatus()}}
         </span></div>

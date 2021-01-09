@@ -67,6 +67,7 @@ import { SignalRNotificationService } from "./services/signlarnotification.servi
 import { MatMenuModule } from "@angular/material/menu";
 import { RemainingRequestsComponent } from "./shared/remaining-requests/remaining-requests.component";
 import { UnauthorizedInterceptor } from "./auth/unauthorized.interceptor";
+import { FilterService } from "./discover/services/filter-service";
 
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
@@ -193,6 +194,7 @@ export function JwtTokenGetter() {
         MessageService,
         StorageService,
         RequestService,
+        FilterService,
         SignalRNotificationService,
         {
             provide: APP_BASE_HREF,

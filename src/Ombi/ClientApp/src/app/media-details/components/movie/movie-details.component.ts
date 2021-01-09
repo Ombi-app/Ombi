@@ -68,10 +68,7 @@ export class MovieDetailsComponent implements OnInit {
                     this.hasRequest = true;
                     this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
                 }
-                this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
-                    this.movie.background = this.sanitizer.bypassSecurityTrustStyle
-                        ("url(" + x + ")");
-                });
+                this.loadBanner();
             });
         } else {
             this.searchService.getFullMovieDetails(this.theMovidDbId).subscribe(async x => {
@@ -81,10 +78,7 @@ export class MovieDetailsComponent implements OnInit {
                     this.hasRequest = true;
                     this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
                 }
-                this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
-                    this.movie.background = this.sanitizer.bypassSecurityTrustStyle
-                        ("url(" + x + ")");
-                });
+                this.loadBanner();
             });
         }
     }
@@ -175,6 +169,18 @@ export class MovieDetailsComponent implements OnInit {
         await dialog.afterClosed().subscribe(async result => {
             if (result) {
                 await this.request(result.id);
+            }
+        });
+    }
+
+    private loadBanner() {
+        this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
+            if (!this.movie.backdropPath) {
+            this.movie.background = this.sanitizer.bypassSecurityTrustStyle
+                ("url(" + x + ")");
+            } else {
+                this.movie.background = this.sanitizer.bypassSecurityTrustStyle
+                ("url(https://image.tmdb.org/t/p/original/" + this.movie.backdropPath + ")");
             }
         });
     }

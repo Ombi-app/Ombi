@@ -1,0 +1,10 @@
+<div class="small-middle-container" >
+    <div *ngIf="loadingFlag" class="row justify-content-md-center top-spacing loading-spinner">
+        <mat-spinner [color]="'accent'"></mat-spinner>
+    </div>
+    <div *ngIf="discoverResults" class="row full-height">
+        <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-4 small-padding" *ngFor="let result of discoverResults">
+            <discover-card [result]="result"></discover-card>
+        </div>
+    </div>
+</div>

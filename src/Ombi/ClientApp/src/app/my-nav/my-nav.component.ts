@@ -9,6 +9,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { SearchFilter } from './SearchFilter';
 import { Md5 } from 'ts-md5/dist/md5';
 import { RequestType } from '../interfaces';
+import { FilterService } from '../discover/services/filter-service';
 
 export enum SearchFilterType {
   Movie = 1,
@@ -48,7 +49,8 @@ export class MyNavComponent implements OnInit {
 
   constructor(private breakpointObserver: BreakpointObserver,
     private settingsService: SettingsService,
-    private store: StorageService) {
+    private store: StorageService,
+    private filterService: FilterService) {
   }
 
   public async ngOnInit() {
@@ -76,6 +78,7 @@ export class MyNavComponent implements OnInit {
     var filter = this.store.get("searchFilter");
     if (filter) {
       this.searchFilter = Object.assign(new SearchFilter(), JSON.parse(filter));
+      this.filterService.changeFilter(this.searchFilter);
     }
     this.navItems = [
       { name: "NavigationBar.Discover", icon: "find_replace", link: "/discover", requiresAdmin: false, enabled: true, faIcon: null },
@@ -124,6 +127,7 @@ export class MyNavComponent implements OnInit {
         this.searchFilter.people = event.checked;
         break;
     }
+    this.filterService.changeFilter(this.searchFilter);
     this.store.save("searchFilter", JSON.stringify(this.searchFilter));
   }
 

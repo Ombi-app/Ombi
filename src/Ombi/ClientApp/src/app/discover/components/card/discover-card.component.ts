@@ -16,6 +16,7 @@ export class DiscoverCardComponent implements OnInit {
 
     @Input() public result: IDiscoverCardResult;
     public RequestType = RequestType;
+    public hide: boolean;
 
     constructor(private searchService: SearchV2Service, private dialog: MatDialog) { }
 
@@ -33,7 +34,15 @@ export class DiscoverCardComponent implements OnInit {
     }
 
     public async getExtraTvInfo() {
-        var result = await this.searchService.getTvInfo(this.result.id);
+        if (this.result.tvMovieDb) {
+            var result = await this.searchService.getTvInfoWithMovieDbId(this.result.id);
+        } else {
+            var result = await this.searchService.getTvInfo(this.result.id);
+        }
+        if(result.status === "404") {
+            this.hide = true;
+            return;
+        }
         this.setTvDefaults(result);
         this.updateTvItem(result);
 
@@ -80,14 +89,16 @@ export class DiscoverCardComponent implements OnInit {
         this.result.requested = updated.requested;
         this.result.requested = updated.requestProcessing;
         this.result.rating = updated.voteAverage;
+        this.result.overview = updated.overview;
+        this.result.imdbid = updated.imdbId;
     }
 
 
     private setTvDefaults(x: ISearchTvResultV2) {
-        if (!x.imdbId) {
-            x.imdbId = "https://www.tvmaze.com/shows/" + x.seriesId;
-        } else {
+        if (x.imdbId) {
             x.imdbId = "http://www.imdb.com/title/" + x.imdbId + "/";
+        } else {
+            x.imdbId = "https://www.tvmaze.com/shows/" + x.seriesId;
         }
     }
 
@@ -98,6 +109,8 @@ export class DiscoverCardComponent implements OnInit {
         this.result.posterPath = updated.banner;
         this.result.requested = updated.requested;
         this.result.url = updated.imdbId;
+        this.result.overview = updated.overview;
+        this.result.approved = updated.approved;
     }
 
 }

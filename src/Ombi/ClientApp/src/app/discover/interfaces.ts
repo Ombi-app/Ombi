@@ -14,6 +14,8 @@ export interface IDiscoverCardResult {
     overview: string;
     imdbid: string;
     background: string|any;
+
+    tvMovieDb?: boolean;
 }
 
 export enum DiscoverOption {
