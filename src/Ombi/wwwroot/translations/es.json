@@ -90,9 +90,9 @@
         "NoResults": "¡Lo sentimos, no encontramos ningún resultado!",
         "DigitalDate": "Versión digital: {{date}}",
         "TheatricalRelease": "En cines: {{date}}",
-        "ViewOnPlex": "Play On Plex",
-        "ViewOnEmby": "Play On Emby",
-        "ViewOnJellyfin": "Play On Jellyfin",
+        "ViewOnPlex": "Reproducir en Plex",
+        "ViewOnEmby": "Reproducir en Emby",
+        "ViewOnJellyfin": "Reproducir en Jellyfin",
         "RequestAdded": "La solicitud de {{title}} se ha añadido correctamente",
         "Similar": "Similar",
         "Refine": "Filtros",
@@ -272,11 +272,11 @@
             "FirstSeasonTooltip": "Esto solo solicitará la primera temporada para este programa",
             "LatestSeasonTooltip": "Esto solo solicitará la última temporada para este programa"
         },
-        "SonarrConfiguration": "Sonarr Configuration",
-        "RadarrConfiguration": "Radarr Configuration",
+        "SonarrConfiguration": "Configuración de Sonarr",
+        "RadarrConfiguration": "Configuración de Radarr",
         "RequestOnBehalf": "Request on behalf of",
-        "PleaseSelectUser": "Please select a user",
-        "StreamingOn": "Streaming On"
+        "PleaseSelectUser": "Por favor, selecciona un usuario",
+        "StreamingOn": "Emitiendo en"
     },
     "Discovery": {
         "PopularTab": "Popular",
@@ -302,8 +302,8 @@
         "Welcome": "Bienvenido {{username}}!",
         "OmbiLanguage": "Idioma",
         "DarkMode": "Modo Oscuro",
-        "Updated": "Successfully Updated",
-        "StreamingCountry": "Streaming Country",
+        "Updated": "Actualizado exitosamente",
+        "StreamingCountry": "País de emisión",
         "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
         "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
         "MobileQRCode": "Mobile QR Code"
