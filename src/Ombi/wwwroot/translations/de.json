@@ -180,7 +180,7 @@
         "RequestPanel": {
             "Delete": "Anfrage löschen",
             "Approve": "Anfrage genehmigen",
-            "ChangeAvailability": "Verfügbarkeit ändern"
+            "ChangeAvailability": "Als verfügbar markieren"
         }
     },
     "Issues": {
