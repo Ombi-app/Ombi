@@ -4,4 +4,7 @@ export class SearchFilter {
   tvShows: boolean;
   music: boolean;
   people: boolean;
+  public constructor(init?:Partial<SearchFilter>) {
+    Object.assign(this, init);
+}
 }

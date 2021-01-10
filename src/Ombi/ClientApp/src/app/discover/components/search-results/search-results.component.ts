@@ -11,7 +11,7 @@ import { isEqual } from "lodash";
 
 @Component({
     templateUrl: "./search-results.component.html",
-    styleUrls: ["./search-results.component.scss"],
+    styleUrls: ["../discover/discover.component.scss"],
 })
 export class DiscoverSearchResultsComponent implements OnInit {
 
@@ -49,6 +49,8 @@ export class DiscoverSearchResultsComponent implements OnInit {
         var filter = this.store.get("searchFilter");
         if (filter) {
             this.filter = Object.assign(new SearchFilter(), JSON.parse(filter));
+        } else {
+            this.filter = new SearchFilter({ movies: true, tvShows: true, people: false, music: false});
         }
         this.loading();
         await this.search();
