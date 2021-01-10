@@ -85,43 +85,8 @@ export class DiscoverSearchResultsComponent implements OnInit {
                 available: false,
                 tvMovieDb: mediaType === RequestType.tvShow ? true : false
             });
-
-            // switch (mediaType) {
-            //     case RequestType.movie:
-            //         this.searchService.getFullMovieDetails(+m.id)
-            //         .subscribe(x => {
-            //             const index = this.discoverResults.findIndex((obj => obj.id === +m.id));
-            //             this.discoverResults[index].available = x.available;
-            //             this.discoverResults[index].requested = x.requested;
-            //             this.discoverResults[index].requested = x.requested;
-            //             this.discoverResults[index].requested = x.requested;
-            //             this.discoverResults[index].requested = x.requested;
-            //             this.discoverResults[index].requested = x.requested;
-            //         });
-            // }
         });
     }
-
-    // private createModel() {
-    //     this.finishLoading();
-    //     this.collection.collection.forEach(m => {
-    //         this.discoverResults.push({
-    //             available: m.available,
-    //             posterPath: `https://image.tmdb.org/t/p/w300/${m.posterPath}`,
-    //             requested: m.requested,
-    //             title: m.title,
-    //             type: RequestType.movie,
-    //             id: m.id,
-    //             url: `http://www.imdb.com/title/${m.imdbId}/`,
-    //             rating: 0,
-    //             overview: m.overview,
-    //             approved: m.approved,
-    //             imdbid: m.imdbId,
-    //             denied:false,
-    //             background: ""
-    //         });
-    //     });
-    // }
 
     private loading() {
         this.loadingFlag = true;

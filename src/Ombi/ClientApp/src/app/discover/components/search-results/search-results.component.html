@@ -9,7 +9,7 @@
     </div>
     <div *ngIf="!discoverResults || discoverResults.length === 0">
         <div  class="row justify-content-md-center top-spacing loading-spinner">
-            <h1>Sorry, nothing matches your search! <i class="fa fa-frown-o" aria-hidden="true"></i></h1>
+            <h1> {{'Discovery.NoSearch' | translate}} <i class="fa fa-frown-o" aria-hidden="true"></i></h1>
         </div>
     </div>
 </div>

@@ -1,9 +1,9 @@
 <div class="card-spacing box" *ngIf="result" [style.display]="hide ? 'none' : 'block'">
-    <mat-card class="mat-elevation-z8 dark-card">
+    <mat-card class="mat-elevation-z8 dark-card" [routerLink]="result.type === RequestType.movie ? '/details/movie/' + result.id : '/details/tv/' + result.id">
         <div class="ribbon {{getStatusClass()}} ribbon-top-right"><span>
             {{getAvailbilityStatus()}}
         </span></div>
-        <a [routerLink]="result.type === RequestType.movie ? '/details/movie/' + result.id : '/details/tv/' + result.id">
+        <a>
             <img id="cardImage" mat-card-image src="{{result.posterPath}}" class="card-poster" alt="{{result.title}}">
         </a>
         <mat-card-content  (click)="openDetails(result);">
