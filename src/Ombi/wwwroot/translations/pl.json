@@ -306,7 +306,7 @@
         "StreamingCountry": "Kraj strumieniowania",
         "StreamingCountryDescription": "To jest kod kraju, dla którego będziemy wyświetlać informacje o strumieniowaniu. Jeśli jesteś w USA, wybierz Stany Zjednoczone, a otrzymasz informacje o przesyłaniu strumieniowym w USA.",
         "LanguageDescription": "To jest język, w którym ma być wyświetlany interfejs Ombi.",
-        "MobileQRCode": "Mobile QR Code",
-        "LegacyApp": "Launch Legacy App"
+        "MobileQRCode": "Kod QR z telefonu",
+        "LegacyApp": "Uruchom starszą aplikację"
     }
 }
