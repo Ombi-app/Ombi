@@ -90,9 +90,9 @@
         "NoResults": "Niestety nic nie znaleziono!",
         "DigitalDate": "Wydanie cyfrowe: {{date}}",
         "TheatricalRelease": "Premiera kinowa: {{date}}",
-        "ViewOnPlex": "Play On Plex",
-        "ViewOnEmby": "Play On Emby",
-        "ViewOnJellyfin": "Play On Jellyfin",
+        "ViewOnPlex": "Odtwórz w Plex",
+        "ViewOnEmby": "Odtwórz w Emby",
+        "ViewOnJellyfin": "Odtwórz w Jellyfin",
         "RequestAdded": "Zgłoszenie dla {{title}} zostało pomyślnie dodane",
         "Similar": "Podobne",
         "Refine": "Zawęź",
@@ -256,7 +256,7 @@
         "RootFolderOverride": "Wymuszenie folderu głównego",
         "QualityOverride": "Wymuszenie jakości",
         "Genres": "Gatunki",
-        "TheatricalRelease": "Release",
+        "TheatricalRelease": "Wydanie",
         "DigitalRelease": "Wydanie cyfrowe",
         "Votes": "Głosy",
         "Runtime": "Czas trwania",
@@ -272,11 +272,11 @@
             "FirstSeasonTooltip": "Zgłoszenie obejmie pierwszy sezon tego serialu",
             "LatestSeasonTooltip": "Zgłoszenie obejmie najnowszy sezon tego serialu"
         },
-        "SonarrConfiguration": "Sonarr Configuration",
-        "RadarrConfiguration": "Radarr Configuration",
-        "RequestOnBehalf": "Request on behalf of",
-        "PleaseSelectUser": "Please select a user",
-        "StreamingOn": "Streaming On"
+        "SonarrConfiguration": "Konfiguracja Sonarr",
+        "RadarrConfiguration": "Konfiguracja Radarr",
+        "RequestOnBehalf": "Zgłoszenie w imieniu",
+        "PleaseSelectUser": "Proszę wybrać użytkownika",
+        "StreamingOn": "Strumieniowane w"
     },
     "Discovery": {
         "PopularTab": "Popularne",
@@ -302,10 +302,10 @@
         "Welcome": "Witaj {{username}}!",
         "OmbiLanguage": "Język",
         "DarkMode": "Tryb ciemny",
-        "Updated": "Successfully Updated",
-        "StreamingCountry": "Streaming Country",
-        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
-        "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
+        "Updated": "Zaktualizowano pomyślnie",
+        "StreamingCountry": "Kraj strumieniowania",
+        "StreamingCountryDescription": "To jest kod kraju, dla którego będziemy wyświetlać informacje o strumieniowaniu. Jeśli jesteś w USA, wybierz Stany Zjednoczone, a otrzymasz informacje o przesyłaniu strumieniowym w USA.",
+        "LanguageDescription": "To jest język, w którym ma być wyświetlany interfejs Ombi.",
         "MobileQRCode": "Mobile QR Code",
         "LegacyApp": "Launch Legacy App"
     }
