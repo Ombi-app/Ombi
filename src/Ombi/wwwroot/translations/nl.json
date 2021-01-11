@@ -296,7 +296,8 @@
             "FirstAired": "Eerste uitzending",
             "Writer": "Schrijver",
             "ExecProducer": "Uitvoerende producent"
-        }
+        },
+        "NoSearch": "Sorry, nothing matches your search!"
     },
     "UserPreferences": {
         "Welcome": "Welkom {{username}}!",
