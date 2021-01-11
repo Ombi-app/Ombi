@@ -296,7 +296,8 @@
             "FirstAired": "Première Diffusion",
             "Writer": "Scénariste",
             "ExecProducer": "Producteur Exécutif"
-        }
+        },
+        "NoSearch": "Sorry, nothing matches your search!"
     },
     "UserPreferences": {
         "Welcome": "Bienvenue {{username}}!",
