@@ -296,7 +296,8 @@
             "FirstAired": "Sändes första gången",
             "Writer": "Författare",
             "ExecProducer": "Exekutiv producent"
-        }
+        },
+        "NoSearch": "Sorry, nothing matches your search!"
     },
     "UserPreferences": {
         "Welcome": "Välkommen {{username}}!",
