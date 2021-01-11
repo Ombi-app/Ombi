@@ -296,7 +296,8 @@
             "FirstAired": "Első sugárzás ideje",
             "Writer": "Író",
             "ExecProducer": "Gyártásvezető"
-        }
+        },
+        "NoSearch": "Sorry, nothing matches your search!"
     },
     "UserPreferences": {
         "Welcome": "Üdv {{username}}!",
