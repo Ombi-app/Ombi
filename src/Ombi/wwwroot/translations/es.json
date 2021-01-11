@@ -296,7 +296,8 @@
             "FirstAired": "Emitido por primera vez",
             "Writer": "Guionistas",
             "ExecProducer": "Productor ejecutivo"
-        }
+        },
+        "NoSearch": "Sorry, nothing matches your search!"
     },
     "UserPreferences": {
         "Welcome": "Bienvenido {{username}}!",
