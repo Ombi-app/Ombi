@@ -296,7 +296,8 @@
             "FirstAired": "Pierwsza emisja",
             "Writer": "Scenarzysta",
             "ExecProducer": "Producent wykonawczy"
-        }
+        },
+        "NoSearch": "Sorry, nothing matches your search!"
     },
     "UserPreferences": {
         "Welcome": "Witaj {{username}}!",
