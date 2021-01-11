@@ -296,7 +296,8 @@
             "FirstAired": "Prima Trasmissione",
             "Writer": "Scrittore",
             "ExecProducer": "Produttore Esecutivo"
-        }
+        },
+        "NoSearch": "Sorry, nothing matches your search!"
     },
     "UserPreferences": {
         "Welcome": "Benvenuto {{username}}!",
