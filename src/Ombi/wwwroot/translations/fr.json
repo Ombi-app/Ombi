@@ -90,9 +90,9 @@
         "NoResults": "Désolé, nous n'avons trouvé aucun résultat !",
         "DigitalDate": "Sortie numérique: {{date}}",
         "TheatricalRelease": "Sortie en salle: {{date}}",
-        "ViewOnPlex": "Play On Plex",
-        "ViewOnEmby": "Play On Emby",
-        "ViewOnJellyfin": "Play On Jellyfin",
+        "ViewOnPlex": "Regarder sur Plex",
+        "ViewOnEmby": "Regarder sur Emby",
+        "ViewOnJellyfin": "Regarder sur JellyFin",
         "RequestAdded": "La demande pour {{title}} a été ajoutée avec succès",
         "Similar": "Similaires",
         "Refine": "Affiner",
@@ -276,7 +276,7 @@
         "RadarrConfiguration": "Radarr Configuration",
         "RequestOnBehalf": "Demander au nom de : ",
         "PleaseSelectUser": "Veuillez sélectionner un utilisateur",
-        "StreamingOn": "Streaming On"
+        "StreamingOn": "Diffusion sur "
     },
     "Discovery": {
         "PopularTab": "Populaire",
@@ -297,17 +297,17 @@
             "Writer": "Scénariste",
             "ExecProducer": "Producteur Exécutif"
         },
-        "NoSearch": "Sorry, nothing matches your search!"
+        "NoSearch": "Désolé, rien ne correspond à votre recherche !"
     },
     "UserPreferences": {
         "Welcome": "Bienvenue {{username}}!",
         "OmbiLanguage": "Langue",
         "DarkMode": "Mode Sombre",
-        "Updated": "Successfully Updated",
-        "StreamingCountry": "Streaming Country",
-        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
-        "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
+        "Updated": "Mise à jour réussie",
+        "StreamingCountry": "Pays de diffusion",
+        "StreamingCountryDescription": "C'est le code du pays pour lequel nous afficherons des informations de diffusion. Si vous êtes en France, veuillez sélectionner la France et vous aurez des informations de streaming en relation avec la France.",
+        "LanguageDescription": "C'est la langue dans laquelle vous souhaitez que l'interface Ombi soit affichée.",
         "MobileQRCode": "Mobile QR Code",
-        "LegacyApp": "Launch Legacy App"
+        "LegacyApp": "Lancez l'ancienne application\n\n"
     }
 }
