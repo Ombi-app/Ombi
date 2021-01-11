@@ -9,7 +9,7 @@ import { ServiceHelpers } from "./service.helpers";
 
 import { ISearchMovieResultV2 } from "../interfaces/ISearchMovieResultV2";
 import { ISearchTvResultV2, IMovieCollectionsViewModel, IActorCredits } from "../interfaces/ISearchTvResultV2";
-import { IArtistSearchResult, IAlbumArt } from "../interfaces/IMusicSearchResultV2";
+import { IArtistSearchResult, IAlbumArt, IReleaseGroups } from "../interfaces/IMusicSearchResultV2";
 import { SearchFilter } from "../my-nav/SearchFilter";
 import { IMovieRatings, ITvRatings } from "../interfaces/IRatings";
 import { IStreamingData } from "../interfaces/IStreams";
@@ -122,6 +122,10 @@ export class SearchV2Service extends ServiceHelpers {
 
     public getReleaseGroupArt(mbid: string): Observable<IAlbumArt> {
         return this.http.get<IAlbumArt>(`${this.url}/releasegroupart/${mbid}`);
+    }
+
+    public getAlbum(mbid: string): Observable<IReleaseGroups> {
+        return this.http.get<IReleaseGroups>(`${this.url}/artist/album/${mbid}`);
     }
 
     public getRottenMovieRatings(name: string, year: number): Observable<IMovieRatings> {

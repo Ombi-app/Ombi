@@ -31,9 +31,9 @@ export class DiscoverCardDetailsComponent implements OnInit {
     public async ngOnInit() {
         this.loading = true;
         if (this.data.type === RequestType.movie) {
-            this.movie = await this.searchService.getFullMovieDetailsPromise(this.data.id);
+            this.movie = await this.searchService.getFullMovieDetailsPromise(+this.data.id);
         } else if (this.data.type === RequestType.tvShow) {
-            this.tv = await this.searchService.getTvInfo(this.data.id);
+            this.tv = await this.searchService.getTvInfo(+this.data.id);
             const creator = this.tv.crew.filter(tv => {
                 return tv.type === "Creator";
             })[0];
@@ -67,7 +67,7 @@ export class DiscoverCardDetailsComponent implements OnInit {
     public async request() {
         this.loading = true;
         if (this.data.type === RequestType.movie) {
-            const result = await this.requestService.requestMovie({ theMovieDbId: this.data.id, languageCode: "", requestOnBehalf: null }).toPromise();
+            const result = await this.requestService.requestMovie({ theMovieDbId: +this.data.id, languageCode: "", requestOnBehalf: null }).toPromise();
             this.loading = false;
 
             if (result.result) {

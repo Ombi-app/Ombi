@@ -39,7 +39,7 @@ export class DiscoverSearchResultsComponent implements OnInit {
 
         this.filterService.onFilterChange.subscribe(async x => {
             if (!isEqual(this.filter, x)) {
-                this.filter =  { ...x };
+                this.filter = { ...x };
                 await this.search();
             }
         });
@@ -50,7 +50,7 @@ export class DiscoverSearchResultsComponent implements OnInit {
         if (filter) {
             this.filter = Object.assign(new SearchFilter(), JSON.parse(filter));
         } else {
-            this.filter = new SearchFilter({ movies: true, tvShows: true, people: false, music: false});
+            this.filter = new SearchFilter({ movies: true, tvShows: true, people: false, music: false });
         }
         this.loading();
         await this.search();
@@ -69,12 +69,22 @@ export class DiscoverSearchResultsComponent implements OnInit {
                 mediaType = RequestType.album;
             }
 
+            let poster = `https://image.tmdb.org/t/p/w300/${m.poster}`;
+            if (!m.poster) {
+                if (mediaType === RequestType.movie) {
+                    poster = "images/default_movie_poster.png"
+                }
+                if (mediaType === RequestType.tvShow) {
+                    poster = "images/default_tv_poster.png"
+                }
+            }
+
             this.discoverResults.push({
-                posterPath: `https://image.tmdb.org/t/p/w300/${m.poster}`,
+                posterPath: mediaType !== RequestType.album ? poster : "images/default-music-placeholder.png",
                 requested: false,
                 title: m.title,
                 type: mediaType,
-                id: +m.id,
+                id: m.id,
                 url: "",
                 rating: 0,
                 overview: "",

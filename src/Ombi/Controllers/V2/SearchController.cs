@@ -16,6 +16,7 @@ using Ombi.Core.Models.Search.V2.Music;
 using Ombi.Models;
 using Ombi.Api.RottenTomatoes.Models;
 using Ombi.Api.RottenTomatoes;
+using Hqub.MusicBrainz.API.Entities.Collections;
 
 namespace Ombi.Controllers.V2
 {
@@ -394,6 +395,14 @@ namespace Ombi.Controllers.V2
         public async Task<ArtistInformation> GetArtistInformationByRequestId(int requestId)
         {
             return await _musicEngine.GetArtistInformationByRequestId(requestId);
+        }
+
+        [HttpGet("artist/album/{albumId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public Task<ReleaseGroup> GetAlbumInformation(string albumId)
+        {
+            return _musicEngine.GetAlbum(albumId);
         }
 
         [HttpGet("releasegroupart/{musicBrainzId}")]

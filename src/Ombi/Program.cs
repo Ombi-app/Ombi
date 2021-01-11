@@ -45,6 +45,8 @@ namespace Ombi
                     }
                 });
 
+            
+
             Console.WriteLine(HelpOutput(result));
 
             UrlArgs = host;

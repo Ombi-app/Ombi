@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Ombi.Api.Lidarr;
 using Ombi.Api.Lidarr.Models;
 using Ombi.Api.MusicBrainz;
@@ -39,6 +40,21 @@ namespace Ombi.Core.Engine.V2
             _musicBrainzApi = musicBrainzApi;
             _lidarrSettings = lidarrSettings;
             _lidarrApi = lidarrApi;
+        }
+
+        public async Task<ReleaseGroup> GetAlbum(string albumId)
+        {
+            var g = await _musicBrainzApi.GetAlbumInformation(albumId);
+            var release = new ReleaseGroup
+            {
+                ReleaseType = g.ReleaseGroup.PrimaryType,
+                Id = g.Id,
+                Title = g.Title,
+                ReleaseDate = g.ReleaseGroup.FirstReleaseDate,
+            };
+
+            await RunSearchRules(release);
+            return release;
         }
 
         public async Task<ArtistInformation> GetArtistInformation(string artistId)
@@ -84,12 +100,19 @@ namespace Ombi.Core.Engine.V2
 
             if (lidarrArtistTask != null)
             {
-                var artistResult = await lidarrArtistTask;
-                info.Banner = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("banner", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
-                info.Logo = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("logo", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
-                info.Poster = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("poster", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
-                info.FanArt = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("fanart", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
-                info.Overview = artistResult.overview;
+                try
+                {
+                    var artistResult = await lidarrArtistTask;
+                    info.Banner = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("banner", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
+                    info.Logo = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("logo", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
+                    info.Poster = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("poster", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
+                    info.FanArt = artistResult.images?.FirstOrDefault(x => x.coverType.Equals("fanart", StringComparison.InvariantCultureIgnoreCase))?.url.ToHttpsUrl();
+                    info.Overview = artistResult.overview;
+                }
+                catch (JsonSerializationException)
+                {
+                    // swallow, Lidarr probably doesn't have this artist
+                }
             }
 
             return info;
@@ -118,7 +141,7 @@ namespace Ombi.Core.Engine.V2
 
             return new AlbumArt();
         }
-        
+
         public async Task<ArtistInformation> GetArtistInformationByRequestId(int requestId)
         {
             var request = await RequestService.MusicRequestRepository.Find(requestId);
