@@ -14,13 +14,16 @@ using Ombi.Core.Models.Search;
 using Ombi.Core.Models.Search.V2;
 using Ombi.Core.Models.Search.V2.Music;
 using Ombi.Models;
+using Ombi.Api.RottenTomatoes.Models;
+using Ombi.Api.RottenTomatoes;
+using Hqub.MusicBrainz.API.Entities.Collections;
 
 namespace Ombi.Controllers.V2
 {
     public class SearchController : V2Controller
     {
         public SearchController(IMultiSearchEngine multiSearchEngine, ITvSearchEngine tvSearchEngine,
-            IMovieEngineV2 v2Movie, ITVSearchEngineV2 v2Tv, IMusicSearchEngineV2 musicEngine)
+            IMovieEngineV2 v2Movie, ITVSearchEngineV2 v2Tv, IMusicSearchEngineV2 musicEngine, IRottenTomatoesApi rottenTomatoesApi)
         {
             _multiSearchEngine = multiSearchEngine;
             _tvSearchEngine = tvSearchEngine;
@@ -29,6 +32,7 @@ namespace Ombi.Controllers.V2
             _movieEngineV2.ResultLimit = 12;
             _tvEngineV2 = v2Tv;
             _musicEngine = musicEngine;
+            _rottenTomatoesApi = rottenTomatoesApi;
         }
 
         private readonly IMultiSearchEngine _multiSearchEngine;
@@ -36,6 +40,7 @@ namespace Ombi.Controllers.V2
         private readonly ITVSearchEngineV2 _tvEngineV2;
         private readonly ITvSearchEngine _tvSearchEngine;
         private readonly IMusicSearchEngineV2 _musicEngine;
+        private readonly IRottenTomatoesApi _rottenTomatoesApi;
 
         /// <summary>
         /// Returns search results for both TV and Movies
@@ -392,12 +397,52 @@ namespace Ombi.Controllers.V2
             return await _musicEngine.GetArtistInformationByRequestId(requestId);
         }
 
+        [HttpGet("artist/album/{albumId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public Task<ReleaseGroup> GetAlbumInformation(string albumId)
+        {
+            return _musicEngine.GetAlbum(albumId);
+        }
+
         [HttpGet("releasegroupart/{musicBrainzId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
         public async Task<AlbumArt> GetReleaseGroupARt(string musicBrainzId)
         {
             return await _musicEngine.GetReleaseGroupArt(musicBrainzId, CancellationToken);
+        }
+
+        [HttpGet("ratings/movie/{name}/{year}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public Task<MovieRatings> GetRottenMovieRatings(string name, int year)
+        {
+            return _rottenTomatoesApi.GetMovieRatings(name, year);
+        }
+
+        [HttpGet("ratings/tv/{name}/{year}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public Task<TvRatings> GetRottenTvRatings(string name, int year)
+        {
+            return _rottenTomatoesApi.GetTvRatings(name, year);
+        }
+
+        [HttpGet("stream/movie/{movieDbId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public Task<IEnumerable<StreamingData>> GetMovieStreams(int movieDBId)
+        {
+            return _movieEngineV2.GetStreamInformation(movieDBId, HttpContext.RequestAborted);
+        }
+
+        [HttpGet("stream/tv/{tvdbId}/{tvMaze}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public Task<IEnumerable<StreamingData>> GetTvStreams(int tvdbId, int tvMaze)
+        {
+            return _tvEngineV2.GetStreamInformation(tvdbId, tvMaze, HttpContext.RequestAborted);
         }
     }
 }

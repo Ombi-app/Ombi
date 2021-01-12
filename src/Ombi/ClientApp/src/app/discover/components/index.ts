@@ -9,6 +9,7 @@ import { SearchService, RequestService } from "../../services";
 import { MatDialog } from "@angular/material/dialog";
 import { DiscoverGridComponent } from "./grid/discover-grid.component";
 import { MovieListComponent } from "./movie-list/movie-list.component";
+import { DiscoverSearchResultsComponent } from "./search-results/search-results.component";
 
 
 export const components: any[] = [
@@ -18,6 +19,7 @@ export const components: any[] = [
     DiscoverCollectionsComponent,
     DiscoverActorComponent,
     DiscoverGridComponent,
+    DiscoverSearchResultsComponent,
     MovieListComponent,
 ];
 
@@ -35,5 +37,6 @@ export const providers: any[] = [
 export const routes: Routes = [
     { path: "", component: DiscoverComponent, canActivate: [AuthGuard] },
     { path: "collection/:collectionId", component: DiscoverCollectionsComponent, canActivate: [AuthGuard] },
-    { path: "actor/:actorId", component: DiscoverActorComponent, canActivate: [AuthGuard] }
+    { path: "actor/:actorId", component: DiscoverActorComponent, canActivate: [AuthGuard] },
+    { path: ":searchTerm", component: DiscoverSearchResultsComponent, canActivate: [AuthGuard] },
 ];

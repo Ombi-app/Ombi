@@ -7,6 +7,7 @@ using Ombi.Helpers;
 using Ombi.Schedule.Jobs;
 using Ombi.Schedule.Jobs.Couchpotato;
 using Ombi.Schedule.Jobs.Emby;
+using Ombi.Schedule.Jobs.Jellyfin;
 using Ombi.Schedule.Jobs.Lidarr;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
@@ -51,6 +52,7 @@ namespace Ombi.Schedule
             // Run configuration
             await AddPlex(s);
             await AddEmby(s);
+            await AddJellyfin(s);
             await AddDvrApps(s);
             await AddSystem(s);
             await AddNotifications(s);
@@ -98,6 +100,15 @@ namespace Ombi.Schedule
             await OmbiQuartz.Instance.AddJob<IEmbyAvaliabilityChecker>(nameof(IEmbyAvaliabilityChecker), "Emby", null);
             await OmbiQuartz.Instance.AddJob<IEmbyUserImporter>(nameof(IEmbyUserImporter), "Emby", JobSettingsHelper.UserImporter(s));
         }
+
+        private static async Task AddJellyfin(JobSettings s)
+        {
+            await OmbiQuartz.Instance.AddJob<IJellyfinContentSync>(nameof(IJellyfinContentSync), "Jellyfin", JobSettingsHelper.JellyfinContent(s));
+            await OmbiQuartz.Instance.AddJob<IJellyfinEpisodeSync>(nameof(IJellyfinEpisodeSync), "Jellyfin", null);
+            await OmbiQuartz.Instance.AddJob<IJellyfinAvaliabilityChecker>(nameof(IJellyfinAvaliabilityChecker), "Jellyfin", null);
+            await OmbiQuartz.Instance.AddJob<IJellyfinUserImporter>(nameof(IJellyfinUserImporter), "Jellyfin", JobSettingsHelper.UserImporter(s));
+        }
+
         private static async Task AddNotifications(JobSettings s)
         {
             await OmbiQuartz.Instance.AddJob<INotificationService>(nameof(INotificationService), "Notifications", null);

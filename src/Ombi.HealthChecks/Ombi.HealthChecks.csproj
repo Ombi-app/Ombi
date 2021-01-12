@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Api.CouchPotato\Ombi.Api.CouchPotato.csproj" />
     <ProjectReference Include="..\Ombi.Api.Emby\Ombi.Api.Emby.csproj" />
+    <ProjectReference Include="..\Ombi.Api.Jellyfin\Ombi.Api.Jellyfin.csproj" />
     <ProjectReference Include="..\Ombi.Api.Lidarr\Ombi.Api.Lidarr.csproj" />
     <ProjectReference Include="..\Ombi.Api.Plex\Ombi.Api.Plex.csproj" />
     <ProjectReference Include="..\Ombi.Api.Radarr\Ombi.Api.Radarr.csproj" />

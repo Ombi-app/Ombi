@@ -1,0 +1,15 @@
+<div class="small-middle-container" >
+    <div *ngIf="loadingFlag" class="row justify-content-md-center top-spacing loading-spinner">
+        <mat-spinner [color]="'accent'"></mat-spinner>
+    </div>
+    <div *ngIf="discoverResults && discoverResults.length > 0" class="row full-height discoverResults col">
+        <div class="col-xl-2 col-lg-3 col-md-3 col-6 col-sm-4 small-padding" *ngFor="let result of discoverResults">
+            <discover-card [result]="result"></discover-card>
+        </div>
+    </div>
+    <div *ngIf="!discoverResults || discoverResults.length === 0">
+        <div  class="row justify-content-md-center top-spacing loading-spinner">
+            <h1> {{'Discovery.NoSearch' | translate}} <i class="fa fa-frown-o" aria-hidden="true"></i></h1>
+        </div>
+    </div>
+</div>

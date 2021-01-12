@@ -1,8 +1,6 @@
 ﻿import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
-import { SearchService, RequestService, RadarrService } from "../services";
-
 import {CarouselModule} from 'primeng/carousel';
 
 import { SharedModule } from "../shared/shared.module";
@@ -13,6 +11,7 @@ import { PipeModule } from "../pipes/pipe.module";
 import * as fromComponents from './components';
 import { AuthGuard } from "../auth/auth.guard";
 import { ArtistDetailsComponent } from "./components/artist/artist-details.component";
+import { ReactiveFormsModule } from "@angular/forms";
 
 
 const routes: Routes = [
@@ -25,6 +24,7 @@ const routes: Routes = [
     imports: [
         RouterModule.forChild(routes),
         SharedModule,
+        ReactiveFormsModule,
         PipeModule,
         CarouselModule,
     ],

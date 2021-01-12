@@ -22,24 +22,6 @@ $card-background: #2b2b2b;
     font-weight: bold;
 }
 
-$border-width: 3px;
-
-.available {
-    border-bottom: $border-width #1DE9B6 solid;
-}
-
-.approved {
-    border-bottom: $border-width #ff5722 solid;
-}
-
-.requested {
-    border-bottom: $border-width #ffd740 solid;
-}
-
-.notrequested {
-    border-bottom: $border-width #303030 solid;
-}
-
 .expand {
     text-align: center;
 }
@@ -85,3 +67,103 @@ small {
         display: block;
     }
 }
+
+
+
+.box {
+    position: relative;
+    max-width: 600px;
+  }
+
+  /* common */
+  .ribbon {
+    width: 118px;
+    height: 96px;
+    overflow: hidden;
+    position: absolute;
+  }
+  .ribbon::before,
+  .ribbon::after {
+    position: absolute;
+    z-index: -1;
+    content: '';
+    display: none;
+    border: 5px solid black;
+  }
+  .ribbon span {
+    position: absolute;
+    display: none;
+    width: 180px;
+    padding: 10px 0;
+    background-color: black;
+    box-shadow: 0 5px 10px rgba(0,0,0,.1);
+    color: #fff;
+    font: 500 11px/1 'Lato', sans-serif;
+    text-shadow: 0 1px 1px rgba(0,0,0,.2);
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .ribbon.available span {
+    background-color: #1DE9B6 !important;
+    display: block;
+    color: #2f2f2f;
+  }
+
+  .ribbon.available::before,
+  .ribbon.available::after {
+    border: 5px solid #1DE9B6 !important;
+    display: block;
+  }
+
+  .ribbon.approved span {
+    background-color: #ff5722 !important;
+    display: block;
+    color: #2f2f2f;
+  }
+
+  .ribbon.approved::before,
+  .ribbon.approved::after {
+    border: 5px solid #ff5722 !important;
+    display: block;
+  }
+
+  .ribbon.requested span {
+    background-color: #ffd740 !important;
+    display: block;
+    color: #2f2f2f;
+  }
+
+  .ribbon.requested::before,
+  .ribbon.requested::after {
+    border: 5px solid #ffd740 !important;
+    display: block;
+  }
+
+
+  /* top right*/
+  .ribbon-top-right {
+    top: -10px;
+    right: -10px;
+  }
+  .ribbon-top-right::before,
+  .ribbon-top-right::after {
+    border-top-color: transparent;
+    border-right-color: transparent;
+  }
+  .ribbon-top-right::before {
+    top: 0;
+    left: 40px;
+  }
+  .ribbon-top-right::after {
+    bottom: 18px;
+    right: 0;
+  }
+  .ribbon-top-right span {
+    left: 0px;
+    top: 13px;
+    transform: rotate(45deg);
+  }
+  .ribbon-icon {
+    transform: translateX(0%) translateY(0%) rotate(-45deg);
+  }

@@ -1,0 +1,23 @@
+<h1 mat-dialog-title>
+
+    Advanced Options</h1>
+<div mat-dialog-content>
+    <mat-form-field>
+        <mat-label>{{'MediaDetails.QualityProfilesSelect' | translate }}</mat-label>
+        <mat-select [(value)]="data.profileId">
+            <mat-option *ngFor="let profile of sonarrProfiles" value="{{profile.id}}">{{profile.name}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<div mat-dialog-content>
+    <mat-form-field>
+        <mat-label>{{'MediaDetails.RootFolderSelect' | translate }}</mat-label>
+        <mat-select [(value)]="data.rootFolderId">
+            <mat-option *ngFor="let profile of sonarrRootFolders" value="{{profile.id}}">{{profile.path}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="" cdkFocusInitial>Close</button>
+    <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Save</button>
+</div>

@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Hqub.MusicBrainz.API;
 using Hqub.MusicBrainz.API.Entities;
+using Hqub.MusicBrainz.API.Entities.Collections;
 using Newtonsoft.Json;
 using Ombi.Api.MusicBrainz.Models;
 
@@ -18,6 +19,12 @@ namespace Ombi.Api.MusicBrainz
         public MusicBrainzApi(IApi api)
         {
             _api = api;
+        }
+
+        public Task<Release> GetAlbumInformation(string albumId)
+        {
+            var album = Release.GetAsync(albumId);
+            return album;
         }
 
         public async Task<IEnumerable<Artist>> SearchArtist(string artistQuery)

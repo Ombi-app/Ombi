@@ -33,6 +33,17 @@
             </form>
           </mat-step>
 
+          <mat-step  [optional]="true">
+            <form >
+              <ng-template matStepLabel>Jellyfin</ng-template>
+              <wizard-jellyfin></wizard-jellyfin>
+              <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button matStepperNext>Next</button>
+              </div>
+            </form>
+          </mat-step>
+
           <mat-step>
             <form >
               <ng-template matStepLabel>Create a local admin</ng-template>

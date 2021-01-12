@@ -1,5 +1,5 @@
 ﻿import { Location } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+import { AfterViewInit, Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
 import { ICheckbox, INotificationAgent, INotificationPreferences, IRadarrProfile, IRadarrRootFolder, ISonarrProfile, ISonarrRootFolder, IUser, UserType } from "../interfaces";
@@ -25,6 +25,8 @@ export class UserManagementUserComponent implements OnInit {
     public NotificationAgent = INotificationAgent;
     public edit: boolean;
 
+    public countries: string[];
+
     constructor(private identityService: IdentityService,
                 private notificationService: MessageService,
                 private router: Router,
@@ -45,6 +47,8 @@ export class UserManagementUserComponent implements OnInit {
                  }
 
     public ngOnInit() {
+
+        this.identityService.getSupportedStreamingCountries().subscribe(x => this.countries = x);
         this.identityService.getAllAvailableClaims().subscribe(x => this.availableClaims = x);
         if(this.edit) {
             this.identityService.getNotificationPreferencesForUser(this.userId).subscribe(x => this.notificationPreferences = x);
@@ -74,6 +78,7 @@ export class UserManagementUserComponent implements OnInit {
                 episodeRequestQuota: null,
                 movieRequestQuota: null,
                 language: null,
+                streamingCountry: "US",
                 userQualityProfiles: {
                     radarrQualityProfile: 0,
                     radarrRootPath: 0,
@@ -172,7 +177,7 @@ export class UserManagementUserComponent implements OnInit {
             }
         });
     }
-
+    
     public back() {
         this.location.back();
     }

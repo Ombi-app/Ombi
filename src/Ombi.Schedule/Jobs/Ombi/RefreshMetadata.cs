@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
+using Ombi.Api.Jellyfin;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Api.TvMaze;
@@ -14,6 +15,7 @@ using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Hubs;
 using Ombi.Schedule.Jobs.Emby;
+using Ombi.Schedule.Jobs.Jellyfin;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -23,31 +25,41 @@ namespace Ombi.Schedule.Jobs.Ombi
 {
     public class RefreshMetadata : IRefreshMetadata
     {
-        public RefreshMetadata(IPlexContentRepository plexRepo, IEmbyContentRepository embyRepo,
+        public RefreshMetadata(IPlexContentRepository plexRepo, IEmbyContentRepository embyRepo, IJellyfinContentRepository jellyfinRepo,
             ILogger<RefreshMetadata> log, ITvMazeApi tvApi, ISettingsService<PlexSettings> plexSettings,
-            IMovieDbApi movieApi, ISettingsService<EmbySettings> embySettings, IEmbyApiFactory embyApi, IHubContext<NotificationHub> notification)
+            IMovieDbApi movieApi,
+            ISettingsService<EmbySettings> embySettings, IEmbyApiFactory embyApi,
+            ISettingsService<JellyfinSettings> jellyfinSettings, IJellyfinApiFactory jellyfinApi,
+            IHubContext<NotificationHub> notification)
         {
             _plexRepo = plexRepo;
             _embyRepo = embyRepo;
+            _jellyfinRepo = jellyfinRepo;
             _log = log;
             _movieApi = movieApi;
             _tvApi = tvApi;
             _plexSettings = plexSettings;
             _embySettings = embySettings;
             _embyApiFactory = embyApi;
+            _jellyfinSettings = jellyfinSettings;
+            _jellyfinApiFactory = jellyfinApi;
             _notification = notification;
         }
 
         private readonly IPlexContentRepository _plexRepo;
         private readonly IEmbyContentRepository _embyRepo;
+        private readonly IJellyfinContentRepository _jellyfinRepo;
         private readonly ILogger _log;
         private readonly IMovieDbApi _movieApi;
         private readonly ITvMazeApi _tvApi;
         private readonly ISettingsService<PlexSettings> _plexSettings;
         private readonly ISettingsService<EmbySettings> _embySettings;
+        private readonly ISettingsService<JellyfinSettings> _jellyfinSettings;
         private readonly IEmbyApiFactory _embyApiFactory;
+        private readonly IJellyfinApiFactory _jellyfinApiFactory;
         private readonly IHubContext<NotificationHub> _notification;
         private IEmbyApi EmbyApi { get; set; }
+        private IJellyfinApi JellyfinApi { get; set; }
 
         public async Task Execute(IJobExecutionContext job)
         {
@@ -71,6 +83,14 @@ namespace Ombi.Schedule.Jobs.Ombi
                     await StartEmby(embySettings);
 
                     await OmbiQuartz.TriggerJob(nameof(IEmbyAvaliabilityChecker), "Emby");
+                }
+
+                var jellyfinSettings = await _jellyfinSettings.GetSettingsAsync();
+                if (jellyfinSettings.Enable)
+                {
+                    await StartJellyfin(jellyfinSettings);
+
+                    await OmbiQuartz.TriggerJob(nameof(IJellyfinAvaliabilityChecker), "Jellyfin");
                 }
             }
             catch (Exception e)
@@ -105,6 +125,13 @@ namespace Ombi.Schedule.Jobs.Ombi
             EmbyApi = _embyApiFactory.CreateClient(s);
             await StartEmbyMovies(s);
             await StartEmbyTv();
+        }
+
+        private async Task StartJellyfin(JellyfinSettings s)
+        {
+            JellyfinApi = _jellyfinApiFactory.CreateClient(s);
+            await StartJellyfinMovies(s);
+            await StartJellyfinTv();
         }
 
         private async Task StartPlexTv(List<PlexServerContent> allTv)
@@ -175,6 +202,41 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
 
                 await _embyRepo.SaveChangesAsync();
+            }
+        }
+
+        private async Task StartJellyfinTv()
+        {
+            var allTv = await _jellyfinRepo.GetAll().Where(x =>
+                x.Type == JellyfinMediaType.Series && (x.TheMovieDbId == null || x.ImdbId == null || x.TvDbId == null)).ToListAsync();
+
+            foreach (var show in allTv)
+            {
+                var hasImdb = show.ImdbId.HasValue();
+                var hasTheMovieDb = show.TheMovieDbId.HasValue();
+                var hasTvDbId = show.TvDbId.HasValue();
+
+                if (!hasTheMovieDb)
+                {
+                    var id = await GetTheMovieDbId(hasTvDbId, hasImdb, show.TvDbId, show.ImdbId, show.Title, false);
+                    show.TheMovieDbId = id;
+                }
+
+                if (!hasImdb)
+                {
+                    var id = await GetImdbId(hasTheMovieDb, hasTvDbId, show.Title, show.TheMovieDbId, show.TvDbId, RequestType.TvShow);
+                    show.ImdbId = id;
+                    _jellyfinRepo.UpdateWithoutSave(show);
+                }
+
+                if (!hasTvDbId)
+                {
+                    var id = await GetTvDbId(hasTheMovieDb, hasImdb, show.TheMovieDbId, show.ImdbId, show.Title);
+                    show.TvDbId = id;
+                    _jellyfinRepo.UpdateWithoutSave(show);
+                }
+
+                await _jellyfinRepo.SaveChangesAsync();
             }
         }
 
@@ -259,6 +321,61 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
 
                 await _embyRepo.SaveChangesAsync();
+
+            }
+        }
+
+        private async Task StartJellyfinMovies(JellyfinSettings settings)
+        {
+            var allMovies = await _jellyfinRepo.GetAll().Where(x =>
+                x.Type == JellyfinMediaType.Movie && (x.TheMovieDbId == null || x.ImdbId == null)).ToListAsync();
+            foreach (var movie in allMovies)
+            {
+                movie.ImdbId.HasValue();
+                movie.TheMovieDbId.HasValue();
+                // Movies don't really use TheTvDb
+
+                // Check if it even has 1 ID
+                if (!movie.HasImdb && !movie.HasTheMovieDb)
+                {
+                    // Ok this sucks,
+                    // The only think I can think that has happened is that we scanned Jellyfin before Jellyfin has got the metadata
+                    // So let's recheck jellyfin to see if they have got the metadata now
+                    //
+                    // Yeah your right that does suck - Future Jamie
+                    _log.LogInformation($"Movie {movie.Title} does not have a ImdbId or TheMovieDbId, so rechecking jellyfin");
+                    foreach (var server in settings.Servers)
+                    {
+                        _log.LogInformation($"Checking server {server.Name} for upto date metadata");
+                        var movieInfo = await JellyfinApi.GetMovieInformation(movie.JellyfinId, server.ApiKey, server.AdministratorId,
+                            server.FullUri);
+
+                        if (movieInfo.ProviderIds?.Imdb.HasValue() ?? false)
+                        {
+                            movie.ImdbId = movieInfo.ProviderIds.Imdb;
+                        }
+
+                        if (movieInfo.ProviderIds?.Tmdb.HasValue() ?? false)
+                        {
+                            movie.TheMovieDbId = movieInfo.ProviderIds.Tmdb;
+                        }
+                    }
+                }
+
+                if (!movie.HasImdb)
+                {
+                    var imdbId = await GetImdbId(movie.HasTheMovieDb, false, movie.Title, movie.TheMovieDbId, string.Empty, RequestType.Movie);
+                    movie.ImdbId = imdbId;
+                    _jellyfinRepo.UpdateWithoutSave(movie);
+                }
+                if (!movie.HasTheMovieDb)
+                {
+                    var id = await GetTheMovieDbId(false, movie.HasImdb, string.Empty, movie.ImdbId, movie.Title, true);
+                    movie.TheMovieDbId = id;
+                    _jellyfinRepo.UpdateWithoutSave(movie);
+                }
+
+                await _jellyfinRepo.SaveChangesAsync();
 
             }
         }

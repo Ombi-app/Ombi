@@ -12,6 +12,8 @@ namespace Ombi.Core.Models.Requests
         public List<SeasonsViewModel> Seasons { get; set; } = new List<SeasonsViewModel>();
         [JsonIgnore]
         public string RequestedByAlias { get; set; }
+
+        public string RequestOnBehalf { get; set; }
     }
 
     public class SeasonsViewModel

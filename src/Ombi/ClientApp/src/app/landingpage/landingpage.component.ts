@@ -35,7 +35,7 @@ export class LandingPageComponent implements OnDestroy, OnInit {
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
         this.settingsService.getLandingPage().subscribe(x => this.landingPageSettings = x);
         this.images.getRandomBackground().subscribe(x => {
-            this.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%), url(" + x.url + ")");
+            this.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 19%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 79%, transparent 80%), url(" + x.url + ")");
         });
         this.timer = setInterval(() => {
             this.cycleBackground();

@@ -14,14 +14,16 @@ namespace Ombi.Store.Migrations.ExternalSqlite
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
+                .HasAnnotation("ProductVersion", "5.0.1");
 
             modelBuilder.Entity("Ombi.Store.Entities.CouchPotatoCache", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("TheMovieDbId");
+                    b.Property<int>("TheMovieDbId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -31,26 +33,36 @@ namespace Ombi.Store.Migrations.ExternalSqlite
             modelBuilder.Entity("Ombi.Store.Entities.EmbyContent", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("AddedAt");
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("EmbyId")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("ImdbId");
+                    b.Property<string>("ImdbId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("ProviderId");
+                    b.Property<string>("ProviderId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("TheMovieDbId");
+                    b.Property<string>("TheMovieDbId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("TvDbId");
+                    b.Property<string>("TvDbId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("Type");
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Url");
+                    b.Property<string>("Url")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -60,27 +72,38 @@ namespace Ombi.Store.Migrations.ExternalSqlite
             modelBuilder.Entity("Ombi.Store.Entities.EmbyEpisode", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("AddedAt");
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("EmbyId");
+                    b.Property<string>("EmbyId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("EpisodeNumber");
+                    b.Property<int>("EpisodeNumber")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("ImdbId");
+                    b.Property<string>("ImdbId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("ParentId");
+                    b.Property<string>("ParentId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("ProviderId");
+                    b.Property<string>("ProviderId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("SeasonNumber");
+                    b.Property<int>("SeasonNumber")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("TheMovieDbId");
+                    b.Property<string>("TheMovieDbId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("TvDbId");
+                    b.Property<string>("TvDbId")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -89,26 +112,117 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                     b.ToTable("EmbyEpisode");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.JellyfinContent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImdbId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("JellyfinId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProviderId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TheMovieDbId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TvDbId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JellyfinContent");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.JellyfinEpisode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("EpisodeNumber")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ImdbId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("JellyfinId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ParentId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProviderId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("SeasonNumber")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TheMovieDbId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TvDbId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("JellyfinEpisode");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.LidarrAlbumCache", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("AddedAt");
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("ArtistId");
+                    b.Property<int>("ArtistId")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("ForeignAlbumId");
+                    b.Property<string>("ForeignAlbumId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<bool>("Monitored");
+                    b.Property<bool>("Monitored")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("PercentOfTracks");
+                    b.Property<decimal>("PercentOfTracks")
+                        .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("ReleaseDate");
+                    b.Property<DateTime>("ReleaseDate")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("TrackCount");
+                    b.Property<int>("TrackCount")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -118,15 +232,20 @@ namespace Ombi.Store.Migrations.ExternalSqlite
             modelBuilder.Entity("Ombi.Store.Entities.LidarrArtistCache", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("ArtistId");
+                    b.Property<int>("ArtistId")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("ArtistName");
+                    b.Property<string>("ArtistName")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("ForeignArtistId");
+                    b.Property<string>("ForeignArtistId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<bool>("Monitored");
+                    b.Property<bool>("Monitored")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -136,19 +255,26 @@ namespace Ombi.Store.Migrations.ExternalSqlite
             modelBuilder.Entity("Ombi.Store.Entities.PlexEpisode", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("EpisodeNumber");
+                    b.Property<int>("EpisodeNumber")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("GrandparentKey");
+                    b.Property<int>("GrandparentKey")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("Key");
+                    b.Property<int>("Key")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("ParentKey");
+                    b.Property<int>("ParentKey")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("SeasonNumber");
+                    b.Property<int>("SeasonNumber")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -160,17 +286,23 @@ namespace Ombi.Store.Migrations.ExternalSqlite
             modelBuilder.Entity("Ombi.Store.Entities.PlexSeasonsContent", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("ParentKey");
+                    b.Property<int>("ParentKey")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("PlexContentId");
+                    b.Property<int>("PlexContentId")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int?>("PlexServerContentId");
+                    b.Property<int?>("PlexServerContentId")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("SeasonKey");
+                    b.Property<int>("SeasonKey")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("SeasonNumber");
+                    b.Property<int>("SeasonNumber")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -182,29 +314,41 @@ namespace Ombi.Store.Migrations.ExternalSqlite
             modelBuilder.Entity("Ombi.Store.Entities.PlexServerContent", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("AddedAt");
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("ImdbId");
+                    b.Property<string>("ImdbId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("Key");
+                    b.Property<int>("Key")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Quality");
+                    b.Property<string>("Quality")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("ReleaseYear");
+                    b.Property<string>("ReleaseYear")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int?>("RequestId");
+                    b.Property<int?>("RequestId")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("TheMovieDbId");
+                    b.Property<string>("TheMovieDbId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("TvDbId");
+                    b.Property<string>("TvDbId")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("Type");
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("Url");
+                    b.Property<string>("Url")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -214,11 +358,14 @@ namespace Ombi.Store.Migrations.ExternalSqlite
             modelBuilder.Entity("Ombi.Store.Entities.RadarrCache", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<bool>("HasFile");
+                    b.Property<bool>("HasFile")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("TheMovieDbId");
+                    b.Property<int>("TheMovieDbId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -228,9 +375,11 @@ namespace Ombi.Store.Migrations.ExternalSqlite
             modelBuilder.Entity("Ombi.Store.Entities.SickRageCache", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("TvDbId");
+                    b.Property<int>("TvDbId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -240,13 +389,17 @@ namespace Ombi.Store.Migrations.ExternalSqlite
             modelBuilder.Entity("Ombi.Store.Entities.SickRageEpisodeCache", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("EpisodeNumber");
+                    b.Property<int>("EpisodeNumber")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("SeasonNumber");
+                    b.Property<int>("SeasonNumber")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("TvDbId");
+                    b.Property<int>("TvDbId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -256,9 +409,11 @@ namespace Ombi.Store.Migrations.ExternalSqlite
             modelBuilder.Entity("Ombi.Store.Entities.SonarrCache", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("TvDbId");
+                    b.Property<int>("TvDbId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -268,15 +423,20 @@ namespace Ombi.Store.Migrations.ExternalSqlite
             modelBuilder.Entity("Ombi.Store.Entities.SonarrEpisodeCache", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("EpisodeNumber");
+                    b.Property<int>("EpisodeNumber")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<bool>("HasFile");
+                    b.Property<bool>("HasFile")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("SeasonNumber");
+                    b.Property<int>("SeasonNumber")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<int>("TvDbId");
+                    b.Property<int>("TvDbId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -289,6 +449,18 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                         .WithMany("Episodes")
                         .HasForeignKey("ParentId")
                         .HasPrincipalKey("EmbyId");
+
+                    b.Navigation("Series");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.JellyfinEpisode", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.JellyfinContent", "Series")
+                        .WithMany("Episodes")
+                        .HasForeignKey("ParentId")
+                        .HasPrincipalKey("JellyfinId");
+
+                    b.Navigation("Series");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.PlexEpisode", b =>
@@ -297,14 +469,34 @@ namespace Ombi.Store.Migrations.ExternalSqlite
                         .WithMany("Episodes")
                         .HasForeignKey("GrandparentKey")
                         .HasPrincipalKey("Key")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Series");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.PlexSeasonsContent", b =>
                 {
-                    b.HasOne("Ombi.Store.Entities.PlexServerContent")
+                    b.HasOne("Ombi.Store.Entities.PlexServerContent", null)
                         .WithMany("Seasons")
                         .HasForeignKey("PlexServerContentId");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.EmbyContent", b =>
+                {
+                    b.Navigation("Episodes");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.JellyfinContent", b =>
+                {
+                    b.Navigation("Episodes");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.PlexServerContent", b =>
+                {
+                    b.Navigation("Episodes");
+
+                    b.Navigation("Seasons");
                 });
 #pragma warning restore 612, 618
         }

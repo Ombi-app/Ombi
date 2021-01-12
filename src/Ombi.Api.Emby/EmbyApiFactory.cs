@@ -25,10 +25,6 @@ namespace Ombi.Api.Emby
 
         public IEmbyApi CreateClient(EmbySettings settings)
         {
-            if (settings.IsJellyfin)
-            {
-                return new JellyfinApi(_api);
-            }
             return new EmbyApi(_api);
         }
     }

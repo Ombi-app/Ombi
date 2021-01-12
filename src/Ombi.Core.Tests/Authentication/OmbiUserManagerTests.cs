@@ -30,7 +30,7 @@ namespace Ombi.Core.Tests.Authentication
             AuthenticationSettings.Setup(x => x.GetSettingsAsync())
                 .ReturnsAsync(new AuthenticationSettings());
             _um = new OmbiUserManager(UserStore.Object, null, null, null, null, null, null, null, null,
-                PlexApi.Object, null, null, AuthenticationSettings.Object);
+                PlexApi.Object, null, null, null, null, AuthenticationSettings.Object);
         }
 
         public OmbiUserManager _um { get; set; }

@@ -75,7 +75,7 @@ import { EpisodeRequestComponent } from "./episode-request/episode-request.compo
     MatSnackBarModule,
   ],
   entryComponents: [
-    EpisodeRequestComponent
+    EpisodeRequestComponent,
   ],
   exports: [
       TranslateModule,

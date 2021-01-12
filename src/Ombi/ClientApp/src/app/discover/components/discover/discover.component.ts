@@ -299,7 +299,7 @@ this.finishLoading();
                 url: undefined,
                 rating: +m.rating,
                 overview: m.overview,
-                approved: m.approved,
+                approved: m.approved || m.partlyAvailable,
                 imdbid: m.imdbId,
                 denied: false,
                 background: m.background

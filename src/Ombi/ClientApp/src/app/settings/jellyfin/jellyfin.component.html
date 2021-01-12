@@ -1,0 +1,111 @@
+﻿
+<settings-menu></settings-menu>
+<div class="small-middle-container">
+<div *ngIf="settings">
+    <fieldset>
+        <legend>
+            Jellyfin Configuration
+        </legend>
+
+        <div class="row">
+            <div class="col-md-6 col-6 col-sm-6">
+                <div style="float:right;text-align:left;">
+                    <div class="md-form-field">
+                        <mat-slide-toggle [(ngModel)]="settings.enable" (change)="toggle()" [checked]="settings.enable">Enable</mat-slide-toggle>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <mat-tab-group #tabGroup [selectedIndex]="selected.value" (selectedTabChange)="addTab($event)" (selectedIndexChange)="selected.setValue($event)" animationDuration="0ms" style="display:block;"> 
+            <mat-tab *ngFor="let server of settings.servers" [label]="server.name">
+                    <div class="col-md-6 col-6 col-sm-6" style="float: right; width:100%; text-align:right;">
+                        <button type="button" (click)="removeServer(server)" class="mat-focus-indicator mat-flat-button mat-button-base mat-warn">Remove Server</button>
+                    </div>
+                    <br />
+                    <br />
+                        <div class="col-md-10 col-10 col-sm-12">
+                            <div class="md-form-field">
+                                <mat-form-field appearance="outline" floatLabel=auto>
+                                    <mat-label>Server Name</mat-label>
+                                    <input matInput placeholder="Server Name" [(ngModel)]="server.name" value="{{server.name}}">
+                                </mat-form-field>
+                            </div>
+
+                            <div class="md-form-field">
+                                <mat-form-field appearance="outline" floatLabel=auto>
+                                    <mat-label>Hostname / IP</mat-label>
+                                    <input matInput placeholder="Hostname or IP" [(ngModel)]="server.ip" value="{{server.ip}}">
+                                </mat-form-field>
+
+                                <div class="md-form-field">
+                                    <mat-form-field appearance="outline" floatLabel=auto>
+                                        <mat-label>Server ID</mat-label>
+                                        <input disabled matInput placeholder="Server Id" [(ngModel)]="server.serverId" value="{{server.serverId}}">
+                                    </mat-form-field>
+                                </div>
+                                <mat-form-field appearance="outline" floatLabel=auto>
+                                    <mat-label>Port</mat-label>
+                                    <input matInput placeholder="Port" [(ngModel)]="server.port" value="{{server.port}}">
+                                </mat-form-field>
+
+                                <mat-slide-toggle id="ssl" [(ngModel)]="server.ssl" [checked]="server.ssl">
+                                    SSL
+                                </mat-slide-toggle>
+                            </div>
+                            <div class="md-form-field">
+                                <mat-form-field appearance="outline" floatLabel=auto>
+                                    <mat-label>API Key</mat-label>
+                                    <input matInput placeholder="Api Key" [(ngModel)]="server.apiKey" value="{{server.apiKey}}">
+                                </mat-form-field>
+                            </div>
+                            <div class="md-form-field">
+                                <mat-form-field appearance="outline" floatLabel=auto>
+                                    <mat-label>Base URL</mat-label>
+                                    <input matInput placeholder="Base Url" [(ngModel)]="server.subDir" value="{{server.subDir}}">
+                                </mat-form-field>
+                            </div>
+                            <div class="md-form-field">
+                                <mat-form-field appearance="outline" floatLabel=auto>
+                                    <mat-label>Externally Facing Hostname</mat-label>
+                                    <input matInput placeholder="e.g. https://jellyfin.server.com/" [(ngModel)]="server.serverHostname" value="{{server.serverHostname}}" matTooltip="This will be the external address that users will navigate to when they press the 'View On Jellyfin' button">
+                                </mat-form-field>
+                                <small>
+                                    <span *ngIf="server.serverHostname">Current URL: "{{server.serverHostname}}/#!/itemdetails.html?id=1"</span>
+                                    <span *ngIf="!server.serverHostname">Current URL: "{{server.ssl ? "https://" : "http://"}}{{server.ip}}:{{server.port}}/"</span>
+                                </small>
+                            </div>
+
+                            
+                            <div class="form-group">
+                                <div>
+                                    <button mat-raised-button id="testJellyfin" type="button" (click)="test(server)" class="mat-focus-indicator mat-stroked-button mat-button-base">Test Connectivity <div id="spinner"></div></button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div>
+                                    <button mat-raised-button id="discover" type="button" (click)="discoverServerInfo(server)" class="mat-focus-indicator mat-stroked-button mat-button-base">Discover Server Information <div id="spinner"></div></button>
+                                </div>
+                            </div>
+                        </div>
+            </mat-tab>  
+            <mat-tab label="" disabled=true> </mat-tab>
+            <mat-tab label="Add Server" position=100> </mat-tab>
+                  
+        </mat-tab-group>
+        <div class="col-md-2">
+            <div class="form-group">
+                <div>
+                    <button mat-raised-button [disabled]="!hasDiscoveredOrDirty" (click)="save()" type="submit" id="save" class="mat-focus-indicator mat-raised-button mat-button-base mat-accent">Submit</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <div>
+                    <button mat-raised-button (click)="runCacher()" type="button" id="save" class="mat-focus-indicator mat-stroked-button mat-button-base">Manually Run Cacher</button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+</div>

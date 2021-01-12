@@ -83,12 +83,16 @@ namespace Ombi.Controllers.V1
             return vm;
         }
 
+        public class RemoveUserModel
+        {
+            public string UserId { get; set; }
+        }
         [HttpPost]
         [ApiExplorerSettings(IgnoreApi = true)]
         [Admin]
-        public async Task<bool> RemoveUser([FromBody] string userId)
+        public async Task<bool> RemoveUser([FromBody] RemoveUserModel userId)
         {
-            var user = await _userManager.Users.Include(x => x.NotificationUserIds).FirstOrDefaultAsync(x => x.Id.Equals(userId, StringComparison.InvariantCultureIgnoreCase));
+            var user = await _userManager.Users.Include(x => x.NotificationUserIds).FirstOrDefaultAsync(x => x.Id.Equals(userId.UserId, StringComparison.InvariantCultureIgnoreCase));
             try
             {
                 await _notification.DeleteRange(user.NotificationUserIds);

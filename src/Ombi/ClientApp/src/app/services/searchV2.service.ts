@@ -9,8 +9,10 @@ import { ServiceHelpers } from "./service.helpers";
 
 import { ISearchMovieResultV2 } from "../interfaces/ISearchMovieResultV2";
 import { ISearchTvResultV2, IMovieCollectionsViewModel, IActorCredits } from "../interfaces/ISearchTvResultV2";
-import { IArtistSearchResult, IAlbumArt } from "../interfaces/IMusicSearchResultV2";
+import { IArtistSearchResult, IAlbumArt, IReleaseGroups } from "../interfaces/IMusicSearchResultV2";
 import { SearchFilter } from "../my-nav/SearchFilter";
+import { IMovieRatings, ITvRatings } from "../interfaces/IRatings";
+import { IStreamingData } from "../interfaces/IStreams";
 
 @Injectable()
 export class SearchV2Service extends ServiceHelpers {
@@ -121,4 +123,25 @@ export class SearchV2Service extends ServiceHelpers {
     public getReleaseGroupArt(mbid: string): Observable<IAlbumArt> {
         return this.http.get<IAlbumArt>(`${this.url}/releasegroupart/${mbid}`);
     }
+
+    public getAlbum(mbid: string): Observable<IReleaseGroups> {
+        return this.http.get<IReleaseGroups>(`${this.url}/artist/album/${mbid}`);
+    }
+
+    public getRottenMovieRatings(name: string, year: number): Observable<IMovieRatings> {
+        return this.http.get<IMovieRatings>(`${this.url}/ratings/movie/${name}/${year}`);
+    }
+
+    public getRottenTvRatings(name: string, year: number): Observable<ITvRatings> {
+        return this.http.get<ITvRatings>(`${this.url}/ratings/tv/${name}/${year}`);
+    }
+
+    public getMovieStreams(theMovieDbId: number): Observable<IStreamingData[]> {
+        return this.http.get<IStreamingData[]>(`${this.url}/stream/movie/${theMovieDbId}`);
+    }
+
+    public getTvStreams(theTvDbId: number, tvMaze: number): Observable<IStreamingData[]> {
+        return this.http.get<IStreamingData[]>(`${this.url}/stream/tv/${theTvDbId}/${tvMaze}`);
+    }
+
 }

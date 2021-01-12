@@ -7,12 +7,12 @@
             <div class="container">
                 <div class="row">
                     <div
-                        class="col-xl-10 col-lg-11 offset-xl-2 offset-lg-1 col-md-8 col-sm-7 col-8 offset-md-4 offset-sm-5 offset-4">
-                        <h1>{{title}} <span *ngIf="releaseDate" class="grey-text align-middle">
+                        class="col-xl-11 col-lg-8 offset-xl-1 offset-lg-4 col-md-8 col-sm-7 col-12 offset-md-4 offset-sm-5 mobile-top-text">
+                        <h1 class="large-text">{{title}} <span *ngIf="releaseDate" class="grey-text align-middle">
                             ({{releaseDate | amLocal | amDateFormat: 'YYYY'}})</span>
                         </h1>
 
-                        <h5 class="tagline grey-text">{{tagline}}</h5>
+                        <h2 class="tagline grey-text">{{tagline}}</h2>
                     </div>
                 </div>
             </div>

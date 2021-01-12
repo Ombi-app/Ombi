@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
+using Ombi.Api.TheMovieDb.Models;
 using Ombi.Attributes;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine;
@@ -159,7 +160,8 @@ namespace Ombi.Controllers.V1
                     UserName = plexUser.user.username,
                     UserType = UserType.PlexUser,
                     Email = plexUser.user.email,
-                    ProviderUserId = plexUser.user.id
+                    ProviderUserId = plexUser.user.id,
+                    StreamingCountry = "US" // Default
                 };
 
                 await _userManagementSettings.SaveSettingsAsync(new UserManagementSettings
@@ -173,7 +175,8 @@ namespace Ombi.Controllers.V1
             var userToCreate = new OmbiUser
             {
                 UserName = user.Username,
-                UserType = UserType.LocalUser
+                UserType = UserType.LocalUser,
+                StreamingCountry = "US"
             };
 
             return await SaveWizardUser(user, userToCreate);
@@ -276,6 +279,31 @@ namespace Ombi.Controllers.V1
         }
 
         /// <summary>
+        /// Gets all users for dropdown purposes.
+        /// </summary>
+        /// <returns>Basic Information about all users</returns>
+        [HttpGet("dropdown/Users")]
+        [PowerUser]
+        public async Task<IEnumerable<UserViewModelDropdown>> GetAllUsersDropdown()
+        {
+            var users = await UserManager.Users.Where(x => x.UserType != UserType.SystemUser)
+                .ToListAsync();
+
+            var model = new List<UserViewModelDropdown>();
+
+            foreach (var user in users)
+            {
+                model.Add(new UserViewModelDropdown
+                {
+                    Id = user.Id,
+                    Username = user.UserName
+                });
+            }
+
+            return model.OrderBy(x => x.Username);
+        }
+
+        /// <summary>
         /// Gets the current logged in user.
         /// </summary>
         /// <returns>Information about all users</returns>
@@ -299,6 +327,32 @@ namespace Ombi.Controllers.V1
             var username = User.Identity.Name.ToUpper();
             var user = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
             user.Language = model.Lang;
+
+            await UserManager.UpdateAsync(user);
+            return Ok();
+        }
+
+        /// <summary>
+        /// Returns the supported country codes that we have streaming data for
+        /// </summary>
+        [HttpGet("streamingcountry")]
+        [Authorize]
+        public IActionResult GetSupportedStreamingCountries()
+        {
+            var resultsProp = typeof(Results).GetProperties();
+            return Json(resultsProp.Select(x => x.Name));
+        }
+
+        /// <summary>
+        /// Sets the current users country streaming preference
+        /// </summary>
+        [HttpPost("streamingcountry")]
+        [Authorize]
+        public async Task<IActionResult> SetCurrentUserCountryStreaming([FromBody] CountryStreamingPreference model)
+        {
+            var username = User.Identity.Name.ToUpper();
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
+            user.StreamingCountry = model.Code;
 
             await UserManager.UpdateAsync(user);
             return Ok();
@@ -333,7 +387,8 @@ namespace Ombi.Controllers.V1
                 EpisodeRequestLimit = user.EpisodeRequestLimit ?? 0,
                 MovieRequestLimit = user.MovieRequestLimit ?? 0,
                 MusicRequestLimit = user.MusicRequestLimit ?? 0,
-                Language = user.Language
+                Language = user.Language,
+                StreamingCountry = user.StreamingCountry
             };
 
             foreach (var role in userRoles)
@@ -402,6 +457,10 @@ namespace Ombi.Controllers.V1
             {
                 return Error("You do not have the correct permissions to create this user");
             }
+            if(user.EmailAddress.HasValue() && await UserManager.FindByEmailAsync(user.EmailAddress) != null)
+            {
+                return Error("This email has already been taken");
+            }
             var ombiUser = new OmbiUser
             {
                 Alias = user.Alias,
@@ -412,6 +471,7 @@ namespace Ombi.Controllers.V1
                 EpisodeRequestLimit = user.EpisodeRequestLimit,
                 MusicRequestLimit = user.MusicRequestLimit,
                 UserAccessToken = Guid.NewGuid().ToString("N"),
+                StreamingCountry = user.StreamingCountry.HasValue() ? user.StreamingCountry : "US"
             };
             var userResult = await UserManager.CreateAsync(ombiUser, user.Password);
 
@@ -569,6 +629,10 @@ namespace Ombi.Controllers.V1
             user.MovieRequestLimit = ui.MovieRequestLimit;
             user.EpisodeRequestLimit = ui.EpisodeRequestLimit;
             user.MusicRequestLimit = ui.MusicRequestLimit;
+            if (ui.StreamingCountry.HasValue())
+            {
+                user.StreamingCountry = ui.StreamingCountry;
+            }
             var updateResult = await UserManager.UpdateAsync(user);
             if (!updateResult.Succeeded)
             {
@@ -714,7 +778,7 @@ namespace Ombi.Controllers.V1
         [HttpPost("reset")]
         [AllowAnonymous]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<OmbiIdentityResult> SubmitResetPassword([FromBody]SubmitPasswordReset email)
+        public async Task<OmbiIdentityResult> SubmitResetPassword([FromBody] SubmitPasswordReset email)
         {
             // Check if account exists
             var user = await UserManager.FindByEmailAsync(email.Email);
@@ -792,7 +856,7 @@ namespace Ombi.Controllers.V1
         [HttpPost("resetpassword")]
         [AllowAnonymous]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<OmbiIdentityResult> ResetPassword([FromBody]ResetPasswordToken token)
+        public async Task<OmbiIdentityResult> ResetPassword([FromBody] ResetPasswordToken token)
         {
             var user = await UserManager.FindByEmailAsync(token.Email);
 

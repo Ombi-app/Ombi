@@ -167,6 +167,7 @@ export interface IEpisodesRequests {
 export interface IMovieRequestModel {
   theMovieDbId: number;
   languageCode: string | undefined;
+  requestOnBehalf: string | undefined;
 }
 
 export interface IFilter {

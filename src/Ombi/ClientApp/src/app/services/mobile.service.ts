@@ -17,6 +17,6 @@ export class MobileService extends ServiceHelpers {
     }
 
     public deleteUser(userId: string): Observable<boolean> {
-        return this.http.post<boolean>(`${this.url}remove/`, userId, {headers: this.headers});
+        return this.http.post<boolean>(`${this.url}`, { userId: userId }, {headers: this.headers});
     }
 }

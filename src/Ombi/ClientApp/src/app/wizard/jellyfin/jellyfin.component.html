@@ -1,0 +1,31 @@
+﻿
+    <div *ngIf="jellyfinSettings">
+        <div *ngIf="jellyfinSettings.servers">
+            <div *ngFor="let server of jellyfinSettings.servers">
+                    <div>
+                        <mat-form-field>
+                        <input type="text" matInput [(ngModel)]="server.ip" id="Ip" name="Ip" placeholder="Jellyfin Hostname or IP Address">
+                    </mat-form-field>
+                    </div>
+
+                <div>
+
+                    <mat-form-field>
+                        <input type="text" matInput [(ngModel)]="server.port" id="portNumber" name="Port" value="{{server.port}}">
+                    </mat-form-field>
+                </div>
+                <div>
+                        <mat-slide-toggle [(ngModel)]="server.ssl">Enable SSL</mat-slide-toggle>
+                </div>
+                <div>
+                 
+                    <mat-form-field>
+                        <input type="text" matInput [(ngModel)]="server.apiKey" id="apiKey" name="ApiKey" placeholder="Jellyfin API Key">
+                    </mat-form-field>
+                </div>
+                <div style="text-align: center; margin-top: 20px">
+                    <a (click)="save()" id="jellyfinApiKeySave" mat-raised-button color="primary">Save <div id="spinner"></div></a>
+                </div>
+            </div>
+        </div>
+    </div>
