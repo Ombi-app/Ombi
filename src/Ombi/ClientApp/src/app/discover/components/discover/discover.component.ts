@@ -5,6 +5,7 @@ import { IDiscoverCardResult, DiscoverOption, DisplayOption } from "../../interf
 import { trigger, transition, style, animate } from "@angular/animations";
 import { StorageService } from "../../../shared/storage/storage-service";
 import { DOCUMENT } from "@angular/common";
+import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 
 @Component({
     templateUrl: "./discover.component.html",
@@ -58,7 +59,7 @@ export class DiscoverComponent implements OnInit {
 
     public async ngOnInit() {
         this.loading()
-        this.upcomingMovies = this.mapMovieModel(await this.searchService.upcomingMoviesByPage(0, 14));
+        this.upcomingMovies = this.mapTvModel(await this.searchService.popularTvByPage(0, 14));
         this.trendingMovies = this.mapMovieModel(await this.searchService.popularMoviesByPage(0, 14));
 this.finishLoading();
         // const localDiscoverOptions = +this.storageService.get(this.mediaTypeStorageKey);
@@ -286,9 +287,9 @@ this.finishLoading();
         return tempResults;
     }
 
-    private mapTvModel(): IDiscoverCardResult[] {
+    private mapTvModel(tv: ISearchTvResult[]): IDiscoverCardResult[] {
         const tempResults = <IDiscoverCardResult[]>[];
-        this.tvShows.forEach(m => {
+        tv.forEach(m => {
             tempResults.push({
                 available: m.available,
                 posterPath: "../../../images/default_tv_poster.png",

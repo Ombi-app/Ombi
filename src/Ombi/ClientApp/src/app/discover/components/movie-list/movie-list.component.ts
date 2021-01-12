@@ -10,76 +10,37 @@ import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
     templateUrl: "./movie-list.component.html",
     styleUrls: ["./movie-list.component.scss"],
 })
-export class MovieListComponent implements OnInit {
+export class MovieListComponent  {
 
     public RequestType = RequestType;
-    @Input() public result: IDiscoverCardResult;
-    
-    constructor(private searchService: SearchV2Service) { }
+    @Input() public result: IDiscoverCardResult[];
 
-    public ngOnInit() {
-        if (this.result.type == RequestType.tvShow) {
-            this.getExtraTvInfo();
-        }
-        if (this.result.type == RequestType.movie) {
-            this.getExtraMovieInfo();
-        }
+    public responsiveOptions: any;
+
+    constructor() {
+        this.responsiveOptions = [
+            {
+                breakpoint: '2559px',
+                numVisible: 7,
+                numScroll: 7
+            },
+            {
+                breakpoint: '1024px',
+                numVisible: 4,
+                numScroll: 4
+            },
+            {
+                breakpoint: '768px',
+                numVisible: 2,
+                numScroll: 2
+            },
+            {
+                breakpoint: '560px',
+                numVisible: 1,
+                numScroll: 1
+            }
+        ];
     }
 
-
-    public async getExtraTvInfo() {
-        var result = await this.searchService.getTvInfo(this.result.id);
-        this.setTvDefaults(result);
-        this.updateTvItem(result);
-
-    }
-
-    public getStatusClass(): string {
-        if (this.result.available) {
-            return "available";
-        }
-        if (this.result.approved) {
-            return "approved";
-        }
-        if (this.result.requested) {
-            return "requested";
-        }
-        return "notrequested";
-    }
-
-    private getExtraMovieInfo() {
-        if (!this.result.imdbid) {
-            this.searchService.getFullMovieDetails(this.result.id)
-                .subscribe(m => {
-                    this.updateMovieItem(m);
-                });
-        }
-    }
-
-    private updateMovieItem(updated: ISearchMovieResultV2) {
-        this.result.url = "http://www.imdb.com/title/" + updated.imdbId + "/";
-        this.result.available = updated.available;
-        this.result.requested = updated.requested;
-        this.result.requested = updated.requestProcessing;
-        this.result.rating = updated.voteAverage;
-    }
-
-
-    private setTvDefaults(x: ISearchTvResultV2) {
-        if (!x.imdbId) {
-            x.imdbId = "https://www.tvmaze.com/shows/" + x.seriesId;
-        } else {
-            x.imdbId = "http://www.imdb.com/title/" + x.imdbId + "/";
-        }
-    }
-
-    private updateTvItem(updated: ISearchTvResultV2) {
-        this.result.title = updated.title;
-        this.result.id = updated.id;
-        this.result.available = updated.fullyAvailable;
-        this.result.posterPath = updated.banner;
-        this.result.requested = updated.requested;
-        this.result.url = updated.imdbId;
-    }
 
 }

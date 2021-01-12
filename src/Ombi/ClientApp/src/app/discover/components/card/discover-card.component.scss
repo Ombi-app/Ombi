@@ -2,7 +2,7 @@ $ombi-primary:#3f3f3f;
 $card-background: #2b2b2b;
 
 #cardImage {
-    border-radius: 5px 5px 0px 0px;
+    border-radius: 5px;
     height: 75%;
 }
 
@@ -166,4 +166,76 @@ small {
   }
   .ribbon-icon {
     transform: translateX(0%) translateY(0%) rotate(-45deg);
+  }
+
+
+  
+
+.ombi-card {
+  padding: 5px;
+}
+::ng-deep .p-carousel-indicators {
+  display: none !important;
+  }
+
+  
+.image {
+  border-radius: 10px;
+  opacity: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+
+
+.middle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 67%;
+  width: 90%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+
+
+.c {
+  position: relative;
+}
+
+.c:hover .image {
+  opacity: 0.3;
+}
+
+.c:hover .middle {
+  opacity: 1;
+}
+
+.small-text {
+  font-size: 11px;
+}
+.title {
+    font-size: 18px;
+  }
+  .top-left {
+      font-size: 14px;
+      position: absolute;
+      text-transform: uppercase;
+      top: 8px;
+      left: 16px;
+      
+    }
+    .full-width {
+      width: 100%;
+    }
+
+    .ellipsis {
+      display: -webkit-box;
+      -webkit-line-clamp: 6;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
   }
