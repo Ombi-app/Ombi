@@ -57,7 +57,7 @@
         "Vote": "Votar",
         "Donate": "¡Donar!",
         "DonateLibraryMaintainer": "Donar al desarrollador de la biblioteca",
-        "DonateTooltip": "Así es como convenzo a mi esposa para que me deje pasar mi tiempo libre desarrollando Ombi ;)",
+        "DonateTooltip": "Así es como convenzo a mi esposa para que me deje pasar mi tiempo libre desarrollando Ombi 😁",
         "UpdateAvailableTooltip": "¡Actualización disponible!",
         "Settings": "Ajustes",
         "Welcome": "Bienvenido {{username}}",
@@ -265,7 +265,7 @@
         "Budget": "Presupuesto",
         "Keywords": "Palabras Clave/Etiquetas",
         "Casts": {
-            "CastTitle": "Enviar pantalla"
+            "CastTitle": "Reparto"
         },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Esto solicitará cada temporada para este programa",
@@ -274,7 +274,7 @@
         },
         "SonarrConfiguration": "Configuración de Sonarr",
         "RadarrConfiguration": "Configuración de Radarr",
-        "RequestOnBehalf": "Request on behalf of",
+        "RequestOnBehalf": "Solicitar de parte de",
         "PleaseSelectUser": "Por favor, selecciona un usuario",
         "StreamingOn": "Emitiendo en"
     },
@@ -297,7 +297,7 @@
             "Writer": "Guionistas",
             "ExecProducer": "Productor ejecutivo"
         },
-        "NoSearch": "Sorry, nothing matches your search!"
+        "NoSearch": "¡Lo sentimos, nada coincide con tu búsqueda!"
     },
     "UserPreferences": {
         "Welcome": "Bienvenido {{username}}!",
@@ -305,9 +305,9 @@
         "DarkMode": "Modo Oscuro",
         "Updated": "Actualizado exitosamente",
         "StreamingCountry": "País de emisión",
-        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
-        "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
-        "MobileQRCode": "Mobile QR Code",
-        "LegacyApp": "Launch Legacy App"
+        "StreamingCountryDescription": "Este es el código de país desde el que mostraremos información de emisión. Si estás en España, por favor selecciona ES y tendrás información relacionada con la emisión en España.",
+        "LanguageDescription": "Este es el idioma en el que desea mostrar la interfaz de Ombi.",
+        "MobileQRCode": "Código QR móvil",
+        "LegacyApp": "Iniciar Aplicación Antigua"
     }
 }
