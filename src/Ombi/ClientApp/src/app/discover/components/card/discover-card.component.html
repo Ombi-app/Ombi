@@ -17,11 +17,10 @@
     </mat-card>
 </div> -->
 
-<p-skeleton  *ngIf="!fullyLoaded" width="100%" height="19.789rem"></p-skeleton>
+<p-skeleton  *ngIf="!fullyLoaded" width="100%" height="315px"></p-skeleton>
 
 <div *ngIf="fullyLoaded" class="ombi-card dark-card c" [style.display]="hide ? 'none' : 'block'">
-    <div >
-        
+    <a>
         <img [routerLink]="generateDetailsLink()" id="cardImage" src="{{result.posterPath}}" class="image"
             alt="{{result.title}}">
             <div class="top-left">{{RequestType[result.type] | humanize}}</div>
@@ -37,5 +36,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </a>
 </div>

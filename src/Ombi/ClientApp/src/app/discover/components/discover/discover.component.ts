@@ -6,6 +6,7 @@ import { trigger, transition, style, animate } from "@angular/animations";
 import { StorageService } from "../../../shared/storage/storage-service";
 import { DOCUMENT } from "@angular/common";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
+import { DiscoverType } from "../carousel-list/carousel-list.component";
 
 @Component({
     templateUrl: "./discover.component.html",
@@ -30,6 +31,7 @@ export class DiscoverComponent implements OnInit {
     public tvShows: ISearchTvResult[] = [];
 
     public discoverOptions: DiscoverOption = DiscoverOption.Combined;
+    public DiscoverType = DiscoverType;
     public DiscoverOption = DiscoverOption;
     public displayOption: DisplayOption = DisplayOption.Card;
     public DisplayOption = DisplayOption;
@@ -59,8 +61,8 @@ export class DiscoverComponent implements OnInit {
 
     public async ngOnInit() {
         this.loading()
-        this.upcomingMovies = this.mapTvModel(await this.searchService.popularTvByPage(0, 14));
-        this.trendingMovies = this.mapMovieModel(await this.searchService.popularMoviesByPage(0, 14));
+        // this.upcomingMovies = this.mapTvModel(await this.searchService.popularTvByPage(0, 14));
+        // this.trendingMovies = this.mapMovieModel(await this.searchService.popularMoviesByPage(0, 14));
 this.finishLoading();
         // const localDiscoverOptions = +this.storageService.get(this.mediaTypeStorageKey);
         // if (localDiscoverOptions) {

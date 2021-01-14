@@ -4,8 +4,8 @@
     padding: 5px;
 }
 ::ng-deep .p-carousel-indicators {
-    display: none !important;
-    }
+  display: none !important;
+  }
 
     
 .image {
@@ -44,15 +44,19 @@
   }
   
 .small-text {
-    font-size: 11px;
-  }
-  .title {
-      font-size: 16px;
-    }
-    .top-left {
-        font-size: 14px;
-        position: absolute;
-        top: 8px;
-        left: 16px;
-        
-      }
+  font-size: 11px;
+}
+.title {
+  font-size: 16px;
+}
+.top-left {
+  font-size: 14px;
+  position: absolute;
+  top: 8px;
+  left: 16px;
+}
+
+
+.right {
+  text-align: right;
+}

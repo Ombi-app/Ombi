@@ -39,18 +39,29 @@
     <div *ngIf="loadingFlag" class="row justify-content-md-center top-spacing loading-spinner">
         <mat-spinner [color]="'accent'"></mat-spinner>
     </div> -->
-
+    <div *ngIf="loadingFlag" class="row justify-content-md-center top-spacing loading-spinner">
+    </div>
     <div class="section">
         <h2>Popular <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></h2>
-        <div *ngIf="!loadingFlag">
-            <movie-list [result]="upcomingMovies"></movie-list>
+        <div>
+            <carousel-list [discoverType]="DiscoverType.Popular"></carousel-list>
         </div>
+
     </div>
 
     <div class="section">
         <h2>Trending <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></h2>
-        <div *ngIf="!loadingFlag">
-            <movie-list [result]="trendingMovies"></movie-list>
+        <div >
+            <carousel-list [discoverType]="DiscoverType.Trending"></carousel-list>
         </div>
+
+    </div>
+
+    <div class="section">
+        <h2>Upcoming <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></h2>
+        <div>
+            <carousel-list [discoverType]="DiscoverType.Upcoming"></carousel-list>
+        </div>
+
     </div>
 </div>

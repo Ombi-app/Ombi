@@ -1,3 +1,7 @@
 .section {
     margin: 20px;
 }
+::ng-deep .p-carousel-indicators {
+    display: none !important;
+    }
+  
