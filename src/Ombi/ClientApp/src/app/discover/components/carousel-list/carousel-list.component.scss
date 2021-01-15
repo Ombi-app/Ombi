@@ -63,8 +63,8 @@
 }
 
 .discover-filter-buttons-group {
-  background: #0f171d;
-  border: 1px solid #35465c;
+  background: $ombi-background-primary;
+  border: 1px solid $ombi-background-primary-accent;
   border-radius: 30px;
   color:#fff;
   margin-bottom:10px;
@@ -78,7 +78,7 @@
   }
 
   .discover-filter-button.cdk-focused{
-    background:#62d2fa;
+    background:$ombi-active;
   }
 
   .discover-filter-button .mat-button-toggle-button:focus{

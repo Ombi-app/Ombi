@@ -122,7 +122,7 @@
     .application-name{
         font-family: 'Montserrat', sans-serif;
         text-transform: uppercase;
-        color:#62d2fa;
+        color: $ombi-active;
         align-items:center;
         justify-content: center;
         font-weight: 700;
@@ -148,8 +148,8 @@
     }
     
     .active-list-item{
-        color:#1b242f;
-        background: #62d2fa;
+        color:$ombi-background-accent;
+        background: $ombi-active;
         border-radius:0px 30px 30px 0px;
         padding:10px 20px;
         height:auto;
@@ -162,12 +162,12 @@
 }
 
 .content-container{
-    background: #0f171d;
+    background: $ombi-background-primary;
     color:#FFF;
 
     .top-bar-container{
-        background: #0f171d;
-        color:#35465c; 
+        background: $ombi-background-primary;
+        color:$ombi-background-primary-accent; 
     }
 
 }
