@@ -21,6 +21,4 @@ $dark-theme: mat-dark-theme($ombi-dark-app-primary, $ombi-dark-app-accent, $ombi
 // `.dark` will be affected by this alternate dark theme instead of the default theme.
 .dark {
     @include angular-material-theme($dark-theme);
-
-
 }

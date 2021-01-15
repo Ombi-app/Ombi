@@ -25,10 +25,8 @@
               "src/assets"
             ],
             "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles/_imports.scss",
               "node_modules/bootstrap/scss/bootstrap.scss",
-              "node_modules/primeng/resources/themes/md-dark-deeppurple/theme.css",
               "node_modules/font-awesome/scss/font-awesome.scss",
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/primeicons/primeicons.css",

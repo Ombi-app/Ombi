@@ -39,7 +39,7 @@ html,
 body {
     min-height: 100vh;
     overflow: initial;
-    scrollbar-color: #616161 #303030; //firefox
+    // scrollbar-color: #616161 #303030; //firefox
     scrollbar-width: thin; //firefox
     -webkit-overflow-scrolling: touch;
 }
@@ -106,7 +106,7 @@ table {
 }
 
 ::ng-deep .dark .nav-link.active {
-    color: #303030;
+    color: $ombi-active;
     background-color: $accent-dark;
     border-color: rgba(0, 0, 0, 0.18);
     font-weight: 400;
