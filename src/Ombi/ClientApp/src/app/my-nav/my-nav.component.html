@@ -3,7 +3,7 @@
         [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
         [opened]="!(isHandset$ | async)">
 
-        <mat-toolbar>{{applicationName}}</mat-toolbar>
+        <mat-toolbar class="application-name">{{applicationName}}</mat-toolbar>
 
         <div class="outer-profile">
             <div class="profile-img-container">
@@ -65,14 +65,14 @@
         </div>
     </mat-sidenav>
 
-    <mat-sidenav-content>
-        <mat-toolbar color="primary">
+    <mat-sidenav-content class="content-container">
+        <mat-toolbar color="primary" class="top-bar-container">
             <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
                 *ngIf="isHandset$ | async">
                 <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
             </button>
 
-            <div class="col-8 col-lg-10">
+            <div class="col-8 col-lg-10 top-search-bar">
                 <span class="justify-content-center align-items-center">
                     <!-- Search Bar -->
                     <div>
@@ -80,7 +80,7 @@
                     </div>
                 </span>
             </div>
-            <div class="col-2">
+            <div class="col-2 top-filter">
                 <button mat-icon-button [matMenuTriggerFor]="filterMenu">
                     <mat-icon>filter_alt</mat-icon>
                 </button>

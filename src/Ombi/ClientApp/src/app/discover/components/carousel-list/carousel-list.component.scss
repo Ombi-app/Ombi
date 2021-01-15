@@ -59,4 +59,29 @@
 
 .right {
   text-align: right;
+  margin-top:-61px;
+}
+
+.discover-filter-buttons-group {
+  background: #0f171d;
+  border: 1px solid #35465c;
+  border-radius: 30px;
+  color:#fff;
+  margin-bottom:10px;
+
+  .discover-filter-button{
+    background:inherit;
+    color:inherit;
+    padding:0 20px;
+    border-radius: 30px;
+    margin:5px;
+  }
+
+  .discover-filter-button.cdk-focused{
+    background:#62d2fa;
+  }
+
+  .discover-filter-button .mat-button-toggle-button:focus{
+    outline:none;
+  }
 }
