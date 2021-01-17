@@ -297,7 +297,7 @@
             "Writer": "Scenarzysta",
             "ExecProducer": "Producent wykonawczy"
         },
-        "NoSearch": "Sorry, nothing matches your search!"
+        "NoSearch": "Przepraszamy, nic nie pasuje do Twojego wyszukiwania!"
     },
     "UserPreferences": {
         "Welcome": "Witaj {{username}}!",
