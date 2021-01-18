@@ -57,7 +57,7 @@
         "Vote": "Votar",
         "Donate": "¡Donar!",
         "DonateLibraryMaintainer": "Donar al desarrollador de la biblioteca",
-        "DonateTooltip": "Así es como convenzo a mi esposa para que me deje pasar mi tiempo libre desarrollando Ombi ;)",
+        "DonateTooltip": "Así es como convenzo a mi esposa para que me deje pasar mi tiempo libre desarrollando Ombi 😁",
         "UpdateAvailableTooltip": "¡Actualización disponible!",
         "Settings": "Ajustes",
         "Welcome": "Bienvenido {{username}}",
@@ -90,8 +90,9 @@
         "NoResults": "¡Lo sentimos, no encontramos ningún resultado!",
         "DigitalDate": "Versión digital: {{date}}",
         "TheatricalRelease": "En cines: {{date}}",
-        "ViewOnPlex": "Ver en Plex",
-        "ViewOnEmby": "Ver en Emby",
+        "ViewOnPlex": "Reproducir en Plex",
+        "ViewOnEmby": "Reproducir en Emby",
+        "ViewOnJellyfin": "Reproducir en Jellyfin",
         "RequestAdded": "La solicitud de {{title}} se ha añadido correctamente",
         "Similar": "Similar",
         "Refine": "Filtros",
@@ -169,7 +170,7 @@
         },
         "AllRequests": "Todas las Solicitudes",
         "PendingRequests": "Solicitudes Pendientes",
-        "ProcessingRequests": "Procesándose Solicitudes",
+        "ProcessingRequests": "Solicitudes Procesándose",
         "AvailableRequests": "Solicitudes Disponibles",
         "DeniedRequests": "Solicitudes Denegadas",
         "RequestsToDisplay": "Solicitudes a Mostrar",
@@ -177,9 +178,9 @@
         "Details": "Detalles",
         "Options": "Opciones",
         "RequestPanel": {
-            "Delete": "Delete Request",
-            "Approve": "Approve Request",
-            "ChangeAvailability": "Mark Available"
+            "Delete": "Eliminar solicitud",
+            "Approve": "Aprobar solicitud",
+            "ChangeAvailability": "Marcar como disponible"
         }
     },
     "Issues": {
@@ -241,7 +242,7 @@
         "VideosTitle": "Vídeos",
         "AlbumsTitle": "Álbumes",
         "RequestAllAlbums": "Solicitar Todos los Álbumes",
-        "ClearSelection": "Clear Selection",
+        "ClearSelection": "Limpiar Selección",
         "RequestSelectedAlbums": "Solicitar Álbumes Seleccionados",
         "ViewCollection": "Ver Colección",
         "NotEnoughInfo": "Desafortunadamente todavía no hay suficiente información sobre este programa!",
@@ -255,7 +256,7 @@
         "RootFolderOverride": "Sobreescribir carpeta raíz",
         "QualityOverride": "Sobreescribir calidad",
         "Genres": "Géneros",
-        "TheatricalRelease": "En cines",
+        "TheatricalRelease": "Release",
         "DigitalRelease": "Estreno Digital",
         "Votes": "Votos",
         "Runtime": "Duración",
@@ -264,13 +265,18 @@
         "Budget": "Presupuesto",
         "Keywords": "Palabras Clave/Etiquetas",
         "Casts": {
-            "CastTitle": "Enviar pantalla"
+            "CastTitle": "Reparto"
         },
         "EpisodeSelector": {
             "AllSeasonsTooltip": "Esto solicitará cada temporada para este programa",
             "FirstSeasonTooltip": "Esto solo solicitará la primera temporada para este programa",
             "LatestSeasonTooltip": "Esto solo solicitará la última temporada para este programa"
-        }
+        },
+        "SonarrConfiguration": "Configuración de Sonarr",
+        "RadarrConfiguration": "Configuración de Radarr",
+        "RequestOnBehalf": "Solicitar de parte de",
+        "PleaseSelectUser": "Por favor, selecciona un usuario",
+        "StreamingOn": "Emitiendo en"
     },
     "Discovery": {
         "PopularTab": "Popular",
@@ -290,11 +296,18 @@
             "FirstAired": "Emitido por primera vez",
             "Writer": "Guionistas",
             "ExecProducer": "Productor ejecutivo"
-        }
+        },
+        "NoSearch": "¡Lo sentimos, nada coincide con tu búsqueda!"
     },
     "UserPreferences": {
         "Welcome": "Bienvenido {{username}}!",
         "OmbiLanguage": "Idioma",
-        "DarkMode": "Modo Oscuro"
+        "DarkMode": "Modo Oscuro",
+        "Updated": "Actualizado exitosamente",
+        "StreamingCountry": "País de emisión",
+        "StreamingCountryDescription": "Este es el código de país desde el que mostraremos información de emisión. Si estás en España, por favor selecciona ES y tendrás información relacionada con la emisión en España.",
+        "LanguageDescription": "Este es el idioma en el que desea mostrar la interfaz de Ombi.",
+        "MobileQRCode": "Código QR móvil",
+        "LegacyApp": "Iniciar Aplicación Antigua"
     }
 }

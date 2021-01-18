@@ -90,8 +90,9 @@
         "NoResults": "Sorry, er zijn geen resultaten gevonden!",
         "DigitalDate": "Digitale Uitgave: {{date}}",
         "TheatricalRelease": "Bioscoop Uitgave: {{date}}",
-        "ViewOnPlex": "Bekijk op Plex",
-        "ViewOnEmby": "Bekijk op Emby",
+        "ViewOnPlex": "Play On Plex",
+        "ViewOnEmby": "Play On Emby",
+        "ViewOnJellyfin": "Play On Jellyfin",
         "RequestAdded": "Aanvraag voor {{title}} is succesvol toegevoegd",
         "Similar": "Vergelijkbaar",
         "Refine": "Verfijn",
@@ -255,7 +256,7 @@
         "RootFolderOverride": "Hoofdmap overschrijven",
         "QualityOverride": "Kwaliteit overschrijven",
         "Genres": "Genres",
-        "TheatricalRelease": "Bioscoop Uitgave",
+        "TheatricalRelease": "Release",
         "DigitalRelease": "Digital Release",
         "Votes": "Votes",
         "Runtime": "Runtime",
@@ -270,7 +271,12 @@
             "AllSeasonsTooltip": "Dit verzoekt ieder seizoen van deze serie",
             "FirstSeasonTooltip": "Dit verzoekt alleen het eerste seizoen van deze serie",
             "LatestSeasonTooltip": "Dit verzoekt alleen het laatste seizoen van deze show"
-        }
+        },
+        "SonarrConfiguration": "Sonarr Configuration",
+        "RadarrConfiguration": "Radarr Configuration",
+        "RequestOnBehalf": "Request on behalf of",
+        "PleaseSelectUser": "Please select a user",
+        "StreamingOn": "Streaming On"
     },
     "Discovery": {
         "PopularTab": "Populair",
@@ -290,11 +296,18 @@
             "FirstAired": "Eerste uitzending",
             "Writer": "Schrijver",
             "ExecProducer": "Uitvoerende producent"
-        }
+        },
+        "NoSearch": "Sorry, nothing matches your search!"
     },
     "UserPreferences": {
         "Welcome": "Welkom {{username}}!",
         "OmbiLanguage": "Language",
-        "DarkMode": "Dark Mode"
+        "DarkMode": "Dark Mode",
+        "Updated": "Successfully Updated",
+        "StreamingCountry": "Streaming Country",
+        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
+        "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
+        "MobileQRCode": "Mobile QR Code",
+        "LegacyApp": "Launch Legacy App"
     }
 }

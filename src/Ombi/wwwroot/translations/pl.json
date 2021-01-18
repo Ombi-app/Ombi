@@ -4,8 +4,8 @@
         "UsernamePlaceholder": "Nazwa użytkownika",
         "PasswordPlaceholder": "Hasło",
         "RememberMe": "Zapamiętaj mnie",
-        "SignInWith": "Sign in with {{appName}}",
-        "SignInWithPlex": "Sign in with Plex",
+        "SignInWith": "Zaloguj się z {{appName}}",
+        "SignInWithPlex": "Zaloguj się z Plex",
         "ForgottenPassword": "Nie pamiętasz hasła?",
         "Errors": {
             "IncorrectCredentials": "Nieprawidłowa nazwa użytkownika lub hasło"
@@ -30,8 +30,8 @@
         "Errors": {
             "Validation": "Proszę sprawdzić wprowadzone wartości"
         },
-        "Cancel": "Cancel",
-        "Submit": "Submit"
+        "Cancel": "Anuluj",
+        "Submit": "Wyślij"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "Adres e-mail",
@@ -68,17 +68,17 @@
         "ChangeTheme": "Zmień motyw",
         "Calendar": "Kalendarz",
         "UserPreferences": "Preferencje",
-        "FeatureSuggestion": "Feature Suggestion",
-        "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
+        "FeatureSuggestion": "Propozycja funkcjonalności",
+        "FeatureSuggestionTooltip": "Masz świetny nowy pomysł? Zaproponuj go tutaj!",
         "Filter": {
             "Movies": "Filmy",
             "TvShows": "Programy TV",
             "Music": "Muzyka",
-            "People": "People"
+            "People": "Osoby"
         },
-        "MorningWelcome": "Good morning!",
-        "AfternoonWelcome": "Good afternoon!",
-        "EveningWelcome": "Good evening!"
+        "MorningWelcome": "Dzień dobry!",
+        "AfternoonWelcome": "Dzień dobry!",
+        "EveningWelcome": "Dobry wieczór!"
     },
     "Search": {
         "Title": "Szukaj",
@@ -90,8 +90,9 @@
         "NoResults": "Niestety nic nie znaleziono!",
         "DigitalDate": "Wydanie cyfrowe: {{date}}",
         "TheatricalRelease": "Premiera kinowa: {{date}}",
-        "ViewOnPlex": "Obejrzyj w Plex",
-        "ViewOnEmby": "Obejrzyj w Emby",
+        "ViewOnPlex": "Odtwórz w Plex",
+        "ViewOnEmby": "Odtwórz w Emby",
+        "ViewOnJellyfin": "Odtwórz w Jellyfin",
         "RequestAdded": "Zgłoszenie dla {{title}} zostało pomyślnie dodane",
         "Similar": "Podobne",
         "Refine": "Zawęź",
@@ -124,8 +125,8 @@
         "Title": "Zgłoszenia",
         "Paragraph": "Poniżej znajdują się Twoje i wszystkie inne zgłoszenia, a także ich status akceptacji i pobierania.",
         "MoviesTab": "Filmy",
-        "ArtistName": "Artist",
-        "AlbumName": "Album Name",
+        "ArtistName": "Wykonawca",
+        "AlbumName": "Nazwa albumu",
         "TvTab": "Seriale",
         "MusicTab": "Muzyka",
         "RequestedBy": "Zgłoszone przez",
@@ -167,19 +168,19 @@
             "NextMinutes": "Kolejne zgłoszenie zostanie dodane za {{time}} minut(y)",
             "NextMinute": "Kolejne zgłoszenie zostanie dodane za {{time}} minut(y)"
         },
-        "AllRequests": "All Requests",
-        "PendingRequests": "Pending Requests",
-        "ProcessingRequests": "Processing Requests",
-        "AvailableRequests": "Available Requests",
-        "DeniedRequests": "Denied Requests",
-        "RequestsToDisplay": "Requests to display",
+        "AllRequests": "Wszystkie zgłoszenia",
+        "PendingRequests": "Zgłoszenia oczekujące",
+        "ProcessingRequests": "Zgłoszenia przetwarzane",
+        "AvailableRequests": "Zgłoszenia dostępne",
+        "DeniedRequests": "Zgłoszenia odrzucone",
+        "RequestsToDisplay": "Zgłoszenia do wyświetlenia",
         "RequestsTitle": "Tytuł",
         "Details": "Szczegóły",
-        "Options": "Options",
+        "Options": "Opcje",
         "RequestPanel": {
-            "Delete": "Delete Request",
-            "Approve": "Approve Request",
-            "ChangeAvailability": "Mark Available"
+            "Delete": "Usuń zgłoszenie",
+            "Approve": "Zatwierdź zgłoszenie",
+            "ChangeAvailability": "Oznacz jako dostępne"
         }
     },
     "Issues": {
@@ -201,19 +202,19 @@
         "WriteMessagePlaceholder": "Tutaj wpisz swoją wiadomość…",
         "ReportedBy": "Zgłoszone przez",
         "IssueDialog": {
-            "Title": "Report an issue",
-            "DescriptionPlaceholder": "Please describe the issue",
-            "TitlePlaceholder": "Short title of your issue",
-            "SelectCategory": "Select Category",
-            "IssueCreated": "Issue has been created"
+            "Title": "Zgłoś problem",
+            "DescriptionPlaceholder": "Proszę opisać problem",
+            "TitlePlaceholder": "Krótki tytuł Twojego problemu",
+            "SelectCategory": "Wybierz kategorię",
+            "IssueCreated": "Problem został zgłoszony"
         },
-        "Outstanding": "There are outstanding issues",
-        "ResolvedDate": "Resolved date",
-        "CreatedDate": "Raised on",
-        "MarkedAsResolved": "This issue has now been marked as resolved!",
-        "MarkedAsInProgress": "This issue has now been marked as in progress!",
-        "Delete": "Delete issue",
-        "DeletedIssue": "Issue has been deleted"
+        "Outstanding": "Występują zaległe problemy",
+        "ResolvedDate": "Data rozwiązania",
+        "CreatedDate": "Zgłoszony",
+        "MarkedAsResolved": "Ten problem został oznaczony jako rozwiązany!",
+        "MarkedAsInProgress": "Ten problem został oznaczony jako rozwiązywany!",
+        "Delete": "Usuń zgłoszenie",
+        "DeletedIssue": "Problem został usunięty"
     },
     "Filter": {
         "ClearFilter": "Wyczyść filtr",
@@ -239,30 +240,30 @@
         "RecommendationsTitle": "Rekomendacje",
         "SimilarTitle": "Podobne",
         "VideosTitle": "Wideo",
-        "AlbumsTitle": "Albums",
-        "RequestAllAlbums": "Request All Albums",
-        "ClearSelection": "Clear Selection",
-        "RequestSelectedAlbums": "Request Selected Albums",
-        "ViewCollection": "View Collection",
-        "NotEnoughInfo": "Unfortunately there is not enough information about this show yet!",
-        "AdvancedOptions": "Advanced Options",
-        "QualityProfilesSelect": "Select A Quality Profile",
-        "RootFolderSelect": "Select A Root Folder",
+        "AlbumsTitle": "Albumy",
+        "RequestAllAlbums": "Zgłoś wszystkie albumy",
+        "ClearSelection": "Wyczyść zaznaczenie",
+        "RequestSelectedAlbums": "Zgłoś zaznaczone albumy",
+        "ViewCollection": "Pokaż kolekcję",
+        "NotEnoughInfo": "Niestety nie ma jeszcze wystarczających informacji na temat tego serialu!",
+        "AdvancedOptions": "Opcje zaawansowane",
+        "QualityProfilesSelect": "Wybierz profil jakości",
+        "RootFolderSelect": "Wybierz katalog główny",
         "Status": "Stan",
         "Availability": "Dostępność",
         "RequestStatus": "Status zgłoszenia",
-        "Quality": "Quality",
+        "Quality": "Jakość",
         "RootFolderOverride": "Wymuszenie folderu głównego",
         "QualityOverride": "Wymuszenie jakości",
-        "Genres": "Genres",
-        "TheatricalRelease": "Premiera kinowa",
-        "DigitalRelease": "Digital Release",
-        "Votes": "Votes",
-        "Runtime": "Runtime",
-        "Minutes": "{{runtime}} Minutes",
-        "Revenue": "Revenue",
-        "Budget": "Budget",
-        "Keywords": "Keywords/Tags",
+        "Genres": "Gatunki",
+        "TheatricalRelease": "Wydanie",
+        "DigitalRelease": "Wydanie cyfrowe",
+        "Votes": "Głosy",
+        "Runtime": "Czas trwania",
+        "Minutes": "{{runtime}} minut(y)",
+        "Revenue": "Przychód",
+        "Budget": "Budżet",
+        "Keywords": "Słowa kluczowe/tagi",
         "Casts": {
             "CastTitle": "Obsada"
         },
@@ -270,15 +271,20 @@
             "AllSeasonsTooltip": "Zgłoszenie obejmie wszystkie sezony tego serialu",
             "FirstSeasonTooltip": "Zgłoszenie obejmie pierwszy sezon tego serialu",
             "LatestSeasonTooltip": "Zgłoszenie obejmie najnowszy sezon tego serialu"
-        }
+        },
+        "SonarrConfiguration": "Konfiguracja Sonarr",
+        "RadarrConfiguration": "Konfiguracja Radarr",
+        "RequestOnBehalf": "Zgłoszenie w imieniu",
+        "PleaseSelectUser": "Proszę wybrać użytkownika",
+        "StreamingOn": "Strumieniowane w"
     },
     "Discovery": {
         "PopularTab": "Popularne",
         "TrendingTab": "Zyskujące popularność",
         "UpcomingTab": "Nadchodzące",
         "Movies": "Filmy",
-        "Combined": "Combined",
-        "Tv": "TV",
+        "Combined": "Połączone",
+        "Tv": "Seriale",
         "CardDetails": {
             "Availability": "Dostępność",
             "Studio": "Studio",
@@ -290,11 +296,18 @@
             "FirstAired": "Pierwsza emisja",
             "Writer": "Scenarzysta",
             "ExecProducer": "Producent wykonawczy"
-        }
+        },
+        "NoSearch": "Przepraszamy, nic nie pasuje do Twojego wyszukiwania!"
     },
     "UserPreferences": {
         "Welcome": "Witaj {{username}}!",
-        "OmbiLanguage": "Language",
-        "DarkMode": "Dark Mode"
+        "OmbiLanguage": "Język",
+        "DarkMode": "Tryb ciemny",
+        "Updated": "Zaktualizowano pomyślnie",
+        "StreamingCountry": "Kraj strumieniowania",
+        "StreamingCountryDescription": "To jest kod kraju, dla którego będziemy wyświetlać informacje o strumieniowaniu. Jeśli jesteś w USA, wybierz Stany Zjednoczone, a otrzymasz informacje o przesyłaniu strumieniowym w USA.",
+        "LanguageDescription": "To jest język, w którym ma być wyświetlany interfejs Ombi.",
+        "MobileQRCode": "Kod QR z telefonu",
+        "LegacyApp": "Uruchom starszą aplikację"
     }
 }

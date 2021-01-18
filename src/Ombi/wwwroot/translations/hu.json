@@ -4,8 +4,8 @@
         "UsernamePlaceholder": "Felhasználónév",
         "PasswordPlaceholder": "Jelszó",
         "RememberMe": "Emlékezz rám",
-        "SignInWith": "Sign in with {{appName}}",
-        "SignInWithPlex": "Sign in with Plex",
+        "SignInWith": "Belépés {{appName}} fiókkal",
+        "SignInWithPlex": "Belépés Plex fiókkal",
         "ForgottenPassword": "Elfelejtetted a jelszavad?",
         "Errors": {
             "IncorrectCredentials": "Helytelen felhasználónév vagy jelszó"
@@ -26,12 +26,12 @@
         "Denied": "Megtagadva",
         "Approve": "Jóváhagyva",
         "PartlyAvailable": "Részlegesen elérhető",
-        "ViewDetails": "View Details",
+        "ViewDetails": "Részletek megjelenítése",
         "Errors": {
             "Validation": "Kérjük, ellenőrizze a beírt értékeket"
         },
-        "Cancel": "Cancel",
-        "Submit": "Submit"
+        "Cancel": "Mégse",
+        "Submit": "Küldés"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "E-mail cím",
@@ -49,7 +49,7 @@
         "CheckPageForUpdates": "Látogasd meg ezt az oldalt a frissítésekhez."
     },
     "NavigationBar": {
-        "Discover": "Discover",
+        "Discover": "Felfedez",
         "Search": "Keresés",
         "Requests": "Kérések",
         "UserManagement": "Felhasználók kezelése",
@@ -65,20 +65,20 @@
         "Logout": "Kilépés",
         "OpenMobileApp": "Mobil app megnyitása",
         "RecentlyAdded": "Nemrég hozzáadott",
-        "ChangeTheme": "Change Theme",
-        "Calendar": "Calendar",
-        "UserPreferences": "Preferences",
-        "FeatureSuggestion": "Feature Suggestion",
-        "FeatureSuggestionTooltip": "Have a great new idea? Suggest it here!",
+        "ChangeTheme": "Témaváltás",
+        "Calendar": "Naptár",
+        "UserPreferences": "Beállítások",
+        "FeatureSuggestion": "Funkció javaslat",
+        "FeatureSuggestionTooltip": "Van egy jó ötleted? Javasold itt!",
         "Filter": {
             "Movies": "Filmek",
             "TvShows": "Sorozatok",
             "Music": "Zene",
-            "People": "People"
+            "People": "Személyek"
         },
-        "MorningWelcome": "Good morning!",
-        "AfternoonWelcome": "Good afternoon!",
-        "EveningWelcome": "Good evening!"
+        "MorningWelcome": "Jó reggelt!",
+        "AfternoonWelcome": "Jó napot!",
+        "EveningWelcome": "Jó estét!"
     },
     "Search": {
         "Title": "Keresés",
@@ -90,8 +90,9 @@
         "NoResults": "Sajnáljuk, nem találtunk semmit!",
         "DigitalDate": "Digitális kiadás: {{date}}",
         "TheatricalRelease": "Mozis kiadás: {{date}}",
-        "ViewOnPlex": "Megnézés Plexen",
-        "ViewOnEmby": "Megnézés Emby-n",
+        "ViewOnPlex": "Play On Plex",
+        "ViewOnEmby": "Play On Emby",
+        "ViewOnJellyfin": "Play On Jellyfin",
         "RequestAdded": "Kérés sikeresen leadva erre: {{title}}",
         "Similar": "Hasonló",
         "Refine": "Finomítás",
@@ -124,8 +125,8 @@
         "Title": "Kérések",
         "Paragraph": "Lentebb láthatod a saját és egyéb kéréseket, valamint a letöltési és jóváhagyási állapotukat.",
         "MoviesTab": "Filmek",
-        "ArtistName": "Artist",
-        "AlbumName": "Album Name",
+        "ArtistName": "Művész",
+        "AlbumName": "Album név",
         "TvTab": "Sorozatok",
         "MusicTab": "Zene",
         "RequestedBy": "Kérte",
@@ -145,7 +146,7 @@
         "MarkAvailable": "Megjelölés elérhetőnek",
         "Remove": "Törlés",
         "Deny": "Elutasítás",
-        "DenyReason": "Deny Reason",
+        "DenyReason": "Elutasítási ok",
         "Season": "Évad:",
         "GridTitle": "Cím",
         "AirDate": "Bemutató",
@@ -167,19 +168,19 @@
             "NextMinutes": "Újabb kérés lesz hozzáadva {{time}} perc múlva",
             "NextMinute": "Újabb kérés lesz hozzáadva {{time}} perc múlva"
         },
-        "AllRequests": "All Requests",
-        "PendingRequests": "Pending Requests",
-        "ProcessingRequests": "Processing Requests",
-        "AvailableRequests": "Available Requests",
-        "DeniedRequests": "Denied Requests",
-        "RequestsToDisplay": "Requests to display",
+        "AllRequests": "Összes kérelem",
+        "PendingRequests": "Függő kérelmek",
+        "ProcessingRequests": "Kérelmek feldolgozása",
+        "AvailableRequests": "Elérhető kérelmek",
+        "DeniedRequests": "Elutasított kérelmek",
+        "RequestsToDisplay": "Kérés mutatva",
         "RequestsTitle": "Cím",
         "Details": "Részletek",
-        "Options": "Options",
+        "Options": "Opciók",
         "RequestPanel": {
-            "Delete": "Delete Request",
-            "Approve": "Approve Request",
-            "ChangeAvailability": "Mark Available"
+            "Delete": "Kérelem törlése",
+            "Approve": "Kérelem elfogadása",
+            "ChangeAvailability": "Elérhetőnek jelölés"
         }
     },
     "Issues": {
@@ -201,19 +202,19 @@
         "WriteMessagePlaceholder": "Írd ide az üzeneted...",
         "ReportedBy": "Jelentette",
         "IssueDialog": {
-            "Title": "Report an issue",
-            "DescriptionPlaceholder": "Please describe the issue",
-            "TitlePlaceholder": "Short title of your issue",
-            "SelectCategory": "Select Category",
-            "IssueCreated": "Issue has been created"
+            "Title": "Hiba jelentése",
+            "DescriptionPlaceholder": "Kérjük írd le a problémád",
+            "TitlePlaceholder": "Rövid címe a hibajegyednek",
+            "SelectCategory": "Válasszon kategóriát",
+            "IssueCreated": "Hibajegy létrehozva"
         },
-        "Outstanding": "There are outstanding issues",
-        "ResolvedDate": "Resolved date",
-        "CreatedDate": "Raised on",
-        "MarkedAsResolved": "This issue has now been marked as resolved!",
-        "MarkedAsInProgress": "This issue has now been marked as in progress!",
-        "Delete": "Delete issue",
-        "DeletedIssue": "Issue has been deleted"
+        "Outstanding": "Nincs kívülálló hibajegy",
+        "ResolvedDate": "Megoldás dátuma",
+        "CreatedDate": "Létrejött",
+        "MarkedAsResolved": "Ez a hibajegy megoldottnak lett jelölve!",
+        "MarkedAsInProgress": "Ez a hibajegy folyamatban lévőnek lett jelölve!",
+        "Delete": "Hibajegy törlése",
+        "DeletedIssue": "Hibajegy törölve lett"
     },
     "Filter": {
         "ClearFilter": "Szűrő törlése",
@@ -236,65 +237,77 @@
     },
     "MediaDetails": {
         "Denied": "Megtagadva",
-        "RecommendationsTitle": "Recommendations",
+        "RecommendationsTitle": "Ajánlások",
         "SimilarTitle": "Hasonló",
-        "VideosTitle": "Videos",
-        "AlbumsTitle": "Albums",
-        "RequestAllAlbums": "Request All Albums",
-        "ClearSelection": "Clear Selection",
-        "RequestSelectedAlbums": "Request Selected Albums",
-        "ViewCollection": "View Collection",
-        "NotEnoughInfo": "Unfortunately there is not enough information about this show yet!",
-        "AdvancedOptions": "Advanced Options",
-        "QualityProfilesSelect": "Select A Quality Profile",
-        "RootFolderSelect": "Select A Root Folder",
+        "VideosTitle": "Videók",
+        "AlbumsTitle": "Albumok",
+        "RequestAllAlbums": "Összes album kérése",
+        "ClearSelection": "Kijelölés törlése",
+        "RequestSelectedAlbums": "Kiválasztott albumok kérése",
+        "ViewCollection": "Gyűjtemény megnézése",
+        "NotEnoughInfo": "Sajnos nincs elég információ erről a médiáról!",
+        "AdvancedOptions": "Haladó beállítások",
+        "QualityProfilesSelect": "Jelölj ki egy minőségprofilt",
+        "RootFolderSelect": "Jelölj ki egy gyökérmappát",
         "Status": "Állapot",
         "Availability": "Elérhetőség",
-        "RequestStatus": "Request Status",
-        "Quality": "Quality",
+        "RequestStatus": "Kérelem állapota",
+        "Quality": "Minőség",
         "RootFolderOverride": "Gyökér mappa felülírása",
         "QualityOverride": "Minőség felülírása",
-        "Genres": "Genres",
-        "TheatricalRelease": "Mozis kiadás",
-        "DigitalRelease": "Digital Release",
-        "Votes": "Votes",
-        "Runtime": "Runtime",
-        "Minutes": "{{runtime}} Minutes",
-        "Revenue": "Revenue",
-        "Budget": "Budget",
-        "Keywords": "Keywords/Tags",
+        "Genres": "Műfajok",
+        "TheatricalRelease": "Release",
+        "DigitalRelease": "Digitális megjelenés",
+        "Votes": "Szavazatok",
+        "Runtime": "Futásidő",
+        "Minutes": "{{runtime}} perc",
+        "Revenue": "Bevétel",
+        "Budget": "Költség",
+        "Keywords": "Kulcsszavak/Címkék",
         "Casts": {
-            "CastTitle": "Cast"
+            "CastTitle": "Szereplők"
         },
         "EpisodeSelector": {
-            "AllSeasonsTooltip": "This will request every season for this show",
-            "FirstSeasonTooltip": "This will only request the First Season for this show",
-            "LatestSeasonTooltip": "This will only request the Latest Season for this show"
-        }
+            "AllSeasonsTooltip": "Ezzel kérni fogja a sorozat összes évadát",
+            "FirstSeasonTooltip": "Ezzel kérni fogja a sorozat első évadát",
+            "LatestSeasonTooltip": "Ezzel kérni fogja a sorozat legutóbbi évadát"
+        },
+        "SonarrConfiguration": "Sonarr Configuration",
+        "RadarrConfiguration": "Radarr Configuration",
+        "RequestOnBehalf": "Request on behalf of",
+        "PleaseSelectUser": "Please select a user",
+        "StreamingOn": "Streaming On"
     },
     "Discovery": {
         "PopularTab": "Népszerű",
         "TrendingTab": "Felkapott",
-        "UpcomingTab": "Upcoming",
+        "UpcomingTab": "Közelgő",
         "Movies": "Filmek",
-        "Combined": "Combined",
+        "Combined": "Kombinált",
         "Tv": "TV",
         "CardDetails": {
             "Availability": "Elérhetőség",
-            "Studio": "Studio",
-            "Network": "Network",
-            "UnknownNetwork": "Unknown",
-            "RequestStatus": "Request Status",
-            "Director": "Director",
-            "InCinemas": "In Cinemas",
-            "FirstAired": "First Aired",
-            "Writer": "Writer",
-            "ExecProducer": "Exec Producer"
-        }
+            "Studio": "Stúdió",
+            "Network": "Csatorna",
+            "UnknownNetwork": "Ismeretlen",
+            "RequestStatus": "Kérelem állapota",
+            "Director": "Rendező",
+            "InCinemas": "Mozikban",
+            "FirstAired": "Első sugárzás ideje",
+            "Writer": "Író",
+            "ExecProducer": "Gyártásvezető"
+        },
+        "NoSearch": "Sorry, nothing matches your search!"
     },
     "UserPreferences": {
         "Welcome": "Üdv {{username}}!",
-        "OmbiLanguage": "Language",
-        "DarkMode": "Dark Mode"
+        "OmbiLanguage": "Nyelv",
+        "DarkMode": "Sötét mód",
+        "Updated": "Successfully Updated",
+        "StreamingCountry": "Streaming Country",
+        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
+        "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
+        "MobileQRCode": "Mobile QR Code",
+        "LegacyApp": "Launch Legacy App"
     }
 }

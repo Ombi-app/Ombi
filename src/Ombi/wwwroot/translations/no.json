@@ -4,8 +4,8 @@
         "UsernamePlaceholder": "Brukernavn",
         "PasswordPlaceholder": "Passord",
         "RememberMe": "Husk meg",
-        "SignInWith": "Sign in with {{appName}}",
-        "SignInWithPlex": "Sign in with Plex",
+        "SignInWith": "Logg inn med {{appName}}",
+        "SignInWithPlex": "Logg inn med Plex",
         "ForgottenPassword": "Glemt passord?",
         "Errors": {
             "IncorrectCredentials": "Ugyldig brukernavn eller passord"
@@ -26,11 +26,11 @@
         "Denied": "Avslått",
         "Approve": "Godkjenn",
         "PartlyAvailable": "Delvis tilgjengelig",
-        "ViewDetails": "View Details",
+        "ViewDetails": "Vis detaljer",
         "Errors": {
             "Validation": "Kontroller de angitte verdiene"
         },
-        "Cancel": "Cancel",
+        "Cancel": "Avbryt",
         "Submit": "Submit"
     },
     "PasswordReset": {
@@ -90,8 +90,9 @@
         "NoResults": "Beklager, vi fant ingen resultater!",
         "DigitalDate": "Digital utgivelse: {{date}}",
         "TheatricalRelease": "Kinopremiere: {{date}}",
-        "ViewOnPlex": "Spill av på Plex",
-        "ViewOnEmby": "Spill av på Emby",
+        "ViewOnPlex": "Play On Plex",
+        "ViewOnEmby": "Play On Emby",
+        "ViewOnJellyfin": "Play On Jellyfin",
         "RequestAdded": "Forespørsel om {{title}} er lagt til",
         "Similar": "Lignende",
         "Refine": "Spesifiser",
@@ -255,7 +256,7 @@
         "RootFolderOverride": "Overstyring av rotmappe",
         "QualityOverride": "Overstyr kvalitet",
         "Genres": "Genres",
-        "TheatricalRelease": "Kinopremiere",
+        "TheatricalRelease": "Release",
         "DigitalRelease": "Digital Release",
         "Votes": "Votes",
         "Runtime": "Runtime",
@@ -270,7 +271,12 @@
             "AllSeasonsTooltip": "This will request every season for this show",
             "FirstSeasonTooltip": "This will only request the First Season for this show",
             "LatestSeasonTooltip": "This will only request the Latest Season for this show"
-        }
+        },
+        "SonarrConfiguration": "Sonarr Configuration",
+        "RadarrConfiguration": "Radarr Configuration",
+        "RequestOnBehalf": "Request on behalf of",
+        "PleaseSelectUser": "Please select a user",
+        "StreamingOn": "Streaming On"
     },
     "Discovery": {
         "PopularTab": "Populært",
@@ -290,11 +296,18 @@
             "FirstAired": "First Aired",
             "Writer": "Writer",
             "ExecProducer": "Exec Producer"
-        }
+        },
+        "NoSearch": "Sorry, nothing matches your search!"
     },
     "UserPreferences": {
         "Welcome": "Velkommen {{username}}!",
         "OmbiLanguage": "Language",
-        "DarkMode": "Dark Mode"
+        "DarkMode": "Dark Mode",
+        "Updated": "Successfully Updated",
+        "StreamingCountry": "Streaming Country",
+        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
+        "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
+        "MobileQRCode": "Mobile QR Code",
+        "LegacyApp": "Launch Legacy App"
     }
 }

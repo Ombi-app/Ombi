@@ -92,6 +92,7 @@
         "TheatricalRelease": "Sortie en salle: {{date}}",
         "ViewOnPlex": "Regarder sur Plex",
         "ViewOnEmby": "Regarder sur Emby",
+        "ViewOnJellyfin": "Regarder sur JellyFin",
         "RequestAdded": "La demande pour {{title}} a été ajoutée avec succès",
         "Similar": "Similaires",
         "Refine": "Affiner",
@@ -255,7 +256,7 @@
         "RootFolderOverride": "Remplacer le Dossier Racine",
         "QualityOverride": "Remplacer la Qualité",
         "Genres": "Genres",
-        "TheatricalRelease": "Sortie en salle",
+        "TheatricalRelease": "Version",
         "DigitalRelease": "Sorti en Numérique",
         "Votes": "Votes",
         "Runtime": "Durée de visionnage",
@@ -270,7 +271,12 @@
             "AllSeasonsTooltip": "Cette action demandera toutes les saisons de cette série",
             "FirstSeasonTooltip": "Cette action ne demandera que la Première Saison de cette série",
             "LatestSeasonTooltip": "Cette action ne demandera que la Dernière Saison de cette série"
-        }
+        },
+        "SonarrConfiguration": "Sonarr Configuration",
+        "RadarrConfiguration": "Radarr Configuration",
+        "RequestOnBehalf": "Demander au nom de : ",
+        "PleaseSelectUser": "Veuillez sélectionner un utilisateur",
+        "StreamingOn": "Diffusion sur "
     },
     "Discovery": {
         "PopularTab": "Populaire",
@@ -290,11 +296,18 @@
             "FirstAired": "Première Diffusion",
             "Writer": "Scénariste",
             "ExecProducer": "Producteur Exécutif"
-        }
+        },
+        "NoSearch": "Désolé, rien ne correspond à votre recherche !"
     },
     "UserPreferences": {
         "Welcome": "Bienvenue {{username}}!",
         "OmbiLanguage": "Langue",
-        "DarkMode": "Mode Sombre"
+        "DarkMode": "Mode Sombre",
+        "Updated": "Mise à jour réussie",
+        "StreamingCountry": "Pays de diffusion",
+        "StreamingCountryDescription": "C'est le code du pays pour lequel nous afficherons des informations de diffusion. Si vous êtes en France, veuillez sélectionner la France et vous aurez des informations de streaming en relation avec la France.",
+        "LanguageDescription": "C'est la langue dans laquelle vous souhaitez que l'interface Ombi soit affichée.",
+        "MobileQRCode": "Mobile QR Code",
+        "LegacyApp": "Lancez l'ancienne application\n\n"
     }
 }

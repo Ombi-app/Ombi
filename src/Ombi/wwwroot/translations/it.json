@@ -1,14 +1,14 @@
 {
     "Login": {
         "SignInButton": "Accedi",
-        "UsernamePlaceholder": "Nome utente",
+        "UsernamePlaceholder": "Nome Utente",
         "PasswordPlaceholder": "Password",
-        "RememberMe": "Ricordati di me",
+        "RememberMe": "Ricordami",
         "SignInWith": "Accedi con {{appName}}",
         "SignInWithPlex": "Accedi con Plex",
         "ForgottenPassword": "Hai dimenticato la password?",
         "Errors": {
-            "IncorrectCredentials": "Username o password non corretta"
+            "IncorrectCredentials": "Nome utente o password non corretti"
         }
     },
     "Common": {
@@ -17,54 +17,54 @@
         "PartiallyAvailable": "Parzialmente Disponibile",
         "Monitored": "Monitorato",
         "NotAvailable": "Non Disponibile",
-        "ProcessingRequest": "Richiesta in elaborazione",
-        "PendingApproval": "In attesa di approvazione",
-        "RequestDenied": "Richiesta negata",
-        "NotRequested": "Non richiesto",
+        "ProcessingRequest": "Elaborando la Richiesta",
+        "PendingApproval": "In Attesa di Approvazione",
+        "RequestDenied": "Richiesta Negata",
+        "NotRequested": "Non Richiesto",
         "Requested": "Richiesto",
         "Request": "Richiesta",
-        "Denied": "Rifiutato",
+        "Denied": "Negato",
         "Approve": "Approva",
         "PartlyAvailable": "Parzialmente Disponibile",
         "ViewDetails": "Visualizza Dettagli",
         "Errors": {
-            "Validation": "Per favore, controlla i valori che hai inserito"
+            "Validation": "Sei pregato di controllare i tuoi valori inseriti"
         },
         "Cancel": "Annulla",
         "Submit": "Invia"
     },
     "PasswordReset": {
-        "EmailAddressPlaceholder": "Indirizzo e-mail",
-        "ResetPasswordButton": "Reimposta la password"
+        "EmailAddressPlaceholder": "Indirizzo Email",
+        "ResetPasswordButton": "Ripristina la password"
     },
     "LandingPage": {
         "OnlineHeading": "Attualmente Online",
-        "OnlineParagraph": "Il media server è attualmente online",
-        "PartiallyOnlineHeading": "Parzialmente in linea",
-        "PartiallyOnlineParagraph": "Il media server è parzialmente in linea.",
-        "MultipleServersUnavailable": "Ci sono {{serversUnavailable}} server offline su {{totalServers}}.",
-        "SingleServerUnavailable": "C'è {{serversUnavailable}} server offline su {{totalServers}}.",
+        "OnlineParagraph": "Il server dei media è attualmente online",
+        "PartiallyOnlineHeading": "Parzialmente Online",
+        "PartiallyOnlineParagraph": "Il server dei media è parzialmente online.",
+        "MultipleServersUnavailable": "Ci sono {{serversUnavailable}} server offline di {{totalServers}}.",
+        "SingleServerUnavailable": "C'è {{serversUnavailable}} server offline di {{totalServers}}.",
         "OfflineHeading": "Attualmente Offline",
-        "OfflineParagraph": "Il media server è attualmente offline.",
-        "CheckPageForUpdates": "Controlla questa pagina per ottenere aggiornamenti del sito."
+        "OfflineParagraph": "Il server dei media è attualmente offline.",
+        "CheckPageForUpdates": "Controlla questa pagina per aggiornamenti continui del sito."
     },
     "NavigationBar": {
         "Discover": "Scopri",
         "Search": "Cerca",
         "Requests": "Richieste",
-        "UserManagement": "Gestione degli utenti",
+        "UserManagement": "Gestione Utenti",
         "Issues": "Problemi",
         "Vote": "Vota",
-        "Donate": "Fai una donazione!",
-        "DonateLibraryMaintainer": "Dona al manutentore della libreria",
-        "DonateTooltip": "Questo è come convinco mia moglie a farmi spendere il mio tempo libero nello sviluppo di Ombi ;)",
-        "UpdateAvailableTooltip": "Aggiornamento disponibile!",
+        "Donate": "Dona!",
+        "DonateLibraryMaintainer": "Dona al Manutentore della Biblioteca",
+        "DonateTooltip": "Così convinco mia moglie a farmi passare il tempo libero a sviluppare Ombi 😁",
+        "UpdateAvailableTooltip": "Aggiornamento Disponibile!",
         "Settings": "Impostazioni",
         "Welcome": "Benvenuto {{username}}",
-        "UpdateDetails": "Aggiorna i tuoi dati",
-        "Logout": "Esci",
-        "OpenMobileApp": "Apri l'applicazione mobile",
-        "RecentlyAdded": "Aggiunto di recente",
+        "UpdateDetails": "Aggiorna Dettagli",
+        "Logout": "Disconnetti",
+        "OpenMobileApp": "Apri l'App Mobile",
+        "RecentlyAdded": "Aggiunto Recentemente",
         "ChangeTheme": "Cambia Tema",
         "Calendar": "Calendario",
         "UserPreferences": "Preferenze",
@@ -90,8 +90,9 @@
         "NoResults": "Ci dispiace, non abbiamo trovato alcun risultato!",
         "DigitalDate": "Rilascio digitale {{date}}",
         "TheatricalRelease": "Rilascio Teatrale: {{date}}",
-        "ViewOnPlex": "Guarda su Plex",
-        "ViewOnEmby": "Guarda su Emby",
+        "ViewOnPlex": "Play On Plex",
+        "ViewOnEmby": "Play On Emby",
+        "ViewOnJellyfin": "Play On Jellyfin",
         "RequestAdded": "La richiesta per {{title}} è stata aggiunta correttamente",
         "Similar": "Simili",
         "Refine": "Affina",
@@ -255,7 +256,7 @@
         "RootFolderOverride": "Sovrascrivi cartella principale",
         "QualityOverride": "Sovrascrivi qualità",
         "Genres": "Generi",
-        "TheatricalRelease": "Rilascio Teatrale",
+        "TheatricalRelease": "Release",
         "DigitalRelease": "Rilascio Digitale",
         "Votes": "Voti",
         "Runtime": "Durata",
@@ -270,7 +271,12 @@
             "AllSeasonsTooltip": "Questo richiederà ogni stagione per questo show",
             "FirstSeasonTooltip": "Questo richiederà solo la Prima Stagione per questo show",
             "LatestSeasonTooltip": "Questo richiederà solo l'Ultima Stagione per questo show"
-        }
+        },
+        "SonarrConfiguration": "Sonarr Configuration",
+        "RadarrConfiguration": "Radarr Configuration",
+        "RequestOnBehalf": "Request on behalf of",
+        "PleaseSelectUser": "Please select a user",
+        "StreamingOn": "Streaming On"
     },
     "Discovery": {
         "PopularTab": "Popolare",
@@ -290,11 +296,18 @@
             "FirstAired": "Prima Trasmissione",
             "Writer": "Scrittore",
             "ExecProducer": "Produttore Esecutivo"
-        }
+        },
+        "NoSearch": "Sorry, nothing matches your search!"
     },
     "UserPreferences": {
         "Welcome": "Benvenuto {{username}}!",
         "OmbiLanguage": "Lingua",
-        "DarkMode": "Modalità Scura"
+        "DarkMode": "Modalità Scura",
+        "Updated": "Successfully Updated",
+        "StreamingCountry": "Streaming Country",
+        "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
+        "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
+        "MobileQRCode": "Mobile QR Code",
+        "LegacyApp": "Launch Legacy App"
     }
 }
