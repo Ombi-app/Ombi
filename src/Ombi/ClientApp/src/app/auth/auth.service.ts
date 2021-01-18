@@ -52,8 +52,9 @@ export class AuthService extends ServiceHelpers {
             const json = this.jwtHelperService.decodeToken(token);
             const roles = json.role;
             const name = json.sub;
+            const email = json.Email;
 
-            const u = { name, roles: [] as string[] };
+            const u = { name, roles: [] as string[], email };
             if (roles instanceof Array) {
                 u.roles = roles;
             } else {

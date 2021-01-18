@@ -6,14 +6,14 @@
         target="_blank">
         <i matTooltip="The Movie DB" class="fa fa-film fa-2x grow-social"></i>
     </a>
-    <a *ngIf="tvdbId" href="https://www.thetvdb.com/tv/{{tvdbId}}" class="media-icons" target="_blank">
+    <a *ngIf="tvdbId" href="https://www.thetvdb.com/?id={{tvdbId}}&tab=series" class="media-icons" target="_blank">
         <i matTooltip="The TV DB" class="fa fa-tv fa-2x grow-social"></i>
     </a>
 
-    <a *ngIf="hasTrailer" class="media-icons" (click)="openDialog()"><i
+    <a *ngIf="hasTrailer" class="media-icons youtube" (click)="openDialog()"><i
             matTooltip="Trailer" class="fa fa-youtube-play fa-2x grow-social"></i></a>
 
-    <a *ngIf="imdbId" class="media-icons" [href]="doNotAppend ? imdbid : 'https://imdb.com/title/' + imdbId"
+    <a *ngIf="imdbId" class="media-icons imdb" [href]="doNotAppend ? imdbid : 'https://imdb.com/title/' + imdbId"
         target="_blank">
         <i matTooltip="Imdb" class="fa fa-imdb fa-2x grow-social"></i>
     </a>
@@ -30,14 +30,22 @@
     </a>
 
     <span class="left-seperator" *ngIf="available">
-        <a *ngIf="plexUrl" class="media-icons plex" href="{{plexUrl}}" target="_blank">
-            <i matTooltip=" {{'Search.ViewOnPlex' | translate}}"
-                class="fa fa-play-circle fa-2x grow-social"></i>
+
+        <a *ngIf="plexUrl" href="{{plexUrl}}" mat-raised-button  target="_blank" class="btn-spacing viewon-btn plex">
+            {{'Search.ViewOnPlex' | translate}} 
+            <i
+            class="fa fa-play-circle fa-2x"></i>
         </a>
 
-        <a *ngIf="embyUrl" class="media-icons emby" href="{{embyUrl}}" target="_blank">
-            <i matTooltip=" {{'Search.ViewOnEmby' | translate}}"
-                class="fa fa-play-circle fa-2x grow-social"></i>
+        <a *ngIf="embyUrl" href="{{embyUrl}}" mat-raised-button  target="_blank" class="btn-spacing viewon-btn emby">
+            {{'Search.ViewOnEmby' | translate}} 
+            <i
+            class="fa fa-play-circle fa-2x"></i>
         </a>
 
+        <a *ngIf="jellyfinUrl" href="{{jellyfinUrl}}" mat-raised-button  target="_blank" class="btn-spacing viewon-btn jellyfinUrl">
+            {{'Search.ViewOnJellyfin' | translate}} 
+            <i
+            class="fa fa-play-circle fa-2x"></i>
+        </a>
     </span>

@@ -88,6 +88,12 @@ namespace Ombi.Schedule.Jobs.Plex
                             _log.LogInformation("Could not create Plex user since the have no username, PlexUserId: {0}", plexUser.Id);
                             continue;
                         }
+
+                        if ((plexUser.Email.HasValue()) && await _userManager.FindByEmailAsync(plexUser.Email) != null)
+                        {
+                            _log.LogWarning($"Cannot add user {plexUser.Username} because their email address is already in Ombi, skipping this user");
+                            continue;
+                        }
                         // Create this users
                         // We do not store a password against the user since they will authenticate via Plex
                         var newUser = new OmbiUser
@@ -98,7 +104,8 @@ namespace Ombi.Schedule.Jobs.Plex
                             Email = plexUser?.Email ?? string.Empty,
                             Alias = string.Empty,
                             MovieRequestLimit = userManagementSettings.MovieRequestLimit,
-                            EpisodeRequestLimit = userManagementSettings.EpisodeRequestLimit
+                            EpisodeRequestLimit = userManagementSettings.EpisodeRequestLimit,
+                            StreamingCountry = userManagementSettings.DefaultStreamingCountry
                         };
                         _log.LogInformation("Creating Plex user {0}", newUser.UserName);
                         var result = await _userManager.CreateAsync(newUser);
@@ -161,7 +168,8 @@ namespace Ombi.Schedule.Jobs.Plex
                 UserName = plexAdmin.username ?? plexAdmin.id,
                 ProviderUserId = plexAdmin.id,
                 Email = plexAdmin.email ?? string.Empty,
-                Alias = string.Empty
+                Alias = string.Empty,
+                StreamingCountry = settings.DefaultStreamingCountry
             };
 
             var result = await _userManager.CreateAsync(newUser);

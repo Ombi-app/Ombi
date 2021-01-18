@@ -113,5 +113,35 @@ namespace Ombi.Core.Rule.Rules.Search
                 episode.Available = true;
             }
         }
+        public static async Task SingleEpisodeCheck(bool useImdb, IQueryable<JellyfinEpisode> allEpisodes, EpisodeRequests episode,
+            SeasonRequests season, JellyfinContent item, bool useTheMovieDb, bool useTvDb)
+        {
+            JellyfinEpisode epExists = null;
+            if (useImdb)
+            {
+                epExists = await allEpisodes.FirstOrDefaultAsync(x =>
+                    x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
+                    x.Series.ImdbId == item.ImdbId);
+            }
+
+            if (useTheMovieDb)
+            {
+                epExists = await allEpisodes.FirstOrDefaultAsync(x =>
+                    x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
+                    x.Series.TheMovieDbId == item.TheMovieDbId);
+            }
+
+            if (useTvDb)
+            {
+                epExists = await allEpisodes.FirstOrDefaultAsync(x =>
+                    x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber &&
+                    x.Series.TvDbId == item.TvDbId);
+            }
+
+            if (epExists != null)
+            {
+                episode.Available = true;
+            }
+        }
     }
 }

@@ -86,7 +86,7 @@ namespace Ombi
             services.AddMemoryCache();
             services.AddHttpClient();
 
-            services.AddJwtAuthentication(Configuration);
+            services.AddJwtAuthentication();
 
             services.AddMvc()
                 .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);

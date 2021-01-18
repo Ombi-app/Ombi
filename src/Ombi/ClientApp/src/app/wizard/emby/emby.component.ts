@@ -20,7 +20,6 @@ export class EmbyComponent implements OnInit {
     public ngOnInit() {
         this.embySettings = {
             servers: [],
-            isJellyfin: false,
             id: 0,
             enable: true,
         };

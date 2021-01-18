@@ -35,6 +35,10 @@
 	opacity: 1;
 }
 
+.full {
+    width: 100%;
+}
+
 .content {
     margin-top: 2em;
 }
@@ -52,7 +56,8 @@
     ::ng-deep .dark & button {
         background: $accent-dark !important;
         color: #303030 !important;
-    }/*
+    }
+    /*
         &:hover{
             box-shadow: 0 1em 1em -0.8em #fff;
             transform: translateY(-0.50em);

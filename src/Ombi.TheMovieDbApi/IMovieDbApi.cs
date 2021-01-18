@@ -13,7 +13,7 @@ namespace Ombi.Api.TheMovieDb
         Task<List<MovieSearchResult>> NowPlaying(string languageCode, int? page = null);
         Task<List<MovieSearchResult>> PopularMovies(string languageCode, int? page = null, CancellationToken cancellationToken = default(CancellationToken));
         Task<List<MovieSearchResult>> SearchMovie(string searchTerm, int? year, string languageCode);
-        Task<List<TvSearchResult>> SearchTv(string searchTerm);
+        Task<List<TvSearchResult>> SearchTv(string searchTerm, string year = default);
         Task<List<MovieSearchResult>> TopRated(string languageCode, int? page = null);
         Task<List<MovieSearchResult>> Upcoming(string languageCode, int? page = null);
         Task<List<MovieSearchResult>> SimilarMovies(int movieId, string langCode);
@@ -28,5 +28,7 @@ namespace Ombi.Api.TheMovieDb
         Task<Collections> GetCollection(string langCode, int collectionId, CancellationToken cancellationToken);
         Task<List<Keyword>> SearchKeyword(string searchTerm);
         Task<Keyword> GetKeyword(int keywordId);
+        Task<WatchProviders> GetMovieWatchProviders(int theMoviedbId, CancellationToken token);
+        Task<WatchProviders> GetTvWatchProviders(int theMoviedbId, CancellationToken token);
     }
 }

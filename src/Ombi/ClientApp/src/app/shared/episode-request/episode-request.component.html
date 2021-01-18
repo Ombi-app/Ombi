@@ -16,7 +16,7 @@
   </div>
 
   <div class="row">
-    <div class="col-12" *ngFor="let season of series.seasonRequests">
+    <div class="col-12" *ngFor="let season of data.series.seasonRequests">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -25,7 +25,7 @@
             <span *ngIf="season.seasonAvailable">Season {{season.seasonNumber}}</span>
           </mat-panel-title>
           <mat-panel-description>
-            Description
+            <!-- Description -->
           </mat-panel-description>
         </mat-expansion-panel-header>
 
@@ -49,12 +49,11 @@
             {{ep.airDateDisplay }}
           </div>
           <div class="col-3">
-            <ng-template [ngIf]="ep.available"><span class="label label-success" id="availableLabel">Available</span></ng-template>
-            <ng-template [ngIf]="ep.approved && !ep.available "><span class="label label-info" id="processingRequestLabel">Processing
-                Request</span></ng-template>
+            <ng-template [ngIf]="ep.available"><span class="label label-success" id="availableLabel">{{'Common.Available' | translate}}</span></ng-template>
+            <ng-template [ngIf]="ep.requested && ep.approved && !ep.available "><span class="label label-info" id="processingRequestLabel">{{'Common.ProcessingRequest' | translate}}</span></ng-template>
             <ng-template [ngIf]="ep.selected"><span class="label label-info" id="selectedLabel">Selected</span></ng-template>
             <ng-template [ngIf]="ep.requested && !ep.approved && !ep.available && !ep.selected"><span class="label label-warning"
-                id="pendingApprovalLabel">Pending Approval</span>
+                id="pendingApprovalLabel">{{'Common.PendingApproval' | translate}}</span>
             </ng-template>
             <ng-template [ngIf]="!ep.requested && !ep.available && !ep.approved && !ep.selected"><span class="label label-danger"
                 id="notRequetsedLabel">Not Requested</span></ng-template>

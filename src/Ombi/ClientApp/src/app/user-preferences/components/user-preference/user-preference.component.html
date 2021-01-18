@@ -3,24 +3,51 @@
 
 
   <hr>
-  <div class="row justify-content-md-center top-spacing">
-    <div class="col-md">
+  <div class="row top-spacing">
+    <div class="col-4">
       <div>
-                <mat-form-field>
-            <mat-label [translate]="'UserPreferences.OmbiLanguage'"></mat-label>
-            <mat-select [(value)]="selectedLang" (selectionChange)="languageSelected();">
-              <mat-option *ngFor="let lang of availableLanguages" [value]="lang.value">
-                {{lang.display}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div>
+        <small>{{'UserPreferences.LanguageDescription' | translate}}</small>
+        <br>
+        <mat-form-field>
+          <mat-label [translate]="'UserPreferences.OmbiLanguage'"></mat-label>
+          <mat-select [(value)]="selectedLang" (selectionChange)="languageSelected();">
+            <mat-option *ngFor="let lang of availableLanguages" [value]="lang.value">
+              {{lang.display}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
 
-        </div>
+      </div>
     </div>
-    <div class="col-md">
+    <div class="col-1"></div>
+    <div class="col-7">
+      <mat-label [translate]="'UserPreferences.MobileQRCode'"></mat-label>
       <qrcode *ngIf="qrCodeEnabled" [qrdata]="qrCode" [size]="256" [level]="'L'"></qrcode>
+      <button mat-raised-button (click)="openMobileApp($event)" *ngIf="customizationSettings.applicationUrl"> {{
+        'UserPreferences.LegacyApp' | translate }}</button>
     </div>
+
+    <div class="col-4">
+      <div>
+        <small>{{'UserPreferences.StreamingCountryDescription' | translate}}</small>
+        <br>
+        <mat-form-field>
+          <mat-label [translate]="'UserPreferences.StreamingCountry'"></mat-label>
+          <mat-select [(value)]="selectedCountry" (selectionChange)="countrySelected();">
+            <mat-option *ngFor="let value of countries" [value]="value">
+              {{value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+
+      </div>
+    </div>
+
+
+
   </div>
 </div>

@@ -15,8 +15,8 @@
 
                             </th>
                             <td mat-cell *matCellDef="let row">
-                                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
-                                </mat-checkbox>
+                                <mat-slide-toggle (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                                </mat-slide-toggle>
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="username">

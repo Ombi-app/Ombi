@@ -1,5 +1,5 @@
 import { CommonModule, PlatformLocation, APP_BASE_HREF } from "@angular/common";
-import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
@@ -53,7 +53,7 @@ import { TokenResetPasswordComponent } from "./login/tokenresetpassword.componen
 // Services
 import { AuthGuard } from "./auth/auth.guard";
 import { AuthService } from "./auth/auth.service";
-import { ImageService, SettingsService, CustomPageService } from "./services";
+import { ImageService, SettingsService, CustomPageService, RequestService } from "./services";
 import { LandingPageService } from "./services";
 import { NotificationService } from "./services";
 import { IssuesService, JobService, PlexTvService, StatusService, SearchService, IdentityService, MessageService } from "./services";
@@ -65,6 +65,10 @@ import { OverlayModule } from "@angular/cdk/overlay";
 import { StorageService } from "./shared/storage/storage-service";
 import { SignalRNotificationService } from "./services/signlarnotification.service";
 import { MatMenuModule } from "@angular/material/menu";
+import { RemainingRequestsComponent } from "./shared/remaining-requests/remaining-requests.component";
+import { UnauthorizedInterceptor } from "./auth/unauthorized.interceptor";
+import { FilterService } from "./discover/services/filter-service";
+
 const routes: Routes = [
     { path: "*", component: PageNotFoundComponent },
     { path: "", redirectTo: "/discover", pathMatch: "full" },
@@ -168,7 +172,9 @@ export function JwtTokenGetter() {
         LoginOAuthComponent,
         MyNavComponent,
         NavSearchComponent,
+        RemainingRequestsComponent,
     ],
+
     providers: [
         NotificationService,
         AuthService,
@@ -187,10 +193,17 @@ export function JwtTokenGetter() {
         SearchV2Service,
         MessageService,
         StorageService,
+        RequestService,
+        FilterService,
         SignalRNotificationService,
         {
             provide: APP_BASE_HREF,
             useValue: window["baseHref"]
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: UnauthorizedInterceptor,
+            multi: true
         }
        ],
     bootstrap: [AppComponent],

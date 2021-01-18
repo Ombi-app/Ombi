@@ -7,8 +7,8 @@
     <button type="button" style="float:right;" mat-raised-button color="primary" (click)="showBulkEdit = !showBulkEdit" [disabled]="this.selection.selected.length <= 0">Bulk Edit</button>
 
   </div>
-  <div class="content">
-      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+  <div class="content" >
+      <table mat-table *ngIf="dataSource" [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
         <ng-container matColumnDef="select">
                 <th mat-header-cell *matHeaderCellDef>
@@ -87,7 +87,10 @@
                 <td mat-cell *matCellDef="let u">
                         <span *ngIf="u.userType === 1">Local User</span>
                         <span *ngIf="u.userType === 2">Plex User</span>
-                        <span *ngIf="u.userType === 3">Emby User</span> </td>
+                        <span *ngIf="u.userType === 3">Emby User</span>
+                        <span *ngIf="u.userType === 4">Emby Connect User</span>
+                        <span *ngIf="u.userType === 5">Jellyfin User</span>
+                </td>
           </ng-container>
   
           <ng-container matColumnDef="roles">
@@ -121,33 +124,41 @@
 
 
 
-<p-sidebar [(visible)]="showBulkEdit" position="right" styleClass="ui-sidebar-md side-back">
-<h3>Bulk Edit</h3>
-<hr/>
+<p-sidebar [(visible)]="showBulkEdit" position="right" [modal]="false">
+        <div>
 <div *ngFor="let c of availableClaims">
         <div class="form-group">
-            <div class="checkbox">
-                <input type="checkbox" [(ngModel)]="c.enabled" [value]="c.value" id="create{{c.value}}" [attr.name]="'create' + c.value" ng-checked="c.enabled">
-                <label for="create{{c.value}}">{{c.value | humanize}}</label>
+                <div class="checkbox">
+                    <mat-slide-toggle  id="create{{c.value}}"  [(ngModel)]="c.enabled" [attr.name]="'create' + c.value">
+                        <small>{{c.value | humanize}}</small></mat-slide-toggle>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="form-group">
-            <label for="movieRequestLimit" class="control-label">Movie Request Limit</label>
-            <div>
-                <input type="text" [(ngModel)]="bulkMovieLimit" class="form-control form-small form-control-custom " id="movieRequestLimit" name="movieRequestLimit" value="{{bulkMovieLimit}}">
-            </div>
-        </div>
+    <mat-form-field appearance="outline" class="full">
+        <mat-label>Movie Request Limit</mat-label>
+        <input matInput id="movieRequestLimit" name="movieRequestLimit"  [(ngModel)]="bulkMovieLimit">
+    </mat-form-field>
+    <mat-form-field appearance="outline"  class="full">
+        <mat-label>Episode Request Limit</mat-label>
+        <input matInput id="episodeRequestLimit" name="episodeRequestLimit"  [(ngModel)]="bulkEpisodeLimit">
+    </mat-form-field>
+    <mat-form-field appearance="outline"  class="full">
+        <mat-label>Music Request Limit</mat-label>
+        <input matInput id="musicRequestLimit" name="musicRequestLimit"  [(ngModel)]="bulkMusicLimit">
+    </mat-form-field>
+    <mat-form-field  appearance="outline"  class="full">
+        <mat-label [translate]="'UserPreferences.StreamingCountry'"></mat-label>
+        <mat-select [(value)]="bulkStreaming">
+          <mat-option *ngFor="let value of countries" [value]="value">
+            {{value}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-        <div class="form-group">
-            <label for="episodeRequestLimit" class="control-label">Episode Request Limit</label>
-            <div>
-                <input type="text" [(ngModel)]="bulkEpisodeLimit" class="form-control form-small form-control-custom " id="episodeRequestLimit" name="episodeRequestLimit" value="{{bulkEpisodeLimit}}">
-            </div>
-        </div>
-    
-<button type="button" class="btn btn-success-outline" (click)="bulkUpdate()">Update Users</button>
+
+<button type="button" mat-raised-button (click)="bulkUpdate()">Update Users</button>
 </p-sidebar>
 </div>
 </div>

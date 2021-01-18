@@ -23,6 +23,7 @@
     available: boolean;
     plexUrl: string;
     embyUrl: string;
+    jellyfinUrl: string;
     quality: string;
     digitalReleaseDate: Date;
     subscribed: boolean;

@@ -7,14 +7,14 @@
     <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
             <div class="form-group">
                 <div class="checkbox">
-                    <mat-checkbox id="allowNoPassword" name="allowNoPassword" formControlName="allowNoPassword">
-                    Allow users to login without a password</mat-checkbox>
+                    <mat-slide-toggle id="allowNoPassword" name="allowNoPassword" formControlName="allowNoPassword">
+                    Allow users to login without a password</mat-slide-toggle>
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="checkbox">
-                    <mat-checkbox id="enableOAuth" name="enableOAuth" formControlName="enableOAuth">Enable Plex OAuth</mat-checkbox>
+                    <mat-slide-toggle id="enableOAuth" name="enableOAuth" formControlName="enableOAuth">Enable Plex OAuth</mat-slide-toggle>
                 </div>
             </div>
 

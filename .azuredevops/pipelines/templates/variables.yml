@@ -12,7 +12,7 @@ variables:
     value: "**/*.Tests.csproj"
 
   - name: "NetCoreVersion"
-    value: "3.1"
+    value: "5.0"
 
   - name: "PublishLocation"
     value: "$(Build.SourcesDirectory)/src/Ombi/bin/Release/netcoreapp$(NetCoreVersion)"

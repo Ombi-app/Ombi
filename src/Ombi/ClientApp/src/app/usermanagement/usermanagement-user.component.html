@@ -18,6 +18,14 @@
         <input matInput placeholder="Email Address" type="email" [(ngModel)]="user.emailAddress">
       </mat-form-field>
     </div>
+    <mat-form-field>
+      <mat-label [translate]="'UserPreferences.StreamingCountry'"></mat-label>
+      <mat-select [(value)]="user.streamingCountry">
+        <mat-option *ngFor="let value of countries" [value]="value">
+          {{value}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
     <div>
       <mat-form-field>
         <input matInput placeholder="Password" type="password" [(ngModel)]="user.password" required>

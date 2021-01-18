@@ -55,6 +55,18 @@ export class AppComponent implements OnInit {
         this.translate.addLangs(["en", "de", "fr", "da", "es", "it", "nl", "sk", "sv", "no", "pl", "pt"]);
 
         if (this.authService.loggedIn()) {
+            this.user = this.authService.claims();
+            this.username = this.user.name;
+            if (!this.hubConnected) {
+                this.signalrNotification.initialize();
+                this.hubConnected = true;
+
+                this.signalrNotification.Notification.subscribe(data => {
+                    this.snackBar.open(data, "OK", {
+                        duration: 3000
+                    });
+                });
+            }
             this.identity.getUser().subscribe(u => {
                 if (u.language) {
                     this.translate.use(u.language);
@@ -105,31 +117,11 @@ export class AppComponent implements OnInit {
         this.router.events.subscribe((event: NavigationStart) => {
             this.currentUrl = event.url;
             if (event instanceof NavigationStart) {
-                this.user = this.authService.claims();
-                if (this.user && this.user.username) {
-                    this.username = this.user.username;
-                }
                 this.isAdmin = this.authService.hasRole("admin");
                 this.showNav = this.authService.loggedIn();
-
-                // tslint:disable-next-line:no-string-literal
-                // if (this.user !== null && this.user.name && !this.checkedForUpdate && this.isAdmin) {
-                //     this.checkedForUpdate = true;
-                //     this.jobService.getCachedUpdate().subscribe(x => {
-                //         this.updateAvailable = x;
-                //     },
-                //         err => this.checkedForUpdate = true);
-                // }
-
-                if (this.authService.loggedIn() && !this.hubConnected) {
-                    this.signalrNotification.initialize();
-                    this.hubConnected = true;
-
-                    this.signalrNotification.Notification.subscribe(data => {
-                        this.snackBar.open(data, "OK", {
-                            duration: 3000
-                        });
-                    });
+                if (this.showNav) {
+                    this.user = this.authService.claims();
+                    this.username = this.user.name;
                 }
             }
         });

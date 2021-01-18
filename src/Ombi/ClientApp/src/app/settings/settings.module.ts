@@ -8,7 +8,7 @@ import { ClipboardModule } from "ngx-clipboard";
 import { AuthGuard } from "../auth/auth.guard";
 import { AuthService } from "../auth/auth.service";
 import {
-    CouchPotatoService, EmbyService, IssuesService, JobService, LidarrService, MobileService, NotificationMessageService, PlexService, RadarrService,
+    CouchPotatoService, EmbyService, JellyfinService, IssuesService, JobService, LidarrService, MobileService, NotificationMessageService, PlexService, RadarrService,
     RequestRetryService, SonarrService, TesterService, ValidationService, SystemService, FileDownloadService, TheMovieDbService
 } from "../services";
 
@@ -19,6 +19,7 @@ import { CouchPotatoComponent } from "./couchpotato/couchpotato.component";
 import { CustomizationComponent } from "./customization/customization.component";
 import { DogNzbComponent } from "./dognzb/dognzb.component";
 import { EmbyComponent } from "./emby/emby.component";
+import { JellyfinComponent } from "./jellyfin/jellyfin.component";
 import { FailedRequestsComponent } from "./failedrequests/failedrequests.component";
 import { IssuesComponent } from "./issues/issues.component";
 import { JobsComponent } from "./jobs/jobs.component";
@@ -73,6 +74,7 @@ const routes: Routes = [
     { path: "About", component: AboutComponent, canActivate: [AuthGuard] },
     { path: "Plex", component: PlexComponent, canActivate: [AuthGuard] },
     { path: "Emby", component: EmbyComponent, canActivate: [AuthGuard] },
+    { path: "Jellyfin", component: JellyfinComponent, canActivate: [AuthGuard] },
     { path: "Sonarr", component: SonarrComponent, canActivate: [AuthGuard] },
     { path: "Radarr", component: RadarrComponent, canActivate: [AuthGuard] },
     { path: "LandingPage", component: LandingPageComponent, canActivate: [AuthGuard] },
@@ -131,6 +133,7 @@ const routes: Routes = [
         OmbiComponent,
         PlexComponent,
         EmbyComponent,
+        JellyfinComponent,
         JobsComponent,
         LandingPageComponent,
         CustomizationComponent,
@@ -182,6 +185,7 @@ const routes: Routes = [
         IssuesService,
         PlexService,
         EmbyService,
+        JellyfinService,
         MobileService,
         NotificationMessageService,
         LidarrService,

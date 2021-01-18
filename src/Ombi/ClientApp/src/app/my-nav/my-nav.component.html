@@ -2,7 +2,21 @@
     <mat-sidenav #drawer class="sidenav" fixedInViewport="true"
         [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
         [opened]="!(isHandset$ | async)">
+
         <mat-toolbar>{{applicationName}}</mat-toolbar>
+
+        <div class="outer-profile">
+            <div class="profile-img-container">
+                <div class="profile-img">
+                    <img
+                        src="https://www.gravatar.com/avatar/{{emailHash}}?d={{applicationLogo ? applicationLogo : 'https://raw.githubusercontent.com/tidusjar/Ombi/gh-pages/img/android-chrome-512x512.png'}}" />
+                </div>
+                <div class="profile-info">
+                    <h3>{{username}}</h3>
+                    <p>{{welcomeText | translate}}</p>
+                </div>
+            </div>
+        </div>
         <mat-nav-list>
             <span *ngFor="let nav of navItems">
 
@@ -33,7 +47,7 @@
                 <mat-icon *ngIf="theme === 'light'" aria-label="Side nav toggle icon">brightness_4</mat-icon>
                 &nbsp;{{ 'NavigationBar.ChangeTheme' | translate }}
             </a>
-            <a id="nav-logout" class="bottom-nav-link" mat-list-item [routerLinkActive]="'active-list-item'"
+            <a id="nav-logout" mat-list-item [routerLinkActive]="'active-list-item'"
                 aria-label="Toggle sidenav" (click)="logOut();">
                 <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
                 &nbsp;{{ 'NavigationBar.Logout' | translate }}
@@ -41,7 +55,16 @@
 
 
         </mat-nav-list>
+
+        <div class="bottom-nav full">
+            <div class="outer-profile">
+                <app-remaining-requests [type]="RequestType.movie"></app-remaining-requests>
+                <app-remaining-requests [type]="RequestType.tvShow"></app-remaining-requests>
+                <app-remaining-requests [type]="RequestType.album"></app-remaining-requests>
+        </div>
+        </div>
     </mat-sidenav>
+
     <mat-sidenav-content>
         <mat-toolbar color="primary">
             <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
@@ -53,18 +76,28 @@
                 <span class="justify-content-center align-items-center">
                     <!-- Search Bar -->
                     <div>
-                        <app-nav-search [filter]="searchFilter"></app-nav-search>
+                        <app-nav-search></app-nav-search>
                     </div>
                 </span>
             </div>
             <div class="col-2">
-                <button mat-icon-button [matMenuTriggerFor]="filterMenu"><mat-icon>filter_alt</mat-icon></button>
-                <mat-menu #filterMenu="matMenu"  yPosition="below" class="smaller-panel">
-                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.movies" (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Movie)">{{ 'NavigationBar.Filter.Movies' | translate}}</mat-slide-toggle>
-                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.tvShows" (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.TvShow)">{{ 'NavigationBar.Filter.TvShows' | translate}}</mat-slide-toggle>
-                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.music" (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Music)">{{ 'NavigationBar.Filter.Music' | translate}}</mat-slide-toggle>
-                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.people" (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.People)">{{ 'NavigationBar.Filter.People' | translate}}</mat-slide-toggle>
-                  </mat-menu>
+                <button mat-icon-button [matMenuTriggerFor]="filterMenu">
+                    <mat-icon>filter_alt</mat-icon>
+                </button>
+                <mat-menu #filterMenu="matMenu" yPosition="below" class="smaller-panel">
+                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.movies"
+                        (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Movie)">
+                        {{ 'NavigationBar.Filter.Movies' | translate}}</mat-slide-toggle>
+                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.tvShows"
+                        (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.TvShow)">
+                        {{ 'NavigationBar.Filter.TvShows' | translate}}</mat-slide-toggle>
+                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.music"
+                        (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Music)">
+                        {{ 'NavigationBar.Filter.Music' | translate}}</mat-slide-toggle>
+                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.people"
+                        (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.People)">
+                        {{ 'NavigationBar.Filter.People' | translate}}</mat-slide-toggle>
+                </mat-menu>
             </div>
 
         </mat-toolbar>

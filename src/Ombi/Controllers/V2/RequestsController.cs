@@ -139,7 +139,7 @@ namespace Ombi.Controllers.V2
             return await _tvRequestEngine.UpdateAdvancedOptions(options);
         }
 
-        [HttpGet("albums/available/{count:int}/{position:int}/{sort}/{sortOrder}")]
+        [HttpGet("album/available/{count:int}/{position:int}/{sort}/{sortOrder}")]
         public async Task<RequestsViewModel<AlbumRequest>> GetAvailableAlbumRequests(int count, int position, string sort, string sortOrder)
         {
             return await _musicRequestEngine.GetRequestsByStatus(count, position, sort, sortOrder, RequestStatus.Available);

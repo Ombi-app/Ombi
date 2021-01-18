@@ -1,5 +1,5 @@
-import { Component, ViewEncapsulation } from "@angular/core";
-import { ImageService, SearchV2Service, RequestService, MessageService } from "../../../services";
+import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
+import { ImageService, SearchV2Service, RequestService, MessageService, RadarrService } from "../../../services";
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
@@ -10,13 +10,18 @@ import { IMovieRequests, RequestType, IAdvancedData } from "../../../interfaces"
 import { DenyDialogComponent } from "../shared/deny-dialog/deny-dialog.component";
 import { NewIssueComponent } from "../shared/new-issue/new-issue.component";
 import { StorageService } from "../../../shared/storage/storage-service";
+import { MovieAdvancedOptionsComponent } from "./panels/movie-advanced-options/movie-advanced-options.component";
+import { RequestServiceV2 } from "../../../services/requestV2.service";
+import { RequestBehalfComponent } from "../shared/request-behalf/request-behalf.component";
+import { IMovieRatings } from "../../../interfaces/IRatings";
+import { APP_BASE_HREF } from "@angular/common";
 
 @Component({
     templateUrl: "./movie-details.component.html",
     styleUrls: ["../../media-details.component.scss"],
     encapsulation: ViewEncapsulation.None
 })
-export class MovieDetailsComponent {
+export class MovieDetailsComponent implements OnInit {
     public movie: ISearchMovieResultV2;
     public hasRequest: boolean;
     public movieRequest: IMovieRequests;
@@ -30,6 +35,7 @@ export class MovieDetailsComponent {
     constructor(private searchService: SearchV2Service, private route: ActivatedRoute,
         private sanitizer: DomSanitizer, private imageService: ImageService,
         public dialog: MatDialog, private requestService: RequestService,
+        private requestService2: RequestServiceV2, private radarrService: RadarrService,
         public messageService: MessageService, private auth: AuthService,
         private storage: StorageService) {
         this.route.params.subscribe((params: any) => {
@@ -39,13 +45,20 @@ export class MovieDetailsComponent {
                 }
             }
             this.theMovidDbId = params.movieDbId;
-            this.load();
         });
+    }
+
+    public async ngOnInit() {
+        await this.load();
     }
 
     public async load() {
 
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+
+        if (this.isAdmin) {
+            this.showAdvanced = await this.radarrService.isRadarrEnabled();
+        }
 
         if (this.imdbId) {
             this.searchService.getMovieByImdbId(this.imdbId).subscribe(async x => {
@@ -55,10 +68,7 @@ export class MovieDetailsComponent {
                     this.hasRequest = true;
                     this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
                 }
-                this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
-                    this.movie.background = this.sanitizer.bypassSecurityTrustStyle
-                        ("url(" + x + ")");
-                });
+                this.loadBanner();
             });
         } else {
             this.searchService.getFullMovieDetails(this.theMovidDbId).subscribe(async x => {
@@ -68,16 +78,13 @@ export class MovieDetailsComponent {
                     this.hasRequest = true;
                     this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
                 }
-                this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
-                    this.movie.background = this.sanitizer.bypassSecurityTrustStyle
-                        ("url(" + x + ")");
-                });
+                this.loadBanner();
             });
         }
     }
 
-    public async request() {
-        const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: null }).toPromise();
+    public async request(userId?: string) {
+        const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: null, requestOnBehalf: userId }).toPromise();
         if (result.result) {
             this.movie.requested = true;
             this.messageService.send(result.message, "Ok");
@@ -143,5 +150,38 @@ export class MovieDetailsComponent {
         if (data.profileId) {
             this.movieRequest.rootPathOverrideTitle = data.profiles.filter(x => x.id == data.profileId)[0].name;
         }
+    }
+
+    public async openAdvancedOptions() {
+        const dialog = this.dialog.open(MovieAdvancedOptionsComponent, { width: "700px", data: <IAdvancedData>{ movieRequest: this.movieRequest }, panelClass: 'modal-panel' })
+        await dialog.afterClosed().subscribe(async result => {
+            if (result) {
+                result.rootFolder = result.rootFolders.filter(f => f.id === +result.rootFolderId)[0];
+                result.profile = result.profiles.filter(f => f.id === +result.profileId)[0];
+                await this.requestService2.updateMovieAdvancedOptions({ qualityOverride: result.profileId, rootPathOverride: result.rootFolderId, requestId: this.movieRequest.id }).toPromise();
+                this.setAdvancedOptions(result);
+            }
+        });
+    }
+
+    public async openRequestOnBehalf() {
+        const dialog = this.dialog.open(RequestBehalfComponent, { width: "700px", panelClass: 'modal-panel' })
+        await dialog.afterClosed().subscribe(async result => {
+            if (result) {
+                await this.request(result.id);
+            }
+        });
+    }
+
+    private loadBanner() {
+        this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
+            if (!this.movie.backdropPath) {
+            this.movie.background = this.sanitizer.bypassSecurityTrustStyle
+                ("url(" + x + ")");
+            } else {
+                this.movie.background = this.sanitizer.bypassSecurityTrustStyle
+                ("url(https://image.tmdb.org/t/p/original/" + this.movie.backdropPath + ")");
+            }
+        });
     }
 }

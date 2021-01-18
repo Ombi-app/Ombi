@@ -71,20 +71,52 @@
     height: 100%;
     /* overflow: auto; */
 }
-// Changed color with !important and changed the font weight
-/*.active-list-item-dark {
-    background: $accent-dark !important;
-    color:black !important;
-    font-weight:500;
-}*/
 
-// changed bottom to 10px so when you overlay a link it won't get blocked by URL
-#bottom-nav-link {
-    bottom: 10px;
-    position: absolute !important;
-    //background-color:#E84C3D;
+.profile-img-container {
+    margin: 20px auto 10px;
+    overflow: hidden;
+    text-align: center;
+    width: 80%;
+}
+.profile-img {
+    float: left;
+    height: 40px;
+    margin-right: 15px;
+}
+.profile-info {
+    overflow: hidden;
+    text-align: left;
+}
+.profile-info > h3 {
+    font-size: 15px;
+    text-transform: capitalize;
+    // color: #333;
+    margin-bottom: 2px;
+}
+.profile-info > p {
+    // color: #333;
+    font-size: 11px;
+    margin-top: 5px;
 }
 
-/*bottom-nav-link:hover{
-    background-color:rgb(226, 52, 36) !important;
-}*/
+.profile-img img {
+    border-radius: 6px;
+    box-shadow: 4px 3px 6px 0 rgba(0,0,0,.2);
+    width: 45px;
+}
+
+.outer-profile {
+    background-color: #303030;
+    box-shadow: inset 0 0 3px #000000;
+    padding: 1px;
+}
+
+.full {
+    width: 100%;
+}
+.bottom-nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+}

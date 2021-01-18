@@ -6,14 +6,12 @@
         <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
             <div class="row top-spacing">
                 <div class="col-md-12 col-12 col-sm-12" >
-                    <div>
-                        <div class="md-form-field">
-                            <mat-slide-toggle formControlName="v3">V3</mat-slide-toggle>
-                        </div>
-                    </div>
                     <div >
                         <div class="md-form-field">
                             <mat-slide-toggle formControlName="enabled" id="enable">Enable</mat-slide-toggle>
+                        </div>
+                       <div class="md-form-field">
+                            <mat-slide-toggle formControlName="v3">V3</mat-slide-toggle>
                         </div>
                         <div class="md-form-field">
                             <mat-slide-toggle [(ngModel)]="advanced" [ngModelOptions]="{standalone: true}">Advanced</mat-slide-toggle>

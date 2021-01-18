@@ -5,49 +5,52 @@
     <fieldset>
         <legend>Newsletter</legend>
         <div class="col-md-6">
+
                 <div class="form-group">
                     <div class="checkbox">
-                        <input type="checkbox" id="enabled" [(ngModel)]="settings.enabled" ng-checked="settings.enabled"><label for="enabled">Enable</label>
+                        <mat-slide-toggle  type="checkbox" id="enabled" [(ngModel)]="settings.enabled"  ng-checked="settings.enabled">Enable</mat-slide-toggle>
+                    </div>
+                </div>
+    
+                <div class="form-group">
+                    <div class="checkbox">
+                        <mat-slide-toggle  type="checkbox" id="disableTv" [(ngModel)]="settings.disableTv"  ng-checked="settings.disableTv">Disable TV</mat-slide-toggle>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="checkbox">
-                        <input type="checkbox" id="disableTv" [(ngModel)]="settings.disableTv" ng-checked="settings.disableTv"><label for="disableTv">Disable TV</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" id="disableMovies" [(ngModel)]="settings.disableMovies" ng-checked="settings.disableMovies"><label for="disableMovies">Disable Movies</label>
+                        <mat-slide-toggle  type="checkbox" id="disableMovies" [(ngModel)]="settings.disableMovies"  ng-checked="settings.disableMovies">Disable Movies</mat-slide-toggle>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="checkbox">
-                        <input type="checkbox" id="disableMusic" [(ngModel)]="settings.disableMusic" ng-checked="settings.disableMusic"><label for="disableMusic">Disable Music</label>
+                        <mat-slide-toggle  type="checkbox" id="disableMusic" [(ngModel)]="settings.disableMusic"  ng-checked="settings.disableMusic">Disable Music</mat-slide-toggle>
                     </div>
                 </div>
                  <div class="form-group">
-                    <label class="control-label">Subject</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom" [(ngModel)]="settings.notificationTemplate.subject" value="{{settings.notificationTemplate.subject}}">
-                    </div>
+                    <mat-form-field appearance="outline" floatLabel=auto>
+                        <mat-label>Subject</mat-label>
+                        <input matInput id="subject" name="subject"
+                        [(ngModel)]="settings.notificationTemplate.subject" value="{{settings.notificationTemplate.subject}}">
+                    </mat-form-field>
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label">Message</label>
-                    <div>
-                        <textarea type="text" class="form-control form-control-custom" [(ngModel)]="settings.notificationTemplate.message" value="{{settings.notificationTemplate.message}}"></textarea>
-                    </div>
+                    <mat-form-field appearance="outline" floatLabel=auto>
+                        <mat-label>Message</mat-label>
+                        <textarea matInput id="message" name="message"
+                        [(ngModel)]="settings.notificationTemplate.message" value="{{settings.notificationTemplate.message}}"> </textarea>
+                    </mat-form-field>
                 </div>
 
                 <div class="form-group">
                     <div>
-                        <button type="submit" id="save" (click)="onSubmit()" class="btn btn-primary-outline">Submit</button>
-                        <button type="button" (click)="test()" class="btn btn-danger-outline">Test</button>
-                        <button type="button" (click)="updateDatabase()" class="btn btn-info-outline" tooltipPosition="top" pTooltip="I recommend running this with a fresh Ombi install, this will set all the current *found* content to have been sent via Newsletter, 
+                        <button mat-raised-button type="submit" id="save" (click)="onSubmit()" class="btn btn-primary-outline">Submit</button>
+                        <button mat-raised-button type="button" (click)="test()" class="btn btn-danger-outline">Test</button>
+                        <button mat-raised-button type="button" (click)="updateDatabase()" class="btn btn-info-outline" tooltipPosition="top" matTooltip="I recommend running this with a fresh Ombi install, this will set all the current *found* content to have been sent via Newsletter, 
                         if you do not do this then everything that Ombi has found in your libraries will go out on the first email!">Update Database</button>
-                        
-                        <button type="button" (click)="trigger()" class="btn btn-danger-outline">Trigger now</button>
+                        <button mat-raised-button type="button" (click)="trigger()" class="btn btn-danger-outline">Trigger now</button>
                     </div>
                                  </div>
         </div>
@@ -62,15 +65,15 @@
             <br/>
             <br/>
             <div class="form-group row">
-                <div class="col-md-12">
-                    <label for="emailToAdd" class="control-label">Add External Email (For users that are not in Ombi)</label>
-                </div>
                 <div class="col-md-9">
-                    <input type="text" [(ngModel)]="emailToAdd" class="form-control form-control-custom " id="emailToAdd" 
-                    email name="emailToAdd" value="{{emailToAdd}}">
+                    <mat-form-field appearance="outline" floatLabel=auto>
+                        <mat-label>Add External Email (For users that are not in Ombi)</mat-label>
+                        <input matInput id="emailToAdd" name="emailToAdd"
+                        [(ngModel)]="emailToAdd" value="{{emailToAdd}}">
+                    </mat-form-field>
                 </div>
                 <div class="col-md-3">
-                    <button class="btn btn-primary-outline" (click)="addEmail()" pTooltip="Don't forget to press the Submit button!">Add</button>
+                    <button mat-raised-button class="btn btn-primary-outline" (click)="addEmail()" matTooltip="Don't forget to press the Submit button!">Add</button>
                 </div>
             </div>
 
@@ -80,7 +83,7 @@
                         {{email}}
                     </div>
                     <div class="col-md-3">
-                        <button class="btn btn-sm btn-danger-outline" (click)="deleteEmail(email)">Delete</button>
+                        <button mat-raised-button class="btn btn-sm btn-danger-outline" (click)="deleteEmail(email)">Delete</button>
                     </div>
                 </div>
             </div>

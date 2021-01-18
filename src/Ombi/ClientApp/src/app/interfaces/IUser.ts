@@ -17,11 +17,17 @@ export interface IUser {
     userAccessToken: string;
     language: string;
     userQualityProfiles: IUserQualityProfiles;
+    streamingCountry: string;
 
     // FOR UI
     episodeRequestQuota: IRemainingRequests | null;
     movieRequestQuota: IRemainingRequests | null;
     musicRequestQuota: IRemainingRequests | null;
+}
+
+export interface IUserDropdown {
+    username: string;
+    id: string;
 }
 
 export interface IUserQualityProfiles {
@@ -30,7 +36,7 @@ export interface IUserQualityProfiles {
     sonarrRootPath: number;
     sonarrQualityProfile: number;
     radarrRootPath: number;
-    radarrQualityProfile: number;   
+    radarrQualityProfile: number;
 }
 
 export interface ICreateWizardUser {
@@ -44,10 +50,16 @@ export interface IWizardUserResult {
     errors: string[];
 }
 
+export interface IStreamingCountries {
+    code: string;
+}
+
 export enum UserType {
     LocalUser = 1,
     PlexUser = 2,
     EmbyUser = 3,
+    EmbyConnect = 4,
+    JellyfinUser = 5,
 }
 
 export interface IIdentityResult {

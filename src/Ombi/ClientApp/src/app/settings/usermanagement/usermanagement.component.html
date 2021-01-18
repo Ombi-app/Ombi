@@ -9,29 +9,41 @@
 
             <div class="form-group">
                 <div>
-                    <mat-checkbox id="importPlex" [(ngModel)]="settings.importPlexUsers">
-                    Import Plex Users</mat-checkbox>
+                    <mat-slide-toggle id="importPlex" [(ngModel)]="settings.importPlexUsers">
+                    Import Plex Users</mat-slide-toggle>
                 </div>
             </div>
-            
+
             <div class="form-group">
-                <mat-checkbox id="importAdmin" [(ngModel)]="settings.importPlexAdmin">Import Plex Admin</mat-checkbox>
+                <mat-slide-toggle id="importAdmin" [(ngModel)]="settings.importPlexAdmin">Import Plex Admin</mat-slide-toggle>
                 </div>
             <div *ngIf="plexUsers">
                 <p>Plex Users excluded from Import</p>
-                
+
                 <p-autoComplete [(ngModel)]="bannedPlexUsers" [suggestions]="filteredPlexUsers" [multiple]="true" field="username" (completeMethod)="filterPlexList($event)"></p-autoComplete>
             </div>
         </div>
         <div *ngIf="embyEnabled">
             <div class="form-group">
-                <mat-checkbox id="importEmbyUsers" [(ngModel)]="settings.importEmbyUsers">Import Emby Users</mat-checkbox>
+                <mat-slide-toggle id="importEmbyUsers" [(ngModel)]="settings.importEmbyUsers">Import Emby Users</mat-slide-toggle>
             </div>
-            
+
             <div *ngIf="embyUsers">
                 <p>Emby Users excluded from Import</p>
-                
+
                 <p-autoComplete [(ngModel)]="bannedEmbyUsers" [suggestions]="filteredEmbyUsers" [multiple]="true" field="username" (completeMethod)="filterEmbyList($event)"></p-autoComplete>
+            </div>
+
+        </div>
+        <div *ngIf="jellyfinEnabled">
+            <div class="form-group">
+                <mat-slide-toggle id="importJellyfinUsers" [(ngModel)]="settings.importJellyfinUsers">Import Jellyfin Users</mat-slide-toggle>
+            </div>
+            
+            <div *ngIf="jellyfinUsers">
+                <p>Jellyfin Users excluded from Import</p>
+                
+                <p-autoComplete [(ngModel)]="bannedJellyfinUsers" [suggestions]="filteredJellyfinUsers" [multiple]="true" field="username" (completeMethod)="filterJellyfinList($event)"></p-autoComplete>
             </div>
 
         </div>
@@ -42,8 +54,8 @@
         <div *ngFor="let c of claims">
             <div class="form-group">
                 <div>
-                    <mat-checkbox [(ngModel)]="c.enabled" [value]="c.value" id="create{{c.value}}" [attr.name]="'create' + c.value" ng-checked="c.enabled">
-                    {{c.value | humanize}}</mat-checkbox>
+                    <mat-slide-toggle [(ngModel)]="c.enabled" [value]="c.value" id="create{{c.value}}" [attr.name]="'create' + c.value" ng-checked="c.enabled">
+                    {{c.value | humanize}}</mat-slide-toggle>
                 </div>
             </div>
         </div>
@@ -62,6 +74,15 @@
                 <input type="text" [(ngModel)]="settings.episodeRequestLimit" class="form-control form-small form-control-custom" id="episodeRequestLimit" name="episodeRequestLimit" value="{{settings?.episodeRequestLimit}}">
             </div>
         </div>
+
+        <mat-form-field>
+            <mat-label [translate]="'UserPreferences.StreamingCountry'"></mat-label>
+            <mat-select [(value)]="settings.defaultStreamingCountry">
+              <mat-option *ngFor="let value of countries" [value]="value">
+                {{value}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
     </div>
         <div class="form-group">

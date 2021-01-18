@@ -35,7 +35,7 @@ namespace Ombi.Core.Engine.Demo
 
         private readonly DemoLists _demoLists;
 
-        public async Task<IEnumerable<SearchTvShowViewModel>> Search(string search)
+        new public async Task<IEnumerable<SearchTvShowViewModel>> Search(string search)
         {
             var searchResult = await TvMazeApi.Search(search);
 

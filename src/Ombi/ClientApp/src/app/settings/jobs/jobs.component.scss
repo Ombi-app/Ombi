@@ -1,5 +1,16 @@
 .small-middle-container{
 	margin: auto;
-	width: 85%;
+	width: 95%;
 	margin-top:10px;
+}
+.cronBox {
+    width: 300px;
+    display: inline-flex;
+    padding-left: 0px;
+    margin-right: 1em;
+}
+.cronbtn {
+	max-height: 36px;
+	margin-top: 1em;
+	margin-left: .5em;
 }

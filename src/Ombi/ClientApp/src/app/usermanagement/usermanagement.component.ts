@@ -10,7 +10,7 @@ import { SelectionModel } from "@angular/cdk/collections";
     templateUrl: "./usermanagement.component.html",
     styleUrls: ["./usermanagement.component.scss"],
 })
-export class UserManagementComponent implements OnInit, AfterViewInit {
+export class UserManagementComponent implements OnInit {
 
     public displayedColumns: string[] = ['select', 'username', 'alias', 'email', 'roles', 'remainingRequests',
         'nextRequestDue', 'lastLoggedIn', 'userType', 'actions', 'welcome'];
@@ -26,28 +26,31 @@ export class UserManagementComponent implements OnInit, AfterViewInit {
     public availableClaims: ICheckbox[];
     public bulkMovieLimit?: number;
     public bulkEpisodeLimit?: number;
+    public bulkMusicLimit?: number;
+    public bulkStreaming?: string;
     public plexEnabled: boolean;
+
+    public countries: string[];
 
     constructor(private identityService: IdentityService,
         private settingsService: SettingsService,
         private notificationService: NotificationService,
-        private plexSettings: SettingsService) { }
+        private plexSettings: SettingsService) {
+            this.dataSource = new MatTableDataSource();
+         }
 
 
     public async ngOnInit() {
+        this.identityService.getSupportedStreamingCountries().subscribe(x => this.countries = x);
         this.users = await this.identityService.getUsers().toPromise();
-
         this.dataSource = new MatTableDataSource(this.users);
+        this.dataSource.sort = this.sort;
 
         this.plexSettings.getPlex().subscribe(x => this.plexEnabled = x.enable);
 
         this.identityService.getAllAvailableClaims().subscribe(x => this.availableClaims = x);
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
         this.settingsService.getEmailNotificationSettings().subscribe(x => this.emailSettings = x);
-    }
-
-    public ngAfterViewInit(): void {
-        this.dataSource.sort = this.sort;
     }
 
     public welcomeEmail(user: IUser) {
@@ -84,6 +87,9 @@ export class UserManagementComponent implements OnInit, AfterViewInit {
             if (this.bulkMovieLimit) {
                 x.movieRequestLimit = this.bulkMovieLimit;
             }
+            if (this.bulkMusicLimit) {
+                x.musicRequestLimit = this.bulkMusicLimit;
+            }
             this.identityService.updateUser(x).subscribe(y => {
                 if (!y.successful) {
                     this.notificationService.error(`Could not update user ${x.userName}. Reason ${y.errors[0]}`);
@@ -95,9 +101,13 @@ export class UserManagementComponent implements OnInit, AfterViewInit {
         this.showBulkEdit = false;
         this.bulkMovieLimit = undefined;
         this.bulkEpisodeLimit = undefined;
+        this.bulkMusicLimit = undefined;
     }
 
     public isAllSelected() {
+        if (!this.dataSource) {
+            return;
+        }
         const numSelected = this.selection.selected.length;
         const numRows = this.dataSource.data.length;
         return numSelected === numRows;
@@ -105,6 +115,9 @@ export class UserManagementComponent implements OnInit, AfterViewInit {
 
 
     public masterToggle() {
+        if (!this.dataSource) {
+            return;
+        }
         this.isAllSelected() ?
             this.selection.clear() :
             this.dataSource.data.forEach(row => this.selection.select(row));

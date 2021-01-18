@@ -7,6 +7,9 @@ import { StorageService } from '../shared/storage/storage-service';
 import { SettingsService } from '../services';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { SearchFilter } from './SearchFilter';
+import { Md5 } from 'ts-md5/dist/md5';
+import { RequestType } from '../interfaces';
+import { FilterService } from '../discover/services/filter-service';
 
 export enum SearchFilterType {
   Movie = 1,
@@ -22,15 +25,17 @@ export enum SearchFilterType {
 })
 export class MyNavComponent implements OnInit {
 
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
+  isHandset$: Observable<boolean> = this.breakpointObserver.observe([Breakpoints.Small, Breakpoints.Handset, Breakpoints.XSmall])
     .pipe(
       map(result => result.matches)
     );
 
   @Input() public showNav: boolean;
   @Input() public applicationName: string;
+  @Input() public applicationLogo: string;
   @Input() public username: string;
   @Input() public isAdmin: string;
+  @Input() public email: string;
   @Output() public logoutClick = new EventEmitter();
   @Output() public themeChange = new EventEmitter<string>();
   public theme: string;
@@ -38,10 +43,14 @@ export class MyNavComponent implements OnInit {
   public navItems: INavBar[];
   public searchFilter: SearchFilter;
   public SearchFilterType = SearchFilterType;
+  public emailHash: string | Int32Array;
+  public welcomeText: string;
+  public RequestType = RequestType;
 
   constructor(private breakpointObserver: BreakpointObserver,
     private settingsService: SettingsService,
-    private store: StorageService) {
+    private store: StorageService,
+    private filterService: FilterService) {
   }
 
   public async ngOnInit() {
@@ -51,6 +60,12 @@ export class MyNavComponent implements OnInit {
       music: false,
       people: false,
       tvShows: true
+    }
+
+    this.setWelcomeText();
+    if (this.email) {
+      const md5 = new Md5();
+      this.emailHash = md5.appendStr(this.email).end();
     }
 
     this.issuesEnabled = await this.settingsService.issueEnabled().toPromise();
@@ -63,6 +78,7 @@ export class MyNavComponent implements OnInit {
     var filter = this.store.get("searchFilter");
     if (filter) {
       this.searchFilter = Object.assign(new SearchFilter(), JSON.parse(filter));
+      this.filterService.changeFilter(this.searchFilter);
     }
     this.navItems = [
       { name: "NavigationBar.Discover", icon: "find_replace", link: "/discover", requiresAdmin: false, enabled: true, faIcon: null },
@@ -111,6 +127,22 @@ export class MyNavComponent implements OnInit {
         this.searchFilter.people = event.checked;
         break;
     }
+    this.filterService.changeFilter(this.searchFilter);
     this.store.save("searchFilter", JSON.stringify(this.searchFilter));
+  }
+
+  private setWelcomeText() {
+    var d = new Date();
+    var hour = d.getHours();
+
+    if (hour >= 0 && hour < 12) {
+      this.welcomeText = 'NavigationBar.MorningWelcome';
+    }
+    if (hour >= 12 && hour < 18) {
+      this.welcomeText = 'NavigationBar.AfternoonWelcome';
+    }
+    if (hour >= 18 && hour < 24) {
+      this.welcomeText = 'NavigationBar.EveningWelcome';
+    }
   }
 }

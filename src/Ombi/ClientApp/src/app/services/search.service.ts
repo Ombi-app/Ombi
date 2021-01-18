@@ -89,6 +89,9 @@ export class SearchService extends ServiceHelpers {
     public searchAlbum(searchTerm: string): Observable<ISearchAlbumResult[]> {
         return this.http.get<ISearchAlbumResult[]>(`${this.url}/Music/Album/` + searchTerm);
     }
+    public getAlbumInformation(foreignAlbumId: string): Observable<ISearchAlbumResult> {
+        return this.http.get<ISearchAlbumResult>(`${this.url}/Music/Album/info/` + foreignAlbumId);
+    }
     public getAlbumsForArtist(foreignArtistId: string): Observable<ISearchAlbumResult[]> {
         return this.http.get<ISearchAlbumResult[]>(`${this.url}/Music/Artist/Album/${foreignArtistId}`);
     }
