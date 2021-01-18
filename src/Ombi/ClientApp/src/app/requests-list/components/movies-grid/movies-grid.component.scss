@@ -4,7 +4,7 @@
 	background: $accent-dark !important;
 	font-size: 1em;
 	font-weight: bold;
-	color: #303030;
+	color: $ombi-background-primary-accent;
 }
 
 .mat-form-field {
@@ -23,7 +23,7 @@
 
 ::ng-deep .dark .mat-tab-label-active{
 	background: $accent-dark !important;
-	color: #303030 !important;
+	color: $ombi-background-primary-accent !important;
 	font-weight:bold;
 }
 

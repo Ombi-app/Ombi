@@ -114,7 +114,7 @@
 // New CSS for new style //
 
 .sidenav-container .sidenav{
-    background: #1b242f;
+    background: $ombi-background-accent;
     color:#FFF;
     width: 23rem;
     font-family: 'Montserrat', sans-serif;
@@ -167,7 +167,7 @@
 
     .top-bar-container{
         background: $ombi-background-primary;
-        color:$ombi-background-primary-accent; 
+        color:$ombi-background-primary-accent;
     }
 
 }

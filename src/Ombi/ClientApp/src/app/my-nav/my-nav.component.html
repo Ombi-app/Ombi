@@ -42,11 +42,6 @@
                 </div>
             </span>
 
-            <a id="nav-theme" mat-list-item (click)="switchTheme()">
-                <mat-icon *ngIf="theme === 'dark'" aria-label="Side nav toggle icon">wb_incandescent</mat-icon>
-                <mat-icon *ngIf="theme === 'light'" aria-label="Side nav toggle icon">brightness_4</mat-icon>
-                &nbsp;{{ 'NavigationBar.ChangeTheme' | translate }}
-            </a>
             <a id="nav-logout" mat-list-item [routerLinkActive]="'active-list-item'"
                 aria-label="Toggle sidenav" (click)="logOut();">
                 <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>

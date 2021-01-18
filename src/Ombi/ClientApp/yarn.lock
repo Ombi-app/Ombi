@@ -7720,6 +7720,11 @@ sass-loader@8.0.2:
     schema-utils "^2.6.1"
     semver "^6.3.0"
 
+sass-recursive-map-merge@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/sass-recursive-map-merge/-/sass-recursive-map-merge-1.0.1.tgz#d5460b9fe10df62d246ca27c48d823f25c2290cb"
+  integrity sha512-OuDTGVGx2o2sPeaSgGob5s2Qf6LxoMU4LG7n6vCzNgfXyBz/y8tKzcEYdmvgyhjvGQVcGA1g2UJnP7WMmahuVg==
+
 sass@1.26.3:
   version "1.26.3"
   resolved "https://registry.yarnpkg.com/sass/-/sass-1.26.3.tgz#412df54486143b76b5a65cdf7569e86f44659f46"

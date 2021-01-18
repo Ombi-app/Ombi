@@ -10,15 +10,14 @@
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 // Create the theme object (a Sass map containing all of the palettes).
-$ombi-app-theme: mat-light-theme($ombi-app-primary, $ombi-app-accent, $ombi-app-warn);
-@include angular-material-theme($ombi-app-theme);
-
-$dark-theme: mat-dark-theme($ombi-dark-app-primary, $ombi-dark-app-accent, $ombi-dark-app-warn);
 
 
-// Include the alternative theme styles inside of a block with a CSS class. You can make this
-// CSS class whatever you want. In this example, any component inside of an element with
-// `.dark` will be affected by this alternate dark theme instead of the default theme.
-.dark {
-    @include angular-material-theme($dark-theme);
-}
+    $mat-light-theme-background: map_merge($mat-light-theme-background, (background: $ombi-background-primary));
+
+    $theme: mat-dark-theme((
+        color: (
+            primary: $ombi-dark-app-primary,
+            accent: $ombi-dark-app-accent,
+        )
+    ), $ombi-dark-app-accent);
+    @include angular-material-theme($theme);

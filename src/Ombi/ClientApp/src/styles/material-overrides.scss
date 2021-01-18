@@ -1,3 +1,5 @@
+@import "./variables.scss";
+
 .lg-form-field .mat-form-field-infix {
     width: 480px;
 }
@@ -12,4 +14,19 @@ td.mat-cell {
 
 .mat-form-field {
     display: block !important;
+}
+
+
+.mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab {
+    background-color:  $ombi-background-accent;
+}
+
+// lighter bg
+.mat-expansion-panel, .mat-card, .mat-dialog-container, .mat-menu-content{
+    background: $ombi-background-accent !important;
+}
+
+// Dark bg
+.mat-sidenav-container {
+    background: $ombi-background-primary;
 }

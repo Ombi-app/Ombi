@@ -85,8 +85,6 @@ export class AppComponent implements OnInit {
 
     public ngOnInit() {
         window["loading_screen"].finish();
-        const theme = this.storage.get("theme");
-        this.onSetTheme(theme);
 
         this.settingsService.getCustomization().subscribe(x => {
             this.customizationSettings = x;
@@ -130,12 +128,5 @@ export class AppComponent implements OnInit {
     public logOut() {
         this.authService.logout();
         this.router.navigate(["login"]);
-    }
-
-    public onSetTheme(theme: string) {
-        if (theme) {
-            this.overlayContainer.getContainerElement().classList.add(theme);
-            this.componentCssClass = theme;
-        }
     }
 }

@@ -8,12 +8,12 @@
 $ombi-app-primary: mat-palette($ombi-primary);
 $ombi-app-accent : mat-palette($ombi-accent);
 // The warn palette is optional (defaults to red).
-$ombi-app-warn : mat-palette($mat-deep-orange);
+$ombi-app-warn : mat-palette($ombi-accent);
 
 // Define an alternate dark theme.
-$ombi-dark-app-primary: mat-palette($ombi-primary);
-$ombi-dark-app-accent:  mat-palette($ombi-accent);
-$ombi-dark-app-warn: mat-palette($mat-deep-orange);
+$ombi-dark-app-primary: mat-palette($ombi-primary, 500);
+$ombi-dark-app-accent:  mat-palette($ombi-accent, 500);
+$ombi-dark-app-warn: mat-palette($ombi-accent, 500);
 
 
 
@@ -32,7 +32,7 @@ $warn: mat-color($ombi-app-warn);
 // DARK
 
 $background-dark: mat-color( mat-palette($ombi-background));
-$backgroundTint-dark:  mat-color(mat-palette($mat-grey, 900));
+$backgroundTint-dark:  mat-color(mat-palette($ombi-background, 900));
 $text-dark: white;
 $panel: mat-color($ombi-dark-app-primary);
 $primary-dark: mat-color($ombi-dark-app-primary);
