@@ -87,7 +87,7 @@ stages:
         gitHubConnection: 'PAT'
         repositoryName: 'Ombi-app/Ombi'
         action: 'create'
-        target: 'c7fcbb77b58aef1076d635a9ef99e4374abc8672'
+        target: '$(Build.SourceVersion)'
         tagSource: 'userSpecifiedTag'
         tag: '$(gitTag)'
         releaseNotesSource: 'inline'
