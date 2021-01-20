@@ -87,6 +87,9 @@ export class CarouselListComponent implements OnInit {
     }
 
     public async switchDiscoverMode(newMode: DiscoverOption) {
+        if (this.discoverOptions === newMode) {
+            return;
+        }
         this.loading();
         this.clear();
         this.discoverOptions = newMode;

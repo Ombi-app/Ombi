@@ -1,8 +1,8 @@
 <div class="right">
-<mat-button-toggle-group name="discoverMode" class="discover-filter-buttons-group">
-    <mat-button-toggle ngDefaultControl (click)="switchDiscoverMode(DiscoverOption.Combined)" [(ngModel)]="discoverOptions" value="{{DiscoverOption.Combined}}" class="discover-filter-button">{{'Discovery.Combined' | translate}}</mat-button-toggle>
-    <mat-button-toggle ngDefaultControl (click)="switchDiscoverMode(DiscoverOption.Movie)" [(ngModel)]="discoverOptions" value="{{DiscoverOption.Movie}}" class="discover-filter-button">{{'Discovery.Movies' | translate}}</mat-button-toggle>
-    <mat-button-toggle ngDefaultControl (click)="switchDiscoverMode(DiscoverOption.Tv)" [(ngModel)]="discoverOptions" value="{{DiscoverOption.Tv}}" class="discover-filter-button">{{'Discovery.Tv' | translate}}</mat-button-toggle>
+<mat-button-toggle-group name="discoverMode" value="{{discoverOptions}}" class="discover-filter-buttons-group">
+    <mat-button-toggle ngDefaultControl [class.cdk-focused]="discoverOptions === DiscoverOption.Combined" (click)="switchDiscoverMode(DiscoverOption.Combined)" [(ngModel)]="discoverOptions" value="{{DiscoverOption.Combined}}" class="discover-filter-button">{{'Discovery.Combined' | translate}}</mat-button-toggle>
+    <mat-button-toggle ngDefaultControl [class.cdk-focused]="discoverOptions === DiscoverOption.Movie" (click)="switchDiscoverMode(DiscoverOption.Movie)" [(ngModel)]="discoverOptions" value="{{DiscoverOption.Movie}}" class="discover-filter-button">{{'Discovery.Movies' | translate}}</mat-button-toggle>
+    <mat-button-toggle ngDefaultControl [class.cdk-focused]="discoverOptions === DiscoverOption.Tv" (click)="switchDiscoverMode(DiscoverOption.Tv)" [(ngModel)]="discoverOptions" value="{{DiscoverOption.Tv}}" class="discover-filter-button">{{'Discovery.Tv' | translate}}</mat-button-toggle>
   </mat-button-toggle-group>
 </div>
 

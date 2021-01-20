@@ -80,7 +80,7 @@
     background:$ombi-active;
   }
 
-  .discover-filter-button .mat-button-toggle-button:focus{
+ ::ng-deep .discover-filter-button .mat-button-toggle-button:focus{
     outline:none;
   }
 }
