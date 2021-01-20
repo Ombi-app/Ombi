@@ -5,6 +5,7 @@
     templateUrl: "./wiki.component.html",
 })
 export class WikiComponent {
-    @Input() public url: string;
+    @Input() public path: string;
     @Input() public text: string;
+    public domain: string = "http://docs.ombi.app/"
 }

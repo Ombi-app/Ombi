@@ -72,9 +72,8 @@
   .discover-filter-button{
     background:inherit;
     color:inherit;
-    padding:0 20px;
+    padding:0 0px;
     border-radius: 30px;
-    margin:5px;
   }
 
   .discover-filter-button.cdk-focused{
@@ -84,4 +83,8 @@
   .discover-filter-button .mat-button-toggle-button:focus{
     outline:none;
   }
+}
+
+.card-skeleton {
+   padding: 5px;
 }

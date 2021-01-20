@@ -91,16 +91,9 @@
 }
 
 .profile-img img {
-    border-radius: 6px;
-    box-shadow: 4px 3px 6px 0 rgba(0,0,0,.2);
     width: 45px;
 }
 
-.outer-profile {
-    background-color: #303030;
-    box-shadow: inset 0 0 3px #000000;
-    padding: 1px;
-}
 
 .full {
     width: 100%;
@@ -116,7 +109,6 @@
 .sidenav-container .sidenav{
     background: $ombi-background-accent;
     color:#FFF;
-    width: 23rem;
     font-family: 'Montserrat', sans-serif;
 
     .application-name{

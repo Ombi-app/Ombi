@@ -22,7 +22,12 @@ td.mat-cell {
 }
 
 // lighter bg
-.mat-expansion-panel, .mat-card, .mat-dialog-container, .mat-menu-content{
+.mat-expansion-panel,
+.mat-card,
+.mat-dialog-container,
+.mat-menu-content,
+.mat-table,
+.mat-paginator {
     background: $ombi-background-accent !important;
 }
 
