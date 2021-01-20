@@ -49,10 +49,11 @@ export class DiscoverCardComponent implements OnInit {
         } else {
             this.tvSearchResult = await this.searchService.getTvInfo(+this.result.id);
         }
-        if (this.tvSearchResult?.status.length > 0 && this.tvSearchResult?.status === "404") {
+        if (!this.tvSearchResult || this.tvSearchResult?.status.length > 0 && this.tvSearchResult?.status === "404") {
             this.hide = true;
             return;
         }
+
         this.setTvDefaults(this.tvSearchResult);
         this.updateTvItem(this.tvSearchResult);
 
@@ -161,9 +162,6 @@ export class DiscoverCardComponent implements OnInit {
 
 
     private setTvDefaults(x: ISearchTvResultV2) {
-        if(!x) {
-            this.hide = true;
-        }
         if (x.imdbId) {
             x.imdbId = "http://www.imdb.com/title/" + x.imdbId + "/";
         } else {

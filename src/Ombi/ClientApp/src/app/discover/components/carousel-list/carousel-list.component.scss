@@ -76,13 +76,14 @@
     border-radius: 30px;
   }
 
-  .discover-filter-button.cdk-focused{
+  .button-active{
     background:$ombi-active;
   }
 
- ::ng-deep .discover-filter-button .mat-button-toggle-button:focus{
-    outline:none;
-  }
+
+}
+::ng-deep .discover-filter-button .mat-button-toggle-button:focus{
+  outline:none;
 }
 
 .card-skeleton {

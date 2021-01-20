@@ -3,6 +3,7 @@ import { DiscoverOption, IDiscoverCardResult } from "../../interfaces";
 import { ISearchMovieResult, ISearchTvResult, RequestType } from "../../../interfaces";
 import { SearchV2Service } from "../../../services";
 import { StorageService } from "../../../shared/storage/storage-service";
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
 
 export enum DiscoverType {
     Upcoming,
@@ -86,7 +87,11 @@ export class CarouselListComponent implements OnInit {
         this.createInitialModel();
     }
 
-    public async switchDiscoverMode(newMode: DiscoverOption) {
+    public async toggleChanged(event: MatButtonToggleChange) {
+        await this.switchDiscoverMode(event.value);
+    }
+
+    private async switchDiscoverMode(newMode: DiscoverOption) {
         if (this.discoverOptions === newMode) {
             return;
         }
