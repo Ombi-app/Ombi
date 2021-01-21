@@ -4,6 +4,7 @@ $card-background: #2b2b2b;
 #cardImage {
     border-radius: 5px;
     height: 315px;
+    object-fit:cover;
 }
 
 .dark-card {

@@ -32,7 +32,20 @@ $ombi-accent: #258a6d;
 }
 
 ::ng-deep .mat-form-field-underline{
-    bottom:0.5em;
+    display:none;
+}
+
+::ng-deep .mat-form-field-flex{
+    border: 1px solid #35465c;
+    border-radius:30px;
+    margin-top:40px;
+    height:50px;
+}
+
+::ng-deep .mat-form-field-infix{
+    margin-left:20px;
+    border-top:0px;
+    margin-top:5px;
 }
 
 
@@ -41,7 +54,18 @@ $ombi-accent: #258a6d;
     margin-right: 8px;
   }
 
-  .options {
-      margin-bottom: 5px;
-  }
+.options {
+    margin-bottom: 5px;
+}
 
+::ng-deep .discoverResults{
+    margin-top:40px;
+}
+
+::ng-deep button:focus{
+    outline:none;
+}
+
+::ng-deep .col-2.top-filter{
+    margin-top:10px;
+}
