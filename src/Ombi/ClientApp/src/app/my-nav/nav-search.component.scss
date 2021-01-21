@@ -31,23 +31,26 @@ $ombi-accent: #258a6d;
     background-color: white;
 }
 
-::ng-deep .mat-form-field-underline{
+::ng-deep .top-search-bar .mat-form-field-underline{
     display:none;
 }
 
-::ng-deep .mat-form-field-flex{
+::ng-deep .top-search-bar .mat-form-field-flex{
     border: 1px solid #35465c;
     border-radius:30px;
-    margin-top:40px;
+    margin-top:20px;
     height:50px;
 }
 
-::ng-deep .mat-form-field-infix{
+::ng-deep .top-search-bar .mat-form-field-infix{
     margin-left:20px;
     border-top:0px;
     margin-top:5px;
 }
 
+::ng-deep .top-search-bar .mat-form-field-appearance-legacy .mat-form-field-wrapper{
+    padding-bottom:0px;
+}
 
 .option-img {
     vertical-align: middle;
