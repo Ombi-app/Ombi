@@ -96,7 +96,6 @@ export class CarouselListComponent implements OnInit {
             return;
         }
         this.loading();
-        this.clear();
         this.discoverOptions = newMode;
         this.storageService.save(this.mediaTypeStorageKey, newMode.toString());
         await this.ngOnInit();
@@ -132,7 +131,6 @@ export class CarouselListComponent implements OnInit {
     }
 
     private createInitialModel() {
-        this.clear();
         this.createModel();
     }
 
@@ -153,6 +151,7 @@ export class CarouselListComponent implements OnInit {
                 break;
         }
 
+        this.clear();
         this.discoverResults.push(...tempResults);
 
         this.finishLoading();
