@@ -1,18 +1,24 @@
-<div class="card-spacing box" *ngIf="result" [style.display]="hide ? 'none' : 'block'">
-    <mat-card class="mat-elevation-z8 dark-card" [routerLink]="generateDetailsLink()">
-        <div class="ribbon {{getStatusClass()}} ribbon-top-right"><span>
-            {{getAvailbilityStatus()}}
-        </span></div>
-        <a>
-            <img id="cardImage" mat-card-image src="{{result.posterPath}}" class="card-poster" alt="{{result.title}}">
-        </a>
-        <mat-card-content  (click)="openDetails(result);">
+<p-skeleton  *ngIf="!fullyLoaded" width="100%" height="315px"></p-skeleton>
 
-            <h6 *ngIf="result.title.length <= 20">{{result.title}}</h6>
-            <h6 *ngIf="result.title.length > 20" matTooltip="{{result.title}}">{{result.title | truncate:20}}</h6>
-            <div class="fade-text">
-            <small class="overview-text">{{result.overview | truncate: 75}}</small>
+<div *ngIf="fullyLoaded" class="ombi-card dark-card c" [style.display]="hide ? 'none' : 'block'">
+    <div class="ribbon {{getStatusClass()}} ribbon-top-right"><span>
+        {{getAvailbilityStatus()}}
+    </span></div>
+    <a>
+        <img [routerLink]="generateDetailsLink()" id="cardImage" src="{{result.posterPath}}" class="image"
+            alt="{{result.title}}">
+            <div class="top-left">{{RequestType[result.type] | humanize}}</div>
+        <div class="middle">
+            <div class="title">{{result.title}}</div>
+            <div class="small-text ellipsis">{{result.overview}}</div>
+            <div class="row" *ngIf="!result.available && !result.approved">
+                <div class="col-12">
+                    <button mat-raised-button class="btn-green full-width" (click)="request($event)">
+                        <mat-icon *ngIf="!loading">cloud_download</mat-icon>
+                        <i *ngIf="loading" class="fa fa-spinner fa-pulse fa-2x fa-fw" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
         </div>
-        </mat-card-content>
-    </mat-card>
+    </a>
 </div>

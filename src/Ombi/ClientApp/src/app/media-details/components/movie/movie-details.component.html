@@ -28,8 +28,6 @@
                     <span *ngIf="!movie.available">
             <span *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></span>
 
-            <button *ngIf="movie.belongsToCollection" [routerLink]="'/discover/collection/' + movie.belongsToCollection.id" mat-raised-button class="btn-spacing"><i class="fa fa-list"></i> {{'MediaDetails.ViewCollection' | translate}}</button>
-
                     <ng-template #requestedBtn>
                         <button mat-raised-button *ngIf="!hasRequest || hasRequest && movieRequest && !movieRequest.denied" class="btn-spacing" color="warn" [disabled]><i class="fa fa-check"></i>
                 {{ 'Common.Requested' | translate }}</button>
@@ -64,6 +62,8 @@
                     <button mat-raised-button class="btn-spacing" color="danger" (click)="issue()">
             <i class="fa fa-exclamation"></i> {{
                 'Requests.ReportIssue' | translate }}</button>
+                <button *ngIf="movie.belongsToCollection" [routerLink]="'/discover/collection/' + movie.belongsToCollection.id" mat-raised-button class="btn-spacing"><i class="fa fa-list"></i> {{'MediaDetails.ViewCollection' | translate}}</button>
+
                 </div>
 
                 <!-- Setting/Configuration admin area -->

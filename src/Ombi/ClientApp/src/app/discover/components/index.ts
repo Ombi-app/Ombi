@@ -9,6 +9,7 @@ import { SearchService, RequestService } from "../../services";
 import { MatDialog } from "@angular/material/dialog";
 import { DiscoverGridComponent } from "./grid/discover-grid.component";
 import { DiscoverSearchResultsComponent } from "./search-results/search-results.component";
+import { CarouselListComponent } from "./carousel-list/carousel-list.component";
 
 
 export const components: any[] = [
@@ -19,6 +20,7 @@ export const components: any[] = [
     DiscoverActorComponent,
     DiscoverGridComponent,
     DiscoverSearchResultsComponent,
+    CarouselListComponent,
 ];
 
 

@@ -37,7 +37,6 @@ export class MyNavComponent implements OnInit {
   @Input() public isAdmin: string;
   @Input() public email: string;
   @Output() public logoutClick = new EventEmitter();
-  @Output() public themeChange = new EventEmitter<string>();
   public theme: string;
   public issuesEnabled: boolean = false;
   public navItems: INavBar[];
@@ -96,20 +95,6 @@ export class MyNavComponent implements OnInit {
 
   public logOut() {
     this.logoutClick.emit();
-  }
-
-  public switchTheme() {
-    if (this.theme) {
-      let newTheme = "";
-      if (this.theme === "dark") {
-        newTheme = "light";
-      } else {
-        newTheme = "dark";
-      }
-      this.store.save("theme", newTheme)
-      this.theme = newTheme;
-      this.themeChange.emit(newTheme);
-    }
   }
 
   public changeFilter(event: MatSlideToggleChange, searchFilterType: SearchFilterType) {

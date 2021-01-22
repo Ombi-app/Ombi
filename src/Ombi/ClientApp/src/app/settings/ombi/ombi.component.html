@@ -1,6 +1,6 @@
 ﻿<settings-menu></settings-menu>
 <div class="small-middle-container">
-<wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Ombi-Settings'"></wiki>
+<wiki [path]="'/settings/ombi-settings/'"></wiki>
 <fieldset *ngIf="form">
     <legend>Ombi Configuration</legend>
     <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">

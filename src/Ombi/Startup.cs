@@ -153,13 +153,6 @@ namespace Ombi
                 ombiService.SaveSettings(settings);
             }
 
-            if (!settings.Set)
-            {
-                settings.Set = true;
-                settings.CollectAnalyticData = true;
-                ombiService.SaveSettings(settings);
-            }
-
             // Check if it's in the startup args
             var appConfig = serviceProvider.GetService<IApplicationConfigRepository>();
             var baseUrl = appConfig.Get(ConfigurationTypes.BaseUrl);

@@ -5,10 +5,6 @@
     overflow:auto;
 }
 
-.sidenav {
-    width: 220px;
-}
-
 .sidenav .mat-toolbar {
     background: inherit;
 }
@@ -42,11 +38,6 @@
     height: 50px;
     line-height: 50px;
     padding: 0px 5px;
-}
-
-.active-list-item {
-    background: $accent !important;
-    color:white;
 }
 
 ::ng-deep .dark .active-list-item {
@@ -100,16 +91,9 @@
 }
 
 .profile-img img {
-    border-radius: 6px;
-    box-shadow: 4px 3px 6px 0 rgba(0,0,0,.2);
     width: 45px;
 }
 
-.outer-profile {
-    background-color: #303030;
-    box-shadow: inset 0 0 3px #000000;
-    padding: 1px;
-}
 
 .full {
     width: 100%;
@@ -119,4 +103,75 @@
     bottom: 0;
     left: 0;
     text-align: center;
+}
+// New CSS for new style //
+
+.sidenav-container .sidenav{
+    background: $ombi-background-accent;
+    color:#FFF;
+    font-family: 'Montserrat', sans-serif;
+
+    .application-name{
+        font-family: 'Montserrat', sans-serif;
+        text-transform: uppercase;
+        color: $ombi-active;
+        align-items:center;
+        justify-content: center;
+        font-weight: 700;
+        font-size:24px;
+        padding:40px 20px;
+        height:auto;
+    }
+
+    .outer-profile {
+        background: inherit;
+        box-shadow:none;
+    }
+
+    .mat-list-item{
+        color:#FFF;
+        font-family:Roboto, sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        padding:10px 20px;
+        height:auto;
+        width:20rem;
+        margin-bottom:1rem;
+    }
+    
+    .active-list-item{
+        color:$ombi-background-accent;
+        background: $ombi-active;
+        border-radius:0px 30px 30px 0px;
+        padding:10px 20px;
+        height:auto;
+        width:20rem;
+    }
+}
+
+.outer-profile .profile-img-container {
+    background: inherit;
+}
+
+.content-container{
+    background: $ombi-background-primary;
+    color:#FFF;
+
+    .top-bar-container{
+        background: $ombi-background-primary;
+        color:$ombi-background-primary-accent;
+    }
+
+}
+
+.top-search-bar{
+    margin-left: 30px;
+}
+
+::ng-deep .mat-toolbar-row, .mat-toolbar-single-row{
+    height:auto;
+}
+
+.top-search-bar{
+    height:84px;
 }

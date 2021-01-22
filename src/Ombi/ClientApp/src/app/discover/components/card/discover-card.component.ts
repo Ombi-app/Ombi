@@ -1,11 +1,12 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { IDiscoverCardResult } from "../../interfaces";
 import { RequestType } from "../../../interfaces";
-import { SearchService, SearchV2Service } from "../../../services";
+import { MessageService, RequestService, SearchV2Service } from "../../../services";
 import { MatDialog } from "@angular/material/dialog";
 import { DiscoverCardDetailsComponent } from "./discover-card-details.component";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
+import { EpisodeRequestComponent } from "../../../shared/episode-request/episode-request.component";
 
 @Component({
     selector: "discover-card",
@@ -17,8 +18,14 @@ export class DiscoverCardComponent implements OnInit {
     @Input() public result: IDiscoverCardResult;
     public RequestType = RequestType;
     public hide: boolean;
+    public fullyLoaded = false;
+    public loading: boolean;
 
-    constructor(private searchService: SearchV2Service, private v1Search: SearchService, private dialog: MatDialog) { }
+    // This data is needed to open the dialog
+    private tvSearchResult: ISearchTvResultV2;
+
+    constructor(private searchService: SearchV2Service, private dialog: MatDialog, private requestService: RequestService,
+        public messageService: MessageService) { }
 
     public ngOnInit() {
         if (this.result.type == RequestType.tvShow) {
@@ -38,16 +45,17 @@ export class DiscoverCardComponent implements OnInit {
 
     public async getExtraTvInfo() {
         if (this.result.tvMovieDb) {
-            var result = await this.searchService.getTvInfoWithMovieDbId(+this.result.id);
+            this.tvSearchResult = await this.searchService.getTvInfoWithMovieDbId(+this.result.id);
         } else {
-            var result = await this.searchService.getTvInfo(+this.result.id);
+            this.tvSearchResult = await this.searchService.getTvInfo(+this.result.id);
         }
-        if(result.status === "404") {
+        if (!this.tvSearchResult || this.tvSearchResult?.status.length > 0 && this.tvSearchResult?.status === "404") {
             this.hide = true;
             return;
         }
-        this.setTvDefaults(result);
-        this.updateTvItem(result);
+
+        this.setTvDefaults(this.tvSearchResult);
+        this.updateTvItem(this.tvSearchResult);
 
     }
 
@@ -55,10 +63,13 @@ export class DiscoverCardComponent implements OnInit {
         this.searchService.getArtistInformation(this.result.id.toString()).subscribe(x => {
             if (x.poster) {
                 this.result.posterPath = x.poster;
+                this.fullyLoaded = true;
             } else {
                 this.searchService.getReleaseGroupArt(this.result.id.toString()).subscribe(art => {
-                    if(art.image) {
+                    if (art.image) {
                         this.result.posterPath = art.image;
+
+                        this.fullyLoaded = true;
                     }
                 })
             }
@@ -68,8 +79,7 @@ export class DiscoverCardComponent implements OnInit {
     }
 
     public generateDetailsLink(): string {
-        let link = "";
-        switch(this.result.type){
+        switch (this.result.type) {
             case RequestType.movie:
                 return `/details/movie/${this.result.id}`;
             case RequestType.tvShow:
@@ -105,12 +115,36 @@ export class DiscoverCardComponent implements OnInit {
         return "";
     }
 
+    public request(event: any) {
+        event.preventDefault();
+        this.loading = true;
+        switch (this.result.type) {
+            case RequestType.tvShow:
+                const dia = this.dialog.open(EpisodeRequestComponent, { width: "700px", data: { series: this.tvSearchResult }, panelClass: 'modal-panel' });
+                dia.afterClosed().subscribe(x => this.loading = false);
+                return;
+            case RequestType.movie:
+                this.requestService.requestMovie({ theMovieDbId: +this.result.id, languageCode: null, requestOnBehalf: null }).subscribe(x => {
+                    if (x.result) {
+                        this.result.requested = true;
+                        this.messageService.send(x.message, "Ok");
+                    } else {
+                        this.messageService.send(x.errorMessage, "Ok");
+                    }
+                    this.loading = false;
+                });
+                return;
+        }
+    }
+
     private getExtraMovieInfo() {
         if (!this.result.imdbid) {
             this.searchService.getFullMovieDetails(+this.result.id)
                 .subscribe(m => {
                     this.updateMovieItem(m);
                 });
+        } else {
+            this.fullyLoaded = true;
         }
     }
 
@@ -122,6 +156,8 @@ export class DiscoverCardComponent implements OnInit {
         this.result.rating = updated.voteAverage;
         this.result.overview = updated.overview;
         this.result.imdbid = updated.imdbId;
+
+        this.fullyLoaded = true;
     }
 
 
@@ -142,6 +178,8 @@ export class DiscoverCardComponent implements OnInit {
         this.result.url = updated.imdbId;
         this.result.overview = updated.overview;
         this.result.approved = updated.approved;
+
+        this.fullyLoaded = true;
     }
 
 }
