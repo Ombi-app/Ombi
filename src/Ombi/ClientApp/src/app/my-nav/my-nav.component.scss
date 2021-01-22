@@ -167,3 +167,11 @@
 .top-search-bar{
     margin-left: 30px;
 }
+
+::ng-deep .mat-toolbar-row, .mat-toolbar-single-row{
+    height:auto;
+}
+
+.top-search-bar{
+    height:84px;
+}
