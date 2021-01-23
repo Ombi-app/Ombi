@@ -68,6 +68,8 @@ td.mat-cell {
     }
 }
 
-
+::ng-deep #main-container .mat-table {
+    background: $ombi-background-accent;
+}
 
 // General Buttons CSS
