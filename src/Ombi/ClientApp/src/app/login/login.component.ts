@@ -94,7 +94,7 @@ export class LoginComponent implements OnDestroy, OnInit {
         this.settingsService.getClientId().subscribe(x => this.clientId = x);
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
         this.images.getRandomBackground().subscribe(x => {
-            this.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%),url(" + x.url + ")");
+            this.background = this.sanitizer.bypassSecurityTrustStyle("url(" + x.url + ")");
         });
         this.timer = setInterval(() => {
             this.cycleBackground();
@@ -206,7 +206,7 @@ export class LoginComponent implements OnDestroy, OnInit {
         });
         this.images.getRandomBackground().subscribe(x => {
             this.background = this.sanitizer
-                .bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%), url(" + x.url + ")");
+                .bypassSecurityTrustStyle("url(" + x.url + ")");
         });
     }
 }

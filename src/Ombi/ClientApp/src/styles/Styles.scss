@@ -20,4 +20,37 @@
             accent: $ombi-dark-app-accent,
         )
     ), $ombi-dark-app-accent);
+
     @include angular-material-theme($theme);
+
+    .mat-table {
+        background: $ombi-background-accent;
+    }
+
+    .mat-paginator {
+        background: $ombi-background-accent;
+    }
+
+    .mat-flat-button.mat-primary, .mat-raised-button.mat-primary, .mat-fab.mat-primary, .mat-mini-fab.mat-primary{
+        background-color: $ombi-background-accent;
+    }
+
+    .mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent{
+        color: $ombi-active-text;
+    }
+
+    .mat-menu-panel{
+        background: $ombi-background-accent;
+    }
+
+    .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick{
+        color: $ombi-active;
+    }
+    
+    .mat-form-field.mat-focused .mat-form-field-label{
+        color: $ombi-active;
+    }
+    
+    .mat-input-element{
+        caret-color: $ombi-active;
+    }

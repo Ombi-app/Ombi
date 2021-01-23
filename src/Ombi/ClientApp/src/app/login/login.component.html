@@ -1,10 +1,12 @@
 ﻿<div *ngIf="background" @fadeInOut class="bg" [style.background-image]="background">
+    <div class="login-gradient-bar">
+    </div>
 </div>
 <div class="small-middle-container">
     <div *ngIf="form && customizationSettings && authenticationSettings">
 
         <mat-card class="mat-elevation-z8 top-margin login-card">
-            <img mat-card-image *ngIf="!customizationSettings.logo" src="{{baseUrl}}/images/logo.png">
+            <H1 *ngIf="!customizationSettings.logo" class="login_logo">OMBI</H1>
             <img mat-card-image *ngIf="customizationSettings.logo" [src]="customizationSettings.logo">
             <mat-card-content id="login-box" *ngIf="!authenticationSettings.enableOAuth || loginWithOmbi">
                 <form *ngIf="authenticationSettings" class="form-signin" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
