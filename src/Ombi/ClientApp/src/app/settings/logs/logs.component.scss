@@ -9,5 +9,10 @@
 }
 
 ::ng-deep .dark .code-block {
-	color:#FFF !important;
+	color:#FFF;
+}
+
+::ng-deep .code-block {
+	color:#FFF;
+	font-family: Menlo, Monaco, "Courier New", Courier, monospace;
 }
