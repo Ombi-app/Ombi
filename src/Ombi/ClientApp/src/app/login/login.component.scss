@@ -1,25 +1,21 @@
-﻿$primary-colour: #df691a;
-$primary-colour-outline: #ff761b;
-$bg-colour: #333333;
-$bg-colour-disabled: #252424;
-$form-color: #4e5d6c;
-$form-color-lighter: #637689;
-$info-colour: #5bc0de;
-$warning-colour: #f0ad4e;
-$danger-colour: #d9534f;
-$success-colour: #5cb85c;
-$placeholder-colour: #3b3b3b;
+﻿@import "~styles/variables.scss";
 
 body, html {
     height: 100% !important;
     background-repeat: no-repeat !important;
-    background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33)) !important;
 }
 
 img.center {
     display: block;
     margin: 0 auto;
     max-width: 100%;
+}
+
+.login-gradient-bar{
+    background: linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.6) 20.0%, rgba(0,0,0,0.6) 80.0%, transparent 60%),transparent;
+    height:100%;
+    width:100%;
+    position: absolute;
 }
 
 div.bg {
@@ -56,24 +52,6 @@ div.bg {
     -webkit-user-select: none;
     user-select: none;
     cursor: default;
-}
-/*
- * Card component
- */
-.card {
-    /*background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33)) !important;*/
-    background-color: $bg-colour;
-    /* just in case there no content*/
-    padding: 20px 25px 30px;
-    margin: 0 auto 25px;
-    margin-top: 50px;
-    /* shadows and rounded borders */
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    border-radius: 2px;
-    /*-moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-        -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);*/
 }
 
 .profile-img-custom {
@@ -178,32 +156,6 @@ div.bg {
     color: rgb(12, 97, 33);
 }
 
-
-// Placeholders
-
-::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-    color: $placeholder-colour;
-}
-
-:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-    color: $placeholder-colour;
-    opacity: 1;
-}
-
-::-moz-placeholder { /* Mozilla Firefox 19+ */
-    color: $placeholder-colour;
-    opacity: 1;
-}
-
-:-ms-input-placeholder { /* Internet Explorer 10-11 */
-    color: $placeholder-colour;
-}
-
-::-ms-input-placeholder { /* Microsoft Edge */
-    color: $placeholder-colour;
-}
-
-
 .full-width {
     width: 100%;
 }
@@ -217,18 +169,34 @@ div.bg {
 @media (min-width: 571px) {
     .small-middle-container{
         margin: auto;
-        width: 25%;
+        width: 35%;
         overflow: auto;
     }
-}
-
-.top-margin {
-    margin-top:10%;
 }
 
 .login-buttons {
     text-align: center;
 }
-.login-card {
-    background: #424242;
+
+::ng-deep button#sign-in{
+    color: $ombi-active-text;
+}
+
+::ng-deep .login-card .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick{
+    color: $ombi-active;
+}
+
+::ng-deep .login-card .mat-form-field.mat-focused .mat-form-field-label{
+    color: $ombi-active;
+}
+
+::ng-deep .login-card .mat-input-element{
+    caret-color: $ombi-active;
+}
+
+.small-middle-container{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    height:100vh;
 }

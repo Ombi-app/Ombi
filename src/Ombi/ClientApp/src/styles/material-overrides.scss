@@ -22,16 +22,52 @@ td.mat-cell {
 }
 
 // lighter bg
-.mat-expansion-panel,
+::ng-deep .mat-expansion-panel,
 .mat-card,
 .mat-dialog-container,
 .mat-menu-content,
 .mat-table,
 .mat-paginator {
-    background: $ombi-background-accent !important;
+    background: $ombi-background-accent;
 }
 
 // Dark bg
 .mat-sidenav-container {
     background: $ombi-background-primary;
 }
+
+//Login Screen CSS
+
+.login-card{
+    background-color: rgba(0,0,0,0.6);
+}
+
+.login-card H1.login_logo{
+    display:flex;
+    font-family: Montserrat,sans-serif;
+    text-transform: uppercase;
+    color:$ombi-active;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 10em;
+    width:100%;
+    padding:40px;
+    margin-bottom:50px;
+}
+
+.login-buttons button{
+    margin:1em;
+    &#sign-in{
+        background-color: $ombi-active;
+        color: $ombi-active-text;
+    }
+    &#sign-plex{
+        background-color: #282A2D;
+        color: #E5A00D;
+    }
+}
+
+
+
+// General Buttons CSS
