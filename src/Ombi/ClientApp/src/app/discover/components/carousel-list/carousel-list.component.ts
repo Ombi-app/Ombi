@@ -41,14 +41,49 @@ export class CarouselListComponent implements OnInit {
         private storageService: StorageService) {
         this.responsiveOptions = [
             {
-                breakpoint: '2559px',
+                breakpoint: '2800px',
+                numVisible: 11,
+                numScroll: 11
+            },
+            {
+                breakpoint: '2600px',
+                numVisible: 10,
+                numScroll: 10
+            },
+            {
+                breakpoint: '2400px',
+                numVisible: 9,
+                numScroll: 9
+            },
+            {
+                breakpoint: '2200px',
+                numVisible: 8,
+                numScroll: 8
+            },
+            {
+                breakpoint: '2000px',
                 numVisible: 7,
                 numScroll: 7
             },
             {
-                breakpoint: '1024px',
+                breakpoint: '1800px',
+                numVisible: 6,
+                numScroll: 6
+            },
+            {
+                breakpoint: '1650px',
+                numVisible: 5,
+                numScroll: 5
+            },
+            {
+                breakpoint: '1500px',
                 numVisible: 4,
                 numScroll: 4
+            },
+            {
+                breakpoint: '1250px',
+                numVisible: 3,
+                numScroll: 3
             },
             {
                 breakpoint: '768px',
@@ -56,7 +91,7 @@ export class CarouselListComponent implements OnInit {
                 numScroll: 2
             },
             {
-                breakpoint: '560px',
+                breakpoint: '480px',
                 numVisible: 1,
                 numScroll: 1
             }
