@@ -82,3 +82,15 @@
     .mat-accent.grow:hover{
         color: $ombi-active-text;
     }
+
+    .mat-dialog-container{
+        background: $ombi-background-accent;
+    }
+
+    .mat-autocomplete-panel{
+        background: $ombi-background-accent;
+    }
+
+    .mat-form-field.mat-focused .mat-form-field-ripple{
+        background-color: $ombi-active;
+    }
