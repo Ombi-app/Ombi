@@ -1,3 +1,13 @@
 .large-text {
     font: 500 40px/30px Roboto, "Helvetica Neue", sans-serif;
 }
+
+@media (min-width:571px){
+    .title-top-banner{
+    margin-left:300px;
+}}
+
+@media (max-width:571px){
+    .title-top-banner{
+    text-align:center;
+}}

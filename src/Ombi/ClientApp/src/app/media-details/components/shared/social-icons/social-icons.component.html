@@ -1,7 +1,7 @@
-<a *ngIf="homepage" class="media-icons" href="{{homepage}}" target="_blank">
+<div class="social-icons-container-inner">
+    <a *ngIf="homepage" class="media-icons" href="{{homepage}}" target="_blank">
         <i matTooltip="Homepage" class="fa fa-home fa-2x grow-social"></i>
     </a>
-
     <a *ngIf="theMoviedbId" href="https://www.themoviedb.org/movie/{{theMoviedbId}}" class="media-icons"
         target="_blank">
         <i matTooltip="The Movie DB" class="fa fa-film fa-2x grow-social"></i>
@@ -10,42 +10,18 @@
         <i matTooltip="The TV DB" class="fa fa-tv fa-2x grow-social"></i>
     </a>
 
-    <a *ngIf="hasTrailer" class="media-icons youtube" (click)="openDialog()"><i
-            matTooltip="Trailer" class="fa fa-youtube-play fa-2x grow-social"></i></a>
-
-    <a *ngIf="imdbId" class="media-icons imdb" [href]="doNotAppend ? imdbid : 'https://imdb.com/title/' + imdbId"
-        target="_blank">
+    <a *ngIf="hasTrailer" class="media-icons youtube" (click)="openDialog()">
+        <i matTooltip="Trailer" class="fa fa-youtube-play fa-2x grow-social"></i>
+    </a>
+    <a *ngIf="imdbId" class="media-icons imdb" [href]="doNotAppend ? imdbid : 'https://imdb.com/title/' + imdbId" target="_blank">
         <i matTooltip="Imdb" class="fa fa-imdb fa-2x grow-social"></i>
     </a>
-    <a *ngIf="twitter" class="media-icons"
-        [href]="doNotAppend ? twitter : 'https://twitter.com/' + twitter" target="_blank">
+    <a *ngIf="twitter" class="media-icons" [href]="doNotAppend ? twitter : 'https://twitter.com/' + twitter" target="_blank">
         <i matTooltip="Twitter" class="fa fa-twitter fa-2x grow-social"></i>
     </a>
-    <a *ngIf="facebook" class="media-icons"
-        [href]="doNotAppend ? facebook : 'https://facebook.com/' + facebook" target="_blank">
+    <a *ngIf="facebook" class="media-icons" [href]="doNotAppend ? facebook : 'https://facebook.com/' + facebook" target="_blank">
         <i matTooltip="Facebook" class="fa fa-facebook fa-2x grow-social"></i>
-    </a> <a *ngIf="instagram" class="media-icons"
-        [href]="doNotAppend ? instagram : 'https://instagram.com/' + instagram" target="_blank">
+    </a> <a *ngIf="instagram" class="media-icons" [href]="doNotAppend ? instagram : 'https://instagram.com/' + instagram" target="_blank">
         <i matTooltip="Instagram" class="fa fa-instagram fa-2x grow-social"></i>
     </a>
-
-    <span class="left-seperator" *ngIf="available">
-
-        <a *ngIf="plexUrl" href="{{plexUrl}}" mat-raised-button  target="_blank" class="btn-spacing viewon-btn plex">
-            {{'Search.ViewOnPlex' | translate}} 
-            <i
-            class="fa fa-play-circle fa-2x"></i>
-        </a>
-
-        <a *ngIf="embyUrl" href="{{embyUrl}}" mat-raised-button  target="_blank" class="btn-spacing viewon-btn emby">
-            {{'Search.ViewOnEmby' | translate}} 
-            <i
-            class="fa fa-play-circle fa-2x"></i>
-        </a>
-
-        <a *ngIf="jellyfinUrl" href="{{jellyfinUrl}}" mat-raised-button  target="_blank" class="btn-spacing viewon-btn jellyfinUrl">
-            {{'Search.ViewOnJellyfin' | translate}} 
-            <i
-            class="fa fa-play-circle fa-2x"></i>
-        </a>
-    </span>
+</div>
