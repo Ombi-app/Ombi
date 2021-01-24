@@ -1,13 +1,18 @@
 <p-skeleton  *ngIf="!fullyLoaded" width="100%" height="315px"></p-skeleton>
 
 <div *ngIf="fullyLoaded" class="ombi-card dark-card c" [style.display]="hide ? 'none' : 'block'">
-    <div class="ribbon {{getStatusClass()}} ribbon-top-right"><span>
-        {{getAvailbilityStatus()}}
-    </span></div>
+    <div class="card-top-info">
+        <div class="top-left">
+            {{RequestType[result.type] | humanize}}
+        </div>
+        <div class="{{getStatusClass()}} top-right">
+            <span>{{getAvailbilityStatus()}}</span>
+        </div>
+    </div>
     <a>
         <img [routerLink]="generateDetailsLink()" id="cardImage" src="{{result.posterPath}}" class="image"
             alt="{{result.title}}">
-            <div class="top-left">{{RequestType[result.type] | humanize}}</div>
+            
         <div class="middle">
             <div class="title">{{result.title}}</div>
             <div class="small-text ellipsis">{{result.overview}}</div>
