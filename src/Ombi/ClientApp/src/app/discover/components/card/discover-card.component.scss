@@ -63,14 +63,11 @@ small {
 .ombi-card{
   height:100%;
 }
-
-@media (min-width: 2000px) {
-    #cardImage {
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
-}
+ #cardImage {
+  height: 100%;
+  object-fit: cover;
+  display: block;
+ }
 
 
 
@@ -207,4 +204,12 @@ small {
 .top-right.requested span:before{
   display: inline-block;
   background-color: #ffd740;
+}
+
+::ng-deep a.poster-overlay{
+  color:#fff;
+}
+
+a.poster-overlay:hover{
+  text-decoration: none;
 }
