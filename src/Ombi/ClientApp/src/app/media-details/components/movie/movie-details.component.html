@@ -33,50 +33,49 @@
                             {{'Search.ViewOnJellyfin' | translate}} 
                             <i class="fa fa-play-circle fa-2x"></i>
                         </a>
+                    </span>
                         <button mat-raised-button class="btn-green btn-spacing" *ngIf="movie.available && !movie.plexUrl && !movie.embyUrl && !movie.jellyfinUrl"> {{
                             'Common.Available' | translate }}</button>
-                                    <span *ngIf="!movie.available">
-                    </span>
-                    <span *ngIf="!movie.available">
-                        <span *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></span>
-                    </span>                   
+                        <span *ngIf="!movie.available">
+                            <span *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></span>
+                            <ng-template #requestedBtn>
+                                <button mat-raised-button *ngIf="!hasRequest || hasRequest && movieRequest && !movieRequest.denied" class="btn-spacing" color="warn" [disabled]>
+                                    <i class="fa fa-check"></i>
+                                    {{ 'Common.Requested' | translate }}
+                                </button>
+                            </ng-template>
+                            <ng-template #notRequestedBtn>
+                                <button mat-raised-button class="btn-spacing" color="primary" (click)="request()">
+                                    <i *ngIf="movie.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> 
+                                    <i *ngIf="!movie.requestProcessing && !movie.processed" class="fa fa-plus"></i>
+                                    <i *ngIf="movie.processed && !movie.requestProcessing" class="fa fa-check"></i> 
+                                    {{'Common.Request' | translate }}
+                                </button>
+                            </ng-template>
+                        </span>
+                        <span *ngIf="isAdmin && hasRequest">
+                            <button *ngIf="!movie.approved" (click)="approve()" mat-raised-button class="btn-spacing" color="accent">
+                            <i class="fa fa-plus"></i> {{ 'Common.Approve' | translate }}
+                            </button>
+                            <button *ngIf="!movie.available" (click)="markAvailable()" mat-raised-button class="btn-spacing"
+                            color="accent">
+                            <i class="fa fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
+                            </button>
 
-                    <ng-template #requestedBtn>
-                        <button mat-raised-button *ngIf="!hasRequest || hasRequest && movieRequest && !movieRequest.denied" class="btn-spacing" color="warn" [disabled]><i class="fa fa-check"></i>
-                {{ 'Common.Requested' | translate }}</button>
-                    </ng-template>
-                    <ng-template #notRequestedBtn>
-                        <button mat-raised-button class="btn-spacing" color="primary" (click)="request()">
-                <i *ngIf="movie.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> <i
-                  *ngIf="!movie.requestProcessing && !movie.processed" class="fa fa-plus"></i>
-                <i *ngIf="movie.processed && !movie.requestProcessing" class="fa fa-check"></i> {{
-                'Common.Request' | translate }}</button>
-                    </ng-template>
-                    </span>
-                    <span *ngIf="isAdmin && hasRequest">
-            <button *ngIf="!movie.approved" (click)="approve()" mat-raised-button class="btn-spacing" color="accent">
-              <i class="fa fa-plus"></i> {{ 'Common.Approve' | translate }}
-            </button>
-            <button *ngIf="!movie.available" (click)="markAvailable()" mat-raised-button class="btn-spacing"
-              color="accent">
-              <i class="fa fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
-            </button>
+                            <button *ngIf="movieRequest && !movieRequest.denied && !movie.available" mat-raised-button class="btn-spacing" color="warn" (click)="deny()">
+                                <i class="fa fa-times"></i> {{'Requests.Deny' | translate }}
+                            </button>
+                            <button *ngIf="movieRequest && movieRequest.denied" [matTooltip]="movieRequest.deniedReason" mat-raised-button class="btn-spacing" color="warn">
+                                <i class="fa fa-times"></i> {{'MediaDetails.Denied' | translate }}
+                            </button>
+                        </span>
 
-            <button *ngIf="movieRequest && !movieRequest.denied && !movie.available" mat-raised-button class="btn-spacing" color="warn"
-              (click)="deny()">
-              <i class="fa fa-times"></i> {{
-                    'Requests.Deny' | translate }}</button>
-            <button *ngIf="movieRequest && movieRequest.denied" [matTooltip]="movieRequest.deniedReason"
-              mat-raised-button class="btn-spacing" color="warn">
-              <i class="fa fa-times"></i> {{
-                            'MediaDetails.Denied' | translate }}</button>
-          </span>
-
-                    <button mat-raised-button class="btn-spacing" color="danger" (click)="issue()">
-            <i class="fa fa-exclamation"></i> {{
-                'Requests.ReportIssue' | translate }}</button>
-                <button *ngIf="movie.belongsToCollection" [routerLink]="'/discover/collection/' + movie.belongsToCollection.id" mat-raised-button class="btn-spacing"><i class="fa fa-list"></i> {{'MediaDetails.ViewCollection' | translate}}</button>
-
+                        <button mat-raised-button class="btn-spacing" color="danger" (click)="issue()">
+                            <i class="fa fa-exclamation"></i> {{'Requests.ReportIssue' | translate }}
+                        </button>
+                        <button *ngIf="movie.belongsToCollection" [routerLink]="'/discover/collection/' + movie.belongsToCollection.id" mat-raised-button class="btn-spacing">
+                            <i class="fa fa-list"></i> {{'MediaDetails.ViewCollection' | translate}}
+                        </button>
                 </div>
 
                 <!-- Setting/Configuration admin area -->
@@ -149,7 +148,6 @@
                                                     </a>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </mat-expansion-panel>
@@ -170,7 +168,6 @@
                                                     </a>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </mat-expansion-panel>
@@ -191,29 +188,10 @@
                             </mat-accordion>
                         </div>
                     </div>
-
-
-
                 </div>
             </div>
-
-
-
-
         </div>
-
-
-
-
         <div class="bottom-page-gap">
         </div>
     </section>
-
-
-
-
-
-
-
-
 </div>
