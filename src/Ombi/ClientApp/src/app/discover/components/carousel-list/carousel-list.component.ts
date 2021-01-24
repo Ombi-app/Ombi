@@ -34,12 +34,42 @@ export class CarouselListComponent implements OnInit {
     get mediaTypeStorageKey() {
         return "DiscoverOptions" + this.discoverType.toString();
     };
-    private amountToLoad = 14;
+    private amountToLoad = 17;
     private currentlyLoaded = 0;
 
     constructor(private searchService: SearchV2Service,
         private storageService: StorageService) {
         this.responsiveOptions = [
+            {
+                breakpoint: '4000px',
+                numVisible: 17,
+                numScroll: 17
+            },
+            {
+                breakpoint: '3800px',
+                numVisible: 16,
+                numScroll: 16
+            },
+            {
+                breakpoint: '3600px',
+                numVisible: 15,
+                numScroll: 15
+            },
+            {
+                breakpoint: '3400px',
+                numVisible: 14,
+                numScroll: 14
+            },
+            {
+                breakpoint: '3200px',
+                numVisible: 13,
+                numScroll: 13
+            },
+            {
+                breakpoint: '3000px',
+                numVisible: 12,
+                numScroll: 12
+            },
             {
                 breakpoint: '2800px',
                 numVisible: 11,
