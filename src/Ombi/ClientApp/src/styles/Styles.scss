@@ -94,3 +94,9 @@
     .mat-form-field.mat-focused .mat-form-field-ripple{
         background-color: $ombi-active;
     }
+
+    @media (hover: none){
+        .mat-expansion-panel:not(.mat-expanded):not([aria-disabled=true]) .mat-expansion-panel-header:hover{
+            background: $ombi-background-accent;
+        }
+    }
