@@ -54,3 +54,31 @@
     .mat-input-element{
         caret-color: $ombi-active;
     }
+
+    .mat-card {
+        background: $ombi-background-accent;
+    }
+
+    .mat-expansion-panel{
+        background: $ombi-background-accent;
+    }
+
+    .mat-chip.mat-standard-chip.mat-chip-selected.mat-accent{
+        color:$ombi-active-text;
+    }
+
+    .mat-chip.mat-standard-chip.mat-chip-selected.mat-primary{
+        background-color: $ombi-background-primary;
+    }
+
+    .mat-bottom-sheet-container{
+        background: $ombi-background-accent;
+    }
+
+    .grow:hover{
+        color: $ombi-active;
+    }
+
+    .mat-accent.grow:hover{
+        color: $ombi-active-text;
+    }
