@@ -60,11 +60,11 @@ small {
     font-size: 0.8rem;
 }
 
-@media (min-width: 2000px) {
-    .ombi-card{
-      height:100%;
-    }
+.ombi-card{
+  height:100%;
+}
 
+@media (min-width: 2000px) {
     #cardImage {
         height: 100%;
         object-fit: cover;
