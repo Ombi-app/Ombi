@@ -71,18 +71,6 @@ div.bg {
 /*
  * Form styles
  */
-.profile-name-card {
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-    margin: 10px 0 0;
-    min-height: 1em;
-}
-
-.form-control {
-    color: black;
-    background-color: white !important;
-}
 
 .reauth-email {
     display: block;
@@ -164,12 +152,12 @@ div.bg {
     .small-middle-container{
         margin: auto;
         overflow: auto;
+        width:auto;
     }
 }
 @media (min-width: 571px) {
     .small-middle-container{
         margin: auto;
-        width: 35%;
         overflow: auto;
     }
 }
@@ -199,4 +187,28 @@ div.bg {
     align-items: center;
     justify-content: center;
     height:100vh;
+}
+
+.login-card.mat-card{
+    background-color: rgba(0,0,0,0.6);
+    padding:60px 40px;
+}
+
+.login-card H1.login_logo{
+    display:flex;
+    font-family: Montserrat,sans-serif;
+    text-transform: uppercase;
+    color:$ombi-active;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 10em;
+    width:100%;
+    margin-bottom:70px;
+}
+
+@media (max-width: 600px){
+    .login-card H1.login_logo{
+        font-size:20vw;
+    }
 }
