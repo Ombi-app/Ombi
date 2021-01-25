@@ -22,16 +22,36 @@ td.mat-cell {
 }
 
 // lighter bg
-.mat-expansion-panel,
+::ng-deep .mat-expansion-panel,
 .mat-card,
 .mat-dialog-container,
 .mat-menu-content,
 .mat-table,
 .mat-paginator {
-    background: $ombi-background-accent !important;
+    background: $ombi-background-accent;
 }
 
 // Dark bg
 .mat-sidenav-container {
     background: $ombi-background-primary;
 }
+
+//Login Screen CSS
+
+.login-buttons button{
+    margin:1em;
+    &#sign-in{
+        background-color: $ombi-active;
+        color: $ombi-active-text;
+    }
+    &#sign-plex{
+        background-color: #282A2D;
+        color: #E5A00D;
+    }
+}
+
+::ng-deep #main-container .mat-table {
+    background: $ombi-background-accent;
+}
+
+// General Buttons CSS

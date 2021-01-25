@@ -1,24 +1,32 @@
 <p-skeleton  *ngIf="!fullyLoaded" width="100%" height="315px"></p-skeleton>
 
 <div *ngIf="fullyLoaded" class="ombi-card dark-card c" [style.display]="hide ? 'none' : 'block'">
-    <div class="ribbon {{getStatusClass()}} ribbon-top-right"><span>
-        {{getAvailbilityStatus()}}
-    </span></div>
-    <a>
+    <div class="card-top-info">
+        <div class="top-left">
+            {{RequestType[result.type] | humanize}}
+        </div>
+        <div class="{{getStatusClass()}} top-right">
+            <span>{{getAvailbilityStatus()}}</span>
+        </div>
+    </div>
+    
         <img [routerLink]="generateDetailsLink()" id="cardImage" src="{{result.posterPath}}" class="image"
             alt="{{result.title}}">
-            <div class="top-left">{{RequestType[result.type] | humanize}}</div>
+            
         <div class="middle">
-            <div class="title">{{result.title}}</div>
-            <div class="small-text ellipsis">{{result.overview}}</div>
+            <a class="poster-overlay" [routerLink]="generateDetailsLink()">
+                <div class="summary">
+                    <div class="title">{{result.title}}</div>
+                    <div class="small-text ellipsis">{{result.overview}}</div>
+                </div>
+            </a>
             <div class="row" *ngIf="!result.available && !result.approved">
                 <div class="col-12">
-                    <button mat-raised-button class="btn-green full-width" (click)="request($event)">
+                    <button mat-raised-button class="btn-green full-width poster-request-btn" (click)="request($event)">
                         <mat-icon *ngIf="!loading">cloud_download</mat-icon>
                         <i *ngIf="loading" class="fa fa-spinner fa-pulse fa-2x fa-fw" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
         </div>
-    </a>
 </div>

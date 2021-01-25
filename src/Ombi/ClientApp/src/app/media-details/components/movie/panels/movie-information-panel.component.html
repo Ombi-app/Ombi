@@ -98,11 +98,11 @@
     </div>
 
     <hr />
-    <div *ngIf="movie.genres">
+    <div class="genre-button-container" *ngIf="movie.genres">
         <strong>{{'MediaDetails.Genres' | translate }}:</strong>
         <div>
             <mat-chip-list>
-                <mat-chip color="accent" selected *ngFor="let genre of movie.genres">
+                <mat-chip selected *ngFor="let genre of movie.genres">
                     {{genre.name}}
                 </mat-chip>
             </mat-chip-list>
@@ -110,10 +110,10 @@
     </div>
 
     <hr />
-    <div *ngIf="movie?.keywords?.keywordsValue?.length > 0">
+    <div class="keyword-button-container" *ngIf="movie?.keywords?.keywordsValue?.length > 0">
         <strong>{{'MediaDetails.Keywords' | translate }}:</strong>
         <mat-chip-list>
-            <mat-chip color="accent" selected *ngFor="let keyword of movie.keywords.keywordsValue">
+            <mat-chip selected *ngFor="let keyword of movie.keywords.keywordsValue">
                 {{keyword.name}}
             </mat-chip>
         </mat-chip-list>

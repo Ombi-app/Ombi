@@ -20,4 +20,83 @@
             accent: $ombi-dark-app-accent,
         )
     ), $ombi-dark-app-accent);
+
     @include angular-material-theme($theme);
+
+    .mat-table {
+        background: $ombi-background-accent;
+    }
+
+    .mat-paginator {
+        background: $ombi-background-accent;
+    }
+
+    .mat-flat-button.mat-primary, .mat-raised-button.mat-primary, .mat-fab.mat-primary, .mat-mini-fab.mat-primary{
+        background-color: $ombi-background-accent;
+    }
+
+    .mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent{
+        color: $ombi-active-text;
+    }
+
+    .mat-menu-panel{
+        background: $ombi-background-accent;
+    }
+
+    .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick{
+        color: $ombi-active;
+    }
+    
+    .mat-form-field.mat-focused .mat-form-field-label{
+        color: $ombi-active;
+    }
+    
+    .mat-input-element{
+        caret-color: $ombi-active;
+    }
+
+    .mat-card {
+        background: $ombi-background-accent;
+    }
+
+    .mat-expansion-panel{
+        background: $ombi-background-accent;
+    }
+
+    .mat-chip.mat-standard-chip.mat-chip-selected.mat-accent{
+        color:$ombi-active-text;
+    }
+
+    .mat-chip.mat-standard-chip.mat-chip-selected.mat-primary{
+        background-color: $ombi-background-primary;
+    }
+
+    .mat-bottom-sheet-container{
+        background: $ombi-background-accent;
+    }
+
+    .grow:hover{
+        color: $ombi-active;
+    }
+
+    .mat-accent.grow:hover{
+        color: $ombi-active-text;
+    }
+
+    .mat-dialog-container{
+        background: $ombi-background-accent;
+    }
+
+    .mat-autocomplete-panel{
+        background: $ombi-background-accent;
+    }
+
+    .mat-form-field.mat-focused .mat-form-field-ripple{
+        background-color: $ombi-active;
+    }
+
+    @media (hover: none){
+        .mat-expansion-panel:not(.mat-expanded):not([aria-disabled=true]) .mat-expansion-panel-header:hover{
+            background: $ombi-background-accent;
+        }
+    }
