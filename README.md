@@ -58,7 +58,7 @@ Here are some of the features Ombi has:
 
 # Preview
 
-![Preview](https://i.imgur.com/Bz4fz3H.jpg)
+![Preview](https://i.imgur.com/kBXIqer.png)
 
 # Installation
 

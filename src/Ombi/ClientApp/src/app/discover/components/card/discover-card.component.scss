@@ -3,7 +3,6 @@ $card-background: #2b2b2b;
 
 #cardImage {
     border-radius: 5px;
-    height: 315px;
     object-fit:cover;
 }
 
@@ -61,17 +60,14 @@ small {
     font-size: 0.8rem;
 }
 
-@media (min-width: 2000px) {
-    .ombi-card{
-      height:100%;
-    }
-
-    #cardImage {
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
+.ombi-card{
+  height:100%;
 }
+ #cardImage {
+  height: 100%;
+  object-fit: cover;
+  display: block;
+ }
 
 
 
@@ -79,79 +75,6 @@ small {
     position: relative;
     max-width: 600px;
   }
-
-  /* common */
-  .ribbon {
-    width: 100px;
-    height: 96px;
-    overflow: hidden;
-    position: absolute;
-    text-align:right;
-  }
-  
-  .ribbon span {
-    position: absolute;
-    display: none;
-    background-color: transparent;
-    color: #fff;
-    text-shadow: 0 1px 1px rgba(0,0,0,.2);
-    text-transform: uppercase;
-    text-align: right;
-    font-size: 14px;
-  }
-
-  .ribbon.available span{
-    display:block;
-  }
-
-  .ribbon.available span:before{
-    content: '';
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    -moz-border-radius: 7.5px;
-    -webkit-border-radius: 7.5px;
-    border-radius: 7.5px;
-    background-color: #1DE9B6;
-  }
-
-  .ribbon.approved span {
-    display: block;
-  }
-
-  .ribbon.approved span:before{
-    content: '';
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    -moz-border-radius: 7.5px;
-    -webkit-border-radius: 7.5px;
-    border-radius: 7.5px;
-    background-color: #ff5722;
-  }
-
-  .ribbon.requested span {
-    display: block;
-  }
-
-  .ribbon.requested span:before{
-    content: '';
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    -moz-border-radius: 7.5px;
-    -webkit-border-radius: 7.5px;
-    border-radius: 7.5px;
-    background-color: #ffd740;
-  }
-
-
-  /* top right*/
-  .ribbon-top-right {
-    top: 13px;
-    right: 0px;
-    z-index: 999999;
-  }  
 
 .ombi-card {
   padding: 5px;
@@ -202,28 +125,91 @@ small {
 .title {
     font-size: 18px;
   }
-  .top-left {
-    font-size: 14px;
-    position: absolute;
-    text-transform: uppercase;
-    top: 0px;
-    width: 100%;
-    background-color: rgba(15,23,31,0.6);
-    padding-left: 1em;
-    padding-top: 1em;
-    padding-bottom: 0.5em;font-size: 14px;
-    position: absolute;
-    text-transform: uppercase;
-      
-  }
-  .full-width {
+
+
+.full-width {
     width: 100%;
   }
 
-  .ellipsis {
+.ellipsis {
     display: -webkit-box;
     -webkit-line-clamp: 6;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.card-top-info{
+  position: absolute;
+  text-transform: uppercase;
+  top: 0px;
+  width: 100%;
+  background-color: rgba(15,23,31,0.6);
+  display:flex;
+  justify-content: space-between;
+  padding-top:0.6em;
+  padding-bottom:0.3em;
+  z-index:2;
+}
+
+.top-left {
+  font-size: 14px;
+  padding-left: 0.5em;
+  font-size: 14px; 
+} 
+
+/* common */
+.top-right span {
+  display: none;
+  background-color: transparent;
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0,0,0,.2);
+  text-align: right;
+  font-size: 14px;
+  padding-right: 1em;
+}
+
+.top-right span:before{
+  content: '';
+  width: 10px;
+  height: 10px;
+  -moz-border-radius: 7.5px;
+  -webkit-border-radius: 7.5px;
+  border-radius: 7.5px;
+  margin-right:5px;
+}
+
+.top-right.available span{
+  display:block;
+}
+
+.top-right.available span:before{
+  display: inline-block;
+  background-color: #1DE9B6;
+}
+
+.top-right.approved span {
+  display: block;
+}
+
+.top-right.approved span:before{
+  display: inline-block;
+  background-color: #ff5722;
+}
+
+.top-right.requested span {
+  display: block;
+}
+
+.top-right.requested span:before{
+  display: inline-block;
+  background-color: #ffd740;
+}
+
+::ng-deep a.poster-overlay{
+  color:#fff;
+}
+
+a.poster-overlay:hover{
+  text-decoration: none;
 }

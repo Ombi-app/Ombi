@@ -22,21 +22,21 @@ namespace Ombi.Store.Repository.Requests
         {
             return await Db.TvRequests.Where(x => x.TvDbId == tvDbId)
                 .Include(x => x.ChildRequests)
-                .ThenInclude(x => x.RequestedUser)
+                    .ThenInclude(x => x.RequestedUser)
                 .Include(x => x.ChildRequests)
-                .ThenInclude(x => x.SeasonRequests)
-                .ThenInclude(x => x.Episodes)
+                    .ThenInclude(x => x.SeasonRequests)
+                    .ThenInclude(x => x.Episodes)
                 .FirstOrDefaultAsync();
         }
 
         public TvRequests GetRequest(int tvDbId)
         {
-            return Db.TvRequests.Where(x => x.TvDbId == tvDbId)
+            return Db.TvRequests.Where(x => x.TvDbId == tvDbId).AsSplitQuery()
                 .Include(x => x.ChildRequests)
-                .ThenInclude(x => x.RequestedUser)
+                    .ThenInclude(x => x.RequestedUser)
                 .Include(x => x.ChildRequests)
-                .ThenInclude(x => x.SeasonRequests)
-                .ThenInclude(x => x.Episodes)
+                    .ThenInclude(x => x.SeasonRequests)
+                    .ThenInclude(x => x.Episodes)
                 .FirstOrDefault();
         }
 

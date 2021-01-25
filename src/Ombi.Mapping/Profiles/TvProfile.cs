@@ -47,7 +47,7 @@ namespace Ombi.Mapping.Profiles
 
 
             CreateMap<TraktShow, SearchTvShowViewModel>()
-                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => Convert.ToInt32(src.Ids.Tvdb.ToString())))
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.Ids.Tvdb.HasValue ? Convert.ToInt32(src.Ids.Tvdb.ToString()) : 0))
                 .ForMember(dest => dest.FirstAired, opts => opts.MapFrom(src => src.FirstAired.HasValue ? src.FirstAired.Value.ToString("yyyy-MM-ddTHH:mm:ss") : string.Empty))
                 .ForMember(dest => dest.ImdbId, opts => opts.MapFrom(src => src.Ids.Imdb))
                 .ForMember(dest => dest.Network, opts => opts.MapFrom(src => src.Network))
@@ -57,9 +57,9 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(dest => dest.Title, opts => opts.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Status, opts => opts.MapFrom(src => TraktEnumHelper.GetDescription(src.Status)))
                 .ForMember(dest => dest.Trailer, 
-                    opts => opts.MapFrom(src => src.Trailer.ToString().ToHttpsUrl()))
+                    opts => opts.MapFrom(src => src.Trailer != null ? src.Trailer.ToString().ToHttpsUrl() : string.Empty))
                 .ForMember(dest => dest.Homepage, 
-                    opts => opts.MapFrom(src => src.Homepage.ToString().ToHttpsUrl()));
+                    opts => opts.MapFrom(src => src.Homepage != null ? src.Homepage.ToString().ToHttpsUrl() : string.Empty));
         }
     }
 }
