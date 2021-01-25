@@ -70,25 +70,27 @@ export class CarouselListComponent implements OnInit {
             this.discoverOptions = DiscoverOption[DiscoverOption[localDiscoverOptions]];
         }
 
-        var moviePromise: Promise<void>;
-        var tvPromise: Promise<void>;
-        switch (this.discoverOptions) {
-            case DiscoverOption.Combined:
-                moviePromise = this.loadMovies();
-                tvPromise = this.loadTv();
-                break;
-            case DiscoverOption.Movie:
-                moviePromise = this.loadMovies();
-                break;
-            case DiscoverOption.Tv:
-                tvPromise = this.loadTv();
-                break;
+        while(this.discoverResults.length < 14) {
+            var moviePromise: Promise<void>;
+            var tvPromise: Promise<void>;
+            switch (this.discoverOptions) {
+                case DiscoverOption.Combined:
+                    moviePromise = this.loadMovies();
+                    tvPromise = this.loadTv();
+                    break;
+                case DiscoverOption.Movie:
+                    moviePromise = this.loadMovies();
+                    break;
+                case DiscoverOption.Tv:
+                    tvPromise = this.loadTv();
+                    break;
+            }
+
+            await moviePromise;
+            await tvPromise;
+
+            this.createInitialModel();
         }
-
-        await moviePromise;
-        await tvPromise;
-
-        this.createInitialModel();
     }
 
     public async toggleChanged(event: MatButtonToggleChange) {
