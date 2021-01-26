@@ -2,8 +2,10 @@
   <mat-spinner *ngIf="loading" [color]="'accent'"></mat-spinner>
 </div>
 <div *ngIf="!loading" mat-dialog-content class="background">
-
-  <div class="row">
+<div *ngIf="!requestable">
+  {{'MediaDetails.EpisodeSelector.NoEpisodes' | translate}}
+</div>
+  <div *ngIf="requestable" class="row">
     <div class="col-12 action-buttons-right">
       <button (click)="requestAllSeasons()" color="primary" mat-raised-button class="btn-spacing" 
       matTooltip="{{'MediaDetails.EpisodeSelector.AllSeasonsTooltip' | translate}}">{{'Search.TvShows.AllSeasons' | translate }}</button>
@@ -71,7 +73,7 @@
 
   </div>
 </div>
-<div mat-dialog-actions>
+<div mat-dialog-actions *ngIf="requestable">
   <div class="action-buttons-right">
 
     <button (click)="submitRequests()" mat-raised-button class="btn-spacing  btn-orange">{{

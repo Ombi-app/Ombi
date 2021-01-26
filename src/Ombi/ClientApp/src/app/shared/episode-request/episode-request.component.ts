@@ -17,6 +17,9 @@ export interface EpisodeRequestData {
 export class EpisodeRequestComponent implements OnInit {
 
     public loading: boolean;
+    public get requestable() {
+        return this.data?.series?.seasonRequests?.length > 0
+    }
 
     constructor(public dialogRef: MatDialogRef<EpisodeRequestComponent>, @Inject(MAT_DIALOG_DATA) public data: EpisodeRequestData,
         private requestService: RequestService, private notificationService: MessageService) { }
