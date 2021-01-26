@@ -25,27 +25,21 @@ namespace Ombi.Store.Repository
         {
             //_cache.Remove(GetName(entity.SettingsName));
 
-            using (var tran = Db.Database.BeginTransaction())
-            {
-                var settings = Db.Settings.Add(entity);
-                Db.SaveChanges();
-                tran.Commit();
-                return settings.Entity;
-            }
+            var settings = Db.Settings.Add(entity);
+            Db.SaveChanges();
+            return settings.Entity;
+
         }
 
         public async Task<GlobalSettings> InsertAsync(GlobalSettings entity)
         {
 
-            using (var tran = Db.Database.BeginTransaction())
-            {
-                //_cache.Remove(GetName(entity.SettingsName));
-                var settings = await Db.Settings.AddAsync(entity);
-                await Db.SaveChangesAsync();
-                tran.Commit();
+            //_cache.Remove(GetName(entity.SettingsName));
+            var settings = await Db.Settings.AddAsync(entity);
+            await Db.SaveChangesAsync();
 
-                return settings.Entity;
-            }
+            return settings.Entity;
+
         }
 
 
@@ -87,23 +81,15 @@ namespace Ombi.Store.Repository
         {
             //_cache.Remove(GetName(entity.SettingsName));
 
-            using (var tran = Db.Database.BeginTransaction())
-            {
-                Db.Settings.Remove(entity);
-                Db.SaveChanges();
-                tran.Commit();
-            }
+            Db.Settings.Remove(entity);
+            Db.SaveChanges();
         }
 
         public void Update(GlobalSettings entity)
         {
-            using (var tran = Db.Database.BeginTransaction())
-            {
-                Db.Update(entity);
-                //_cache.Remove(GetName(entity.SettingsName));
-                Db.SaveChanges();
-                tran.Commit();
-            }
+            Db.Update(entity);
+            //_cache.Remove(GetName(entity.SettingsName));
+            Db.SaveChanges();
         }
 
         private string GetName(string entity)
@@ -113,13 +99,8 @@ namespace Ombi.Store.Repository
 
         private async Task<int> InternalSaveChanges()
         {
-
-            using (var tran = Db.Database.BeginTransaction())
-            {
-                var r = await Db.SaveChangesAsync();
-                tran.Commit();
-                return r;
-            }
+            var r = await Db.SaveChangesAsync();
+            return r;
         }
     }
 }
