@@ -7,8 +7,26 @@
     <top-banner [background]="movie.background" [available]="movie.available" [title]="movie.title" [releaseDate]="movie.releaseDate" [tagline]="movie.tagline"></top-banner>
     <div class="social-icons-container">
 
-        <social-icons [homepage]="movie.homepage" [theMoviedbId]="movie.id" [hasTrailer]="movie.videos?.results?.length > 0" (openTrailer)="openDialog()" [imdbId]="movie.imdbId" [twitter]="movie.externalIds.twitterId" [facebook]="movie.externalIds.facebookId"
-            [instagram]="movie.externalIds.instagramId" [available]="movie.available" [plexUrl]="movie.plexUrl" [embyUrl]="movie.embyUrl" [jellyfinUrl]="movie.jellyfinUrl"></social-icons>
+        <social-icons
+            [homepage]="movie.homepage"
+            [theMoviedbId]="movie.id"
+            [hasTrailer]="movie.videos?.results?.length > 0"
+            [imdbId]="movie.imdbId"
+            [twitter]="movie.externalIds.twitterId"
+            [facebook]="movie.externalIds.facebookId"
+            [instagram]="movie.externalIds.instagramId"
+            [available]="movie.available"
+            [plexUrl]="movie.plexUrl"
+            [embyUrl]="movie.embyUrl"
+            [jellyfinUrl]="movie.jellyfinUrl"
+            [isAdmin]="isAdmin"
+            [canRequestOnBehalf]="!hasRequest && !movie.available"
+            [canShowAdvanced]="showAdvanced && movieRequest"
+            (openTrailer)="openDialog()"
+            (onRequestBehalf)="openRequestOnBehalf()"
+            (onAdvancedOptions)="openAdvancedOptions()"
+            >
+        </social-icons>
 
     </div>
     <section id="info-wrapper">
@@ -19,7 +37,7 @@
                 <media-poster [posterPath]="'https://image.tmdb.org/t/p/w300/' + movie.posterPath"></media-poster>
 
                 <!--Next to poster-->
-                <div class="col-12 col-lg-8 col-xl-8 media-row">
+                <div class="col-12 col-lg-9 col-xl-9 media-row">
                     <span *ngIf="movie.available">
                         <a *ngIf="movie.plexUrl" href="{{movie.plexUrl}}" mat-raised-button  target="_blank" class="btn-spacing viewon-btn plex">
                             {{'Search.ViewOnPlex' | translate}} 
@@ -76,23 +94,6 @@
                         <button *ngIf="movie.belongsToCollection" [routerLink]="'/discover/collection/' + movie.belongsToCollection.id" mat-raised-button class="btn-spacing">
                             <i class="fa fa-list"></i> {{'MediaDetails.ViewCollection' | translate}}
                         </button>
-                </div>
-
-                <!-- Setting/Configuration admin area -->
-                <div class="col-12 col-lg-1 col-xl-1 media-row content-end">
-                    <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="menu">
-                        <mat-icon>settings</mat-icon>
-                      </button>
-                      <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="openRequestOnBehalf()" [disabled]="hasRequest || movie.available">
-                          <mat-icon>supervised_user_circle</mat-icon>
-                          <span>{{'MediaDetails.RequestOnBehalf' | translate}}</span>
-                        </button>
-                        <button mat-menu-item [disabled]="!showAdvanced || !movieRequest" (click)="openAdvancedOptions()">
-                          <mat-icon>movie_filter</mat-icon>
-                          <span>{{'MediaDetails.RadarrConfiguration' | translate}}</span>
-                        </button>
-                      </mat-menu>
                 </div>
             </div>
 

@@ -24,4 +24,18 @@
     </a> <a *ngIf="instagram" class="media-icons" [href]="doNotAppend ? instagram : 'https://instagram.com/' + instagram" target="_blank">
         <i matTooltip="Instagram" class="fa fa-instagram fa-2x grow-social"></i>
     </a>
+    <!-- Setting/Configuration admin area -->
+    <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>settings</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="openRequestOnBehalf()" [disabled]="!canRequestOnBehalf">
+            <mat-icon>supervised_user_circle</mat-icon>
+            <span>{{'MediaDetails.RequestOnBehalf' | translate}}</span>
+        </button>
+        <button mat-menu-item [disabled]="!canShowAdvanced" (click)="openAdvancedOptions()">
+            <mat-icon>movie_filter</mat-icon>
+            <span>{{'MediaDetails.RadarrConfiguration' | translate}}</span>
+        </button>
+    </mat-menu>
 </div>

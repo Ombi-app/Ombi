@@ -7,15 +7,14 @@ import { DomSanitizer, SafeStyle } from "@angular/platform-browser";
     styleUrls: ["top-banner.component.scss"]
 })
 export class TopBannerComponent {
-    
     @Input() title: string;
     @Input() releaseDate: Date;
     @Input() tagline: string;
     @Input() available: boolean;
     @Input() background: any;
 
-    
-    constructor(private sanitizer:DomSanitizer){}    
+
+    constructor(private sanitizer:DomSanitizer){ }
 
     public getBackgroundImage(): SafeStyle {
         return this.sanitizer.bypassSecurityTrustStyle(this.background);
