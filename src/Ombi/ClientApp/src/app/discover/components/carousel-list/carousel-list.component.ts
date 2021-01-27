@@ -135,26 +135,10 @@ export class CarouselListComponent implements OnInit {
             this.discoverOptions = DiscoverOption[DiscoverOption[localDiscoverOptions]];
         }
 
-        while(this.discoverResults.length < 14) {
-            var moviePromise: Promise<void>;
-            var tvPromise: Promise<void>;
-            switch (this.discoverOptions) {
-                case DiscoverOption.Combined:
-                    moviePromise = this.loadMovies();
-                    tvPromise = this.loadTv();
-                    break;
-                case DiscoverOption.Movie:
-                    moviePromise = this.loadMovies();
-                    break;
-                case DiscoverOption.Tv:
-                    tvPromise = this.loadTv();
-                    break;
-            }
-
-            await moviePromise;
-            await tvPromise;
-
-            this.createInitialModel();
+        let currentIteration = 0;
+        while (this.discoverResults.length <= 14 && currentIteration <= 3) {
+            currentIteration++;
+            await this.loadData();
         }
     }
 
@@ -169,7 +153,7 @@ export class CarouselListComponent implements OnInit {
         if (end) {
             var moviePromise: Promise<void>;
             var tvPromise: Promise<void>;
-            switch (this.discoverOptions) {
+            switch (+this.discoverOptions) {
                 case DiscoverOption.Combined:
                     moviePromise = this.loadMovies();
                     tvPromise = this.loadTv();
@@ -188,14 +172,35 @@ export class CarouselListComponent implements OnInit {
         }
     }
 
+    private async loadData() {
+        var moviePromise: Promise<void>;
+        var tvPromise: Promise<void>;
+        switch (+this.discoverOptions) {
+            case DiscoverOption.Combined:
+                moviePromise = this.loadMovies();
+                tvPromise = this.loadTv();
+                break;
+            case DiscoverOption.Movie:
+                moviePromise = this.loadMovies();
+                break;
+            case DiscoverOption.Tv:
+                tvPromise = this.loadTv();
+                break;
+        }
+        await moviePromise;
+        await tvPromise;
+        this.createInitialModel();
+    }
+
     private async switchDiscoverMode(newMode: DiscoverOption) {
         if (this.discoverOptions === newMode) {
             return;
         }
         this.loading();
-        this.discoverOptions = newMode;
+        this.currentlyLoaded = 0;
+        this.discoverOptions = +newMode;
         this.storageService.save(this.mediaTypeStorageKey, newMode.toString());
-        await this.ngOnInit();
+        await this.loadData();
         this.finishLoading();
     }
 
@@ -237,7 +242,7 @@ export class CarouselListComponent implements OnInit {
     private createModel() {
         const tempResults = <IDiscoverCardResult[]>[];
 
-        switch (this.discoverOptions) {
+        switch (+this.discoverOptions) {
             case DiscoverOption.Combined:
                 tempResults.push(...this.mapMovieModel());
                 tempResults.push(...this.mapTvModel());
