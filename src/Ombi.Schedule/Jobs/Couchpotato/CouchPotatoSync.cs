@@ -106,7 +106,7 @@ namespace Ombi.Schedule.Jobs.Couchpotato
                             _log.LogError("TMDBId is not > 0 for movie {0}", m.title);
                         }
                     }
-                    var strat = _ctx.Database.CreateExecutionStrategy();
+                    strat = _ctx.Database.CreateExecutionStrategy();
                     await strat.ExecuteAsync(async () =>
                     {
                         using (var tran = await _ctx.Database.BeginTransactionAsync())
