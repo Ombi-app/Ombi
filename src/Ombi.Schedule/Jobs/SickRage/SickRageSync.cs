@@ -45,12 +45,16 @@ namespace Ombi.Schedule.Jobs.SickRage
                 if (shows != null)
                 {
                     var srShows = shows.data.Values;
-                    var ids = srShows.Select(x => x.tvdbid);
-                    using (var tran = await _ctx.Database.BeginTransactionAsync())
+                    var ids = srShows.Select(x => x.tvdbid); 
+                    var strat = _ctx.Database.CreateExecutionStrategy();
+                    await strat.ExecuteAsync(async () =>
                     {
-                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SickRageCache");
-                        tran.Commit();
-                    }
+                        using (var tran = await _ctx.Database.BeginTransactionAsync())
+                        {
+                            await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SickRageCache");
+                            tran.Commit();
+                        }
+                    });
 
                     var entites = ids.Select(id => new SickRageCache { TvDbId = id }).ToList();
 
@@ -77,13 +81,16 @@ namespace Ombi.Schedule.Jobs.SickRage
                         }
 
                     }
-
-                    using (var tran = await _ctx.Database.BeginTransactionAsync())
+                    strat = _ctx.Database.CreateExecutionStrategy();
+                    await strat.ExecuteAsync(async () =>
                     {
-                        await _ctx.SickRageEpisodeCache.AddRangeAsync(episodesToAdd);
-                        await _ctx.SaveChangesAsync();
-                        tran.Commit();
-                    }
+                        using (var tran = await _ctx.Database.BeginTransactionAsync())
+                        {
+                            await _ctx.SickRageEpisodeCache.AddRangeAsync(episodesToAdd);
+                            await _ctx.SaveChangesAsync();
+                            tran.Commit();
+                        }
+                    });
                 }
             }
             catch (Exception e)

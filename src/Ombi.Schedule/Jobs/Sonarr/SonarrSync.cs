@@ -48,12 +48,16 @@ namespace Ombi.Schedule.Jobs.Sonarr
                 if (series != null)
                 {
                     var sonarrSeries = series as ImmutableHashSet<SonarrSeries> ?? series.ToImmutableHashSet();
-                    var ids = sonarrSeries.Select(x => x.tvdbId);
-                    using (var tran = await _ctx.Database.BeginTransactionAsync())
+                    var ids = sonarrSeries.Select(x => x.tvdbId); 
+                    var strat = _ctx.Database.CreateExecutionStrategy();
+                    await strat.ExecuteAsync(async () =>
                     {
-                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrCache");
-                        tran.Commit();
-                    }
+                        using (var tran = await _ctx.Database.BeginTransactionAsync())
+                        {
+                            await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrCache");
+                            tran.Commit();
+                        }
+                    });
 
                     var existingSeries = await _ctx.SonarrCache.Select(x => x.TvDbId).ToListAsync();
                     
@@ -62,11 +66,15 @@ namespace Ombi.Schedule.Jobs.Sonarr
 
                     await _ctx.SonarrCache.AddRangeAsync(entites);
                     entites.Clear();
-                    using (var tran = await _ctx.Database.BeginTransactionAsync())
+                    strat = _ctx.Database.CreateExecutionStrategy();
+                    await strat.ExecuteAsync(async () =>
                     {
-                        await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrEpisodeCache");
-                        tran.Commit();
-                    }
+                        using (var tran = await _ctx.Database.BeginTransactionAsync())
+                        {
+                            await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM SonarrEpisodeCache");
+                            tran.Commit();
+                        }
+                    });
 
                     foreach (var s in sonarrSeries)
                     {
@@ -116,14 +124,17 @@ namespace Ombi.Schedule.Jobs.Sonarr
                         //    }
 
                         //}
-
-                        using (var tran = await _ctx.Database.BeginTransactionAsync())
+                        strat = _ctx.Database.CreateExecutionStrategy();
+                        await strat.ExecuteAsync(async () =>
                         {
-                            await _ctx.SonarrEpisodeCache.AddRangeAsync(episodesToAdd);
-                            _log.LogDebug("Commiting the transaction");
-                            await _ctx.SaveChangesAsync();
-                            tran.Commit();
-                        }
+                            using (var tran = await _ctx.Database.BeginTransactionAsync())
+                            {
+                                await _ctx.SonarrEpisodeCache.AddRangeAsync(episodesToAdd);
+                                _log.LogDebug("Commiting the transaction");
+                                await _ctx.SaveChangesAsync();
+                                tran.Commit();
+                            }
+                        });
                     }
 
                 }

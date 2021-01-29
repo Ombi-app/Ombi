@@ -51,12 +51,16 @@ namespace Ombi.Schedule.Jobs.Lidarr
                         var albums = await _lidarrApi.GetAllAlbums(settings.ApiKey, settings.FullUri);
                         if (albums != null && albums.Any())
                         {
-                            // Let's remove the old cached data
-                            using (var tran = await _ctx.Database.BeginTransactionAsync())
+                            var strat = _ctx.Database.CreateExecutionStrategy();
+                            await strat.ExecuteAsync(async () =>
                             {
-                                await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM LidarrAlbumCache");
-                                tran.Commit();
-                            }
+                                // Let's remove the old cached data
+                                using (var tran = await _ctx.Database.BeginTransactionAsync())
+                                {
+                                    await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM LidarrAlbumCache");
+                                    tran.Commit();
+                                }
+                            });
 
                             var albumCache = new List<LidarrAlbumCache>();
                             foreach (var a in albums)
@@ -76,14 +80,17 @@ namespace Ombi.Schedule.Jobs.Lidarr
                                     });
                                 }
                             }
-
-                            using (var tran = await _ctx.Database.BeginTransactionAsync())
+                            strat = _ctx.Database.CreateExecutionStrategy();
+                            await strat.ExecuteAsync(async () =>
                             {
-                                await _ctx.LidarrAlbumCache.AddRangeAsync(albumCache);
+                                using (var tran = await _ctx.Database.BeginTransactionAsync())
+                                {
+                                    await _ctx.LidarrAlbumCache.AddRangeAsync(albumCache);
 
-                                await _ctx.SaveChangesAsync();
-                                tran.Commit();
-                            }
+                                    await _ctx.SaveChangesAsync();
+                                    tran.Commit();
+                                }
+                            });
                         }
                     }
                     catch (System.Exception ex)
