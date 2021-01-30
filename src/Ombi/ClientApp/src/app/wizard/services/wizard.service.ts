@@ -12,7 +12,7 @@ export class WizardService extends ServiceHelpers {
         super(http, "/api/v2/wizard/", href);
     }
 
-    public async downvoteAlbum(config: IOmbiConfigModel): Promise<ICustomizationSettings> {
+    public async addOmbiConfig(config: IOmbiConfigModel): Promise<ICustomizationSettings> {
         return await this.http.post<ICustomizationSettings>(`${this.url}config`, config, {headers: this.headers}).toPromise();
     }
 }
