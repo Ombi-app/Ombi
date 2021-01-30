@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Wiki
-    url: https://github.com/tidusjar/Ombi/wiki
-    about: The Ombi wiki should help guide you through installation and setup as well as help resolve common problems and answer frequently asked questions
+  - name: Docs
+    url: https://docs.ombi.app/
+    about: The Ombi documentation should help guide you through installation and setup as well as help resolve common problems and answer frequently asked questions
   - name: Reddit support
     url: https://www.reddit.com/r/Ombi
     about: Ask questions about Ombi
