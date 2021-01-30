@@ -16,29 +16,29 @@
             <div class="col-md-1 col-md-push-9">
                 <button id="subscribeBtn" *ngIf="child.showSubscribe && !child.subscribed" (click)="subscribe(child)"
                     class="btn btn-sm btn-primary-outline" pTooltip="Subscribe for notifications" type="submit"><i
-                        class="fa fa-rss"></i> Subscribe</button>
+                        class="fas fa-rss"></i> Subscribe</button>
                 <button id="subscribeBtn" *ngIf="child.showSubscribe && child.subscribed" (click)="unSubscribe(child)"
                     class="btn btn-sm btn-danger-outline" pTooltip="UnSubscribe for notifications" type="submit"><i
-                        class="fa fa-rss"></i> UnSubscribe</button>
+                        class="fas fa-rss"></i> UnSubscribe</button>
 
 
                 <div *ngIf="isAdmin">
                     <button id="approveBtn" *ngIf="child.canApprove && !child.approved" (click)="approve(child)" class="btn btn-sm btn-success-outline"
-                        type="submit"><i class="fa fa-plus"></i> {{ 'Common.Approve' | translate }}</button>
+                        type="submit"><i class="fas fa-plus"></i> {{ 'Common.Approve' | translate }}</button>
                     <button id="unavailableBtn" *ngIf="child.available" (click)="changeAvailability(child, false)"
-                        style="text-align: right" value="false" class="btn btn-sm btn-info-outline change"><i class="fa fa-minus"></i>
+                        style="text-align: right" value="false" class="btn btn-sm btn-info-outline change"><i class="fas fa-minus"></i>
                         {{ 'Requests.MarkUnavailable' | translate }}</button>
                     <button id="availableBtn" *ngIf="!child.available" (click)="changeAvailability(child, true)" style="text-align: right"
-                        value="true" class="btn btn-sm btn-success-outline change"><i class="fa fa-plus"></i> {{
+                        value="true" class="btn btn-sm btn-success-outline change"><i class="fas fa-plus"></i> {{
                         'Requests.MarkAvailable' | translate }}</button>
 
                     <button id="denyBtn" *ngIf="!child.denied" type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny">
-                        <i class="fa fa-times"></i> {{ 'Requests.Deny' | translate }}</button>
+                        <i class="fas fa-times"></i> {{ 'Requests.Deny' | translate }}</button>
 
                 </div>
                 <div *ngIf="isAdmin || isRequestUser(child)">
                     <button id="removeBtn" type="button" (click)="removeRequest(child)" class="btn btn-sm btn-danger-outline deny"><i
-                            class="fa fa-times"></i> {{ 'Requests.Remove' | translate }}</button>
+                            class="fas fa-times"></i> {{ 'Requests.Remove' | translate }}</button>
                 </div>
 
 
@@ -91,7 +91,7 @@
                                         <td>
                                             <span *ngIf="child.denied" class="label label-danger" id="deniedLabel"
                                                 [translate]="'Common.Denied'">
-                                                <i style="color:red;" class="fa fa-check" pTooltip="{{child.deniedReason}}"></i>
+                                                <i style="color:red;" class="fas fa-check" pTooltip="{{child.deniedReason}}"></i>
                                             </span>
                                             <span *ngIf="!child.denied && ep.available" class="label label-success" id="availableLabel"
                                                 [translate]="'Common.Available'"></span>

@@ -47,15 +47,15 @@
         <div class="row" *ngIf="result.requested">
             <div class="col-md-2 col-md-push-10">
 
-                <!-- <a *ngIf="result.showSubscribe && !result.subscribed" style="color:white" (click)="subscribe(result)" pTooltip="Subscribe for notifications"> <i class="fa fa-rss"></i></a>
-            <a *ngIf="result.showSubscribe && result.subscribed" style="color:red" (click)="unSubscribe(result)" pTooltip="Unsubscribe notification"> <i class="fa fa-rss"></i></a> -->
+                <!-- <a *ngIf="result.showSubscribe && !result.subscribed" style="color:white" (click)="subscribe(result)" pTooltip="Subscribe for notifications"> <i class="fas fa-rss"></i></a>
+            <a *ngIf="result.showSubscribe && result.subscribed" style="color:red" (click)="unSubscribe(result)" pTooltip="Unsubscribe notification"> <i class="fas fa-rss"></i></a> -->
             </div>
         </div>
         <button style="text-align: right" class="btn btn-info-outline" [disabled]="searchingAlbums" (click)="viewAllAlbums()">
-            <i class="fa fa-eye"></i> View Albums</button>
+            <i class="far fa-eye"></i> View Albums</button>
 
     </div>
-    <!-- <button style="text-align: right" class="btn btn-sm btn-info-outline" (click)="similarMovies(result.id)"> <i class="fa fa-eye"></i> {{ 'Search.Similar' | translate }}</button> -->
+    <!-- <button style="text-align: right" class="btn btn-sm btn-info-outline" (click)="similarMovies(result.id)"> <i class="far fa-eye"></i> {{ 'Search.Similar' | translate }}</button> -->
 
     <br/>
 

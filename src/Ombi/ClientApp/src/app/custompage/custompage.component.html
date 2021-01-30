@@ -5,7 +5,7 @@
             <div class="form-group">
                     <label for="Ip" class="control-label">Page Title
                         
-                        <i *ngIf="form.get('title').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="Title is required"></i>
+                        <i *ngIf="form.get('title').hasError('required')" class="fas fa-exclamation-circle error-text" pTooltip="Title is required"></i>
                     </label>
 
                         <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" formControlName="title"  [ngClass]="{'form-error': form.get('title').hasError('required')}">
@@ -14,7 +14,7 @@
                 <div class="form-group">
                         <label for="Ip" class="control-label">Font Awesome Icon
                             
-                            <i *ngIf="form.get('fontAwesomeIcon').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="Font Awesome Icon is required"></i>
+                            <i *ngIf="form.get('fontAwesomeIcon').hasError('required')" class="fas fa-exclamation-circle error-text" pTooltip="Font Awesome Icon is required"></i>
                         </label>
     
                             <input type="text" class="form-control form-control-custom " id="fontAwesomeIcon" name="fontAwesomeIcon" formControlName="fontAwesomeIcon"  [ngClass]="{'form-error': form.get('fontAwesomeIcon').hasError('required')}">

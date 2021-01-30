@@ -3,14 +3,14 @@
 
 <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active">
-        <a id="movieTabButton" aria-controls="home" role="tab" data-toggle="tab" (click)="selectMovieTab()" href="#movieTab"><i class="fa fa-film"></i> {{ 'Requests.MoviesTab' | translate }}</a>
+        <a id="movieTabButton" aria-controls="home" role="tab" data-toggle="tab" (click)="selectMovieTab()" href="#movieTab"><i class="fas fa-film"></i> {{ 'Requests.MoviesTab' | translate }}</a>
     </li>
     <li role="presentation">
-        <a id="tvTabButton" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectTvTab()" href="#tvTab"><i class="fa fa-television"></i> {{ 'Requests.TvTab' | translate }}</a>
+        <a id="tvTabButton" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectTvTab()" href="#tvTab"><i class="fas fa-tv"></i> {{ 'Requests.TvTab' | translate }}</a>
 
     </li>
     <li role="presentation" *ngIf="musicEnabled">
-        <a id="albumTabButton" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectMusicTab()" href="#albumTab"><i class="fa fa-music"></i> {{ 'Requests.MusicTab' | translate }}</a>
+        <a id="albumTabButton" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectMusicTab()" href="#albumTab"><i class="fas fa-music"></i> {{ 'Requests.MusicTab' | translate }}</a>
 
     </li>
 </ul>

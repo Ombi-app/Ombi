@@ -5,7 +5,7 @@
         <div class="btn-group" role="group">
             <a href="#" class="btn btn-sm btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 {{ 'Search.Suggestions' | translate }}
-                <i class="fa fa-chevron-down"></i>
+                <i class="fa-list fa-chevron-down"></i>
             </a>
             <ul class="dropdown-menu">
                 <li><a (click)="popularMovies()" [translate]="'Search.Movies.PopularMovies'"></a></li>
@@ -15,7 +15,7 @@
             </ul>
             <button class="btn btn-sm btn-primary-outline" (click)="refineOpen()">
                 {{ 'Search.Refine' | translate }}
-                <i class="fa" [ngClass]="{'fa-chevron-down': !refineSearchEnabled, 'fa-chevron-up': refineSearchEnabled}"></i>
+                <i class="fas" [ngClass]="{'fa-chevron-down': !refineSearchEnabled, 'fa-chevron-up': refineSearchEnabled}"></i>
             </button>
         </div>
     </ng-template>
@@ -28,7 +28,7 @@
             <div class="search-button-container-inline">
                 <ng-template [ngTemplateOutlet]="FilterRef"></ng-template>
             </div>
-            <i class="fa fa-search"></i>
+            <i class="fas fa-search"></i>
         </div>
     </div>
 
@@ -77,7 +77,7 @@
     <!-- Movie content -->
     <div id="movieList">
         <div *ngIf="searchApplied && movieResults?.length <= 0" class='no-search-results'>
-            <i class='fa fa-film no-search-results-icon'></i>
+            <i class='fas fa-film no-search-results-icon'></i>
             <div class='no-search-results-text' [translate]="'Search.NoResults'"></div>
         </div>
 
@@ -132,50 +132,50 @@
 
                 <div class="col-sm-2 small-padding">
                     <div *ngIf="result.available">
-                        <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i>
+                        <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fas fa-check"></i>
                             {{ 'Common.Available' | translate }}</button>
                     </div>
                     <div *ngIf="!result.available">
                         <div *ngIf="result.requested || result.approved; then requestedBtn else notRequestedBtn"></div>
                         <ng-template #requestedBtn>
                             <button style="text-align: right" class="btn btn-primary-outline disabled" [disabled]><i
-                                    class="fa fa-check"></i> {{ 'Common.Requested' | translate }}</button>
+                                    class="fas fa-check"></i> {{ 'Common.Requested' | translate }}</button>
                         </ng-template>
                         <ng-template #notRequestedBtn>
                             <button id="{{result.id}}" style="text-align: right" class="btn btn-primary-outline"
                                 (click)="request(result)">
-                                <i *ngIf="result.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> <i
-                                    *ngIf="!result.requestProcessing && !result.processed" class="fa fa-plus"></i>
-                                <i *ngIf="result.processed && !result.requestProcessing" class="fa fa-check"></i> {{
+                                <i *ngIf="result.requestProcessing" class="fas fa-circle-notch fa-spin fa-fw"></i> <i
+                                    *ngIf="!result.requestProcessing && !result.processed" class="fas fa-plus"></i>
+                                <i *ngIf="result.processed && !result.requestProcessing" class="fas fa-check"></i> {{
                                 'Common.Request' | translate }}</button>
                         </ng-template>
                     </div>
                     <div *ngIf="result.requested">
                         <a *ngIf="result.showSubscribe && !result.subscribed" style="text-align: right" class="btn btn btn-success-outline"
                             (click)="subscribe(result)" pTooltip="Subscribe for notifications when this movie becomes available">
-                            <i class="fa fa-rss"></i> Subscribe</a>
+                            <i class="fas fa-rss"></i> Subscribe</a>
                         <a *ngIf="result.showSubscribe && result.subscribed" style="text-align: right;" class="btn btn btn-warning-outline"
                             (click)="unSubscribe(result)" pTooltip="Unsubscribe notifications when this movie becomes available">
-                            <i class="fa fa-rss"></i> Unsubscribe</a>
+                            <i class="fas fa-rss"></i> Unsubscribe</a>
                     </div>
                     <button style="text-align: right" class="btn btn-sm btn-info-outline" (click)="similarMovies(result.id)">
-                        <i class="fa fa-eye"></i> {{ 'Search.Similar' | translate }}</button>
+                        <i class="far fa-eye"></i> {{ 'Search.Similar' | translate }}</button>
 
                     <br />
                     <div *ngIf="result.available">
                         <a *ngIf="result.plexUrl" style="text-align: right" class="btn btn-sm btn-success-outline" href="{{result.plexUrl}}"
-                            target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnPlex' | translate}}</a>
+                            target="_blank"><i class="far fa-eye"></i> {{'Search.ViewOnPlex' | translate}}</a>
                         <a *ngIf="result.embyUrl" style="text-align: right" id="embybtn" class="btn btn-sm btn-success-outline"
-                            href="{{result.embyUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
+                            href="{{result.embyUrl}}" target="_blank"><i class="far fa-eye"></i> {{'Search.ViewOnEmby' |
                             translate}}</a>
                         <a *ngIf="result.jellyfinUrl" style="text-align: right" id="jellyfinbtn" class="btn btn-sm btn-success-outline"
-                            href="{{result.jellyfinUrl}}" target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnJellyfin' |
+                            href="{{result.jellyfinUrl}}" target="_blank"><i class="far fa-eye"></i> {{'Search.ViewOnJellyfin' |
                             translate}}</a>
                     </div>
                     <div class="dropdown" *ngIf="result.available && issueCategories && issuesEnabled">
                         <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="true">
-                            <i class="fa fa-plus"></i> {{'Requests.ReportIssue' | translate}}
+                            <i class="fas fa-plus"></i> {{'Requests.ReportIssue' | translate}}
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">

@@ -23,12 +23,12 @@
                 <div class="col-12 col-lg-6 col-xl-6 media-row">
 
                     <button mat-raised-button *ngIf="selectedAlbums.length === 0" class="btn-spacing" color="primary" (click)="requestAllAlbums()">
-            <i class="fa fa-plus"></i> {{ 'MediaDetails.RequestAllAlbums' | translate }}</button>
+            <i class="fas fa-plus"></i> {{ 'MediaDetails.RequestAllAlbums' | translate }}</button>
                     <button mat-raised-button *ngIf="selectedAlbums.length > 0" class="btn-spacing" color="primary" (click)="requestAllAlbums()">
-              <i class="fa fa-plus"></i> {{ 'MediaDetails.RequestSelectedAlbums' | translate }}</button>
+              <i class="fas fa-plus"></i> {{ 'MediaDetails.RequestSelectedAlbums' | translate }}</button>
 
                     <button mat-raised-button *ngIf="selectedAlbums.length > 0" class="btn-spacing" color="accent" (click)="clearSelection()">
-                <i class="fa fa-minus"></i> {{ 'MediaDetails.ClearSelection' | translate }}</button>
+                <i class="fas fa-minus"></i> {{ 'MediaDetails.ClearSelection' | translate }}</button>
 
 
 
@@ -39,39 +39,39 @@
 
             <ng-template #requestedBtn>
               <button mat-raised-button *ngIf="!hasRequest || hasRequest && movieRequest && !movieRequest.denied"
-                class="btn-spacing" color="warn" [disabled]><i class="fa fa-check"></i>
+                class="btn-spacing" color="warn" [disabled]><i class="fas fa-check"></i>
                 {{ 'Common.Requested' | translate }}</button>
             </ng-template>
             <ng-template #notRequestedBtn>
               <button mat-raised-button class="btn-spacing" color="primary" (click)="request()">
-                <i *ngIf="movie.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> <i
-                  *ngIf="!movie.requestProcessing && !movie.processed" class="fa fa-plus"></i>
-                <i *ngIf="movie.processed && !movie.requestProcessing" class="fa fa-check"></i> {{
+                <i *ngIf="movie.requestProcessing" class="fas fa-circle-notch fa-spin fa-fw"></i> <i
+                  *ngIf="!movie.requestProcessing && !movie.processed" class="fas fa-plus"></i>
+                <i *ngIf="movie.processed && !movie.requestProcessing" class="fas fa-check"></i> {{
                 'Common.Request' | translate }}</button>
             </ng-template>
           </span> -->
                     <!-- <span *ngIf="isAdmin && hasRequest">
             <button (click)="approve()" mat-raised-button class="btn-spacing" color="accent">
-              <i class="fa fa-plus"></i> {{ 'Common.Approve' | translate }}
+              <i class="fas fa-plus"></i> {{ 'Common.Approve' | translate }}
             </button>
             <button *ngIf="!movie.available" (click)="markAvailable()" mat-raised-button class="btn-spacing"
               color="accent">
-              <i class="fa fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
+              <i class="fas fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
             </button>
 
             <button *ngIf="movieRequest && !movieRequest.denied" mat-raised-button class="btn-spacing" color="warn"
               (click)="deny()">
-              <i class="fa fa-times"></i> {{
+              <i class="fas fa-times"></i> {{
                     'Requests.Deny' | translate }}</button>
             <button *ngIf="movieRequest && movieRequest.denied" [matTooltip]="movieRequest.deniedReason"
               mat-raised-button class="btn-spacing" color="warn">
-              <i class="fa fa-times"></i> {{
+              <i class="fas fa-times"></i> {{
                             'MediaDetails.Denied' | translate }}</button>
           </span> -->
 
                     <!-- <button *ngIf="(hasRequest && movieRequest) || movie.available" mat-raised-button class="btn-spacing"
             color="danger" (click)="issue()">
-            <i class="fa fa-exclamation"></i> {{
+            <i class="fas fa-exclamation"></i> {{
                 'Requests.ReportIssue' | translate }}</button> -->
 
 

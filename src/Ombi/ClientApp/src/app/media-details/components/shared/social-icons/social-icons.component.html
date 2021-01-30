@@ -1,32 +1,32 @@
 <div class="social-icons-container-inner">
     <a *ngIf="homepage" class="media-icons" href="{{homepage}}" target="_blank">
-        <i matTooltip="Homepage" class="fa fa-home fa-2x grow-social"></i>
+        <i matTooltip="Homepage" class="sfa-home fa-2x grow-social"></i>
     </a>
     <a *ngIf="theMoviedbId" href="https://www.themoviedb.org/movie/{{theMoviedbId}}" class="media-icons"
         target="_blank">
-        <i matTooltip="The Movie DB" class="fa fa-film fa-2x grow-social"></i>
+        <i matTooltip="The Movie DB" class="fas fa-film fa-2x grow-social"></i>
     </a>
     <a *ngIf="tvdbId" href="https://www.thetvdb.com/?id={{tvdbId}}&tab=series" class="media-icons" target="_blank">
-        <i matTooltip="The TV DB" class="fa fa-tv fa-2x grow-social"></i>
+        <i matTooltip="The TV DB" class="fas fa-tv fa-2x grow-social"></i>
     </a>
 
     <a *ngIf="hasTrailer" class="media-icons youtube" (click)="openDialog()">
-        <i matTooltip="Trailer" class="fa fa-youtube-play fa-2x grow-social"></i>
+        <i matTooltip="Trailer" class="fab fa-youtube fa-2x grow-social"></i>
     </a>
     <a *ngIf="imdbId" class="media-icons imdb" [href]="doNotAppend ? imdbid : 'https://imdb.com/title/' + imdbId" target="_blank">
-        <i matTooltip="Imdb" class="fa fa-imdb fa-2x grow-social"></i>
+        <i matTooltip="Imdb" class="fab fa-imdb fa-2x grow-social"></i>
     </a>
     <a *ngIf="twitter" class="media-icons" [href]="doNotAppend ? twitter : 'https://twitter.com/' + twitter" target="_blank">
-        <i matTooltip="Twitter" class="fa fa-twitter fa-2x grow-social"></i>
+        <i matTooltip="Twitter" class="fab fa-twitter fa-2x grow-social"></i>
     </a>
     <a *ngIf="facebook" class="media-icons" [href]="doNotAppend ? facebook : 'https://facebook.com/' + facebook" target="_blank">
-        <i matTooltip="Facebook" class="fa fa-facebook fa-2x grow-social"></i>
+        <i matTooltip="Facebook" class="fab fa-facebook fa-2x grow-social"></i>
     </a> <a *ngIf="instagram" class="media-icons" [href]="doNotAppend ? instagram : 'https://instagram.com/' + instagram" target="_blank">
-        <i matTooltip="Instagram" class="fa fa-instagram fa-2x grow-social"></i>
+        <i matTooltip="Instagram" class="fab fa-instagram fa-2x grow-social"></i>
     </a>
     <!-- Setting/Configuration admin area -->
     <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="menu">
-        <mat-icon>settings</mat-icon>
+        <i class="fas fa-cog fa-2x "></i>
     </button>
     <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="openRequestOnBehalf()" [disabled]="!canRequestOnBehalf">
