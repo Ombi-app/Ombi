@@ -17,6 +17,7 @@ import { JellyfinService } from "../services";
 import { PlexService } from "../services";
 import { IdentityService } from "../services";
 import { PlexOAuthService } from "../services";
+import { WizardService } from "./services/wizard.service";
 
 import { SharedModule } from "../shared/shared.module";
 
@@ -54,6 +55,7 @@ const routes: Routes = [
         EmbyService,
         JellyfinService,
         PlexOAuthService,
+        WizardService,
     ],
 
 })

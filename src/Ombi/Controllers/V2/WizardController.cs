@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.DependencyInjection;
 using Ombi.Attributes;
 using Ombi.Core.Settings;
+using Ombi.Helpers;
+using Ombi.Models.V2;
 using Ombi.Settings.Settings.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Ombi.Controllers.V2
@@ -16,20 +13,42 @@ namespace Ombi.Controllers.V2
     [AllowAnonymous]
     public class WizardController : V2Controller
     {
+        private ISettingsService<CustomizationSettings> _customizationSettings { get; }
 
-        private ISettingsService<OmbiSettings> _ombiSettings { get; }
-        
-
-        [HttpGet]
-        public IActionResult Ok()
+        public WizardController(ISettingsService<CustomizationSettings> customizationSettings)
         {
-            return Ok();
+            _customizationSettings = customizationSettings;
         }
 
+        [HttpPost("config")]
+        [ApiExplorerSettings(IgnoreApi =true)]
+        public async Task<IActionResult> OmbiConfig([FromBody] OmbiConfigModel config)
+        {
+            if (config == null)
+            {
+                return BadRequest();
+            }
 
+            var settings = await _customizationSettings.GetSettingsAsync();
 
+            if (config.ApplicationName.HasValue())
+            {
+                settings.ApplicationName = config.ApplicationName;
+            }
 
+            if(config.ApplicationUrl.HasValue())
+            {
+                settings.ApplicationUrl = config.ApplicationUrl;
+            }
+
+            if(config.Logo.HasValue())
+            {
+                settings.Logo = config.Logo;
+            }
+
+            await _customizationSettings.SaveSettingsAsync(settings);
+
+            return new OkObjectResult(settings);
+        }
     }
-
-
 }
