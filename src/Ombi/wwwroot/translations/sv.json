@@ -116,7 +116,7 @@
             "LatestSeason": "Senaste säsongen",
             "Select": "Välj...",
             "SubmitRequest": "Skicka begäran",
-            "Season": "Säsong: {{seasonNumber}}",
+            "Season": "Säsong {{seasonNumber}}",
             "SelectAllInSeason": "Välj alla avsnitt i säsong {{seasonNumber}}"
         }
     },
@@ -146,7 +146,7 @@
         "Remove": "Ta bort",
         "Deny": "Neka",
         "DenyReason": "Anledning för nekande",
-        "Season": "Säsong:",
+        "Season": "Säsong",
         "GridTitle": "Titel",
         "AirDate": "Releasedatum",
         "GridStatus": "Status",

@@ -116,7 +116,7 @@
             "LatestSeason": "Последен сезон",
             "Select": "Изберете...",
             "SubmitRequest": "Подаване на заявка",
-            "Season": "Сезон: {{seasonNumber}}",
+            "Season": "Сезон {{seasonNumber}}",
             "SelectAllInSeason": "Избиране на всичко в сезона {{seasonNumber}}"
         }
     },
@@ -146,7 +146,7 @@
         "Remove": "Премахване",
         "Deny": "Отказване",
         "DenyReason": "Deny Reason",
-        "Season": "Сезон:",
+        "Season": "Сезон",
         "GridTitle": "Заглавие",
         "AirDate": "Дата на излъчване",
         "GridStatus": "Състояние",

@@ -19,6 +19,7 @@ import { ArtistReleasePanel } from "./artist/panels/artist-release-panel/artist-
 import { IssuesPanelComponent } from "./shared/issues-panel/issues-panel.component";
 import { TvAdvancedOptionsComponent } from "./tv/panels/tv-advanced-options/tv-advanced-options.component";
 import { RequestBehalfComponent } from "./shared/request-behalf/request-behalf.component";
+import { TvRequestGridComponent } from "./tv/panels/tv-request-grid/tv-request-grid.component";
 
 export const components: any[] = [
     MovieDetailsComponent,
@@ -40,6 +41,7 @@ export const components: any[] = [
     ArtistReleasePanel,
     RequestBehalfComponent,
     IssuesPanelComponent,
+    TvRequestGridComponent,
 ];
 
 export const entryComponents: any[] = [

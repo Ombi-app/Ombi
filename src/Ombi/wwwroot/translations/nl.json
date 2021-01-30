@@ -116,7 +116,7 @@
             "LatestSeason": "Laatste Seizoen",
             "Select": "Selecteer...",
             "SubmitRequest": "Verzoek Indienen",
-            "Season": "Seizoen: {{seasonNumber}}",
+            "Season": "Seizoen {{seasonNumber}}",
             "SelectAllInSeason": "Selecteer Alles in het Seizoen {{seasonNumber}}"
         }
     },
@@ -146,7 +146,7 @@
         "Remove": "Verwijderen",
         "Deny": "Weigeren",
         "DenyReason": "Reden van afwijzing",
-        "Season": "Seizoen:",
+        "Season": "Seizoen",
         "GridTitle": "Titel",
         "AirDate": "Uitzenddatum",
         "GridStatus": "Status",

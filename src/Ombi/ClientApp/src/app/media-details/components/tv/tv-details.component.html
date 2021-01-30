@@ -36,9 +36,9 @@
 
                         <div class="col-12 col-lg-5 col-xl-5 media-row">
 
-                            <button *ngIf="!tv.fullyAvailable" mat-raised-button class="btn-spacing" color="primary"
+                            <!-- <button *ngIf="!tv.fullyAvailable" mat-raised-button class="btn-spacing" color="primary"
                                 (click)="request()"><i class="fa fa-plus"></i>
-                                {{ 'Common.Request' | translate }}</button>
+                                {{ 'Common.Request' | translate }}</button> -->
 
                             <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent"
                                 [disabled]>
@@ -106,10 +106,17 @@
 
                             <!--Just some space yo-->
 
-
                         </div>
 
+                        <div class="col-12 col-md-10">
+                            <tv-request-grid [tvRequest]="tvRequest" [isAdmin]="isAdmin" [tv]="tv"></tv-request-grid>
+                        </div>
 
+                        <div class="col-12 col-md-2">
+
+                            <!--Just some space yo-->
+
+                        </div>
                         <div class="col-12 col-md-10">
                             <div class="issuesPanel">
                                 <issues-panel [providerId]="tv.theTvDbId" [isAdmin]="isAdmin"></issues-panel>

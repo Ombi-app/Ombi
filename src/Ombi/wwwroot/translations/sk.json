@@ -116,7 +116,7 @@
             "LatestSeason": "Posledná séria",
             "Select": "Vybrať ...",
             "SubmitRequest": "Poslať žiadosť",
-            "Season": "Séria: {{seasonNumber}}",
+            "Season": "Séria {{seasonNumber}}",
             "SelectAllInSeason": "Vybrať všetko v danej sérii {{seasonNumber}}"
         }
     },
@@ -146,7 +146,7 @@
         "Remove": "Odstrániť",
         "Deny": "Odmietnuť",
         "DenyReason": "Deny Reason",
-        "Season": "Séria:",
+        "Season": "Séria",
         "GridTitle": "Názov",
         "AirDate": "Dátum vysielania",
         "GridStatus": "Stav",

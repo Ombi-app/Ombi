@@ -116,7 +116,7 @@
             "LatestSeason": "Última temporada",
             "Select": "Selecciona...",
             "SubmitRequest": "Enviar solicitud",
-            "Season": "Temporada: {{seasonNumber}}",
+            "Season": "Temporada {{seasonNumber}}",
             "SelectAllInSeason": "Seleccionar todo en temporada {{seasonNumber}}"
         }
     },
@@ -146,7 +146,7 @@
         "Remove": "Eliminar",
         "Deny": "Denegar",
         "DenyReason": "Razón Denegada",
-        "Season": "Temporada:",
+        "Season": "Temporada",
         "GridTitle": "Título",
         "AirDate": "Fecha de estreno",
         "GridStatus": "Estado",

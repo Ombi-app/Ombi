@@ -116,7 +116,7 @@
             "LatestSeason": "Seneste sæson",
             "Select": "Vælg ...",
             "SubmitRequest": "Send anmodning",
-            "Season": "Sæson: {{seasonNumber}}",
+            "Season": "Sæson {{seasonNumber}}",
             "SelectAllInSeason": "Vælg alle i sæson {{seasonNumber}}"
         }
     },
@@ -146,7 +146,7 @@
         "Remove": "Fjern",
         "Deny": "Afvis",
         "DenyReason": "Deny Reason",
-        "Season": "Sæson:",
+        "Season": "Sæson",
         "GridTitle": "Titel",
         "AirDate": "Sendt",
         "GridStatus": "Status",

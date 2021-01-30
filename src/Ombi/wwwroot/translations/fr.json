@@ -116,7 +116,7 @@
             "LatestSeason": "Dernière saison",
             "Select": "Sélectionner...",
             "SubmitRequest": "Envoyer la demande",
-            "Season": "Saison: {{seasonNumber}}",
+            "Season": "Saison {{seasonNumber}}",
             "SelectAllInSeason": "Tout sélectionner dans la saison {{seasonNumber}}"
         }
     },
@@ -146,7 +146,7 @@
         "Remove": "Supprimer",
         "Deny": "Refuser",
         "DenyReason": "Raison de refus",
-        "Season": "Saison :",
+        "Season": "Saison",
         "GridTitle": "Titre",
         "AirDate": "Date de diffusion",
         "GridStatus": "Statut",

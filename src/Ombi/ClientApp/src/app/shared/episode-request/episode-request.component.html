@@ -1,7 +1,4 @@
-<div class="spinner-container">
-  <mat-spinner *ngIf="loading" [color]="'accent'"></mat-spinner>
-</div>
-<div *ngIf="!loading" mat-dialog-content class="background">
+<div mat-dialog-content class="background">
 <div *ngIf="!requestable">
   {{'MediaDetails.EpisodeSelector.NoEpisodes' | translate}}
 </div>
@@ -22,9 +19,9 @@
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
-            <mat-checkbox *ngIf="!season.seasonAvailable" (click)="$event.stopPropagation();" (change)="seasonChanged($event, season)">
+            <mat-checkbox *ngIf="!season.seasonAvailable && isSeasonCheckable(season)" (click)="$event.stopPropagation();" (change)="seasonChanged($event, season)">
               Season {{season.seasonNumber}}</mat-checkbox>
-            <span *ngIf="season.seasonAvailable">Season {{season.seasonNumber}}</span>
+            <span *ngIf="season.seasonAvailable || !isSeasonCheckable(season)">Season {{season.seasonNumber}}</span>
           </mat-panel-title>
           <mat-panel-description>
             <!-- Description -->
@@ -51,14 +48,7 @@
             {{ep.airDateDisplay }}
           </div>
           <div class="col-3">
-            <ng-template [ngIf]="ep.available"><span class="label label-success" id="availableLabel">{{'Common.Available' | translate}}</span></ng-template>
-            <ng-template [ngIf]="ep.requested && ep.approved && !ep.available "><span class="label label-info" id="processingRequestLabel">{{'Common.ProcessingRequest' | translate}}</span></ng-template>
-            <ng-template [ngIf]="ep.selected"><span class="label label-info" id="selectedLabel">Selected</span></ng-template>
-            <ng-template [ngIf]="ep.requested && !ep.approved && !ep.available && !ep.selected"><span class="label label-warning"
-                id="pendingApprovalLabel">{{'Common.PendingApproval' | translate}}</span>
-            </ng-template>
-            <ng-template [ngIf]="!ep.requested && !ep.available && !ep.approved && !ep.selected"><span class="label label-danger"
-                id="notRequetsedLabel">Not Requested</span></ng-template>
+            {{ep.requestStatus | translate}}
           </div>
 
         </div>

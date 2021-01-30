@@ -116,7 +116,7 @@
             "LatestSeason": "aktuellste Staffel",
             "Select": "Wähle...",
             "SubmitRequest": "Anfrage einreichen",
-            "Season": "Staffel: {{seasonNumber}}",
+            "Season": "Staffel {{seasonNumber}}",
             "SelectAllInSeason": "Markiere alles in Staffel {{seasonNumber}}"
         }
     },
@@ -146,7 +146,7 @@
         "Remove": "Entfernen",
         "Deny": "Ablehnen",
         "DenyReason": "Ablehnungsgrund",
-        "Season": "Staffel:",
+        "Season": "Staffel",
         "GridTitle": "Titel",
         "AirDate": "Erstausstrahlung",
         "GridStatus": "Status",

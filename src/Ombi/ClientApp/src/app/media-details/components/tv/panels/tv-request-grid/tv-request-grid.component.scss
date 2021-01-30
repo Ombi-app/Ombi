@@ -1,0 +1,44 @@
+.floating-fab {
+    position: fixed;
+    right: 3%;
+    bottom: 6%;
+    z-index: 10;
+}
+
+
+.top-right span:before{
+    content: '';
+    width: 10px;
+    height: 10px;
+    -moz-border-radius: 7.5px;
+    -webkit-border-radius: 7.5px;
+    border-radius: 7.5px;
+    margin-right:5px;
+  }
+  
+  .top-right.available span{
+    display:block;
+  }
+  
+  .top-right.available span:before{
+    display: inline-block;
+    background-color: #1DE9B6;
+  }
+  
+  .top-right.approved span {
+    display: block;
+  }
+  
+  .top-right.approved span:before{
+    display: inline-block;
+    background-color: #ff5722;
+  }
+  
+  .top-right.requested span {
+    display: block;
+  }
+  
+  .top-right.requested span:before{
+    display: inline-block;
+    background-color: #ffd740;
+  }

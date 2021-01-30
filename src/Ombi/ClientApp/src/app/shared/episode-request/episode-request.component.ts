@@ -14,9 +14,8 @@ export interface EpisodeRequestData {
     selector: "episode-request",
     templateUrl: "episode-request.component.html",
 })
-export class EpisodeRequestComponent implements OnInit {
+export class EpisodeRequestComponent {
 
-    public loading: boolean;
     public get requestable() {
         return this.data?.series?.seasonRequests?.length > 0
     }
@@ -24,11 +23,6 @@ export class EpisodeRequestComponent implements OnInit {
     constructor(public dialogRef: MatDialogRef<EpisodeRequestComponent>, @Inject(MAT_DIALOG_DATA) public data: EpisodeRequestData,
         private requestService: RequestService, private notificationService: MessageService) { }
 
-    public ngOnInit() {
-        this.loading = true;
-
-        this.loading = false;
-    }
 
     public async submitRequests() {
         // Make sure something has been selected
@@ -98,6 +92,13 @@ export class EpisodeRequestComponent implements OnInit {
             }
         });
     }
+
+    public isSeasonCheckable(season: INewSeasonRequests) {
+        const seasonAvailable = season.episodes.every((ep) => {
+          return ep.available || ep.requested || ep.approved;
+        });
+        return !seasonAvailable;
+      }
 
     public async requestAllSeasons() {
         this.data.series.requestAll = true;
