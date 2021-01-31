@@ -100,3 +100,35 @@
             background: $ombi-background-accent;
         }
     }
+
+    .mat-tooltip{
+        background: $ombi-background-accent;
+    } 
+
+    //Wizard CSS
+    .mat-stepper-horizontal, .mat-stepper-vertical{
+        background: $ombi-background-accent;
+    }
+
+    .wizard-background{
+        background-color: $ombi-background-primary;
+        width:100%;
+        height:100vh;
+        display:flex;
+        align-items:center;
+        justify-content: center;
+    }
+
+    .wizard-inner{
+        color:#FFF;
+        min-height: 450px;
+    }
+
+    .wizard-inner .mat-stepper-horizontal {
+        min-height: 450px;
+    }
+
+    .mat-step-header .mat-step-icon{
+        background-color:$ombi-active;
+        color: $ombi-active-text;
+    }

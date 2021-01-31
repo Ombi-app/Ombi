@@ -1,0 +1,47 @@
+@import "~styles/variables.scss";
+.welcome-container{
+    display:flex;
+    height:100%;
+    width:100%;
+}
+
+.welcome-container .logo{
+    display:flex;
+    font-family: Montserrat,sans-serif;
+    text-transform: uppercase;
+    color: #62d2fa;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 5em;
+    padding: 40px 20px;
+    min-height: 300px;
+}
+
+.welcome-container .left-container{
+    width:20%;
+    //border: 1px solid $ombi-background-primary;
+}
+
+.welcome-container .right-container{
+    width:70%;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.welcome-buttons{
+    float:right;
+}
+
+.fab {
+    font-family: 'Font Awesome 5 Brands';
+    font-size: 28px !important;
+    padding: 5px;
+    margin-bottom: 5px;
+    border: 1px solid;
+}
+
+.fa-discord:before {
+    content: "\f392";
+}

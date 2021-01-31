@@ -1,12 +1,27 @@
-﻿<div class="container">
+﻿<div class="wizard-background">
+  <div class="container wizard-inner">
       
       <mat-horizontal-stepper linear #stepper>
         <mat-step >
           <form >
             <ng-template matStepLabel>Welcome</ng-template>
-            <p>Welcome to Ombi, this wizard will quickly take you through the inital setup!</p>
-            <div>
-              <button mat-button matStepperNext>Next</button>
+            <div class="welcome-container">
+              <div class="left-container logo">
+                OMBI
+              </div>
+              <div class="right-container">
+                <div class="right-container-content">
+                  <p>Welcome to Ombi, this wizard will quickly take you through the inital setup!</p>
+                  <br />
+                  <p>If you encounter any problems you can find help on the following platforms:</p>
+                  <div class="social-media">
+                    <a href="https://discord.gg/Sa7wNWb" target="_blank"><i class="fab fa-discord"></i></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="welcome-buttons">
+              <button mat-button matStepperNext class="mat-raised-button mat-accent">Next</button>
             </div>
           </form>
         </mat-step>
@@ -64,4 +79,5 @@
           </div>
         </mat-step>
       </mat-horizontal-stepper>
+  </div>
 </div>

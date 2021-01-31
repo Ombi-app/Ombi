@@ -3,8 +3,10 @@ import { Router } from "@angular/router";
 import { ICreateWizardUser } from "../../interfaces";
 import { IdentityService, NotificationService } from "../../services";
 
+
 @Component({
     templateUrl: "./welcome.component.html",
+    styleUrls: ["./welcome.component.scss"],
 })
 export class WelcomeComponent implements OnInit {
     
