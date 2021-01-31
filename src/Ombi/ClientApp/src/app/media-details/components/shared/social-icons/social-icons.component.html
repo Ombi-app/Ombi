@@ -25,7 +25,7 @@
         <i matTooltip="Instagram" class="fab fa-instagram fa-2x grow-social"></i>
     </a>
     <!-- Setting/Configuration admin area -->
-    <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="menu">
+    <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="menu" class="admin-cog">
         <i class="fas fa-cog fa-2x "></i>
     </button>
     <mat-menu #menu="matMenu">

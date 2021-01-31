@@ -37,6 +37,7 @@
 
     .mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent{
         color: $ombi-active-text;
+        background-color: $ombi-active;
     }
 
     .mat-menu-panel{
@@ -134,5 +135,9 @@
     }
 
     .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar{
+        background-color: $ombi-active;
+    }
+
+    .mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab{
         background-color: $ombi-active;
     }
