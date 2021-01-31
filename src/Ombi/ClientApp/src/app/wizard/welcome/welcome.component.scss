@@ -18,13 +18,19 @@
     min-height: 300px;
 }
 
-.welcome-container .left-container{
-    width:20%;
-    //border: 1px solid $ombi-background-primary;
+.left-container{
+    width:30%;
+}
+
+.right-container{
+    width:70%;
+}
+
+.right-container-content{
+    width:100%;
 }
 
 .welcome-container .right-container{
-    width:70%;
     display:flex;
     align-items: center;
     justify-content: center;
@@ -34,14 +40,87 @@
     float:right;
 }
 
-.fab {
+.fab:before {
     font-family: 'Font Awesome 5 Brands';
-    font-size: 28px !important;
-    padding: 5px;
-    margin-bottom: 5px;
-    border: 1px solid;
 }
 
-.fa-discord:before {
-    content: "\f392";
+.social-media .fab{
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.fas:before {
+    font-family:"Font Awesome 5 Free";
+    font-weight:800;
+}
+
+.social-media .fas{
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-weight:400;
+}
+
+.social-media a{
+    color: #FFF;
+}
+
+.social-media{
+    display:grid;
+}
+
+.fa-ul {
+    list-style-type: none;
+    margin-left: 2.5em;
+    padding-left: 0;
+}
+
+.fa-li {
+    left: -2em;
+    position: absolute;
+    text-align: center;
+    width: 2em;
+    line-height: inherit;
+}
+
+.social-media ul li{
+    font-size:16px;
+    padding:5px;
+}
+
+
+.left-container.mediaserver img{
+    object-fit: contain;
+    width: 100%;
+}
+
+.left-container.mediaserver{
+    display:flex;
+    justify-content: center;
+    height:300px;
+    padding:20px;
+}
+
+.right-container.mediaserver{
+    display:flex;
+    justify-content: center;
+    align-items:center;
+}
+
+.right-container-content .mediaserver{
+    display:block;
+}
+
+.mediaserver-container{
+    display:flex;
+    height:100%;
+    width:100%;
+}
+
+.plex-buttons{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+p.space-or{
+    padding:20px;
+    margin-top:20px;
 }

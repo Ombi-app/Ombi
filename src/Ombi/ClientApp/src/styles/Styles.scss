@@ -132,3 +132,7 @@
         background-color:$ombi-active;
         color: $ombi-active-text;
     }
+
+    .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar{
+        background-color: $ombi-active;
+    }

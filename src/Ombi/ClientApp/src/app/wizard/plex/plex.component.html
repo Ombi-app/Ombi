@@ -1,24 +1,35 @@
-﻿<div class="form-group">
-    <div>
-    <mat-form-field>
-        <input matInput type="text" [(ngModel)]="login"  id="username"  placeholder="Username">
-    </mat-form-field>
-</div>
-<div>
-    <mat-form-field>
-        <input matInput type="password" [(ngModel)]="password"  placeholder="Password">
-    </mat-form-field>
-</div>
-</div>
-<small>Please note we do not store this information, we only store your Plex Authorization Token that will allow Ombi to view your media and users</small>
-<div class="form-group">
-    <div style="text-align: center; margin-top: 20px">
-        <button (click)="requestAuthToken()" mat-raised-button color="primary" >Request Token <i class="fas fa-key"></i></button>
+﻿<div class="mediaserver-container">
+    <div class="left-container mediaserver">
+      <img src="https://i.redd.it/5czvsiboj9g51.png">
     </div>
-</div>
-<p class="text-center">OR</p>
-<div class="form-group">
-    <div style="text-align: center; margin-top: 20px">
-        <button (click)="oauth()" mat-raised-button color="accent" type="button">Continue With Plex</button>
+    <div class="right-container mediaserver">
+        <div class="right-container-content mediaserver">
+            <div class="form-group">
+                <div>
+                <mat-form-field>
+                    <input matInput type="text" [(ngModel)]="login"  id="username"  placeholder="Username">
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field>
+                    <input matInput type="password" [(ngModel)]="password"  placeholder="Password">
+                </mat-form-field>
+            </div>
+            </div>
+            <small>Please note we do not store this information, we only store your Plex Authorization Token that will allow Ombi to view your media and users</small>
+            <div class="plex-buttons">
+                <div class="form-group">
+                    <div style="text-align: center; margin-top: 20px">
+                        <button (click)="requestAuthToken()" mat-raised-button color="primary" >Request Token <i class="fas fa-key"></i></button>
+                    </div>
+                </div>
+                <p class="text-center space-or">OR</p>
+                <div class="form-group">
+                    <div style="text-align: center; margin-top: 20px">
+                        <button (click)="oauth()" mat-raised-button color="accent" type="button">Continue With Plex</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

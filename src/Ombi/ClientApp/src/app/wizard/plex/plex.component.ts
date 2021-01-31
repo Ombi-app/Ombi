@@ -9,6 +9,7 @@ import { StorageService } from "../../shared/storage/storage-service";
 @Component({
     selector: "wizard-plex",
     templateUrl: "./plex.component.html",
+    styleUrls: ["../welcome/welcome.component.scss"],
 })
 export class PlexComponent implements OnInit, OnDestroy {
 
