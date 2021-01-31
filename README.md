@@ -63,7 +63,7 @@ Here are some of the features Ombi has:
 # Installation
 
 [Installation Guide](https://docs.ombi.app/installation/)  
-[Here for Reverse Proxy Config Examples](https://docs.ombi.app/settings/reverse-proxy/)  
+[Here for Reverse Proxy Config Examples](https://docs.ombi.app/info/reverse-proxy/)  
 
 # Contributors
 
