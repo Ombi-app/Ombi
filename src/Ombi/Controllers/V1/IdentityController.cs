@@ -139,7 +139,7 @@ namespace Ombi.Controllers.V1
         public async Task<SaveWizardResult> CreateWizardUser([FromBody] CreateUserWizardModel user)
         {
             var users = UserManager.Users;
-            if (users.Any(x => x.NormalizedUserName != "API"))
+            if (users.Any(x => x.UserType == UserType.LocalUser))
             {
                 // No one should be calling this. Only the wizard
                 return new SaveWizardResult { Result = false, Errors = new List<string> { "Looks like there is an existing user!" } };
@@ -169,7 +169,7 @@ namespace Ombi.Controllers.V1
                     ImportPlexAdmin = true
                 });
 
-                return await SaveWizardUser(user, adminUser);
+                return await SaveWizardUser(user, adminUser, false);
             }
 
             var userToCreate = new OmbiUser
@@ -179,10 +179,10 @@ namespace Ombi.Controllers.V1
                 StreamingCountry = "US"
             };
 
-            return await SaveWizardUser(user, userToCreate);
+            return await SaveWizardUser(user, userToCreate, true);
         }
 
-        private async Task<SaveWizardResult> SaveWizardUser(CreateUserWizardModel user, OmbiUser userToCreate)
+        private async Task<SaveWizardResult> SaveWizardUser(CreateUserWizardModel user, OmbiUser userToCreate, bool completeWizard)
         {
             IdentityResult result;
             var retVal = new SaveWizardResult();
@@ -210,10 +210,13 @@ namespace Ombi.Controllers.V1
                     _log.LogInformation("Added the Admin role");
                 }
 
-                // Update the wizard flag
-                var settings = await OmbiSettings.GetSettingsAsync();
-                settings.Wizard = true;
-                await OmbiSettings.SaveSettingsAsync(settings);
+                if (completeWizard)
+                {
+                    // Update the wizard flag
+                    var settings = await OmbiSettings.GetSettingsAsync();
+                    settings.Wizard = true;
+                    await OmbiSettings.SaveSettingsAsync(settings);
+                }
             }
             if (!result.Succeeded)
             {

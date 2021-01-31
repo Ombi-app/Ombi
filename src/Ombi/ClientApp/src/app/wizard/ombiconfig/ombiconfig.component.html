@@ -4,21 +4,22 @@
     </div>
     <div class="right-container mediaserver">
         <div class="right-container-content mediaserver">
-            <h1>Customize your Ombi</h1>
+            <h1 *ngIf="!config.applicationName">Customize your Ombi</h1>
+            <h1 *ngIf="config.applicationName">Customize your {{config.applicationName}}</h1>
             <div>
                 <mat-form-field>
-                    <input type="text" matInput id="applicationname" name="Application Name" placeholder="Application Name">
+                    <input type="text" matInput id="applicationname" name="Application Name" [(ngModel)]="config.applicationName" placeholder="Application Name">
                 </mat-form-field>
             </div>
             <div>
                 <mat-form-field>
-                    <input matInput type="text" id="applicationurl" name="Application URL" placeholder="Application URL">
+                    <input matInput type="text" id="applicationurl" name="Application URL" [(ngModel)]="config.applicationUrl"  placeholder="Application URL">
                 </mat-form-field>
-            </div> 
+            </div>
             <div>
                 <mat-form-field>
                     <mat-label>Custom Logo</mat-label>
-                    <input  matInput  type="url" id="customlogo" name="Custom Logo" placeholder="Input the URL of your custom logo">
+                    <input matInput type="url" id="customlogo" name="Custom Logo" [(ngModel)]="config.logo"  placeholder="Input the URL of your custom logo">
                 </mat-form-field>
             </div>
         </div>
