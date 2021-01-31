@@ -66,10 +66,20 @@
 
         <mat-step>
           <ng-template matStepLabel>Done</ng-template>
-          All setup! Press Finish to continue and login to Ombi!
+          <div class="mediaserver-container">
+            <div class="left-container mediaserver">
+                <i class="fas fa-check text-logo"></i>
+            </div>
+            <div class="right-container mediaserver">
+                <div class="right-container-content mediaserver">
+                    <h1>All setup!</h1>
+                    Press Finish to continue and login to Ombi!
+                </div>
+            </div>
+          </div>
           <div>
-            <button mat-button matStepperPrevious (click)="createUser()">Finish</button>
-            <button mat-button (click)="stepper.reset()">Reset</button>
+            <button mat-button matStepperPrevious (click)="createUser()" class="mat-raised-button mat-accent right">Finish</button>
+            <button mat-button (click)="stepper.reset()" class="mat-raised-button mat-error left">Reset</button>
           </div>
         </mat-step>
       </mat-horizontal-stepper>
