@@ -661,7 +661,7 @@
 
 - Added capture of anonymous analytical data. [tidusjar]
 
-- Added {AvailableDate} as a Notification Variable, this is the date the request was marked as available. See here: https://github.com/tidusjar/Ombi/wiki/Notification-Template-Variables. [tidusjar]
+- Added {AvailableDate} as a Notification Variable, this is the date the request was marked as available. See here: https://docs.ombi.app/info/notification-template-variables/. [tidusjar]
 
 - Added the ability to search movies via the movie db with a different language! [tidusjar]
 
