@@ -11,6 +11,7 @@ import { JellyfinComponent } from "./jellyfin/jellyfin.component";
 import { MediaServerComponent } from "./mediaserver/mediaserver.component";
 import { PlexComponent } from "./plex/plex.component";
 import { WelcomeComponent } from "./welcome/welcome.component";
+import { OmbiConfigComponent } from "./ombiconfig/ombiconfig.component";
 
 import { EmbyService } from "../services";
 import { JellyfinService } from "../services";
@@ -28,6 +29,7 @@ const routes: Routes = [
     { path: "Emby", component: EmbyComponent},
     { path: "Jellyfin", component: JellyfinComponent},
     { path: "CreateAdmin", component: CreateAdminComponent},
+    { path: "OmbiConfig", component: OmbiConfigComponent},
 ];
 @NgModule({
     imports: [
@@ -45,6 +47,7 @@ const routes: Routes = [
         CreateAdminComponent,
         EmbyComponent,
         JellyfinComponent,
+        OmbiConfigComponent,
     ],
     exports: [
         RouterModule,

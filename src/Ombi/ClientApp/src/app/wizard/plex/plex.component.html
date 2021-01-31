@@ -4,6 +4,7 @@
     </div>
     <div class="right-container mediaserver">
         <div class="right-container-content mediaserver">
+            <H1 class="wizard-title">Plex Configuration</H1>
             <div class="form-group">
                 <div>
                 <mat-form-field>
@@ -20,13 +21,13 @@
             <div class="plex-buttons">
                 <div class="form-group">
                     <div style="text-align: center; margin-top: 20px">
-                        <button (click)="requestAuthToken()" mat-raised-button color="primary" >Request Token <i class="fas fa-key"></i></button>
+                        <button (click)="requestAuthToken()" mat-raised-button color="primary" class="viewon-btn standard">Request Token <i class="fas fa-key"></i></button>
                     </div>
                 </div>
                 <p class="text-center space-or">OR</p>
                 <div class="form-group">
                     <div style="text-align: center; margin-top: 20px">
-                        <button (click)="oauth()" mat-raised-button color="accent" type="button">Continue With Plex</button>
+                        <button (click)="oauth()" mat-raised-button color="accent" type="button" class="viewon-btn plex">Login With Plex</button>
                     </div>
                 </div>
             </div>

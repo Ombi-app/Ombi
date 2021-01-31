@@ -4,6 +4,7 @@
     </div>
     <div class="right-container mediaserver">
         <div class="right-container-content mediaserver">
+            <H1 class="wizard-title">Emby Configuration</H1>
             <div *ngIf="embySettings">
                 <div *ngIf="embySettings.servers">
                     <div *ngFor="let server of embySettings.servers">
@@ -29,7 +30,7 @@
                             </mat-form-field>
                         </div>
                         <div style="text-align: center; margin-top: 20px">
-                            <a (click)="save()" id="embyApiKeySave" mat-raised-button color="primary">Save <div id="spinner"></div></a>
+                            <button (click)="save()" id="embyApiKeySave" mat-raised-button color="accent" type="button" class="viewon-btn emby">Save</button><div id="spinner"></div>
                         </div>
                     </div>
                 </div>

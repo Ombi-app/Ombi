@@ -13,7 +13,7 @@
                 <div class="right-container-content">
                   <h1>Welcome to Ombi!</h1>
                   <p>This wizard will quickly take you through the inital setup!</p>
-                  <p>If you encounter any problems you can find help on the following platforms:</p>
+                  <p>If you encounter any problems, please reach out on the following platforms:</p>
                   <br />
                   <div class="social-media">
                     <ul class="fa-ul">
@@ -39,6 +39,8 @@
               <mat-tab label="Emby"><wizard-emby></wizard-emby></mat-tab>
               <mat-tab label="Jellyfin"><wizard-jellyfin></wizard-jellyfin></mat-tab>
             </mat-tab-group>
+              <button mat-button matStepperPrevious class="mat-raised-button mat-error left">Back</button>
+              <button mat-button matStepperNext class="mat-raised-button mat-accent right">Next</button>
           </form>
         </mat-step>
         <mat-step>
@@ -46,18 +48,18 @@
             <ng-template matStepLabel>Create a local admin</ng-template>
             <wizard-local-admin [user]="localUser"></wizard-local-admin>
             <div>
-              <button mat-button matStepperPrevious>Back</button>
-              <button mat-button matStepperNext>Next</button>
+              <button mat-button matStepperPrevious class="mat-raised-button mat-error left">Back</button>
+              <button mat-button matStepperNext class="mat-raised-button mat-accent right">Next</button>
             </div>
           </form>
         </mat-step>
         <mat-step [optional]="true">
           <form >
             <ng-template matStepLabel>Ombi config</ng-template>
-            <wizard-local-admin [user]="localUser"></wizard-local-admin>
+            <wizard-ombi></wizard-ombi>
             <div>
-              <button mat-button matStepperPrevious>Back</button>
-              <button mat-button matStepperNext>Next</button>
+              <button mat-button matStepperPrevious class="mat-raised-button mat-error left">Back</button>
+              <button mat-button matStepperNext class="mat-raised-button mat-accent right">Next</button>
             </div>
           </form>
         </mat-step>
