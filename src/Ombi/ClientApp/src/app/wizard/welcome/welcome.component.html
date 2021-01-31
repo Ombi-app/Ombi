@@ -44,7 +44,7 @@
           </form>
         </mat-step>
         <mat-step>
-          <form >
+          <form>
             <ng-template matStepLabel>Create a local admin</ng-template>
             <wizard-local-admin [user]="localUser"></wizard-local-admin>
             <div>
@@ -56,7 +56,7 @@
         <mat-step [optional]="true">
           <form >
             <ng-template matStepLabel>Ombi config</ng-template>
-            <wizard-ombi></wizard-ombi>
+            <wizard-ombi [config]="config"></wizard-ombi>
             <div>
               <button mat-button matStepperPrevious class="mat-raised-button mat-error left">Back</button>
               <button mat-button matStepperNext class="mat-raised-button mat-accent right">Next</button>

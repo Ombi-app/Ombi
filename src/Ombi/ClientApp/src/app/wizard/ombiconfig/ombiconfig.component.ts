@@ -1,4 +1,6 @@
 ﻿import { Component, Input } from "@angular/core";
+import { IOmbiConfigModel } from "../models/OmbiConfigModel";
+import { WizardService } from "../services/wizard.service";
 
 @Component({
     selector: "wizard-ombi",
@@ -7,5 +9,5 @@
 })
 export class OmbiConfigComponent {
 
-    constructor() { }
+    @Input() public config: IOmbiConfigModel;
 }

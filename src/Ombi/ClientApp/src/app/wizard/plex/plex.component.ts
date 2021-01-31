@@ -16,6 +16,8 @@ export class PlexComponent implements OnInit, OnDestroy {
     public login: string;
     public password: string;
     public pinTimer: any;
+    public completed: boolean;
+    public oauthLoading: boolean;
 
     private clientId: string;
 
@@ -43,7 +45,7 @@ export class PlexComponent implements OnInit, OnDestroy {
                 usePlexAdminAccount: true,
             }).subscribe(y => {
                 if (y.result) {
-                    this.router.navigate(["login"]);
+                    this.notificationService.success("Created your Plex User!");
                 } else {
                     this.notificationService.error("Could not get the Plex Admin Information");
                     if (y.errors.length > 0) {
@@ -57,6 +59,7 @@ export class PlexComponent implements OnInit, OnDestroy {
     }
 
     public oauth() {
+        this.oauthLoading = true;
         const oAuthWindow = window.open(window.location.toString(), "_blank", `toolbar=0,
         location=0,
         status=0,
@@ -69,20 +72,24 @@ export class PlexComponent implements OnInit, OnDestroy {
 
             this.authService.login({ usePlexOAuth: true, password: "", rememberMe: true, username: "", plexTvPin: pin }).subscribe(x => {
                 oAuthWindow!.location.replace(x.url);
-
                 this.pinTimer = setInterval(() => {
                     // this.notify.info("Authenticating", "Loading... Please Wait");
                     this.getPinResult(x.pinId);
-                }, 10000);
+                }, 3000);
             });
         });
     }
 
     public getPinResult(pinId: number) {
         this.plexOauth.oAuth(pinId).subscribe(x => {
+            
             if (!x.accessToken) {
+                if(!x.success) {
+                    this.oauthLoading = false;
+                    clearInterval(this.pinTimer);
+                    this.notificationService.error(`Error From Plex: ${x.error}`)
+                }
                 return;
-                // RETURN
             }
 
             this.identityService.createWizardUser({
@@ -93,10 +100,14 @@ export class PlexComponent implements OnInit, OnDestroy {
                 if (u.result) {
                     this.authService.oAuth(pinId).subscribe(c => {
                         this.store.save("id_token", c.access_token);
-                        this.router.navigate(["login"]);
+                        this.completed = true;
+                        this.notificationService.success("Created your Plex User!");
+                        this.oauthLoading = false;
+                        clearInterval(this.pinTimer);
                     });
                 } else {
 
+                    this.oauthLoading = false;
                     if (u.errors.length > 0) {
                         console.log(u.errors[0]);
                     }

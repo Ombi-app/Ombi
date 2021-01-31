@@ -14,6 +14,8 @@ export interface IPlexOAuthViewModel {
 
 export interface IPlexOAuthAccessToken {
     accessToken: string;
+    success: boolean;
+    error: string;
 }
 
 export interface IPlexUser {
