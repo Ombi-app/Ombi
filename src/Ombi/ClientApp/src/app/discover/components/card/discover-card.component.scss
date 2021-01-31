@@ -159,17 +159,27 @@ small {
 } 
 
 /* common */
-.top-right span {
+.top-right{
+  display:flex;
+}
+
+.top-right span.indicator, span.indicator-text {
   display: none;
   background-color: transparent;
   color: #fff;
   text-shadow: 0 1px 1px rgba(0,0,0,.2);
   text-align: right;
   font-size: 14px;
+}
+
+.top-right span.indicator{
+  padding-right: 0px;
+}
+.top-right span.indicator-text{
   padding-right: 1em;
 }
 
-.top-right span:before{
+.top-right span.indicator:before{
   content: '';
   width: 10px;
   height: 10px;
@@ -179,29 +189,29 @@ small {
   margin-right:5px;
 }
 
-.top-right.available span{
+.top-right.available span.indicator, span.indicator-text{
   display:block;
 }
 
-.top-right.available span:before{
+.top-right.available span.indicator:before{
   display: inline-block;
   background-color: #1DE9B6;
 }
 
-.top-right.approved span {
+.top-right.approved span.indicator, span.indicator-text {
   display: block;
 }
 
-.top-right.approved span:before{
+.top-right.approved span.indicator:before{
   display: inline-block;
   background-color: #ff5722;
 }
 
-.top-right.requested span {
+.top-right.requested span.indicator, span.indicator-text {
   display: block;
 }
 
-.top-right.requested span:before{
+.top-right.requested span.indicator:before{
   display: inline-block;
   background-color: #ffd740;
 }
@@ -212,4 +222,18 @@ small {
 
 a.poster-overlay:hover{
   text-decoration: none;
+}
+
+@media screen and (max-width: 400px){
+  .ellipsis{
+    display:none;
+  }
+
+  .top-right span.indicator-text{
+    display:none;
+  }
+
+  .top-right span.indicator{
+    padding-right:1em;
+  }
 }

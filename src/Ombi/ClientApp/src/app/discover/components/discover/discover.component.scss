@@ -10,3 +10,8 @@ h2{
     margin-left:40px;
     font-size: 24px;
 }
+
+::ng-deep .p-carousel-item{
+    min-height:290px;
+    max-height:290px;
+}

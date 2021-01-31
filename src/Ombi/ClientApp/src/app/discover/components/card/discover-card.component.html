@@ -6,7 +6,7 @@
             {{RequestType[result.type] | humanize}}
         </div>
         <div class="{{getStatusClass()}} top-right">
-            <span>{{getAvailbilityStatus()}}</span>
+            <span class="indicator"></span><span class="indicator-text">{{getAvailbilityStatus()}}</span>
         </div>
     </div>
         <img [routerLink]="generateDetailsLink()" id="cardImage" src="{{result.posterPath}}" class="image"
