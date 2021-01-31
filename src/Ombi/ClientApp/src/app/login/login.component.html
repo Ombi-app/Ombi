@@ -40,7 +40,7 @@
                     <button id="sign-in" mat-raised-button color="primary" type="submit" (click)="loginWithOmbi = true">{{'Login.SignInWith' | translate:appNameTranslate}}</button>
                     <button id="sign-plex" mat-raised-button color="accent" type="button" (click)="oauth()">
                         <span *ngIf="!oauthLoading">{{'Login.SignInWithPlex' | translate}}</span>
-                        <span *ngIf="oauthLoading"><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></span>
+                        <span *ngIf="oauthLoading"><i class="fas fa-circle-notch fa-spin fa-fw"></i></span>
                     </button>
                 </div>
             </mat-card-content>

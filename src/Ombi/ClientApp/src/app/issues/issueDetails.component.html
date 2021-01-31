@@ -61,7 +61,7 @@
                         <div *ngFor="let comment of comments" class="row msg_container" [ngClass]="{'base_sent': comment.adminComment, 'base_receive': !comment.adminComment}">
                             <div class="col-md-10 col-xs-10">
                                 
-                                <div class="messages msg_sent"> <i *ngIf="isAdmin" style="float:right;" class="fa fa-times" aria-hidden="true" (click)="deleteComment(comment.id)"></i>
+                                <div class="messages msg_sent"> <i *ngIf="isAdmin" style="float:right;" class="fas fa-times" aria-hidden="true" (click)="deleteComment(comment.id)"></i>
                                     <p>{{comment.comment}}</p>
                                     <time>{{comment.username}} • {{comment.date  | amLocal | amDateFormat: 'l LT'}}</time>
                                 </div>

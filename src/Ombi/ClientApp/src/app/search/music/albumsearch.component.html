@@ -71,25 +71,25 @@
         <!-- <div class="row" *ngIf="result.requested">
             <div class="col-md-2 col-md-push-10">
 
-                 <a *ngIf="result.showSubscribe && !result.subscribed" style="color:white" (click)="subscribe(result)" pTooltip="Subscribe for notifications"> <i class="fa fa-rss"></i></a>
-            <a *ngIf="result.showSubscribe && result.subscribed" style="color:red" (click)="unSubscribe(result)" pTooltip="Unsubscribe notification"> <i class="fa fa-rss"></i></a>
+                 <a *ngIf="result.showSubscribe && !result.subscribed" style="color:white" (click)="subscribe(result)" pTooltip="Subscribe for notifications"> <i class="fas fa-rss"></i></a>
+            <a *ngIf="result.showSubscribe && result.subscribed" style="color:red" (click)="unSubscribe(result)" pTooltip="Unsubscribe notification"> <i class="fas fa-rss"></i></a>
             </div>
         </div> -->
         <div *ngIf="result.fullyAvailable">
             <button style="text-align: right" class="btn btn-success-outline disabled" disabled>
-                <i class="fa fa-check"></i> {{ 'Common.Available' | translate }}</button>
+                <i class="fas fa-check"></i> {{ 'Common.Available' | translate }}</button>
         </div>
         <div *ngIf="!result.fullyAvailable">
             <div *ngIf="result.requested || result.approved || result.monitored; then requestedBtn else notRequestedBtn"></div>
             <ng-template #requestedBtn>
                 <button style="text-align: right" class="btn btn-primary-outline disabled" [disabled]>
-                    <i class="fa fa-check"></i> {{ 'Common.Requested' | translate }}</button>
+                    <i class="fas fa-check"></i> {{ 'Common.Requested' | translate }}</button>
             </ng-template>
             <ng-template #notRequestedBtn>
                 <button style="text-align: right" class="btn btn-primary-outline" (click)="request(result)">
-                    <i *ngIf="result.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i>
-                    <i *ngIf="!result.requestProcessing && !result.processed" class="fa fa-plus"></i>
-                    <i *ngIf="result.processed && !result.requestProcessing" class="fa fa-check"></i> {{ 'Common.Request'
+                    <i *ngIf="result.requestProcessing" class="fas fa-circle-notch fa-spin fa-fw"></i>
+                    <i *ngIf="!result.requestProcessing && !result.processed" class="fas fa-plus"></i>
+                    <i *ngIf="result.processed && !result.requestProcessing" class="fas fa-check"></i> {{ 'Common.Request'
                     | translate }}</button>
             </ng-template>
         </div>
@@ -98,7 +98,7 @@
          <div class="dropdown" *ngIf="(result.partiallyAvailable || result.fullyAvailable) && issueCategories && issuesEnabled">
             <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="true">
-                <i class="fa fa-plus"></i> Report Issue
+                <i class="fas fa-plus"></i> Report Issue
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">

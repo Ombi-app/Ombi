@@ -13,21 +13,21 @@
             </div>
             <div class="col-md-4 col-md-push-3 vcenter">
                 <div *ngIf="landingPageSettings.noticeEnabled">
-                    <h3><i class="fa fa-bell-o"></i>&nbsp;<b>Notice</b></h3>
+                    <h3><i class="far fa-bell"></i>&nbsp;<b>Notice</b></h3>
                     <span [innerHtml]="landingPageSettings.noticeText"></span>
                 </div>
                 <br>
                 <div *ngIf="!mediaServerStatus">
-                    <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                    <i class="fas fa-spinner fa-spin fa-3x fa-fw"></i>
                 </div>
                 <div *ngIf="mediaServerStatus">
                     <div *ngIf="mediaServerStatus.fullyAvailable">
-                        <h3 class="online"><i class="fa fa-check-circle "></i> {{ 'LandingPage.OnlineHeading' | translate }}</h3>
+                        <h3 class="online"><i class="fas fa-check-circle "></i> {{ 'LandingPage.OnlineHeading' | translate }}</h3>
                         <span [translate]="'LandingPage.OnlineParagraph'"></span>
                         <p [translate]="'LandingPage.CheckPageForUpdates'"></p>
                     </div>
                     <div *ngIf="mediaServerStatus.partiallyDown">
-                        <h3 class="partial"><i class="fa fa-exclamation-triangle "></i> {{ 'LandingPage.PartiallyOnlineHeading' | translate }}</h3>
+                        <h3 class="partial"><i class="fas fa-exclamation-triangle "></i> {{ 'LandingPage.PartiallyOnlineHeading' | translate }}</h3>
                         <span [translate]="'LandingPage.PartiallyOnlineParagraph'"></span>
                         <p *ngIf="mediaServerStatus.serversUnavailable > 1" [translate]="'LandingPage.MultipleServersUnavailable'" [translateParams]="{serversUnavailable: mediaServerStatus.serversUnavailable, totalServers: mediaServerStatus.totalServers}"></p>
                         <p *ngIf="mediaServerStatus.serversUnavailable == 1" [translate]="'LandingPage.SingleServerUnavailable'" [translateParams]="{serversUnavailable: mediaServerStatus.serversUnavailable, totalServers: mediaServerStatus.totalServers}">There is {{mediaServerStatus.serversUnavailable}} server offline out of {{mediaServerStatus.totalServers}}.</p>
@@ -35,7 +35,7 @@
                     </div>
 
                     <div *ngIf="mediaServerStatus.completelyDown">
-                        <h3 class="offline"><i class="fa fa-times "></i> {{ 'LandingPage.OfflineHeading' | translate }}</h3>
+                        <h3 class="offline"><i class="fas fa-times "></i> {{ 'LandingPage.OfflineHeading' | translate }}</h3>
                         <span [translate]="'LandingPage.OfflineParagraph'"></span>
                         <p [translate]="'LandingPage.CheckPageForUpdates'"></p>
                     </div>

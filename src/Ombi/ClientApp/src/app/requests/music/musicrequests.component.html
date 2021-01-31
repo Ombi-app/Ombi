@@ -4,13 +4,13 @@
             (keyup)="search($event)">
         <span class="input-group-btn">
             <button id="filterBtn" class="btn btn-sm btn-info-outline" (click)="filterDisplay = !filterDisplay">
-                <i class="fa fa-filter"></i> {{ 'Requests.Filter' | translate }}
+                <i class="fas fa-filter"></i> {{ 'Requests.Filter' | translate }}
             </button>
 
 
             <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="true">
-                <i class="fa fa-sort"></i> {{ 'Requests.Sort' | translate }}
+                <i class="fas fa-sort"></i> {{ 'Requests.Sort' | translate }}
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
@@ -91,7 +91,7 @@
                             [translate]="'Common.ProcessingRequest'"></span>
                         <span *ngIf="request.denied" class="label label-danger" id="requestDeclinedLabel" [translate]="'Common.RequestDenied'"></span>
                         <span *ngIf="request.deniedReason" title="{{request.deniedReason}}">
-                            <i class="fa fa-info-circle"></i>
+                            <i class="fas fa-info-circle"></i>
                         </span>
                         <span *ngIf="!request.approved && !request.availble && !request.denied" id="pendingApprovalLabel"
                             class="label label-warning" [translate]="'Common.PendingApproval'"></span>
@@ -99,7 +99,7 @@
                     </div>
                     <div *ngIf="request.denied" id="requestDenied">
                         {{ 'Requests.Denied' | translate }}
-                        <i style="color:red;" class="fa fa-check" pTooltip="{{request.deniedReason}}"></i>
+                        <i style="color:red;" class="fas fa-check" pTooltip="{{request.deniedReason}}"></i>
 
                     </div>
 
@@ -125,10 +125,10 @@
                     <div class="col-md-2 col-md-push-6">
 
                         <a *ngIf="request.showSubscribe && !request.subscribed" style="color:white" (click)="subscribe(request)" pTooltip="Subscribe for notifications">
-                            <i class="fa fa-rss"></i>
+                            <i class="fas fa-rss"></i>
                         </a>
                         <a *ngIf="request.showSubscribe && request.subscribed" style="color:red" (click)="unSubscribe(request)" pTooltip="Unsubscribe notification">
-                            <i class="fa fa-rss"></i>
+                            <i class="fas fa-rss"></i>
                         </a>
                     </div>
                 </div> -->
@@ -137,14 +137,14 @@
                         <form class="col-md-6">
                             <button (click)="approve(request)" style="text-align: right" class="btn btn-sm btn-success-outline approve"
                                 type="submit">
-                                <i class="fa fa-plus"></i> {{ 'Common.Approve' | translate }}
+                                <i class="fas fa-plus"></i> {{ 'Common.Approve' | translate }}
                             </button>
                         </form>
 
                         <!--Radarr Root Folder-->
                         <!-- <div *ngIf="radarrRootFolders" class="btn-group btn-split" id="rootFolderBtn">
                             <button type="button" class="btn btn-sm btn-warning-outline">
-                                <i class="fa fa-plus"></i> {{ 'Requests.ChangeRootFolder' | translate }}
+                                <i class="fas fa-plus"></i> {{ 'Requests.ChangeRootFolder' | translate }}
                             </button>
                             <button type="button" class="btn btn-warning-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="caret"></span>
@@ -160,7 +160,7 @@
                         <!--Radarr Quality Profiles -->
                         <!-- <div *ngIf="radarrProfiles" class="btn-group btn-split" id="changeQualityBtn">
                             <button type="button" class="btn btn-sm btn-warning-outline">
-                                <i class="fa fa-plus"></i> {{ 'Requests.ChangeQualityProfile' | translate }}
+                                <i class="fas fa-plus"></i> {{ 'Requests.ChangeQualityProfile' | translate }}
                             </button>
                             <button type="button" class="btn btn-warning-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="caret"></span>
@@ -175,7 +175,7 @@
 
                         <div *ngIf="!request.denied" id="denyBtn" class="col-md-6">
                             <button type="button" (click)="deny(request)" class="btn btn-sm btn-danger-outline deny">
-                                <i class="fa fa-times"></i> {{ 'Requests.Deny' | translate }}
+                                <i class="fas fa-times"></i> {{ 'Requests.Deny' | translate }}
                             </button>
                         </div>
                     </div>
@@ -184,11 +184,11 @@
                     <form id="markBtnGroup">
                         <button id="unavailableBtn" *ngIf="request.available" (click)="changeAvailability(request, false)"
                             style="text-align: right" value="false" class="btn btn-sm btn-info-outline change">
-                            <i class="fa fa-minus"></i> {{ 'Requests.MarkUnavailable' | translate }}
+                            <i class="fas fa-minus"></i> {{ 'Requests.MarkUnavailable' | translate }}
                         </button>
                         <button id="availableBtn" *ngIf="!request.available" (click)="changeAvailability(request, true)"
                             style="text-align: right" value="true" class="btn btn-sm btn-success-outline change">
-                            <i class="fa fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
+                            <i class="fas fa-plus"></i> {{ 'Requests.MarkAvailable' | translate }}
                         </button>
                     </form>
 
@@ -198,14 +198,14 @@
                 <div *ngIf="isAdmin || isRequestUser(request)">
                     <form id="removeBtn">
                         <button (click)="removeRequest(request)" style="text-align: right" class="btn btn-sm btn-danger-outline delete">
-                            <i class="fa fa-minus"></i> {{ 'Requests.Remove' | translate }}
+                            <i class="fas fa-minus"></i> {{ 'Requests.Remove' | translate }}
                         </button>
                     </form>
                 </div>
                 <div class="dropdown" *ngIf="issueCategories && issuesEnabled" id="issuesBtn">
                     <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="true">
-                        <i class="fa fa-plus"></i> {{ 'Requests.ReportIssue' | translate }}
+                        <i class="fas fa-plus"></i> {{ 'Requests.ReportIssue' | translate }}
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -274,7 +274,7 @@
     </div>
 
     <button class="btn btn-sm btn-primary-outline" (click)="clearFilter($event)">
-        <i class="fa fa-filter"></i> {{ 'Filter.ClearFilter' | translate }}</button>
+        <i class="fas fa-filter"></i> {{ 'Filter.ClearFilter' | translate }}</button>
 </p-sidebar>
 
 

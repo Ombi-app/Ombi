@@ -255,3 +255,7 @@
     border: 1px solid #00a4dc;
     color: #00a4dc;
 }
+
+::ng-deep .p-carousel-indicators {
+    display: none !important;
+    }

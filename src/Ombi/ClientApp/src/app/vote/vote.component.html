@@ -6,12 +6,12 @@
 
     <li role="presentation" class="active">
         <a id="currentVotes" href="#currentVotes" aria-controls="home" role="tab" data-toggle="tab" (click)="selectCurrentTab()"><i
-                class="fa fa-meh-o"></i> {{ 'Votes.VotesTab' | translate }}</a>
+                class="far fa-meh"></i> {{ 'Votes.VotesTab' | translate }}</a>
     </li>
 
     <li role="presentation">
         <a id="completedVotes" href="#completedVotes" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectCompletedVotesTab()"><i
-                class="fa fa-smile-o"></i> {{ 'Votes.CompletedVotesTab' | translate }}</a>
+                class="far fa-smile"></i> {{ 'Votes.CompletedVotesTab' | translate }}</a>
     </li>
 </ul>
 
@@ -32,9 +32,9 @@
                         <tbody>
                             <tr *ngFor="let vm of currentVotes">
                                 <td class="vcenter">
-                                    <button id="{{vm.requestId}}upvote" class="btn btn-info-outline col-md-6" (click)="upvote(vm)"><i class="fa fa-thumbs-o-up"
+                                    <button id="{{vm.requestId}}upvote" class="btn btn-info-outline col-md-6" (click)="upvote(vm)"><i class="far fa-thumbs-up"
                                             aria-hidden="true"></i></button>
-                                    <button id="{{vm.requestId}}downvote" class="btn btn-info-outline col-md-6" (click)="downvote(vm)" ><i class="fa fa-thumbs-o-down"
+                                    <button id="{{vm.requestId}}downvote" class="btn btn-info-outline col-md-6" (click)="downvote(vm)" ><i class="far fa-thumbs-down"
                                             aria-hidden="true"></i></button>
                                 </td>
                                 <td style="width: 10%"> <img *ngIf="vm.image" class="img-responsive poster" style="max-width: 100%;
@@ -66,10 +66,10 @@
                     <tr *ngFor="let vm of completedVotes">
                         <td class="vcenter">
                             <button id="{{vm.requestId}}upvote" class="btn btn-info-outline col-md-6" [ngClass]="{'btn-success-outline': vm.myVote == VoteType.Upvote, 'btn-info-outline':  vm.myVote != VoteType.Upvote}"
-                             (click)="upvote(vm)" [disabled]="vm.myVote == VoteType.Upvote"><i class="fa fa-thumbs-o-up"
+                             (click)="upvote(vm)" [disabled]="vm.myVote == VoteType.Upvote"><i class="far fa-thumbs-up"
                                     aria-hidden="true"></i></button>
                             <button id="{{vm.requestId}}downvote" class="btn btn-info-outline col-md-6" [ngClass]="{'btn-danger-outline': vm.myVote == VoteType.Downvote, 'btn-info-outline':  vm.myVote != VoteType.Downvote}"
-                             (click)="downvote(vm)" [disabled]="vm.myVote == VoteType.Downvote"><i class="fa fa-thumbs-o-down"
+                             (click)="downvote(vm)" [disabled]="vm.myVote == VoteType.Downvote"><i class="far fa-thumbs-down"
                                     aria-hidden="true"></i></button>
                         </td>
                         <td style="width: 10%"> <img *ngIf="vm.image" class="img-responsive poster" style="max-width: 100%;
