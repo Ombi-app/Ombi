@@ -96,7 +96,14 @@ namespace Ombi.Notifications
                         client.Authenticate(settings.Username, settings.Password);
                     }
                     _log.LogDebug("sending message to {0} \r\n from: {1}\r\n Are we authenticated: {2}", message.To, message.From, client.IsAuthenticated);
-                    await client.SendAsync(message);
+                    try
+                    {
+                        await client.SendAsync(message);
+                    }
+                    catch (MailKit.Net.Smtp.SmtpCommandException e) when (e.ErrorCode.Equals(MailKit.Net.Smtp.SmtpErrorCode.RecipientNotAccepted) && e.StatusCode.Equals(MailKit.Net.Smtp.SmtpStatusCode.MailboxUnavailable))
+                    {
+                        _log.LogError("Could not send email '{0}', address <{1}> does not exist.", message.Subject, model.To);
+                    }
                     await client.DisconnectAsync(true);
                 }
             }

@@ -1,6 +1,18 @@
 # Changelog
 
-## (unreleased)
+## v3.0.4892 (2019-11-16)
+
+### **Fixes**
+
+- Fixed an issue where some users couldn't start Ombi
+
+## v3.0.4887 (2019-11-13)
+
+### **Fixes**
+
+- Fixed issues with the RequestId Migration #3244 #3253 #3249
+
+## v3.0.4880 (2019-11-13)
 
 ### **New Features**
 
