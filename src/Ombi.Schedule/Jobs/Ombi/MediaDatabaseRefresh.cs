@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Settings;
@@ -106,6 +107,9 @@ namespace Ombi.Schedule.Jobs.Ombi
                 await _plexRepo.ExecuteSql(episodeSQL);
                 await _plexRepo.ExecuteSql(seasonsSql);
                 await _plexRepo.ExecuteSql(mainSql);
+
+
+                await OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IPlexContentSync), "Plex"), new JobDataMap(new Dictionary<string, string> { { "recentlyAddedSearch", "false" } }));
             }
             catch (Exception e)
             {
