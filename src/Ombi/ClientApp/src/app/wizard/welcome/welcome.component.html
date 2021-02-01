@@ -1,67 +1,87 @@
-﻿<div class="container">
+﻿<div class="wizard-background">
+  <div class="container wizard-inner">
       
       <mat-horizontal-stepper linear #stepper>
         <mat-step >
           <form >
             <ng-template matStepLabel>Welcome</ng-template>
-            <p>Welcome to Ombi, this wizard will quickly take you through the inital setup!</p>
-            <div>
-              <button mat-button matStepperNext>Next</button>
+            <div class="welcome-container">
+              <div class="left-container logo">
+                OMBI
+              </div>
+              <div class="right-container">
+                <div class="right-container-content">
+                  <h1>Welcome to Ombi!</h1>
+                  <p>This wizard will quickly take you through the inital setup!</p>
+                  <p>If you encounter any problems, please reach out on the following platforms:</p>
+                  <br />
+                  <div class="social-media">
+                    <ul class="fa-ul">
+                      <li><a href="https://discord.gg/Sa7wNWb" target="_blank"><span class="fa-li"><i class="fab fa-discord"></i></span>Ombi Discord</a>
+                      <li><a href="https://github.com/Ombi-app/Ombi" target="_blank"><span class="fa-li"><i class="fab fa-github"></i></span>Ombi Github</a>
+                      <li><a href="https://docs.ombi.app/" target="_blank"><span class="fa-li"><i class="fas fa-book"></i></span>Ombi Documentation</a>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="welcome-buttons">
+              <button mat-button matStepperNext class="mat-raised-button mat-accent">Next</button>
             </div>
           </form>
         </mat-step>
 
         <mat-step  [optional]="true">
-            <form >
-              <ng-template matStepLabel>Plex</ng-template>
-              <wizard-plex></wizard-plex>
-              <div>
-                <button mat-button matStepperPrevious>Back</button>
-                <button mat-button matStepperNext>Next</button>
-              </div>
-            </form>
-          </mat-step>
-
-          <mat-step  [optional]="true">
-            <form >
-              <ng-template matStepLabel>Emby</ng-template>
-              <wizard-emby></wizard-emby>
-              <div>
-                <button mat-button matStepperPrevious>Back</button>
-                <button mat-button matStepperNext>Next</button>
-              </div>
-            </form>
-          </mat-step>
-
-          <mat-step  [optional]="true">
-            <form >
-              <ng-template matStepLabel>Jellyfin</ng-template>
-              <wizard-jellyfin></wizard-jellyfin>
-              <div>
-                <button mat-button matStepperPrevious>Back</button>
-                <button mat-button matStepperNext>Next</button>
-              </div>
-            </form>
-          </mat-step>
-
-          <mat-step>
-            <form >
-              <ng-template matStepLabel>Create a local admin</ng-template>
-              <wizard-local-admin [user]="localUser"></wizard-local-admin>
-              <div>
-                <button mat-button matStepperPrevious>Back</button>
-                <button mat-button matStepperNext>Next</button>
-              </div>
-            </form>
-          </mat-step>
+          <form >
+            <ng-template matStepLabel>Media Server</ng-template>
+            <mat-tab-group>
+              <mat-tab label="Plex"><wizard-plex></wizard-plex></mat-tab>
+              <mat-tab label="Emby"><wizard-emby></wizard-emby></mat-tab>
+              <mat-tab label="Jellyfin"><wizard-jellyfin></wizard-jellyfin></mat-tab>
+            </mat-tab-group>
+              <button mat-button matStepperPrevious class="mat-raised-button mat-error left">Back</button>
+              <button mat-button matStepperNext class="mat-raised-button mat-accent right">Next</button>
+          </form>
+        </mat-step>
+        <mat-step>
+          <form>
+            <ng-template matStepLabel>Create a local admin</ng-template>
+            <wizard-local-admin [user]="localUser"></wizard-local-admin>
+            <div>
+              <button mat-button matStepperPrevious class="mat-raised-button mat-error left">Back</button>
+              <button mat-button matStepperNext class="mat-raised-button mat-accent right">Next</button>
+            </div>
+          </form>
+        </mat-step>
+        <mat-step [optional]="true">
+          <form >
+            <ng-template matStepLabel>Ombi config</ng-template>
+            <wizard-ombi [config]="config"></wizard-ombi>
+            <div>
+              <button mat-button matStepperPrevious class="mat-raised-button mat-error left">Back</button>
+              <button mat-button matStepperNext class="mat-raised-button mat-accent right">Next</button>
+            </div>
+          </form>
+        </mat-step>
 
         <mat-step>
           <ng-template matStepLabel>Done</ng-template>
-          All setup! Press Finish to continue and login to Ombi!
+          <div class="mediaserver-container">
+            <div class="left-container mediaserver">
+                <i class="fas fa-check text-logo"></i>
+            </div>
+            <div class="right-container mediaserver">
+                <div class="right-container-content mediaserver">
+                    <h1>All setup!</h1>
+                    Press Finish to continue and login to Ombi!
+                </div>
+            </div>
+          </div>
           <div>
-            <button mat-button matStepperPrevious (click)="createUser()">Finish</button>
-            <button mat-button (click)="stepper.reset()">Reset</button>
+            <button mat-button matStepperPrevious (click)="createUser()" class="mat-raised-button mat-accent right">Finish</button>
+            <button mat-button (click)="stepper.reset()" class="mat-raised-button mat-error left">Reset</button>
           </div>
         </mat-step>
       </mat-horizontal-stepper>
+  </div>
 </div>

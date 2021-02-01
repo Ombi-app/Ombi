@@ -8,6 +8,7 @@ import { IEmbySettings } from "../../interfaces";
 @Component({
     selector: "wizard-emby",
     templateUrl: "./emby.component.html",
+    styleUrls: ["../welcome/welcome.component.scss"],
 })
 export class EmbyComponent implements OnInit {
 

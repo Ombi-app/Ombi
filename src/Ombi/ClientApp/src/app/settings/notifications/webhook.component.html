@@ -22,7 +22,7 @@
 
                 <div class="form-group">
                     <label for="applicationToken" class="control-label">Application Token
-                        <i class="fa fa-question-circle" pTooltip="Optional authentication token. Will be sent as 'Access-Token' header."></i>
+                        <i class="far fa-question-circle" pTooltip="Optional authentication token. Will be sent as 'Access-Token' header."></i>
                     </label>
 
                     <input type="text" class="form-control form-control-custom " id="applicationToken" name="applicationToken" [ngClass]="{'form-error': form.get('applicationToken').hasError('required')}" formControlName="applicationToken" pTooltip="Enter your Application token from Webhook.">

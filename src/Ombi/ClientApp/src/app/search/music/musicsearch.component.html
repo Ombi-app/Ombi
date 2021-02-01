@@ -3,7 +3,7 @@
     <div class="input-group">
         <input id="search" type="text" placeholder="{{ 'Search.SearchBarPlaceholder' | translate }}" class="form-control form-control-custom form-control-search form-control-withbuttons" (keyup)="search($event)">
         <div class="input-group-addon right-radius">
-            <i class="fa fa-search"></i>
+            <i class="fas fa-search"></i>
         </div>
     </div>
     <div class="form-group">
@@ -20,11 +20,11 @@
     <br />
     <div id="movieList">
         <div *ngIf="searchApplied && artistResult?.length <= 0 && !searchAlbum" class='no-search-results'>
-            <i class='fa fa-music no-search-results-icon'></i>
+            <i class='fas fa-music no-search-results-icon'></i>
             <div class='no-search-results-text' [translate]="'Search.NoResults'"></div>
         </div>
         <div *ngIf="searchApplied && albumResult?.length <= 0 && searchAlbum" class='no-search-results'>
-            <i class='fa fa-music no-search-results-icon'></i>
+            <i class='fas fa-music no-search-results-icon'></i>
             <div class='no-search-results-text' [translate]="'Search.NoResults'"></div>
         </div>
 

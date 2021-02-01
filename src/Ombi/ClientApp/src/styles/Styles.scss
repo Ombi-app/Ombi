@@ -37,6 +37,7 @@
 
     .mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent{
         color: $ombi-active-text;
+        background-color: $ombi-active;
     }
 
     .mat-menu-panel{
@@ -99,4 +100,44 @@
         .mat-expansion-panel:not(.mat-expanded):not([aria-disabled=true]) .mat-expansion-panel-header:hover{
             background: $ombi-background-accent;
         }
+    }
+
+    .mat-tooltip{
+        background: $ombi-background-accent;
+    } 
+
+    //Wizard CSS
+    .mat-stepper-horizontal, .mat-stepper-vertical{
+        background: $ombi-background-accent;
+    }
+
+    .wizard-background{
+        background-color: $ombi-background-primary;
+        width:100%;
+        height:100vh;
+        display:flex;
+        align-items:center;
+        justify-content: center;
+    }
+
+    .wizard-inner{
+        color:#FFF;
+        min-height: 450px;
+    }
+
+    .wizard-inner .mat-stepper-horizontal {
+        min-height: 450px;
+    }
+
+    .mat-step-header .mat-step-icon{
+        background-color:$ombi-active;
+        color: $ombi-active-text;
+    }
+
+    .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar{
+        background-color: $ombi-active;
+    }
+
+    .mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab{
+        background-color: $ombi-active;
     }

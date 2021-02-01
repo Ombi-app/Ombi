@@ -4,7 +4,7 @@
 <div *ngIf="tv">
     <div *ngIf="tv.id === 0; else main">
         <div class="small-middle-container no-info">
-            <h1><i class="fa fa-frown-o" aria-hidden="true"></i></h1>
+            <h1><i class="far fa-frown-o" aria-hidden="true"></i></h1>
             <h3> {{ 'MediaDetails.NotEnoughInfo' | translate }}</h3>
         </div>
     </div>
@@ -37,18 +37,18 @@
                         <div class="col-12 col-lg-5 col-xl-5 media-row">
 
                             <!-- <button *ngIf="!tv.fullyAvailable" mat-raised-button class="btn-spacing" color="primary"
-                                (click)="request()"><i class="fa fa-plus"></i>
+                                (click)="request()"><i class="fas fa-plus"></i>
                                 {{ 'Common.Request' | translate }}</button> -->
 
                             <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent"
                                 [disabled]>
-                                <i class="fa fa-check"></i> {{'Common.Available' | translate }}</button>
+                                <i class="fas fa-check"></i> {{'Common.Available' | translate }}</button>
                             <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" mat-raised-button
                                 class="btn-spacing" color="accent" [disabled]>
-                                <i class="fa fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
+                                <i class="fas fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
 
                             <button mat-raised-button class="btn-spacing" color="danger" (click)="issue()">
-                                <i class="fa fa-exclamation"></i> {{
+                                <i class="fas fa-exclamation"></i> {{
                                 'Requests.ReportIssue' | translate }}</button>
 
                         </div>

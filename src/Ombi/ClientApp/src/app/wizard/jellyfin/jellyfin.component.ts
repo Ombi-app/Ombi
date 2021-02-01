@@ -8,6 +8,7 @@ import { IJellyfinSettings } from "../../interfaces";
 @Component({
     selector: "wizard-jellyfin",
     templateUrl: "./jellyfin.component.html",
+    styleUrls: ["../welcome/welcome.component.scss"]
 })
 export class JellyfinComponent implements OnInit {
 

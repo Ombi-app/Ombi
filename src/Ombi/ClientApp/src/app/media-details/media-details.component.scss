@@ -14,12 +14,6 @@
     }
 }
 
-@media (max-width: 767px) {
-    #summary-wrapper {
-        height: 350px !important;
-    }
-}
-
 #summary-wrapper .full-screenshot,
 .summary-wrapper .full-screenshot,
 #watching-wrapper .full-screenshot,
@@ -43,7 +37,7 @@
     background-size: cover;
     background-position: 50% 10%;
     transition: all .5s;
-    height: 300px;
+    height: 600px;
     color: #fff;
     position: relative;
 }
@@ -85,7 +79,7 @@
 #summary-wrapper .summary .container,
 .summary-wrapper .summary .container {
     position: absolute;
-    bottom: 0;
+    bottom: 300px;
     left: 0;
     right: 0;
 }
@@ -176,7 +170,8 @@
 }
 
 .media-row {
-    padding-top: 2%;
+    padding-top: 56px;
+    padding-left: 26px;
 }
 
 .cast-profile-img {
@@ -235,7 +230,7 @@
     text-align:right;
     display:flex;
     justify-content: flex-end;
-    padding-right:2em;
+    padding-right:2.5%
 }
 
 .viewon-btn {
@@ -254,4 +249,28 @@
 .viewon-btn.jellyfin {
     border: 1px solid #00a4dc;
     color: #00a4dc;
+}
+
+::ng-deep .p-carousel-indicators {
+    display: none !important;
+    }
+
+
+#info-wrapper{
+    margin-top:-200px;
+}
+.full-screenshot.enabled.overlay{
+    background-image: linear-gradient(to bottom, transparent, 50%, $ombi-background-primary);
+}
+
+.row.justify-content-center.justify-content-sm-start.header-container{
+    flex-wrap: nowrap;
+}
+
+.details-button-container{
+    width:100%;
+}
+
+.info-wrapper .row{
+    flex-wrap:wrap;
 }

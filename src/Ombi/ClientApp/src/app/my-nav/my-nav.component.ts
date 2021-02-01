@@ -87,7 +87,7 @@ export class MyNavComponent implements OnInit {
       // { name: "NavigationBar.Calendar", icon: "calendar_today", link: "/calendar", requiresAdmin: false, enabled: true },
       { name: "NavigationBar.Donate", icon: "attach_money", link: "https://www.paypal.me/PlexRequestsNet", externalLink: true, requiresAdmin: true, enabled: true, toolTip: true, style: "color:red;", toolTipMessage: 'NavigationBar.DonateTooltip', faIcon: null },
       { name: "NavigationBar.Donate", icon: "attach_money", link: customizationSettings.customDonationUrl, externalLink: true, requiresAdmin: false, enabled: customizationSettings.enableCustomDonations, toolTip: true, toolTipMessage: customizationSettings.customDonationMessage, faIcon: null },
-      { name: "NavigationBar.FeatureSuggestion", icon: null, link: "https://features.ombi.io/", externalLink: true, requiresAdmin: true, enabled: true, toolTip: true, toolTipMessage: 'NavigationBar.FeatureSuggestionTooltip', faIcon: "fa-lightbulb-o" },
+      { name: "NavigationBar.FeatureSuggestion", icon: null, link: "https://features.ombi.io/", externalLink: true, requiresAdmin: true, enabled: true, toolTip: true, toolTipMessage: 'NavigationBar.FeatureSuggestionTooltip', faIcon: "fa-lightbulb" },
       { name: "NavigationBar.Settings", icon: "settings", link: "/Settings/About", requiresAdmin: true, enabled: true, faIcon: null },
       { name: "NavigationBar.UserPreferences", icon: "person", link: "/user-preferences", requiresAdmin: false, enabled: true, faIcon: null },
     ];

@@ -6,7 +6,7 @@
             {{RequestType[result.type] | humanize}}
         </div>
         <div class="{{getStatusClass()}} top-right">
-            <span>{{getAvailbilityStatus()}}</span>
+            <span class="indicator"></span><span class="indicator-text">{{getAvailbilityStatus()}}</span>
         </div>
     </div>
         <img [routerLink]="generateDetailsLink()" id="cardImage" src="{{result.posterPath}}" class="image"
@@ -22,7 +22,7 @@
                 <div class="col-12">
                     <button mat-raised-button class="btn-green full-width poster-request-btn" (click)="request($event)">
                         <mat-icon *ngIf="!loading">cloud_download</mat-icon>
-                        <i *ngIf="loading" class="fa fa-spinner fa-pulse fa-2x fa-fw" aria-hidden="true"></i>
+                        <i *ngIf="loading" class="fas fa-spinner fa-pulse fa-2x fa-fw" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
