@@ -18,7 +18,7 @@ Don't worry, it's grandma friendly, and more importantly; has wife approval cert
 | Service  | Stable         | Develop          
 |----------|:---------------------------:|:----------------------------:|
 | Build Status | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/master?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/master) | [![Build Status](https://dev.azure.com/tidusjar/Ombi/_apis/build/status/Ombi%20CI?repoName=Ombi-app%2FOmbi&branchName=develop)](https://dev.azure.com/tidusjar/Ombi/_build/latest?definitionId=18&repoName=Ombi-app%2FOmbi&branchName=develop) | [![Build Status](https://dev.azure.com/tidusjar/Ombi/_apis/build/status/Ombi%20CI?branchName=feature%2Fv4)](https://dev.azure.com/tidusjar/Ombi/_build/latest?definitionId=18&branchName=feature%2Fv4)
-| Download |[![Download](http://i.imgur.com/odToka3.png)](https://github.com/tidusjar/Ombi/releases)            |      [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/develop/artifacts)       | [![Download](http://i.imgur.com/odToka3.png)](https://github.com/ombi-app/ombi/releases)       | 
+| Download |[![Download](http://i.imgur.com/odToka3.png)](https://github.com/Ombi-app/Ombi/releases)            |      [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/develop/artifacts)       | [![Download](http://i.imgur.com/odToka3.png)](https://github.com/ombi-app/ombi/releases)       | 
 
 # Feature Requests
 Feature requests are handled on Feature Upvote.
