@@ -15,6 +15,7 @@ using Ombi.Api.Sonarr;
 using Ombi.Api.Twilio;
 using Ombi.Attributes;
 using Ombi.Core.Authentication;
+using Ombi.Core.Models;
 using Ombi.Core.Models.UI;
 using Ombi.Core.Notifications;
 using Ombi.Core.Settings.Models.External;
@@ -364,19 +365,23 @@ namespace Ombi.Controllers.V1.External
         /// <param name="settings"></param>
         /// <returns></returns>
         [HttpPost("radarr")]
-        public async Task<bool> Radarr([FromBody] RadarrSettings settings)
+        public async Task<TesterResultModel> Radarr([FromBody] RadarrSettings settings)
         {
             try
             {
 
 
                 var result = await RadarrApi.SystemStatus(settings.ApiKey, settings.FullUri);
-                return result.version != null;
+                return new TesterResultModel
+                {
+                    IsValid = result.urlBase == settings.SubDir,
+                    ExpectedSubDir = result.urlBase
+                };
             }
             catch (Exception e)
             {
                 Log.LogError(LoggingEvents.Api, e, "Could not test Radarr");
-                return false;
+                return new TesterResultModel { IsValid = false };
             }
         }
 
@@ -386,23 +391,27 @@ namespace Ombi.Controllers.V1.External
         /// <param name="settings"></param>
         /// <returns></returns>
         [HttpPost("sonarr")]
-        public async Task<bool> Sonarr([FromBody] SonarrSettings settings)
+        public async Task<TesterResultModel> Sonarr([FromBody] SonarrSettings settings)
         {
             try
             {
 
                 var result = await SonarrApi.SystemStatus(settings.ApiKey, settings.FullUri);
-                return result.version != null;
+                return new TesterResultModel
+                {
+                    IsValid = result.urlBase == settings.SubDir,
+                    ExpectedSubDir = result.urlBase
+                };
             }
             catch (Exception e)
             {
                 Log.LogError(LoggingEvents.Api, e, "Could not test Sonarr");
-                return false;
+                return new TesterResultModel { IsValid = false };
             }
         }
 
         /// <summary>
-        /// Checks if we can connect to Sonarr with the provided settings
+        /// Checks if we can connect to CouchPotato with the provided settings
         /// </summary>
         /// <param name="settings"></param>
         /// <returns></returns>
@@ -497,24 +506,21 @@ namespace Ombi.Controllers.V1.External
         }
 
         [HttpPost("lidarr")]
-        public async Task<bool> LidarrTest([FromBody] LidarrSettings settings)
+        public async Task<TesterResultModel> LidarrTest([FromBody] LidarrSettings settings)
         {
             try
             {
                 var status = await LidarrApi.Status(settings.ApiKey, settings.FullUri);
-                if (status != null & status?.version.HasValue() ?? false)
+                return new TesterResultModel
                 {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                    IsValid = status?.urlBase == settings.SubDir,
+                    ExpectedSubDir = status?.urlBase
+                };
             }
             catch (Exception e)
             {
                 Log.LogError(LoggingEvents.Api, e, "Could not test Lidarr");
-                return false;
+                return new TesterResultModel { IsValid = false };
             }
         }
 

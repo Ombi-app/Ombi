@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 
 import { ILanguageProfiles, ISonarrProfile, ISonarrRootFolder } from "../../interfaces";
@@ -150,9 +150,11 @@ export class SonarrComponent implements OnInit {
             return;
         }
         const settings = <ISonarrSettings> form.value;
-        this.testerService.sonarrTest(settings).subscribe(x => {
-            if (x) {
+        this.testerService.sonarrTest(settings).subscribe(result => {
+            if (result.isValid) {
                 this.notificationService.success("Successfully connected to Sonarr!");
+            } else if (result.expectedSubDir !== null) {
+                this.notificationService.error("Your Sonarr Base URL must be set to " + result.expectedSubDir);
             } else {
                 this.notificationService.error("We could not connect to Sonarr!");
             }

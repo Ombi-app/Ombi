@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 import { IMinimumAvailability, IRadarrProfile, IRadarrRootFolder } from "../../interfaces";
@@ -96,11 +96,13 @@ export class RadarrComponent implements OnInit {
             return;
         }
         const settings = <IRadarrSettings> form.value;
-        this.testerService.radarrTest(settings).subscribe(x => {
-            if (x === true) {
-                this.notificationService.success("Successfully connected to Radarr!");
+        this.testerService.radarrTest(settings).subscribe(result => {
+            if (result.isValid) {
+                this.notificationService.success("Successfully connected to Sonarr!");
+            } else if (result.expectedSubDir !== null) {
+                this.notificationService.error("Your Sonarr Base URL must be set to " + result.expectedSubDir);
             } else {
-                this.notificationService.error("We could not connect to Radarr!");
+                this.notificationService.error("We could not connect to Sonarr!");
             }
         });
     }

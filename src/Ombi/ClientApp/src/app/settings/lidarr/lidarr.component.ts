@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 import { ILidarrSettings, IMinimumAvailability, IProfiles, IRadarrProfile, IRadarrRootFolder } from "../../interfaces";
@@ -106,11 +106,13 @@ export class LidarrComponent implements OnInit {
             return;
         }
         const settings = <ILidarrSettings>form.value;
-        this.testerService.lidarrTest(settings).subscribe(x => {
-            if (x === true) {
-                this.notificationService.success("Successfully connected to Lidarr!");
+        this.testerService.lidarrTest(settings).subscribe(result => {
+            if (result.isValid) {
+                this.notificationService.success("Successfully connected to Sonarr!");
+            } else if (result.expectedSubDir !== null) {
+                this.notificationService.error("Your Sonarr Base URL must be set to " + result.expectedSubDir);
             } else {
-                this.notificationService.error("We could not connect to Lidarr!");
+                this.notificationService.error("We could not connect to Sonarr!");
             }
         });
     }
