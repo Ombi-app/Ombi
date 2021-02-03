@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from "@angular/core";
+import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from "@angular/core";
 import { ImageService, SearchV2Service, RequestService, MessageService, RadarrService } from "../../../services";
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -12,6 +12,7 @@ import { NewIssueComponent } from "../shared/new-issue/new-issue.component";
 import { MovieAdvancedOptionsComponent } from "./panels/movie-advanced-options/movie-advanced-options.component";
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { RequestBehalfComponent } from "../shared/request-behalf/request-behalf.component";
+import { forkJoin } from "rxjs";
 
 @Component({
     templateUrl: "./movie-details.component.html",
@@ -70,6 +71,7 @@ export class MovieDetailsComponent {
                     // Load up this request
                     this.hasRequest = true;
                     this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
+                    this.loadAdvancedInfo();
                 }
                 this.loadBanner();
             });
@@ -138,10 +140,10 @@ export class MovieDetailsComponent {
     public setAdvancedOptions(data: IAdvancedData) {
         this.advancedOptions = data;
         if (data.rootFolderId) {
-            this.movieRequest.qualityOverrideTitle = data.rootFolders.filter(x => x.id == data.rootFolderId)[0].path;
+            this.movieRequest.qualityOverrideTitle = data.profiles.filter(x => x.id == data.profileId)[0].name;
         }
         if (data.profileId) {
-            this.movieRequest.rootPathOverrideTitle = data.profiles.filter(x => x.id == data.profileId)[0].name;
+            this.movieRequest.rootPathOverrideTitle = data.rootFolders.filter(x => x.id == data.rootFolderId)[0].path;
         }
     }
 
@@ -175,6 +177,32 @@ export class MovieDetailsComponent {
                 this.movie.background = this.sanitizer.bypassSecurityTrustStyle
                 ("url(https://image.tmdb.org/t/p/original/" + this.movie.backdropPath + ")");
             }
+        });
+    }
+
+    private loadAdvancedInfo() {
+        const profile = this.radarrService.getQualityProfilesFromSettings();
+        const folders = this.radarrService.getRootFoldersFromSettings();
+
+        forkJoin([profile, folders]).subscribe(x => {
+            debugger;
+            const radarrProfiles = x[0];
+            const radarrRootFolders = x[1];
+
+            const profile = radarrProfiles.filter((p) => {
+                return p.id === this.movieRequest.qualityOverride;
+            });
+            if (profile.length > 0) {
+                this.movieRequest.qualityOverrideTitle = profile[0].name;
+            }
+
+            const path = radarrRootFolders.filter((folder) => {
+                return folder.id === this.movieRequest.rootPathOverride;
+            });
+            if (path.length > 0) {
+                this.movieRequest.rootPathOverrideTitle = path[0].path;
+            }
+
         });
     }
 }

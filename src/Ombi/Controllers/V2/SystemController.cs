@@ -25,7 +25,7 @@ namespace Ombi.Controllers.V2
         [HttpGet("news")]
         public async Task<IActionResult> GetNews()
         {
-            var result = await _client.GetAsync("https://raw.githubusercontent.com/tidusjar/Ombi.News/main/README.md");
+            var result = await _client.GetAsync("https://raw.githubusercontent.com/Ombi-app/Ombi.News/main/README.md");
             var content = await result.Content.ReadAsStringAsync();
             var md = Markdown.ToHtml(content);
             return Ok(md);
