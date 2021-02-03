@@ -12,7 +12,7 @@
         <img [routerLink]="generateDetailsLink()" id="cardImage" src="{{result.posterPath}}" class="image"
             alt="{{result.title}}">
         <div class="middle">
-            <a class="poster-overlay">
+            <a class="poster-overlay" [routerLink]="generateDetailsLink()">
                 <div class="summary">
                     <div class="title">{{result.title}}</div>
                     <div class="small-text ellipsis">{{result.overview}}</div>
