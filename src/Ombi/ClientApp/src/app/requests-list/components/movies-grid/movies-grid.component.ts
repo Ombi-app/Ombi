@@ -1,14 +1,18 @@
 import { Component, AfterViewInit, ViewChild, EventEmitter, Output, ChangeDetectorRef, OnInit } from "@angular/core";
-import { IMovieRequests, IRequestsViewModel } from "../../../interfaces";
+import { IMovieRequests, IRequestEngineResult, IRequestsViewModel } from "../../../interfaces";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
-import { merge, Observable, of as observableOf } from 'rxjs';
+import { merge, Observable, of as observableOf, forkJoin } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { AuthService } from "../../../auth/auth.service";
 import { StorageService } from "../../../shared/storage/storage-service";
 import { RequestFilterType } from "../../models/RequestFilterType";
+import { SelectionModel } from "@angular/cdk/collections";
+import { NotificationService, RequestService } from "../../../services";
+import { TranslateService } from "@ngx-translate/core";
+import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
     templateUrl: "./movies-grid.component.html",
@@ -16,7 +20,7 @@ import { RequestFilterType } from "../../models/RequestFilterType";
     styleUrls: ["./movies-grid.component.scss"]
 })
 export class MoviesGridComponent implements OnInit, AfterViewInit {
-    public dataSource: IMovieRequests[] = [];
+    public dataSource: MatTableDataSource<IMovieRequests>;
     public resultsLength: number;
     public isLoadingResults = true;
     public displayedColumns: string[] = ['title', 'requestedUser.requestedBy',  'status', 'requestStatus','requestedDate', 'actions'];
@@ -25,6 +29,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     public defaultSort: string = "requestedDate";
     public defaultOrder: string = "desc";
     public currentFilter: RequestFilterType = RequestFilterType.All;
+    public selection = new SelectionModel<IMovieRequests>(true, []);
 
     public RequestFilter = RequestFilterType;
 
@@ -40,13 +45,17 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
 
     constructor(private requestService: RequestServiceV2, private ref: ChangeDetectorRef,
-                private auth: AuthService, private storageService: StorageService) {
+                private auth: AuthService, private storageService: StorageService,
+                private requestServiceV1: RequestService, private notification: NotificationService,
+                private translateService: TranslateService) {
 
     }
-    
-    public ngOnInit() {        
-        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
 
+    public ngOnInit() {
+        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+        if (this.isAdmin) {
+            this.displayedColumns.unshift('select');
+        }
         const defaultCount = this.storageService.get(this.storageKeyGridCount);
         const defaultSort = this.storageService.get(this.storageKey);
         const defaultOrder = this.storageService.get(this.storageKeyOrder);
@@ -96,7 +105,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
                     this.isLoadingResults = false;
                     return observableOf([]);
                 })
-            ).subscribe(data => this.dataSource = data);
+            ).subscribe(data => this.dataSource = new MatTableDataSource(data));
     }
 
     public loadData(): Observable<IRequestsViewModel<IMovieRequests>> {
@@ -117,9 +126,9 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
 
     public openOptions(request: IMovieRequests) {
         const filter = () => {
-        this.dataSource = this.dataSource.filter((req) => {
-            return req.id !== request.id;
-        })
+            this.dataSource.data = this.dataSource.data.filter((req) => {
+                return req.id !== request.id;
+            });
         };
 
         const onChange = () => {
@@ -133,4 +142,56 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
         this.currentFilter = type;
         this.ngAfterViewInit();
     }
+
+    public isAllSelected() {
+        const numSelected = this.selection.selected.length;
+        const numRows = this.dataSource.data.length;
+        return numSelected === numRows;
+      }
+
+      public masterToggle() {
+        this.isAllSelected() ?
+            this.selection.clear() :
+            this.dataSource.data.forEach(row => this.selection.select(row));
+      }
+
+      public async bulkDelete() {
+        if (this.selection.isEmpty()) {
+            return;
+        }
+        let tasks = new Array();
+        this.selection.selected.forEach((selected) => {
+            tasks.push(this.requestServiceV1.removeMovieRequestAsync(selected.id));
+        });
+
+        await Promise.all(tasks);
+
+        this.notification.success(this.translateService.instant('Requests.RequestPanel.Deleted'))
+        this.selection.clear();
+        this.ngAfterViewInit();
+      }
+
+      public bulkApprove() {
+        if (this.selection.isEmpty()) {
+            return;
+        }
+        let tasks = new Array<Observable<IRequestEngineResult>>();
+        this.selection.selected.forEach((selected) => {
+            tasks.push(this.requestServiceV1.approveMovie({ id: selected.id }));
+        });
+
+        this.isLoadingResults = true;
+        forkJoin(tasks).subscribe((result: IRequestEngineResult[]) => {
+            this.isLoadingResults = false;
+            const failed = result.filter(x => !x.result);
+            if(failed.length > 0) {
+                this.notification.error("Some requests failed to approve: " + failed[0].errorMessage);
+                this.selection.clear();
+                return;
+            }
+            this.notification.success(this.translateService.instant('Requests.RequestPanel.Approved'));
+            this.selection.clear();
+            this.ngAfterViewInit();
+        })
+      }
 }

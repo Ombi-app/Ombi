@@ -63,3 +63,10 @@
 ::ng-deep table.requests button{
 	margin:5px;
 }
+
+::ng-deep .floating-fab {
+    position: fixed;
+    right: 3%;
+    bottom: 6%;
+    z-index: 10;
+}

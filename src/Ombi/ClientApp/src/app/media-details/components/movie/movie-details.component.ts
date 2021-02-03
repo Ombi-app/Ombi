@@ -12,7 +12,7 @@ import { NewIssueComponent } from "../shared/new-issue/new-issue.component";
 import { MovieAdvancedOptionsComponent } from "./panels/movie-advanced-options/movie-advanced-options.component";
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { RequestBehalfComponent } from "../shared/request-behalf/request-behalf.component";
-import { Observable, forkJoin } from "rxjs";
+import { forkJoin } from "rxjs";
 
 @Component({
     templateUrl: "./movie-details.component.html",
