@@ -25,6 +25,7 @@ import {
     ISlackNotificationSettings,
     ISonarrSettings,
     ITelegramNotifcationSettings,
+    ITesterResult,
     IWebhookNotificationSettings,
     IWhatsAppSettings,
 } from "../../interfaces";
@@ -83,16 +84,16 @@ export class TesterService extends ServiceHelpers {
         return this.http.post<boolean>(`${this.url}jellyfin`, JSON.stringify(settings),  {headers: this.headers});
     }
 
-    public radarrTest(settings: IRadarrSettings): Observable<boolean> {
-        return this.http.post<boolean>(`${this.url}radarr`, JSON.stringify(settings),  {headers: this.headers});
+    public radarrTest(settings: IRadarrSettings): Observable<ITesterResult> {
+        return this.http.post<ITesterResult>(`${this.url}radarr`, JSON.stringify(settings),  {headers: this.headers});
     }
 
-    public lidarrTest(settings: ILidarrSettings): Observable<boolean> {
-        return this.http.post<boolean>(`${this.url}lidarr`, JSON.stringify(settings),  {headers: this.headers});
+    public lidarrTest(settings: ILidarrSettings): Observable<ITesterResult> {
+        return this.http.post<ITesterResult>(`${this.url}lidarr`, JSON.stringify(settings),  {headers: this.headers});
     }
 
-    public sonarrTest(settings: ISonarrSettings): Observable<boolean> {
-        return this.http.post<boolean>(`${this.url}sonarr`, JSON.stringify(settings),  {headers: this.headers});
+    public sonarrTest(settings: ISonarrSettings): Observable<ITesterResult> {
+        return this.http.post<ITesterResult>(`${this.url}sonarr`, JSON.stringify(settings),  {headers: this.headers});
     }
 
     public couchPotatoTest(settings: ICouchPotatoSettings): Observable<boolean> {

@@ -1,4 +1,4 @@
-﻿export * from "./ICommon";
+export * from "./ICommon";
 export * from "./ICouchPotato";
 export * from "./IImages";
 export * from "./IMediaServerStatus";
@@ -20,3 +20,4 @@ export * from "./ISearchMusicResult";
 export * from "./IVote";
 export * from "./IFailedRequests";
 export * from "./IHub";
+export * from "./ITester";
