@@ -241,3 +241,23 @@ a.poster-overlay:hover{
 .ombi-card #cardImage:hover{
   cursor: pointer;
 }
+
+.ombi-card .button-request-container{
+  position: relative;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: -37px;
+  margin-bottom: 0px;
+  opacity:0;
+  transition: .5s ease;
+}
+
+::ng-deep .ombi-card .button-request-container .button-request{
+  padding-right:0px;
+  padding-left:0px;
+}
+
+.c:hover .button-request-container {
+  opacity:1;
+}
