@@ -121,6 +121,10 @@
         font-size:36px;
         padding:40px 20px;
         height:auto;
+        max-width: 350px;
+        display: flex;
+        white-space: normal;
+        text-align: center;
     }
 
     .outer-profile {
