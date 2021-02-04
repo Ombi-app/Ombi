@@ -18,13 +18,13 @@
                     <div class="small-text ellipsis">{{result.overview}}</div>
                 </div>
             </a>
-            <div class="row" *ngIf="!result.available && !result.approved">
-                <div class="col-12">
-                    <button mat-raised-button class="btn-green full-width poster-request-btn" (click)="request($event)">
-                        <mat-icon *ngIf="!loading">cloud_download</mat-icon>
-                        <i *ngIf="loading" class="fas fa-spinner fa-pulse fa-2x fa-fw" aria-hidden="true"></i>
-                    </button>
-                </div>
+        </div>
+        <div class="row button-request-container" *ngIf="!result.available && !result.approved">
+            <div class="button-request poster-overlay">
+                <button mat-raised-button class="btn-green full-width poster-request-btn" (click)="request($event)">
+                    <mat-icon *ngIf="!loading">cloud_download</mat-icon>
+                    <i *ngIf="loading" class="fas fa-spinner fa-pulse fa-2x fa-fw" aria-hidden="true"></i>
+                </button>
             </div>
         </div>
 </div>

@@ -62,6 +62,13 @@
   margin-top:-61px;
 }
 
+@media (max-width:520px){
+  .right{
+      margin-top:0px;
+      text-align: center;;
+  }
+}
+
 .discover-filter-buttons-group {
   background: $ombi-background-primary;
   border: 1px solid $ombi-background-primary-accent;
