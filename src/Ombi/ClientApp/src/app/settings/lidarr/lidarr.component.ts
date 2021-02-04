@@ -108,11 +108,11 @@ export class LidarrComponent implements OnInit {
         const settings = <ILidarrSettings>form.value;
         this.testerService.lidarrTest(settings).subscribe(result => {
             if (result.isValid) {
-                this.notificationService.success("Successfully connected to Sonarr!");
+                this.notificationService.success("Successfully connected to Lidarr!");
             } else if (result.expectedSubDir !== null) {
-                this.notificationService.error("Your Sonarr Base URL must be set to " + result.expectedSubDir);
+                this.notificationService.error("Your Lidarr Base URL must be set to " + result.expectedSubDir);
             } else {
-                this.notificationService.error("We could not connect to Sonarr!");
+                this.notificationService.error("We could not connect to Lidarr!");
             }
         });
     }
