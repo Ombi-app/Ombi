@@ -105,13 +105,13 @@ stages:
         targetType: 'inline'
         script: |
           $body = @{
-            "ref"="master"
+            "ref"="main"
             "inputs"= @{"version"= "$(gitTag)"}
           } | ConvertTo-Json
 
           $header = @{
             "Accept"="application/vnd.github.v3+json"
-            "Authorization"="${env:APTPAT}"
+            "Authorization"="Bearer ${env:APTPAT}"
           } 
 
           Invoke-RestMethod -Uri "https://api.github.com/repos/Ombi-app/Ombi.Apt/actions/workflows/build-deb.yml/dispatches" -Method 'Post' -Body $body -Headers $header
