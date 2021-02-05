@@ -26,94 +26,17 @@
         <td mat-cell *matCellDef="let element"> {{element.userReported.userAlias}} </td>
     </ng-container>
 
-    <!-- <ng-container matColumnDef="requestedUser.requestedBy">
-        <th mat-header-cell *matHeaderCellDef> {{'Requests.RequestedBy' | translate}} </th>
-        <td mat-cell *matCellDef="let element"> {{element.requestedUser?.userAlias}} </td>
-    </ng-container>
-
-
-    <ng-container matColumnDef="requestedDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.RequestDate' | translate}} </th>
-        <td mat-cell *matCellDef="let element"> {{element.requestedDate | amLocal | amDateFormat: 'LL'}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.Status' | translate}} </th>
-        <td mat-cell *matCellDef="let element"> {{element.status}} </td>
-    </ng-container>
-
-
-    <ng-container matColumnDef="requestStatus">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{ 'Requests.RequestStatus' | translate}} </th>
-        <td mat-cell *matCellDef="let element"> {{element.requestStatus | translate}} </td>
-    </ng-container>-->
-
     <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> </th>
         <td mat-cell *matCellDef="let element">
             <button *ngIf="element.requestType === 1" mat-raised-button color="accent" [routerLink]="'/details/movie/' + element.providerId">{{ 'Issues.Details' | translate}}</button>
             <button *ngIf="element.requestType === 0" mat-raised-button color="accent" [routerLink]="'/details/tv/' + element.providerId">{{ 'Issues.Details' | translate}}</button>
             <button *ngIf="element.requestType === 2" mat-raised-button color="accent" [routerLink]="'/details/artist/request/' + element.providerId">{{ 'Issues.Details' | translate}}</button>
-            <!-- <button mat-raised-button color="warn" (click)="openOptions(element)" *ngIf="isAdmin"> {{ 'Requests.Options' | translate}}</button> -->
-        </td>
+         </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 
-<!-- <table class="table table-striped table-hover table-responsive table-condensed">
-        <thead>
-            <tr>
-                <th (click)="setOrder('title', $event)">
-                    <a [translate]="'Issues.ColumnTitle'"></a>
-                    <span *ngIf="order === 'title'">
-                        <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
-                    </span>
-                </th>
-                <th (click)="setOrder('issueCategory.value', $event)">
-                    <a [translate]="'Issues.Category'"></a>
-                    <span *ngIf="order === 'issueCategory.value'">
-                            <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
-                    </span>
-                </th>
-                <th (click)="setOrder('status', $event)">
-                    <a [translate]="'Issues.Status'"></a>
-                    <span *ngIf="order === 'status'">
-                            <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
-                    </span>
-                </th>
-                <th (click)="setOrder('reportedUser', $event)">
-                    <a [translate]="'Issues.ReportedBy'"></a>
-                    <span *ngIf="order === 'reportedUser'">
-                            <span [hidden]="reverse"><i class="fa fa-arrow-down" aria-hidden="true"></i></span><span [hidden]="!reverse"><i class="fa fa-arrow-up" aria-hidden="true"></i></span>
-                    </span>
-                </th>
-                <th>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let issue of issues | orderBy: order : reverse : 'case-insensitive'">
-                <td>
-                    {{issue.title}}
-                </td>
-                <td>
-                    {{issue.issueCategory.value}}
-                </td>
-                <td>
-                    {{IssueStatus[issue.status] | humanize}}
-                </td>
-                <td *ngIf="issue.userReported?.alias">
-                    {{issue.userReported.alias}}
-                </td>
-                <td *ngIf="!issue.userReported?.alias">
-                    {{issue.userReported.userName}}
-                </td>
-                <td>
-                        <a [routerLink]="['/issues/' + issue.id]" class="btn btn-sm btn-info-outline" [translate]="'Issues.Details'"></a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <p-paginator [rows]="rowCount" [totalRecords]="totalRecords" (onPageChange)="paginate($event)"></p-paginator> -->
+<mat-paginator (page)="paginate($event)" [length]="totalRecords"></mat-paginator>

@@ -88,7 +88,7 @@
 </div>
 
 <button *ngIf="selection.hasValue() && isAdmin" mat-fab color="accent" class="floating-fab" [matMenuTriggerFor]="aboveMenu">
-    <mat-icon>add</mat-icon></button>
+    <i class="fas fa-bars"></i></button>
   <mat-menu #aboveMenu="matMenu" yPosition="above">
     <button mat-menu-item (click)="bulkDelete()">{{'Requests.RequestPanel.Delete' | translate}}</button>
     <button mat-menu-item (click)="bulkApprove()">{{'Requests.RequestPanel.Approve' | translate}}</button>

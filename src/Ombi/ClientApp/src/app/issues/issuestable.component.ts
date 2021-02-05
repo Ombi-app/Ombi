@@ -14,7 +14,9 @@ export class IssuesTableComponent  {
     @Output() public changePage = new EventEmitter<IPagenator>();
 
     public displayedColumns = ["title", "category", "subject", "status", "reportedBy", "actions"]
-    public IssueStatus = IssueStatus;
+    public IssueStatus = IssueStatus; 
+    public resultsLength: number;
+    public gridCount: string = "15";
 
     public order: string = "id";
     public reverse = false;
@@ -44,11 +46,6 @@ export class IssuesTableComponent  {
       }
 
       public paginate(event: IPagenator) {
-        //event.first = Index of the first record (current index)
-        //event.rows = Number of rows to display in new page
-        //event.page = Index of the new page
-        //event.pageCount = Total number of pages
-
         this.changePage.emit(event);
     }
 
