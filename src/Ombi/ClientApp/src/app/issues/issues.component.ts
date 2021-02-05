@@ -4,6 +4,8 @@ import { IssuesService } from "../services";
 
 import { IIssueCount, IIssues, IPagenator, IssueStatus } from "../interfaces";
 
+import { PageEvent } from '@angular/material/paginator';
+
 @Component({
     templateUrl: "issues.component.html",
     styleUrls: ['issues.component.scss']
@@ -16,7 +18,7 @@ export class IssuesComponent implements OnInit {
 
     public count: IIssueCount;
 
-    private takeAmount = 10;
+    private takeAmount = 50;
     private pendingSkip = 0;
     private inProgressSkip = 0;
     private resolvedSkip = 0;
@@ -30,18 +32,18 @@ export class IssuesComponent implements OnInit {
         this.issueService.getIssuesCount().subscribe(x => this.count = x);
     }
 
-    public changePagePending(event: IPagenator) {
-        this.pendingSkip = event.first;
+    public changePagePending(event: PageEvent) {
+        this.pendingSkip = event.pageSize * event.pageIndex++;
         this.getPending();
     }
 
-    public changePageInProg(event: IPagenator) {
-        this.inProgressSkip = event.first;
+    public changePageInProg(event: PageEvent) {
+        this.inProgressSkip = event.pageSize * event.pageIndex++;
         this.getInProg();
     }
 
-    public changePageResolved(event: IPagenator) {
-        this.resolvedSkip = event.first;
+    public changePageResolved(event: PageEvent) {
+        this.resolvedSkip = event.pageSize * event.pageIndex++;
         this.getResolved();
     }
 
