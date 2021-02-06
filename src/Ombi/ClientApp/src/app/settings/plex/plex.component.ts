@@ -73,10 +73,9 @@ export class PlexComponent implements OnInit, OnDestroy {
     }
 
     public addTab(event: MatTabChangeEvent) {
-        
         const tabName = event.tab.textLabel;
         if (tabName == "Add Server"){ 
-            
+
             if (this.settings.servers == null) {
             this.settings.servers = [];
             }
@@ -142,6 +141,14 @@ export class PlexComponent implements OnInit, OnDestroy {
         this.jobService.runPlexRecentlyAddedCacher().subscribe(x => {
             if (x) {
                 this.notificationService.success("Triggered the Plex Recently Added Sync");
+            }
+        });
+    }
+
+    public clearDataAndResync(): void {
+        this.jobService.clearMediaserverData().subscribe(x => {
+            if (x) {
+                this.notificationService.success("Triggered the Clear MediaServer Resync");
             }
         });
     }

@@ -1,21 +1,23 @@
-<div *ngIf="movie">
-    <span *ngIf="movie.voteAverage"
-        matTooltip="{{'MediaDetails.Votes' | translate }}  {{movie.voteCount | thousandShort: 1}}">
-        <img class="rating-small" src="{{baseUrl}}/images/tmdb-logo.svg"> {{movie.voteAverage | number:'1.0-1'}}/10
-    </span>
-    <span *ngIf="ratings?.critics_rating && ratings?.critics_score">
-        <img class="rating-small"
-            src="{{baseUrl}}/images/{{ratings.critics_rating === 'Rotten' ? 'rotten-rotten.svg' : 'rotten-fresh.svg'}}">
-        {{ratings.critics_score}}%
-    </span>
-    <span *ngIf="ratings?.audience_rating && ratings?.audience_score">
-        <img class="rating-small"
-            src="{{baseUrl}}/images/{{ratings.audience_rating === 'Upright' ? 'rotten-audience-fresh.svg' : 'rotten-audience-rotten.svg'}}">
-        {{ratings.audience_score}}%
-    </span>
-    <div *ngIf="streams?.length > 0">
+<div *ngIf="movie" class="left-panel-details">
+    <div class="rating medium-font">
+        <span *ngIf="movie.voteAverage"
+            matTooltip="{{'MediaDetails.Votes' | translate }}  {{movie.voteCount | thousandShort: 1}}">
+            <img class="rating-small" src="{{baseUrl}}/images/tmdb-logo.svg"> {{movie.voteAverage | number:'1.0-1'}}/10
+        </span>
+        <span *ngIf="ratings?.critics_rating && ratings?.critics_score">
+            <img class="rating-small"
+                src="{{baseUrl}}/images/{{ratings.critics_rating === 'Rotten' ? 'rotten-rotten.svg' : 'rotten-fresh.svg'}}">
+            {{ratings.critics_score}}%
+        </span>
+        <span *ngIf="ratings?.audience_rating && ratings?.audience_score">
+            <img class="rating-small"
+                src="{{baseUrl}}/images/{{ratings.audience_rating === 'Upright' ? 'rotten-audience-fresh.svg' : 'rotten-audience-rotten.svg'}}">
+            {{ratings.audience_score}}%
+        </span>
+    </div>
+    <div *ngIf="streams?.length > 0" class="streaming-on">
         <hr>
-        <strong>{{'MediaDetails.StreamingOn' | translate }}:</strong>
+        <span class="label">{{'MediaDetails.StreamingOn' | translate }}:</span>
         <div>
         <span *ngFor="let stream of streams">
             <img class="stream-small" [matTooltip]="stream.streamingProvider" src="https://image.tmdb.org/t/p/original{{stream.logo}}">
@@ -24,18 +26,16 @@
     </div>
     <hr>
     <div>
-        <strong>{{'MediaDetails.Status' | translate }}:</strong>
+        <span class="label">{{'MediaDetails.Status' | translate }}:</span>
         {{movie.status}}
     </div>
     <div>
-        <strong>{{'MediaDetails.Availability' | translate }}:</strong>
+        <span class="label">{{'MediaDetails.Availability' | translate }}:</span>
         <span *ngIf="movie.available"> {{'Common.Available' | translate}}</span>
         <span *ngIf="!movie.available"> {{'Common.NotAvailable' | translate}}</span>
-
     </div>
-
     <div *ngIf="!movie.available">
-        <strong>{{'MediaDetails.RequestStatus' | translate }}</strong>
+        <span class="label">{{'MediaDetails.RequestStatus' | translate }}</span>
         <div *ngIf="movie.approved && !movie.available">{{'Common.ProcessingRequest' | translate}}</div>
         <div *ngIf="movie.requested && !movie.approved && !movie.available">{{'Common.PendingApproval' | translate}}
         </div>
@@ -44,27 +44,27 @@
     </div>
 
     <div *ngIf="request">
-        <strong>{{'Requests.RequestedBy' | translate }}:</strong>
+        <span class="label">{{'Requests.RequestedBy' | translate }}:</span>
         {{request.requestedUser.userAlias}}
     </div>
 
     <div *ngIf="request">
-        <strong>{{'Requests.RequestDate' | translate }}:</strong>
+        <span class="label">{{'Requests.RequestDate' | translate }}:</span>
         {{request.requestedDate | date}}
     </div>
 
 
     <div *ngIf="movie.quality">
-        <strong>{{'MediaDetails.Quality' | translate }}:</strong>
+        <span class="label">{{'MediaDetails.Quality' | translate }}:</span>
         <div>{{movie.quality | quality}}</div>
     </div>
 
     <div *ngIf="advancedOptions && request && request.rootPathOverrideTitle">
-        <strong>{{'MediaDetails.RootFolderOverride' | translate }}</strong>
+        <span class="label">{{'MediaDetails.RootFolderOverride' | translate }}</span>
         <div>{{request.rootPathOverrideTitle}}</div>
     </div>
     <div *ngIf="advancedOptions && request && request.qualityOverrideTitle">
-        <strong>{{'MediaDetails.QualityOverride' | translate }}</strong>
+        <span class="label">{{'MediaDetails.QualityOverride' | translate }}</span>
         <div>{{request.qualityOverrideTitle}}</div>
     </div>
 
@@ -72,34 +72,34 @@
 
     <hr>
 
-    <strong>{{'MediaDetails.TheatricalRelease' | translate }}:</strong>
+    <span class="label">{{'MediaDetails.TheatricalRelease' | translate }}:</span>
     {{movie.releaseDate | date: 'mediumDate'}}
 
     <div *ngIf="movie.digitalReleaseDate">
-        <strong>{{'MediaDetails.DigitalRelease' | translate }}:</strong>
+        <span class="label">{{'MediaDetails.DigitalRelease' | translate }}:</span>
         {{movie.digitalReleaseDate | date: 'mediumDate'}}
     </div>
 
     <div *ngIf="movie.voteCount">
-        <strong>{{'MediaDetails.Votes' | translate }}:</strong>
+        <span class="label">{{'MediaDetails.Votes' | translate }}:</span>
         {{movie.voteCount | thousandShort: 1}}
     </div>
     <div>
-        <strong>{{'MediaDetails.Runtime' | translate }}:</strong>
+        <span class="label">{{'MediaDetails.Runtime' | translate }}:</span>
         {{'MediaDetails.Minutes' | translate:{runtime: movie.runtime} }}
     </div>
     <div *ngIf="movie.revenue">
-        <strong>{{'MediaDetails.Revenue' | translate }}:</strong>
+        <span class="label">{{'MediaDetails.Revenue' | translate }}:</span>
         {{movie.revenue | currency: 'USD'}}
     </div>
     <div *ngIf="movie.budget">
-        <strong>{{'MediaDetails.Budget' | translate }}:</strong>
+        <span class="label">{{'MediaDetails.Budget' | translate }}:</span>
         {{movie.budget | currency: 'USD'}}
     </div>
 
     <hr />
     <div class="genre-button-container" *ngIf="movie.genres">
-        <strong>{{'MediaDetails.Genres' | translate }}:</strong>
+        <span class="label">{{'MediaDetails.Genres' | translate }}:</span>
         <div>
             <mat-chip-list>
                 <mat-chip selected *ngFor="let genre of movie.genres">
@@ -111,7 +111,7 @@
 
     <hr />
     <div class="keyword-button-container" *ngIf="movie?.keywords?.keywordsValue?.length > 0">
-        <strong>{{'MediaDetails.Keywords' | translate }}:</strong>
+        <span class="label">{{'MediaDetails.Keywords' | translate }}:</span>
         <mat-chip-list>
             <mat-chip selected *ngFor="let keyword of movie.keywords.keywordsValue">
                 {{keyword.name}}

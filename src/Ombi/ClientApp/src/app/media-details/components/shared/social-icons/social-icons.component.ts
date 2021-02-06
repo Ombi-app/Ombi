@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { RequestType } from "../../../../interfaces";
 @Component({
     selector: "social-icons",
     templateUrl: "./social-icons.component.html",
@@ -18,6 +19,7 @@ export class SocialIconsComponent {
     @Input() embyUrl: string;
     @Input() jellyfinUrl: string;
     @Input() doNotAppend: boolean;
+    @Input() type: RequestType;
 
     @Input() isAdmin: boolean;
     @Input() canRequestOnBehalf: boolean;
@@ -26,6 +28,8 @@ export class SocialIconsComponent {
     @Output() openTrailer: EventEmitter<any> = new EventEmitter();
     @Output() onRequestBehalf: EventEmitter<any> = new EventEmitter();
     @Output() onAdvancedOptions: EventEmitter<any> = new EventEmitter();
+
+    public RequestType = RequestType;
 
 
     public openDialog() {

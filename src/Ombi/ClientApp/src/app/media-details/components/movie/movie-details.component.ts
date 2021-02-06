@@ -27,6 +27,9 @@ export class MovieDetailsComponent {
     public advancedOptions: IAdvancedData;
     public showAdvanced: boolean; // Set on the UI
 
+    public requestType = RequestType.movie;
+
+
     private theMovidDbId: number;
     private imdbId: string;
 
