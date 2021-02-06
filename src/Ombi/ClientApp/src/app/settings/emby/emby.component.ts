@@ -92,4 +92,12 @@ export class EmbyComponent implements OnInit {
             }
         });
     }
+
+    public clearDataAndResync(): void {
+        this.jobService.clearMediaserverData().subscribe(x => {
+            if (x) {
+                this.notificationService.success("Triggered the Clear MediaServer Resync");
+            }
+        });
+    }
 }

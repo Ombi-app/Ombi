@@ -1,11 +1,11 @@
 ﻿<settings-menu></settings-menu>
-<wiki [path]="'/settings/scheduled-tasks/'"></wiki>
+<wiki [path]="'settings/jobs/'"></wiki>
 <div *ngIf="form" class="small-middle-container">
     <fieldset>
         <legend>Job Settings</legend>
         <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
             <small>Changes require a restart.</small><p>
-            <small>You can generate valid CRON Expressions here: <a href="https://www.cronmaker.com/" target="_blank">https://www.cronmaker.com/</a></small>
+            <small>You can generate valid CRON Expressions here: <a href="http://www.cronmaker.com/" target="_blank">https://www.cronmaker.com/</a></small>
             <div style="margin-top:1em;">    
                 <div class="form-group cronBox">
                     <mat-form-field appearance="outline" floatLabel=always>
