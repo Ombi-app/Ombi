@@ -28,6 +28,7 @@ export class TvDetailsComponent implements OnInit {
     public isAdmin: boolean;
     public advancedOptions: IAdvancedData;
     public showAdvanced: boolean; // Set on the UI
+    public requestType = RequestType.tvShow;
 
     private tvdbId: number;
 
