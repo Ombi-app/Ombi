@@ -16,58 +16,62 @@
 
             <top-banner [background]="tv.background" [available]="tv.available" [title]="tv.title"
                 [releaseDate]="tv.firstAired" [tagline]="tv.certification"></top-banner>
+            <div class="social-icons-container">
+                <social-icons 
+                    [homepage]="tv.homepage" 
+                    [tvdbId]="tv.id" 
+                    [hasTrailer]="tv.trailer"
+                    (openTrailer)="openDialog()" 
+                    [imdbId]="tv.imdbId" 
+                    [available]="tv.available || tv.partlyAvailable"
+                    [plexUrl]="tv.plexUrl" 
+                    [embyUrl]="tv.embyUrl" 
+                    [jellyfinUrl]="tv.jellyfinUrl">
+                </social-icons>
+            </div>
 
             <section id="info-wrapper">
                 <div class="small-middle-container">
-                    <div class="row justify-content-center justify-content-sm-start">
-
-                        <media-poster [posterPath]="tv.images?.medium"></media-poster>
-
-
+                    <div class="row justify-content-center justify-content-sm-start header-container">
+                        <div class="details-poster-container">
+                            <media-poster [posterPath]="tv.images?.medium"></media-poster>
+                        </div>
                         <!--Next to poster-->
-                        <div class="col-12 col-lg-2 col-xl-3 media-row">
+                        <div class="details-button-container">
+                            <div class="col-12 media-row">
+                                <button *ngIf="!tv.fullyAvailable" mat-raised-button class="btn-spacing" color="primary"
+                                    (click)="request()"><i class="fas fa-plus"></i>
+                                    {{ 'Common.Request' | translate }}</button>
 
-                            <social-icons [homepage]="tv.homepage" [tvdbId]="tv.id" [hasTrailer]="tv.trailer"
-                                (openTrailer)="openDialog()" [imdbId]="tv.imdbId" [available]="tv.available || tv.partlyAvailable"
-                                [plexUrl]="tv.plexUrl" [embyUrl]="tv.embyUrl" [jellyfinUrl]="tv.jellyfinUrl">
-                            </social-icons>
+                                <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent"
+                                    [disabled]>
+                                    <i class="fas fa-check"></i> {{'Common.Available' | translate }}</button>
+                                <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" mat-raised-button
+                                    class="btn-spacing" color="accent" [disabled]>
+                                    <i class="fas fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
 
-                        </div>
+                                <button mat-raised-button class="btn-spacing" color="danger" (click)="issue()">
+                                    <i class="fas fa-exclamation"></i> {{
+                                    'Requests.ReportIssue' | translate }}</button>
 
-                        <div class="col-12 col-lg-5 col-xl-5 media-row">
-
-                            <!-- <button *ngIf="!tv.fullyAvailable" mat-raised-button class="btn-spacing" color="primary"
-                                (click)="request()"><i class="fas fa-plus"></i>
-                                {{ 'Common.Request' | translate }}</button> -->
-
-                            <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent"
-                                [disabled]>
-                                <i class="fas fa-check"></i> {{'Common.Available' | translate }}</button>
-                            <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" mat-raised-button
-                                class="btn-spacing" color="accent" [disabled]>
-                                <i class="fas fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
-
-                            <button mat-raised-button class="btn-spacing" color="danger" (click)="issue()">
-                                <i class="fas fa-exclamation"></i> {{
-                                'Requests.ReportIssue' | translate }}</button>
-
-                        </div>
-                        <!-- Setting/Configuration admin area -->
-                        <div class="col-12 col-lg-1 col-xl-1 media-row content-end">
-                            <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="menu">
-                                <mat-icon>settings</mat-icon>
-                            </button>
-                            <mat-menu #menu="matMenu">
-                                <button mat-menu-item (click)="openRequestOnBehalf()" [disabled]="fullyAvailable">
-                                    <mat-icon>supervised_user_circle</mat-icon>
-                                    <span>{{'MediaDetails.RequestOnBehalf' | translate}}</span>
+                            </div>
+                            <!-- Setting/Configuration admin area -->
+                            <div class="col-12 col-lg-1 col-xl-1 media-row content-end">
+                                <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="menu">
+                                    <mat-icon>settings</mat-icon>
                                 </button>
-                                <button mat-menu-item [disabled]="!showAdvanced || !showRequest"
-                                    (click)="openAdvancedOptions()">
-                                    <mat-icon>movie_filter</mat-icon>
-                                    <span>{{'MediaDetails.SonarrConfiguration' | translate}}</span>
-                                </button>
-                            </mat-menu>
+                                <mat-menu #menu="matMenu">
+                                    <button mat-menu-item (click)="openRequestOnBehalf()" [disabled]="fullyAvailable">
+                                        <mat-icon>supervised_user_circle</mat-icon>
+                                        <span>{{'MediaDetails.RequestOnBehalf' | translate}}</span>
+                                    </button>
+                                    <button mat-menu-item [disabled]="!showAdvanced || !showRequest"
+                                        (click)="openAdvancedOptions()">
+                                        <mat-icon>movie_filter</mat-icon>
+                                        <span>{{'MediaDetails.SonarrConfiguration' | translate}}</span>
+                                    </button>
+                                </mat-menu>
+                            </div>
                         </div>
                     </div>
 
@@ -79,10 +83,7 @@
                                         [advancedOptions]="showAdvanced"></tv-information-panel>
                                 </mat-card-content>
                             </mat-card>
-
                         </div>
-
-
                         <div class="col-12 col-md-10">
                             <div class="row">
                                 <div class="col-12">
@@ -95,7 +96,6 @@
                                 <div class="col-12">
                                     <cast-carousel [cast]="tv.cast"></cast-carousel>
                                 </div>
-
                             </div>
                         </div>
                     </div>
