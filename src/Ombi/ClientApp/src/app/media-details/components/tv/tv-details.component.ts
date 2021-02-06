@@ -12,6 +12,7 @@ import { NewIssueComponent } from "../shared/new-issue/new-issue.component";
 import { TvAdvancedOptionsComponent } from "./panels/tv-advanced-options/tv-advanced-options.component";
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { RequestBehalfComponent } from "../shared/request-behalf/request-behalf.component";
+import { forkJoin } from "rxjs";
 
 @Component({
     templateUrl: "./tv-details.component.html",
@@ -63,6 +64,7 @@ export class TvDetailsComponent implements OnInit {
         if (this.tv.requestId) {
             this.tvRequest = await this.requestService.getChildRequests(this.tv.requestId).toPromise();
             this.showRequest = this.tvRequest.length > 0 ? this.tvRequest[0].parentRequest : undefined;
+            this.loadAdvancedInfo();
         }
 
         const tvBanner = await this.imageService.getTvBanner(this.tvdbId).toPromise();
@@ -97,7 +99,7 @@ export class TvDetailsComponent implements OnInit {
                 // get the name and ids
                 result.rootFolder = result.rootFolders.filter(f => f.id === +result.rootFolderId)[0];
                 result.profile = result.profiles.filter(f => f.id === +result.profileId)[0];
-                await this.requestService2.updateTvAdvancedOptions({ qualityOverride: result.profileId, rootPathOverride: result.rootFolderId, requestId: this.tv.id }).toPromise();
+                await this.requestService2.updateTvAdvancedOptions({ qualityOverride: result.profileId, rootPathOverride: result.rootFolderId, requestId: this.showRequest.id }).toPromise();
                 this.setAdvancedOptions(result);
             }
         });
@@ -116,10 +118,35 @@ export class TvDetailsComponent implements OnInit {
         this.advancedOptions = data;
         console.log(this.advancedOptions);
         if (data.rootFolderId) {
-            this.showRequest.qualityOverrideTitle = data.rootFolders.filter(x => x.id == data.rootFolderId)[0].path;
+            this.showRequest.qualityOverrideTitle = data.profiles.filter(x => x.id == data.profileId)[0].name;
         }
         if (data.profileId) {
-            this.showRequest.rootPathOverrideTitle = data.profiles.filter(x => x.id == data.profileId)[0].name;
+            this.showRequest.rootPathOverrideTitle =  data.rootFolders.filter(x => x.id == data.rootFolderId)[0].path;
         }
+    }
+
+    private loadAdvancedInfo() {
+        const profile = this.sonarrService.getQualityProfilesWithoutSettings();
+        const folders = this.sonarrService.getRootFoldersWithoutSettings();
+
+        forkJoin([profile, folders]).subscribe(x => {
+            const sonarrProfiles = x[0];
+            const sonarrRootFolders = x[1];
+
+            const profile = sonarrProfiles.filter((p) => {
+                return p.id === this.showRequest.qualityOverride;
+            });
+            if (profile.length > 0) {
+                this.showRequest.qualityOverrideTitle = profile[0].name;
+            }
+
+            const path = sonarrRootFolders.filter((folder) => {
+                return folder.id === this.showRequest.rootFolder;
+            });
+            if (path.length > 0) {
+                this.showRequest.rootPathOverrideTitle = path[0].path;
+            }
+
+        });
     }
 }
