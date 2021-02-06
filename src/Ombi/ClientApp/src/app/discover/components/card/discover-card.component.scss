@@ -2,8 +2,8 @@ $ombi-primary:#3f3f3f;
 $card-background: #2b2b2b;
 
 #cardImage {
-    border-radius: 5px 5px 0px 0px;
-    height: 75%;
+    border-radius: 5px;
+    object-fit:cover;
 }
 
 .dark-card {
@@ -20,24 +20,6 @@ $card-background: #2b2b2b;
 .rating {
     position: absolute;
     font-weight: bold;
-}
-
-$border-width: 3px;
-
-.available {
-    border-bottom: $border-width #1DE9B6 solid;
-}
-
-.approved {
-    border-bottom: $border-width #ff5722 solid;
-}
-
-.requested {
-    border-bottom: $border-width #ffd740 solid;
-}
-
-.notrequested {
-    border-bottom: $border-width #303030 solid;
 }
 
 .expand {
@@ -78,10 +60,205 @@ small {
     font-size: 0.8rem;
 }
 
-@media (min-width: 2000px) {
-    #cardImage {
-        height: 80%;
-        object-fit: cover;
-        display: block;
-    }
+.ombi-card{
+  height:100%;
+}
+ #cardImage {
+  height: 100%;
+  object-fit: cover;
+  display: block;
+ }
+
+
+
+.box {
+    position: relative;
+    max-width: 600px;
+  }
+
+.ombi-card {
+  padding: 5px;
+}
+::ng-deep .p-carousel-indicators {
+  display: none !important;
+  }
+
+  
+.image {
+  border-radius: 10px;
+  opacity: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+
+
+.middle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 67%;
+  width: 90%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+
+
+.c {
+  position: relative;
+}
+
+.c:hover .image {
+  opacity: 0.3;
+}
+
+.c:hover .middle {
+  opacity: 1;
+}
+
+.small-text {
+  font-size: 11px;
+}
+.title {
+    font-size: 18px;
+  }
+
+
+.full-width {
+    width: 100%;
+  }
+
+.ellipsis {
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-top-info{
+  position: absolute;
+  text-transform: uppercase;
+  top: 0px;
+  width: 100%;
+  background-color: rgba(15,23,31,0.6);
+  display:flex;
+  justify-content: space-between;
+  padding-top:0.6em;
+  padding-bottom:0.3em;
+  z-index:2;
+}
+
+.top-left {
+  font-size: 14px;
+  padding-left: 0.5em;
+  font-size: 14px; 
+} 
+
+/* common */
+.top-right{
+  display:flex;
+}
+
+.top-right span.indicator, span.indicator-text {
+  display: none;
+  background-color: transparent;
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0,0,0,.2);
+  text-align: right;
+  font-size: 14px;
+}
+
+.top-right span.indicator{
+  padding-right: 0px;
+}
+.top-right span.indicator-text{
+  padding-right: 1em;
+}
+
+.top-right span.indicator:before{
+  content: '';
+  width: 10px;
+  height: 10px;
+  -moz-border-radius: 7.5px;
+  -webkit-border-radius: 7.5px;
+  border-radius: 7.5px;
+  margin-right:5px;
+}
+
+.top-right.available span.indicator, span.indicator-text{
+  display:block;
+}
+
+.top-right.available span.indicator:before{
+  display: inline-block;
+  background-color: #1DE9B6;
+}
+
+.top-right.approved span.indicator, span.indicator-text {
+  display: block;
+}
+
+.top-right.approved span.indicator:before{
+  display: inline-block;
+  background-color: #ff5722;
+}
+
+.top-right.requested span.indicator, span.indicator-text {
+  display: block;
+}
+
+.top-right.requested span.indicator:before{
+  display: inline-block;
+  background-color: #ffd740;
+}
+
+::ng-deep a.poster-overlay{
+  color:#fff;
+}
+
+a.poster-overlay:hover{
+  text-decoration: none;
+}
+
+@media screen and (max-width: 400px){
+  .ellipsis{
+    display:none;
+  }
+
+  .top-right span.indicator-text{
+    display:none;
+  }
+
+  .top-right span.indicator{
+    padding-right:1em;
+  }
+}
+
+.ombi-card #cardImage:hover{
+  cursor: pointer;
+}
+
+.ombi-card .button-request-container{
+  position: relative;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: -37px;
+  margin-bottom: 0px;
+  opacity:0;
+  transition: .5s ease;
+}
+
+::ng-deep .ombi-card .button-request-container .button-request{
+  padding-right:0px;
+  padding-left:0px;
+  width:100%;
+}
+
+.c:hover .button-request-container {
+  opacity:1;
 }

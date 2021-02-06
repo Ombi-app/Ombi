@@ -6,7 +6,7 @@
             <div class="btn-group">
                 <a href="#" class="btn btn-sm btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     Suggestions
-                    <i class="fa fa-chevron-down"></i>
+                    <i class="fas fa-chevron-down"></i>
                 </a>
                 <ul class="dropdown-menu">
                     <li>
@@ -23,7 +23,7 @@
                     </li>
                 </ul>
             </div>
-            <i id="movieSearchButton" class="fa fa-search"></i>
+            <i id="movieSearchButton" class="fas fa-search"></i>
         </div>
     </div>
     <br />
@@ -31,7 +31,7 @@
     <!-- Movie content -->
     <div id="movieList">
         <div *ngIf="searchApplied && movieResults?.length <= 0" class='no-search-results'>
-            <i class='fa fa-film no-search-results-icon'></i>
+            <i class='fas fa-film no-search-results-icon'></i>
             <div class='no-search-results-text'>Sorry, we didn't find any results!</div>
         </div>
 
@@ -108,13 +108,13 @@
 
                     <div *ngIf="result.available">
                         <button style="text-align: right" class="btn btn-success-outline disabled" disabled>
-                            <i class="fa fa-check"></i> Available</button>
+                            <i class="fas fa-check"></i> Available</button>
 
                         <div *ngIf="result.plexUrl">
                             <br/>
                             <br/>
                             <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{result.plexUrl}}" target="_blank">
-                                <i class="fa fa-eye"></i> View In Plex</a>
+                                <i class="far fa-eye"></i> View In Plex</a>
 
                         </div>
                     </div>
@@ -122,20 +122,20 @@
                         <div *ngIf="result.requested || result.approved; then requestedBtn else notRequestedBtn"></div>
                         <ng-template #requestedBtn>
                             <button style="text-align: right" class="btn btn-primary-outline disabled" [disabled]>
-                                <i class="fa fa-check"></i> Requested</button>
+                                <i class="fas fa-check"></i> Requested</button>
                         </ng-template>
                         <ng-template #notRequestedBtn>
                             <button id="{{result.id}}" style="text-align: right" class="btn btn-primary-outline" (click)="request(result)">
-                                <i *ngIf="result.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i>
-                                <i *ngIf="!result.requestProcessing && !result.processed" class="fa fa-plus"></i>
-                                <i *ngIf="result.processed && !result.requestProcessing" class="fa fa-check"></i>Request</button>
+                                <i *ngIf="result.requestProcessing" class="fas fa-circle-notch fa-spin fa-fw"></i>
+                                <i *ngIf="!result.requestProcessing && !result.processed" class="fas fa-plus"></i>
+                                <i *ngIf="result.processed && !result.requestProcessing" class="fas fa-check"></i>Request</button>
                         </ng-template>
                     </div>
 
                     <br/>
                     <div *ngIf="result.available">
                         <a *ngIf="result.plexUrl" style="text-align: right" class="btn btn-sm btn-success-outline" href="{{result.plexUrl}}" target="_blank">
-                            <i class="fa fa-eye"></i> View On Plex</a>
+                            <i class="far fa-eye"></i> View On Plex</a>
 
                     </div>
 

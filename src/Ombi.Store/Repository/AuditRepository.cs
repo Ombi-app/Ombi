@@ -24,20 +24,16 @@ namespace Ombi.Store.Repository
 
         public async Task Record(AuditType type, AuditArea area, string description, string user)
         {
-            using (var tran = await Ctx.Database.BeginTransactionAsync())
+            await Ctx.Audit.AddAsync(new Audit
             {
-                await Ctx.Audit.AddAsync(new Audit
-                {
-                    User = user,
-                    AuditArea = area,
-                    AuditType = type,
-                    DateTime = DateTime.UtcNow,
-                    Description = description
-                });
+                User = user,
+                AuditArea = area,
+                AuditType = type,
+                DateTime = DateTime.UtcNow,
+                Description = description
+            });
 
-                await Ctx.SaveChangesAsync();
-                tran.Commit();
-            }
+            await Ctx.SaveChangesAsync();
         }
     }
 }

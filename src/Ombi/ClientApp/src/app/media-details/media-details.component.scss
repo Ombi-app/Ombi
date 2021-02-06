@@ -5,21 +5,12 @@
     h1 {
         font-size: 1.5rem;
     }
-    .mobile-poster {
-        display: block;
-        position: absolute;
-        width: 70px;
-        left: 12px;
-        bottom: 2px;
+    .mobile-top-text {
+        margin-bottom: 170px;
     }
+
     #info-wrapper .sidebar-poster {
         margin-top: -126px !important;
-    }
-}
-
-@media (max-width: 767px) {
-    #summary-wrapper {
-        height: 350px !important;
     }
 }
 
@@ -46,7 +37,7 @@
     background-size: cover;
     background-position: 50% 10%;
     transition: all .5s;
-    height: 450px;
+    height: 600px;
     color: #fff;
     position: relative;
 }
@@ -88,20 +79,9 @@
 #summary-wrapper .summary .container,
 .summary-wrapper .summary .container {
     position: absolute;
-    bottom: 0;
+    bottom: 300px;
     left: 0;
     right: 0;
-}
-
-#summary-wrapper,
-.summary-wrapper {
-    background-color: #000;
-    background-size: cover;
-    background-position: 50% 10%;
-    transition: all .5s;
-    height: 550px;
-    color: #fff;
-    position: relative;
 }
 
 .grey-text {
@@ -163,11 +143,11 @@
 }
 
 .btn-spacing {
-    margin-right: 10px !important;
+    margin-right: 10px;
 }
 
 .spacing-below {
-    margin-bottom: 15px !important;
+    margin-bottom: 15px;
 }
 
 .left-seperator {
@@ -185,19 +165,20 @@
 }
 
 .media-icons {
-    color: mat-color($ombi-app-primary) !important;
-    padding: 1%;
+    color: #FFF;
+    padding: 5px;
 }
 
 .media-row {
-    padding-top: 2%;
+    position:absolute;
+    bottom:0;
+    margin-bottom:20px;
 }
 
 .cast-profile-img {
     border-radius: 100%;
     width: 170px;
 }
-
 
 
 
@@ -222,4 +203,140 @@
 .no-info {
     text-align: center;
     padding-top: 15%;
+}
+
+.content-end {
+    text-align: end;
+}
+
+.rating-small {
+    width: 1.3em;
+}
+.stream-small {
+    width: 3em;
+    border-radius: 1em;
+    margin-right: 10px;
+    margin-top: 5px;
+}
+
+.social-icons-container{
+    position:absolute;
+    top:84px;
+    right:0px;
+    width:100%;
+    background-color:rgba(15,23,31,.6);
+}
+
+.social-icons-container-inner{
+    text-align:right;
+    display:flex;
+    justify-content: flex-end;
+    padding-right:2.5%
+}
+
+.viewon-btn {
+    background-color: transparent;
+    text-decoration: none;
+}
+
+.viewon-btn.plex {
+    color: #E5A00D;
+    box-shadow: inset 0px 0px 0px 1px #e5a00d;
+}
+.viewon-btn.emby {
+    color: #52b54a;
+    box-shadow: inset 0px 0px 0px 1px #52b54a;
+}
+.viewon-btn.jellyfin {
+    color: #00a4dc;
+    box-shadow: inset 0px 0px 0px 1px #00a4dc;
+}
+
+::ng-deep .p-carousel-indicators {
+    display: none !important;
+    }
+
+
+#info-wrapper{
+    margin-top:-200px;
+}
+.full-screenshot.enabled.overlay{
+    background-image: linear-gradient(to bottom, transparent, 50%, $ombi-background-primary);
+}
+
+.row.justify-content-center.justify-content-sm-start.header-container{
+    flex-wrap: nowrap;
+}
+
+.details-button-container{
+    width:100%;
+    position:relative;
+}
+
+.info-wrapper .row{
+    flex-wrap:wrap;
+}
+
+.rating{
+    display:flex;
+    justify-content: space-evenly;
+    width:100%;
+    flex-wrap: wrap;
+}
+
+.left-panel-details .label{
+    font-weight:500;
+}
+
+.left-panel-details{
+    font-weight:100;
+}
+
+.genre-button-container .mat-chip-list .mat-chip-list-wrapper{
+    margin-top:3px;
+    margin:0;
+    margin-left: -6px;
+}
+
+.keyword-button-container .mat-chip-list .mat-chip-list-wrapper{
+    margin-top:3px;
+    margin:0;
+    margin-left: -6px;
+}
+
+.mat-card-header{
+    font-size: 20px;
+    padding-top: 10px;
+    padding-bottom:10px;
+}
+
+.media-row .mat-raised-button{
+    padding:2px 1.5em;;
+    width:170px;
+    margin-top:10px;
+}
+
+@media (max-width:500px){
+    .row.justify-content-center.justify-content-sm-start.header-container{
+        flex-wrap:wrap;
+    }
+
+    .media-row{
+        position:relative;
+        justify-content: center;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .media-row .mat-raised-button{
+        width:100%;
+    }
+
+    .media-row .btn-spacing{
+        margin-right:0;
+    }
+    
+    .media-row span{
+        width:100%;
+    }
 }

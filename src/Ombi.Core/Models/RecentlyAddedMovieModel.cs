@@ -18,6 +18,7 @@ namespace Ombi.Core.Models
     public enum RecentlyAddedType
     {
         Plex,
-        Emby
+        Emby,
+        Jellyfin
     }
 }

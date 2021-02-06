@@ -8,6 +8,7 @@ import { IEmbySettings } from "../../interfaces";
 @Component({
     selector: "wizard-emby",
     templateUrl: "./emby.component.html",
+    styleUrls: ["../welcome/welcome.component.scss"],
 })
 export class EmbyComponent implements OnInit {
 
@@ -20,7 +21,6 @@ export class EmbyComponent implements OnInit {
     public ngOnInit() {
         this.embySettings = {
             servers: [],
-            isJellyfin: false,
             id: 0,
             enable: true,
         };

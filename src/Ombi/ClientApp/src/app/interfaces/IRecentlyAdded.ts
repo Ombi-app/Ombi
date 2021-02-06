@@ -26,4 +26,5 @@ export interface IRecentlyAddedRangeModel {
 export enum RecentlyAddedType {
     Plex,
     Emby,
+    Jellyfin,
 }

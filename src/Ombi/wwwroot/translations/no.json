@@ -116,7 +116,7 @@
             "LatestSeason": "Siste sesong",
             "Select": "Velg...",
             "SubmitRequest": "Send forespørsel",
-            "Season": "Sesong: {{seasonNumber}}",
+            "Season": "Sesong {{seasonNumber}}",
             "SelectAllInSeason": "Velg alle i sesong {{seasonNumber}}"
         }
     },
@@ -146,7 +146,7 @@
         "Remove": "Fjern",
         "Deny": "Avslå",
         "DenyReason": "Deny Reason",
-        "Season": "Sesong:",
+        "Season": "Sesong",
         "GridTitle": "Tittel",
         "AirDate": "Sendedato",
         "GridStatus": "Status",
@@ -257,7 +257,6 @@
         "Genres": "Genres",
         "TheatricalRelease": "Kinopremiere",
         "DigitalRelease": "Digital Release",
-        "UserScore": "User Score",
         "Votes": "Votes",
         "Runtime": "Runtime",
         "Minutes": "{{runtime}} Minutes",

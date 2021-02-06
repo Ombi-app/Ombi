@@ -39,7 +39,7 @@ html,
 body {
     min-height: 100vh;
     overflow: initial;
-    scrollbar-color: #616161 #303030; //firefox
+    // scrollbar-color: #616161 #303030; //firefox
     scrollbar-width: thin; //firefox
     -webkit-overflow-scrolling: touch;
 }
@@ -62,7 +62,7 @@ body {
 
 ::-webkit-scrollbar {
     width: 7px;
-    background: #818181;
+    background: #0f171d;
 }
 
 ::-webkit-scrollbar-track {
@@ -72,7 +72,7 @@ body {
 // Changed color of the scrollbar 
 ::-webkit-scrollbar-thumb {
     border-radius: 3px;
-    background: #303030;
+    background: #35465c;
 }
 
 .sidenav ::-webkit-scrollbar-track {
@@ -86,7 +86,6 @@ body {
 
     .grow:hover {
         transform: scale(1.1);
-        color: black;
     }
 }
 
@@ -106,7 +105,7 @@ table {
 }
 
 ::ng-deep .dark .nav-link.active {
-    color: #303030;
+    color: $ombi-active;
     background-color: $accent-dark;
     border-color: rgba(0, 0, 0, 0.18);
     font-weight: 400;
@@ -128,9 +127,9 @@ table {
     border: 1px solid rgba(0, 0, 0, 0.18);
 }
 
-::ng-deep .mat-toolbar.mat-primary {
-    margin-bottom: 0.5em;
-}
+// ::ng-deep .mat-toolbar.mat-primary {
+//     margin-bottom: 0.5em;
+// }
 
 ::ng-deep .dark .mat-form-field.mat-focused .mat-form-field-label {
     color: $accent-dark;

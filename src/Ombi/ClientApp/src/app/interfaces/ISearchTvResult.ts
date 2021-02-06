@@ -28,6 +28,7 @@ export interface ISearchTvResult {
     available: boolean;
     plexUrl: string;
     embyUrl: string;
+    jellyfinUrl: string;
     quality: string;
     firstSeason: boolean;
     latestSeason: boolean;
@@ -46,6 +47,7 @@ export interface ITvRequestViewModel {
     latestSeason: boolean;
     tvDbId: number;
     seasons: ISeasonsViewModel[];
+    requestOnBehalf: string | undefined;
 }
 
 export interface ISeasonsViewModel {

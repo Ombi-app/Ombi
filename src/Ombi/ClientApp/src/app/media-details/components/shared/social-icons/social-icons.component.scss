@@ -1,9 +1,10 @@
+@import "~styles/variables.scss";
 
-
-.media-icons.plex {
-    color: #feb801 !important;
+a.media-icons:hover{
+    color:$ombi-active;
 }
 
-.media-icons.emby {
-    color: #52b54a !important;
+button.admin-cog{
+    margin-left:40px;
+    color:$ombi-active;
 }

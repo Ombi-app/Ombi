@@ -21,10 +21,6 @@
 	float:right;
 }
 
-::ng-deep .mat-form-field-label{
-	font-size: 1.2em;
-}
-
 ::ng-deep .mat-form-field-infix {
 	width: 10em;
 	margin-top:1em;
@@ -62,4 +58,15 @@
 	.justify-content-md-center {
     	justify-content: center !important;
 	}
+}
+
+::ng-deep table.requests button{
+	margin:5px;
+}
+
+::ng-deep .floating-fab {
+    position: fixed;
+    right: 3%;
+    bottom: 6%;
+    z-index: 10;
 }

@@ -19,6 +19,8 @@ using Ombi.Core.Settings;
 using Ombi.Store.Repository;
 using TraktSharp.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
+using Ombi.Api.TheMovieDb;
 
 namespace Ombi.Core.Engine.V2
 {
@@ -27,15 +29,17 @@ namespace Ombi.Core.Engine.V2
         private readonly ITvMazeApi _tvMaze;
         private readonly IMapper _mapper;
         private readonly ITraktApi _traktApi;
+        private readonly IMovieDbApi _movieApi;
 
         public TvSearchEngineV2(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
             ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um, ICacheService memCache, ISettingsService<OmbiSettings> s,
-            IRepository<RequestSubscription> sub)
+            IRepository<RequestSubscription> sub, IMovieDbApi movieApi)
             : base(identity, service, r, um, memCache, s, sub)
         {
             _tvMaze = tvMaze;
             _mapper = mapper;
             _traktApi = trakt;
+            _movieApi = movieApi;
         }
 
 
@@ -106,6 +110,39 @@ namespace Ombi.Core.Engine.V2
             return await ProcessResult(mapped, traktInfoTask);
         }
 
+        public async Task<IEnumerable<StreamingData>> GetStreamInformation(int tvDbId, int tvMazeId, CancellationToken cancellationToken)
+        {
+            var tvdbshow = await Cache.GetOrAdd(nameof(GetShowInformation) + tvMazeId,
+                async () => await _tvMaze.ShowLookupByTheTvDbId(tvMazeId), DateTime.Now.AddHours(12));
+            if (tvdbshow == null)
+            {
+                return null;
+            }
+
+            /// this is a best effort guess since TV maze do not provide the TheMovieDbId
+            var movieDbResults = await _movieApi.SearchTv(tvdbshow.name, tvdbshow.premiered.Substring(0, 4));
+            var potential = movieDbResults.FirstOrDefault();
+            tvDbId = potential.Id;
+            // end guess
+
+            var providers = await _movieApi.GetTvWatchProviders(tvDbId, cancellationToken);
+            var results = await GetUserWatchProvider(providers);
+
+            var data = new List<StreamingData>();
+
+            foreach (var result in results)
+            {
+                data.Add(new StreamingData
+                {
+                    Logo = result.logo_path,
+                    Order = result.display_priority,
+                    StreamingProvider = result.provider_name
+                });
+            }
+
+            return data;
+        }
+
         private IEnumerable<SearchTvShowViewModel> ProcessResults<T>(IEnumerable<T> items)
         {
             var retVal = new List<SearchTvShowViewModel>();
@@ -141,7 +178,7 @@ namespace Ombi.Core.Engine.V2
             {
                 item.Images.Medium = item.Images.Medium.ToHttpsUrl();
             }
-            
+
             if (item.Cast?.Any() ?? false)
             {
                 foreach (var cast in item.Cast)

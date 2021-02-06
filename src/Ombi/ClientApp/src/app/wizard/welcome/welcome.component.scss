@@ -1,0 +1,172 @@
+@import "~styles/variables.scss";
+.welcome-container{
+    display:flex;
+    height:100%;
+    width:100%;
+}
+
+.welcome-container .logo{
+    font-family: Montserrat,sans-serif;
+    text-transform: uppercase;
+    color: #62d2fa;
+    font-weight: 700;
+    font-size: 5em;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    height:300px;
+}
+
+.left-container{
+    width:30%;
+}
+
+.right-container{
+    width:60%;
+    float:right;
+}
+
+.right-container-content{
+    width:100%;
+}
+
+.welcome-container .right-container{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.welcome-buttons{
+    float:right;
+}
+
+.fab:before {
+    font-family: 'Font Awesome 5 Brands';
+}
+
+.social-media .fab{
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.fas:before {
+    font-family:"Font Awesome 5 Free";
+    font-weight:800;
+}
+
+.social-media .fas{
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-weight:400;
+}
+
+.social-media a{
+    color: #FFF;
+}
+
+.social-media{
+    display:grid;
+}
+
+.fa-ul {
+    list-style-type: none;
+    margin-left: 2.5em;
+    padding-left: 0;
+}
+
+.fa-li {
+    left: -2em;
+    position: absolute;
+    text-align: center;
+    width: 2em;
+    line-height: inherit;
+}
+
+.social-media ul li{
+    font-size:16px;
+    padding:5px;
+}
+
+
+.left-container.mediaserver img{
+    object-fit: contain;
+    width: 100%;
+}
+
+.left-container.mediaserver{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    height:300px;
+    padding:20px;
+}
+
+.right-container.mediaserver{
+    display:flex;
+    justify-content: center;
+    align-items:center;
+}
+
+.right-container-content .mediaserver{
+    display:block;
+}
+
+.mediaserver-container{
+    display:flex;
+    height:100%;
+    width:100%;
+    justify-content: space-between;
+}
+
+.plex-buttons{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+p.space-or{
+    padding:20px;
+    margin-top:20px;
+}
+
+.viewon-btn.plex {
+    border: 1px solid #e5a00d;
+    color: #e5a00d;
+}
+
+.viewon-btn {
+    background-color: transparent;
+    text-decoration: none;
+}
+
+.viewon-btn.standard {
+    border: 1px solid #FFF;
+}
+
+.viewon-btn.emby {
+    border: 1px solid #52B54B;
+    color: #52B54B;
+}
+
+.viewon-btn.jellyfin {
+    border: 1px solid #A45FC4;
+    color: #A45FC4;
+}
+
+.text-logo{
+    font-size:12em;
+}
+
+.left{
+    float:left;
+}
+
+.right{
+    float:right;
+}
+
+small.important{
+    color:red;
+}
+
+h1.wizard-title{
+    margin-top:30px;
+}

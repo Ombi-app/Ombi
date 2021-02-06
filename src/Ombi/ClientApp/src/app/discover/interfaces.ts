@@ -1,7 +1,7 @@
 import { RequestType } from "../interfaces";
 
 export interface IDiscoverCardResult {
-    id: number;
+    id: number | string;
     posterPath: string;
     url: string | undefined;
     title: string;
@@ -14,6 +14,8 @@ export interface IDiscoverCardResult {
     overview: string;
     imdbid: string;
     background: string|any;
+
+    tvMovieDb?: boolean;
 }
 
 export enum DiscoverOption {

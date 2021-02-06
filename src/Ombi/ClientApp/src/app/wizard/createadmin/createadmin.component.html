@@ -1,12 +1,22 @@
-﻿
-<small>This account will be used to configure your settings and also manage all of the requests.</small>
-<div>
-    <mat-form-field>
-        <input matInput type="text" id="adminUsername" name="Username" [(ngModel)]="user.username" placeholder="Username">
-    </mat-form-field>
-   </div> <div>
-    <mat-form-field>
-        <input type="password" matInput id="adminPassword" name="Password" [(ngModel)]="user.password" placeholder="Password">
-    </mat-form-field>
+﻿<div class="mediaserver-container">
+    <div class="left-container mediaserver">
+        <i class="fas fa-user-shield text-logo"></i>
+    </div>
+    <div class="right-container mediaserver">
+        <div class="right-container-content mediaserver">
+            <h1>Protect your Ombi</h1>
+            <small>Create an Admin account to make sure you are always able to access your Ombi.</small>
+            <div>
+                <mat-form-field>
+                    <input matInput type="text" id="adminUsername" name="Username" [(ngModel)]="user.username" placeholder="Username">
+                </mat-form-field>
+            </div> <div>
+                <mat-form-field>
+                    <input type="password" matInput id="adminPassword" name="Password" [(ngModel)]="user.password" placeholder="Password">
+                </mat-form-field>
+            </div>
+            <small class="important">You'll need to configure e-mail to reset your password!</small>
+        </div>
+    </div>
 </div>
 

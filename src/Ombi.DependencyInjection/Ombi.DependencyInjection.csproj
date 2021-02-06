@@ -32,6 +32,7 @@
     <ProjectReference Include="..\Ombi.Api.Pushbullet\Ombi.Api.Pushbullet.csproj" />
     <ProjectReference Include="..\Ombi.Api.Pushover\Ombi.Api.Pushover.csproj" />
     <ProjectReference Include="..\Ombi.Api.Radarr\Ombi.Api.Radarr.csproj" />
+    <ProjectReference Include="..\Ombi.Api.RottenTomatoes\Ombi.Api.RottenTomatoes.csproj" />
     <ProjectReference Include="..\Ombi.Api.Service\Ombi.Api.Service.csproj" />
     <ProjectReference Include="..\Ombi.Api.SickRage\Ombi.Api.SickRage.csproj" />
     <ProjectReference Include="..\Ombi.Api.Slack\Ombi.Api.Slack.csproj" />

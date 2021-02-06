@@ -59,7 +59,12 @@ namespace Ombi.Core.Engine
                     {
                         continue;
                     }
-                    retVal.Add(await ProcessResult(tvMazeSearch, false));
+                    var mappedResult = await ProcessResult(tvMazeSearch, false);
+                    if (mappedResult == null)
+                    {
+                        continue;
+                    }
+                    retVal.Add(mappedResult);
                 }
                 return retVal;
             }
@@ -194,7 +199,7 @@ namespace Ombi.Core.Engine
             foreach (var tvMazeSearch in items)
             {
                 var result = await ProcessResult(tvMazeSearch, includeImages);
-                if(settings.HideAvailableFromDiscover && result.Available)
+                if (result == null || settings.HideAvailableFromDiscover && result.Available)
                 {
                     continue;
                 }
@@ -211,15 +216,17 @@ namespace Ombi.Core.Engine
 
         private async Task<SearchTvShowViewModel> ProcessResult(SearchTvShowViewModel item, bool includeImages)
         {
+            if (item.Id == 0)
+            {
+                return null;
+            }
             item.TheTvDbId = item.Id.ToString();
             if (includeImages)
             {
-
-                    if (item.TheTvDbId.HasValue())
-                    {
-                        item.BackdropPath = await _imageService.GetTvBackground(item.TheTvDbId);
-                    }
-
+                if (item.TheTvDbId.HasValue())
+                {
+                    item.BackdropPath = await _imageService.GetTvBackground(item.TheTvDbId);
+                }
             }
 
             await RunSearchRules(item);

@@ -27,7 +27,6 @@ export class EmbyComponent implements OnInit {
 
     public async discoverServerInfo(server: IEmbyServer) {
         const result = await this.embyService.getPublicInfo(server).toPromise();
-        this.settings.isJellyfin = result.isJellyfin;
         server.name = result.serverName;
         server.serverId = result.id;
         this.hasDiscoveredOrDirty = true;
@@ -90,6 +89,14 @@ export class EmbyComponent implements OnInit {
         this.jobService.runEmbyCacher().subscribe(x => {
             if(x) {
                 this.notificationService.success("Triggered the Emby Content Cacher");
+            }
+        });
+    }
+
+    public clearDataAndResync(): void {
+        this.jobService.clearMediaserverData().subscribe(x => {
+            if (x) {
+                this.notificationService.success("Triggered the Clear MediaServer Resync");
             }
         });
     }

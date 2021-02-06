@@ -50,7 +50,7 @@ namespace Ombi.Store.Repository.Requests
                     return "Common.ProcessingRequest";
                 }
 
-                if (!Approved && !Available)
+                if (!Approved && !Available && Requested)
                 {
                     return "Common.PendingApproval";
                 }

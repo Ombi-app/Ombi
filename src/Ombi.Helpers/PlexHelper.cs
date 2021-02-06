@@ -42,7 +42,7 @@ namespace Ombi.Helpers
             //com.plexapp.agents.themoviedb://390043?lang=en
             //com.plexapp.agents.imdb://tt2543164?lang=en
             //plex://movie/5e1632df2d4d84003e48e54e
-            // https://github.com/tidusjar/Ombi/issues/3277
+            // https://github.com/Ombi-app/Ombi/issues/3277
             if (string.IsNullOrEmpty(guid))
             {
                 return new ProviderId();

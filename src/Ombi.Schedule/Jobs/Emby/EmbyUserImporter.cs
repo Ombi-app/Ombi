@@ -80,7 +80,7 @@ namespace Ombi.Schedule.Jobs.Emby
             Api = _apiFactory.CreateClient(settings);
 
             await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
-                .SendAsync(NotificationHub.NotificationEvent, $"{(settings.IsJellyfin ? "Jellyfin" : "Emby")}  User Importer Started");
+                .SendAsync(NotificationHub.NotificationEvent, $"Emby User Importer Started");
             var allUsers = await _userManager.Users.Where(x => x.UserType == UserType.EmbyUser || x.UserType == UserType.EmbyConnectUser).ToListAsync();
             foreach (var server in settings.Servers)
             {
@@ -117,7 +117,8 @@ namespace Ombi.Schedule.Jobs.Emby
                             ProviderUserId = embyUser.Id,
                             Alias = isConnectUser ? embyUser.Name : string.Empty,
                             MovieRequestLimit = userManagementSettings.MovieRequestLimit,
-                            EpisodeRequestLimit = userManagementSettings.EpisodeRequestLimit
+                            EpisodeRequestLimit = userManagementSettings.EpisodeRequestLimit,
+                            StreamingCountry = userManagementSettings.DefaultStreamingCountry
                         };
                         var result = await _userManager.CreateAsync(newUser);
                         if (!result.Succeeded)

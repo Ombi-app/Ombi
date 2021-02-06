@@ -47,12 +47,12 @@
                 <div class="col-sm-3 col-sm-push-3  small-padding">
 
                     <button style="text-align: right" class="btn btn-sm btn-success-outline" (click)="openClosestTab(node,$event)">
-                            <i class="fa fa-plus"></i> View</button>
+                            <i class="fas fa-plus"></i> View</button>
                     <div *ngIf="isAdmin">
                         <!--Sonarr Root Folder-->
                         <div *ngIf="sonarrRootFolders?.length > 1" class="btn-group btn-split" id="rootFolderBtn">
                             <button type="button" class="btn btn-sm btn-warning-outline">
-                                    <i class="fa fa-plus"></i> {{ 'Requests.ChangeRootFolder' | translate }}
+                                    <i class="fas fa-plus"></i> {{ 'Requests.ChangeRootFolder' | translate }}
                                 </button>
                             <button type="button" class="btn btn-warning-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="caret"></span>
@@ -68,7 +68,7 @@
                         <!--Sonarr Quality Profiles -->
                         <div *ngIf="sonarrProfiles?.length > 1" class="btn-group btn-split" id="changeQualityBtn">
                             <button type="button" class="btn btn-sm btn-warning-outline">
-                                    <i class="fa fa-plus"></i> {{ 'Requests.ChangeQualityProfile' | translate }}
+                                    <i class="fas fa-plus"></i> {{ 'Requests.ChangeQualityProfile' | translate }}
                                 </button>
                             <button type="button" class="btn btn-warning-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="caret"></span>
@@ -84,7 +84,7 @@
                     </div>
                     <div class="dropdown" *ngIf="issueCategories && issuesEnabled" id="issueBtn">
                         <button class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                <i class="fa fa-plus"></i> {{ 'Requests.ReportIssue' | translate }}
+                                <i class="fas fa-plus"></i> {{ 'Requests.ReportIssue' | translate }}
                                 <span class="caret"></span>
                             </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">

@@ -21,6 +21,11 @@ namespace Ombi.Settings.Settings.Models
             return ValidateCron(Get(s.EmbyContentSync, Cron.Hourly(5)));
         }
 
+        public static string JellyfinContent(JobSettings s)
+        {
+            return ValidateCron(Get(s.JellyfinContentSync, Cron.Hourly(5)));
+        }
+
         public static string PlexContent(JobSettings s)
         {
             return ValidateCron(Get(s.PlexContentSync, Cron.Daily(2)));

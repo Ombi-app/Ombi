@@ -30,6 +30,7 @@ using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Ombi.HealthChecks;
+using Ombi.Attributes;
 
 namespace Ombi
 {
@@ -86,7 +87,7 @@ namespace Ombi
             services.AddMemoryCache();
             services.AddHttpClient();
 
-            services.AddJwtAuthentication(Configuration);
+            services.AddJwtAuthentication();
 
             services.AddMvc()
                 .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
@@ -97,6 +98,7 @@ namespace Ombi
             services.RegisterApplicationDependencies(); // Ioc and EF
             services.AddSwagger();
             services.AddAppSettingsValues(Configuration);
+            services.AddScoped<WizardActionFilter>();
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {

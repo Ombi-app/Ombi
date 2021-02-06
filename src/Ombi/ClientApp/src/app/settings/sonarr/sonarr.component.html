@@ -61,7 +61,7 @@
                         <div id="profiles">
                             <div class="md-form-field" style="display:inline;">
                                 <button mat-raised-button id="profiles" (click)="getProfiles(form)" class="mat-stroked-button">
-                                        Load Qualities <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"></span></button>
+                                        Load Qualities <span *ngIf="profilesRunning" class="fas fa-spinner fa-spin"></span></button>
                                         <div class="md-form-field" style="margin-top:1em;"></div>
                                 </div>
                             <div class="md-form-field" style="display:contents;">
@@ -93,7 +93,7 @@
                         <div id="rootFolders">
                             <div class="md-form-field" style="display:inline">
                                 <button mat-raised-button id="rootFolder" (click)="getRootFolders(form)" class="mat-stroked-button">
-                                    Load Folders <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button><div class="md-form-field" style="margin-top:1em;"></div>
+                                    Load Folders <span *ngIf="rootFoldersRunning" class="fas fa-spinner fa-spin"></span></button><div class="md-form-field" style="margin-top:1em;"></div>
                                 </div>
                             <div class="md-form-field" style="display:contents;">
                                 <mat-form-field appearance="outline">
@@ -122,12 +122,12 @@
 
                     <div class="form-group  col-md-12" *ngIf="form.controls.v3.value">
                         <label for="select" class="control-label">Language Profiles 
-                            <i *ngIf="form.get('languageProfile').hasError('required')" class="fa fa-exclamation-circle error-text" pTooltip="A Language Profile is required"></i>
+                            <i *ngIf="form.get('languageProfile').hasError('required')" class="fas fa-exclamation-circle error-text" pTooltip="A Language Profile is required"></i>
                         </label>
                         <div id="langaugeProfile">
                             <div class="md-form-field" style="display:inline">
                                 <button type="button" mat-raised-button (click)="getLanguageProfiles(form)" class="mat-stroked-button">Load
-                                    Languages <span *ngIf="langRunning" class="fa fa-spinner fa-spin"> </span></button><div class="md-form-field" style="margin-top:1em;"></div>
+                                    Languages <span *ngIf="langRunning" class="fas fa-spinner fa-spin"> </span></button><div class="md-form-field" style="margin-top:1em;"></div>
                                 </div>
                             <div class="md-form-field" style="display:contents;">
                                 <mat-form-field appearance="outline">

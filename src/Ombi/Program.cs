@@ -49,6 +49,8 @@ namespace Ombi
                     }
                 });
 
+
+
             Console.WriteLine(HelpOutput(result));
             if (baseUrl.HasValue())
             {
@@ -98,12 +100,16 @@ namespace Ombi
                         Type = ConfigurationTypes.Url,
                         Value = "http://*:5000"
                     };
-                    using (var tran = await settingsDb.Database.BeginTransactionAsync())
+                    var strat = settingsDb.Database.CreateExecutionStrategy();
+                    await strat.ExecuteAsync(async () =>
                     {
-                        settingsDb.ApplicationConfigurations.Add(url);
-                        await settingsDb.SaveChangesAsync();
-                        await tran.CommitAsync();
-                    }
+                        using (var tran = await settingsDb.Database.BeginTransactionAsync())
+                        {
+                            settingsDb.ApplicationConfigurations.Add(url);
+                            await settingsDb.SaveChangesAsync();
+                            await tran.CommitAsync();
+                        }
+                    });
 
                     urlValue = url.Value;
                 }
@@ -111,12 +117,15 @@ namespace Ombi
                 if (!url.Value.Equals(host))
                 {
                     url.Value = UrlArgs;
-
-                    using (var tran = await settingsDb.Database.BeginTransactionAsync())
+                    var strat = settingsDb.Database.CreateExecutionStrategy();
+                    await strat.ExecuteAsync(async () =>
                     {
-                        await settingsDb.SaveChangesAsync();
-                        await tran.CommitAsync();
-                    }
+                        using (var tran = await settingsDb.Database.BeginTransactionAsync())
+                        {
+                            await settingsDb.SaveChangesAsync();
+                            await tran.CommitAsync();
+                        }
+                    });
 
                     urlValue = url.Value;
                 }
@@ -142,13 +151,16 @@ namespace Ombi
                     Type = ConfigurationTypes.SecurityToken,
                     Value = Guid.NewGuid().ToString("N")
                 };
-
-                using (var tran = await ctx.Database.BeginTransactionAsync())
+                var strat = ctx.Database.CreateExecutionStrategy();
+                await strat.ExecuteAsync(async () =>
                 {
-                    ctx.ApplicationConfigurations.Add(securityToken);
-                    await ctx.SaveChangesAsync();
-                    await tran.CommitAsync();
-                }
+                    using (var tran = await ctx.Database.BeginTransactionAsync())
+                    {
+                        ctx.ApplicationConfigurations.Add(securityToken);
+                        await ctx.SaveChangesAsync();
+                        await tran.CommitAsync();
+                    }
+                });
             }
 
             instance.SecurityKey = securityToken.Value;

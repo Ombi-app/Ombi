@@ -1126,6 +1126,11 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
+"@fortawesome/fontawesome-free@^5.15.2":
+  version "5.15.2"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.15.2.tgz#218cd7276ab4f9ab57cc3d2efa2697e6a579f25d"
+  integrity sha512-7l/AX41m609L/EXI9EKH3Vs3v0iA8tKlIOGtw+kgcoanI7p+e4I4GYLqW3UXWiTnjSFymKSmTTPKYrivzbxxqA==
+
 "@fullcalendar/core@^4.2.0":
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-4.4.0.tgz#79dbc0cca836ce628a07e739a456da11ff141373"
@@ -3841,10 +3846,6 @@ follow-redirects@^1.0.0:
   dependencies:
     debug "=3.1.0"
 
-font-awesome@^4.7.0:
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.7.0.tgz#8fa8cf0411a1a31afd07b06d2902bb9fc815a133"
-
 for-in@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
@@ -5241,6 +5242,11 @@ lodash@^4.0.0, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@~4.17.1
 lodash@^4.17.10, lodash@^4.17.11:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
+
+lodash@^4.17.20:
+  version "4.17.20"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
+  integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
 
 log-symbols@^3.0.0:
   version "3.0.0"
@@ -7000,10 +7006,10 @@ primeicons@^4.0.0:
   resolved "https://registry.yarnpkg.com/primeicons/-/primeicons-4.0.0.tgz#a3594b3af213dcf8c4c3d6fc99eea05b7c92f57c"
   integrity sha512-JQBIswGSItn8I0Pq21RchENpKJxSi1MjfBDfggMQpXtoKNKblJoHmol/7tCV3CAV2Dlb94ht8TD8qdIAW01pGg==
 
-primeng@^10.0.3:
-  version "10.0.3"
-  resolved "https://registry.yarnpkg.com/primeng/-/primeng-10.0.3.tgz#e9d0ea425b9c5023bc9eef2cb014941939d0c35e"
-  integrity sha512-Nsiwpmy3RlFPBlxabdzeAYxFn4fXEyZjj7iAi1X5J4RRGD7NoB67+NbnOInE1rXTnNVHYxCca91OvaNiHSWWrg==
+primeng@^11.0.0:
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/primeng/-/primeng-11.1.0.tgz#3957e6bac5bf4cc5e4eb4dc2761a35668e08a780"
+  integrity sha512-5eQvLbUJeyaa5EwIEQobRhyl92EhNo4jxvh4YGh984t0B8SyuGmWH5TjoM5GmiZeYOBlt8htvHFJ3rz3xKXQFA==
   dependencies:
     tslib "^2.0.0"
 
@@ -7714,6 +7720,11 @@ sass-loader@8.0.2:
     neo-async "^2.6.1"
     schema-utils "^2.6.1"
     semver "^6.3.0"
+
+sass-recursive-map-merge@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/sass-recursive-map-merge/-/sass-recursive-map-merge-1.0.1.tgz#d5460b9fe10df62d246ca27c48d823f25c2290cb"
+  integrity sha512-OuDTGVGx2o2sPeaSgGob5s2Qf6LxoMU4LG7n6vCzNgfXyBz/y8tKzcEYdmvgyhjvGQVcGA1g2UJnP7WMmahuVg==
 
 sass@1.26.3:
   version "1.26.3"
@@ -8762,9 +8773,9 @@ tslib@^1.8.0, tslib@^1.8.1:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
 
 tslib@^2.0.0:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.0.3.tgz#8e0741ac45fc0c226e58a17bfc3e64b9bc6ca61c"
-  integrity sha512-uZtkfKblCEQtZKBF6EBXVZeQNl82yqtDQdv+eck8u7tdPxjLu2/lp5/uPW+um2tpuxINHWy3GhiccY7QgEaVHQ==
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.1.0.tgz#da60860f1c2ecaa5703ab7d39bc05b6bf988b97a"
+  integrity sha512-hcVC3wYEziELGGmEEXue7D75zbwIIVUMWAVbHItGPx0ziyXxrOMQx4rQEVEV45Ut/1IotuEvwqPopzIOkDMf0A==
 
 tslint-angular@^1.1.2:
   version "1.1.2"

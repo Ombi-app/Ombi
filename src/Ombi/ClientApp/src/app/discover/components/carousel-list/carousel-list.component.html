@@ -1,0 +1,13 @@
+<div class="right">
+<mat-button-toggle-group name="discoverMode" (change)="toggleChanged($event)" value="{{discoverOptions}}" class="discover-filter-buttons-group">
+    <mat-button-toggle [ngClass]="{'button-active': discoverOptions === DiscoverOption.Combined}" value="{{DiscoverOption.Combined}}" class="discover-filter-button">{{'Discovery.Combined' | translate}}</mat-button-toggle>
+    <mat-button-toggle [ngClass]="{'button-active': discoverOptions === DiscoverOption.Movie}" value="{{DiscoverOption.Movie}}" class="discover-filter-button">{{'Discovery.Movies' | translate}}</mat-button-toggle>
+    <mat-button-toggle [ngClass]="{'button-active': discoverOptions === DiscoverOption.Tv}" value="{{DiscoverOption.Tv}}" class="discover-filter-button">{{'Discovery.Tv' | translate}}</mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
+<p-carousel #carousel [numVisible]="10" [numScroll]="10" [page]="0" [value]="discoverResults" [responsiveOptions]="responsiveOptions" (onPage)="newPage()">
+    <ng-template let-result pTemplate="item">
+        <discover-card [result]="result"></discover-card>
+    </ng-template>
+</p-carousel>

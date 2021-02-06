@@ -4,45 +4,49 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { ISearchTvResultV2 } from "../../interfaces/ISearchTvResultV2";
 import { RequestService, MessageService } from "../../services";
 import { ITvRequestViewModel, ISeasonsViewModel, IEpisodesRequests, INewSeasonRequests } from "../../interfaces";
+import { ThousandShortPipe } from "../../pipes/ThousandShortPipe";
 
-
+export interface EpisodeRequestData {
+    series: ISearchTvResultV2;
+    requestOnBehalf: string | undefined;
+}
 @Component({
     selector: "episode-request",
     templateUrl: "episode-request.component.html",
 })
-export class EpisodeRequestComponent implements OnInit {
+export class EpisodeRequestComponent {
 
-    public loading: boolean;
+    public get requestable() {
+        return this.data?.series?.seasonRequests?.length > 0
+    }
 
-    constructor(public dialogRef: MatDialogRef<EpisodeRequestComponent>, @Inject(MAT_DIALOG_DATA) public series: ISearchTvResultV2,
+    constructor(public dialogRef: MatDialogRef<EpisodeRequestComponent>, @Inject(MAT_DIALOG_DATA) public data: EpisodeRequestData,
         private requestService: RequestService, private notificationService: MessageService) { }
 
-    public ngOnInit() {
-        this.loading = true;
-
-        this.loading = false;
-    }
 
     public async submitRequests() {
         // Make sure something has been selected
-        const selected = this.series.seasonRequests.some((season) => {
+        const selected = this.data.series.seasonRequests.some((season) => {
             return season.episodes.some((ep) => {
                 return ep.selected;
             });
         });
         debugger;
-        if (!selected && !this.series.requestAll && !this.series.firstSeason && !this.series.latestSeason) {
+        if (!selected && !this.data.series.requestAll && !this.data.series.firstSeason && !this.data.series.latestSeason) {
             this.notificationService.send("You need to select some episodes!", "OK");
             return;
         }
 
-        this.series.requested = true;
+        this.data.series.requested = true;
 
-        const viewModel = <ITvRequestViewModel>{ firstSeason: this.series.firstSeason, latestSeason: this.series.latestSeason, requestAll: this.series.requestAll, tvDbId: this.series.id };
+        const viewModel = <ITvRequestViewModel>{
+            firstSeason: this.data.series.firstSeason, latestSeason: this.data.series.latestSeason, requestAll: this.data.series.requestAll, tvDbId: this.data.series.id,
+            requestOnBehalf: this.data.requestOnBehalf
+        };
         viewModel.seasons = [];
-        this.series.seasonRequests.forEach((season) => {
+        this.data.series.seasonRequests.forEach((season) => {
             const seasonsViewModel = <ISeasonsViewModel>{ seasonNumber: season.seasonNumber, episodes: [] };
-            if (!this.series.latestSeason && !this.series.requestAll && !this.series.firstSeason) {
+            if (!this.data.series.latestSeason && !this.data.series.requestAll && !this.data.series.firstSeason) {
                 season.episodes.forEach(ep => {
                     if (ep.selected) {
                         ep.requested = true;
@@ -57,9 +61,9 @@ export class EpisodeRequestComponent implements OnInit {
 
         if (requestResult.result) {
             this.notificationService.send(
-                `Request for ${this.series.title} has been added successfully`);
+                `Request for ${this.data.series.title} has been added successfully`);
 
-            this.series.seasonRequests.forEach((season) => {
+            this.data.series.seasonRequests.forEach((season) => {
                 season.episodes.forEach((ep) => {
                     ep.selected = false;
                 });
@@ -89,18 +93,25 @@ export class EpisodeRequestComponent implements OnInit {
         });
     }
 
+    public isSeasonCheckable(season: INewSeasonRequests) {
+        const seasonAvailable = season.episodes.every((ep) => {
+          return ep.available || ep.requested || ep.approved;
+        });
+        return !seasonAvailable;
+      }
+
     public async requestAllSeasons() {
-        this.series.requestAll = true;
+        this.data.series.requestAll = true;
         await this.submitRequests();
     }
 
     public async requestFirstSeason() {
-        this.series.firstSeason = true;
+        this.data.series.firstSeason = true;
         await this.submitRequests();
     }
 
     public async requestLatestSeason() {
-        this.series.latestSeason = true;
+        this.data.series.latestSeason = true;
         await this.submitRequests();
     }
 }

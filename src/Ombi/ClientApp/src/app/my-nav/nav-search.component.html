@@ -1,42 +1,5 @@
-<!-- <input class="form-control quater-width search-bar" type="text" [(ngModel)]="selectedItem" placeholder="{{'NavigationBar.Search' | translate}}"
-aria-label="Search" [ngbTypeahead]="searchModel" [resultFormatter]="formatter" [inputFormatter]="formatter" [resultTemplate]="template" (selectItem)="selected($event)">
-
-<ng-template #template let-result="result">
-</ng-template> -->
-
 <form [formGroup]='searchForm'>
     <mat-form-field floatLabel="never" style="width: 100%;">
-        <input id="nav-search" matInput placeholder="{{'NavigationBar.Search' | translate}}" [matAutocomplete]="auto" formControlName='input'>
+        <input id="nav-search" matInput placeholder="{{'NavigationBar.Search' | translate}}"  formControlName='input'>
     </mat-form-field>
-
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)" [displayWith]="displayFn">
-        <mat-option *ngIf="searching" color="warn">
-            <mat-spinner diameter="50"></mat-spinner>
-        </mat-option>
-        <ng-container *ngIf="!searching">
-            <mat-option class="option" *ngFor="let result of results" [value]="result">
-                <img *ngIf="result.poster" class="option-img" aria-hidden [src]="'https://image.tmdb.org/t/p/w300/'+result.poster" height="75">
-                <span *ngIf="result.mediaType === 'movie'">
-                    <i *ngIf="!result.poster" class="fa fa-film"></i> &nbsp;
-                    <span>{{result.title}}</span>
-                </span>
-                <span *ngIf="result.mediaType === 'tv'">
-                    <i *ngIf="!result.poster" class="fa fa-tv"></i> &nbsp;
-
-                    <span>{{result.title}}</span>
-                </span>
-
-                <span *ngIf="result.mediaType === 'Artist'">
-                    <i *ngIf="!result.poster" class="fa fa-music"></i> &nbsp;
-
-                    <span>{{result.title}}</span>
-                </span>
-
-                <span *ngIf="result.mediaType === 'person'">
-                    <i *ngIf="!result.poster" class="fa fa-user"></i> &nbsp;
-                    <span>{{result.title}}</span>
-                </span>
-            </mat-option>
-        </ng-container>
-    </mat-autocomplete>
 </form>

@@ -2,7 +2,7 @@
 
 import { ICheckbox, IUserManagementSettings } from "../../interfaces";
 import { IUsersModel } from "../../interfaces";
-import { EmbyService, IdentityService, JobService, NotificationService, PlexService, SettingsService } from "../../services";
+import { EmbyService, JellyfinService, IdentityService, JobService, NotificationService, PlexService, SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./usermanagement.component.html",
@@ -12,6 +12,7 @@ export class UserManagementComponent implements OnInit {
 
     public plexEnabled: boolean;
     public embyEnabled: boolean;
+    public jellyfinEnabled: boolean;
     public settings: IUserManagementSettings;
     public claims: ICheckbox[];
 
@@ -23,21 +24,28 @@ export class UserManagementComponent implements OnInit {
     public filteredEmbyUsers: IUsersModel[];
     public bannedEmbyUsers: IUsersModel[] = [];
 
+    public jellyfinUsers: IUsersModel[];
+    public filteredJellyfinUsers: IUsersModel[];
+    public bannedJellyfinUsers: IUsersModel[] = [];
+
     public enableImportButton = false;
+    public countries: string[];
 
     constructor(private readonly settingsService: SettingsService,
                 private readonly notificationService: NotificationService,
                 private readonly identityService: IdentityService,
                 private readonly plexService: PlexService,
                 private readonly jobService: JobService,
-                private readonly embyService: EmbyService) {
+                private readonly embyService: EmbyService,
+                private readonly jellyfinService: JellyfinService) {
     }
 
     public ngOnInit(): void {
+        this.identityService.getSupportedStreamingCountries().subscribe(x => this.countries = x);
         this.settingsService.getUserManagementSettings().subscribe(x => {
             this.settings = x;
 
-            if(x.importEmbyUsers || x.importPlexUsers) {
+            if(x.importEmbyUsers || x.importJellyfinUsers || x.importPlexUsers) {
                 this.enableImportButton = true;
             }
 
@@ -65,6 +73,18 @@ export class UserManagementComponent implements OnInit {
                 });
             });
 
+            this.jellyfinService.getUsers().subscribe(f => {
+                this.jellyfinUsers = f;
+                this.jellyfinUsers.forEach((jellyfin) => {
+                    const isExcluded = this.settings.bannedPlexUserIds.some((val) => {
+                        return jellyfin.id === val;
+                    });
+                    if (isExcluded) {
+                        this.bannedJellyfinUsers.push(jellyfin);
+                    }
+                });
+            });
+
             this.identityService.getAllAvailableClaims().subscribe(c => {
 
                 this.claims = c;
@@ -80,6 +100,7 @@ export class UserManagementComponent implements OnInit {
         });
         this.settingsService.getPlex().subscribe(x => this.plexEnabled = x.enable);
         this.settingsService.getEmby().subscribe(x => this.embyEnabled = x.enable);
+        this.settingsService.getJellyfin().subscribe(x => this.jellyfinEnabled = x.enable);
     }
 
     public submit(): void {
@@ -89,8 +110,9 @@ export class UserManagementComponent implements OnInit {
         this.settings.defaultRoles = enabledClaims.map((claim) => claim.value);
         this.settings.bannedPlexUserIds = this.bannedPlexUsers.map((u) => u.id);
         this.settings.bannedEmbyUserIds = this.bannedEmbyUsers.map((u) => u.id);
+        this.settings.bannedJellyfinUserIds = this.bannedJellyfinUsers.map((u) => u.id);
         
-        if(this.settings.importEmbyUsers || this.settings.importPlexUsers) {
+        if(this.settings.importEmbyUsers || this.settings.importJellyfinUsers || this.settings.importPlexUsers) {
             this.enableImportButton = true;
         }
 
@@ -111,10 +133,15 @@ export class UserManagementComponent implements OnInit {
         this.filteredEmbyUsers = this.filter(event.query, this.embyUsers);
     }
 
+    public filterJellyfinList(event: any) {
+        this.filteredJellyfinUsers = this.filter(event.query, this.jellyfinUsers);
+    }
+
     public runImporter(): void {
         
         this.jobService.runPlexImporter().subscribe();
         this.jobService.runEmbyImporter().subscribe();
+        this.jobService.runJellyfinImporter().subscribe();
     }
 
     private filter(query: string, users: IUsersModel[]): IUsersModel[] {

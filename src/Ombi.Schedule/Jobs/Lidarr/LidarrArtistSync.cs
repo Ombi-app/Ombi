@@ -50,12 +50,16 @@ namespace Ombi.Schedule.Jobs.Lidarr
                         var artists = await _lidarrApi.GetArtists(settings.ApiKey, settings.FullUri);
                         if (artists != null && artists.Any())
                         {
-                            // Let's remove the old cached data
-                            using (var tran = await _ctx.Database.BeginTransactionAsync())
+                            var strat = _ctx.Database.CreateExecutionStrategy();
+                            await strat.ExecuteAsync(async () =>
                             {
-                                await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM LidarrArtistCache");
-                                tran.Commit();
-                            }
+                                // Let's remove the old cached data
+                                using (var tran = await _ctx.Database.BeginTransactionAsync())
+                                {
+                                    await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM LidarrArtistCache");
+                                    tran.Commit();
+                                }
+                            });
 
                             var artistCache = new List<LidarrArtistCache>();
                             foreach (var a in artists)
@@ -71,14 +75,17 @@ namespace Ombi.Schedule.Jobs.Lidarr
                                     });
                                 }
                             }
-
-                            using (var tran = await _ctx.Database.BeginTransactionAsync())
+                            strat = _ctx.Database.CreateExecutionStrategy();
+                            await strat.ExecuteAsync(async () =>
                             {
-                                await _ctx.LidarrArtistCache.AddRangeAsync(artistCache);
+                                using (var tran = await _ctx.Database.BeginTransactionAsync())
+                                {
+                                    await _ctx.LidarrArtistCache.AddRangeAsync(artistCache);
 
-                                await _ctx.SaveChangesAsync();
-                                tran.Commit();
-                            }
+                                    await _ctx.SaveChangesAsync();
+                                    tran.Commit();
+                                }
+                            });
                         }
                     }
                     catch (Exception ex)

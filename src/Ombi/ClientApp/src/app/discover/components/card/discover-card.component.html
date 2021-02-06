@@ -1,15 +1,30 @@
-<div class="card-spacing" *ngIf="result">
-    <mat-card class="mat-elevation-z8 dark-card grow">
-        <a [routerLink]="result.type === RequestType.movie ? '/details/movie/' + result.id : '/details/tv/' + result.id">
-            <img id="cardImage" mat-card-image src="{{result.posterPath}}" class="card-poster" [ngClass]="getStatusClass()" alt="{{result.title}}">
-        </a>
-        <mat-card-content  (click)="openDetails(result);">
+<p-skeleton  *ngIf="!fullyLoaded" width="100%" height="315px"></p-skeleton>
 
-            <h6 *ngIf="result.title.length <= 20">{{result.title}}</h6>
-            <h6 *ngIf="result.title.length > 20" matTooltip="{{result.title}}">{{result.title | truncate:20}}</h6>
-            <div class="fade-text">
-            <small class="overview-text">{{result.overview | truncate: 75}}</small>
+<div *ngIf="fullyLoaded" class="ombi-card dark-card c" [style.display]="hide ? 'none' : 'block'">
+    <div class="card-top-info">
+        <div class="top-left">
+            {{RequestType[result.type] | humanize}}
         </div>
-        </mat-card-content>
-    </mat-card>
+        <div class="{{getStatusClass()}} top-right">
+            <span class="indicator"></span><span class="indicator-text">{{getAvailbilityStatus()}}</span>
+        </div>
+    </div>
+        <img [routerLink]="generateDetailsLink()" id="cardImage" src="{{result.posterPath}}" class="image"
+            alt="{{result.title}}">
+        <div class="middle">
+            <a class="poster-overlay" [routerLink]="generateDetailsLink()">
+                <div class="summary">
+                    <div class="title">{{result.title}}</div>
+                    <div class="small-text ellipsis">{{result.overview}}</div>
+                </div>
+            </a>
+        </div>
+        <div class="row button-request-container" *ngIf="!result.available && !result.approved">
+            <div class="button-request poster-overlay">
+                <button mat-raised-button class="btn-green full-width poster-request-btn" (click)="request($event)">
+                    <mat-icon *ngIf="!loading">cloud_download</mat-icon>
+                    <i *ngIf="loading" class="fas fa-spinner fa-pulse fa-2x fa-fw" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
 </div>

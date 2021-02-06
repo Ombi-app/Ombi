@@ -45,7 +45,7 @@
                     <ul *ngIf="customizationSettings.recentlyAddedPage" class="nav navbar-nav">
                         <li id="RecentlyAdded" [routerLinkActive]="['active']">
                             <a [routerLink]="['/recentlyadded']">
-                                <i class="fa fa-check"></i> {{ 'NavigationBar.RecentlyAdded' | translate }}</a>
+                                <i class="fas fa-check"></i> {{ 'NavigationBar.RecentlyAdded' | translate }}</a>
                         </li>
                     </ul>
                 </div>
@@ -170,7 +170,7 @@
 
 
 <div>
-    <app-my-nav id="main-container" [showNav]="showNav" [isAdmin]="isAdmin" [applicationName]="applicationName" [applicationLogo]="customizationSettings?.logo" [username]="username" [email]="user?.email " (logoutClick)="logOut();" (themeChange)="onSetTheme($event)">
+    <app-my-nav id="main-container dark" [showNav]="showNav" [isAdmin]="isAdmin" [applicationName]="applicationName" [applicationLogo]="customizationSettings?.logo" [username]="username" [email]="user?.email " (logoutClick)="logOut();">
     </app-my-nav>
 
 

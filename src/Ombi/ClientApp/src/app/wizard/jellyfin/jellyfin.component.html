@@ -1,0 +1,40 @@
+﻿<div class="mediaserver-container">
+    <div class="left-container mediaserver">
+      <img src="https://jellyfin.org/images/banner-dark.svg">
+    </div>
+    <div class="right-container mediaserver">
+        <div class="right-container-content mediaserver">
+            <H1 class="wizard-title">Jellyfin Configuration</H1>
+            <div *ngIf="jellyfinSettings">
+                <div *ngIf="jellyfinSettings.servers">
+                    <div *ngFor="let server of jellyfinSettings.servers">
+                            <div>
+                                <mat-form-field>
+                                <input type="text" matInput [(ngModel)]="server.ip" id="Ip" name="Ip" placeholder="Jellyfin Hostname or IP Address">
+                            </mat-form-field>
+                            </div>
+
+                        <div>
+
+                            <mat-form-field>
+                                <input type="text" matInput [(ngModel)]="server.port" id="portNumber" name="Port" value="{{server.port}}">
+                            </mat-form-field>
+                        </div>
+                        <div>
+                                <mat-slide-toggle [(ngModel)]="server.ssl">Enable SSL</mat-slide-toggle>
+                        </div>
+                        <div>
+                        
+                            <mat-form-field>
+                                <input type="text" matInput [(ngModel)]="server.apiKey" id="apiKey" name="ApiKey" placeholder="Jellyfin API Key">
+                            </mat-form-field>
+                        </div>
+                        <div style="text-align: center; margin-top: 20px">
+                            <button (click)="save()" id="jellyfinApiKeySave" mat-raised-button color="accent" type="button" class="viewon-btn jellyfin">Save</button><div id="spinner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

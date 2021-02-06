@@ -50,6 +50,10 @@
                                 <mat-icon style="color:white" matTooltip=" {{'Search.ViewOnEmby' | translate}}">
                                     play_circle_outline</mat-icon>
                             </a></mat-chip>
+                        <mat-chip *ngIf="movie && movie.jellyfinUrl"> <a href="{{movie.jellyfinUrl}}" target="_blank">
+                                <mat-icon style="color:white" matTooltip=" {{'Search.ViewOnJellyfin' | translate}}">
+                                    play_circle_outline</mat-icon>
+                            </a></mat-chip>
 
                         <mat-chip *ngIf="tv && tv.plexUrl"> <a href="{{tv.plexUrl}}" target="_blank">
                                 <mat-icon style="color:white" matTooltip=" {{'Search.ViewOnPlex' | translate}}">
@@ -57,6 +61,10 @@
                             </a></mat-chip>
                         <mat-chip *ngIf="tv &&tv.embyUrl"> <a href="{{movie.embyUrl}}" target="_blank">
                                 <mat-icon style="color:white" matTooltip=" {{'Search.ViewOnEmby' | translate}}">
+                                    play_circle_outline</mat-icon>
+                            </a></mat-chip>
+                        <mat-chip *ngIf="tv &&tv.jellyfinUrl"> <a href="{{movie.jellyfinUrl}}" target="_blank">
+                                <mat-icon style="color:white" matTooltip=" {{'Search.ViewOnJellyfin' | translate}}">
                                     play_circle_outline</mat-icon>
                             </a></mat-chip>
                     </mat-chip-list>
@@ -110,14 +118,14 @@
                                 *ngIf="movie.requested || movie.approved; then requestedBtn else notRequestedBtn"></span>
                             <ng-template #requestedBtn>
                                 <button mat-raised-button class="btn-spacing btn-orange" [disabled]><i
-                                        class="fa fa-check"></i>
+                                        class="fas fa-check"></i>
                                     {{ 'Common.Requested' | translate }}</button>
                             </ng-template>
                             <ng-template #notRequestedBtn>
                                 <button mat-raised-button class="btn-spacing" color="primary" (click)="request()">
-                                    <i *ngIf="movie.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i>
-                                    <i *ngIf="!movie.requestProcessing && !movie.processed" class="fa fa-plus"></i>
-                                    <i *ngIf="movie.processed && !movie.requestProcessing" class="fa fa-check"></i> {{
+                                    <i *ngIf="movie.requestProcessing" class="fas fa-circle-notch fa-spin fa-fw"></i>
+                                    <i *ngIf="!movie.requestProcessing && !movie.processed" class="fas fa-plus"></i>
+                                    <i *ngIf="movie.processed && !movie.requestProcessing" class="fas fa-check"></i> {{
                         'Common.Request' | translate }}</button>
                             </ng-template>
                         </span>
@@ -127,7 +135,7 @@
 
                         <div *ngIf="!tv.fullyAvailable" class="dropdown">
                             <button mat-raised-button class="btn-orange btn-spacing" type="button" (click)="request()">
-                                <i class="fa fa-plus"></i>
+                                <i class="fas fa-plus"></i>
                                 {{ 'Common.Request' | translate }}
                                 <span class="caret"></span>
                             </button>
@@ -135,18 +143,21 @@
 
                         <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent"
                             [disabled]>
-                            <i class="fa fa-check"></i> {{'Common.Available' | translate }}</button>
+                            <i class="fas fa-check"></i> {{'Common.Available' | translate }}</button>
                         <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" mat-raised-button class="btn-spacing"
                             color="accent" [disabled]>
-                            <i class="fa fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
+                            <i class="fas fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
 
                         <span *ngIf="tv.available">
                             <a *ngIf="tv.plexUrl" mat-raised-button style="text-align: right"
                                 class="btn-spacing btn-greem" href="{{tv.plexUrl}}" target="_blank"><i
-                                    class="fa fa-eye"></i> {{'Search.ViewOnPlex' |
+                                    class="far fa-eye"></i> {{'Search.ViewOnPlex' |
                                 translate}}</a>
                             <a *ngIf="tv.embyUrl" mat-raised-button class="btn-green btn-spacing" href="{{tv.embyUrl}}"
-                                target="_blank"><i class="fa fa-eye"></i> {{'Search.ViewOnEmby' |
+                                target="_blank"><i class="far fa-eye"></i> {{'Search.ViewOnEmby' |
+                                translate}}</a>
+                            <a *ngIf="tv.jellyfinUrl" mat-raised-button class="btn-green btn-spacing" href="{{tv.jellyfinUrl}}"
+                                target="_blank"><i class="far fa-eye"></i> {{'Search.ViewOnJellyfin' |
                                 translate}}</a>
                         </span>
                     </div>

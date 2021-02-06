@@ -1,31 +1,40 @@
-﻿
-    <div *ngIf="embySettings">
-        <div *ngIf="embySettings.servers">
-            <div *ngFor="let server of embySettings.servers">
-                    <div>
-                        <mat-form-field>
-                        <input type="text" matInput [(ngModel)]="server.ip" id="Ip" name="Ip" placeholder="Emby/Jellyfin Hostname or IP Address">
-                    </mat-form-field>
+﻿<div class="mediaserver-container">
+    <div class="left-container mediaserver">
+      <img src="https://emby.media/resources/logowhite_1881.png">
+    </div>
+    <div class="right-container mediaserver">
+        <div class="right-container-content mediaserver">
+            <H1 class="wizard-title">Emby Configuration</H1>
+            <div *ngIf="embySettings">
+                <div *ngIf="embySettings.servers">
+                    <div *ngFor="let server of embySettings.servers">
+                            <div>
+                                <mat-form-field>
+                                <input type="text" matInput [(ngModel)]="server.ip" id="Ip" name="Ip" placeholder="Emby Hostname or IP Address">
+                            </mat-form-field>
+                            </div>
+
+                        <div>
+
+                            <mat-form-field>
+                                <input type="text" matInput [(ngModel)]="server.port" id="portNumber" name="Port" value="{{server.port}}">
+                            </mat-form-field>
+                        </div>
+                        <div>
+                                <mat-slide-toggle [(ngModel)]="server.ssl">Enable SSL</mat-slide-toggle>
+                        </div>
+                        <div>
+                        
+                            <mat-form-field>
+                                <input type="text" matInput [(ngModel)]="server.apiKey" id="apiKey" name="ApiKey" placeholder="Emby API Key">
+                            </mat-form-field>
+                        </div>
+                        <div style="text-align: center; margin-top: 20px">
+                            <button (click)="save()" id="embyApiKeySave" mat-raised-button color="accent" type="button" class="viewon-btn emby">Save</button><div id="spinner"></div>
+                        </div>
                     </div>
-
-                <div>
-
-                    <mat-form-field>
-                        <input type="text" matInput [(ngModel)]="server.port" id="portNumber" name="Port" value="{{server.port}}">
-                    </mat-form-field>
-                </div>
-                <div>
-                        <mat-slide-toggle [(ngModel)]="server.ssl">Enable SSL</mat-slide-toggle>
-                </div>
-                <div>
-                 
-                    <mat-form-field>
-                        <input type="text" matInput [(ngModel)]="server.apiKey" id="apiKey" name="ApiKey" placeholder="Emby API Key">
-                    </mat-form-field>
-                </div>
-                <div style="text-align: center; margin-top: 20px">
-                    <a (click)="save()" id="embyApiKeySave" mat-raised-button color="primary">Save <div id="spinner"></div></a>
                 </div>
             </div>
         </div>
     </div>
+</div>

@@ -1,3 +1,5 @@
+@import "./variables.scss";
+
 .lg-form-field .mat-form-field-infix {
     width: 480px;
 }
@@ -13,3 +15,43 @@ td.mat-cell {
 .mat-form-field {
     display: block !important;
 }
+
+
+.mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab {
+    background-color:  $ombi-background-accent;
+}
+
+// lighter bg
+::ng-deep .mat-expansion-panel,
+.mat-card,
+.mat-dialog-container,
+.mat-menu-content,
+.mat-table,
+.mat-paginator {
+    background: $ombi-background-accent;
+}
+
+// Dark bg
+.mat-sidenav-container {
+    background: $ombi-background-primary;
+}
+
+//Login Screen CSS
+
+.login-buttons button{
+    margin:1em;
+    &#sign-in{
+        background-color: $ombi-active;
+        color: $ombi-active-text;
+    }
+    &#sign-plex{
+        background-color: #282A2D;
+        color: #E5A00D;
+    }
+}
+
+::ng-deep #main-container .mat-table {
+    background: $ombi-background-accent;
+}
+
+// General Buttons CSS

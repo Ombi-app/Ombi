@@ -9,7 +9,6 @@ import { MediaPosterComponent } from "./shared/media-poster/media-poster.compone
 import { CastCarouselComponent } from "./shared/cast-carousel/cast-carousel.component";
 import { DenyDialogComponent } from "./shared/deny-dialog/deny-dialog.component";
 import { TvRequestsPanelComponent } from "./tv/panels/tv-requests/tv-requests-panel.component";
-import { MovieAdminPanelComponent } from "./movie/panels/movie-admin-panel/movie-admin-panel.component";
 import { MovieAdvancedOptionsComponent } from "./movie/panels/movie-advanced-options/movie-advanced-options.component";
 import { SearchService, RequestService, RadarrService, IssuesService, SonarrService } from "../../services";
 import { RequestServiceV2 } from "../../services/requestV2.service";
@@ -18,7 +17,9 @@ import { ArtistDetailsComponent } from "./artist/artist-details.component";
 import { ArtistInformationPanel } from "./artist/panels/artist-information-panel/artist-information-panel.component";
 import { ArtistReleasePanel } from "./artist/panels/artist-release-panel/artist-release-panel.component";
 import { IssuesPanelComponent } from "./shared/issues-panel/issues-panel.component";
-import { TvAdminPanelComponent } from "./tv/panels/tv-admin-panel/tv-admin-panel.component";
+import { TvAdvancedOptionsComponent } from "./tv/panels/tv-advanced-options/tv-advanced-options.component";
+import { RequestBehalfComponent } from "./shared/request-behalf/request-behalf.component";
+import { TvRequestGridComponent } from "./tv/panels/tv-request-grid/tv-request-grid.component";
 
 export const components: any[] = [
     MovieDetailsComponent,
@@ -32,21 +33,24 @@ export const components: any[] = [
     CastCarouselComponent,
     DenyDialogComponent,
     TvRequestsPanelComponent,
-    MovieAdminPanelComponent,
     MovieAdvancedOptionsComponent,
+    TvAdvancedOptionsComponent,
     NewIssueComponent,
     ArtistDetailsComponent,
     ArtistInformationPanel,
     ArtistReleasePanel,
+    RequestBehalfComponent,
     IssuesPanelComponent,
-    TvAdminPanelComponent,
+    TvRequestGridComponent,
 ];
 
 export const entryComponents: any[] = [
     YoutubeTrailerComponent,
     DenyDialogComponent,
     MovieAdvancedOptionsComponent,
+    TvAdvancedOptionsComponent,
     NewIssueComponent,
+    RequestBehalfComponent,
 ];
 
 export const providers: any[] = [

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import {
   debounceTime,
   switchMap,
@@ -7,12 +7,8 @@ import {
 } from "rxjs/operators";
 
 import { empty} from "rxjs";
-import { SearchV2Service } from "../services/searchV2.service";
-import { IMultiSearchResult } from "../interfaces";
 import { Router } from "@angular/router";
 import { FormGroup, FormBuilder } from "@angular/forms";
-import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
-import { SearchFilter } from "./SearchFilter";
 
 @Component({
   selector: "app-nav-search",
@@ -20,15 +16,10 @@ import { SearchFilter } from "./SearchFilter";
   styleUrls: ["./nav-search.component.scss"],
 })
 export class NavSearchComponent implements OnInit {
-  @Input() public filter: SearchFilter;
-  public selectedItem: string;
-  public results: IMultiSearchResult[];
-  public searching = false;
 
   public searchForm: FormGroup;
 
   constructor(
-    private searchService: SearchV2Service,
     private router: Router,
     private fb: FormBuilder
   ) {}
@@ -41,38 +32,14 @@ export class NavSearchComponent implements OnInit {
     this.searchForm
       .get("input")
       .valueChanges.pipe(
-        debounceTime(600),
-        tap(() => (this.searching = true)),
+        debounceTime(1300),
         switchMap((value: string) => {
           if (value) {
-            return this.searchService
-              .multiSearch(value, this.filter)
-              .pipe(finalize(() => (this.searching = false)));
+            this.router.navigate([`discover`, value]);
           }
-          return empty().pipe(finalize(() => (this.searching = false)));
+          return empty();;
         })
       )
-      .subscribe((r) => (this.results = r));
-  }
-
-  public selected(event: MatAutocompleteSelectedEvent) {
-    this.searchForm.controls.input.setValue(null);
-      const val = event.option.value as IMultiSearchResult;
-    if (val.mediaType == "movie") {
-      this.router.navigate([`details/movie/${val.id}`]);
-      return;
-    } else if (val.mediaType == "tv") {
-      this.router.navigate([`details/tv/${val.id}/true`]);
-      return;
-    } else if (val.mediaType == "person") {
-      this.router.navigate([`discover/actor/${val.id}`]);
-      return;
-    } else if (val.mediaType == "Artist") {
-      this.router.navigate([`details/artist/${val.id}`]);
-      return;
-    }
-  }
-  displayFn(result: IMultiSearchResult) {
-    if (result) { return result.title; }
+      .subscribe();
   }
 }

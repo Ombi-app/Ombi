@@ -1,5 +1,5 @@
-import { Component, ViewEncapsulation } from "@angular/core";
-import { ImageService, SearchV2Service, RequestService, MessageService } from "../../../services";
+import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from "@angular/core";
+import { ImageService, SearchV2Service, RequestService, MessageService, RadarrService } from "../../../services";
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
@@ -9,7 +9,10 @@ import { AuthService } from "../../../auth/auth.service";
 import { IMovieRequests, RequestType, IAdvancedData } from "../../../interfaces";
 import { DenyDialogComponent } from "../shared/deny-dialog/deny-dialog.component";
 import { NewIssueComponent } from "../shared/new-issue/new-issue.component";
-import { StorageService } from "../../../shared/storage/storage-service";
+import { MovieAdvancedOptionsComponent } from "./panels/movie-advanced-options/movie-advanced-options.component";
+import { RequestServiceV2 } from "../../../services/requestV2.service";
+import { RequestBehalfComponent } from "../shared/request-behalf/request-behalf.component";
+import { forkJoin } from "rxjs";
 
 @Component({
     templateUrl: "./movie-details.component.html",
@@ -24,28 +27,35 @@ export class MovieDetailsComponent {
     public advancedOptions: IAdvancedData;
     public showAdvanced: boolean; // Set on the UI
 
+    public requestType = RequestType.movie;
+
+
     private theMovidDbId: number;
     private imdbId: string;
 
     constructor(private searchService: SearchV2Service, private route: ActivatedRoute,
         private sanitizer: DomSanitizer, private imageService: ImageService,
         public dialog: MatDialog, private requestService: RequestService,
-        public messageService: MessageService, private auth: AuthService,
-        private storage: StorageService) {
-        this.route.params.subscribe((params: any) => {
+        private requestService2: RequestServiceV2, private radarrService: RadarrService,
+        public messageService: MessageService, private auth: AuthService) {
+        this.route.params.subscribe(async (params: any) => {
             if (typeof params.movieDbId === 'string' || params.movieDbId instanceof String) {
                 if (params.movieDbId.startsWith("tt")) {
                     this.imdbId = params.movieDbId;
                 }
             }
             this.theMovidDbId = params.movieDbId;
-            this.load();
+            await this.load();
         });
     }
 
     public async load() {
 
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+
+        if (this.isAdmin) {
+            this.showAdvanced = await this.radarrService.isRadarrEnabled();
+        }
 
         if (this.imdbId) {
             this.searchService.getMovieByImdbId(this.imdbId).subscribe(async x => {
@@ -55,10 +65,7 @@ export class MovieDetailsComponent {
                     this.hasRequest = true;
                     this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
                 }
-                this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
-                    this.movie.background = this.sanitizer.bypassSecurityTrustStyle
-                        ("url(" + x + ")");
-                });
+                this.loadBanner();
             });
         } else {
             this.searchService.getFullMovieDetails(this.theMovidDbId).subscribe(async x => {
@@ -67,17 +74,15 @@ export class MovieDetailsComponent {
                     // Load up this request
                     this.hasRequest = true;
                     this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
+                    this.loadAdvancedInfo();
                 }
-                this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
-                    this.movie.background = this.sanitizer.bypassSecurityTrustStyle
-                        ("url(" + x + ")");
-                });
+                this.loadBanner();
             });
         }
     }
 
-    public async request() {
-        const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: null }).toPromise();
+    public async request(userId?: string) {
+        const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: null, requestOnBehalf: userId }).toPromise();
         if (result.result) {
             this.movie.requested = true;
             this.messageService.send(result.message, "Ok");
@@ -138,10 +143,69 @@ export class MovieDetailsComponent {
     public setAdvancedOptions(data: IAdvancedData) {
         this.advancedOptions = data;
         if (data.rootFolderId) {
-            this.movieRequest.qualityOverrideTitle = data.rootFolders.filter(x => x.id == data.rootFolderId)[0].path;
+            this.movieRequest.qualityOverrideTitle = data.profiles.filter(x => x.id == data.profileId)[0].name;
         }
         if (data.profileId) {
-            this.movieRequest.rootPathOverrideTitle = data.profiles.filter(x => x.id == data.profileId)[0].name;
+            this.movieRequest.rootPathOverrideTitle = data.rootFolders.filter(x => x.id == data.rootFolderId)[0].path;
         }
+    }
+
+    public async openAdvancedOptions() {
+        const dialog = this.dialog.open(MovieAdvancedOptionsComponent, { width: "700px", data: <IAdvancedData>{ movieRequest: this.movieRequest }, panelClass: 'modal-panel' })
+        await dialog.afterClosed().subscribe(async result => {
+            if (result) {
+                result.rootFolder = result.rootFolders.filter(f => f.id === +result.rootFolderId)[0];
+                result.profile = result.profiles.filter(f => f.id === +result.profileId)[0];
+                await this.requestService2.updateMovieAdvancedOptions({ qualityOverride: result.profileId, rootPathOverride: result.rootFolderId, requestId: this.movieRequest.id }).toPromise();
+                this.setAdvancedOptions(result);
+            }
+        });
+    }
+
+    public async openRequestOnBehalf() {
+        const dialog = this.dialog.open(RequestBehalfComponent, { width: "700px", panelClass: 'modal-panel' })
+        await dialog.afterClosed().subscribe(async result => {
+            if (result) {
+                await this.request(result.id);
+            }
+        });
+    }
+
+    private loadBanner() {
+        this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
+            if (!this.movie.backdropPath) {
+            this.movie.background = this.sanitizer.bypassSecurityTrustStyle
+                ("url(" + x + ")");
+            } else {
+                this.movie.background = this.sanitizer.bypassSecurityTrustStyle
+                ("url(https://image.tmdb.org/t/p/original/" + this.movie.backdropPath + ")");
+            }
+        });
+    }
+
+    private loadAdvancedInfo() {
+        const profile = this.radarrService.getQualityProfilesFromSettings();
+        const folders = this.radarrService.getRootFoldersFromSettings();
+
+        forkJoin([profile, folders]).subscribe(x => {
+            debugger;
+            const radarrProfiles = x[0];
+            const radarrRootFolders = x[1];
+
+            const profile = radarrProfiles.filter((p) => {
+                return p.id === this.movieRequest.qualityOverride;
+            });
+            if (profile.length > 0) {
+                this.movieRequest.qualityOverrideTitle = profile[0].name;
+            }
+
+            const path = radarrRootFolders.filter((folder) => {
+                return folder.id === this.movieRequest.rootPathOverride;
+            });
+            if (path.length > 0) {
+                this.movieRequest.rootPathOverrideTitle = path[0].path;
+            }
+
+        });
     }
 }

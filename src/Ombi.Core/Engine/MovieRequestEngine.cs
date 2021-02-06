@@ -67,6 +67,22 @@ namespace Ombi.Core.Engine
                 $"{movieInfo.Title}{(!string.IsNullOrEmpty(movieInfo.ReleaseDate) ? $" ({DateTime.Parse(movieInfo.ReleaseDate).Year})" : string.Empty)}";
 
             var userDetails = await GetUser();
+            var canRequestOnBehalf = false;
+
+            if (model.RequestOnBehalf.HasValue())
+            {
+                canRequestOnBehalf = await UserManager.IsInRoleAsync(userDetails, OmbiRoles.PowerUser) || await UserManager.IsInRoleAsync(userDetails, OmbiRoles.Admin);
+
+                if (!canRequestOnBehalf)
+                {
+                    return new RequestEngineResult
+                    {
+                        Result = false,
+                        Message = "You do not have the correct permissions to request on behalf of users!",
+                        ErrorMessage = $"You do not have the correct permissions to request on behalf of users!"
+                    };
+                }
+            }
 
             var requestModel = new MovieRequests
             {
@@ -82,7 +98,7 @@ namespace Ombi.Core.Engine
                 Status = movieInfo.Status,
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
-                RequestedUserId = userDetails.Id,
+                RequestedUserId = canRequestOnBehalf ? model.RequestOnBehalf : userDetails.Id,
                 Background = movieInfo.BackdropPath,
                 LangCode = model.LanguageCode,
                 RequestedByAlias = model.RequestedByAlias
@@ -103,7 +119,7 @@ namespace Ombi.Core.Engine
 
             if (requestModel.Approved) // The rules have auto approved this
             {
-                var requestEngineResult = await AddMovieRequest(requestModel, fullMovieName);
+                var requestEngineResult = await AddMovieRequest(requestModel, fullMovieName, model.RequestOnBehalf);
                 if (requestEngineResult.Result)
                 {
                     var result = await ApproveMovie(requestModel);
@@ -124,7 +140,7 @@ namespace Ombi.Core.Engine
                 // If there are no providers then it's successful but movie has not been sent
             }
 
-            return await AddMovieRequest(requestModel, fullMovieName);
+            return await AddMovieRequest(requestModel, fullMovieName, model.RequestOnBehalf);
         }
 
 
@@ -270,7 +286,7 @@ namespace Ombi.Core.Engine
                     allRequests = allRequests.Where(x => x.Available);
                     break;
                 case RequestStatus.Denied:
-                    allRequests = allRequests.Where(x => x.Denied.HasValue  && x.Denied.Value && !x.Available);
+                    allRequests = allRequests.Where(x => x.Denied.HasValue && x.Denied.Value && !x.Available);
                     break;
                 default:
                     break;
@@ -429,7 +445,7 @@ namespace Ombi.Core.Engine
         public async Task<MovieRequests> GetRequest(int requestId)
         {
             var request = await MovieRepository.GetWithUser().Where(x => x.Id == requestId).FirstOrDefaultAsync();
-            await CheckForSubscription(new HideResult(), new List<MovieRequests>{request });
+            await CheckForSubscription(new HideResult(), new List<MovieRequests> { request });
 
             return request;
         }
@@ -654,19 +670,19 @@ namespace Ombi.Core.Engine
             };
         }
 
-        private async Task<RequestEngineResult> AddMovieRequest(MovieRequests model, string movieName)
+        private async Task<RequestEngineResult> AddMovieRequest(MovieRequests model, string movieName, string requestOnBehalf)
         {
             await MovieRepository.Add(model);
 
             var result = await RunSpecificRule(model, SpecificRules.CanSendNotification);
             if (result.Success)
-            { 
+            {
                 await NotificationHelper.NewRequest(model);
             }
 
             await _requestLog.Add(new RequestLog
             {
-                UserId = (await GetUser()).Id,
+                UserId = requestOnBehalf.HasValue() ? requestOnBehalf : (await GetUser()).Id,
                 RequestDate = DateTime.UtcNow,
                 RequestId = model.Id,
                 RequestType = RequestType.Movie,

@@ -34,7 +34,7 @@ export class DiscoverCollectionsComponent implements OnInit {
 
     public async requestCollection() {
         await this.collection.collection.forEach(async (movie) => {
-            await this.requestService.requestMovie({theMovieDbId: movie.id, languageCode: null}).toPromise();
+            await this.requestService.requestMovie({theMovieDbId: movie.id, languageCode: null, requestOnBehalf: null}).toPromise();
         });
         this.messageService.send("Requested Collection");
     }

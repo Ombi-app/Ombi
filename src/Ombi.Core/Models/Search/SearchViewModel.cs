@@ -14,11 +14,12 @@ namespace Ombi.Core.Models.Search
         public bool Available { get; set; }
         public string PlexUrl { get; set; }
         public string EmbyUrl { get; set; }
+        public string JellyfinUrl { get; set; }
         public string Quality { get; set; }
         public abstract RequestType Type { get; }
 
         /// <summary>
-        /// This is used for the PlexAvailabilityCheck/EmbyAvailabilityRule rule
+        /// This is used for the PlexAvailabilityCheck/EmbyAvailabilityRule/JellyfinAvailabilityRule rule
         /// </summary>
         /// <value>
         /// The custom identifier.

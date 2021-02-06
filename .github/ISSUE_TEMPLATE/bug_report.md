@@ -27,7 +27,7 @@ If applicable, a snippet of the logs that seems relevant to the bug if present.
  - OS: [e.g. iOS]
 
 **Ombi Version (please complete the following information):**
- - Version [e.g. 3.0.1158]
+ - Version [e.g. 4.0.958]
 - Media Server [e.g. Plex]
 - Database Type: SQLite (Please change if using MySQL)
 

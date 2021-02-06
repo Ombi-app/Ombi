@@ -116,7 +116,7 @@
             "LatestSeason": "Utolsó évad",
             "Select": "Kiválasztás...",
             "SubmitRequest": "Kérés küldése",
-            "Season": "Évad: {{seasonNumber}}",
+            "Season": "Évad {{seasonNumber}}",
             "SelectAllInSeason": "Egész {{seasonNumber}}. évad kiválasztása"
         }
     },
@@ -146,7 +146,7 @@
         "Remove": "Törlés",
         "Deny": "Elutasítás",
         "DenyReason": "Deny Reason",
-        "Season": "Évad:",
+        "Season": "Évad",
         "GridTitle": "Cím",
         "AirDate": "Bemutató",
         "GridStatus": "Állapot",
@@ -257,7 +257,6 @@
         "Genres": "Genres",
         "TheatricalRelease": "Mozis kiadás",
         "DigitalRelease": "Digital Release",
-        "UserScore": "User Score",
         "Votes": "Votes",
         "Runtime": "Runtime",
         "Minutes": "{{runtime}} Minutes",

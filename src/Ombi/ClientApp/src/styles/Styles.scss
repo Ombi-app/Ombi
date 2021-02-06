@@ -10,17 +10,138 @@
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 // Create the theme object (a Sass map containing all of the palettes).
-$ombi-app-theme: mat-light-theme($ombi-app-primary, $ombi-app-accent, $ombi-app-warn);
-@include angular-material-theme($ombi-app-theme);
-
-$dark-theme: mat-dark-theme($ombi-dark-app-primary, $ombi-dark-app-accent, $ombi-dark-app-warn);
 
 
-// Include the alternative theme styles inside of a block with a CSS class. You can make this
-// CSS class whatever you want. In this example, any component inside of an element with
-// `.dark` will be affected by this alternate dark theme instead of the default theme.
-.dark {
-    @include angular-material-theme($dark-theme);
+    $mat-light-theme-background: map_merge($mat-light-theme-background, (background: $ombi-background-primary));
 
+    $theme: mat-dark-theme((
+        color: (
+            primary: $ombi-dark-app-primary,
+            accent: $ombi-dark-app-accent,
+        )
+    ), $ombi-dark-app-accent);
 
-}
+    @include angular-material-theme($theme);
+
+    .mat-table {
+        background: $ombi-background-accent;
+    }
+
+    .mat-paginator {
+        background: $ombi-background-accent;
+    }
+
+    .mat-flat-button.mat-primary, .mat-raised-button.mat-primary, .mat-fab.mat-primary, .mat-mini-fab.mat-primary{
+        background-color: $ombi-background-accent;
+    }
+
+    .mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent{
+        color: $ombi-active-text;
+        background-color: $ombi-active;
+    }
+
+    .mat-menu-panel{
+        background: $ombi-background-accent;
+    }
+
+    .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick{
+        color: $ombi-active;
+    }
+    
+    .mat-form-field.mat-focused .mat-form-field-label{
+        color: $ombi-active;
+    }
+    
+    .mat-input-element{
+        caret-color: $ombi-active;
+    }
+
+    .mat-card {
+        background: $ombi-background-accent;
+    }
+
+    .mat-expansion-panel{
+        background: $ombi-background-accent;
+    }
+
+    .mat-chip.mat-standard-chip.mat-chip-selected.mat-accent{
+        color:$ombi-active-text;
+    }
+
+    .mat-chip.mat-standard-chip.mat-chip-selected.mat-primary{
+        background-color: $ombi-background-primary;
+    }
+
+    .mat-bottom-sheet-container{
+        background: $ombi-background-accent;
+    }
+
+    .grow:hover{
+        color: $ombi-active;
+    }
+
+    .mat-accent.grow:hover{
+        color: $ombi-active-text;
+    }
+
+    .mat-dialog-container{
+        background: $ombi-background-accent;
+    }
+
+    .mat-autocomplete-panel{
+        background: $ombi-background-accent;
+    }
+
+    .mat-form-field.mat-focused .mat-form-field-ripple{
+        background-color: $ombi-active;
+    }
+
+    @media (hover: none){
+        .mat-expansion-panel:not(.mat-expanded):not([aria-disabled=true]) .mat-expansion-panel-header:hover{
+            background: $ombi-background-accent;
+        }
+    }
+
+    .mat-tooltip{
+        background: $ombi-background-accent;
+    } 
+
+    //Wizard CSS
+    .mat-stepper-horizontal, .mat-stepper-vertical{
+        background: $ombi-background-accent;
+    }
+
+    .wizard-background{
+        background-color: $ombi-background-primary;
+        width:100%;
+        height:100vh;
+        display:flex;
+        align-items:center;
+        justify-content: center;
+    }
+
+    .wizard-inner{
+        color:#FFF;
+        min-height: 450px;
+    }
+
+    .wizard-inner .mat-stepper-horizontal {
+        min-height: 450px;
+    }
+
+    .mat-step-header .mat-step-icon{
+        background-color:$ombi-active;
+        color: $ombi-active-text;
+    }
+
+    .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar{
+        background-color: $ombi-active;
+    }
+
+    .mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab{
+        background-color: $ombi-active;
+    }
+
+    hr{
+        border-top: 1px solid $ombi-background-primary;
+    }

@@ -116,7 +116,7 @@
             "LatestSeason": "Последний сезон",
             "Select": "Выбрать...",
             "SubmitRequest": "Подать запрос",
-            "Season": "Сезон: {{seasonNumber}}",
+            "Season": "Сезон {{seasonNumber}}",
             "SelectAllInSeason": "Выбрать все в сезоне {{seasonNumber}}"
         }
     },
@@ -146,7 +146,7 @@
         "Remove": "Удалить",
         "Deny": "Отклонить",
         "DenyReason": "Deny Reason",
-        "Season": "Сезон:",
+        "Season": "Сезон",
         "GridTitle": "Название",
         "AirDate": "Дата",
         "GridStatus": "Статус",
@@ -257,7 +257,6 @@
         "Genres": "Genres",
         "TheatricalRelease": "Релиз в кинотеатрах",
         "DigitalRelease": "Digital Release",
-        "UserScore": "User Score",
         "Votes": "Votes",
         "Runtime": "Runtime",
         "Minutes": "{{runtime}} Minutes",

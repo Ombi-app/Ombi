@@ -57,23 +57,27 @@ namespace Ombi.Store.Context
 
         public void Seed()
         {
-
-            using (var tran = Database.BeginTransaction())
+            var strat = Database.CreateExecutionStrategy();
+            strat.Execute(() =>
             {
-                // Make sure we have the API User
-                var apiUserExists = Users.ToList().Any(x => x.NormalizedUserName == "API");
-                if (!apiUserExists)
+                using (var tran = Database.BeginTransaction())
                 {
-                    Users.Add(new OmbiUser
+                    // Make sure we have the API User
+                    var apiUserExists = Users.ToList().Any(x => x.NormalizedUserName == "API");
+                    if (!apiUserExists)
                     {
-                        UserName = "Api",
-                        UserType = UserType.SystemUser,
-                        NormalizedUserName = "API",
-                    });
-                    SaveChanges();
-                    tran.Commit();
+                        Users.Add(new OmbiUser
+                        {
+                            UserName = "Api",
+                            UserType = UserType.SystemUser,
+                            NormalizedUserName = "API",
+                            StreamingCountry = "US"
+                        });
+                        SaveChanges();
+                        tran.Commit();
+                    }
                 }
-            }
+            });
 
             //Check if templates exist
             var templates = NotificationTemplates.ToList();
@@ -216,12 +220,14 @@ namespace Ombi.Store.Context
 
             if (needToSave)
             {
-
-                using (var tran = Database.BeginTransaction())
+                strat.Execute(() =>
                 {
-                    SaveChanges();
-                    tran.Commit();
-                }
+                    using (var tran = Database.BeginTransaction())
+                    {
+                        SaveChanges();
+                        tran.Commit();
+                    }
+                });
             }
         }
     }

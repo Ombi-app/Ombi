@@ -1,6 +1,6 @@
-﻿<settings-menu></settings-menu>
+<settings-menu></settings-menu>
 <div class="small-middle-container">
-<wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Mass-Email'"></wiki>
+<wiki [path]="'/settings/notifications/mass-email/'"></wiki>
 <fieldset>
     <legend>Mass Email</legend>
 
@@ -23,7 +23,7 @@
                 </div>
                 <div class="form-group">
                         <div>
-                            <button type="submit" id="save" (click)="send()" class="btn btn-primary-outline">Send</button>
+                            <button type="submit" id="save" (click)="send()" class="mat-focus-indicator btn-spacing mat-raised-button mat-button-base mat-accent">Send</button>
                         </div>
                     </div>
     </div>

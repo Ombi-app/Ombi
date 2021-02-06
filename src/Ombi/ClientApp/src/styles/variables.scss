@@ -1,18 +1,19 @@
-﻿@import "./mat-palette.scss";
+﻿// @import "./mat-palette.scss";
 @import '~@angular/material/theming';
+@import "./new-mat-palette.scss";
 // BASE
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $ombi-app-primary: mat-palette($ombi-primary);
-$ombi-app-accent : mat-palette($ombi-accent, 400);
+$ombi-app-accent : mat-palette($ombi-accent);
 // The warn palette is optional (defaults to red).
-$ombi-app-warn : mat-palette($mat-deep-orange);
+$ombi-app-warn : mat-palette($ombi-accent);
 
 // Define an alternate dark theme.
-$ombi-dark-app-primary: mat-palette($mat-grey, 800);
-$ombi-dark-app-accent: mat-palette($mat-amber, A200, A100, A400);
-$ombi-dark-app-warn: mat-palette($mat-deep-orange);
+$ombi-dark-app-primary: mat-palette($ombi-primary, 500);
+$ombi-dark-app-accent:  mat-palette($ombi-accent, 500);
+$ombi-dark-app-warn: mat-palette($ombi-accent, 500);
 
 
 
@@ -30,10 +31,17 @@ $warn: mat-color($ombi-app-warn);
 
 // DARK
 
-$background-dark: mat-color(mat-palette($mat-grey, 800));;
-$backgroundTint-dark:  mat-color(mat-palette($mat-grey, 900));
+$background-dark: mat-color( mat-palette($ombi-background));
+$backgroundTint-dark:  mat-color(mat-palette($ombi-background, 900));
 $text-dark: white;
-$panel: mat-color(mat-palette($mat-grey, 800));
+$panel: mat-color($ombi-dark-app-primary);
 $primary-dark: mat-color($ombi-dark-app-primary);
 $accent-dark: mat-color($ombi-dark-app-accent);
 $warn-dark: mat-color($ombi-dark-app-warn);
+
+
+$ombi-active: mat-color($ombi-dark-app-accent);
+$ombi-background-accent: mat-color($ombi-dark-app-primary);
+$ombi-background-primary: #0f171f;
+$ombi-background-primary-accent: #35465c;
+$ombi-active-text:#1b242f;

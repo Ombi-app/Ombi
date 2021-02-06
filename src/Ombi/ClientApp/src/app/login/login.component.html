@@ -1,10 +1,12 @@
 ﻿<div *ngIf="background" @fadeInOut class="bg" [style.background-image]="background">
+    <div class="login-gradient-bar">
+    </div>
 </div>
 <div class="small-middle-container">
     <div *ngIf="form && customizationSettings && authenticationSettings">
 
         <mat-card class="mat-elevation-z8 top-margin login-card">
-            <img mat-card-image *ngIf="!customizationSettings.logo" src="{{baseUrl}}/images/logo.png">
+            <H1 *ngIf="!customizationSettings.logo" class="login_logo">OMBI</H1>
             <img mat-card-image *ngIf="customizationSettings.logo" [src]="customizationSettings.logo">
             <mat-card-content id="login-box" *ngIf="!authenticationSettings.enableOAuth || loginWithOmbi">
                 <form *ngIf="authenticationSettings" class="form-signin" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
@@ -17,7 +19,7 @@
                             {{'Login.UsernamePlaceholder' | translate}} is <strong>required</strong></mat-error>
                     </mat-form-field>
 
-                    <mat-form-field class="full-width" appearance="outline">
+                    <mat-form-field *ngIf="!authenticationSettings.allowNoPassword" class="full-width" appearance="outline">
                         <mat-label>{{'Login.PasswordPlaceholder' | translate}}</mat-label>
                         <input id="password-field" color="black" type="password" matInput formControlName="password" />
                     </mat-form-field>
@@ -38,7 +40,7 @@
                     <button id="sign-in" mat-raised-button color="primary" type="submit" (click)="loginWithOmbi = true">{{'Login.SignInWith' | translate:appNameTranslate}}</button>
                     <button id="sign-plex" mat-raised-button color="accent" type="button" (click)="oauth()">
                         <span *ngIf="!oauthLoading">{{'Login.SignInWithPlex' | translate}}</span>
-                        <span *ngIf="oauthLoading"><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></span>
+                        <span *ngIf="oauthLoading"><i class="fas fa-circle-notch fa-spin fa-fw"></i></span>
                     </button>
                 </div>
             </mat-card-content>

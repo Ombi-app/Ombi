@@ -46,12 +46,16 @@ namespace Ombi.Schedule.Jobs.Radarr
                         var movies = await RadarrApi.GetMovies(settings.ApiKey, settings.FullUri);
                         if (movies != null)
                         {
-                            // Let's remove the old cached data
-                            using (var tran = await _ctx.Database.BeginTransactionAsync())
+                            var strat = _ctx.Database.CreateExecutionStrategy();
+                            await strat.ExecuteAsync(async () =>
                             {
-                                await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM RadarrCache");
-                                tran.Commit();
-                            }
+                                // Let's remove the old cached data
+                                using (var tran = await _ctx.Database.BeginTransactionAsync())
+                                {
+                                    await _ctx.Database.ExecuteSqlRawAsync("DELETE FROM RadarrCache");
+                                    tran.Commit();
+                                }
+                            });
 
                             var movieIds = new List<RadarrCache>();
                             foreach (var m in movies)
@@ -72,14 +76,17 @@ namespace Ombi.Schedule.Jobs.Radarr
                                     }
                                 }
                             }
-
-                            using (var tran = await _ctx.Database.BeginTransactionAsync())
+                            strat = _ctx.Database.CreateExecutionStrategy();
+                            await strat.ExecuteAsync(async () =>
                             {
-                                await _ctx.RadarrCache.AddRangeAsync(movieIds);
+                                using (var tran = await _ctx.Database.BeginTransactionAsync())
+                                {
+                                    await _ctx.RadarrCache.AddRangeAsync(movieIds);
 
-                                await _ctx.SaveChangesAsync();
-                                tran.Commit();
-                            }
+                                    await _ctx.SaveChangesAsync();
+                                    tran.Commit();
+                                }
+                            });
                         }
 
                         await OmbiQuartz.TriggerJob(nameof(IArrAvailabilityChecker), "DVR");

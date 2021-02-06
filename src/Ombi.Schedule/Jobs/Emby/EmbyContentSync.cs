@@ -58,7 +58,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 {
                     await _notification.Clients.Clients(NotificationHub.AdminConnectionIds)
                         .SendAsync(NotificationHub.NotificationEvent, "Emby Content Sync Failed");
-                    _logger.LogError(e, "Exception when caching {1} for server {0}", server.Name, embySettings.IsJellyfin ? "Jellyfin" : "Emby");
+                    _logger.LogError(e, "Exception when caching Emby for server {0}", server.Name);
                 }
             }
 
@@ -145,7 +145,7 @@ namespace Ombi.Schedule.Jobs.Emby
                                 Title = tvShow.Name,
                                 Type = EmbyMediaType.Series,
                                 EmbyId = tvShow.Id,
-                                Url = EmbyHelper.GetEmbyMediaUrl(tvShow.Id, server?.ServerId, server.ServerHostname, settings.IsJellyfin),
+                                Url = EmbyHelper.GetEmbyMediaUrl(tvShow.Id, server?.ServerId, server.ServerHostname),
                                 AddedAt = DateTime.UtcNow
                             });
                         }

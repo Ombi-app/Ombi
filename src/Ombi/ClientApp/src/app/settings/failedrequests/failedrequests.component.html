@@ -19,8 +19,8 @@
             </td>
             <td>{{RequestType[v.type] | humanize}}</td>
             <td class="vcenter">{{v.retryCount}}</td>
-            <td class="vcenter"> <i [pTooltip]="v.error" class="fa fa-info-circle"></i></td>
-            <td class="vcenter"><button class="btn btn-sm btn-danger-outline" (click)="remove(v)">Remove</button></td>
+            <td class="vcenter"> <i [pTooltip]="v.error" class="fas fa-info-circle"></i></td>
+            <td class="vcenter"><button type="button" class="mat-focus-indicator mat-flat-button mat-button-base mat-warn" (click)="remove(v)">Remove</button></td>
         </tr>
     </tbody>
 </table>

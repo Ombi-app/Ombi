@@ -3,8 +3,8 @@ import { AuthService } from "../../../auth/auth.service";
 import { TranslateService } from "@ngx-translate/core";
 import { AvailableLanguages, ILanguage } from "./user-preference.constants";
 import { StorageService } from "../../../shared/storage/storage-service";
-import { IdentityService, SettingsService } from "../../../services";
-import { IUser } from "../../../interfaces";
+import { IdentityService, NotificationService, SettingsService } from "../../../services";
+import { ICustomizationSettings, IUser } from "../../../interfaces";
 
 @Component({
     templateUrl: "./user-preference.component.html",
@@ -17,12 +17,15 @@ export class UserPreferenceComponent implements OnInit {
     public availableLanguages = AvailableLanguages;
     public qrCode: string;
     public qrCodeEnabled: boolean;
+    public countries: string[];
+    public selectedCountry: string;
+    public customizationSettings: ICustomizationSettings;
 
     private user: IUser;
 
     constructor(private authService: AuthService,
         private readonly translate: TranslateService,
-        private storage: StorageService,
+        private readonly notification: NotificationService,
         private readonly identityService: IdentityService,
         private readonly settingsService: SettingsService) { }
 
@@ -31,26 +34,41 @@ export class UserPreferenceComponent implements OnInit {
         if (user.name) {
             this.username = user.name;
         }
-        const customization = await this.settingsService.getCustomization().toPromise();
+        this.customizationSettings = await this.settingsService.getCustomization().toPromise();
+
+        this.selectedLang = this.translate.currentLang;
 
         const accessToken = await this.identityService.getAccessToken().toPromise();
-        this.qrCode = `${customization.applicationUrl}|${accessToken}`;
+        this.qrCode = `${this.customizationSettings.applicationUrl}|${accessToken}`;
 
-        if(!customization.applicationUrl) {
+        if(!this.customizationSettings.applicationUrl) {
            this.qrCodeEnabled = false;
         } else {
            this.qrCodeEnabled = true;
         }
 
         this.user = await this.identityService.getUser().toPromise();
-        if (this.user.language) {
-            this.selectedLang = this.user.language;
-        }
+        this.selectedCountry = this.user.streamingCountry;
+        this.identityService.getSupportedStreamingCountries().subscribe(x => this.countries = x);
+        this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
+
     }
 
     public languageSelected() {
-        this.identityService.updateLanguage(this.selectedLang).subscribe();
+        this.identityService.updateLanguage(this.selectedLang).subscribe(x => this.notification.success(this.translate.instant("UserPreferences.Updated")));
         this.translate.use(this.selectedLang);
     }
 
+    public countrySelected() {
+        this.identityService.updateStreamingCountry(this.selectedCountry).subscribe(x => this.notification.success(this.translate.instant("UserPreferences.Updated")));
+    }
+
+    public openMobileApp(event: any) {
+        event.preventDefault();
+
+        this.identityService.getAccessToken().subscribe(x => {
+            const url = `ombi://${this.customizationSettings.applicationUrl}_${x}`;
+            window.location.assign(url);
+        });
+    }
 }

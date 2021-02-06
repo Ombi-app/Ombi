@@ -74,7 +74,7 @@
                                     <mat-label for="episodeBatchSize" class="control-label">Episode Batch Size</mat-label>
                                     <input matInput type="number" id="episodeBatchSize" name="episodeBatchSize"
                                         [(ngModel)]="server.episodeBatchSize" value="{{server.episodeBatchSize}}"
-                                        matTooltip="This is used when we cache the episodes, we cache in batches of 50 by default, you can configure how many we do at a time here"
+                                        matTooltip="This is used when we cache the episodes, we cache in batches of 150 by default, you can configure how many we do at a time here"
                                         matTooltipPosition="right">
                                 </mat-form-field>
                             </div>
@@ -102,7 +102,7 @@
                             <div>
                                 <button mat-raised-button (click)="loadLibraries(server)"
                                     class="mat-focus-indicator mat-stroked-button mat-button-base">Load Libraries
-                                    <i class="fa fa-film"></i>
+                                    <i class="fas fa-film"></i>
                                 </button>
                             </div>
                         </div>
@@ -143,7 +143,7 @@
                             <div>
                                 <button mat-raised-button id="requestToken" (click)="requestServers(server)"
                                     class="mat-stroked-button">Load Servers
-                                    <i class="fa fa-key"></i>
+                                    <i class="fas fa-key"></i>
                                 </button>
                             </div>
                         </div>
@@ -158,14 +158,20 @@
                                 </button>
                             </div>
                             <div class="form-group">
-                                <button mat-raised-button (click)="runCacher()" type="button" id="save"
+                                <button mat-raised-button (click)="runCacher()" type="button" id="fullSync"
                                     class="mat-focus-indicator mat-stroked-button mat-button-base">Manually Run Full
                                     Sync</button><br />
                             </div>
                             <div class="form-group">
-                                <button mat-raised-button (click)="runRecentlyAddedCacher()" type="button" id="save"
+                                <button mat-raised-button (click)="runRecentlyAddedCacher()" type="button" id="recentlyAddedSync"
                                     class="mat-focus-indicator mat-stroked-button mat-button-base">Manually Run Recently
                                     Added Sync</button>
+                            </div>
+                            <div class="form-group">
+                                <button mat-raised-button (click)="clearDataAndResync()" type="button" id="clearData"
+                                    class="mat-focus-indicator mat-stroked-button mat-button-base">
+                                    Clear Data And Resync
+                                </button>
                             </div>
                         </div>
                     </div>

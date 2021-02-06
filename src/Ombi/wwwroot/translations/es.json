@@ -116,7 +116,7 @@
             "LatestSeason": "Última temporada",
             "Select": "Selecciona...",
             "SubmitRequest": "Enviar solicitud",
-            "Season": "Temporada: {{seasonNumber}}",
+            "Season": "Temporada {{seasonNumber}}",
             "SelectAllInSeason": "Seleccionar todo en temporada {{seasonNumber}}"
         }
     },
@@ -146,7 +146,7 @@
         "Remove": "Eliminar",
         "Deny": "Denegar",
         "DenyReason": "Razón Denegada",
-        "Season": "Temporada:",
+        "Season": "Temporada",
         "GridTitle": "Título",
         "AirDate": "Fecha de estreno",
         "GridStatus": "Estado",
@@ -257,7 +257,6 @@
         "Genres": "Géneros",
         "TheatricalRelease": "En cines",
         "DigitalRelease": "Estreno Digital",
-        "UserScore": "Puntuación de Usuarios",
         "Votes": "Votos",
         "Runtime": "Duración",
         "Minutes": "{{runtime}} Minutos",

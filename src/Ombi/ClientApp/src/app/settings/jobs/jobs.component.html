@@ -1,11 +1,11 @@
 ﻿<settings-menu></settings-menu>
-<wiki [url]="'https://github.com/tidusjar/Ombi/wiki/Job-Settings'"></wiki>
+<wiki [path]="'settings/jobs/'"></wiki>
 <div *ngIf="form" class="small-middle-container">
     <fieldset>
         <legend>Job Settings</legend>
         <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
             <small>Changes require a restart.</small><p>
-            <small>You can generate valid CRON Expressions here: <a href="https://www.cronmaker.com/" target="_blank">https://www.cronmaker.com/</a></small>
+            <small>You can generate valid CRON Expressions here: <a href="http://www.cronmaker.com/" target="_blank">https://www.cronmaker.com/</a></small>
             <div style="margin-top:1em;">    
                 <div class="form-group cronBox">
                     <mat-form-field appearance="outline" floatLabel=always>
@@ -84,6 +84,14 @@
                         <input type="text" matInput [ngClass]="{'form-error': form.get('embyContentSync').hasError('required')}" id="embyContentSync" name="embyContentSync" formControlName="embyContentSync">
                         <small *ngIf="form.get('embyContentSync').hasError('required')" class="error-text">The Emby Sync is required</small></mat-form-field>
                         <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('embyContentSync')?.value)">Test</button>
+                </div>
+
+                <div class="form-group cronBox">
+                    <mat-form-field appearance="outline" floatLabel=always>
+                    <mat-label for="jellyfinContentSync" class="control-label">Jellyfin Sync</mat-label>
+                        <input type="text" matInput [ngClass]="{'form-error': form.get('jellyfinContentSync').hasError('required')}" id="jellyfinContentSync" name="jellyfinContentSync" formControlName="jellyfinContentSync">
+                        <small *ngIf="form.get('jellyfinContentSync').hasError('required')" class="error-text">The Jellyfin Sync is required</small></mat-form-field>
+                        <button mat-raised-button type="button" class="btn btn-sm btn-primary-outline cronbtn" (click)="testCron(form.get('jellyfinContentSync')?.value)">Test</button>
                 </div>
 
                 <div class="form-group cronBox">

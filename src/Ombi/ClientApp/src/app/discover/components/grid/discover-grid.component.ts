@@ -5,7 +5,7 @@ import { ImageService, RequestService, SearchV2Service } from "../../../services
 import { MatDialog } from "@angular/material/dialog";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
-import { EpisodeRequestComponent } from "../../../shared/episode-request/episode-request.component";
+import { EpisodeRequestComponent, EpisodeRequestData } from "../../../shared/episode-request/episode-request.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -27,8 +27,8 @@ export class DiscoverGridComponent implements OnInit {
     public movie: ISearchMovieResultV2;
 
     constructor(private searchService: SearchV2Service, private dialog: MatDialog,
-                private requestService: RequestService, private notification: MatSnackBar,
-                private router: Router, private sanitizer: DomSanitizer, private imageService: ImageService) { }
+        private requestService: RequestService, private notification: MatSnackBar,
+        private router: Router, private sanitizer: DomSanitizer, private imageService: ImageService) { }
 
     public ngOnInit() {
         if (this.result.type == RequestType.tvShow) {
@@ -40,7 +40,7 @@ export class DiscoverGridComponent implements OnInit {
     }
 
     public async getExtraTvInfo() {
-        this.tv = await this.searchService.getTvInfo(this.result.id);
+        this.tv = await this.searchService.getTvInfo(+this.result.id);
         this.setTvDefaults(this.tv);
         this.updateTvItem(this.tv);
         const creator = this.tv.crew.filter(tv => {
@@ -80,35 +80,33 @@ export class DiscoverGridComponent implements OnInit {
     }
 
     private getExtraMovieInfo() {
-        // if (!this.result.imdbid) {
-            this.searchService.getFullMovieDetails(this.result.id)
-                .subscribe(m => {
-                    this.movie = m;
-                    this.updateMovieItem(m);
-                });
+        this.searchService.getFullMovieDetails(+this.result.id)
+            .subscribe(m => {
+                this.movie = m;
+                this.updateMovieItem(m);
+            });
 
-                this.setMovieBackground()
-        // }
+        this.setMovieBackground()
     }
 
     private setMovieBackground(): void {
-                this.result.background = this.sanitizer.bypassSecurityTrustStyle
-                    ("linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(" + "https://image.tmdb.org/t/p/original" + this.result.background + ")");
-            }
+        this.result.background = this.sanitizer.bypassSecurityTrustStyle
+            ("linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(" + "https://image.tmdb.org/t/p/original" + this.result.background + ")");
+    }
 
-            private setTvBackground(): void {
-                        if (this.result.background != null) {
-                            this.result.background = this.sanitizer.bypassSecurityTrustStyle
-                                ("linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(https://image.tmdb.org/t/p/original" + this.result.background + ")");
-                        } else {
-                            this.imageService.getTvBanner(this.result.id).subscribe(x => {
-                                if (x) {
-                                    this.result.background = this.sanitizer.bypassSecurityTrustStyle
-                                        ("linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(" + x + ")");
-                                }
-                            });
-                        }
-                    }
+    private setTvBackground(): void {
+        if (this.result.background != null) {
+            this.result.background = this.sanitizer.bypassSecurityTrustStyle
+                ("linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(https://image.tmdb.org/t/p/original" + this.result.background + ")");
+        } else {
+            this.imageService.getTvBanner(+this.result.id).subscribe(x => {
+                if (x) {
+                    this.result.background = this.sanitizer.bypassSecurityTrustStyle
+                        ("linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(" + x + ")");
+                }
+            });
+        }
+    }
 
     private updateMovieItem(updated: ISearchMovieResultV2) {
         this.result.url = "http://www.imdb.com/title/" + updated.imdbId + "/";
@@ -139,7 +137,7 @@ export class DiscoverGridComponent implements OnInit {
     public async request() {
         this.requesting = true;
         if (this.result.type === RequestType.movie) {
-            const result = await this.requestService.requestMovie({ theMovieDbId: this.result.id, languageCode: "" }).toPromise();
+            const result = await this.requestService.requestMovie({ theMovieDbId: +this.result.id, languageCode: "", requestOnBehalf: null }).toPromise();
 
             if (result.result) {
                 this.result.requested = true;
@@ -148,7 +146,7 @@ export class DiscoverGridComponent implements OnInit {
                 this.notification.open(result.errorMessage, "Ok");
             }
         } else if (this.result.type === RequestType.tvShow) {
-            this.dialog.open(EpisodeRequestComponent, { width: "700px", data: this.tv,  panelClass: 'modal-panel' })
+            this.dialog.open(EpisodeRequestComponent, { width: "700px", data: <EpisodeRequestData>{ series: this.tv, requestOnBehalf: null }, panelClass: 'modal-panel' })
         }
         this.requesting = false;
     }
