@@ -329,10 +329,6 @@
     margin-left:10px;
 }
 
-.media-row .mat-raised-button:first-child{
-    margin-left:0px;
-}
-
 @media (max-width:500px){
     .row.justify-content-center.justify-content-sm-start.header-container{
         flex-wrap:wrap;
@@ -347,6 +343,7 @@
 
     .media-row .mat-raised-button{
         width:100%;
+        margin-left:0px;
     }
 
     .media-row .btn-spacing{
