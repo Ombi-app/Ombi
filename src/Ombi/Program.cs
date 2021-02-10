@@ -256,7 +256,7 @@ namespace Ombi
                 }
                 var indexHtml = await File.ReadAllTextAsync(indexPath);
                 indexHtml = indexHtml.Replace("<script type='text/javascript'>window[\"baseHref\"] = '/';</script>"
-                   , $"<script type='text/javascript'>window[\"baseHref\"] = '{baseUrl}';</script><base href=\"{baseUrl}/\">", StringComparison.InvariantCultureIgnoreCase);
+                   , $"<script type='text/javascript'>window[\"baseHref\"] = '{baseUrl}';</script><base href=\"{baseUrl}\">", StringComparison.InvariantCultureIgnoreCase);
 
                 await File.WriteAllTextAsync(indexPath, indexHtml);
 
