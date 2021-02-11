@@ -201,12 +201,16 @@ namespace Ombi
                     SettingsName = "OmbiSettings",
                     Content = JsonConvert.SerializeObject(new OmbiSettings())
                 };
-                using (var tran = await settingsDb.Database.BeginTransactionAsync())
+                var strat = settingsDb.Database.CreateExecutionStrategy();
+                await strat.ExecuteAsync(async () =>
                 {
-                    settingsDb.Add(ombiSettingsContent);
-                    await settingsDb.SaveChangesAsync();
-                    await tran.CommitAsync();
-                }
+                    using (var tran = await settingsDb.Database.BeginTransactionAsync())
+                    {
+                        settingsDb.Add(ombiSettingsContent);
+                        await settingsDb.SaveChangesAsync();
+                        await tran.CommitAsync();
+                    }
+                });
             }
             var ombiSettings = JsonConvert.DeserializeObject<OmbiSettings>(ombiSettingsContent.Content);
             if (ombiSettings == null)
@@ -220,12 +224,16 @@ namespace Ombi
                     };
 
                     ombiSettingsContent.Content = JsonConvert.SerializeObject(ombiSettings);
-                    using (var tran = await settingsDb.Database.BeginTransactionAsync())
+                    var strat = settingsDb.Database.CreateExecutionStrategy();
+                    await strat.ExecuteAsync(async () =>
                     {
-                        settingsDb.Update(ombiSettingsContent);
-                        await settingsDb.SaveChangesAsync();
-                        await tran.CommitAsync();
-                    }
+                        using (var tran = await settingsDb.Database.BeginTransactionAsync())
+                        {
+                            settingsDb.Update(ombiSettingsContent);
+                            await settingsDb.SaveChangesAsync();
+                            await tran.CommitAsync();
+                        }
+                    });
                 }
             }
             else if (baseUrl.HasValue() && !baseUrl.Equals(ombiSettings.BaseUrl))
@@ -234,17 +242,22 @@ namespace Ombi
                 ombiSettings.BaseUrl = baseUrl;
 
                 ombiSettingsContent.Content = JsonConvert.SerializeObject(ombiSettings);
-                using (var tran = await settingsDb.Database.BeginTransactionAsync())
+                var strat = settingsDb.Database.CreateExecutionStrategy();
+                await strat.ExecuteAsync(async () =>
                 {
-                    settingsDb.Update(ombiSettingsContent);
-                    await settingsDb.SaveChangesAsync();
-                    await tran.CommitAsync();
-                }
+                    using (var tran = await settingsDb.Database.BeginTransactionAsync())
+                    {
+                        settingsDb.Update(ombiSettingsContent);
+                        await settingsDb.SaveChangesAsync();
+                        await tran.CommitAsync();
+                    }
+                });
             }
 
 
             if (setBaseUrl)
             {
+                var trimmedBaseUrl = baseUrl.EndsWith('/') ? baseUrl.TrimEnd('/') : baseUrl;
                 var process = Process.GetCurrentProcess().MainModule.FileName;
                 var ombiInstalledDir = Path.GetDirectoryName(process);
                 var indexPath = Path.Combine(ombiInstalledDir, "ClientApp", "dist", "index.html");
@@ -256,7 +269,7 @@ namespace Ombi
                 }
                 var indexHtml = await File.ReadAllTextAsync(indexPath);
                 indexHtml = indexHtml.Replace("<script type='text/javascript'>window[\"baseHref\"] = '/';</script>"
-                   , $"<script type='text/javascript'>window[\"baseHref\"] = '{baseUrl}';</script><base href=\"{baseUrl}\">", StringComparison.InvariantCultureIgnoreCase);
+                   , $"<script type='text/javascript'>window[\"baseHref\"] = '{trimmedBaseUrl}';</script><base href=\"{baseUrl}\">", StringComparison.InvariantCultureIgnoreCase);
 
                 await File.WriteAllTextAsync(indexPath, indexHtml);
 
