@@ -240,6 +240,12 @@ namespace Ombi
                     }
                 });
             }
+            else
+            {
+                // The base url might have changed in the settings, so just rewrite
+                setBaseUrl = true;
+                baseUrl = ombiSettings.BaseUrl.HasValue() ? ombiSettings.BaseUrl : string.Empty;
+            }
 
 
             if (setBaseUrl)
