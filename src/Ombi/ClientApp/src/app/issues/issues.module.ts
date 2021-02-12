@@ -39,8 +39,7 @@ const routes: Routes = [
         RouterModule,
     ],
     providers: [
-        IdentityService,
-        SearchService,
+        ...fromComponents.providers
     ],
 
 })

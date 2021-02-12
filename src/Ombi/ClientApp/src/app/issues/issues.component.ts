@@ -2,9 +2,10 @@ import { Component, OnInit } from "@angular/core";
 
 import { IssuesService } from "../services";
 
-import { IIssueCount, IIssues, IPagenator, IssueStatus } from "../interfaces";
+import { IIssueCount, IIssues, IIssuesSummary, IPagenator, IssueStatus } from "../interfaces";
 
 import { PageEvent } from '@angular/material/paginator';
+import { IssuesV2Service } from "../services/issuesv2.service";
 
 @Component({
     templateUrl: "issues.component.html",
@@ -12,9 +13,9 @@ import { PageEvent } from '@angular/material/paginator';
 })
 export class IssuesComponent implements OnInit {
 
-    public pendingIssues: IIssues[];
-    public inProgressIssues: IIssues[];
-    public resolvedIssues: IIssues[];
+    public pendingIssues: IIssuesSummary[];
+    public inProgressIssues: IIssuesSummary[];
+    public resolvedIssues: IIssuesSummary[];
 
     public count: IIssueCount;
 
@@ -23,7 +24,7 @@ export class IssuesComponent implements OnInit {
     private inProgressSkip = 0;
     private resolvedSkip = 0;
 
-    constructor(private issueService: IssuesService) { }
+    constructor(private issuev2Service: IssuesV2Service, private issueService: IssuesService) { }
 
     public ngOnInit() {
         this.getPending();
@@ -48,19 +49,19 @@ export class IssuesComponent implements OnInit {
     }
 
     private getPending() {
-        this.issueService.getIssuesPage(this.takeAmount, this.pendingSkip, IssueStatus.Pending).subscribe(x => {
+        this.issuev2Service.getIssues(this.pendingSkip, this.takeAmount, IssueStatus.Pending).subscribe(x => {
             this.pendingIssues = x;
         });
     }
 
     private getInProg() {
-        this.issueService.getIssuesPage(this.takeAmount, this.inProgressSkip, IssueStatus.InProgress).subscribe(x => {
+        this.issuev2Service.getIssues(this.inProgressSkip, this.takeAmount, IssueStatus.InProgress).subscribe(x => {
             this.inProgressIssues = x;
         });
     }
 
     private getResolved() {
-        this.issueService.getIssuesPage(this.takeAmount, this.resolvedSkip, IssueStatus.Resolved).subscribe(x => {
+        this.issuev2Service.getIssues(this.resolvedSkip, this.takeAmount, IssueStatus.Resolved).subscribe(x => {
             this.resolvedIssues = x;
         });
     }
