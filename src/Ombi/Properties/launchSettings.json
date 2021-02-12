@@ -14,7 +14,7 @@
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "commandLineArgs": "--host http://*:3577",
+      "commandLineArgs": "--host http://*:3577" ,
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -22,7 +22,7 @@
     },
     "Ombi": {
       "commandName": "Project",
-      "commandLineArgs": "--host http://localhost:3577 ",
+      "commandLineArgs": "--host http://localhost:3577 --baseUrl /ombi/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

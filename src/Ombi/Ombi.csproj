@@ -45,6 +45,10 @@
     <None Remove="Styles\**" />
     <None Remove="wwwroot\dist\**" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
 
  
   <ItemGroup>

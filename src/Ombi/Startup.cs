@@ -93,7 +93,7 @@ namespace Ombi
                 .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
             services.AddOmbiMappingProfile();
-            services.AddAutoMapper(expression => { expression.AddCollectionMappers(); });
+            services.AddAutoMapper(expression => expression.AddCollectionMappers());
 
             services.RegisterApplicationDependencies(); // Ioc and EF
             services.AddSwagger();
@@ -110,10 +110,7 @@ namespace Ombi
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
             services.AddSignalR();
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/dist";
-            });
+            services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/dist");
 
         }
 

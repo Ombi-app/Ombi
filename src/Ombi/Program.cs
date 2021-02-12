@@ -49,8 +49,6 @@ namespace Ombi
                     }
                 });
 
-
-
             Console.WriteLine(HelpOutput(result));
             if (baseUrl.HasValue())
             {
@@ -64,82 +62,75 @@ namespace Ombi
             demoInstance.Demo = demo;
             instance.StoragePath = storagePath ?? string.Empty;
 
-
             var services = new ServiceCollection();
             services.ConfigureDatabases(null);
-            using (var provider = services.BuildServiceProvider())
+            using var provider = services.BuildServiceProvider();
+            var settingsDb = provider.GetRequiredService<SettingsContext>();
+            var ombiDb = provider.GetRequiredService<OmbiContext>();
+
+            if (migrate)
             {
-                var settingsDb = provider.GetRequiredService<SettingsContext>();
-                var ombiDb = provider.GetRequiredService<OmbiContext>();
+                Console.WriteLine("Migrate in progress...");
 
-                if (migrate)
-                {
-                    Console.WriteLine("Migrate in progress...");
+                var migrationTasks = new List<Task>();
+                var externalDb = provider.GetRequiredService<ExternalContext>();
+                migrationTasks.Add(settingsDb.Database.MigrateAsync());
+                migrationTasks.Add(ombiDb.Database.MigrateAsync());
+                migrationTasks.Add(externalDb.Database.MigrateAsync());
 
-                    var migrationTasks = new List<Task>();
-                    var externalDb = provider.GetRequiredService<ExternalContext>();
-                    migrationTasks.Add(settingsDb.Database.MigrateAsync());
-                    migrationTasks.Add(ombiDb.Database.MigrateAsync());
-                    migrationTasks.Add(externalDb.Database.MigrateAsync());
+                Task.WaitAll(migrationTasks.ToArray());
 
-                    Task.WaitAll(migrationTasks.ToArray());
-
-                    Console.WriteLine("Migrate complete.");
-                    Environment.Exit(0);
-                }
-
-                var config = await settingsDb.ApplicationConfigurations.ToListAsync();
-                var url = config.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
-                var ombiSettingsContent = await settingsDb.Settings.FirstOrDefaultAsync(x => x.SettingsName == "OmbiSettings");
-                var securityToken = config.FirstOrDefault(x => x.Type == ConfigurationTypes.SecurityToken);
-                await CheckSecurityToken(securityToken, settingsDb, instance);
-                if (url == null)
-                {
-                    url = new ApplicationConfiguration
-                    {
-                        Type = ConfigurationTypes.Url,
-                        Value = "http://*:5000"
-                    };
-                    var strat = settingsDb.Database.CreateExecutionStrategy();
-                    await strat.ExecuteAsync(async () =>
-                    {
-                        using (var tran = await settingsDb.Database.BeginTransactionAsync())
-                        {
-                            settingsDb.ApplicationConfigurations.Add(url);
-                            await settingsDb.SaveChangesAsync();
-                            await tran.CommitAsync();
-                        }
-                    });
-
-                    urlValue = url.Value;
-                }
-
-                if (!url.Value.Equals(host))
-                {
-                    url.Value = UrlArgs;
-                    var strat = settingsDb.Database.CreateExecutionStrategy();
-                    await strat.ExecuteAsync(async () =>
-                    {
-                        using (var tran = await settingsDb.Database.BeginTransactionAsync())
-                        {
-                            await settingsDb.SaveChangesAsync();
-                            await tran.CommitAsync();
-                        }
-                    });
-
-                    urlValue = url.Value;
-                }
-                else if (string.IsNullOrEmpty(urlValue))
-                {
-                    urlValue = host;
-                }
-
-                await SortOutBaseUrl(baseUrl, settingsDb, ombiSettingsContent);
-
-                Console.WriteLine($"We are running on {urlValue}");
-
-                CreateHostBuilder(args).Build().Run();
+                Console.WriteLine("Migrate complete.");
+                Environment.Exit(0);
             }
+
+            var config = await settingsDb.ApplicationConfigurations.ToListAsync();
+            var url = config.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
+            var ombiSettingsContent = await settingsDb.Settings.FirstOrDefaultAsync(x => x.SettingsName == "OmbiSettings");
+            var securityToken = config.FirstOrDefault(x => x.Type == ConfigurationTypes.SecurityToken);
+            await CheckSecurityToken(securityToken, settingsDb, instance);
+            if (url == null)
+            {
+                url = new ApplicationConfiguration
+                {
+                    Type = ConfigurationTypes.Url,
+                    Value = "http://*:5000"
+                };
+                var strat = settingsDb.Database.CreateExecutionStrategy();
+                await strat.ExecuteAsync(async () =>
+                {
+                    using var tran = await settingsDb.Database.BeginTransactionAsync();
+                    settingsDb.ApplicationConfigurations.Add(url);
+                    await settingsDb.SaveChangesAsync();
+                    await tran.CommitAsync();
+                });
+
+                urlValue = url.Value;
+            }
+
+            if (!url.Value.Equals(host))
+            {
+                url.Value = UrlArgs;
+                var strat = settingsDb.Database.CreateExecutionStrategy();
+                await strat.ExecuteAsync(async () =>
+                {
+                    using var tran = await settingsDb.Database.BeginTransactionAsync();
+                    await settingsDb.SaveChangesAsync();
+                    await tran.CommitAsync();
+                });
+
+                urlValue = url.Value;
+            }
+            else if (string.IsNullOrEmpty(urlValue))
+            {
+                urlValue = host;
+            }
+
+            await SortOutBaseUrl(baseUrl, settingsDb, ombiSettingsContent);
+
+            Console.WriteLine($"We are running on {urlValue}");
+
+            CreateHostBuilder(args).Build().Run();
         }
 
         private static async Task CheckSecurityToken(ApplicationConfiguration securityToken, SettingsContext ctx, StartupSingleton instance)
@@ -154,12 +145,10 @@ namespace Ombi
                 var strat = ctx.Database.CreateExecutionStrategy();
                 await strat.ExecuteAsync(async () =>
                 {
-                    using (var tran = await ctx.Database.BeginTransactionAsync())
-                    {
-                        ctx.ApplicationConfigurations.Add(securityToken);
-                        await ctx.SaveChangesAsync();
-                        await tran.CommitAsync();
-                    }
+                    using var tran = await ctx.Database.BeginTransactionAsync();
+                    ctx.ApplicationConfigurations.Add(securityToken);
+                    await ctx.SaveChangesAsync();
+                    await tran.CommitAsync();
                 });
             }
 
@@ -170,7 +159,7 @@ namespace Ombi
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.ConfigureKestrel(serverOptions =>
+                    webBuilder.ConfigureKestrel(_ =>
                     {
                         // Set properties and call methods on options
                     });
@@ -204,12 +193,10 @@ namespace Ombi
                 var strat = settingsDb.Database.CreateExecutionStrategy();
                 await strat.ExecuteAsync(async () =>
                 {
-                    using (var tran = await settingsDb.Database.BeginTransactionAsync())
-                    {
-                        settingsDb.Add(ombiSettingsContent);
-                        await settingsDb.SaveChangesAsync();
-                        await tran.CommitAsync();
-                    }
+                    using var tran = await settingsDb.Database.BeginTransactionAsync();
+                    settingsDb.Add(ombiSettingsContent);
+                    await settingsDb.SaveChangesAsync();
+                    await tran.CommitAsync();
                 });
             }
             var ombiSettings = JsonConvert.DeserializeObject<OmbiSettings>(ombiSettingsContent.Content);

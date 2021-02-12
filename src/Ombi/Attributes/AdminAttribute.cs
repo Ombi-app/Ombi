@@ -8,6 +8,5 @@ namespace Ombi.Attributes
         {
             Roles = "Admin";
         }
-        
     }
 }
