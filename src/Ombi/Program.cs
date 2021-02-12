@@ -255,10 +255,17 @@ namespace Ombi
                     throw new Exception(error);
                 }
                 var indexHtml = await File.ReadAllTextAsync(indexPath);
-                indexHtml = indexHtml.Replace("<script type='text/javascript'>window[\"baseHref\"] = '/';</script>"
-                   , $"<script type='text/javascript'>window[\"baseHref\"] = '{trimmedBaseUrl}';</script><base href=\"{baseUrl}\">", StringComparison.InvariantCultureIgnoreCase);
+                var sb = new StringBuilder(indexHtml);
 
-                await File.WriteAllTextAsync(indexPath, indexHtml);
+                var headPosition = indexHtml.IndexOf("<head>");
+                var firstLinkPosition = indexHtml.IndexOf("<link");
+
+                sb.Remove(headPosition + 6, firstLinkPosition - headPosition - 6);
+
+                sb.Insert(headPosition + 6,
+                    $"<script type='text/javascript'>window[\"baseHref\"] = '{trimmedBaseUrl}';</script><base href=\"{trimmedBaseUrl}/\">");
+
+                await File.WriteAllTextAsync(indexPath, sb.ToString());
 
                 Console.WriteLine($"Wrote new baseurl at {indexPath}");
             }
