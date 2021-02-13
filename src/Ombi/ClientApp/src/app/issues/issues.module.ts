@@ -3,8 +3,6 @@ import { RouterModule, Routes } from "@angular/router";
 
 import { OrderModule } from "ngx-order-pipe";
 
-import { IdentityService, SearchService } from "../services";
-
 import { AuthGuard } from "../auth/auth.guard";
 
 import { SharedModule as OmbiShared } from "../shared/shared.module";
@@ -27,7 +25,7 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         OrderModule,
         PipeModule,
-        OmbiShared,
+        OmbiShared
     ],
     declarations: [
         IssuesComponent,

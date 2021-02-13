@@ -1,12 +1,16 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
 
 import { IIssues, IIssuesSummary, IPagenator, IssueStatus } from "../interfaces";
+import { DetailsGroupComponent, IssuesDetailsGroupData } from "./components/details-group/details-group.component";
 
 @Component({
     selector: "issues-table",
     templateUrl: "issuestable.component.html",
 })
 export class IssuesTableComponent  {
+
+    constructor(public dialog: MatDialog) { }
 
     @Input() public issues: IIssuesSummary[];
     @Input() public totalRecords: number;
@@ -50,7 +54,10 @@ export class IssuesTableComponent  {
     }
 
     public openDetails(summary: IIssuesSummary) {
-        
+        const dialogRef = this.dialog.open(DetailsGroupComponent, {
+            width: "50vw",
+            data: <IssuesDetailsGroupData>{ issues: summary.issues, title: summary.title },
+          });
     }
 
 }

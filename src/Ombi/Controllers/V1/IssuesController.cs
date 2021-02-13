@@ -142,7 +142,7 @@ namespace Ombi.Controllers.V1
             var notificationModel = new NotificationOptions
             {
                 RequestId = i.RequestId ?? 0,
-                DateTime = DateTime.Now,
+                DateTime = DateTime.UtcNow,
                 NotificationType = NotificationType.Issue,
                 RequestType = i.RequestType,
                 Recipient = string.Empty,

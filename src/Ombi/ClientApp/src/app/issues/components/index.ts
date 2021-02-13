@@ -3,15 +3,13 @@ import { IssuesListComponent } from "./issues-list/issues-list.component";
 import { Routes } from "@angular/router";
 import { IssuesV2Service } from "../../services/issuesv2.service";
 import { IdentityService, SearchService } from "../../services";
+import { DetailsGroupComponent } from "./details-group/details-group.component";
 
 
 
 export const components: any[] = [
     IssuesListComponent,
-];
-
-
-export const entryComponents: any[] = [
+    DetailsGroupComponent,
 ];
 
 export const providers: any[] = [

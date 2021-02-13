@@ -18,7 +18,7 @@ namespace Ombi.Controllers.V2
         [HttpGet("{position}/{take}/{status}")]
         public Task<IEnumerable<IssuesSummaryModel>> GetIssuesSummary(int position, int take, IssueStatus status)
         {
-            return _engine.GetIssues(position, take, status);
+            return _engine.GetIssues(position, take, status, HttpContext.RequestAborted);
         }
     }
 }
