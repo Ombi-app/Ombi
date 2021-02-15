@@ -1,0 +1,9 @@
+@import "~styles/variables.scss";
+
+::ng-deep .mat-card {
+  background: $ombi-background-primary-accent;
+}
+
+.top-spacing {
+  margin-top:2%;
+}

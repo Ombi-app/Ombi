@@ -66,5 +66,6 @@ export interface IUpdateStatus {
 export interface IIssuesSummary {
     title: string;
     count: number;
+    providerId: string;
     issues: IIssues[];
 }

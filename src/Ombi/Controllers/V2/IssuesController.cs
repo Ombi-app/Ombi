@@ -20,5 +20,12 @@ namespace Ombi.Controllers.V2
         {
             return _engine.GetIssues(position, take, status, HttpContext.RequestAborted);
         }
+
+
+        [HttpGet("details/{providerId}")]
+        public Task<IssuesSummaryModel> GetIssueDetails(string providerId)
+        {
+            return _engine.GetIssuesByProviderId(providerId, HttpContext.RequestAborted);
+        }
     }
 }

@@ -1,0 +1,38 @@
+<div *ngIf="details">
+
+  <h1>Issues for {{details.title}}</h1>
+  <div>
+    <span>Has Request {{hasRequest}}</span>
+    <div class="row">
+      <div class="col-6 top-spacing" *ngFor="let issue of details.issues">
+        <div color="accent">
+          <div>
+            <div>{{issue.subject}}</div>
+            <span>{{issue.userReported?.userName}} on {{issue.createdDate | date:short}}</span>
+          </div>
+          <div>
+            <p>
+              {{issue.description}}
+            </p>
+          </div>
+          <div>
+            <button mat-raised-button color="accent">{{'Issues.Chat' | translate }}</button>
+            <span *ngIf="isAdmin && settings">
+              <button mat-raised-button color="accent"
+                *ngIf="issue.status === IssueStatus.Pending && settings.enableInProgress"
+                (click)="inProgress(issue)">{{'Issues.MarkInProgress' | translate }}</button>
+              <button mat-raised-button color="accent"
+                *ngIf="issue.status === IssueStatus.Pending && !settings.enableInProgress || issue.status == IssueStatus.InProgress"
+                (click)="resolve(issue)">{{'Issues.MarkResolved' | translate}}</button>
+              <button mat-raised-button color="warn" (click)="delete(issue)">{{'Issues.Delete' | translate}}</button>
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button mat-raised-button color="accent" (click)="navToMedia()">{{'Common.ViewDetails' | translate }}</button>
+  </div>
+</div>

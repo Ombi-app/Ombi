@@ -16,4 +16,8 @@ export class IssuesV2Service extends ServiceHelpers {
     public getIssues(position: number, take: number, status: IssueStatus): Observable<IIssuesSummary[]> {
         return this.http.get<IIssuesSummary[]>(`${this.url}${position}/${take}/${status}`,  {headers: this.headers});
     }
+
+    public getIssuesByProviderId(providerId: string): Observable<IIssuesSummary> {
+        return this.http.get<IIssuesSummary>(`${this.url}details/${providerId}`,  {headers: this.headers});
+    }
 }

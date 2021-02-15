@@ -6,10 +6,11 @@ import { TranslateService } from "@ngx-translate/core";
 @Component({
     selector: "issues-panel",
     templateUrl: "./issues-panel.component.html",
-    styleUrls: ["./issues-panel.component.scss"]
+    styleUrls: ["./issues-panel.component.scss"],
+    
 })
 export class IssuesPanelComponent implements OnInit {
-    
+
     @Input() public providerId: string;
     @Input() public isAdmin: boolean;
 
@@ -22,7 +23,6 @@ export class IssuesPanelComponent implements OnInit {
 
     constructor(private issuesService: IssuesService, private notificationService: NotificationService,
                 private translateService: TranslateService, private settingsService: SettingsService) {
-        
     }
 
     public async ngOnInit() {
@@ -54,7 +54,7 @@ export class IssuesPanelComponent implements OnInit {
         this.issuesCount = this.issues.length;
         this.calculateOutstanding();
     }
-    
+
     private calculateOutstanding() {
         this.isOutstanding = this.issues.some((i) => {
             return i.status !== IssueStatus.Resolved;

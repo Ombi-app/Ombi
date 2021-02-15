@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 
-import { IIssues, IIssuesSummary, IPagenator, IssueStatus } from "../interfaces";
-import { DetailsGroupComponent, IssuesDetailsGroupData } from "./components/details-group/details-group.component";
+import { IIssuesSummary, IPagenator, IssueStatus } from "../interfaces";
 
 @Component({
     selector: "issues-table",
@@ -52,12 +51,4 @@ export class IssuesTableComponent  {
       public paginate(event: IPagenator) {
         this.changePage.emit(event);
     }
-
-    public openDetails(summary: IIssuesSummary) {
-        const dialogRef = this.dialog.open(DetailsGroupComponent, {
-            width: "50vw",
-            data: <IssuesDetailsGroupData>{ issues: summary.issues, title: summary.title },
-          });
-    }
-
 }
