@@ -98,3 +98,21 @@ stages:
         isPreRelease: true
         changeLogCompareToRelease: 'lastNonDraftRelease'
         changeLogType: 'commitBased'
+
+    - task: PowerShell@2
+      displayName: "Trigger APT build"
+      inputs:
+        targetType: 'inline'
+        script: |
+          $body = @{
+            "ref"="main"
+            "inputs"= @{"version"= "$(gitTag)"}
+          } | ConvertTo-Json
+
+          $header = @{
+            "Accept"="application/vnd.github.v3+json"
+            "Authorization"="Bearer $(APTPAT)"
+            "User-Agent"="Ombi"
+          } 
+
+          Invoke-RestMethod -Uri "https://api.github.com/repos/Ombi-app/Ombi.Apt/actions/workflows/build-deb.yml/dispatches" -Method 'Post' -Body $body -Headers $header

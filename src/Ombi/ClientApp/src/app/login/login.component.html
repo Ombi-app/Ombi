@@ -19,7 +19,7 @@
                             {{'Login.UsernamePlaceholder' | translate}} is <strong>required</strong></mat-error>
                     </mat-form-field>
 
-                    <mat-form-field class="full-width" appearance="outline">
+                    <mat-form-field *ngIf="!authenticationSettings.allowNoPassword" class="full-width" appearance="outline">
                         <mat-label>{{'Login.PasswordPlaceholder' | translate}}</mat-label>
                         <input id="password-field" color="black" type="password" matInput formControlName="password" />
                     </mat-form-field>

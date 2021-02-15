@@ -11,6 +11,7 @@ import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
     templateUrl: "./cloudmobile.component.html",
+    styleUrls: ["./notificationtemplate.component.scss"]
 })
 export class CloudMobileComponent implements OnInit {
 

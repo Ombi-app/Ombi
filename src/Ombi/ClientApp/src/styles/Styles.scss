@@ -141,3 +141,19 @@
     .mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab{
         background-color: $ombi-active;
     }
+
+    hr{
+        border-top: 1px solid $ombi-background-primary;
+    }
+
+    .form-control{
+        background-color: $ombi-background-accent;
+        color:#FFF;
+        border: 1px solid $ombi-background-accent;
+    }
+
+    .form-control:focus{
+        background-color: $ombi-background-accent;
+        color:#FFF;
+        border: 1px solid $ombi-active;
+    }

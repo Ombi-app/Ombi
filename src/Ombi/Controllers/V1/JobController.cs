@@ -9,6 +9,7 @@ using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Jellyfin;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
+using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.Radarr;
 using Quartz;
 
@@ -122,6 +123,17 @@ namespace Ombi.Controllers.V1
         public bool StartPlexContentCacher()
         {
             OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IPlexContentSync), "Plex"), new JobDataMap(new Dictionary<string, string> { { "recentlyAddedSearch", "false" } }));
+            return true;
+        }
+
+        /// <summary>
+        /// Clear out the media server and resync
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("clearmediaserverdata")]
+        public bool ClearMediaServerData()
+        {
+            OmbiQuartz.Scheduler.TriggerJob(new JobKey(nameof(IMediaDatabaseRefresh), "System"));
             return true;
         }
 

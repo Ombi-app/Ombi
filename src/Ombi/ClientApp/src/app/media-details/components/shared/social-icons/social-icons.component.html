@@ -35,7 +35,8 @@
         </button>
         <button mat-menu-item [disabled]="!canShowAdvanced" (click)="openAdvancedOptions()">
             <mat-icon>movie_filter</mat-icon>
-            <span>{{'MediaDetails.RadarrConfiguration' | translate}}</span>
+            <span *ngIf="type === RequestType.movie">{{'MediaDetails.RadarrConfiguration' | translate}}</span>
+            <span *ngIf="type === RequestType.tvShow">{{'MediaDetails.SonarrConfiguration' | translate}}</span>
         </button>
     </mat-menu>
 </div>

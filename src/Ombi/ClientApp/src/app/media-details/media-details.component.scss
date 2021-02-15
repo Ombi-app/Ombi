@@ -143,11 +143,11 @@
 }
 
 .btn-spacing {
-    margin-right: 10px !important;
+    margin-right: 10px;
 }
 
 .spacing-below {
-    margin-bottom: 15px !important;
+    margin-bottom: 15px;
 }
 
 .left-seperator {
@@ -170,8 +170,9 @@
 }
 
 .media-row {
-    padding-top: 56px;
-    padding-left: 26px;
+    position:absolute;
+    bottom:0;
+    margin-bottom:20px;
 }
 
 .cast-profile-img {
@@ -239,16 +240,16 @@
 }
 
 .viewon-btn.plex {
-    border: 1px solid #E5A00D;
     color: #E5A00D;
+    box-shadow: inset 0px 0px 0px 1px #e5a00d;
 }
 .viewon-btn.emby {
-    border: 1px solid #52b54a;
     color: #52b54a;
+    box-shadow: inset 0px 0px 0px 1px #52b54a;
 }
 .viewon-btn.jellyfin {
-    border: 1px solid #00a4dc;
     color: #00a4dc;
+    box-shadow: inset 0px 0px 0px 1px #00a4dc;
 }
 
 ::ng-deep .p-carousel-indicators {
@@ -269,8 +270,87 @@
 
 .details-button-container{
     width:100%;
+    position:relative;
 }
 
 .info-wrapper .row{
     flex-wrap:wrap;
+}
+
+.rating{
+    display:flex;
+    justify-content: space-evenly;
+    width:100%;
+    flex-wrap: wrap;
+}
+
+.left-panel-details .label{
+    font-weight:500;
+}
+
+.left-panel-details .streaming-on-content{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow:row wrap;
+}
+
+.left-panel-details .streaming-on-content .label{
+    white-space:nowrap;
+    padding-right:10px;
+}
+
+.left-panel-details{
+    font-weight:100;
+}
+
+.genre-button-container .mat-chip-list .mat-chip-list-wrapper{
+    margin-top:3px;
+    margin:0;
+    margin-left: -6px;
+}
+
+.keyword-button-container .mat-chip-list .mat-chip-list-wrapper{
+    margin-top:3px;
+    margin:0;
+    margin-left: -6px;
+}
+
+.mat-card-header{
+    font-size: 20px;
+    padding-top: 10px;
+    padding-bottom:10px;
+}
+
+.media-row .mat-raised-button{
+    padding:2px 1.5em;;
+    width:170px;
+    margin-top:10px;
+    margin-left:10px;
+}
+
+@media (max-width:500px){
+    .row.justify-content-center.justify-content-sm-start.header-container{
+        flex-wrap:wrap;
+    }
+
+    .media-row{
+        position:relative;
+        justify-content: center;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .media-row .mat-raised-button{
+        width:100%;
+        margin-left:0px;
+    }
+
+    .media-row .btn-spacing{
+        margin-right:0;
+    }
+    
+    .media-row span{
+        width:100%;
+    }
 }

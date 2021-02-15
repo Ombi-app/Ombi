@@ -22,6 +22,7 @@
             [isAdmin]="isAdmin"
             [canRequestOnBehalf]="!hasRequest && !movie.available"
             [canShowAdvanced]="showAdvanced && movieRequest"
+            [type]="requestType"
             (openTrailer)="openDialog()"
             (onRequestBehalf)="openRequestOnBehalf()"
             (onAdvancedOptions)="openAdvancedOptions()"
@@ -103,7 +104,7 @@
             <div class="row">
                 <div class="col-12 col-md-2">
                     <mat-card class="mat-elevation-z8">
-                        <mat-card-content class="medium-font">
+                        <mat-card-content>
                             <movie-information-panel [movie]="movie" [request]="movieRequest" [advancedOptions]="showAdvanced"></movie-information-panel>
                         </mat-card-content>
                     </mat-card>

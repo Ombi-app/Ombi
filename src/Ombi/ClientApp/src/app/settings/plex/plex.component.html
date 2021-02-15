@@ -158,14 +158,20 @@
                                 </button>
                             </div>
                             <div class="form-group">
-                                <button mat-raised-button (click)="runCacher()" type="button" id="save"
+                                <button mat-raised-button (click)="runCacher()" type="button" id="fullSync"
                                     class="mat-focus-indicator mat-stroked-button mat-button-base">Manually Run Full
                                     Sync</button><br />
                             </div>
                             <div class="form-group">
-                                <button mat-raised-button (click)="runRecentlyAddedCacher()" type="button" id="save"
+                                <button mat-raised-button (click)="runRecentlyAddedCacher()" type="button" id="recentlyAddedSync"
                                     class="mat-focus-indicator mat-stroked-button mat-button-base">Manually Run Recently
                                     Added Sync</button>
+                            </div>
+                            <div class="form-group">
+                                <button mat-raised-button (click)="clearDataAndResync()" type="button" id="clearData"
+                                    class="mat-focus-indicator mat-stroked-button mat-button-base">
+                                    Clear Data And Resync
+                                </button>
                             </div>
                         </div>
                     </div>
