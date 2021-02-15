@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Api.Emby;
+using Ombi.Api.Jellyfin;
 using Ombi.Api.Plex;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
@@ -18,19 +19,22 @@ namespace Ombi.Controllers.V1
     public class LandingPageController : ControllerBase
     {
         public LandingPageController(ISettingsService<PlexSettings> plex, ISettingsService<EmbySettings> emby,
-            IPlexApi plexApi, IEmbyApiFactory embyApi)
+            IPlexApi plexApi, IEmbyApiFactory embyApi, ISettingsService<JellyfinSettings> jellyfin, IJellyfinApi jellyfinApi)
         {
             _plexSettings = plex;
             _embySettings = emby;
             _plexApi = plexApi;
             _embyApi = embyApi;
+            _jellyfin = jellyfin;
+            _jellyfinApi = jellyfinApi;
         }
 
         private readonly IPlexApi _plexApi;
         private readonly IEmbyApiFactory _embyApi;
         private readonly ISettingsService<PlexSettings> _plexSettings;
         private readonly ISettingsService<EmbySettings> _embySettings;
-
+        private readonly ISettingsService<JellyfinSettings> _jellyfin;
+        private readonly IJellyfinApi _jellyfinApi;
 
         [HttpGet]
         public async Task<MediaSeverAvailibilityViewModel> GetMediaServerStatus()
@@ -71,6 +75,31 @@ namespace Ombi.Controllers.V1
                     try
                     {
                         var result = await client.GetUsers(server.FullUri, server.ApiKey);
+                        if (result.Any())
+                        {
+                            model.ServersAvailable++;
+                        }
+                        else
+                        {
+                            model.ServersUnavailable++;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        model.ServersUnavailable++;
+                    }
+                }
+            }
+
+
+            var jellyfin = await _jellyfin.GetSettingsAsync();
+            if (jellyfin.Enable)
+            {
+                foreach (var server in jellyfin.Servers)
+                {
+                    try
+                    {
+                        var result = await _jellyfinApi.GetUsers(server.FullUri, server.ApiKey);
                         if (result.Any())
                         {
                             model.ServersAvailable++;
