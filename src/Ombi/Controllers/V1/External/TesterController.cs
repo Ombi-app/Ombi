@@ -374,7 +374,7 @@ namespace Ombi.Controllers.V1.External
                 var result = await RadarrApi.SystemStatus(settings.ApiKey, settings.FullUri);
                 return new TesterResultModel
                 {
-                    IsValid = result.urlBase == settings.SubDir,
+                    IsValid = result.urlBase == settings.SubDir || string.IsNullOrEmpty(result.urlBase) && string.IsNullOrEmpty(settings.SubDir),
                     ExpectedSubDir = result.urlBase
                 };
             }
@@ -399,7 +399,7 @@ namespace Ombi.Controllers.V1.External
                 var result = await SonarrApi.SystemStatus(settings.ApiKey, settings.FullUri);
                 return new TesterResultModel
                 {
-                    IsValid = result.urlBase == settings.SubDir,
+                    IsValid = result.urlBase == settings.SubDir || string.IsNullOrEmpty(result.urlBase) && string.IsNullOrEmpty(settings.SubDir),
                     ExpectedSubDir = result.urlBase
                 };
             }
@@ -513,7 +513,7 @@ namespace Ombi.Controllers.V1.External
                 var status = await LidarrApi.Status(settings.ApiKey, settings.FullUri);
                 return new TesterResultModel
                 {
-                    IsValid = status?.urlBase == settings.SubDir,
+                    IsValid = status?.urlBase == settings.SubDir || string.IsNullOrEmpty(result.urlBase) && string.IsNullOrEmpty(settings.SubDir),
                     ExpectedSubDir = status?.urlBase
                 };
             }

@@ -99,7 +99,7 @@ export class RadarrComponent implements OnInit {
         this.testerService.radarrTest(settings).subscribe(result => {
             if (result.isValid) {
                 this.notificationService.success("Successfully connected to Radarr!");
-            } else if (result.expectedSubDir !== null) {
+            } else if (result.expectedSubDir) {
                 this.notificationService.error("Your Radarr Base URL must be set to " + result.expectedSubDir);
             } else {
                 this.notificationService.error("We could not connect to Radarr!");
