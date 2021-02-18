@@ -5,6 +5,7 @@ using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -93,17 +94,26 @@ namespace Ombi.Core.Engine
             var issues = _issuesRepository.GetAll().Where(x => x.UserReportedId == userId);
             var issueComments = _issueCommentsRepository.GetAll().Where(x => x.UserId == userId);
             var requestLog = _requestLogRepository.GetAll().Where(x => x.UserId == userId);
+
+            if (issueComments.Any())
+            {
+                await _issueCommentsRepository.DeleteRange(issueComments);
+            }
             if (issues.Any())
             {
+                var extraComments = new List<IssueComments>();
+                var issueIds = issues.Select(x => x.Id).Distinct();
+                foreach (var issue in issueIds)
+                {
+                    // Get all the comments for this issue and delete them, since the issue will be deleted
+                    var extra = _issueCommentsRepository.GetAll().Where(x => x.IssuesId == issue);
+                    extraComments.AddRange(extra.ToList());
+                }
                 await _issuesRepository.DeleteRange(issues);
             }
             if (requestLog.Any())
             {
                 await _requestLogRepository.DeleteRange(requestLog);
-            }
-            if (issueComments.Any())
-            {
-                await _issueCommentsRepository.DeleteRange(issueComments);
             }
 
             // Delete the Subscriptions and mobile notification ids
