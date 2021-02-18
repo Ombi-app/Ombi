@@ -124,5 +124,8 @@
       }
     }
   },
-  "defaultProject": "ombi"
+  "defaultProject": "ombi",
+  "cli": {
+    "analytics": false
+  }
 }

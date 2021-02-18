@@ -513,7 +513,7 @@ namespace Ombi.Controllers.V1.External
                 var status = await LidarrApi.Status(settings.ApiKey, settings.FullUri);
                 return new TesterResultModel
                 {
-                    IsValid = status?.urlBase == settings.SubDir || string.IsNullOrEmpty(result.urlBase) && string.IsNullOrEmpty(settings.SubDir),
+                    IsValid = status?.urlBase == settings.SubDir || string.IsNullOrEmpty(status.urlBase) && string.IsNullOrEmpty(settings.SubDir),
                     ExpectedSubDir = status?.urlBase
                 };
             }
