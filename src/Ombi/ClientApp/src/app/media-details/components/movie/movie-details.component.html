@@ -91,7 +91,7 @@
                                 </button>
                             </span>
 
-                            <button mat-raised-button class="btn-spacing" color="danger" (click)="issue()">
+                            <button mat-raised-button class="btn-spacing" color="danger" (click)="issue()" *ngIf="issuesEnabled">
                                 <i class="fas fa-exclamation"></i> {{'Requests.ReportIssue' | translate }}
                             </button>
                             <button *ngIf="movie.belongsToCollection" [routerLink]="'/discover/collection/' + movie.belongsToCollection.id" mat-raised-button class="btn-spacing">

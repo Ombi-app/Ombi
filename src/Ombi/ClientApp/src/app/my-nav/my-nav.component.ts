@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { INavBar } from '../interfaces/ICommon';
 import { StorageService } from '../shared/storage/storage-service';
-import { SettingsService } from '../services';
+import { SettingsService, SettingsStateService } from '../services';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { SearchFilter } from './SearchFilter';
 import { Md5 } from 'ts-md5/dist/md5';
@@ -49,7 +49,8 @@ export class MyNavComponent implements OnInit {
   constructor(private breakpointObserver: BreakpointObserver,
     private settingsService: SettingsService,
     private store: StorageService,
-    private filterService: FilterService) {
+    private filterService: FilterService,
+    private readonly settingState: SettingsStateService) {
   }
 
   public async ngOnInit() {
@@ -68,6 +69,8 @@ export class MyNavComponent implements OnInit {
     }
 
     this.issuesEnabled = await this.settingsService.issueEnabled().toPromise();
+    this.settingState.setIssue(this.issuesEnabled);
+
     const customizationSettings = await this.settingsService.getCustomization().toPromise();
     console.log("issues enabled: " + this.issuesEnabled);
     this.theme = this.store.get("theme");

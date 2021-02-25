@@ -22,3 +22,4 @@ export * from "./message.service";
 export * from "./hub.service";
 export * from "./system.service";
 export * from "./filedownload.service";
+export * from "./settingsState.service";

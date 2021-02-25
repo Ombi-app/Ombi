@@ -57,7 +57,7 @@
                                     class="btn-spacing" color="accent" [disabled]>
                                     <i class="fas fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
 
-                                <button mat-raised-button class="btn-spacing" color="danger" (click)="issue()">
+                                <button mat-raised-button class="btn-spacing" color="danger" *ngIf="issuesEnabled" (click)="issue()">
                                     <i class="fas fa-exclamation"></i> {{
                                     'Requests.ReportIssue' | translate }}</button>
 
