@@ -28,6 +28,7 @@ export interface IUser {
 export interface IUserDropdown {
     username: string;
     id: string;
+    email: string;
 }
 
 export interface IUserQualityProfiles {

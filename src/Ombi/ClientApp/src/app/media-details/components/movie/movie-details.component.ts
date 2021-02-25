@@ -190,7 +190,6 @@ export class MovieDetailsComponent {
         const folders = this.radarrService.getRootFoldersFromSettings();
 
         forkJoin([profile, folders]).subscribe(x => {
-            debugger;
             const radarrProfiles = x[0];
             const radarrRootFolders = x[1];
 
