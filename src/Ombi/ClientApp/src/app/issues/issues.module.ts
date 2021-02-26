@@ -6,7 +6,7 @@ import { OrderModule } from "ngx-order-pipe";
 
 import { AuthGuard } from "../auth/auth.guard";
 
-import { SharedModule as OmbiShared } from "../shared/shared.module";
+import { SharedModule } from "../shared/shared.module";
 
 import { IssueDetailsComponent } from "./issueDetails.component";
 import { IssuesComponent } from "./issues.component";
@@ -27,7 +27,7 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         OrderModule,
         PipeModule,
-        OmbiShared,
+        SharedModule,
         // NbChatModule,
     ],
     declarations: [

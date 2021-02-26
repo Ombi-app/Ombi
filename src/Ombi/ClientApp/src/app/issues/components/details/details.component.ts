@@ -1,11 +1,12 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from "@angular/core";
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { AuthService } from "../../../auth/auth.service";
 import { IIssues, IIssueSettings, IIssuesSummary, IssueStatus, RequestType } from "../../../interfaces";
 import { IssuesService, NotificationService, SettingsService } from "../../../services";
 import { IssuesV2Service } from "../../../services/issuesv2.service";
+import { IssueChatComponent } from "../issue-chat/issue-chat.component";
 
 
 export interface IssuesDetailsGroupData {
@@ -33,7 +34,8 @@ export class IssuesDetailsComponent implements OnInit {
 
     constructor(private authService: AuthService, private settingsService: SettingsService,
                 private issueServiceV2: IssuesV2Service, private route: ActivatedRoute, private router: Router,
-                private issuesService: IssuesService, private translateService: TranslateService, private notificationService: NotificationService) { 
+                private issuesService: IssuesService, private translateService: TranslateService, private notificationService: NotificationService,
+                private dialog: MatDialog) {
                     this.route.params.subscribe(async (params: any) => {
                         if (typeof params.providerId === 'string' || params.providerId instanceof String) {
                             this.providerId = params.providerId;
@@ -67,6 +69,9 @@ export class IssuesDetailsComponent implements OnInit {
         this.details.issues =  this.details.issues.filter((el) => { return el.id !== issue.id; }); 
     }
 
+    public openChat(issue: IIssues) {
+        this.dialog.open(IssueChatComponent, { width: "80vh", data: { issueId: issue.id },  panelClass: 'modal-panel' })
+    }
 
     public navToMedia() {
         const firstIssue = this.details.issues[0];

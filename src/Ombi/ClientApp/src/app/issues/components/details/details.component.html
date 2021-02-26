@@ -3,6 +3,7 @@
   <h1>Issues for {{details.title}}</h1>
   <div>
     <span>Has Request {{hasRequest}}</span>
+  
     <div class="row">
       <div class="col-6 top-spacing" *ngFor="let issue of details.issues">
         <div color="accent">
@@ -16,7 +17,7 @@
             </p>
           </div>
           <div>
-            <button mat-raised-button color="accent">{{'Issues.Chat' | translate }}</button>
+            <button mat-raised-button (click)="openChat(issue)" color="accent">{{'Issues.Chat' | translate }}</button>
             <span *ngIf="isAdmin && settings">
               <button mat-raised-button color="accent"
                 *ngIf="issue.status === IssueStatus.Pending && settings.enableInProgress"
@@ -32,7 +33,7 @@
       </div>
     </div>
   </div>
-  <div>
+  <div class="row">
     <button mat-raised-button color="accent" (click)="navToMedia()">{{'Common.ViewDetails' | translate }}</button>
   </div>
 </div>
