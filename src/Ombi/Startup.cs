@@ -93,7 +93,7 @@ namespace Ombi
                 .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
             services.AddOmbiMappingProfile();
-            services.AddAutoMapper(expression => { expression.AddCollectionMappers(); });
+            services.AddAutoMapper(expression => expression.AddCollectionMappers());
 
             services.RegisterApplicationDependencies(); // Ioc and EF
             services.AddSwagger();
@@ -110,10 +110,7 @@ namespace Ombi
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
             services.AddSignalR();
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/dist";
-            });
+            services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/dist");
 
         }
 
@@ -153,18 +150,6 @@ namespace Ombi
                 settings.CollectAnalyticData = true; // Since this is a first setup, enable analytical data collection
                 settings.Set = true;
                 ombiService.SaveSettings(settings);
-            }
-
-            // Check if it's in the startup args
-            var appConfig = serviceProvider.GetService<IApplicationConfigRepository>();
-            var baseUrl = appConfig.Get(ConfigurationTypes.BaseUrl);
-            if (baseUrl != null)
-            {
-                if (baseUrl.Value.HasValue())
-                {
-                    settings.BaseUrl = baseUrl.Value;
-                    ombiService.SaveSettings(settings);
-                }
             }
 
             if (settings.BaseUrl.HasValue())
@@ -228,8 +213,8 @@ namespace Ombi
 
             app.UseSpa(spa =>
             {
-#if DEBUG
                 spa.Options.SourcePath = "ClientApp";
+#if DEBUG
                 spa.UseProxyToSpaDevelopmentServer("http://localhost:3578");
 #endif
             });

@@ -1,0 +1,10 @@
+﻿[*.cs]
+
+# CS1591: Missing XML comment for publicly visible type or member
+dotnet_diagnostic.CS1591.severity = none
+
+# RCS1090: Add call to 'ConfigureAwait' (or vice versa).
+dotnet_diagnostic.RCS1090.severity = none
+
+# RCS1036: Remove redundant empty line.
+dotnet_diagnostic.RCS1036.severity = none

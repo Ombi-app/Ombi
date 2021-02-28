@@ -45,6 +45,10 @@
     <None Remove="Styles\**" />
     <None Remove="wwwroot\dist\**" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
 
  
   <ItemGroup>
@@ -68,7 +72,7 @@
     <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
     <PackageReference Include="System.Security.Cryptography.Csp" Version="4.3.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.10" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="5.0.0-preview.8.20414.8" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.0" />
   </ItemGroup>

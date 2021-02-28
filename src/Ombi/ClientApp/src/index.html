@@ -2,39 +2,7 @@
 <html lang="en">
 
 <head>
-    <script type='text/javascript'>
-        function configExists(url) {
-            var req = new XMLHttpRequest();
-            req.open('GET', url, false);
-            req.send();
-            return req.status === 200 && req.responseURL === url;
-        }
-
-        var probePath = 'styles/please-wait.js';
-        var origin = document.location.origin;
-        var pathSegments = document.location.pathname.split('/');
-
-        var basePath = '/'
-        var configFound = false;
-        for (var i = 0; i < pathSegments.length; i++) {
-            var segment = pathSegments[i];
-            if (segment.length > 0) {
-                basePath = basePath + segment + '/';
-            }
-            var fullPath = origin + basePath + probePath;
-            configFound = configExists(fullPath);
-            if (configFound) {
-                break;
-            }
-        }
-        var basePathToUse = basePath.substring(0, basePath.length - 1); // trim off the trailing '/'
-        basePathToUse == '' ? '/' : basePathToUse;
-        window["baseHref"] = configFound ? basePathToUse : '/';
-
-        document.write("<base href='" + (configFound ? basePath : '/') + "' />");
-
-        console.log(window["baseHref"]);
-    </script>
+    <script type='text/javascript'>window["baseHref"] = '/';</script>
     <style>
         .sk-folding-cube .sk-cube:before {
             background-color: white !important;
@@ -81,7 +49,6 @@ var line = lines[Math.floor(Math.random() * lines.length)];
 
 
             window.loading_screen = window.pleaseWait({
-                // logo: "assets/images/logo.png",
                 template: `<div class='pg-loading-inner'>
   <div class='pg-loading-center-outer'>
     <div class='pg-loading-center-middle'>

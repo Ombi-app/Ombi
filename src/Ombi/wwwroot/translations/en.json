@@ -273,7 +273,7 @@
             "AllSeasonsTooltip": "This will request every season for this show",
             "FirstSeasonTooltip": "This will only request the First Season for this show",
             "LatestSeasonTooltip": "This will only request the Latest Season for this show",
-            "NoEpisodes": "There unfortunatly is no episode data for this show yet!"
+            "NoEpisodes": "There Unfortunately is no episode data for this show yet!"
         },
         "SonarrConfiguration": "Sonarr Configuration",
         "RadarrConfiguration": "Radarr Configuration",
