@@ -31,7 +31,7 @@
 
                 <div class="form-group">
                     <div>
-                        <button [disabled]="form.invalid" type="button" (click)="test(form)" class="btn btn-primary-outline">
+                        <button [disabled]="form.invalid" mat-raised-button type="button" (click)="test(form)" class="btn btn-primary-outline">
                             Test
                             <div id="spinner"></div>
                         </button>
@@ -40,7 +40,7 @@
 
                 <div class="form-group">
                     <div>
-                        <button [disabled]="form.invalid" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                        <button [disabled]="form.invalid" mat-raised-button type="submit" id="save" class="btn btn-primary-outline">Submit</button>
                     </div>
                 </div>
             </form>

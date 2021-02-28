@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from "@angular/core";
-import { ImageService, SearchV2Service, RequestService, MessageService, RadarrService } from "../../../services";
+import { ImageService, SearchV2Service, RequestService, MessageService, RadarrService, SettingsStateService } from "../../../services";
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
@@ -26,6 +26,7 @@ export class MovieDetailsComponent {
     public isAdmin: boolean;
     public advancedOptions: IAdvancedData;
     public showAdvanced: boolean; // Set on the UI
+    public issuesEnabled: boolean;
 
     public requestType = RequestType.movie;
 
@@ -37,7 +38,7 @@ export class MovieDetailsComponent {
         private sanitizer: DomSanitizer, private imageService: ImageService,
         public dialog: MatDialog, private requestService: RequestService,
         private requestService2: RequestServiceV2, private radarrService: RadarrService,
-        public messageService: MessageService, private auth: AuthService) {
+        public messageService: MessageService, private auth: AuthService, private settingsState: SettingsStateService) {
         this.route.params.subscribe(async (params: any) => {
             if (typeof params.movieDbId === 'string' || params.movieDbId instanceof String) {
                 if (params.movieDbId.startsWith("tt")) {
@@ -51,6 +52,7 @@ export class MovieDetailsComponent {
 
     public async load() {
 
+        this.issuesEnabled = this.settingsState.getIssue();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
 
         if (this.isAdmin) {
@@ -188,7 +190,6 @@ export class MovieDetailsComponent {
         const folders = this.radarrService.getRootFoldersFromSettings();
 
         forkJoin([profile, folders]).subscribe(x => {
-            debugger;
             const radarrProfiles = x[0];
             const radarrRootFolders = x[1];
 

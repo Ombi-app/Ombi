@@ -111,7 +111,8 @@ stages:
 
           $header = @{
             "Accept"="application/vnd.github.v3+json"
-            "Authorization"="Bearer ${env:APTPAT}"
+            "Authorization"="Bearer $(APTPAT)"
+            "User-Agent"="Ombi"
           } 
 
           Invoke-RestMethod -Uri "https://api.github.com/repos/Ombi-app/Ombi.Apt/actions/workflows/build-deb.yml/dispatches" -Method 'Post' -Body $body -Headers $header

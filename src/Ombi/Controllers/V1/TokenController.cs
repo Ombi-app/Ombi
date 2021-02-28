@@ -146,7 +146,7 @@ namespace Ombi.Controllers.V1
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: rememberMe ? DateTime.Now.AddDays(7) : DateTime.Now.AddDays(1),
+                expires: rememberMe ? DateTime.Now.AddYears(1) : DateTime.Now.AddDays(7),
                 signingCredentials: creds,
                 audience: "Ombi", issuer: "Ombi"
             );

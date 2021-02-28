@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, OnInit } from "@angular/core";
-import { ImageService, SearchV2Service, MessageService, RequestService, SonarrService } from "../../../services";
+import { ImageService, SearchV2Service, MessageService, RequestService, SonarrService, SettingsStateService } from "../../../services";
 import { ActivatedRoute } from "@angular/router";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
@@ -29,6 +29,7 @@ export class TvDetailsComponent implements OnInit {
     public advancedOptions: IAdvancedData;
     public showAdvanced: boolean; // Set on the UI
     public requestType = RequestType.tvShow;
+    public issuesEnabled: boolean;
 
     private tvdbId: number;
 
@@ -36,7 +37,7 @@ export class TvDetailsComponent implements OnInit {
         private sanitizer: DomSanitizer, private imageService: ImageService,
         public dialog: MatDialog, public messageService: MessageService, private requestService: RequestService,
         private requestService2: RequestServiceV2,
-        private auth: AuthService, private sonarrService: SonarrService) {
+        private auth: AuthService, private sonarrService: SonarrService, private settingsState: SettingsStateService) {
         this.route.params.subscribe((params: any) => {
             this.tvdbId = params.tvdbId;
             this.fromSearch = params.search;
@@ -49,6 +50,7 @@ export class TvDetailsComponent implements OnInit {
 
     public async load() {
 
+        this.issuesEnabled = this.settingsState.getIssue();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
 
         if (this.isAdmin) {

@@ -299,7 +299,8 @@ namespace Ombi.Controllers.V1
                 model.Add(new UserViewModelDropdown
                 {
                     Id = user.Id,
-                    Username = user.UserName
+                    Username = user.UserName,
+                    Email = user.Email
                 });
             }
 

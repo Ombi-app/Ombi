@@ -288,6 +288,18 @@
     font-weight:500;
 }
 
+.left-panel-details .streaming-on-content{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow:row wrap;
+}
+
+.left-panel-details .streaming-on-content .label{
+    white-space:nowrap;
+    padding-right:10px;
+}
+
 .left-panel-details{
     font-weight:100;
 }
@@ -314,6 +326,7 @@
     padding:2px 1.5em;;
     width:170px;
     margin-top:10px;
+    margin-left:10px;
 }
 
 @media (max-width:500px){
@@ -330,6 +343,7 @@
 
     .media-row .mat-raised-button{
         width:100%;
+        margin-left:0px;
     }
 
     .media-row .btn-spacing{

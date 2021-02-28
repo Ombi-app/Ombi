@@ -203,6 +203,9 @@ div.bg {
     justify-content: center;
     font-weight: 700;
     font-size: 10em;
+    &.custom {
+        font-size: 5em;
+    }
     width:100%;
     margin-bottom:70px;
 }

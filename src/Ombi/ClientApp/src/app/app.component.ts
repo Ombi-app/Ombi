@@ -10,7 +10,6 @@ import { SettingsService } from "./services";
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ICustomizationSettings, ICustomPage } from "./interfaces";
-import { StorageService } from './shared/storage/storage-service';
 
 import { SignalRNotificationService } from './services/signlarnotification.service';
 import { DOCUMENT } from '@angular/common';
@@ -46,7 +45,6 @@ export class AppComponent implements OnInit {
         public readonly translate: TranslateService,
         private readonly customPageService: CustomPageService,
         public overlayContainer: OverlayContainer,
-        private storage: StorageService,
         private signalrNotification: SignalRNotificationService,
         private readonly snackBar: MatSnackBar,
         private readonly identity: IdentityService,

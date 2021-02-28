@@ -203,7 +203,7 @@ namespace Ombi.Controllers.V1
                 var item = rand.Next(moviesArray.Length);
                 var result = await _cache.GetOrAdd($"{CacheKeys.FanartTv}movie{moviesArray[item]}", async () => await FanartTvApi.GetMovieImages(moviesArray[item].ToString(), key.Value), DateTime.Now.AddDays(1));
 
-                while (!result.moviebackground.Any())
+                while (!result.moviebackground?.Any() ?? true)
                 {
                     item = rand.Next(moviesArray.Length);
                     result = await _cache.GetOrAdd($"{CacheKeys.FanartTv}movie{moviesArray[item]}", async () => await FanartTvApi.GetMovieImages(moviesArray[item].ToString(), key.Value), DateTime.Now.AddDays(1));
@@ -220,7 +220,7 @@ namespace Ombi.Controllers.V1
                 var item = rand.Next(tvArray.Length);
                 var result = await _cache.GetOrAdd($"{CacheKeys.FanartTv}tv{tvArray[item]}", async () => await FanartTvApi.GetTvImages(tvArray[item], key.Value), DateTime.Now.AddDays(1));
 
-                while (!result.showbackground.Any())
+                while (!result.showbackground?.Any() ?? true)
                 {
                     item = rand.Next(tvArray.Length);
                     result = await _cache.GetOrAdd($"{CacheKeys.FanartTv}tv{tvArray[item]}", async () => await FanartTvApi.GetTvImages(tvArray[item], key.Value), DateTime.Now.AddDays(1));

@@ -41,7 +41,9 @@ export class RequestBehalfComponent implements OnInit {
     }
 
     public displayFn(user: IUserDropdown): string {
-        return user?.username ? user.username : '';
+        const username = user?.username ? user.username : '';
+        const email = user?.email ? `(${user.email})` : '';
+        return `${username} ${email}`;
       }
 
     private _filter(value: string|IUserDropdown): IUserDropdown[] {
