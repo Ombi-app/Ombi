@@ -258,7 +258,7 @@ namespace Ombi
                 {
                     var error = $"Can't set the base URL because we cannot find the file at '{indexPath}', if you are trying to set a base url please report this on Github!";
                     Console.WriteLine(error);
-                    throw new Exception(error);
+                    return;
                 }
                 var indexHtml = await File.ReadAllTextAsync(indexPath);
                 var sb = new StringBuilder(indexHtml);
