@@ -271,7 +271,14 @@ namespace Ombi
                 sb.Insert(headPosition + 6,
                     $"<script type='text/javascript'>window[\"baseHref\"] = '{trimmedBaseUrl}';</script><base href=\"{trimmedBaseUrl}/\">");
 
-                await File.WriteAllTextAsync(indexPath, sb.ToString());
+                try
+                {
+                    await File.WriteAllTextAsync(indexPath, sb.ToString());
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    Console.WriteLine("Error attempting to write Base URL, see here: https://docs.ombi.app/info/faq/#unauthorized-access-to-indexhtml");
+                }
 
                 Console.WriteLine($"Wrote new baseurl at {indexPath}");
             }
