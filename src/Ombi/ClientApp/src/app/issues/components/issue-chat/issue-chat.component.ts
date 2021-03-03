@@ -20,7 +20,7 @@ export interface ChatData {
 export class IssueChatComponent implements OnInit {
 
     public isAdmin: boolean;
-    public comments: IIssuesChat[];
+    public comments: IIssuesChat[] = [];
     public IssueStatus = IssueStatus;
     public settings: IIssueSettings;
     public messages: ChatMessages[] = [];

@@ -49,6 +49,7 @@ html,body {
   align-items: center;
   flex-direction: column;
   height: 70vh;
+  width: 100%;
   h1 {
     margin: 0.5em auto;
     color: #FFF;
@@ -58,8 +59,8 @@ html,body {
 
 .chatbox {
   background: rgba(255, 255, 255, 0.05);
-  width: 600px;
-  height: 75%;
+  width: 85%;
+  height: 100%;
   border-radius: 0.2em;
   position: relative;
   box-shadow: 1px 1px 12px rgba(0, 0, 0, 0.1);

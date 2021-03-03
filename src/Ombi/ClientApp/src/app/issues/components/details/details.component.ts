@@ -70,7 +70,7 @@ export class IssuesDetailsComponent implements OnInit {
     }
 
     public openChat(issue: IIssues) {
-        this.dialog.open(IssueChatComponent, { width: "80vh", data: { issueId: issue.id },  panelClass: 'modal-panel' })
+        this.dialog.open(IssueChatComponent, { width: "100vh", data: { issueId: issue.id },  panelClass: 'modal-panel' })
     }
 
     public navToMedia() {

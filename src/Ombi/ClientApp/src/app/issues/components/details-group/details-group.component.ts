@@ -1,48 +1,55 @@
-import { Component, Inject, OnInit } from "@angular/core";
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AuthService } from "../../../auth/auth.service";
+import { Component, Input } from "@angular/core";
+import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from "@ngx-translate/core";
 import { IIssues, IIssueSettings, IssueStatus } from "../../../interfaces";
-import { SettingsService } from "../../../services";
-
-
-export interface IssuesDetailsGroupData {
-    issues: IIssues[];
-    title: string;
-  }
+import { IssuesService, NotificationService } from "../../../services";
+import { IssueChatComponent } from "../issue-chat/issue-chat.component";
 
 @Component({
     selector: "issues-details-group",
     templateUrl: "details-group.component.html",
     styleUrls: ["details-group.component.scss"],
 })
-export class DetailsGroupComponent implements OnInit {
+export class DetailsGroupComponent {
 
-    public isAdmin: boolean;
+    @Input() public issue: IIssues;
+    @Input() public isAdmin: boolean;
+    @Input() public settings: IIssueSettings;
+
+    public deleted: boolean;
     public IssueStatus = IssueStatus;
-    public settings: IIssueSettings;
     public get hasRequest(): boolean {
-        return this.data.issues.some(x => x.requestId);
+        if (this.issue.requestId) {
+            return true;
+        }
+        return false;
     }
 
- constructor(public dialogRef: MatDialogRef<DetailsGroupComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: IssuesDetailsGroupData,
-    private authService: AuthService,  private settingsService: SettingsService) { }
+ constructor(
+    private translateService: TranslateService, private issuesService: IssuesService,
+    private notificationService: NotificationService, private dialog: MatDialog) { }
 
-    public ngOnInit() {
-        this.isAdmin = this.authService.hasRole("Admin") || this.authService.hasRole("PowerUser");
-        this.settingsService.getIssueSettings().subscribe(x => this.settings = x);
+    public async delete(issue: IIssues) {
+        await this.issuesService.deleteIssue(issue.id);
+        this.notificationService.success(this.translateService.instant("Issues.DeletedIssue"));
+        this.deleted = true;
     }
 
-    public close() {
-        this.dialogRef.close();
-      }
+    public openChat(issue: IIssues) {
+        this.dialog.open(IssueChatComponent, { width: "100vh", data: { issueId: issue.id },  panelClass: 'modal-panel' })
+    }
 
-      public navToRequest() {
-          var issue = this.data.issues.filter(x => {
-              return x.requestId;
-          })[0];
+    public resolve(issue: IIssues) {
+        this.issuesService.updateStatus({issueId: issue.id, status: IssueStatus.Resolved}).subscribe(() => {
+            this.notificationService.success(this.translateService.instant("Issues.MarkedAsResolved"));
+            issue.status = IssueStatus.Resolved;
+        });
+    }
 
-          // close dialog and tell calling component to navigate
-      }
-
+    public inProgress(issue: IIssues) {
+        this.issuesService.updateStatus({issueId: issue.id, status: IssueStatus.InProgress}).subscribe(() => {
+            this.notificationService.success(this.translateService.instant("Issues.MarkedAsInProgress"));
+            issue.status = IssueStatus.InProgress;
+        });
+    }
 }
