@@ -1,0 +1,20 @@
+<div class="container top-spacing" *ngIf="details">
+
+  <h1>Issues for {{details.title}}</h1>
+  <div>
+    <span>{{'Issues.Requested' | translate}} 
+      <i *ngIf="!hasRequest" class="far fa-times-circle"></i>
+      <i *ngIf="hasRequest" class="far fa-check-circle"></i>
+    </span>
+    <div>
+    <button mat-raised-button color="accent" (click)="navToMedia()"><i class="far fa-eye"></i> {{'Common.ViewDetails' | translate }}</button>
+  </div>
+    <div class="row">
+      <div class="col-6 top-spacing" *ngFor="let issue of details.issues">
+        <issues-details-group [issue]="issue" [settings]="settings" [isAdmin]="isAdmin"></issues-details-group>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+  </div>
+</div>

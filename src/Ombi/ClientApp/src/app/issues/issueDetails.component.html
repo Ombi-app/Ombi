@@ -84,7 +84,7 @@
         <div class="col-md-12">
             <div *ngIf="isAdmin && settings">
                 <div *ngIf="issue.status === IssueStatus.Pending && settings.enableInProgress">
-                    <button class="btn btn-primary btn-sm bottom-btn" (click)="inProgress()" [translate]="'Issues.MarkInProgress'"></button>
+                    <button class="btn btn-primary btn-sm bottom-btn" (click)="inProgress()">{{'Issues.MarkInProgress' | translate }}</button>
                 </div>
                 <div *ngIf="issue.status === IssueStatus.Pending && !settings.enableInProgress || issue.status == IssueStatus.InProgress">
                     <button class="btn btn-primary btn-sm bottom-btn" (click)="resolve()" [translate]="'Issues.MarkResolved'"></button>

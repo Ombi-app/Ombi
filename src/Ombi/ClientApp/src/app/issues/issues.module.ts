@@ -1,17 +1,17 @@
 ﻿import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
+// import { NbChatModule, NbThemeModule } from '@nebular/theme';
 
 import { OrderModule } from "ngx-order-pipe";
 
-import { IdentityService, SearchService } from "../services";
-
 import { AuthGuard } from "../auth/auth.guard";
 
-import { SharedModule as OmbiShared } from "../shared/shared.module";
+import { SharedModule } from "../shared/shared.module";
 
 import { IssueDetailsComponent } from "./issueDetails.component";
 import { IssuesComponent } from "./issues.component";
 import { IssuesTableComponent } from "./issuestable.component";
+import { IssuesDetailsComponent } from "./components/details/details.component";
 
 import { PipeModule } from "../pipes/pipe.module";
 
@@ -19,7 +19,7 @@ import * as fromComponents from "./components";
 
 const routes: Routes = [
     { path: "", component: IssuesComponent, canActivate: [AuthGuard] },
-    { path: ":id", component: IssueDetailsComponent, canActivate: [AuthGuard] },
+    { path: ":providerId", component: IssuesDetailsComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -27,7 +27,8 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         OrderModule,
         PipeModule,
-        OmbiShared,
+        SharedModule,
+        // NbChatModule,
     ],
     declarations: [
         IssuesComponent,
@@ -39,8 +40,7 @@ const routes: Routes = [
         RouterModule,
     ],
     providers: [
-        IdentityService,
-        SearchService,
+        ...fromComponents.providers
     ],
 
 })

@@ -1,20 +1,19 @@
-import { AuthGuard } from "../../auth/auth.guard";
-import { IssuesListComponent } from "./issues-list/issues-list.component";
-import { Routes } from "@angular/router";
+import { IssuesV2Service } from "../../services/issuesv2.service";
+import { IdentityService, SearchService } from "../../services";
+import { IssuesDetailsComponent } from "./details/details.component";
+import { IssueChatComponent } from "./issue-chat/issue-chat.component";
+import { ChatBoxComponent } from "../../shared/chat-box/chat-box.component";
 
 
 
 export const components: any[] = [
-    IssuesListComponent,
-];
-
-
-export const entryComponents: any[] = [
+    IssuesDetailsComponent,
+    IssueChatComponent,
+    ChatBoxComponent,
 ];
 
 export const providers: any[] = [
-];
-
-export const routes: Routes = [
-    { path: "", component: IssuesListComponent, canActivate: [AuthGuard] },
+    IssuesV2Service,
+    IdentityService,
+    SearchService,
 ];
