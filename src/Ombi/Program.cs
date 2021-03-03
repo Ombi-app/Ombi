@@ -277,7 +277,7 @@ namespace Ombi
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    Console.WriteLine("Error attempting to write Base URL, see here: https://docs.ombi.app/info/faq/#unauthorized-access-to-indexhtml");
+                    Console.WriteLine("Error attempting to write Base URL, see here: https://docs.ombi.app/info/known-faults/#unauthorized-access-to-indexhtml");
                 }
 
                 Console.WriteLine($"Wrote new baseurl at {indexPath}");
