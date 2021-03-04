@@ -7,6 +7,7 @@ namespace Ombi.Store.Entities.Requests
     public class TvRequests : Entity
     {
         public int TvDbId { get; set; }
+        //public int ExternalProviderId { get; set; }
         public string ImdbId { get; set; }
         public int? QualityOverride { get; set; }
         public int? RootFolder { get; set; }

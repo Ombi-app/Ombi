@@ -36,6 +36,7 @@ export interface ISearchTvResult {
     subscribed: boolean;
     showSubscribe: boolean;
     fullyAvailable: boolean;
+    backdropPath: string;
     partlyAvailable: boolean;
     background: any;
     open: boolean; // THIS IS FOR THE UI

@@ -22,6 +22,8 @@ using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using TraktSharp.Entities;
+using Ombi.Api.TheMovieDb;
+using Ombi.Api.TheMovieDb.Models;
 
 namespace Ombi.Core.Engine
 {
@@ -29,13 +31,16 @@ namespace Ombi.Core.Engine
     {
         private readonly ISettingsService<CustomizationSettings> _customizationSettings;
         private readonly IImageService _imageService;
+        private readonly IMovieDbApi _theMovieDbApi;
 
         public TvSearchEngine(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
             ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um, ISettingsService<CustomizationSettings> customizationSettings,
-            ICacheService memCache, ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub, IImageService imageService)
+            ICacheService memCache, ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub, IImageService imageService,
+            IMovieDbApi theMovieDbApi)
             : base(identity, service, r, um, memCache, s, sub)
         {
             _imageService = imageService;
+            _theMovieDbApi = theMovieDbApi;
             TvMazeApi = tvMaze;
             Mapper = mapper;
             TraktApi = trakt;
@@ -48,18 +53,18 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<SearchTvShowViewModel>> Search(string searchTerm)
         {
-            var searchResult = await TvMazeApi.Search(searchTerm);
+            var searchResult = await _theMovieDbApi.SearchTv(searchTerm);
 
             if (searchResult != null)
             {
                 var retVal = new List<SearchTvShowViewModel>();
-                foreach (var tvMazeSearch in searchResult)
+                foreach (var result in searchResult)
                 {
-                    if (tvMazeSearch.show.externals == null || !(tvMazeSearch.show.externals?.thetvdb.HasValue ?? false))
-                    {
-                        continue;
-                    }
-                    var mappedResult = await ProcessResult(tvMazeSearch, false);
+                    //if (tvMazeSearch.show.externals == null || !(tvMazeSearch.show.externals?.thetvdb.HasValue ?? false))
+                    //{
+                    //    continue;
+                    //}
+                    var mappedResult = await ProcessResult(result, false);
                     if (mappedResult == null)
                     {
                         continue;
@@ -135,12 +140,14 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<SearchTvShowViewModel>> Popular(int currentlyLoaded, int amountToLoad, bool includeImages = false)
         {
+            var langCode = await DefaultLanguageCode(null);
+
             var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
-            var results = new List<TraktShow>();
+            var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
-                var apiResult = await Cache.GetOrAdd(nameof(Popular) + pagesToLoad.Page,
-                    async () => await TraktApi.GetPopularShows(pagesToLoad.Page, ResultLimit), DateTime.Now.AddHours(12));
+                var apiResult = await Cache.GetOrAdd(nameof(Popular) + langCode + pagesToLoad.Page,
+                    async () => await _theMovieDbApi.PopularTv(langCode, pagesToLoad.Page), DateTime.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
 
@@ -158,12 +165,14 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<SearchTvShowViewModel>> Anticipated(int currentlyLoaded, int amountToLoad)
         {
+            var langCode = await DefaultLanguageCode(null);
+
             var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
-            var results = new List<TraktShow>();
+            var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
-                var apiResult = await Cache.GetOrAdd(nameof(Anticipated) + pagesToLoad.Page,
-                    async () => await TraktApi.GetAnticipatedShows(pagesToLoad.Page, ResultLimit), DateTime.Now.AddHours(12));
+                var apiResult = await Cache.GetOrAdd(nameof(Anticipated) + langCode + pagesToLoad.Page,
+                    async () => await _theMovieDbApi.UpcomingTv(langCode, pagesToLoad.Page), DateTime.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
             var processed = ProcessResults(results);
@@ -180,12 +189,14 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<SearchTvShowViewModel>> Trending(int currentlyLoaded, int amountToLoad)
         {
+            var langCode = await DefaultLanguageCode(null);
+
             var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
-            var results = new List<TraktShow>();
+            var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
-                var apiResult = await Cache.GetOrAdd(nameof(Trending) + pagesToLoad.Page,
-                    async () => await TraktApi.GetTrendingShows(pagesToLoad.Page, ResultLimit), DateTime.Now.AddHours(12));
+                var apiResult = await Cache.GetOrAdd(nameof(Trending) + langCode + pagesToLoad.Page,
+                    async () => await _theMovieDbApi.TopRatedTv(langCode, pagesToLoad.Page), DateTime.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
             var processed = ProcessResults(results);
@@ -220,14 +231,15 @@ namespace Ombi.Core.Engine
             {
                 return null;
             }
-            item.TheTvDbId = item.Id.ToString();
-            if (includeImages)
-            {
-                if (item.TheTvDbId.HasValue())
-                {
-                    item.BackdropPath = await _imageService.GetTvBackground(item.TheTvDbId);
-                }
-            }
+            item.TheMovieDbId = item.Id.ToString();
+            //item.TheTvDbId = item.Id.ToString();
+            //if (includeImages)
+            //{
+            //    if (item.TheTvDbId.HasValue())
+            //    {
+            //        item.BackdropPath = await _imageService.GetTvBackground(item.TheTvDbId);
+            //    }
+            //}
 
             await RunSearchRules(item);
 
