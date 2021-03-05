@@ -76,42 +76,42 @@ namespace Ombi.Core.Engine
             return null;
         }
 
-        public async Task<SearchTvShowViewModel> GetShowInformation(int tvdbid)
+        public async Task<SearchTvShowViewModel> GetShowInformation(string theMovieDbId)
         {
-            var show = await Cache.GetOrAdd(nameof(GetShowInformation) + tvdbid,
-                async () => await TvMazeApi.ShowLookupByTheTvDbId(tvdbid), DateTime.Now.AddHours(12));
+            var show = await Cache.GetOrAdd(nameof(GetShowInformation) + theMovieDbId,
+                async () => await _theMovieDbApi.GetTVInfo(theMovieDbId), DateTime.Now.AddHours(12));
             if (show == null)
             {
                 // We don't have enough information
                 return null;
             }
 
-            var episodes = await Cache.GetOrAdd("TvMazeEpisodeLookup" + show.id,
-                async () => await TvMazeApi.EpisodeLookup(show.id), DateTime.Now.AddHours(12));
-            if (episodes == null || !episodes.Any())
-            {
-                // We don't have enough information
-                return null;
-            }
+            //var episodes = await Cache.GetOrAdd("TvMazeEpisodeLookup" + show.id,
+            //    async () => await TvMazeApi.EpisodeLookup(show.id), DateTime.Now.AddHours(12));
+            //if (episodes == null || !episodes.Any())
+            //{
+            //    // We don't have enough information
+            //    return null;
+            //}
 
             var mapped = Mapper.Map<SearchTvShowViewModel>(show);
 
-            foreach (var e in episodes)
+            foreach (var e in show.seasons)
             {
-                var season = mapped.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == e.season);
+                var season = mapped.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == e.season_number);
                 if (season == null)
                 {
                     var newSeason = new SeasonRequests
                     {
-                        SeasonNumber = e.season,
+                        SeasonNumber = e.season_number,
                         Episodes = new List<EpisodeRequests>()
                     };
                     newSeason.Episodes.Add(new EpisodeRequests
                     {
-                        Url = e.url.ToHttpsUrl(),
+                        //Url = e..ToHttpsUrl(),
                         Title = e.name,
-                        AirDate = e.airstamp.HasValue() ? DateTime.Parse(e.airstamp) : DateTime.MinValue,
-                        EpisodeNumber = e.number,
+                        AirDate = e.air_date.HasValue() ? DateTime.Parse(e.air_date) : DateTime.MinValue,
+                        EpisodeNumber = e,
 
                     });
                     mapped.SeasonRequests.Add(newSeason);
