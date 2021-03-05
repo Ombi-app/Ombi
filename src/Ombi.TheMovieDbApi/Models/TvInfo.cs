@@ -18,6 +18,7 @@ namespace Ombi.Api.TheMovieDb.Models
         public Network[] networks { get; set; }
         public int number_of_episodes { get; set; }
         public int number_of_seasons { get; set; }
+        public string tagline { get; set; }
         public string[] origin_country { get; set; }
         public string original_language { get; set; }
         public string original_name { get; set; }
@@ -30,7 +31,21 @@ namespace Ombi.Api.TheMovieDb.Models
         public string type { get; set; }
         public float vote_average { get; set; }
         public int vote_count { get; set; }
-        [JsonProperty("external_ids")] public TvExternalIds TvExternalIds { get; set; }
+        [JsonProperty("videos")]
+        public Videos Videos { get; set; }
+        [JsonProperty("credits")]
+        public Credits Credits { get; set; }
+        [JsonProperty("similar")]
+        public Similar Similar { get; set; }
+        [JsonProperty("recommendations")]
+        public Recommendations Recommendations { get; set; }
+        [JsonProperty("external_ids")]
+        public ExternalIds ExternalIds { get; set; }
+        [JsonProperty("keywords")]
+        public Keywords Keywords { get; set; }
+        [JsonProperty("images")]
+        public Images Images { get; set; }
+
     }
 
     public class Created_By

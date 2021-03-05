@@ -2,7 +2,7 @@
     <a *ngIf="homepage" class="media-icons" href="{{homepage}}" target="_blank">
         <i matTooltip="Homepage" class="sfa-home fa-2x grow-social"></i>
     </a>
-    <a *ngIf="theMoviedbId" href="https://www.themoviedb.org/movie/{{theMoviedbId}}" class="media-icons"
+    <a *ngIf="theMoviedbId" href="https://www.themoviedb.org/{{type === RequestType.movie ? 'movie' : 'tv'}}/{{theMoviedbId}}" class="media-icons"
         target="_blank">
         <i matTooltip="The Movie DB" class="fas fa-film fa-2x grow-social"></i>
     </a>

@@ -54,7 +54,7 @@ namespace Ombi.Core.Rule.Rules
             {
                 var vm = (SearchTvShowViewModel) obj;
                 // Check if it's in Radarr
-                var result = await _ctx.SonarrCache.FirstOrDefaultAsync(x => x.TvDbId == vm.Id);
+                var result = await _ctx.SonarrCache.FirstOrDefaultAsync(x => x.TvDbId.ToString() == vm.TheTvDbId);
                 if (result != null)
                 {
                     vm.Approved = true;
@@ -69,7 +69,7 @@ namespace Ombi.Core.Rule.Rules
                                 // Check if we have it
                                 var monitoredInSonarr = await sonarrEpisodes.FirstOrDefaultAsync(x =>
                                     x.EpisodeNumber == ep.EpisodeNumber && x.SeasonNumber == season.SeasonNumber
-                                    && x.TvDbId == vm.Id);
+                                    && x.TvDbId.ToString() == vm.TheTvDbId);
                                 if (monitoredInSonarr != null)
                                 {
                                     ep.Approved = true;

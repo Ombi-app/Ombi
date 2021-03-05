@@ -35,6 +35,7 @@ namespace Ombi.Core.Helpers
         public TvRequests NewRequest { get; protected set; }
         protected TvMazeShow ShowInfo { get; set; }
         protected List<TvSearchResult> Results { get; set; }
+        protected TvSearchResult TheMovieDbRecord { get; set; }
 
         public async Task<TvShowRequestBuilder> GetShowInfo(int id)
         {
@@ -42,7 +43,8 @@ namespace Ombi.Core.Helpers
             Results = await MovieDbApi.SearchTv(ShowInfo.name);
             foreach (TvSearchResult result in Results) {
                 if (result.Name.Equals(ShowInfo.name, StringComparison.InvariantCultureIgnoreCase))
-                {                  
+                {
+                    TheMovieDbRecord = result;
                     var showIds = await MovieDbApi.GetTvExternals(result.Id);
                     ShowInfo.externals.imdb = showIds.imdb_id;
                     BackdropPath = result.BackdropPath;
@@ -240,6 +242,7 @@ namespace Ombi.Core.Helpers
                 PosterPath = PosterPath,
                 Title = ShowInfo.name,
                 ReleaseDate = FirstAir,
+                ExternalProviderId = TheMovieDbRecord.Id,
                 Status = ShowInfo.status,
                 ImdbId = ShowInfo.externals?.imdb ?? string.Empty,
                 TvDbId = tv.TvDbId,

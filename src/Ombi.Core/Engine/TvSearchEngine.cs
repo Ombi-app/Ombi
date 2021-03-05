@@ -6,7 +6,6 @@ using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Settings;
-using Ombi.Core.Settings.Models.External;
 using Ombi.Store.Repository;
 
 using System;
@@ -16,14 +15,13 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Repository.Requests;
-using Microsoft.Extensions.Caching.Memory;
 using Ombi.Core.Authentication;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
-using TraktSharp.Entities;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
+using System.Threading;
 
 namespace Ombi.Core.Engine
 {
@@ -76,7 +74,7 @@ namespace Ombi.Core.Engine
             return null;
         }
 
-        public async Task<SearchTvShowViewModel> GetShowInformation(string theMovieDbId)
+        public async Task<SearchTvShowViewModel> GetShowInformation(string theMovieDbId, CancellationToken token)
         {
             var show = await Cache.GetOrAdd(nameof(GetShowInformation) + theMovieDbId,
                 async () => await _theMovieDbApi.GetTVInfo(theMovieDbId), DateTime.Now.AddHours(12));
@@ -96,38 +94,44 @@ namespace Ombi.Core.Engine
 
             var mapped = Mapper.Map<SearchTvShowViewModel>(show);
 
-            foreach (var e in show.seasons)
+            foreach(var tvSeason in show.seasons)
             {
-                var season = mapped.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == e.season_number);
-                if (season == null)
-                {
-                    var newSeason = new SeasonRequests
-                    {
-                        SeasonNumber = e.season_number,
-                        Episodes = new List<EpisodeRequests>()
-                    };
-                    newSeason.Episodes.Add(new EpisodeRequests
-                    {
-                        //Url = e..ToHttpsUrl(),
-                        Title = e.name,
-                        AirDate = e.air_date.HasValue() ? DateTime.Parse(e.air_date) : DateTime.MinValue,
-                        EpisodeNumber = e,
+                var seasonEpisodes = (await _theMovieDbApi.GetSeasonEpisodes(show.id, tvSeason.season_number, token));
 
-                    });
-                    mapped.SeasonRequests.Add(newSeason);
-                }
-                else
+                foreach (var episode in seasonEpisodes.episodes)
                 {
-                    // We already have the season, so just add the episode
-                    season.Episodes.Add(new EpisodeRequests
+                    var season = mapped.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == episode.season_number);
+                    if (season == null)
                     {
-                        Url = e.url.ToHttpsUrl(),
-                        Title = e.name,
-                        AirDate = e.airstamp.HasValue() ? DateTime.Parse(e.airstamp) : DateTime.MinValue,
-                        EpisodeNumber = e.number,
-                    });
+                        var newSeason = new SeasonRequests
+                        {
+                            SeasonNumber = episode.season_number,
+                            Episodes = new List<EpisodeRequests>()
+                        };
+                        newSeason.Episodes.Add(new EpisodeRequests
+                        {
+                            //Url = episode...ToHttpsUrl(),
+                            Title = episode.name,
+                            AirDate = episode.air_date.HasValue() ? DateTime.Parse(episode.air_date) : DateTime.MinValue,
+                            EpisodeNumber = episode.episode_number,
+
+                        });
+                        mapped.SeasonRequests.Add(newSeason);
+                    }
+                    else
+                    {
+                        // We already have the season, so just add the episode
+                        season.Episodes.Add(new EpisodeRequests
+                        {
+                            //Url = e.url.ToHttpsUrl(),
+                            Title = episode.name,
+                            AirDate = episode.air_date.HasValue() ? DateTime.Parse(episode.air_date) : DateTime.MinValue,
+                            EpisodeNumber = episode.episode_number,
+                        });
+                    }
                 }
             }
+
             return await ProcessResult(mapped, false);
         }
 

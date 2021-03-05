@@ -8,19 +8,18 @@
                         <a *ngIf="item.profile_path" [routerLink]="'/discover/actor/' + item.id">
                             <img class="cast-profile-img" src="https://image.tmdb.org/t/p/w300/{{item.profile_path}}">
                         </a>
-                        <a *ngIf="item.character?.image?.medium" [routerLink]="'/discover/actor/' + item.person.id">
-                            <img class="cast-profile-img" [src]="item.character.image.medium">
+                        <a *ngIf="item.image" [routerLink]="'/discover/actor/' + item.person.id">
+                            <img class="cast-profile-img" src="https://image.tmdb.org/t/p/w300/{{item.image}}">
                         </a>
                         <!-- TODO get profile image default -->
 
                     </div>
                     <div class="col-12">
                         <span *ngIf="item.name"><strong>{{item.name}}</strong></span>
-                        <span *ngIf="item.person?.name"><strong>{{item.person.name}}</strong></span>
+                        <span *ngIf="item.person"><strong>{{item.person}}</strong></span>
                     </div>
                     <div class="col-12">
-                        <span *ngIf="!item.character?.name"><small>{{item.character}}</small></span>
-                        <span *ngIf="item.character.name"><small>{{item.character.name}}</small></span>
+                        <span *ngIf="item.character"><small>{{item.character}}</small></span>
                     </div>
 
                 </div>

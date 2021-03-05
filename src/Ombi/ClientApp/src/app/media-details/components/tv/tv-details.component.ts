@@ -13,6 +13,7 @@ import { TvAdvancedOptionsComponent } from "./panels/tv-advanced-options/tv-adva
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { RequestBehalfComponent } from "../shared/request-behalf/request-behalf.component";
 import { forkJoin } from "rxjs";
+import { TopBannerComponent } from "../shared/top-banner/top-banner.component";
 
 @Component({
     templateUrl: "./tv-details.component.html",
@@ -57,12 +58,12 @@ export class TvDetailsComponent implements OnInit {
             this.showAdvanced = await this.sonarrService.isEnabled();
         }
 
-        if (this.fromSearch) {
-            this.tv = await this.searchService.getTvInfoWithMovieDbId(this.tvdbId);
-            this.tvdbId = this.tv.id;
-        } else {
+        // if (this.fromSearch) {
+        //     this.tv = await this.searchService.getTvInfoWithMovieDbId(this.tvdbId);
+        //     this.tvdbId = this.tv.id;
+        // } else {
             this.tv = await this.searchService.getTvInfo(this.tvdbId);
-        }
+        // }
 
         if (this.tv.requestId) {
             this.tvRequest = await this.requestService.getChildRequests(this.tv.requestId).toPromise();
@@ -70,8 +71,8 @@ export class TvDetailsComponent implements OnInit {
             this.loadAdvancedInfo();
         }
 
-        const tvBanner = await this.imageService.getTvBanner(this.tvdbId).toPromise();
-        this.tv.background = this.sanitizer.bypassSecurityTrustStyle("url(" + tvBanner + ")");
+        // const tvBanner = await this.imageService.getTvBanner(this.tvdbId).toPromise();
+        this.tv.background = this.sanitizer.bypassSecurityTrustStyle("url(https://image.tmdb.org/t/p/original" + this.tv.banner + ")");
     }
 
     public async request(userId: string) {
@@ -87,7 +88,6 @@ export class TvDetailsComponent implements OnInit {
 
     public openDialog() {
         let trailerLink = this.tv.trailer;
-        trailerLink = trailerLink.split('?v=')[1];
 
         this.dialog.open(YoutubeTrailerComponent, {
             width: '560px',

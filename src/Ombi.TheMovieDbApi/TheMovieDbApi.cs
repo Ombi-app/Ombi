@@ -302,14 +302,25 @@ namespace Ombi.Api.TheMovieDb
             return Mapper.Map<List<MovieDbSearchResult>>(result.results);
         }
 
-        public async Task<TvInfo> GetTVInfo(string themoviedbid)
+        public async Task<TvInfo> GetTVInfo(string themoviedbid, string langCode = "en")
         {
             var request = new Request($"/tv/{themoviedbid}", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
-            request.AddQueryString("append_to_response", "external_ids");
+            request.AddQueryString("language", langCode);
+            request.AddQueryString("append_to_response", "videos,credits,similar,recommendations,external_ids,keywords,images");
             AddRetry(request);
 
             return await Api.Request<TvInfo>(request);
+        }
+
+        public async Task<SeasonDetails> GetSeasonEpisodes(int theMovieDbId, int seasonNumber, CancellationToken token, string langCode = "en")
+        {
+            var request = new Request($"/tv/{theMovieDbId}/season/{seasonNumber}", BaseUri, HttpMethod.Get);
+            request.AddQueryString("api_key", ApiToken);
+            request.AddQueryString("language", langCode);
+            AddRetry(request);
+
+            return await Api.Request<SeasonDetails>(request, token);
         }
 
         public async Task<List<Keyword>> SearchKeyword(string searchTerm)

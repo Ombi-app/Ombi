@@ -15,12 +15,15 @@
         <div>
 
             <top-banner [background]="tv.background" [available]="tv.available" [title]="tv.title"
-                [releaseDate]="tv.firstAired" [tagline]="tv.certification"></top-banner>
+                [releaseDate]="tv.firstAired" [tagline]="tv.tagline"></top-banner>
             <div class="social-icons-container">
                 <social-icons
                     [homepage]="tv.homepage"
-                    [tvdbId]="tv.id"
+                    [theMoviedbId]="tv.id"
                     [hasTrailer]="tv.trailer"
+                    [twitter]="tv.externalIds.twitterId"
+                    [facebook]="tv.externalIds.facebookId"
+                    [instagram]="tv.externalIds.instagramId"
                     (openTrailer)="openDialog()"
                     [imdbId]="tv.imdbId"
                     [available]="tv.available || tv.partlyAvailable"
@@ -41,7 +44,7 @@
                 <div class="small-middle-container">
                     <div class="row justify-content-center justify-content-sm-start header-container">
                         <div class="details-poster-container">
-                            <media-poster [posterPath]="tv.images?.medium"></media-poster>
+                            <media-poster [posterPath]="'https://image.tmdb.org/t/p/w300/' + tv.images.original"></media-poster>
                         </div>
                         <!--Next to poster-->
                         <div class="details-button-container">

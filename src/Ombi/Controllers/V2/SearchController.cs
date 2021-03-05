@@ -99,9 +99,9 @@ namespace Ombi.Controllers.V2
         /// <remarks>TVMaze is the TV Show Provider</remarks>
         /// <param name="tvdbid">The TVDB Id</param>
         [HttpGet("tv/{tvdbId}")]
-        public async Task<SearchFullInfoTvShowViewModel> GetTvInfo(int tvdbid)
+        public async Task<SearchFullInfoTvShowViewModel> GetTvInfo(string tvdbid)
         {
-            return await _tvEngineV2.GetShowInformation(tvdbid);
+            return await _tvEngineV2.GetShowInformation(tvdbid, HttpContext.RequestAborted);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Ombi.Controllers.V2
         [HttpGet("tv/request/{requestId}")]
         public async Task<SearchFullInfoTvShowViewModel> GetTvInfoByRequest(int requestId)
         {
-            return await _tvEngineV2.GetShowByRequest(requestId);
+            return await _tvEngineV2.GetShowByRequest(requestId, HttpContext.RequestAborted);
         }
 
         /// <summary>
@@ -120,10 +120,9 @@ namespace Ombi.Controllers.V2
         /// </summary>
         /// <returns></returns>
         [HttpGet("tv/moviedb/{moviedbid}")]
-        public async Task<SearchFullInfoTvShowViewModel> GetTvInfoByMovieId(int moviedbid)
+        public async Task<SearchFullInfoTvShowViewModel> GetTvInfoByMovieId(string moviedbid)
         {
-            var tvDbId = await _movieEngineV2.GetTvDbId(moviedbid);
-            return await _tvEngineV2.GetShowInformation(tvDbId);
+            return await _tvEngineV2.GetShowInformation(moviedbid, HttpContext.RequestAborted);
         }
 
         /// <summary>
@@ -437,12 +436,12 @@ namespace Ombi.Controllers.V2
             return _movieEngineV2.GetStreamInformation(movieDBId, HttpContext.RequestAborted);
         }
 
-        [HttpGet("stream/tv/{tvdbId}/{tvMaze}")]
+        [HttpGet("stream/tv/{movieDbId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public Task<IEnumerable<StreamingData>> GetTvStreams(int tvdbId, int tvMaze)
+        public Task<IEnumerable<StreamingData>> GetTvStreams(int movieDbId)
         {
-            return _tvEngineV2.GetStreamInformation(tvdbId, tvMaze, HttpContext.RequestAborted);
+            return _tvEngineV2.GetStreamInformation(movieDbId, HttpContext.RequestAborted);
         }
     }
 }

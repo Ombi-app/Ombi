@@ -29,7 +29,7 @@ export class TvInformationPanelComponent implements OnInit {
         this.searchService.getRottenTvRatings(this.tv.title, +this.tv.firstAired.toString().substring(0,4))
             .subscribe(x => this.ratings = x);
 
-        this.searchService.getTvStreams(+this.tv.theTvDbId, this.tv.id).subscribe(x => this.streams = x);
+        this.searchService.getTvStreams(+this.tv.id ).subscribe(x => this.streams = x);
         this.tv.seasonRequests.forEach(season => {
             this.totalEpisodes = this.totalEpisodes + season.episodes.length;
         });

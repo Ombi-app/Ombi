@@ -1,5 +1,6 @@
 ﻿using Ombi.Core.Models.Search;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ombi.Core.Engine.Interfaces
@@ -7,7 +8,7 @@ namespace Ombi.Core.Engine.Interfaces
     public interface ITvSearchEngine
     {
         Task<IEnumerable<SearchTvShowViewModel>> Search(string searchTerm);
-        Task<SearchTvShowViewModel> GetShowInformation(int tvdbid);
+        Task<SearchTvShowViewModel> GetShowInformation(string movieDbId, CancellationToken token);
         Task<IEnumerable<SearchTvShowViewModel>> Popular();
         Task<IEnumerable<SearchTvShowViewModel>> Popular(int currentlyLoaded, int amountToLoad, bool includeImages = false);
         Task<IEnumerable<SearchTvShowViewModel>> Anticipated();
