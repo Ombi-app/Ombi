@@ -86,12 +86,16 @@ namespace Ombi.Api
                     _handler = await GetHandler();
                 }
                 _client = new HttpClient(_handler);
-                _client.DefaultRequestHeaders.Add("User-Agent",$"Ombi/{_runtimeVersion} (https://ombi.io/)");
+                _client.DefaultRequestHeaders.Add("User-Agent", $"Ombi/{_runtimeVersion} (https://ombi.io/)");
             }
         }
 
         private async Task<HttpMessageHandler> GetHandler()
         {
+            if (_cache == null)
+            {
+                return new HttpClientHandler();
+            }
             var settings = await _cache.GetOrAdd(CacheKeys.OmbiSettings, async () => await _settings.GetSettingsAsync(), DateTime.Now.AddHours(1));
             if (settings.IgnoreCertificateErrors)
             {

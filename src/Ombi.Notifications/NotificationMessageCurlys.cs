@@ -123,7 +123,7 @@ namespace Ombi.Notifications
         {
             LoadIssues(opts);
             RequestId = req?.Id.ToString();
-            ProviderId = req?.ParentRequest?.TvDbId.ToString() ?? string.Empty;
+            ProviderId = req?.ParentRequest?.ExternalProviderId.ToString() ?? string.Empty;
             string title;
             if (req == null)
             {

@@ -17,6 +17,10 @@ using Newtonsoft.Json;
 using Ombi.Settings.Settings.Models;
 using System.Diagnostics;
 using System.IO;
+using Ombi.Api.TheMovieDb;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging;
+using Ombi.Api.TheMovieDb.Models;
 
 namespace Ombi
 {
@@ -127,6 +131,9 @@ namespace Ombi
             }
 
             await SortOutBaseUrl(baseUrl, settingsDb, ombiSettingsContent);
+            var httpClient = new Ombi.Api.OmbiHttpClient(null, null);
+            var api = new Ombi.Api.Api(new Logger<Api.Api>(NullLoggerFactory.Instance), httpClient);
+            await MigrateOldTvDbIds(ombiDb, ombiSettingsContent, settingsDb, new Ombi.Api.TheMovieDb.TheMovieDbApi(null, (Api.IApi)api, null));
 
             Console.WriteLine($"We are running on {urlValue}");
 
@@ -282,6 +289,70 @@ namespace Ombi
 
                 Console.WriteLine($"Wrote new baseurl at {indexPath}");
             }
+        }
+
+        private static async Task MigrateOldTvDbIds(OmbiContext ctx, GlobalSettings ombiSettingsContent, SettingsContext settingsContext, Api.TheMovieDb.TheMovieDbApi api)
+        {
+            var ombiSettings = JsonConvert.DeserializeObject<OmbiSettings>(ombiSettingsContent.Content);
+            if (ombiSettings.HasMigratedOldTvDbData)
+            {
+                return;
+            }
+
+            var tvRequests = ctx.TvRequests;
+            Console.WriteLine($"Total Requests to migrate {await tvRequests.CountAsync()}");
+            foreach (var request in tvRequests)
+            {
+                var findResuilt = await api.Find(request.TvDbId.ToString(), ExternalSource.tvdb_id);
+
+                var found = findResuilt.tv_results.FirstOrDefault();
+
+                if (found == null)
+                {
+                    var seriesFound = findResuilt.tv_season_results.FirstOrDefault();
+                    if (seriesFound == null)
+                    {
+                        Console.WriteLine($"Cannot find TheMovieDb Record for request {request.Title}");
+                        continue;
+                    }
+                    request.ExternalProviderId = seriesFound.show_id;
+                    Console.WriteLine($"Cannot find TheMovieDb Record for request, found potential match Title: {request.Title}, Match: {seriesFound.show_id}");
+                }
+                else
+                {
+                    request.ExternalProviderId = found.id;
+                }
+            }
+            Console.WriteLine($"Finished Migration");
+
+            var strat = ctx.Database.CreateExecutionStrategy();
+            await strat.ExecuteAsync(async () =>
+            {
+                using (var tran = await ctx.Database.BeginTransactionAsync())
+                {
+                    ctx.TvRequests.UpdateRange(tvRequests);
+                    await ctx.SaveChangesAsync();
+                    await tran.CommitAsync();
+                }
+            });
+
+
+            var settingsStrat = settingsContext.Database.CreateExecutionStrategy();
+            await settingsStrat.ExecuteAsync(async () =>
+            {
+                using (var tran = await settingsContext.Database.BeginTransactionAsync())
+                {
+                    ombiSettings.HasMigratedOldTvDbData = true;
+
+                    ombiSettingsContent.Content = JsonConvert.SerializeObject(ombiSettings);
+                    settingsContext.Update(ombiSettingsContent);
+                    await settingsContext.SaveChangesAsync();
+                    await tran.CommitAsync();
+                }
+            });
+
+            return;
+
         }
     }
 

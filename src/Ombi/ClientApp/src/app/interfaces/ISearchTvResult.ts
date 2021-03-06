@@ -42,11 +42,15 @@ export interface ISearchTvResult {
     open: boolean; // THIS IS FOR THE UI
 }
 
-export interface ITvRequestViewModel {
+export interface ITvRequestViewModelV2 extends ITvRequestViewModelBase {
+    theMovieDbId: number;
+}
+
+
+export interface ITvRequestViewModelBase {
     requestAll: boolean;
     firstSeason: boolean;
     latestSeason: boolean;
-    tvDbId: number;
     seasons: ISeasonsViewModel[];
     requestOnBehalf: string | undefined;
 }

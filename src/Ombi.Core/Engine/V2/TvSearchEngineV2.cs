@@ -46,7 +46,7 @@ namespace Ombi.Core.Engine.V2
         public async Task<SearchFullInfoTvShowViewModel> GetShowByRequest(int requestId, CancellationToken token)
         {
             var request = await RequestService.TvRequestService.Get().FirstOrDefaultAsync(x => x.Id == requestId);
-            return await GetShowInformation(request.TvDbId.ToString(), token); // TODO
+            return await GetShowInformation(request.ExternalProviderId.ToString(), token); // TODO
         }
 
         public async Task<SearchFullInfoTvShowViewModel> GetShowInformation(string tvdbid, CancellationToken token)

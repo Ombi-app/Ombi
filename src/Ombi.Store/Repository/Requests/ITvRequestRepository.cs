@@ -16,7 +16,7 @@ namespace Ombi.Store.Repository.Requests
         IQueryable<TvRequests> Get(string userId);
         IQueryable<TvRequests> GetLite(string userId);
         Task<TvRequests> GetRequestAsync(int tvDbId);
-        TvRequests GetRequest(int tvDbId);
+        TvRequests GetRequest(int theMovieDbId);
         Task Update(TvRequests request);
         Task UpdateChild(ChildRequests request);
         IQueryable<ChildRequests> GetChild();

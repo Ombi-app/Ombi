@@ -22,7 +22,7 @@ namespace Ombi.Core.Rule.Rules
             if (obj.RequestType == RequestType.TvShow)
             {
                 var vm = (ChildRequests) obj;
-                var result = await _ctx.SonarrCache.FirstOrDefaultAsync(x => x.TvDbId == vm.Id);
+                var result = await _ctx.SonarrCache.FirstOrDefaultAsync(x => x.TvDbId == vm.Id); // TODO lookup the external provider in the sonarr sync to use themoviedb
                 if (result != null)
                 {
                     if (vm.SeasonRequests.Any())
