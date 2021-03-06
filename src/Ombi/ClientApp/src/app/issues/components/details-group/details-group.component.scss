@@ -1,0 +1,9 @@
+@import "~styles/variables.scss";
+
+::ng-deep .issue-card {
+  border: 3px solid $ombi-background-primary-accent;
+}
+
+.top-spacing {
+  margin-top:2%;
+}

@@ -62,3 +62,10 @@ export interface IUpdateStatus {
     issueId: number;
     status: IssueStatus;
 }
+
+export interface IIssuesSummary {
+    title: string;
+    count: number;
+    providerId: string;
+    issues: IIssues[];
+}

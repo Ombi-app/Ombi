@@ -74,6 +74,10 @@ export class AuthService extends ServiceHelpers {
         return false;
     }
 
+    public isAdmin() {
+        return this.hasRole("Admin") || this.hasRole("PowerUser");
+    }
+
     public logout() {
         this.store.remove("id_token");
     }

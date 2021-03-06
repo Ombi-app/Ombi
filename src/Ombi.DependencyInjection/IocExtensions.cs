@@ -114,6 +114,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ITVSearchEngineV2, TvSearchEngineV2>();
             services.AddTransient<ICalendarEngine, CalendarEngine>();
             services.AddTransient<IMusicSearchEngineV2, MusicSearchEngineV2>();
+            services.AddTransient<IIssuesEngine, IssuesEngine>();
         }
 
         public static void RegisterHttp(this IServiceCollection services)

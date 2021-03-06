@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
 
-import { IIssues, IPagenator, IssueStatus } from "../interfaces";
+import { IIssuesSummary, IPagenator, IssueStatus } from "../interfaces";
 
 @Component({
     selector: "issues-table",
@@ -8,12 +9,14 @@ import { IIssues, IPagenator, IssueStatus } from "../interfaces";
 })
 export class IssuesTableComponent  {
 
-    @Input() public issues: IIssues[];
+    constructor(public dialog: MatDialog) { }
+
+    @Input() public issues: IIssuesSummary[];
     @Input() public totalRecords: number;
 
     @Output() public changePage = new EventEmitter<IPagenator>();
 
-    public displayedColumns = ["title", "category", "subject", "status", "reportedBy", "actions"]
+    public displayedColumns = ["title", "count",  "actions"]
     public IssueStatus = IssueStatus; 
     public resultsLength: number;
     public gridCount: string = "15";
@@ -48,5 +51,4 @@ export class IssuesTableComponent  {
       public paginate(event: IPagenator) {
         this.changePage.emit(event);
     }
-
 }

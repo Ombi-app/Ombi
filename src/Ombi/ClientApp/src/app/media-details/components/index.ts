@@ -20,6 +20,7 @@ import { IssuesPanelComponent } from "./shared/issues-panel/issues-panel.compone
 import { TvAdvancedOptionsComponent } from "./tv/panels/tv-advanced-options/tv-advanced-options.component";
 import { RequestBehalfComponent } from "./shared/request-behalf/request-behalf.component";
 import { TvRequestGridComponent } from "./tv/panels/tv-request-grid/tv-request-grid.component";
+import { DetailsGroupComponent } from "../../issues/components/details-group/details-group.component";
 
 export const components: any[] = [
     MovieDetailsComponent,
