@@ -38,8 +38,8 @@
             <mat-card-content *ngIf="authenticationSettings.enableOAuth && !loginWithOmbi" class="login-buttons">
                 <div>
 
-                    <button id="sign-in" mat-raised-button color="primary" type="submit" (click)="loginWithOmbi = true">{{'Login.SignInWith' | translate:appNameTranslate}}</button>
-                    <button id="sign-plex" mat-raised-button color="accent" type="button" (click)="oauth()">
+                    <button id="sign-in" mat-raised-button color="primary" type="submit" data-cy="OmbiButton" (click)="loginWithOmbi = true">{{'Login.SignInWith' | translate:appNameTranslate}}</button>
+                    <button id="sign-plex" mat-raised-button color="accent" type="button" data-cy="oAuthPlexButton" (click)="oauth()">
                         <span *ngIf="!oauthLoading">{{'Login.SignInWithPlex' | translate}}</span>
                         <span *ngIf="oauthLoading"><i class="fas fa-circle-notch fa-spin fa-fw"></i></span>
                     </button>
