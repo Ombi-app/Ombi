@@ -38,7 +38,12 @@ namespace Ombi.Notifications
                 UserName = req?.RequestedUser?.UserName;
             }
 
-            Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
+            if (Alias.IsNullOrEmpty())
+            {
+                // Can be set if it's an issue
+                Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
+            }
+
             if (pref != null)
             {
                 UserPreference = pref.Value.HasValue() ? pref.Value : Alias;
@@ -95,7 +100,10 @@ namespace Ombi.Notifications
 
             AvailableDate = req?.MarkedAsAvailable?.ToString("D") ?? string.Empty;
             DenyReason = req?.DeniedReason;
-            Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
+            if (Alias.IsNullOrEmpty())
+            {
+                Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
+            }
             if (pref != null)
             {
                 UserPreference = pref.Value.HasValue() ? pref.Value : Alias;
@@ -143,7 +151,10 @@ namespace Ombi.Notifications
                 UserName = req?.RequestedUser?.UserName;
             }
             AvailableDate = req?.MarkedAsAvailable?.ToString("D") ?? string.Empty;
-            Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
+            if (Alias.IsNullOrEmpty())
+            {
+                Alias = (req?.RequestedUser?.Alias.HasValue() ?? false) ? req?.RequestedUser?.Alias : req?.RequestedUser?.UserName;
+            }
             if (pref != null)
             {
                 UserPreference = pref.Value.HasValue() ? pref.Value : Alias;
@@ -223,6 +234,7 @@ namespace Ombi.Notifications
             IssueSubject = opts.Substitutes.TryGetValue("IssueSubject", out val) ? val : string.Empty;
             NewIssueComment = opts.Substitutes.TryGetValue("NewIssueComment", out val) ? val : string.Empty;
             UserName = opts.Substitutes.TryGetValue("IssueUser", out val) ? val : string.Empty;
+            Alias = opts.Substitutes.TryGetValue("IssueUserAlias", out val) ? val : string.Empty;
             Type = opts.Substitutes.TryGetValue("RequestType", out val) ? val.Humanize() : string.Empty;
         }
 

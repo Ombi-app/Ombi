@@ -132,7 +132,8 @@ namespace Ombi.Controllers.V1
             i.IssueCategory = null;
             i.CreatedDate = DateTime.UtcNow;
             var username = User.Identity.Name.ToUpper();
-            i.UserReportedId = (await _userManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username)).Id;
+            var reportedUser = await _userManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username);
+            i.UserReportedId = reportedUser.Id;
             await _issues.Add(i);
             var category = await _categories.GetAll().FirstOrDefaultAsync(x => i.IssueCategoryId == x.Id);
             if (category != null)
@@ -151,7 +152,7 @@ namespace Ombi.Controllers.V1
                 
             };
 
-            AddIssueNotificationSubstitutes(notificationModel, i, User.Identity.Name);
+            AddIssueNotificationSubstitutes(notificationModel, i, reportedUser.UserName, reportedUser.UserAlias);
 
             await _notification.Notify(notificationModel);
 
@@ -242,7 +243,7 @@ namespace Ombi.Controllers.V1
             };
 
             var isAdmin = await _userManager.IsInRoleAsync(user, OmbiRoles.Admin) || user.IsSystemUser;
-            AddIssueNotificationSubstitutes(notificationModel, issue, issue.UserReported.UserAlias);
+            AddIssueNotificationSubstitutes(notificationModel, issue, user.UserName, user.UserAlias);
             notificationModel.Substitutes.Add("NewIssueComment", comment.Comment);
             notificationModel.Substitutes.Add("IssueId", comment.IssueId.ToString());
             notificationModel.Substitutes.Add("AdminComment", isAdmin.ToString());
@@ -319,7 +320,7 @@ namespace Ombi.Controllers.V1
                     UserId = issue.UserReported.Id, // This is a resolved notification, so needs to go to the user who raised it
                     
                 };
-                AddIssueNotificationSubstitutes(notificationModel, issue, issue.UserReported?.UserAlias ?? string.Empty);
+                AddIssueNotificationSubstitutes(notificationModel, issue, issue.UserReported?.UserName ?? string.Empty, issue.UserReported.UserAlias);
 
                 await _notification.Notify(notificationModel);
             }
@@ -328,7 +329,7 @@ namespace Ombi.Controllers.V1
             return true;
         }
 
-        private static void AddIssueNotificationSubstitutes(NotificationOptions notificationModel, Issues issue, string issueReportedUsername)
+        private static void AddIssueNotificationSubstitutes(NotificationOptions notificationModel, Issues issue, string issueReportedUsername, string alias)
         {
             notificationModel.Substitutes.Add("Title", issue.Title);
             notificationModel.Substitutes.Add("IssueDescription", issue.Description);
@@ -336,6 +337,7 @@ namespace Ombi.Controllers.V1
             notificationModel.Substitutes.Add("IssueStatus", issue.Status.ToString());
             notificationModel.Substitutes.Add("IssueSubject", issue.Subject);
             notificationModel.Substitutes.Add("IssueUser", issueReportedUsername);
+            notificationModel.Substitutes.Add("IssueUserAlias", alias);
             notificationModel.Substitutes.Add("RequestType", notificationModel.RequestType.ToString());
         }
     }
