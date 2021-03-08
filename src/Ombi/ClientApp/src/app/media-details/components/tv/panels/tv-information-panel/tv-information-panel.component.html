@@ -21,8 +21,8 @@
         </div>
         <hr>
         <div *ngIf="tv.status">
-            <span class="label">{{'MediaDetails.Status' | translate }}:</span>
-                {{tv.status}}
+            <span  class="label">{{'MediaDetails.Status' | translate }}:</span>
+                <span id="status">{{tv.status}}</span>
         </div>
         <span class="label">First Aired:</span>
             {{tv.firstAired | date: 'mediumDate'}}

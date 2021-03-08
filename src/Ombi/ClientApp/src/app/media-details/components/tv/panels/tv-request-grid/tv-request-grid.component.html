@@ -67,7 +67,7 @@
  -->
 
 
-<button *ngIf="!tv.fullyAvailable && requestable" mat-fab color="accent" class="floating-fab" [matMenuTriggerFor]="aboveMenu">
+<button *ngIf="!tv.fullyAvailable && requestable" mat-fab color="accent" id="addFabBtn" class="floating-fab" [matMenuTriggerFor]="aboveMenu">
   <mat-icon>add</mat-icon></button>
 <mat-menu #aboveMenu="matMenu" yPosition="above">
 

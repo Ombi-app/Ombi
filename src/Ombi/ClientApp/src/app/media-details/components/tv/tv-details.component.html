@@ -46,24 +46,24 @@
                         <!--Next to poster-->
                         <div class="details-button-container">
                             <div class="col-12 media-row">
-                                <button *ngIf="!tv.fullyAvailable" mat-raised-button class="btn-spacing" color="primary"
+                                <button *ngIf="!tv.fullyAvailable" mat-raised-button id="requestBtn" class="btn-spacing" color="primary"
                                     (click)="request()"><i class="fas fa-plus"></i>
                                     {{ 'Common.Request' | translate }}</button>
 
-                                <button *ngIf="tv.fullyAvailable && !tv.partlyAvailable" mat-raised-button class="btn-spacing" color="accent"
+                                <button *ngIf="tv.fullyAvailable && !tv.partlyAvailable" id="availableBtn" mat-raised-button class="btn-spacing" color="accent"
                                     [disabled]>
                                     <i class="fas fa-check"></i> {{'Common.Available' | translate }}</button>
-                                    <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" mat-raised-button
+                                    <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" id="partiallyAvailableBtn" mat-raised-button
                                     class="btn-spacing" color="accent" [disabled]>
                                     <i class="fas fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
 
                                     <!-- There are unaired episodes-->
-                                    <button *ngIf="tv.partlyAvailable && tv.fullyAvailable" mat-raised-button
+                                    <button *ngIf="tv.partlyAvailable && tv.fullyAvailable" id="partiallyAvailableBtn" mat-raised-button
                                         class="btn-spacing" color="accent" [disabled]>
                                     <i class="fas fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
                                     <!-- end unaired episodes-->
 
-                                <button mat-raised-button class="btn-spacing" color="danger" *ngIf="issuesEnabled" (click)="issue()">
+                                <button mat-raised-button class="btn-spacing" color="danger" id="reportIssueBtn" *ngIf="issuesEnabled" (click)="issue()">
                                     <i class="fas fa-exclamation"></i> {{
                                     'Requests.ReportIssue' | translate }}</button>
 
