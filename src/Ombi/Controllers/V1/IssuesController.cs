@@ -278,7 +278,7 @@ namespace Ombi.Controllers.V1
         [PowerUser]
         public async Task<bool> DeleteIssue(int id)
         {
-            var issue = await _issues.GetAll().FirstOrDefaultAsync(x => x.Id == id);
+            var issue = await _issues.GetAll().Include(x => x.Comments).FirstOrDefaultAsync(x => x.Id == id);
 
             await _issues.Delete(issue);
             return true;
