@@ -22,7 +22,7 @@ jobs:
         node-version: '14'
     - name: Start Server
       run: |
-          ls &
+          yarn global add @angular/cli &
           dotnet run -p ./src/Ombi -- --host http://*:3577 &
           yarn --cwd ./src/Ombi/ClientApp start
     - name: Cypress Tests
