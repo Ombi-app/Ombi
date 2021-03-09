@@ -117,11 +117,11 @@
                             <div class="issuesPanel">
                                 <issues-panel [providerId]="tv.theTvDbId" [isAdmin]="isAdmin"></issues-panel>
                             </div>
-                            <mat-accordion>
+                            <mat-accordion id="requests-panel">
                                 <mat-expansion-panel>
                                     <mat-expansion-panel-header>
                                         <mat-panel-title>
-                                            Requests
+                                            {{'Requests.Title' | translate}}
                                         </mat-panel-title>
                                     </mat-expansion-panel-header>
                                     <tv-requests-panel [tvRequest]="tvRequest" [isAdmin]="isAdmin"></tv-requests-panel>

@@ -43,6 +43,7 @@ jobs:
     - name: Cypress Tests
       uses: cypress-io/github-action@v2.8.2
       with:
+        record: true
         browser: chrome
         headless: true
         working-directory: tests
@@ -50,5 +51,6 @@ jobs:
         # 7 minutes
         wait-on-timeout: 420
       env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
