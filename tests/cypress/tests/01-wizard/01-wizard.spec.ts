@@ -32,7 +32,7 @@ describe("Wizard Setup", () => {
 
   });
 
-  it.only("Compete Wizard", () => {
+  it("Compete Wizard", () => {
     cy.visit("");
     cy.get("[data-test=nextWelcome]").click();
     cy.get("[data-test=nextMediaServer]").click();
