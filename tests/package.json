@@ -1,0 +1,22 @@
+{
+  "devDependencies": {
+    "cypress": "^6.6.0",
+    "cypress-wait-until": "^1.7.1",
+    "typescript": "^4.2.3"
+  },
+  "name": "ombiautomation",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/ombi-app/ombi.automation",
+  "author": "TidusJar",
+  "scripts": {
+    "cypress:version": "cypress version",
+    "cypress:verify": "cypress verify",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "types": "tsc --noEmit",
+    "e2e": "cypress run",
+    "regression": "cypress run --config-file cypress/config/regression.json",
+    "demo:open": "cypress open --config-file cypress/config/demo.json"
+  }
+}

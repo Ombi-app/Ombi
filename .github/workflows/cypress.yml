@@ -1,0 +1,35 @@
+name: .NET
+
+on:
+  push:
+    branches: [ feature/automation ]
+  pull_request:
+    branches: [ feature/automation ]
+
+jobs:
+  automation-tests:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Run backend
+      run: dotnet run -p ./src/Ombi -- --host http://*:3575
+    - name: Run Frontend
+      uses: borales/actions-yarn@v2.0.0
+      with:
+        cmd: start --cwd ./src/ombi/clientapp
+
+    - name: Cypress Tests
+      uses: cypress-io/github-action@v2.8.2
+      with:
+        browser: chrome
+        headless: true
+        project: ./tests
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

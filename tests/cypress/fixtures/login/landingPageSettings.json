@@ -1,0 +1,10 @@
+{
+  "enabled": false,
+  "noticeEnabled": false,
+  "noticeText": "Hey what's up!\n<br>\n<br>\nThe username and password is beta\n<br>\n<br>\nEnjoy!",
+  "timeLimit": false,
+  "startDateTime": "0001-01-01T00:00:00",
+  "endDateTime": "0001-01-01T00:00:00",
+  "expired": false,
+  "id": 0
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://on.cypress.io/cypress.schema.json",
+  "supportFile": "cypress/support/index.ts",
+  "baseUrl": "http://localhost:3577",
+  "integrationFolder": "cypress/tests",
+  "testFiles": "**/*.spec.ts*",
+  "watchForFileChanges": true,
+  "chromeWebSecurity": false,
+  "viewportWidth": 2560,
+  "viewportHeight": 1440,
+  "ignoreTestFiles": [
+    "**/snapshots/*"
+  ],
+  "env": {
+    "username": "a",
+    "password": "a"
+  },
+  "projectId": "o5451s"
+}
