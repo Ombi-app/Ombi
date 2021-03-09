@@ -20,8 +20,10 @@ jobs:
     - uses: actions/setup-node@v2
       with:
         node-version: '14'
-    - name: Install Deps
-      run: yarn global add @angular/cli
+
+    - name: Install FrontEnd Deps
+      run: yarn --cwd ./src/Ombi/ClientApp install
+
     - name: Start Server
       run: |
           dotnet run -p ./src/Ombi -- --host http://*:3577 &
