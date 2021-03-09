@@ -140,8 +140,8 @@ export class SearchV2Service extends ServiceHelpers {
         return this.http.get<IStreamingData[]>(`${this.url}/stream/movie/${theMovieDbId}`);
     }
 
-    public getTvStreams(theTvDbId: number, tvMaze: number): Observable<IStreamingData[]> {
-        return this.http.get<IStreamingData[]>(`${this.url}/stream/tv/${theTvDbId}/${tvMaze}`);
+    public getTvStreams(movieDbId: number): Observable<IStreamingData[]> {
+        return this.http.get<IStreamingData[]>(`${this.url}/stream/tv/${movieDbId}`);
     }
 
 }

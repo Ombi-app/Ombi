@@ -34,6 +34,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
+using Ombi.Api.TheMovieDb;
+using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
@@ -49,8 +51,9 @@ namespace Ombi.Schedule.Jobs.Plex
 {
     public class PlexContentSync : IPlexContentSync
     {
+        private readonly IMovieDbApi _movieApi;
         public PlexContentSync(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentSync> logger, IPlexContentRepository repo,
-            IPlexEpisodeSync epsiodeSync, IHubContext<NotificationHub> hub)
+            IPlexEpisodeSync epsiodeSync, IHubContext<NotificationHub> hub, IMovieDbApi movieDbApi)
         {
             Plex = plex;
             PlexApi = plexApi;
@@ -58,6 +61,7 @@ namespace Ombi.Schedule.Jobs.Plex
             Repo = repo;
             EpisodeSync = epsiodeSync;
             Notification = hub;
+            _movieApi = movieDbApi;
             Plex.ClearCache();
         }
 
@@ -418,7 +422,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     var showMetadata = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
                         existingContent.Key);
-                    GetProviderIds(showMetadata, existingContent);
+                    await GetProviderIds(showMetadata, existingContent);
 
                     await Repo.Update(existingContent);
                 }
@@ -531,7 +535,7 @@ namespace Ombi.Schedule.Jobs.Plex
                         Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, show.ratingKey),
                         Seasons = new List<PlexSeasonsContent>()
                     };
-                    GetProviderIds(showMetadata, item);
+                    await GetProviderIds(showMetadata, item);
 
                     // Let's just double check to make sure we do not have it now we have some id's
                     var existingImdb = false;
@@ -573,7 +577,7 @@ namespace Ombi.Schedule.Jobs.Plex
             }
         }
 
-        private static void GetProviderIds(PlexMetadata showMetadata, PlexServerContent existingContent)
+        private async Task GetProviderIds(PlexMetadata showMetadata, PlexServerContent existingContent)
         {
             var metadata = showMetadata.MediaContainer.Metadata.FirstOrDefault();
             var guids = new List<string>
@@ -601,6 +605,13 @@ namespace Ombi.Schedule.Jobs.Plex
 
             if (providerIds.TheTvDb.HasValue())
             {
+                // Lookup TheMovieDbId
+                var findResult = await _movieApi.Find(providerIds.TheTvDb, ExternalSource.tvdb_id);
+                var tvResult = findResult.tv_results.FirstOrDefault();
+                if (tvResult != null)
+                {
+                    existingContent.TheMovieDbId = tvResult.id.ToString();
+                }
                 existingContent.TvDbId = providerIds.TheTvDb;
             }
         }
@@ -683,6 +694,7 @@ namespace Ombi.Schedule.Jobs.Plex
         }
 
         private bool _disposed;
+
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed)

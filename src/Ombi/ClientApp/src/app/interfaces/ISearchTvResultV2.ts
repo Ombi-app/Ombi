@@ -1,4 +1,5 @@
 ﻿import { INewSeasonRequests, RequestType } from "./IRequestModel";
+import { IExternalIds, IGenresViewModel, IKeywords } from "./ISearchMovieResultV2";
 
 export interface ISearchTvResultV2 {
     id: number;
@@ -11,7 +12,7 @@ export interface ISearchTvResultV2 {
     firstAired: string;
     networkId: string;
     runtime: string;
-    genre: string[];
+    genres: IGenresViewModel[],
     overview: string;
     lastUpdated: number;
     airsDayOfWeek: string;
@@ -21,7 +22,6 @@ export interface ISearchTvResultV2 {
     siteRating: number;
     trailer: string;
     homepage: string;
-    certification: string;
     seasonRequests: INewSeasonRequests[];
     requestAll: boolean;
     approved: boolean;
@@ -30,6 +30,7 @@ export interface ISearchTvResultV2 {
     plexUrl: string;
     embyUrl: string;
     jellyfinUrl: string;
+    tagline: string;
     quality: string;
     firstSeason: boolean;
     latestSeason: boolean;
@@ -38,8 +39,10 @@ export interface ISearchTvResultV2 {
     showSubscribe: boolean;
     fullyAvailable: boolean;
     partlyAvailable: boolean;
+    externalIds: IExternalIds;
     network: INetwork;
     images: IImagesV2;
+    keywords: IKeywords;
     cast: ICast[];
     crew: ICrew[];
     requestId: number;

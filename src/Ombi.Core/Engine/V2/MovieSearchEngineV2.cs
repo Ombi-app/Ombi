@@ -127,7 +127,7 @@ namespace Ombi.Core.Engine.V2
 
             var pages = PaginationHelper.GetNextPages(currentlyLoaded, toLoad, _theMovieDbMaxPageItems);
 
-            var results = new List<MovieSearchResult>();
+            var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
                 var apiResult = await Cache.GetOrAdd(nameof(PopularMovies) + pagesToLoad.Page + langCode,
@@ -161,7 +161,7 @@ namespace Ombi.Core.Engine.V2
 
             var pages = PaginationHelper.GetNextPages(currentPosition, amountToLoad, _theMovieDbMaxPageItems);
 
-            var results = new List<MovieSearchResult>();
+            var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
                 var apiResult = await Cache.GetOrAdd(nameof(TopRatedMovies) + pagesToLoad.Page + langCode,
@@ -177,7 +177,7 @@ namespace Ombi.Core.Engine.V2
 
             var pages = PaginationHelper.GetNextPages(currentPosition, amountToLoad, _theMovieDbMaxPageItems);
 
-            var results = new List<MovieSearchResult>();
+            var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
                 var apiResult = await Cache.GetOrAdd(nameof(NowPlayingMovies) + pagesToLoad.Page + langCode,
@@ -213,7 +213,7 @@ namespace Ombi.Core.Engine.V2
 
             var pages = PaginationHelper.GetNextPages(currentPosition, amountToLoad, _theMovieDbMaxPageItems);
 
-            var results = new List<MovieSearchResult>();
+            var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
                 var apiResult = await Cache.GetOrAdd(nameof(UpcomingMovies) + pagesToLoad.Page + langCode,
@@ -270,7 +270,7 @@ namespace Ombi.Core.Engine.V2
         }
 
         protected async Task<List<SearchMovieViewModel>> TransformMovieResultsToResponse(
-            IEnumerable<MovieSearchResult> movies)
+            IEnumerable<MovieDbSearchResult> movies)
         {
             var settings = await _customizationSettings.GetSettingsAsync();
             var viewMovies = new List<SearchMovieViewModel>();
@@ -286,7 +286,7 @@ namespace Ombi.Core.Engine.V2
             return viewMovies;
         }
 
-        private async Task<SearchMovieViewModel> ProcessSingleMovie(MovieSearchResult movie)
+        private async Task<SearchMovieViewModel> ProcessSingleMovie(MovieDbSearchResult movie)
         {
             var viewMovie = Mapper.Map<SearchMovieViewModel>(movie);
             return await ProcessSingleMovie(viewMovie);

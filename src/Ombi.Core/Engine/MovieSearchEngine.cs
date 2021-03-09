@@ -189,7 +189,7 @@ namespace Ombi.Core.Engine
         }
 
         protected async Task<List<SearchMovieViewModel>> TransformMovieResultsToResponse(
-            IEnumerable<MovieSearchResult> movies)
+            IEnumerable<MovieDbSearchResult> movies)
         {
             var viewMovies = new List<SearchMovieViewModel>();
             foreach (var movie in movies)
@@ -244,7 +244,7 @@ namespace Ombi.Core.Engine
             }
         }
 
-        private async Task<SearchMovieViewModel> ProcessSingleMovie(MovieSearchResult movie)
+        private async Task<SearchMovieViewModel> ProcessSingleMovie(MovieDbSearchResult movie)
         {
             var viewMovie = Mapper.Map<SearchMovieViewModel>(movie);
             return await ProcessSingleMovie(viewMovie);

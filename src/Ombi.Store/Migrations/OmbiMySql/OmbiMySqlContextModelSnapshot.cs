@@ -308,6 +308,7 @@ namespace Ombi.Store.Migrations.OmbiMySql
                         .HasColumnType("longtext");
 
                     b.Property<string>("StreamingCountry")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -764,6 +765,9 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<string>("Background")
                         .HasColumnType("longtext");
 
+                    b.Property<int>("ExternalProviderId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ImdbId")
                         .HasColumnType("longtext");
 
@@ -953,6 +957,9 @@ namespace Ombi.Store.Migrations.OmbiMySql
 
                     b.Property<int>("ChildRequestId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Overview")
+                        .HasColumnType("longtext");
 
                     b.Property<int>("SeasonNumber")
                         .HasColumnType("int");

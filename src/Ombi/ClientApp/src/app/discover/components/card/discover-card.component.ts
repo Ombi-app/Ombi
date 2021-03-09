@@ -29,7 +29,8 @@ export class DiscoverCardComponent implements OnInit {
 
     public ngOnInit() {
         if (this.result.type == RequestType.tvShow) {
-            this.getExtraTvInfo();
+            this.fullyLoaded = true;
+            // this.getExtraTvInfo();
         }
         if (this.result.type == RequestType.movie) {
             this.getExtraMovieInfo();
@@ -44,15 +45,15 @@ export class DiscoverCardComponent implements OnInit {
     }
 
     public async getExtraTvInfo() {
-        if (this.result.tvMovieDb) {
-            this.tvSearchResult = await this.searchService.getTvInfoWithMovieDbId(+this.result.id);
-        } else {
-            this.tvSearchResult = await this.searchService.getTvInfo(+this.result.id);
-        }
-        if (!this.tvSearchResult || this.tvSearchResult?.status.length > 0 && this.tvSearchResult?.status === "404") {
-            this.hide = true;
-            return;
-        }
+        // if (this.result.tvMovieDb) {
+        //     this.tvSearchResult = await this.searchService.getTvInfoWithMovieDbId(+this.result.id);
+        // } else {
+        //     this.tvSearchResult = await this.searchService.getTvInfo(+this.result.id);
+        // }
+        // if (!this.tvSearchResult || this.tvSearchResult?.status.length > 0 && this.tvSearchResult?.status === "404") {
+        //     this.hide = true;
+        //     return;
+        // }
 
         this.setTvDefaults(this.tvSearchResult);
         this.updateTvItem(this.tvSearchResult);

@@ -6,7 +6,12 @@
         public object[] person_results { get; set; }
         public TvResults[] tv_results { get; set; }
         public object[] tv_episode_results { get; set; }
-        public object[] tv_season_results { get; set; }
+        public FindSeasonResults[] tv_season_results { get; set; }
+    }
+
+    public class FindSeasonResults
+    {
+        public int show_id { get; set; }
     }
 
     public class Movie_Results

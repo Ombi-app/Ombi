@@ -14,7 +14,7 @@ namespace Ombi.Core.Models.Search.V2
         public string FirstAired { get; set; }
         public string NetworkId { get; set; }
         public string Runtime { get; set; }
-        public List<string> Genre { get; set; }
+        public GenreViewModel[] Genres { get; set; }
         public string Overview { get; set; }
         public int LastUpdated { get; set; }
         public string AirsDayOfWeek { get; set; }
@@ -24,23 +24,12 @@ namespace Ombi.Core.Models.Search.V2
         public NetworkViewModel Network { get; set; }
         public Images Images { get; set; }
         public List<CastViewModel> Cast { get; set; }
-        public List<CrewViewModel> Crew { get; set; }
+        public List<PersonViewModel> Crew { get; set; }
         public string Certification { get; set; }
-
-        /// <summary>
-        ///     This is used from the Trakt API
-        /// </summary>
-        /// <value>
-        ///     The trailer.
-        /// </value>
+        public string Tagline { get; set; }
+        public Keywords Keywords { get; set; }
+        public ExternalIds ExternalIds { get; set; }
         public string Trailer { get; set; }
-
-        /// <summary>
-        ///     This is used from the Trakt API
-        /// </summary>
-        /// <value>
-        ///     The trailer.
-        /// </value>
         public string Homepage { get; set; }
 
         public List<SeasonRequests> SeasonRequests { get; set; } = new List<SeasonRequests>();
@@ -66,7 +55,7 @@ namespace Ombi.Core.Models.Search.V2
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public Country Country { get; set; }
+        public string Country { get; set; }
     }
 
     public class Country
@@ -84,8 +73,9 @@ namespace Ombi.Core.Models.Search.V2
 
     public class CastViewModel
     {
-        public PersonViewModel Person { get; set; }
-        public CharacterViewModel Character { get; set; }
+        public string Person { get; set; }
+        public string Character { get; set; }
+        public string Image { get; set; }
         public bool Self { get; set; }
         public bool Voice { get; set; }
     }
@@ -95,7 +85,7 @@ namespace Ombi.Core.Models.Search.V2
         public int Id { get; set; }
         public string Url { get; set; }
         public string Name { get; set; }
-        public Images Image { get; set; }
+        public string Image { get; set; }
     }
 
     public class CharacterViewModel
@@ -106,9 +96,4 @@ namespace Ombi.Core.Models.Search.V2
         public Images Image { get; set; }
     }
 
-    public class CrewViewModel
-    {
-        public string Type { get; set; }
-        public PersonViewModel Person { get; set; }
-    }
 }

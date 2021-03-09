@@ -14,7 +14,7 @@ namespace Ombi.Mapping.Profiles
     {
         public MovieProfile()
         {
-            CreateMap<SearchResult, MovieSearchResult>()
+            CreateMap<SearchResult, MovieDbSearchResult>()
                 .ForMember(dest => dest.Adult, opts => opts.MapFrom(src => src.adult))
                 .ForMember(dest => dest.BackdropPath, opts => opts.MapFrom(src => src.backdrop_path))
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.id))
@@ -24,7 +24,7 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(dest => dest.Popularity, opts => opts.MapFrom(src => src.popularity))
                 .ForMember(dest => dest.PosterPath, opts => opts.MapFrom(src => src.poster_path))
                 .ForMember(dest => dest.ReleaseDate, opts => opts.MapFrom(src => src.release_date))
-                .ForMember(dest => dest.Title, opts => opts.MapFrom(src => src.title))
+                .ForMember(dest => dest.Title, opts => opts.MapFrom(src => string.IsNullOrEmpty(src.title) ? src.name : src.title))
                 .ForMember(dest => dest.Video, opts => opts.MapFrom(src => src.video))
                 .ForMember(dest => dest.VoteAverage, opts => opts.MapFrom(src => src.vote_average))
                 .ForMember(dest => dest.VoteCount, opts => opts.MapFrom(src => src.vote_count));
@@ -75,7 +75,7 @@ namespace Ombi.Mapping.Profiles
 
             CreateMap<TheMovieDbApi.Models.Genre, GenreDto>();
 
-            CreateMap<MovieSearchResult, SearchMovieViewModel>().ReverseMap();
+            CreateMap<MovieDbSearchResult, SearchMovieViewModel>().ReverseMap();
             CreateMap<MovieResponseDto, SearchMovieViewModel>().ReverseMap();
 
             CreateMap<FullMovieInfo, SearchMovieViewModel>().ReverseMap();

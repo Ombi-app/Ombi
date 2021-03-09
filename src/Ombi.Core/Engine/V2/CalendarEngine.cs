@@ -47,7 +47,7 @@ namespace Ombi.Core.Engine.V2
                         new ExtraParams
                         {
                             Overview = e.Season?.ChildRequest?.ParentRequest?.Overview ?? string.Empty,
-                            ProviderId = e.Season?.ChildRequest?.ParentRequest?.TvDbId ?? 0,
+                            ProviderId = e.Season?.ChildRequest?.ParentRequest?.ExternalProviderId ?? 0,
                             Type = RequestType.TvShow,
                             ReleaseDate = e.AirDate,
                             RequestStatus = e.RequestStatus

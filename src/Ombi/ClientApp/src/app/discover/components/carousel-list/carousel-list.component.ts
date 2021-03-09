@@ -289,7 +289,7 @@ export class CarouselListComponent implements OnInit {
         this.tvShows.forEach(m => {
             tempResults.push({
                 available: m.available,
-                posterPath: "../../../images/default_tv_poster.png",
+                posterPath: m.backdropPath ? `https://image.tmdb.org/t/p/w500/${m.backdropPath}` : "../../../images/default_tv_poster.png",
                 requested: m.requested,
                 title: m.title,
                 type: RequestType.tvShow,

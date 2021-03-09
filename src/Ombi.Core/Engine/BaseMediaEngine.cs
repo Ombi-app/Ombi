@@ -69,8 +69,8 @@ namespace Ombi.Core.Engine
             {
                 var allResults = await TvRepository.Get().ToListAsync();
 
-                var distinctResults = allResults.DistinctBy(x => x.TvDbId);
-                _dbTv = distinctResults.ToDictionary(x => x.TvDbId);
+                var distinctResults = allResults.DistinctBy(x => x.ExternalProviderId);
+                _dbTv = distinctResults.ToDictionary(x => x.ExternalProviderId);
                 _cacheTime = now;
             }
             return _dbTv;

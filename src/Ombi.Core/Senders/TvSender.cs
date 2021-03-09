@@ -140,7 +140,7 @@ namespace Ombi.Core.Senders
 
         private async Task<DogNzbAddResult> SendToDogNzb(ChildRequests model, DogNzbSettings settings)
         {
-            var id = model.ParentRequest.TvDbId;
+            var id = model.ParentRequest.ExternalProviderId;
             return await DogNzbApi.AddTvShow(settings.ApiKey, id.ToString());
         }
 

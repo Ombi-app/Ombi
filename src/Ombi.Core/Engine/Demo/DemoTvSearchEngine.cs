@@ -28,7 +28,7 @@ namespace Ombi.Core.Engine.Demo
              ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um, ICacheService memCache,
             ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub, IOptions<DemoLists> lists, IImageService imageService,
             ISettingsService<CustomizationSettings> custom)
-            : base(identity, service, tvMaze, mapper, trakt, r, um, custom, memCache, s, sub, imageService)
+            : base(identity, service, tvMaze, mapper, trakt, r, um, custom, memCache, s, sub, imageService, null)
         {
             _demoLists = lists.Value;
         }

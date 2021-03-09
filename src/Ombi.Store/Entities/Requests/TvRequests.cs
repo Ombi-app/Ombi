@@ -6,7 +6,13 @@ namespace Ombi.Store.Entities.Requests
 {
     public class TvRequests : Entity
     {
+        /// <summary>
+        /// No longer used since moved away from TvMaze
+        /// </summary>
         public int TvDbId { get; set; }
+
+        // TheMovieDbId
+        public int ExternalProviderId { get; set; }
         public string ImdbId { get; set; }
         public int? QualityOverride { get; set; }
         public int? RootFolder { get; set; }
