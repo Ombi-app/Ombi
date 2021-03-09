@@ -39,7 +39,7 @@ jobs:
 
     - name: Start Backend
       run: |
-          nohup run -p ./src/Ombi -- --host http://*:3577 &
+          nohup dotnet run -p ./src/Ombi -- --host http://*:3577 &
 
     - name: Start Frontend
       run: |
