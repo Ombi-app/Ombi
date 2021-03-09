@@ -9,8 +9,6 @@
     },
     "watchForFileChanges": true,
     "chromeWebSecurity": false,
-    "viewportWidth": 2880,
-    "viewportHeight": 2160,
     "ignoreTestFiles": ["**/snapshots/*"],
     "screenshotOnRunFailure": false,
     "video": false,
@@ -19,7 +17,7 @@
         "mochaFile": "results/junit/regression-[hash].xml"
     },
     "env": {
-        "username": "beta",
-        "password": "beta"
+        "username": "a",
+        "password": "a"
    }
 }
