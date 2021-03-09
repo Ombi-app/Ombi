@@ -32,7 +32,6 @@ Cypress.Commands.add("landingSettings", (enabled) => {
 })
 
 Cypress.Commands.add('login', (username, password) => {
-    cy.clearLocalStorage();
     cy.request({
         method: 'POST',
         url: '/api/v1/token',
@@ -89,3 +88,15 @@ Cypress.Commands.add('generateUniqueId', () => {
     const id = Cypress._.uniqueId(uniqueSeed);
     return id;
 });
+
+Cypress.Commands.add("getByData", (selector, ...args) => {
+    return cy.get(`[data-test=${selector}]`, ...args);
+  });
+
+Cypress.Commands.add("getByData", (selector) => {
+    return cy.get(`[data-test=${selector}]`);
+  });
+
+  Cypress.Commands.add("getByDataLike", (selector) => {
+    return cy.get(`[data-test*=${selector}]`);
+  });

@@ -9,6 +9,10 @@
   "main": "index.js",
   "repository": "https://github.com/ombi-app/ombi.automation",
   "author": "TidusJar",
+  "retries": {
+    "runMode": 2,
+    "openMode": 1
+  },
   "scripts": {
     "cypress:version": "cypress version",
     "cypress:verify": "cypress verify",

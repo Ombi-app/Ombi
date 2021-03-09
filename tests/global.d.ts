@@ -11,6 +11,9 @@ declare namespace Cypress {
         verifyNotification(text: string): Chainable<any>;
         createUser(username: string, password: string, claims: any[]): Chainable<any>;
         generateUniqueId(): Chainable<string>;
+        getByData(selector: string, args: any[]): Chainable<any>;
+        getByData(selector: string): Chainable<any>;
+        getByDataLike(selector: string): Chainable<any>;
 
         requestGenericMovie(): Chainable<any>;
         requestMovie(movieId: number): Chainable<any>;
