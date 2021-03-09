@@ -24,7 +24,7 @@ jobs:
       run: |
           ls &
           dotnet run -p ./src/Ombi -- --host http://*:3577 &
-          yarn --cwd /src/ombi/clientapp start
+          yarn --cwd ./src/Ombi/ClientApp start
     - name: Cypress Tests
       uses: cypress-io/github-action@v2.8.2
       with:
