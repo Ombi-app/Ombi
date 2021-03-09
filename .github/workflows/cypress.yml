@@ -1,4 +1,4 @@
-name: .NET
+name: Automation Tests
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
     - name: Start Server
       run: |
           dotnet run -p ./src/Ombi -- --host http://*:3577 &
-          yarn start --cwd ./src/ombi/clientapp
+          yarn --cwd ./src/ombi/clientapp start
     - name: Cypress Tests
       uses: cypress-io/github-action@v2.8.2
       with:
