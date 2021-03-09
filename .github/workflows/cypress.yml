@@ -21,8 +21,7 @@ jobs:
       with:
         node-version: '14'
     - name: Install Deps
-      run: |
-          yarn global add @angular/cli &
+      run: yarn global add @angular/cli
     - name: Start Server
       run: |
           dotnet run -p ./src/Ombi -- --host http://*:3577 &
