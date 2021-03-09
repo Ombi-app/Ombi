@@ -24,25 +24,21 @@ jobs:
     - name: Install FrontEnd Deps
       run: yarn --cwd ./src/Ombi/ClientApp install
 
-    - name: Start Server
+    - name: Start Backend
       run: |
-          screen &
-          dotnet run -p ./src/Ombi -- --host http://*:3577 &
-          screen -r &
-          screen &
-          yarn --cwd ./src/Ombi/ClientApp start
-          screen -r
+          nohup run -p ./src/Ombi -- --host http://*:3577
 
-    - name: Sleep while BE & FE run
-      uses: jakejarvis/wait-action@master
-      with:
-        time: '7m'
+    - name: Start Frontend
+      run: |
+          nohup yarn --cwd ./src/Ombi/ClientApp start
+
     - name: Cypress Tests
       uses: cypress-io/github-action@v2.8.2
       with:
         browser: chrome
         headless: true
         project: ./tests
+        wait-on: http://localhost:3577/
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
