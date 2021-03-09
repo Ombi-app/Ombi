@@ -152,7 +152,7 @@ describe("TV Requests Grid", function () {
       .should('have.class', 'requested')
   });
 
-  it.only("Request Latest Season", () => {
+  it("Request Latest Season", () => {
     cy.visit("/details/tv/121361");
 
     cy.get('#addFabBtn').click();
