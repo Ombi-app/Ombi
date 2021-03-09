@@ -43,6 +43,12 @@ namespace Ombi.Schedule.Jobs.Ombi
                 if (request.Type == RequestType.Movie)
                 {
                     var movieRequest = await _movieRequestRepository.GetAll().FirstOrDefaultAsync(x => x.Id == request.RequestId);
+                    if (movieRequest == null)
+                    {
+                        await _requestQueue.Delete(request);
+                        await _requestQueue.SaveChangesAsync();
+                        continue;
+                    }
                     var result = await _movieSender.Send(movieRequest);
                     if (result.Success)
                     {
@@ -53,6 +59,12 @@ namespace Ombi.Schedule.Jobs.Ombi
                 if (request.Type == RequestType.TvShow)
                 {
                     var tvRequest = await _tvRequestRepository.GetChild().FirstOrDefaultAsync(x => x.Id == request.RequestId);
+                    if (tvRequest == null)
+                    {
+                        await _requestQueue.Delete(request);
+                        await _requestQueue.SaveChangesAsync();
+                        continue;
+                    }
                     var result = await _tvSender.Send(tvRequest);
                     if (result.Success)
                     {
@@ -63,6 +75,12 @@ namespace Ombi.Schedule.Jobs.Ombi
                 if (request.Type == RequestType.Album)
                 {
                     var musicRequest = await _musicRequestRepository.GetAll().FirstOrDefaultAsync(x => x.Id == request.RequestId);
+                    if (musicRequest == null)
+                    {
+                        await _requestQueue.Delete(request);
+                        await _requestQueue.SaveChangesAsync();
+                        continue;
+                    }
                     var result = await _musicSender.Send(musicRequest);
                     if (result.Success)
                     {
