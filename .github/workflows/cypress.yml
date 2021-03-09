@@ -71,7 +71,7 @@ jobs:
         wait-on: http://localhost:3577/
         parallel: true
         # 8 minutes
-        wait-on-timeout: 480
+        wait-on-timeout: 1200
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
