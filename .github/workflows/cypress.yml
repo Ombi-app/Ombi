@@ -21,8 +21,21 @@ jobs:
       with:
         node-version: '14'
 
-    - name: Install FrontEnd Deps
+    - uses: actions/cache@v2
+      with:
+        path: './src/Ombi/ClientApp/node_modules'
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+    - uses: actions/cache@v2
+      with:
+        path: './tests/node_modules'
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+    - name: Install Frontend Deps
       run: yarn --cwd ./src/Ombi/ClientApp install
+
+    - name: Install Automation Deps
+      run: yarn --cwd ./tests install
 
     - name: Start Backend
       run: |
