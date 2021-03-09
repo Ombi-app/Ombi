@@ -48,7 +48,7 @@ jobs:
         working-directory: tests
         wait-on: http://localhost:3577/
         # 7 minutes
-        wait-on-timeout: 240
+        wait-on-timeout: 420
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
