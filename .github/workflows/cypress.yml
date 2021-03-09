@@ -20,9 +20,11 @@ jobs:
     - uses: actions/setup-node@v2
       with:
         node-version: '14'
-    - name: Start Server
+    - name: Install Deps
       run: |
           yarn global add @angular/cli &
+    - name: Start Server
+      run: |
           dotnet run -p ./src/Ombi -- --host http://*:3577 &
           yarn --cwd ./src/Ombi/ClientApp start
     - name: Cypress Tests
