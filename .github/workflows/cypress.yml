@@ -57,7 +57,7 @@ jobs:
 
     - name: Start Frontend
       run: |
-           yarn --cwd ./src/Ombi/ClientApp run start:nomap &
+           yarn --cwd ./src/Ombi/ClientApp run start:nomap 
 
     - name: Cypress Tests
       uses: cypress-io/github-action@v2.8.2
