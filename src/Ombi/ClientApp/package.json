@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 3578 --configuration hmr",
+    "start:nomap": "ng serve --port 3578 --source-map=false",
     "build": "node --max_old_space_size=6144 node_modules/@angular/cli/bin/ng build --prod",
     "lint": "ng lint"
   },

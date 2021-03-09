@@ -57,7 +57,7 @@ jobs:
 
     - name: Start Frontend
       run: |
-          nohup yarn --cwd ./src/Ombi/ClientApp start &
+          nohup yarn --cwd ./src/Ombi/ClientApp run start:nomap &
 
     - name: Cypress Tests
       uses: cypress-io/github-action@v2.8.2
@@ -70,8 +70,8 @@ jobs:
         group: "UI - Chrome"
         wait-on: http://localhost:3577/
         parallel: true
-        # 7 minutes
-        wait-on-timeout: 420
+        # 8 minutes
+        wait-on-timeout: 480
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
