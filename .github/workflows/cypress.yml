@@ -26,11 +26,11 @@ jobs:
 
     - name: Start Backend
       run: |
-          nohup run -p ./src/Ombi -- --host http://*:3577
+          nohup run -p ./src/Ombi -- --host http://*:3577 &
 
     - name: Start Frontend
       run: |
-          nohup yarn --cwd ./src/Ombi/ClientApp start
+          nohup yarn --cwd ./src/Ombi/ClientApp start &
 
     - name: Cypress Tests
       uses: cypress-io/github-action@v2.8.2
