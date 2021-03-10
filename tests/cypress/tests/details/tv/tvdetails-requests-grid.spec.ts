@@ -123,17 +123,18 @@ describe("TV Requests Grid", function () {
     cy.verifyNotification('You need to select some episodes!');
   });
 
-  it("Request single episodes", () => {
+  it.only("Request single episodes", () => {
     cy.visit("/details/tv/121361");
-    const episodeCheckbox = 'episodeCheckbox11';
+    const episodeCheckbox = 'episodeCheckbox21';
 
+    cy.getByData("classStatus2").click();
     cy.getByData(episodeCheckbox).click();
     cy.get('#addFabBtn').click();
     cy.get('#requestSelected').click();
 
     cy.verifyNotification('Request for Game of Thrones has been added successfully');
 
-    cy.getByData('episodeStatus11')
+    cy.getByData('episodeStatus21')
       .should('contain.text', 'Pending Approval')
       .should('have.class', 'requested')
   });
