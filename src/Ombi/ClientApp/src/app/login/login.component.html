@@ -7,7 +7,7 @@
 
         <mat-card class="mat-elevation-z8 top-margin login-card">
             <H1 *ngIf="!customizationSettings.logo && !customizationSettings.applicationName" class="login_logo">OMBI</H1>
-            <H1 *ngIf="customizationSettings.applicationName && !customizationSettings.logo" class="login_logo custom">{{customizationSettings.applicationName}}</H1>
+            <H1 *ngIf="customizationSettings.applicationName && !customizationSettings.logo" [ngClass]="{'bigText': customizationSettings.applicationName.length >= 7 && customizationSettings.applicationName.length < 14, 'hugeText': customizationSettings.applicationName.length >= 14 }" class="login_logo custom">{{customizationSettings.applicationName}}</H1>
             <img mat-card-image *ngIf="customizationSettings.logo" [src]="customizationSettings.logo">
             <mat-card-content id="login-box" *ngIf="!authenticationSettings.enableOAuth || loginWithOmbi">
                 <form *ngIf="authenticationSettings" class="form-signin" novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
