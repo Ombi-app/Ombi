@@ -23,7 +23,9 @@ jobs:
 
     - uses: actions/cache@v2
       with:
-        path: '**/node_modules'
+        path: |
+          '**/node_modules'
+          '/home/runner/.cache/Cypress'
         key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
     - name: Install Frontend Deps
