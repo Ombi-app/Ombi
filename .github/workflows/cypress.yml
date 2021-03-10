@@ -2,12 +2,12 @@ name: Automation Tests
 
 on:
   push:
-    branches: [ feature/automation ]
+    branches: [ feature/ui-automation ]
   pull_request:
-    branches: [ feature/automation ]
+    branches: [ feature/ui-automation ]
 
 jobs:
-  automation-tests:
+  install:
 
     runs-on: ubuntu-latest
 
@@ -32,25 +32,49 @@ jobs:
     - name: Install Automation Deps
       run: yarn --cwd ./tests install
 
+  cypress-tests:
+
+    runs-on: ubuntu-latest
+    needs: install
+    strategy:
+      fail-fast: false
+      matrix:
+        # run copies of the current job in parallel
+        containers: [1, 2]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - uses: actions/cache@v2
+      with:
+        path: '**/node_modules'
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
     - name: Start Backend
       run: |
           nohup dotnet run -p ./src/Ombi -- --host http://*:3577 &
 
     - name: Start Frontend
       run: |
-          nohup yarn --cwd ./src/Ombi/ClientApp start &
+           nohup yarn --cwd ./src/Ombi/ClientApp run start:nomap &
 
     - name: Cypress Tests
       uses: cypress-io/github-action@v2.8.2
       with:
+        install: false
         record: true
         browser: chrome
         headless: true
         working-directory: tests
+        group: "UI - Chrome"
         wait-on: http://localhost:3577/
-        # 7 minutes
-        wait-on-timeout: 420
+        parallel: true
+        # 8 minutes
+        wait-on-timeout: 1200
       env:
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
 
