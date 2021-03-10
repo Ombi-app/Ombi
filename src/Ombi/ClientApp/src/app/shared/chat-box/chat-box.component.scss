@@ -195,6 +195,18 @@ html,body {
 :-ms-input-placeholder {  
    color: rgba(255, 255, 255, 0.9);
 }
+.chatbox-message-box{
+  height: 90%;
+  width: 75%;
+  position: relative;
+  overflow-y: scroll;
+  display:flex; 
+  flex-direction:column-reverse;
+}
+
+.chatbox__user-list p{
+  font-size:12px;
+}
 
 // ::-webkit-scrollbar {
 // 	width: 4px;

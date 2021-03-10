@@ -6,13 +6,15 @@
             <p>{{user}}</p>
         </div>
       </div>
-      <div class="chatbox__messages" *ngFor="let m of messages">
-        <div class="chatbox__messages__user-message">
-          <div class="chatbox__messages__user-message--ind-message" [ngClass]="{'sender': m.chatType === ChatType.Sender, 'reciever':m.chatType === ChatType.Reciever }">
-            <p class="name" *ngIf="m?.username">{{m.username}}</p>
-            <br/>
-            <p class="message">{{m.message}}</p>
-            <p class="timestamp">{{m.date  | amLocal | amDateFormat: 'l LT'}}</p>
+      <div class="chatbox-message-box">
+        <div class="chatbox__messages" *ngFor="let m of messages">
+          <div class="chatbox__messages__user-message">
+            <div class="chatbox__messages__user-message--ind-message" [ngClass]="{'sender': m.chatType === ChatType.Sender, 'reciever':m.chatType === ChatType.Reciever }">
+              <p class="name" *ngIf="m?.username">{{m.username}}</p>
+              <br/>
+              <p class="message">{{m.message}}</p>
+              <p class="timestamp">{{m.date  | amLocal | amDateFormat: 'l LT'}}</p>
+            </div>
           </div>
         </div>
       </div>
