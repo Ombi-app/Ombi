@@ -2,9 +2,9 @@ name: Automation Tests
 
 on:
   push:
-    branches: [ feature/automation ]
+    branches: [ feature/ui-automation ]
   pull_request:
-    branches: [ feature/automation ]
+    branches: [ feature/ui-automation ]
 
 jobs:
   automation-tests:
