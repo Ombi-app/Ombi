@@ -100,3 +100,22 @@ Cypress.Commands.add("getByData", (selector) => {
   Cypress.Commands.add("getByDataLike", (selector) => {
     return cy.get(`[data-test*=${selector}]`);
   });
+
+  Cypress.Commands.add('triggerHover', function(elements) {
+
+      fireEvent(elements, 'mouseover');
+
+  
+    function fireEvent(element, event) {
+      if (element.fireEvent) {
+        element.fireEvent('on' + event);
+      } else {
+        var evObj = document.createEvent('Events');
+  
+        evObj.initEvent(event, true, false);
+  
+        element.dispatchEvent(evObj);
+      }
+    }
+  
+  });

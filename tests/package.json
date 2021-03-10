@@ -22,5 +22,8 @@
     "e2e": "cypress run",
     "regression": "cypress run --config-file cypress/config/regression.json",
     "demo:open": "cypress open --config-file cypress/config/demo.json"
+  },
+  "dependencies": {
+    "cypress-real-events": "^1.3.0"
   }
 }

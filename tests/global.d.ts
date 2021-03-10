@@ -14,6 +14,7 @@ declare namespace Cypress {
         getByData(selector: string, args: any[]): Chainable<any>;
         getByData(selector: string): Chainable<any>;
         getByDataLike(selector: string): Chainable<any>;
+        triggerHover(): Chainable<any>;
 
         requestGenericMovie(): Chainable<any>;
         requestMovie(movieId: number): Chainable<any>;

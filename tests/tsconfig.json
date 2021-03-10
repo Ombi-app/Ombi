@@ -2,7 +2,7 @@
     "compilerOptions": {
         "target": "es5",
         "lib": ["es2018", "dom"],
-        "types": ["cypress", "cypress-wait-until", "cypress-image-snapshot"],
+        "types": ["cypress", "cypress-wait-until", "cypress-image-snapshot", "cypress-real-events"],
         "baseUrl": "./cypress",
         "paths": {
             "@/*": ["./*"]
