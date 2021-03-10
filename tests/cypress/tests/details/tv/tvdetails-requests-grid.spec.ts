@@ -123,7 +123,7 @@ describe("TV Requests Grid", function () {
     cy.verifyNotification('You need to select some episodes!');
   });
 
-  it.only("Request single episodes", () => {
+  it("Request single episodes", () => {
     cy.visit("/details/tv/121361");
     const episodeCheckbox = 'episodeCheckbox21';
 
