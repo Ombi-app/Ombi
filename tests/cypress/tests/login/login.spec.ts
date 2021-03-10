@@ -1,83 +1,88 @@
+import { loginPage as Page } from "@/integration/page-objects";
+
 describe("Login Tests", () => {
-
   it("Landing Page is enabled, should redirect", () => {
-
     cy.landingSettings(true);
-    cy.visit("");
+    Page.visit();
     cy.location("pathname").should("eq", "/landingpage");
     cy.get("[data-cy=continue]").click();
     cy.location("pathname").should("contains", "/login");
   });
 
   it("Landing Page is disabled, should not redirect", () => {
-
     cy.landingSettings(false);
-    cy.visit("");
+    Page.visit();
 
     cy.location("pathname").should("eq", "/login");
   });
 
   it("Plex OAuth Enabled, should be button", () => {
     cy.landingSettings(false);
-    cy.fixture('login/authenticationSettngs').then((settings)  => {
-        settings.enableOAuth = true;
-        cy.intercept('GET', '/Settings/Authentication', settings).as('authSettings')
-      })
+    cy.fixture("login/authenticationSettngs").then((settings) => {
+      settings.enableOAuth = true;
+      cy.intercept("GET", "/Settings/Authentication", settings).as(
+        "authSettings"
+      );
+    });
 
-    cy.visit("");
+    Page.visit();
 
-    cy.get("[data-cy=oAuthPlexButton]").should('be.visible');
-    cy.get("[data-cy=OmbiButton]").should('be.visible');
+    Page.plexSignInButton.should("be.visible");
+    Page.ombiSignInButton.should("be.visible");
   });
 
   it("Plex OAuth Diabled, Should show local form", () => {
     cy.landingSettings(false);
-    cy.fixture('login/authenticationSettngs').then((settings)  => {
-        settings.enableOAuth = false;
-        cy.intercept('GET', '/Settings/Authentication', settings).as('authSettings')
-      })
+    cy.fixture("login/authenticationSettngs").then((settings) => {
+      settings.enableOAuth = false;
+      cy.intercept("GET", "/Settings/Authentication", settings).as(
+        "authSettings"
+      );
+    });
 
-    cy.visit("");
+    Page.visit();
 
-    cy.get("[data-cy=OmbiButton]").should('be.visible');
+    Page.ombiSignInButton.should("be.visible");
 
-    cy.get('#username-field').should('be.visible');
-    cy.get('#password-field').should('be.visible');
+    Page.username.should("be.visible");
+    Page.password.should("be.visible");
   });
 
-  it('Invalid Password',() => {
+  it("Invalid Password", () => {
     cy.landingSettings(false);
-    cy.visit('/');
-    cy.contains('Sign in');
 
-    cy.get('#username-field').type('automation');
-    cy.get('#password-field').type('incorrectpw');
+    Page.visit();
+    cy.contains("Sign in");
 
-    cy.get('[data-cy=OmbiButton]').click();
-    cy.verifyNotification('Incorrect username');
+    Page.username.type("automation");
+    Page.password.type("incorrectpw");
+
+    Page.ombiSignInButton.click();
+    cy.verifyNotification("Incorrect username");
   });
 
-  it('Invalid Username',() => {
+  it("Invalid Username", () => {
     cy.landingSettings(false);
-    cy.visit('/');
-    cy.contains('Sign in');
 
-    cy.get('#username-field').type('bad username');
-    cy.get('#password-field').type('incorrectpw');
+    Page.visit();
+    cy.contains("Sign in");
 
-    cy.get('[data-cy=OmbiButton]').click();
-    cy.verifyNotification('Incorrect username');
+    Page.username.type("bad username");
+    Page.password.type("incorrectpw");
+
+    Page.ombiSignInButton.click();
+    cy.verifyNotification("Incorrect username");
   });
 
-  it('Correct Login',() => {
+  it("Correct Login", () => {
     cy.landingSettings(false);
-    cy.visit('/');
-    cy.contains('Sign in');
+    Page.visit();
+    cy.contains("Sign in");
 
-    cy.get('#username-field').type(Cypress.env('username'));
-    cy.get('#password-field').type(Cypress.env('password'));
+    Page.username.type(Cypress.env("username"));
+    Page.password.type(Cypress.env("password"));
 
-    cy.get('[data-cy=OmbiButton]').click();
-    cy.url().should('include', '/discover')
+    Page.ombiSignInButton.click();
+    cy.url().should("include", "/discover");
   });
 });

@@ -20,6 +20,7 @@ export enum DiscoverType {
 export class CarouselListComponent implements OnInit {
 
     @Input() public discoverType: DiscoverType;
+    @Input() public id: string;
     @ViewChild('carousel', {static: false}) carousel: Carousel;
 
     public DiscoverOption = DiscoverOption;

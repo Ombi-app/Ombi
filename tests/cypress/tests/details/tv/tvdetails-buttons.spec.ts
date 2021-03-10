@@ -1,4 +1,4 @@
-describe("TV Details Buttons", function () {
+describe("TV Details Buttons", () => {
   beforeEach(() => {
     cy.login();
   });

@@ -1,23 +1,26 @@
+import { wizardPage as Page } from "@/integration/page-objects";
+
 describe("Wizard Setup", () => {
 
   it("Wizard should be first page", () => {
-    cy.visit("");
+    Page.visit();
     cy.location("pathname").should("contains", "/Wizard");
   });
 
 
   it("Finsh with no local user", () => {
-    cy.visit("");
-    cy.get("[data-test=nextWelcome]").click();
-    cy.get("[data-test=nextMediaServer]").click();
-    cy.get("[data-test=nextLocalUser]").click();
-    cy.get("[data-test=nextOmbiConfig]").click();
-    cy.get("#finishWizard").click();
+    Page.visit();
+
+    Page.welcomeTab.next.click();
+    Page.mediaServerTab.next.click();
+    Page.localUserTab.next.click();
+    Page.ombiConfigTab.next.click();
+    Page.finishButton.click();
 
     cy.verifyNotification("Username '' is invalid, can only contain letters or digits.")
 
     // Verify we end back up on the user page
-    cy.get('mat-step-header').then((items) => {
+    Page.matStepsHeader.then((items) => {
 
       const results = items.filter((index, html) => {
         var attributes = Cypress.$(html).attr('ng-reflect-index');
@@ -33,16 +36,18 @@ describe("Wizard Setup", () => {
   });
 
   it("Compete Wizard", () => {
-    cy.visit("");
-    cy.get("[data-test=nextWelcome]").click();
-    cy.get("[data-test=nextMediaServer]").click();
+    Page.visit();
 
-    cy.get('#adminUsername').type(Cypress.env("username"));
-    cy.get('#adminPassword').type(Cypress.env("password"));
+    Page.welcomeTab.next.click();
+    Page.mediaServerTab.next.click();
 
-    cy.get("[data-test=nextLocalUser]").click();
-    cy.get("[data-test=nextOmbiConfig]").click();
-    cy.get("#finishWizard").click();
+    Page.localUserTab.username.type(Cypress.env("username"));
+    Page.localUserTab.password.type(Cypress.env("password"));
+
+    Page.localUserTab.next.click();
+    Page.ombiConfigTab.next.click();
+
+    Page.finishButton.click();
 
     cy.location("pathname").should("contains", "/login");
   });
