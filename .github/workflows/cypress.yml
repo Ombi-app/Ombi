@@ -40,7 +40,7 @@ jobs:
     needs: install
     strategy:
       fail-fast: false
-      martix:
+      matrix:
         containers: [1]
 
     steps:
