@@ -65,7 +65,7 @@ describe("Discover Cards Tests", () => {
     cy.wait("@tvPopular");
   });
 
-  it.skip("Not requested movie allows us to request", () => {
+  it("Not requested movie allows us to request", () => {
     window.localStorage.setItem("DiscoverOptions2", "2");
     cy.intercept("GET", "**/search/Movie/Popular/**", (req) => {
       req.reply((res) => {
@@ -106,7 +106,7 @@ describe("Discover Cards Tests", () => {
     });
   });
 
-  it.skip("Available movie does not allow us to request", () => {
+  it("Available movie does not allow us to request", () => {
     window.localStorage.setItem("DiscoverOptions2", "2");
     cy.intercept("GET", "**/search/Movie/Popular/**", (req) => {
       req.reply((res) => {
@@ -138,7 +138,7 @@ describe("Discover Cards Tests", () => {
     });
   });
 
-  it.skip("Requested movie does not allow us to request", () => {
+  it("Requested movie does not allow us to request", () => {
     window.localStorage.setItem("DiscoverOptions2", "2");
     cy.intercept("GET", "**/search/Movie/Popular/**", (req) => {
       req.reply((res) => {
@@ -170,7 +170,7 @@ describe("Discover Cards Tests", () => {
       card.statusClass.should('have.class','requested');
     });
 
-    it.skip("Approved movie does not allow us to request", () => {
+    it("Approved movie does not allow us to request", () => {
       window.localStorage.setItem("DiscoverOptions2", "2");
       cy.intercept("GET", "**/search/Movie/Popular/**", (req) => {
         req.reply((res) => {

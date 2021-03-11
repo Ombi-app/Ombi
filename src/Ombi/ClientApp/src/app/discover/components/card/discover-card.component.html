@@ -21,7 +21,7 @@
         </div>
         <div class="row button-request-container" *ngIf="!result.available && !result.approved && !result.requested">
             <div class="button-request poster-overlay">
-                <button attr.data-test="requestButton{{result.id}}{{result.type}}" mat-raised-button class="btn-green full-width poster-request-btn" (click)="request($event)">
+                <button id="requestButton{{result.id}}{{result.type}}" mat-raised-button class="btn-green full-width poster-request-btn" (click)="request($event)">
                     <mat-icon *ngIf="!loading">cloud_download</mat-icon>
                     <i *ngIf="loading" class="fas fa-spinner fa-pulse fa-2x fa-fw" aria-hidden="true"></i>
                 </button>

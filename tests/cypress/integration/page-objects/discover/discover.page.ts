@@ -33,7 +33,7 @@ class DiscoverCard {
   }
 
   get requestButton(): Cypress.Chainable<any> {
-    return cy.get(`button > [data-test=requestButton${this.id}${this.movie ? '1' : '0'}]`);
+    return cy.get(`#requestButton${this.id}${this.movie ? '1' : '0'}`);
   }
 
   verifyTitle(expected: string): Cypress.Chainable<any> {
