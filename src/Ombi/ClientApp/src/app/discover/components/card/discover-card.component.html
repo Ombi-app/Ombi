@@ -1,12 +1,12 @@
-<p-skeleton  *ngIf="!fullyLoaded" width="100%" height="315px"></p-skeleton>
+<p-skeleton id="cardLoading{{result.id}}"  *ngIf="!fullyLoaded" width="100%" height="315px"></p-skeleton>
 
-<div *ngIf="fullyLoaded" class="ombi-card dark-card c" [style.display]="hide ? 'none' : 'block'">
+<div id="result{{result.id}}" *ngIf="fullyLoaded" class="ombi-card dark-card c" [style.display]="hide ? 'none' : 'block'">
     <div class="card-top-info">
-        <div class="top-left">
+        <div class="top-left" id="type{{result.id}}">
             {{RequestType[result.type] | humanize}}
         </div>
-        <div class="{{getStatusClass()}} top-right">
-            <span class="indicator"></span><span class="indicator-text">{{getAvailbilityStatus()}}</span>
+        <div class="{{getStatusClass()}} top-right" id="status{{result.id}}">
+            <span class="indicator"></span><span class="indicator-text" id="availabilityStatus{{result.id}}">{{getAvailbilityStatus()}}</span>
         </div>
     </div>
         <img [routerLink]="generateDetailsLink()" id="cardImage" src="{{result.posterPath}}" class="image"
@@ -14,14 +14,14 @@
         <div class="middle">
             <a class="poster-overlay" [routerLink]="generateDetailsLink()">
                 <div class="summary">
-                    <div class="title">{{result.title}}</div>
-                    <div class="small-text ellipsis">{{result.overview}}</div>
+                    <div class="title" id="title{{result.id}}">{{result.title}}</div>
+                    <div class="small-text ellipsis" id="overview{{result.id}}">{{result.overview}}</div>
                 </div>
             </a>
         </div>
-        <div class="row button-request-container" *ngIf="!result.available && !result.approved">
+        <div class="row button-request-container" *ngIf="!result.available && !result.approved && !result.requested">
             <div class="button-request poster-overlay">
-                <button mat-raised-button class="btn-green full-width poster-request-btn" (click)="request($event)">
+                <button id="requestButton{{result.id}}{{result.type}}" mat-raised-button class="btn-green full-width poster-request-btn" (click)="request($event)">
                     <mat-icon *ngIf="!loading">cloud_download</mat-icon>
                     <i *ngIf="loading" class="fas fa-spinner fa-pulse fa-2x fa-fw" aria-hidden="true"></i>
                 </button>

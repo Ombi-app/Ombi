@@ -25,7 +25,7 @@
               </div>
             </div>
             <div class="welcome-buttons">
-              <button mat-button matStepperNext class="mat-raised-button mat-accent">Next</button>
+              <button mat-button matStepperNext class="mat-raised-button mat-accent" data-test="nextWelcome">Next</button>
             </div>
           </form>
         </mat-step>
@@ -39,16 +39,16 @@
               <mat-tab label="Jellyfin"><wizard-jellyfin></wizard-jellyfin></mat-tab>
             </mat-tab-group>
               <button mat-button matStepperPrevious class="mat-raised-button mat-error left">Back</button>
-              <button mat-button matStepperNext class="mat-raised-button mat-accent right">Next</button>
+              <button mat-button matStepperNext class="mat-raised-button mat-accent right" data-test="nextMediaServer">Next</button>
           </form>
         </mat-step>
-        <mat-step>
+        <mat-step id="userStep">
           <form>
             <ng-template matStepLabel>Create a local admin</ng-template>
             <wizard-local-admin [user]="localUser"></wizard-local-admin>
             <div>
               <button mat-button matStepperPrevious class="mat-raised-button mat-error left">Back</button>
-              <button mat-button matStepperNext class="mat-raised-button mat-accent right">Next</button>
+              <button mat-button matStepperNext class="mat-raised-button mat-accent right" data-test="nextLocalUser">Next</button>
             </div>
           </form>
         </mat-step>
@@ -58,7 +58,7 @@
             <wizard-ombi [config]="config"></wizard-ombi>
             <div>
               <button mat-button matStepperPrevious class="mat-raised-button mat-error left">Back</button>
-              <button mat-button matStepperNext class="mat-raised-button mat-accent right">Next</button>
+              <button mat-button matStepperNext class="mat-raised-button mat-accent right" data-test="nextOmbiConfig">Next</button>
             </div>
           </form>
         </mat-step>
@@ -77,7 +77,7 @@
             </div>
           </div>
           <div>
-            <button mat-button matStepperPrevious (click)="createUser()" class="mat-raised-button mat-accent right">Finish</button>
+            <button mat-button matStepperPrevious id="finishWizard" (click)="createUser()" class="mat-raised-button mat-accent right">Finish</button>
             <button mat-button (click)="stepper.reset()" class="mat-raised-button mat-error left">Reset</button>
           </div>
         </mat-step>

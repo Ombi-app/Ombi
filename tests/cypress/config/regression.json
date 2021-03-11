@@ -1,0 +1,25 @@
+{
+    "$schema": "https://on.cypress.io/cypress.schema.json",
+    "supportFile": "cypress/support/index.ts",
+    "baseUrl": "http://localhost:3577",
+    "integrationFolder": "cypress/tests",
+    "testFiles": "**/*.spec.ts*",
+    "retries": {
+        "runMode": 2,
+        "openMode": 1
+    },
+    "watchForFileChanges": true,
+    "projectId": "o5451s",
+    "viewportWidth": 2560,
+    "viewportHeight": 1440,
+    "chromeWebSecurity": false,
+    "ignoreTestFiles": ["**/snapshots/*"],
+    "reporter": "junit",
+    "reporterOptions": {
+        "mochaFile": "results/junit/regression-[hash].xml"
+    },
+    "env": {
+        "username": "a",
+        "password": "a"
+   }
+}
