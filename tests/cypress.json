@@ -8,6 +8,10 @@
   "chromeWebSecurity": false,
   "viewportWidth": 2560,
   "viewportHeight": 1440,
+  "retries": {
+    "runMode": 2,
+    "openMode": 1
+  },
   "ignoreTestFiles": [
     "**/snapshots/*"
   ],
