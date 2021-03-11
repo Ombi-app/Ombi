@@ -2,9 +2,9 @@ name: Automation Tests
 
 on:
   push:
-    branches: [ feature/ui-automation ]
+    branches: [ feature/ui-automation, develop ]
   pull_request:
-    branches: [ feature/ui-automation ]
+    branches: [ feature/ui-automation, develop ]
   schedule:
     - cron: '0 0 * * *'
 
