@@ -70,7 +70,7 @@ jobs:
         browser: chrome
         headless: true
         working-directory: tests
-        group: "UI - Chrome",
+        group: "UI - Chrome"
         parallel: true
         wait-on: http://localhost:3577/
         # 7 minutes
