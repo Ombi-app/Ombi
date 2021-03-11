@@ -1,29 +1,31 @@
+import { tvDetailsPage as Page } from "@/integration/page-objects";
+
 describe('TV Details Information Panel',() => {
     beforeEach(() => {
         cy.login();
     });
 
     it('Status should be ended',() => {
-        cy.visit('/details/tv/121361');
-        cy.get('#status').contains("Ended")
+        Page.visit('121361');
+        Page.informationPanel.status.contains("Ended")
       });
 
 
       it('Streaming Data should display',() => {
         cy.intercept("GET", "**/search/stream/tv/**", { fixture: 'details/tv/streamingResponse'}).as("streamingResponse");
 
-        cy.visit('/details/tv/121361');
+        Page.visit('121361');
         cy.wait('@streamingResponse')
 
-        cy.get('#streamSuper1').should('be.visible');
-        cy.get('#streamJamiesNetwork').should('be.visible');
+        Page.informationPanel.getStreaming('Super1').should('be.visible');
+        Page.informationPanel.getStreaming('JamiesNetwork').should('be.visible');
       });
 
 
-    it.only('Streaming Data should be in correct order',() => {
+    it('Streaming Data should be in correct order',() => {
       cy.intercept("GET", "**/search/stream/tv/**", { fixture: 'details/tv/streamingResponse'}).as("streamingResponse");
 
-      cy.visit('/details/tv/121361');
+      Page.visit('121361');
       cy.wait('@streamingResponse')
 
       cy.get('.stream-small').then((items) => {

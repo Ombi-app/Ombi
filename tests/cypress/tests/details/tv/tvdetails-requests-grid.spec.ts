@@ -1,17 +1,20 @@
+import { tvDetailsPage as Page } from "@/integration/page-objects";
+
 describe("TV Requests Grid", function () {
   beforeEach(() => {
     cy.login();
   });
 
   it("Season not available", () => {
-    cy.visit("/details/tv/121361");
+    Page.visit('121361');
 
-    cy.getByData("classStatus1").should("not.have.class", "available");
-    cy.getByData("classStatus1").should("not.have.class", "requested");
-    cy.getByData("classStatus1").should("not.have.class", "approved");
+    Page.requestPanel.seasonTab(1)
+      .should("not.have.class", "available")
+      .should("not.have.class", "requested")
+      .should("not.have.class", "approved");
 
-    cy.getByData("masterCheckbox1").should("be.visible");
-    cy.getByDataLike("episodeCheckbox1").each((element) => {
+    Page.requestPanel.getSeasonMasterCheckbox(1).should("be.visible");
+    Page.requestPanel.getEpisodeCheckbox(1).each((element) => {
       expect(element.length).to.be.greaterThan(0);
     });
   });
@@ -31,19 +34,20 @@ describe("TV Requests Grid", function () {
       });
     }).as("detailsResponse");
 
-    cy.visit("/details/tv/121361");
+    Page.visit('121361');
 
     cy.wait("@detailsResponse");
 
-    cy.getByData("classStatus1").should("not.have.class", "available");
-    cy.getByData("classStatus1").should("have.class", "requested");
-    cy.getByData("classStatus1").should("not.have.class", "approved");
+    Page.requestPanel.seasonTab(1)
+      .should("not.have.class", "available")
+      .should("have.class", "requested")
+      .should("not.have.class", "approved");
 
     // checkboxes
-    cy.getByData("masterCheckbox1").should("not.exist");
-    cy.getByDataLike("episodeCheckbox1").should("not.exist");
+    Page.requestPanel.getSeasonMasterCheckbox(1).should("not.exist");
+    Page.requestPanel.getEpisodeCheckbox(1).should("not.exist");
 
-    cy.getByDataLike("episodeStatus1").each((element) => {
+    Page.requestPanel.getEpisodeStatus(1).each((element) => {
       expect(element.hasClass("requested")).to.be.true;
       expect(element.text()).contain('Pending Approval');
     });
@@ -64,19 +68,20 @@ describe("TV Requests Grid", function () {
       });
     }).as("detailsResponse");
 
-    cy.visit("/details/tv/121361");
+    Page.visit('121361');
 
     cy.wait("@detailsResponse");
 
-    cy.getByData("classStatus1").should("not.have.class", "available");
-    cy.getByData("classStatus1").should("not.have.class", "requested");
-    cy.getByData("classStatus1").should("have.class", "approved");
+    Page.requestPanel.seasonTab(1)
+      .should("not.have.class", "available")
+      .should("not.have.class", "requested")
+      .should("have.class", "approved");
 
     // checkboxes
-    cy.getByData("masterCheckbox1").should("not.exist");
-    cy.getByDataLike("episodeCheckbox1").should("not.exist");
+    Page.requestPanel.getSeasonMasterCheckbox(1).should("not.exist");
+    Page.requestPanel.getEpisodeCheckbox(1).should("not.exist");
 
-    cy.getByDataLike("episodeStatus1").each((element) => {
+    Page.requestPanel.getEpisodeStatus(1).each((element) => {
       expect(element.hasClass("approved")).to.be.true;
       expect(element.text()).contain('Approved');
     });
@@ -96,74 +101,76 @@ describe("TV Requests Grid", function () {
       });
     }).as("detailsResponse");
 
-    cy.visit("/details/tv/121361");
+    Page.visit('121361');
 
     cy.wait("@detailsResponse");
 
-    cy.getByData("classStatus1").should("have.class", "available");
-    cy.getByData("classStatus1").should("not.have.class", "requested");
-    cy.getByData("classStatus1").should("not.have.class", "approved");
+    Page.requestPanel.seasonTab(1)
+      .should("have.class", "available")
+      .should("not.have.class", "requested")
+      .should("not.have.class", "approved");
 
     // checkboxes
-    cy.getByData("masterCheckbox1").should("not.exist");
-    cy.getByDataLike("episodeCheckbox1").should("not.exist");
+    Page.requestPanel.getSeasonMasterCheckbox(1).should("not.exist");
+    Page.requestPanel.getEpisodeCheckbox(1).should("not.exist");
 
-    cy.getByDataLike("episodeStatus1").each((element) => {
+    Page.requestPanel.getEpisodeStatus(1).each((element) => {
       expect(element.hasClass("available")).to.be.true;
       expect(element.text()).contain('Available');
     });
   });
 
   it("Request no episodes", () => {
-    cy.visit("/details/tv/121361");
+    Page.visit('121361');
 
-    cy.get('#addFabBtn').click();
-    cy.get('#requestSelected').click();
+    Page.requestFabButton.fab.click();
+    Page.requestFabButton.requestSelected.click();
 
     cy.verifyNotification('You need to select some episodes!');
   });
 
   it("Request single episodes", () => {
-    cy.visit("/details/tv/121361");
-    const episodeCheckbox = 'episodeCheckbox21';
+    Page.visit('121361');
 
-    cy.getByData("classStatus2").click();
-    cy.getByData(episodeCheckbox).click();
-    cy.get('#addFabBtn').click();
-    cy.get('#requestSelected').click();
+    Page.requestPanel.seasonTab(2).click();
+    Page.requestPanel.getEpisodeSeasonCheckbox(2,1).click();
+    Page.requestFabButton.fab.click();
+    Page.requestFabButton.requestSelected.click();
 
     cy.verifyNotification('Request for Game of Thrones has been added successfully');
 
-    cy.getByData('episodeStatus21')
+    Page.requestPanel.getEpisodeStatus(2,1)
       .should('contain.text', 'Pending Approval')
       .should('have.class', 'requested')
   });
 
 
   it("Request First Season", () => {
-    cy.visit("/details/tv/121361");
+    Page.visit('121361');
 
-    cy.get('#addFabBtn').click();
-    cy.get('#requestFirst').click();
+    Page.requestFabButton.fab.click();
+    Page.requestFabButton.requestFirst.click();
 
     cy.verifyNotification('Request for Game of Thrones has been added successfully');
 
-    cy.getByDataLike('episodeStatus1')
+    Page.requestPanel.getEpisodeStatus(1)
       .should('contain.text', 'Pending Approval')
       .should('have.class', 'requested')
   });
 
   it("Request Latest Season", () => {
-    cy.visit("/details/tv/121361");
+    Page.visit('121361');
 
-    cy.get('#addFabBtn').click();
-    cy.get('#requestLatest').click();
+    Page.requestFabButton.fab.click();
+    Page.requestFabButton.requestLatest.click();
 
     cy.verifyNotification('Request for Game of Thrones has been added successfully');
 
-    cy.getByData("classStatus8").click();
-    cy.getByData("classStatus8").should("have.class", "requested");
-    cy.getByDataLike('episodeStatus8')
+    Page.requestPanel.seasonTab(8)
+    .click()
+    .should("have.class", "requested");
+
+    Page.requestPanel.getEpisodeStatus(8)
       .should('contain.text', 'Pending Approval')
       .should('have.class', 'requested')
   });

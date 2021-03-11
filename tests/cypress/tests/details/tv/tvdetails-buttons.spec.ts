@@ -1,3 +1,5 @@
+import { tvDetailsPage as Page } from "@/integration/page-objects";
+
 describe("TV Details Buttons", () => {
   beforeEach(() => {
     cy.login();
@@ -14,13 +16,13 @@ describe("TV Details Buttons", () => {
       });
     }).as("detailsResponse");
 
-    cy.visit("/details/tv/121361");
+    Page.visit("121361");
 
     cy.wait('@detailsResponse');
 
-    cy.get('#availableBtn').should('be.visible');
-    cy.get('#requestBtn').should('not.exist');
-    cy.get('#addFabBtn').should('not.exist');
+    Page.availableButton.should('be.visible');
+    Page.requestButton.should('not.exist');
+    Page.requestFabButton.fab.should('not.exist');
   });
 
   it("Partially Available Request", () => {
@@ -34,14 +36,14 @@ describe("TV Details Buttons", () => {
       });
     }).as("detailsResponse");
 
-    cy.visit("/details/tv/121361");
+    Page.visit("121361");
 
     cy.wait('@detailsResponse');
 
-    cy.get('#availableBtn').should('not.exist');
-    cy.get('#requestBtn').should('be.visible');
-    cy.get('#addFabBtn').should('be.visible');
-    cy.get('#partiallyAvailableBtn').should('be.visible');
+    Page.availableButton.should('not.exist');
+    Page.requestButton.should('be.visible');
+    Page.requestFabButton.fab.should('be.visible');
+    Page.partiallyAvailableButton.should('be.visible');
   });
 
   it("Not Available Request", () => {
@@ -55,13 +57,13 @@ describe("TV Details Buttons", () => {
       });
     }).as("detailsResponse");
 
-    cy.visit("/details/tv/121361");
+    Page.visit("121361");
     cy.wait('@detailsResponse');
 
-    cy.get('#availableBtn').should('not.exist');
-    cy.get('#requestBtn').should('be.visible');
-    cy.get('#addFabBtn').should('be.visible');
-    cy.get('#partiallyAvailableBtn').should('not.exist');
+    Page.availableButton.should('not.exist');
+    Page.requestButton.should('be.visible');
+    Page.requestFabButton.fab.should('be.visible');
+    Page.partiallyAvailableButton.should('not.exist');
   });
 
 
@@ -70,14 +72,14 @@ describe("TV Details Buttons", () => {
 
     cy.visit("/details/tv/121361");
 
-    cy.get('#reportIssueBtn').should('be.visible');
+    Page.reportIssueButton.should('be.visible');
   });
 
   it("Issues Disabled", () => {
     cy.intercept("GET", "Settings/issuesenabled", 'false');
 
-    cy.visit("/details/tv/121361");
+    Page.visit("121361");
 
-    cy.get('#reportIssueBtn').should('not.exist');
+    Page.reportIssueButton.should('not.exist');
   });
 });
