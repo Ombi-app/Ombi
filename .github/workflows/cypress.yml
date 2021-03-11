@@ -5,6 +5,8 @@ on:
     branches: [ feature/ui-automation ]
   pull_request:
     branches: [ feature/ui-automation ]
+  schedule:
+    - cron: '*/20 * * * *'
 
 jobs:
   automation-tests:
