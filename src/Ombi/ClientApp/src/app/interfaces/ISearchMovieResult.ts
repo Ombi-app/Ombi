@@ -40,6 +40,7 @@ export interface IMultiSearchResult {
    mediaType: string;
    title: string;
    poster: string;
+   overview: string;
 }
 
 export interface ILanguageRefine {

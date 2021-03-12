@@ -87,7 +87,7 @@ export class DiscoverSearchResultsComponent implements OnInit {
                 id: m.id,
                 url: "",
                 rating: 0,
-                overview: "",
+                overview: m.overview,
                 approved: false,
                 imdbid: "",
                 denied: false,

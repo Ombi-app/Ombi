@@ -13,6 +13,11 @@
         <!-- content start -->
 
         <mat-accordion class="mat-elevation-z8">
+
+            <div  *ngFor="let issue of issues">
+            <issues-details-group [issue]="issue" [settings]="settings" [isAdmin]="isAdmin"></issues-details-group>
+        </div>
+<!--         
             <mat-expansion-panel *ngFor="let issue of issues">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
@@ -54,7 +59,7 @@
                         <button mat-raised-button color="warn" (click)="delete(issue)"> {{ 'Issues.Delete' | translate }}</button>
                     </div>
                 </div>
-            </mat-expansion-panel>
+            </mat-expansion-panel> -->
         </mat-accordion>
 
         <!-- content end -->

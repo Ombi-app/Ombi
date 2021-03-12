@@ -1,0 +1,57 @@
+name: Automation Tests
+
+on:
+  push:
+    branches: [ develop, feature/** ]
+  pull_request:
+    branches: [ develop ]
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  automation-tests:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - uses: actions/cache@v2
+      with:
+        path: |
+          '**/node_modules'
+          '/home/runner/.cache/Cypress'
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+    - name: Install Frontend Deps
+      run: yarn --cwd ./src/Ombi/ClientApp install
+
+    - name: Install Automation Deps
+      run: yarn --cwd ./tests install
+
+    - name: Start Backend
+      run: |
+          nohup dotnet run -p ./src/Ombi -- --host http://*:3577 &
+    - name: Start Frontend
+      run: |
+          nohup yarn --cwd ./src/Ombi/ClientApp start &
+    - name: Cypress Tests
+      uses: cypress-io/github-action@v2.8.2
+      with:
+        record: true
+        browser: chrome
+        headless: true
+        working-directory: tests
+        wait-on: http://localhost:3577/
+        # 7 minutes
+        wait-on-timeout: 420
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

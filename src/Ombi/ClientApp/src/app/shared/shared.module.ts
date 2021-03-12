@@ -36,11 +36,13 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatTabsModule } from "@angular/material/tabs";
 import { EpisodeRequestComponent } from "./episode-request/episode-request.component";
+import { DetailsGroupComponent } from "../issues/components/details-group/details-group.component";
 
 @NgModule({
   declarations: [
     IssuesReportComponent,
     EpisodeRequestComponent,
+    DetailsGroupComponent,
   ],
   imports: [
     SidebarModule,
@@ -76,6 +78,7 @@ import { EpisodeRequestComponent } from "./episode-request/episode-request.compo
   ],
   entryComponents: [
     EpisodeRequestComponent,
+    DetailsGroupComponent,
   ],
   exports: [
       TranslateModule,
@@ -86,6 +89,7 @@ import { EpisodeRequestComponent } from "./episode-request/episode-request.compo
       MatProgressSpinnerModule,
       IssuesReportComponent,
       EpisodeRequestComponent,
+      DetailsGroupComponent,
       TruncateModule,
       InputSwitchModule,
       MatTreeModule,

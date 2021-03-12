@@ -633,11 +633,16 @@ namespace Ombi.Controllers.V1
             user.MovieRequestLimit = ui.MovieRequestLimit;
             user.EpisodeRequestLimit = ui.EpisodeRequestLimit;
             user.MusicRequestLimit = ui.MusicRequestLimit;
+            if (ui.Password.HasValue())
+            {
+                user.PasswordHash = UserManager.PasswordHasher.HashPassword(user, ui.Password);
+            }
             if (ui.StreamingCountry.HasValue())
             {
                 user.StreamingCountry = ui.StreamingCountry;
             }
             var updateResult = await UserManager.UpdateAsync(user);
+                
             if (!updateResult.Succeeded)
             {
                 return new OmbiIdentityResult

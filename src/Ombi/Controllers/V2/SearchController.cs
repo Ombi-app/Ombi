@@ -27,9 +27,9 @@ namespace Ombi.Controllers.V2
         {
             _multiSearchEngine = multiSearchEngine;
             _tvSearchEngine = tvSearchEngine;
-            _tvSearchEngine.ResultLimit = 12;
+            _tvSearchEngine.ResultLimit = 20;
             _movieEngineV2 = v2Movie;
-            _movieEngineV2.ResultLimit = 12;
+            _movieEngineV2.ResultLimit = 20;
             _tvEngineV2 = v2Tv;
             _musicEngine = musicEngine;
             _rottenTomatoesApi = rottenTomatoesApi;

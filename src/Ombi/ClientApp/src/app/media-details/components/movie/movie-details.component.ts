@@ -115,9 +115,13 @@ export class MovieDetailsComponent {
     }
 
     public async issue() {
+        let provider = this.movie.id.toString();
+        if (this.movie.imdbId) {
+            provider = this.movie.imdbId;
+        }
         const dialogRef = this.dialog.open(NewIssueComponent, {
             width: '500px',
-            data: { requestId: this.movieRequest ? this.movieRequest.id : null, requestType: RequestType.movie, providerId: this.movie.imdbId ? this.movie.imdbId : this.movie.id, title: this.movie.title }
+            data: { requestId: this.movieRequest ? this.movieRequest.id : null, requestType: RequestType.movie, providerId: provider, title: this.movie.title }
         });
     }
 

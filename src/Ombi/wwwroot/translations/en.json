@@ -216,7 +216,9 @@
         "MarkedAsResolved": "This issue has now been marked as resolved!",
         "MarkedAsInProgress": "This issue has now been marked as in progress!",
         "Delete": "Delete issue",
-        "DeletedIssue": "Issue has been deleted"
+        "DeletedIssue": "Issue has been deleted",
+        "Chat":"Chat",
+        "Requested":"Requested"
     },
     "Filter": {
         "ClearFilter": "Clear Filter",

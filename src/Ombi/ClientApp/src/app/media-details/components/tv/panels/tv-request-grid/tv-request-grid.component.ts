@@ -51,6 +51,7 @@ export class TvRequestGridComponent {
                 season.episodes.forEach(ep => {
                     if (this.selection.isSelected(ep)) {
                         ep.requested = true;
+                        ep.requestStatus = "Common.PendingApproval";
                         seasonsViewModel.episodes.push({ episodeNumber: ep.episodeNumber });
                     }
                 });
@@ -65,6 +66,27 @@ export class TvRequestGridComponent {
                 `Request for ${this.tv.title} has been added successfully`);
 
             this.selection.clear();
+
+            if (this.tv.firstSeason) {
+                this.tv.seasonRequests[0].episodes.forEach(ep => {
+                    ep.requested = true;
+                    ep.requestStatus = "Common.PendingApproval";
+                });
+            }
+            if (this.tv.requestAll) {
+                this.tv.seasonRequests.forEach(season => {
+                    season.episodes.forEach(ep => {
+                        ep.requested = true;
+                        ep.requestStatus = "Common.PendingApproval";
+                    });
+                });
+            }
+            if (this.requestLatestSeason) {
+                this.tv.seasonRequests[this.tv.seasonRequests.length - 1].episodes.forEach(ep => {
+                    ep.requested = true;
+                    ep.requestStatus = "Common.PendingApproval";
+                });
+            }
 
         } else {
             this.notificationService.send(requestResult.errorMessage ? requestResult.errorMessage : requestResult.message);

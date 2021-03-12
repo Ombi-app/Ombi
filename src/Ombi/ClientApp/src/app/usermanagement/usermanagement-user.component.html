@@ -4,18 +4,18 @@
       <label class="control-label"><h3>User Details</h3></label>
     <div>
       <mat-form-field>
-        <input matInput placeholder="Username" [(ngModel)]="user.userName" required>
+        <input matInput id="username" placeholder="Username" [(ngModel)]="user.userName" required>
       </mat-form-field>
     </div>
     <div>
       <mat-form-field>
-        <input matInput placeholder="Alias" [(ngModel)]="user.alias"
+        <input id="alias" matInput placeholder="Alias" [(ngModel)]="user.alias"
           matTooltip="This is used as a display value instead of the users username, so think of it as a more friendly username">
       </mat-form-field>
     </div>
     <div>
       <mat-form-field>
-        <input matInput placeholder="Email Address" type="email" [(ngModel)]="user.emailAddress">
+        <input id="emailAddress" matInput placeholder="Email Address" type="email" [(ngModel)]="user.emailAddress">
       </mat-form-field>
     </div>
     <mat-form-field>
@@ -28,12 +28,12 @@
     </mat-form-field>
     <div>
       <mat-form-field>
-        <input matInput placeholder="Password" type="password" [(ngModel)]="user.password" required>
+        <input id="password" matInput placeholder="Password" type="password" [(ngModel)]="user.password" required>
       </mat-form-field>
     </div>
     <div>
       <mat-form-field>
-        <input matInput placeholder="Confirm Password" type="password" [(ngModel)]="confirmPass" required>
+        <input id="confirmPass" matInput placeholder="Confirm Password" type="password" [(ngModel)]="confirmPass" required>
       </mat-form-field>
     </div>
 
@@ -44,17 +44,17 @@
     <label class="control-label"><h3>Request Limits</h3></label>
     <div>
       <mat-form-field>
-        <input matInput placeholder="Movie Request Limit" [(ngModel)]="user.movieRequestLimit">
+        <input id="movieRequestLimit" matInput placeholder="Movie Request Limit" [(ngModel)]="user.movieRequestLimit">
       </mat-form-field>
     </div>
     <div>
       <mat-form-field>
-        <input matInput placeholder="Episode Request Limit" [(ngModel)]="user.episodeRequestLimit">
+        <input id="episodeRequestLimit" matInput placeholder="Episode Request Limit" [(ngModel)]="user.episodeRequestLimit">
       </mat-form-field>
     </div>
     <div>
       <mat-form-field>
-        <input matInput placeholder="Music Request Limit" [(ngModel)]="user.musicRequestLimit">
+        <input id="musicRequestLimit" matInput placeholder="Music Request Limit" [(ngModel)]="user.musicRequestLimit">
       </mat-form-field>
     </div>
     <label class="control-label"><h3>Quality & Root Path Preferences</h3></label>
@@ -117,13 +117,13 @@
     <label class="control-label"><h3>Roles</h3></label>
     <div *ngIf="!edit">
       <div *ngFor="let c of availableClaims">
-        <mat-slide-toggle [(ngModel)]="c.enabled">{{c.value | humanize}}</mat-slide-toggle>
+        <mat-slide-toggle id="role{{c.value}}" [(ngModel)]="c.enabled">{{c.value | humanize}}</mat-slide-toggle>
       </div>
     </div>
 
     <div *ngIf="edit">
       <div *ngFor="let c of user.claims">
-        <mat-slide-toggle [(ngModel)]="c.enabled">{{c.value | humanize}}</mat-slide-toggle>
+        <mat-slide-toggle  id="role{{c.value}}" [(ngModel)]="c.enabled">{{c.value | humanize}}</mat-slide-toggle>
       </div>
     </div>
   </div>
@@ -134,7 +134,7 @@
     <div *ngFor="let pref of notificationPreferences">
       <div>
         <mat-form-field>
-          <input matInput placeholder="{{NotificationAgent[pref.agent] | humanize}}" [(ngModel)]="pref.value">
+          <input id="{{NotificationAgent[pref.agent]}}" matInput placeholder="{{NotificationAgent[pref.agent] | humanize}}" [(ngModel)]="pref.value">
         </mat-form-field>
       </div>
     </div>

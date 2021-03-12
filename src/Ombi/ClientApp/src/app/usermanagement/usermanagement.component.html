@@ -73,10 +73,10 @@
           </ng-container>
           <ng-container matColumnDef="lastLoggedIn">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>  Last Logged In </th>
-                <td mat-cell *matCellDef="let u"> 
+                <td mat-cell *matCellDef="let u">
                         <span *ngIf="u.lastLoggedIn">
                                         {{u.lastLoggedIn  | amLocal | amDateFormat: 'l LT'}}
-                        </span>                
+                        </span>
                         <span *ngIf="!u.lastLoggedIn">
                                         Not logged in yet!
                         </span> </td>
@@ -92,10 +92,10 @@
                         <span *ngIf="u.userType === 5">Jellyfin User</span>
                 </td>
           </ng-container>
-  
+
           <ng-container matColumnDef="roles">
                 <th mat-header-cell *matHeaderCellDef> Roles </th>
-                <td mat-cell *matCellDef="let element"> 
+                <td mat-cell *matCellDef="let element">
                         <div *ngFor="let claim of element.claims">
                                 <span *ngIf="claim.enabled">{{claim.value}}</span>
                         </div>
@@ -105,7 +105,7 @@
           <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> </th>
                 <td mat-cell *matCellDef="let u">
-                        <button mat-raised-button color="accent" [routerLink]="['/usermanagement/user/' + u.id]">Details/Edit</button>
+                        <button id="edit{{u.userName}}" mat-raised-button color="accent" [routerLink]="['/usermanagement/user/' + u.id]">Details/Edit</button>
                 </td>
           </ng-container>
 
@@ -115,7 +115,7 @@
                         <button *ngIf="!u.hasLoggedIn" mat-raised-button color="accent"  (click)="welcomeEmail(u)" [disabled]="!customizationSettings?.applicationUrl">Send Welcome Email</button>
                 </td>
           </ng-container>
-  
+
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>

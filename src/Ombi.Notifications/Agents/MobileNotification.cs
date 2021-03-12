@@ -131,7 +131,7 @@ namespace Ombi.Notifications.Agents
             };
 
             // Send to user
-            var playerIds = GetUsers(model, NotificationType.IssueResolved);
+            var playerIds = await GetUsers(model, NotificationType.IssueResolved);
 
             await Send(playerIds, notification, settings, model);
         }
@@ -172,7 +172,7 @@ namespace Ombi.Notifications.Agents
             };
 
             // Send to user
-            var playerIds = GetUsers(model, NotificationType.RequestDeclined);
+            var playerIds = await GetUsers(model, NotificationType.RequestDeclined);
             await AddSubscribedUsers(playerIds);
             await Send(playerIds, notification, settings, model);
         }
@@ -192,7 +192,7 @@ namespace Ombi.Notifications.Agents
             };
 
             // Send to user
-            var playerIds = GetUsers(model, NotificationType.RequestApproved);
+            var playerIds = await GetUsers(model, NotificationType.RequestApproved);
 
             await AddSubscribedUsers(playerIds);
             await Send(playerIds, notification, settings, model);
@@ -215,7 +215,7 @@ namespace Ombi.Notifications.Agents
                 Data = data
             };
             // Send to user
-            var playerIds = GetUsers(model, NotificationType.RequestAvailable);
+            var playerIds = await GetUsers(model, NotificationType.RequestAvailable);
 
             await AddSubscribedUsers(playerIds);
             await Send(playerIds, notification, settings, model);
@@ -285,19 +285,23 @@ namespace Ombi.Notifications.Agents
             return playerIds;
         }
 
-        private List<string> GetUsers(NotificationOptions model, NotificationType type)
+        private async Task<List<string>> GetUsers(NotificationOptions model, NotificationType type)
         {
-            var notificationIds = new List<NotificationUserId>();
+            var notificationIds = new List<MobileDevices>();
             if (MovieRequest != null || TvRequest != null)
             {
-                notificationIds = model.RequestType == RequestType.Movie
-                    ? MovieRequest?.RequestedUser?.NotificationUserIds
-                    : TvRequest?.RequestedUser?.NotificationUserIds;
+                var userId = model.RequestType == RequestType.Movie
+                    ? MovieRequest?.RequestedUser?.Id
+                    : TvRequest?.RequestedUser?.Id;
+
+                var userNotificationIds = await _notifications.GetAll().Where(x => x.UserId == userId).ToListAsync();
+                notificationIds.AddRange(userNotificationIds);
             }
             if (model.UserId.HasValue() && (!notificationIds?.Any() ?? true))
             {
-                var user = _userManager.Users.Include(x => x.NotificationUserIds).FirstOrDefault(x => x.Id == model.UserId);
-                notificationIds = user.NotificationUserIds;
+                var user = _userManager.Users.FirstOrDefault(x => x.Id == model.UserId);
+                var userNotificationIds = await _notifications.GetAll().Where(x => x.UserId == model.UserId).ToListAsync();
+                notificationIds.AddRange(userNotificationIds);
             }
 
             if (!notificationIds?.Any() ?? true)
@@ -306,21 +310,21 @@ namespace Ombi.Notifications.Agents
                     $"there are no users to send a notification for {type}, for agent {NotificationAgent.Mobile}");
                 return null;
             }
-            var playerIds = notificationIds.Select(x => x.PlayerId).ToList();
+            var playerIds = notificationIds.Select(x => x.Token).ToList();
             return playerIds;
         }
 
         private async Task<List<string>> GetUsersForIssue(NotificationOptions model, int issueId, NotificationType type)
         {
-            var notificationIds = new List<NotificationUserId>();
+            var notificationIds = new List<MobileDevices>();
 
             var issue = await _issueRepository.GetAll()
                 .FirstOrDefaultAsync(x => x.Id == issueId);
 
             // Get the user that raised the issue to send the notification to
-            var userRaised = await _userManager.Users.Include(x => x.NotificationUserIds).FirstOrDefaultAsync(x => x.Id == issue.UserReportedId);
+            var userRaised = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == issue.UserReportedId);
 
-            notificationIds = userRaised.NotificationUserIds;
+            notificationIds = await _notifications.GetAll().Where(x => x.UserId == userRaised.Id).ToListAsync();
 
             if (!notificationIds?.Any() ?? true)
             {
@@ -328,7 +332,7 @@ namespace Ombi.Notifications.Agents
                     $"there are no users to send a notification for {type}, for agent {NotificationAgent.Mobile}");
                 return null;
             }
-            var playerIds = notificationIds.Select(x => x.PlayerId).ToList();
+            var playerIds = notificationIds.Select(x => x.Token).ToList();
             return playerIds;
         }
 
@@ -338,10 +342,11 @@ namespace Ombi.Notifications.Agents
             {
                 foreach (var user in SubsribedUsers)
                 {
-                    var notificationId = user.NotificationUserIds;
-                    if (notificationId.Any())
+                    var notificationIds = await _notifications.GetAll().Where(x => x.UserId == user.Id).ToListAsync();
+
+                    if (notificationIds.Any())
                     {
-                        playerIds.AddRange(notificationId.Select(x => x.PlayerId));
+                        playerIds.AddRange(notificationIds.Select(x => x.Token));
                     }
                 }
             }

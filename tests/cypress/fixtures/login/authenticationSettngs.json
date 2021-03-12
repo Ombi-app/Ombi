@@ -1,0 +1,10 @@
+{
+  "allowNoPassword": false,
+  "requireDigit": false,
+  "requiredLength": 0,
+  "requireLowercase": false,
+  "requireNonAlphanumeric": false,
+  "requireUppercase": false,
+  "enableOAuth": true,
+  "id": 14
+}

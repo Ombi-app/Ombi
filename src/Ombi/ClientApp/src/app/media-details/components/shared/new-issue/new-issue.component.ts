@@ -10,7 +10,7 @@ import { TranslateService } from "@ngx-translate/core";
     templateUrl: "./new-issue.component.html",
 })
 export class NewIssueComponent implements OnInit {
-   
+
     public issue: IIssues;
     public issueCategories: IIssueCategory[];
 
@@ -40,9 +40,9 @@ export class NewIssueComponent implements OnInit {
 
         public async ngOnInit(): Promise<void> {
             this.issueCategories = await this.issueService.getCategories().toPromise();
-        }   
+        }
 
-        public async createIssue() { 
+        public async createIssue() {
             const result = await this.issueService.createIssue(this.issue).toPromise();
             if(result) {
                 this.messageService.send(this.translate.instant("Issues.IssueDialog.IssueCreated"));

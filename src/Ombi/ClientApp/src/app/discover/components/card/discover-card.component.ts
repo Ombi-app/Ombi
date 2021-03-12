@@ -46,7 +46,7 @@ export class DiscoverCardComponent implements OnInit {
 
     public async getExtraTvInfo() {
         // if (this.result.tvMovieDb) {
-        //     this.tvSearchResult = await this.searchService.getTvInfoWithMovieDbId(+this.result.id);
+            this.tvSearchResult = await this.searchService.getTvInfoWithMovieDbId(+this.result.id);
         // } else {
         //     this.tvSearchResult = await this.searchService.getTvInfo(+this.result.id);
         // }
@@ -173,8 +173,8 @@ export class DiscoverCardComponent implements OnInit {
     private updateTvItem(updated: ISearchTvResultV2) {
         this.result.title = updated.title;
         this.result.id = updated.id;
-        this.result.available = updated.fullyAvailable || updated.partlyAvailable;
-        this.result.posterPath = updated.banner;
+        // this.result.available = updated.fullyAvailable || updated.partlyAvailable;
+        // this.result.posterPath = updated.banner;
         this.result.requested = updated.requested;
         this.result.url = updated.imdbId;
         this.result.overview = updated.overview;

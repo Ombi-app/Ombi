@@ -145,6 +145,7 @@ export function JwtTokenGetter() {
         MatCheckboxModule,
         MatProgressSpinnerModule,
         MDBBootstrapModule.forRoot(),
+        // NbThemeModule.forRoot({ name: 'dark'}),
         JwtModule.forRoot({
             config: {
                 tokenGetter: JwtTokenGetter,

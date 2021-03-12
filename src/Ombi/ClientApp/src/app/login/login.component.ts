@@ -73,7 +73,7 @@ export class LoginComponent implements OnDestroy, OnInit {
             });
 
         this.form = this.fb.group({
-            username: [""],
+            username: ["", Validators.required],
             password: [""],
             rememberMe: [false],
         });
@@ -112,7 +112,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     public onSubmit(form: FormGroup) {
         if (form.invalid) {
             this.notify.open(this.errorValidation, "OK", {
-                duration: 3000
+                duration: 300000
             });
             return;
         }
@@ -139,7 +139,7 @@ export class LoginComponent implements OnDestroy, OnInit {
 
                 }, err => {
                 this.notify.open(this.errorBody, "OK", {
-                    duration: 3000
+                    duration: 3000000
                 })
             });
         });

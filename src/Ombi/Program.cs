@@ -293,6 +293,10 @@ namespace Ombi
 
         private static async Task MigrateOldTvDbIds(OmbiContext ctx, GlobalSettings ombiSettingsContent, SettingsContext settingsContext, Api.TheMovieDb.TheMovieDbApi api)
         {
+            if (ombiSettingsContent == null)
+            {
+                return;
+            }
             var ombiSettings = JsonConvert.DeserializeObject<OmbiSettings>(ombiSettingsContent.Content);
             if (ombiSettings.HasMigratedOldTvDbData)
             {

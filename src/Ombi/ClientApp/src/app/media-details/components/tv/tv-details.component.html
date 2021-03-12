@@ -49,18 +49,24 @@
                         <!--Next to poster-->
                         <div class="details-button-container">
                             <div class="col-12 media-row">
-                                <button *ngIf="!tv.fullyAvailable" mat-raised-button class="btn-spacing" color="primary"
+                                <button *ngIf="!tv.fullyAvailable" mat-raised-button id="requestBtn" class="btn-spacing" color="primary"
                                     (click)="request()"><i class="fas fa-plus"></i>
                                     {{ 'Common.Request' | translate }}</button>
 
-                                <button *ngIf="tv.fullyAvailable" mat-raised-button class="btn-spacing" color="accent"
+                                <button *ngIf="tv.fullyAvailable && !tv.partlyAvailable" id="availableBtn" mat-raised-button class="btn-spacing" color="accent"
                                     [disabled]>
                                     <i class="fas fa-check"></i> {{'Common.Available' | translate }}</button>
-                                <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" mat-raised-button
+                                    <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" id="partiallyAvailableBtn" mat-raised-button
                                     class="btn-spacing" color="accent" [disabled]>
                                     <i class="fas fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
 
-                                <button mat-raised-button class="btn-spacing" color="danger" *ngIf="issuesEnabled" (click)="issue()">
+                                    <!-- There are unaired episodes-->
+                                    <button *ngIf="tv.partlyAvailable && tv.fullyAvailable" id="partiallyAvailableBtn" mat-raised-button
+                                        class="btn-spacing" color="accent" [disabled]>
+                                    <i class="fas fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
+                                    <!-- end unaired episodes-->
+
+                                <button mat-raised-button class="btn-spacing" color="danger" id="reportIssueBtn" *ngIf="issuesEnabled" (click)="issue()">
                                     <i class="fas fa-exclamation"></i> {{
                                     'Requests.ReportIssue' | translate }}</button>
 
@@ -102,7 +108,7 @@
                         </div>
 
                         <div class="col-12 col-md-10">
-                            <tv-request-grid [tvRequest]="tvRequest" [isAdmin]="isAdmin" [tv]="tv"></tv-request-grid>
+                            <tv-request-grid id="requests-grid" [tvRequest]="tvRequest" [isAdmin]="isAdmin" [tv]="tv"></tv-request-grid>
                         </div>
 
                         <div class="col-12 col-md-2">
@@ -114,11 +120,11 @@
                             <div class="issuesPanel">
                                 <issues-panel [providerId]="tv.theTvDbId" [isAdmin]="isAdmin"></issues-panel>
                             </div>
-                            <mat-accordion>
+                            <mat-accordion id="requests-panel">
                                 <mat-expansion-panel>
                                     <mat-expansion-panel-header>
                                         <mat-panel-title>
-                                            Requests
+                                            {{'Requests.Title' | translate}}
                                         </mat-panel-title>
                                     </mat-expansion-panel-header>
                                     <tv-requests-panel [tvRequest]="tvRequest" [isAdmin]="isAdmin"></tv-requests-panel>
