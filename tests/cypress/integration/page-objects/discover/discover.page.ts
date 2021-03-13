@@ -1,4 +1,5 @@
 import { BasePage } from "../base.page";
+import { DiscoverCard } from "../shared/DiscoverCard";
 
 class CarouselComponent {
   private type: string;
