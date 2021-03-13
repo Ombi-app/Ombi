@@ -120,7 +120,7 @@ describe("Search Tests", () => {
     card.requestButton.should('exist');
   });
 
-  it.only("Multiple Movie Matches", () => {
+  it("Multiple Movie Matches", () => {
     Page.navbar.searchFilter.applyFilter(false, true, false);
     Page.visit("007");
 
@@ -131,7 +131,7 @@ describe("Search Tests", () => {
     });
   });
 
-  it.only("Multiple Tv Matches", () => {
+  it("Multiple Tv Matches", () => {
     Page.navbar.searchFilter.applyFilter(true, false, false);
     Page.visit("net");
 
@@ -142,7 +142,7 @@ describe("Search Tests", () => {
     });
   });
 
-  it.only("Multiple combined Matches", () => {
+  it("Multiple combined Matches", () => {
     Page.navbar.searchFilter.applyFilter(true, true, false);
     Page.visit("net");
 
