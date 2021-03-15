@@ -73,6 +73,7 @@ namespace Ombi.Core.Models.Search.V2
 
     public class CastViewModel
     {
+        public int Id { get; set; }
         public string Person { get; set; }
         public string Character { get; set; }
         public string Image { get; set; }

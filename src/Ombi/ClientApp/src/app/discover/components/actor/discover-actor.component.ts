@@ -15,7 +15,7 @@ export class DiscoverActorComponent implements AfterViewInit {
     public loadingFlag: boolean;
 
     public discoverResults: IDiscoverCardResult[] = [];
-    
+
     constructor(private searchService: SearchV2Service,
         private route: ActivatedRoute) {
         this.route.params.subscribe((params: any) => {

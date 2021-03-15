@@ -65,6 +65,7 @@ export class TvRequestGridComponent {
             this.notificationService.send(
                 `Request for ${this.tv.title} has been added successfully`);
 
+                    debugger;
             this.selection.clear();
 
             if (this.tv.firstSeason) {
@@ -81,7 +82,7 @@ export class TvRequestGridComponent {
                     });
                 });
             }
-            if (this.requestLatestSeason) {
+            if (this.tv.latestSeason) {
                 this.tv.seasonRequests[this.tv.seasonRequests.length - 1].episodes.forEach(ep => {
                     ep.requested = true;
                     ep.requestStatus = "Common.PendingApproval";

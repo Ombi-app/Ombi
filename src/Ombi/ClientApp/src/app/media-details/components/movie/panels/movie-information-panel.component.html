@@ -2,16 +2,16 @@
     <div class="rating medium-font">
         <span *ngIf="movie.voteAverage"
             matTooltip="{{'MediaDetails.Votes' | translate }}  {{movie.voteCount | thousandShort: 1}}">
-            <img class="rating-small" src="{{baseUrl}}/images/tmdb-logo.svg"> {{movie.voteAverage | number:'1.0-1'}}/10
+            <img class="rating-small" src="{{baseUrl}}images/tmdb-logo.svg"> {{movie.voteAverage | number:'1.0-1'}}/10
         </span>
         <span *ngIf="ratings?.critics_rating && ratings?.critics_score">
             <img class="rating-small"
-                src="{{baseUrl}}/images/{{ratings.critics_rating === 'Rotten' ? 'rotten-rotten.svg' : 'rotten-fresh.svg'}}">
+                src="{{baseUrl}}images/{{ratings.critics_rating === 'Rotten' ? 'rotten-rotten.svg' : 'rotten-fresh.svg'}}">
             {{ratings.critics_score}}%
         </span>
         <span *ngIf="ratings?.audience_rating && ratings?.audience_score">
             <img class="rating-small"
-                src="{{baseUrl}}/images/{{ratings.audience_rating === 'Upright' ? 'rotten-audience-fresh.svg' : 'rotten-audience-rotten.svg'}}">
+                src="{{baseUrl}}images/{{ratings.audience_rating === 'Upright' ? 'rotten-audience-fresh.svg' : 'rotten-audience-rotten.svg'}}">
             {{ratings.audience_score}}%
         </span>
     </div>

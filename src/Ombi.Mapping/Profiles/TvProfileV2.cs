@@ -97,16 +97,17 @@ namespace Ombi.Mapping.Profiles
             //    .ForMember(dest => dest.Medium, opts => opts.MapFrom(src => src.medium.ToHttpsUrl()))
             //    .ForMember(dest => dest.Original, opts => opts.MapFrom(src => src.original.ToHttpsUrl()));
 
-            CreateMap<Api.TvMaze.Models.V2.Cast, CastViewModel>()
-                .ForMember(dest => dest.Character, opts => opts.MapFrom(src => src.character))
-                .ForMember(dest => dest.Person, opts => opts.MapFrom(src => src.person))
-                .ForMember(dest => dest.Voice, opts => opts.MapFrom(src => src.voice))
-                .ForMember(dest => dest.Self, opts => opts.MapFrom(src => src.self));
+            //CreateMap<Api.TvMaze.Models.V2.Cast, CastViewModel>()
+            //    .ForMember(dest => dest.Character, opts => opts.MapFrom(src => src.character))
+            //    .ForMember(dest => dest.Person, opts => opts.MapFrom(src => src.person))
+            //    .ForMember(dest => dest.Voice, opts => opts.MapFrom(src => src.voice))
+            //    .ForMember(dest => dest.Self, opts => opts.MapFrom(src => src.self));
 
             CreateMap<FullMovieCast, CastViewModel>()
     .ForMember(dest => dest.Character, opts => opts.MapFrom(src => src.character))
     .ForMember(dest => dest.Person, opts => opts.MapFrom(src => src.name))
-    .ForMember(dest => dest.Image, opts => opts.MapFrom(src => src.profile_path));
+    .ForMember(dest => dest.Image, opts => opts.MapFrom(src => src.profile_path))
+    .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.id));
 
             CreateMap<Api.TvMaze.Models.V2.Person, PersonViewModel>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.id))

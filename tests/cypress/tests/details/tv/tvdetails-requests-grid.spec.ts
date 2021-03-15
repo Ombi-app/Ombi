@@ -129,7 +129,7 @@ describe("TV Requests Grid", function () {
     cy.verifyNotification('You need to select some episodes!');
   });
 
-  it("Request single episodes", () => {
+  it.only("Request single episodes", () => {
     Page.visit('1399');
 
     Page.requestPanel.seasonTab(2).click();
@@ -142,6 +142,12 @@ describe("TV Requests Grid", function () {
     Page.requestPanel.getEpisodeStatus(2,1)
       .should('contain.text', 'Pending Approval')
       .should('have.class', 'requested')
+
+    Page.requestPanel.getEpisodeStatus(2).each((element) => {
+      if (element.attr('data-test') !== 'episodeStatus21') {
+        expect(element.hasClass("requested")).to.be.false;
+      }
+    });
   });
 
 
