@@ -1,0 +1,9 @@
+# Add 'test' label to any change to *.spec.js files within the source dir
+automation:
+  - tests/**/*
+
+frontend:
+- any: ['src/Ombi/ClientApp/**/*']
+
+backend:
+- any: ['src/**/*.cs']
