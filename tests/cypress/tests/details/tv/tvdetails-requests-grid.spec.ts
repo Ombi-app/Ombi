@@ -129,7 +129,7 @@ describe("TV Requests Grid", function () {
     cy.verifyNotification('You need to select some episodes!');
   });
 
-  it.only("Request single episodes", () => {
+  it("Request single episodes", () => {
     Page.visit('1399');
 
     Page.requestPanel.seasonTab(2).click();

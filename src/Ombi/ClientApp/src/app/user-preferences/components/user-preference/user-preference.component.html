@@ -10,8 +10,8 @@
         <br>
         <mat-form-field>
           <mat-label [translate]="'UserPreferences.OmbiLanguage'"></mat-label>
-          <mat-select [(value)]="selectedLang" (selectionChange)="languageSelected();">
-            <mat-option *ngFor="let lang of availableLanguages" [value]="lang.value">
+          <mat-select id="langSelect" [(value)]="selectedLang" (selectionChange)="languageSelected();">
+            <mat-option id="langSelect{{lang.value}}" *ngFor="let lang of availableLanguages" [value]="lang.value">
               {{lang.display}}
             </mat-option>
           </mat-select>
@@ -24,7 +24,8 @@
     <div class="col-1"></div>
     <div class="col-7">
       <mat-label [translate]="'UserPreferences.MobileQRCode'"></mat-label>
-      <qrcode *ngIf="qrCodeEnabled" [qrdata]="qrCode" [size]="256" [level]="'L'"></qrcode>
+      <div id="noQrCode" *ngIf="!qrCodeEnabled" [translate]="'UserPreferences.NoQrCode'"></div>
+      <qrcode id="qrCode" *ngIf="qrCodeEnabled" [qrdata]="qrCode" [size]="256" [level]="'L'"></qrcode>
       <button mat-raised-button (click)="openMobileApp($event)" *ngIf="customizationSettings.applicationUrl"> {{
         'UserPreferences.LegacyApp' | translate }}</button>
     </div>
@@ -35,8 +36,8 @@
         <br>
         <mat-form-field>
           <mat-label [translate]="'UserPreferences.StreamingCountry'"></mat-label>
-          <mat-select [(value)]="selectedCountry" (selectionChange)="countrySelected();">
-            <mat-option *ngFor="let value of countries" [value]="value">
+          <mat-select id="streamingSelect" [(value)]="selectedCountry" (selectionChange)="countrySelected();">
+            <mat-option id="streamingSelect{{value}}" *ngFor="let value of countries" [value]="value">
               {{value}}
             </mat-option>
           </mat-select>

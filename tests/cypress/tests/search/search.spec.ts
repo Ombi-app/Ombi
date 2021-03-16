@@ -1,5 +1,4 @@
 import { searchPage as Page } from "@/integration/page-objects";
-import { verify } from "cypress/types/sinon";
 
 describe("Search Tests", () => {
   beforeEach(() => {
@@ -147,6 +146,19 @@ describe("Search Tests", () => {
     Page.visit("net");
 
     cy.wait('@searchResponse');
+
+    Page.searchResultsContainer.invoke('attr', 'search-count').then((x: string) => {
+      expect(+x).to.be.greaterThan(0);
+    });
+  });
+
+  it("Searching via the search bar", () => {
+    Page.navbar.searchFilter.applyFilter(true, true, false);
+    Page.visit(" ");
+
+    cy.wait('@searchResponse');
+
+    Page.navbar.searchBar.searchInput.type('007');
 
     Page.searchResultsContainer.invoke('attr', 'search-count').then((x: string) => {
       expect(+x).to.be.greaterThan(0);

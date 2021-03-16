@@ -313,6 +313,7 @@
         "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
         "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
         "MobileQRCode":"Mobile QR Code",
-        "LegacyApp":"Launch Legacy App"
+        "LegacyApp":"Launch Legacy App",
+        "NoQrCode":"Please contact your administrator to enable QR codes"
     }
 }
