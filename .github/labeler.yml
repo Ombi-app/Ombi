@@ -1,8 +1,5 @@
-automation:
-  - any: ['tests/**/*]
+automation: tests/**/*
 
-frontend:
-- any: ['src/Ombi/ClientApp/**/*']
+frontend: src/Ombi/ClientApp/**/*
 
-backend:
-- any: ['src/**/*.cs']
+backend: src/**/*.cs
