@@ -53,7 +53,7 @@ namespace Ombi.Core.Engine.V2
         {
             var show = await Cache.GetOrAdd(nameof(GetShowInformation) + tvdbid,
               async () => await _movieApi.GetTVInfo(tvdbid), DateTime.Now.AddHours(12));
-            if (show == null)
+            if (show == null || show.name == null)
             {
                 // We don't have enough information
                 return null;
