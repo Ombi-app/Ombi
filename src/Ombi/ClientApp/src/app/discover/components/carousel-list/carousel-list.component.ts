@@ -10,6 +10,7 @@ export enum DiscoverType {
     Upcoming,
     Trending,
     Popular,
+    RecentlyRequested,
 }
 
 @Component({
@@ -216,6 +217,8 @@ export class CarouselListComponent implements OnInit {
             case DiscoverType.Upcoming:
                 this.movies = await this.searchService.upcomingMoviesByPage(this.currentlyLoaded, this.amountToLoad);
                 break
+            case DiscoverType.RecentlyRequested:
+                this.movies = await this.searchService.recentlyRequestedMoviesByPage(this.currentlyLoaded, this.amountToLoad);
         }
         this.currentlyLoaded += this.amountToLoad;
     }

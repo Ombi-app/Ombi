@@ -4,6 +4,7 @@ using AutoMapper;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Models.Search.V2;
+using Ombi.Store.Entities.Requests;
 using Ombi.TheMovieDbApi.Models;
 using Keywords = Ombi.Core.Models.Search.V2.Keywords;
 using KeywordsValue = Ombi.Api.TheMovieDb.Models.KeywordsValue;
@@ -76,6 +77,7 @@ namespace Ombi.Mapping.Profiles
             CreateMap<TheMovieDbApi.Models.Genre, GenreDto>();
 
             CreateMap<MovieDbSearchResult, SearchMovieViewModel>().ReverseMap();
+
             CreateMap<MovieResponseDto, SearchMovieViewModel>().ReverseMap();
 
             CreateMap<FullMovieInfo, SearchMovieViewModel>().ReverseMap();
