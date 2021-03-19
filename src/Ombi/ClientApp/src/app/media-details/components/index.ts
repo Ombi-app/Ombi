@@ -45,15 +45,6 @@ export const components: any[] = [
     TvRequestGridComponent,
 ];
 
-export const entryComponents: any[] = [
-    YoutubeTrailerComponent,
-    DenyDialogComponent,
-    MovieAdvancedOptionsComponent,
-    TvAdvancedOptionsComponent,
-    NewIssueComponent,
-    RequestBehalfComponent,
-];
-
 export const providers: any[] = [
     SearchService,
     RequestService,

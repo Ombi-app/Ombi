@@ -132,7 +132,7 @@ describe("Discover Cards Tests", () => {
       card.verifyTitle(title);
       card.topLevelCard.realHover();
 
-      card.requestButton.should("not.be.visible");
+      card.requestButton.should("not.exist");
       card.availabilityText.should('have.text','Available');
       card.statusClass.should('have.class','available');
     });
@@ -165,7 +165,7 @@ describe("Discover Cards Tests", () => {
 
       card.topLevelCard.realHover();
 
-      card.requestButton.should("not.be.visible");
+      card.requestButton.should("not.exist");
       card.availabilityText.should('have.text','Pending');
       card.statusClass.should('have.class','requested');
     });
