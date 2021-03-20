@@ -5,18 +5,6 @@
 
         <mat-toolbar class="application-name" id="nav-applicationName">{{applicationName}}</mat-toolbar>
 
-        <div class="outer-profile">
-            <div class="profile-img-container">
-                <div class="profile-img">
-                    <img id="profile-image"
-                        src="https://www.gravatar.com/avatar/{{emailHash}}?d={{applicationLogo ? applicationLogo : 'https://raw.githubusercontent.com/Ombi-app/Ombi/gh-pages/img/android-chrome-512x512.png'}}" />
-                </div>
-                <div class="profile-info">
-                    <h3 id="profile-username">{{username}}</h3>
-                    <p>{{welcomeText | translate}}</p>
-                </div>
-            </div>
-        </div>
         <mat-nav-list>
             <span *ngFor="let nav of navItems">
 
@@ -73,7 +61,7 @@
                     </div>
                 </span>
             </div>
-            <div class="col-2 top-filter">
+            <div class="col-1 top-filter">
                 <button id="search-filter" mat-icon-button [matMenuTriggerFor]="filterMenu">
                     <i class="fa-lg fas fa-filter"></i>
                 </button>
@@ -91,6 +79,11 @@
                         (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.People)">
                         {{ 'NavigationBar.Filter.People' | translate}}</mat-slide-toggle> -->
                 </mat-menu>
+            </div>
+            <div class="col-1">
+                <a routerLink="/user-preferences">
+                <img [matTooltip]="username" class="profile-img"  [src]="getUserImage()" />
+            </a>
             </div>
 
         </mat-toolbar>

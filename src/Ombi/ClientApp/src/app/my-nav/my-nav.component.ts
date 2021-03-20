@@ -8,8 +8,9 @@ import { SettingsService, SettingsStateService } from '../services';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { SearchFilter } from './SearchFilter';
 import { Md5 } from 'ts-md5/dist/md5';
-import { RequestType } from '../interfaces';
+import { IUser, RequestType, UserType } from '../interfaces';
 import { FilterService } from '../discover/services/filter-service';
+import { ILocalUser } from '../auth/IUserLogin';
 
 export enum SearchFilterType {
   Movie = 1,
@@ -62,7 +63,6 @@ export class MyNavComponent implements OnInit {
       tvShows: true
     }
 
-    this.setWelcomeText();
     if (this.email) {
       const md5 = new Md5();
       this.emailHash = md5.appendStr(this.email).end();
@@ -92,8 +92,7 @@ export class MyNavComponent implements OnInit {
       { id: "nav-userDonate", name: "NavigationBar.Donate", icon: "fas fa-dollar-sign", link: customizationSettings.customDonationUrl, externalLink: true, requiresAdmin: false, enabled: customizationSettings.enableCustomDonations, toolTip: true, toolTipMessage: customizationSettings.customDonationMessage },
       { id: "nav-featureSuggestion", name: "NavigationBar.FeatureSuggestion", icon: "far fa-lightbulb", link: "https://features.ombi.io/", externalLink: true, requiresAdmin: true, enabled: true, toolTip: true, toolTipMessage: 'NavigationBar.FeatureSuggestionTooltip'},
       { id: "nav-settings", name: "NavigationBar.Settings", icon: "fas fa-cogs", link: "/Settings/About", requiresAdmin: true, enabled: true },
-      { id: "nav-userPreferences", name: "NavigationBar.UserPreferences", icon: "fas fa-user", link: "/user-preferences", requiresAdmin: false, enabled: true },
-    ];
+      ];
   }
 
   public logOut() {
@@ -119,18 +118,8 @@ export class MyNavComponent implements OnInit {
     this.store.save("searchFilter", JSON.stringify(this.searchFilter));
   }
 
-  private setWelcomeText() {
-    var d = new Date();
-    var hour = d.getHours();
-
-    if (hour >= 0 && hour < 12) {
-      this.welcomeText = 'NavigationBar.MorningWelcome';
-    }
-    if (hour >= 12 && hour < 18) {
-      this.welcomeText = 'NavigationBar.AfternoonWelcome';
-    }
-    if (hour >= 18 && hour < 24) {
-      this.welcomeText = 'NavigationBar.EveningWelcome';
-    }
+  public getUserImage(): string {
+    var fallback = this.applicationLogo ? this.applicationLogo : 'https://raw.githubusercontent.com/Ombi-app/Ombi/gh-pages/img/android-chrome-512x512.png';
+    return `https://www.gravatar.com/avatar/${this.emailHash}?d=${fallback}`;
   }
 }
