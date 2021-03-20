@@ -53,6 +53,11 @@
         {{request.requestedDate | date}}
     </div>
 
+    <div *ngIf="request && request.denied">
+        <span class="label">{{'Requests.DeniedReason' | translate }}: </span>
+        <span id="deniedReasonInfo">{{request.deniedReason}}</span>
+    </div>
+
 
     <div *ngIf="movie.quality">
         <span class="label">{{'MediaDetails.Quality' | translate }}:</span>

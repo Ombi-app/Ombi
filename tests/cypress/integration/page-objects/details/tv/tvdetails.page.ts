@@ -1,10 +1,5 @@
 import { BasePage } from "../../base.page";
 
-class BaseMediaPage extends BasePage {
-    get title(): Cypress.Chainable<any> {
-        return cy.get('#mediaTitle');
-    }
-}
 class TvRequestPanel {
 
     seasonTab(seasonNumber: number): Cypress.Chainable<any> {
@@ -61,8 +56,11 @@ class TvDetailsInformationPanel {
     }
 }
 
-class TvDetailsPage extends BaseMediaPage {
+class TvDetailsPage extends BasePage {
 
+    get title(): Cypress.Chainable<any> {
+        return cy.get('#mediaTitle');
+    }
 
     get availableButton(): Cypress.Chainable<any> {
         return cy.get('#availableBtn');
