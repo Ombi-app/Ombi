@@ -27,16 +27,14 @@
                         matTooltip="{{nav.toolTipMessage | translate}}" matTooltipPosition="right"
                         [routerLinkActive]="'active-list-item'">
 
-                        <mat-icon *ngIf="nav.icon" aria-label="Side nav toggle icon" [style]="nav.style">{{nav.icon}}
-                        </mat-icon>
-                        <i *ngIf="nav.faIcon" class="far fa-lg {{nav.faIcon}}"
+                        <i *ngIf="nav.icon" class="fa-lg {{nav.icon}}"
                             style="padding-left: 5px; padding-right: 5px;" aria-hidden="true"></i>
                         &nbsp;{{nav.name | translate}}
                     </a>
                     <a id="{{nav.id}}" *ngIf="!nav.externalLink" mat-list-item [routerLink]="nav.link" [style]="nav.color"
                         [routerLinkActive]="'active-list-item'">
 
-                        <mat-icon aria-label="Side nav toggle icon">{{nav.icon}}</mat-icon>
+                        <i class="fa-lg {{nav.icon}}"></i>
                         &nbsp;{{nav.name | translate}}
                     </a>
                 </div>
@@ -44,7 +42,7 @@
 
             <a id="nav-logout" mat-list-item [routerLinkActive]="'active-list-item'"
                 aria-label="Toggle sidenav" (click)="logOut();">
-                <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
+                <i class="fa-lg fas fa-sign-out-alt"></i>
                 &nbsp;{{ 'NavigationBar.Logout' | translate }}
             </a>
 
@@ -64,7 +62,7 @@
         <mat-toolbar color="primary" class="top-bar-container">
             <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
                 *ngIf="isHandset$ | async">
-                <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+                <i class="fa-lg fas fa-bars"></i>
             </button>
 
             <div class="col-8 col-lg-10 top-search-bar">
@@ -77,7 +75,7 @@
             </div>
             <div class="col-2 top-filter">
                 <button id="search-filter" mat-icon-button [matMenuTriggerFor]="filterMenu">
-                    <mat-icon>filter_alt</mat-icon>
+                    <i class="fa-lg fas fa-filter"></i>
                 </button>
                 <mat-menu #filterMenu="matMenu" yPosition="below" class="smaller-panel">
                     <mat-slide-toggle id="filterMovies" class="mat-menu-item slide-menu" [checked]="searchFilter.movies"
