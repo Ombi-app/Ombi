@@ -34,9 +34,6 @@ const routes: Routes = [
     exports: [
         RouterModule,
     ],
-    entryComponents: [
-        ...fromComponents.entryComponents
-    ],
     providers: [
         ...fromComponents.providers
         ],

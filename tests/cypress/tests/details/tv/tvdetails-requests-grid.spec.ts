@@ -6,7 +6,7 @@ describe("TV Requests Grid", function () {
   });
 
   it("Season not available", () => {
-    Page.visit('121361');
+    Page.visit('1399');
 
     Page.requestPanel.seasonTab(1)
       .should("not.have.class", "available")
@@ -20,7 +20,7 @@ describe("TV Requests Grid", function () {
   });
 
   it("Season is requested", () => {
-    cy.intercept("GET", "**/v2/search/Tv/121361", (req) => {
+    cy.intercept("GET", "**/v2/search/Tv/1399", (req) => {
       req.reply((res) => {
         const body = res.body;
         const requests = body.seasonRequests[0].episodes;
@@ -34,7 +34,7 @@ describe("TV Requests Grid", function () {
       });
     }).as("detailsResponse");
 
-    Page.visit('121361');
+    Page.visit('1399');
 
     cy.wait("@detailsResponse");
 
@@ -54,7 +54,7 @@ describe("TV Requests Grid", function () {
   });
 
   it("Season is approved", () => {
-    cy.intercept("GET", "**/v2/search/Tv/121361", (req) => {
+    cy.intercept("GET", "**/v2/search/Tv/1399", (req) => {
       req.reply((res) => {
         const body = res.body;
         const requests = body.seasonRequests[0].episodes;
@@ -68,7 +68,7 @@ describe("TV Requests Grid", function () {
       });
     }).as("detailsResponse");
 
-    Page.visit('121361');
+    Page.visit('1399');
 
     cy.wait("@detailsResponse");
 
@@ -88,7 +88,7 @@ describe("TV Requests Grid", function () {
   });
 
   it("Season is available", () => {
-    cy.intercept("GET", "**/v2/search/Tv/121361", (req) => {
+    cy.intercept("GET", "**/v2/search/Tv/1399", (req) => {
       req.reply((res) => {
         const body = res.body;
         const requests = body.seasonRequests[0].episodes;
@@ -101,7 +101,7 @@ describe("TV Requests Grid", function () {
       });
     }).as("detailsResponse");
 
-    Page.visit('121361');
+    Page.visit('1399');
 
     cy.wait("@detailsResponse");
 
@@ -121,7 +121,7 @@ describe("TV Requests Grid", function () {
   });
 
   it("Request no episodes", () => {
-    Page.visit('121361');
+    Page.visit('1399');
 
     Page.requestFabButton.fab.click();
     Page.requestFabButton.requestSelected.click();
@@ -130,7 +130,7 @@ describe("TV Requests Grid", function () {
   });
 
   it("Request single episodes", () => {
-    Page.visit('121361');
+    Page.visit('1399');
 
     Page.requestPanel.seasonTab(2).click();
     Page.requestPanel.getEpisodeSeasonCheckbox(2,1).click();
@@ -142,11 +142,17 @@ describe("TV Requests Grid", function () {
     Page.requestPanel.getEpisodeStatus(2,1)
       .should('contain.text', 'Pending Approval')
       .should('have.class', 'requested')
+
+    Page.requestPanel.getEpisodeStatus(2).each((element) => {
+      if (element.attr('data-test') !== 'episodeStatus21') {
+        expect(element.hasClass("requested")).to.be.false;
+      }
+    });
   });
 
 
   it("Request First Season", () => {
-    Page.visit('121361');
+    Page.visit('1399');
 
     Page.requestFabButton.fab.click();
     Page.requestFabButton.requestFirst.click();
@@ -159,7 +165,7 @@ describe("TV Requests Grid", function () {
   });
 
   it("Request Latest Season", () => {
-    Page.visit('121361');
+    Page.visit('1399');
 
     Page.requestFabButton.fab.click();
     Page.requestFabButton.requestLatest.click();

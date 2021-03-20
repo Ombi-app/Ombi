@@ -56,7 +56,11 @@ class WizardPage extends BasePage {
         this.ombiConfigTab = new OmbiConfigTab();
     }
 
-    visit(options?: Cypress.VisitOptions): Cypress.Chainable<Cypress.AUTWindow> {
+    visit(options: Cypress.VisitOptions): Cypress.Chainable<Cypress.AUTWindow>;
+    visit(): Cypress.Chainable<Cypress.AUTWindow>;
+    visit(id: string): Cypress.Chainable<Cypress.AUTWindow>;
+    visit(id: string, options: Cypress.VisitOptions): Cypress.Chainable<Cypress.AUTWindow>;
+    visit(id?: any, options?: any) {
         return cy.visit(`/`, options);
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Ombi.Api.TheMovieDb.Models
 {
-    public class MovieSearchResult
+    public class MovieDbSearchResult
     {
         public string PosterPath { get; set; }
         public bool Adult { get; set; }

@@ -1,11 +1,12 @@
 import { Component, Input } from "@angular/core";
-import { IChildRequests, IEpisodesRequests, INewSeasonRequests, ISeasonsViewModel, ITvRequestViewModel, RequestType } from "../../../../../interfaces";
+import { IChildRequests, IEpisodesRequests, INewSeasonRequests, ISeasonsViewModel, ITvRequestViewModelV2, RequestType } from "../../../../../interfaces";
 import { RequestService } from "../../../../../services/request.service";
 import { MessageService } from "../../../../../services";
 import { DenyDialogComponent } from "../../../shared/deny-dialog/deny-dialog.component";
 import { ISearchTvResultV2 } from "../../../../../interfaces/ISearchTvResultV2";
 import { MatDialog } from "@angular/material/dialog";
 import { SelectionModel } from "@angular/cdk/collections";
+import { RequestServiceV2 } from "../../../../../services/requestV2.service";
 
 @Component({
     templateUrl: "./tv-request-grid.component.html",
@@ -24,7 +25,7 @@ export class TvRequestGridComponent {
 
     public displayedColumns: string[] = ['select', 'number', 'title', 'airDate', 'status'];
 
-    constructor(private requestService: RequestService, private notificationService: MessageService,
+    constructor(private requestService: RequestService, private requestServiceV2: RequestServiceV2, private notificationService: MessageService,
         private dialog: MatDialog) {
 
     }
@@ -39,8 +40,8 @@ export class TvRequestGridComponent {
 
         this.tv.requested = true;
 
-        const viewModel = <ITvRequestViewModel>{
-            firstSeason: this.tv.firstSeason, latestSeason: this.tv.latestSeason, requestAll: this.tv.requestAll, tvDbId: this.tv.id,
+        const viewModel = <ITvRequestViewModelV2>{
+            firstSeason: this.tv.firstSeason, latestSeason: this.tv.latestSeason, requestAll: this.tv.requestAll, theMovieDbId: this.tv.id,
             requestOnBehalf: null
         };
         viewModel.seasons = [];
@@ -58,12 +59,13 @@ export class TvRequestGridComponent {
             viewModel.seasons.push(seasonsViewModel);
         });
 
-        const requestResult = await this.requestService.requestTv(viewModel).toPromise();
+        const requestResult = await this.requestServiceV2.requestTv(viewModel).toPromise();
 
         if (requestResult.result) {
             this.notificationService.send(
                 `Request for ${this.tv.title} has been added successfully`);
 
+                    debugger;
             this.selection.clear();
 
             if (this.tv.firstSeason) {
@@ -80,7 +82,7 @@ export class TvRequestGridComponent {
                     });
                 });
             }
-            if (this.requestLatestSeason) {
+            if (this.tv.latestSeason) {
                 this.tv.seasonRequests[this.tv.seasonRequests.length - 1].episodes.forEach(ep => {
                     ep.requested = true;
                     ep.requestStatus = "Common.PendingApproval";

@@ -1,10 +1,10 @@
 <h1 mat-dialog-title>{{ 'Requests.DenyReason' | translate}}</h1>
 <div mat-dialog-content>
   <mat-form-field>
-    <input matInput [(ngModel)]="denyReason">
+    <input id="denyInput" matInput [(ngModel)]="denyReason">
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-raised-button (click)="onNoClick()"  [mat-dialog-close]="data.denied">Cancel</button>
-  <button mat-raised-button (click)="deny()" color="danger"  [mat-dialog-close]="data.denied" cdkFocusInitial>Deny</button>
+  <button mat-raised-button (click)="onNoClick()"  [mat-dialog-close]="data.denied">{{ 'Common.Cancel' | translate }}</button>
+  <button mat-raised-button id="denyButton" (click)="deny()" color="danger"  [mat-dialog-close]="data.denied" cdkFocusInitial>{{ 'Requests.Deny' | translate}}</button>
 </div>

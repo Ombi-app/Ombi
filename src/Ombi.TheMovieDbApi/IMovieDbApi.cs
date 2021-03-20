@@ -10,16 +10,20 @@ namespace Ombi.Api.TheMovieDb
     {
         Task<MovieResponseDto> GetMovieInformation(int movieId);
         Task<MovieResponseDto> GetMovieInformationWithExtraInfo(int movieId, string langCode = "en");
-        Task<List<MovieSearchResult>> NowPlaying(string languageCode, int? page = null);
-        Task<List<MovieSearchResult>> PopularMovies(string languageCode, int? page = null, CancellationToken cancellationToken = default(CancellationToken));
-        Task<List<MovieSearchResult>> SearchMovie(string searchTerm, int? year, string languageCode);
+        Task<List<MovieDbSearchResult>> NowPlaying(string languageCode, int? page = null);
+        Task<List<MovieDbSearchResult>> PopularMovies(string languageCode, int? page = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<List<MovieDbSearchResult>> PopularTv(string langCode, int? page = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<List<MovieDbSearchResult>> SearchMovie(string searchTerm, int? year, string languageCode);
         Task<List<TvSearchResult>> SearchTv(string searchTerm, string year = default);
-        Task<List<MovieSearchResult>> TopRated(string languageCode, int? page = null);
-        Task<List<MovieSearchResult>> Upcoming(string languageCode, int? page = null);
-        Task<List<MovieSearchResult>> SimilarMovies(int movieId, string langCode);
+        Task<List<MovieDbSearchResult>> TopRated(string languageCode, int? page = null);
+        Task<List<MovieDbSearchResult>> Upcoming(string languageCode, int? page = null);
+        Task<List<MovieDbSearchResult>> TopRatedTv(string languageCode, int? page = null);
+        Task<List<MovieDbSearchResult>> UpcomingTv(string languageCode, int? page = null);
+        Task<List<MovieDbSearchResult>> SimilarMovies(int movieId, string langCode);
         Task<FindResult> Find(string externalId, ExternalSource source);
-        Task<TvExternals> GetTvExternals(int theMovieDbId);
-        Task<TvInfo> GetTVInfo(string themoviedbid);
+        Task<TvExternals> GetTvExternals(int theMovieDbId); 
+        Task<SeasonDetails> GetSeasonEpisodes(int theMovieDbId, int seasonNumber, CancellationToken token, string langCode = "en");
+        Task<TvInfo> GetTVInfo(string themoviedbid, string langCode = "en");
         Task<TheMovieDbContainer<ActorResult>> SearchByActor(string searchTerm, string langCode);
         Task<ActorCredits> GetActorMovieCredits(int actorId, string langCode);
         Task<TheMovieDbContainer<MultiSearch>> MultiSearch(string searchTerm, string languageCode, CancellationToken cancellationToken);

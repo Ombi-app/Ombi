@@ -29,7 +29,8 @@ export class DiscoverCardComponent implements OnInit {
 
     public ngOnInit() {
         if (this.result.type == RequestType.tvShow) {
-            this.getExtraTvInfo();
+            this.fullyLoaded = true;
+            // this.getExtraTvInfo();
         }
         if (this.result.type == RequestType.movie) {
             this.getExtraMovieInfo();
@@ -44,15 +45,15 @@ export class DiscoverCardComponent implements OnInit {
     }
 
     public async getExtraTvInfo() {
-        if (this.result.tvMovieDb) {
+        // if (this.result.tvMovieDb) {
             this.tvSearchResult = await this.searchService.getTvInfoWithMovieDbId(+this.result.id);
-        } else {
-            this.tvSearchResult = await this.searchService.getTvInfo(+this.result.id);
-        }
-        if (!this.tvSearchResult || this.tvSearchResult?.status.length > 0 && this.tvSearchResult?.status === "404") {
-            this.hide = true;
-            return;
-        }
+        // } else {
+        //     this.tvSearchResult = await this.searchService.getTvInfo(+this.result.id);
+        // }
+        // if (!this.tvSearchResult || this.tvSearchResult?.status.length > 0 && this.tvSearchResult?.status === "404") {
+        //     this.hide = true;
+        //     return;
+        // }
 
         this.setTvDefaults(this.tvSearchResult);
         this.updateTvItem(this.tvSearchResult);
@@ -172,8 +173,8 @@ export class DiscoverCardComponent implements OnInit {
     private updateTvItem(updated: ISearchTvResultV2) {
         this.result.title = updated.title;
         this.result.id = updated.id;
-        this.result.available = updated.fullyAvailable || updated.partlyAvailable;
-        this.result.posterPath = updated.banner;
+        // this.result.available = updated.fullyAvailable || updated.partlyAvailable;
+        // this.result.posterPath = updated.banner;
         this.result.requested = updated.requested;
         this.result.url = updated.imdbId;
         this.result.overview = updated.overview;

@@ -83,16 +83,16 @@ export class MyNavComponent implements OnInit {
       this.filterService.changeFilter(this.searchFilter);
     }
     this.navItems = [
-      { name: "NavigationBar.Discover", icon: "find_replace", link: "/discover", requiresAdmin: false, enabled: true, faIcon: null },
-      { name: "NavigationBar.Requests", icon: "list", link: "/requests-list", requiresAdmin: false, enabled: true, faIcon: null },
-      { name: "NavigationBar.Issues", icon: "notification_important", link: "/issues", requiresAdmin: false, enabled: this.issuesEnabled, faIcon: null },
-      { name: "NavigationBar.UserManagement", icon: "account_circle", link: "/usermanagement", requiresAdmin: true, enabled: true, faIcon: null },
-      // { name: "NavigationBar.Calendar", icon: "calendar_today", link: "/calendar", requiresAdmin: false, enabled: true },
-      { name: "NavigationBar.Donate", icon: "attach_money", link: "https://www.paypal.me/PlexRequestsNet", externalLink: true, requiresAdmin: true, enabled: true, toolTip: true, style: "color:red;", toolTipMessage: 'NavigationBar.DonateTooltip', faIcon: null },
-      { name: "NavigationBar.Donate", icon: "attach_money", link: customizationSettings.customDonationUrl, externalLink: true, requiresAdmin: false, enabled: customizationSettings.enableCustomDonations, toolTip: true, toolTipMessage: customizationSettings.customDonationMessage, faIcon: null },
-      { name: "NavigationBar.FeatureSuggestion", icon: null, link: "https://features.ombi.io/", externalLink: true, requiresAdmin: true, enabled: true, toolTip: true, toolTipMessage: 'NavigationBar.FeatureSuggestionTooltip', faIcon: "fa-lightbulb" },
-      { name: "NavigationBar.Settings", icon: "settings", link: "/Settings/About", requiresAdmin: true, enabled: true, faIcon: null },
-      { name: "NavigationBar.UserPreferences", icon: "person", link: "/user-preferences", requiresAdmin: false, enabled: true, faIcon: null },
+      { id: "nav-discover", name: "NavigationBar.Discover", icon: "find_replace", link: "/discover", requiresAdmin: false, enabled: true, faIcon: null },
+      { id: "nav-requests", name: "NavigationBar.Requests", icon: "list", link: "/requests-list", requiresAdmin: false, enabled: true, faIcon: null },
+      { id: "nav-issues", name: "NavigationBar.Issues", icon: "notification_important", link: "/issues", requiresAdmin: false, enabled: this.issuesEnabled, faIcon: null },
+      { id: "nav-userManagement", name: "NavigationBar.UserManagement", icon: "account_circle", link: "/usermanagement", requiresAdmin: true, enabled: true, faIcon: null },
+      //id: "",  { name: "NavigationBar.Calendar", icon: "calendar_today", link: "/calendar", requiresAdmin: false, enabled: true },
+      { id: "nav-adminDonate", name: "NavigationBar.Donate", icon: "attach_money", link: "https://www.paypal.me/PlexRequestsNet", externalLink: true, requiresAdmin: true, enabled: true, toolTip: true, style: "color:red;", toolTipMessage: 'NavigationBar.DonateTooltip', faIcon: null },
+      { id: "nav-userDonate", name: "NavigationBar.Donate", icon: "attach_money", link: customizationSettings.customDonationUrl, externalLink: true, requiresAdmin: false, enabled: customizationSettings.enableCustomDonations, toolTip: true, toolTipMessage: customizationSettings.customDonationMessage, faIcon: null },
+      { id: "nav-featureSuggestion", name: "NavigationBar.FeatureSuggestion", icon: null, link: "https://features.ombi.io/", externalLink: true, requiresAdmin: true, enabled: true, toolTip: true, toolTipMessage: 'NavigationBar.FeatureSuggestionTooltip', faIcon: "fa-lightbulb" },
+      { id: "nav-settings", name: "NavigationBar.Settings", icon: "settings", link: "/Settings/About", requiresAdmin: true, enabled: true, faIcon: null },
+      { id: "nav-userPreferences", name: "NavigationBar.UserPreferences", icon: "person", link: "/user-preferences", requiresAdmin: false, enabled: true, faIcon: null },
     ];
   }
 

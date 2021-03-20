@@ -10,7 +10,7 @@
   "viewportHeight": 1440,
   "retries": {
     "runMode": 2,
-    "openMode": 1
+    "openMode": 0
   },
   "ignoreTestFiles": [
     "**/snapshots/*"

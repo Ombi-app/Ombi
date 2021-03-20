@@ -27,5 +27,6 @@ namespace Ombi.Core.Engine.Interfaces
 
         Task<MovieFullInfoViewModel> GetMovieInfoByImdbId(string imdbId, CancellationToken requestAborted);
         Task<IEnumerable<StreamingData>> GetStreamInformation(int movieDbId, CancellationToken cancellationToken);
+        Task<IEnumerable<SearchMovieViewModel>> RecentlyRequestedMovies(int currentlyLoaded, int toLoad, CancellationToken cancellationToken);
     }
 }

@@ -24,9 +24,6 @@ import * as fromComponents from './components';
     declarations: [
         ...fromComponents.components
     ],
-    entryComponents: [
-        ...fromComponents.entryComponents
-    ],
     exports: [
         RouterModule,
     ],

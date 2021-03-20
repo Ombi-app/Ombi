@@ -23,11 +23,6 @@ export const components: any[] = [
     CarouselListComponent,
 ];
 
-
-export const entryComponents: any[] = [
-    DiscoverCardDetailsComponent
-];
-
 export const providers: any[] = [
     SearchService,
     MatDialog,

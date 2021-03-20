@@ -1,10 +1,10 @@
-import { Component, OnInit, Inject } from "@angular/core";
+import { Component, Inject } from "@angular/core";
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { ISearchTvResultV2 } from "../../interfaces/ISearchTvResultV2";
-import { RequestService, MessageService } from "../../services";
-import { ITvRequestViewModel, ISeasonsViewModel, IEpisodesRequests, INewSeasonRequests } from "../../interfaces";
-import { ThousandShortPipe } from "../../pipes/ThousandShortPipe";
+import { MessageService } from "../../services";
+import { ISeasonsViewModel, IEpisodesRequests, INewSeasonRequests, ITvRequestViewModelV2 } from "../../interfaces";
+import { RequestServiceV2 } from "../../services/requestV2.service";
 
 export interface EpisodeRequestData {
     series: ISearchTvResultV2;
@@ -21,7 +21,7 @@ export class EpisodeRequestComponent {
     }
 
     constructor(public dialogRef: MatDialogRef<EpisodeRequestComponent>, @Inject(MAT_DIALOG_DATA) public data: EpisodeRequestData,
-        private requestService: RequestService, private notificationService: MessageService) { }
+        private requestService: RequestServiceV2, private notificationService: MessageService) { }
 
 
     public async submitRequests() {
@@ -31,7 +31,7 @@ export class EpisodeRequestComponent {
                 return ep.selected;
             });
         });
-        debugger;
+
         if (!selected && !this.data.series.requestAll && !this.data.series.firstSeason && !this.data.series.latestSeason) {
             this.notificationService.send("You need to select some episodes!", "OK");
             return;
@@ -39,8 +39,8 @@ export class EpisodeRequestComponent {
 
         this.data.series.requested = true;
 
-        const viewModel = <ITvRequestViewModel>{
-            firstSeason: this.data.series.firstSeason, latestSeason: this.data.series.latestSeason, requestAll: this.data.series.requestAll, tvDbId: this.data.series.id,
+        const viewModel = <ITvRequestViewModelV2>{
+            firstSeason: this.data.series.firstSeason, latestSeason: this.data.series.latestSeason, requestAll: this.data.series.requestAll, theMovieDbId: this.data.series.id,
             requestOnBehalf: this.data.requestOnBehalf
         };
         viewModel.seasons = [];

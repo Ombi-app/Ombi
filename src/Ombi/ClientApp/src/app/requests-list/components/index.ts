@@ -17,10 +17,6 @@ export const components: any[] = [
     AlbumsGridComponent
 ];
 
-export const entryComponents: any[] = [
-    RequestOptionsComponent
-];
-
 export const providers: any[] = [
     RequestService,
     RequestServiceV2,

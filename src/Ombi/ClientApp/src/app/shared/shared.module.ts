@@ -76,10 +76,6 @@ import { DetailsGroupComponent } from "../issues/components/details-group/detail
     MatStepperModule,
     MatSnackBarModule,
   ],
-  entryComponents: [
-    EpisodeRequestComponent,
-    DetailsGroupComponent,
-  ],
   exports: [
       TranslateModule,
       CommonModule,

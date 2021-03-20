@@ -26,11 +26,11 @@ Cypress.Commands.add('requestMovie', (movieId) => {
 })
 
 Cypress.Commands.add('requestAllTv', (tvId) => {
-    cy.request({
+    return cy.request({
         method: 'POST',
-        url: '/api/v1/request/tv',
+        url: '/api/v2/requests/tv',
         body: {
-            TvDbId: tvId,
+            TheMovieDbId: tvId,
             RequestAll: true
         },
         headers: {

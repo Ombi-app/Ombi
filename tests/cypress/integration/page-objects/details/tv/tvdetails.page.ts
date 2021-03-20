@@ -58,6 +58,10 @@ class TvDetailsInformationPanel {
 
 class TvDetailsPage extends BasePage {
 
+    get title(): Cypress.Chainable<any> {
+        return cy.get('#mediaTitle');
+    }
+
     get availableButton(): Cypress.Chainable<any> {
         return cy.get('#availableBtn');
     }
@@ -83,9 +87,11 @@ class TvDetailsPage extends BasePage {
         super();
     }
 
-    visit(options?: Cypress.VisitOptions): Cypress.Chainable<Cypress.AUTWindow>;
-    visit(id: string, options?: Cypress.VisitOptions): Cypress.Chainable<Cypress.AUTWindow>;
-    visit(id: any, options?: Cypress.VisitOptions): Cypress.Chainable<Cypress.AUTWindow> {
+    visit(options: Cypress.VisitOptions): Cypress.Chainable<Cypress.AUTWindow>;
+    visit(): Cypress.Chainable<Cypress.AUTWindow>;
+    visit(id: string): Cypress.Chainable<Cypress.AUTWindow>;
+    visit(id: string, options: Cypress.VisitOptions): Cypress.Chainable<Cypress.AUTWindow>;
+    visit(id?: any, options?: any) {
         return cy.visit(`/details/tv/` + id, options);
     }
 }

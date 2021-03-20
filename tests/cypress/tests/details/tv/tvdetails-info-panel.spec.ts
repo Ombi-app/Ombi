@@ -6,7 +6,7 @@ describe('TV Details Information Panel',() => {
     });
 
     it('Status should be ended',() => {
-        Page.visit('121361');
+        Page.visit('1399');
         Page.informationPanel.status.contains("Ended")
       });
 
@@ -14,7 +14,7 @@ describe('TV Details Information Panel',() => {
       it('Streaming Data should display',() => {
         cy.intercept("GET", "**/search/stream/tv/**", { fixture: 'details/tv/streamingResponse'}).as("streamingResponse");
 
-        Page.visit('121361');
+        Page.visit('1399');
         cy.wait('@streamingResponse')
 
         Page.informationPanel.getStreaming('Super1').should('be.visible');
@@ -25,7 +25,7 @@ describe('TV Details Information Panel',() => {
     it('Streaming Data should be in correct order',() => {
       cy.intercept("GET", "**/search/stream/tv/**", { fixture: 'details/tv/streamingResponse'}).as("streamingResponse");
 
-      Page.visit('121361');
+      Page.visit('1399');
       cy.wait('@streamingResponse')
 
       cy.get('.stream-small').then((items) => {

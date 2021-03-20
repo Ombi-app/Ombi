@@ -4,7 +4,7 @@ import { Injectable, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ServiceHelpers } from "./service.helpers";
-import { IRequestsViewModel, IMovieRequests, IChildRequests, IMovieAdvancedOptions as IMediaAdvancedOptions, IRequestEngineResult, IAlbumRequest } from "../interfaces";
+import { IRequestsViewModel, IMovieRequests, IChildRequests, IMovieAdvancedOptions as IMediaAdvancedOptions, IRequestEngineResult, IAlbumRequest, ITvRequestViewModelV2 } from "../interfaces";
 
 
 @Injectable()
@@ -87,5 +87,9 @@ export class RequestServiceV2 extends ServiceHelpers {
 
     public getAlbumDeniedRequests(count: number, position: number, sortProperty: string , order: string): Observable<IRequestsViewModel<IAlbumRequest>> {
         return this.http.get<IRequestsViewModel<IAlbumRequest>>(`${this.url}Album/denied/${count}/${position}/${sortProperty}/${order}`, {headers: this.headers});
+    }
+
+    public requestTv(tv: ITvRequestViewModelV2): Observable<IRequestEngineResult> {
+        return this.http.post<IRequestEngineResult>(`${this.url}TV/`, JSON.stringify(tv), {headers: this.headers});
     }
 }

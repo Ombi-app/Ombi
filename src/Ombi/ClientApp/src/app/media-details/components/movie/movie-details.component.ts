@@ -107,10 +107,8 @@ export class MovieDetailsComponent {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            this.movieRequest.denied = result;
-            if (this.movieRequest.denied) {
-                this.movie.approved = false;
-            }
+            this.movieRequest.denied = result.denied;
+            this.movieRequest.deniedReason = result.reason;
         });
     }
 

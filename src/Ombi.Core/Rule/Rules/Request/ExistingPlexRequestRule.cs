@@ -32,8 +32,8 @@ namespace Ombi.Core.Rule.Rules.Request
                 
                 var tvContent = _plexContent.GetAll().Include(x => x.Episodes).Where(x => x.Type == PlexMediaTypeEntity.Show);
                 // We need to do a check on the TVDBId
-                var anyTvDbMatches = await tvContent.FirstOrDefaultAsync(x => x.TvDbId.Length > 0 && x.TvDbId == tvRequest.Id.ToString()); // the Id on the child is the tvdbid at this point
-                if (anyTvDbMatches == null)
+                var anyMovieDbMatches = await tvContent.FirstOrDefaultAsync(x => x.TheMovieDbId.Length > 0 && x.TheMovieDbId == tvRequest.Id.ToString()); 
+                if (anyMovieDbMatches == null)
                 {
                     // So we do not have a TVDB Id, that really sucks.
                     // Let's try and match on the title and year of the show
@@ -50,7 +50,7 @@ namespace Ombi.Core.Rule.Rules.Request
                     return Success();
                 }
                 // looks like we have a match on the TVDbID
-                return CheckExistingContent(tvRequest, anyTvDbMatches);
+                return CheckExistingContent(tvRequest, anyMovieDbMatches);
             }
             return Success();
         }

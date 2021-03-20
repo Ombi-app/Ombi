@@ -7,7 +7,7 @@ describe("TV Details Buttons", () => {
 
   it("Fully Available Request", () => {
 
-    cy.intercept("GET", "**/v2/search/Tv/121361", (req) => {
+    cy.intercept("GET", "**/v2/search/Tv/1399", (req) => {
       req.reply((res) => {
         const body = res.body;
         body.fullyAvailable = true;
@@ -16,7 +16,7 @@ describe("TV Details Buttons", () => {
       });
     }).as("detailsResponse");
 
-    Page.visit("121361");
+    Page.visit("1399");
 
     cy.wait('@detailsResponse');
 
@@ -27,7 +27,7 @@ describe("TV Details Buttons", () => {
 
   it("Partially Available Request", () => {
 
-    cy.intercept("GET", "**/v2/search/Tv/121361", (req) => {
+    cy.intercept("GET", "**/v2/search/Tv/1399", (req) => {
       req.reply((res) => {
         const body = res.body;
         body.fullyAvailable = false;
@@ -36,7 +36,7 @@ describe("TV Details Buttons", () => {
       });
     }).as("detailsResponse");
 
-    Page.visit("121361");
+    Page.visit("1399");
 
     cy.wait('@detailsResponse');
 
@@ -48,7 +48,7 @@ describe("TV Details Buttons", () => {
 
   it("Not Available Request", () => {
 
-    cy.intercept("GET", "**/v2/search/Tv/121361", (req) => {
+    cy.intercept("GET", "**/v2/search/Tv/1399", (req) => {
       req.reply((res) => {
         const body = res.body;
         body.fullyAvailable = false;
@@ -57,7 +57,7 @@ describe("TV Details Buttons", () => {
       });
     }).as("detailsResponse");
 
-    Page.visit("121361");
+    Page.visit("1399");
     cy.wait('@detailsResponse');
 
     Page.availableButton.should('not.exist');
@@ -70,7 +70,7 @@ describe("TV Details Buttons", () => {
   it("Issues Enabled", () => {
     cy.intercept("GET", "Settings/issuesenabled", 'true');
 
-    cy.visit("/details/tv/121361");
+    cy.visit("/details/tv/1399");
 
     Page.reportIssueButton.should('be.visible');
   });
@@ -78,7 +78,7 @@ describe("TV Details Buttons", () => {
   it("Issues Disabled", () => {
     cy.intercept("GET", "Settings/issuesenabled", 'false');
 
-    Page.visit("121361");
+    Page.visit("1399");
 
     Page.reportIssueButton.should('not.exist');
   });

@@ -8,11 +8,13 @@ using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Models.Search.V2;
+using Ombi.Core.Models.UI;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
+using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using System;
 using System.Collections.Generic;
@@ -27,20 +29,21 @@ namespace Ombi.Core.Engine.V2
     {
         public MovieSearchEngineV2(IPrincipal identity, IRequestServiceMain service, IMovieDbApi movApi, IMapper mapper,
             ILogger<MovieSearchEngineV2> logger, IRuleEvaluator r, OmbiUserManager um, ICacheService mem, ISettingsService<OmbiSettings> s, IRepository<RequestSubscription> sub,
-            ISettingsService<CustomizationSettings> customizationSettings)
+            ISettingsService<CustomizationSettings> customizationSettings, IMovieRequestEngine movieRequestEngine)
             : base(identity, service, r, um, mem, s, sub)
         {
             MovieApi = movApi;
             Mapper = mapper;
             Logger = logger;
             _customizationSettings = customizationSettings;
+            _movieRequestEngine = movieRequestEngine;
         }
 
         private IMovieDbApi MovieApi { get; }
         private IMapper Mapper { get; }
         private ILogger Logger { get; }
         private readonly ISettingsService<CustomizationSettings> _customizationSettings;
-
+        private readonly IMovieRequestEngine _movieRequestEngine;
 
         public async Task<MovieFullInfoViewModel> GetFullMovieInformation(int theMovieDbId, CancellationToken cancellationToken, string langCode = null)
         {
@@ -127,7 +130,7 @@ namespace Ombi.Core.Engine.V2
 
             var pages = PaginationHelper.GetNextPages(currentlyLoaded, toLoad, _theMovieDbMaxPageItems);
 
-            var results = new List<MovieSearchResult>();
+            var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
                 var apiResult = await Cache.GetOrAdd(nameof(PopularMovies) + pagesToLoad.Page + langCode,
@@ -161,7 +164,7 @@ namespace Ombi.Core.Engine.V2
 
             var pages = PaginationHelper.GetNextPages(currentPosition, amountToLoad, _theMovieDbMaxPageItems);
 
-            var results = new List<MovieSearchResult>();
+            var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
                 var apiResult = await Cache.GetOrAdd(nameof(TopRatedMovies) + pagesToLoad.Page + langCode,
@@ -177,13 +180,48 @@ namespace Ombi.Core.Engine.V2
 
             var pages = PaginationHelper.GetNextPages(currentPosition, amountToLoad, _theMovieDbMaxPageItems);
 
-            var results = new List<MovieSearchResult>();
+            var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
                 var apiResult = await Cache.GetOrAdd(nameof(NowPlayingMovies) + pagesToLoad.Page + langCode,
                     async () => await MovieApi.NowPlaying(langCode, pagesToLoad.Page), DateTime.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
+            return await TransformMovieResultsToResponse(results);
+        }
+
+        /// <summary>
+        /// Gets recently requested movies
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<SearchMovieViewModel>> RecentlyRequestedMovies(int currentlyLoaded, int toLoad, CancellationToken cancellationToken)
+        {
+            var langCode = await DefaultLanguageCode(null);
+
+            var results = new List<MovieResponseDto>();
+
+            var requestResult = await Cache.GetOrAdd(nameof(RecentlyRequestedMovies) + "Requests" + toLoad + langCode,
+                async () =>
+                {
+                    return await _movieRequestEngine.GetRequests(toLoad, currentlyLoaded, new Models.UI.OrderFilterModel
+                    {
+                        OrderType = OrderType.RequestedDateDesc
+                    });
+                }, DateTime.Now.AddMinutes(15), cancellationToken);
+
+            var movieDBResults = await Cache.GetOrAdd(nameof(RecentlyRequestedMovies) + toLoad + langCode,
+                async () =>
+                {
+                    var responses = new List<MovieResponseDto>();
+                    foreach(var movie in requestResult.Collection)
+                    {
+                        responses.Add(await MovieApi.GetMovieInformation(movie.TheMovieDbId));
+                    }
+                    return responses;
+                }, DateTime.Now.AddHours(12), cancellationToken);
+
+            results.AddRange(movieDBResults);
+
             return await TransformMovieResultsToResponse(results);
         }
 
@@ -213,7 +251,7 @@ namespace Ombi.Core.Engine.V2
 
             var pages = PaginationHelper.GetNextPages(currentPosition, amountToLoad, _theMovieDbMaxPageItems);
 
-            var results = new List<MovieSearchResult>();
+            var results = new List<MovieDbSearchResult>();
             foreach (var pagesToLoad in pages)
             {
                 var apiResult = await Cache.GetOrAdd(nameof(UpcomingMovies) + pagesToLoad.Page + langCode,
@@ -269,8 +307,8 @@ namespace Ombi.Core.Engine.V2
             return data;
         }
 
-        protected async Task<List<SearchMovieViewModel>> TransformMovieResultsToResponse(
-            IEnumerable<MovieSearchResult> movies)
+        protected async Task<List<SearchMovieViewModel>> TransformMovieResultsToResponse<T>(
+            IEnumerable<T> movies) where T: new()
         {
             var settings = await _customizationSettings.GetSettingsAsync();
             var viewMovies = new List<SearchMovieViewModel>();
@@ -286,7 +324,7 @@ namespace Ombi.Core.Engine.V2
             return viewMovies;
         }
 
-        private async Task<SearchMovieViewModel> ProcessSingleMovie(MovieSearchResult movie)
+        private async Task<SearchMovieViewModel> ProcessSingleMovie<T>(T movie) where T : new()
         {
             var viewMovie = Mapper.Map<SearchMovieViewModel>(movie);
             return await ProcessSingleMovie(viewMovie);

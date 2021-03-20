@@ -8,6 +8,13 @@
         </div>
         </ng-template>
 
+        <mat-card *ngIf="season.overview" class="mat-elevation-z8">
+          <mat-card-content>
+              <p>{{season.overview}}</p>
+          </mat-card-content>
+      </mat-card>
+
+
         <table mat-table [dataSource]="season.episodes" class="mat-elevation-z8">
 
           <ng-container matColumnDef="select">

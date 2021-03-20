@@ -59,6 +59,10 @@ export class SearchV2Service extends ServiceHelpers {
         return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/upcoming/${currentlyLoaded}/${toLoad}`).toPromise();
     }
 
+    public recentlyRequestedMoviesByPage(currentlyLoaded: number, toLoad: number): Promise<ISearchMovieResult[]> {
+        return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/requested/${currentlyLoaded}/${toLoad}`).toPromise();
+    }
+
     public nowPlayingMovies(): Observable<ISearchMovieResult[]> {
         return this.http.get<ISearchMovieResult[]>(`${this.url}/Movie/nowplaying`);
     }
@@ -140,8 +144,8 @@ export class SearchV2Service extends ServiceHelpers {
         return this.http.get<IStreamingData[]>(`${this.url}/stream/movie/${theMovieDbId}`);
     }
 
-    public getTvStreams(theTvDbId: number, tvMaze: number): Observable<IStreamingData[]> {
-        return this.http.get<IStreamingData[]>(`${this.url}/stream/tv/${theTvDbId}/${tvMaze}`);
+    public getTvStreams(movieDbId: number): Observable<IStreamingData[]> {
+        return this.http.get<IStreamingData[]>(`${this.url}/stream/tv/${movieDbId}`);
     }
 
 }

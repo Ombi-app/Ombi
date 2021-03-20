@@ -23,6 +23,7 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+import 'cypress-wait-until';
 
 Cypress.Commands.add("landingSettings", (enabled) => {
     cy.fixture('login/landingPageSettings').then((settings)  => {
@@ -31,7 +32,7 @@ Cypress.Commands.add("landingSettings", (enabled) => {
       })
 })
 
-Cypress.Commands.add('login', (username, password) => {
+Cypress.Commands.add('loginWithCreds', (username, password) => {
     cy.request({
         method: 'POST',
         url: '/api/v1/token',
@@ -86,12 +87,13 @@ Cypress.Commands.add('createUser', (username, password, claims) => {
 Cypress.Commands.add('generateUniqueId', () => {
     const uniqueSeed = Date.now().toString();
     const id = Cypress._.uniqueId(uniqueSeed);
-    return id;
+    cy.wrap(id);
 });
 
 Cypress.Commands.add("getByData", (selector, ...args) => {
-    return cy.get(`[data-test=${selector}]`, ...args);
-  });
+  return cy.get(`[data-test=${selector}]`, ...args);
+});
+
 
 Cypress.Commands.add("getByData", (selector) => {
     return cy.get(`[data-test=${selector}]`);
