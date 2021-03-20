@@ -129,7 +129,7 @@ describe("Movie Details Buttons", () => {
     Page.viewCollectionButton.should('be.visible');
   });
 
-  it.only("Non requested movie valid buttons", () => {
+  it("Non requested movie valid buttons", () => {
     cy.login();
 
     Page.visit("590706");
