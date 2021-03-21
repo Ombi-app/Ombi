@@ -28,7 +28,6 @@ describe("Navigation Bar Tests", () => {
 
         cy.wait("@discoverLoad");
 
-        Page.navbar.profileUsername.should('have.text', id);
         Page.navbar.adminDonate.should("not.exist");
         Page.navbar.settings.should("not.exist");
         Page.navbar.userManagement.should("not.exist");

@@ -32,10 +32,6 @@ class NavBar {
     return cy.get('#profile-image');
   }
 
-  get profileUsername(): Cypress.Chainable<any> {
-    return cy.get('#profile-username');
-  }
-
   get applicationName(): Cypress.Chainable<any> {
     return cy.get('#nav-applicationName');
   }
