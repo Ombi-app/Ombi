@@ -68,8 +68,11 @@ export interface IIdentityResult {
     successful: boolean;
 }
 
-export interface IUpdateLocalUser extends IUser {
+export interface IUpdateLocalUser {
     currentPassword: string;
+    password: string;
+    id: string;
+    emailAddress: string;
     confirmNewPassword: string;
 }
 

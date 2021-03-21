@@ -8,29 +8,29 @@
         <mat-nav-list>
             <span *ngFor="let nav of navItems">
 
-                <div *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled">
+                <div class="menu-spacing" *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled">
 
 
                     <a id="{{nav.id}}" *ngIf="nav.externalLink" mat-list-item [href]="nav.link" target="_blank"
                         matTooltip="{{nav.toolTipMessage | translate}}" matTooltipPosition="right"
                         [routerLinkActive]="'active-list-item'">
 
-                        <i *ngIf="nav.icon" class="fa-lg {{nav.icon}}"
+                        <i *ngIf="nav.icon" class="fa-lg {{nav.icon}} icon-spacing"
                             style="padding-left: 5px; padding-right: 5px;" aria-hidden="true"></i>
                         &nbsp;{{nav.name | translate}}
                     </a>
                     <a id="{{nav.id}}" *ngIf="!nav.externalLink" mat-list-item [routerLink]="nav.link" [style]="nav.color"
                         [routerLinkActive]="'active-list-item'">
 
-                        <i class="fa-lg {{nav.icon}}"></i>
+                        <i class="fa-lg {{nav.icon}} icon-spacing"></i>
                         &nbsp;{{nav.name | translate}}
                     </a>
                 </div>
             </span>
 
-            <a id="nav-logout" mat-list-item [routerLinkActive]="'active-list-item'"
+            <a   class="menu-spacing" id="nav-logout" mat-list-item [routerLinkActive]="'active-list-item'"
                 aria-label="Toggle sidenav" (click)="logOut();">
-                <i class="fa-lg fas fa-sign-out-alt"></i>
+                <i class="fa-lg fas fa-sign-out-alt  icon-spacing"></i>
                 &nbsp;{{ 'NavigationBar.Logout' | translate }}
             </a>
 
@@ -82,7 +82,7 @@
             </div>
             <div class="col-1">
                 <a routerLink="/user-preferences">
-                <img [matTooltip]="username" class="profile-img"  [src]="getUserImage()" />
+                <img [matTooltip]="username" id="profile-image" class="profile-img"  [src]="getUserImage()" />
             </a>
             </div>
 

@@ -1,7 +1,6 @@
 import { BasePage } from "../base.page";
 
-class UserPreferencesPage extends BasePage {
-
+class ProfileTab {
     get languageSelectBox(): Cypress.Chainable<any> {
         return cy.get('#langSelect');
     }
@@ -17,6 +16,9 @@ class UserPreferencesPage extends BasePage {
     streamingSelectBoxOption(country: string): Cypress.Chainable<any> {
         return cy.get('#streamingSelect'+country);
     }
+}
+
+class MobileTab {
 
     get qrCode(): Cypress.Chainable<any> {
         return cy.get('#qrCode');
@@ -25,6 +27,59 @@ class UserPreferencesPage extends BasePage {
     get noQrCode(): Cypress.Chainable<any> {
         return cy.get('#noQrCode');
     }
+}
+
+class SecurityTab {
+    get currentPassword(): Cypress.Chainable<any> {
+        return cy.get('#currentPassword');
+    }
+
+    get email(): Cypress.Chainable<any> {
+        return cy.get('#email');
+    }
+
+    get newPassword(): Cypress.Chainable<any> {
+        return cy.get('#newPassword');
+    }
+
+    get confirmPassword(): Cypress.Chainable<any> {
+        return cy.get('#confirmPassword');
+    }
+
+    get submitButton(): Cypress.Chainable<any> {
+        return cy.get('#submitSecurity');
+    }
+}
+
+class UserPreferencesPage extends BasePage {
+
+
+    get username(): Cypress.Chainable<any> {
+        return cy.get('#usernameTitle');
+    }
+    get email(): Cypress.Chainable<any> {
+        return cy.get('#emailTitle');
+    }
+
+    get profileTab(): Cypress.Chainable<any> {
+        return cy.get('[role="tab"]').eq(0);
+    }
+
+    get securityTab(): Cypress.Chainable<any> {
+        return cy.get('[role="tab"]').eq(1);
+    }
+
+    get preferencesTab(): Cypress.Chainable<any> {
+        return cy.get('[role="tab"]').eq(2);
+    }
+
+    get mobileTab(): Cypress.Chainable<any> {
+        return cy.get('[role="tab"]').eq(3);
+    }
+
+    profile = new ProfileTab();
+    mobile = new MobileTab();
+    security = new SecurityTab();
 
     constructor() {
         super();

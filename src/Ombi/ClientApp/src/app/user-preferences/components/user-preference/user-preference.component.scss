@@ -1,5 +1,23 @@
 .small-middle-container{
     margin: auto;
     margin-top: 3%;
-	width: 80%;
+	width: 90%;
+}
+
+.profile-img {
+    border-radius: 100%;
+    width: 75px;
+}
+.my-auto {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+::ng-deep .mat-tab-body-content {
+    height: 100%;
+    overflow: hidden !important;
+}
+
+.tab-content {
+    margin-top: 1%;
 }

@@ -73,7 +73,7 @@ class NavBar {
   }
 
   get userPreferences(): Cypress.Chainable<any> {
-    return cy.get('#nav-userPreferences');
+    return cy.get('#profile-image');
   }
 
   get logout(): Cypress.Chainable<any> {

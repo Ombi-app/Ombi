@@ -1,6 +1,6 @@
 import { userPreferencesPage as Page } from "@/integration/page-objects";
 
-describe("User Preferences Tests", () => {
+describe("User Preferences Profile Tests", () => {
   beforeEach(() => {
     cy.login();
   });
@@ -16,8 +16,8 @@ langs.forEach((l) => {
     cy.intercept('POST','/language').as('langSave');
     Page.visit();
 
-    Page.languageSelectBox.click();
-    Page.languageSelectBoxOption(l.code).click();
+    Page.profile.languageSelectBox.click();
+    Page.profile.languageSelectBoxOption(l.code).click();
 
     Page.navbar.discover.contains(l.discover);
 
@@ -42,10 +42,10 @@ streamingCountries.forEach((country) => {
       Page.visit();
       cy.wait('@countryApi');
 
-      Page.streamingSelectBox.click();
-      Page.streamingSelectBoxOption(country).click();
+      Page.profile.streamingSelectBox.click();
+      Page.profile.streamingSelectBoxOption(country).click();
 
-      Page.streamingSelectBox.should('have.attr','ng-reflect-value', country);
+      Page.profile.streamingSelectBox.should('have.attr','ng-reflect-value', country);
 
       cy.wait('@countryApiSave').then((intercept) => {
         expect(intercept.request.body.code).equal(country);

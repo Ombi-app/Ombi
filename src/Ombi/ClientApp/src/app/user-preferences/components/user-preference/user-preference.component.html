@@ -1,54 +1,135 @@
 <div class="small-middle-container" *ngIf="username">
-  <h3 [translate]="'UserPreferences.Welcome'" [translateParams]="{username: username}"></h3>
-
-
-  <hr>
-  <div class="row top-spacing">
-    <div class="col-4">
-      <div>
-        <small>{{'UserPreferences.LanguageDescription' | translate}}</small>
-        <br>
-        <mat-form-field>
-          <mat-label [translate]="'UserPreferences.OmbiLanguage'"></mat-label>
-          <mat-select id="langSelect" [(value)]="selectedLang" (selectionChange)="languageSelected();">
-            <mat-option id="langSelect{{lang.value}}" *ngFor="let lang of availableLanguages" [value]="lang.value">
-              {{lang.display}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div>
-
-      </div>
+  <div class="row h-100">
+    <div class="col-1">
+      <img class="profile-img" [src]="getProfileImage()">
     </div>
-    <div class="col-1"></div>
-    <div class="col-7">
-      <mat-label [translate]="'UserPreferences.MobileQRCode'"></mat-label>
-      <div id="noQrCode" *ngIf="!qrCodeEnabled" [translate]="'UserPreferences.NoQrCode'"></div>
-      <qrcode id="qrCode" *ngIf="qrCodeEnabled" [qrdata]="qrCode" [size]="256" [level]="'L'"></qrcode>
-      <button mat-raised-button (click)="openMobileApp($event)" *ngIf="customizationSettings.applicationUrl"> {{
-        'UserPreferences.LegacyApp' | translate }}</button>
+    <div class="col-11 align-middle">
+      <h2 id="usernameTitle">{{username}} <small id="emailTitle" *ngIf="user.emailAddress">({{user.emailAddress}})</small></h2>
+
     </div>
-
-    <div class="col-4">
-      <div>
-        <small>{{'UserPreferences.StreamingCountryDescription' | translate}}</small>
-        <br>
-        <mat-form-field>
-          <mat-label [translate]="'UserPreferences.StreamingCountry'"></mat-label>
-          <mat-select id="streamingSelect" [(value)]="selectedCountry" (selectionChange)="countrySelected();">
-            <mat-option id="streamingSelect{{value}}" *ngFor="let value of countries" [value]="value">
-              {{value}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div>
-
-      </div>
-    </div>
-
-
-
   </div>
+
+
+  <mat-tab-group>
+    <mat-tab label="Profile">
+      <div class="tab-content">
+
+        <div class="row">
+          <div class="col-1">
+            User Type:
+          </div>
+          <div class="col-11">
+            {{UserType[user.userType]}}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-4">
+            <div>
+              <small>{{'UserPreferences.LanguageDescription' | translate}}</small>
+              <br>
+              <mat-form-field>
+                <mat-label [translate]="'UserPreferences.OmbiLanguage'"></mat-label>
+                <mat-select id="langSelect" [(value)]="selectedLang" (selectionChange)="languageSelected();">
+                  <mat-option id="langSelect{{lang.value}}" *ngFor="let lang of availableLanguages"
+                    [value]="lang.value">
+                    {{lang.display}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div>
+
+            </div>
+          </div>
+          <div class="col-1"></div>
+
+
+          <div class="col-4">
+            <div>
+              <small>{{'UserPreferences.StreamingCountryDescription' | translate}}</small>
+              <br>
+              <mat-form-field>
+                <mat-label [translate]="'UserPreferences.StreamingCountry'"></mat-label>
+                <mat-select id="streamingSelect" [(value)]="selectedCountry" (selectionChange)="countrySelected();">
+                  <mat-option id="streamingSelect{{value}}" *ngFor="let value of countries" [value]="value">
+                    {{value}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+
+    </mat-tab>
+    <mat-tab  *ngIf="user.userType === UserType.LocalUser" label="Security">
+      <div class="tab-content">
+        <h2>Change Details</h2>
+        <form  novalidate [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
+          <div class="row">
+            <div class="col-md-6 col-12">
+              <span>You need your current password to make any changes here</span>
+            <mat-form-field appearance="outline" floatLabel=always>
+              <mat-label>Current Password</mat-label>
+              <input id="currentPassword" matInput type="password" formControlName="currentPassword">
+            </mat-form-field>
+          </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-12">
+            <mat-form-field appearance="outline" floatLabel=always>
+              <mat-label>Email Address</mat-label>
+              <input id="email" matInput formControlName="emailAddress">
+            </mat-form-field>
+          </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 col-12">
+            <mat-form-field appearance="outline" floatLabel=always>
+              <mat-label>New Password</mat-label>
+              <input id="newPassword" matInput type="password" formControlName="password">
+            </mat-form-field>
+          </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-12">
+            <mat-form-field appearance="outline" floatLabel=always>
+              <mat-label>New Password Confirm</mat-label>
+              <input id="confirmPassword" matInput type="password" formControlName="confirmPassword">
+            </mat-form-field>
+          </div>
+          </div>
+          <button id="submitSecurity" mat-raised-button color="accent" type="submit">Update</button>
+        </form>
+
+      </div>
+
+    </mat-tab>
+
+
+    <mat-tab label="Preferences"> Coming Soon... </mat-tab>
+
+
+    <mat-tab label="Mobile">
+      <div class="tab-content">
+        <div class="col-7">
+          <mat-label [translate]="'UserPreferences.MobileQRCode'"></mat-label>
+          <div id="noQrCode" *ngIf="!qrCodeEnabled" [translate]="'UserPreferences.NoQrCode'"></div>
+          <qrcode id="qrCode" *ngIf="qrCodeEnabled" [qrdata]="qrCode" [size]="256" [level]="'L'"></qrcode>
+          <button mat-raised-button (click)="openMobileApp($event)" *ngIf="customizationSettings.applicationUrl"> {{
+            'UserPreferences.LegacyApp' | translate }}</button>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+
+
 </div>
