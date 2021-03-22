@@ -1,7 +1,10 @@
+import { EpisodeRequestModal } from "./EpisodeRequestModal";
 
 export class DiscoverCard {
     private id: string;
     private movie: boolean;
+
+    episodeRequestModal = new EpisodeRequestModal();
     constructor(id: string, movie: boolean) {
       this.id = id;
       this.movie = movie;

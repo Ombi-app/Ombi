@@ -8,14 +8,14 @@ describe("Search Tests", () => {
 
   it("Single result when TV Search Only", () => {
     Page.navbar.searchFilter.applyFilter(true, false, false);
-    Page.visit("Game Of Thrones");
+    Page.visit("Dexters Laboratory");
 
     cy.wait('@searchResponse');
-    const card = Page.getCard('1399', false);
+    const card = Page.getCard('4229', false);
 
     card.topLevelCard.realHover();
-    card.title.should('have.text', 'Game of Thrones');
-    card.overview.contains('noble');
+    card.title.should('have.text', "Dexter's Laboratory");
+    card.overview.contains('Cartoon Network');
     card.requestType.contains('Tv Show');
     card.requestButton.should('exist');
   });

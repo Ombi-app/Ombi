@@ -292,7 +292,7 @@ export class CarouselListComponent implements OnInit {
         const tempResults = <IDiscoverCardResult[]>[];
         this.tvShows.forEach(m => {
             tempResults.push({
-                available: m.available,
+                available: m.fullyAvailable,
                 posterPath: m.backdropPath ? `https://image.tmdb.org/t/p/w500/${m.backdropPath}` : "../../../images/default_tv_poster.png",
                 requested: m.requested,
                 title: m.title,
