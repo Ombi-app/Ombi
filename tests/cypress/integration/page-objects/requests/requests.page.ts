@@ -95,6 +95,10 @@ class MoviesTab extends MediaBaseTab {
     get approveFabButton(): Cypress.Chainable<any> {
         return cy.get('#approveFabButton');
     }
+
+    getRowCheckbox(rowId: number): Cypress.Chainable<any> {
+        return cy.get('#adminMasterCheckbox' + rowId);
+    }
 }
 
 class RequestsPage extends BasePage {

@@ -10,6 +10,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { DiscoverGridComponent } from "./grid/discover-grid.component";
 import { DiscoverSearchResultsComponent } from "./search-results/search-results.component";
 import { CarouselListComponent } from "./carousel-list/carousel-list.component";
+import { RequestServiceV2 } from "../../services/requestV2.service";
 
 
 export const components: any[] = [
@@ -27,6 +28,7 @@ export const providers: any[] = [
     SearchService,
     MatDialog,
     RequestService,
+    RequestServiceV2,
 ];
 
 export const routes: Routes = [

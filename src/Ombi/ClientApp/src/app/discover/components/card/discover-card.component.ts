@@ -30,7 +30,7 @@ export class DiscoverCardComponent implements OnInit {
     public ngOnInit() {
         if (this.result.type == RequestType.tvShow) {
             this.fullyLoaded = true;
-            // this.getExtraTvInfo();
+            this.getExtraTvInfo();
         }
         if (this.result.type == RequestType.movie) {
             this.getExtraMovieInfo();
