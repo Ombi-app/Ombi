@@ -5,7 +5,9 @@
                 {{'Issues.Title' | translate}}
             </mat-panel-title>
             <mat-panel-description>
-                <span *ngIf="isOutstanding">{{issuesCount}} </span><span><mat-icon *ngIf="isOutstanding" matTooltip="{{'Issues.Outstanding' | translate}}">error_outline</mat-icon></span>
+                <span *ngIf="isOutstanding">{{issuesCount}} </span><span>
+                    <i *ngIf="isOutstanding" matTooltip="{{'Issues.Outstanding' | translate}}" class="fas fa-exclamation-triangle"></i>
+                </span>
                 <span *ngIf="!isOutstanding">{{issuesCount}}</span>
             </mat-panel-description>
         </mat-expansion-panel-header>

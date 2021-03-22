@@ -52,7 +52,10 @@ export class PlexComponent implements OnInit, OnDestroy {
     }
 
     public selectServer(selectedServer: IPlexServerResponse, server: IPlexServer) {
-        server.ip = selectedServer.localAddresses.split(",")[0];
+        var splitServers = selectedServer.localAddresses.split(",");
+        if (splitServers.length > 1) {
+            server.ip = splitServers[splitServers.length - 1];
+        }
         server.name = selectedServer.name;
         server.machineIdentifier = selectedServer.machineIdentifier;
         server.plexAuthToken = selectedServer.accessToken;

@@ -31,13 +31,13 @@
     </button>
     <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="openRequestOnBehalf()" [disabled]="!canRequestOnBehalf">
-            <mat-icon>supervised_user_circle</mat-icon>
-            <span>{{'MediaDetails.RequestOnBehalf' | translate}}</span>
+            <i class="fas fa-user-friends icon-spacing"></i>
+            <span> {{'MediaDetails.RequestOnBehalf' | translate}}</span>
         </button>
         <button mat-menu-item [disabled]="!canShowAdvanced" (click)="openAdvancedOptions()">
-            <mat-icon>movie_filter</mat-icon>
-            <span *ngIf="type === RequestType.movie">{{'MediaDetails.RadarrConfiguration' | translate}}</span>
-            <span *ngIf="type === RequestType.tvShow">{{'MediaDetails.SonarrConfiguration' | translate}}</span>
+            <i class="fas fa-ticket-alt icon-spacing"></i>
+            <span *ngIf="type === RequestType.movie"> {{ 'MediaDetails.RadarrConfiguration' | translate}}</span>
+            <span *ngIf="type === RequestType.tvShow"> {{ 'MediaDetails.SonarrConfiguration' | translate}}</span>
         </button>
     </mat-menu>
 </div>

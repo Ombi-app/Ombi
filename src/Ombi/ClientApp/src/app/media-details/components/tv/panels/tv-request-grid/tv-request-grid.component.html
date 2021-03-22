@@ -75,7 +75,7 @@
 
 
 <button *ngIf="!tv.fullyAvailable && requestable" mat-fab color="accent" id="addFabBtn" class="floating-fab" [matMenuTriggerFor]="aboveMenu">
-  <mat-icon>add</mat-icon></button>
+  <i class="fas fa-plus fa-lg"></i>
 <mat-menu #aboveMenu="matMenu" yPosition="above">
 
   <button id="requestAll" mat-menu-item (click)="requestAllSeasons()">{{'Search.TvShows.AllSeasons' | translate }}</button>

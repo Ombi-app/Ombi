@@ -99,11 +99,11 @@ describe("Movie Details Buttons", () => {
   it("Movie Requested, Deny Movie", () => {
     cy.login();
 
-    Page.visit("484718");
+    Page.visit("671");
 
     Page.requestButton.click();
     cy.verifyNotification(
-      "Coming 2 America (2021) has been successfully added"
+      "Harry Potter and the Philosopher's Stone (2001) has been successfully added"
     );
 
     cy.reload();
