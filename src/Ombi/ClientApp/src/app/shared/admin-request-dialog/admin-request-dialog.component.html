@@ -1,0 +1,82 @@
+
+
+<form [formGroup]="form" *ngIf="form">
+  <h1>Advanced Options</h1>
+  <div class="alert alert-info" role="alert">
+    You can configure the request here, once requested it will be send to your DVR application and will be auto approved!
+  </div>
+
+  <div style="max-width: 0; max-height: 0; overflow: hidden;">
+      <input autofocus="true" />
+  </div>
+
+<!-- User area -->
+<h3>{{'MediaDetails.RequestOnBehalf' | translate }}</h3>
+<mat-form-field class="example-full-width" appearance="outline" floatLabel=auto>
+  <mat-label>{{ 'MediaDetails.PleaseSelectUser' | translate}}</mat-label>
+  <input type="text"
+         matInput
+         formControlName="username"
+         [matAutocomplete]="auto">
+  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+      {{displayFn(option)}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+<!-- End User area -->
+
+
+<hr />
+
+  <!-- Sonarr -->
+  <div *ngIf="data.type === RequestType.tvShow">
+  <div>
+    <h3>Sonarr Overrides</h3>
+    <mat-form-field appearance="outline" floatLabel=auto>
+        <mat-label>{{'MediaDetails.QualityProfilesSelect' | translate }}</mat-label>
+        <mat-select formControlName="sonarrPathId">
+            <mat-option *ngFor="let profile of sonarrProfiles" value="{{profile.id}}">{{profile.name}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+  </div>
+  <div >
+    <mat-form-field appearance="outline" floatLabel=auto>
+        <mat-label>{{'MediaDetails.RootFolderSelect' | translate }}</mat-label>
+        <mat-select formControlName="sonarrFolderId">
+            <mat-option *ngFor="let profile of sonarrRootFolders" value="{{profile.id}}">{{profile.path}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+  <!-- End Sonarr-->
+
+  <!-- Radarr -->
+  <div *ngIf="data.type === RequestType.movie">
+  <div>
+    <h3>Radarr Overrides</h3>
+      <mat-form-field appearance="outline" floatLabel=auto>
+          <mat-label>{{'MediaDetails.QualityProfilesSelect' | translate }}</mat-label>
+          <mat-select formControlName="radarrPathId">
+              <mat-option *ngFor="let profile of radarrProfiles" value="{{profile.id}}">{{profile.name}}</mat-option>
+          </mat-select>
+      </mat-form-field>
+  </div>
+  <div mat-dialog-content>
+      <mat-form-field appearance="outline" floatLabel=auto>
+          <mat-label>{{'MediaDetails.RootFolderSelect' | translate }}</mat-label>
+          <mat-select formControlName="radarrFolderId">
+              <mat-option *ngFor="let profile of radarrRootFolders" value="{{profile.id}}">{{profile.path}}</mat-option>
+          </mat-select>
+      </mat-form-field>
+  </div>
+</div>
+  <!-- End Radarr-->
+
+
+<div mat-dialog-actions>
+  <button mat-raised-button [mat-dialog-close]="" color="warn">{{ 'Common.Cancel' | translate }}</button>
+  <button mat-raised-button (click)="submitRequest()" color="accent">{{ 'Common.Request' | translate }}</button>
+</div>
+</form>
+

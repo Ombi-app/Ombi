@@ -13,6 +13,7 @@ import { MovieAdvancedOptionsComponent } from "./panels/movie-advanced-options/m
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { RequestBehalfComponent } from "../shared/request-behalf/request-behalf.component";
 import { forkJoin } from "rxjs";
+import { AdminRequestDialogComponent } from "../../../shared/admin-request-dialog/admin-request-dialog.component";
 
 @Component({
     templateUrl: "./movie-details.component.html",
@@ -84,13 +85,17 @@ export class MovieDetailsComponent {
     }
 
     public async request(userId?: string) {
-        const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: null, requestOnBehalf: userId }).toPromise();
+        if (this.isAdmin) {
+            this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.movie.id }, panelClass: 'modal-panel' });
+        } else {
+        const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: null, requestOnBehalf: userId, qualityPathOverride: 0, rootFolderOverride: 0 }).toPromise();
         if (result.result) {
             this.movie.requested = true;
             this.messageService.send(result.message, "Ok");
         } else {
             this.messageService.send(result.errorMessage, "Ok");
         }
+    }
     }
 
     public openDialog() {

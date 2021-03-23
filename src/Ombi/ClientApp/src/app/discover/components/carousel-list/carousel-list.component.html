@@ -8,6 +8,6 @@
 
 <p-carousel #carousel [numVisible]="10" [numScroll]="10" [page]="0" [value]="discoverResults" [responsiveOptions]="responsiveOptions" (onPage)="newPage()">
     <ng-template let-result pTemplate="item">
-        <discover-card [result]="result"></discover-card>
+        <discover-card [isAdmin]="isAdmin" [result]="result"></discover-card>
     </ng-template>
 </p-carousel>

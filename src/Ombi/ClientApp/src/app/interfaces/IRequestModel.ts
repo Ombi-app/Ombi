@@ -168,10 +168,9 @@ export interface IEpisodesRequests {
   selected: boolean; // This is for the UI only
 }
 
-export interface IMovieRequestModel {
+export interface IMovieRequestModel extends BaseRequestOptions {
   theMovieDbId: number;
   languageCode: string | undefined;
-  requestOnBehalf: string | undefined;
 }
 
 export interface IFilter {
@@ -186,4 +185,10 @@ export enum FilterType {
   Approved = 3,
   Processing = 4,
   PendingApproval = 5,
+}
+
+export class BaseRequestOptions {
+  requestOnBehalf: string | undefined;
+  rootFolderOverride: number | undefined;
+  qualityPathOverride: number | undefined;
 }

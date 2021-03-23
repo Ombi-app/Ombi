@@ -1,4 +1,4 @@
-﻿import { INewSeasonRequests } from "./IRequestModel";
+﻿import { BaseRequestOptions, INewSeasonRequests } from "./IRequestModel";
 
 export interface ISearchTvResult {
     id: number;
@@ -47,12 +47,11 @@ export interface ITvRequestViewModelV2 extends ITvRequestViewModelBase {
 }
 
 
-export interface ITvRequestViewModelBase {
+export interface ITvRequestViewModelBase extends BaseRequestOptions {
     requestAll: boolean;
     firstSeason: boolean;
     latestSeason: boolean;
     seasons: ISeasonsViewModel[];
-    requestOnBehalf: string | undefined;
 }
 
 export interface ISeasonsViewModel {
