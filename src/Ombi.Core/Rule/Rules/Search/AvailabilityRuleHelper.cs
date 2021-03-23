@@ -17,18 +17,18 @@ namespace Ombi.Core.Rule.Rules.Search
             {
                 // If we have all the episodes for this season, then this season is available
                 if (season.Episodes.All(x => x.Available))
-                {
+                {yarn 
                     season.SeasonAvailable = true;
                 }
-            }
-            if(search.SeasonRequests.Any(x => x.Episodes.Any(e => e.Available)))
-            {
-                search.PartlyAvailable = true;
             }
             if (search.SeasonRequests.All(x => x.Episodes.All(e => e.Available)))
             {
                 search.FullyAvailable = true;
             }
+             else if (search.SeasonRequests.Any(x => x.Episodes.Any(e => e.Available)))
+            {
+                search.PartlyAvailable = true;
+            }            
             else
             {
                 var airedButNotAvailable = search.SeasonRequests.Any(x =>
