@@ -67,7 +67,7 @@ namespace Ombi.Core.Engine
                 $"{movieInfo.Title}{(!string.IsNullOrEmpty(movieInfo.ReleaseDate) ? $" ({DateTime.Parse(movieInfo.ReleaseDate).Year})" : string.Empty)}";
 
             var userDetails = await GetUser();
-            var canRequestOnBehalf = false;
+            var canRequestOnBehalf = model.RequestOnBehalf.HasValue();
 
             var isAdmin = await UserManager.IsInRoleAsync(userDetails, OmbiRoles.PowerUser) || await UserManager.IsInRoleAsync(userDetails, OmbiRoles.Admin);
             if (model.RequestOnBehalf.HasValue() && !isAdmin)

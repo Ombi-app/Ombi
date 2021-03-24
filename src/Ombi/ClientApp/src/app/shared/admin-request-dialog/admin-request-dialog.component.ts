@@ -21,12 +21,9 @@ export class AdminRequestDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<AdminRequestDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IAdminRequestDialogData,
-    private requestServiceV2: RequestServiceV2,
-    private notificationService: MessageService,
     private identityService: IdentityService,
     private sonarrService: SonarrService,
     private radarrService: RadarrService,
-    private requestService: RequestService,
     private fb: FormBuilder
   ) {}
 
@@ -38,7 +35,7 @@ export class AdminRequestDialogComponent implements OnInit {
   public userId: string;
 
   public radarrEnabled: boolean;
-
+  public sonarrEnabled: boolean;
 
   public sonarrProfiles: ISonarrProfile[];
   public sonarrRootFolders: ISonarrRootFolder[];
@@ -63,12 +60,15 @@ export class AdminRequestDialogComponent implements OnInit {
     );
 
     if (this.data.type === RequestType.tvShow) {
+      this.sonarrEnabled = await this.sonarrService.isEnabled();
+      if (this.sonarrEnabled) {
         this.sonarrService.getQualityProfilesWithoutSettings().subscribe(c => {
             this.sonarrProfiles = c;
         });
         this.sonarrService.getRootFoldersWithoutSettings().subscribe(c => {
             this.sonarrRootFolders = c;
         });
+      }
     }
     if (this.data.type === RequestType.movie) {
         this.radarrEnabled = await this.radarrService.isRadarrEnabled();
@@ -102,29 +102,10 @@ export class AdminRequestDialogComponent implements OnInit {
 
   public async submitRequest() {
       const model = this.form.value;
-    if (this.data.type === RequestType.movie) {
-        this.requestService.requestMovie({
-            qualityPathOverride: model.radarrPathId,
-            requestOnBehalf: model.username?.id,
-            rootFolderOverride: model.radarrFolderId,
-            theMovieDbId: this.data.id,
-            languageCode: null
-        }).subscribe((x) => {
-            if (x.result) {
-                this.notificationService.send(x.message, "Ok");
-                model.radarrQualityOverrideTitle =  this.radarrProfiles?.filter(x => x.id == model.radarrPathId)[0]?.name;
-                model.radarrRootFolderTitle =  this.radarrRootFolders?.filter(x => x.id == model.radarrFolderId)[0]?.path;
-
-                model.requestId = x.requestId;
-
-                this.dialogRef.close(model);
-
-            } else {
-                this.notificationService.send(x.errorMessage, "Ok");
-            }
-
-        })
-    }
-
+      model.radarrQualityOverrideTitle =  this.radarrProfiles?.filter(x => x.id == model.radarrPathId)[0]?.name;
+      model.radarrRootFolderTitle =  this.radarrRootFolders?.filter(x => x.id == model.radarrFolderId)[0]?.path;
+      model.sonarrRootFolderTitle = this.sonarrRootFolders?.filter(x => x.id == model.sonarrFolderId)[0]?.path;
+      model.sonarrQualityOverrideTitle = this.sonarrProfiles?.filter(x => x.id == model.sonarrPathId)[0]?.name;
+      this.dialogRef.close(model);
   }
 }

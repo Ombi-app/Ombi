@@ -3,7 +3,8 @@
 <form [formGroup]="form" *ngIf="form">
   <h1 id="advancedOptionsTitle">{{'MediaDetails.AdvancedOptions' | translate }}</h1>
   <div class="alert alert-info" role="alert">
-    {{'MediaDetails.AutoApproveOptions' | translate }}
+    <span *ngIf="data.type === RequestType.movie">{{'MediaDetails.AutoApproveOptions' | translate }}</span>
+    <span *ngIf="data.type === RequestType.tvShow">{{'MediaDetails.AutoApproveOptionsTv' | translate }}</span>
   </div>
 
   <div style="max-width: 0; max-height: 0; overflow: hidden;">
@@ -31,7 +32,7 @@
 <hr />
 
   <!-- Sonarr -->
-  <div *ngIf="data.type === RequestType.tvShow">
+  <div *ngIf="data.type === RequestType.tvShow && sonarrEnabled">
   <div>
     <h3>Sonarr Overrides</h3>
     <mat-form-field appearance="outline" floatLabel=auto>

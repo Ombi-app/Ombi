@@ -76,7 +76,7 @@ export class TvDetailsComponent implements OnInit {
     }
 
     public async request(userId: string) {
-        this.dialog.open(EpisodeRequestComponent, { width: "800px", data: <EpisodeRequestData> { series: this.tv, requestOnBehalf: userId }, panelClass: 'modal-panel' })
+        this.dialog.open(EpisodeRequestComponent, { width: "800px", data: <EpisodeRequestData> { series: this.tv, requestOnBehalf: userId, isAdmin: this.isAdmin }, panelClass: 'modal-panel' })
     }
 
     public async issue() {

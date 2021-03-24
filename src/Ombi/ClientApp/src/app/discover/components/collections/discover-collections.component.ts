@@ -4,6 +4,7 @@ import { SearchV2Service, RequestService, MessageService } from "../../../servic
 import { IMovieCollectionsViewModel } from "../../../interfaces/ISearchTvResultV2";
 import { IDiscoverCardResult } from "../../interfaces";
 import { RequestType } from "../../../interfaces";
+import { AuthService } from "../../../auth/auth.service";
 
 @Component({
     templateUrl: "./discover-collections.component.html",
@@ -14,13 +15,15 @@ export class DiscoverCollectionsComponent implements OnInit {
     public collectionId: number;
     public collection: IMovieCollectionsViewModel;
     public loadingFlag: boolean;
-    
+    public isAdmin: boolean;
+
     public discoverResults: IDiscoverCardResult[] = [];
 
     constructor(private searchService: SearchV2Service,
          private route: ActivatedRoute,
          private requestService: RequestService,
-         private messageService: MessageService) {
+         private messageService: MessageService,
+         private auth: AuthService) {
         this.route.params.subscribe((params: any) => {
             this.collectionId = params.collectionId;
         });
@@ -28,6 +31,7 @@ export class DiscoverCollectionsComponent implements OnInit {
 
     public async ngOnInit() {
         this.loadingFlag = true;
+        this.isAdmin = this.auth.isAdmin();
         this.collection = await this.searchService.getMovieCollections(this.collectionId);
         this.createModel();
     }

@@ -118,12 +118,17 @@ export class DiscoverCardComponent implements OnInit {
         this.loading = true;
         switch (this.result.type) {
             case RequestType.tvShow:
-                const dia = this.dialog.open(EpisodeRequestComponent, { width: "700px", data: { series: this.tvSearchResult }, panelClass: 'modal-panel' });
+                const dia = this.dialog.open(EpisodeRequestComponent, { width: "700px", data: { series: this.tvSearchResult, isAdmin: this.isAdmin }, panelClass: 'modal-panel' });
                 dia.afterClosed().subscribe(x => this.loading = false);
                 return;
             case RequestType.movie:
                 if (this.isAdmin) {
-                    this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.result.id }, panelClass: 'modal-panel' });
+                    const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.result.id }, panelClass: 'modal-panel' });
+                    dialog.afterClosed().subscribe((result) => {
+                        if (result) {
+                            this.result.requested = true;
+                        }
+                    });
                 } else {
                 this.requestService.requestMovie({ theMovieDbId: +this.result.id, languageCode: null, requestOnBehalf: null, qualityPathOverride: null, rootFolderOverride: null }).subscribe(x => {
                     if (x.result) {

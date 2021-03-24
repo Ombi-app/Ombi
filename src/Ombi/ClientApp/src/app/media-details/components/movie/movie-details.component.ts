@@ -88,16 +88,28 @@ export class MovieDetailsComponent {
         if (this.isAdmin) {
             const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.movie.id }, panelClass: 'modal-panel' });
             dialog.afterClosed().subscribe(async (result) => {
-            if (result) {
-                this.movie.requested = true;
-                this.movie.requestId = result.requestId;
-                this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
-            }
-        });
+                if (result) {
+                    const requestResult = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId,
+                        languageCode: null,
+                        qualityPathOverride: result.radarrPathId,
+                        requestOnBehalf: result.username?.id,
+                        rootFolderOverride: result.radarrFolderId, }).toPromise();
+                    if (requestResult.result) {
+                        this.movie.requested = true;
+                        this.movie.requestId = result.requestId;
+                        this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
+                        this.messageService.send(requestResult.message, "Ok");
+                    } else {
+                        this.messageService.send(requestResult.errorMessage, "Ok");
+                    }
+                }
+            });
         } else {
         const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: null, requestOnBehalf: userId, qualityPathOverride: undefined, rootFolderOverride: undefined }).toPromise();
         if (result.result) {
             this.movie.requested = true;
+            this.movie.requestId = result.requestId;
+            this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
             this.messageService.send(result.message, "Ok");
         } else {
             this.messageService.send(result.errorMessage, "Ok");

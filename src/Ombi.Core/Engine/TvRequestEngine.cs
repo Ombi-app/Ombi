@@ -140,7 +140,7 @@ namespace Ombi.Core.Engine
                         ErrorMessage = "This has already been requested"
                     };
                 }
-                return await AddExistingRequest(tvBuilder.ChildRequest, existingRequest, tv.RequestOnBehalf);
+                return await AddExistingRequest(tvBuilder.ChildRequest, existingRequest, tv.RequestOnBehalf, tv.RootFolderOverride.GetValueOrDefault(), tv.QualityPathOverride.GetValueOrDefault());
             }
 
             // This is a new request
@@ -151,21 +151,27 @@ namespace Ombi.Core.Engine
         public async Task<RequestEngineResult> RequestTvShow(TvRequestViewModelV2 tv)
         {
             var user = await GetUser();
-            var canRequestOnBehalf = false;
+            var canRequestOnBehalf = tv.RequestOnBehalf.HasValue();
 
-            if (tv.RequestOnBehalf.HasValue())
+            var isAdmin = await UserManager.IsInRoleAsync(user, OmbiRoles.PowerUser) || await UserManager.IsInRoleAsync(user, OmbiRoles.Admin);
+            if (tv.RequestOnBehalf.HasValue() && !isAdmin)
             {
-                canRequestOnBehalf = await UserManager.IsInRoleAsync(user, OmbiRoles.PowerUser) || await UserManager.IsInRoleAsync(user, OmbiRoles.Admin);
-
-                if (!canRequestOnBehalf)
+                return new RequestEngineResult
                 {
-                    return new RequestEngineResult
-                    {
-                        Result = false,
-                        Message = "You do not have the correct permissions to request on behalf of users!",
-                        ErrorMessage = $"You do not have the correct permissions to request on behalf of users!"
-                    };
-                }
+                    Result = false,
+                    Message = "You do not have the correct permissions to request on behalf of users!",
+                    ErrorMessage = $"You do not have the correct permissions to request on behalf of users!"
+                };
+            }
+
+            if ((tv.RootFolderOverride.HasValue || tv.QualityPathOverride.HasValue) && !isAdmin)
+            {
+                return new RequestEngineResult
+                {
+                    Result = false,
+                    Message = "You do not have the correct permissions!",
+                    ErrorMessage = $"You do not have the correct permissions!"
+                };
             }
 
             var tvBuilder = new TvShowRequestBuilderV2(MovieDbApi);
@@ -240,11 +246,11 @@ namespace Ombi.Core.Engine
                         ErrorMessage = "This has already been requested"
                     };
                 }
-                return await AddExistingRequest(tvBuilder.ChildRequest, existingRequest, tv.RequestOnBehalf);
+                return await AddExistingRequest(tvBuilder.ChildRequest, existingRequest, tv.RequestOnBehalf, tv.RootFolderOverride.GetValueOrDefault(), tv.QualityPathOverride.GetValueOrDefault());
             }
 
             // This is a new request
-            var newRequest = tvBuilder.CreateNewRequest(tv);
+            var newRequest = tvBuilder.CreateNewRequest(tv, tv.RootFolderOverride.GetValueOrDefault(), tv.QualityPathOverride.GetValueOrDefault());
             return await AddRequest(newRequest.NewRequest, tv.RequestOnBehalf);
         }
 
@@ -852,10 +858,18 @@ namespace Ombi.Core.Engine
             }
         }
 
-        private async Task<RequestEngineResult> AddExistingRequest(ChildRequests newRequest, TvRequests existingRequest, string requestOnBehalf)
+        private async Task<RequestEngineResult> AddExistingRequest(ChildRequests newRequest, TvRequests existingRequest, string requestOnBehalf, int rootFolder, int qualityProfile)
         {
             // Add the child
             existingRequest.ChildRequests.Add(newRequest);
+            if (qualityProfile > 0)
+            {
+                existingRequest.QualityOverride = qualityProfile;
+            }
+            if (rootFolder > 0)
+            {
+                existingRequest.RootFolder = rootFolder;
+            }
 
             await TvRepository.Update(existingRequest);
 
