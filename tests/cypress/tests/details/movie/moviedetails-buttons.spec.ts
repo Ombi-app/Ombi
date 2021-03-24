@@ -102,7 +102,7 @@ describe("Movie Details Buttons", () => {
     Page.availableButton.should("exist");
   });
 
-  it.only("Movie Requested, Deny Movie", () => {
+  it("Movie Requested, Deny Movie", () => {
     cy.login();
 
     Page.visit("671");
