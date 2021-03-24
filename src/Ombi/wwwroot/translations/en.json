@@ -252,6 +252,7 @@
         "ViewCollection":"View Collection",
         "NotEnoughInfo": "Unfortunately there is not enough information about this show yet!",
         "AdvancedOptions":"Advanced Options",
+        "AutoApproveOptions":"You can configure the request here, once requested it will be send to your DVR application and will be auto approved!",
         "QualityProfilesSelect":"Select A Quality Profile",
         "RootFolderSelect":"Select A Root Folder",
         "Status":"Status",

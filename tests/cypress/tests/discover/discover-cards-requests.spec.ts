@@ -173,7 +173,7 @@ describe("Discover Cards Requests Tests", () => {
     });
   });
 
-  it.only("Not available TV does not allow us to request", () => {
+  it("Not available TV does not allow us to request", () => {
     cy.intercept("GET", "**/search/Tv/popular/**", (req) => {
       req.reply((res) => {
         const body = res.body;

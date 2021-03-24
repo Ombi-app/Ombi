@@ -112,11 +112,17 @@ export class AdminRequestDialogComponent implements OnInit {
         }).subscribe((x) => {
             if (x.result) {
                 this.notificationService.send(x.message, "Ok");
+                model.radarrQualityOverrideTitle =  this.radarrProfiles?.filter(x => x.id == model.radarrPathId)[0]?.name;
+                model.radarrRootFolderTitle =  this.radarrRootFolders?.filter(x => x.id == model.radarrFolderId)[0]?.path;
+
+                model.requestId = x.requestId;
+
+                this.dialogRef.close(model);
+
             } else {
                 this.notificationService.send(x.errorMessage, "Ok");
             }
 
-            this.dialogRef.close();
         })
     }
 

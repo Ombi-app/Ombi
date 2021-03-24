@@ -1,9 +1,14 @@
 import { BasePage } from "../../base.page";
+import { AdminRequestDialog } from "../../shared/AdminRequestDialog";
 
 class MovieInformationPanel {
 
     get denyReason(): Cypress.Chainable<any> {
         return cy.get('#deniedReasonInfo');
+    }
+
+    get requestedBy(): Cypress.Chainable<any> {
+        return cy.get('#requestedByInfo');
     }
 }
 
@@ -74,6 +79,7 @@ class MovieDetailsPage extends BasePage {
 
     denyModal = new DenyModal();
     informationPanel = new MovieInformationPanel();
+    adminOptionsDialog = new AdminRequestDialog();
 
     constructor() {
         super();

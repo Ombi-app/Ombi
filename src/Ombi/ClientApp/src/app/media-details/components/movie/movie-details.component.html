@@ -75,7 +75,7 @@
                                 </ng-template>
                             </span>
                             <span *ngIf="isAdmin && hasRequest">
-                                <button id="approveBtn" *ngIf="!movie.approved" (click)="approve()" mat-raised-button class="btn-spacing" color="accent">
+                                <button id="approveBtn" *ngIf="!movie.approved " (click)="approve()" mat-raised-button class="btn-spacing" color="accent">
                                 <i class="fas fa-plus"></i> {{ 'Common.Approve' | translate }}
                                 </button>
                                 <button id="markAvailableBtn" *ngIf="!movie.available" (click)="markAvailable()" mat-raised-button class="btn-spacing"

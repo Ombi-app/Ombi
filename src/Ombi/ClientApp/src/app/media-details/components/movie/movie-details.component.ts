@@ -86,9 +86,16 @@ export class MovieDetailsComponent {
 
     public async request(userId?: string) {
         if (this.isAdmin) {
-            this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.movie.id }, panelClass: 'modal-panel' });
+            const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.movie.id }, panelClass: 'modal-panel' });
+            dialog.afterClosed().subscribe(async (result) => {
+            if (result) {
+                this.movie.requested = true;
+                this.movie.requestId = result.requestId;
+                this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
+            }
+        });
         } else {
-        const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: null, requestOnBehalf: userId, qualityPathOverride: 0, rootFolderOverride: 0 }).toPromise();
+        const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: null, requestOnBehalf: userId, qualityPathOverride: undefined, rootFolderOverride: undefined }).toPromise();
         if (result.result) {
             this.movie.requested = true;
             this.messageService.send(result.message, "Ok");

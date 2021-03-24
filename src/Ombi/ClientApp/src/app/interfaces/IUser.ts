@@ -9,6 +9,7 @@ export interface IUser {
     emailAddress: string;
     password: string;
     userType: UserType;
+    userAlias: string;
     lastLoggedIn: Date;
     hasLoggedIn: boolean;
     movieRequestLimit: number;
