@@ -208,6 +208,10 @@ namespace Ombi.Core.Senders
             {
                 qualityToUse = model.ParentRequest.QualityOverride.Value;
             }
+            if (model.ParentRequest.RootFolder.HasValue)
+            {
+               rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder.Value, s);
+            }
       
             // Are we using v3 sonarr?
             var sonarrV3 = s.V3;

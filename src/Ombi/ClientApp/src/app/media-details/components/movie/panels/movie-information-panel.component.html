@@ -2,7 +2,7 @@
     <div class="rating medium-font">
         <span *ngIf="movie.voteAverage"
             matTooltip="{{'MediaDetails.Votes' | translate }}  {{movie.voteCount | thousandShort: 1}}">
-            <img class="rating-small" src="{{baseUrl}}/images/tmdb-logo.svg"> {{movie.voteAverage | number:'1.0-1'}}/10
+            <img class="rating-small" src="{{baseUrl}}images/tmdb-logo.svg"> {{movie.voteAverage | number:'1.0-1'}}/10
         </span>
         <span *ngIf="ratings?.critics_rating && ratings?.critics_score">
             <img class="rating-small"
@@ -45,7 +45,7 @@
 
     <div *ngIf="request">
         <span class="label">{{'Requests.RequestedBy' | translate }}:</span>
-        {{request.requestedUser.userAlias}}
+        <span id="requestedByInfo">{{request.requestedUser.userAlias}}</span>
     </div>
 
     <div *ngIf="request">

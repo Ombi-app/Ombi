@@ -217,7 +217,7 @@ namespace Ombi.Core.Helpers
         }
 
 
-        public TvShowRequestBuilderV2 CreateNewRequest(TvRequestViewModelV2 tv)
+        public TvShowRequestBuilderV2 CreateNewRequest(TvRequestViewModelV2 tv, int rootPathOverride, int qualityOverride)
         {
             int.TryParse(TheMovieDbRecord.ExternalIds?.TvDbId, out var tvdbId);
             NewRequest = new TvRequests
@@ -232,7 +232,9 @@ namespace Ombi.Core.Helpers
                 TvDbId = tvdbId,
                 ChildRequests = new List<ChildRequests>(),
                 TotalSeasons = tv.Seasons.Count(),
-                Background = BackdropPath
+                Background = BackdropPath,
+                RootFolder = rootPathOverride,
+                QualityOverride = qualityOverride
             };
             NewRequest.ChildRequests.Add(ChildRequest);
 

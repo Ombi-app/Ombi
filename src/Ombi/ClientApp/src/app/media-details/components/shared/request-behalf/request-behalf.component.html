@@ -16,8 +16,10 @@
     </mat-form-field>
   </form>
 </div>
-<div mat-dialog-actions>
-  <button mat-raised-button (click)="onNoClick()">{{'Common.Cancel' | translate}}</button>
-  <button mat-raised-button (click)="request()" color="accent" [mat-dialog-close]="userId" cdkFocusInitial>{{'Common.Request' | translate}}</button>
+
+
+<div mat-dialog-actions class="right-buttons">
+  <button mat-raised-button (click)="onNoClick()" color="warn"><i class="fas fa-times"></i> {{'Common.Cancel' | translate}}</button>
+  <button mat-raised-button (click)="request()" color="accent" [mat-dialog-close]="userId" cdkFocusInitial><i class="fas fa-plus"></i> {{'Common.Request' | translate}}</button>
 </div>
 

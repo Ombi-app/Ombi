@@ -1,5 +1,6 @@
 import { BasePage } from "../base.page";
-import { DiscoverCard } from "../shared/DiscoverCard";
+import { AdminRequestDialog } from "../shared/AdminRequestDialog";
+import { DiscoverCard, DiscoverType } from "../shared/DiscoverCard";
 
 class CarouselComponent {
   private type: string;
@@ -16,8 +17,8 @@ class CarouselComponent {
     return cy.get(`#${this.type}Tv-button`);
   }
 
-  getCard(id: string, movie: boolean): DiscoverCard {
-    return new DiscoverCard(id, movie);
+  getCard(id: string, movie: boolean, type?: DiscoverType): DiscoverCard {
+    return new DiscoverCard(id, movie, type);
   }
 
   constructor(id: string) {
@@ -27,6 +28,7 @@ class CarouselComponent {
 
 class DiscoverPage extends BasePage {
   popularCarousel = new CarouselComponent("popular");
+  adminOptionsDialog = new AdminRequestDialog();
 
   constructor() {
     super();

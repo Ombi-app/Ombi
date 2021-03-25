@@ -31,10 +31,8 @@
                     [embyUrl]="tv.embyUrl"
                     [jellyfinUrl]="tv.jellyfinUrl"
                     [isAdmin]="isAdmin"
-                    [canRequestOnBehalf]="!showRequest"
                     [canShowAdvanced]="showAdvanced && showRequest"
                     [type]="requestType"
-                    (onRequestBehalf)="openRequestOnBehalf()"
                     (onAdvancedOptions)="openAdvancedOptions()"
                     >
                 </social-icons>
@@ -53,9 +51,10 @@
                                     (click)="request()"><i class="fas fa-plus"></i>
                                     {{ 'Common.Request' | translate }}</button>
 
-                                <button *ngIf="tv.fullyAvailable && !tv.partlyAvailable" id="availableBtn" mat-raised-button class="btn-spacing" color="accent"
+                                    <button *ngIf="tv.fullyAvailable && !tv.partlyAvailable" id="availableBtn" mat-raised-button class="btn-spacing" color="accent"
                                     [disabled]>
                                     <i class="fas fa-check"></i> {{'Common.Available' | translate }}</button>
+
                                     <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" id="partiallyAvailableBtn" mat-raised-button
                                     class="btn-spacing" color="accent" [disabled]>
                                     <i class="fas fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>

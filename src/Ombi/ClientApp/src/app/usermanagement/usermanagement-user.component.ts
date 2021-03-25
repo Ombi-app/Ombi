@@ -78,6 +78,7 @@ export class UserManagementUserComponent implements OnInit {
                 episodeRequestQuota: null,
                 movieRequestQuota: null,
                 language: null,
+                userAlias: "",
                 streamingCountry: "US",
                 userQualityProfiles: {
                     radarrQualityProfile: 0,

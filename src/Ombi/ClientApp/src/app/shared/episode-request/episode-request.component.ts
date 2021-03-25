@@ -1,13 +1,15 @@
 import { Component, Inject } from "@angular/core";
 import { MatCheckboxChange } from "@angular/material/checkbox";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { ISearchTvResultV2 } from "../../interfaces/ISearchTvResultV2";
 import { MessageService } from "../../services";
-import { ISeasonsViewModel, IEpisodesRequests, INewSeasonRequests, ITvRequestViewModelV2 } from "../../interfaces";
+import { ISeasonsViewModel, IEpisodesRequests, INewSeasonRequests, ITvRequestViewModelV2, IRequestEngineResult, RequestType } from "../../interfaces";
 import { RequestServiceV2 } from "../../services/requestV2.service";
+import { AdminRequestDialogComponent } from "../admin-request-dialog/admin-request-dialog.component";
 
 export interface EpisodeRequestData {
     series: ISearchTvResultV2;
+    isAdmin: boolean;
     requestOnBehalf: string | undefined;
 }
 @Component({
@@ -21,7 +23,7 @@ export class EpisodeRequestComponent {
     }
 
     constructor(public dialogRef: MatDialogRef<EpisodeRequestComponent>, @Inject(MAT_DIALOG_DATA) public data: EpisodeRequestData,
-        private requestService: RequestServiceV2, private notificationService: MessageService) { }
+        private requestService: RequestServiceV2, private notificationService: MessageService, private dialog: MatDialog) { }
 
 
     public async submitRequests() {
@@ -57,21 +59,23 @@ export class EpisodeRequestComponent {
             viewModel.seasons.push(seasonsViewModel);
         });
 
-        const requestResult = await this.requestService.requestTv(viewModel).toPromise();
+        if (this.data.isAdmin) {
+            const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.tvShow, id: this.data.series.id }, panelClass: 'modal-panel' });
+            dialog.afterClosed().subscribe(async (result) => {
+                if (result) {
+                    viewModel.requestOnBehalf = result.username?.id;
+                    viewModel.qualityPathOverride = result?.sonarrPathId;
+                    viewModel.rootFolderOverride = result?.sonarrFolderId;
 
-        if (requestResult.result) {
-            this.notificationService.send(
-                `Request for ${this.data.series.title} has been added successfully`);
-
-            this.data.series.seasonRequests.forEach((season) => {
-                season.episodes.forEach((ep) => {
-                    ep.selected = false;
-                });
+                    const requestResult = await this.requestService.requestTv(viewModel).toPromise();
+                    this.postRequest(requestResult);
+                }
             });
-
         } else {
-            this.notificationService.send(requestResult.errorMessage ? requestResult.errorMessage : requestResult.message);
+            const requestResult = await this.requestService.requestTv(viewModel).toPromise();
+            this.postRequest(requestResult);
         }
+
         this.dialogRef.close();
     }
 
@@ -113,5 +117,21 @@ export class EpisodeRequestComponent {
     public async requestLatestSeason() {
         this.data.series.latestSeason = true;
         await this.submitRequests();
+    }
+
+    private postRequest(requestResult: IRequestEngineResult) {
+        if (requestResult.result) {
+            this.notificationService.send(
+                `Request for ${this.data.series.title} has been added successfully`);
+
+            this.data.series.seasonRequests.forEach((season) => {
+                season.episodes.forEach((ep) => {
+                    ep.selected = false;
+                });
+            });
+
+        } else {
+            this.notificationService.send(requestResult.errorMessage ? requestResult.errorMessage : requestResult.message);
+        }
     }
 }

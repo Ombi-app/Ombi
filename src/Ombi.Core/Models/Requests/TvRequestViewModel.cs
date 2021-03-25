@@ -20,7 +20,7 @@ namespace Ombi.Core.Models.Requests
     }
 
 
-    public class TvRequestViewModelBase
+    public class TvRequestViewModelBase : BaseRequestOptions
     {
         public bool RequestAll { get; set; }
         public bool LatestSeason { get; set; }
@@ -28,7 +28,5 @@ namespace Ombi.Core.Models.Requests
         public List<SeasonsViewModel> Seasons { get; set; } = new List<SeasonsViewModel>();
         [JsonIgnore]
         public string RequestedByAlias { get; set; }
-
-        public string RequestOnBehalf { get; set; }
     }
 }

@@ -3,10 +3,11 @@ import { IDiscoverCardResult } from "../../interfaces";
 import { RequestType } from "../../../interfaces";
 import { MessageService, RequestService, SearchV2Service } from "../../../services";
 import { MatDialog } from "@angular/material/dialog";
-import { DiscoverCardDetailsComponent } from "./discover-card-details.component";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
 import { EpisodeRequestComponent } from "../../../shared/episode-request/episode-request.component";
+import { AdminRequestDialogComponent } from "../../../shared/admin-request-dialog/admin-request-dialog.component";
+import { DiscoverType } from "../carousel-list/carousel-list.component";
 
 @Component({
     selector: "discover-card",
@@ -15,7 +16,9 @@ import { EpisodeRequestComponent } from "../../../shared/episode-request/episode
 })
 export class DiscoverCardComponent implements OnInit {
 
+    @Input() public discoverType: DiscoverType;
     @Input() public result: IDiscoverCardResult;
+    @Input() public isAdmin: boolean;
     public RequestType = RequestType;
     public hide: boolean;
     public fullyLoaded = false;
@@ -38,10 +41,6 @@ export class DiscoverCardComponent implements OnInit {
         if (this.result.type == RequestType.album) {
             this.getAlbumInformation();
         }
-    }
-
-    public openDetails(details: IDiscoverCardResult) {
-        this.dialog.open(DiscoverCardDetailsComponent, { width: "700px", data: details, panelClass: 'modal-panel' })
     }
 
     public async getExtraTvInfo() {
@@ -121,11 +120,30 @@ export class DiscoverCardComponent implements OnInit {
         this.loading = true;
         switch (this.result.type) {
             case RequestType.tvShow:
-                const dia = this.dialog.open(EpisodeRequestComponent, { width: "700px", data: { series: this.tvSearchResult }, panelClass: 'modal-panel' });
+                const dia = this.dialog.open(EpisodeRequestComponent, { width: "700px", data: { series: this.tvSearchResult, isAdmin: this.isAdmin }, panelClass: 'modal-panel' });
                 dia.afterClosed().subscribe(x => this.loading = false);
                 return;
             case RequestType.movie:
-                this.requestService.requestMovie({ theMovieDbId: +this.result.id, languageCode: null, requestOnBehalf: null }).subscribe(x => {
+                if (this.isAdmin) {
+                    const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.result.id }, panelClass: 'modal-panel' });
+                    dialog.afterClosed().subscribe((result) => {
+                        if (result) {
+                                this.requestService.requestMovie({ theMovieDbId: +this.result.id,
+                                    languageCode: null,
+                                    qualityPathOverride: result.radarrPathId,
+                                    requestOnBehalf: result.username?.id,
+                                    rootFolderOverride: result.radarrFolderId, }).subscribe(x => {
+                                if (x.result) {
+                                    this.result.requested = true;
+                                    this.messageService.send(x.message, "Ok");
+                                } else {
+                                    this.messageService.send(x.errorMessage, "Ok");
+                                }
+                            });
+                        }
+                    });
+                } else {
+                this.requestService.requestMovie({ theMovieDbId: +this.result.id, languageCode: null, requestOnBehalf: null, qualityPathOverride: null, rootFolderOverride: null }).subscribe(x => {
                     if (x.result) {
                         this.result.requested = true;
                         this.messageService.send(x.message, "Ok");
@@ -135,6 +153,7 @@ export class DiscoverCardComponent implements OnInit {
                     this.loading = false;
                 });
                 return;
+            }
         }
     }
 

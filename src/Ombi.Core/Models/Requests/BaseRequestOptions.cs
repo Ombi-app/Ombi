@@ -29,15 +29,11 @@ using Newtonsoft.Json;
 
 namespace Ombi.Core.Models.Requests
 {
-    public class MovieRequestViewModel : BaseRequestOptions
-    {
-        public int TheMovieDbId { get; set; }
-        public string LanguageCode { get; set; } = "en";
 
-        /// <summary>
-        /// This is only set from a HTTP Header
-        /// </summary>
-        [JsonIgnore]
-        public string RequestedByAlias { get; set; }
+    public class BaseRequestOptions
+    {
+        public string RequestOnBehalf { get; set; }
+        public int? RootFolderOverride { get; set; }
+        public int? QualityPathOverride { get; set; }
     }
 }

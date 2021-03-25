@@ -1,14 +1,14 @@
 ﻿
 <button mat-button [matMenuTriggerFor]="configurationmenu"><i class="fas fa-wrench" aria-hidden="true"></i> Configuration</button>
 <mat-menu #configurationmenu="matMenu">
-    <button mat-menu-item [routerLink]="['/Settings/Ombi']">General</button>
-    <button mat-menu-item [routerLink]="['/Settings/Customization']">Customization</button>
-    <button mat-menu-item [routerLink]="['/Settings/LandingPage']">Landing Page</button>
-    <button mat-menu-item [routerLink]="['/Settings/Issues']">Issues</button>
-    <button mat-menu-item [routerLink]="['/Settings/UserManagement']">User Management</button>
-    <button mat-menu-item [routerLink]="['/Settings/Authentication']">Authentication</button>
+    <button mat-menu-item [routerLink]="['/Settings/Ombi']"><i class="far fa-grin-stars icon-spacing"></i> General</button>
+    <button mat-menu-item [routerLink]="['/Settings/Customization']"><i class="fas fa-paint-brush icon-spacing"></i> Customization</button>
+    <button mat-menu-item [routerLink]="['/Settings/LandingPage']"><i class="far fa-file icon-spacing"></i> Landing Page</button>
+    <button mat-menu-item [routerLink]="['/Settings/Issues']"><i class="fas fa-exclamation-triangle icon-spacing"></i> Issues</button>
+    <button mat-menu-item [routerLink]="['/Settings/UserManagement']"><i class="fas fa-users-cog icon-spacing"></i> User Management</button>
+    <button mat-menu-item [routerLink]="['/Settings/Authentication']"><i class="fas fa-sign-in-alt icon-spacing"></i> Authentication</button>
     <!-- <button mat-menu-item [routerLink]="['/Settings/Vote']">Vote</button> -->
-    <button mat-menu-item [routerLink]="['/Settings/TheMovieDb']">The Movie Database</button>
+    <button mat-menu-item [routerLink]="['/Settings/TheMovieDb']"><i class="fas fa-film icon-spacing"></i> The Movie Database</button>
 </mat-menu>
 
 <button mat-button [matMenuTriggerFor]="mediaservermenu"><i class="fas fa-server" aria-hidden="true"></i> Media Server</button>
@@ -39,27 +39,27 @@
 
 <button mat-button [matMenuTriggerFor]="notificationMenu"><i class="fas fa-bell" aria-hidden="true"></i> Notifications</button>
 <mat-menu #notificationMenu="matMenu">
-    <button mat-menu-item [routerLink]="['/Settings/CloudMobile']">Mobile</button>
-    <button mat-menu-item [routerLink]="['/Settings/Mobile']">Legacy Mobile</button>
-    <button mat-menu-item [routerLink]="['/Settings/Email']">Email</button>
-    <button mat-menu-item [routerLink]="['/Settings/MassEmail']">MassEmail</button>
-    <button mat-menu-item [routerLink]="['/Settings/Newsletter']">Newsletter</button>
-    <button mat-menu-item [routerLink]="['/Settings/Discord']">Discord</button>
-    <button mat-menu-item [routerLink]="['/Settings/Slack']">Slack</button>
-    <button mat-menu-item [routerLink]="['/Settings/Pushbullet']">Pushbullet</button>
-    <button mat-menu-item [routerLink]="['/Settings/Pushover']">Pushover</button>
-    <button mat-menu-item [routerLink]="['/Settings/Mattermost']">Mattermost</button>
-    <button mat-menu-item [routerLink]="['/Settings/Telegram']">Telegram</button>
-    <button mat-menu-item [routerLink]="['/Settings/Gotify']">Gotify</button>
-    <button mat-menu-item [routerLink]="['/Settings/Twilio']">Twilio</button>
-    <button mat-menu-item [routerLink]="['/Settings/Webhook']">Webhook</button>
+    <button mat-menu-item [routerLink]="['/Settings/CloudMobile']"><i class="fas fa-mobile-alt icon-spacing"></i> Mobile</button>
+    <button mat-menu-item [routerLink]="['/Settings/Mobile']"><i class="fas fa-mobile icon-spacing"></i> Legacy Mobile</button>
+    <button mat-menu-item [routerLink]="['/Settings/Email']"> <i class="far fa-envelope icon-spacing"></i> Email</button>
+    <button mat-menu-item [routerLink]="['/Settings/MassEmail']"><i class="fas fa-mail-bulk icon-spacing"></i> MassEmail</button>
+    <button mat-menu-item [routerLink]="['/Settings/Newsletter']"><i class="fas fa-inbox icon-spacing"></i> Newsletter</button>
+    <button mat-menu-item [routerLink]="['/Settings/Discord']"><i class="fab fa-discord icon-spacing"></i> Discord</button>
+    <button mat-menu-item [routerLink]="['/Settings/Slack']"><i class="fab fa-slack icon-spacing"></i> Slack</button>
+    <button mat-menu-item [routerLink]="['/Settings/Pushbullet']"><i class="far fa-comments icon-spacing"></i> Pushbullet</button>
+    <button mat-menu-item [routerLink]="['/Settings/Pushover']"><i class="fas fa-comments icon-spacing"></i> Pushover</button>
+    <button mat-menu-item [routerLink]="['/Settings/Mattermost']"><i class="far fa-comments icon-spacing"></i> Mattermost</button>
+    <button mat-menu-item [routerLink]="['/Settings/Telegram']"><i class="fab fa-telegram icon-spacing"></i> Telegram</button>
+    <button mat-menu-item [routerLink]="['/Settings/Gotify']"><i class="fas fa-comments icon-spacing"></i> Gotify</button>
+    <button mat-menu-item [routerLink]="['/Settings/Twilio']"><i class="fas fa-sms icon-spacing"></i> Twilio</button>
+    <button mat-menu-item [routerLink]="['/Settings/Webhook']"><i class="fas fa-sync icon-spacing"></i> Webhook</button>
 </mat-menu>
 
 <button mat-button [matMenuTriggerFor]="systemMenu"><i class="fas fa-sliders-h" aria-hidden="true"></i> System</button>
 <mat-menu #systemMenu="matMenu">
-    <button mat-menu-item [routerLink]="['/Settings/About']">About</button>
-    <button mat-menu-item [routerLink]="['/Settings/FailedRequests']">Failed Requests</button>
+    <button mat-menu-item [routerLink]="['/Settings/About']"><i class="fas fa-question icon-spacing"></i> About</button>
+    <button mat-menu-item [routerLink]="['/Settings/FailedRequests']"><i class="fas fa-times icon-spacing"></i> Failed Requests</button>
     <!-- <button mat-menu-item [routerLink]="['/Settings/Update']">Update</button> -->
-    <button mat-menu-item [routerLink]="['/Settings/Jobs']">Scheduled Tasks</button>
-    <button mat-menu-item [routerLink]="['/Settings/Logs']">Logs</button>
+    <button mat-menu-item [routerLink]="['/Settings/Jobs']"><i class="fas fa-clock icon-spacing"></i> Scheduled Tasks</button>
+    <button mat-menu-item [routerLink]="['/Settings/Logs']"><i class="fas fa-stream icon-spacing"></i> Logs</button>
 </mat-menu>

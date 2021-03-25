@@ -30,10 +30,6 @@
         <i class="fas fa-cog fa-2x "></i>
     </button>
     <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="openRequestOnBehalf()" [disabled]="!canRequestOnBehalf">
-            <i class="fas fa-user-friends icon-spacing"></i>
-            <span> {{'MediaDetails.RequestOnBehalf' | translate}}</span>
-        </button>
         <button mat-menu-item [disabled]="!canShowAdvanced" (click)="openAdvancedOptions()">
             <i class="fas fa-ticket-alt icon-spacing"></i>
             <span *ngIf="type === RequestType.movie"> {{ 'MediaDetails.RadarrConfiguration' | translate}}</span>

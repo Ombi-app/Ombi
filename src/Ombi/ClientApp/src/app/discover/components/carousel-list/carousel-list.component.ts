@@ -22,6 +22,7 @@ export class CarouselListComponent implements OnInit {
 
     @Input() public discoverType: DiscoverType;
     @Input() public id: string;
+    @Input() public isAdmin: boolean;
     @ViewChild('carousel', {static: false}) carousel: Carousel;
 
     public DiscoverOption = DiscoverOption;

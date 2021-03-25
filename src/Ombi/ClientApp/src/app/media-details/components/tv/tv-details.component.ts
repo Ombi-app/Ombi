@@ -76,7 +76,7 @@ export class TvDetailsComponent implements OnInit {
     }
 
     public async request(userId: string) {
-        this.dialog.open(EpisodeRequestComponent, { width: "800px", data: <EpisodeRequestData> { series: this.tv, requestOnBehalf: userId }, panelClass: 'modal-panel' })
+        this.dialog.open(EpisodeRequestComponent, { width: "800px", data: <EpisodeRequestData> { series: this.tv, requestOnBehalf: userId, isAdmin: this.isAdmin }, panelClass: 'modal-panel' })
     }
 
     public async issue() {
@@ -104,15 +104,6 @@ export class TvDetailsComponent implements OnInit {
                 result.profile = result.profiles.filter(f => f.id === +result.profileId)[0];
                 await this.requestService2.updateTvAdvancedOptions({ qualityOverride: result.profileId, rootPathOverride: result.rootFolderId, requestId: this.showRequest.id }).toPromise();
                 this.setAdvancedOptions(result);
-            }
-        });
-    }
-
-    public async openRequestOnBehalf() {
-        const dialog = this.dialog.open(RequestBehalfComponent, { width: "700px", panelClass: 'modal-panel' })
-        await dialog.afterClosed().subscribe(async result => {
-            if (result) {
-                await this.request(result.id);
             }
         });
     }

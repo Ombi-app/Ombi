@@ -6,6 +6,10 @@ describe("Movie Details Buttons", () => {
 
     Page.visit("587807");
     Page.requestButton.click();
+    Page.adminOptionsDialog.isOpen();
+
+    Page.adminOptionsDialog.requestButton.click();
+
     cy.verifyNotification("Tom & Jerry (2021) has been successfully added");
 
     Page.requestedButton.should("be.visible");
@@ -80,11 +84,13 @@ describe("Movie Details Buttons", () => {
   it("Movie Requested, mark as available", () => {
     cy.login();
 
-    Page.visit("399566");
+    Page.visit("12444");
 
     Page.requestButton.click();
+    Page.adminOptionsDialog.isOpen();
+    Page.adminOptionsDialog.requestButton.click();
     cy.verifyNotification(
-      "Godzilla vs. Kong (2021) has been successfully added"
+      "Harry Potter and the Deathly Hallows: Part 1 (2010) has been successfully added"
     );
 
     cy.reload();
@@ -102,6 +108,8 @@ describe("Movie Details Buttons", () => {
     Page.visit("671");
 
     Page.requestButton.click();
+    Page.adminOptionsDialog.isOpen();
+    Page.adminOptionsDialog.requestButton.click();
     cy.verifyNotification(
       "Harry Potter and the Philosopher's Stone (2001) has been successfully added"
     );
@@ -112,6 +120,7 @@ describe("Movie Details Buttons", () => {
     Page.denyButton.click();
 
     Page.denyModal.denyReason.type("Automation Tests");
+      cy.wait(500);
     Page.denyModal.denyButton.click();
 
     Page.deniedButton.should('exist');

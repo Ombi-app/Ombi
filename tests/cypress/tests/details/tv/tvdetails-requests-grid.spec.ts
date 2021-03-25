@@ -137,6 +137,9 @@ describe("TV Requests Grid", function () {
     Page.requestFabButton.fab.click();
     Page.requestFabButton.requestSelected.click();
 
+    Page.adminOptionsDialog.isOpen();
+    Page.adminOptionsDialog.requestButton.click();
+
     cy.verifyNotification('Request for Game of Thrones has been added successfully');
 
     Page.requestPanel.getEpisodeStatus(2,1)
@@ -157,6 +160,9 @@ describe("TV Requests Grid", function () {
     Page.requestFabButton.fab.click();
     Page.requestFabButton.requestFirst.click();
 
+    Page.adminOptionsDialog.isOpen();
+    Page.adminOptionsDialog.requestButton.click();
+
     cy.verifyNotification('Request for Game of Thrones has been added successfully');
 
     Page.requestPanel.getEpisodeStatus(1)
@@ -169,6 +175,9 @@ describe("TV Requests Grid", function () {
 
     Page.requestFabButton.fab.click();
     Page.requestFabButton.requestLatest.click();
+
+    Page.adminOptionsDialog.isOpen();
+    Page.adminOptionsDialog.requestButton.click();
 
     cy.verifyNotification('Request for Game of Thrones has been added successfully');
 

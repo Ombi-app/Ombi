@@ -1,13 +1,22 @@
 import { EpisodeRequestModal } from "./EpisodeRequestModal";
 
+export enum DiscoverType {
+  Upcoming,
+  Trending,
+  Popular,
+  RecentlyRequested,
+}
+
 export class DiscoverCard {
     private id: string;
     private movie: boolean;
+    private type: DiscoverType;
 
     episodeRequestModal = new EpisodeRequestModal();
-    constructor(id: string, movie: boolean) {
+    constructor(id: string, movie: boolean, type?: DiscoverType) {
       this.id = id;
       this.movie = movie;
+      this.type = type;
     }
 
     get topLevelCard(): Cypress.Chainable<any> {
@@ -35,6 +44,10 @@ export class DiscoverCard {
     }
 
     get requestButton(): Cypress.Chainable<any> {
+      if (this.type) {
+        return cy.get(`#requestButton${this.id}${this.movie ? '1' : '0'}${this.type}`);
+      }
+
       return cy.get(`#requestButton${this.id}${this.movie ? '1' : '0'}`);
     }
 
