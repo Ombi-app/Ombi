@@ -1,4 +1,5 @@
 import { BasePage } from "../../base.page";
+import { AdminRequestDialog } from "../../shared/AdminRequestDialog";
 
 class TvRequestPanel {
 
@@ -82,6 +83,7 @@ class TvDetailsPage extends BasePage {
     informationPanel = new TvDetailsInformationPanel();
     requestFabButton = new RequestFabButton();
     requestPanel = new TvRequestPanel();
+    adminOptionsDialog = new AdminRequestDialog();
 
     constructor() {
         super();

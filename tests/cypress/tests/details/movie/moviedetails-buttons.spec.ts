@@ -84,13 +84,13 @@ describe("Movie Details Buttons", () => {
   it("Movie Requested, mark as available", () => {
     cy.login();
 
-    Page.visit("399566");
+    Page.visit("12444");
 
     Page.requestButton.click();
     Page.adminOptionsDialog.isOpen();
     Page.adminOptionsDialog.requestButton.click();
     cy.verifyNotification(
-      "Godzilla vs. Kong (2021) has been successfully added"
+      "Harry Potter and the Deathly Hallows: Part 1 (2010) has been successfully added"
     );
 
     cy.reload();
