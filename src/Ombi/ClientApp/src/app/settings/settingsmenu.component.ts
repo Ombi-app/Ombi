@@ -2,6 +2,7 @@
 @Component({
     selector: "settings-menu",
     templateUrl: "./settingsmenu.component.html",
+    styleUrls: ["./settingsmenu.component.scss"]
 })
 export class SettingsMenuComponent {
     public ignore(event: any): void {

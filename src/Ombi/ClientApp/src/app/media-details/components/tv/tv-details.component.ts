@@ -108,15 +108,6 @@ export class TvDetailsComponent implements OnInit {
         });
     }
 
-    public async openRequestOnBehalf() {
-        const dialog = this.dialog.open(RequestBehalfComponent, { width: "700px", panelClass: 'modal-panel' })
-        await dialog.afterClosed().subscribe(async result => {
-            if (result) {
-                await this.request(result.id);
-            }
-        });
-    }
-
     public setAdvancedOptions(data: IAdvancedData) {
         this.advancedOptions = data;
         console.log(this.advancedOptions);

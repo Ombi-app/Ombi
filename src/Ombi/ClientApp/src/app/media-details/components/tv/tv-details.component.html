@@ -31,10 +31,8 @@
                     [embyUrl]="tv.embyUrl"
                     [jellyfinUrl]="tv.jellyfinUrl"
                     [isAdmin]="isAdmin"
-                    [canRequestOnBehalf]="!showRequest"
                     [canShowAdvanced]="showAdvanced && showRequest"
                     [type]="requestType"
-                    (onRequestBehalf)="openRequestOnBehalf()"
                     (onAdvancedOptions)="openAdvancedOptions()"
                     >
                 </social-icons>

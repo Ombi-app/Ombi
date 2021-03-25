@@ -20,11 +20,9 @@
             [embyUrl]="movie.embyUrl"
             [jellyfinUrl]="movie.jellyfinUrl"
             [isAdmin]="isAdmin"
-            [canRequestOnBehalf]="!hasRequest && !movie.available"
             [canShowAdvanced]="showAdvanced && movieRequest"
             [type]="requestType"
             (openTrailer)="openDialog()"
-            (onRequestBehalf)="openRequestOnBehalf()"
             (onAdvancedOptions)="openAdvancedOptions()"
             >
         </social-icons>

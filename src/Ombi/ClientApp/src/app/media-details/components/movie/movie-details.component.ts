@@ -190,15 +190,6 @@ export class MovieDetailsComponent {
         });
     }
 
-    public async openRequestOnBehalf() {
-        const dialog = this.dialog.open(RequestBehalfComponent, { width: "700px", panelClass: 'modal-panel' })
-        await dialog.afterClosed().subscribe(async result => {
-            if (result) {
-                await this.request(result.id);
-            }
-        });
-    }
-
     private loadBanner() {
         this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
             if (!this.movie.backdropPath) {

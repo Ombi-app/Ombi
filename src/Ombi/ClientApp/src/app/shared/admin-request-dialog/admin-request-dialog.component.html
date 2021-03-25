@@ -1,8 +1,10 @@
 
 
 <form [formGroup]="form" *ngIf="form">
-  <h1 id="advancedOptionsTitle">{{'MediaDetails.AdvancedOptions' | translate }}</h1>
+  <h1 id="advancedOptionsTitle"><i class="fas fa-sliders-h"></i> {{'MediaDetails.AdvancedOptions' | translate }}</h1>
+  <hr />
   <div class="alert alert-info" role="alert">
+    <i class="fas fa-x7 fa-exclamation-triangle glyphicon"></i>
     <span *ngIf="data.type === RequestType.movie">{{'MediaDetails.AutoApproveOptions' | translate }}</span>
     <span *ngIf="data.type === RequestType.tvShow">{{'MediaDetails.AutoApproveOptionsTv' | translate }}</span>
   </div>
@@ -12,7 +14,7 @@
   </div>
 
 <!-- User area -->
-<h3>{{'MediaDetails.RequestOnBehalf' | translate }}</h3>
+<h3><i class="fas fa-user-friends"></i> {{'MediaDetails.RequestOnBehalf' | translate }}</h3>
 <mat-form-field class="example-full-width" appearance="outline" floatLabel=auto>
   <mat-label>{{ 'MediaDetails.PleaseSelectUser' | translate}}</mat-label>
   <input id="requestOnBehalfUserInput"
@@ -29,10 +31,10 @@
 <!-- End User area -->
 
 
-<hr />
+
 
   <!-- Sonarr -->
-  <div *ngIf="data.type === RequestType.tvShow && sonarrEnabled">
+  <div *ngIf="data.type === RequestType.tvShow && sonarrEnabled"><hr />
   <div>
     <h3>Sonarr Overrides</h3>
     <mat-form-field appearance="outline" floatLabel=auto>
@@ -54,7 +56,7 @@
   <!-- End Sonarr-->
 
   <!-- Radarr -->
-  <div *ngIf="data.type === RequestType.movie && radarrEnabled">
+  <div *ngIf="data.type === RequestType.movie && radarrEnabled"><hr />
   <div>
     <h3>Radarr Overrides</h3>
       <mat-form-field appearance="outline" floatLabel=auto>
@@ -76,9 +78,9 @@
   <!-- End Radarr-->
 
 
-<div mat-dialog-actions>
-  <button mat-raised-button id="cancelButton" [mat-dialog-close]="" color="warn">{{ 'Common.Cancel' | translate }}</button>
-  <button mat-raised-button id="requestButton" (click)="submitRequest()" color="accent">{{ 'Common.Request' | translate }}</button>
+<div mat-dialog-actions class="right-buttons">
+  <button mat-raised-button id="cancelButton" [mat-dialog-close]="" color="warn"><i class="fas fa-times"></i> {{ 'Common.Cancel' | translate }}</button>
+  <button mat-raised-button id="requestButton" (click)="submitRequest()" color="accent"><i class="fas fa-plus"></i> {{ 'Common.Request' | translate }}</button>
 </div>
 </form>
 
