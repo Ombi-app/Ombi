@@ -96,9 +96,9 @@ export class MovieDetailsComponent {
                         rootFolderOverride: result.radarrFolderId, }).toPromise();
                     if (requestResult.result) {
                         this.movie.requested = true;
-                        this.movie.requestId = result.requestId;
-                        this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
+                        this.movie.requestId = requestResult.requestId;
                         this.messageService.send(requestResult.message, "Ok");
+                        this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
                     } else {
                         this.messageService.send(requestResult.errorMessage, "Ok");
                     }

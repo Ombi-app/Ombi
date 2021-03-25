@@ -79,7 +79,7 @@ describe("Search Tests", () => {
     card.requestButton.should('exist');
   });
 
-  it("No TV results, enabling movies filter we get results", () => {
+  it.only("No TV results, enabling movies filter we get results", () => {
     Page.navbar.searchFilter.applyFilter(true, false, false);
     Page.visit("half blood prince");
 

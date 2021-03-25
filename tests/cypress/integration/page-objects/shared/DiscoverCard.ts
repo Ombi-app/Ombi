@@ -44,7 +44,11 @@ export class DiscoverCard {
     }
 
     get requestButton(): Cypress.Chainable<any> {
-      return cy.get(`#requestButton${this.id}${this.movie ? '1' : '0'}${this.type}`);
+      if (this.type) {
+        return cy.get(`#requestButton${this.id}${this.movie ? '1' : '0'}${this.type}`);
+      }
+
+      return cy.get(`#requestButton${this.id}${this.movie ? '1' : '0'}`);
     }
 
     verifyTitle(expected: string): Cypress.Chainable<any> {
