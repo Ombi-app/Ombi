@@ -7,6 +7,7 @@ import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
 import { EpisodeRequestComponent } from "../../../shared/episode-request/episode-request.component";
 import { AdminRequestDialogComponent } from "../../../shared/admin-request-dialog/admin-request-dialog.component";
+import { DiscoverType } from "../carousel-list/carousel-list.component";
 
 @Component({
     selector: "discover-card",
@@ -15,6 +16,7 @@ import { AdminRequestDialogComponent } from "../../../shared/admin-request-dialo
 })
 export class DiscoverCardComponent implements OnInit {
 
+    @Input() public discoverType: DiscoverType;
     @Input() public result: IDiscoverCardResult;
     @Input() public isAdmin: boolean;
     public RequestType = RequestType;
@@ -126,7 +128,18 @@ export class DiscoverCardComponent implements OnInit {
                     const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.result.id }, panelClass: 'modal-panel' });
                     dialog.afterClosed().subscribe((result) => {
                         if (result) {
-                            this.result.requested = true;
+                                this.requestService.requestMovie({ theMovieDbId: +this.result.id,
+                                    languageCode: null,
+                                    qualityPathOverride: result.radarrPathId,
+                                    requestOnBehalf: result.username?.id,
+                                    rootFolderOverride: result.radarrFolderId, }).subscribe(x => {
+                                if (x.result) {
+                                    this.result.requested = true;
+                                    this.messageService.send(x.message, "Ok");
+                                } else {
+                                    this.messageService.send(x.errorMessage, "Ok");
+                                }
+                            });
                         }
                     });
                 } else {
