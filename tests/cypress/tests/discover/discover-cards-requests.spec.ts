@@ -50,7 +50,7 @@ describe("Discover Cards Requests Tests", () => {
     });
   });
 
-  it.only("Not requested movie allows non-admin to request", () => {
+  it("Not requested movie allows non-admin to request", () => {
     cy.generateUniqueId().then((id) => {
       cy.login();
       const roles = [];

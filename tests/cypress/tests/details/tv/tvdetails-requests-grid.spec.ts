@@ -170,7 +170,7 @@ describe("TV Requests Grid", function () {
       .should('have.class', 'requested')
   });
 
-  it.only("Request Latest Season", () => {
+  it("Request Latest Season", () => {
     Page.visit('1399');
 
     Page.requestFabButton.fab.click();
