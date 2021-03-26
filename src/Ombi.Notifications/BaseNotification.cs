@@ -209,7 +209,6 @@ namespace Ombi.Notifications
             if (model.RequestType == RequestType.Movie)
             {
                 _log.LogDebug("Notification options: {@model}, Req: {@MovieRequest}, Settings: {@Customization}", model, MovieRequest, Customization);
-
                 curlys.Setup(model, MovieRequest, Customization, preference);
             }
             else if (model.RequestType == RequestType.TvShow)
