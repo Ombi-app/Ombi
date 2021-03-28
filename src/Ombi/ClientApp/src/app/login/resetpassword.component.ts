@@ -2,12 +2,14 @@
 import { Component, OnInit, Inject } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
+import { fadeInOutAnimation } from "../animations/fadeinout";
 
 import { ICustomizationSettings } from "../interfaces";
 import { IdentityService, ImageService, NotificationService, SettingsService } from "../services";
 
 @Component({
     templateUrl: "./resetpassword.component.html",
+    animations: [fadeInOutAnimation],
     styleUrls: ["./login.component.scss"],
 })
 export class ResetPasswordComponent implements OnInit {

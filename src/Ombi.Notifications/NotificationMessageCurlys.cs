@@ -39,12 +39,7 @@ namespace Ombi.Notifications
             Year = req?.ReleaseDate.Year.ToString();
             Overview = req?.Overview;
             AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
-
-            if (!string.IsNullOrEmpty(req?.PosterPath))
-            {
-                PosterImage = $"https://image.tmdb.org/t/p/w300/{req.PosterPath.TrimStart('/')}";
-            }
-
+            PosterImage = $"https://image.tmdb.org/t/p/w300/{req?.PosterPath?.TrimStart('/') ?? string.Empty}";
             CalculateRequestStatus(req);
         }
 
@@ -58,11 +53,8 @@ namespace Ombi.Notifications
             Year = req?.ParentRequest?.ReleaseDate.Year.ToString();
             Overview = req?.ParentRequest?.Overview;
             AdditionalInformation = opts.AdditionalInformation;
-
-            if (!string.IsNullOrEmpty(req?.ParentRequest?.PosterPath))
-            {
-                PosterImage = $"https://image.tmdb.org/t/p/w300/{req.ParentRequest?.PosterPath.TrimStart('/')}";
-            }
+            PosterImage =
+                $"https://image.tmdb.org/t/p/w300/{req?.ParentRequest?.PosterPath?.TrimStart('/') ?? string.Empty}";
 
             // Generate episode list.
             StringBuilder epSb = new StringBuilder();
