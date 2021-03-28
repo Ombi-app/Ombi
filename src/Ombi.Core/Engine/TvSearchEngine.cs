@@ -22,6 +22,7 @@ using Ombi.Store.Entities;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using System.Threading;
+using TraktSharp.Entities;
 
 namespace Ombi.Core.Engine
 {
@@ -51,18 +52,18 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<SearchTvShowViewModel>> Search(string searchTerm)
         {
-            var searchResult = await _theMovieDbApi.SearchTv(searchTerm);
+            var searchResult = await TvMazeApi.Search(searchTerm);
 
             if (searchResult != null)
             {
                 var retVal = new List<SearchTvShowViewModel>();
-                foreach (var result in searchResult)
+                foreach (var tvMazeSearch in searchResult)
                 {
-                    //if (tvMazeSearch.show.externals == null || !(tvMazeSearch.show.externals?.thetvdb.HasValue ?? false))
-                    //{
-                    //    continue;
-                    //}
-                    var mappedResult = await ProcessResult(result, false);
+                    if (tvMazeSearch.show.externals == null || !(tvMazeSearch.show.externals?.thetvdb.HasValue ?? false))
+                    {
+                        continue;
+                    }
+                    var mappedResult = await ProcessResult(tvMazeSearch, false);
                     if (mappedResult == null)
                     {
                         continue;
@@ -74,61 +75,56 @@ namespace Ombi.Core.Engine
             return null;
         }
 
-        public async Task<SearchTvShowViewModel> GetShowInformation(string theMovieDbId, CancellationToken token)
+        public async Task<SearchTvShowViewModel> GetShowInformation(string tvdbid, CancellationToken token)
         {
-            var show = await Cache.GetOrAdd(nameof(GetShowInformation) + theMovieDbId,
-                async () => await _theMovieDbApi.GetTVInfo(theMovieDbId), DateTime.Now.AddHours(12));
+            var show = await Cache.GetOrAdd(nameof(GetShowInformation) + tvdbid,
+                async () => await TvMazeApi.ShowLookupByTheTvDbId(int.Parse(tvdbid)), DateTime.Now.AddHours(12));
             if (show == null)
             {
                 // We don't have enough information
                 return null;
             }
 
-            //var episodes = await Cache.GetOrAdd("TvMazeEpisodeLookup" + show.id,
-            //    async () => await TvMazeApi.EpisodeLookup(show.id), DateTime.Now.AddHours(12));
-            //if (episodes == null || !episodes.Any())
-            //{
-            //    // We don't have enough information
-            //    return null;
-            //}
+            var episodes = await Cache.GetOrAdd("TvMazeEpisodeLookup" + show.id,
+                async () => await TvMazeApi.EpisodeLookup(show.id), DateTime.Now.AddHours(12));
+            if (episodes == null || !episodes.Any())
+            {
+                // We don't have enough information
+                return null;
+            }
 
             var mapped = Mapper.Map<SearchTvShowViewModel>(show);
 
-            foreach(var tvSeason in show.seasons)
+            foreach (var e in episodes)
             {
-                var seasonEpisodes = (await _theMovieDbApi.GetSeasonEpisodes(show.id, tvSeason.season_number, token));
-
-                foreach (var episode in seasonEpisodes.episodes)
+                var season = mapped.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == e.season);
+                if (season == null)
                 {
-                    var season = mapped.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == episode.season_number);
-                    if (season == null)
+                    var newSeason = new SeasonRequests
                     {
-                        var newSeason = new SeasonRequests
-                        {
-                            SeasonNumber = episode.season_number,
-                            Episodes = new List<EpisodeRequests>()
-                        };
-                        newSeason.Episodes.Add(new EpisodeRequests
-                        {
-                            //Url = episode...ToHttpsUrl(),
-                            Title = episode.name,
-                            AirDate = episode.air_date.HasValue() ? DateTime.Parse(episode.air_date) : DateTime.MinValue,
-                            EpisodeNumber = episode.episode_number,
+                        SeasonNumber = e.season,
+                        Episodes = new List<EpisodeRequests>()
+                    };
+                    newSeason.Episodes.Add(new EpisodeRequests
+                    {
+                        Url = e.url.ToHttpsUrl(),
+                        Title = e.name,
+                        AirDate = e.airstamp.HasValue() ? DateTime.Parse(e.airstamp) : DateTime.MinValue,
+                        EpisodeNumber = e.number,
 
-                        });
-                        mapped.SeasonRequests.Add(newSeason);
-                    }
-                    else
+                    });
+                    mapped.SeasonRequests.Add(newSeason);
+                }
+                else
+                {
+                    // We already have the season, so just add the episode
+                    season.Episodes.Add(new EpisodeRequests
                     {
-                        // We already have the season, so just add the episode
-                        season.Episodes.Add(new EpisodeRequests
-                        {
-                            //Url = e.url.ToHttpsUrl(),
-                            Title = episode.name,
-                            AirDate = episode.air_date.HasValue() ? DateTime.Parse(episode.air_date) : DateTime.MinValue,
-                            EpisodeNumber = episode.episode_number,
-                        });
-                    }
+                        Url = e.url.ToHttpsUrl(),
+                        Title = e.name,
+                        AirDate = e.airstamp.HasValue() ? DateTime.Parse(e.airstamp) : DateTime.MinValue,
+                        EpisodeNumber = e.number,
+                    });
                 }
             }
 
@@ -147,11 +143,11 @@ namespace Ombi.Core.Engine
             var langCode = await DefaultLanguageCode(null);
 
             var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
-            var results = new List<MovieDbSearchResult>();
+            var results = new List<TraktShow>();
             foreach (var pagesToLoad in pages)
             {
                 var apiResult = await Cache.GetOrAdd(nameof(Popular) + langCode + pagesToLoad.Page,
-                    async () => await _theMovieDbApi.PopularTv(langCode, pagesToLoad.Page), DateTime.Now.AddHours(12));
+                    async () => await TraktApi.GetPopularShows(pagesToLoad.Page, ResultLimit), DateTime.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
 
@@ -172,11 +168,11 @@ namespace Ombi.Core.Engine
             var langCode = await DefaultLanguageCode(null);
 
             var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
-            var results = new List<MovieDbSearchResult>();
+            var results = new List<TraktShow>();
             foreach (var pagesToLoad in pages)
             {
                 var apiResult = await Cache.GetOrAdd(nameof(Anticipated) + langCode + pagesToLoad.Page,
-                    async () => await _theMovieDbApi.UpcomingTv(langCode, pagesToLoad.Page), DateTime.Now.AddHours(12));
+                    async () => await TraktApi.GetAnticipatedShows(pagesToLoad.Page, ResultLimit), DateTime.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
             var processed = ProcessResults(results);
@@ -196,11 +192,11 @@ namespace Ombi.Core.Engine
             var langCode = await DefaultLanguageCode(null);
 
             var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
-            var results = new List<MovieDbSearchResult>();
+            var results = new List<TraktShow>();
             foreach (var pagesToLoad in pages)
             {
                 var apiResult = await Cache.GetOrAdd(nameof(Trending) + langCode + pagesToLoad.Page,
-                    async () => await _theMovieDbApi.TopRatedTv(langCode, pagesToLoad.Page), DateTime.Now.AddHours(12));
+                    async () => await TraktApi.GetTrendingShows(pagesToLoad.Page, ResultLimit), DateTime.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
             var processed = ProcessResults(results);

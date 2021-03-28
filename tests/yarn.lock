@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@bahmutov/cy-api@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@bahmutov/cy-api/-/cy-api-1.5.0.tgz#e6569f1d0f3040e55f97cf151a16932bfb10dcc6"
+  integrity sha512-N1pBawxcwXyDpJx0qwd78k/6yFEyHWVC71N7n78Rnaegs3LR1Z0odZJrKurpb56JFaP4abNm6EONXEEi5boMmQ==
+  dependencies:
+    common-tags "1.8.0"
+
 "@cypress/listr-verbose-renderer@^0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@cypress/listr-verbose-renderer/-/listr-verbose-renderer-0.4.1.tgz#a77492f4b11dcc7c446a34b3e28721afd33c642a"
@@ -330,7 +337,7 @@ commander@^5.1.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-5.1.0.tgz#46abbd1652f8e059bddaef99bbdcb2ad9cf179ae"
   integrity sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==
 
-common-tags@^1.8.0:
+common-tags@1.8.0, common-tags@^1.8.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/common-tags/-/common-tags-1.8.0.tgz#8e3153e542d4a39e9b10554434afaaf98956a937"
   integrity sha512-6P6g0uetGpW/sdyUy/iQQCbFF0kWVMSIVSyYz7Zgjcgh8mgw8PQzDNZeyZ5DQ2gM7LBoZPHmnjz8rUthkBG5tw==

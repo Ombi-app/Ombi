@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "@bahmutov/cy-api": "^1.5.0",
     "cypress": "6.8.0",
     "cypress-wait-until": "^1.7.1",
     "typescript": "^4.2.3"

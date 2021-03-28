@@ -22,12 +22,10 @@ namespace Ombi.Controllers.V2
 {
     public class SearchController : V2Controller
     {
-        public SearchController(IMultiSearchEngine multiSearchEngine, ITvSearchEngine tvSearchEngine,
+        public SearchController(IMultiSearchEngine multiSearchEngine,
             IMovieEngineV2 v2Movie, ITVSearchEngineV2 v2Tv, IMusicSearchEngineV2 musicEngine, IRottenTomatoesApi rottenTomatoesApi)
         {
             _multiSearchEngine = multiSearchEngine;
-            _tvSearchEngine = tvSearchEngine;
-            _tvSearchEngine.ResultLimit = 20;
             _movieEngineV2 = v2Movie;
             _movieEngineV2.ResultLimit = 20;
             _tvEngineV2 = v2Tv;
@@ -38,7 +36,6 @@ namespace Ombi.Controllers.V2
         private readonly IMultiSearchEngine _multiSearchEngine;
         private readonly IMovieEngineV2 _movieEngineV2;
         private readonly ITVSearchEngineV2 _tvEngineV2;
-        private readonly ITvSearchEngine _tvSearchEngine;
         private readonly IMusicSearchEngineV2 _musicEngine;
         private readonly IRottenTomatoesApi _rottenTomatoesApi;
 
@@ -263,51 +260,12 @@ namespace Ombi.Controllers.V2
         /// </summary>
         /// <remarks>We use Trakt.tv as the Provider</remarks>
         /// <returns></returns>
-        [HttpGet("tv/popular")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesDefaultResponseType]
-        public async Task<IEnumerable<SearchTvShowViewModel>> PopularTv()
-        {
-            return await _tvSearchEngine.Popular();
-        }
-
-        /// <summary>
-        /// Returns Popular Tv Shows
-        /// </summary>
-        /// <remarks>We use Trakt.tv as the Provider</remarks>
-        /// <returns></returns>
         [HttpGet("tv/popular/{currentPosition}/{amountToLoad}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchTvShowViewModel>> PopularTv(int currentPosition, int amountToLoad)
         {
-            return await _tvSearchEngine.Popular(currentPosition, amountToLoad);
-        }
-
-        /// <summary>
-        /// Returns Popular Tv Shows
-        /// </summary>
-        /// <remarks>We use Trakt.tv as the Provider</remarks>
-        /// <returns></returns>
-        [HttpGet("tv/popular/{currentPosition}/{amountToLoad}/images")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesDefaultResponseType]
-        public async Task<IEnumerable<SearchTvShowViewModel>> PopularTvWithImages(int currentPosition, int amountToLoad)
-        {
-            return await _tvSearchEngine.Popular(currentPosition, amountToLoad, true);
-        }
-
-        /// <summary>
-        /// Returns most Anticipated tv shows.
-        /// </summary>
-        /// <remarks>We use Trakt.tv as the Provider</remarks>
-        /// <returns></returns>
-        [HttpGet("tv/anticipated")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesDefaultResponseType]
-        public async Task<IEnumerable<SearchTvShowViewModel>> AnticipatedTv()
-        {
-            return await _tvSearchEngine.Anticipated();
+            return await _tvEngineV2.Popular(currentPosition, amountToLoad);
         }
 
         /// <summary>
@@ -320,22 +278,7 @@ namespace Ombi.Controllers.V2
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchTvShowViewModel>> AnticipatedTv(int currentPosition, int amountToLoad)
         {
-            return await _tvSearchEngine.Anticipated(currentPosition, amountToLoad);
-        }
-
-
-        /// <summary>
-        /// Returns Most watched shows.
-        /// </summary>
-        /// <remarks>We use Trakt.tv as the Provider</remarks>
-        /// <returns></returns>
-        [HttpGet("tv/mostwatched")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesDefaultResponseType]
-        [Obsolete("This method is obsolete, Trakt API no longer supports this")]
-        public async Task<IEnumerable<SearchTvShowViewModel>> MostWatched()
-        {
-            return await _tvSearchEngine.Popular();
+            return await _tvEngineV2.Anticipated(currentPosition, amountToLoad);
         }
 
         /// <summary>
@@ -349,21 +292,9 @@ namespace Ombi.Controllers.V2
         [Obsolete("This method is obsolete, Trakt API no longer supports this")]
         public async Task<IEnumerable<SearchTvShowViewModel>> MostWatched(int currentPosition, int amountToLoad)
         {
-            return await _tvSearchEngine.Popular(currentPosition, amountToLoad);
+            return await _tvEngineV2.Popular(currentPosition, amountToLoad);
         }
 
-        /// <summary>
-        /// Returns trending shows
-        /// </summary>
-        /// <remarks>We use Trakt.tv as the Provider</remarks>
-        /// <returns></returns>
-        [HttpGet("tv/trending")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesDefaultResponseType]
-        public async Task<IEnumerable<SearchTvShowViewModel>> Trending()
-        {
-            return await _tvSearchEngine.Trending();
-        }
 
         /// <summary>
         /// Returns trending shows by page
@@ -375,9 +306,8 @@ namespace Ombi.Controllers.V2
         [ProducesDefaultResponseType]
         public async Task<IEnumerable<SearchTvShowViewModel>> Trending(int currentPosition, int amountToLoad)
         {
-            return await _tvSearchEngine.Trending(currentPosition, amountToLoad);
+            return await _tvEngineV2.Trending(currentPosition, amountToLoad);
         }
-
 
         /// <summary>
         /// Returns all the movies that is by the actor id 
