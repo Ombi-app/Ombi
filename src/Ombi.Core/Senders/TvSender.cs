@@ -206,11 +206,19 @@ namespace Ombi.Core.Senders
             // Overrides on the request take priority
             if (model.ParentRequest.QualityOverride.HasValue)
             {
-                qualityToUse = model.ParentRequest.QualityOverride.Value;
+                var qualityOverride = model.ParentRequest.QualityOverride.Value;
+                if (qualityOverride > 0)
+                {
+                    qualityToUse = qualityOverride;
+                }
             }
             if (model.ParentRequest.RootFolder.HasValue)
             {
-               rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder.Value, s);
+                var rootfolderOverride = model.ParentRequest.RootFolder.Value;
+                if (rootfolderOverride > 0)
+                {
+                    rootFolderPath = await GetSonarrRootPath(rootfolderOverride, s);
+                }
             }
       
             // Are we using v3 sonarr?
