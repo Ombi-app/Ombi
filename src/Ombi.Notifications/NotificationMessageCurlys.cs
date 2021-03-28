@@ -58,15 +58,10 @@ namespace Ombi.Notifications
             Year = req?.ReleaseDate.Year.ToString();
             DenyReason = req?.DeniedReason;
             AvailableDate = req?.MarkedAsAvailable?.ToString("D") ?? string.Empty;
-            if (req?.RequestType == RequestType.Movie)
-            {
-                PosterImage = string.Format((req?.PosterPath ?? string.Empty).StartsWith("/", StringComparison.InvariantCultureIgnoreCase)
-                    ? "https://image.tmdb.org/t/p/w300{0}" : "https://image.tmdb.org/t/p/w300/{0}", req?.PosterPath);
-            }
-            else
-            {
-                PosterImage = req?.PosterPath;
-            }
+
+            PosterImage = string.Format((req?.PosterPath ?? string.Empty).StartsWith("/", StringComparison.InvariantCultureIgnoreCase)
+                ? "https://image.tmdb.org/t/p/w300{0}" : "https://image.tmdb.org/t/p/w300/{0}", req?.PosterPath);
+
 
             AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
 
@@ -168,15 +163,10 @@ namespace Ombi.Notifications
 
             Overview = req?.ParentRequest.Overview;
             Year = req?.ParentRequest.ReleaseDate.Year.ToString();
-            if (req?.RequestType == RequestType.Movie)
-            {
-                PosterImage = string.Format((req?.ParentRequest.PosterPath ?? string.Empty).StartsWith("/", StringComparison.InvariantCultureIgnoreCase)
-                    ? "https://image.tmdb.org/t/p/w300{0}" : "https://image.tmdb.org/t/p/w300/{0}", req?.ParentRequest.PosterPath);
-            }
-            else
-            {
-                PosterImage = req?.ParentRequest.PosterPath;
-            }
+
+            PosterImage = string.Format((req?.ParentRequest.PosterPath ?? string.Empty).StartsWith("/", StringComparison.InvariantCultureIgnoreCase)
+                ? "https://image.tmdb.org/t/p/w300{0}" : "https://image.tmdb.org/t/p/w300/{0}", req?.ParentRequest.PosterPath);
+
             AdditionalInformation = opts.AdditionalInformation;
             // DO Episode and Season Lists
 
