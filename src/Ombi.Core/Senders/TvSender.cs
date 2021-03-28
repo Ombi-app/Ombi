@@ -167,7 +167,7 @@ namespace Ombi.Core.Senders
             {
                 // Get the root path from the rootfolder selected.
                 // For some reason, if we haven't got one use the first root folder in Sonarr
-                rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder ?? int.Parse(s.RootPathAnime), s);
+                rootFolderPath = await GetSonarrRootPath(int.Parse(s.RootPathAnime), s);
                 int.TryParse(s.QualityProfileAnime, out qualityToUse);
                 if (profiles != null)
                 {
@@ -188,7 +188,7 @@ namespace Ombi.Core.Senders
                 int.TryParse(s.QualityProfile, out qualityToUse);
                 // Get the root path from the rootfolder selected.
                 // For some reason, if we haven't got one use the first root folder in Sonarr
-                rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder ?? int.Parse(s.RootPath), s);
+                rootFolderPath = await GetSonarrRootPath(int.Parse(s.RootPath), s);
                 if (profiles != null)
                 {
                     if (profiles.SonarrRootPath > 0)
