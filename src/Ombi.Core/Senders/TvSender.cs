@@ -206,7 +206,11 @@ namespace Ombi.Core.Senders
             // Overrides on the request take priority
             if (model.ParentRequest.QualityOverride.HasValue)
             {
-                qualityToUse = model.ParentRequest.QualityOverride.Value;
+                overrideQuality = model.ParentRequest.QualityOverride.Value;
+                if (overrideQuality > 0)
+                {
+                    qualityToUse = overrideQuality;
+                }
             }
             if (model.ParentRequest.RootFolder.HasValue)
             {
