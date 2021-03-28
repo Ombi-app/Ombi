@@ -18,7 +18,7 @@ namespace Ombi.Core.Rule.Rules.Search
                 // If we have all the episodes for this season, then this season is available
                 if (season.Episodes.All(x => x.Available))
                 {
-                    season.SeasonAvailable = true;
+                    season.SeasonAvailable = true; 
                 }
             }
             if (search.SeasonRequests.All(x => x.Episodes.All(e => e.Available)))

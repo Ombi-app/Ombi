@@ -17,6 +17,7 @@
 import './commands'
 import './request.commands';
 import "cypress-real-events/support";
+import '@bahmutov/cy-api/support';
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

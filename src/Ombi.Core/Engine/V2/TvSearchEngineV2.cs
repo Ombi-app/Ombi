@@ -21,6 +21,7 @@ using TraktSharp.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using Ombi.Api.TheMovieDb;
+using Ombi.Api.TheMovieDb.Models;
 
 namespace Ombi.Core.Engine.V2
 {
@@ -30,16 +31,18 @@ namespace Ombi.Core.Engine.V2
         private readonly IMapper _mapper;
         private readonly ITraktApi _traktApi;
         private readonly IMovieDbApi _movieApi;
+        private readonly ISettingsService<CustomizationSettings> _customization;
 
         public TvSearchEngineV2(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
             ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um, ICacheService memCache, ISettingsService<OmbiSettings> s,
-            IRepository<RequestSubscription> sub, IMovieDbApi movieApi)
+            IRepository<RequestSubscription> sub, IMovieDbApi movieApi, ISettingsService<CustomizationSettings> customization)
             : base(identity, service, r, um, memCache, s, sub)
         {
             _tvMaze = tvMaze;
             _mapper = mapper;
             _traktApi = trakt;
             _movieApi = movieApi;
+            _customization = customization;
         }
 
 
@@ -104,6 +107,56 @@ namespace Ombi.Core.Engine.V2
             return await ProcessResult(mapped);
         }
 
+        public async Task<IEnumerable<SearchTvShowViewModel>> Popular(int currentlyLoaded, int amountToLoad)
+        {
+            var langCode = await DefaultLanguageCode(null);
+
+            var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
+            var results = new List<MovieDbSearchResult>();
+            foreach (var pagesToLoad in pages)
+            {
+                var apiResult = await Cache.GetOrAdd(nameof(Popular) + langCode + pagesToLoad.Page,
+                 async () => await _movieApi.PopularTv(langCode, pagesToLoad.Page), DateTime.Now.AddHours(12));
+                results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
+            }
+
+            var processed = ProcessResults(results);
+            return await processed;
+        }
+
+        public async Task<IEnumerable<SearchTvShowViewModel>> Anticipated(int currentlyLoaded, int amountToLoad)
+        {
+            var langCode = await DefaultLanguageCode(null);
+
+            var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
+            var results = new List<MovieDbSearchResult>();
+            foreach (var pagesToLoad in pages)
+            {
+                var apiResult = await Cache.GetOrAdd(nameof(Anticipated) + langCode + pagesToLoad.Page,
+                    async () => await _movieApi.UpcomingTv(langCode, pagesToLoad.Page), DateTime.Now.AddHours(12));
+                results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
+            }
+            var processed = ProcessResults(results);
+            return await processed;
+        }
+
+        public async Task<IEnumerable<SearchTvShowViewModel>> Trending(int currentlyLoaded, int amountToLoad)
+        {
+            var langCode = await DefaultLanguageCode(null);
+
+            var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
+            var results = new List<MovieDbSearchResult>();
+            foreach (var pagesToLoad in pages)
+            {
+                var apiResult = await Cache.GetOrAdd(nameof(Trending) + langCode + pagesToLoad.Page,
+                    async () => await _movieApi.TopRatedTv(langCode, pagesToLoad.Page), DateTime.Now.AddHours(12));
+                results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
+            }
+            var processed = ProcessResults(results);
+            return await processed;
+        }
+
+
         public async Task<IEnumerable<StreamingData>> GetStreamInformation(int movieDbId, CancellationToken cancellationToken)
         {
             var providers = await _movieApi.GetTvWatchProviders(movieDbId, cancellationToken);
@@ -124,19 +177,28 @@ namespace Ombi.Core.Engine.V2
             return data;
         }
 
-        private IEnumerable<SearchTvShowViewModel> ProcessResults<T>(IEnumerable<T> items)
+        private async Task<IEnumerable<SearchTvShowViewModel>> ProcessResults<T>(IEnumerable<T> items)
         {
-            var retVal = new List<SearchTvShowViewModel>();
+            var retVal = new List<SearchTvShowViewModel>(); 
+            var settings = await _customization.GetSettingsAsync();
             foreach (var tvMazeSearch in items)
             {
-                retVal.Add(ProcessResult(tvMazeSearch));
+                var result = await ProcessResult(tvMazeSearch);
+                if (result == null || settings.HideAvailableFromDiscover && result.Available)
+                {
+                    continue;
+                }
+                retVal.Add(result);
             }
             return retVal;
         }
 
-        private SearchTvShowViewModel ProcessResult<T>(T tvMazeSearch)
+        private async Task<SearchTvShowViewModel> ProcessResult<T>(T tvMazeSearch)
         {
-            return _mapper.Map<SearchTvShowViewModel>(tvMazeSearch);
+            var item = _mapper.Map<SearchTvShowViewModel>(tvMazeSearch);
+
+            await RunSearchRules(item);
+            return item;
         }
 
         private async Task<SearchFullInfoTvShowViewModel> ProcessResult(SearchFullInfoTvShowViewModel item)
