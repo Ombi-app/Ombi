@@ -6,7 +6,7 @@ describe("TV Search V1 API tests", () => {
     });
 
     it("Get Extra TV Info", () => {
-        cy.api({url: '/api/v1/search/tv/info/121361', headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem('id_token')} })
+        cy.api({url: '/api/v1/search/tv/info/287247', headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem('id_token')} })
             .then((res) => {
                 expect(res.status).equal(200);
                 cy.fixture('api/v1/tv-search-extra-info').then(x => {
@@ -15,17 +15,37 @@ describe("TV Search V1 API tests", () => {
             });
       });
 
-      it("Popular TV", () => {
-        cy.api({url: '/api/v1/search/tv/popular', headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem('id_token')} })
+    it("TV Basic Search", () => {
+        cy.api({url: '/api/v1/search/tv/Shitts Creek', headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem('id_token')} })
             .then((res) => {
-                expect(res.status).equal(200);
+                expect(res.status).equal(200); 
                 const body = res.body;
-                expect(body.length).is.greaterThan(0);
-                expect(body[0].title).is.not.null;
+                expect(body[0].title).is.equal("Schitt's Creek")
+                expect(body[0].status).is.equal("Ended");
                 expect(body[0].id).is.not.null;
                 expect(body[0].id).to.be.an('number');
             });
       });
 
- 
+const types = [
+    'popular',
+    'trending',
+    'anticipated',
+    'mostwatched'
+  ];
+
+  types.forEach((type) => {
+      // derive test name from data
+      it(`${type} TV List`, () => {
+        cy.api({url: '/api/v1/search/tv/'+type, headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem('id_token')} })
+        .then((res) => {
+            expect(res.status).equal(200);
+            const body = res.body;
+            expect(body.length).is.greaterThan(0);
+            expect(body[0].title).is.not.null;
+            expect(body[0].id).is.not.null;
+            expect(body[0].id).to.be.an('number');
+        });
+    });
+});
 });

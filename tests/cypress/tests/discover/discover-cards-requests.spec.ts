@@ -227,6 +227,37 @@ describe("Discover Cards Requests Tests", () => {
     });
   });
 
+  it.only("Available TV (From Details Call) does not allow us to request", () => {
+    cy.intercept("GET", "**/search/Tv/popular/**").as("cardsResponse");
+    window.localStorage.setItem("DiscoverOptions2", "3");
+
+    Page.visit();
+
+    cy.wait("@cardsResponse").then((res) => {
+      const body = res.response.body;
+      var expectedId = body[1].id;
+      cy.intercept("GET", "**/search/Tv/moviedb/"+expectedId, (req) => {
+        req.reply((res2) => {
+          const body = res2.body;
+          body.fullyAvailable = true;
+          res2.send(body);
+        });
+      }).as("movieDbResponse");
+      var title = body[1].title;
+
+
+      cy.wait("@movieDbResponse")
+
+      const card = Page.popularCarousel.getCard(expectedId, true, DiscoverType.Popular);
+      card.title.realHover();
+
+      card.verifyTitle(title);
+      card.requestButton.should("not.exist");
+      card.availabilityText.should("have.text", "Available");
+      card.statusClass.should("have.class", "available");
+    });
+  });
+
   it("Not available TV allow admin to request", () => {
     cy.intercept("GET", "**/search/Tv/popular/**", (req) => {
       req.reply((res) => {
