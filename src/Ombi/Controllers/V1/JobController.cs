@@ -11,6 +11,7 @@ using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Jobs.Plex.Interfaces;
 using Ombi.Schedule.Jobs.Radarr;
+using Ombi.Schedule.Jobs.Ldap;
 using Quartz;
 
 namespace Ombi.Controllers.V1
@@ -112,6 +113,16 @@ namespace Ombi.Controllers.V1
         public async Task<bool> JellyfinUserImporter()
         {
             await OmbiQuartz.TriggerJob(nameof(IJellyfinUserImporter), "Jellyfin");
+            return true;
+        }
+
+        /// Runs the LDAP User importer
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("ldapuserimporter")]
+        public async Task<bool> LdapUserImporter()
+        {
+            await OmbiQuartz.TriggerJob(nameof(ILdapUserImporter), "LDAP");
             return true;
         }
 

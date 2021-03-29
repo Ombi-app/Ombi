@@ -8,6 +8,7 @@ using Ombi.Schedule.Jobs;
 using Ombi.Schedule.Jobs.Couchpotato;
 using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Jellyfin;
+using Ombi.Schedule.Jobs.Ldap;
 using Ombi.Schedule.Jobs.Lidarr;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
@@ -56,6 +57,7 @@ namespace Ombi.Schedule
             await AddDvrApps(s);
             await AddSystem(s);
             await AddNotifications(s);
+            await AddLdap(s);
 
             // Run Quartz
             await OmbiQuartz.Start();
@@ -112,6 +114,10 @@ namespace Ombi.Schedule
         private static async Task AddNotifications(JobSettings s)
         {
             await OmbiQuartz.Instance.AddJob<INotificationService>(nameof(INotificationService), "Notifications", null);
+        }
+        private static async Task AddLdap(JobSettings s)
+        {
+            await OmbiQuartz.Instance.AddJob<ILdapUserImporter>(nameof(ILdapUserImporter), "LDAP", JobSettingsHelper.UserImporter(s));
         }
     }
 }

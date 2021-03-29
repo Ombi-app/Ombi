@@ -35,5 +35,6 @@ namespace Ombi.Store.Entities
         EmbyUser = 3,
         EmbyConnectUser = 4,
         JellyfinUser = 5,
+        LdapUser = 6,
     }
 }

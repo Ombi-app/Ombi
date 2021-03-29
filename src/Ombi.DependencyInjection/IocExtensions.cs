@@ -52,6 +52,7 @@ using Ombi.Schedule.Jobs.Jellyfin;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Jobs.Sonarr;
+using Ombi.Schedule.Jobs.Ldap;
 using Ombi.Store.Repository.Requests;
 using Ombi.Updater;
 using Ombi.Api.Telegram;
@@ -101,6 +102,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMusicSender, MusicSender>();
             services.AddTransient<IMassEmailSender, MassEmailSender>();
             services.AddTransient<IPlexOAuthManager, PlexOAuthManager>();
+            services.AddTransient<ILdapUserManager, LdapUserManager>();
             services.AddTransient<IVoteEngine, VoteEngine>();
             services.AddTransient<IDemoMovieSearchEngine, DemoMovieSearchEngine>();
             services.AddTransient<IDemoTvSearchEngine, DemoTvSearchEngine>();
@@ -231,6 +233,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IPlexUserImporter, PlexUserImporter>();
             services.AddTransient<IEmbyUserImporter, EmbyUserImporter>();
             services.AddTransient<IJellyfinUserImporter, JellyfinUserImporter>();
+            services.AddTransient<ILdapUserImporter, LdapUserImporter>();
             services.AddTransient<IWelcomeEmail, WelcomeEmail>();
             services.AddTransient<ICouchPotatoSync, CouchPotatoSync>();
             services.AddTransient<IProcessProvider, ProcessProvider>();

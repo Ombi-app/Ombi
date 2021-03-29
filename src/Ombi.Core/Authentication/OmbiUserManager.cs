@@ -26,12 +26,14 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Novell.Directory.Ldap;
 using Ombi.Api.Emby;
 using Ombi.Api.Jellyfin;
 using Ombi.Api.Plex;
@@ -50,9 +52,14 @@ namespace Ombi.Core.Authentication
             IPasswordHasher<OmbiUser> passwordHasher, IEnumerable<IUserValidator<OmbiUser>> userValidators,
             IEnumerable<IPasswordValidator<OmbiUser>> passwordValidators, ILookupNormalizer keyNormalizer,
             IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<OmbiUser>> logger, IPlexApi plexApi,
+<<<<<<< HEAD
             IEmbyApiFactory embyApi, ISettingsService<EmbySettings> embySettings,
             IJellyfinApiFactory jellyfinApi, ISettingsService<JellyfinSettings> jellyfinSettings,
             ISettingsService<AuthenticationSettings> auth)
+=======
+            IEmbyApiFactory embyApi, ISettingsService<EmbySettings> embySettings, ISettingsService<AuthenticationSettings> auth,
+            ILdapUserManager ldapUserManager, ISettingsService<UserManagementSettings> userManagementSettings)
+>>>>>>> 691c70804f203fab858b1079a1cf3d5e4adbf322
             : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
             _plexApi = plexApi;
@@ -61,14 +68,49 @@ namespace Ombi.Core.Authentication
             _embySettings = embySettings;
             _jellyfinSettings = jellyfinSettings;
             _authSettings = auth;
+            _ldapUserManager = ldapUserManager;
+            _userManagementSettings = userManagementSettings;
         }
 
         private readonly IPlexApi _plexApi;
         private readonly IEmbyApiFactory _embyApi;
+<<<<<<< HEAD
         private readonly IJellyfinApiFactory _jellyfinApi;
+=======
+        private readonly ILdapUserManager _ldapUserManager;
+>>>>>>> 691c70804f203fab858b1079a1cf3d5e4adbf322
         private readonly ISettingsService<EmbySettings> _embySettings;
         private readonly ISettingsService<JellyfinSettings> _jellyfinSettings;
         private readonly ISettingsService<AuthenticationSettings> _authSettings;
+        private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
+
+        public async Task<OmbiUser> FindUser(string userName)
+        {
+            var user = await FindByNameAsync(userName);
+            if (user != null)
+            {
+                return user;
+            }
+            user = await FindByEmailAsync(userName);
+            if (user != null)
+            {
+                user.EmailLogin = true;
+                return user;
+            }
+
+            var ldapSettings = await _ldapUserManager.GetSettings();
+            if (!(ldapSettings.IsEnabled && ldapSettings.CreateUsersAtLogin))
+            {
+                return null;
+            }
+
+            var ldapUser = await _ldapUserManager.LocateLdapUser(userName);
+            if (ldapUser == null)
+            {
+                return null;
+            }
+            return await CreateOmbiUserFromLdapEntry(ldapUser);
+        }
 
         public override async Task<bool> CheckPasswordAsync(OmbiUser user, string password)
         {
@@ -90,9 +132,15 @@ namespace Ombi.Core.Authentication
             {
                 return await CheckEmbyPasswordAsync(user, password);
             }
+<<<<<<< HEAD
             if (user.UserType == UserType.JellyfinUser)
             {
                 return await CheckJellyfinPasswordAsync(user, password);
+=======
+            if (user.UserType == UserType.LdapUser)
+            {
+                return await CheckLdapPasswordAsync(user, password);
+>>>>>>> 691c70804f203fab858b1079a1cf3d5e4adbf322
             }
             return false;
         }
@@ -226,6 +274,42 @@ namespace Ombi.Core.Authentication
                 }
             }
             return false;
+        }
+        private async Task<bool> CheckLdapPasswordAsync(OmbiUser user, string password)
+        {
+            var ldapSettings = await _ldapUserManager.GetSettings();
+            if (!ldapSettings.IsEnabled)
+            {
+                return false;
+            }
+
+            return await _ldapUserManager.Authenticate(user, password);
+        }
+
+        public async Task<OmbiUser> CreateOmbiUserFromLdapEntry(LdapEntry entry)
+        {
+            var newUser = await _ldapUserManager.LdapEntryToOmbiUser(entry);
+            var userManagementSettings = await _userManagementSettings.GetSettingsAsync();
+
+            var result = await CreateAsync(newUser);
+            if (!result.Succeeded)
+            {
+                foreach (var identityError in result.Errors)
+                {
+                    Logger.LogError(LoggingEvents.Authentication, identityError.Description);
+                }
+                return null;
+            }
+
+            if (userManagementSettings.DefaultRoles.Any())
+            {
+                foreach (var defaultRole in userManagementSettings.DefaultRoles)
+                {
+                    await AddToRoleAsync(newUser, defaultRole);
+                }
+            }
+
+            return newUser;
         }
     }
 }
