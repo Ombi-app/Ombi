@@ -197,7 +197,7 @@ describe("Discover Cards Requests Tests", () => {
     });
   });
 
-  it("Available TV does not allow us to request", () => {
+  it.only("Available TV does not allow us to request", () => {
     cy.intercept("GET", "**/search/Tv/popular/**", (req) => {
       req.reply((res) => {
         const body = res.body;
@@ -208,6 +208,13 @@ describe("Discover Cards Requests Tests", () => {
         res.send(body);
       });
     }).as("cardsResponse");
+    cy.intercept("GET", "**/search/Tv/moviedb/**", (req) => {
+      req.reply((res2) => {
+        const body = res2.body;
+        body.fullyAvailable = true;
+        res2.send(body);
+      });
+    }).as("movieDbResponse");
     window.localStorage.setItem("DiscoverOptions2", "3");
 
     Page.visit();
