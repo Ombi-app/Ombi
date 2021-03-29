@@ -52,14 +52,10 @@ namespace Ombi.Core.Authentication
             IPasswordHasher<OmbiUser> passwordHasher, IEnumerable<IUserValidator<OmbiUser>> userValidators,
             IEnumerable<IPasswordValidator<OmbiUser>> passwordValidators, ILookupNormalizer keyNormalizer,
             IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<OmbiUser>> logger, IPlexApi plexApi,
-<<<<<<< HEAD
             IEmbyApiFactory embyApi, ISettingsService<EmbySettings> embySettings,
             IJellyfinApiFactory jellyfinApi, ISettingsService<JellyfinSettings> jellyfinSettings,
-            ISettingsService<AuthenticationSettings> auth)
-=======
-            IEmbyApiFactory embyApi, ISettingsService<EmbySettings> embySettings, ISettingsService<AuthenticationSettings> auth,
+            ISettingsService<AuthenticationSettings> auth,
             ILdapUserManager ldapUserManager, ISettingsService<UserManagementSettings> userManagementSettings)
->>>>>>> 691c70804f203fab858b1079a1cf3d5e4adbf322
             : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
             _plexApi = plexApi;
@@ -74,11 +70,8 @@ namespace Ombi.Core.Authentication
 
         private readonly IPlexApi _plexApi;
         private readonly IEmbyApiFactory _embyApi;
-<<<<<<< HEAD
         private readonly IJellyfinApiFactory _jellyfinApi;
-=======
         private readonly ILdapUserManager _ldapUserManager;
->>>>>>> 691c70804f203fab858b1079a1cf3d5e4adbf322
         private readonly ISettingsService<EmbySettings> _embySettings;
         private readonly ISettingsService<JellyfinSettings> _jellyfinSettings;
         private readonly ISettingsService<AuthenticationSettings> _authSettings;
@@ -132,15 +125,13 @@ namespace Ombi.Core.Authentication
             {
                 return await CheckEmbyPasswordAsync(user, password);
             }
-<<<<<<< HEAD
             if (user.UserType == UserType.JellyfinUser)
             {
                 return await CheckJellyfinPasswordAsync(user, password);
-=======
+            }
             if (user.UserType == UserType.LdapUser)
             {
                 return await CheckLdapPasswordAsync(user, password);
->>>>>>> 691c70804f203fab858b1079a1cf3d5e4adbf322
             }
             return false;
         }

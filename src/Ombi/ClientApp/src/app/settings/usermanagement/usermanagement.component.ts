@@ -12,11 +12,8 @@ export class UserManagementComponent implements OnInit {
 
     public plexEnabled: boolean;
     public embyEnabled: boolean;
-<<<<<<< HEAD
     public jellyfinEnabled: boolean;
-=======
     public ldapEnabled: boolean;
->>>>>>> 691c70804f203fab858b1079a1cf3d5e4adbf322
     public settings: IUserManagementSettings;
     public claims: ICheckbox[];
 
@@ -49,11 +46,7 @@ export class UserManagementComponent implements OnInit {
         this.settingsService.getUserManagementSettings().subscribe(x => {
             this.settings = x;
 
-<<<<<<< HEAD
-            if(x.importEmbyUsers || x.importJellyfinUsers || x.importPlexUsers) {
-=======
-            if(x.importEmbyUsers || x.importPlexUsers || x.importLdapUsers) {
->>>>>>> 691c70804f203fab858b1079a1cf3d5e4adbf322
+            if(x.importEmbyUsers || x.importJellyfinUsers || x.importPlexUsers || x.importLdapUsers) {
                 this.enableImportButton = true;
             }
 
@@ -108,11 +101,8 @@ export class UserManagementComponent implements OnInit {
         });
         this.settingsService.getPlex().subscribe(x => this.plexEnabled = x.enable);
         this.settingsService.getEmby().subscribe(x => this.embyEnabled = x.enable);
-<<<<<<< HEAD
         this.settingsService.getJellyfin().subscribe(x => this.jellyfinEnabled = x.enable);
-=======
         this.settingsService.getLdap().subscribe(x => this.ldapEnabled = x.isEnabled);
->>>>>>> 691c70804f203fab858b1079a1cf3d5e4adbf322
     }
 
     public submit(): void {
@@ -122,14 +112,9 @@ export class UserManagementComponent implements OnInit {
         this.settings.defaultRoles = enabledClaims.map((claim) => claim.value);
         this.settings.bannedPlexUserIds = this.bannedPlexUsers.map((u) => u.id);
         this.settings.bannedEmbyUserIds = this.bannedEmbyUsers.map((u) => u.id);
-<<<<<<< HEAD
         this.settings.bannedJellyfinUserIds = this.bannedJellyfinUsers.map((u) => u.id);
         
         if(this.settings.importEmbyUsers || this.settings.importJellyfinUsers || this.settings.importPlexUsers) {
-=======
-
-        if(this.settings.importEmbyUsers || this.settings.importPlexUsers) {
->>>>>>> 691c70804f203fab858b1079a1cf3d5e4adbf322
             this.enableImportButton = true;
         }
 
@@ -158,11 +143,8 @@ export class UserManagementComponent implements OnInit {
 
         this.jobService.runPlexImporter().subscribe();
         this.jobService.runEmbyImporter().subscribe();
-<<<<<<< HEAD
         this.jobService.runJellyfinImporter().subscribe();
-=======
         this.jobService.runLdapImporter().subscribe();
->>>>>>> 691c70804f203fab858b1079a1cf3d5e4adbf322
     }
 
     private filter(query: string, users: IUsersModel[]): IUsersModel[] {

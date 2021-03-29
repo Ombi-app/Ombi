@@ -137,31 +137,6 @@
         </div>
     </div>
 
-<<<<<<< HEAD
-    <mat-form-field appearance="outline" class="full">
-        <mat-label>Movie Request Limit</mat-label>
-        <input matInput id="movieRequestLimit" name="movieRequestLimit"  [(ngModel)]="bulkMovieLimit">
-    </mat-form-field>
-    <mat-form-field appearance="outline"  class="full">
-        <mat-label>Episode Request Limit</mat-label>
-        <input matInput id="episodeRequestLimit" name="episodeRequestLimit"  [(ngModel)]="bulkEpisodeLimit">
-    </mat-form-field>
-    <mat-form-field appearance="outline"  class="full">
-        <mat-label>Music Request Limit</mat-label>
-        <input matInput id="musicRequestLimit" name="musicRequestLimit"  [(ngModel)]="bulkMusicLimit">
-    </mat-form-field>
-    <mat-form-field  appearance="outline"  class="full">
-        <mat-label [translate]="'UserPreferences.StreamingCountry'"></mat-label>
-        <mat-select [(value)]="bulkStreaming">
-          <mat-option *ngFor="let value of countries" [value]="value">
-            {{value}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-
-<button type="button" mat-raised-button (click)="bulkUpdate()">Update Users</button>
-=======
     <div class="form-group">
             <label for="movieRequestLimit" class="control-label">Movie Request Limit</label>
             <div>
@@ -177,7 +152,6 @@
         </div>
 
 <button type="button" class="btn btn-success-outline" (click)="bulkUpdate()">Update Users</button>
->>>>>>> 691c70804f203fab858b1079a1cf3d5e4adbf322
 </p-sidebar>
 </div>
 </div>
