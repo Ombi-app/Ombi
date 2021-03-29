@@ -227,23 +227,24 @@ describe("Discover Cards Requests Tests", () => {
     });
   });
 
-  it.only("Available TV (From Details Call) does not allow us to request", () => {
-    cy.intercept("GET", "**/search/Tv/popular/**").as("cardsResponse");
+  it("Available TV (From Details Call) does not allow us to request", () => {
+    cy.intercept("GET", "**/search/Tv/popular/**", { fixture: '/discover/popularTv'}).as("cardsResponse");      
+    cy.intercept("GET", "**/search/Tv/moviedb/88396", (req) => {
+      req.reply((res2) => {
+        const body = res2.body;
+        body.fullyAvailable = true;
+        res2.send(body);
+      });
+    }).as("movieDbResponse");
     window.localStorage.setItem("DiscoverOptions2", "3");
 
     Page.visit();
 
     cy.wait("@cardsResponse").then((res) => {
       const body = res.response.body;
-      var expectedId = body[1].id;
-      cy.intercept("GET", "**/search/Tv/moviedb/"+expectedId, (req) => {
-        req.reply((res2) => {
-          const body = res2.body;
-          body.fullyAvailable = true;
-          res2.send(body);
-        });
-      }).as("movieDbResponse");
-      var title = body[1].title;
+      var expectedId = "88396";
+
+      var title = body[0].title;
 
 
       cy.wait("@movieDbResponse")

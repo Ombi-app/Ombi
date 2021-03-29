@@ -127,6 +127,7 @@ describe("Movie Details Buttons", () => {
 
     cy.verifyNotification("Denied Request");
 
+    cy.wait(1000);
     Page.informationPanel.denyReason.should('have.text', "Automation Tests");
   });
 
