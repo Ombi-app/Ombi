@@ -6,8 +6,7 @@ stages:
 - stage: build
   jobs:
   - job: Build
-    pool:
-      vmImage: ${{ variables.vmImage }}
+    pool: TestPipeline
     steps:
     - template: templates/build-steps.yml
 
@@ -16,32 +15,11 @@ stages:
   - job:
     strategy:
       matrix:
-        win10-x64:
-          runtime: win10-x64
-          format: zip
-          compression: zip
-        win10-x86:
-          runtime: win10-x86
-          format: zip
-          compression: zip
-        osx-x64:
-          runtime: osx-x64
-          format: tar.gz
-          compression: tar
         linux-x64:
           runtime: linux-x64
           format: tar.gz
           compression: tar
-        linux-arm:
-          runtime: linux-arm
-          format: tar.gz
-          compression: tar
-        linux-arm64:
-          runtime: linux-arm64
-          format: tar.gz
-          compression: tar
-    pool:
-      vmImage: ${{ variables.vmImage }}
+    pool: TestPipeline
     steps:
       - template: templates/publish-os-steps.yml
 
@@ -63,56 +41,41 @@ stages:
           $response = Invoke-WebRequest -Uri "https://ombireleasenote.azurewebsites.net/api/ReleaseNotesFunction?buildId=$(Build.BuildId)"
           Write-Host "##vso[task.setvariable variable=ReleaseNotes;]$response"
 
-    - task: GitHubRelease@1
-      displayName: 'Ombi.Releases Release'
-      inputs:
-        gitHubConnection: 'PAT'
-        repositoryName: 'Ombi-app/Ombi.Releases'
-        action: 'create'
-        target: 'c7fcbb77b58aef1076d635a9ef99e4374abc8672'
-        tagSource: 'userSpecifiedTag'
-        tag: '$(gitTag)'
-        releaseNotesSource: 'inline'
-        releaseNotesInline: '$(ReleaseNotes)'
-        assets: |
-          $(System.ArtifactsDirectory)/**/*.zip
-          $(System.ArtifactsDirectory)/**/*.tar.gz
-        isPreRelease: true
-        changeLogCompareToRelease: 'lastNonDraftRelease'
-        changeLogType: 'commitBased'
+    # - task: GitHubRelease@1
+    #   inputs:
+    #     gitHubConnection: 'github.com_tidusjar'
+    #     repositoryName: 'tidusjar/Ombi'
+    #     action: 'create'
+    #     target: '$(Build.SourceVersion)'
+    #     tagSource: 'userSpecifiedTag'
+    #     tag: '$(gitTag)'
+    #     isDraft: true
+    #     changeLogCompareToRelease: 'lastNonDraftRelease'
+    #     changeLogType: 'commitBased'
 
-    - task: GitHubRelease@1
-      displayName: 'Ombi Release'
-      inputs:
-        gitHubConnection: 'PAT'
-        repositoryName: 'Ombi-app/Ombi'
-        action: 'create'
-        target: '$(Build.SourceVersion)'
-        tagSource: 'userSpecifiedTag'
-        tag: '$(gitTag)'
-        releaseNotesSource: 'inline'
-        releaseNotesInline: '$(ReleaseNotes)'
-        assets: |
-          $(System.ArtifactsDirectory)/**/*.zip
-          $(System.ArtifactsDirectory)/**/*.tar.gz
-        isPreRelease: true
-        changeLogCompareToRelease: 'lastNonDraftRelease'
-        changeLogType: 'commitBased'
-
-    - task: PowerShell@2
-      displayName: "Trigger APT build"
-      inputs:
-        targetType: 'inline'
-        script: |
-          $body = @{
-            "ref"="main"
-            "inputs"= @{"version"= "$(gitTag)"}
-          } | ConvertTo-Json
-
-          $header = @{
-            "Accept"="application/vnd.github.v3+json"
-            "Authorization"="Bearer $(APTPAT)"
-            "User-Agent"="Ombi"
-          } 
-
-          Invoke-RestMethod -Uri "https://api.github.com/repos/Ombi-app/Ombi.Apt/actions/workflows/build-deb.yml/dispatches" -Method 'Post' -Body $body -Headers $header
+    #- task: GitHubRelease@1
+    #  inputs:
+    #    gitHubConnection: 'github.com_tidusjar'
+    #    repositoryName: 'tidusjar/Ombi.Releases'
+    #    action: 'create'
+    #    target: 'c7fcbb77b58aef1076d635a9ef99e4374abc8672'
+    #    tagSource: 'userSpecifiedTag'
+    #    tag: '$(gitTag)'
+    #    releaseNotesSource: 'inline'
+    #    releaseNotesInline: '$(ReleaseNotes)'
+    #    assets: |
+    #      $(System.ArtifactsDirectory)/**/*.zip
+    #      $(System.ArtifactsDirectory)/**/*.tar.gz
+    #    isPreRelease: true
+    #    changeLogCompareToRelease: 'lastNonDraftRelease'
+    #    changeLogType: 'commitBased'
+  - deployment: VMDeploy
+    displayName: web
+    environment:
+      name:  Test1
+      resourceType: VirtualMachine
+    strategy:
+        runOnce:
+          deploy:
+            steps:
+            - script: tar xvf /home/azure/azagent/_work/1/linux-x64/linux-x64.tar.gz -C /home/azure/azagent/_work/1/linux-x64/ && sudo systemctl stop ombi && cp -R /home/azure/azagent/_work/1/linux-x64/* /opt/ombi && sudo systemctl start ombi
