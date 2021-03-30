@@ -29,12 +29,14 @@ namespace Ombi.Core.Tests.Authentication
             AuthenticationSettings = new Mock<ISettingsService<AuthenticationSettings>>();
             ManagementSettings = new Mock<ISettingsService<UserManagementSettings>>();
 
-            ManagementSettings.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new UserManagementSettings());
+            ManagementSettings.Setup(x => x.GetSettingsAsync())
+                .ReturnsAsync(new UserManagementSettings());
 
             AuthenticationSettings.Setup(x => x.GetSettingsAsync())
                 .ReturnsAsync(new AuthenticationSettings());
+
             _um = new OmbiUserManager(UserStore.Object, null, null, null, null, null, null, null, null,
-                PlexApi.Object, null, null, null, null, AuthenticationSettings.Object, LdapApi.ObjectManagementSettings.Object);
+                PlexApi.Object, null, null, null, null, AuthenticationSettings.Object, LdapApi.Object, ManagementSettings.Object);
         }
 
         public OmbiUserManager _um { get; set; }

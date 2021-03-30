@@ -14,7 +14,7 @@ namespace Ombi.Test.Common
         {
             var store = new Mock<IUserStore<OmbiUser>>();
             //var u = new OmbiUserManager(store.Object, null, null, null, null, null, null, null, null,null,null,null,null)
-            var mgr = new Mock<OmbiUserManager>(store.Object, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+            var mgr = new Mock<OmbiUserManager>(store.Object, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
             mgr.Object.UserValidators.Add(new UserValidator<OmbiUser>());
             mgr.Object.PasswordValidators.Add(new PasswordValidator<OmbiUser>());
 
