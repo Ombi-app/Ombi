@@ -221,7 +221,7 @@
 
 .social-icons-container{
     position:absolute;
-    top:84px;
+    top:0px;
     right:0px;
     width:100%;
     background-color:rgba(15,23,31,.6);
@@ -327,6 +327,10 @@
     width:170px;
     margin-top:10px;
     margin-left:10px;
+}
+
+.dark-theme{
+    position:relative;
 }
 
 @media (max-width:500px){
