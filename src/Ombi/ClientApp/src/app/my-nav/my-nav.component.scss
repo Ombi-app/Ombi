@@ -24,7 +24,8 @@
 }
 
 .icon-spacing {
-    margin-right: 5%;
+    width:40px;
+    text-align: center;
 }
 
 .example-form {
@@ -48,18 +49,33 @@
     padding: 0px 5px;
 }
 
-::ng-deep .dark .active-list-item {
-    background: $accent-dark !important;
-    color:black !important;
-    font-weight:500;
-}
-
 .slide-menu {
     width: 100%;
 }
 
 ::ng-deep .smaller-panel {
     max-width: 170px !important;
+}
+
+.top-bar-container{
+    width: 95%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+
+.top-search-block{
+    height:84px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex:1;
+    margin-right:5%;
+}
+
+.top-search-bar{
+    width:100%;
 }
 
 .mat-drawer-content {
@@ -71,36 +87,34 @@
     /* overflow: auto; */
 }
 
-.profile-img-container {
-    margin: 20px auto 10px;
-    overflow: hidden;
-    text-align: center;
-    width: 80%;
+.profile-block a{
+    color: #FFF;
+    font-size: 0.8em;
+    font-weight: 100;
+    display:flex;
+    justify-content: end;
+    align-items: flex-end;
+    text-transform: capitalize;
+    flex:0 0 250px;
 }
 
-.profile-img {
-    float: left;
-    width: 45px;
-    border-radius: 100%;
+
+.profile-username{
+    justify-content: center;
+    display:flex;
+    height:50px;
+    align-items: center;
+    margin-right:5px;
 }
-.profile-info {
-    overflow: hidden;
-    text-align: left;
-}
-.profile-info > h3 {
-    font-size: 15px;
-    text-transform: capitalize;
-    // color: #333;
-    margin-bottom: 2px;
-}
-.profile-info > p {
-    // color: #333;
-    font-size: 11px;
-    margin-top: 5px;
+
+@media (max-width: 600px) {
+    .profile-username{
+        display:none;
+    }
 }
 
 .profile-img img {
-    width: 45px;
+    width: 50px;
 }
 
 
@@ -173,18 +187,11 @@
     .top-bar-container{
         background: $ombi-background-primary;
         color:$ombi-background-primary-accent;
+        padding-top:1em;
     }
 
 }
 
-.top-search-bar{
-    margin-left: 30px;
-}
-
 ::ng-deep .mat-toolbar-row, .mat-toolbar-single-row{
     height:auto;
-}
-
-.top-search-bar{
-    height:84px;
 }
