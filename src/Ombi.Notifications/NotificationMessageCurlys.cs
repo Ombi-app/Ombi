@@ -58,15 +58,10 @@ namespace Ombi.Notifications
             Year = req?.ReleaseDate.Year.ToString();
             DenyReason = req?.DeniedReason;
             AvailableDate = req?.MarkedAsAvailable?.ToString("D") ?? string.Empty;
-            if (req?.RequestType == RequestType.Movie)
-            {
-                PosterImage = string.Format((req?.PosterPath ?? string.Empty).StartsWith("/", StringComparison.InvariantCultureIgnoreCase)
-                    ? "https://image.tmdb.org/t/p/w300{0}" : "https://image.tmdb.org/t/p/w300/{0}", req?.PosterPath);
-            }
-            else
-            {
-                PosterImage = req?.PosterPath;
-            }
+
+            PosterImage = string.Format((req?.PosterPath ?? string.Empty).StartsWith("/", StringComparison.InvariantCultureIgnoreCase)
+                ? "https://image.tmdb.org/t/p/w300{0}" : "https://image.tmdb.org/t/p/w300/{0}", req?.PosterPath);
+
 
             AdditionalInformation = opts?.AdditionalInformation ?? string.Empty;
 
@@ -131,7 +126,7 @@ namespace Ombi.Notifications
         {
             LoadIssues(opts);
             RequestId = req?.Id.ToString();
-            ProviderId = req?.ParentRequest?.TvDbId.ToString() ?? string.Empty;
+            ProviderId = req?.ParentRequest?.ExternalProviderId.ToString() ?? string.Empty;
             string title;
             if (req == null)
             {
@@ -168,15 +163,10 @@ namespace Ombi.Notifications
 
             Overview = req?.ParentRequest.Overview;
             Year = req?.ParentRequest.ReleaseDate.Year.ToString();
-            if (req?.RequestType == RequestType.Movie)
-            {
-                PosterImage = string.Format((req?.ParentRequest.PosterPath ?? string.Empty).StartsWith("/", StringComparison.InvariantCultureIgnoreCase)
-                    ? "https://image.tmdb.org/t/p/w300{0}" : "https://image.tmdb.org/t/p/w300/{0}", req?.ParentRequest.PosterPath);
-            }
-            else
-            {
-                PosterImage = req?.ParentRequest.PosterPath;
-            }
+
+            PosterImage = string.Format((req?.ParentRequest.PosterPath ?? string.Empty).StartsWith("/", StringComparison.InvariantCultureIgnoreCase)
+                ? "https://image.tmdb.org/t/p/w300{0}" : "https://image.tmdb.org/t/p/w300/{0}", req?.ParentRequest.PosterPath);
+
             AdditionalInformation = opts.AdditionalInformation;
             // DO Episode and Season Lists
 

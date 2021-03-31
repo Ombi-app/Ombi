@@ -53,17 +53,17 @@ export class RemainingRequestsComponent implements OnInit {
         switch (this.type) {
             case RequestType.movie:
                 this.requestService.getRemainingMovieRequests().subscribe(callback);
-                this.matIcon = "movie";
+                this.matIcon = "fas fa-film";
 
                 break;
             case RequestType.tvShow:
                 this.requestService.getRemainingTvRequests().subscribe(callback);
-                this.matIcon = "tv";
+                this.matIcon = "fas fa-tv";
 
                 break;
             case RequestType.album:
                 this.requestService.getRemainingMusicRequests().subscribe(callback);
-                this.matIcon = "library_music";
+                this.matIcon = "fas fa-music";
 
                 break;
         }

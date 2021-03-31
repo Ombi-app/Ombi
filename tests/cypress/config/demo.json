@@ -1,0 +1,20 @@
+{
+    "$schema": "https://on.cypress.io/cypress.schema.json",
+    "supportFile": "cypress/support/index.ts",
+    "baseUrl": "https://app.ombi.io/",
+    "integrationFolder": "cypress/tests",
+    "testFiles": "**/*.spec.ts*",
+    "retries": {
+        "runMode": 2,
+        "openMode": 1
+    },
+    "watchForFileChanges": true,
+    "chromeWebSecurity": false,
+    "viewportWidth": 2880,
+    "viewportHeight": 2160,
+    "ignoreTestFiles": ["**/snapshots/*"],
+    "env": {
+        "username": "beta",
+        "password": "beta"
+   }
+}

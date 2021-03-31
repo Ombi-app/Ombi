@@ -30,7 +30,7 @@
                         <mat-chip *ngFor="let key of excludedKeywords" [selectable]="false" [removable]="true"
                             (removed)="remove(key)">
                             {{key.name}}
-                            <mat-icon matChipRemove>cancel</mat-icon>
+                            <i matChipRemove class="fas fa-times fa-lg"></i>
                         </mat-chip>
                     </mat-chip-list>
 

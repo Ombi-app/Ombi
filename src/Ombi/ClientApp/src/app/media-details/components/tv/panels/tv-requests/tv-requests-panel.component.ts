@@ -40,6 +40,15 @@ export class TvRequestsPanelComponent {
         }
     }
 
+    public async delete(request: IChildRequests) {
+        const result = await this.requestService.deleteChild(request.id).toPromise();
+
+        if (result) {
+            this.tvRequest.splice(this.tvRequest.indexOf(request),1);
+            this.messageService.send("Request has been Deleted", "Ok");
+        }
+    }
+
     public changeAvailability(request: IChildRequests, available: boolean) {
         request.available = available;
         request.seasonRequests.forEach((season) => {

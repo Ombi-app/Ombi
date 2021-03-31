@@ -148,7 +148,6 @@ namespace Ombi
                 // Generate a API Key
                 settings.ApiKey = Guid.NewGuid().ToString("N");
                 settings.CollectAnalyticData = true; // Since this is a first setup, enable analytical data collection
-                settings.Set = true;
                 ombiService.SaveSettings(settings);
             }
 
@@ -157,9 +156,6 @@ namespace Ombi
                 app.UsePathBase(settings.BaseUrl);
             }
 
-            // Setup the scheduler
-            //var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
-            //jobSetup.Setup();
             ctx.Seed();
             var settingsctx = serviceProvider.GetService<SettingsContext>();
             settingsctx.Seed();
@@ -185,11 +181,11 @@ namespace Ombi
             {
                 if (settings.BaseUrl.HasValue())
                 {
-                    c.SwaggerEndpoint($"{settings.BaseUrl}/swagger/v1/swagger.json", "My API V1");
+                    c.SwaggerEndpoint($"{settings.BaseUrl}/swagger/v1/swagger.json", "Ombi API");
                 }
                 else
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Ombi API");
                 }
             });
 

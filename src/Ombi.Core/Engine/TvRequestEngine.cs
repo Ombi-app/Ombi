@@ -140,11 +140,117 @@ namespace Ombi.Core.Engine
                         ErrorMessage = "This has already been requested"
                     };
                 }
-                return await AddExistingRequest(tvBuilder.ChildRequest, existingRequest, tv.RequestOnBehalf);
+                return await AddExistingRequest(tvBuilder.ChildRequest, existingRequest, tv.RequestOnBehalf, tv.RootFolderOverride.GetValueOrDefault(), tv.QualityPathOverride.GetValueOrDefault());
             }
 
             // This is a new request
             var newRequest = tvBuilder.CreateNewRequest(tv);
+            return await AddRequest(newRequest.NewRequest, tv.RequestOnBehalf);
+        }
+
+        public async Task<RequestEngineResult> RequestTvShow(TvRequestViewModelV2 tv)
+        {
+            var user = await GetUser();
+            var canRequestOnBehalf = tv.RequestOnBehalf.HasValue();
+
+            var isAdmin = await UserManager.IsInRoleAsync(user, OmbiRoles.PowerUser) || await UserManager.IsInRoleAsync(user, OmbiRoles.Admin);
+            if (tv.RequestOnBehalf.HasValue() && !isAdmin)
+            {
+                return new RequestEngineResult
+                {
+                    Result = false,
+                    Message = "You do not have the correct permissions to request on behalf of users!",
+                    ErrorMessage = $"You do not have the correct permissions to request on behalf of users!"
+                };
+            }
+
+            if ((tv.RootFolderOverride.HasValue || tv.QualityPathOverride.HasValue) && !isAdmin)
+            {
+                return new RequestEngineResult
+                {
+                    Result = false,
+                    Message = "You do not have the correct permissions!",
+                    ErrorMessage = $"You do not have the correct permissions!"
+                };
+            }
+
+            var tvBuilder = new TvShowRequestBuilderV2(MovieDbApi);
+            (await tvBuilder
+                .GetShowInfo(tv.TheMovieDbId))
+                .CreateTvList(tv)
+                .CreateChild(tv, canRequestOnBehalf ? tv.RequestOnBehalf : user.Id);
+
+            await tvBuilder.BuildEpisodes(tv);
+
+            var ruleResults = await RunRequestRules(tvBuilder.ChildRequest);
+            var results = ruleResults as RuleResult[] ?? ruleResults.ToArray();
+            if (results.Any(x => !x.Success))
+            {
+                return new RequestEngineResult
+                {
+                    ErrorMessage = results.FirstOrDefault(x => !string.IsNullOrEmpty(x.Message)).Message
+                };
+            }
+
+            // Check if we have auto approved the request, if we have then mark the episodes as approved
+            if (tvBuilder.ChildRequest.Approved)
+            {
+                foreach (var seasons in tvBuilder.ChildRequest.SeasonRequests)
+                {
+                    foreach (var ep in seasons.Episodes)
+                    {
+                        ep.Approved = true;
+                        ep.Requested = true;
+                    }
+                }
+            }
+
+            var existingRequest = await TvRepository.Get().FirstOrDefaultAsync(x => x.ExternalProviderId == tv.TheMovieDbId);
+            if (existingRequest != null)
+            {
+                // Remove requests we already have, we just want new ones
+                foreach (var existingSeason in existingRequest.ChildRequests)
+                    foreach (var existing in existingSeason.SeasonRequests)
+                    {
+                        var newChild = tvBuilder.ChildRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == existing.SeasonNumber);
+                        if (newChild != null)
+                        {
+                            // We have some requests in this season...
+                            // Let's find the episodes.
+                            foreach (var existingEp in existing.Episodes)
+                            {
+                                var duplicateEpisode = newChild.Episodes.FirstOrDefault(x => x.EpisodeNumber == existingEp.EpisodeNumber);
+                                if (duplicateEpisode != null)
+                                {
+                                    // Remove it.
+                                    newChild.Episodes.Remove(duplicateEpisode);
+                                }
+                            }
+                            if (!newChild.Episodes.Any())
+                            {
+                                // We may have removed all episodes
+                                tvBuilder.ChildRequest.SeasonRequests.Remove(newChild);
+                            }
+                        }
+                    }
+
+                // Remove the ID since this is a new child
+                // This was a TVDBID for the request rules to run
+                tvBuilder.ChildRequest.Id = 0;
+                if (!tvBuilder.ChildRequest.SeasonRequests.Any())
+                {
+                    // Looks like we have removed them all! They were all duplicates...
+                    return new RequestEngineResult
+                    {
+                        Result = false,
+                        ErrorMessage = "This has already been requested"
+                    };
+                }
+                return await AddExistingRequest(tvBuilder.ChildRequest, existingRequest, tv.RequestOnBehalf, tv.RootFolderOverride.GetValueOrDefault(), tv.QualityPathOverride.GetValueOrDefault());
+            }
+
+            // This is a new request
+            var newRequest = tvBuilder.CreateNewRequest(tv, tv.RootFolderOverride.GetValueOrDefault(), tv.QualityPathOverride.GetValueOrDefault());
             return await AddRequest(newRequest.NewRequest, tv.RequestOnBehalf);
         }
 
@@ -752,10 +858,18 @@ namespace Ombi.Core.Engine
             }
         }
 
-        private async Task<RequestEngineResult> AddExistingRequest(ChildRequests newRequest, TvRequests existingRequest, string requestOnBehalf)
+        private async Task<RequestEngineResult> AddExistingRequest(ChildRequests newRequest, TvRequests existingRequest, string requestOnBehalf, int rootFolder, int qualityProfile)
         {
             // Add the child
             existingRequest.ChildRequests.Add(newRequest);
+            if (qualityProfile > 0)
+            {
+                existingRequest.QualityOverride = qualityProfile;
+            }
+            if (rootFolder > 0)
+            {
+                existingRequest.RootFolder = rootFolder;
+            }
 
             await TvRepository.Update(existingRequest);
 

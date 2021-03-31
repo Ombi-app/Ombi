@@ -1,27 +1,30 @@
 <div class="small-middle-container">
-    <div *ngIf="loadingFlag" class="row justify-content-md-center top-spacing loading-spinner">
-    </div>
     <div class="section">
-        <h2>Popular</h2>
+        <h2>{{'Discovery.PopularTab' | translate}}</h2>
         <div>
-            <carousel-list [discoverType]="DiscoverType.Popular"></carousel-list>
+            <carousel-list [id]="'popular'" [isAdmin]="isAdmin" [discoverType]="DiscoverType.Popular"></carousel-list>
         </div>
 
     </div>
 
     <div class="section">
-        <h2>Trending</h2>
+        <h2>{{'Discovery.TrendingTab' | translate}}</h2>
         <div >
-            <carousel-list [discoverType]="DiscoverType.Trending"></carousel-list>
+            <carousel-list [id]="'trending'" [isAdmin]="isAdmin" [discoverType]="DiscoverType.Trending"></carousel-list>
         </div>
 
     </div>
 
     <div class="section">
-        <h2>Upcoming</h2>
+        <h2>{{'Discovery.UpcomingTab' | translate}}</h2>
         <div>
-            <carousel-list [discoverType]="DiscoverType.Upcoming"></carousel-list>
+            <carousel-list [id]="'upcoming'" [isAdmin]="isAdmin" [discoverType]="DiscoverType.Upcoming"></carousel-list>
         </div>
-
     </div>
+    <!-- <div class="section">
+        <h2>{{'Discovery.RecentlyRequestedTab' | translate}}</h2>
+        <div>
+            <carousel-list [id]="'recentlyRequested'" [discoverType]="DiscoverType.RecentlyRequested"></carousel-list>
+        </div>
+    </div> -->
 </div>

@@ -67,7 +67,8 @@ namespace Ombi.Controllers.V1
             IMovieRequestEngine movieRequestEngine,
             ITvRequestEngine tvRequestEngine,
             IMusicRequestEngine musicEngine,
-            IUserDeletionEngine deletionEngine)
+            IUserDeletionEngine deletionEngine,
+            ICacheService cacheService)
         {
             UserManager = user;
             Mapper = mapper;
@@ -95,10 +96,13 @@ namespace Ombi.Controllers.V1
             _userQualityProfiles = userProfiles;
             MusicRequestEngine = musicEngine;
             _deletionEngine = deletionEngine;
+            _cacheService = cacheService;
         }
 
         private OmbiUserManager UserManager { get; }
         private readonly IUserDeletionEngine _deletionEngine;
+        private readonly ICacheService _cacheService;
+
         private RoleManager<IdentityRole> RoleManager { get; }
         private IMapper Mapper { get; }
         private IEmailProvider EmailProvider { get; }
@@ -289,8 +293,8 @@ namespace Ombi.Controllers.V1
         [PowerUser]
         public async Task<IEnumerable<UserViewModelDropdown>> GetAllUsersDropdown()
         {
-            var users = await UserManager.Users.Where(x => x.UserType != UserType.SystemUser)
-                .ToListAsync();
+            var users = await _cacheService.GetOrAdd(CacheKeys.UsersDropdown,
+                async () => await UserManager.Users.Where(x => x.UserType != UserType.SystemUser).ToListAsync());
 
             var model = new List<UserViewModelDropdown>();
 

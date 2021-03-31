@@ -132,7 +132,7 @@ namespace Ombi.Api.TheMovieDb
             return await Api.Request<TvExternals>(request);
         }
 
-        public async Task<List<MovieSearchResult>> SimilarMovies(int movieId, string langCode)
+        public async Task<List<MovieDbSearchResult>> SimilarMovies(int movieId, string langCode)
         {
             var request = new Request($"movie/{movieId}/similar", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
@@ -140,7 +140,7 @@ namespace Ombi.Api.TheMovieDb
             AddRetry(request);
 
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
-            return Mapper.Map<List<MovieSearchResult>>(result.results);
+            return Mapper.Map<List<MovieDbSearchResult>>(result.results);
         }
 
         public async Task<MovieResponseDto> GetMovieInformationWithExtraInfo(int movieId, string langCode = "en")
@@ -154,7 +154,7 @@ namespace Ombi.Api.TheMovieDb
             return Mapper.Map<MovieResponseDto>(result);
         }
 
-        public async Task<List<MovieSearchResult>> SearchMovie(string searchTerm, int? year, string langCode)
+        public async Task<List<MovieDbSearchResult>> SearchMovie(string searchTerm, int? year, string langCode)
         {
             var request = new Request($"search/movie", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
@@ -171,15 +171,25 @@ namespace Ombi.Api.TheMovieDb
             AddRetry(request);
 
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
-            return Mapper.Map<List<MovieSearchResult>>(result.results);
+            return Mapper.Map<List<MovieDbSearchResult>>(result.results);
         }
 
         /// <remarks>
         /// Maintains filter parity with <a href="https://developers.themoviedb.org/3/movies/get-popular-movies">/movie/popular</a>.
         /// </remarks>
-        public async Task<List<MovieSearchResult>> PopularMovies(string langCode, int? page = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<List<MovieDbSearchResult>> PopularMovies(string langCode, int? page = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var request = new Request($"discover/movie", BaseUri, HttpMethod.Get);
+            return await Popular("movie", langCode, page, cancellationToken);
+        }
+
+        public async Task<List<MovieDbSearchResult>> PopularTv(string langCode, int? page = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await Popular("tv", langCode, page, cancellationToken);
+        }
+
+        public async Task<List<MovieDbSearchResult>> Popular(string type, string langCode, int? page = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var request = new Request($"discover/{type}", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             request.AddQueryString("language", langCode);
             request.AddQueryString("sort_by", "popularity.desc");
@@ -187,18 +197,28 @@ namespace Ombi.Api.TheMovieDb
             {
                 request.AddQueryString("page", page.ToString());
             }
-            await AddDiscoverMovieSettings(request);
+            await AddDiscoverSettings(request);
             AddRetry(request);
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request, cancellationToken);
-            return Mapper.Map<List<MovieSearchResult>>(result.results);
+            return Mapper.Map<List<MovieDbSearchResult>>(result.results);
+        }
+
+        public Task<List<MovieDbSearchResult>> TopRated(string langCode, int? page = null)
+        {
+            return TopRated("movie", langCode, page);
+        }
+
+        public Task<List<MovieDbSearchResult>> TopRatedTv(string langCode, int? page = null)
+        {
+            return TopRated("tv", langCode, page);
         }
 
         /// <remarks>
         /// Maintains filter parity with <a href="https://developers.themoviedb.org/3/movies/get-top-rated-movies">/movie/top_rated</a>.
         /// </remarks>
-        public async Task<List<MovieSearchResult>> TopRated(string langCode, int? page = null)
+        private async Task<List<MovieDbSearchResult>> TopRated(string type, string langCode, int? page = null)
         {
-            var request = new Request($"discover/movie", BaseUri, HttpMethod.Get);
+            var request = new Request($"discover/{type}", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             request.AddQueryString("language", langCode);
             request.AddQueryString("sort_by", "vote_average.desc");
@@ -212,18 +232,27 @@ namespace Ombi.Api.TheMovieDb
             // to filter out extremely high-rated movies due to very little votes
             request.AddQueryString("vote_count.gte", "250");
 
-            await AddDiscoverMovieSettings(request);
+            await AddDiscoverSettings(request);
             AddRetry(request);
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
-            return Mapper.Map<List<MovieSearchResult>>(result.results);
+            return Mapper.Map<List<MovieDbSearchResult>>(result.results);
+        }
+
+        public Task<List<MovieDbSearchResult>> Upcoming(string langCode, int? page = null)
+        {
+            return Upcoming("movie", langCode, page);
+        }
+        public Task<List<MovieDbSearchResult>> UpcomingTv(string langCode, int? page = null)
+        {
+            return Upcoming("tv", langCode, page);
         }
 
         /// <remarks>
         /// Maintains filter parity with <a href="https://developers.themoviedb.org/3/movies/get-upcoming">/movie/upcoming</a>.
         /// </remarks>
-        public async Task<List<MovieSearchResult>> Upcoming(string langCode, int? page = null)
+        private async Task<List<MovieDbSearchResult>> Upcoming(string type, string langCode, int? page = null)
         {
-            var request = new Request($"discover/movie", BaseUri, HttpMethod.Get);
+            var request = new Request($"discover/{type}", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
             request.AddQueryString("language", langCode);
 
@@ -239,16 +268,16 @@ namespace Ombi.Api.TheMovieDb
             {
                 request.AddQueryString("page", page.ToString());
             }
-            await AddDiscoverMovieSettings(request);
+            await AddDiscoverSettings(request);
             AddRetry(request);
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
-            return Mapper.Map<List<MovieSearchResult>>(result.results);
+            return Mapper.Map<List<MovieDbSearchResult>>(result.results);
         }
 
         /// <remarks>
         /// Maintains filter parity with <a href="https://developers.themoviedb.org/3/movies/get-now-playing">/movie/now_playing</a>.
         /// </remarks>
-        public async Task<List<MovieSearchResult>> NowPlaying(string langCode, int? page = null)
+        public async Task<List<MovieDbSearchResult>> NowPlaying(string langCode, int? page = null)
         {
             var request = new Request($"discover/movie", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
@@ -267,20 +296,31 @@ namespace Ombi.Api.TheMovieDb
                 request.AddQueryString("page", page.ToString());
             }
 
-            await AddDiscoverMovieSettings(request);
+            await AddDiscoverSettings(request);
             AddRetry(request);
             var result = await Api.Request<TheMovieDbContainer<SearchResult>>(request);
-            return Mapper.Map<List<MovieSearchResult>>(result.results);
+            return Mapper.Map<List<MovieDbSearchResult>>(result.results);
         }
 
-        public async Task<TvInfo> GetTVInfo(string themoviedbid)
+        public async Task<TvInfo> GetTVInfo(string themoviedbid, string langCode = "en")
         {
             var request = new Request($"/tv/{themoviedbid}", BaseUri, HttpMethod.Get);
             request.AddQueryString("api_key", ApiToken);
-            request.AddQueryString("append_to_response", "external_ids");
+            request.AddQueryString("language", langCode);
+            request.AddQueryString("append_to_response", "videos,credits,similar,recommendations,external_ids,keywords,images");
             AddRetry(request);
 
             return await Api.Request<TvInfo>(request);
+        }
+
+        public async Task<SeasonDetails> GetSeasonEpisodes(int theMovieDbId, int seasonNumber, CancellationToken token, string langCode = "en")
+        {
+            var request = new Request($"/tv/{theMovieDbId}/season/{seasonNumber}", BaseUri, HttpMethod.Get);
+            request.AddQueryString("api_key", ApiToken);
+            request.AddQueryString("language", langCode);
+            AddRetry(request);
+
+            return await Api.Request<SeasonDetails>(request, token);
         }
 
         public async Task<List<Keyword>> SearchKeyword(string searchTerm)
@@ -330,7 +370,7 @@ namespace Ombi.Api.TheMovieDb
             return Api.Request<WatchProviders>(request, token);
         }
 
-        private async Task AddDiscoverMovieSettings(Request request)
+        private async Task AddDiscoverSettings(Request request)
         {
             var settings = await Settings;
             request.AddQueryString("include_adult", settings.ShowAdultMovies.ToString().ToLower());

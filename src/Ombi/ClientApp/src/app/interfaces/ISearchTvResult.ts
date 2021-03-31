@@ -1,4 +1,4 @@
-﻿import { INewSeasonRequests } from "./IRequestModel";
+﻿import { BaseRequestOptions, INewSeasonRequests } from "./IRequestModel";
 
 export interface ISearchTvResult {
     id: number;
@@ -36,18 +36,22 @@ export interface ISearchTvResult {
     subscribed: boolean;
     showSubscribe: boolean;
     fullyAvailable: boolean;
+    backdropPath: string;
     partlyAvailable: boolean;
     background: any;
     open: boolean; // THIS IS FOR THE UI
 }
 
-export interface ITvRequestViewModel {
+export interface ITvRequestViewModelV2 extends ITvRequestViewModelBase {
+    theMovieDbId: number;
+}
+
+
+export interface ITvRequestViewModelBase extends BaseRequestOptions {
     requestAll: boolean;
     firstSeason: boolean;
     latestSeason: boolean;
-    tvDbId: number;
     seasons: ISeasonsViewModel[];
-    requestOnBehalf: string | undefined;
 }
 
 export interface ISeasonsViewModel {

@@ -82,7 +82,7 @@ export class AppComponent implements OnInit {
     }
 
     public ngOnInit() {
-        window["loading_screen"].finish();
+        // window["loading_screen"].finish();
 
         this.settingsService.getCustomization().subscribe(x => {
             this.customizationSettings = x;

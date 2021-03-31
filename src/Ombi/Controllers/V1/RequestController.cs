@@ -286,6 +286,7 @@ namespace Ombi.Controllers.V1
         /// <param name="tv">The tv.</param>
         /// <returns></returns>
         [HttpPost("tv")]
+        [Obsolete("This method is obsolete, please use v2 API")]
         public async Task<RequestEngineResult> RequestTv([FromBody] TvRequestViewModel tv)
         {
             tv.RequestedByAlias = GetApiAlias();

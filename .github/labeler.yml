@@ -1,0 +1,5 @@
+automation: tests/**/*
+
+frontend: src/Ombi/ClientApp/**/*
+
+backend: src/**/*.cs

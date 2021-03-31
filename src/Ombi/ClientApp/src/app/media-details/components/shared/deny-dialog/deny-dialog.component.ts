@@ -1,4 +1,4 @@
-import { Component, Inject, Output, EventEmitter } from "@angular/core";
+import { Component, Inject } from "@angular/core";
 import { IDenyDialogData } from "../interfaces/interfaces";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { RequestService, MessageService } from "../../../../services";
@@ -36,8 +36,8 @@ export class DenyDialogComponent {
                 this.messageService.send(result.errorMessage, "Ok");
                 this.data.denied = false;
             }
-            
-            this.dialogRef.close();
+
+            this.dialogRef.close({denied: this.data.denied, reason: this.denyReason});
         }
 
         onNoClick(): void {

@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "lib": ["es2018", "dom"],
+        "types": ["cypress", "cypress-wait-until", "cypress-image-snapshot", "cypress-real-events", "@bahmutov/cy-api"],
+        "baseUrl": "./cypress",
+        "paths": {
+            "@/*": ["./*"]
+        }
+    },
+    "include": [
+        "**/*.ts",
+        "support/*.ts"
+    ]
+}

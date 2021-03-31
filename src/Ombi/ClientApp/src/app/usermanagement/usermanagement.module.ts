@@ -7,8 +7,6 @@ import {  MultiSelectModule } from "primeng/multiselect";
 import { SidebarModule } from "primeng/sidebar";
 import { TooltipModule } from "primeng/tooltip";
 
-
-import { UpdateDetailsComponent } from "./updatedetails.component";
 import { UserManagementUserComponent } from "./usermanagement-user.component";
 import { UserManagementComponent } from "./usermanagement.component";
 
@@ -25,7 +23,6 @@ const routes: Routes = [
     { path: "", component: UserManagementComponent, canActivate: [AuthGuard] },
     { path: "user", component: UserManagementUserComponent, canActivate: [AuthGuard] },
     { path: "user/:id", component: UserManagementUserComponent, canActivate: [AuthGuard] },
-    { path: "updatedetails", component: UpdateDetailsComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -44,7 +41,6 @@ const routes: Routes = [
     ],
     declarations: [
         UserManagementComponent,
-        UpdateDetailsComponent,
         UserManagementUserComponent,
     ],
     exports: [

@@ -147,6 +147,7 @@
         "Remove": "Remove",
         "Deny": "Deny",
         "DenyReason": "Deny Reason",
+        "DeniedReason": "Denied Reason",
         "Season": "Season",
         "GridTitle": "Title",
         "AirDate": "AirDate",
@@ -251,6 +252,9 @@
         "ViewCollection":"View Collection",
         "NotEnoughInfo": "Unfortunately there is not enough information about this show yet!",
         "AdvancedOptions":"Advanced Options",
+        "AutoApproveOptions":"You can configure the request here, once requested it will be send to your DVR application and will be auto approved!",
+        "AutoApproveOptionsTv":"You can configure the request here, once requested it will be send to your DVR application and will be auto approved! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it!",
+        "AutoApproveOptionsTvShort":"You can configure the request here, once requested it will be send to your DVR application! If the request is already in Sonarr, we will not change the root folder or quality profile if you set it!",
         "QualityProfilesSelect":"Select A Quality Profile",
         "RootFolderSelect":"Select A Root Folder",
         "Status":"Status",
@@ -287,6 +291,7 @@
         "PopularTab": "Popular",
         "TrendingTab": "Trending",
         "UpcomingTab": "Upcoming",
+        "RecentlyRequestedTab": "Recently Requested",
         "Movies": "Movies",
         "Combined": "Combined",
         "Tv": "TV",
@@ -313,6 +318,7 @@
         "StreamingCountryDescription": "This is the country code that we will display streaming information for. If you are in the US please select US and you will have US related streaming information.",
         "LanguageDescription": "This is the language you would like the Ombi interface to be displayed in.",
         "MobileQRCode":"Mobile QR Code",
-        "LegacyApp":"Launch Legacy App"
+        "LegacyApp":"Launch Legacy App",
+        "NoQrCode":"Please contact your administrator to enable QR codes"
     }
 }

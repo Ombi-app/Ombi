@@ -1,11 +1,13 @@
 import { Component, Input } from "@angular/core";
-import { IChildRequests, IEpisodesRequests, INewSeasonRequests, ISeasonsViewModel, ITvRequestViewModel, RequestType } from "../../../../../interfaces";
+import { IChildRequests, IEpisodesRequests, INewSeasonRequests, IRequestEngineResult, ISeasonsViewModel, ITvRequestViewModelV2, RequestType } from "../../../../../interfaces";
 import { RequestService } from "../../../../../services/request.service";
 import { MessageService } from "../../../../../services";
 import { DenyDialogComponent } from "../../../shared/deny-dialog/deny-dialog.component";
 import { ISearchTvResultV2 } from "../../../../../interfaces/ISearchTvResultV2";
 import { MatDialog } from "@angular/material/dialog";
 import { SelectionModel } from "@angular/cdk/collections";
+import { RequestServiceV2 } from "../../../../../services/requestV2.service";
+import { AdminRequestDialogComponent } from "../../../../../shared/admin-request-dialog/admin-request-dialog.component";
 
 @Component({
     templateUrl: "./tv-request-grid.component.html",
@@ -24,7 +26,7 @@ export class TvRequestGridComponent {
 
     public displayedColumns: string[] = ['select', 'number', 'title', 'airDate', 'status'];
 
-    constructor(private requestService: RequestService, private notificationService: MessageService,
+    constructor(private requestService: RequestService, private requestServiceV2: RequestServiceV2, private notificationService: MessageService,
         private dialog: MatDialog) {
 
     }
@@ -39,8 +41,8 @@ export class TvRequestGridComponent {
 
         this.tv.requested = true;
 
-        const viewModel = <ITvRequestViewModel>{
-            firstSeason: this.tv.firstSeason, latestSeason: this.tv.latestSeason, requestAll: this.tv.requestAll, tvDbId: this.tv.id,
+        const viewModel = <ITvRequestViewModelV2>{
+            firstSeason: this.tv.firstSeason, latestSeason: this.tv.latestSeason, requestAll: this.tv.requestAll, theMovieDbId: this.tv.id,
             requestOnBehalf: null
         };
         viewModel.seasons = [];
@@ -50,6 +52,7 @@ export class TvRequestGridComponent {
                 season.episodes.forEach(ep => {
                     if (this.selection.isSelected(ep)) {
                         ep.requested = true;
+                        ep.requestStatus = "Common.PendingApproval";
                         seasonsViewModel.episodes.push({ episodeNumber: ep.episodeNumber });
                     }
                 });
@@ -57,16 +60,21 @@ export class TvRequestGridComponent {
             viewModel.seasons.push(seasonsViewModel);
         });
 
-        const requestResult = await this.requestService.requestTv(viewModel).toPromise();
+        if (this.isAdmin) {
+            const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.tvShow, id: this.tv.id }, panelClass: 'modal-panel' });
+            dialog.afterClosed().subscribe(async (result) => {
+                if (result) {
+                    viewModel.requestOnBehalf = result.username?.id;
+                    viewModel.qualityPathOverride = result?.sonarrPathId;
+                    viewModel.rootFolderOverride = result?.sonarrFolderId;
 
-        if (requestResult.result) {
-            this.notificationService.send(
-                `Request for ${this.tv.title} has been added successfully`);
-
-            this.selection.clear();
-
+                    const requestResult = await this.requestServiceV2.requestTv(viewModel).toPromise();
+                    this.postRequest(requestResult);
+                }
+            });
         } else {
-            this.notificationService.send(requestResult.errorMessage ? requestResult.errorMessage : requestResult.message);
+            const requestResult = await this.requestServiceV2.requestTv(viewModel).toPromise();
+            this.postRequest(requestResult);
         }
     }
 
@@ -211,5 +219,38 @@ export class TvRequestGridComponent {
             return "approved";
         }
         return "";
+    }
+
+    private postRequest(requestResult: IRequestEngineResult) {
+        if (requestResult.result) {
+            this.notificationService.send(
+                `Request for ${this.tv.title} has been added successfully`);
+
+            this.selection.clear();
+
+            if (this.tv.firstSeason) {
+                this.tv.seasonRequests[0].episodes.forEach(ep => {
+                    ep.requested = true;
+                    ep.requestStatus = "Common.PendingApproval";
+                });
+            }
+            if (this.tv.requestAll) {
+                this.tv.seasonRequests.forEach(season => {
+                    season.episodes.forEach(ep => {
+                        ep.requested = true;
+                        ep.requestStatus = "Common.PendingApproval";
+                    });
+                });
+            }
+            if (this.tv.latestSeason) {
+                this.tv.seasonRequests[this.tv.seasonRequests.length - 1].episodes.forEach(ep => {
+                    ep.requested = true;
+                    ep.requestStatus = "Common.PendingApproval";
+                });
+            }
+
+        } else {
+            this.notificationService.send(requestResult.errorMessage ? requestResult.errorMessage : requestResult.message);
+        }
     }
 }

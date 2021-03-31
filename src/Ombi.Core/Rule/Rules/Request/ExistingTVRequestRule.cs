@@ -28,7 +28,7 @@ namespace Ombi.Core.Rule.Rules.Request
             {
                 var tv = (ChildRequests) obj;
                 var tvRequests = Tv.GetChild();
-                var currentRequest = await tvRequests.FirstOrDefaultAsync(x => x.ParentRequest.TvDbId == tv.Id); // the Id on the child is the tvdbid at this point
+                var currentRequest = await tvRequests.FirstOrDefaultAsync(x => x.ParentRequest.ExternalProviderId == tv.Id); // the Id on the child is the TheMovieDb at this point
                 if (currentRequest == null)
                 {
                     return Success();

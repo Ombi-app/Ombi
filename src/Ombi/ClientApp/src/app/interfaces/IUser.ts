@@ -9,6 +9,7 @@ export interface IUser {
     emailAddress: string;
     password: string;
     userType: UserType;
+    userAlias: string;
     lastLoggedIn: Date;
     hasLoggedIn: boolean;
     movieRequestLimit: number;
@@ -68,8 +69,11 @@ export interface IIdentityResult {
     successful: boolean;
 }
 
-export interface IUpdateLocalUser extends IUser {
+export interface IUpdateLocalUser {
     currentPassword: string;
+    password: string;
+    id: string;
+    emailAddress: string;
     confirmNewPassword: string;
 }
 

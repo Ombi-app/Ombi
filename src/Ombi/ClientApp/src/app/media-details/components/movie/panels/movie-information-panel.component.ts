@@ -13,7 +13,7 @@ import { IStreamingData } from "../../../../interfaces/IStreams";
 })
 export class MovieInformationPanelComponent implements OnInit {
 
-    constructor(private searchService: SearchV2Service, @Inject(APP_BASE_HREF) public baseUrl: string) { }
+    constructor(private searchService: SearchV2Service, @Inject(APP_BASE_HREF) public internalBaseUrl: string) { }
 
     @Input() public movie: ISearchMovieResultV2;
     @Input() public request: IMovieRequests;
@@ -22,7 +22,12 @@ export class MovieInformationPanelComponent implements OnInit {
     public ratings: IMovieRatings;
     public streams: IStreamingData[];
 
+    public baseUrl: string;
+
     public ngOnInit() {
+        if (this.internalBaseUrl.length > 1) {
+            this.baseUrl = this.internalBaseUrl;
+        }
         this.searchService.getRottenMovieRatings(this.movie.title, +this.movie.releaseDate.toString().substring(0,4))
             .subscribe(x => this.ratings = x);
 

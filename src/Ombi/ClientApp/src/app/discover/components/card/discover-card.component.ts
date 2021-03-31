@@ -3,10 +3,11 @@ import { IDiscoverCardResult } from "../../interfaces";
 import { RequestType } from "../../../interfaces";
 import { MessageService, RequestService, SearchV2Service } from "../../../services";
 import { MatDialog } from "@angular/material/dialog";
-import { DiscoverCardDetailsComponent } from "./discover-card-details.component";
 import { ISearchTvResultV2 } from "../../../interfaces/ISearchTvResultV2";
 import { ISearchMovieResultV2 } from "../../../interfaces/ISearchMovieResultV2";
 import { EpisodeRequestComponent } from "../../../shared/episode-request/episode-request.component";
+import { AdminRequestDialogComponent } from "../../../shared/admin-request-dialog/admin-request-dialog.component";
+import { DiscoverType } from "../carousel-list/carousel-list.component";
 
 @Component({
     selector: "discover-card",
@@ -15,7 +16,9 @@ import { EpisodeRequestComponent } from "../../../shared/episode-request/episode
 })
 export class DiscoverCardComponent implements OnInit {
 
+    @Input() public discoverType: DiscoverType;
     @Input() public result: IDiscoverCardResult;
+    @Input() public isAdmin: boolean;
     public RequestType = RequestType;
     public hide: boolean;
     public fullyLoaded = false;
@@ -29,6 +32,7 @@ export class DiscoverCardComponent implements OnInit {
 
     public ngOnInit() {
         if (this.result.type == RequestType.tvShow) {
+            this.fullyLoaded = true;
             this.getExtraTvInfo();
         }
         if (this.result.type == RequestType.movie) {
@@ -39,20 +43,16 @@ export class DiscoverCardComponent implements OnInit {
         }
     }
 
-    public openDetails(details: IDiscoverCardResult) {
-        this.dialog.open(DiscoverCardDetailsComponent, { width: "700px", data: details, panelClass: 'modal-panel' })
-    }
-
     public async getExtraTvInfo() {
-        if (this.result.tvMovieDb) {
+        // if (this.result.tvMovieDb) {
             this.tvSearchResult = await this.searchService.getTvInfoWithMovieDbId(+this.result.id);
-        } else {
-            this.tvSearchResult = await this.searchService.getTvInfo(+this.result.id);
-        }
-        if (!this.tvSearchResult || this.tvSearchResult?.status.length > 0 && this.tvSearchResult?.status === "404") {
-            this.hide = true;
-            return;
-        }
+        // } else {
+        //     this.tvSearchResult = await this.searchService.getTvInfo(+this.result.id);
+        // }
+        // if (!this.tvSearchResult || this.tvSearchResult?.status.length > 0 && this.tvSearchResult?.status === "404") {
+        //     this.hide = true;
+        //     return;
+        // }
 
         this.setTvDefaults(this.tvSearchResult);
         this.updateTvItem(this.tvSearchResult);
@@ -120,11 +120,30 @@ export class DiscoverCardComponent implements OnInit {
         this.loading = true;
         switch (this.result.type) {
             case RequestType.tvShow:
-                const dia = this.dialog.open(EpisodeRequestComponent, { width: "700px", data: { series: this.tvSearchResult }, panelClass: 'modal-panel' });
+                const dia = this.dialog.open(EpisodeRequestComponent, { width: "700px", data: { series: this.tvSearchResult, isAdmin: this.isAdmin }, panelClass: 'modal-panel' });
                 dia.afterClosed().subscribe(x => this.loading = false);
                 return;
             case RequestType.movie:
-                this.requestService.requestMovie({ theMovieDbId: +this.result.id, languageCode: null, requestOnBehalf: null }).subscribe(x => {
+                if (this.isAdmin) {
+                    const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.result.id }, panelClass: 'modal-panel' });
+                    dialog.afterClosed().subscribe((result) => {
+                        if (result) {
+                                this.requestService.requestMovie({ theMovieDbId: +this.result.id,
+                                    languageCode: null,
+                                    qualityPathOverride: result.radarrPathId,
+                                    requestOnBehalf: result.username?.id,
+                                    rootFolderOverride: result.radarrFolderId, }).subscribe(x => {
+                                if (x.result) {
+                                    this.result.requested = true;
+                                    this.messageService.send(x.message, "Ok");
+                                } else {
+                                    this.messageService.send(x.errorMessage, "Ok");
+                                }
+                            });
+                        }
+                    });
+                } else {
+                this.requestService.requestMovie({ theMovieDbId: +this.result.id, languageCode: null, requestOnBehalf: null, qualityPathOverride: null, rootFolderOverride: null }).subscribe(x => {
                     if (x.result) {
                         this.result.requested = true;
                         this.messageService.send(x.message, "Ok");
@@ -134,6 +153,7 @@ export class DiscoverCardComponent implements OnInit {
                     this.loading = false;
                 });
                 return;
+            }
         }
     }
 
@@ -172,12 +192,13 @@ export class DiscoverCardComponent implements OnInit {
     private updateTvItem(updated: ISearchTvResultV2) {
         this.result.title = updated.title;
         this.result.id = updated.id;
-        this.result.available = updated.fullyAvailable || updated.partlyAvailable;
-        this.result.posterPath = updated.banner;
+        // this.result.available = updated.fullyAvailable || updated.partlyAvailable;
+        // this.result.posterPath = updated.banner;
         this.result.requested = updated.requested;
         this.result.url = updated.imdbId;
         this.result.overview = updated.overview;
         this.result.approved = updated.approved;
+        this.result.available = updated.fullyAvailable;
 
         this.fullyLoaded = true;
     }

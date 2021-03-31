@@ -100,6 +100,7 @@ export interface IBaseRequest {
 export interface ITvRequests {
   id: number;
   imdbId: string;
+  externalProviderId: number;
   rootFolder: number;
   overview: string;
   title: string;
@@ -111,7 +112,8 @@ export interface ITvRequests {
   qualityOverride: number;
   background: any;
   totalSeasons: number;
-  tvDbId: number;
+  tvDbId: number; // NO LONGER USED
+
   open: boolean; // THIS IS FOR THE UI
 
   // For UI display
@@ -146,6 +148,7 @@ export enum OrderType {
 
 export interface INewSeasonRequests {
   id: number;
+  overview: string;
   seasonNumber: number;
   episodes: IEpisodesRequests[];
   seasonAvailable: boolean;
@@ -161,13 +164,13 @@ export interface IEpisodesRequests {
   available: boolean;
   requested: boolean;
   approved: boolean;
+  requestStatus: string;
   selected: boolean; // This is for the UI only
 }
 
-export interface IMovieRequestModel {
+export interface IMovieRequestModel extends BaseRequestOptions {
   theMovieDbId: number;
   languageCode: string | undefined;
-  requestOnBehalf: string | undefined;
 }
 
 export interface IFilter {
@@ -182,4 +185,10 @@ export enum FilterType {
   Approved = 3,
   Processing = 4,
   PendingApproval = 5,
+}
+
+export class BaseRequestOptions {
+  requestOnBehalf: string | undefined;
+  rootFolderOverride: number | undefined;
+  qualityPathOverride: number | undefined;
 }

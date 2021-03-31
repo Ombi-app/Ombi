@@ -3,48 +3,34 @@
         [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
         [opened]="!(isHandset$ | async)">
 
-        <mat-toolbar class="application-name">{{applicationName}}</mat-toolbar>
+        <mat-toolbar class="application-name" id="nav-applicationName">{{applicationName}}</mat-toolbar>
 
-        <div class="outer-profile">
-            <div class="profile-img-container">
-                <div class="profile-img">
-                    <img
-                        src="https://www.gravatar.com/avatar/{{emailHash}}?d={{applicationLogo ? applicationLogo : 'https://raw.githubusercontent.com/Ombi-app/Ombi/gh-pages/img/android-chrome-512x512.png'}}" />
-                </div>
-                <div class="profile-info">
-                    <h3>{{username}}</h3>
-                    <p>{{welcomeText | translate}}</p>
-                </div>
-            </div>
-        </div>
         <mat-nav-list>
             <span *ngFor="let nav of navItems">
 
-                <div *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled">
+                <div class="menu-spacing" *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled">
 
 
-                    <a *ngIf="nav.externalLink" mat-list-item [href]="nav.link" target="_blank"
+                    <a id="{{nav.id}}" *ngIf="nav.externalLink" mat-list-item [href]="nav.link" target="_blank"
                         matTooltip="{{nav.toolTipMessage | translate}}" matTooltipPosition="right"
                         [routerLinkActive]="'active-list-item'">
 
-                        <mat-icon *ngIf="nav.icon" aria-label="Side nav toggle icon" [style]="nav.style">{{nav.icon}}
-                        </mat-icon>
-                        <i *ngIf="nav.faIcon" class="far fa-lg {{nav.faIcon}}"
+                        <i *ngIf="nav.icon" class="fa-lg {{nav.icon}} icon-spacing"
                             style="padding-left: 5px; padding-right: 5px;" aria-hidden="true"></i>
                         &nbsp;{{nav.name | translate}}
                     </a>
-                    <a *ngIf="!nav.externalLink" mat-list-item [routerLink]="nav.link" [style]="nav.color"
+                    <a id="{{nav.id}}" *ngIf="!nav.externalLink" mat-list-item [routerLink]="nav.link" [style]="nav.color"
                         [routerLinkActive]="'active-list-item'">
 
-                        <mat-icon aria-label="Side nav toggle icon">{{nav.icon}}</mat-icon>
+                        <i class="fa-lg {{nav.icon}} icon-spacing"></i>
                         &nbsp;{{nav.name | translate}}
                     </a>
                 </div>
             </span>
 
-            <a id="nav-logout" mat-list-item [routerLinkActive]="'active-list-item'"
+            <a   class="menu-spacing" id="nav-logout" mat-list-item [routerLinkActive]="'active-list-item'"
                 aria-label="Toggle sidenav" (click)="logOut();">
-                <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
+                <i class="fa-lg fas fa-sign-out-alt  icon-spacing"></i>
                 &nbsp;{{ 'NavigationBar.Logout' | translate }}
             </a>
 
@@ -64,7 +50,7 @@
         <mat-toolbar color="primary" class="top-bar-container">
             <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
                 *ngIf="isHandset$ | async">
-                <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+                <i class="fa-lg fas fa-bars"></i>
             </button>
 
             <div class="col-8 col-lg-10 top-search-bar">
@@ -75,24 +61,29 @@
                     </div>
                 </span>
             </div>
-            <div class="col-2 top-filter">
-                <button mat-icon-button [matMenuTriggerFor]="filterMenu">
-                    <mat-icon>filter_alt</mat-icon>
+            <div class="col-1 top-filter">
+                <button id="search-filter" mat-icon-button [matMenuTriggerFor]="filterMenu">
+                    <i class="fa-lg fas fa-filter"></i>
                 </button>
                 <mat-menu #filterMenu="matMenu" yPosition="below" class="smaller-panel">
-                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.movies"
+                    <mat-slide-toggle id="filterMovies" class="mat-menu-item slide-menu" [checked]="searchFilter.movies"
                         (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Movie)">
                         {{ 'NavigationBar.Filter.Movies' | translate}}</mat-slide-toggle>
-                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.tvShows"
+                    <mat-slide-toggle id="filterTv" class="mat-menu-item slide-menu" [checked]="searchFilter.tvShows"
                         (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.TvShow)">
                         {{ 'NavigationBar.Filter.TvShows' | translate}}</mat-slide-toggle>
-                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.music"
+                    <mat-slide-toggle id="filterMusic" class="mat-menu-item slide-menu" [checked]="searchFilter.music"
                         (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.Music)">
                         {{ 'NavigationBar.Filter.Music' | translate}}</mat-slide-toggle>
-                    <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.people"
+                    <!-- <mat-slide-toggle class="mat-menu-item slide-menu" [checked]="searchFilter.people"
                         (click)="$event.stopPropagation()" (change)="changeFilter($event,SearchFilterType.People)">
-                        {{ 'NavigationBar.Filter.People' | translate}}</mat-slide-toggle>
+                        {{ 'NavigationBar.Filter.People' | translate}}</mat-slide-toggle> -->
                 </mat-menu>
+            </div>
+            <div class="col-1">
+                <a routerLink="/user-preferences">
+                <img [matTooltip]="username" id="profile-image" class="profile-img"  [src]="getUserImage()" />
+            </a>
             </div>
 
         </mat-toolbar>

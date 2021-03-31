@@ -1,43 +1,35 @@
-import { Component, AfterViewInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { SearchV2Service } from "../../../services";
 import { IActorCredits } from "../../../interfaces/ISearchTvResultV2";
 import { IDiscoverCardResult } from "../../interfaces";
 import { RequestType } from "../../../interfaces";
+import { AuthService } from "../../../auth/auth.service";
 
 @Component({
     templateUrl: "./discover-actor.component.html",
     styleUrls: ["./discover-actor.component.scss"],
 })
-export class DiscoverActorComponent implements AfterViewInit {
+export class DiscoverActorComponent {
     public actorId: number;
     public actorCredits: IActorCredits;
     public loadingFlag: boolean;
+    public isAdmin: boolean;
 
     public discoverResults: IDiscoverCardResult[] = [];
-    
+
     constructor(private searchService: SearchV2Service,
-        private route: ActivatedRoute) {
+        private route: ActivatedRoute,
+        private auth: AuthService) {
         this.route.params.subscribe((params: any) => {
             this.actorId = params.actorId;
+            this.isAdmin = this.auth.isAdmin();
             this.loading();
             this.searchService.getMoviesByActor(this.actorId).subscribe(res => {
                 this.actorCredits = res;
                 this.createModel();
             });
         });
-    }
-
-    public async ngAfterViewInit() {
-        // this.discoverResults.forEach((result) => {
-        //     this.searchService.getFullMovieDetails(result.id).subscribe(x => {
-        //         result.available = x.available;
-        //         result.approved = x.approved;
-        //         result.rating = x.voteAverage;
-        //         result.requested = x.requested;
-        //         result.url = x.homepage;
-        //     });
-        // });
     }
 
     private createModel() {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using AutoMapper;
+using Ombi.Api.TheMovieDb.Models;
 using Ombi.Api.TvMaze.Models;
 using Ombi.Core.Models.Search;
 using Ombi.Helpers;
@@ -26,6 +27,15 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(dest => dest.Title, opts => opts.MapFrom(src => src.show.name))
                 .ForMember(dest => dest.Banner, opts => opts.MapFrom(src => !string.IsNullOrEmpty(src.show.image.medium) ? src.show.image.medium.ToHttpsUrl() : string.Empty))
                 .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.show.status));
+
+            CreateMap<TvSearchResult, SearchTvShowViewModel>()
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.Id))
+                .ForMember(dest => dest.TheMovieDbId, opts => opts.MapFrom(src => src.Id.ToString()))
+                .ForMember(dest => dest.FirstAired, opts => opts.MapFrom(src => src.ReleaseDate))
+                .ForMember(dest => dest.Overview, opts => opts.MapFrom(src => src.Overview))
+                .ForMember(dest => dest.Rating, opts => opts.MapFrom(src => src.VoteAverage.ToString(CultureInfo.CurrentUICulture)))
+                .ForMember(dest => dest.Title, opts => opts.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Banner, opts => opts.MapFrom(src => !string.IsNullOrEmpty(src.BackdropPath) ? src.BackdropPath.ToHttpsUrl() : src.PosterPath));
 
             CreateMap<TvMazeShow, SearchTvShowViewModel>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.externals.thetvdb))
@@ -56,10 +66,27 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(dest => dest.Runtime, opts => opts.MapFrom(src => src.Runtime.ToString()))
                 .ForMember(dest => dest.Title, opts => opts.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Status, opts => opts.MapFrom(src => TraktEnumHelper.GetDescription(src.Status)))
-                .ForMember(dest => dest.Trailer, 
+                .ForMember(dest => dest.Trailer,
                     opts => opts.MapFrom(src => src.Trailer != null ? src.Trailer.ToString().ToHttpsUrl() : string.Empty))
-                .ForMember(dest => dest.Homepage, 
+                .ForMember(dest => dest.Homepage,
                     opts => opts.MapFrom(src => src.Homepage != null ? src.Homepage.ToString().ToHttpsUrl() : string.Empty));
+
+
+            CreateMap<MovieDbSearchResult, SearchTvShowViewModel>()
+                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.Id))
+                .ForMember(dest => dest.FirstAired, opts => opts.MapFrom(src => src.ReleaseDate))
+                //.ForMember(dest => dest.ImdbId, opts => opts.MapFrom(src => src.Ids.Imdb))
+                //.ForMember(dest => dest.Network, opts => opts.MapFrom(src => src.Network))
+                .ForMember(dest => dest.Overview, opts => opts.MapFrom(src => src.Overview))
+                .ForMember(dest => dest.Rating, opts => opts.MapFrom(src => src.VoteAverage.ToString()))
+                .ForMember(dest => dest.BackdropPath, opts => opts.MapFrom(src => src.PosterPath))
+                //.ForMember(dest => dest.Runtime, opts => opts.MapFrom(src => src.Runtime.ToString()))
+                .ForMember(dest => dest.Title, opts => opts.MapFrom(src => src.Title));
+                //.ForMember(dest => dest.Status, opts => opts.MapFrom(src => TraktEnumHelper.GetDescription(src.Status)))
+                //.ForMember(dest => dest.Trailer,
+                //    opts => opts.MapFrom(src => src.Trailer != null ? src.Trailer.ToString().ToHttpsUrl() : string.Empty))
+                //.ForMember(dest => dest.Homepage,
+                //    opts => opts.MapFrom(src => src.Homepage != null ? src.Homepage.ToString().ToHttpsUrl() : string.Empty));
         }
     }
 }

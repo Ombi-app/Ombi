@@ -1,7 +1,10 @@
-<h1 mat-dialog-title>
-
-    Advanced Options</h1>
+<h1 mat-dialog-title><i class="fas fa-sliders-h"></i> {{'MediaDetails.AdvancedOptions' | translate }}</h1>
 <div mat-dialog-content>
+    <hr />
+    <div class="alert alert-info" role="alert">
+      <i class="fas fa-x7 fa-exclamation-triangle glyphicon"></i>
+      <span>{{'MediaDetails.AutoApproveOptionsTvShort' | translate }}</span>
+    </div>
     <mat-form-field>
         <mat-label>{{'MediaDetails.QualityProfilesSelect' | translate }}</mat-label>
         <mat-select [(value)]="data.profileId">
@@ -18,6 +21,6 @@
     </mat-form-field>
 </div>
 <div mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="" cdkFocusInitial>Close</button>
-    <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Save</button>
+    <button mat-raised-button [mat-dialog-close]="" color="warn"><i class="fas fa-times"></i> {{ 'Common.Cancel' | translate }}</button>
+    <button mat-raised-button [mat-dialog-close]="data" color="accent" cdkFocusInitial><i class="fas fa-plus"></i> {{ 'Common.Submit' | translate }}</button>
 </div>

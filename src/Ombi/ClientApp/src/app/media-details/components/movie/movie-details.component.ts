@@ -13,6 +13,7 @@ import { MovieAdvancedOptionsComponent } from "./panels/movie-advanced-options/m
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { RequestBehalfComponent } from "../shared/request-behalf/request-behalf.component";
 import { forkJoin } from "rxjs";
+import { AdminRequestDialogComponent } from "../../../shared/admin-request-dialog/admin-request-dialog.component";
 
 @Component({
     templateUrl: "./movie-details.component.html",
@@ -84,13 +85,36 @@ export class MovieDetailsComponent {
     }
 
     public async request(userId?: string) {
-        const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: null, requestOnBehalf: userId }).toPromise();
+        if (this.isAdmin) {
+            const dialog = this.dialog.open(AdminRequestDialogComponent, { width: "700px", data: { type: RequestType.movie, id: this.movie.id }, panelClass: 'modal-panel' });
+            dialog.afterClosed().subscribe(async (result) => {
+                if (result) {
+                    const requestResult = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId,
+                        languageCode: null,
+                        qualityPathOverride: result.radarrPathId,
+                        requestOnBehalf: result.username?.id,
+                        rootFolderOverride: result.radarrFolderId, }).toPromise();
+                    if (requestResult.result) {
+                        this.movie.requested = true;
+                        this.movie.requestId = requestResult.requestId;
+                        this.messageService.send(requestResult.message, "Ok");
+                        this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
+                    } else {
+                        this.messageService.send(requestResult.errorMessage, "Ok");
+                    }
+                }
+            });
+        } else {
+        const result = await this.requestService.requestMovie({ theMovieDbId: this.theMovidDbId, languageCode: null, requestOnBehalf: userId, qualityPathOverride: undefined, rootFolderOverride: undefined }).toPromise();
         if (result.result) {
             this.movie.requested = true;
+            this.movie.requestId = result.requestId;
+            this.movieRequest = await this.requestService.getMovieRequest(this.movie.requestId);
             this.messageService.send(result.message, "Ok");
         } else {
             this.messageService.send(result.errorMessage, "Ok");
         }
+    }
     }
 
     public openDialog() {
@@ -107,10 +131,8 @@ export class MovieDetailsComponent {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            this.movieRequest.denied = result;
-            if (this.movieRequest.denied) {
-                this.movie.approved = false;
-            }
+            this.movieRequest.denied = result.denied;
+            this.movieRequest.deniedReason = result.reason;
         });
     }
 
@@ -164,15 +186,6 @@ export class MovieDetailsComponent {
                 result.profile = result.profiles.filter(f => f.id === +result.profileId)[0];
                 await this.requestService2.updateMovieAdvancedOptions({ qualityOverride: result.profileId, rootPathOverride: result.rootFolderId, requestId: this.movieRequest.id }).toPromise();
                 this.setAdvancedOptions(result);
-            }
-        });
-    }
-
-    public async openRequestOnBehalf() {
-        const dialog = this.dialog.open(RequestBehalfComponent, { width: "700px", panelClass: 'modal-panel' })
-        await dialog.afterClosed().subscribe(async result => {
-            if (result) {
-                await this.request(result.id);
             }
         });
     }

@@ -7,12 +7,15 @@ import { SharedModule } from "../shared/shared.module";
 import { QRCodeModule } from 'angularx-qrcode';
 
 import * as fromComponents from './components';
+import { ReactiveFormsModule } from "@angular/forms";
+import { ValidationService } from "../services";
 
 
 @NgModule({
     imports: [
         RouterModule.forChild(fromComponents.routes),
         SharedModule,
+        ReactiveFormsModule,
         MatCheckboxModule,
         QRCodeModule,
     ],
@@ -23,6 +26,7 @@ import * as fromComponents from './components';
         RouterModule,
     ],
     providers: [
+        ValidationService,
     ],
 
 })

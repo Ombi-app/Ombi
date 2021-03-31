@@ -263,9 +263,9 @@ namespace Ombi.Controllers.V1
         [HttpGet("tv/info/{tvdbId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public async Task<SearchTvShowViewModel> GetShowInfo(int tvdbId)
+        public async Task<SearchTvShowViewModel> GetShowInfo(string tvdbId)
         {
-            return await TvEngine.GetShowInformation(tvdbId);
+            return await TvEngine.GetShowInformation(tvdbId, HttpContext.RequestAborted);
         }
 
         /// <summary>

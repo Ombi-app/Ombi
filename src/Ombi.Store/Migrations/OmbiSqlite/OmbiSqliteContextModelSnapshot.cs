@@ -764,6 +764,9 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.Property<string>("Background")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("ExternalProviderId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("ImdbId")
                         .HasColumnType("TEXT");
 
@@ -953,6 +956,9 @@ namespace Ombi.Store.Migrations.OmbiSqlite
 
                     b.Property<int>("ChildRequestId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Overview")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("SeasonNumber")
                         .HasColumnType("INTEGER");

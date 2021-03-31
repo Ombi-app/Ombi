@@ -13,6 +13,7 @@ import { TvAdvancedOptionsComponent } from "./panels/tv-advanced-options/tv-adva
 import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { RequestBehalfComponent } from "../shared/request-behalf/request-behalf.component";
 import { forkJoin } from "rxjs";
+import { TopBannerComponent } from "../shared/top-banner/top-banner.component";
 
 @Component({
     templateUrl: "./tv-details.component.html",
@@ -57,12 +58,12 @@ export class TvDetailsComponent implements OnInit {
             this.showAdvanced = await this.sonarrService.isEnabled();
         }
 
-        if (this.fromSearch) {
-            this.tv = await this.searchService.getTvInfoWithMovieDbId(this.tvdbId);
-            this.tvdbId = this.tv.id;
-        } else {
+        // if (this.fromSearch) {
+        //     this.tv = await this.searchService.getTvInfoWithMovieDbId(this.tvdbId);
+        //     this.tvdbId = this.tv.id;
+        // } else {
             this.tv = await this.searchService.getTvInfo(this.tvdbId);
-        }
+        // }
 
         if (this.tv.requestId) {
             this.tvRequest = await this.requestService.getChildRequests(this.tv.requestId).toPromise();
@@ -70,12 +71,12 @@ export class TvDetailsComponent implements OnInit {
             this.loadAdvancedInfo();
         }
 
-        const tvBanner = await this.imageService.getTvBanner(this.tvdbId).toPromise();
-        this.tv.background = this.sanitizer.bypassSecurityTrustStyle("url(" + tvBanner + ")");
+        // const tvBanner = await this.imageService.getTvBanner(this.tvdbId).toPromise();
+        this.tv.background = this.sanitizer.bypassSecurityTrustStyle("url(https://image.tmdb.org/t/p/original" + this.tv.banner + ")");
     }
 
     public async request(userId: string) {
-        this.dialog.open(EpisodeRequestComponent, { width: "800px", data: <EpisodeRequestData> { series: this.tv, requestOnBehalf: userId }, panelClass: 'modal-panel' })
+        this.dialog.open(EpisodeRequestComponent, { width: "800px", data: <EpisodeRequestData> { series: this.tv, requestOnBehalf: userId, isAdmin: this.isAdmin }, panelClass: 'modal-panel' })
     }
 
     public async issue() {
@@ -87,7 +88,6 @@ export class TvDetailsComponent implements OnInit {
 
     public openDialog() {
         let trailerLink = this.tv.trailer;
-        trailerLink = trailerLink.split('?v=')[1];
 
         this.dialog.open(YoutubeTrailerComponent, {
             width: '560px',
@@ -104,15 +104,6 @@ export class TvDetailsComponent implements OnInit {
                 result.profile = result.profiles.filter(f => f.id === +result.profileId)[0];
                 await this.requestService2.updateTvAdvancedOptions({ qualityOverride: result.profileId, rootPathOverride: result.rootFolderId, requestId: this.showRequest.id }).toPromise();
                 this.setAdvancedOptions(result);
-            }
-        });
-    }
-
-    public async openRequestOnBehalf() {
-        const dialog = this.dialog.open(RequestBehalfComponent, { width: "700px", panelClass: 'modal-panel' })
-        await dialog.afterClosed().subscribe(async result => {
-            if (result) {
-                await this.request(result.id);
             }
         });
     }

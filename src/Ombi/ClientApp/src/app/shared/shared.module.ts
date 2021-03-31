@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { TruncateModule } from "@yellowspot/ng-truncate";
 import { MomentModule } from "ngx-moment";
@@ -37,15 +37,18 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatTabsModule } from "@angular/material/tabs";
 import { EpisodeRequestComponent } from "./episode-request/episode-request.component";
 import { DetailsGroupComponent } from "../issues/components/details-group/details-group.component";
+import { AdminRequestDialogComponent } from "./admin-request-dialog/admin-request-dialog.component";
 
 @NgModule({
   declarations: [
     IssuesReportComponent,
     EpisodeRequestComponent,
     DetailsGroupComponent,
+    AdminRequestDialogComponent,
   ],
   imports: [
     SidebarModule,
+    ReactiveFormsModule,
     FormsModule,
     CommonModule,
     InputSwitchModule,
@@ -76,10 +79,6 @@ import { DetailsGroupComponent } from "../issues/components/details-group/detail
     MatStepperModule,
     MatSnackBarModule,
   ],
-  entryComponents: [
-    EpisodeRequestComponent,
-    DetailsGroupComponent,
-  ],
   exports: [
       TranslateModule,
       CommonModule,
@@ -89,6 +88,7 @@ import { DetailsGroupComponent } from "../issues/components/details-group/detail
       MatProgressSpinnerModule,
       IssuesReportComponent,
       EpisodeRequestComponent,
+      AdminRequestDialogComponent,
       DetailsGroupComponent,
       TruncateModule,
       InputSwitchModule,

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Models.Search;
+using Ombi.Helpers;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
@@ -22,7 +23,7 @@ namespace Ombi.Core.Rule.Rules
             if (obj.RequestType == RequestType.TvShow)
             {
                 var vm = (ChildRequests) obj;
-                var result = await _ctx.SonarrCache.FirstOrDefaultAsync(x => x.TvDbId == vm.Id);
+                var result = await _ctx.SonarrCache.FirstOrDefaultAsync(x => x.TvDbId == vm.Id); // TODO lookup the external provider in the sonarr sync to use themoviedb
                 if (result != null)
                 {
                     if (vm.SeasonRequests.Any())
@@ -53,8 +54,13 @@ namespace Ombi.Core.Rule.Rules
             if (obj.Type == RequestType.TvShow)
             {
                 var vm = (SearchTvShowViewModel) obj;
-                // Check if it's in Radarr
-                var result = await _ctx.SonarrCache.FirstOrDefaultAsync(x => x.TvDbId == vm.Id);
+                // Check if it's in Sonarr
+                if (!vm.TheTvDbId.HasValue())
+                {
+                    return new RuleResult { Success = true };
+                }
+                var tvdbidint = int.Parse(vm.TheTvDbId);
+                var result = await _ctx.SonarrCache.FirstOrDefaultAsync(x => x.TvDbId == tvdbidint);
                 if (result != null)
                 {
                     vm.Approved = true;
@@ -69,7 +75,7 @@ namespace Ombi.Core.Rule.Rules
                                 // Check if we have it
                                 var monitoredInSonarr = await sonarrEpisodes.FirstOrDefaultAsync(x =>
                                     x.EpisodeNumber == ep.EpisodeNumber && x.SeasonNumber == season.SeasonNumber
-                                    && x.TvDbId == vm.Id);
+                                    && x.TvDbId == tvdbidint);
                                 if (monitoredInSonarr != null)
                                 {
                                     ep.Approved = true;

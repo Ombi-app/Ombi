@@ -10,6 +10,7 @@ export enum DiscoverType {
     Upcoming,
     Trending,
     Popular,
+    RecentlyRequested,
 }
 
 @Component({
@@ -20,6 +21,8 @@ export enum DiscoverType {
 export class CarouselListComponent implements OnInit {
 
     @Input() public discoverType: DiscoverType;
+    @Input() public id: string;
+    @Input() public isAdmin: boolean;
     @ViewChild('carousel', {static: false}) carousel: Carousel;
 
     public DiscoverOption = DiscoverOption;
@@ -215,6 +218,8 @@ export class CarouselListComponent implements OnInit {
             case DiscoverType.Upcoming:
                 this.movies = await this.searchService.upcomingMoviesByPage(this.currentlyLoaded, this.amountToLoad);
                 break
+            case DiscoverType.RecentlyRequested:
+                this.movies = await this.searchService.recentlyRequestedMoviesByPage(this.currentlyLoaded, this.amountToLoad);
         }
         this.currentlyLoaded += this.amountToLoad;
     }
@@ -288,8 +293,8 @@ export class CarouselListComponent implements OnInit {
         const tempResults = <IDiscoverCardResult[]>[];
         this.tvShows.forEach(m => {
             tempResults.push({
-                available: m.available,
-                posterPath: "../../../images/default_tv_poster.png",
+                available: m.fullyAvailable,
+                posterPath: m.backdropPath ? `https://image.tmdb.org/t/p/w500/${m.backdropPath}` : "../../../images/default_tv_poster.png",
                 requested: m.requested,
                 title: m.title,
                 type: RequestType.tvShow,

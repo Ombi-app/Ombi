@@ -1,4 +1,5 @@
-import { Component, ViewEncapsulation, Input, OnInit } from "@angular/core";
+import { APP_BASE_HREF } from "@angular/common";
+import { Component, ViewEncapsulation, Input, OnInit, Inject } from "@angular/core";
 import { ITvRequests } from "../../../../../interfaces";
 import { ITvRatings } from "../../../../../interfaces/IRatings";
 import { ISearchTvResultV2 } from "../../../../../interfaces/ISearchTvResultV2"; 
@@ -13,7 +14,7 @@ import { SearchV2Service } from "../../../../../services";
 })
 export class TvInformationPanelComponent implements OnInit {
 
-    constructor(private searchService: SearchV2Service) { }
+    constructor(private searchService: SearchV2Service, @Inject(APP_BASE_HREF) public internalBaseUrl: string) { }
 
     @Input() public tv: ISearchTvResultV2;
     @Input() public request: ITvRequests;
@@ -24,12 +25,16 @@ export class TvInformationPanelComponent implements OnInit {
     public seasonCount: number;
     public totalEpisodes: number = 0;
     public nextEpisode: any;
+    public baseUrl: string;
 
     public ngOnInit(): void {
+        if (this.internalBaseUrl.length > 1) {
+            this.baseUrl = this.internalBaseUrl;
+        }
         this.searchService.getRottenTvRatings(this.tv.title, +this.tv.firstAired.toString().substring(0,4))
             .subscribe(x => this.ratings = x);
 
-        this.searchService.getTvStreams(+this.tv.theTvDbId, this.tv.id).subscribe(x => this.streams = x);
+        this.searchService.getTvStreams(+this.tv.id ).subscribe(x => this.streams = x);
         this.tv.seasonRequests.forEach(season => {
             this.totalEpisodes = this.totalEpisodes + season.episodes.length;
         });

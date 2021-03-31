@@ -2,7 +2,7 @@
     <div>
         <div class="rating medium-font">
             <span *ngIf="tv.rating">
-                <img class="rating-small" src="{{baseUrl}}/images/tvm-logo.png"> {{tv.rating}}/10
+                <img class="rating-small" src="{{baseUrl}}/images/tmdb-logo.svg"> {{tv.rating * 10}}%
             </span>
             <span *ngIf="ratings?.score && ratings?.class">
                 <img class="rating-small" src="{{baseUrl}}/images/{{ratings.class === 'rotten' ? 'rotten-rotten.svg' : 'rotten-fresh.svg'}}"> {{ratings.score}}%
@@ -22,7 +22,7 @@
         <hr>
         <div *ngIf="tv.status">
             <span  class="label">{{'MediaDetails.Status' | translate }}:</span>
-                <span id="status">{{tv.status}}</span>
+                <span id="status"> {{tv.status}}</span>
         </div>
         <span class="label">First Aired:</span>
             {{tv.firstAired | date: 'mediumDate'}}
@@ -56,13 +56,27 @@
             {{tv.network.name}}
     </div>
 
-    <div *ngIf="tv.genre">
+
+    <div class="genre-button-container" *ngIf="tv.genres">
         <span class="label">{{'MediaDetails.Genres' | translate }}:</span>
         <div>
-            <span *ngFor="let genre of tv.genre">
-                {{genre}} |
-            </span>
+            <mat-chip-list>
+                <mat-chip selected *ngFor="let genre of tv.genres">
+                    {{genre.name}}
+                </mat-chip>
+            </mat-chip-list>
         </div>
     </div>
+
+    <hr />
+    <div class="keyword-button-container" *ngIf="tv?.keywords?.keywordsValue?.length > 0">
+        <span class="label">{{'MediaDetails.Keywords' | translate }}:</span>
+        <mat-chip-list>
+            <mat-chip selected *ngFor="let keyword of tv.keywords.keywordsValue">
+                {{keyword.name}}
+            </mat-chip>
+        </mat-chip-list>
+    </div>
+
 </div>
 

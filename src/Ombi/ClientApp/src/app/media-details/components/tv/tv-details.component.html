@@ -15,12 +15,15 @@
         <div>
 
             <top-banner [background]="tv.background" [available]="tv.available" [title]="tv.title"
-                [releaseDate]="tv.firstAired" [tagline]="tv.certification"></top-banner>
+                [releaseDate]="tv.firstAired" [tagline]="tv.tagline"></top-banner>
             <div class="social-icons-container">
                 <social-icons
                     [homepage]="tv.homepage"
-                    [tvdbId]="tv.id"
+                    [theMoviedbId]="tv.id"
                     [hasTrailer]="tv.trailer"
+                    [twitter]="tv.externalIds.twitterId"
+                    [facebook]="tv.externalIds.facebookId"
+                    [instagram]="tv.externalIds.instagramId"
                     (openTrailer)="openDialog()"
                     [imdbId]="tv.imdbId"
                     [available]="tv.available || tv.partlyAvailable"
@@ -28,10 +31,8 @@
                     [embyUrl]="tv.embyUrl"
                     [jellyfinUrl]="tv.jellyfinUrl"
                     [isAdmin]="isAdmin"
-                    [canRequestOnBehalf]="!showRequest"
                     [canShowAdvanced]="showAdvanced && showRequest"
                     [type]="requestType"
-                    (onRequestBehalf)="openRequestOnBehalf()"
                     (onAdvancedOptions)="openAdvancedOptions()"
                     >
                 </social-icons>
@@ -41,7 +42,7 @@
                 <div class="small-middle-container">
                     <div class="row justify-content-center justify-content-sm-start header-container">
                         <div class="details-poster-container">
-                            <media-poster [posterPath]="tv.images?.medium"></media-poster>
+                            <media-poster [posterPath]="'https://image.tmdb.org/t/p/w300/' + tv.images.original"></media-poster>
                         </div>
                         <!--Next to poster-->
                         <div class="details-button-container">
@@ -50,9 +51,10 @@
                                     (click)="request()"><i class="fas fa-plus"></i>
                                     {{ 'Common.Request' | translate }}</button>
 
-                                <button *ngIf="tv.fullyAvailable && !tv.partlyAvailable" id="availableBtn" mat-raised-button class="btn-spacing" color="accent"
+                                    <button *ngIf="tv.fullyAvailable && !tv.partlyAvailable" id="availableBtn" mat-raised-button class="btn-spacing" color="accent"
                                     [disabled]>
                                     <i class="fas fa-check"></i> {{'Common.Available' | translate }}</button>
+
                                     <button *ngIf="tv.partlyAvailable && !tv.fullyAvailable" id="partiallyAvailableBtn" mat-raised-button
                                     class="btn-spacing" color="accent" [disabled]>
                                     <i class="fas fa-check"></i> {{'Common.PartiallyAvailable' | translate }}</button>
@@ -105,7 +107,7 @@
                         </div>
 
                         <div class="col-12 col-md-10">
-                            <tv-request-grid [tvRequest]="tvRequest" [isAdmin]="isAdmin" [tv]="tv"></tv-request-grid>
+                            <tv-request-grid id="requests-grid" [tvRequest]="tvRequest" [isAdmin]="isAdmin" [tv]="tv"></tv-request-grid>
                         </div>
 
                         <div class="col-12 col-md-2">
@@ -117,11 +119,11 @@
                             <div class="issuesPanel">
                                 <issues-panel [providerId]="tv.theTvDbId" [isAdmin]="isAdmin"></issues-panel>
                             </div>
-                            <mat-accordion>
+                            <mat-accordion id="requests-panel">
                                 <mat-expansion-panel>
                                     <mat-expansion-panel-header>
                                         <mat-panel-title>
-                                            Requests
+                                            {{'Requests.Title' | translate}}
                                         </mat-panel-title>
                                     </mat-expansion-panel-header>
                                     <tv-requests-panel [tvRequest]="tvRequest" [isAdmin]="isAdmin"></tv-requests-panel>

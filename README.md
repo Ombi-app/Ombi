@@ -1,4 +1,4 @@
-
+ 
 ![](http://i.imgur.com/qQsN78U.png)   
 ____ 
 [![Discord](https://img.shields.io/discord/270828201473736705.svg)](https://discord.gg/Sa7wNWb)
@@ -13,7 +13,7 @@ ____
 
 # Welcome
 
-Ombi is your friendly media request tool, automatically syncs with your media with your media servers!
+Ombi is your friendly media request tool, automatically syncs with your media servers!
 Don't worry, it's grandma friendly, and more importantly; has wife approval certification 😂
 
 | Service  | Stable         | Develop          

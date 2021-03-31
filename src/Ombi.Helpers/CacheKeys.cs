@@ -21,5 +21,6 @@ namespace Ombi.Helpers
         public const string LidarrRootFolders = nameof(LidarrRootFolders);
         public const string LidarrQualityProfiles = nameof(LidarrQualityProfiles);
         public const string FanartTv = nameof(FanartTv);
+        public const string UsersDropdown = nameof(UsersDropdown);
     }
 }

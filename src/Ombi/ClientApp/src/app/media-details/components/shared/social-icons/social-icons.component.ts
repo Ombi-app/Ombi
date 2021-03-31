@@ -22,11 +22,9 @@ export class SocialIconsComponent {
     @Input() type: RequestType;
 
     @Input() isAdmin: boolean;
-    @Input() canRequestOnBehalf: boolean;
     @Input() canShowAdvanced: boolean;
 
     @Output() openTrailer: EventEmitter<any> = new EventEmitter();
-    @Output() onRequestBehalf: EventEmitter<any> = new EventEmitter();
     @Output() onAdvancedOptions: EventEmitter<any> = new EventEmitter();
 
     public RequestType = RequestType;
@@ -34,10 +32,6 @@ export class SocialIconsComponent {
 
     public openDialog() {
         this.openTrailer.emit();
-    }
-
-    public openRequestOnBehalf() {
-        this.onRequestBehalf.emit();
     }
 
     public openAdvancedOptions() {

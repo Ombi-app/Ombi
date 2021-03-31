@@ -67,21 +67,27 @@ namespace Ombi.Core.Engine
                 $"{movieInfo.Title}{(!string.IsNullOrEmpty(movieInfo.ReleaseDate) ? $" ({DateTime.Parse(movieInfo.ReleaseDate).Year})" : string.Empty)}";
 
             var userDetails = await GetUser();
-            var canRequestOnBehalf = false;
+            var canRequestOnBehalf = model.RequestOnBehalf.HasValue();
 
-            if (model.RequestOnBehalf.HasValue())
+            var isAdmin = await UserManager.IsInRoleAsync(userDetails, OmbiRoles.PowerUser) || await UserManager.IsInRoleAsync(userDetails, OmbiRoles.Admin);
+            if (model.RequestOnBehalf.HasValue() && !isAdmin)
             {
-                canRequestOnBehalf = await UserManager.IsInRoleAsync(userDetails, OmbiRoles.PowerUser) || await UserManager.IsInRoleAsync(userDetails, OmbiRoles.Admin);
-
-                if (!canRequestOnBehalf)
+                return new RequestEngineResult
                 {
-                    return new RequestEngineResult
-                    {
-                        Result = false,
-                        Message = "You do not have the correct permissions to request on behalf of users!",
-                        ErrorMessage = $"You do not have the correct permissions to request on behalf of users!"
-                    };
-                }
+                    Result = false,
+                    Message = "You do not have the correct permissions to request on behalf of users!",
+                    ErrorMessage = $"You do not have the correct permissions to request on behalf of users!"
+                };
+            }
+
+            if ((model.RootFolderOverride.HasValue || model.QualityPathOverride.HasValue) && !isAdmin)
+            {
+                return new RequestEngineResult
+                {
+                    Result = false,
+                    Message = "You do not have the correct permissions!",
+                    ErrorMessage = $"You do not have the correct permissions!"
+                };
             }
 
             var requestModel = new MovieRequests
@@ -101,7 +107,9 @@ namespace Ombi.Core.Engine
                 RequestedUserId = canRequestOnBehalf ? model.RequestOnBehalf : userDetails.Id,
                 Background = movieInfo.BackdropPath,
                 LangCode = model.LanguageCode,
-                RequestedByAlias = model.RequestedByAlias
+                RequestedByAlias = model.RequestedByAlias,
+                RootPathOverride = model.RootFolderOverride.GetValueOrDefault(),
+                QualityOverride = model.QualityPathOverride.GetValueOrDefault()
             };
 
             var usDates = movieInfo.ReleaseDates?.Results?.FirstOrDefault(x => x.IsoCode == "US");

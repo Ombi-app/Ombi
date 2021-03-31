@@ -142,8 +142,8 @@
         background-color: $ombi-active;
     }
 
-    hr{
-        border-top: 1px solid $ombi-background-primary;
+    hr {
+        border-top: 1px solid $accent-dark;
     }
 
     .form-control{
@@ -157,3 +157,20 @@
         color:#FFF;
         border: 1px solid $ombi-active;
     }
+
+
+    .alert .glyphicon{
+        display: table-cell;
+        vertical-align: middle;
+        padding-right: 1%;
+      }
+
+      .alert div,
+      .alert span{
+        padding-left: 1%;
+        display:table-cell;
+      }
+
+      .right-buttons {
+          float:right;
+      }

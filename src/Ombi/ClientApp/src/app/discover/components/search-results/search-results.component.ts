@@ -8,6 +8,7 @@ import { SearchFilter } from "../../../my-nav/SearchFilter";
 import { StorageService } from "../../../shared/storage/storage-service";
 
 import { isEqual } from "lodash";
+import { AuthService } from "../../../auth/auth.service";
 
 @Component({
     templateUrl: "./search-results.component.html",
@@ -18,6 +19,7 @@ export class DiscoverSearchResultsComponent implements OnInit {
     public loadingFlag: boolean;
     public searchTerm: string;
     public results: IMultiSearchResult[];
+    public isAdmin: boolean;
 
     public discoverResults: IDiscoverCardResult[] = [];
 
@@ -26,7 +28,8 @@ export class DiscoverSearchResultsComponent implements OnInit {
     constructor(private searchService: SearchV2Service,
         private route: ActivatedRoute,
         private filterService: FilterService,
-        private store: StorageService) {
+        private store: StorageService,
+        private authService: AuthService) {
         this.route.params.subscribe((params: any) => {
             this.searchTerm = params.searchTerm;
             this.clear();
@@ -36,6 +39,7 @@ export class DiscoverSearchResultsComponent implements OnInit {
 
     public async ngOnInit() {
         this.loadingFlag = true;
+        this.isAdmin = this.authService.isAdmin();
 
         this.filterService.onFilterChange.subscribe(async x => {
             if (!isEqual(this.filter, x)) {
@@ -87,7 +91,7 @@ export class DiscoverSearchResultsComponent implements OnInit {
                 id: m.id,
                 url: "",
                 rating: 0,
-                overview: "",
+                overview: m.overview,
                 approved: false,
                 imdbid: "",
                 denied: false,

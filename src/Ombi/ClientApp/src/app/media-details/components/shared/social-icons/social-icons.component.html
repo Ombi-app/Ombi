@@ -1,8 +1,9 @@
 <div class="social-icons-container-inner">
+
     <a *ngIf="homepage" class="media-icons" href="{{homepage}}" target="_blank">
         <i matTooltip="Homepage" class="sfa-home fa-2x grow-social"></i>
     </a>
-    <a *ngIf="theMoviedbId" href="https://www.themoviedb.org/movie/{{theMoviedbId}}" class="media-icons"
+    <a *ngIf="theMoviedbId" href="https://www.themoviedb.org/{{type === RequestType.movie ? 'movie' : 'tv'}}/{{theMoviedbId}}" class="media-icons"
         target="_blank">
         <i matTooltip="The Movie DB" class="fas fa-film fa-2x grow-social"></i>
     </a>
@@ -29,14 +30,10 @@
         <i class="fas fa-cog fa-2x "></i>
     </button>
     <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="openRequestOnBehalf()" [disabled]="!canRequestOnBehalf">
-            <mat-icon>supervised_user_circle</mat-icon>
-            <span>{{'MediaDetails.RequestOnBehalf' | translate}}</span>
-        </button>
         <button mat-menu-item [disabled]="!canShowAdvanced" (click)="openAdvancedOptions()">
-            <mat-icon>movie_filter</mat-icon>
-            <span *ngIf="type === RequestType.movie">{{'MediaDetails.RadarrConfiguration' | translate}}</span>
-            <span *ngIf="type === RequestType.tvShow">{{'MediaDetails.SonarrConfiguration' | translate}}</span>
+            <i class="fas fa-ticket-alt icon-spacing"></i>
+            <span *ngIf="type === RequestType.movie"> {{ 'MediaDetails.RadarrConfiguration' | translate}}</span>
+            <span *ngIf="type === RequestType.tvShow"> {{ 'MediaDetails.SonarrConfiguration' | translate}}</span>
         </button>
     </mat-menu>
 </div>

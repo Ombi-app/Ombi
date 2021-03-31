@@ -7,7 +7,6 @@ import { Observable } from "rxjs";
 import { UITreeNode } from "primeng/tree";
 import { FilterType, IAlbumRequest, IAlbumRequestModel, IAlbumUpdateModel, IChildRequests, IDenyAlbumModel, IDenyMovieModel, IFilter,
       IMovieRequestModel, IMovieRequests, IMovieUpdateModel, IRequestEngineResult, IRequestsViewModel, ITvDenyModel, ITvRequests, ITvUpdateModel, OrderType } from "../interfaces";
-import { ITvRequestViewModel } from "../interfaces";
 import { ServiceHelpers } from "./service.helpers";
 
 import { IRemainingRequests } from "../interfaces/IRemainingRequests";
@@ -40,10 +39,6 @@ export class RequestService extends ServiceHelpers {
 
     public getTotalTv(): Observable<number> {
         return this.http.get<number>(`${this.url}tv/total`, {headers: this.headers});
-    }
-
-    public requestTv(tv: ITvRequestViewModel): Observable<IRequestEngineResult> {
-        return this.http.post<IRequestEngineResult>(`${this.url}TV/`, JSON.stringify(tv), {headers: this.headers});
     }
 
     public approveMovie(movie: IMovieUpdateModel): Observable<IRequestEngineResult> {

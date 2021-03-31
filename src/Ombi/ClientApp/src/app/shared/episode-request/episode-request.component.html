@@ -4,12 +4,12 @@
 </div>
   <div *ngIf="requestable" class="row">
     <div class="col-12 action-buttons-right">
-      <button (click)="requestAllSeasons()" color="primary" mat-raised-button class="btn-spacing" 
+      <button id="episodeModalAllSeasons" (click)="requestAllSeasons()" color="primary" mat-raised-button class="btn-spacing" 
       matTooltip="{{'MediaDetails.EpisodeSelector.AllSeasonsTooltip' | translate}}">{{'Search.TvShows.AllSeasons' | translate }}</button>
 
-        <button (click)="requestFirstSeason()" color="accent" mat-raised-button class="btn-spacing"
+        <button id="episodeModalFirstSeason" (click)="requestFirstSeason()" color="accent" mat-raised-button class="btn-spacing"
         matTooltip="{{'MediaDetails.EpisodeSelector.FirstSeasonTooltip' | translate}}">{{ 'Search.TvShows.FirstSeason' | translate }}</button>
-          <button (click)="requestLatestSeason()" color="warn" mat-raised-button class="btn-spacing"
+          <button id="episodeModalLatestSeason"  (click)="requestLatestSeason()" color="warn" mat-raised-button class="btn-spacing"
           matTooltip="{{'MediaDetails.EpisodeSelector.LatestSeasonTooltip' | translate}}">{{ 'Search.TvShows.LatestSeason' | translate }}</button>
     </div>
   </div>

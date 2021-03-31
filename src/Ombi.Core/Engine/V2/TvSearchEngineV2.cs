@@ -21,6 +21,7 @@ using TraktSharp.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using Ombi.Api.TheMovieDb;
+using Ombi.Api.TheMovieDb.Models;
 
 namespace Ombi.Core.Engine.V2
 {
@@ -30,102 +31,135 @@ namespace Ombi.Core.Engine.V2
         private readonly IMapper _mapper;
         private readonly ITraktApi _traktApi;
         private readonly IMovieDbApi _movieApi;
+        private readonly ISettingsService<CustomizationSettings> _customization;
 
         public TvSearchEngineV2(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper,
             ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um, ICacheService memCache, ISettingsService<OmbiSettings> s,
-            IRepository<RequestSubscription> sub, IMovieDbApi movieApi)
+            IRepository<RequestSubscription> sub, IMovieDbApi movieApi, ISettingsService<CustomizationSettings> customization)
             : base(identity, service, r, um, memCache, s, sub)
         {
             _tvMaze = tvMaze;
             _mapper = mapper;
             _traktApi = trakt;
             _movieApi = movieApi;
+            _customization = customization;
         }
 
 
-        public async Task<SearchFullInfoTvShowViewModel> GetShowByRequest(int requestId)
+        public async Task<SearchFullInfoTvShowViewModel> GetShowByRequest(int requestId, CancellationToken token)
         {
             var request = await RequestService.TvRequestService.Get().FirstOrDefaultAsync(x => x.Id == requestId);
-            return await GetShowInformation(request.TvDbId);
+            return await GetShowInformation(request.ExternalProviderId.ToString(), token); // TODO
         }
 
-        public async Task<SearchFullInfoTvShowViewModel> GetShowInformation(int tvdbid)
+        public async Task<SearchFullInfoTvShowViewModel> GetShowInformation(string tvdbid, CancellationToken token)
         {
-            var tvdbshow = await Cache.GetOrAdd(nameof(GetShowInformation) + tvdbid,
-                async () => await _tvMaze.ShowLookupByTheTvDbId(tvdbid), DateTime.Now.AddHours(12));
-            if (tvdbshow == null)
-            {
-                return null;
-            }
-            var show = await Cache.GetOrAdd("GetTvFullInformation" + tvdbshow.id,
-                async () => await _tvMaze.GetTvFullInformation(tvdbshow.id), DateTime.Now.AddHours(12));
-            if (show == null)
+            var show = await Cache.GetOrAdd(nameof(GetShowInformation) + tvdbid,
+              async () => await _movieApi.GetTVInfo(tvdbid), DateTime.Now.AddHours(12));
+            if (show == null || show.name == null)
             {
                 // We don't have enough information
                 return null;
             }
 
-            // Setup the task so we can get the data later on if we have a IMDBID
-            Task<TraktShow> traktInfoTask = null;
-            if (show.externals?.imdb.HasValue() ?? false)
-            {
-                traktInfoTask = Cache.GetOrAdd("GetExtendedTvInfoTrakt" + show.externals?.imdb,
-                    () => _traktApi.GetTvExtendedInfo(show.externals?.imdb), DateTime.Now.AddHours(12));
-            }
-
             var mapped = _mapper.Map<SearchFullInfoTvShowViewModel>(show);
 
-            foreach (var e in show._embedded?.episodes ?? new Api.TvMaze.Models.V2.Episode[0])
-            {
-                var season = mapped.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == e.season);
-                if (season == null)
-                {
-                    var newSeason = new SeasonRequests
-                    {
-                        SeasonNumber = e.season,
-                        Episodes = new List<EpisodeRequests>()
-                    };
-                    newSeason.Episodes.Add(new EpisodeRequests
-                    {
-                        Url = e.url.ToHttpsUrl(),
-                        Title = e.name,
-                        AirDate = e.airstamp,
-                        EpisodeNumber = e.number,
 
-                    });
-                    mapped.SeasonRequests.Add(newSeason);
-                }
-                else
+            foreach (var tvSeason in show.seasons.Where(x => x.season_number != 0)) // skip the first season
+            {
+                var seasonEpisodes = (await _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, token));
+
+                foreach (var episode in seasonEpisodes.episodes)
                 {
-                    // We already have the season, so just add the episode
-                    season.Episodes.Add(new EpisodeRequests
+                    var season = mapped.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == episode.season_number);
+                    if (season == null)
                     {
-                        Url = e.url.ToHttpsUrl(),
-                        Title = e.name,
-                        AirDate = e.airstamp,
-                        EpisodeNumber = e.number,
-                    });
+                        var newSeason = new SeasonRequests
+                        {
+                            SeasonNumber = episode.season_number,
+                            Overview = tvSeason.overview,
+                            Episodes = new List<EpisodeRequests>()
+                        };
+                        newSeason.Episodes.Add(new EpisodeRequests
+                        {
+                            //Url = episode...ToHttpsUrl(),
+                            Title = episode.name,
+                            AirDate = episode.air_date.HasValue() ? DateTime.Parse(episode.air_date) : DateTime.MinValue,
+                            EpisodeNumber = episode.episode_number,
+
+                        });
+                        mapped.SeasonRequests.Add(newSeason);
+                    }
+                    else
+                    {
+                        // We already have the season, so just add the episode
+                        season.Episodes.Add(new EpisodeRequests
+                        {
+                            //Url = e.url.ToHttpsUrl(),
+                            Title = episode.name,
+                            AirDate = episode.air_date.HasValue() ? DateTime.Parse(episode.air_date) : DateTime.MinValue,
+                            EpisodeNumber = episode.episode_number,
+                        });
+                    }
                 }
             }
-            return await ProcessResult(mapped, traktInfoTask);
+
+            return await ProcessResult(mapped);
         }
 
-        public async Task<IEnumerable<StreamingData>> GetStreamInformation(int tvDbId, int tvMazeId, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SearchTvShowViewModel>> Popular(int currentlyLoaded, int amountToLoad)
         {
-            var tvdbshow = await Cache.GetOrAdd(nameof(GetShowInformation) + tvMazeId,
-                async () => await _tvMaze.ShowLookupByTheTvDbId(tvMazeId), DateTime.Now.AddHours(12));
-            if (tvdbshow == null)
+            var langCode = await DefaultLanguageCode(null);
+
+            var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
+            var results = new List<MovieDbSearchResult>();
+            foreach (var pagesToLoad in pages)
             {
-                return null;
+                var apiResult = await Cache.GetOrAdd(nameof(Popular) + langCode + pagesToLoad.Page,
+                 async () => await _movieApi.PopularTv(langCode, pagesToLoad.Page), DateTime.Now.AddHours(12));
+                results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
 
-            /// this is a best effort guess since TV maze do not provide the TheMovieDbId
-            var movieDbResults = await _movieApi.SearchTv(tvdbshow.name, tvdbshow.premiered.Substring(0, 4));
-            var potential = movieDbResults.FirstOrDefault();
-            tvDbId = potential.Id;
-            // end guess
+            var processed = ProcessResults(results);
+            return await processed;
+        }
 
-            var providers = await _movieApi.GetTvWatchProviders(tvDbId, cancellationToken);
+        public async Task<IEnumerable<SearchTvShowViewModel>> Anticipated(int currentlyLoaded, int amountToLoad)
+        {
+            var langCode = await DefaultLanguageCode(null);
+
+            var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
+            var results = new List<MovieDbSearchResult>();
+            foreach (var pagesToLoad in pages)
+            {
+                var apiResult = await Cache.GetOrAdd(nameof(Anticipated) + langCode + pagesToLoad.Page,
+                    async () => await _movieApi.UpcomingTv(langCode, pagesToLoad.Page), DateTime.Now.AddHours(12));
+                results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
+            }
+            var processed = ProcessResults(results);
+            return await processed;
+        }
+
+        public async Task<IEnumerable<SearchTvShowViewModel>> Trending(int currentlyLoaded, int amountToLoad)
+        {
+            var langCode = await DefaultLanguageCode(null);
+
+            var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
+            var results = new List<MovieDbSearchResult>();
+            foreach (var pagesToLoad in pages)
+            {
+                var apiResult = await Cache.GetOrAdd(nameof(Trending) + langCode + pagesToLoad.Page,
+                    async () => await _movieApi.TopRatedTv(langCode, pagesToLoad.Page), DateTime.Now.AddHours(12));
+                results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
+            }
+            var processed = ProcessResults(results);
+            return await processed;
+        }
+
+
+        public async Task<IEnumerable<StreamingData>> GetStreamInformation(int movieDbId, CancellationToken cancellationToken)
+        {
+            var providers = await _movieApi.GetTvWatchProviders(movieDbId, cancellationToken);
             var results = await GetUserWatchProvider(providers);
 
             var data = new List<StreamingData>();
@@ -143,24 +177,33 @@ namespace Ombi.Core.Engine.V2
             return data;
         }
 
-        private IEnumerable<SearchTvShowViewModel> ProcessResults<T>(IEnumerable<T> items)
+        private async Task<IEnumerable<SearchTvShowViewModel>> ProcessResults<T>(IEnumerable<T> items)
         {
-            var retVal = new List<SearchTvShowViewModel>();
+            var retVal = new List<SearchTvShowViewModel>(); 
+            var settings = await _customization.GetSettingsAsync();
             foreach (var tvMazeSearch in items)
             {
-                retVal.Add(ProcessResult(tvMazeSearch));
+                var result = await ProcessResult(tvMazeSearch);
+                if (result == null || settings.HideAvailableFromDiscover && result.Available)
+                {
+                    continue;
+                }
+                retVal.Add(result);
             }
             return retVal;
         }
 
-        private SearchTvShowViewModel ProcessResult<T>(T tvMazeSearch)
+        private async Task<SearchTvShowViewModel> ProcessResult<T>(T tvMazeSearch)
         {
-            return _mapper.Map<SearchTvShowViewModel>(tvMazeSearch);
+            var item = _mapper.Map<SearchTvShowViewModel>(tvMazeSearch);
+
+            await RunSearchRules(item);
+            return item;
         }
 
-        private async Task<SearchFullInfoTvShowViewModel> ProcessResult(SearchFullInfoTvShowViewModel item, Task<TraktShow> showInfoTask)
+        private async Task<SearchFullInfoTvShowViewModel> ProcessResult(SearchFullInfoTvShowViewModel item)
         {
-            item.TheTvDbId = item.Id.ToString();
+            item.TheMovieDbId = item.Id.ToString();
 
             var oldModel = _mapper.Map<SearchTvShowViewModel>(item);
             await RunSearchRules(oldModel);
@@ -179,18 +222,9 @@ namespace Ombi.Core.Engine.V2
                 item.Images.Medium = item.Images.Medium.ToHttpsUrl();
             }
 
-            if (item.Cast?.Any() ?? false)
-            {
-                foreach (var cast in item.Cast)
-                {
-                    if (!string.IsNullOrEmpty(cast.Character?.Image?.Medium))
-                    {
-                        cast.Character.Image.Medium = cast.Character?.Image?.Medium.ToHttpsUrl();
-                    }
-                }
-            }
-
-            return await GetExtraInfo(showInfoTask, item);
+           
+            return item;
+            //return await GetExtraInfo(showInfoTask, item);
         }
 
         private async Task<SearchFullInfoTvShowViewModel> GetExtraInfo(Task<TraktShow> showInfoTask, SearchFullInfoTvShowViewModel model)

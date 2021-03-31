@@ -87,11 +87,15 @@ namespace Ombi.Api.TheMovieDb.Models
     {
         [JsonProperty("file_path")]
         public string FilePath { get; set; }
+        [JsonProperty("vote_count")]
+        public int VoteCount { get; set; }
+        [JsonProperty("vote_average")]
+        public double VoteAverage { get; set; }
     }
 
     public class Keywords
     {
-        [JsonProperty("keywords")]
+        [JsonProperty("results")]
         public List<KeywordsValue> KeywordsValue { get; set; }
     }
 
@@ -128,6 +132,8 @@ namespace Ombi.Api.TheMovieDb.Models
         public string InstagramId { get; set; }
         [JsonProperty("twitter_id")]
         public string TwitterId { get; set; }
+        [JsonProperty("tvdb_id")]
+        public string TvDbId { get; set; }
     }
 
     public class Credits
