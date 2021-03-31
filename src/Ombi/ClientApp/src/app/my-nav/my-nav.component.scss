@@ -92,7 +92,7 @@
     font-size: 0.8em;
     font-weight: 100;
     display:flex;
-    justify-content: end;
+    justify-content: flex-end;
     align-items: flex-end;
     text-transform: capitalize;
     flex:0 0 250px;
@@ -139,7 +139,6 @@
         text-transform: uppercase;
         color: $ombi-active;
         align-items:center;
-        justify-content: center;
         font-weight: 700;
         font-size:36px;
         padding:40px 20px;
@@ -147,7 +146,6 @@
         max-width: 350px;
         display: flex;
         white-space: normal;
-        text-align: center;
     }
 
     .outer-profile {
