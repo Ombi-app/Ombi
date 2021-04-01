@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 using Ombi.Api.Jellyfin.Models;
 using Ombi.Api.Jellyfin.Models.Media.Tv;
 using Ombi.Api.Jellyfin.Models.Movie;
-using Ombi.Helpers;
 
 namespace Ombi.Api.Jellyfin
 {
@@ -85,6 +85,16 @@ namespace Ombi.Api.Jellyfin
             request.AddQueryString("IsVirtualItem", "False");
 
             return await Api.Request<JellyfinItemContainer<JellyfinMovie>>(request);
+        }
+
+        public async Task<JellyfinItemContainer<MediaFolders>> GetLibraries(string apiKey, string baseUrl)
+        {
+            var request = new Request("library/mediafolders", baseUrl, HttpMethod.Get);
+            AddHeaders(request, apiKey);
+
+            var response = await Api.Request<JellyfinItemContainer<MediaFolders>>(request);
+            response.Items = response.Items.Where(x => !x.CollectionType.Equals("playlists", StringComparison.InvariantCultureIgnoreCase)).ToList();
+            return response;
         }
 
         public async Task<JellyfinItemContainer<JellyfinMovie>> GetAllMovies(string apiKey, int startIndex, int count, string userId, string baseUri)

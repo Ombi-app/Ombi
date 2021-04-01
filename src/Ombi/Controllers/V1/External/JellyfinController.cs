@@ -66,6 +66,14 @@ namespace Ombi.Controllers.V1.External
             return result;
         }
 
+        [HttpPost("Library")]
+        public async Task<JellyfinItemContainer<MediaFolders>> GetLibaries([FromBody] JellyfinServers server)
+        {
+            var client = await JellyfinApi.CreateClient();
+            var result = await client.GetLibraries(server.ApiKey, server.FullUri);
+            return result;
+        }
+
         /// <summary>
         /// Gets the jellyfin users.
         /// </summary>
