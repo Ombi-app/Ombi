@@ -197,7 +197,7 @@ describe("Discover Cards Requests Tests", () => {
     });
   });
 
-  it.only("Available TV does not allow us to request", () => {
+  it("Available TV does not allow us to request", () => {
     cy.intercept("GET", "**/search/Tv/popular/**", (req) => {
       req.reply((res) => {
         const body = res.body;

@@ -24,6 +24,8 @@ export class DiscoverCardComponent implements OnInit {
     public fullyLoaded = false;
     public loading: boolean;
 
+    public requestable: boolean;
+
     // This data is needed to open the dialog
     private tvSearchResult: ISearchTvResultV2;
 
@@ -44,19 +46,10 @@ export class DiscoverCardComponent implements OnInit {
     }
 
     public async getExtraTvInfo() {
-        // if (this.result.tvMovieDb) {
-            this.tvSearchResult = await this.searchService.getTvInfoWithMovieDbId(+this.result.id);
-        // } else {
-        //     this.tvSearchResult = await this.searchService.getTvInfo(+this.result.id);
-        // }
-        // if (!this.tvSearchResult || this.tvSearchResult?.status.length > 0 && this.tvSearchResult?.status === "404") {
-        //     this.hide = true;
-        //     return;
-        // }
-
+        this.tvSearchResult = await this.searchService.getTvInfoWithMovieDbId(+this.result.id);
+        this.requestable = true;
         this.setTvDefaults(this.tvSearchResult);
         this.updateTvItem(this.tvSearchResult);
-
     }
 
     public async getAlbumInformation() {
@@ -69,12 +62,13 @@ export class DiscoverCardComponent implements OnInit {
                     if (art.image) {
                         this.result.posterPath = art.image;
 
-                        this.fullyLoaded = true;
                     }
                 })
             }
             this.result.title = x.startYear ? `${x.name} (${x.startYear})` : x.name;
             this.result.overview = x.overview;
+            this.fullyLoaded = true;
+            this.requestable = true;
         });
     }
 
@@ -166,6 +160,7 @@ export class DiscoverCardComponent implements OnInit {
         } else {
             this.fullyLoaded = true;
         }
+        this.requestable = true;
     }
 
     private updateMovieItem(updated: ISearchMovieResultV2) {
