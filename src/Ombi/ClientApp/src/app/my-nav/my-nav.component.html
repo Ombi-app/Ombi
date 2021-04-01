@@ -78,8 +78,8 @@
             </div>
             <div class="profile-block">
                 <a routerLink="/user-preferences">
-                <div class="profile-username">{{username}}</div>    
-                <div class="profile-img"><img [matTooltip]="username" [src]="getUserImage()" /></div>
+                <div class="profile-username">{{username}}</div>
+                <div class="profile-img" data-test="profile-image"><img [matTooltip]="username" [src]="getUserImage()" /></div>
             </a>
             </div>
 
