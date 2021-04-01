@@ -11,6 +11,7 @@ describe("Navigation Bar Tests", () => {
     Page.navbar.requests.should("be.visible");
     Page.navbar.discover.should("be.visible");
     Page.navbar.userPreferences.should("be.visible");
+    Page.navbar.username.contains("a");
     Page.navbar.logout.should("be.visible");
   });
 
@@ -34,6 +35,7 @@ describe("Navigation Bar Tests", () => {
         Page.navbar.requests.should("be.visible");
         Page.navbar.discover.should("be.visible");
         Page.navbar.userPreferences.should("be.visible");
+        Page.navbar.username.contains(id);
         Page.navbar.logout.should("be.visible");
       });
     });

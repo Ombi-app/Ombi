@@ -21,7 +21,7 @@
         </div>
         <div class="row button-request-container" *ngIf="!result.available && !result.approved && !result.requested">
             <div class="button-request poster-overlay">
-                <button id="requestButton{{result.id}}{{result.type}}{{discoverType}}" mat-raised-button class="btn-ombi full-width poster-request-btn" (click)="request($event)">
+                <button id="requestButton{{result.id}}{{result.type}}{{discoverType}}" *ngIf="requestable" mat-raised-button class="btn-ombi full-width poster-request-btn" (click)="request($event)">
                     <i *ngIf="!loading" class="fa-lg fas fa-cloud-download-alt"></i>
                     <i *ngIf="loading" class="fas fa-spinner fa-pulse fa-2x fa-fw" aria-hidden="true"></i>
                     {{'Common.Request' | translate }}

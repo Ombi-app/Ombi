@@ -72,6 +72,10 @@ class NavBar {
     return cy.getByData('profile-image');
   }
 
+  get username(): Cypress.Chainable<any> {
+    return cy.getByData('profile-username');
+  }
+
   get logout(): Cypress.Chainable<any> {
     return cy.get('#nav-logout');
   }
