@@ -49,10 +49,10 @@ namespace Ombi.Schedule.Jobs.Ombi
             var productArray = productVersion.Split('-');
             return productArray;
         }
-        public async Task<bool> UpdateAvailable(string branch, string currentVersion)
+        public async Task<bool> UpdateAvailable(string currentVersion)
         {
 
-            var updates = await Processor.Process(branch);
+            var updates = await Processor.Process();
             var serverVersion = updates.UpdateVersionString;
             return !serverVersion.Equals(currentVersion, StringComparison.CurrentCultureIgnoreCase);
 
@@ -88,7 +88,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 Logger.LogDebug(LoggingEvents.Updater, "Looking for updates now");
                 //TODO this fails because the branch = featureupdater when it should be feature/updater
-                var updates = await Processor.Process(branch);
+                var updates = await Processor.Process();
                 Logger.LogDebug(LoggingEvents.Updater, "Updates: {0}", updates);
 
 
