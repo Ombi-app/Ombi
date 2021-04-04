@@ -16,7 +16,7 @@ describe("Search Tests", () => {
     card.topLevelCard.realHover();
     card.title.should('have.text', "Dexter's Laboratory");
     card.overview.contains('Cartoon Network');
-    card.requestType.contains('Tv Show');
+    card.requestType.contains('TV Show');
     card.requestButton.should('exist');
   });
 
@@ -115,7 +115,7 @@ describe("Search Tests", () => {
     card.topLevelCard.realHover();
     card.title.should('have.text', "It's Always Sunny in Philadelphia");
     card.overview.contains('Irish pub');
-    card.requestType.contains('Tv Show');
+    card.requestType.contains('TV Show');
     card.requestButton.should('exist');
   });
 

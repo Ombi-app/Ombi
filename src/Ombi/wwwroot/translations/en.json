@@ -31,7 +31,9 @@
             "Validation": "Please check your entered values"
         },
         "Cancel": "Cancel",
-        "Submit": "Submit"
+        "Submit": "Submit",
+		"tvShow": "TV Show",
+        "movie": "Movie"
     },
     "PasswordReset": {
         "EmailAddressPlaceholder": "Email Address",
