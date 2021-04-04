@@ -1,30 +1,26 @@
 <div class="small-middle-container" *ngIf="username">
-  <div class="row h-100">
-    <div class="col-1">
-      <img class="profile-img" [src]="getProfileImage()">
-    </div>
-    <div class="col-11 align-middle">
-      <h2 id="usernameTitle">{{username}} <small id="emailTitle" *ngIf="user.emailAddress">({{user.emailAddress}})</small></h2>
-
-    </div>
+  <div class="d-flex">
+    <img class="profile-img" [src]="getProfileImage()">
+    <h2 id="usernameTitle">{{username}} 
+      <small id="emailTitle" *ngIf="user.emailAddress">({{user.emailAddress}})</small>
+    </h2>
   </div>
-
 
   <mat-tab-group>
     <mat-tab label="Profile">
       <div class="tab-content">
 
-        <div class="row">
-          <div class="col-1">
+        <div class="row user-type-row">
+          <div class="col-5 col-sm-3 col-md-2">
             User Type:
           </div>
-          <div class="col-11">
+          <div class="col-7 col-sm-9 col-md-10">
             {{UserType[user.userType]}}
           </div>
         </div>
 
         <div class="row">
-          <div class="col-4">
+          <div class="col-12 col-sm-6 col-xl-5">
             <div>
               <small>{{'UserPreferences.LanguageDescription' | translate}}</small>
               <br>
@@ -38,14 +34,9 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            <div>
-
-            </div>
           </div>
-          <div class="col-1"></div>
 
-
-          <div class="col-4">
+          <div class="col-12 col-sm-6 col-xl-5">
             <div>
               <small>{{'UserPreferences.StreamingCountryDescription' | translate}}</small>
               <br>
@@ -58,13 +49,8 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            <div>
-            </div>
           </div>
         </div>
-
-
-
       </div>
 
     </mat-tab>
