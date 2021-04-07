@@ -49,7 +49,7 @@ namespace Ombi.Schedule.Processor
                 UpdateDate = DateTime.Now,
                 ChangeLogs = release.Description,
                 Downloads = new List<Downloads>(),
-                UpdateAvailable = release.Version != AssemblyHelper.GetRuntimeVersion()
+                UpdateAvailable = release.Version != "v" + AssemblyHelper.GetRuntimeVersion()
         };
 
             foreach (var dl in release.Downloads)
