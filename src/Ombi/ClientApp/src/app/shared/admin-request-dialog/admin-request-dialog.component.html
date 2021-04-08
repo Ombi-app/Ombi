@@ -52,6 +52,14 @@
         </mat-select>
     </mat-form-field>
   </div>
+  <div>
+    <mat-form-field appearance="outline" floatLabel=auto>
+        <mat-label>{{'MediaDetails.LanguageProfileSelect' | translate }}</mat-label>
+        <mat-select id="sonarrLanguageId" formControlName="sonarrLanguageId">
+            <mat-option id="sonarrLanguageId{{profile.id}}" *ngFor="let profile of sonarrLanguageProfiles" value="{{profile.id}}">{{profile.name}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+  </div>
 </div>
   <!-- End Sonarr-->
 

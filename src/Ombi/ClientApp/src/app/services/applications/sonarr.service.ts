@@ -32,6 +32,10 @@ export class SonarrService extends ServiceHelpers {
         return this.http.post<ILanguageProfiles[]>(`${this.url}/v3/languageprofiles/`, JSON.stringify(settings), {headers: this.headers});
     }
 
+    public getV3LanguageProfilesWithoutSettings(): Observable<ILanguageProfiles[]> {
+        return this.http.get<ILanguageProfiles[]>(`${this.url}/v3/languageprofiles/`, {headers: this.headers});
+    }
+
     public isEnabled(): Promise<boolean> {
         return this.http.get<boolean>(`${this.url}/enabled/`, { headers: this.headers }).toPromise();
     }

@@ -103,6 +103,7 @@ export interface ISonarrSettings extends IExternalSettings {
   addOnly: boolean;
   v3: boolean;
   languageProfile: number;
+  languageProfileAnime: number;
   scanForAvailability: boolean;
 }
 

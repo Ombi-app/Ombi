@@ -1,5 +1,6 @@
 ﻿import { IChildRequests, IMovieRequests } from ".";
 import { ITvRequests } from "./IRequestModel";
+import { ILanguageProfiles } from "./ISonarr";
 
 export interface IRadarrRootFolder {
     id: number;
@@ -27,6 +28,9 @@ export interface IAdvancedData {
     rootFolder: IRadarrRootFolder;
     rootFolders: IRadarrRootFolder[];
     rootFolderId: number;
+    language: ILanguageProfiles;
+    languages: ILanguageProfiles[];
+    languageId: number;
     movieRequest: IMovieRequests;
     tvRequest: ITvRequests;
 }

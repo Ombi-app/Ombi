@@ -26,6 +26,7 @@ export interface IMovieAdvancedOptions {
   requestId: number;
   qualityOverride: number;
   rootPathOverride: number;
+  languageProfile: number;
 }
 
 export interface IAlbumRequest extends IBaseRequest {
@@ -110,6 +111,7 @@ export interface ITvRequests {
   status: string;
   childRequests: IChildRequests[];
   qualityOverride: number;
+  languageProfile: number;
   background: any;
   totalSeasons: number;
   tvDbId: number; // NO LONGER USED
@@ -119,6 +121,7 @@ export interface ITvRequests {
   // For UI display
   qualityOverrideTitle: string;
   rootPathOverrideTitle: string;
+  languageOverrideTitle: string;
 }
 
 export interface IChildRequests extends IBaseRequest {

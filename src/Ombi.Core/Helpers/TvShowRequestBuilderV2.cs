@@ -217,7 +217,7 @@ namespace Ombi.Core.Helpers
         }
 
 
-        public TvShowRequestBuilderV2 CreateNewRequest(TvRequestViewModelV2 tv, int rootPathOverride, int qualityOverride)
+        public TvShowRequestBuilderV2 CreateNewRequest(TvRequestViewModelV2 tv, int rootPathOverride, int qualityOverride, int langProfile)
         {
             int.TryParse(TheMovieDbRecord.ExternalIds?.TvDbId, out var tvdbId);
             NewRequest = new TvRequests
@@ -234,7 +234,8 @@ namespace Ombi.Core.Helpers
                 TotalSeasons = tv.Seasons.Count(),
                 Background = BackdropPath,
                 RootFolder = rootPathOverride,
-                QualityOverride = qualityOverride
+                QualityOverride = qualityOverride,
+                LanguageProfile = langProfile
             };
             NewRequest.ChildRequests.Add(ChildRequest);
 

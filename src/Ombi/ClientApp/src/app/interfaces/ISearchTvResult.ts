@@ -51,6 +51,7 @@ export interface ITvRequestViewModelBase extends BaseRequestOptions {
     requestAll: boolean;
     firstSeason: boolean;
     latestSeason: boolean;
+    languageProfile: number | undefined;
     seasons: ISeasonsViewModel[];
 }
 
