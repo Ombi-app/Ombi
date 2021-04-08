@@ -164,7 +164,7 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            if ((tv.RootFolderOverride.HasValue || tv.QualityPathOverride.HasValue) && !isAdmin)
+            if ((tv.RootFolderOverride.HasValue || tv.QualityPathOverride.HasValue || tv.LanguageProfile.HasValue) && !isAdmin)
             {
                 return new RequestEngineResult
                 {
@@ -250,7 +250,7 @@ namespace Ombi.Core.Engine
             }
 
             // This is a new request
-            var newRequest = tvBuilder.CreateNewRequest(tv, tv.RootFolderOverride.GetValueOrDefault(), tv.QualityPathOverride.GetValueOrDefault());
+            var newRequest = tvBuilder.CreateNewRequest(tv, tv.RootFolderOverride.GetValueOrDefault(), tv.QualityPathOverride.GetValueOrDefault(), tv.LanguageProfile.GetValueOrDefault());
             return await AddRequest(newRequest.NewRequest, tv.RequestOnBehalf);
         }
 
@@ -997,6 +997,10 @@ namespace Ombi.Core.Engine
 
             request.QualityOverride = options.QualityOverride;
             request.RootFolder = options.RootPathOverride;
+            if (options.LanguageProfile > 0)
+            {
+                request.LanguageProfile = options.LanguageProfile;
+            }
 
             await TvRepository.Update(request);
 

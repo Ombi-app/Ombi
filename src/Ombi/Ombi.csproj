@@ -6,8 +6,8 @@
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <!-- <PublishTrimmed>true</PublishTrimmed>    
     <PublishReadyToRun>true</PublishReadyToRun> -->
-    <AssemblyVersion>$(SemVer)</AssemblyVersion>
-    <FileVersion>$(SemVer)</FileVersion>
+    <AssemblyVersion>4.0.1328.0</AssemblyVersion>
+    <FileVersion>4.0.1328.0</FileVersion>
     <Version>$(FullVer)</Version>
     <PackageVersion></PackageVersion>
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>    
@@ -95,6 +95,10 @@
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
     <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj" />
     <ProjectReference Include="..\Ombi.Updater\Ombi.Updater.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\External\" />
   </ItemGroup>
 
   

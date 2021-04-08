@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { Observable } from "rxjs";
 import { startWith, map } from "rxjs/operators";
-import { IRadarrProfile, IRadarrRootFolder, ISonarrProfile, ISonarrRootFolder, IUserDropdown, RequestType } from "../../interfaces";
-import { IdentityService, MessageService, RadarrService, RequestService, SonarrService } from "../../services";
+import { ILanguageProfiles, IRadarrProfile, IRadarrRootFolder, ISonarrProfile, ISonarrRootFolder, ISonarrSettings, IUserDropdown, RequestType } from "../../interfaces";
+import { IdentityService, MessageService, RadarrService, RequestService, SettingsService, SonarrService } from "../../services";
 import { RequestServiceV2 } from "../../services/requestV2.service";
 
 export interface IAdminRequestDialogData {
@@ -23,6 +23,7 @@ export class AdminRequestDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: IAdminRequestDialogData,
     private identityService: IdentityService,
     private sonarrService: SonarrService,
+    private settingsService: SettingsService,
     private radarrService: RadarrService,
     private fb: FormBuilder
   ) {}
@@ -39,6 +40,7 @@ export class AdminRequestDialogComponent implements OnInit {
 
   public sonarrProfiles: ISonarrProfile[];
   public sonarrRootFolders: ISonarrRootFolder[];
+  public sonarrLanguageProfiles: ILanguageProfiles[];
   public radarrProfiles: IRadarrProfile[];
   public radarrRootFolders: IRadarrRootFolder[];
 
@@ -48,6 +50,7 @@ export class AdminRequestDialogComponent implements OnInit {
         username: [null],
         sonarrPathId: [null],
         sonarrFolderId: [null],
+        sonarrLanguageId: [null],
         radarrPathId: [null],
         radarrFolderId: [null]
     })
@@ -62,6 +65,13 @@ export class AdminRequestDialogComponent implements OnInit {
     if (this.data.type === RequestType.tvShow) {
       this.sonarrEnabled = await this.sonarrService.isEnabled();
       if (this.sonarrEnabled) {
+        this.settingsService.getSonarr().subscribe((settings: ISonarrSettings) => {
+          if (settings.v3) {
+            this.sonarrService.getV3LanguageProfiles(settings).subscribe((profiles: ILanguageProfiles[]) => {
+              this.sonarrLanguageProfiles = profiles;
+            })
+          }
+        });
         this.sonarrService.getQualityProfilesWithoutSettings().subscribe(c => {
             this.sonarrProfiles = c;
         });
@@ -106,6 +116,7 @@ export class AdminRequestDialogComponent implements OnInit {
       model.radarrRootFolderTitle =  this.radarrRootFolders?.filter(x => x.id == model.radarrFolderId)[0]?.path;
       model.sonarrRootFolderTitle = this.sonarrRootFolders?.filter(x => x.id == model.sonarrFolderId)[0]?.path;
       model.sonarrQualityOverrideTitle = this.sonarrProfiles?.filter(x => x.id == model.sonarrPathId)[0]?.name;
+      model.sonarrLanguageProfileTitle = this.sonarrLanguageProfiles?.filter(x => x.id == model.sonarrLanguageId)[0]?.name;
       this.dialogRef.close(model);
   }
 }

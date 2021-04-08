@@ -5,7 +5,7 @@
       <i class="fas fa-x7 fa-exclamation-triangle glyphicon"></i>
       <span>{{'MediaDetails.AutoApproveOptionsTvShort' | translate }}</span>
     </div>
-    <mat-form-field>
+    <mat-form-field *ngIf="sonarrEnabled">
         <mat-label>{{'MediaDetails.QualityProfilesSelect' | translate }}</mat-label>
         <mat-select [(value)]="data.profileId">
             <mat-option *ngFor="let profile of sonarrProfiles" value="{{profile.id}}">{{profile.name}}</mat-option>
@@ -13,10 +13,18 @@
     </mat-form-field>
 </div>
 <div mat-dialog-content>
-    <mat-form-field>
+    <mat-form-field  *ngIf="sonarrEnabled">
         <mat-label>{{'MediaDetails.RootFolderSelect' | translate }}</mat-label>
         <mat-select [(value)]="data.rootFolderId">
             <mat-option *ngFor="let profile of sonarrRootFolders" value="{{profile.id}}">{{profile.path}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+<div mat-dialog-content>
+    <mat-form-field  *ngIf="sonarrEnabled">
+        <mat-label>{{'MediaDetails.LanguageProfileSelect' | translate }}</mat-label>
+        <mat-select [(value)]="data.languageId">
+            <mat-option *ngFor="let profile of sonarrLanguageProfiles" value="{{profile.id}}">{{profile.name}}</mat-option>
         </mat-select>
     </mat-form-field>
 </div>

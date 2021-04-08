@@ -770,6 +770,9 @@ namespace Ombi.Store.Migrations.OmbiSqlite
                     b.Property<string>("ImdbId")
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("LanguageProfile")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Overview")
                         .HasColumnType("TEXT");
 

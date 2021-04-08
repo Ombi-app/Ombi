@@ -184,7 +184,7 @@ export class MovieDetailsComponent {
             if (result) {
                 result.rootFolder = result.rootFolders.filter(f => f.id === +result.rootFolderId)[0];
                 result.profile = result.profiles.filter(f => f.id === +result.profileId)[0];
-                await this.requestService2.updateMovieAdvancedOptions({ qualityOverride: result.profileId, rootPathOverride: result.rootFolderId, requestId: this.movieRequest.id }).toPromise();
+                await this.requestService2.updateMovieAdvancedOptions({ qualityOverride: result.profileId, rootPathOverride: result.rootFolderId, languageProfile: 0, requestId: this.movieRequest.id }).toPromise();
                 this.setAdvancedOptions(result);
             }
         });
