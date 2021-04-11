@@ -124,9 +124,9 @@ namespace Ombi.Core.Engine.V2
         /// Gets popular movies by paging
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<SearchMovieViewModel>> PopularMovies(int currentlyLoaded, int toLoad, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SearchMovieViewModel>> PopularMovies(int currentlyLoaded, int toLoad, CancellationToken cancellationToken, string langCustomCode = null)
         {
-            var langCode = await DefaultLanguageCode(null);
+            var langCode = await DefaultLanguageCode(langCustomCode);
 
             var pages = PaginationHelper.GetNextPages(currentlyLoaded, toLoad, _theMovieDbMaxPageItems);
 

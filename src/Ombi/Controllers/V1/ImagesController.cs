@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Ombi.Api.FanartTv;
 using Ombi.Config;
 using Ombi.Core;
+using Ombi.Core.Engine.Interfaces;
 using Ombi.Helpers;
 using Ombi.Store.Repository;
 
@@ -17,13 +18,16 @@ namespace Ombi.Controllers.V1
     public class ImagesController : ControllerBase
     {
         public ImagesController(IFanartTvApi fanartTvApi, IApplicationConfigRepository config,
-            IOptions<LandingPageBackground> options, ICacheService c, IImageService imageService)
+            IOptions<LandingPageBackground> options, ICacheService c, IImageService imageService,
+            IMovieEngineV2 movieEngineV2, ITVSearchEngineV2 tVSearchEngineV2)
         {
             FanartTvApi = fanartTvApi;
             Config = config;
             Options = options.Value;
             _cache = c;
             _imageService = imageService;
+            _movieEngineV2 = movieEngineV2;
+            _tvSearchEngineV2 = tVSearchEngineV2;
         }
 
         private IFanartTvApi FanartTvApi { get; }
@@ -31,6 +35,8 @@ namespace Ombi.Controllers.V1
         private LandingPageBackground Options { get; }
         private readonly ICacheService _cache;
         private readonly IImageService _imageService;
+        private readonly IMovieEngineV2 _movieEngineV2;
+        private readonly ITVSearchEngineV2 _tvSearchEngineV2;
 
         [HttpGet("tv/{tvdbid}")]
         public async Task<string> GetTvBanner(int tvdbid)
@@ -59,6 +65,50 @@ namespace Ombi.Controllers.V1
                 return images.seasonposter.FirstOrDefault()?.url ?? string.Empty;
             }
             return string.Empty;
+        }
+
+        [HttpGet("poster")]
+        public async Task<string> GetRandomPoster()
+        {
+            var key = await _cache.GetOrAdd(CacheKeys.FanartTv, async () => await Config.GetAsync(Store.Entities.ConfigurationTypes.FanartTv), DateTime.Now.AddDays(1));
+            var rand = new Random();
+            var val = rand.Next(1, 3);
+            if (val == 1)
+            {
+                var movies = (await _movieEngineV2.PopularMovies(0, 10, HttpContext.RequestAborted ,"en")).ToArray();
+                var selectedMovieIndex = rand.Next(movies.Count());
+                var movie = movies[selectedMovieIndex];
+
+                var images = await _cache.GetOrAdd($"{CacheKeys.FanartTv}movie{movie.Id}", async () => await FanartTvApi.GetMovieImages(movie.Id.ToString(), key.Value), DateTime.Now.AddDays(1));
+                if (images == null)
+                {
+                    return string.Empty;
+                }
+
+                if (images.movieposter?.Any() ?? false)
+                {
+                    var enImage = images.movieposter.Where(x => x.lang == "en").OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                    if (enImage == null)
+                    {
+                        return images.movieposter.OrderByDescending(x => x.likes).Select(x => x.url).FirstOrDefault();
+                    }
+                    return enImage;
+                }
+
+                if (images.moviethumb?.Any() ?? false)
+                {
+                    return images.moviethumb.OrderBy(x => x.likes).Select(x => x.url).FirstOrDefault();
+                }
+            } 
+            else
+            {
+                var tv = (await _tvSearchEngineV2.Popular(0, 10, "en")).ToArray();
+                var selectedMovieIndex = rand.Next(tv.Count());
+                var selected = tv[selectedMovieIndex];
+
+                return $"https://image.tmdb.org/t/p/original{selected.BackdropPath}";
+            }
+            return "";
         }
 
         [HttpGet("poster/movie/{movieDbId}")]

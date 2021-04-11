@@ -9,6 +9,7 @@ using Ombi.Store.Entities.Requests;
 using Ombi.Store.Entities;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Authentication;
+using Ombi.Helpers;
 
 namespace Ombi.Core.Engine.Interfaces
 {
@@ -29,6 +30,10 @@ namespace Ombi.Core.Engine.Interfaces
         private OmbiUser _user;
         protected async Task<OmbiUser> GetUser()
         {
+            if(!Username.HasValue())
+            {
+                return null;
+            }
             var username = Username.ToUpper();
             return _user ?? (_user = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username));
         }

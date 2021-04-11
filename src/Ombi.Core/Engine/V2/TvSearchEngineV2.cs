@@ -107,9 +107,9 @@ namespace Ombi.Core.Engine.V2
             return await ProcessResult(mapped);
         }
 
-        public async Task<IEnumerable<SearchTvShowViewModel>> Popular(int currentlyLoaded, int amountToLoad)
+        public async Task<IEnumerable<SearchTvShowViewModel>> Popular(int currentlyLoaded, int amountToLoad, string langCustomCode = null)
         {
-            var langCode = await DefaultLanguageCode(null);
+            var langCode = await DefaultLanguageCode(langCustomCode);
 
             var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
             var results = new List<MovieDbSearchResult>();
