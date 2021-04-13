@@ -154,16 +154,20 @@ namespace Ombi.Core.Engine.V2
 
             foreach (var tvMazeSearch in items)
             {
-                var show = await Cache.GetOrAdd(nameof(GetShowInformation) + tvMazeSearch.Id.ToString(),
-                    async () => await _movieApi.GetTVInfo(tvMazeSearch.Id.ToString()), DateTime.Now.AddHours(12));
-                foreach (var tvSeason in show.seasons.Where(x => x.season_number != 0)) // skip the first season
+                if (settings.HideAvailableFromDiscover)
                 {
-                    var seasonEpisodes = await Cache.GetOrAdd("SeasonEpisodes" + show.id + tvSeason.season_number, async () =>
+                    // To hide, we need to know if it's fully available, the only way to do this is to lookup it's episodes to check if we have every episode
+                    var show = await Cache.GetOrAdd(nameof(GetShowInformation) + tvMazeSearch.Id.ToString(),
+                        async () => await _movieApi.GetTVInfo(tvMazeSearch.Id.ToString()), DateTime.Now.AddHours(12));
+                    foreach (var tvSeason in show.seasons.Where(x => x.season_number != 0)) // skip the first season
                     {
-                        return await _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, CancellationToken.None);
-                    }, DateTime.Now.AddHours(12));
+                        var seasonEpisodes = await Cache.GetOrAdd("SeasonEpisodes" + show.id + tvSeason.season_number, async () =>
+                        {
+                            return await _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, CancellationToken.None);
+                        }, DateTime.Now.AddHours(12));
 
-                    MapSeasons(tvMazeSearch.SeasonRequests, tvSeason, seasonEpisodes);
+                        MapSeasons(tvMazeSearch.SeasonRequests, tvSeason, seasonEpisodes);
+                    }
                 }
 
                 var result = await ProcessResult(tvMazeSearch);
