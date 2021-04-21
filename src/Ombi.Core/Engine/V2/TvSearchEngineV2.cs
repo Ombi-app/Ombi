@@ -241,6 +241,9 @@ namespace Ombi.Core.Engine.V2
             item.Approved = oldModel.Approved;
             item.SeasonRequests = oldModel.SeasonRequests;
             item.RequestId = oldModel.RequestId;
+            item.PlexUrl = oldModel.PlexUrl;
+            item.EmbyUrl = oldModel.EmbyUrl;
+            item.JellyfinUrl = oldModel.JellyfinUrl;
 
             if (!string.IsNullOrEmpty(item.Images?.Medium))
             {

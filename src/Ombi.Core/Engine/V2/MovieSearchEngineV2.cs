@@ -371,6 +371,7 @@ namespace Ombi.Core.Engine.V2
                 mapped.Requested = movie.Requested;
                 mapped.PlexUrl = movie.PlexUrl;
                 mapped.EmbyUrl = movie.EmbyUrl;
+                mapped.JellyfinUrl = movie.JellyfinUrl;
                 mapped.Subscribed = movie.Subscribed;
                 mapped.ShowSubscribe = movie.ShowSubscribe;
                 mapped.ReleaseDate = movie.ReleaseDate;
