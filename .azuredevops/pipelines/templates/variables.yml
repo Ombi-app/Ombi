@@ -27,4 +27,4 @@ variables:
     value: "4.0.$(Build.BuildId)"
 
   - name: isMain
-    value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))]
+    value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))]
