@@ -190,6 +190,16 @@ export class MovieDetailsComponent {
         });
     }
 
+    public reProcessRequest() {
+        this.requestService2.reprocessRequest(this.movieRequest.id, RequestType.movie).subscribe(result => {
+            if (result.result) {
+                this.messageService.send(result.message ? result.message : "Successfully Re-processed the request", "Ok");
+            } else {
+                this.messageService.send(result.errorMessage, "Ok");
+            }
+        });
+    }
+
     private loadBanner() {
         this.imageService.getMovieBanner(this.theMovidDbId.toString()).subscribe(x => {
             if (!this.movie.backdropPath) {

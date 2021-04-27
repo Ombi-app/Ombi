@@ -21,6 +21,7 @@ using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Core.Models;
+using System.Threading;
 
 namespace Ombi.Core.Engine
 {
@@ -555,6 +556,11 @@ namespace Ombi.Core.Engine
                 await NotificationHelper.Notify(request, NotificationType.RequestApproved);
             }
 
+            return await ProcessSendingMovie(request);
+        }
+
+        private async Task<RequestEngineResult> ProcessSendingMovie(MovieRequests request)
+        {
             if (request.Approved)
             {
                 var result = await Sender.Send(request);
@@ -632,6 +638,21 @@ namespace Ombi.Core.Engine
         public async Task<bool> UserHasRequest(string userId)
         {
             return await MovieRepository.GetAll().AnyAsync(x => x.RequestedUserId == userId);
+        }
+
+        public async Task<RequestEngineResult> ReProcessRequest(int requestId, CancellationToken cancellationToken)
+        {
+            var request = await MovieRepository.Find(requestId); 
+            if (request == null)
+            {
+                return new RequestEngineResult
+                {
+                    Result = false,
+                    ErrorMessage = "Request does not exist"
+                };
+            }
+
+            return await ProcessSendingMovie(request);
         }
 
         public async Task<RequestEngineResult> MarkUnavailable(int modelId)

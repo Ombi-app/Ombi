@@ -288,7 +288,8 @@
         "RadarrConfiguration": "Radarr Configuration",
         "RequestOnBehalf": "Request on behalf of",
         "PleaseSelectUser": "Please select a user",
-        "StreamingOn": "Streaming On"
+        "StreamingOn": "Streaming On",
+        "ReProcessRequest": "Re-Process Request"
     },
     "Discovery": {
         "PopularTab": "Popular",

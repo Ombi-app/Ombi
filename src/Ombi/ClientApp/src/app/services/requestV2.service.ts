@@ -4,7 +4,7 @@ import { Injectable, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ServiceHelpers } from "./service.helpers";
-import { IRequestsViewModel, IMovieRequests, IChildRequests, IMovieAdvancedOptions as IMediaAdvancedOptions, IRequestEngineResult, IAlbumRequest, ITvRequestViewModelV2 } from "../interfaces";
+import { IRequestsViewModel, IMovieRequests, IChildRequests, IMovieAdvancedOptions as IMediaAdvancedOptions, IRequestEngineResult, IAlbumRequest, ITvRequestViewModelV2, RequestType } from "../interfaces";
 
 
 @Injectable()
@@ -91,5 +91,9 @@ export class RequestServiceV2 extends ServiceHelpers {
 
     public requestTv(tv: ITvRequestViewModelV2): Observable<IRequestEngineResult> {
         return this.http.post<IRequestEngineResult>(`${this.url}TV/`, JSON.stringify(tv), {headers: this.headers});
+    }
+
+    public reprocessRequest(requestId: number, type: RequestType): Observable<IRequestEngineResult> {
+        return this.http.post<IRequestEngineResult>(`${this.url}reprocess/${type}/${requestId}`, undefined, { headers: this.headers });
     }
 }
