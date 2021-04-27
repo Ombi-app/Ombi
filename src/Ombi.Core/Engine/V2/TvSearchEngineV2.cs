@@ -50,13 +50,14 @@ namespace Ombi.Core.Engine.V2
         public async Task<SearchFullInfoTvShowViewModel> GetShowByRequest(int requestId, CancellationToken token)
         {
             var request = await RequestService.TvRequestService.Get().FirstOrDefaultAsync(x => x.Id == requestId);
-            return await GetShowInformation(request.ExternalProviderId.ToString(), token); // TODO
+            return await GetShowInformation(request.ExternalProviderId.ToString(), token);
         }
 
         public async Task<SearchFullInfoTvShowViewModel> GetShowInformation(string tvdbid, CancellationToken token)
         {
-            var show = await Cache.GetOrAdd(nameof(GetShowInformation) + tvdbid,
-              async () => await _movieApi.GetTVInfo(tvdbid), DateTime.Now.AddHours(12));
+            var langCode = await DefaultLanguageCode(null);
+            var show = await Cache.GetOrAdd(nameof(GetShowInformation) + langCode + tvdbid,
+              async () => await _movieApi.GetTVInfo(tvdbid, langCode), DateTime.Now.AddHours(12));
             if (show == null || show.name == null)
             {
                 // We don't have enough information
