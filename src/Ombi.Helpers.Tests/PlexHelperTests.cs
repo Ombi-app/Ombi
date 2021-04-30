@@ -61,6 +61,7 @@ namespace Ombi.Helpers.Tests
             get
             {
                 yield return new TestCaseData("plex://movie/5e1632df2d4d84003e48e54e|imdb://tt9178402|tmdb://610201", new ProviderId { ImdbId = "tt9178402", TheMovieDb = "610201" }).SetName("V2 Regular Plex Id");
+                yield return new TestCaseData("plex://movie/5e1632df2d4d84003e48e54e|imdb://tt9178402|tmdb://610201|thetvdb://12345", new ProviderId { ImdbId = "tt9178402", TheMovieDb = "610201", TheTvDb = "12345" }).SetName("V2 Regular Plex Id w/ tvdb");
                 yield return new TestCaseData("plex://movie/5d7768253c3c2a001fbcab72|imdb://tt0119567|tmdb://330", new ProviderId { ImdbId = "tt0119567", TheMovieDb = "330" }).SetName("V2 Regular Plex Id Another");
                 yield return new TestCaseData("plex://movie/5d7768253c3c2a001fbcab72|imdb://tt0119567", new ProviderId { ImdbId = "tt0119567" }).SetName("V2 Regular Plex Id Single Imdb");
                 yield return new TestCaseData("plex://movie/5d7768253c3c2a001fbcab72|tmdb://330", new ProviderId { TheMovieDb = "330" }).SetName("V2 Regular Plex Id Single Tmdb");

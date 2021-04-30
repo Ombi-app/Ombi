@@ -29,7 +29,7 @@ namespace Ombi.Core.Rule.Rules.Search
             var useTvDb = false;
             if (obj.ImdbId.HasValue())
             {
-                item = await PlexContentRepository.Get(obj.ImdbId);
+                item = await PlexContentRepository.Get(obj.ImdbId, ProviderType.ImdbId);
                 if (item != null)
                 {
                     useImdb = true;
@@ -39,7 +39,7 @@ namespace Ombi.Core.Rule.Rules.Search
             {
                 if (obj.Id > 0)
                 {
-                    item = await PlexContentRepository.Get(obj.Id.ToString());
+                    item = await PlexContentRepository.Get(obj.Id.ToString(), ProviderType.TheMovieDbId);
                     if (item != null)
                     {
                         useId = true;
@@ -47,7 +47,7 @@ namespace Ombi.Core.Rule.Rules.Search
                 }
                 if (obj.TheMovieDbId.HasValue())
                 {
-                    item = await PlexContentRepository.Get(obj.TheMovieDbId);
+                    item = await PlexContentRepository.Get(obj.TheMovieDbId, ProviderType.TheMovieDbId);
                     if (item != null)
                     {
                         useTheMovieDb = true;
@@ -58,7 +58,7 @@ namespace Ombi.Core.Rule.Rules.Search
                 {
                     if (obj.TheTvDbId.HasValue())
                     {
-                        item = await PlexContentRepository.Get(obj.TheTvDbId);
+                        item = await PlexContentRepository.Get(obj.TheTvDbId, ProviderType.TvDbId);
                         if (item != null)
                         {
                             useTvDb = true;
