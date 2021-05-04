@@ -86,15 +86,6 @@ export class UserPreferenceComponent implements OnInit {
         this.identityService.updateStreamingCountry(this.selectedCountry).subscribe(x => this.notification.success(this.translate.instant("UserPreferences.Updated")));
     }
 
-    public openMobileApp(event: any) {
-        event.preventDefault();
-
-        this.identityService.getAccessToken().subscribe(x => {
-            const url = `ombi://${this.customizationSettings.applicationUrl}_${x}`;
-            window.location.assign(url);
-        });
-    }
-
     public getProfileImage(): string {
         let emailHash: string|Int32Array;
         if (this.user.emailAddress) {
@@ -131,7 +122,7 @@ export class UserPreferenceComponent implements OnInit {
 
 
     private welcomeText: string;
-  private setWelcomeText() {
+    private setWelcomeText() {
     var d = new Date();
     var hour = d.getHours();
 
