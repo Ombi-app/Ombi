@@ -24,6 +24,8 @@
                                 <mat-label>Username</mat-label>
                                 <input matInput formControlName="username">
                             </mat-form-field>
+                                <mat-slide-toggle matTooltip="This when enabled will not show the user who did the action e.g. Requested a new movie" formControlName="hideUser">Hide Users in notification</mat-slide-toggle>
+   
                         </div>
                         <div class="md-form-field">
                             <mat-form-field appearance="outline">
@@ -34,6 +36,7 @@
                                 <img [src]="form.value.icon" style="width: 300px" />
                             </div>
                         </div>
+                        
                     </div>
                     <div class="row top-space">
 

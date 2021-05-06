@@ -48,7 +48,7 @@ namespace Ombi.Notifications
         protected ChildRequests TvRequest { get; set; }
         protected AlbumRequest AlbumRequest { get; set; }
         protected MovieRequests MovieRequest { get; set; }
-        protected IQueryable<OmbiUser> SubsribedUsers { get; private set; }
+        protected IQueryable<OmbiUser> Subscribed { get; private set; }
 
         public abstract string NotificationName { get; }
 
@@ -75,7 +75,7 @@ namespace Ombi.Notifications
             if (model.RequestId > 0)
             {
                 await LoadRequest(model.RequestId, model.RequestType);
-                SubsribedUsers = GetSubscriptions(model.RequestId, model.RequestType);
+                Subscribed = GetSubscriptions(model.RequestId, model.RequestType);
             }
 
             Customization = await CustomizationSettings.GetSettingsAsync();
