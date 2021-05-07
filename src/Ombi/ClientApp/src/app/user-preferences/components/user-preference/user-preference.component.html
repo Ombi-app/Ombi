@@ -52,19 +52,25 @@
           <div style="margin-left:4%" class="col-12 col-sm-6 col-xl-5">
             <mat-label [translate]="'UserPreferences.MobileQRCode'"></mat-label>
             <div id="noQrCode" *ngIf="!qrCodeEnabled" [translate]="'UserPreferences.NoQrCode'"></div>
-         <div class="row">
-            <qrcode id="qrCode" *ngIf="qrCodeEnabled" [qrdata]="qrCode" [size]="256" [level]="'L'"></qrcode>
             <div class="row">
-            <div class="col-12">
-              <a href='https://play.google.com/store/apps/details?id=com.tidusjar.Ombi&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'
-                target="_blank"><img width="200px" alt='Get it on Google Play'
-                  src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' /></a>
+              <qrcode id="qrCode" *ngIf="qrCodeEnabled" [qrdata]="qrCode" [size]="256" [level]="'L'"></qrcode>
+              <div class="row">
+                <div class="col-12">
+                  <a href='https://play.google.com/store/apps/details?id=com.tidusjar.Ombi&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'
+                    target="_blank"><img width="200px" alt='Get it on Google Play'
+                      src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' /></a>
+                </div>
+                <div class="col-12">
+                  <a href='https://apps.apple.com/us/app/ombi/id1335260043' target="_blank"><img
+                      style="margin-left:13px" width="170px" alt='Get it on Google Play'
+                      src='../../../images/appstore.svg' /></a>
+                </div>
+                <div class="col-12">
+                  <button  style="margin-left:13px; margin-top: 20px;" mat-raised-button color="accent" type="button" (click)="openMobileApp($event)">Open Mobile App</button>
+                </div>
+              </div>
             </div>
-            <div class="col-12">
-              <a href='https://apps.apple.com/us/app/ombi/id1335260043' target="_blank"><img style="margin-left:13px" width="170px"
-                  alt='Get it on Google Play' src='../../../images/appstore.svg' /></a>
-            </div></div>
-          </div></div>
+          </div>
         </div>
       </div>
 

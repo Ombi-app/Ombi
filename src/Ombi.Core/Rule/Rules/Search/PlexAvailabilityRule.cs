@@ -85,9 +85,9 @@ namespace Ombi.Core.Rule.Rules.Search
                     if (search.SeasonRequests.Any())
                     {
                         var allEpisodes = PlexContentRepository.GetAllEpisodes();
-                        foreach (var season in search.SeasonRequests)
+                        foreach (var season in search.SeasonRequests.ToList())
                         {
-                            foreach (var episode in season.Episodes)
+                            foreach (var episode in season.Episodes.ToList())
                             {
                                 await AvailabilityRuleHelper.SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb, Log);
                             }

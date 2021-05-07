@@ -120,6 +120,13 @@ export class UserPreferenceComponent implements OnInit {
         })
     }
 
+    public openMobileApp(event: any) {
+        event.preventDefault();
+
+        const url = `ombi://${this.qrCode}`;
+        window.location.assign(url);
+    }
+
 
     private welcomeText: string;
     private setWelcomeText() {
