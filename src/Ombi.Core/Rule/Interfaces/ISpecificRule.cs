@@ -5,7 +5,7 @@ namespace Ombi.Core.Rule.Interfaces
 {
     public interface ISpecificRule<T> where T : new() 
     {
-        Task<RuleResult> Execute(T obj);
+        Task<RuleResult> Execute(T obj, string requestOnBehalf);
         SpecificRules Rule { get; }
     }
 }

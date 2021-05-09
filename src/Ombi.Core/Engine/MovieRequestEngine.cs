@@ -71,7 +71,7 @@ namespace Ombi.Core.Engine
             var canRequestOnBehalf = model.RequestOnBehalf.HasValue();
 
             var isAdmin = await UserManager.IsInRoleAsync(userDetails, OmbiRoles.PowerUser) || await UserManager.IsInRoleAsync(userDetails, OmbiRoles.Admin);
-            if (model.RequestOnBehalf.HasValue() && !isAdmin)
+            if (canRequestOnBehalf && !isAdmin)
             {
                 return new RequestEngineResult
                 {
@@ -703,7 +703,7 @@ namespace Ombi.Core.Engine
         {
             await MovieRepository.Add(model);
 
-            var result = await RunSpecificRule(model, SpecificRules.CanSendNotification);
+            var result = await RunSpecificRule(model, SpecificRules.CanSendNotification, requestOnBehalf);
             if (result.Success)
             {
                 await NotificationHelper.NewRequest(model);

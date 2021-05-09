@@ -59,9 +59,9 @@ namespace Ombi.Core.Engine.Interfaces
             var ruleResults = await Rules.StartSearchRules(model);
             return ruleResults;
         }
-        public async Task<RuleResult> RunSpecificRule(object model, SpecificRules rule)
+        public async Task<RuleResult> RunSpecificRule(object model, SpecificRules rule, string requestOnBehalf)
         {
-            var ruleResults = await Rules.StartSpecificRules(model, rule);
+            var ruleResults = await Rules.StartSpecificRules(model, rule, requestOnBehalf);
             return ruleResults;
         }
     }
