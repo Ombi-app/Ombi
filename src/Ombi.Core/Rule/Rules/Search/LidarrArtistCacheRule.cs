@@ -8,7 +8,7 @@ using Ombi.Store.Repository;
 
 namespace Ombi.Core.Rule.Rules.Search
 {
-    public class LidarrArtistCacheRule : SpecificRule, IRules<object>
+    public class LidarrArtistCacheRule : SpecificRule, ISpecificRule<object>
     {
         public LidarrArtistCacheRule(IExternalRepository<LidarrArtistCache> db)
         {
@@ -17,7 +17,7 @@ namespace Ombi.Core.Rule.Rules.Search
 
         private readonly IExternalRepository<LidarrArtistCache> _db;
 
-        public Task<RuleResult> Execute(object objec)
+        public Task<RuleResult> Execute(object objec, string requestOnBehalf)
         {
             var obj = (SearchArtistViewModel) objec;
             // Check if it's in Lidarr

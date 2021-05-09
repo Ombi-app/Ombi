@@ -151,7 +151,7 @@ namespace Ombi.Core.Engine
             }
 
 
-            await Rules.StartSpecificRules(vm, SpecificRules.LidarrArtist);
+            await Rules.StartSpecificRules(vm, SpecificRules.LidarrArtist, string.Empty);
 
             return vm;
         }
@@ -190,7 +190,7 @@ namespace Ombi.Core.Engine
 
             vm.Cover = a.images?.FirstOrDefault(x => x.coverType.Equals("cover"))?.url?.ToHttpsUrl();
 
-            await Rules.StartSpecificRules(vm, SpecificRules.LidarrAlbum);
+            await Rules.StartSpecificRules(vm, SpecificRules.LidarrAlbum, string.Empty);
 
             await RunSearchRules(vm);
 
@@ -230,7 +230,7 @@ namespace Ombi.Core.Engine
                 vm.Cover = a.remoteCover;
             }
 
-            await Rules.StartSpecificRules(vm, SpecificRules.LidarrAlbum);
+            await Rules.StartSpecificRules(vm, SpecificRules.LidarrAlbum, string.Empty);
 
             await RunSearchRules(vm);
 
@@ -258,7 +258,7 @@ namespace Ombi.Core.Engine
                 vm.Cover = fullAlbum.remoteCover;
             }
 
-            await Rules.StartSpecificRules(vm, SpecificRules.LidarrAlbum);
+            await Rules.StartSpecificRules(vm, SpecificRules.LidarrAlbum, string.Empty);
 
             await RunSearchRules(vm);
 

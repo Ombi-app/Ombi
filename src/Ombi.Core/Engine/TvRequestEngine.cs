@@ -915,7 +915,7 @@ namespace Ombi.Core.Engine
 
         private async Task<RequestEngineResult> AfterRequest(ChildRequests model, string requestOnBehalf)
         {
-            var sendRuleResult = await RunSpecificRule(model, SpecificRules.CanSendNotification);
+            var sendRuleResult = await RunSpecificRule(model, SpecificRules.CanSendNotification, requestOnBehalf);
             if (sendRuleResult.Success)
             {
                 await NotificationHelper.NewRequest(model);

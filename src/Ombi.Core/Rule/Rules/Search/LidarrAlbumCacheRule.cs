@@ -9,7 +9,7 @@ using Ombi.Store.Repository;
 
 namespace Ombi.Core.Rule.Rules.Search
 {
-    public class LidarrAlbumCacheRule : BaseSearchRule, IRules<SearchViewModel>
+    public class LidarrAlbumCacheRule : SpecificRule, ISpecificRule<object>
     {
         public LidarrAlbumCacheRule(IExternalRepository<LidarrAlbumCache> db)
         {
@@ -18,7 +18,9 @@ namespace Ombi.Core.Rule.Rules.Search
 
         private readonly IExternalRepository<LidarrAlbumCache> _db;
 
-        public Task<RuleResult> Execute(SearchViewModel objec)
+        public override SpecificRules Rule => SpecificRules.LidarrAlbum;
+
+        public Task<RuleResult> Execute(object objec, string requestOnBehalf)
         {
             if (objec is SearchAlbumViewModel obj)
             {

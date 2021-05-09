@@ -362,7 +362,7 @@ namespace Ombi.Core.Engine
             await MusicRepository.Update(request);
 
 
-            var canNotify = await RunSpecificRule(request, SpecificRules.CanSendNotification);
+            var canNotify = await RunSpecificRule(request, SpecificRules.CanSendNotification, string.Empty);
             if (canNotify.Success)
             {
                 await NotificationHelper.Notify(request, NotificationType.RequestApproved);
@@ -506,7 +506,7 @@ namespace Ombi.Core.Engine
         {
             await MusicRepository.Add(model);
 
-            var result = await RunSpecificRule(model, SpecificRules.CanSendNotification);
+            var result = await RunSpecificRule(model, SpecificRules.CanSendNotification, string.Empty);
             if (result.Success)
             {
                 await NotificationHelper.NewRequest(model);
