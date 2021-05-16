@@ -85,7 +85,8 @@ namespace Ombi.Api.Radarr
                 titleSlug = title + year,
                 monitored = true,
                 year = year,
-                minimumAvailability = minimumAvailability
+                minimumAvailability = minimumAvailability,
+                sizeOnDisk = 0
             };
 
             if (searchNow)
