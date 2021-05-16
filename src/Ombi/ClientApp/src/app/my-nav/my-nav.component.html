@@ -6,12 +6,12 @@
         <mat-toolbar class="application-name" id="nav-applicationName">{{applicationName}}</mat-toolbar>
 
         <mat-nav-list>
-            <span *ngFor="let nav of navItems">
+            <span  mat-list-item  *ngFor="let nav of navItems">
 
-                <div class="menu-spacing" *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled">
+                <div class="menu-spacing mat-ripple" mat-ripple *ngIf="(nav.requiresAdmin && isAdmin || !nav.requiresAdmin) && nav.enabled">
 
 
-                    <a id="{{nav.id}}" *ngIf="nav.externalLink" mat-list-item [href]="nav.link" target="_blank"
+                    <a [disableRipple]="true" mat-list-item  id="{{nav.id}}" *ngIf="nav.externalLink" [href]="nav.link" target="_blank"
                         matTooltip="{{nav.toolTipMessage | translate}}" matTooltipPosition="right"
                         [routerLinkActive]="'active-list-item'">
 
@@ -19,7 +19,7 @@
                             style="padding-left: 5px; padding-right: 5px;" aria-hidden="true"></i>
                         &nbsp;{{nav.name | translate}}
                     </a>
-                    <a id="{{nav.id}}" *ngIf="!nav.externalLink" mat-list-item [routerLink]="nav.link" [style]="nav.color"
+                    <a [disableRipple]="true"  mat-list-item  id="{{nav.id}}" *ngIf="!nav.externalLink" [routerLink]="nav.link" [style]="nav.color"
                         [routerLinkActive]="'active-list-item'">
 
                         <i class="fa-lg {{nav.icon}} icon-spacing"></i>
@@ -28,7 +28,7 @@
                 </div>
             </span>
 
-            <a   class="menu-spacing" id="nav-logout" mat-list-item [routerLinkActive]="'active-list-item'"
+            <a mat-list-item [disableRipple]="true"   class="menu-spacing" id="nav-logout" [routerLinkActive]="'active-list-item'"
                 aria-label="Toggle sidenav" (click)="logOut();">
                 <i class="fa-lg fas fa-sign-out-alt  icon-spacing"></i>
                 &nbsp;{{ 'NavigationBar.Logout' | translate }}
