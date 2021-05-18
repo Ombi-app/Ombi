@@ -40,8 +40,8 @@ Search the existing requests to see if your suggestion has already been submitte
 ___
 <a href='https://play.google.com/store/apps/details?id=com.tidusjar.Ombi&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img width="150"   alt='Get it on Google Play' src='https://play.google.com/intl/en_gb/badges/images/generic/en_badge_web_generic.png'/></a>
 <br>
-_**Note:** There is no longer an iOS app due to complications outside of our control._
-
+<a href='https://apps.apple.com/us/app/ombi/id1335260043'><img width="130"   alt='Get it on the App Store' src='https://developer.apple.com/app-store/marketing/guidelines/images/badge-example-preferred.png'/></a>
+<br>
 
 # Features
 Here are some of the features Ombi has:
