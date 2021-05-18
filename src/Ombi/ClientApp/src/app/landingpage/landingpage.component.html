@@ -3,12 +3,15 @@
 
     <div class="small-middle-container">
         <div class="row">
-            <div class="col-md-push-3 col-md-6">
+            <div class="col-md-push-3 col-md-6 logo-container">
                 <div *ngIf="customizationSettings.logo">
-                    <img [src]="customizationSettings.logo" style="width:100%"/>
+                    <img class="logo-img" [src]="customizationSettings.logo"/>
                 </div>
-                <div *ngIf="!customizationSettings.logo">
-                    <img src="{{baseUrl}}/images/logo.png" style="width:100%" />
+                <div *ngIf="!customizationSettings.logo && customizationSettings.applicationName" class="logo">
+                    {{customizationSettings.applicationName}}
+                </div>
+                <div *ngIf="!customizationSettings.logo && !customizationSettings.applicationName" class="logo">
+                    OMBI
                 </div>
             </div>
             <div class="col-md-4 col-md-push-3 vcenter">
@@ -39,10 +42,10 @@
                         <span [translate]="'LandingPage.OfflineParagraph'"></span>
                         <p [translate]="'LandingPage.CheckPageForUpdates'"></p>
                     </div>
+                    <div class="button-continue">
+                        <button id="continue" mat-raised-button [routerLink]="['/login', 'true']" color="accent" type="submit" data-cy="continue">{{ 'Common.ContinueButton' | translate }}</button>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-3 offset-md-6 vcenter">
-                <button id="continue" mat-raised-button [routerLink]="['/login', 'true']" color="accent" type="submit" data-cy="continue">{{ 'Common.ContinueButton' | translate }}</button>
             </div>
         </div>
     </div>
