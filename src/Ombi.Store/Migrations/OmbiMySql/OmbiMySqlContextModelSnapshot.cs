@@ -771,6 +771,9 @@ namespace Ombi.Store.Migrations.OmbiMySql
                     b.Property<string>("ImdbId")
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("LanguageProfile")
+                        .HasColumnType("int");
+
                     b.Property<string>("Overview")
                         .HasColumnType("longtext");
 

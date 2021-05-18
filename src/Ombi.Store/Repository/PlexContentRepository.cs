@@ -31,6 +31,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Ombi.Helpers;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
 
@@ -61,18 +62,21 @@ namespace Ombi.Store.Repository
             return any;
         }
 
-        public async Task<PlexServerContent> Get(string providerId)
+        public async Task<PlexServerContent> Get(string providerId, ProviderType type)
         {
-            var item = await Db.PlexServerContent.FirstOrDefaultAsync(x => x.ImdbId == providerId);
-            if (item == null)
+            switch (type)
             {
-                item = await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TheMovieDbId == providerId);
-                if (item == null)
-                {
-                    item = await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TvDbId == providerId);
-                }
+                case ProviderType.ImdbId:
+                    return await Db.PlexServerContent.FirstOrDefaultAsync(x => x.ImdbId == providerId);
+                case ProviderType.TheMovieDbId:
+                    return await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TheMovieDbId == providerId);
+                case ProviderType.TvDbId:
+                    return await Db.PlexServerContent.FirstOrDefaultAsync(x => x.TvDbId == providerId);
+                default:
+                    break;
             }
-            return item;
+
+            return null;
         }
 
         public async Task<PlexServerContent> GetByKey(int key)

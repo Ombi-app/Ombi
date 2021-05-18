@@ -30,7 +30,7 @@ namespace Ombi.Core.Tests.Rule.Search
         public async Task Should_Not_Be_Monitored_Or_Available()
         {
             var request = new SearchAlbumViewModel { ForeignAlbumId = "abc" };
-            var result = await Rule.Execute(request);
+            var result = await Rule.Execute(request, string.Empty);
 
             Assert.True(result.Success);
             Assert.False(request.Approved);
@@ -49,7 +49,7 @@ namespace Ombi.Core.Tests.Rule.Search
                 }
             }.AsQueryable());
             var request = new SearchAlbumViewModel { ForeignAlbumId = "abc" };
-            var result = await Rule.Execute(request);
+            var result = await Rule.Execute(request, string.Empty);
 
             Assert.True(result.Success);
             Assert.False(request.Approved);
@@ -71,7 +71,7 @@ namespace Ombi.Core.Tests.Rule.Search
                 }
             }.AsQueryable());
             var request = new SearchAlbumViewModel { ForeignAlbumId = "abc" };
-            var result = await Rule.Execute(request);
+            var result = await Rule.Execute(request, string.Empty);
 
             Assert.True(result.Success);
             Assert.False(request.Approved);
@@ -93,7 +93,7 @@ namespace Ombi.Core.Tests.Rule.Search
                 }
             }.AsQueryable());
             var request = new SearchAlbumViewModel { ForeignAlbumId = "abc" };
-            var result = await Rule.Execute(request);
+            var result = await Rule.Execute(request, string.Empty);
 
             Assert.True(result.Success);
             Assert.False(request.Approved);
@@ -114,7 +114,7 @@ namespace Ombi.Core.Tests.Rule.Search
                 }
             }.AsQueryable());
             var request = new SearchAlbumViewModel { ForeignAlbumId = "abc" };
-            var result = await Rule.Execute(request);
+            var result = await Rule.Execute(request, string.Empty);
 
             Assert.True(result.Success);
             Assert.False(request.Approved);

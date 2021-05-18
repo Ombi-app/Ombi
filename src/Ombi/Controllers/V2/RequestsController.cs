@@ -11,6 +11,7 @@ using System;
 using Ombi.Store.Entities;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using Ombi.Attributes;
 
 namespace Ombi.Controllers.V2
 {
@@ -134,12 +135,14 @@ namespace Ombi.Controllers.V2
             return await _tvRequestEngine.GetUnavailableRequests(count, position, sort, sortOrder);
         }
 
+        [PowerUser]
         [HttpPost("movie/advancedoptions")]
         public async Task<RequestEngineResult> UpdateAdvancedOptions([FromBody] MediaAdvancedOptions options)
         {
             return await _movieRequestEngine.UpdateAdvancedOptions(options);
         }
 
+        [PowerUser]
         [HttpPost("tv/advancedoptions")]
         public async Task<RequestEngineResult> UpdateTvAdvancedOptions([FromBody] MediaAdvancedOptions options)
         {
@@ -196,6 +199,21 @@ namespace Ombi.Controllers.V2
             }
 
             return result;
+        }
+
+        [PowerUser]
+        [HttpPost("reprocess/{type}/{requestId}")]
+        public async Task<IActionResult> ReProcessRequest(RequestType type, int requestId)
+        {
+            switch (type)
+            {
+                case RequestType.TvShow:
+                    return Ok(await _tvRequestEngine.ReProcessRequest(requestId, HttpContext.RequestAborted));
+                case RequestType.Movie:
+                    return Ok(await _movieRequestEngine.ReProcessRequest(requestId, HttpContext.RequestAborted));
+            }
+
+            return BadRequest();
         }
 
         private string GetApiAlias()

@@ -12,7 +12,6 @@ export interface IOmbiSettings extends ISettings {
   collectAnalyticData: boolean;
   wizard: boolean;
   apiKey: string;
-  ignoreCertificateErrors: boolean;
   doNotSendNotificationsForAutoApprove: boolean;
   hideRequestsUsers: boolean;
   defaultLanguageCode: string;
@@ -104,6 +103,7 @@ export interface ISonarrSettings extends IExternalSettings {
   addOnly: boolean;
   v3: boolean;
   languageProfile: number;
+  languageProfileAnime: number;
   scanForAvailability: boolean;
 }
 
@@ -284,4 +284,20 @@ export interface IVoteSettings extends ISettings {
 export interface ITheMovieDbSettings extends ISettings {
     showAdultMovies: boolean;
     excludedKeywordIds: number[];
+}
+
+export interface IUpdateModel
+{
+  updateVersionString: string;
+  updateVersion: number;
+  updateDate: Date,
+  updateAvailable: boolean;
+  changeLogs: string;
+  downloads: IUpdateDonloads[];
+}
+
+export interface  IUpdateDonloads
+{
+    name: string;
+    url: string
 }

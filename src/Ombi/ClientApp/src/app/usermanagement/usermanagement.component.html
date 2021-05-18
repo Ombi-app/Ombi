@@ -105,14 +105,8 @@
           <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> </th>
                 <td mat-cell *matCellDef="let u">
-                        <button id="edit{{u.userName}}" mat-raised-button color="accent" [routerLink]="['/usermanagement/user/' + u.id]">Details/Edit</button>
-                </td>
-          </ng-container>
-
-          <ng-container matColumnDef="welcome">
-                <th mat-header-cell *matHeaderCellDef> </th>
-                <td mat-cell *matCellDef="let u">
-                        <button *ngIf="!u.hasLoggedIn" mat-raised-button color="accent"  (click)="welcomeEmail(u)" [disabled]="!customizationSettings?.applicationUrl">Send Welcome Email</button>
+                        <button id="edit{{u.userName}}" mat-raised-button color="accent" [routerLink]="['/usermanagement/user/' + u.id]">Edit</button>  
+                        <button *ngIf="!u.hasLoggedIn" mat-raised-button color="accent"  (click)="welcomeEmail(u)" [disabled]="!customizationSettings?.applicationUrl"><i class="far fa-paper-plane"></i> Welcome</button>
                 </td>
           </ng-container>
 

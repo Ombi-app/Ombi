@@ -57,6 +57,7 @@ namespace Ombi.Notifications.Agents
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
+                Subject = "New Request",
                 Data = GetNotificationData(parsed, NotificationType.NewRequest)
             };
 
@@ -76,6 +77,7 @@ namespace Ombi.Notifications.Agents
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
+                Subject = "New Issue",
                 Data = GetNotificationData(parsed, NotificationType.Issue)
             };
 
@@ -127,6 +129,7 @@ namespace Ombi.Notifications.Agents
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
+                Subject = "Issue Resolved",
                 Data = GetNotificationData(parsed, NotificationType.IssueResolved)
             };
 
@@ -149,6 +152,7 @@ namespace Ombi.Notifications.Agents
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
+                Subject = "Request Error",
                 Data = GetNotificationData(parsed, NotificationType.ItemAddedToFaultQueue)
             };
 
@@ -168,6 +172,7 @@ namespace Ombi.Notifications.Agents
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
+                Subject = "Request Declined",
                 Data = GetNotificationData(parsed, NotificationType.RequestDeclined)
             };
 
@@ -188,6 +193,7 @@ namespace Ombi.Notifications.Agents
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
+                Subject = "Request Approved",
                 Data = GetNotificationData(parsed, NotificationType.RequestApproved)
             };
 
@@ -212,6 +218,7 @@ namespace Ombi.Notifications.Agents
             var notification = new NotificationMessage
             {
                 Message = parsed.Message,
+                Subject = "Request Available",
                 Data = data
             };
             // Send to user
@@ -259,6 +266,7 @@ namespace Ombi.Notifications.Agents
             var notification = new NotificationMessage
             {
                 Message = message,
+                Subject = "Test Notification"
             };
             // Send to user
             var user = await _userManager.Users.Include(x => x.NotificationUserIds).FirstOrDefaultAsync(x => x.Id.Equals(model.UserId));
@@ -338,9 +346,9 @@ namespace Ombi.Notifications.Agents
 
         private async Task AddSubscribedUsers(List<string> playerIds)
         {
-            if (await SubsribedUsers.AnyAsync())
+            if (await Subscribed.AnyAsync())
             {
-                foreach (var user in SubsribedUsers)
+                foreach (var user in Subscribed)
                 {
                     var notificationIds = await _notifications.GetAll().Where(x => x.UserId == user.Id).ToListAsync();
 

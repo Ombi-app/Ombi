@@ -17,7 +17,7 @@ namespace Ombi.Core.Rule.Rules.Search
 
         private readonly IExternalRepository<LidarrArtistCache> _db;
 
-        public Task<RuleResult> Execute(object objec)
+        public Task<RuleResult> Execute(object objec, string requestOnBehalf)
         {
             var obj = (SearchArtistViewModel) objec;
             // Check if it's in Lidarr
@@ -29,6 +29,7 @@ namespace Ombi.Core.Rule.Rules.Search
 
             return Task.FromResult(Success());
         }
+
 
         public override SpecificRules Rule => SpecificRules.LidarrArtist;
     }

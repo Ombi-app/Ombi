@@ -65,7 +65,7 @@ namespace Ombi.Api.Radarr
 
         public async Task<MovieResponse> UpdateMovie(MovieResponse movie, string apiKey, string baseUrl)
         {
-            var request = new Request($"/api/v3/movie/", baseUrl, HttpMethod.Put);
+            var request = new Request($"/api/v3/movie/{movie.id}", baseUrl, HttpMethod.Put);
             AddHeaders(request, apiKey);
             request.AddJsonBody(movie);
 
@@ -85,7 +85,8 @@ namespace Ombi.Api.Radarr
                 titleSlug = title + year,
                 monitored = true,
                 year = year,
-                minimumAvailability = minimumAvailability
+                minimumAvailability = minimumAvailability,
+                sizeOnDisk = 0
             };
 
             if (searchNow)

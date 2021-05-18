@@ -68,6 +68,9 @@ import { TwilioComponent } from "./notifications/twilio/twilio.component";
 import { WhatsAppComponent } from "./notifications/twilio/whatsapp.component";
 import { CloudMobileComponent } from "./notifications/cloudmobile.coponent";
 import { CloudMobileService } from "../services/cloudmobile.service";
+import { UpdateService } from "../services/update.service";
+import { MatDialogModule } from "@angular/material/dialog";
+import { UpdateDialogComponent } from "./about/update-dialog.component";
 
 const routes: Routes = [
     { path: "Ombi", component: OmbiComponent, canActivate: [AuthGuard] },
@@ -126,7 +129,8 @@ const routes: Routes = [
         RadioButtonModule,
         DialogModule,
         SharedModule,
-        MatMenuModule
+        MatMenuModule,
+        MatDialogModule
     ],
     declarations: [
         SettingsMenuComponent,
@@ -169,6 +173,7 @@ const routes: Routes = [
         TwilioComponent,
         WhatsAppComponent,
         CloudMobileComponent,
+        UpdateDialogComponent,
     ],
     exports: [
         RouterModule,
@@ -195,6 +200,7 @@ const routes: Routes = [
         FileDownloadService,
         TheMovieDbService,
         CloudMobileService,
+        UpdateService,
     ],
 
 })

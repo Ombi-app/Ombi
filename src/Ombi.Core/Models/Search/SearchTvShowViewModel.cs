@@ -58,9 +58,6 @@ namespace Ombi.Core.Models.Search
         public bool PartlyAvailable { get; set; }
         public override RequestType Type => RequestType.TvShow;
 
-        /// <summary>
-        /// Only set on the images call
-        /// </summary>
         public string BackdropPath { get; set; }
     }
 }

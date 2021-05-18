@@ -81,7 +81,9 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(dest => dest.Rating, opts => opts.MapFrom(src => src.VoteAverage.ToString()))
                 .ForMember(dest => dest.BackdropPath, opts => opts.MapFrom(src => src.PosterPath))
                 //.ForMember(dest => dest.Runtime, opts => opts.MapFrom(src => src.Runtime.ToString()))
-                .ForMember(dest => dest.Title, opts => opts.MapFrom(src => src.Title));
+                .ForMember(dest => dest.Title, opts => opts.MapFrom(src => src.Title))
+                .ForMember(dest => dest.SeasonRequests, opts => opts.MapFrom(src => src.SeasonRequests))
+                ;
                 //.ForMember(dest => dest.Status, opts => opts.MapFrom(src => TraktEnumHelper.GetDescription(src.Status)))
                 //.ForMember(dest => dest.Trailer,
                 //    opts => opts.MapFrom(src => src.Trailer != null ? src.Trailer.ToString().ToHttpsUrl() : string.Empty))

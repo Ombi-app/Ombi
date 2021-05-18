@@ -9,6 +9,7 @@ using Ombi.Store.Entities.Requests;
 using Ombi.Store.Entities;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Authentication;
+using Ombi.Helpers;
 
 namespace Ombi.Core.Engine.Interfaces
 {
@@ -29,6 +30,10 @@ namespace Ombi.Core.Engine.Interfaces
         private OmbiUser _user;
         protected async Task<OmbiUser> GetUser()
         {
+            if(!Username.HasValue())
+            {
+                return null;
+            }
             var username = Username.ToUpper();
             return _user ?? (_user = await UserManager.Users.FirstOrDefaultAsync(x => x.NormalizedUserName == username));
         }
@@ -54,9 +59,9 @@ namespace Ombi.Core.Engine.Interfaces
             var ruleResults = await Rules.StartSearchRules(model);
             return ruleResults;
         }
-        public async Task<RuleResult> RunSpecificRule(object model, SpecificRules rule)
+        public async Task<RuleResult> RunSpecificRule(object model, SpecificRules rule, string requestOnBehalf)
         {
-            var ruleResults = await Rules.StartSpecificRules(model, rule);
+            var ruleResults = await Rules.StartSpecificRules(model, rule, requestOnBehalf);
             return ruleResults;
         }
     }

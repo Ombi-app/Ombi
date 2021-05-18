@@ -25,6 +25,7 @@ using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Core.Models;
+using System.Threading;
 
 namespace Ombi.Core.Engine
 {
@@ -164,7 +165,7 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            if ((tv.RootFolderOverride.HasValue || tv.QualityPathOverride.HasValue) && !isAdmin)
+            if ((tv.RootFolderOverride.HasValue || tv.QualityPathOverride.HasValue || tv.LanguageProfile.HasValue) && !isAdmin)
             {
                 return new RequestEngineResult
                 {
@@ -250,7 +251,7 @@ namespace Ombi.Core.Engine
             }
 
             // This is a new request
-            var newRequest = tvBuilder.CreateNewRequest(tv, tv.RootFolderOverride.GetValueOrDefault(), tv.QualityPathOverride.GetValueOrDefault());
+            var newRequest = tvBuilder.CreateNewRequest(tv, tv.RootFolderOverride.GetValueOrDefault(), tv.QualityPathOverride.GetValueOrDefault(), tv.LanguageProfile.GetValueOrDefault());
             return await AddRequest(newRequest.NewRequest, tv.RequestOnBehalf);
         }
 
@@ -896,9 +897,25 @@ namespace Ombi.Core.Engine
         }
 
 
+        public async Task<RequestEngineResult> ReProcessRequest(int requestId, CancellationToken cancellationToken)
+        {
+            var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId, cancellationToken);
+            if (request == null)
+            {
+                return new RequestEngineResult
+                {
+                    Result = false,
+                    ErrorMessage = "Request does not exist"
+                };
+            }
+
+            return await ProcessSendingShow(request);
+        }
+
+
         private async Task<RequestEngineResult> AfterRequest(ChildRequests model, string requestOnBehalf)
         {
-            var sendRuleResult = await RunSpecificRule(model, SpecificRules.CanSendNotification);
+            var sendRuleResult = await RunSpecificRule(model, SpecificRules.CanSendNotification, requestOnBehalf);
             if (sendRuleResult.Success)
             {
                 await NotificationHelper.NewRequest(model);
@@ -913,6 +930,11 @@ namespace Ombi.Core.Engine
                 EpisodeCount = model.SeasonRequests.Select(m => m.Episodes.Count).Sum(),
             });
 
+            return await ProcessSendingShow(model);
+        }
+
+        private async Task<RequestEngineResult> ProcessSendingShow(ChildRequests model)
+        {
             if (model.Approved)
             {
                 // Autosend
@@ -997,6 +1019,10 @@ namespace Ombi.Core.Engine
 
             request.QualityOverride = options.QualityOverride;
             request.RootFolder = options.RootPathOverride;
+            if (options.LanguageProfile > 0)
+            {
+                request.LanguageProfile = options.LanguageProfile;
+            }
 
             await TvRepository.Update(request);
 

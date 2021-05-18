@@ -9,6 +9,6 @@ namespace Ombi.Core.Rule.Interfaces
     {
         Task<IEnumerable<RuleResult>> StartRequestRules(BaseRequest obj);
         Task<IEnumerable<RuleResult>> StartSearchRules(SearchViewModel obj);
-        Task<RuleResult> StartSpecificRules(object obj, SpecificRules selectedRule);
+        Task<RuleResult> StartSpecificRules(object obj, SpecificRules selectedRule, string requestOnBehalf);
     }
 }

@@ -17,6 +17,7 @@ using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
+using Ombi.Helpers;
 
 namespace Ombi.Schedule.Tests
 {
@@ -53,7 +54,7 @@ namespace Ombi.Schedule.Tests
                 ImdbId = "test"
             };
             _movie.Setup(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
-            _repo.Setup(x => x.Get("test")).ReturnsAsync(new PlexServerContent());
+            _repo.Setup(x => x.Get("test", ProviderType.ImdbId)).ReturnsAsync(new PlexServerContent());
 
             await Checker.Execute(null);
 

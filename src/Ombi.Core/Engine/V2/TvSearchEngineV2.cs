@@ -22,6 +22,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
+using System.Diagnostics;
 
 namespace Ombi.Core.Engine.V2
 {
@@ -49,13 +50,14 @@ namespace Ombi.Core.Engine.V2
         public async Task<SearchFullInfoTvShowViewModel> GetShowByRequest(int requestId, CancellationToken token)
         {
             var request = await RequestService.TvRequestService.Get().FirstOrDefaultAsync(x => x.Id == requestId);
-            return await GetShowInformation(request.ExternalProviderId.ToString(), token); // TODO
+            return await GetShowInformation(request.ExternalProviderId.ToString(), token);
         }
 
         public async Task<SearchFullInfoTvShowViewModel> GetShowInformation(string tvdbid, CancellationToken token)
         {
-            var show = await Cache.GetOrAdd(nameof(GetShowInformation) + tvdbid,
-              async () => await _movieApi.GetTVInfo(tvdbid), DateTime.Now.AddHours(12));
+            var langCode = await DefaultLanguageCode(null);
+            var show = await Cache.GetOrAdd(nameof(GetShowInformation) + langCode + tvdbid,
+              async () => await _movieApi.GetTVInfo(tvdbid, langCode), DateTime.Now.AddHours(12));
             if (show == null || show.name == null)
             {
                 // We don't have enough information
@@ -69,47 +71,15 @@ namespace Ombi.Core.Engine.V2
             {
                 var seasonEpisodes = (await _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, token));
 
-                foreach (var episode in seasonEpisodes.episodes)
-                {
-                    var season = mapped.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == episode.season_number);
-                    if (season == null)
-                    {
-                        var newSeason = new SeasonRequests
-                        {
-                            SeasonNumber = episode.season_number,
-                            Overview = tvSeason.overview,
-                            Episodes = new List<EpisodeRequests>()
-                        };
-                        newSeason.Episodes.Add(new EpisodeRequests
-                        {
-                            //Url = episode...ToHttpsUrl(),
-                            Title = episode.name,
-                            AirDate = episode.air_date.HasValue() ? DateTime.Parse(episode.air_date) : DateTime.MinValue,
-                            EpisodeNumber = episode.episode_number,
-
-                        });
-                        mapped.SeasonRequests.Add(newSeason);
-                    }
-                    else
-                    {
-                        // We already have the season, so just add the episode
-                        season.Episodes.Add(new EpisodeRequests
-                        {
-                            //Url = e.url.ToHttpsUrl(),
-                            Title = episode.name,
-                            AirDate = episode.air_date.HasValue() ? DateTime.Parse(episode.air_date) : DateTime.MinValue,
-                            EpisodeNumber = episode.episode_number,
-                        });
-                    }
-                }
+                MapSeasons(mapped.SeasonRequests, tvSeason, seasonEpisodes);
             }
 
             return await ProcessResult(mapped);
         }
 
-        public async Task<IEnumerable<SearchTvShowViewModel>> Popular(int currentlyLoaded, int amountToLoad)
+        public async Task<IEnumerable<SearchTvShowViewModel>> Popular(int currentlyLoaded, int amountToLoad, string langCustomCode = null)
         {
-            var langCode = await DefaultLanguageCode(null);
+            var langCode = await DefaultLanguageCode(langCustomCode);
 
             var pages = PaginationHelper.GetNextPages(currentlyLoaded, amountToLoad, ResultLimit);
             var results = new List<MovieDbSearchResult>();
@@ -152,6 +122,7 @@ namespace Ombi.Core.Engine.V2
                     async () => await _movieApi.TopRatedTv(langCode, pagesToLoad.Page), DateTime.Now.AddHours(12));
                 results.AddRange(apiResult.Skip(pagesToLoad.Skip).Take(pagesToLoad.Take));
             }
+
             var processed = ProcessResults(results);
             return await processed;
         }
@@ -177,20 +148,75 @@ namespace Ombi.Core.Engine.V2
             return data;
         }
 
-        private async Task<IEnumerable<SearchTvShowViewModel>> ProcessResults<T>(IEnumerable<T> items)
+        private async Task<IEnumerable<SearchTvShowViewModel>> ProcessResults(List<MovieDbSearchResult> items)
         {
             var retVal = new List<SearchTvShowViewModel>(); 
             var settings = await _customization.GetSettingsAsync();
+
             foreach (var tvMazeSearch in items)
             {
+                if (settings.HideAvailableFromDiscover)
+                {
+                    // To hide, we need to know if it's fully available, the only way to do this is to lookup it's episodes to check if we have every episode
+                    var show = await Cache.GetOrAdd(nameof(GetShowInformation) + tvMazeSearch.Id.ToString(),
+                        async () => await _movieApi.GetTVInfo(tvMazeSearch.Id.ToString()), DateTime.Now.AddHours(12));
+                    foreach (var tvSeason in show.seasons.Where(x => x.season_number != 0)) // skip the first season
+                    {
+                        var seasonEpisodes = await Cache.GetOrAdd("SeasonEpisodes" + show.id + tvSeason.season_number, async () =>
+                        {
+                            return await _movieApi.GetSeasonEpisodes(show.id, tvSeason.season_number, CancellationToken.None);
+                        }, DateTime.Now.AddHours(12));
+
+                        MapSeasons(tvMazeSearch.SeasonRequests, tvSeason, seasonEpisodes);
+                    }
+                }
+
                 var result = await ProcessResult(tvMazeSearch);
-                if (result == null || settings.HideAvailableFromDiscover && result.Available)
+                if (result == null || settings.HideAvailableFromDiscover && result.FullyAvailable)
                 {
                     continue;
                 }
                 retVal.Add(result);
             }
+
             return retVal;
+        }
+
+        private static void MapSeasons(List<SeasonRequests> seasonRequests, Season tvSeason, SeasonDetails seasonEpisodes)
+        {
+            foreach (var episode in seasonEpisodes.episodes)
+            {
+                var season = seasonRequests.FirstOrDefault(x => x.SeasonNumber == episode.season_number);
+                if (season == null)
+                {
+                    var newSeason = new SeasonRequests
+                    {
+                        SeasonNumber = episode.season_number,
+                        Overview = tvSeason.overview,
+                        Episodes = new List<EpisodeRequests>()
+                    };
+                    newSeason.Episodes.Add(new EpisodeRequests
+                    {
+                        //Url = episode...ToHttpsUrl(),
+                        Title = episode.name,
+                        AirDate = episode.air_date.HasValue() ? DateTime.Parse(episode.air_date) : DateTime.MinValue,
+                        EpisodeNumber = episode.episode_number,
+
+                    });
+                    seasonRequests.Add(newSeason);
+                }
+                else
+                {
+                    // We already have the season, so just add the episode
+                    season.Episodes.Add(new EpisodeRequests
+                    {
+                        //Url = e.url.ToHttpsUrl(),
+                        Title = episode.name,
+                        AirDate = episode.air_date.HasValue() ? DateTime.Parse(episode.air_date) : DateTime.MinValue,
+                        EpisodeNumber = episode.episode_number,
+                    });
+                }
+            }
         }
 
         private async Task<SearchTvShowViewModel> ProcessResult<T>(T tvMazeSearch)
@@ -216,6 +242,9 @@ namespace Ombi.Core.Engine.V2
             item.Approved = oldModel.Approved;
             item.SeasonRequests = oldModel.SeasonRequests;
             item.RequestId = oldModel.RequestId;
+            item.PlexUrl = oldModel.PlexUrl;
+            item.EmbyUrl = oldModel.EmbyUrl;
+            item.JellyfinUrl = oldModel.JellyfinUrl;
 
             if (!string.IsNullOrEmpty(item.Images?.Medium))
             {

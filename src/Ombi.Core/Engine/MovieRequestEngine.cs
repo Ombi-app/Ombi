@@ -21,6 +21,7 @@ using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Core.Models;
+using System.Threading;
 
 namespace Ombi.Core.Engine
 {
@@ -70,7 +71,7 @@ namespace Ombi.Core.Engine
             var canRequestOnBehalf = model.RequestOnBehalf.HasValue();
 
             var isAdmin = await UserManager.IsInRoleAsync(userDetails, OmbiRoles.PowerUser) || await UserManager.IsInRoleAsync(userDetails, OmbiRoles.Admin);
-            if (model.RequestOnBehalf.HasValue() && !isAdmin)
+            if (canRequestOnBehalf && !isAdmin)
             {
                 return new RequestEngineResult
                 {
@@ -549,12 +550,17 @@ namespace Ombi.Core.Engine
             request.Denied = false;
             await MovieRepository.Update(request);
 
-            var canNotify = await RunSpecificRule(request, SpecificRules.CanSendNotification);
+            var canNotify = await RunSpecificRule(request, SpecificRules.CanSendNotification, string.Empty);
             if (canNotify.Success)
             {
                 await NotificationHelper.Notify(request, NotificationType.RequestApproved);
             }
 
+            return await ProcessSendingMovie(request);
+        }
+
+        private async Task<RequestEngineResult> ProcessSendingMovie(MovieRequests request)
+        {
             if (request.Approved)
             {
                 var result = await Sender.Send(request);
@@ -634,6 +640,21 @@ namespace Ombi.Core.Engine
             return await MovieRepository.GetAll().AnyAsync(x => x.RequestedUserId == userId);
         }
 
+        public async Task<RequestEngineResult> ReProcessRequest(int requestId, CancellationToken cancellationToken)
+        {
+            var request = await MovieRepository.Find(requestId); 
+            if (request == null)
+            {
+                return new RequestEngineResult
+                {
+                    Result = false,
+                    ErrorMessage = "Request does not exist"
+                };
+            }
+
+            return await ProcessSendingMovie(request);
+        }
+
         public async Task<RequestEngineResult> MarkUnavailable(int modelId)
         {
             var request = await MovieRepository.Find(modelId);
@@ -682,7 +703,7 @@ namespace Ombi.Core.Engine
         {
             await MovieRepository.Add(model);
 
-            var result = await RunSpecificRule(model, SpecificRules.CanSendNotification);
+            var result = await RunSpecificRule(model, SpecificRules.CanSendNotification, requestOnBehalf);
             if (result.Success)
             {
                 await NotificationHelper.NewRequest(model);

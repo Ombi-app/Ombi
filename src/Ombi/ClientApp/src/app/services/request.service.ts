@@ -187,5 +187,4 @@ export class RequestService extends ServiceHelpers {
     public removeAlbumRequest(request: number): any {
         return this.http.delete(`${this.url}music/${request}`, {headers: this.headers});
     }
-
 }

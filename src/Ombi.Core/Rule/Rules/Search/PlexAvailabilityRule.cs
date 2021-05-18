@@ -25,10 +25,11 @@ namespace Ombi.Core.Rule.Rules.Search
             PlexServerContent item = null;
             var useImdb = false;
             var useTheMovieDb = false;
+            var useId = false;
             var useTvDb = false;
             if (obj.ImdbId.HasValue())
             {
-                item = await PlexContentRepository.Get(obj.ImdbId);
+                item = await PlexContentRepository.Get(obj.ImdbId, ProviderType.ImdbId);
                 if (item != null)
                 {
                     useImdb = true;
@@ -36,9 +37,17 @@ namespace Ombi.Core.Rule.Rules.Search
             }
             if (item == null)
             {
+                if (obj.Id > 0)
+                {
+                    item = await PlexContentRepository.Get(obj.Id.ToString(), ProviderType.TheMovieDbId);
+                    if (item != null)
+                    {
+                        useId = true;
+                    }
+                }
                 if (obj.TheMovieDbId.HasValue())
                 {
-                    item = await PlexContentRepository.Get(obj.TheMovieDbId);
+                    item = await PlexContentRepository.Get(obj.TheMovieDbId, ProviderType.TheMovieDbId);
                     if (item != null)
                     {
                         useTheMovieDb = true;
@@ -49,7 +58,7 @@ namespace Ombi.Core.Rule.Rules.Search
                 {
                     if (obj.TheTvDbId.HasValue())
                     {
-                        item = await PlexContentRepository.Get(obj.TheTvDbId);
+                        item = await PlexContentRepository.Get(obj.TheTvDbId, ProviderType.TvDbId);
                         if (item != null)
                         {
                             useTvDb = true;
@@ -60,6 +69,11 @@ namespace Ombi.Core.Rule.Rules.Search
 
             if (item != null)
             {
+                if (useId)
+                {
+                    obj.TheMovieDbId = obj.Id.ToString();
+                    useTheMovieDb = true;
+                }
                 obj.Available = true;
                 obj.PlexUrl = item.Url;
                 obj.Quality = item.Quality;
@@ -71,9 +85,9 @@ namespace Ombi.Core.Rule.Rules.Search
                     if (search.SeasonRequests.Any())
                     {
                         var allEpisodes = PlexContentRepository.GetAllEpisodes();
-                        foreach (var season in search.SeasonRequests)
+                        foreach (var season in search.SeasonRequests.ToList())
                         {
-                            foreach (var episode in season.Episodes)
+                            foreach (var episode in season.Episodes.ToList())
                             {
                                 await AvailabilityRuleHelper.SingleEpisodeCheck(useImdb, allEpisodes, episode, season, item, useTheMovieDb, useTvDb, Log);
                             }

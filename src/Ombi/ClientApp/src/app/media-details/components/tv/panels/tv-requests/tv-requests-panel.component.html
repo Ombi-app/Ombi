@@ -70,6 +70,7 @@
     <button *ngIf="request.available" mat-raised-button color="warn" (click)="changeAvailability(request, false);">{{ 'Requests.MarkUnavailable' | translate }}</button>
     <button *ngIf="!request.denied" mat-raised-button color="danger" (click)="deny(request);">{{ 'Requests.Deny' | translate }}</button>
     <button mat-raised-button color="danger" (click)="delete(request);">{{ 'Requests.RequestPanel.Delete' | translate }}</button>
+    <button mat-raised-button color="accent" (click)="reProcessRequest(request);">{{ 'MediaDetails.ReProcessRequest' | translate }}</button>
 </div>
 
 

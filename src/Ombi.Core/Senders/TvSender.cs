@@ -158,6 +158,8 @@ namespace Ombi.Core.Senders
             }
 
             int qualityToUse;
+            var sonarrV3 = s.V3;
+            var languageProfileId = s.LanguageProfile;
             string rootFolderPath;
             string seriesType;
 
@@ -167,8 +169,17 @@ namespace Ombi.Core.Senders
             {
                 // Get the root path from the rootfolder selected.
                 // For some reason, if we haven't got one use the first root folder in Sonarr
-                rootFolderPath = await GetSonarrRootPath(int.Parse(s.RootPathAnime), s);
-                int.TryParse(s.QualityProfileAnime, out qualityToUse);
+                if (!int.TryParse(s.RootPathAnime, out int animePath))
+                {
+                    animePath = int.Parse(s.RootPath); // Set it to the main root folder if we have no anime folder.
+                }
+                rootFolderPath = await GetSonarrRootPath(animePath, s);
+                languageProfileId = s.LanguageProfileAnime > 0 ? s.LanguageProfileAnime : s.LanguageProfile;
+
+                if (!int.TryParse(s.QualityProfileAnime, out qualityToUse))
+                {
+                    qualityToUse = int.Parse(s.QualityProfile);
+                }
                 if (profiles != null)
                 {
                     if (profiles.SonarrRootPathAnime > 0)
@@ -181,7 +192,6 @@ namespace Ombi.Core.Senders
                     }
                 }
                 seriesType = "anime";
-
             }
             else
             {
@@ -220,11 +230,16 @@ namespace Ombi.Core.Senders
                     rootFolderPath = await GetSonarrRootPath(rootfolderOverride, s);
                 }
             }
-      
-            // Are we using v3 sonarr?
-            var sonarrV3 = s.V3;
-            var languageProfileId = s.LanguageProfile;
 
+            if (model.ParentRequest.LanguageProfile.HasValue)
+            {
+                var languageProfile = model.ParentRequest.LanguageProfile.Value;
+                if (languageProfile > 0)
+                {
+                    languageProfileId = languageProfile;
+                }
+            }
+      
             try
             {
                 // Does the series actually exist?
@@ -264,6 +279,10 @@ namespace Ombi.Core.Senders
                     var seasonsToAdd = GetSeasonsToCreate(model);
                     newSeries.seasons = seasonsToAdd;
                     var result = await SonarrApi.AddSeries(newSeries, s.ApiKey, s.FullUri);
+                    if (result?.ErrorMessages?.Any() ?? false)
+                    {
+                        throw new Exception(string.Join(',', result.ErrorMessages));
+                    }
                     existingSeries = await SonarrApi.GetSeriesById(result.id, s.ApiKey, s.FullUri);
                     await SendToSonarr(model, existingSeries, s);
                 }
@@ -406,7 +425,6 @@ namespace Ombi.Core.Senders
             {
                 await SonarrApi.SeasonPass(s.ApiKey, s.FullUri, result);
             }
-
 
             if (!s.AddOnly)
             {
