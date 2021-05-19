@@ -4,7 +4,7 @@ import { Injectable, Inject } from "@angular/core";
 import { empty, Observable, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 
-import { IMovieDbKeyword } from "../../interfaces";
+import { IMovieDbGenre, IMovieDbKeyword } from "../../interfaces";
 import { ServiceHelpers } from "../service.helpers";
 
 @Injectable()
@@ -21,5 +21,9 @@ export class TheMovieDbService extends ServiceHelpers {
     public getKeyword(keywordId: number): Observable<IMovieDbKeyword> {
         return this.http.get<IMovieDbKeyword>(`${this.url}/Keywords/${keywordId}`, { headers: this.headers })
             .pipe(catchError((error: HttpErrorResponse) => error.status === 404 ? empty() : throwError(error)));
+    }
+
+    public getGenres(media: string): Observable<IMovieDbGenre[]> {
+        return this.http.get<IMovieDbGenre[]>(`${this.url}/Genres/${media}`, { headers: this.headers })
     }
 }

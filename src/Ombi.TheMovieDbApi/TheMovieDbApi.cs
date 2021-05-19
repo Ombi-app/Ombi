@@ -13,6 +13,10 @@ using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.TheMovieDbApi.Models;
 
+// Due to conflicting Genre models in
+// Ombi.TheMovieDbApi.Models and Ombi.Api.TheMovieDb.Models   
+using Genre = Ombi.TheMovieDbApi.Models.Genre;
+
 namespace Ombi.Api.TheMovieDb
 {
     public class TheMovieDbApi : IMovieDbApi
@@ -342,6 +346,16 @@ namespace Ombi.Api.TheMovieDb
 
             var keyword = await Api.Request<Keyword>(request);
             return keyword == null || keyword.Id == 0 ? null : keyword;
+        }
+
+        public async Task<List<Genre>> GetGenres(string media)
+        {
+            var request = new Request($"genre/{media}/list", BaseUri, HttpMethod.Get);
+            request.AddQueryString("api_key", ApiToken);
+            AddRetry(request);
+
+            var result = await Api.Request<GenreContainer<Genre>>(request);
+            return result.genres ?? new List<Genre>();
         }
 
         public Task<TheMovieDbContainer<MultiSearch>> MultiSearch(string searchTerm, string languageCode, CancellationToken cancellationToken)

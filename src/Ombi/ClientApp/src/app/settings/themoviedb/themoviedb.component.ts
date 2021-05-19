@@ -18,6 +18,7 @@ interface IKeywordTag {
 interface IGenres {
     id: number;
     name: string;
+    initial: boolean;
 }
 
 @Component({
@@ -48,6 +49,8 @@ export class TheMovieDbComponent implements OnInit {
           });
         this.settingsService.getTheMovieDbSettings().subscribe(settings => {
             this.settings = settings;
+
+            // Map Keyword ids -> keyword name
             this.excludedKeywords = settings.excludedKeywordIds
                 ? settings.excludedKeywordIds.map(id => ({
                     id,
@@ -55,13 +58,52 @@ export class TheMovieDbComponent implements OnInit {
                     initial: true,
                 }))
                 : [];
-                this.excludedKeywords.forEach(key => {
-                    this.tmdbService.getKeyword(key.id).subscribe(keyResult => {
-                        this.excludedKeywords.filter((val, idx) => {
-                            val.name = keyResult.name;
-                        })
-                    });
+
+            this.excludedKeywords.forEach(key => {
+                this.tmdbService.getKeyword(key.id).subscribe(keyResult => {
+                    this.excludedKeywords.filter((val, idx) => {
+                        val.name = keyResult.name;
+                    })
                 });
+            });
+
+            // Map Movie Genre ids -> genre name
+            this.excludedMovieGenres = settings.excludedMovieGenreIds
+                ? settings.excludedMovieGenreIds.map(id => ({
+                    id,
+                    name: "",
+                    initial: true,
+                }))
+                : [];
+
+            this.tmdbService.getGenres("movie").subscribe(results => {
+                results.forEach(genre => {
+                    this.excludedMovieGenres.forEach(key => {
+                        this.excludedMovieGenres.filter((val, idx) => {
+                            val.name = genre.name
+                        })
+                    })
+                });
+            });
+            
+            // Map Tv Genre ids -> genre name
+            this.excludedTvGenres = settings.excludedTvGenreIds
+                ? settings.excludedTvGenreIds.map(id => ({
+                    id,
+                    name: "",
+                    initial: true,
+                }))
+                : [];
+
+            this.tmdbService.getGenres("tv").subscribe(results => {
+                results.forEach(genre => {
+                    this.excludedTvGenres.forEach(key => {
+                        this.excludedTvGenres.filter((val, idx) => {
+                            val.name = genre.name
+                        })
+                    })
+                });
+            });
         });
 
         this.tagForm
@@ -75,7 +117,6 @@ export class TheMovieDbComponent implements OnInit {
           })
         )
         .subscribe((r) => (this.filteredTags = r));
-
     }
 
     public remove(tag: IKeywordTag): void {

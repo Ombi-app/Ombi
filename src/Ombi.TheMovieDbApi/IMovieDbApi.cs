@@ -4,6 +4,10 @@ using System.Threading.Tasks;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.TheMovieDbApi.Models;
 
+// Due to conflicting Genre models in
+// Ombi.TheMovieDbApi.Models and Ombi.Api.TheMovieDb.Models   
+using Genre = Ombi.TheMovieDbApi.Models.Genre;
+
 namespace Ombi.Api.TheMovieDb
 {
     public interface IMovieDbApi
@@ -34,5 +38,6 @@ namespace Ombi.Api.TheMovieDb
         Task<Keyword> GetKeyword(int keywordId);
         Task<WatchProviders> GetMovieWatchProviders(int theMoviedbId, CancellationToken token);
         Task<WatchProviders> GetTvWatchProviders(int theMoviedbId, CancellationToken token);
+        Task<List<Genre>> GetGenres(string media);
     }
 }
