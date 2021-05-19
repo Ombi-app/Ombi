@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import { AuthService } from "../../../auth/auth.service";
 import { TranslateService } from "@ngx-translate/core";
 import { AvailableLanguages, ILanguage } from "./user-preference.constants";
@@ -6,6 +6,7 @@ import { IdentityService, NotificationService, SettingsService, ValidationServic
 import { ICustomizationSettings, IUser, UserType } from "../../../interfaces";
 import { Md5 } from "ts-md5";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { APP_BASE_HREF } from "@angular/common";
 
 @Component({
     templateUrl: "./user-preference.component.html",
@@ -22,6 +23,7 @@ export class UserPreferenceComponent implements OnInit {
     public selectedCountry: string;
     public customizationSettings: ICustomizationSettings;
     public UserType = UserType;
+    public baseUrl: string;
 
     public passwordForm: FormGroup;
 
@@ -33,9 +35,13 @@ export class UserPreferenceComponent implements OnInit {
         private readonly identityService: IdentityService,
         private readonly settingsService: SettingsService,
         private readonly fb: FormBuilder,
-        private readonly validationService: ValidationService) { }
+        private readonly validationService: ValidationService,
+        @Inject(APP_BASE_HREF) public internalBaseUrl: string) { }
 
     public async ngOnInit() {
+        if (this.internalBaseUrl.length > 1) {
+            this.baseUrl = this.internalBaseUrl;
+        }
         const user = this.authService.claims();
         if (user.name) {
             this.username = user.name;
