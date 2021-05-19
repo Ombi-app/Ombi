@@ -2,7 +2,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from "@angular/core";
 import { MatAutocomplete } from "@angular/material/autocomplete";
 
-import { ITheMovieDbSettings, IMovieDbKeyword } from "../../interfaces";
+import { ITheMovieDbSettings, IMovieDbKeyword, IMovieDbGenre } from "../../interfaces";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
 import { TheMovieDbService } from "../../services";
@@ -15,6 +15,11 @@ interface IKeywordTag {
     initial: boolean;
 }
 
+interface IGenres {
+    id: number;
+    name: string;
+}
+
 @Component({
     templateUrl: "./themoviedb.component.html",
     styleUrls: ["./themoviedb.component.scss"]
@@ -23,8 +28,13 @@ export class TheMovieDbComponent implements OnInit {
 
     public settings: ITheMovieDbSettings;
     public excludedKeywords: IKeywordTag[];
+    public excludedMovieGenres: IGenres[];
+    public excludedTvGenres: IGenres[];
     public tagForm: FormGroup;
     public filteredTags: IMovieDbKeyword[];
+    public filteredMovieGenres: IMovieDbGenre[];
+    public filteredTvGenres: IMovieDbGenre[];
+
     @ViewChild('fruitInput') public fruitInput: ElementRef<HTMLInputElement>;
 
     constructor(private settingsService: SettingsService,
