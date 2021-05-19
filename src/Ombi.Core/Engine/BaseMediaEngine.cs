@@ -48,6 +48,8 @@ namespace Ombi.Core.Engine
         protected readonly ISettingsService<OmbiSettings> OmbiSettings;
         protected readonly IRepository<RequestSubscription> _subscriptionRepository;
 
+        private bool _demo = DemoSingleton.Instance.Demo;
+
         protected async Task<Dictionary<int, MovieRequests>> GetMovieRequests()
         {
             var now = DateTime.Now.Ticks;
@@ -191,6 +193,23 @@ namespace Ombi.Core.Engine
         protected async Task<OmbiSettings> GetOmbiSettings()
         {
             return ombiSettings ?? (ombiSettings = await OmbiSettings.GetSettingsAsync());
+        }
+
+        protected bool DemoCheck(string title)
+        {
+            if (!title.HasValue())
+            {
+                return false;
+            }
+            if (_demo)
+            {
+                if (ExcludedDemo.ExcludedContent.Any(x => title.Contains(x, System.Globalization.CompareOptions.OrdinalIgnoreCase)))
+                {
+                    return true;
+                }
+                return false;
+            }
+            return false;
         }
 
         public class HideResult

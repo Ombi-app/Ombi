@@ -35,6 +35,8 @@ namespace Ombi.Core.Engine.V2
         private readonly ISettingsService<LidarrSettings> _lidarrSettings;
         private readonly IMusicBrainzApi _musicApi;
 
+        private bool _demo = DemoSingleton.Instance.Demo;
+
 
         public async Task<List<MultiSearchResult>> MultiSearch(string searchTerm, MultiSearchFilter filter, CancellationToken cancellationToken)
         {
@@ -60,6 +62,12 @@ namespace Ombi.Core.Engine.V2
 
             foreach (var multiSearch in movieDbData)
             {
+
+                if (DemoCheck(multiSearch.title) || DemoCheck(multiSearch.name))
+                {
+                    continue;
+                }
+
                 var result = new MultiSearchResult
                 {
                     MediaType = multiSearch.media_type,
