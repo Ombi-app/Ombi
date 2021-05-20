@@ -1,8 +1,8 @@
-﻿import {COMMA, ENTER} from "@angular/cdk/keycodes";
+﻿import {COMMA, ENTER, K} from "@angular/cdk/keycodes";
 import { Component, OnInit, ElementRef, ViewChild } from "@angular/core";
 import { MatAutocomplete } from "@angular/material/autocomplete";
 
-import { ITheMovieDbSettings, IMovieDbKeyword, IMovieDbGenre } from "../../interfaces";
+import { ITheMovieDbSettings, IMovieDbKeyword } from "../../interfaces";
 import { NotificationService } from "../../services";
 import { SettingsService } from "../../services";
 import { TheMovieDbService } from "../../services";
@@ -10,12 +10,6 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { debounceTime, switchMap } from "rxjs/operators";
 
 interface IKeywordTag {
-    id: number;
-    name: string;
-    initial: boolean;
-}
-
-interface IGenres {
     id: number;
     name: string;
     initial: boolean;
@@ -29,12 +23,12 @@ export class TheMovieDbComponent implements OnInit {
 
     public settings: ITheMovieDbSettings;
     public excludedKeywords: IKeywordTag[];
-    public excludedMovieGenres: IGenres[];
-    public excludedTvGenres: IGenres[];
+    public excludedMovieGenres: IKeywordTag[];
+    public excludedTvGenres: IKeywordTag[];
     public tagForm: FormGroup;
     public filteredTags: IMovieDbKeyword[];
-    public filteredMovieGenres: IMovieDbGenre[];
-    public filteredTvGenres: IMovieDbGenre[];
+    public filteredMovieGenres: IMovieDbKeyword[];
+    public filteredTvGenres: IMovieDbKeyword[];
 
     @ViewChild('fruitInput') public fruitInput: ElementRef<HTMLInputElement>;
 
@@ -46,6 +40,8 @@ export class TheMovieDbComponent implements OnInit {
     public ngOnInit() {
         this.tagForm = this.fb.group({
             input: null,
+            excludedMovieGenres: null,
+            excludedTvGenres: null,
           });
         this.settingsService.getTheMovieDbSettings().subscribe(settings => {
             this.settings = settings;
@@ -77,14 +73,16 @@ export class TheMovieDbComponent implements OnInit {
                 : [];
 
             this.tmdbService.getGenres("movie").subscribe(results => {
-                results.forEach(genre => {
-                    this.excludedMovieGenres.forEach(key => {
-                        this.excludedMovieGenres.filter((val, idx) => {
-                            val.name = genre.name
-                        })
-                    })
+                this.filteredMovieGenres = results;
+
+                this.excludedMovieGenres.forEach(genre => {
+                    results.forEach(result => {
+                        if (genre.id == result.id) {
+                            genre.name = result.name;
+                        }
+                    });
                 });
-            });
+            });        
             
             // Map Tv Genre ids -> genre name
             this.excludedTvGenres = settings.excludedTvGenreIds
@@ -96,13 +94,15 @@ export class TheMovieDbComponent implements OnInit {
                 : [];
 
             this.tmdbService.getGenres("tv").subscribe(results => {
-                results.forEach(genre => {
-                    this.excludedTvGenres.forEach(key => {
-                        this.excludedTvGenres.filter((val, idx) => {
-                            val.name = genre.name
-                        })
-                    })
-                });
+                this.filteredTvGenres = results;
+
+                this.excludedTvGenres.forEach(genre => {
+                    results.forEach(result => {
+                        if (genre.id == result.id) {
+                            genre.name = result.name;
+                        }
+                    });
+                }); 
             });
         });
 
@@ -119,16 +119,46 @@ export class TheMovieDbComponent implements OnInit {
         .subscribe((r) => (this.filteredTags = r));
     }
 
-    public remove(tag: IKeywordTag): void {
-        const index = this.excludedKeywords.indexOf(tag);
+    public remove(tag: IKeywordTag, tag_type: string): void {
+        var exclusion_list;
+
+        switch (tag_type) {
+            case "keyword":
+                exclusion_list = this.excludedKeywords;
+                break;
+            case "movieGenre":
+                exclusion_list = this.excludedMovieGenres;
+                break;
+            case "tvGenre":
+                exclusion_list = this.excludedTvGenres;
+                break;
+            default:
+                return;
+        }
+
+        const index = exclusion_list.indexOf(tag);
 
         if (index >= 0) {
-          this.excludedKeywords.splice(index, 1);
+          exclusion_list.splice(index, 1);
         }
       }
 
     public save() {
+
+        var selectedMovieGenres: number[] = this.tagForm.controls.excludedMovieGenres.value ?? [];
+        var selectedTvGenres: number[] = this.tagForm.controls.excludedTvGenres.value ?? [];
+
+        var movieIds: number[] = this.excludedMovieGenres.map(k => k.id);
+        var tvIds: number[] = this.excludedTvGenres.map(k => k.id)
+
+        // Concat and dedup already excluded genres + newly selected ones
+        selectedMovieGenres = movieIds.concat(selectedMovieGenres.filter(item => movieIds.indexOf(item) < 0));
+        selectedTvGenres = tvIds.concat(selectedTvGenres.filter(item => tvIds.indexOf(item) < 0));
+
         this.settings.excludedKeywordIds = this.excludedKeywords.map(k => k.id);
+        this.settings.excludedMovieGenreIds = selectedMovieGenres;
+        this.settings.excludedTvGenreIds = selectedTvGenres;
+
         this.settingsService.saveTheMovieDbSettings(this.settings).subscribe(x => {
             if (x) {
                 this.notificationService.success("Successfully saved The Movie Database settings");
