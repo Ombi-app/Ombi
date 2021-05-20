@@ -284,6 +284,8 @@ export interface IVoteSettings extends ISettings {
 export interface ITheMovieDbSettings extends ISettings {
     showAdultMovies: boolean;
     excludedKeywordIds: number[];
+    excludedMovieGenreIds: number[];
+    excludedTvGenreIds: number[]
 }
 
 export interface IUpdateModel

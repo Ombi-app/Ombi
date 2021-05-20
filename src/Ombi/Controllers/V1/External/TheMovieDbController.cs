@@ -5,6 +5,10 @@ using Ombi.Attributes;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+// Due to conflicting Genre models in
+// Ombi.TheMovieDbApi.Models and Ombi.Api.TheMovieDb.Models   
+using Genre = Ombi.TheMovieDbApi.Models.Genre;
+
 namespace Ombi.Controllers.External
 {
     [Admin]
@@ -34,5 +38,13 @@ namespace Ombi.Controllers.External
             var keyword = await TmdbApi.GetKeyword(keywordId);
             return keyword == null ? NotFound() : (IActionResult)Ok(keyword);
         }
+
+        /// <summary>
+        /// Gets the genres for either Tv or Movies depending on media type
+        /// </summary>
+        /// <param name="media">Either `tv` or `movie`.</param> 
+        [HttpGet("Genres/{media}")]
+        public async Task<IEnumerable<Genre>> GetGenres(string media) =>
+            await TmdbApi.GetGenres(media);
     }
 }
