@@ -28,47 +28,41 @@
 
                     <mat-chip-list #chipList>
                         <mat-chip *ngFor="let key of excludedKeywords" [selectable]="false" [removable]="true"
-                            (removed)="remove(key)">
+                            (removed)="remove(key, 'keyword')">
                             {{key.name}}
                             <i matChipRemove class="fas fa-times fa-lg"></i>
                         </mat-chip>
                     </mat-chip-list>
 
-                    <mat-form-field class="example-full-width">
-                        <input type="text" placeholder="Excluded Genres for Movie Suggestions" matInput
-                            formControlName="input" [matAutocomplete]="auto"
-                            matTooltip="Prevent movies with certain genres from being suggested. May require a restart to take effect.">
-                        <mat-autocomplete (optionSelected)="optionSelected($event.option.value)" autoActiveFirstOption
-                            #auto="matAutocomplete">
-                            <mat-option *ngFor="let option of filteredMovieGenres" [value]="option">
-                                {{option.name}}
+                    <mat-form-field appearance="outline" >
+                        <mat-label>Movie Genres</mat-label>
+                        <mat-select formControlName="excludedMovieGenres" multiple>
+                            <mat-option *ngFor="let genre of filteredMovieGenres" [value]="genre.id">
+                                {{genre.name}}
                             </mat-option>
-                        </mat-autocomplete>
+                        </mat-select>
                     </mat-form-field>
 
                     <mat-chip-list #chipList>
                         <mat-chip *ngFor="let key of excludedMovieGenres" [selectable]="false" [removable]="true"
-                            (removed)="remove(key)">
+                            (removed)="remove(key, 'movieGenre')">
                             {{key.name}}
                             <i matChipRemove class="fas fa-times fa-lg"></i>
                         </mat-chip>
                     </mat-chip-list>                    
 
-                    <mat-form-field class="example-full-width">
-                        <input type="text" placeholder="Excluded Genres for TV Suggestions" matInput
-                            formControlName="input" [matAutocomplete]="auto"
-                            matTooltip="Prevent TV Shows with certain genres from being suggested. May require a restart to take effect.">
-                        <mat-autocomplete (optionSelected)="optionSelected($event.option.value)" autoActiveFirstOption
-                            #auto="matAutocomplete">
-                            <mat-option *ngFor="let option of filteredTvGenres" [value]="option">
-                                {{option.name}}
+                    <mat-form-field appearance="outline" >
+                        <mat-label>Tv Genres</mat-label>
+                        <mat-select formControlName="excludedTvGenres" multiple>
+                            <mat-option *ngFor="let genre of filteredTvGenres" [value]="genre.id">
+                                {{genre.name}}
                             </mat-option>
-                        </mat-autocomplete>
+                        </mat-select>
                     </mat-form-field>
 
                     <mat-chip-list #chipList>
                         <mat-chip *ngFor="let key of excludedTvGenres" [selectable]="false" [removable]="true"
-                            (removed)="remove(key)">
+                            (removed)="remove(key, 'tvGenre')">
                             {{key.name}}
                             <i matChipRemove class="fas fa-times fa-lg"></i>
                         </mat-chip>
