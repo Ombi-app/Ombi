@@ -1,4 +1,4 @@
-﻿<settings-menu></settings-menu>
+<settings-menu></settings-menu>
 <div class="small-middle-container">
 <wiki [path]="'/settings/customization/'"></wiki>
 <fieldset *ngIf="settings">
@@ -12,9 +12,8 @@
             </mat-form-field>
         </div>
         <div class="md-form-field">
-            <mat-hint>The application url should be your Externally Accessible URL for example, your internal URL is http://192.168.1.50/ but your Externally
-                Accessible URL is 'https://mydomain.com/requests' Please ensure this field is correct as it drives a lot of functionality include the QR code for the 
-                mobile app and it affects the way email notifications are sent.
+            <mat-hint>The application url should be your Externally Accessible URL (the address you use to reach Ombi from outside your system). For example, 'https://example.com/requests'. <br />Please ensure this field is correct as it drives a lot of functionality, including the QR code for the 
+                mobile app, and the way email notifications are sent.
             </mat-hint>
             <mat-form-field appearance="outline">
                 <mat-label>Application URL</mat-label>
