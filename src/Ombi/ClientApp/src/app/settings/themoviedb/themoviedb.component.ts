@@ -1,4 +1,4 @@
-﻿import {COMMA, ENTER, K} from "@angular/cdk/keycodes";
+﻿import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import { Component, OnInit, ElementRef, ViewChild } from "@angular/core";
 import { MatAutocomplete } from "@angular/material/autocomplete";
 
