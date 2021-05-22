@@ -1,16 +1,17 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { INavBar } from '../interfaces/ICommon';
-import { StorageService } from '../shared/storage/storage-service';
-import { SettingsService, SettingsStateService } from '../services';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { SearchFilter } from './SearchFilter';
-import { Md5 } from 'ts-md5/dist/md5';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IUser, RequestType, UserType } from '../interfaces';
+import { SettingsService, SettingsStateService } from '../services';
+
 import { FilterService } from '../discover/services/filter-service';
 import { ILocalUser } from '../auth/IUserLogin';
+import { INavBar } from '../interfaces/ICommon';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { Md5 } from 'ts-md5/dist/md5';
+import { Observable } from 'rxjs';
+import { SearchFilter } from './SearchFilter';
+import { StorageService } from '../shared/storage/storage-service';
+import { map } from 'rxjs/operators';
 
 export enum SearchFilterType {
   Movie = 1,
@@ -34,6 +35,8 @@ export class MyNavComponent implements OnInit {
   @Input() public showNav: boolean;
   @Input() public applicationName: string;
   @Input() public applicationLogo: string;
+  @Input() public applicationUrl: string;
+  @Input() public accessToken: string;
   @Input() public username: string;
   @Input() public isAdmin: string;
   @Input() public email: string;
@@ -122,4 +125,12 @@ export class MyNavComponent implements OnInit {
     var fallback = this.applicationLogo ? this.applicationLogo : 'https://raw.githubusercontent.com/Ombi-app/Ombi/gh-pages/img/android-chrome-512x512.png';
     return `https://www.gravatar.com/avatar/${this.emailHash}?d=${fallback}`;
   }
+
+  public openMobileApp(event: any) {
+    event.preventDefault();
+
+    const url = `ombi://${this.applicationUrl}|${this.accessToken}`;
+    window.location.assign(url);
+}
+
 }
