@@ -27,6 +27,7 @@ export class TvDetailsComponent implements OnInit {
     public showRequest: ITvRequests;
     public fromSearch: boolean;
     public isAdmin: boolean;
+    public manageOwnRequests: boolean;
     public advancedOptions: IAdvancedData;
     public showAdvanced: boolean; // Set on the UI
     public requestType = RequestType.tvShow;
@@ -53,6 +54,7 @@ export class TvDetailsComponent implements OnInit {
 
         this.issuesEnabled = this.settingsState.getIssue();
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+        this.manageOwnRequests = this.auth.hasRole('ManageOwnRequests');
 
         if (this.isAdmin) {
             this.showAdvanced = await this.sonarrService.isEnabled();

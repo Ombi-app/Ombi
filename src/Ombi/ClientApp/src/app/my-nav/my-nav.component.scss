@@ -107,9 +107,20 @@
     margin-right:5px;
 }
 
+#nav-openMobile {
+    display: none;
+}
+
 @media (max-width: 600px) {
     .profile-username{
         display:none;
+    }
+
+}
+
+@media (max-width: 950px) {
+    #nav-openMobile {
+        display: block;
     }
 }
 

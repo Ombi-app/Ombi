@@ -33,6 +33,7 @@ export class AppComponent implements OnInit {
     public applicationName: string = "Ombi"
     public isAdmin: boolean;
     public username: string;
+    public accessToken: string;
 
     private hubConnected: boolean;
 
@@ -55,6 +56,7 @@ export class AppComponent implements OnInit {
         if (this.authService.loggedIn()) {
             this.user = this.authService.claims();
             this.username = this.user.name;
+            this.identity.getAccessToken().subscribe(x => this.accessToken = x);
             if (!this.hubConnected) {
                 this.signalrNotification.initialize();
                 this.hubConnected = true;
