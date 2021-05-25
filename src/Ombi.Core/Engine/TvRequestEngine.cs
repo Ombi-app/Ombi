@@ -26,19 +26,21 @@ using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Core.Models;
 using System.Threading;
+using Microsoft.Extensions.Logging;
 
 namespace Ombi.Core.Engine
 {
     public class TvRequestEngine : BaseMediaEngine, ITvRequestEngine
     {
         public TvRequestEngine(ITvMazeApi tvApi, IMovieDbApi movApi, IRequestServiceMain requestService, IPrincipal user,
-            INotificationHelper helper, IRuleEvaluator rule, OmbiUserManager manager,
+            INotificationHelper helper, IRuleEvaluator rule, OmbiUserManager manager, ILogger<TvRequestEngine> logger,
             ITvSender sender, IRepository<RequestLog> rl, ISettingsService<OmbiSettings> settings, ICacheService cache,
             IRepository<RequestSubscription> sub) : base(user, requestService, rule, manager, cache, settings, sub)
         {
             TvApi = tvApi;
             MovieDbApi = movApi;
             NotificationHelper = helper;
+            _logger = logger;
             TvSender = sender;
             _requestLog = rl;
         }
@@ -47,6 +49,8 @@ namespace Ombi.Core.Engine
         private ITvMazeApi TvApi { get; }
         private IMovieDbApi MovieDbApi { get; }
         private ITvSender TvSender { get; }
+
+        private readonly ILogger<TvRequestEngine> _logger;
         private readonly IRepository<RequestLog> _requestLog;
 
         public async Task<RequestEngineResult> RequestTvShow(TvRequestViewModel tv)
@@ -69,7 +73,7 @@ namespace Ombi.Core.Engine
                 }
             }
 
-            var tvBuilder = new TvShowRequestBuilder(TvApi, MovieDbApi);
+            var tvBuilder = new TvShowRequestBuilder(TvApi, MovieDbApi, _logger);
             (await tvBuilder
                 .GetShowInfo(tv.TvDbId))
                 .CreateTvList(tv)

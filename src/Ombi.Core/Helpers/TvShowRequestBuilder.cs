@@ -20,7 +20,7 @@ namespace Ombi.Core.Helpers
     {
         private readonly ILogger _logger;
 
-        public TvShowRequestBuilder(ITvMazeApi tvApi, IMovieDbApi movApi, ILogger<TvShowRequestBuilder> logger)
+        public TvShowRequestBuilder(ITvMazeApi tvApi, IMovieDbApi movApi, ILogger logger)
         {
             TvApi = tvApi;
             MovieDbApi = movApi;
