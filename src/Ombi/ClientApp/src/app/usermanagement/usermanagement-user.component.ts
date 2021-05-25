@@ -1,9 +1,10 @@
-﻿import { Location } from "@angular/common";
-import { AfterViewInit, Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+﻿import { ActivatedRoute, Router } from "@angular/router";
+import { Component, OnInit } from "@angular/core";
+import { ICheckbox, ICustomizationSettings, INotificationAgent, INotificationPreferences, IRadarrProfile, IRadarrRootFolder, ISonarrProfile, ISonarrRootFolder, IUser, UserType } from "../interfaces";
+import { IdentityService, MessageService, RadarrService, SettingsService, SonarrService } from "../services";
 
-import { ICheckbox, INotificationAgent, INotificationPreferences, IRadarrProfile, IRadarrRootFolder, ISonarrProfile, ISonarrRootFolder, IUser, UserType } from "../interfaces";
-import { IdentityService, RadarrService, SonarrService, MessageService } from "../services";
+import { Clipboard } from '@angular/cdk/clipboard';
+import { Location } from "@angular/common";
 
 @Component({
     templateUrl: "./usermanagement-user.component.html",
@@ -27,12 +28,17 @@ export class UserManagementUserComponent implements OnInit {
 
     public countries: string[];
 
+    private customization: ICustomizationSettings;
+    private accessToken: string;
+
     constructor(private identityService: IdentityService,
                 private notificationService: MessageService,
+                private readonly settingsService: SettingsService,
                 private router: Router,
                 private route: ActivatedRoute,
                 private sonarrService: SonarrService,
                 private radarrService: RadarrService,
+                private clipboard: Clipboard,
                 private location: Location) {
 
                     this.route.params.subscribe((params: any) => {
@@ -59,6 +65,9 @@ export class UserManagementUserComponent implements OnInit {
         this.sonarrService.getRootFoldersWithoutSettings().subscribe(x => this.sonarrRootFolders = x);
         this.radarrService.getQualityProfilesFromSettings().subscribe(x => this.radarrQualities = x);
         this.radarrService.getRootFoldersFromSettings().subscribe(x => this.radarrRootFolders = x);
+
+        this.settingsService.getCustomization().subscribe(x => this.customization = x);
+        this.identityService.getAccessToken().subscribe(x => this.accessToken = x);
 
         if(!this.edit) {
             this.user = {
@@ -178,7 +187,12 @@ export class UserManagementUserComponent implements OnInit {
             }
         });
     }
-    
+
+    public async appLink() {
+        this.clipboard.copy(`ombi://${this.customization.applicationUrl}|${this.accessToken}`);
+        this.notificationService.send("Copied!");
+    }
+
     public back() {
         this.location.back();
     }

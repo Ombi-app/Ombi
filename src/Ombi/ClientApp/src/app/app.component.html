@@ -170,7 +170,17 @@
 
 
 <div>
-    <app-my-nav id="main-container dark" [showNav]="showNav" [isAdmin]="isAdmin" [applicationName]="applicationName" [applicationLogo]="customizationSettings?.logo" [username]="username" [email]="user?.email " (logoutClick)="logOut();">
+    <app-my-nav id="main-container dark"
+        [showNav]="showNav"
+        [isAdmin]="isAdmin"
+        [applicationName]="applicationName"
+        [applicationLogo]="customizationSettings?.logo"
+        [username]="username"
+        [email]="user?.email"
+        [accessToken]="accessToken"
+        [applicationUrl]="customizationSettings?.applicationUrl"
+        (logoutClick)="logOut();"
+    >
     </app-my-nav>
 
 

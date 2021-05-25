@@ -28,6 +28,13 @@
                 </div>
             </span>
 
+            <span mat-list-item  >
+            <a mat-list-item [disableRipple]="true" id="nav-openMobile" [routerLinkActive]="'active-list-item'"
+                aria-label="Toggle sidenav" (click)="openMobileApp($event);">
+                <i class="fa-lg fas fa-mobile-alt  icon-spacing"></i>
+                &nbsp;{{ 'NavigationBar.OpenMobileApp' | translate }}
+            </a></span>
+
             <a mat-list-item [disableRipple]="true"   class="menu-spacing" id="nav-logout" [routerLinkActive]="'active-list-item'"
                 aria-label="Toggle sidenav" (click)="logOut();">
                 <i class="fa-lg fas fa-sign-out-alt  icon-spacing"></i>
