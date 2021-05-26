@@ -137,7 +137,8 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
             this.ref.detectChanges();
         };
 
-        this.onOpenOptions.emit({ request: request, filter: filter, onChange: onChange, manageOwnRequests: this.manageOwnRequests, isAdmin: this.isAdmin });
+        const data = { request: request, filter: filter, onChange: onChange, manageOwnRequests: this.manageOwnRequests, isAdmin: this.isAdmin };
+        this.onOpenOptions.emit(data);
     }
 
     public switchFilter(type: RequestFilterType) {
