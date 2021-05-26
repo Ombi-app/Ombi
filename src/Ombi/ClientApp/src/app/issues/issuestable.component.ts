@@ -6,6 +6,7 @@ import { IIssuesSummary, IPagenator, IssueStatus } from "../interfaces";
 @Component({
     selector: "issues-table",
     templateUrl: "issuestable.component.html",
+    styleUrls: ['issuestable.component.scss']
 })
 export class IssuesTableComponent  {
 
