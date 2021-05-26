@@ -65,7 +65,7 @@
                                     </button>
                                 </ng-template>
                                 <ng-template #notRequestedBtn>
-                                    <button id="requestBtn" mat-raised-button class="btn-spacing" color="primary" (click)="request()">
+                                    <button *ngIf="!movie.requested" id="requestBtn" mat-raised-button class="btn-spacing" color="primary" (click)="request()">
                                         <i *ngIf="movie.requestProcessing" class="fas fa-circle-notch fa-spin fa-fw"></i> 
                                         <i *ngIf="!movie.requestProcessing && !movie.processed" class="fas fa-plus"></i>
                                         <i *ngIf="movie.processed && !movie.requestProcessing" class="fas fa-check"></i> 

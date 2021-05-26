@@ -12,16 +12,19 @@ using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository.Requests;
+using Microsoft.Extensions.Logging;
 
 namespace Ombi.Core.Helpers
 {
     public class TvShowRequestBuilder
     {
+        private readonly ILogger _logger;
 
-        public TvShowRequestBuilder(ITvMazeApi tvApi, IMovieDbApi movApi)
+        public TvShowRequestBuilder(ITvMazeApi tvApi, IMovieDbApi movApi, ILogger logger)
         {
             TvApi = tvApi;
             MovieDbApi = movApi;
+            _logger = logger;
         }
         
         private ITvMazeApi TvApi { get; }
@@ -45,6 +48,7 @@ namespace Ombi.Core.Helpers
             {
                 if (result.Name.Equals(ShowInfo.name, StringComparison.InvariantCultureIgnoreCase))
                 {
+                    _logger.LogInformation($"Found matching MovieDb entry for show name {ShowInfo.name}");
                     TheMovieDbRecord = result;
                     var showIds = await MovieDbApi.GetTvExternals(result.Id);
                     ShowInfo.externals.imdb = showIds.imdb_id;
@@ -237,18 +241,19 @@ namespace Ombi.Core.Helpers
         
         public TvShowRequestBuilder CreateNewRequest(TvRequestViewModel tv)
         {
+            _logger.LogInformation($"Building Request for {ShowInfo.name} with Provider ID {TheMovieDbRecord?.Id ?? 0}");
             NewRequest = new TvRequests
             {
                 Overview = ShowInfo.summary.RemoveHtml(),
                 PosterPath = PosterPath,
                 Title = ShowInfo.name,
                 ReleaseDate = FirstAir,
-                ExternalProviderId = TheMovieDbRecord.Id,
+                ExternalProviderId = TheMovieDbRecord?.Id ?? 0,
                 Status = ShowInfo.status,
                 ImdbId = ShowInfo.externals?.imdb ?? string.Empty,
                 TvDbId = tv.TvDbId,
                 ChildRequests = new List<ChildRequests>(),
-                TotalSeasons = tv.Seasons.Count(),
+                TotalSeasons = tv.Seasons?.Count ?? 0,
                 Background = BackdropPath
             };
             NewRequest.ChildRequests.Add(ChildRequest);

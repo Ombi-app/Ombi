@@ -155,6 +155,10 @@ namespace Ombi.Core.Engine.V2
 
             foreach (var tvMazeSearch in items)
             {
+                if (DemoCheck(tvMazeSearch.Title))
+                {
+                    continue;
+                }
                 if (settings.HideAvailableFromDiscover)
                 {
                     // To hide, we need to know if it's fully available, the only way to do this is to lookup it's episodes to check if we have every episode

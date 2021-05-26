@@ -1,18 +1,18 @@
-import { Component, AfterViewInit, ViewChild, EventEmitter, Output, ChangeDetectorRef, OnInit } from "@angular/core";
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
 import { IMovieRequests, IRequestEngineResult, IRequestsViewModel } from "../../../interfaces";
-import { MatPaginator } from "@angular/material/paginator";
-import { MatSort } from "@angular/material/sort";
-import { merge, Observable, of as observableOf, forkJoin } from 'rxjs';
+import { NotificationService, RequestService } from "../../../services";
+import { Observable, forkJoin, merge, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
-import { RequestServiceV2 } from "../../../services/requestV2.service";
 import { AuthService } from "../../../auth/auth.service";
-import { StorageService } from "../../../shared/storage/storage-service";
-import { RequestFilterType } from "../../models/RequestFilterType";
-import { SelectionModel } from "@angular/cdk/collections";
-import { NotificationService, RequestService } from "../../../services";
-import { TranslateService } from "@ngx-translate/core";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
+import { RequestFilterType } from "../../models/RequestFilterType";
+import { RequestServiceV2 } from "../../../services/requestV2.service";
+import { SelectionModel } from "@angular/cdk/collections";
+import { StorageService } from "../../../shared/storage/storage-service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
     templateUrl: "./movies-grid.component.html",
@@ -26,6 +26,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     public displayedColumns: string[] = ['title', 'requestedUser.requestedBy',  'status', 'requestStatus','requestedDate', 'actions'];
     public gridCount: string = "15";
     public isAdmin: boolean;
+    public manageOwnRequests: boolean;
     public defaultSort: string = "requestedDate";
     public defaultOrder: string = "desc";
     public currentFilter: RequestFilterType = RequestFilterType.All;
@@ -39,7 +40,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
     private storageKeyGridCount = "Movie_DefaultGridCount";
     private storageKeyCurrentFilter = "Movie_DefaultFilter";
 
-    @Output() public onOpenOptions = new EventEmitter<{ request: any, filter: any, onChange: any }>();
+    @Output() public onOpenOptions = new EventEmitter<{ request: any, filter: any, onChange: any, manageOwnRequests: boolean, isAdmin: boolean }>();
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -53,6 +54,7 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
 
     public ngOnInit() {
         this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
+        this.manageOwnRequests = this.auth.hasRole("ManageOwnRequests")
         if (this.isAdmin) {
             this.displayedColumns.unshift('select');
         }
@@ -135,7 +137,8 @@ export class MoviesGridComponent implements OnInit, AfterViewInit {
             this.ref.detectChanges();
         };
 
-        this.onOpenOptions.emit({ request: request, filter: filter, onChange: onChange });
+        const data = { request: request, filter: filter, onChange: onChange, manageOwnRequests: this.manageOwnRequests, isAdmin: this.isAdmin };
+        this.onOpenOptions.emit(data);
     }
 
     public switchFilter(type: RequestFilterType) {
