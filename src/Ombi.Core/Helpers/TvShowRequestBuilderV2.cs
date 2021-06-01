@@ -33,6 +33,14 @@ namespace Ombi.Core.Helpers
         public async Task<TvShowRequestBuilderV2> GetShowInfo(int id)
         {
             TheMovieDbRecord = await MovieDbApi.GetTVInfo(id.ToString());
+
+            // Remove 'Specials Season'
+            var firstSeason = TheMovieDbRecord.seasons.OrderBy(x => x.season_number).FirstOrDefault();
+            if (firstSeason?.season_number == 0)
+            {
+                TheMovieDbRecord.seasons.Remove(firstSeason);
+            }
+
             BackdropPath = TheMovieDbRecord.Images?.Backdrops?.OrderBy(x => x.VoteCount).ThenBy(x => x.VoteAverage).FirstOrDefault()?.FilePath; ;
 
             DateTime.TryParse(TheMovieDbRecord.first_air_date, out var dt);
@@ -149,6 +157,10 @@ namespace Ombi.Core.Helpers
             else if (tv.FirstSeason)
             {
                 var first = allEpisodes.OrderBy(x => x.season_number).FirstOrDefault();
+                if (first.season_number == 0)
+                {
+                    first = allEpisodes.OrderBy(x => x.season_number).Skip(1).FirstOrDefault();
+                }
                 var episodesRequests = new List<EpisodeRequests>();
                 foreach (var ep in allEpisodes)
                 {
