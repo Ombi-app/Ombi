@@ -104,3 +104,7 @@
 .card-skeleton {
    padding: 5px;
 }
+
+::ng-deep .p-carousel-item{
+  flex: 1 0 200px !important;
+}
