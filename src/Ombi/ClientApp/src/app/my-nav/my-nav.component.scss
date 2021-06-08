@@ -160,9 +160,10 @@
         font-size:36px;
         padding:40px 20px;
         height:auto;
-        max-width: 350px;
+        max-width: 300px;
         display: flex;
         white-space: normal;
+        word-break: break-word;
     }
 
     .outer-profile {
